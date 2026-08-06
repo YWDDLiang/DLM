@@ -1,129 +1,179 @@
-# Current ICLR Focus: Shared Plan + Diffusion Language Model
+# DLM: H1 Planner + exact-length DLM + CrysLLMGen
 
-As of 2026-07-28, the active research focus is a fully de novo shared-Plan
-pipeline built on the strongest restored R5-C assets:
+This repository contains the code, experiment contracts, frozen ledgers, and
+reproduction records for the H1 crystal-generation program. The current
+research question is narrow:
+
+> Can a small, chemistry-aligned change to the H1 Planner improve strict
+> raw-attempt `comp_valid` without changing the downstream DLM, refiner, or
+> evaluator?
+
+The full generation pipeline is:
 
 ```text
-goal -> H1-A2 Planner -> shared Plan
-                       -> exact-length R5-C body DLM -> draft
-                       -> Plan-conditioned CrysLLMGen diffusion -> crystal
+goal
+  -> H1 Planner (P0 / C0 / C1)
+  -> canonical Plan
+  -> exact-length R5-C body DLM (B0, 7 + 4N tokens)
+  -> CrysLLMGen model_494 refiner (800 reverse steps)
+  -> Direct metrics
+  -> common-snapshot S.U.N. metrics
 ```
 
-The immediate task is not another Planner/body training run.  It is an
-algebraic exact-null repair of the strongest later shared-Plan refiner, followed
-by a frozen matched/null/shuffled mechanism gate and then one H1-A2
-fully-de-novo paired panel.
+## Current status: 2026-08-06
 
-The Wyckoff-quotient program is paused and preserved in the non-destructive
-checkpoint at
-[`archive/20260728_wq_pause_checkpoint/`](archive/20260728_wq_pause_checkpoint/README.md).
+The project has a useful successful module result, but no claim that the full
+CR-Plan route improves crystal generation:
 
-Active entry points:
+| Result | What was tested | Outcome |
+|---|---|---|
+| **R03 safe-axis** | Changed only the body-DLM reveal order while keeping Planner, body weights, tokenizer, Plan, refiner, seeds, and evaluator fixed | Body completion `246 -> 248/256`; pooled raw joint validity `+5/1024`; completed-snapshot strict S.U.N. lower bound `99 -> 117/1024`. Meta S.U.N. fell `523 -> 496/1024`, so this is a successful DLM/schedule module, not a broad stability win. |
+| **CR-Plan paired-32** | Added formula-prefix reachability to the frozen Planner; old missing-oxidation-state semantics were still in force | Engineering gates passed; composition `17/32 -> 18/32`, primary `9/32 -> 10/32`, terminal charge failures `0`. The candidate was very slow (`112.813/215.895 s` median/p95 vs P0 `2.835/3.022 s`), so this was not a scientific prefix-gain result. |
+| **Exact-tokenizer V2 audit** | Audited the optimized trie/DP support against the complete frozen tokenizer vocabulary | `128,256` decoded fragments matched the scalar oracle; maximum audit states `76,267`; trie/scalar support time `10.3488/121.9064 s` (`~11.78x`). No model, GPU, generation, or downstream evaluation was used. |
+| **E1 physical probe** | Tested the optimized support implementation on real Planner traces, separately from the V4 logical-state gate | Full-prefix median/off ratio `1.468x`; `14/14` charge-applicable full attempts had real preterminal support differences; actual-trace support and scalar parity were exact. This only justified a separately preregistered route amendment. |
+| **Four-arm Plan-only 512 amendment** | `off`, `grammar-only`, `terminal-only`, and `full-prefix` with the corrected fail-closed policy | Engineering/scientific stop. Full vs terminal raw `comp_valid` was `+6/512`, but nonshortcut/primary was only `+1/512` and shortcuts increased by `+5`; terminal-only also had seven generation errors. No paired-64, paired-256, Body, Direct, or S.U.N. run followed. |
 
-- [ICLR Plan + DLM relaunch](docs/experiment_program/20260728_iclr_plan_dlm_relaunch.md);
-- [complete post-R5-C results review](workstreams/r5c_reactivation_20260728/ALL_POST_R5C_RESULTS_REVIEW.md);
-- [mutable reactivation workstream](workstreams/r5c_reactivation_20260728/README.md);
-- [frozen provenance snapshot](legacy_dlm_r5c/README.md).
+The frozen conclusion is therefore: the exact-length DLM and safe-axis schedule
+are usable modules; the dominant remaining bottleneck is Planner chemistry and
+composition. The failed CR-Plan route is retained as evidence and is not
+repaired by changing denominators, selecting seeds, or tuning on S.U.N.
 
-The scientific restart uses H1-A2 epoch 2 as the Planner, the frozen R5-C
-exact-length DLM as body, and the original CrysLLMGen diffusion parent.  The
-later S2 shared-Plan adapter is an initialization/diagnostic only until its
-null path is algebraically identical to the parent.  Historical outputs are
-never overwritten; every A800 request remains limited to at most eight CPUs.
+## What is being improved now: minimal no-charge ion-auxiliary SFT
 
-# Paused Program: CrysLLMGen-Derived Stratified Wyckoff Revision
+The current authorized candidate keeps the existing formula-first H1 Plan and
+changes only the causal part that is most likely hurting composition:
 
-This workspace targets one ICLR oral-quality crystal-generation paper:
+| Arm | Inference representation | Training purpose |
+|---|---|---|
+| `P0` | Frozen historical seven-line Plan, including `charge:` | Baseline |
+| `C0` | Same Plan with the generated `charge:` line removed | Measures the minimal schema/continued-SFT effect; auxiliaries use neutral atom/count supervision |
+| `C1` | The same six-line no-charge Plan as C0 | Adds explicit oxidation-state/ion witnesses only in same-head training auxiliaries |
 
-> A closed-loop Wyckoff-quotient extension of CrysLLMGen's Llama-to-diffusion
-> crystal generator.
+At inference, C0/C1 generate only:
 
-The discrete topology specifies the space group and an unordered multiset of active
-Wyckoff/species orbits. It indexes a continuous stratum containing the
-symmetry-compatible lattice metric and the free coordinates of those orbits.
-An autoregressive CrysLLMGen proposer emits the space group first, followed by
-the lattice chart and a dynamic sequence of Wyckoff/species/free-coordinate
-orbit tuples. The space group is fixed after emission. The proposal is expanded
-and refined by the inherited CrysLLMGen CSPDiffusion path, while geometry
-evidence can trigger direct orbit birth, death, type change, or species change.
-Newly introduced continuous charts are initialized by a target-stratum bridge
-before refinement resumes.
+```text
+formula: Li2O
+anion: oxide
+lattice: cubic
+spacegroup: sg_195_230
+volume: volpa_016_020
+end: plan
+```
 
-The Day-7 diagnostic did not promote DLM, so the active method does not start
-from a global `MASK` topology state and does not claim that DLM is superior to
-AR or D3PM. `MASK` may be used only as a local training-corruption or infilling
-symbol. The preserved, previously valid R5-C DLM program is isolated under
-[`legacy_dlm_r5c/`](legacy_dlm_r5c/README.md).
+There is no generated `charge:` or `ions:` field. The frozen evaluator still
+derives charge taxonomy from the generated formula. It does not repair,
+replace, filter, retry, rerank, or select an oxidation witness after sampling.
+An invalid formula remains a raw failed attempt.
 
-The official CrysLLMGen repository at commit `94bb287...` is the code and
-experimental parent, not merely an external baseline. Its exact atom-wise path
-is preserved as an upstream reproduction. The flagship must beat a matched
-one-way WQ handoff by using refinement geometry to correct already proposed
-Wyckoff topology.
+The 3,200-record C0/C1 task mixture is frozen before any generated result is
+read:
 
-The active cycle is hard-capped at four A800 GPUs for 28 days: 2050 usable
-GPU-hours, with 800 reserved for the frozen champion/final comparison in Week 4.
+- 30% stable primary no-charge Plans;
+- 5% repeated atom/ion sequence-to-formula supervision;
+- 5% matched element/count versus element/oxidation infill;
+- 40% full-MP20 conditional anchors, with the formula in the input rather
+  than an unconditional answer target;
+- 20% conditional P0 KL/logit anchors over the non-formula fields.
 
-## Active Documents
+Thus invalid MP-20 formulas are not silently declared physically wrong, but
+they are also not repeatedly taught as unconditional positive answers. Formula
+tokens receive weight `2.0`; other answer tokens receive weight `1.0`.
 
-- [Four-week execution runbook](docs/experiment_program/FOUR_WEEK_RUNBOOK.md)
-- [Decision log](docs/experiment_program/DECISIONS.md)
-- [AR topology decision](docs/experiment_program/AR_TOPOLOGY_DECISION.md)
-- [Revised CrysLLMGen-WQ experiment plan](docs/experiment_program/LLAMA_AR_REVISED_EXPERIMENT_PLAN.md)
-- [CrysLLMGen fork and modification map](docs/experiment_program/CRYSLLMGEN_FORK_MAP.md)
-- [Llama-3-8B-Instruct asset preflight](configs/experiments/wyckoff_codiffusion/model_asset_preflight_meta_llama3_8b_instruct_v1.json)
-- [CrysLLMGen MP20 checkpoint preflight](configs/experiments/wyckoff_codiffusion/model_asset_preflight_crysllmgen_mp20_v1.json)
-- [Training and evaluation inventory](configs/experiments/wyckoff_codiffusion/training_evaluation_inventory_v1.json)
-- [Frozen Day-7 protocol v3](configs/experiments/wyckoff_codiffusion/protocol_v3.yaml)
-- [Frozen Day-7 registry v1](configs/experiments/wyckoff_codiffusion/experiment_registry_v1.yaml)
+The DLM is deliberately unchanged: the downstream contract remains frozen B0,
+the exact `7+4N` body length, `model_494`, exact 800 reverse steps, the Direct
+evaluator, and the common S.U.N. snapshot. RL is not part of this first test.
 
-The primary AR asset is the verified shared
-`Meta-Llama-3-8B-Instruct` checkpoint at
-`/public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct/`.
-Protocol v4 and registry v2 will be created only after its full shard-hash,
-grammar, and Slurm offline-forward gates pass. Protocol v3 remains immutable
-because the completed Day-7 artifacts are bound to its hash.
+### Why this change
 
-Superseded plans, protocols, failed runs, data, references, and reports stay
-locally preserved but are excluded from the active source bundle and every
-server execution path.
+The old target is causally backward: the model first emits a formula and only
+then emits `charge: charge_fail`, so the charge label cannot guide the earlier
+element/count decisions. A compact formula also gives each count only sparse
+token supervision. The ion/atom auxiliary exposes repeated chemistry tokens
+to the same LM head without changing the deployed Plan format.
 
-## Claim Boundary
+MP-20 itself is not being discarded. Under the frozen H1 heuristic taxonomy,
+the local 27,136-row training split contains 7,079 nonshortcut primary rows,
+9,302 all-metal shortcuts, 226 unary shortcuts, 9,806 charge-neutrality
+failures, 440 Pauling failures, and 283 oxidation-state-missing rows. This is
+an evaluator-alignment problem, not evidence that the structures are
+physically invalid.
 
-The project does not claim the first crystal DLM, the first joint
-discrete--continuous crystal diffusion, the first bidirectional atom/structure
-model, or the first variable-cardinality generator. The candidate novelty is
-the combination of:
+SMACT `4.0.0` is frozen as a secondary witness/audit contract. The
+paper-comparable legacy evaluator remains the primary metric, so upgrading
+SMACT does not rewrite historical headline numbers or change the denominator.
 
-1. topology-indexed continuous Wyckoff strata;
-2. orbit-level dimension-changing birth/death transitions;
-3. constraint- and geometry-adaptive direct revision of committed topology.
+## Metric interpretation
 
-All stability headlines are explicitly `MLIP-SUN@0.0` or `MLIP-SUN@0.1`
-because no new DFT is planned. Raw, common-refiner, and relaxed stages are
-reported separately.
+The paper's published CrysLLMGen `93.55%` is a **strict raw-attempt
+composition-validity** number. It is not a S.U.N. survivor-denominator
+number. The current local reference values are not checkpoint/recipe-parity
+reproductions:
 
-## Active Evidence
+| Reference | Strict raw `comp_valid` |
+|---|---:|
+| Published CrysLLMGen | `93.55%` |
+| Local CrysLLMGen asset | `89.2%` |
+| H1-A2 epoch-2 Planner | `87.8%` |
+| Frozen P-control discovery screen | `456/512 = 89.0625%` |
 
-Historical run directories remain under runs but are excluded from active source sync:
+The no-charge experiment will report, on the same common evaluator and raw
+all-attempt denominator:
 
-- the R5-C conditional oracle diagnostic;
-- the legacy A100 evaluator-sensitivity baseline.
+- Planner parse/completion, `comp_valid`, primary/nonshortcut and shortcut
+  taxonomy, failure reasons, unique formulas, top-1 frequency, element/arity
+  coverage, and mean atom count;
+- Body generation/completion, composition validity, `struct_valid`, and raw
+  joint validity;
+- CrysLLMGen metrics: `comp_valid`, `struct_valid`, `valid`,
+  `wdist_density`, `wdist_num_elems`, `cov_recall`, and `cov_precision`;
+- raw and completed/survivor secondary tables, novelty, novel-unique,
+  uniqueness, and paired discordance;
+- strict/meta S.U.N. on a common union snapshot, with coverage and unknown
+  accounting.
 
-They are not headline-eligible. All paper results must be rerun under the new
-attempt-level protocol with stable IDs, fixed seeds, no output-dependent
-selection, frozen evaluators, and one final refinement per submitted attempt.
+No new no-charge SFT `comp_valid`, `struct_valid`, joint, or S.U.N. result is
+claimed yet: local source repair and audit passed, but the real train-data
+build, tokenizer/model smoke, and A800 training remain pending restoration of
+the maintained remote tmux path.
 
-## Registered Work Order
+## Frozen evaluation ladder
 
-1. Audit the remaining GPU budget and freeze the complete Llama asset.
-2. Vendor the CrysLLMGen source-only snapshot, preserve its MIT notice, and
-   pass disabled-extension atom-pipeline parity.
-3. Implement and formally audit the atom/WQ proposal grammars, inherited
-   CSPDiffusion wrapper, and direct edit process; then freeze protocol v4.
-4. Train the registered 3 x 3-seed main runs plus one seed-11 presentation
-   ablation, pass the proposal/handoff gate, and only then begin SUN screening.
-5. Screen the five matched routes, pass or stop geometry revision, and
-   freeze the final method by Day 21.
-6. In Week 4, run only frozen champion/final three-seed, 10k-attempt,
-   multi-MLIP, symmetry, novelty, compute, statistics, and failure audits.
+1. Build the exact C0/C1 train and validation ledgers and pass the tokenizer,
+   witness, mask, P0-KL, and finite-gradient preflights.
+2. Run the paired Planner-only raw-64 gate. Require positive raw and primary
+   gains, no shortcut inflation, no meaningful parse/completion loss, and no
+   new failure class.
+3. Only a passing raw-64 enters the independent paired raw-256 Planner gate.
+4. Only a passing Planner candidate enters frozen B0/D1 + `model_494` Body,
+   Direct, and then common-snapshot S.U.N. evaluation.
+5. RL is a last-resort, separately frozen Planner-only fallback; S.U.N. and
+   downstream outputs cannot be used to select a checkpoint or tune the SFT.
+
+All scientific gates use raw attempts. There is no retry, replacement,
+repair, filtering, reranking, survivor-only rescue, or S.U.N.-based tuning.
+
+## Reproduction entry points
+
+- [Current no-charge ion-auxiliary SFT annex](workstreams/plangraph_dlm_iclr_20260731/analysis/H1_NOCHARGE_ION_AUX_SFT_EXECUTION_ANNEX_V1.md)
+- [Root-cause analysis and SFT rationale](workstreams/plangraph_dlm_iclr_20260731/analysis/H1_COMP_VALID_ROOT_CAUSE_AND_SFT_PLAN_V2.md)
+- [CR-Plan policy, audit, and terminal evidence](workstreams/plangraph_dlm_iclr_20260731/analysis/H1_CRPLAN_MISSING_POLICY_AND_SUPPORT_OPTIMIZATION_REVIEW_V1.md)
+- [Single TODO/result index](workstreams/plangraph_dlm_iclr_20260731/EXPERIMENT_TODO_INDEX_V3.md)
+- [R03 safe-axis reproducibility report](workstreams/plangraph_dlm_iclr_20260731/H1_R03_SAFE_AXIS_REPRODUCIBILITY_REPORT_V1.md)
+- [DLM fixed-panel audit record](workstreams/plangraph_dlm_iclr_20260731/DLM_FIXED_PANEL_AUDIT_V1.json)
+- [Planner and Plan implementations](crystal_dlm/h1_llm_planner.py)
+- [No-charge ion-auxiliary implementation](crystal_dlm/h1_nocharge_ion_aux.py)
+- [Exact-length body implementation](crystal_dlm/r5_plan_body.py)
+- [CrysLLMGen integration](crystal_dlm/wqcodiff/crysllmgen/)
+
+The older Wyckoff-quotient program is preserved for provenance but is paused;
+it is not the current H1 experimental headline. Likewise, `legacy_dlm_r5c/`
+contains the restored historical R5-C program and is not silently mixed into
+the new no-charge comparison.
+
+## Repository boundaries
+
+Source code, experiment contracts, ledgers, tests, terminal reports, and
+reproduction documents are versioned here. Large checkpoints, model weights,
+datasets, run directories, caches, archives, and secrets are excluded by
+[`.gitignore`](.gitignore) and must be referenced by immutable SHA/path records
+when a run depends on them.
