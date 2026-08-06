@@ -1,76 +1,94 @@
 # DLM: plan-guided discrete diffusion for crystal generation
 
-This repository contains the models, experiment contracts, execution code,
-frozen ledgers, and reproduction records for a plan-guided crystal-generation
-system:
+This repository contains the complete experimental record for a staged crystal
+generator built from a learned Planner, a discrete diffusion body model, and a
+continuous diffusion refiner. It versions source code, immutable contracts,
+ledgers, tests, terminal decisions, and reproduction documents; large model
+weights and run artifacts are referenced by path and SHA rather than committed.
+
+## Current result in one minute
+
+As of 2026-08-06:
+
+- **Best validated end-to-end system:** H1-A2 epoch-2 Planner + R5-C
+  exact-length body DLM + CrysLLMGen `model_494` refine800.
+- **Most successful recent model change:** R03 safe-axis decoding for the body
+  DLM. It passed the registered 32/64/256 body gates, eliminated the
+  mixed-axis duplicate-coordinate collapse, and improved pooled completion and
+  raw joint validity.
+- **Important boundary:** R03 is a successful DLM component, not a promoted
+  end-to-end replacement. Its registered four-repeat evaluation improved joint
+  and strict S.U.N. counts but reduced meta S.U.N., so the scientific route
+  stopped.
+- **Current bottleneck:** formula/composition generation in the Planner. The
+  next authorized experiment removes the causally useless generated `charge:`
+  line and adds training-only ion/count auxiliary supervision while keeping
+  the DLM and refiner frozen. It has passed local source/preflight tests but has
+  not yet produced generation metrics.
+
+### Frozen headline metrics
+
+All values below use raw attempts as the denominator.
+
+| System / experiment | Attempts | `comp_valid` | `struct_valid` | Joint valid | Strict S.U.N. | Meta S.U.N. |
+|---|---:|---:|---:|---:|---:|---:|
+| Local historical CrysLLMGen reference | 1,000 | 89.2% | 99.9% | 89.1% | 9.0% | 46.1% |
+| **H1-A2 epoch-2 end-to-end fallback** | **1,000** | **87.8%** | **99.9%** | **87.7%** | **9.4%** | **47.4%** |
+| R03 D1 control, four repeats | 1,024 | 848/1,024 (82.81%) | 982/1,024 (95.90%) | 846/1,024 (82.62%) | 99/1,024 (9.67%) | 523/1,024 (51.07%) |
+| **R03 safe-axis, four repeats** | **1,024** | **852/1,024 (83.20%)** | **989/1,024 (96.58%)** | **851/1,024 (83.11%)** | **117/1,024 (11.43%)** | **496/1,024 (48.44%)** |
+
+The R03 S.U.N. row is the later completed-snapshot lower-bound report
+(`R03G`), in which 72 unresolved hulls are explicitly false-scored. The
+preregistered frozen-cache decision (`R03E`) was candidate minus control
+`+5/1024` joint, `+4/1024` strict S.U.N., and `-28/1024` meta S.U.N.; that
+negative meta result remains the promotion decision.
+
+The published CrysLLMGen composition-validity number is **93.55% on strict raw
+attempts**, not a S.U.N. survivor-denominator metric. The local 89.2% reference
+is not claimed to be an exact reproduction of the paper checkpoint and recipe.
+
+## What the successful stack actually uses
 
 ```text
 materials goal
-  -> H1-A2 Planner (formula + coarse crystal Plan)
-  -> exact-length R5-C discrete body DLM
-  -> CrysLLMGen continuous diffusion refiner
-  -> Direct validity metrics
-  -> common-snapshot strict/meta S.U.N.
+  -> Meta-Llama-3-8B + H1-A2 epoch-2 Planner LoRA
+       formula + anion/lattice/space-group/volume Plan
+  -> LLaDA-8B-Instruct + R5-C exact-length body adapter
+       discrete lattice/species/coordinates, exactly 7 + 4N tokens
+  -> safe-axis constrained decoding
+       lattice -> grouped X -> grouped Y -> grouped Z
+  -> CrysLLMGen model_494 continuous refiner
+       exactly 800 reverse steps, batch 1
+  -> frozen Direct and common-snapshot S.U.N. evaluators
 ```
 
-The current result is not a single model claiming to solve every stage. It is
-a causal decomposition of crystal generation into:
-
-1. **Planner chemistry** — chooses composition and coarse structural
-   conditions;
-2. **body DLM** — generates an exact-length discrete crystal proposal that
-   follows the Plan;
-3. **continuous refiner** — converts the proposal into continuous lattice and
-   coordinate values;
-4. **frozen evaluators** — measure raw composition validity, structural
-   validity, joint validity, novelty, uniqueness, and stability.
-
-## Current headline
-
-Two results should be distinguished.
-
-- **Best validated end-to-end H1 system:** H1-A2 epoch-2 Planner + frozen R5-C
-  body DLM + CrysLLMGen `model_494` refiner.
-- **Most recent successful method component:** the R03 safe-axis body-DLM
-  decoding schedule. It passed the registered 32, 64, and 256-attempt body
-  gates and removed the failure mode caused by mixed-axis decoding.
-
-R03 is a real DLM-mechanics improvement, but it is not promoted as a complete
-end-to-end winner: strict S.U.N. improved while meta S.U.N. decreased. The
-remaining primary bottleneck is the Planner's formula/composition generation.
-
-## Best validated end-to-end system
-
-The frozen H1-A2 stack uses:
-
-| Stage | Frozen implementation | Role |
+| Component | Concrete implementation | What it contributes / improves |
 |---|---|---|
-| Planner | Meta-Llama-3-8B + H1-A2 epoch-2 LoRA | Generates the seven-line rich Plan, including formula, anion family, lattice family, space-group bucket, volume bin, and historical charge label |
-| Body DLM | LLaDA-8B-Instruct + R5-C exact-length adapter | Generates the discrete lattice/species/coordinate body with exactly `7 + 4N` answer tokens |
-| Body constraints | Count/element prefill, schema masks, duplicate-coordinate mask, lattice-volume mask | Keeps the DLM output aligned with the sampled Plan |
-| Refiner | CrysLLMGen `model_494` | Runs exactly 800 reverse steps, batch 1, from each successful body proposal |
-| Direct evaluator | Frozen CrysLLMGen-compatible MP-20 evaluator | Measures composition, structure, and joint validity |
-| S.U.N. evaluator | Frozen novelty/uniqueness/CHGNet/MP-hull pipeline | Reports strict and metastable stable-unique-novel rates on raw attempts |
+| Planner | Meta-Llama-3-8B + H1-A2 epoch-2 LoRA | Converts an unconstrained generation request into a model-generated rich Plan: formula, anion family, lattice family, space-group bucket, and volume bin |
+| Body DLM | LLaDA-8B-Instruct + R5-C adapter | Realizes the sampled Plan as an exact-length discrete crystal body; count/element prefill and schema masks keep output aligned with the Plan |
+| Body safety constraints | Duplicate-coordinate and lattice-volume masks | Fail closed on malformed geometry while preserving one raw attempt per ordinal |
+| R03 decoding | Safe-axis reveal order | Restores the causal prerequisite of the duplicate-coordinate mask; improves completion without changing weights, prompts, Plans, seeds, or denominators |
+| Continuous refiner | CrysLLMGen `model_494`, exact 800 steps | Converts the discrete proposal to continuous lattice and coordinates; conditional structure validity is approximately 99.7–99.8% |
+| Evaluation | Frozen CrysLLMGen-compatible Direct + novelty/uniqueness/CHGNet/MP-hull | Reports raw composition, structure, joint validity, strict S.U.N., meta S.U.N., coverage, and unknown accounting |
 
-### Frozen 1,000-attempt reference
-
-| System | `comp_valid` | `struct_valid` | Joint valid | Strict S.U.N. | Meta S.U.N. |
-|---|---:|---:|---:|---:|---:|
-| Local historical CrysLLMGen | 89.2% | 99.9% | 89.1% | 9.0% | 46.1% |
-| **H1-A2 epoch 2** | **87.8%** | **99.9%** | **87.7%** | **9.4%** | **47.4%** |
-
-Compared with the local CrysLLMGen reference, H1-A2 gained `+0.4` percentage
-point strict S.U.N. and `+1.3` points meta S.U.N., while losing `1.4` points
-in composition and joint validity. This is why H1-A2 is the frozen end-to-end
-fallback, but composition remains the next target.
-
-The paper-reported CrysLLMGen composition-validity result is **93.55% strict
-raw attempts**. It is not a S.U.N. survivor-denominator metric. The local
-89.2% asset is retained as a local reference and is not claimed to be an exact
-checkpoint/recipe reproduction of the published 93.55%.
+Compared with the local historical CrysLLMGen reference, the frozen H1-A2
+system gained `+0.4` percentage point strict S.U.N. and `+1.3` points meta
+S.U.N., while losing `1.4` points in composition and joint validity. This is
+why H1-A2 remains the end-to-end fallback and Planner chemistry is now the
+primary optimization target.
 
 Full identities and metric provenance are in
 [H1_FALLBACK_MANIFEST.md](workstreams/plangraph_dlm_iclr_20260731/H1_FALLBACK_MANIFEST.md).
+
+## Recent experiment ledger: success, stop, and pending work
+
+| Experiment | Intervention | Main observed result | Decision |
+|---|---|---|---|
+| R03B/R03C/R03D safe-axis | Change only DLM coordinate reveal order | `31/32`, `63/64`, and `248/256` completion; zero duplicate-coordinate failures | **Component gate pass** |
+| R03E/R03G/R03H | Four fixed refine800 repeats plus common-snapshot attribution | Raw joint `+5/1024`; completed-snapshot strict `+18/1024`; meta `-27/1024` | **Mechanism success, end-to-end scientific stop** |
+| CR-Plan E1 | Exact full-prefix charge reachability, real-model physical probe | 100% trace/scalar parity; full/off median `1.468x`; all `14/14` applicable attempts affected before terminal | **Engineering feasibility pass only** |
+| CR-Plan four-arm 512 | Off / grammar / terminal-only / full-prefix formula support | Full-prefix gained `+6/512` raw composition but only `+1/512` nonshortcut/primary and added five shortcuts | **Scientific stop; no downstream** |
+| No-charge C0/C1 SFT | Delete generated `charge:`; matched neutral vs oxidation auxiliaries; `2x` chemistry-token loss | Source-repair V2 passed isolated `101/101` tests and preflight; no generated metrics yet | **Authorized and locally frozen; training pending** |
 
 ## Recent successful experiment: R03 safe-axis DLM decoding
 
