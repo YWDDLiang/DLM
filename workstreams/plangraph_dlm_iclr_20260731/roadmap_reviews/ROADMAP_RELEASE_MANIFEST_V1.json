@@ -1,0 +1,86 @@
+{
+  "schema": "plangraph_dlm_iclr2027_roadmap_release_manifest_v1",
+  "status": "release_ready_decision_only_no_execution_authorization",
+  "date": "2026-08-04",
+  "roadmap": {
+    "path": "workstreams/plangraph_dlm_iclr_20260731/ICLR2027_TIMEBOXED_FULL_IMPROVEMENT_ROADMAP_V1.md",
+    "sha256": "47e0b9fe1ce1a891edf0df9744e8e8d68cd9fa6225f2339bc49e99608cbf2bc7"
+  },
+  "inputs": [
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/ROOT_EVIDENCE_AND_DEADLINE_FRAME_V1.md",
+      "sha256": "02747c6f58c8d38a104cdb56de90b9d0bf94712f64d578dc642b612c3c0974b6"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/PLANNER_CHEMISTRY_PROPOSAL_V1.md",
+      "sha256": "01acb700d6dad28a235f1a58af19ce31d5bccf2e2a9aeda86c9443babf49f307"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/BODY_TOKEN_PROPOSAL_V1.md",
+      "sha256": "a47b34cbeb0a35562781045c1db6e184c5e2696be5c61240fa3bbd19fc89d639"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/MASK_AWARE_RL_PROPOSAL_V1.md",
+      "sha256": "2814ad67db65f6f192751c3aa144d6dfb80fc2ce62566d6bf9d522eeb53a99ba"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/CROSS_REVIEW_PLANNER_ON_BODY_RL_V1.md",
+      "sha256": "55d3c356ebbb8bed8f57910cbdb1207aa860cc65c9abff2747697b706abbdc9c"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/CROSS_REVIEW_BODY_ON_PLANNER_RL_V1.md",
+      "sha256": "06cd3b5a3df666a2c3a17aceb12101199c29052227b41aba945926fffda6e46f"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/CROSS_REVIEW_RL_ON_PLANNER_BODY_V1.md",
+      "sha256": "e46071b8ad784252998fe602244a5b3fe03d98ef0d1c2c46342351b6fef49a98"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/INDEPENDENT_RED_TEAM_REVIEW_V1.md",
+      "sha256": "5ac3b0a7ad85d64d9da0a9908f60a9e933e1d72fd662fa9dfc30e331cf5a6364"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/ROADMAP_RELEASE_CONSISTENCY_AUDIT_V1.md",
+      "sha256": "8e368f5f046423e56f1f84c82e2703a00691461b2441b14a4eb97b3d38a4c1f8"
+    },
+    {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/ROADMAP_RELEASE_NARROW_REAUDIT_V1.md",
+      "sha256": "c70e5c0a2e2931473a636d5899164f632b4fe4de767a799a8705625037c4300c"
+    }
+  ],
+  "decision": {
+    "main": "frozen P0 versus the same frozen P0 plus CR-Plan",
+    "backup": "PILS-L Gate minus one cold readiness only; an early CR-Plan stop grants eligibility but execution requires a separate release-ready annex and new authorization",
+    "cut_for_iclr": [
+      "mask-aware Body-DLM RL",
+      "two permanent RL models",
+      "chemistry compiler",
+      "reachability-mass SFT",
+      "further safe-axis expansion"
+    ],
+    "iclr_rl_gpu_hours": 0
+  },
+  "hard_dates": {
+    "literature_novelty": "2026-08-08",
+    "engineering_and_plan_only_mechanism": "2026-08-10",
+    "paired_64": "2026-08-15",
+    "paired_256": "2026-08-22",
+    "four_by_256_confirmation": "2026-08-31",
+    "science_freeze": "2026-09-05",
+    "only_fix": "2026-09-12",
+    "official_abstract_aoe": "2026-09-18",
+    "official_paper_aoe": "2026-09-25"
+  },
+  "resource_caps": {
+    "cr_plan_target_a800_gpu_hours": 96,
+    "total_absolute_hard_a800_gpu_hours": 136,
+    "iclr_rl_a800_gpu_hours": 0
+  },
+  "release_audit": {
+    "status": "release_ready",
+    "remaining_blockers": 0,
+    "bound_roadmap_sha256": "47e0b9fe1ce1a891edf0df9744e8e8d68cd9fa6225f2339bc49e99608cbf2bc7",
+    "audit_path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/ROADMAP_RELEASE_NARROW_REAUDIT_V1.md",
+    "audit_sha256": "c70e5c0a2e2931473a636d5899164f632b4fe4de767a799a8705625037c4300c"
+  }
+}

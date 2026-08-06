@@ -1,0 +1,133 @@
+registry:
+  name: crysllmgen_wq_iclr_four_week_v2
+  schema_version: 2
+  protocol: configs/experiments/wyckoff_codiffusion/protocol_v4.yaml
+  status: preregistered_immutable
+
+execution_contract:
+  maximum_concurrent_gpu_lanes: 4
+  one_model_lane_per_gpu: true
+  gpu_type: NVIDIAA800-SXM4-80GB
+  retry_or_replacement: false
+  append_only_outputs: true
+  blas_threads: 1
+
+gate_a:
+  gpu_jobs:
+    - id: disabled-extension-parity
+      gpus: 1
+      attempts: 256
+      output_schema: crysllmgen_disabled_extension_parity_report_v1
+    - id: llama-offline-bf16-forward
+      gpus: 1
+      attempts: 0
+      output_schema: crysllmgen_llama_gate_a_report_v1
+    - id: atom-lora-100-step-smoke
+      gpus: 1
+      attempts: 0
+      output_schema: crysllmgen_lora_smoke_v1
+    - id: wq-lora-100-step-smoke
+      gpus: 1
+      attempts: 0
+      output_schema: crysllmgen_lora_smoke_v1
+  cpu_jobs:
+    - id: grammar-million-transition
+      transitions: 1000000
+      output_schema: crysllmgen_wq_grammar_gate_report_v1
+  training_blocked_until_all_pass: true
+
+training_inventory:
+  seeds: [11, 23, 47]
+  main_families:
+    - id: ATOM_LLAMA_MATCHED_LORA
+      runs: 3
+      seeds: [11, 23, 47]
+      stages: [coarse_proposal_three_epochs]
+      consumers: [C-ATOM-MATCHED]
+    - id: WQ_LLAMA_SHARED_LORA
+      runs: 3
+      seeds: [11, 23, 47]
+      stages: [coarse_proposal_three_epochs, mixed_direct_edit_20000_updates]
+      consumers: [C-WQ-HANDOFF, C-WQ-CONFEDIT, C-WQ-GEOREV, all_wq_controls]
+    - id: WQ_CSP_SHARED_REFINER
+      runs: 3
+      seeds: [11, 23, 47]
+      stages: [warmup_20000, joint_geometry_40000, revision_40000]
+      consumers: [C-WQ-HANDOFF, C-WQ-CONFEDIT, C-WQ-GEOREV, all_wq_controls]
+  trained_ablation:
+    - id: WQ_LLAMA_CANONICAL_ORDER
+      runs: 1
+      seeds: [11]
+      headline_sun_eligible: false
+  counts:
+    main_families: 3
+    main_runs: 9
+    trained_ablation_runs: 1
+    maximum_training_runs: 10
+    inference_control_training_runs: 0
+
+seed11_lanes:
+  - {lane: 0, model: WQ_LLAMA_SHARED_LORA, seed: 11}
+  - {lane: 1, model: ATOM_LLAMA_MATCHED_LORA, seed: 11}
+  - {lane: 2, model: WQ_CSP_SHARED_REFINER, seed: 11}
+  - {lane: 3, model: WQ_LLAMA_CANONICAL_ORDER, seed: 11}
+
+screening:
+  primary_methods:
+    - C-ATOM-OFFICIAL
+    - C-ATOM-MATCHED
+    - C-WQ-HANDOFF
+    - C-WQ-CONFEDIT
+    - C-WQ-GEOREV
+  smoke_attempts_per_configuration: 256
+  development_sampling_seeds: [101, 202, 303]
+  development_attempts_per_seed: 1000
+  handoff_tau_grid: [0.25, 0.5, 0.75, 1.0]
+  freeze_outputs: [matched_atom_baseline, wq_handoff_champion, handoff_tau, respaced_schedule, geometry_threshold]
+
+controls:
+  inference_only:
+    - C-WQ-BIRTH-DEATH-ONLY
+    - C-WQ-RANDOM-MATCHED-COUNT
+    - C-WQ-SHUFFLED-GEOMETRY
+    - C-WQ-EXTRA-CALL-IGNORED
+  validation_only:
+    - C-WQ-FORWARD-NOISED-INJECTION
+    - C-WQ-ORACLE-TRIGGER-PAYLOAD
+    - C-WQ-CANONICAL-ORDER
+    - C-WQ-FROZEN-LLAMA
+
+final:
+  methods: [frozen_champion, frozen_final]
+  training_seeds: [11, 23, 47]
+  attempts_per_method: 10000
+  allocation: [3334, 3333, 3333]
+  multi_mlip_common_attempts_per_method: 6000
+  bootstrap_repetitions: 10000
+  freeze_day: 21
+
+evaluation_inventory:
+  families:
+    - upstream_and_formal_parity
+    - llama_proposal_and_edit_quality
+    - crysllmgen_validity_and_coverage
+    - mlip_sun_and_relaxation
+    - novelty_and_uniqueness
+    - distributional_fidelity_and_diversity
+    - symmetry_and_wyckoff_fidelity
+    - revision_mechanism_causality
+    - efficiency_and_failure_accounting
+    - statistical_robustness
+  primary_configurations: 5
+  inference_control_configurations: 4
+  validation_only_configurations: 4
+  total_configuration_ids: 13
+  mlip_evaluators: [CHGNet-0.3.0, MatterSim-v1.0.0-5M, MACE-MP-0b3-medium]
+  structure_stages: [raw, common_refiner, mlip_relaxed]
+  sun_thresholds_ev_per_atom: [0.0, 0.1]
+
+compute:
+  global_gpu_hours_hard_ceiling: 2050
+  final_reserve_gpu_hours_min: 800
+  failure_buffer_gpu_hours: 80
+  maximum_calendar_days: 28

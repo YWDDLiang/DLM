@@ -1,0 +1,256 @@
+{
+  "schema_version": "plangraph-dlm-engineering-pilot@1",
+  "identity": "plangraph_dlm_engineering32_v1",
+  "created_at": "2026-07-31",
+  "status": "frozen_review_point_not_authorized_not_submitted",
+  "purpose": {
+    "primary": "Measure A800 peak memory, wall time, and finite loss/gradient behavior for the registered DLM corruption paths.",
+    "scientific_result": false,
+    "checkpoint_selection": false,
+    "crystal_generation": false,
+    "refinement": false,
+    "sun_evaluation": false
+  },
+  "authorization": {
+    "job_submission": false,
+    "automatic_downstream": false,
+    "automatic_promotion": false,
+    "modify_h1_artifacts": false,
+    "modify_continuous_refiner": false,
+    "requires_explicit_user_authorization_before_submission": true,
+    "slurm_job_ids": []
+  },
+  "execution_identity": {
+    "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_engineering32_v1",
+    "run_root_observed_absent_at_freeze": true,
+    "run_root_must_be_absent_before_authorized_launch": true,
+    "environment_python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "source_install_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/preflight_source_v2",
+    "source_bundle": {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/plangraph_preflight_source_v2.tar.gz",
+      "sha256": "a95eda38e4baa435be95ad69881ffbdb9289be7bde343c3fc9ce0a0f03303215",
+      "bytes": 485132,
+      "entries": 139,
+      "remote_unittest": {
+        "passed": 34,
+        "failed": 0
+      }
+    },
+    "entrypoint": {
+      "path": "scripts/llada_sft.py",
+      "sha256": "edaf8a500447ef57edfd3048049acb4250adae2c8dd41ba7d7da71474eb6d977"
+    }
+  },
+  "frozen_model": {
+    "base_model_path": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct/",
+    "initial_adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "initial_adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "initialization_shared_by_every_arm": true
+  },
+  "frozen_data": {
+    "dataset_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/dlm_sft/mp_20_plangraph_v1_20260731",
+    "dataset_version": "plangraph_dlm_dataset_v1",
+    "manifest_sha256": "2aac3b91a9cc5f0b18bfa0084886f7cb7e5eca689d0fdce3235f41ccfc0b2e2e",
+    "total_rows": 36183,
+    "train_rows": 27136,
+    "validation_rows": 9047,
+    "fixed_validation_panel_ordered_sha256": "45da490d0d0dee2989802a6b7424343b5b32df2475039705622ecef75e61f00f",
+    "selection": {
+      "rule": "immutable source prefix by ordinal; no sample-id selection",
+      "train": {
+        "ordinal_start": 0,
+        "ordinal_end_inclusive": 31,
+        "rows": 32,
+        "first32_body_raw_sha256": "30915456c3224bb6ae14b1aec99e6515d6998105af826165fea9b6c63e5bf7aa",
+        "first32_row_ledger_raw_sha256": "2aafb2fe824a63035047c19bbeddba718e4f12c2ec48eea35a1daa6d19fc71d8"
+      },
+      "validation": {
+        "ordinal_start": 0,
+        "ordinal_end_inclusive": 31,
+        "rows": 32,
+        "first32_body_raw_sha256": "f77d0f520915d783ab05aa8cb968357b4f40ee1153699f9a7ead07b0f8318e6b",
+        "first32_row_ledger_raw_sha256": "ea430bd988c94e14b9bd7042ce2398bee28fbf2f79a80c49102fdd3cacdccd57"
+      },
+      "engineering_outputs_excluded_from_scientific_results": true,
+      "does_not_remove_these_rows_from_later_registered_training_corpus": true
+    },
+    "leakage_and_denominator_locks": {
+      "sample_ids_copied": false,
+      "source_metadata_copied": false,
+      "retry": false,
+      "replacement": false,
+      "repair": false,
+      "filter": false,
+      "rerank": false,
+      "energy_or_sun_training_signal": false,
+      "mp_api": false
+    }
+  },
+  "preflight_evidence": {
+    "max_length": 768,
+    "train_max_observed_model_length": 750,
+    "validation_max_observed_model_length": 696,
+    "tokenizer_vocab_sha256_after": "dd3968132cdd9f75f92363a842d26a8d083a4a05f0411ee856ba5e473090815d",
+    "data_vocab_sha256": "71d3145913eb3496c82f28c654989e37b0031105f52291483788aca3a8bee56b",
+    "all_reports": {
+      "rows": 36183,
+      "passed_rows": 36183,
+      "failed_rows": 0,
+      "duplicate_corruption_key_rows": 0,
+      "mask_invariants_passed": true,
+      "gpu_used": false,
+      "model_loaded": false
+    },
+    "reports": {
+      "D1": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/reports/tokenizer_mask_preflight_d1_len768.json",
+        "sha256": "42ff3e22be25f7a16a9971f24d73029649a3e0b9d77a56be649e6089a999a712"
+      },
+      "D2": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/reports/tokenizer_mask_preflight_d2_len768.json",
+        "sha256": "25ecd2651fd0f7f619342fd1e9f556d02f7003ca7b36d07d8f6c62f95075b293"
+      },
+      "D2-shuffle": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/reports/tokenizer_mask_preflight_d2_shuffle_len768.json",
+        "sha256": "fe7b8813583c00fa277c795febec456096b582a0189429b325e5821dab7a1102"
+      }
+    }
+  },
+  "pilot_protocol": {
+    "arms": [
+      {
+        "arm": "D0",
+        "planned_corruption_policy": "none",
+        "iid_fraction": 1,
+        "planned_fraction": 0,
+        "purpose": "legacy iid runtime baseline"
+      },
+      {
+        "arm": "D1",
+        "planned_corruption_policy": "d1",
+        "iid_fraction": 2,
+        "planned_fraction": 1,
+        "purpose": "current-order alignment control"
+      },
+      {
+        "arm": "D2",
+        "planned_corruption_policy": "d2",
+        "iid_fraction": 2,
+        "planned_fraction": 1,
+        "purpose": "registered PlanGraph corruption"
+      },
+      {
+        "arm": "D2-shuffle",
+        "planned_corruption_policy": "d2_shuffle",
+        "iid_fraction": 2,
+        "planned_fraction": 1,
+        "purpose": "content-keyed dependency-order mechanism control"
+      }
+    ],
+    "shared_training_args": {
+      "representation": "dynamic_v1",
+      "max_length": 768,
+      "answer_token_count": 87,
+      "limit_train": 32,
+      "limit_val": 32,
+      "epochs": 1,
+      "max_train_steps": 4,
+      "batch_size": 1,
+      "grad_accum": 8,
+      "microbatches": 32,
+      "effective_sequences_per_optimizer_step": 8,
+      "learning_rate": 5e-05,
+      "lr_scheduler": "constant",
+      "warmup_steps": 0,
+      "weight_decay": 0,
+      "logging_steps": 1,
+      "eval_steps": 4,
+      "eval_max_batches": 32,
+      "save_steps": 999999,
+      "dataloader_num_workers": 0,
+      "data_seed": 20260515,
+      "corruption_seed": 20260731,
+      "validation_corruption": "stateless_iid_fixed_panel_v1",
+      "precision": "bf16",
+      "lora_rank": 8,
+      "lora_alpha": 32,
+      "lora_dropout": 0.05,
+      "lora_target_modules": "q_proj,k_proj,v_proj,ff_proj,up_proj",
+      "modules_to_save": "model.transformer.wte,model.transformer.ff_out"
+    },
+    "output_policy": {
+      "one_subdirectory_per_arm": true,
+      "eligible_for_checkpoint_selection": false,
+      "eligible_for_scientific_metrics": false,
+      "eligible_for_later_initialization": false,
+      "retain_logs_and_failure_evidence": true
+    }
+  },
+  "resources_if_later_authorized": {
+    "partition": "gpu",
+    "array_elements": 4,
+    "maximum_concurrent_elements": 1,
+    "a800_per_element": 1,
+    "cpus_per_element": 8,
+    "memory_gib_per_element": 64,
+    "time_limit_per_element": "01:00:00",
+    "cpus_per_a800_hard_maximum": 8,
+    "maximum_reserved_a800_hours": 4,
+    "freeze_full_screen_envelope_from_observed_pilot": true
+  },
+  "engineering_gate": {
+    "required_for_every_arm": [
+      "COMPLETED 0:0 if submitted",
+      "exactly 32 train microbatches and 4 optimizer updates",
+      "finite nonzero supervised loss",
+      "finite nonzero gradient norm",
+      "no OOM, NaN, Inf, CUDA, NCCL, traceback, BrokenProcessPool, or schedule violation",
+      "peak allocated and reserved GPU memory recorded",
+      "model-load time, train time, validation time, and total wall time recorded",
+      "initial adapter identity and tokenizer identity reverified",
+      "all writes remain under the new non-H1 run root"
+    ],
+    "scientific_continue_or_stop_decision": false,
+    "next_action_if_passed": "Freeze a measured A800-hour envelope and prepare, but do not automatically submit, the registered <=400-update G2 screen.",
+    "next_action_if_failed": "Preserve evidence and fix locally; do not resubmit or enlarge resources automatically."
+  },
+  "h1_fallback_guard": {
+    "canonical_local_verification": {
+      "date": "2026-07-31",
+      "manifest_count": 6,
+      "entry_count": 68,
+      "ok_count": 68,
+      "ok": true
+    },
+    "a800_mirror_observation": {
+      "authoritative_restore_source": false,
+      "manifest_count": 6,
+      "registered_entries_present": 66,
+      "registered_entries_hash_ok": 47,
+      "existing_file_hash_mismatches": 0,
+      "missing_top_level_checksum_manifests": 2,
+      "missing_baseline_files": 19,
+      "classification": "incomplete_mirror_missing_only",
+      "action": "Do not patch, overwrite, or use this incomplete mirror as the H1 restore source."
+    },
+    "read_only_roots": [
+      "workstreams/r5c_reactivation_20260728/h1a2_epoch2_innovation",
+      "workstreams/r5c_reactivation_20260728/r5c_frozen_baseline_20260728",
+      "runs/20260603_034533-h1a2-epoch2-3-fullmetrics",
+      "runs/20260729_h1a2c_jointchem_v1",
+      "runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1",
+      "runs/20260731_h1a2c_p0_p1_sun256_mpcomplete_v4"
+    ],
+    "pre_and_post_execution_canonical_68_of_68_required": true
+  },
+  "forbidden_actions": [
+    "submit without a new explicit user authorization",
+    "cancel, resubmit, replace, or expand resources automatically",
+    "write to any frozen H1 root",
+    "run crystal generation, refinement, S.U.N., CHGNet, MLIP, or MP API",
+    "select or promote an engineering checkpoint",
+    "use engineering outputs in paper metrics",
+    "retry, replacement, repair, filtering, or reranking"
+  ]
+}

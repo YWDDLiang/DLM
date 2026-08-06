@@ -1,0 +1,77 @@
+{
+  "schema": "h1_r03g_no_completed_hull_execution_manifest_v1",
+  "status": "frozen_before_execution",
+  "run_id": "20260803_h1_body_safeaxis_refined_repeats4_no_completed_hull_v1",
+  "scientific_role": "evaluation-only residual-unknown-false lower-bound recomputation",
+  "source_r03e_run": "20260802_h1_body_safeaxis_refined_repeats4_v1",
+  "source_r03e_terminal_sha256": "7fa49a6feb372d4d5e5dc442a187657a39001b6190dd6a64af0bf7f53c293b02",
+  "source_r03e_manifest_sha256": "7beaf38b7d378ecf8fb31627f195f5fe6095350b60d99882c0a11b39cbf211a4",
+  "attempt_ledger_sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f",
+  "mapping": {
+    "repeats": 4,
+    "arms_per_repeat": 2,
+    "attempts_per_arm": 256,
+    "raw_attempts_total": 2048,
+    "ordinals": "0..255",
+    "denominator": "raw_all_attempts"
+  },
+  "source_r03f": {
+    "run_id": "20260803_h1_body_safeaxis_refined_repeats4_mpcomplete_v1",
+    "source_manifest_sha256": "c26e141d130bd640eefe23b4fcce08fe464eea0f99c52125956b655f51d1a485",
+    "failure_report_sha256": "4380b0f270db959264004da959bc8c4afe78a7e862be79aa1667d31133349020",
+    "query_progress_sha256": "fa40676fe76eb74f6346e0d60e790b60b3137f1c9388c352723279fc86fb59c6",
+    "common_snapshot_sha256": "56f91774c798854d253c0726773593c415456a8b5361f31802c44d8e1bbad917",
+    "common_snapshot_chemsys": 227
+  },
+  "materials_project": {
+    "distinct_missing_chemsys_union": 107,
+    "missing_chemsys_union_sha256": "e977016940c04bd5635aeb15c0970806c721e0be41803152b9f72b1af6816a38",
+    "frozen_r03f_snapshot_reuse": true,
+    "common_snapshot_for_all_eight_arms": true,
+    "new_network_queries": 0,
+    "transport_retries": 0,
+    "api_key_read": false,
+    "sample_retry_or_replacement": false
+  },
+  "hard_gates": {
+    "strict_meta_relaxation_evidence_identical": true,
+    "completed_hull_zero_unknown_gate_enabled": false,
+    "source_unknown_conserved_as_resolved_or_still_unknown": true,
+    "residual_hull_unknown_scored_false": true,
+    "residual_hull_unknown_reported": true,
+    "existing_finite_e_hull_parity": 1.0,
+    "source_r03e_evidence_unchanged": true,
+    "source_r03f_snapshot_unchanged": true
+  },
+  "runtime": {
+    "location": "A800 login node through user-maintained nested tmux",
+    "slurm": false,
+    "gpu": false,
+    "cuda_visible_devices": "",
+    "network": false,
+    "secret_carrier": "none"
+  },
+  "reruns": {
+    "generation": false,
+    "refinement": false,
+    "chgnet": false,
+    "direct_metrics": false,
+    "novelty": false
+  },
+  "analysis": {
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "bootstrap_seed": 20260803,
+    "bootstrap_replicates": 50000,
+    "per_repeat_mcnemar": true,
+    "hierarchical_paired_bootstrap": true,
+    "sign_stability": true
+  },
+  "firewall": {
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_training": false,
+    "checkpoint_reselection": false,
+    "automatic_downstream": false
+  }
+}

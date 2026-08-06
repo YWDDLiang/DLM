@@ -1,0 +1,181 @@
+{
+  "schema": "wqcodiff_existing22_projection_survival_contract_v2_order_alignment",
+  "status": "preregistered_after_v1_preflight_and_before_any_scientific_call",
+  "created_date": "2026-07-25",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "purpose": "Test whether the 22 already-created fixed-topology composition projections survive deterministic structure rendering and unchanged CrysLLMGen direct validity metrics after identity-only orbit-list order alignment.",
+  "supersedes": {
+    "contract": "configs/experiments/wyckoff_codiffusion/wq_existing22_projection_survival_v1.json",
+    "contract_sha256": "4743a2129597b0f68483aa0feb9e2dd286089da3926bbb9ab2b119bf783e540b",
+    "preflight_status": "FAILED_BEFORE_CLAIM",
+    "scientific_call_started": false,
+    "scientific_outputs_created": false,
+    "reason": "canonical_storage=True includes species in the storage key and reordered 13 projected orbit lists even though all per-orbit-ID geometry and declared species changes were exact"
+  },
+  "amendment_record": "runs/remote_audit/20260725_wq_existing22_projection_survival_v2_order_alignment/amendment_record.json",
+  "scope": {
+    "new_generation": false,
+    "training": false,
+    "projector_rerun": false,
+    "candidate_reselection": false,
+    "retry_or_replacement": false,
+    "chgnet_or_other_mlip": false,
+    "mp_api_or_external_api": false,
+    "sun": false,
+    "slurm": false,
+    "gpu": false,
+    "scientific_call_limit": 1
+  },
+  "runtime": {
+    "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "location": "A800_login_node",
+    "cuda_visible_devices": "",
+    "numerical_threads": 1,
+    "chart_catalog": "PyXtalChartCatalog(hall_style=spglib)",
+    "structure_renderer": "crystal_dlm.wqcodiff.runtime.expand_state(redetect_space_group=true)",
+    "metric_class": "unchanged_upstream_CrysLLMGen_compute_metrics.Crystal"
+  },
+  "inputs": {
+    "panel": {
+      "path": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_composition_mechanism64_v1_panel.jsonl",
+      "sha256": "3da00d574fcf23416d4464b937480d2609f50a04a98d4c81f719c73c938d63f2",
+      "rows": 64
+    },
+    "panel_manifest": {
+      "path": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_composition_mechanism64_v1_panel_manifest.json",
+      "sha256": "9a3db1dc1bfa5cbf2cb8b0ecc8158098d3813adf6eae770c5c85922b850b69a7"
+    },
+    "projections": {
+      "path": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_composition_mechanism64_v1/projections.jsonl",
+      "sha256": "5f2054c52f9fe8db25f272a9ecedac0af9f454f560686e1f81856538b0244a79",
+      "rows": 64
+    },
+    "projection_report": {
+      "path": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_composition_mechanism64_v1/report.json",
+      "sha256": "255eba7d9aa862706caa3754ad41a14c111b76480b707ac0d0d3f265df075d2f",
+      "no_neutral_recovered": 22
+    },
+    "upstream_snapshot": {
+      "root": "crystal_dlm/wqcodiff/crysllmgen/upstream",
+      "manifest": "crystal_dlm/wqcodiff/crysllmgen/UPSTREAM_MANIFEST.json",
+      "manifest_sha256": "334dda2240aa90c007e13222410d08241a25ff9ba50d6f36c99db368debe28bb",
+      "compute_metrics_sha256": "c48730ee405c205a912f450c297cc787ed61cefbc3723b3a7dbf2926c60434cd",
+      "eval_utils_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6"
+    }
+  },
+  "expected_projected_ordinals": [
+    262,
+    275,
+    276,
+    285,
+    292,
+    295,
+    298,
+    316,
+    322,
+    323,
+    324,
+    328,
+    354,
+    380,
+    383,
+    397,
+    442,
+    445,
+    457,
+    479,
+    502,
+    508
+  ],
+  "representation_alignment": {
+    "method": "join original and projected orbits by immutable orbit_id, validate every geometry field exactly, then restore the source panel orbit-list order before rendering",
+    "expected_reordered_count": 13,
+    "expected_reordered_ordinals": [
+      276,
+      295,
+      298,
+      316,
+      323,
+      324,
+      328,
+      354,
+      380,
+      383,
+      445,
+      457,
+      502
+    ],
+    "orbit_id_set_changes_allowed": false,
+    "per_orbit_geometry_changes_allowed": false,
+    "species_changes_beyond_declared_changed_orbit_ids_allowed": false,
+    "candidate_or_projection_reselection": false
+  },
+  "denominator": {
+    "name": "all_existing_projected_states",
+    "attempts": 22,
+    "render_metric_or_fingerprint_failure_scores_zero": true,
+    "survivor_only_denominator_forbidden": true
+  },
+  "invariants": {
+    "preserve_exactly": [
+      "attempt_id",
+      "space_group",
+      "lattice_system",
+      "lattice_chart",
+      "orbit_id_set",
+      "per_orbit_id_wyckoff_type",
+      "per_orbit_id_multiplicity",
+      "per_orbit_id_primitive_multiplicity",
+      "per_orbit_id_chart_dimension",
+      "per_orbit_id_free_coordinates",
+      "primitive_atom_count",
+      "original_element_set"
+    ],
+    "only_allowed_scientific_change": "whole_orbit_species_assignment",
+    "only_allowed_representation_change": "restore source panel orbit-list order by immutable orbit_id",
+    "source_panel_group": "no_neutral",
+    "source_reason": "charge_neutrality_fail"
+  },
+  "acceptance": {
+    "rendered_count_exact": 22,
+    "composition_valid_count_exact": 22,
+    "minimum_structural_valid_count": 20,
+    "minimum_joint_valid_count": 20,
+    "minimum_structural_and_joint_rate": 0.88,
+    "one_output_per_attempt": true,
+    "retry_or_replacement_used": false
+  },
+  "threshold_rationale": {
+    "unchanged_from_v1": true,
+    "composition": "The projector exists specifically to make all 22 selected states composition-valid, so any composition loss is a mechanism failure.",
+    "structural_and_joint": "ceil(0.88 * 22) = 20, matching the already-frozen confirmatory joint-valid target while remaining above the observed parent-panel joint-valid rate of 207/256.",
+    "historical_parent_panel": {
+      "attempts": 256,
+      "composition_valid": 208,
+      "structural_valid": 256,
+      "joint_valid": 207
+    }
+  },
+  "output": {
+    "directory": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_composition_existing22_survival_v2_order_alignment",
+    "claim": "claim.json",
+    "structures": "structures.jsonl",
+    "attempt_metrics": "attempt_metrics.jsonl",
+    "report": "report.json",
+    "terminal_acceptance": "terminal_acceptance.json",
+    "overwrite_forbidden": true
+  },
+  "decision": {
+    "pass": "Prepare a separate, newly preregistered all-22 CHGNet relaxation/hull and exact SUN gate; do not run it automatically.",
+    "fail": "Stop composition-projection escalation and do not train or run CHGNet/SUN on this mechanism.",
+    "result_may_not_change_projector_objective_or_candidate_selection": true
+  },
+  "authorization": {
+    "local_code_config_tests_and_documents": true,
+    "small_direct_A800_fix": true,
+    "single_A800_login_node_CPU_only_direct_metric_call": true,
+    "remote_slurm_submission": false,
+    "training": false,
+    "chgnet_or_sun": false
+  }
+}

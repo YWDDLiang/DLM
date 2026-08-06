@@ -1,0 +1,72 @@
+{
+  "schema": "h1a2_factorial_runtime_validation_v1",
+  "status": "complete",
+  "validated_at": "2026-08-01",
+  "scope": "strict H1-A2 two-factor inference/runtime contract only",
+  "components": {
+    "contract": {
+      "path": "crystal_dlm/h1a2_factorial_contract.py",
+      "sha256": "2717c2ab384eec91b7730da3c59dceabaa36ac8be0c24872d5150b7d88b9474b"
+    },
+    "runtime": {
+      "path": "crystal_dlm/h1a2_factorial_runtime.py",
+      "sha256": "e3b371227896a013b6aece71babaa3257f38fde376f3bf878de03f6de7b268e4"
+    },
+    "planner_runner": {
+      "path": "scripts/sample_llama_h1a2_factorial_plans.py",
+      "sha256": "cac6d69aa18eb02cd5300d8757f352783537054a0828d0ec9319f08b88b007ec"
+    },
+    "body_runner": {
+      "path": "scripts/sample_llada_h1a2_factorial_body.py",
+      "sha256": "3e1fdca67d070a72fa2ae031d8e65a3382960e76f0c3a3d666e1d30c12889892"
+    },
+    "refiner_runner": {
+      "path": "scripts/refine_h1a2_factorial_with_crysllmgen.py",
+      "sha256": "7b4a98224f84df38f5b9a7ae881430f3e732a03f292cbe3b788fc9924e3c70c1"
+    },
+    "assembler": {
+      "path": "scripts/assemble_h1a2_factorial_attempts.py",
+      "sha256": "402d1df3a49c5a4728f94940e917cf13f5736ed02ce747e825a3572744f1b3cd"
+    }
+  },
+  "validated_contracts": [
+    "P0 and Pstar use the same no-sample-id prompt and exact seven-line output schema",
+    "every visible Plan field is persisted from one model-sampled Planner attempt",
+    "B0 uses historical current-order denoising and Bstar uses a PlanGraph compiled only from the persisted sampled Plan",
+    "body tokenization is additive and enforces exact semantic length 7+4N",
+    "Planner, body, and refiner seeds are stateless per ordinal",
+    "M00/M01 and M10/M11 preserve exact within-Planner Plan and body-prompt identities",
+    "Planner, PlanGraph compilation, body, and refiner failures remain in the all-attempt denominator",
+    "four-arm merge rejects missing, duplicate, stray, or out-of-order identities"
+  ],
+  "local_validation": {
+    "targeted_tests_run": 50,
+    "targeted_tests_passed": 50,
+    "torch_runner_import_skipped": true,
+    "reason": "local environment has no Torch"
+  },
+  "a800_validation": {
+    "remote_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_factorial_runtime_staging_v5",
+    "archive_sha256": "62328f3a31b30a8f31fd4f1b3ba4777cfd86f7d881a3577f2d2522814607c04c",
+    "archive_sha_match_local_outer_a800": true,
+    "key_source_sha_checks_passed": 11,
+    "py_compile_passed": true,
+    "runner_import_passed": true,
+    "targeted_tests_run": 50,
+    "targeted_tests_passed": 50
+  },
+  "preserved_packaging_evidence": {
+    "v3": "runner import failed because an unrelated installed scripts package shadowed the namespace directory",
+    "v4": "runner imports passed; self-contained test bundle omitted two existing test dependencies",
+    "v3_to_v4_repair_log_sha256": "2ae4eafca43251bebf38358a73929b0103f8ee1658bdc985508d0bf296a77426",
+    "v4_to_v5_repair_log_sha256": "4c1a2d1786183491baaf7a09522524f852a73d5aace0557748f0bb8e56b6ef6b"
+  },
+  "model_weights_loaded": false,
+  "gpu_used": false,
+  "slurm_job_submitted": false,
+  "job_ids": [],
+  "scientific_training_authorized": false,
+  "crystal_generation_authorized": false,
+  "sun_evaluation_authorized": false,
+  "automatic_downstream": false
+}

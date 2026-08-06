@@ -1,0 +1,211 @@
+{
+  "schema": "wqcodiff_iclr_mlip_free_experiment_v1",
+  "status": "local_preparation_only_no_remote_submission",
+  "created_date": "2026-07-25",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "supersession": {
+    "cancelled_before_scientific_attempts": true,
+    "cancelled_scientific_attempt_count": 0,
+    "cancelled_remote_submission_count": 0,
+    "cancelled_documents": [
+      "docs/experiment_program/20260725_mattersim_guided_wq_iclr_execution_plan.md",
+      "configs/experiments/wyckoff_codiffusion/mattersim_guidance_chgnet_eval_v1.json"
+    ],
+    "preserve_cancelled_files_as_decision_history": true
+  },
+  "focus": {
+    "primary": "chemistry_completable_symmetry_native_Wyckoff_proposals",
+    "secondary": "schedule_correct_proposal_conditioned_geometry_refinement",
+    "heldout_question": "transfer_to_exact_CHGNet_R5C_SUN_without_filtering_or_retries"
+  },
+  "method_roles": {
+    "wq_llm_or_constrained_decoder": [
+      "composition",
+      "space_group",
+      "Wyckoff_orbit_inventory",
+      "species_assignment"
+    ],
+    "parent_or_bridge_diffusion": [
+      "coordinates",
+      "lattice"
+    ],
+    "heldout_evaluator": [
+      "CHGNet_R5C_SUN_only_after_method_freeze"
+    ]
+  },
+  "training_contract": {
+    "mlip_free": true,
+    "allowed_signal_sources": [
+      "MP20_train_split_denoising_targets",
+      "released_parent_trajectory_consistency",
+      "clean_proposal_conditioning",
+      "self_conditioning",
+      "train_split_volume_density_and_lattice_statistics",
+      "analytic_minimum_distance_barrier",
+      "symmetry_reconstruction"
+    ],
+    "forbidden_signal_sources": [
+      "MatterSim",
+      "CHGNet",
+      "MACE",
+      "any_MLIP_energy_force_stress_or_relaxation",
+      "heldout_SUN",
+      "MP_API_posthoc_labels"
+    ],
+    "checkpoint_selection_sources": [
+      "denoising_loss",
+      "proposal_recovery",
+      "finite_rate",
+      "reconstruction_success",
+      "minimum_distance_support",
+      "volume_density_support"
+    ],
+    "long_training_authorized_by_this_contract": false
+  },
+  "sampling_contract": {
+    "mlip_free": true,
+    "energy_guidance_enabled": false,
+    "property_guidance_enabled": false,
+    "reranking_enabled": false,
+    "retry_enabled": false,
+    "replacement_enabled": false,
+    "best_of_n_enabled": false,
+    "one_output_per_registered_attempt": true,
+    "all_registered_attempts_in_denominator": true
+  },
+  "composition_projection": {
+    "identity": "fixed_topology_composition_projector_v1",
+    "role": "mechanism_diagnostic_not_final_headline_method",
+    "applicable_source_reason": "charge_neutrality_fail",
+    "identity_source_reasons": [
+      "charge_neutral_pauling_valid",
+      "pauling_fail_or_ratio_rejected",
+      "single_element_shortcut",
+      "all_metal_shortcut",
+      "oxidation_state_missing"
+    ],
+    "preserve": [
+      "space_group",
+      "lattice_system",
+      "lattice_chart",
+      "orbit_ids",
+      "Wyckoff_types",
+      "orbit_multiplicities",
+      "primitive_multiplicities",
+      "chart_dimensions",
+      "free_coordinates",
+      "atom_count",
+      "exact_original_element_set"
+    ],
+    "allowed_change": "whole_orbit_species_reassignment_only",
+    "objective_order": [
+      "changed_orbit_count",
+      "affected_primitive_atom_count",
+      "raw_composition_count_L1",
+      "canonical_assignment_SHA256"
+    ],
+    "max_changed_orbits": 6,
+    "max_candidate_assignments": 100000,
+    "no_solution_policy": "retain_original_invalid_attempt",
+    "budget_exhaustion_policy": "retain_original_invalid_attempt_and_fail_closed"
+  },
+  "composition_mechanism_panel": {
+    "attempts": 64,
+    "no_charge_neutral_assignment": 36,
+    "pauling_only": 12,
+    "matched_valid_controls": 16,
+    "panel_is_enriched_not_population_estimate": true,
+    "gate": {
+      "minimum_no_neutral_recovered": 24,
+      "valid_controls_byte_identical": 16,
+      "pauling_only_byte_identical": 12,
+      "minimum_parent_generation_success": 61,
+      "raw_meta_non_decreasing": true,
+      "raw_novel_unique_non_decreasing_with_tolerance": true
+    }
+  },
+  "bridge_parity": {
+    "clean_proposal_is_condition_not_noisy_state": true,
+    "geometry_state_uses_parent_forward_noise": true,
+    "released_parent_schedule_required": true,
+    "start_timesteps": [
+      100,
+      200,
+      400,
+      800
+    ],
+    "attempts_per_cell": 8,
+    "gate": {
+      "all_trajectories_finite": true,
+      "invalid_lattice_first_step_count": 0,
+      "schedule_reconstruction_audit": "PASS",
+      "failure_attempts_retained": true
+    }
+  },
+  "confirmatory_256": {
+    "fresh_disjoint_attempts": true,
+    "methods": [
+      "C-CRYSLLMGEN-RELEASED",
+      "C-ATOM-MATCHED",
+      "C-WQ-BASE",
+      "C-WQ-CHEM-HANDOFF",
+      "C-WQ-CHEM-BRIDGE"
+    ],
+    "gate": {
+      "minimum_composition_valid_rate": 0.89,
+      "minimum_joint_valid_rate": 0.88,
+      "minimum_chemistry_gated_meta_gain_pp": 2.0,
+      "raw_meta_same_direction": true,
+      "strict_noninferior": true,
+      "maximum_novel_unique_loss_pp": 2.0,
+      "minimum_graph_acceptance_rate": 0.95
+    }
+  },
+  "evaluation_contract": {
+    "model": "chgnet",
+    "package_version": "0.4.2",
+    "model_semantics": "0.3.0",
+    "checkpoint": "chgnet-0.3.0.pth.tar",
+    "checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+    "runtime": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+    "protocol": "exact_R5C_A100_protocol_on_A800",
+    "visible_only_after_method_and_checkpoint_freeze": true,
+    "allowed_uses": [
+      "heldout_raw_chemistry_gated_and_joint_valid_SUN",
+      "historical_CrysLLMGen_comparison"
+    ],
+    "forbidden_uses": [
+      "training",
+      "guidance",
+      "reranking",
+      "schedule_tuning",
+      "hyperparameter_tuning",
+      "checkpoint_selection",
+      "retry_or_replacement_decision"
+    ],
+    "main_denominator": "all_registered_attempts",
+    "sun_thresholds_ev_per_atom": [
+      0.0,
+      0.1
+    ],
+    "coverage_adjusted_used_for_selection": false,
+    "mp_reference_prefetch": "login_node_no_slurm_then_frozen_read_only_cache",
+    "new_dft_allowed": false
+  },
+  "statistics": {
+    "binary_paired_test": "exact_McNemar_or_paired_exact",
+    "paired_bootstrap_replicates": 10000,
+    "uniqueness_recomputed_inside_bootstrap": true,
+    "failures_and_unknowns_score_zero": true
+  },
+  "resource_contract": {
+    "max_cpus_per_a800": 8,
+    "resource_preflight_before_claim": true,
+    "existing_output_or_claim_is_fatal": true
+  },
+  "authorization": {
+    "local_code_config_tests_and_documents": true,
+    "remote_submission": false,
+    "long_training": false
+  }
+}

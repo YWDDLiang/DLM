@@ -1,0 +1,114 @@
+{
+  "schema": "h1a2_b1_b2_scientific_one_epoch_execution_draft_v2",
+  "status": "authorized_pending_executable_bundle",
+  "created_at": "2026-08-01",
+  "proposed_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1",
+  "protocol_amendment": "workstreams/plangraph_dlm_iclr_20260731/PROTOCOL_OVERRIDE_V3_DLM_LR5E5_AUTHORIZED_20260801.json",
+  "arms": {
+    "0": {
+      "arm": "B1",
+      "planned_corruption_policy": "d1",
+      "inference_schedule": "frozen_h1a2_exact_plan",
+      "role": "same_budget_continuation_control"
+    },
+    "1": {
+      "arm": "B2",
+      "planned_corruption_policy": "d2",
+      "inference_schedule": "compiled_plangraph",
+      "role": "proposed_method"
+    }
+  },
+  "array": {
+    "indices": [
+      0,
+      1
+    ],
+    "maximum_concurrent_elements": 1
+  },
+  "frozen_initialization": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct/",
+    "adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+  },
+  "frozen_data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2",
+    "manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+    "train_rows": 27136,
+    "validation_rows": 9047,
+    "source_plan_provenance": "structure_derived_teacher_plan_state",
+    "eligible_as_planner_evidence": false,
+    "same_order_and_prompt_answer_bytes_for_B1_B2": true
+  },
+  "frozen_training": {
+    "representation": "dynamic_v1",
+    "maximum_sequence_length": 382,
+    "epochs": 1,
+    "exact_optimizer_updates": 1696,
+    "maximum_optimizer_updates": 1696,
+    "validation_before_training": true,
+    "validation_interval_updates": 212,
+    "validation_steps": [
+      0,
+      212,
+      424,
+      636,
+      848,
+      1060,
+      1272,
+      1484,
+      1696
+    ],
+    "validation_max_batches_per_rank": 50,
+    "validation_global_fixed_panel_rows": 100,
+    "validation_panel_rule": "first 50 indices from each frozen rank-strided no-padding validation shard",
+    "validation_panel_audit_report": "../../DLM_FIXED_PANEL_AUDIT_V1.json",
+    "validation_panel_audit_report_sha256": "47c3a5916ef72b701903ed9a319688eb449d671eecdeec4a50029569123659b5",
+    "validation_panel_ledger": "../../DLM_FIXED_PANEL_LEDGER_V1.jsonl",
+    "validation_panel_ledger_sha256": "f4fad13216eefe51b073c80df5b6d91507db12dbfb7f95603b01ed9858ab03cd",
+    "per_device_batch": 1,
+    "gradient_accumulation": 8,
+    "world_size": 2,
+    "global_effective_batch": 16,
+    "iid_fraction": 2,
+    "planned_fraction": 1,
+    "corruption_seed": 20260731,
+    "data_seed": 20260515,
+    "weight_decay": 0,
+    "data_order": "deterministic DistributedSampler without replacement within the epoch",
+    "early_stopping": false,
+    "checkpoint_eligibility": "terminal_step_1696_only"
+  },
+  "learning_rate": {
+    "frozen": true,
+    "historical_smoke_value": 0.00005,
+    "historical_smoke_value_eligible": true,
+    "scientific_value": 0.00005,
+    "selection": "user_directed_historical_value_no_sweep",
+    "candidate_status": "frozen_and_authorized_with_adverse_smoke_risk_retained"
+  },
+  "resources_per_arm": {
+    "partition": "gpu",
+    "a800": 2,
+    "cpus": 8,
+    "memory_gib": 64,
+    "walltime": "02:00:00",
+    "maximum_concurrent_elements": 1,
+    "resource_status": "frozen_from_completed_two_A800_smoke_and_historical_1696_update_one_epoch_runtime",
+    "historical_one_epoch_elapsed": "00:37:58"
+  },
+  "selection": {
+    "Bstar_must_be": "B2",
+    "eligible_checkpoint": "terminal_step_1696_only",
+    "fixed_panel_nll_relative_to_B0_max": 1.01,
+    "conditional_completion_drop_points_max": 1.0,
+    "matched_dependency_margin_positive": true,
+    "B2_strictly_beats_B1_on_registered_margin": true,
+    "generation_used": false,
+    "sun_or_energy_used": false
+  },
+  "scientific_training_authorized": true,
+  "submitted": false,
+  "job_ids": [],
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

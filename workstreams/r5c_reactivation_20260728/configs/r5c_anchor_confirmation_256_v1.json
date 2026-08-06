@@ -1,0 +1,60 @@
+{
+  "identity": "r5c_anchor_confirmation_256_v1",
+  "purpose": "no-training confirmation of the frozen conditional R5-C body/refinement anchor",
+  "training": false,
+  "historical_claim_boundary": "conditional plan-supplied body diagnostic, not a de novo planner result",
+  "resources": {
+    "partition": "gpu",
+    "a800_gpus": 1,
+    "cpus": 8,
+    "memory_gb": 96,
+    "time_limit_hours": 12
+  },
+  "environment": {
+    "path": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+    "required_python": "3.10.18",
+    "required_torch": "2.4.0+cu121",
+    "single_environment_for_all_phases": true
+  },
+  "assets": {
+    "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+    "llada_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "r5c_checkpoint": "runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "prompt_jsonl": "data/dlm_sft/mp_20_r5_exact_length/test.jsonl",
+    "crysllmgen_checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "a100_eval_sun": "reference/a100_eval_sun/eval_sun.py",
+    "a100_eval_sun_resumable": "reference/a100_eval_sun/eval_sun_resumable.py"
+  },
+  "sampling": {
+    "attempts": 256,
+    "seed": 17,
+    "temperature": 0.7,
+    "prefill_count_token": true,
+    "freeze_plan_composition": true,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "retry_or_replacement": false,
+    "candidate_pool_or_rerank": false
+  },
+  "refinement": {
+    "diffusion_steps": 800,
+    "backend": "frozen CrysLLMGen",
+    "report_graph_survivor_count_separately": true
+  },
+  "evaluation": {
+    "crysllmgen_direct_metrics": true,
+    "sun_backend": "original A100 scripts with CHGNet",
+    "strict_threshold_eV_per_atom": 0.0,
+    "meta_threshold_eV_per_atom": 0.1,
+    "report_original_lower_bound_and_adjusted_rates": true,
+    "mattersim": false,
+    "dft": false
+  },
+  "outputs": {
+    "new_run_id_required": true,
+    "historical_overwrite_forbidden": true,
+    "terminal_report_count": 1,
+    "per_poll_audit_sidecars": false
+  }
+}
+

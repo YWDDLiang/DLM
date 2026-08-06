@@ -1,0 +1,38 @@
+{
+  "schema": "h1_crplan_fourarm512_route_amendment_authorization_v1",
+  "authorized_at_local_date": "2026-08-05",
+  "user_authorization": "好的，去尝试一下",
+  "authorized_context": "After the clean E1 physical-feasibility pass, run one separately preregistered four-arm Plan-only 512 mechanism panel.",
+  "authorized_scope": [
+    "create_one_new_immutable_source_and_run",
+    "run_512_independent_raw_attempts_per_arm",
+    "compare_off_grammar_only_terminal_only_and_full_prefix",
+    "use_the_frozen_fail_closed_missing_oxidation_state_policy",
+    "report_plan_parse_completion_composition_validity_diversity_and_mechanism_telemetry",
+    "stop_at_the_four_arm_512_terminal"
+  ],
+  "not_authorized": [
+    "modify_or_reinterpret_V4",
+    "modify_or_reinterpret_E1",
+    "reuse_the_V4_100000_state_gate",
+    "Body_generation",
+    "refinement",
+    "Direct_structure_evaluation",
+    "SUN_evaluation",
+    "network_or_MP_API",
+    "training_or_RL",
+    "checkpoint_reselection",
+    "paired_64",
+    "paired_256",
+    "independent_scientific_panels",
+    "promotion",
+    "formal_g3_or_g4",
+    "automatic_downstream"
+  ],
+  "v4_terminal_report_sha256": "55df7801e24f3bfd013e2e41f0cb96babe2a20ff3c5fb8a5b8e0b23073a5e627",
+  "e1_terminal_report_sha256": "b7c8e2bfd1bdec7c62b29d1cc2996d69086d4cd5aef9de847d16959bc449996b",
+  "formal_g3": false,
+  "automatic_training": false,
+  "automatic_promotion": false,
+  "automatic_downstream": false
+}

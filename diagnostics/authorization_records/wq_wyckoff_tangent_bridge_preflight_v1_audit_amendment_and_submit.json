@@ -1,0 +1,78 @@
+{
+  "schema": "wq_wyckoff_tangent_bridge_preflight_audit_amendment_and_submit_authorization_v1",
+  "recorded_date": "2026-07-26",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "user_quote": "授权",
+  "supersedes_for_submission_only": {
+    "record": "runs/remote_audit/20260726_wq_wyckoff_tangent_bridge_preflight_v1/authorization_record.json",
+    "sha256": "e93ea7c04c1099b2a02d26e27dbdbe8a40a5a58daae86ad8719ab231a0476c58",
+    "reason": "The earlier record authorized remote installation and tests but explicitly excluded a Slurm claim and submission."
+  },
+  "interpretation": {
+    "authorized_now": [
+      "build exactly one immutable cumulative amendment archive without changing the frozen WTB-32 scientific contract, tangent implementation, runner, source panel, released checkpoint, or immutable U outputs",
+      "include the exact local job28081 terminal audit as a non-source amendment payload",
+      "transfer that one amendment archive once through the established local-to-starteam-to-A800 route",
+      "atomically install the cumulative source amendment and exclusively materialize the exact job28081 terminal audit at its frozen A800 path",
+      "run exact remote import, unit-test, installed-byte, checkpoint strict-load, frozen-input, and submission-absence gates",
+      "after every gate passes, create the unique WTB-32 claim and invoke submit_once.sh exactly once",
+      "submit exactly one evaluation-only WTB-32 Slurm job using one A800, eight CPU, 64 GiB, and a one-hour limit",
+      "read-only monitor and audit that unique WTB-32 job to terminal state"
+    ],
+    "not_authorized": [
+      "retry, replace, cancel, split, or resubmit the amendment or WTB-32 job",
+      "rerun immutable U job28081",
+      "submit training",
+      "generate new proposals",
+      "run CHGNet, MatterSim, another MLIP, Materials Project API, S.U.N., hull, or final-test evaluation",
+      "change the frozen WTB-32 F/T arms, 32-cell call budgets, paired-noise cells, mechanics gates, resource envelope, or scientific contract",
+      "modify or overwrite the earlier remote-install authorization record",
+      "transfer scattered files, use base64 transfer, or connect directly from the local machine to A800"
+    ]
+  },
+  "frozen_identities": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "parent_execution_patch_sha256": "b8e987569f9794821921aea149b511f98d192673e39054848955a4cf2e39e134",
+    "scientific_contract_sha256": "125a19b6eca74fca8c7637830263406568c48ff51a0878f44202af0c3fa136f2",
+    "tangent_bridge_source_sha256": "175c98dcf36ced9b4f0fee6a30845ba78c9a275114fdca3c55392bf9dafa97e8",
+    "runner_source_sha256": "edddded5bbf3aca16b47bfd3e060a374f60e22ff3473e852e88a8c72b7cec3c3",
+    "source_generation_sha256": "b6eb7f80a29da699407d8d19bbedeb2d657f5d7940cd767d6d71aecb6c58a598",
+    "released_checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "immutable_u_terminal_audit_sha256": "4b77a10d632c33b53b2208d49db19f542081a7fd91d52f038ebe7e5280e2cf41",
+    "immutable_u_terminal_audit_bytes": 9596,
+    "immutable_u_selection_sha256": "547c521c96e3375ffc0665d07c9104d605d14cef2e79c92159339eefb5065cc1",
+    "immutable_u_attempts_sha256": "888caaba6683d1b953bf6a7f5a42d9da3d2b432df7a3b1b810b525328b555e94",
+    "immutable_u_terminal_report_sha256": "730dc0f005676f08d160b37006f1d2d9ababddef5e6ebeb0b200f129e062032e"
+  },
+  "authorized_job": {
+    "identity": "wq_wyckoff_tangent_bridge_preflight_v1",
+    "job_name": "wq-tangent-wtb32-v1",
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit_minutes": 60,
+    "cpu_per_a800_gate": "cpus<=8*a800",
+    "evaluation_only": true,
+    "u_rerun": false,
+    "training": false,
+    "new_generation": false,
+    "mlip": false,
+    "external_api": false,
+    "retry_or_replacement_allowed": false
+  },
+  "connection_boundary": {
+    "local_to_starteam_tmux": "wq-starteam:1.0",
+    "starteam_to_a800_user_managed_tmux": "ssha800:1.0",
+    "nested_ssh_reconnect_by_agent_allowed": false,
+    "direct_a800_ssh_scp_sftp_allowed": false,
+    "starteam_to_a800_port": 7001,
+    "starteam_to_a800_explicit_private_key_flag": false
+  },
+  "single_amendment_archive_transfer": {
+    "local_to_starteam_once": true,
+    "starteam_to_a800_once": true,
+    "reusable": false,
+    "scatter_file_transfer_allowed": false
+  }
+}

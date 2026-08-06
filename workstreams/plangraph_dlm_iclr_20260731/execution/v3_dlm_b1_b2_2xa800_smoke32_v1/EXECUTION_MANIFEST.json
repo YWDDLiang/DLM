@@ -1,0 +1,125 @@
+{
+  "schema": "h1a2_dlm_b1_b2_2xa800_smoke32_execution_v1",
+  "status": "prepared_not_submitted",
+  "created_at": "2026-08-01",
+  "purpose": "Bounded two-GPU numerical and DDP-contract smoke for the H1-A2-aligned B1/B2 body-DLM paths.",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_b1_b2_2xa800_smoke32_v1",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_b1_b2_2xa800_smoke32_v1/source",
+  "authorization": "workstreams/plangraph_dlm_iclr_20260731/AUTHORIZATION_V3_DLM_2XA800_SMOKE32_20260801.json",
+  "array": {
+    "indices": [
+      0,
+      1
+    ],
+    "maximum_concurrent_elements": 1,
+    "arms": {
+      "0": {
+        "arm": "B1",
+        "planned_corruption_policy": "d1"
+      },
+      "1": {
+        "arm": "B2",
+        "planned_corruption_policy": "d2"
+      }
+    }
+  },
+  "frozen_model": {
+    "base_model_path": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct/",
+    "initial_adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "registered_initial_adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "adapter_model_bytes": 6391016776,
+    "small_file_sha256": {
+      "adapter_config.json": "2b69a62cc62fdb89ecc8178a6a6fdd6bc03cac702d7bcef2dd282ea7a0bca868",
+      "tokenizer_config.json": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+      "special_tokens_map.json": "95c306b5886d915f970629a0fe34e30e20fb8805a31f694846d01ea4487e8790",
+      "tokenizer.json": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+    },
+    "large_adapter_rehash": false,
+    "identity_basis": "previously_frozen_R5C_composite_SHA_plus_exact_path_size_and_small_companion_hashes"
+  },
+  "frozen_data": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2",
+    "dataset_version": "h1a2_r5c_plangraph_sidecar_v2",
+    "manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+    "success_sha256": "c29f04bd45b033520d35232d9f3a7653f1c4ec6cb1d0f8ce0c9b7daf08e6ce42",
+    "train_rows": 27136,
+    "validation_rows": 9047,
+    "train_sha256": "cd34cd92db1246da323daa5edb67a7e715a49f181a6c521cc148189e5279b8bd",
+    "validation_sha256": "0a6802afec4c497a12e4069b049d97114b079b2d29ef1e577011b17cfccb8498",
+    "first32_train_raw_sha256": "0c190b8182b6b7dafa3798ced95ebb744f163feb268464003a85b6e04d0882fb",
+    "first32_validation_raw_sha256": "bc7c7aa210be1e837e128811dc31f6cd4dc74363f6654287ab63005b1550e293",
+    "source_plan_provenance": "structure_derived_teacher_plan_state",
+    "eligible_as_planner_evidence": false,
+    "prompt_answer_byte_identity": true
+  },
+  "preflight": {
+    "job_id": 29331,
+    "scheduler_state": "COMPLETED",
+    "exit_code": "0:0",
+    "terminal_report_sha256": "75e9297a28b375cd594d9c55b77c313f13430cff1800b3c8c8287420cdd29ad8",
+    "d1_report_sha256": "d49f32adf347a498631967271d266d4bb8d3f8314d05b248e7f4d6cf68bf2a2f",
+    "d2_report_sha256": "2a275f2fd8881e4d2779fea193565b7d5e76d4f6834feaadcdd1665d4aad07ac",
+    "rows_per_policy": 36183,
+    "gate_passed": true
+  },
+  "training": {
+    "representation": "dynamic_v1",
+    "max_length": 382,
+    "answer_token_count": 87,
+    "limit_train": 32,
+    "limit_val": 32,
+    "epochs": 1,
+    "max_optimizer_updates": 2,
+    "per_device_batch": 1,
+    "gradient_accumulation": 8,
+    "world_size": 2,
+    "global_effective_batch": 16,
+    "global_training_sequences": 32,
+    "microbatches_per_rank": 16,
+    "iid_fraction": 2,
+    "planned_fraction": 1,
+    "corruption_seed": 20260731,
+    "data_seed": 20260515,
+    "learning_rate": 5e-05,
+    "learning_rate_role": "historical_R5C_smoke_value_not_yet_frozen_for_scientific_training",
+    "lr_scheduler": "constant",
+    "warmup_steps": 0,
+    "weight_decay": 0,
+    "logging_steps": 1,
+    "eval_before_train": true,
+    "eval_steps": 2,
+    "eval_max_batches_per_rank": 16,
+    "validation_sampler": "rank_strided_no_padding",
+    "validation_corruption": "stateless_iid_fixed_panel_v1",
+    "save_final_checkpoint": false
+  },
+  "resources": {
+    "partition": "gpu",
+    "nodes": 1,
+    "tasks": 1,
+    "a800_per_array_element": 2,
+    "cpus_per_array_element": 8,
+    "memory_gib_per_array_element": 64,
+    "walltime_per_array_element": "01:00:00",
+    "maximum_concurrent_elements": 1,
+    "maximum_reserved_a800_hours": 4
+  },
+  "gates": {
+    "both_array_elements_completed_0_0": true,
+    "exact_two_rank_runtime": true,
+    "exact_32_global_training_sequences": true,
+    "exact_two_optimizer_updates": true,
+    "finite_positive_losses_gradients_and_validation": true,
+    "two_visible_A800s_with_nonzero_memory": true,
+    "validation_32_unique_no_padding": true,
+    "rank0_only_report_publication": true,
+    "no_checkpoint_serialization_for_engineering_smoke": true
+  },
+  "scientific_result": false,
+  "eligible_for_checkpoint_selection": false,
+  "eligible_for_later_initialization": false,
+  "crystal_generation": false,
+  "sun_evaluation": false,
+  "automatic_downstream": false,
+  "scientific_training_authorized": false
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "h1a2_pstar_data_preflight_execution_v1",
+  "status": "prepared_not_submitted",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_data_preflight_v1",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_data_preflight_v1/source",
+  "authorization": "../../../AUTHORIZATION_V3_PREFLIGHT_SMOKE_20260801.json",
+  "scope": [
+    "deterministic_3200_train_materialization",
+    "deterministic_256_validation_materialization",
+    "deterministic_32_32_smoke_materialization",
+    "real_tokenizer_offset_and_additive_eos_preflight"
+  ],
+  "source_data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/dlm_sft/mp_20_h1a2_rich_planner_noid_l3base",
+    "train_rows": 27136,
+    "train_sha256": "d431dfec1de8c3240dbc5648867be1b4b676fd85276e805a177b9944f3a1a157",
+    "validation_rows": 9047,
+    "validation_sha256": "59327aa789ae5d2bbb66d8a8f0dc882d594bcc14623aa96ce95076ed1b6fc540"
+  },
+  "tokenizer": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "role": "frozen_H1A2_epoch2_real_tokenizer"
+  },
+  "resources": {
+    "partition": "short",
+    "nodes": 1,
+    "tasks": 1,
+    "cpus": 8,
+    "memory_gib": 32,
+    "walltime": "02:00:00",
+    "gpus": 0
+  },
+  "mutates_h1_assets": false,
+  "loads_model_weights": false,
+  "crystal_generation": false,
+  "sun_evaluation": false,
+  "automatic_downstream": false,
+  "scientific_training_authorized": false
+}

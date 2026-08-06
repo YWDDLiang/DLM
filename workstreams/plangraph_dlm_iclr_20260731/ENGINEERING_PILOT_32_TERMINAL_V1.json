@@ -1,0 +1,128 @@
+{
+  "schema_version": "plangraph-dlm-engineering-pilot-terminal@1",
+  "identity": "plangraph_dlm_engineering32_v1",
+  "observed_at_utc": "2026-07-31T13:25:13.510000+00:00",
+  "status": "complete",
+  "job_id": 29080,
+  "execution_jobs": {
+    "D0": {
+      "job_id": 29081,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:13:38",
+      "max_rss_kib": 1640496
+    },
+    "D1": {
+      "job_id": 29084,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:12:45",
+      "max_rss_kib": 7838988
+    },
+    "D2": {
+      "job_id": 29086,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:12:59",
+      "max_rss_kib": 7817272
+    },
+    "D2-shuffle": {
+      "job_id": 29080,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:20:32",
+      "max_rss_kib": 7820636
+    }
+  },
+  "arm_reports": {
+    "D0": {
+      "engineering_gate_passed": true,
+      "train_microbatches": 32,
+      "optimizer_updates": 4,
+      "total_main_seconds": 272.548,
+      "model_load_seconds": 145.095,
+      "training_seconds": 6.564,
+      "validation_seconds": 8.003,
+      "peak_allocated_bytes": 30934960128,
+      "peak_reserved_bytes": 31622955008,
+      "minimum_train_loss": 1.245643138885498,
+      "minimum_gradient_norm": 12.01184368133545,
+      "minimum_validation_loss": 1.7497886477503926
+    },
+    "D1": {
+      "engineering_gate_passed": true,
+      "train_microbatches": 32,
+      "optimizer_updates": 4,
+      "total_main_seconds": 539.839,
+      "model_load_seconds": 261.202,
+      "training_seconds": 13.804,
+      "validation_seconds": 2.324,
+      "peak_allocated_bytes": 30934961152,
+      "peak_reserved_bytes": 31622955008,
+      "minimum_train_loss": 0.06010202318429947,
+      "minimum_gradient_norm": 10.632452964782715,
+      "minimum_validation_loss": 1.8098679480608553
+    },
+    "D2": {
+      "engineering_gate_passed": true,
+      "train_microbatches": 32,
+      "optimizer_updates": 4,
+      "total_main_seconds": 393.762,
+      "model_load_seconds": 173.744,
+      "training_seconds": 6.805,
+      "validation_seconds": 2.328,
+      "peak_allocated_bytes": 30934961152,
+      "peak_reserved_bytes": 31622955008,
+      "minimum_train_loss": 1.5038564205169678,
+      "minimum_gradient_norm": 12.74298095703125,
+      "minimum_validation_loss": 1.7999007056932896
+    },
+    "D2-shuffle": {
+      "engineering_gate_passed": true,
+      "train_microbatches": 32,
+      "optimizer_updates": 4,
+      "total_main_seconds": 966.497,
+      "model_load_seconds": 375.831,
+      "training_seconds": 10.48,
+      "validation_seconds": 2.343,
+      "peak_allocated_bytes": 30934961152,
+      "peak_reserved_bytes": 31622955008,
+      "minimum_train_loss": 0.12343480437994003,
+      "minimum_gradient_norm": 22.237186431884766,
+      "minimum_validation_loss": 1.8077149547170848
+    }
+  },
+  "error_scan": {
+    "patterns": [
+      "OOM",
+      "NaN",
+      "Inf",
+      "CUDA error",
+      "NCCL",
+      "traceback",
+      "BrokenProcessPool"
+    ],
+    "true_errors_found": 0
+  },
+  "engineering_gate_passed": true,
+  "scientific_result": false,
+  "eligible_for_checkpoint_selection": false,
+  "eligible_for_later_initialization": false,
+  "resource_envelope_for_g2": {
+    "basis": "four completed 32-row engineering arms plus conservative scaling and headroom",
+    "a800_per_arm": 1,
+    "cpus_per_arm": 8,
+    "memory_gib_per_arm": 64,
+    "time_limit_per_arm": "02:00:00",
+    "maximum_concurrent_arms": 1,
+    "maximum_updates_per_arm": 400,
+    "validation_interval_updates": 50,
+    "maximum_reserved_a800_hours_for_three_primary_arms": 6,
+    "observed_peak_reserved_gib": 29.45046329498291,
+    "observed_peak_host_rss_gib": 7.475841522216797,
+    "observed_worst_elapsed": "00:20:32",
+    "within_registered_limits": true
+  },
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

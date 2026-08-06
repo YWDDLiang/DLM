@@ -1,0 +1,269 @@
+{
+  "schema": "wqcodiff_mattersim_guidance_chgnet_evaluation_v1",
+  "status": "local_preparation_only_no_remote_submission",
+  "created_date": "2026-07-25",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "protocol_revision": {
+    "kind": "addendum",
+    "scope": "future_MLIP_role_assignment_only",
+    "supersedes_for_future_experiments": [
+      "MatterSim_as_primary_heldout_evaluator",
+      "CHGNet_as_guidance_MLIP"
+    ],
+    "does_not_modify_historical_results": true,
+    "preserved_contracts": [
+      "all_registered_attempts_denominator",
+      "no_retry_or_replacement",
+      "no_best_of_n",
+      "coverage_adjusted_is_report_only",
+      "no_DFT",
+      "exact_R5C_A100_CHGNet_protocol_on_A800"
+    ]
+  },
+  "roles": {
+    "guidance": {
+      "model": "mattersim",
+      "package": "mattersim",
+      "package_version": "1.1.2",
+      "checkpoint": "MatterSim-v1.0.0-5M.pth",
+      "checkpoint_sha256": "e3df9fa708725e3d453140646c7d1838324b347a3d1214cf1440522146f872b5",
+      "runtime": "/public/home/jiaosz/ywliang/models/wqcodiff/runtimes/mattersim-1.1.2-py310-v4",
+      "allowed_uses": [
+        "fixed_composition_low_noise_position_corrector",
+        "within_trajectory_energy_delta",
+        "force_norm_diagnostic",
+        "stress_record_only"
+      ],
+      "forbidden_uses": [
+        "training_loss",
+        "distillation_teacher",
+        "training_label_generation",
+        "training_checkpoint_selection",
+        "headline_SUN_evaluation",
+        "cross_composition_energy_ranking",
+        "best_of_n_candidate_selection",
+        "attempt_retry_or_replacement"
+      ]
+    },
+    "headline_evaluator": {
+      "model": "chgnet",
+      "package": "chgnet",
+      "package_version": "0.4.2",
+      "model_semantics": "0.3.0",
+      "checkpoint": "chgnet-0.3.0.pth.tar",
+      "checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+      "runtime": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+      "protocol": "exact_R5C_A100_protocol_on_A800",
+      "allowed_uses": [
+        "frozen_heldout_SUN_evaluation",
+        "historical_CrysLLMGen_comparison"
+      ],
+      "forbidden_uses": [
+        "training_loss",
+        "guidance",
+        "schedule_selection",
+        "hyperparameter_selection",
+        "checkpoint_selection",
+        "retry_decision"
+      ]
+    }
+  },
+  "guidance_contract": {
+    "version": "position_only_v1",
+    "composition_scope": "fixed_per_attempt",
+    "state_scope": "predicted_clean_x0_at_low_noise",
+    "coordinate_scope": "cartesian_positions_only",
+    "energy_comparison_scope": "within_same_composition_trajectory_only",
+    "cross_composition_energy_ranking": false,
+    "lattice_guidance_enabled": false,
+    "lattice_guidance_requires_separate_stress_finite_difference_audit": true,
+    "force_sign_and_unit_audit_required": true,
+    "corrector_calls_grid": [
+      0,
+      1,
+      2,
+      4
+    ],
+    "max_cartesian_displacement_angstrom_grid": [
+      0.01,
+      0.02,
+      0.05
+    ],
+    "low_noise_start_timestep_grid": [
+      25,
+      50,
+      100
+    ],
+    "fixed_calls_per_attempt": true,
+    "line_search_enabled": false,
+    "retry_enabled": false,
+    "replacement_enabled": false,
+    "best_of_n_enabled": false,
+    "failure_policy": "retain_attempt_as_failure_without_unguided_fallback",
+    "development_selection_sources": [
+      "mattersim_within_trajectory_energy_delta",
+      "mattersim_max_force",
+      "reconstruction_success",
+      "minimum_distance",
+      "volume_per_atom",
+      "density",
+      "finite_rate"
+    ]
+  },
+  "evaluation_firewall": {
+    "guidance_configuration_frozen_before_chgnet": true,
+    "chgnet_visible_during_guidance_development": false,
+    "chgnet_used_for_tuning": false,
+    "mattersim_used_as_headline_evaluator": false,
+    "heldout_panel_reusable_after_tuning": false,
+    "main_denominator": "all_registered_attempts",
+    "sun_thresholds_ev_per_atom": [
+      0.0,
+      0.1
+    ],
+    "primary_metric": "raw_MLIP_SUN_at_0.1",
+    "required_parallel_reports": [
+      "raw_strict_and_meta",
+      "chemistry_gated_strict_and_meta",
+      "joint_valid_strict_and_meta",
+      "novel_unique",
+      "all_failures_and_unknowns"
+    ],
+    "coverage_adjusted_used_for_selection": false,
+    "mp_reference_prefetch": "login_node_no_slurm_then_frozen_read_only_cache",
+    "new_dft_allowed": false
+  },
+  "panels": {
+    "composition_mechanism_64": {
+      "no_charge_neutral_assignment": 36,
+      "pauling_only": 12,
+      "matched_valid_controls": 16,
+      "uses_mlip_for_intervention": false
+    },
+    "guidance_development_geometry_64": {
+      "attempts": 64,
+      "disjoint_from_chgnet_heldout": true,
+      "disjoint_from_confirmatory_256": true,
+      "composition_valid_and_fixed": true
+    },
+    "chgnet_transfer_heldout_64": {
+      "attempts": 64,
+      "one_shot_after_guidance_freeze": true,
+      "paired_unguided_and_guided": true
+    },
+    "confirmatory_256": {
+      "attempts": 256,
+      "fresh_after_all_development": true,
+      "promotion_not_final_significance": true
+    }
+  },
+  "phase_gates": {
+    "G1_mattersim_cuda_fd_smoke": {
+      "finite_energy_forces_stress": true,
+      "deterministic_repeat": true,
+      "directional_derivative_force_consistent": true,
+      "minimum_energy_nonincrease_fraction": 0.95,
+      "new_geometry_failure_count": 0
+    },
+    "G2_composition_mechanism_64": {
+      "minimum_no_neutral_recovered": 24,
+      "valid_controls_byte_identical": 16,
+      "pauling_only_unchanged": 12,
+      "minimum_generation_success": 61
+    },
+    "G3_schedule_bridge_parity": {
+      "start_timesteps": [
+        100,
+        200,
+        400,
+        800
+      ],
+      "attempts_per_cell": 8,
+      "all_trajectories_finite": true,
+      "invalid_lattice_first_step_count": 0
+    },
+    "G4_mattersim_guidance_development": {
+      "finite_fraction": 1.0,
+      "minimum_energy_nonincrease_fraction": 0.95,
+      "new_geometry_failure_count": 0,
+      "exclusive_guidance_freeze_required": true
+    },
+    "G5_chgnet_transfer_64": {
+      "raw_meta_non_decreasing": true,
+      "chemistry_and_joint_meta_non_decreasing": true,
+      "maximum_raw_strict_loss_attempts": 1,
+      "maximum_novel_unique_loss_attempts": 2,
+      "maximum_new_generation_failures": 0,
+      "paired_bootstrap_replicates": 10000
+    },
+    "G6_confirmatory_256": {
+      "minimum_composition_valid_rate": 0.89,
+      "minimum_joint_valid_rate": 0.88,
+      "minimum_chemistry_gated_meta_gain_pp": 2.0,
+      "raw_meta_same_direction": true,
+      "strict_noninferior": true,
+      "maximum_novel_unique_loss_pp": 2.0,
+      "minimum_graph_acceptance_rate": 0.95
+    }
+  },
+  "confirmatory_method_matrix": [
+    "C-CRYSLLMGEN-RELEASED",
+    "C-ATOM-MATCHED",
+    "C-WQ-BASE",
+    "C-WQ-CHEM-HANDOFF",
+    "C-WQ-CHEM-MSGUIDE-HANDOFF"
+  ],
+  "new_diffusion_training_policy": {
+    "long_training_authorized_by_this_file": false,
+    "required_prior_gates": [
+      "G2_composition_mechanism_64",
+      "G3_schedule_bridge_parity"
+    ],
+    "training_mode": "MLIP_free",
+    "allowed_training_signal_sources": [
+      "MP20_train_split_denoising_targets",
+      "released_parent_trajectory_consistency",
+      "clean_proposal_conditioning",
+      "self_conditioning",
+      "train_split_volume_density_and_lattice_statistics",
+      "analytic_minimum_distance_barrier",
+      "symmetry_reconstruction"
+    ],
+    "stages": [
+      "frozen_backbone_schedule_parity",
+      "short_proposal_conditioned_training",
+      "optional_MLIP_free_geometry_regularization",
+      "optional_topology_revision_after_mechanism_pass"
+    ],
+    "mattersim_allowed_in_training_or_distillation": false,
+    "chgnet_allowed_in_training_or_selection": false
+  },
+  "resource_contract": {
+    "max_cpus_per_a800": 8,
+    "claim_must_be_created_after_resource_preflight": true,
+    "job_profiles": [
+      {
+        "name": "mattersim_cuda_fd_smoke",
+        "a800": 1,
+        "cpus": 8
+      },
+      {
+        "name": "guidance_development",
+        "a800": 1,
+        "cpus": 8
+      },
+      {
+        "name": "chgnet_transfer_evaluation",
+        "a800": 1,
+        "cpus": 8
+      }
+    ]
+  },
+  "local_preparation_outputs": [
+    "docs/experiment_program/20260725_mattersim_guided_wq_iclr_execution_plan.md",
+    "docs/experiment_program/20260725_mattersim_guided_wq_execution_tasks.md",
+    "crystal_dlm/wqcodiff/guidance_contract.py",
+    "diagnostics/preflight_mattersim_guidance_contract.py",
+    "tests/test_mattersim_guidance_contract.py"
+  ]
+}

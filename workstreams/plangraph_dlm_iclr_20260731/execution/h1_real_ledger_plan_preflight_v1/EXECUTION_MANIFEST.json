@@ -1,0 +1,26 @@
+{
+  "automatic_downstream": false,
+  "denominator": "first 256 raw all-attempt ordinals per Planner arm",
+  "forbidden": [
+    "model inference or training",
+    "body generation",
+    "diffusion refinement",
+    "direct metrics or S.U.N.",
+    "retry, replacement, repair, filtering, or reranking"
+  ],
+  "inputs": {
+    "P0_raw_generations_sha256": "7c630cecd7654d103f67ad2edf69da869c22408cec95454c26f2ddd6870d3e70",
+    "Pstar_raw_generations_sha256": "8a233c483c6104251480e309ecc666da30567831e5a1fa6cf77864d553858aa8",
+    "planner_base_seed": 17029
+  },
+  "objective": "Prove that every frozen parsed=true real-ledger Planner attempt reaches body-prompt compilation with independent raw and canonical SHA identities.",
+  "resources": {
+    "cpus": 4,
+    "gpus": 0,
+    "memory_gib": 8,
+    "partition": "short",
+    "walltime_minutes": 15
+  },
+  "schema": "h1_real_ledger_plan_preflight_execution_manifest_v1",
+  "status": "registered"
+}

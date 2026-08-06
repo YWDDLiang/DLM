@@ -1,0 +1,30 @@
+{
+  "schema": "h1_nocharge_ion_aux_execution_manifest_v1",
+  "identity": "h1_nocharge_ion_aux_sft_v1",
+  "source_state": "candidate_until_freeze_record_and_remote_identity_pass",
+  "initial_dag": [
+    "data.sbatch",
+    "smoke.sbatch[0-1%2]",
+    "train.sbatch[0-1%2]",
+    "planner64.sbatch[0-2%2]",
+    "assemble64.sbatch"
+  ],
+  "conditional_dag": [
+    "planner256.sbatch[0-2%2]",
+    "assemble256.sbatch"
+  ],
+  "declared_partitions": ["normal", "gpu"],
+  "initial_terminal": "raw_planner64",
+  "conditional_256_requires": "planner64_status_planner_gate_pass",
+  "training_arms": ["c0_neutral_aux", "c1_oxidation_aux"],
+  "planner_arms": ["p0", "c0", "c1"],
+  "fixed_endpoint": "checkpoint-0400",
+  "legacy_evaluator_runtime": "exact_SMACT_3.1.0_python",
+  "secondary_evaluator_runtime": "distinct_exact_SMACT_4.0.0_python",
+  "raw_all_attempt": true,
+  "retry_replacement_repair_filter_rerank_fallback": false,
+  "checkpoint_metric_selection": false,
+  "automatic_rl": false,
+  "automatic_downstream": false,
+  "dlm_model_changed": false
+}

@@ -1,0 +1,17 @@
+{
+  "a800_per_element": 2,
+  "array": "0-1%1",
+  "array_job_id": "29337",
+  "assembly_job_id": "29338",
+  "authorization_sha256": "7786f43727ffdcd8cbddcaf9818f73f616de82f779d7d3f45497f1a58e4a8a29",
+  "automatic_downstream": false,
+  "dependency": "afterany:29337",
+  "execution_manifest_sha256": "10c6d802e437a2ccf4b6fa0c54aa52f48a75f404fe2d24749cbfff5082f1c8b5",
+  "maximum_concurrent_elements": 1,
+  "next_stage_submitted": false,
+  "schema": "h1a2_dlm_b1_b2_2xa800_smoke32_submission_v1",
+  "scientific_training_authorized": false,
+  "source_archive_sha256": "e8e2917b79eff360018c0bfe25352926b83f7d4064dc97a2dd34745266ae4525",
+  "status": "complete",
+  "submitted_at_utc": "2026-08-01T05:30:22.656781+00:00"
+}

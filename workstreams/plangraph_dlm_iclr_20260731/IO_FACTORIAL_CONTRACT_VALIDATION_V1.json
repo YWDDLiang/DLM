@@ -1,0 +1,45 @@
+{
+  "schema": "h1a2_io_factorial_contract_validation_v1",
+  "status": "complete",
+  "validated_at": "2026-08-01",
+  "scope": [
+    "P0_and_Pstar_planner_prompt_byte_identity",
+    "P0_and_Pstar_planner_token_id_identity",
+    "no_sample_id_at_inference",
+    "exact_model_generated_seven_line_plan",
+    "no_teacher_plan_substitution",
+    "M00_M01_plan_and_body_prompt_identity",
+    "M10_M11_plan_and_body_prompt_identity",
+    "rank_independent_planner_body_refiner_seeds",
+    "strict_four_arm_ordinal_merge"
+  ],
+  "implementation": {
+    "path": "crystal_dlm/h1a2_factorial_contract.py",
+    "sha256": "ab83f497f273480fce4d2befeb5daba7236240dbff061334abccb0c3daa001fa"
+  },
+  "tests": {
+    "path": "tests/test_h1a2_factorial_contract.py",
+    "sha256": "416be66cb13f6df8e160c8e86b22c37e0773c983a0d660c0afabb58e8c12db24",
+    "command": "python3 -m unittest tests.test_h1a2_factorial_contract tests.test_ordinal_rng tests.test_h1_llm_planner",
+    "tests_run": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0
+  },
+  "scientific_contract": {
+    "visible_plan_values_are_model_generated": true,
+    "formula_counts_and_N_are_nonvisible_deterministic_compiler_fields": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "structure_derived_teacher_plan_allowed_at_inference": false
+  },
+  "execution_status": {
+    "contract_layer_complete": true,
+    "historical_sampler_modified": false,
+    "factorial_runner_integration_complete": false,
+    "remote_job_submitted": false
+  }
+}

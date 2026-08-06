@@ -1,0 +1,10 @@
+{
+  "schema": "h1a2_dlm_b1_b2_2xa800_smoke32_assembly_repair_archive_v1",
+  "status": "complete",
+  "source_file_count": 8,
+  "source_sha256_manifest_sha256": "783cf102cad20d248ae2a9306b2a4a6eb5f622d22c7182fb3f67448f1576639e",
+  "source_archive_sha256": "441d6ff8c14f6fbd514854d0ee34a05aa8914c462f23c2de2bc92c1e7078efc8",
+  "source_archive_bytes": 5338,
+  "automatic_downstream": false,
+  "scientific_training_authorized": false
+}

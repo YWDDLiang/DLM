@@ -1,0 +1,24 @@
+{
+  "schema": "h1a2_factorial_runtime_staging_v4",
+  "status": "prepared_for_read_only_validation",
+  "created_at": "2026-08-01",
+  "purpose": [
+    "repair repository-local scripts package resolution on A800",
+    "validate the fresh strict H1-A2 Planner runner imports",
+    "validate model-sampled Plan to B0/Bstar body schedule compilation",
+    "validate ordinal-stable body and refiner runner imports",
+    "validate strict four-arm all-attempt assembly"
+  ],
+  "source_subdirectory": "source",
+  "remote_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_factorial_runtime_staging_v4",
+  "supersedes_failed_staging": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_factorial_runtime_staging_v3",
+  "validation_only": true,
+  "loads_model_weights": false,
+  "uses_gpu": false,
+  "submits_slurm_job": false,
+  "scientific_training_authorized": false,
+  "crystal_generation_authorized": false,
+  "sun_evaluation_authorized": false,
+  "automatic_downstream": false,
+  "mutates_h1_assets": false
+}

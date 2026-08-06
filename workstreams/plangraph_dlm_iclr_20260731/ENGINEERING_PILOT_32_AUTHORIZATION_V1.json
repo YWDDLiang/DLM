@@ -1,0 +1,61 @@
+{
+  "schema_version": "plangraph-dlm-engineering-pilot-authorization@1",
+  "identity": "plangraph_dlm_engineering32_authorization_v1",
+  "authorized_at": "2026-07-31T19:37:58+08:00",
+  "status": "authorized_for_one_submission",
+  "authorization_source": {
+    "kind": "explicit_user_message",
+    "directive": "同意"
+  },
+  "frozen_manifest": {
+    "path": "workstreams/plangraph_dlm_iclr_20260731/ENGINEERING_PILOT_32_MANIFEST_V1.json",
+    "sha256": "097943f6947ca166a07cb8dcbce0b68b938e52ba1e2d850ec6cca45e0aa69777"
+  },
+  "authorized_scope": {
+    "identity": "plangraph_dlm_engineering32_v1",
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_engineering32_v1",
+    "job_submission": true,
+    "submission_count": 1,
+    "slurm_object": "one_gpu_array",
+    "array_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "arms_in_order": [
+      "D0",
+      "D1",
+      "D2",
+      "D2-shuffle"
+    ],
+    "maximum_concurrent_elements": 1,
+    "a800_per_element": 1,
+    "cpus_per_element": 8,
+    "memory_gib_per_element": 64,
+    "time_limit_per_element": "01:00:00",
+    "maximum_reserved_a800_hours": 4
+  },
+  "continuing_locks": {
+    "automatic_downstream": false,
+    "automatic_promotion": false,
+    "checkpoint_selection": false,
+    "scientific_result": false,
+    "crystal_generation": false,
+    "refinement": false,
+    "sun_evaluation": false,
+    "chgnet": false,
+    "mlip": false,
+    "mp_api": false,
+    "modify_h1_artifacts": false,
+    "modify_continuous_refiner": false,
+    "cancel_resubmit_replace_or_expand_automatically": false
+  },
+  "valid_only_if": [
+    "the frozen manifest SHA-256 still matches",
+    "the source, data, model, tokenizer, H1, and resource pre-submit gates pass",
+    "the run root is absent before the one authorized launch",
+    "no Slurm job id has already been recorded for this authorization"
+  ],
+  "terminal_effect": "consumed_by_the_first_successful_sbatch_submission"
+}

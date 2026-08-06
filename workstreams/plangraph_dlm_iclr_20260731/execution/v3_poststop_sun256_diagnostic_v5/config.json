@@ -1,0 +1,182 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_diagnostic_v5",
+  "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v5",
+  "status": "user_authorized_diagnostic_execution",
+  "authorization": {
+    "path": "AUTHORIZATION.json",
+    "user_quotes": [
+      "你先去算SUN吧",
+      "别忘了都要接diffusion refine",
+      "几个任务安排到一个slurm任务提交",
+      "七行严格契约这个可以去掉，但是不大符合要求的可以记录下来，然后送入下一环节，不再作为阻塞的一环"
+    ],
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_downstream": false
+  },
+  "panel": {
+    "attempts_per_arm": 256,
+    "sample_idx_start": 0,
+    "sample_idx_end_inclusive": 255,
+    "planner_base_seed": 17029,
+    "denominator": "raw_all_attempt",
+    "same_planner_seed_across_P0_Pstar": true,
+    "same_body_seed_across_all_arms": true,
+    "same_refiner_seed_across_all_arms": true,
+    "same_evaluation_order": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "sample_id_in_prompt": false,
+    "raw_plan_format_gate": "advisory_nonblocking",
+    "historical_h1a2_parsed_flag_is_authoritative": true,
+    "frozen_canonical_plan_text_feeds_body": true,
+    "raw_model_text_preserved": true
+  },
+  "planner_source": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1",
+    "terminal_report": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/terminal_report.json",
+      "sha256": "09f66256f5d5f96d0a4b161770801adaea5da9e75758389ff45b10d0680f3c0c",
+      "decision": "scientific_stop_retain_P0"
+    },
+    "model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+    "arms": {
+      "P0": {
+        "step": 2,
+        "checkpoint_identity_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+        "raw_generations": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P0/plan512/raw_generations.jsonl",
+        "raw_generations_sha256": "7c630cecd7654d103f67ad2edf69da869c22408cec95454c26f2ddd6870d3e70",
+        "run_config": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P0/plan512/run_config.json",
+        "run_config_sha256": "c5f4d0b30dd999ff5d767f95c09f9583e75e3685c9bf0871472d4a3b4c536033",
+        "plan_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P0/plan_report.json",
+        "plan_report_sha256": "86daffd6bd44e298545d048814736c9317f90418d4c8b9bd96b3214446e8bba2"
+      },
+      "Pstar": {
+        "step": 400,
+        "checkpoint_identity_sha256": "617aebf19e9b13ec84d7751bdc3824c13eb4fb639f8ccc5067dcf5fc3f84e950",
+        "raw_generations": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P-star/plan512/raw_generations.jsonl",
+        "raw_generations_sha256": "8a233c483c6104251480e309ecc666da30567831e5a1fa6cf77864d553858aa8",
+        "run_config": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P-star/plan512/run_config.json",
+        "run_config_sha256": "283be137a0544a1b75d90647e4535216995a7b7d7846cc182117681eca35914a",
+        "plan_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P-star/plan_report.json",
+        "plan_report_sha256": "af1754377cf34e26b1a63eeed0952913493279f29fced0d8d571ee54588ce8f3"
+      }
+    }
+  },
+  "body_models": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "expected_tokenizer_vocab_sha256": "dd3968132cdd9f75f92363a842d26a8d083a4a05f0411ee856ba5e473090815d",
+    "B0": {
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+      "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+      "inference_policy": "d1"
+    },
+    "B2": {
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1/arms/B2/output/final",
+      "adapter_sha256": "e3451c94822ca83d1fa1f91680e24880ce9ced022379865b76705554f31f8cb8",
+      "terminal_step": 1696,
+      "terminal_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1/arms/B2/terminal_training_report.json",
+      "terminal_report_sha256": "7e6ef415d951d93a6622214ff25c046b53dd607756571fd05fad307af3bd7834",
+      "inference_policy": "d2"
+    },
+    "training_terminal": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1/terminal_report.json",
+      "sha256": "ea22ced98f1712efdc8f6b33e7ffff17471a82eef48abeadb7203d3708fd9a89"
+    },
+    "generation": {
+      "temperature": 0.7,
+      "cfg_scale": 0.0,
+      "remasking": "low_confidence",
+      "schema_logit_mask": true,
+      "prefill_count_token": true,
+      "freeze_plan_composition": true,
+      "duplicate_coordinate_mask": true,
+      "lattice_volume_mask": true,
+      "min_lattice_rad": 0.0001,
+      "effective_batch_size": 1
+    }
+  },
+  "refiner": {
+    "name": "CrysLLMGen model_494",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "crysllmgen_snapshot": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen",
+    "timesteps": 1000,
+    "diffusion_steps": 800,
+    "num_evals": 1,
+    "same_refiner_all_arms": true
+  },
+  "arms": {
+    "M00": {
+      "planner": "P0",
+      "body": "B0",
+      "method": "H1A2-V3-DIAG-P0-B0-REFINE800"
+    },
+    "M10": {
+      "planner": "Pstar",
+      "body": "B0",
+      "method": "H1A2-V3-DIAG-PSTAR-B0-REFINE800"
+    },
+    "M01": {
+      "planner": "P0",
+      "body": "B2",
+      "method": "H1A2-V3-DIAG-P0-B2-REFINE800"
+    },
+    "M11": {
+      "planner": "Pstar",
+      "body": "B2",
+      "method": "H1A2-V3-DIAG-PSTAR-B2-REFINE800"
+    }
+  },
+  "sun": {
+    "definition": "frozen R5-C A100 protocol executed on A800",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "mp_api_enabled": false,
+    "eval_sun_py": {
+      "path": "reference/a100_eval_sun/eval_sun.py",
+      "sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+    },
+    "eval_sun_resumable_py": {
+      "path": "reference/a100_eval_sun/eval_sun_resumable.py",
+      "sha256": "44c7d9adf01de29d5bdd0eb6a0e6e5d77f1b47b47f0e4bcd9b35cd6c51e19baa"
+    },
+    "train_csv": {
+      "path": "reference/crysllmgen/data/mp_20/train.csv",
+      "sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde"
+    },
+    "training_index_cache": {
+      "path": "reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+      "sha256": "f26ea30d6f529cca2d743401049e0328227faa156c95af3e0641d35fe03ffc62"
+    },
+    "mp_hull_cache": {
+      "path": "data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+      "sha256": "93d6532cd93c1cfebcbc969d0299852359d6a2950b66b259c028e971f8f7e4ff"
+    },
+    "chgnet_relax_cache": {
+      "path": "data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl",
+      "sha256": "9d29489fcf61544ed2420fee7f78c6d59a0dca4bc55f989223bb7000f4961c71"
+    },
+    "chgnet_model_asset": {
+      "path": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    },
+    "chgnet_runtime_checkpoint": {
+      "path": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    }
+  },
+  "decision_firewall": {
+    "phase2_planner_gate_passed": false,
+    "phase2_body_gate_passed": false,
+    "diagnostic_only": true,
+    "formal_g3": false,
+    "checkpoint_reselection_from_generation_or_sun": false,
+    "automatic_promotion": false,
+    "automatic_downstream": false,
+    "automatic_training": false
+  }
+}

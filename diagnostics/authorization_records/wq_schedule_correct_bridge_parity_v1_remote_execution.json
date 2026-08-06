@@ -1,0 +1,50 @@
+{
+  "schema": "wq_schedule_correct_bridge_parity_remote_execution_authorization_v1",
+  "recorded_date": "2026-07-26",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "user_quote": "同意，继续",
+  "interpretation": {
+    "authorized_now": [
+      "build and transfer exactly one immutable cumulative source archive for wq_schedule_correct_bridge_parity_v1",
+      "atomically install that archive through the frozen starteam-to-A800 tmux route",
+      "strictly once submit one evaluation-only 32-cell schedule-correct bridge parity preflight",
+      "monitor that one preflight to a terminal Slurm state and retain immutable evidence"
+    ],
+    "not_authorized_by_this_record": [
+      "short bridge training",
+      "long bridge training",
+      "LoRA retraining",
+      "diffusion retraining",
+      "a second preflight submission, retry, replacement, or changed variant",
+      "new proposal generation",
+      "MLIP guidance, reranking, checkpoint selection, or evaluation",
+      "rewriting the formal all-22 FAIL conclusion",
+      "resuming the stopped composition-projection escalation"
+    ]
+  },
+  "single_job_resource_envelope": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit_minutes": 60,
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "scientific_contract": {
+    "path": "configs/experiments/wyckoff_codiffusion/wq_schedule_correct_bridge_parity_v1.json",
+    "sha256": "d4f18bf74a1814d7de6d7a4d4934c615857edef364a039f371723aa1763b4c6b"
+  },
+  "submission_semantics": {
+    "claim_created_exclusively_before_sbatch": true,
+    "submission_record_created_exclusively_after_valid_job_id": true,
+    "submit_once": true,
+    "retry_or_replacement_allowed": false,
+    "training_performed": false
+  },
+  "connection_boundary": {
+    "local_to_starteam_tmux": "wq-starteam:1.0",
+    "starteam_to_a800_user_managed_tmux": "ssha800:1.0",
+    "nested_ssh_reconnect_by_agent_allowed": false,
+    "direct_a800_ssh_scp_sftp_allowed": false
+  }
+}

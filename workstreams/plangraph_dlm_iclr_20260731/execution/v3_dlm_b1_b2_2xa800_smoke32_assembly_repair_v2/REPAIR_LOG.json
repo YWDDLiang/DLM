@@ -1,0 +1,34 @@
+{
+  "schema": "h1a2_dlm_b1_b2_2xa800_smoke32_repair_log_v1",
+  "status": "prepared",
+  "failure_job_id": "29338",
+  "failure_exit_code": "3:0",
+  "failed_terminal_sha256": "894d4a704214d9ff56f51c09b1c35ad20fb3a108805b28920c3714c584ce2e6f",
+  "root_cause": "The terminal assembler used JobIDRaw as if it were the array display identity. Slurm returned raw allocation IDs 29339 and 29337, while JobID correctly returned 29337_0 and 29337_1.",
+  "classification": "engineering_scheduler_serialization_false_negative",
+  "scientific_failure": false,
+  "arm_evidence": {
+    "B1": {
+      "scheduler_job_id": "29337_0",
+      "scheduler_job_id_raw": "29339",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "engineering_report_sha256": "bedf0800f01344d6b67804d6859c003dca8bcd98648cd3544045243cc88bd35b",
+      "engineering_gate_passed": true
+    },
+    "B2": {
+      "scheduler_job_id": "29337_1",
+      "scheduler_job_id_raw": "29337",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "engineering_report_sha256": "ccf8f8c283494266d11403134927cc71d81430dc8a65d398f291379a5557ba78",
+      "engineering_gate_passed": true
+    }
+  },
+  "patch_scope": "CPU-only array-aware scheduler parsing and new terminal publication.",
+  "old_run_overwritten": false,
+  "gpu_rerun": false,
+  "scientific_protocol_changed": false,
+  "automatic_downstream": false,
+  "scientific_training_authorized": false
+}

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "record_status": "login_node_identity_verified_compute_gate_pending",
+  "recorded_date": "2026-07-20",
+  "source_path": "/public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct",
+  "identity": {
+    "architecture": "LlamaForCausalLM",
+    "model_type": "llama",
+    "torch_dtype": "bfloat16",
+    "hidden_size": 4096,
+    "intermediate_size": 14336,
+    "num_hidden_layers": 32,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 8,
+    "vocab_size": 128256,
+    "max_position_embeddings": 8192,
+    "tensor_shard_count": 4,
+    "tensor_file_bytes": 16060556376,
+    "index_metadata_tensor_bytes": 16060522496
+  },
+  "tokenizer": {
+    "chat_template_present": true,
+    "chat_template_chars": 389,
+    "bos_token": "<|begin_of_text|>",
+    "eos_token": "<|eot_id|>",
+    "protocol_max_sequence_length": 256,
+    "trust_tokenizer_model_max_length": false
+  },
+  "access_gates": {
+    "existing_tmux_login_node_readable": true,
+    "all_indexed_shards_exist": true,
+    "all_shards_are_not_lfs_pointers": true,
+    "compute_node_readable": null,
+    "slurm_offline_bf16_forward": null
+  },
+  "files": [
+    {
+      "name": "model-00001-of-00004.safetensors",
+      "bytes": 4976698672,
+      "sha256": "d8cf9c4d0dd972e1a2131bfe656235ee98221679711a3beef6d46dadf0f20b5c"
+    },
+    {
+      "name": "model-00002-of-00004.safetensors",
+      "bytes": 4999802720,
+      "sha256": "8d4782b4a69ef03845159ce1a15e272aadaaf134dc138d68f616098e8531729c"
+    },
+    {
+      "name": "model-00003-of-00004.safetensors",
+      "bytes": 4915916176,
+      "sha256": "3acdd690e65c24f42a24581b8467af98bd3ca357444580f8012aacd2bd607921"
+    },
+    {
+      "name": "model-00004-of-00004.safetensors",
+      "bytes": 1168138808,
+      "sha256": "67e9ad31c8c32abf3a55ee7fc7217b3ecb35fd3c74d98a5bd233e0e4d6964f46"
+    },
+    {
+      "name": "model.safetensors.index.json",
+      "bytes": 23950,
+      "sha256": "146776fce3f6db1103aa6f249e65ee5544c5923ce6f971b092eee79aa6e5d37b"
+    },
+    {
+      "name": "config.json",
+      "bytes": 654,
+      "sha256": "61f3de03a16ca8046b05dc777bce72717022bc8522152eee61a69072272ef54b"
+    },
+    {
+      "name": "generation_config.json",
+      "bytes": 187,
+      "sha256": "d1af74d8ba49428ab2faa65f7948165cc6bf52b740e57e840f8af772587c894c"
+    },
+    {
+      "name": "tokenizer.json",
+      "bytes": 9085698,
+      "sha256": "e134af98b985517b4f068e3755ae90d4e9cd2d45d328325dc503f1c6b2d06cc7"
+    },
+    {
+      "name": "tokenizer_config.json",
+      "bytes": 50977,
+      "sha256": "da0e3a7cce6e4d787e85eb1c24d548420e0d7fe2c7a214e192795c46e40d75bb"
+    },
+    {
+      "name": "special_tokens_map.json",
+      "bytes": 73,
+      "sha256": "462d91939dbc37178aa5a3eae7068d1990ccc92e09f288cc71f42cdf139d69cc"
+    },
+    {
+      "name": "LICENSE",
+      "bytes": 7801,
+      "sha256": "475211637354ce4c14b9c3dacccbefbaba735fe1b0db97d6c4fd11cd1356819f"
+    },
+    {
+      "name": "USE_POLICY.md",
+      "bytes": 4696,
+      "sha256": "003513f595a20b7d63c609dfe80879531acb9caef6376fcc109bf0827471f3d1"
+    },
+    {
+      "name": "README.md",
+      "bytes": 38854,
+      "sha256": "8ca60bb111f7a6ac8922daf085c050d3c30755a7a21ee52e53982ad82eae3b49"
+    },
+    {
+      "name": "configuration.json",
+      "bytes": 48,
+      "sha256": "a78221ae93dd8977b26fcd1d106fa5ad7e7f1fd3a7d93bfd9d6fba5ed00ec4d2"
+    },
+    {
+      "name": ".mdl",
+      "bytes": 60,
+      "sha256": "05c7f2b54c6662a6164c44bbb9027cf647ca2ccdc6d320948bf77d369b21779c"
+    },
+    {
+      "name": ".msc",
+      "bytes": 1314,
+      "sha256": "1cf1042baf8f196463d8b3650b68555c9dd9da19653dc7350270f474c2834ae3"
+    },
+    {
+      "name": ".mv",
+      "bytes": 36,
+      "sha256": "4e0701371c3b9af2e78b52823f91df13b877aab71362777089adc859baaf06e9"
+    }
+  ],
+  "remaining_gate_a_actions": [
+    "Verify read permission from the allocated Slurm compute node without network access.",
+    "Load with local_files_only and run one BF16 forward pass through Slurm.",
+    "Freeze the exact official chat template and constrained grammar in protocol v4."
+  ]
+}

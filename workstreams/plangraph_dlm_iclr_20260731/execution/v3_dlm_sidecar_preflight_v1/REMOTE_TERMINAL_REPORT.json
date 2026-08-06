@@ -1,0 +1,48 @@
+{
+  "automatic_downstream": false,
+  "crystal_generation": false,
+  "d1_preflight_gate_passed": true,
+  "d1_preflight_report_sha256": "d49f32adf347a498631967271d266d4bb8d3f8314d05b248e7f4d6cf68bf2a2f",
+  "d2_preflight_gate_passed": true,
+  "d2_preflight_report_sha256": "2a275f2fd8881e4d2779fea193565b7d5e76d4f6834feaadcdd1665d4aad07ac",
+  "dataset_manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+  "filter": false,
+  "gpu_used": false,
+  "max_length": 382,
+  "model_loaded": false,
+  "model_proposed_plan": false,
+  "model_visible_plangraph": false,
+  "next_gate": "targeted_2xa800_b1_b2_engineering_smoke",
+  "observed_max_model_length": {
+    "d1_train": 333,
+    "d1_val": 325,
+    "d2_train": 333,
+    "d2_val": 325
+  },
+  "preflight_train_validation_rows": 36183,
+  "prompt_answer_byte_identity": true,
+  "repair": false,
+  "replacement": false,
+  "rerank": false,
+  "retry": false,
+  "sample_ids_copied": false,
+  "schema": "h1a2_dlm_sidecar_preflight_terminal_v1",
+  "scientific_training_authorized": false,
+  "sidecar_gate_passed": true,
+  "source_identity_sha256": "f5c2ed21383a1179bea978b1189cc81528be6da8f14bdd3472f57947e209b9d9",
+  "source_metadata_copied": false,
+  "source_plan_provenance": "structure_derived_teacher_plan_state",
+  "source_split_sha256": {
+    "test": "9a5c542888029ee785c3f922e2922a61a6cb92abf028b1fe197c8920d48efe8b",
+    "train": "7e96c28b6bbfde8658c5c09f060b389292df322497712f78cfab6689dcfbd590",
+    "val": "81c8d21a4942410835a31f00fa81b550c400584a11ae654a67207015d1f845a2"
+  },
+  "split_rows": {
+    "test": 9046,
+    "train": 27136,
+    "val": 9047
+  },
+  "status": "complete",
+  "sun_evaluation": false,
+  "total_sidecar_rows": 45229
+}

@@ -1,0 +1,113 @@
+{
+  "schema": "wq_schedule_correct_bridge_parity_contract_v1",
+  "status": "local_preparation_only_remote_execution_not_authorized",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "authorization": {
+    "record": "runs/remote_audit/20260726_wq_schedule_correct_bridge_parity_v1/authorization_record.json",
+    "record_sha256": "0129966f77c86e02cc4263a0b0a0af2fa75b7068d9a853539b441d771fcfd7f5"
+  },
+  "non_rewrite_boundary": {
+    "formal_all22_terminal_audit_sha256": "97335e5e0d2851835f892ff5dee56d8cf492755d9714aa055a53face193f766f",
+    "formal_all22_gate": "FAIL",
+    "composition_projection_escalation_remains_stopped": true,
+    "this_stage_is_independent_exploratory_geometry_schedule_diagnosis": true
+  },
+  "parent": {
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "scheduler_timesteps": 1000,
+    "schedule_tensor_length": 1001,
+    "official_reverse_start_timestep": 800,
+    "run_type": "train",
+    "strict_load_required": true,
+    "strict_load_components": [
+      "full_parent_state_dict",
+      "decoder",
+      "time_embedding",
+      "beta_scheduler",
+      "sigma_scheduler"
+    ]
+  },
+  "source_panel": {
+    "generation_jsonl": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_sun256_v1/generation.jsonl",
+    "generation_jsonl_sha256": "b6eb7f80a29da699407d8d19bbedeb2d657f5d7940cd767d6d71aecb6c58a598",
+    "rows": 256,
+    "ordinals": "256-511",
+    "required_schema": "wq_parent_csp_probe_attempt_v1",
+    "required_status": "succeeded",
+    "proposal_field": "proposal_state",
+    "selection_count": 8,
+    "selection_rule": "lowest_sha256(selection_salt_colon_attempt_id)",
+    "selection_salt": "wq-schedule-correct-bridge-parity-v1-panel8",
+    "selection_uses_scientific_outcomes": false,
+    "new_generation": false
+  },
+  "matrix": {
+    "timesteps": [
+      100,
+      200,
+      400,
+      800
+    ],
+    "attempts_per_timestep": 8,
+    "total_cells": 32,
+    "same_eight_proposals_at_each_timestep": true,
+    "paired_forward_and_reverse_noise_across_timesteps": true,
+    "reverse_steps_per_cell": 32,
+    "decoder_calls_per_cell": 64,
+    "base_noise_seed": 2026072601
+  },
+  "bridge_semantics": {
+    "clean_proposal_is_separate_immutable_condition": true,
+    "clean_proposal_is_never_reverse_state": true,
+    "coordinate_forward_noise": "(x0 + sigma_t * epsilon_x) mod 1",
+    "lattice_forward_noise": "sqrt(alpha_bar_t) * L0 + sqrt(1-alpha_bar_t) * epsilon_L",
+    "schedule_source": "strict_loaded_released_parent",
+    "condition_state_aliasing_allowed": false
+  },
+  "gates": {
+    "derived_vs_strict_loaded_schedule_max_abs_error": 1e-06,
+    "derived_vs_strict_loaded_schedule_relative_tolerance": 0.0,
+    "known_noise_coordinate_reconstruction_max_abs_error": 1e-06,
+    "known_noise_lattice_reconstruction_max_abs_error": 1e-06,
+    "first_reverse_step_invalid_lattice_count": 0,
+    "nonfinite_trajectory_count": 0,
+    "terminal_cells": 32,
+    "successful_positive_volume_outputs": 32,
+    "raw_success_requirement_reason": "no lower than the frozen 4/4 released-parent handoff baseline",
+    "retry_or_replacement_used": false,
+    "all_failures_retained": true
+  },
+  "model_selection": {
+    "mlip_free": true,
+    "chgnet_used": false,
+    "mattersim_used": false,
+    "external_api_used": false,
+    "checkpoint_selection_performed": false,
+    "training_performed": false
+  },
+  "future_resource_envelope_not_authorized_for_submission": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit_minutes": 60,
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "immutable_future_outputs": {
+    "selection_manifest": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_schedule_correct_bridge_parity_v1/selection_manifest.json",
+    "attempts_jsonl": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_schedule_correct_bridge_parity_v1/attempts.jsonl",
+    "terminal_report": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_schedule_correct_bridge_parity_v1/terminal_report.json"
+  },
+  "stop_rules": [
+    "any parent strict-load mismatch stops before scientific cells",
+    "any schedule reconstruction mismatch stops bridge training",
+    "any nonterminal or missing cell stops bridge training",
+    "any first-step invalid lattice stops bridge training",
+    "any nonfinite trajectory stops bridge training",
+    "any raw success below 32/32 stops bridge training",
+    "a preflight PASS authorizes neither transfer nor training",
+    "short training requires a separate identity, contract, and explicit authorization",
+    "long training remains forbidden"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "schema": "h1a2_v3_dlm_one_epoch_protocol_amendment_v1",
+  "status": "frozen_not_submitted",
+  "created_at": "2026-08-01",
+  "trigger": "User required the body-DLM training decision to be based on one complete epoch rather than a two-update or 400-update partial pass.",
+  "scope": "B1/B2 body-DLM factor only",
+  "planner_factor_unchanged": {
+    "training_microbatches": 3200,
+    "gradient_accumulation": 8,
+    "optimizer_updates": 400,
+    "interpretation": "The Planner 400-update budget already equals one complete pass over its frozen 3,200-microbatch stream."
+  },
+  "superseded_dlm_plan": {
+    "maximum_optimizer_updates": 400,
+    "validation_interval_updates": 50,
+    "separate_5e-6_two_update_engineering_gate": true
+  },
+  "frozen_dlm_one_epoch_plan": {
+    "train_rows": 27136,
+    "epochs": 1,
+    "world_size": 2,
+    "per_device_batch": 1,
+    "gradient_accumulation": 8,
+    "global_effective_batch": 16,
+    "exact_optimizer_updates": 1696,
+    "coverage": "Each frozen training row is consumed exactly once globally through the deterministic two-rank DistributedSampler.",
+    "learning_rate": 0.000005,
+    "learning_rate_selection": "single predeclared value; no sweep",
+    "lr_scheduler": "cosine",
+    "warmup_updates": 100,
+    "minimum_lr_ratio": 0.2,
+    "validation": {
+      "before_training": true,
+      "interval_updates": 212,
+      "steps": [
+        0,
+        212,
+        424,
+        636,
+        848,
+        1060,
+        1272,
+        1484,
+        1696
+      ],
+      "max_batches_per_rank": 50,
+      "global_fixed_panel_rows": 100,
+      "panel_rule": "first 50 indices from each frozen rank-strided no-padding validation shard",
+      "same_panel_for_B1_B2_and_initial_terminal_evaluation": true
+    },
+    "early_stopping": false,
+    "allowed_early_termination": [
+      "nonfinite_loss_or_gradient",
+      "OOM_or_CUDA_or_NCCL_failure",
+      "scheduler_or_identity_contract_failure"
+    ],
+    "checkpoint_eligibility": "Only the terminal step-1696 checkpoint is eligible for the registered B1/B2 scientific comparison.",
+    "generation_or_sun_used_for_training_or_selection": false
+  },
+  "resource_evidence": {
+    "historical_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256",
+    "historical_command_updates": 1696,
+    "historical_command_world_size": 2,
+    "historical_elapsed": "00:37:58",
+    "historical_progress_elapsed": "00:36:04",
+    "historical_eval_interval_updates": 500,
+    "historical_eval_max_batches_per_rank": 50
+  },
+  "frozen_resources_per_arm": {
+    "a800": 2,
+    "cpus": 8,
+    "memory_gib": 64,
+    "walltime": "02:00:00",
+    "maximum_concurrent_arms": 1
+  },
+  "fixed_panel_audit": {
+    "status": "complete",
+    "report": "DLM_FIXED_PANEL_AUDIT_V1.json",
+    "report_sha256": "47c3a5916ef72b701903ed9a319688eb449d671eecdeec4a50029569123659b5",
+    "panel_ledger": "DLM_FIXED_PANEL_LEDGER_V1.jsonl",
+    "panel_ledger_sha256": "f4fad13216eefe51b073c80df5b6d91507db12dbfb7f95603b01ed9858ab03cd",
+    "model_visible_panel_sha256": "8401854824585d35f3385a87c814f68463f677309ae41a5796b9448c73b51dde",
+    "global_ordinals": "0..99 exactly once",
+    "no_padding_duplicates": true
+  },
+  "scientific_training_authorized": false,
+  "submitted": false,
+  "job_ids": [],
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "H1_fallback_read_only": true
+}

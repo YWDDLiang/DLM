@@ -1,0 +1,68 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_repair_log_v2",
+  "status": "repair_frozen_before_resubmission",
+  "failed_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v2",
+  "failed_jobs": {
+    "packed_end_to_end_array": {
+      "job_id": "29505",
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "failed_tasks": [0, 1, 2, 3]
+    },
+    "assembly": {
+      "job_id": "29506",
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "reason": "all four arm elements failed before producing arm evidence"
+    }
+  },
+  "root_cause": {
+    "class": "per_attempt_strict_planner_contract_rejection_was_arm_fatal",
+    "failed_stage": "arm_local_input_preparation",
+    "message": "P-star ordinal 30 was marked parsed by the historical report parser but its raw model output contains the extra line 'primate: rhombohedral'; the strict seven-line factorial contract rejected it and prepare_plans.py incorrectly terminated the whole arm",
+    "observed_first_256": {
+      "P0": {
+        "rows": 256,
+        "historically_parsed": 253,
+        "strict_text_shape": 256,
+        "historically_parsed_but_not_strict": 0
+      },
+      "Pstar": {
+        "rows": 256,
+        "historically_parsed": 253,
+        "strict_text_shape": 254,
+        "historically_parsed_but_not_strict": 1,
+        "offending_ordinals": [30]
+      }
+    },
+    "body_generation_started": false,
+    "diffusion_refinement_started": false,
+    "sun_evaluation_started": false,
+    "partial_scientific_outputs_reused": false
+  },
+  "repair": {
+    "new_source_version": "v3_poststop_sun256_diagnostic_v3",
+    "new_run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v3",
+    "behavior": "the historical H1-A2 parsed flag is authoritative; raw seven-line formatting is advisory and nonblocking. The exact raw model text and warning are preserved, while the frozen Planner-512 canonical plan_text continues to the body compiler without retry, replacement, newly inferred fields, filtering, or reranking",
+    "slurm_packing": "one four-element GPU array; each element runs input preparation, body generation, frozen diffusion refinement, direct metrics, and frozen S.U.N.; one afterany CPU assembly",
+    "old_run_overwritten": false
+  },
+  "scientific_protocol_changes": {
+    "planner_checkpoint": false,
+    "body_checkpoint": false,
+    "refiner_checkpoint": false,
+    "diffusion_reverse_steps": false,
+    "ordinals_or_seeds": false,
+    "denominator": false,
+    "model_output_content": false,
+    "retry_replacement_repair_filter_rerank": false,
+    "sun_cache_or_thresholds": false,
+    "raw_seven_line_format_gate": "blocking_to_advisory_user_authorized"
+  },
+  "user_quotes": [
+    "你先去算SUN吧",
+    "别忘了都要接diffusion refine",
+    "几个任务安排到一个slurm任务提交",
+    "七行严格契约这个可以去掉，但是不大符合要求的可以记录下来，然后送入下一环节，不再作为阻塞的一环"
+  ]
+}

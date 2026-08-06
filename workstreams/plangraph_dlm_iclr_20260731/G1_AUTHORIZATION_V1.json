@@ -1,0 +1,46 @@
+{
+  "schema_version": "plangraph-dlm-stage-authorization@1",
+  "identity": "plangraph_dlm_g1_v1",
+  "authorized_at": "2026-07-31",
+  "user_authorization_quote": "可以自动进入G3，有问题你可以自行修复，但要留下日志，如果实在修复不了可以放弃",
+  "scope": {
+    "submit_G1": true,
+    "automatically_continue_to_G2_if_G1_passes": true,
+    "automatically_continue_to_G3_if_G2_passes": true,
+    "submit_G4": false,
+    "automatic_promotion": false,
+    "modify_H1_assets": false,
+    "self_training": false,
+    "energy_or_SUN_training_signal": false
+  },
+  "bounded_repair": {
+    "authorized": true,
+    "engineering_or_implementation_faults_only": true,
+    "maximum_repair_submissions_per_distinct_failure": 2,
+    "repair_log_required": true,
+    "scientific_gate_failure_is_not_repairable": true,
+    "abandon_when_safe_repair_is_unavailable": true
+  },
+  "G1": {
+    "planner_training_arms": [
+      "PG",
+      "PG-shuffle"
+    ],
+    "planner_sampling_arms": [
+      "P0",
+      "PG",
+      "PG-shuffle"
+    ],
+    "attempts_per_arm": 512,
+    "denominator": "all_attempt",
+    "same_ordinal_seeds": true,
+    "sample_id_in_prompt": false,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "crystal_generation": false,
+    "SUN_evaluation": false
+  }
+}

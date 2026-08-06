@@ -1,0 +1,39 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_repair_log_v3",
+  "status": "repair_frozen_before_submission",
+  "failed_source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/v3_poststop_sun256_diagnostic_v3",
+  "failed_source_manifest_sha256": "16255e58cd876f0ce05823fe1a86c2060f7187f911ac235678c987855957adc7",
+  "failed_source_archive_sha256": "fd83b0885fe86fcd75601c9748d22f9229dd9d0a7daca22e65484a04dcca50f0",
+  "job_submitted": false,
+  "failed_test": {
+    "stage": "pre_submission_focused_unit_test",
+    "command": "python test_protocol.py",
+    "error": "ModuleNotFoundError: No module named 'crystal_dlm.h1a2_factorial_contract'"
+  },
+  "root_cause": {
+    "class": "isolated_runtime_sys_path_order",
+    "message": "test_protocol imported assemble_terminal first; assemble_terminal placed the shared project root ahead of the already-present isolated runtime. prepare_plans only checked path presence and did not reassert ordering, so Python resolved the older shared crystal_dlm package",
+    "data_or_model_loaded": false,
+    "body_generation_started": false,
+    "diffusion_refinement_started": false,
+    "sun_evaluation_started": false,
+    "partial_scientific_outputs_reused": false
+  },
+  "repair": {
+    "new_source_version": "v3_poststop_sun256_diagnostic_v4",
+    "new_run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v4",
+    "behavior": "prepare_plans removes any existing source/runtime entries and explicitly inserts the frozen runtime ahead of the source and shared project before importing crystal_dlm",
+    "old_source_overwritten": false
+  },
+  "scientific_protocol_changes": {
+    "planner_checkpoint": false,
+    "body_checkpoint": false,
+    "refiner_checkpoint": false,
+    "diffusion_reverse_steps": false,
+    "ordinals_or_seeds": false,
+    "denominator": false,
+    "raw_plan_advisory_policy": false,
+    "retry_replacement_repair_filter_rerank": false,
+    "sun_cache_or_thresholds": false
+  }
+}

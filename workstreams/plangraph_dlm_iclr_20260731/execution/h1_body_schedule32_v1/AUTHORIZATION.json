@@ -1,0 +1,28 @@
+{
+  "schema": "h1_body_schedule32_authorization_v1",
+  "status": "authorized",
+  "date": "2026-08-02",
+  "user_quotes": [
+    "好的，按照你说的，后续都要在H1的基础上改进，不要一次性改太多，防止像这次一样",
+    "开始推进"
+  ],
+  "scope": {
+    "frozen_h1_p0_plans": true,
+    "frozen_b0_checkpoint": true,
+    "attempts": 32,
+    "principal_variable": "body_generation_schedule_only",
+    "control_schedule": "h1_exact_plan_d1",
+    "candidate_schedule": "plangraph_d2",
+    "body_generation": true,
+    "paired_d1_d2_generation_in_one_job": true,
+    "training": false,
+    "planner_sampling": false,
+    "body_checkpoint_change": false,
+    "diffusion_refinement": false,
+    "direct_metrics": false,
+    "sun": false,
+    "checkpoint_reselection": false,
+    "promotion": false,
+    "automatic_downstream": false
+  }
+}

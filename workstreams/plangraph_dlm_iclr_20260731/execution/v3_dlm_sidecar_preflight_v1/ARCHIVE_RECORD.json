@@ -1,0 +1,22 @@
+{
+  "schema": "h1a2_dlm_sidecar_preflight_source_archive_v1",
+  "status": "frozen",
+  "created_at": "2026-08-01",
+  "archive": "source_bundle.tar.gz",
+  "archive_sha256": "df455438a3b00c6df3eaa54b99df43e95798dafa0d25355b00f985a367dcbde8",
+  "archive_bytes": 115436,
+  "archive_entries": 35,
+  "source_sha256_manifest": "SOURCE_SHA256.txt",
+  "source_sha256_manifest_sha256": "1eabcb8186943f69e8e216582fa8d51e82136099f5693acb7d824d922a05df99",
+  "execution_manifest_sha256": "d881668659fb45c0fdaf5a80964d6a45caa1baa6145f9cfe89d1403ea5a89162",
+  "sbatch_sha256": "59df03cea14513232587177346d5cf4875772f59c93ec754e05d35c30d79838a",
+  "authorization_sha256": "07f1fb6f188209a314aa48b86e5d7cea8e7c70cd9b92c8371009c7a8f49e7c5b",
+  "targeted_local_tests": {
+    "command": "python3 -m unittest tests.test_h1a2_sidecar_dataset tests.test_planned_preflight tests.test_planned_corruption",
+    "run": 21,
+    "passed": 19,
+    "failed": 0,
+    "skipped": 2,
+    "skip_reason": "local Torch is absent; the remote preflight environment supplies Torch"
+  }
+}

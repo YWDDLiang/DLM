@@ -1,0 +1,68 @@
+{
+  "schema": "h1_nocharge_ion_aux_execution_config_v1",
+  "identity": "h1_nocharge_ion_aux_sft_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260806_h1_nocharge_ion_aux_sft_v1",
+  "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+  "model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+  "p0_adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+  "p0_adapter_weight_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+  "legacy_evaluator": {
+    "smact_version": "3.1.0",
+    "composition_validity_sha256": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178"
+  },
+  "secondary_evaluator": {
+    "smact_version": "4.0.0",
+    "wheel_sha256": "e3eb968da92d47a8ef9a4af42af5589a6de61cccbca9d329937e1f4e402f0551",
+    "source_commit": "c2b4d3ce6fa3a8c39fd21ab252934253dc66e131",
+    "oxidation_map_sha256": "9789ef90afc08faed4eb082bb762c22a4a7675dfc0ae9a21a6951d2f583efad6",
+    "contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19"
+  },
+  "data": {
+    "mp20_counts": {"train": 27136, "val": 9047, "test": 9046},
+    "train_records_per_arm": 3200,
+    "val_records_per_arm": 640,
+    "task_counts": {
+      "direct_nocharge_plan": 960,
+      "sequence_to_formula": 160,
+      "oxidation_infill": 160,
+      "conditional_mp20_anchor": 1280,
+      "p0_kl_anchor": 640
+    }
+  },
+  "training": {
+    "seed": 26080617,
+    "max_length": 512,
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "updates": 400,
+    "learning_rate": 0.000002,
+    "warmup_steps": 25,
+    "weight_decay": 0.0,
+    "kl_beta": 0.05,
+    "checkpoint_steps": [100, 200, 300, 400],
+    "fixed_endpoint": "checkpoint-0400",
+    "conditional_anchor_nll_relative_degradation_max": 0.01
+  },
+  "planner": {
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "max_atoms": 20,
+    "seed_mode": "stateless_ordinal_v1",
+    "include_sample_id": false,
+    "stage64_base_seed": 26080664,
+    "stage256_base_seed": 26080856
+  },
+  "downstream": {
+    "body_dlm_changed": false,
+    "exact_length": "7+4N",
+    "refiner_checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "reverse_steps": 800,
+    "batch_size": 1,
+    "common_union_sun_snapshot_required": true,
+    "automatic_submission": false
+  },
+  "automatic_rl": false,
+  "automatic_downstream": false
+}

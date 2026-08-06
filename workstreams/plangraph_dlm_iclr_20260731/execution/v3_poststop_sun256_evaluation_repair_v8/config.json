@@ -1,0 +1,66 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_evaluation_repair_v8",
+  "run_id": "20260802_h1a2_v3_poststop_sun256_evaluation_repair_v8",
+  "status": "authorized_evaluation_only_repair",
+  "source_v7": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7",
+    "source_manifest_sha256": "5d05e23da6ba4e0e49f4646a5db8181c27f3dd47d67148cac9baaa842fa6a42f",
+    "terminal_report_sha256": "b249c982b4ede6b7fbfee20f9ab49a910e31f66a87f596f5b4b80a28ffae6e9f"
+  },
+  "scope": {
+    "generation": "reuse_frozen_v7",
+    "diffusion_refinement": "reuse_frozen_v7_exact_800_steps",
+    "direct_metrics": "reuse_frozen_v7",
+    "sun": "run_only_missing_stage",
+    "attempts_per_arm": 256,
+    "ordinals": "0..255",
+    "denominator": "raw_all_attempt",
+    "same_paired_evidence": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  },
+  "arms": {
+    "M00": {
+      "factors": "P0+B0",
+      "method": "H1A2-V3-DIAG-P0-B0-REFINE800"
+    },
+    "M10": {
+      "factors": "Pstar+B0",
+      "method": "H1A2-V3-DIAG-PSTAR-B0-REFINE800"
+    },
+    "M01": {
+      "factors": "P0+B2",
+      "method": "H1A2-V3-DIAG-P0-B2-REFINE800"
+    },
+    "M11": {
+      "factors": "Pstar+B2",
+      "method": "H1A2-V3-DIAG-PSTAR-B2-REFINE800"
+    }
+  },
+  "sun": {
+    "definition": "frozen R5-C A100 protocol executed on A800",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "mp_api_enabled": false,
+    "frozen_cache_only": true,
+    "eval_sun_py": "reference/a100_eval_sun/eval_sun.py",
+    "eval_sun_resumable_py": "reference/a100_eval_sun/eval_sun_resumable.py",
+    "train_csv": "reference/crysllmgen/data/mp_20/train.csv",
+    "training_index_cache": "reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+    "mp_hull_cache": "data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+    "chgnet_relax_cache": "data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl",
+    "chgnet_model_asset": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+    "chgnet_runtime_checkpoint": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar"
+  },
+  "decision_firewall": {
+    "diagnostic_only_after_phase2_scientific_stops": true,
+    "formal_g3": false,
+    "checkpoint_reselection": false,
+    "automatic_promotion": false,
+    "automatic_downstream": false,
+    "training_feedback": false
+  }
+}

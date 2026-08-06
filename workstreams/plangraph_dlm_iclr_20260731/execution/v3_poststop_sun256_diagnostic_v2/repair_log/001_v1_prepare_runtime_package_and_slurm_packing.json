@@ -1,0 +1,47 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_repair_log_v1",
+  "status": "repair_frozen_before_resubmission",
+  "failed_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v1",
+  "failed_jobs": {
+    "prepare": {
+      "job_id": "29495",
+      "state": "FAILED",
+      "exit_code": "1:0"
+    },
+    "generation_and_diffusion_refinement_array": {
+      "job_id": "29496",
+      "state": "CANCELLED",
+      "exit_code": "0:0",
+      "reason": "afterok dependency could not be satisfied"
+    }
+  },
+  "root_cause": {
+    "class": "isolated_runtime_python_package_resolution",
+    "message": "runtime/crystal_dlm omitted __init__.py, so the older shared regular package shadowed the isolated namespace package and prepare_plans.py could not import crystal_dlm.h1a2_factorial_contract",
+    "failed_stage": "prepare_import",
+    "gpu_generation_started": false,
+    "partial_scientific_outputs_reused": false
+  },
+  "repair": {
+    "new_source_version": "v3_poststop_sun256_diagnostic_v2",
+    "new_run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v2",
+    "add_isolated_package_marker": "runtime/crystal_dlm/__init__.py",
+    "slurm_packing": "one four-element GPU array; each element runs input preparation, body generation, frozen diffusion refinement, direct metrics, and frozen S.U.N.; one afterany CPU assembly",
+    "old_run_overwritten": false
+  },
+  "scientific_protocol_changes": {
+    "planner_checkpoint": false,
+    "body_checkpoint": false,
+    "refiner_checkpoint": false,
+    "diffusion_reverse_steps": false,
+    "ordinals_or_seeds": false,
+    "denominator": false,
+    "retry_replacement_repair_filter_rerank": false,
+    "sun_cache_or_thresholds": false
+  },
+  "user_quotes": [
+    "你先去算SUN吧",
+    "别忘了都要接diffusion refine",
+    "几个任务安排到一个slurm任务提交"
+  ]
+}

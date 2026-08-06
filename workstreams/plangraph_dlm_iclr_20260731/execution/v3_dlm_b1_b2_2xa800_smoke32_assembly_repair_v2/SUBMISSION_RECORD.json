@@ -1,0 +1,23 @@
+{
+  "schema": "h1a2_dlm_b1_b2_2xa800_smoke32_assembly_repair_submission_v1",
+  "status": "complete",
+  "submitted_at_utc": "2026-08-01T05:53:58Z",
+  "repair_job_id": "29345",
+  "original_array_job_id": "29337",
+  "original_failed_assembly_job_id": "29338",
+  "initial_scheduler_state": "PENDING",
+  "resources": {
+    "partition": "short",
+    "cpus": 2,
+    "memory_gib": 4,
+    "walltime": "00:10:00",
+    "gpu": 0
+  },
+  "authorization_sha256": "da53ecd4d7118dcf53f4820d488dcf60286d031e409d55ccfad0f000b4aaa1ea",
+  "execution_manifest_sha256": "f85bd8199cd81b4bb62cc269bcc8d6491c7350a799123092e1677905f5506b79",
+  "repair_log_sha256": "f15d62c4cbf984aec8a70d50be4bed60998e2cef1f0709232c8f264dea280540",
+  "source_archive_sha256": "441d6ff8c14f6fbd514854d0ee34a05aa8914c462f23c2de2bc92c1e7078efc8",
+  "automatic_downstream": false,
+  "scientific_training_authorized": false,
+  "gpu_rerun": false
+}

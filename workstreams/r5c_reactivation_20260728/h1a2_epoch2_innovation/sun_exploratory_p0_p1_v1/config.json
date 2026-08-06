@@ -1,0 +1,195 @@
+{
+  "schema": "h1a2c_p0_p1_sun256_exploratory_v1",
+  "identity": "h1a2c_p0_p1_sun256_exploratory_v1",
+  "run_id": "20260731_h1a2c_p0_p1_sun256_exploratory_v1",
+  "status": "user_authorized_exploratory_execution",
+  "authorization": {
+    "user_quote": "好，去做吧",
+    "scope": "separate P0 versus P1 paired-256 crystal generation and S.U.N screen",
+    "manual_crystal_evaluation_authorized": true,
+    "manual_authorization_includes_afterok_sun_evaluation": true,
+    "automatic_crystal_evaluation_authorized": false,
+    "formal_jointchem_promotion_override": false,
+    "automatic_followup_submission": false
+  },
+  "source_plan_run": {
+    "run_root": "runs/20260729_h1a2c_jointchem_v1",
+    "corrected_terminal_report": "runs/20260729_h1a2c_jointchem_v1/corrections/gcd_reduced_v2/terminal_report.json",
+    "corrected_terminal_sha256": "6bfb9cd2927fcfb6017b303f1eed993545c99d37877e968268b2417b3d921ea6",
+    "corrected_decision": "stop_no_plan_candidate",
+    "formal_selected_arm": null,
+    "execution_manifest_sha256": "aedd7e5b4b91720ea2e8490f563eb747886c848c64a9d98196a6ab1cf7b9f874",
+    "arms": {
+      "P0": {
+        "method": "H1A2C-P0-FROZEN-EPOCH2-R5C-PARENT",
+        "planner_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+        "planner_checkpoint": "runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+        "plan_report": "runs/20260729_h1a2c_jointchem_v1/arms/P0/plan_report.json",
+        "raw_generations": "runs/20260729_h1a2c_jointchem_v1/arms/P0/plan512/raw_generations.jsonl",
+        "raw_generations_sha256": "bfaf2f9aa92ef4212d11bc71484ae6a60be13fd7239f107f08e419190afedb3e",
+        "planner_adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
+      },
+      "P1": {
+        "method": "H1A2C-P1-VALIDREPLAY-STEP50-R5C-PARENT",
+        "planner_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+        "planner_checkpoint": "runs/20260729_h1a2c_jointchem_v1/arms/P1/training/checkpoint-000050",
+        "plan_report": "runs/20260729_h1a2c_jointchem_v1/arms/P1/plan_report.json",
+        "raw_generations": "runs/20260729_h1a2c_jointchem_v1/arms/P1/plan512/raw_generations.jsonl",
+        "raw_generations_sha256": "ac7dd485e81b68ee3cf9b7b5facfe0fbc1869fd3344f90652effffc9b4c00c47",
+        "checkpoint_selection": "runs/20260729_h1a2c_jointchem_v1/arms/P1/checkpoint_selection.json",
+        "planner_checkpoint_manifest_sha256": "9cad344703e435d32c76f4d242bf7c3ef39a8c1d4a3af72cf36353d22c88644a",
+        "planner_step": 50
+      }
+    }
+  },
+  "panel": {
+    "attempts_per_arm": 256,
+    "sample_idx_start": 0,
+    "sample_idx_end_inclusive": 255,
+    "expected_body_eligible_by_arm": {
+      "P0": 254,
+      "P1": 253
+    },
+    "planner_global_sampling_seed": 17029,
+    "pairing_training_seed": 17,
+    "pairing_experiment": "h1a2c-p0-p1-sun256-exploratory-v1",
+    "pair_on": [
+      "frozen Planner sample_idx under common global seed 17029",
+      "same registered ordinal without sample identity in either body prompt",
+      "stateless R5-C suffix-noise seed",
+      "full max-20-atom parent reverse-noise tensors",
+      "evaluation ordinal"
+    ],
+    "treatment_boundary": "P0/P1 Planner outputs and their derived body prompts are treatment-dependent and may differ",
+    "failure_denominator": "all_registered_attempts",
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "sample_id_in_prompt": false
+  },
+  "body": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "checkpoint": "runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "adapter_file": "runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final/adapter_model.safetensors",
+    "adapter_bytes": 6391016776,
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "batch_size": 8,
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "generation_schedule": "exact-plan",
+    "schema_logit_mask": true,
+    "prefill_count_token": true,
+    "freeze_plan_composition": true,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "min_lattice_rad": 0.0001
+  },
+  "parent_refiner": {
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "crysllmgen_snapshot": "reference/crysllmgen",
+    "batch_size": 64,
+    "timesteps": 1000,
+    "diffusion_steps": 800,
+    "num_evals": 1,
+    "maximum_atoms_for_common_noise": 20
+  },
+  "direct_metrics": {
+    "gt_csv": "reference/crysllmgen/data/mp_20/test.csv",
+    "upstream_snapshot": "crystal_dlm/wqcodiff/crysllmgen/upstream",
+    "denominator": 256,
+    "worker_count": 1
+  },
+  "sun": {
+    "definition": "frozen R5-C A100 protocol executed on actual A800",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "mp_api_enabled": false,
+    "coverage_adjusted_selection_role": "report_only",
+    "eval_sun_py": {
+      "path": "reference/a100_eval_sun/eval_sun.py",
+      "sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+    },
+    "eval_sun_resumable_py": {
+      "path": "reference/a100_eval_sun/eval_sun_resumable.py",
+      "sha256": "44c7d9adf01de29d5bdd0eb6a0e6e5d77f1b47b47f0e4bcd9b35cd6c51e19baa"
+    },
+    "train_csv": {
+      "path": "reference/crysllmgen/data/mp_20/train.csv",
+      "sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde"
+    },
+    "training_index_cache": {
+      "path": "reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+      "sha256": "f26ea30d6f529cca2d743401049e0328227faa156c95af3e0641d35fe03ffc62"
+    },
+    "mp_hull_cache": {
+      "path": "data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+      "sha256": "93d6532cd93c1cfebcbc969d0299852359d6a2950b66b259c028e971f8f7e4ff"
+    },
+    "chgnet_relax_cache": {
+      "path": "data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl",
+      "sha256": "9d29489fcf61544ed2420fee7f78c6d59a0dca4bc55f989223bb7000f4961c71"
+    },
+    "chgnet_model_asset": {
+      "path": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    },
+    "chgnet_runtime_checkpoint": {
+      "path": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    }
+  },
+  "screening_gates": {
+    "direct_composition_gain_pp_min": 2.0,
+    "joint_valid_gain_pp_min": 1.5,
+    "structure_noninferiority_pp_min": -1.0,
+    "graph_yield_noninferiority_pp_min": -2.0,
+    "unique_noninferiority_pp_min": -2.0,
+    "novel_noninferiority_pp_min": -2.0,
+    "strict_sun_noninferiority_pp_min": 0.0,
+    "meta_sun_gain_pp_min": 2.0,
+    "all_metal_inflation_pp_max": 0.0,
+    "matched_vs_shuffled_plan_gate": "not_run_in_two_arm_exploratory_screen"
+  },
+  "decision_firewall": {
+    "exploratory_only": true,
+    "formal_jointchem_candidate_exists": false,
+    "automatic_promotion_authorized": false,
+    "automatic_1000_attempt_confirmation_authorized": false,
+    "automatic_training_authorized": false,
+    "automatic_downstream_authorized": false
+  },
+  "resources": {
+    "ledger": {
+      "partition": "short",
+      "cpus": 8,
+      "memory": "32G",
+      "time": "02:00:00"
+    },
+    "generation_array": {
+      "partition": "gpu",
+      "a800_per_task": 1,
+      "cpus_per_task": 8,
+      "memory": "96G",
+      "time": "18:00:00",
+      "array": "0-1%2"
+    },
+    "evaluation_array": {
+      "partition": "gpu",
+      "a800_per_task": 1,
+      "cpus_per_task": 8,
+      "memory": "96G",
+      "time": "18:00:00",
+      "array": "0-1%2"
+    },
+    "assembly": {
+      "partition": "short",
+      "cpus": 4,
+      "memory": "32G",
+      "time": "01:00:00"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "snapshot_status": "immutable_source_only",
+  "source_repository": "https://github.com/kdmsit/crysllmgen.git",
+  "upstream_commit": "94bb287751cd20a882c7c1df7ca736633d78e5e1",
+  "license": "MIT",
+  "snapshot_path": "crystal_dlm/wqcodiff/crysllmgen/upstream",
+  "source_file_count": 26,
+  "relative_file_hash_manifest_sha256": "6151615ab1d34ec8d5091d6d1ee89cca2edfde6d07a38e83fe9094098e0a6b7f",
+  "snapshot_rule": "SHA256 each file, sort records by POSIX relative path, then SHA256 the records",
+  "known_worktree_differences_from_commit": [
+    "compute_metrics.py retains the pre-existing CRYSLLMGEN_METRICS_NUM_CPUS worker-cap patch",
+    "Windows line-ending differences are byte-preserved from the local reference",
+    "Data files, checkpoints, caches, IDE metadata, images, and Git metadata are excluded"
+  ],
+  "key_files": {
+    "crysllmgen_sample.py": "6c641e2d873184d0301d824c256cf27b07c1e59cf6c547d38162ee49866fc0d9",
+    "llm_finetune.py": "b5e0a4cbba6f43a1081acbfe56dee8eb65194fd40762e940793b33a3ae997bc8",
+    "models_ddpm/cspnet.py": "9bb0b99e86a052bec3963eb0521c3b015635dcfc127e61e703006e79f323586c",
+    "models_ddpm/diffusion.py": "d27eff3839e1a0da0098a287225e3c4f2239188cbffed3387d37dc8b95bdb6ca",
+    "compute_metrics.py": "c48730ee405c205a912f450c297cc787ed61cefbc3723b3a7dbf2926c60434cd"
+  },
+  "active_extension_policy": {
+    "upstream_snapshot_is_edited": false,
+    "disabled_extension_parity_required": true,
+    "attempt_level_denominator_required": true,
+    "offline_model_loading_required": true
+  }
+}

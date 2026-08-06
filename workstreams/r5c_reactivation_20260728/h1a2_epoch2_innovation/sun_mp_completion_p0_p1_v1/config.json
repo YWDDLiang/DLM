@@ -1,0 +1,118 @@
+{
+  "schema": "h1a2c_p0_p1_sun256_mp_completion_v1",
+  "identity": "h1a2c_p0_p1_sun256_mp_completion_v1",
+  "run_id": "20260731_h1a2c_p0_p1_sun256_mpcomplete_v4",
+  "status": "user_authorized_manual_mp_completion",
+  "authorization": {
+    "scope": "fill only missing Materials Project hull references and recompute frozen P0/P1 all-attempt S.U.N.",
+    "new_generation_authorized": false,
+    "chgnet_rerun_authorized": false,
+    "manual_mp_reference_completion_authorized": true,
+    "automatic_crystal_evaluation_authorized": false,
+    "automatic_promotion_authorized": false,
+    "automatic_downstream_authorized": false
+  },
+  "source_run": {
+    "run_root": "runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1",
+    "execution_manifest_sha256": "f4a4e94a6df1acb10e8c6ad8d0b712448371d1dcea79027f6c2b07b8a3303d34",
+    "terminal_report": {
+      "path": "final/terminal_report.json",
+      "sha256": "0faa322603bef556d6bbb00ce1551067dee4bfbf41c13dad56af1d1b1c99112d"
+    },
+    "attempt_ledger": {
+      "path": "data/attempt_ledger.jsonl",
+      "sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f"
+    },
+    "base_mp_hull_cache": {
+      "path": "arms/P0/evaluation/r5c_a100_sun/working_mp_hull_cache.jsonl",
+      "sha256": "93d6532cd93c1cfebcbc969d0299852359d6a2950b66b259c028e971f8f7e4ff"
+    },
+    "arms": {
+      "P0": {
+        "method": "H1A2C-P0-FROZEN-EPOCH2-R5C-PARENT",
+        "attempt_results": {
+          "path": "arms/P0/evaluation/r5c_a100_sun/attempt_results.jsonl",
+          "sha256": "acf63cd366811ba8d41f41bbc9289335c022cbddb03f5dd935ccaa7d3a98ce24"
+        },
+        "relax_results": {
+          "path": "arms/P0/evaluation/r5c_a100_sun/exact_strict/relax_results.jsonl",
+          "sha256": "f5e00f9b8ee9e585b609ddcec2a0fb92989291ad4f77f857fa10542c5a8d42f3"
+        },
+        "input_manifest": {
+          "path": "arms/P0/evaluation/r5c_a100_sun/input_manifest.json",
+          "sha256": "6c323e18e978a0dc54c1d9262dad8783b8eb4eb5f73ac918d2691249c20d6958"
+        },
+        "expected_counts": {
+          "total_attempts": 256,
+          "novel_unique": 219,
+          "source_evaluated": 118,
+          "source_hull_unknown": 101,
+          "distinct_missing_chemsys": 101
+        }
+      },
+      "P1": {
+        "method": "H1A2C-P1-VALIDREPLAY-STEP50-R5C-PARENT",
+        "attempt_results": {
+          "path": "arms/P1/evaluation/r5c_a100_sun/attempt_results.jsonl",
+          "sha256": "88931c04c6c3d81500cc4a8148377ba4b85d1b1017b2a3ef91a884ea1713fd65"
+        },
+        "relax_results": {
+          "path": "arms/P1/evaluation/r5c_a100_sun/exact_strict/relax_results.jsonl",
+          "sha256": "4ae06b4c975c6f47f8b7691667a30ffb49cfccc0c623a5b3290312642d8fcd18"
+        },
+        "input_manifest": {
+          "path": "arms/P1/evaluation/r5c_a100_sun/input_manifest.json",
+          "sha256": "af1e68718dd52e1cc4bd1791cc26848c80f8ae37378aa09ea7310830a8a6438c"
+        },
+        "expected_counts": {
+          "total_attempts": 256,
+          "novel_unique": 215,
+          "source_evaluated": 105,
+          "source_hull_unknown": 110,
+          "distinct_missing_chemsys": 110
+        }
+      }
+    },
+    "expected_distinct_missing_chemsys_union": 204,
+    "expected_distinct_missing_chemsys_overlap": 7
+  },
+  "materials_project": {
+    "client": "current Materials Project thermo API via requests, decoded to pymatgen entries",
+    "method": "all subsystem chemsys + MaterialsProject2020Compatibility(clean=True)",
+    "compatible_only": true,
+    "endpoint": "https://api.materialsproject.org/materials/thermo/",
+    "pagination": "_limit/_skip",
+    "mson_legacy_module_redirects": {
+      "pymatgen.analysis.compatibility": "pymatgen.entries.compatibility",
+      "pymatgen.core.entries": "pymatgen.entries.computed_entries",
+      "pymatgen.core.structure_matcher": "pymatgen.analysis.structure_matcher"
+    },
+    "optional_metadata_modules_retained_as_plain_json": [
+      "emmet.*",
+      "mp_api.*"
+    ],
+    "pymatgen_version": "2025.6.14",
+    "deduplicate_queries_by_chemsys": true,
+    "maximum_queries": 204,
+    "maximum_transport_attempts_per_chemsys": 5,
+    "transport_retry_is_not_sample_retry": true,
+    "api_key_serialized": false
+  },
+  "sun": {
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "denominator": "all_registered_attempts",
+    "attempts_per_arm": 256,
+    "generation_reused": true,
+    "chgnet_energy_reused": true,
+    "retry_or_replacement_used": false
+  },
+  "execution": {
+    "location": "A800_login_node_via_user_maintained_nested_tmux",
+    "slurm_allowed": false,
+    "gpu_allowed": false,
+    "crystal_generation_allowed": false,
+    "network_reads_allowed": true,
+    "output_mode": "new_sidecar_run_only"
+  }
+}

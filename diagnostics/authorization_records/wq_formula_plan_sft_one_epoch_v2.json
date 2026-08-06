@@ -1,0 +1,25 @@
+{
+  "schema": "wq_formula_plan_sft_one_epoch_v2_authorization_v1",
+  "date": "2026-07-27",
+  "authorization_label": "user_wq_formula_plan_sft_one_epoch_v2_2026-07-27",
+  "user_quote": "你先去把12 次全都死在 Wyckoff 计量不可达的硬约束状态这个解决，然后plan生成成功概率也有点低。把第一个问题解决了，训完一个epoch后看看效果",
+  "authorized_scope": [
+    "replace local-only multiplicity fitting with exact remaining-count reachability at space-group, Wyckoff-type, and species decisions",
+    "remove invalid formula-plan END fallback at exhausted MP20 support",
+    "reuse the immutable 61393-example v1 chemistry-plan dataset without rebuilding or using heldout labels",
+    "train exactly one epoch from the frozen original epoch-3 adapter on one A800 with at most eight CPUs",
+    "run one paired-64 development evaluation against the unchanged frozen baseline"
+  ],
+  "forbidden": [
+    "retry",
+    "replacement",
+    "best-of-n",
+    "reranking",
+    "post-generation repair",
+    "training-time MLIP or CHGNet",
+    "training-time S.U.N",
+    "external API",
+    "automatic downstream training",
+    "modifying unrelated jobs"
+  ]
+}

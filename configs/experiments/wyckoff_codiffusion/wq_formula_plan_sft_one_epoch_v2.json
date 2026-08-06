@@ -1,0 +1,144 @@
+{
+  "schema": "wq_formula_plan_sft_one_epoch_contract_v2",
+  "identity": "wq_formula_plan_sft_one_epoch_v2",
+  "status": "authorized_one_epoch_reachability_pilot",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "authorization": {
+    "date": "2026-07-27",
+    "label": "user_wq_formula_plan_sft_one_epoch_v2_2026-07-27",
+    "record": "diagnostics/authorization_records/wq_formula_plan_sft_one_epoch_v2.json",
+    "record_sha256": "1b62811d6b7408f7e1b27e64515693c3b6212d07bf6d3ca92fb8b062ad63176a",
+    "quote": "你先去把12 次全都死在 Wyckoff 计量不可达的硬约束状态这个解决，然后plan生成成功概率也有点低。把第一个问题解决了，训完一个epoch后看看效果"
+  },
+  "objective": "Eliminate deterministic Wyckoff count dead ends and measure one full epoch of chemistry-first formula-plan SFT.",
+  "decoder": {
+    "space_group_requires_every_species_count_reachable": true,
+    "wyckoff_action_requires_reachable_residual_vector": true,
+    "species_action_requires_reachable_residual_vector": true,
+    "reachability": "exact_unbounded_coin_change_over_distinct_primitive_wyckoff_multiplicities",
+    "stop_only_after_exact_plan_exhaustion": true,
+    "invalid_end_on_atom_or_species_support_exhaustion": false,
+    "retry_or_repair": false
+  },
+  "frozen_assets": {
+    "protocol_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+    "gate_a_lock_sha256": "534dbd55caf3599bad233bfd671bf304fe28891854101d2a201f1d1feaaa4bf5",
+    "source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "source_sft_path": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/sft_wq_mixed_seed11_ctx512_v3/coarse_sft.jsonl",
+    "source_sft_sha256": "a4aec58ca904d466b650a8641a3fe527e9e25249e2f8fe7453145e55588bd899",
+    "training_data_path": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_formula_plan_sft_pilot_v1/data",
+    "training_data_sha256": "b96ca8c08ddf1fe65daa9568f1e9507d1afa4d5886794a4e7115c8a08df4e48e",
+    "training_data_manifest_sha256": "3eab205be1458fcda087ee3b1cc8b27f262ca352168af3f68499e58185861c92",
+    "training_data_token_audit_sha256": "d0ebe69bdbd3fd7b5bf8ae872a7e60c11736090e4fbf2b497dceb1c5c8d84ac4",
+    "training_examples": 61393,
+    "initial_adapter_path": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/train_wq_lora_seed11_mixed_three_epoch_formal_v1/epoch_03/adapter_final",
+    "initial_adapter_model_sha256": "9e12192fbd9fd42a1cdc236a50a3e70f8f97e4b44353cb37986c72dafd21b45c",
+    "initial_adapter_config_sha256": "c8f3fe4407f254e14365e59b2a4a9f7591164ed12c1f9fde2146b67cb56e4c38",
+    "baseline_attempts_path": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_llm_charge_stop_paired64_v1/attempts.jsonl",
+    "baseline_attempts_sha256": "d2e04647be2670c14a799a7fe874f3ef53af08641c0830fadd6c7f5ebc30576f",
+    "baseline_composition_valid_count": 61,
+    "llama_root": "/public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "environment": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff"
+  },
+  "training_data": {
+    "rebuilt": false,
+    "heldout_metrics_or_generations_used": false,
+    "stage_counts": {
+      "formula_plan": 24557,
+      "formula_conditioned_body": 24557,
+      "direct_edit_replay": 12279
+    },
+    "maximum_sequence_length": 640
+  },
+  "optimizer": {
+    "training_seed": 11,
+    "epochs": 1.0,
+    "expected_completed_updates_minimum": 959,
+    "expected_completed_updates_maximum": 960,
+    "per_device_microbatch": 8,
+    "gradient_accumulation": 8,
+    "global_effective_batch": 64,
+    "learning_rate": 1e-05,
+    "warmup_fraction": 0.05,
+    "scheduler": "constant_with_warmup",
+    "precision": "bf16",
+    "attention_implementation": "sdpa",
+    "gradient_checkpointing": false,
+    "initialization": "original_selected_epoch_03_not_v1_200_update_adapter"
+  },
+  "panel": {
+    "role": "reused_development_gate_not_final_paper_test",
+    "protocol_name": "crysllmgen_wyckoff_georev_v4",
+    "training_seed": 11,
+    "sampling_seed": 101,
+    "start_ordinal": 1024,
+    "end_ordinal_inclusive": 1087,
+    "attempts": 64,
+    "baseline_reused_not_regenerated": true,
+    "formula_plan_generated_once": true,
+    "formula_body_generated_once": true,
+    "plan_and_body_status_logged_separately": true,
+    "all_attempts_in_denominator": true
+  },
+  "promotion_gate": {
+    "minimum_formula_generation_success_count": 63,
+    "minimum_formula_composition_valid_count": 63,
+    "minimum_composition_valid_gain_count": 2,
+    "maximum_valid_to_invalid_pairs": 1,
+    "minimum_unique_formula_all_attempt_rate": 0.9,
+    "maximum_absolute_mean_atom_count_shift": 4.0,
+    "charge_failures_must_not_increase": true,
+    "plan_body_exact_match_required_on_every_success": true
+  },
+  "resources": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit": "05:00:00",
+    "cpus_per_a800_hard_maximum": 8
+  },
+  "implementation": {
+    "formula_plan": {
+      "path": "crystal_dlm/wqcodiff/crysllmgen/formula_plan.py",
+      "sha256": "ced153d0559158fd17d841e476361066a6bdc587fe6cf48bdf8114e8b3e4b0bc"
+    },
+    "inference": {
+      "path": "crystal_dlm/wqcodiff/crysllmgen/inference.py",
+      "sha256": "cbf217da319c5e471e520cc2b5c98adebb1f79c1b6dea444a890b04802c33bf6"
+    },
+    "trainer": {
+      "path": "scripts/a800/train_wq_formula_plan_lora.py",
+      "sha256": "5151c5436d39cf3376ec3bc5bc49dcdad6b21ae18e93c9c7177b43245954c525"
+    },
+    "evaluator": {
+      "path": "scripts/a800/run_wq_formula_plan_paired64_v1.py",
+      "sha256": "f2ca7e8350e49b0978188471b23dca3f52bde4d5b1b9c8f9dced2c92a7900ada"
+    },
+    "formula_plan_tests": {
+      "path": "tests/test_crysllmgen_formula_plan.py",
+      "sha256": "5ec6a01264243e707130f1287d0ace5ea993546807f88496c250653a4f50067b"
+    },
+    "gate_tests": {
+      "path": "tests/test_crysllmgen_gate_lock.py",
+      "sha256": "0b1c0e139df15e71b7a2e326b64c6038d60ec03526bcddb45b087a68a3bf55a3"
+    }
+  },
+  "audit_policy": {
+    "mode": "minimal_terminal_only",
+    "poll_sidecars": false
+  },
+  "forbidden_actions": {
+    "retry": true,
+    "replacement": true,
+    "best_of_n": true,
+    "reranking": true,
+    "post_generation_repair": true,
+    "training_time_mlip_or_chgnet": true,
+    "training_time_sun": true,
+    "training_time_mp_api": true,
+    "automatic_large_panel": true,
+    "automatic_downstream_training": true,
+    "modify_unrelated_jobs": true
+  }
+}

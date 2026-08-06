@@ -1,0 +1,181 @@
+{
+  "schema": "wq_wyckoff_identity_mechanics_contract_v1",
+  "identity": "wq_wyckoff_identity_mechanics_sup28195_v1",
+  "status": "authorized_development_execution",
+  "created": "2026-07-27",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "scientific_role": "permutation_safe_source_identity_and_rut_mechanics_regression",
+  "lineage": {
+    "supersedes_failed_job_id": 28195,
+    "job28195_terminal_state": "FAILED_2_0_SCIENTIFIC_INTEGRITY_GATE",
+    "job28195_decision": "invalid_integrity_stop_no_retry",
+    "job28195_reinterpreted": false,
+    "development_panel_reused": true,
+    "reuse_purpose": "mechanics_regression_only",
+    "confirmatory_evidence": false,
+    "future_confirmation_requires_nonoverlapping_panel": true,
+    "terminal_failure_audit": "runs/remote_audit/20260727_wq_wyckoff_chart_retraction_confirmatory256_sup28194_v1/terminal_failure_audit_job28195.json",
+    "terminal_failure_audit_sha256": "124bb6e02d612687cd25a21b57b57e64773eff5836c788b8f5998754f1da76c9"
+  },
+  "identity_contract": {
+    "composition_identity": "element_count_multiset",
+    "atom_count_identity": "exact",
+    "topology_identity": "exact_species_wyckoff_topology_hash",
+    "proposal_identity": "canonical_storage_payload",
+    "legacy_ordered_atom_identity_role": "diagnostic_only",
+    "legacy_ordered_atom_mismatch_blocking": false,
+    "parent_input_order": "canonical_orbit_expansion",
+    "atom_correspondence_rule": "expand_only_the_canonicalized_proposal_state",
+    "true_composition_topology_or_atom_count_change_blocking": true
+  },
+  "frozen_job28195_sources": {
+    "source_attempts": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_wyckoff_chart_retraction_confirmatory256_sup28194_v1/sources/source_attempts.jsonl",
+    "source_attempts_sha256": "3246a24d2595ae760e15f402222d6730a2a0fdbc404636254a7fa995559d56f2",
+    "source_attempts_bytes": 1211300,
+    "source_report": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_wyckoff_chart_retraction_confirmatory256_sup28194_v1/sources/source_report.json",
+    "source_report_sha256": "9c6d5a9f2570f73b87ffa4c2bac898499588ea803cdf5803103408ce22323be9",
+    "source_report_bytes": 3585,
+    "job28195_scientific_contract_sha256": "293c026d2f371b592a81e8e4d3982b4cb65ae3b0d90b82bf72a639caae24b77a",
+    "job28195_execution_patch_sha256": "1d15a08a07d6312fff636b0ec25078580aafd37c1e5e931783d801dbcf7c2f10",
+    "source_rows": 256,
+    "source_ordinals": "512-767",
+    "source_report_acceptance": "PASS",
+    "source_generation_rerun": false
+  },
+  "matrix": {
+    "source_identity_audit_attempts": 256,
+    "mechanics_attempts_per_arm": 32,
+    "start_ordinal": 512,
+    "end_ordinal_inclusive": 543,
+    "arms": {
+      "R": "WTB-IDV2-R-RAW-WQ-CANONICAL",
+      "U": "WTB-IDV2-U-PARENT-SCHEDULE32-CANONICAL",
+      "T": "WTB-IDV2-T-EVERY-STEP-GLOBAL-CHART-RETRACTION-CANONICAL"
+    },
+    "reverse_start_timestep": 800,
+    "reverse_steps": 32,
+    "decoder_calls_per_diffusion_arm": 64,
+    "tangent_projection_calls_per_t_attempt": 64,
+    "tangent_projection_method": "global_chart_retraction_v1",
+    "paired_source_and_noise_identity": true,
+    "new_proposals": 0,
+    "retry": 0,
+    "replacement": 0
+  },
+  "frozen_assets": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "protocol_path": "configs/experiments/wyckoff_codiffusion/protocol_v4.yaml",
+    "protocol_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+    "gate_a_lock_path": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/gate_a_lock_v8.json",
+    "gate_a_lock_sha256": "534dbd55caf3599bad233bfd671bf304fe28891854101d2a201f1d1feaaa4bf5",
+    "parent_checkpoint_path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "parent_checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "parent_decoder_state_sha256": "23832dbb8117fad8cacc32cc664cfa2e528faa1db737348c31c6ff83cc451c84",
+    "parent_beta_scheduler_state_sha256": "b6f21e709194a4270932694664a818e0df36bd562cd177226f99f375a78618ff",
+    "parent_sigma_scheduler_state_sha256": "40690291a9b96fd8f2627931d16d66df746b947411f8f4f3572f40058658267d"
+  },
+  "implementation": {
+    "identity_module": {
+      "path": "crystal_dlm/wqcodiff/crysllmgen/wtb_identity_v2.py",
+      "sha256": "af98a0bdb0c919748afbbef267139e5743fda78b41fabc086e06e966e7222435"
+    },
+    "mechanics_runner": {
+      "path": "scripts/a800/run_wq_wyckoff_identity_mechanics_sup28195_v1.py",
+      "sha256": "3f5adf540b003d1e70863e8c5610b536c73b3dd3e1724b1f9386b64836d5c467"
+    },
+    "byte_pinned_legacy_arm_engine": {
+      "path": "scripts/a800/run_wq_wyckoff_chart_retraction_arms256_v1.py",
+      "sha256": "056ea0406154090243c13fd3010cfed07a205f0aa0ec2985665fa2c12dfd7121"
+    },
+    "global_retraction_wrapper": {
+      "path": "scripts/a800/run_wq_wyckoff_chart_retraction_preflight_sup28185_v2.py",
+      "sha256": "63925aa0b877914b35240e55459026cf10e660665a14304a427c20253ef57a35"
+    },
+    "legacy_tangent_engine": {
+      "path": "scripts/a800/run_wq_wyckoff_tangent_bridge_preflight_v1.py",
+      "sha256": "edddded5bbf3aca16b47bfd3e060a374f60e22ff3473e852e88a8c72b7cec3c3"
+    },
+    "schedule_bridge": {
+      "path": "scripts/a800/run_wq_schedule_correct_bridge_parity_v1.py",
+      "sha256": "22dd1ad3884fd6bf7fc8832e12372cecba53c35e89a2eca977fef121177f310b"
+    },
+    "runtime": {
+      "path": "crystal_dlm/wqcodiff/runtime.py",
+      "sha256": "8b5ba104ee1be25ff7f8a14b703193b33920bfd71abd52b1ba1e0d082e909ea4"
+    },
+    "state": {
+      "path": "crystal_dlm/wqcodiff/state.py",
+      "sha256": "75aaa737bc8ac992318b4b1a98a5300608a054cc7ef629899fd9e27c55b47d0f"
+    }
+  },
+  "mechanics_gates": {
+    "source_permutation_safe_identity_required": 256,
+    "legacy_order_mismatch_blocking": false,
+    "terminal_attempts_required_per_arm": 32,
+    "successful_attempts_required_per_arm": 32,
+    "terminal_composition_multiset_exact": true,
+    "T_exact_topology_required": 32,
+    "T_parent_decoder_calls_required_per_attempt": 64,
+    "T_global_projection_calls_required_per_attempt": 64,
+    "finite_chart_retraction_audit_required": true,
+    "retry_or_replacement_used": false
+  },
+  "integrity_gates": {
+    "parent_schedule_max_absolute_error": 1e-06,
+    "source_permutation_safe_identity_required": 256,
+    "legacy_order_mismatch_blocking": false,
+    "terminal_attempts_required_per_arm": 32,
+    "terminal_composition_multiset_exact": true,
+    "T_exact_topology_required": 32,
+    "T_global_projection_steps_required_per_attempt": 64,
+    "retry_or_replacement_used": false
+  },
+  "resources": {
+    "partition": "gpu",
+    "nodes": 1,
+    "tasks": 1,
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit": "01:00:00",
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "immutable_outputs": {
+    "output_directory": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_wyckoff_identity_mechanics_sup28195_v1",
+    "submission_record": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_wyckoff_identity_mechanics_sup28195_v1_submission.json",
+    "submission_claim": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_wyckoff_identity_mechanics_sup28195_v1_submission.json.claim",
+    "overwrite": false
+  },
+  "forbidden_actions": {
+    "job28195_overwrite_delete_rename_or_reinterpret": true,
+    "training": true,
+    "new_proposal_generation": true,
+    "crysllmgen_direct_metrics": true,
+    "chgnet_or_sun": true,
+    "external_api": true,
+    "dft": true,
+    "retry": true,
+    "replacement": true,
+    "best_of_or_rerank": true,
+    "outcome_dependent_filtering": true,
+    "automatic_confirmatory_submission": true,
+    "unrelated_job_modification": true
+  },
+  "authorization": {
+    "label": "user_wq_wyckoff_identity_mechanics_sup28195_v1_2026-07-27",
+    "record": "diagnostics/authorization_records/wq_wyckoff_identity_mechanics_sup28195_v1.json",
+    "record_sha256": "d97e82caa5421a860a1943b50b17effabfd204980e994696041e692467cce417",
+    "remote_transfer_authorized": true,
+    "remote_install_authorized": true,
+    "slurm_submission_authorized_once": true
+  },
+  "next_action_if_pass": {
+    "automatic": false,
+    "required": "build a new non-overlapping held-out 256 contract and request or bind separate exact execution authorization",
+    "proposed_ordinal_range": "768-1023"
+  },
+  "next_action_if_fail": {
+    "automatic": false,
+    "required": "stop the WTB bridge branch, preserve evidence, and return to the standalone WQ LLM line"
+  }
+}

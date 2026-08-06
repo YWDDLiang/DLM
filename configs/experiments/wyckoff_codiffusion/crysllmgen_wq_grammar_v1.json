@@ -1,0 +1,55 @@
+{
+  "schema": "crysllmgen_wq_grammar_v1",
+  "record_status": "preregistered_before_gate_a",
+  "proposal": {
+    "exact_layout": "SG=<1..230>;Q=<HEXBYTE[,HEXBYTE...]>;O=<0..>,W=<legal>,E=<1..89>,U=<HEXBYTE[,HEXBYTE...]|->;...;STOP",
+    "whitespace_allowed": false,
+    "prefix_or_trailing_prose_allowed": false,
+    "space_group_committed_after_first_field": true,
+    "orbit_indices_contiguous_from_zero": true,
+    "minimum_orbits": 1,
+    "primitive_atom_count_min": 1,
+    "primitive_atom_count_max": 20,
+    "species_encoding": "one_based_index_into_frozen_MP20_89_species_vocabulary",
+    "initial_mask_semantics": false,
+    "semantic_padding_or_null_canvas": false,
+    "continuous_code": {
+      "encoding": "uppercase_two_digit_hexadecimal",
+      "bins": 256,
+      "periodic_free_coordinate_decode": "code_div_256",
+      "lattice_compander": "signed_mu_law",
+      "lattice_parameters": {
+        "log_length": {"max_abs": 20.0, "mu": 63.0},
+        "triclinic_off_diagonal": {"max_abs": 256.0, "mu": 127.0},
+        "monoclinic_beta_logit": {"max_abs": 30.0, "mu": 63.0}
+      }
+    }
+  },
+  "direct_edit": {
+    "commands": [
+      "NOOP",
+      "BIRTH;W=<legal>;E=<1..89>",
+      "DEATH;O=<current_index>",
+      "TYPE;O=<current_index>;W=<different_legal>",
+      "SPECIES;O=<current_index>;E=<different_1..89>"
+    ],
+    "commands_per_invocation_max": 1,
+    "type_change_semantics": "death_plus_birth",
+    "invalid_probability_zero_before_normalization": true,
+    "empty_structure_forbidden": true,
+    "primitive_atom_count_above_20_forbidden": true
+  },
+  "formal_audit": {
+    "synthetic_transitions": 1000000,
+    "seed": 2026072002,
+    "illegal_generated_max": 0,
+    "space_groups_required": 230,
+    "wyckoff_positions_required": 1731,
+    "parser_roundtrip_space_groups_required": 230
+  },
+  "attempt_semantics": {
+    "parse_once": true,
+    "retry_or_replacement": false,
+    "invalid_or_bridge_failure_terminal": true
+  }
+}

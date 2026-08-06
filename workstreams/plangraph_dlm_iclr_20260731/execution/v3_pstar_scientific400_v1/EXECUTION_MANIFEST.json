@@ -1,0 +1,56 @@
+{
+  "schema": "h1a2_v3_pcontrol_pstar_scientific400_execution_v1",
+  "status": "prepared_authorized_not_submitted",
+  "created_at": "2026-08-01",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pcontrol_pstar_scientific400_v1",
+  "authorization": "../../AUTHORIZATION_V3_SCIENTIFIC_TRAINING_20260801.json",
+  "authorization_sha256": "4220233e1b968e7a8c464554d7d1fa48c8ae7febe6d9fab62ff4433a55626fbd",
+  "arms": {
+    "0": "pcontrol",
+    "1": "pstar"
+  },
+  "array": "0-1%1",
+  "initialization": {
+    "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
+  },
+  "data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_data_preflight_v1/data/full",
+    "manifest_sha256": "4c2ba66923ccea16244cbc7ec138e69e07f50c4bca6ec7bfa1c631cd7f406c4d",
+    "train_microbatches": 3200,
+    "validation_rows": 256,
+    "same_order_for_arms": true
+  },
+  "training": {
+    "epochs": 1,
+    "optimizer_updates": 400,
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "learning_rate": 0.000002,
+    "scheduler": "cosine",
+    "warmup_updates": 25,
+    "validation_interval_updates": 50,
+    "maximum_length": 768,
+    "seed": 17,
+    "shuffle": false
+  },
+  "resources_per_arm": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "walltime": "12:00:00",
+    "maximum_concurrent_arms": 1
+  },
+  "selection": {
+    "target_nll_relative_to_initial_P0_max": 1.01,
+    "primary": "lowest_field_loss",
+    "tie_break": "earlier_update",
+    "generation_or_sun_or_energy_used": false
+  },
+  "scientific_training_authorized": true,
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "job_ids": []
+}

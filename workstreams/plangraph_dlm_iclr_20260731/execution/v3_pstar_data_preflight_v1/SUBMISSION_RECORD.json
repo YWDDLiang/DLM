@@ -1,0 +1,28 @@
+{
+  "schema": "h1a2_pstar_data_preflight_submission_v1",
+  "status": "complete",
+  "submitted_at": "2026-08-01T12:16:22+08:00",
+  "job_id": 29318,
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_data_preflight_v1",
+  "sbatch_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_data_preflight_v1/source/workstreams/plangraph_dlm_iclr_20260731/execution/v3_pstar_data_preflight_v1/data_preflight.sbatch",
+  "source_transfer": {
+    "method": "scp_from_frozen_outer_host_after_explicit_user_authorization",
+    "archive_sha256": "f9c659d2245c2b07559cd8568303cebae3d303d9817d6c6f0d79314db2ac93ac",
+    "archive_bytes": 107698,
+    "nested_sha256_verified": true,
+    "nested_bytes_verified": true
+  },
+  "frozen_records": {
+    "source_manifest_sha256": "3feec9dcad803626cacbbc686896028d3cce464a87d44e815c7385cd9f30648a",
+    "authorization_sha256": "07f1fb6f188209a314aa48b86e5d7cea8e7c70cd9b92c8371009c7a8f49e7c5b",
+    "execution_manifest_sha256": "f369e6a7f69a529f76d6c6ada7443e9291ddba05b9c724f171600a620de77f38"
+  },
+  "scope": [
+    "deterministic_3200_256_materialization",
+    "deterministic_32_32_smoke_slice_materialization",
+    "real_H1A2_tokenizer_preflight"
+  ],
+  "scientific_training_authorized": false,
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

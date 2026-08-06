@@ -1,0 +1,46 @@
+{
+  "B1_B2_same_panel": true,
+  "automatic_downstream": false,
+  "batch_size_per_rank": 1,
+  "dataset_manifest_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2/manifest.json",
+  "dataset_manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+  "dataset_version": "h1a2_r5c_plangraph_sidecar_v2",
+  "eval_max_batches_per_rank": 50,
+  "gate_passed": true,
+  "global_panel_row_count": 100,
+  "global_sorted_model_visible_sha256": "8401854824585d35f3385a87c814f68463f677309ae41a5796b9448c73b51dde",
+  "global_sorted_plan_condition_sha256": "e4ed363faf0c9469ee528ce8a05a652cd245888969e32548719e1ff7fdd1b701",
+  "global_sorted_selected_indices_sha256": "6d506216aa5bad159f167e2535293b4e5ec8e1073b64449d30b66b460ebf6da0",
+  "global_sorted_training_pair_sha256": "51f1f35bd5cde0bfa9d8960dca1ceea2d12cb0af73ce4a8f47fdb28ee74de19b",
+  "initial_intermediate_terminal_same_panel": true,
+  "no_padding_duplicates": true,
+  "panel_ledger_sha256": "f4fad13216eefe51b073c80df5b6d91507db12dbfb7f95603b01ed9858ab03cd",
+  "panel_rule": "first rows_per_rank indices from each frozen rank-strided no-padding validation shard",
+  "rank_major_selected_indices_sha256": "254b66e510de0fe7a2ecdc426be494873125f4628a255eb565687075a6dd6499",
+  "rank_shards": [
+    {
+      "full_count": 4524,
+      "rank": 0,
+      "selected_count": 50,
+      "selected_first": 0,
+      "selected_last": 98,
+      "selected_ordered_index_sha256": "625ad9650dee2751a01416a1b141cf9542c47609a3248bb38a03036918691625"
+    },
+    {
+      "full_count": 4523,
+      "rank": 1,
+      "selected_count": 50,
+      "selected_first": 1,
+      "selected_last": 99,
+      "selected_ordered_index_sha256": "17393e28ee9cf73d9ce3cda90fea6cdd9dec58bf0760107d234a2c0a2193ffe5"
+    }
+  ],
+  "sampler": "rank_strided_no_padding",
+  "schema": "h1a2_v3_dlm_fixed_100_row_panel_audit_v1",
+  "scientific_training_authorized": false,
+  "status": "complete",
+  "validation_ledger_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2/row_ledger/val.jsonl",
+  "validation_ledger_sha256": "d1f4dacada130bc171290c9bf16e343dc47a03a9d0ce6297d6720c8a679b789d",
+  "validation_row_count": 9047,
+  "world_size": 2
+}

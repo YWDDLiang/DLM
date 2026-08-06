@@ -1,0 +1,31 @@
+{
+  "schema": "h1a2_v3_submission_repair_note_v1",
+  "created_at": "2026-08-01",
+  "status": "repair_authorized_during_submission",
+  "affected_scripts": [
+    "v3_planner512_v1/assemble_planner512.sbatch",
+    "v3_dependency_margin_v1/assemble_dependency_margin.sbatch"
+  ],
+  "root_cause": "The assembly drafts named a non-existent partition 'cpu'. The same cluster's completed likelihood assemblies 29392 and 29394 ran in partition 'short'; sinfo confirms short is the default active CPU partition.",
+  "first_submission_evidence": {
+    "planner_array_job_id": "29452",
+    "planner_array_retried": false,
+    "planner_assembly_job_created": false,
+    "scheduler_error": "invalid partition specified: cpu",
+    "historical_reference_jobs": {
+      "29392": "short",
+      "29394": "short"
+    }
+  },
+  "repair": {
+    "action": "Submit each assembly once with the command-line override --partition=short while leaving the immutable source bundle and its SHA-256 inventory unchanged.",
+    "source_bundle_changed": false,
+    "execution_manifest_changed": false,
+    "scientific_protocol_changed": false,
+    "model_or_data_changed": false,
+    "seed_denominator_threshold_changed": false,
+    "GPU_array_retried": false,
+    "resource_change": "partition name only; CPU, memory, and walltime unchanged"
+  },
+  "automatic_downstream": false
+}

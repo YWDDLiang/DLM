@@ -1,0 +1,48 @@
+{
+  "schema_version": "plan-dlm-null-repair-selection-lock@1",
+  "status": "frozen_before_gpu_execution",
+  "source": {
+    "records": 1200,
+    "eligible_records": 1167,
+    "sha256": "ff6d5ca132bcbfa2615f7e90bddc4c8d8ad427d9083e8ae5fe1eb7374b2526ca"
+  },
+  "prior_panel": {
+    "schema_version": "r5c-shared-plan-gold-gate-selection@1",
+    "seed": 20260724,
+    "records": 256,
+    "selected_positions_sha256": "5c02f6e24a874ae290d0142e26e3cd13658234f0f855351934c1e690726885bd"
+  },
+  "new_panel": {
+    "schema_version": "plan-dlm-null-repair-selection@1",
+    "seed": 20260728,
+    "records": 256,
+    "prior_outcome_overlap_count": 0,
+    "selected_positions_sha256": "1d3d670092da45c78d3adaaddaeeaadee2ffe7efe410660d106b8a7b73cd7e18",
+    "selected_identities_jsonl_sha256": "686a37a826d8c14d41b94238e715e2e5aa6e99c0f92260a76f70f01e9bcbd841",
+    "selection_identities_artifact_sha256": "fcf29ae5263a709a8134e8e9862ca454f841a85a21592d7a3d4822ee252fdf68"
+  },
+  "shuffled_control": {
+    "seed": 20260728,
+    "group_eligible_records": 245,
+    "distinct_hint_records": 171,
+    "permutation_sha256": "3b75d6133ebe049e759fed94e48c7ad996f13fb486804a4ef343567c909df772",
+    "effective_mask_sha256": "9d1176e2b7cc1d0adfc47e4802abc98befe7e70b5b0003d356754d3c351a4e0a"
+  },
+  "artifacts": {
+    "freeze_receipt": {
+      "path": "workstreams/plan_dlm_relaunch_20260728/selection_freeze_v1/selection_freeze_receipt.json",
+      "sha256": "85466a01e8178f829f50b7a8f9b305ecacfc96303eefbd06e6d3b13c968ec152"
+    },
+    "selection_identities": {
+      "path": "workstreams/plan_dlm_relaunch_20260728/selection_freeze_v1/selection_identities.jsonl",
+      "sha256": "fcf29ae5263a709a8134e8e9862ca454f841a85a21592d7a3d4822ee252fdf68",
+      "records": 256
+    },
+    "execution_config": {
+      "path": "../llm_plan_diff/configs/experiments/mp20_plan_dlm_null_repair_v1.yaml",
+      "sha256": "4336edb490e524abc91ab71bf9adabe30513520b2c071425c2f2594791042d4f"
+    }
+  },
+  "sun_or_mlip_consulted": false,
+  "automatic_gpu_submission_authorized": false
+}

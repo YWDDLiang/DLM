@@ -1,0 +1,293 @@
+#!/usr/bin/env python3
+"""Build the one authorized cumulative bridge-parity execution archive."""
+
+from __future__ import annotations
+
+import gzip
+import hashlib
+import json
+import os
+import shutil
+import tarfile
+from pathlib import Path, PurePosixPath
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+AUDIT = (
+    ROOT
+    / "runs/remote_audit/20260726_wq_schedule_correct_bridge_parity_v1"
+)
+BUILD = AUDIT / "build_execution_v3"
+PARENT_ROOT = (
+    ROOT
+    / "runs/remote_audit/20260725_wq_existing22_mp_completion_v1"
+    / "build/archive_root"
+)
+PARENT_MANIFEST = PARENT_ROOT / "patch_manifest.json"
+PARENT_MANIFEST_SHA256 = (
+    "2eef709c1f671a504c440d5103fea533238fe25a6725901eb08ee52723ef23a1"
+)
+AUTHORIZATION = "user_wq_schedule_correct_bridge_parity_v1_2026-07-26"
+AUTHORIZATION_RECORD = (
+    "runs/remote_audit/20260726_wq_schedule_correct_bridge_parity_v1/"
+    "remote_execution_authorization.json"
+)
+AUTHORIZATION_SOURCE = (
+    "diagnostics/authorization_records/"
+    "wq_schedule_correct_bridge_parity_v1_remote_execution.json"
+)
+AUTHORIZATION_SHA256 = (
+    "ee83f4a2ee3ea71c08c8f642cab5fdc374accf8498de1eb08846ca5cc92f6cab"
+)
+BASE_SOURCE_BUNDLE_SHA256 = (
+    "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908"
+)
+CONTRACT_SHA256 = (
+    "d4f18bf74a1814d7de6d7a4d4934c615857edef364a039f371723aa1763b4c6b"
+)
+NEW_PATHS = {
+    "configs/experiments/wyckoff_codiffusion/"
+    "wq_schedule_correct_bridge_parity_v1.json",
+    "configs/experiments/wyckoff_codiffusion/"
+    "wq_schedule_correct_bridge_parity_execution_v1.json",
+    "crystal_dlm/wqcodiff/crysllmgen/bridge_parity.py",
+    AUTHORIZATION_SOURCE,
+    "diagnostics/authorization_records/"
+    "wq_schedule_correct_bridge_parity_v1_local_preparation.json",
+    "diagnostics/build_wq_schedule_correct_bridge_parity_archive.py",
+    "docs/experiment_program/"
+    "20260726_wq_schedule_correct_bridge_exploratory_execution.md",
+    "scripts/a800/run_wq_schedule_correct_bridge_parity_v1.py",
+    "scripts/a800/wq_schedule_correct_bridge_parity_v1/preflight.sbatch",
+    "scripts/a800/wq_schedule_correct_bridge_parity_v1/submit_once.sh",
+    "tests/test_crysllmgen_bridge_parity.py",
+    "tests/test_crysllmgen_bridge_parity_runner.py",
+    "tests/test_wq_schedule_correct_bridge_parity_submission.py",
+}
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def write_json_exclusive(path: Path, payload: dict[str, Any]) -> None:
+    with path.open("x", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def source_for(relative: str) -> Path:
+    current = ROOT / relative
+    if current.is_file():
+        return current
+    preserved = PARENT_ROOT / relative
+    if preserved.is_file():
+        return preserved
+    raise FileNotFoundError(f"cumulative source path is missing: {relative}")
+
+
+def add_tar_entry(
+    archive: tarfile.TarFile,
+    source: Path,
+    arcname: str,
+    *,
+    is_directory: bool,
+) -> None:
+    info = archive.gettarinfo(str(source), arcname)
+    info.uid = 0
+    info.gid = 0
+    info.uname = ""
+    info.gname = ""
+    info.mtime = 0
+    info.mode = 0o755 if is_directory else (0o755 if os.access(source, os.X_OK) else 0o644)
+    if is_directory:
+        archive.addfile(info)
+    else:
+        with source.open("rb") as handle:
+            archive.addfile(info, handle)
+
+
+def build_tar(archive_path: Path, archive_root: Path) -> None:
+    with archive_path.open("xb") as raw:
+        with gzip.GzipFile(fileobj=raw, mode="wb", mtime=0, filename="") as zipped:
+            with tarfile.open(fileobj=zipped, mode="w") as archive:
+                root_name = archive_root.name
+                add_tar_entry(
+                    archive,
+                    archive_root,
+                    root_name,
+                    is_directory=True,
+                )
+                directories = sorted(
+                    (
+                        path
+                        for path in archive_root.rglob("*")
+                        if path.is_dir()
+                    ),
+                    key=lambda path: path.relative_to(archive_root).as_posix(),
+                )
+                files = sorted(
+                    (
+                        path
+                        for path in archive_root.rglob("*")
+                        if path.is_file()
+                    ),
+                    key=lambda path: path.relative_to(archive_root).as_posix(),
+                )
+                for directory in directories:
+                    relative = directory.relative_to(archive_root).as_posix()
+                    add_tar_entry(
+                        archive,
+                        directory,
+                        f"{root_name}/{relative}",
+                        is_directory=True,
+                    )
+                for file_path in files:
+                    relative = file_path.relative_to(archive_root).as_posix()
+                    add_tar_entry(
+                        archive,
+                        file_path,
+                        f"{root_name}/{relative}",
+                        is_directory=False,
+                    )
+
+
+def main() -> None:
+    if sha256(PARENT_MANIFEST) != PARENT_MANIFEST_SHA256:
+        raise ValueError("parent cumulative manifest identity changed")
+    parent = json.loads(PARENT_MANIFEST.read_text(encoding="utf-8"))
+    if parent.get("schema") != "wqcodiff_authorized_patch_v1":
+        raise ValueError("unexpected parent manifest schema")
+    parent_paths = {str(entry["path"]) for entry in parent["files"]}
+    relative_paths = sorted(parent_paths | NEW_PATHS)
+    if not relative_paths or len(relative_paths) != len(set(relative_paths)):
+        raise ValueError("cumulative path set is empty or duplicated")
+    for relative in relative_paths:
+        pure = PurePosixPath(relative)
+        if pure.is_absolute() or ".." in pure.parts or pure.parts[0] == "runs":
+            raise ValueError(f"unsafe archive path: {relative}")
+
+    BUILD.mkdir(parents=True, exist_ok=False)
+    temporary_root = BUILD / "archive_root_building"
+    temporary_root.mkdir()
+    files: list[dict[str, Any]] = []
+    for relative in relative_paths:
+        source = source_for(relative)
+        destination = temporary_root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+        files.append(
+            {
+                "path": relative,
+                "bytes": destination.stat().st_size,
+                "sha256": sha256(destination),
+            }
+        )
+
+    authorization_source = temporary_root / AUTHORIZATION_SOURCE
+    if sha256(authorization_source) != AUTHORIZATION_SHA256:
+        raise ValueError("archive authorization record identity changed")
+    contract = (
+        temporary_root
+        / "configs/experiments/wyckoff_codiffusion/"
+        "wq_schedule_correct_bridge_parity_v1.json"
+    )
+    if sha256(contract) != CONTRACT_SHA256:
+        raise ValueError("scientific contract identity changed")
+
+    manifest = {
+        "schema": "wqcodiff_authorized_patch_v1",
+        "authorization": AUTHORIZATION,
+        "authorization_record": AUTHORIZATION_RECORD,
+        "authorization_record_source": AUTHORIZATION_SOURCE,
+        "authorization_record_sha256": AUTHORIZATION_SHA256,
+        "base_source_bundle_sha256": BASE_SOURCE_BUNDLE_SHA256,
+        "cumulative_preservation": True,
+        "parent_authorized_patch_manifest_sha256": PARENT_MANIFEST_SHA256,
+        "scope": (
+            "Preserve all previously authorized source bytes; add one "
+            "MLIP-free, evaluation-only 4x8 schedule-correct released-parent "
+            "bridge parity preflight using one A800, eight CPUs, 64 GiB, and "
+            "60 minutes. No generation, retry, replacement, API query, "
+            "checkpoint selection, short training, or long training."
+        ),
+        "files": files,
+    }
+    manifest_path = temporary_root / "patch_manifest.json"
+    write_json_exclusive(manifest_path, manifest)
+    manifest_sha = sha256(manifest_path)
+    archive_root = BUILD / f"archive_root_{manifest_sha[:12]}"
+    temporary_root.rename(archive_root)
+    archive_name = (
+        f"wq_schedule_correct_bridge_parity_v1_{manifest_sha[:12]}.tar.gz"
+    )
+    archive_path = BUILD / archive_name
+    build_tar(archive_path, archive_root)
+    archive_sha = sha256(archive_path)
+    transfer = {
+        "schema": "wq_schedule_correct_bridge_parity_transfer_v1",
+        "archive": archive_name,
+        "archive_bytes": archive_path.stat().st_size,
+        "archive_regular_files": len(files) + 1,
+        "archive_root": archive_root.name,
+        "archive_sha256": archive_sha,
+        "authorized_patch_files": len(files),
+        "authorization_record_sha256": AUTHORIZATION_SHA256,
+        "patch_manifest_sha256": manifest_sha,
+        "parent_execution_patch_sha256": PARENT_MANIFEST_SHA256,
+        "scientific_contract_sha256": CONTRACT_SHA256,
+        "starteam_staging_directory": (
+            "/zhdd/home/ywliang/a800/staging/"
+            "wq_schedule_correct_bridge_parity_v1"
+        ),
+        "a800_staging_directory": (
+            "/public/home/jiaosz/ywliang/ai4s/.staging/"
+            "wq_schedule_correct_bridge_parity_v1"
+        ),
+        "starteam_to_a800_port": 7001,
+        "starteam_to_a800_private_key_flag": False,
+        "transfer_authorization": {
+            "local_to_starteam5090_once": True,
+            "starteam5090_to_a800_once": True,
+            "reusable": False,
+        },
+        "execution": {
+            "evaluation_only": True,
+            "single_non_array_slurm_job": True,
+            "a800": 1,
+            "cpus": 8,
+            "memory_gib": 64,
+            "time_limit_minutes": 60,
+            "training": False,
+        },
+    }
+    transfer_path = BUILD / "transfer_manifest.json"
+    write_json_exclusive(transfer_path, transfer)
+    print(
+        json.dumps(
+            {
+                "ok": True,
+                "archive": str(archive_path),
+                "archive_sha256": archive_sha,
+                "archive_bytes": archive_path.stat().st_size,
+                "archive_regular_files": len(files) + 1,
+                "authorized_patch_files": len(files),
+                "patch_manifest_sha256": manifest_sha,
+                "transfer_manifest": str(transfer_path),
+                "transfer_manifest_sha256": sha256(transfer_path),
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,29 @@
+{
+  "schema": "h1_r03g_no_completed_hull_authorization_v1",
+  "status": "authorized",
+  "date": "2026-08-03",
+  "user_quote": "去除completed-hull再跑",
+  "authorized_scope": [
+    "read-only reuse of the clean-terminal R03E four-repeat, eight-arm evidence",
+    "read-only reuse of the R03F common 227-system Materials Project snapshot",
+    "remove only the completed-hull zero-unknown hard gate",
+    "retain exact parity for every pre-existing finite E_hull",
+    "retain conservation of every source unknown as resolved or still unknown",
+    "recompute strict and meta S.U.N. over every original 256-attempt arm, with residual unknowns scored false and disclosed",
+    "per-repeat McNemar and deterministic hierarchical paired bootstrap reporting"
+  ],
+  "not_authorized": [
+    "new Materials Project queries or API-key use",
+    "generation or body rerun",
+    "diffusion refinement rerun",
+    "CHGNet relaxation rerun",
+    "direct metric or novelty rerun",
+    "sample retry, replacement, repair, filtering, or reranking",
+    "Slurm or GPU execution",
+    "training",
+    "checkpoint reselection",
+    "formal G3 or G4",
+    "promotion",
+    "automatic downstream"
+  ]
+}

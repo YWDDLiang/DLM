@@ -1,0 +1,145 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_execution_manifest_v6",
+  "created_at": "2026-08-01",
+  "status": "frozen_ready_for_packed_two_submission_dag_after_bounded_repair",
+  "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v6",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v6",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/v3_poststop_sun256_diagnostic_v6",
+  "authorization": {
+    "path": "AUTHORIZATION.json",
+    "sha256": "7c825d80bc75dba87e8490799c604f4cfd35191c3d47c39875363d8e13ad7a14"
+  },
+  "config": {
+    "path": "config.json",
+    "sha256": "ab718c84d0b32eee4fb18390567fb4a8a1b2db017e03b7035823ff04a293e21a"
+  },
+  "isolated_runtime": {
+    "root": "runtime",
+    "files": 73,
+    "manifest": "RUNTIME_REQUIRED_SHA256.txt",
+    "manifest_sha256": "0c83c9aa648dccf16532b40f1e74d31df96ca2e2ec2b21893504772730992e7c",
+    "shared_project_runtime_overwrite": false
+  },
+  "scientific_context": {
+    "phase2_planner_gate_passed": false,
+    "phase2_body_gate_passed": false,
+    "purpose": "post-stop_factor_attribution_and_sun_diagnostic",
+    "formal_g3": false
+  },
+  "factorial_design": {
+    "arms": {
+      "M00": "P0+B0",
+      "M10": "Pstar+B0",
+      "M01": "P0+B2",
+      "M11": "Pstar+B2"
+    },
+    "attempts_per_arm": 256,
+    "ordinals": "0..255",
+    "denominator": "raw_all_attempt",
+    "same_ordinal_planner_seed": true,
+    "same_ordinal_body_seed": true,
+    "same_ordinal_refiner_seed": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "raw_plan_format_gate": "advisory_nonblocking",
+    "historical_h1a2_parsed_flag_is_authoritative": true,
+    "frozen_canonical_plan_text_feeds_body": true,
+    "raw_model_text_and_format_warning_preserved": true
+  },
+  "diffusion_refinement": {
+    "required_for_every_arm": true,
+    "required_before_direct_metrics_and_sun": true,
+    "checkpoint": "CrysLLMGen model_494",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "reverse_steps": 800,
+    "num_evals": 1,
+    "successful_unrefined_output_may_enter_evaluation": false
+  },
+  "dag": [
+    {
+      "stage": "per_arm_end_to_end_pipeline",
+      "dependency": null,
+      "array": "0-3%2",
+      "partition": "gpu",
+      "gpus_per_element": 1,
+      "gpu_type": "NVIDIAA800-SXM4-80GB",
+      "cpus_per_element": 8,
+      "memory_gib_per_element": 96,
+      "walltime_per_element": "1-12:00:00",
+      "ordered_internal_stages": [
+        "arm_local_input_preparation",
+        "body_generation",
+        "frozen_diffusion_refinement_800",
+        "generation_finalization",
+        "direct_metrics",
+        "frozen_sun",
+        "arm_validation"
+      ]
+    },
+    {
+      "stage": "assembly",
+      "dependency": "afterany:per_arm_end_to_end_pipeline",
+      "partition": "short",
+      "cpus": 4,
+      "memory_gib": 32,
+      "walltime": "01:00:00"
+    }
+  ],
+  "repair_context": {
+    "superseded_failed_runs": [
+      {
+        "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v1",
+        "jobs": ["29495", "29496"]
+      },
+      {
+        "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v2",
+        "jobs": ["29505", "29506"]
+      },
+      {
+        "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v3",
+        "jobs": [],
+        "reason": "pre-submission isolated-runtime import-order test failed"
+      },
+      {
+        "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v4",
+        "jobs": ["29520", "29521"],
+        "reason": "bundled runtime/scripts lacked a regular-package marker and was shadowed before body generation"
+      },
+      {
+        "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v5",
+        "jobs": ["29531", "29532"],
+        "reason": "generated __pycache__ bytecode was misclassified as an execution source file-set change before model loading"
+      }
+    ],
+    "partial_outputs_reused": false,
+    "repair_logs": [
+      "repair_log/001_v1_prepare_runtime_package_and_slurm_packing.json",
+      "repair_log/002_v2_strict_planner_attempt_accounting.json",
+      "repair_log/003_v3_isolated_runtime_import_order.json",
+      "repair_log/004_v4_isolated_scripts_package_marker.json",
+      "repair_log/005_v5_python_bytecode_source_inventory.json"
+    ],
+    "scientific_protocol_changed": true,
+    "current_v4_to_v5_repair_changes_scientific_protocol": false,
+    "current_v5_to_v6_repair_changes_scientific_protocol": false,
+    "user_authorized_change": "raw seven-line formatting changed from blocking to advisory; frozen H1-A2 canonical plan_text continues downstream"
+  },
+  "sun": {
+    "mp_api_enabled": false,
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "frozen_cache_only": true,
+    "credential_written_to_source_or_logs": false
+  },
+  "decision_firewall": {
+    "diagnostic_only": true,
+    "checkpoint_reselection_from_generation_or_sun": false,
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_downstream": false,
+    "automatic_training": false
+  }
+}

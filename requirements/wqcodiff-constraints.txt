@@ -1,0 +1,3 @@
+# Static invariant. bootstrap_diff_meets_diff.sh adds exact installed NumPy,
+# pymatgen, spglib, triton, and CUDA runtime packages at run time.
+torch==2.4.0

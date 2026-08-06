@@ -1,0 +1,65 @@
+{
+  "schema": "wq_wyckoff_identity_mechanics_sup28195_authorization_v1",
+  "recorded_date": "2026-07-27",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "execution_identity": "wq_wyckoff_identity_mechanics_sup28195_v1",
+  "supersedes_failed_job_id": 28195,
+  "user_quote": "与原顺序签名比较这个太严苛了，我觉得可以去掉，或者不作为拦截，然后你看看接下来该做什么，然后就去做",
+  "bound_request": "Replace the representation-sensitive ordered primitive-atom composition gate with an exact order-invariant element-count multiset gate, keep the ordered signature as a non-blocking diagnostic, preserve exact Wyckoff topology and canonical proposal identity as hard gates, and execute one development-only mechanics regression before any new confirmatory panel.",
+  "authorized_once": [
+    "implement and test a permutation-safe source identity",
+    "register one exact installer and runtime Gate-A authorization",
+    "build one deterministic cumulative archive and transfer its exact tar.gz through the frozen two-hop route",
+    "atomically install and verify the exact patch on A800",
+    "reuse the already exposed job28195 source panel for one development-only 256-source identity audit",
+    "run exactly one R/U/T mechanics regression on the first 32 frozen job28195 source/noise cells",
+    "submit one Slurm job with one A800 and eight CPU after an exclusive claim",
+    "perform read-only monitoring and immutable terminal auditing"
+  ],
+  "scientific_boundary": {
+    "job28195_reinterpreted": false,
+    "job28195_decision_remains": "invalid_integrity_stop_no_retry",
+    "development_panel_reused": true,
+    "confirmatory_evidence": false,
+    "new_proposals": 0,
+    "crysllmgen_metrics": false,
+    "chgnet_or_sun": false,
+    "training": false,
+    "automatic_confirmatory_submission": false
+  },
+  "identity_boundary": {
+    "composition_identity": "exact_element_count_multiset",
+    "atom_count_identity": "exact",
+    "topology_identity": "exact_species_wyckoff_topology_hash",
+    "proposal_identity": "canonical_storage_payload",
+    "legacy_ordered_atomic_numbers_signature": "diagnostic_only",
+    "legacy_ordered_atom_mismatch_blocking": false,
+    "parent_input_order": "canonical_orbit_expansion"
+  },
+  "resource_boundary": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit": "01:00:00",
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "not_authorized": [
+    "overwriting, deleting, renaming, retrying, or scientifically reinterpreting job28195",
+    "training or fine-tuning",
+    "running CrysLLMGen direct metrics, CHGNet, S.U.N., MP API, MatterSim, or DFT",
+    "generating replacement proposals or using a new held-out panel",
+    "best-of, reranking, outcome filtering, retry, or replacement",
+    "automatic submission of a new 256-attempt confirmatory evaluation",
+    "using more than eight CPU per A800",
+    "cancelling or modifying unrelated jobs",
+    "reconnecting the user-maintained nested A800 SSH session",
+    "connecting directly from the local machine to A800"
+  ],
+  "connection_boundary": {
+    "local_outer_tmux": "wq-starteam:1.0",
+    "a800_nested_user_managed_tmux": "ssha800:1.0",
+    "nested_reconnect_by_agent": false,
+    "direct_local_to_a800": false
+  }
+}

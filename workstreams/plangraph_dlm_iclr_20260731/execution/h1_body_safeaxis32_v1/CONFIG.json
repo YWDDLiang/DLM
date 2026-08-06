@@ -1,0 +1,69 @@
+{
+  "schema": "h1_body_safeaxis32_config_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis32_v1",
+  "denominator": 32,
+  "ordinals": {
+    "start": 0,
+    "end_inclusive": 31
+  },
+  "frozen_h1": {
+    "source_manifest_sha256": "f4a4e94a6df1acb10e8c6ad8d0b712448371d1dcea79027f6c2b07b8a3303d34",
+    "attempt_ledger": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1/data/attempt_ledger.jsonl",
+    "attempt_ledger_sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f",
+    "control_body_attempts": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_exact_replay_p0_v1/replay/P0/generation/body_attempts.jsonl",
+    "control_body_attempts_sha256": "d1970e1499e8837d1b837a085005fdcbbc24c9ca12e2999d2f0e3c36d015816f",
+    "planner_arm": "P0",
+    "expected_first32_body_eligible": 32
+  },
+  "body": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "exact_length_generation": true,
+    "answer_token_count_formula": "7+4N",
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "adapter_file": "adapter_model.safetensors",
+    "adapter_expected_bytes": 6391016776,
+    "tokenizer_vocab_sha256": "3acc073da85047265769f2dccd93543fa9d7cbfa95021aef54ef282b13ce2f37",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "tokenizer_config_sha256": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+    "tokenizer_size": 128830,
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "max_batch_size": 8,
+    "schema_logit_mask": true,
+    "prefill_count_token": true,
+    "freeze_plan_composition": true,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "min_lattice_rad": 0.0001
+  },
+  "treatment": {
+    "control_policy": "d1",
+    "candidate_policy": "d2_safe_axis",
+    "same_model_checkpoint": true,
+    "same_plans_prompts_ordinals_and_noise": true,
+    "candidate_graph_source": "model_sampled_plan_state_only",
+    "structure_derived_teacher_plan": false,
+    "all_xy_must_precede_all_z": true,
+    "mixed_axis_coordinate_groups_allowed": false,
+    "required_z_before_xy_count": 0
+  },
+  "gate": {
+    "control_completion_drop_vs_historical_max_count": 0,
+    "control_new_failure_classes_allowed": 0,
+    "candidate_completion_drop_max_count": 0,
+    "candidate_excess_duplicate_coordinate_failures_max_count": 0,
+    "new_candidate_failure_classes_allowed": 0,
+    "require_schedule_treatment_applied": true
+  },
+  "retry": false,
+  "replacement": false,
+  "repair": false,
+  "filter": false,
+  "rerank": false,
+  "refinement": false,
+  "direct_metrics": false,
+  "sun": false,
+  "automatic_downstream": false
+}

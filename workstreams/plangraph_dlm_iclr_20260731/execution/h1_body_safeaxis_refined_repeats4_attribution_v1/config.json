@@ -1,0 +1,67 @@
+{
+  "schema": "h1_r03h_paired_ordinal_attribution_config_v1",
+  "identity": "h1_r03h_paired_ordinal_attribution_v1",
+  "run_id": "20260803_h1_body_safeaxis_refined_repeats4_attribution_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260803_h1_body_safeaxis_refined_repeats4_attribution_v1",
+  "source_r03g": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260803_h1_body_safeaxis_refined_repeats4_no_completed_hull_v1",
+    "source_manifest_sha256": "06fa4bcd2fc4e340906c9e2396af2c6cbe7f7fb9178156d4112eba96201f4858",
+    "source_manifest": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_no_completed_hull_v1/SOURCE_SHA256.txt",
+      "sha256": "06fa4bcd2fc4e340906c9e2396af2c6cbe7f7fb9178156d4112eba96201f4858"
+    },
+    "terminal_report": {
+      "path": "final/terminal_report.json",
+      "bytes": 24777,
+      "sha256": "3cb705ea9b572f37dc46696a8aa59a8ae90a0ec90db4789d341052bab7d3bfff"
+    },
+    "decision": {
+      "path": "final/decision.json",
+      "bytes": 440,
+      "sha256": "0f9b33f53dcf066b9c77f92fc6adcd799bc18b2df6bce431c89fb6fe453dfa6b"
+    },
+    "input_contract": {
+      "path": "input_contract.json",
+      "bytes": 24103,
+      "sha256": "69ad665631ac52ea6ff8e5a48e9df17ee1e580554f8e6da46da5d646cbc316fe"
+    },
+    "success_marker": "final/_SUCCESS",
+    "expected_status": "complete_without_completed_hull_zero_unknown_gate",
+    "expected_common_snapshot_sha256": "56f91774c798854d253c0726773593c415456a8b5361f31802c44d8e1bbad917",
+    "expected_r03e_terminal_sha256": "7fa49a6feb372d4d5e5dc442a187657a39001b6190dd6a64af0bf7f53c293b02"
+  },
+  "analysis": {
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "attempts_per_arm": 256,
+    "repeat_count": 4,
+    "paired_records": 1024,
+    "denominator": "raw_all_attempts",
+    "state_order": [
+      "ineligible",
+      "residual_unknown",
+      "strict",
+      "meta_only",
+      "above_meta"
+    ],
+    "descriptive_meta_margin_ev_per_atom": 0.01,
+    "threshold_change": false,
+    "new_inferential_test": false,
+    "sample_selection": false
+  },
+  "execution": {
+    "location": "A800_login_node_via_user_maintained_nested_tmux",
+    "slurm_allowed": false,
+    "gpu_allowed": false,
+    "network_allowed": false,
+    "api_key_allowed": false,
+    "output_mode": "new_report_only_sidecar"
+  },
+  "decision_firewall": {
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_training": false,
+    "checkpoint_reselection": false,
+    "automatic_downstream": false
+  }
+}

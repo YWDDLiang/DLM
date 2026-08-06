@@ -1,0 +1,63 @@
+{
+  "schema": "wq_wyckoff_chart_retraction_confirmatory256_v1_local_preparation_authorization_v1",
+  "recorded_date": "2026-07-26",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "user_quote": "开始吧，写成已给plan，按计划推进",
+  "interpretation": {
+    "authorized_now": [
+      "write and accept the WTB-256 execution plan and task list",
+      "freeze one fresh confirmatory scientific contract before any ordinal 512 output exists",
+      "implement the source, paired R/U/T, direct-metric, exact S.U.N., paired-statistics, promotion-lock, and terminal-acceptance paths",
+      "implement a one-job fail-closed Slurm wrapper with one A800 and no more than eight CPU",
+      "run local static, unit, fixture, syntax, simulated-install, and installed-byte checks",
+      "build exactly one deterministic cumulative local-preparation archive and record its exact manifest and transfer identities"
+    ],
+    "not_authorized_yet": [
+      "transfer the not-yet-frozen archive to starteam5090 or A800",
+      "install the not-yet-frozen archive on A800",
+      "create a remote submission claim or submit the confirmatory Slurm job",
+      "train, fine-tune, retry, replace, rerank, use best-of, or select outcomes",
+      "run MatterSim or another MLIP for guidance",
+      "query Materials Project from Slurm",
+      "cancel or modify unrelated jobs",
+      "reconnect the user-maintained nested A800 SSH session or connect directly from the local machine to A800"
+    ]
+  },
+  "frozen_scientific_scope": {
+    "identity": "wq_wyckoff_chart_retraction_confirmatory256_v1",
+    "training_seed": 11,
+    "sampling_seed": 101,
+    "ordinal_range": [
+      512,
+      767
+    ],
+    "attempts_per_arm": 256,
+    "arms": [
+      "R",
+      "U",
+      "T"
+    ],
+    "reverse_start_timestep": 800,
+    "reverse_steps": 32,
+    "decoder_calls_per_diffusion_arm": 64,
+    "evaluation_only": true,
+    "training": false,
+    "retry_or_replacement_allowed": false
+  },
+  "resource_boundary": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 96,
+    "time_limit": "18:00:00",
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "connection_boundary_for_future_separate_authorization": {
+    "local_to_starteam_tmux": "wq-starteam:1.0",
+    "starteam_to_a800_user_managed_tmux": "ssha800:1.0",
+    "nested_ssh_reconnect_by_agent_allowed": false,
+    "direct_a800_ssh_scp_sftp_allowed": false,
+    "starteam_to_a800_port": 7001,
+    "starteam_to_a800_explicit_private_key_flag": false
+  }
+}

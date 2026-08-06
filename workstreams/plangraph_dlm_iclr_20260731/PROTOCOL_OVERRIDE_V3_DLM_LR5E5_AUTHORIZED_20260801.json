@@ -1,0 +1,59 @@
+{
+  "schema": "h1a2_v3_dlm_learning_rate_user_override_v1",
+  "status": "frozen_authorized_for_scientific_training",
+  "created_at": "2026-08-01",
+  "user_directive": "DLM lr用以前的5e-5，别的都授权",
+  "supersedes": {
+    "document": "PROTOCOL_AMENDMENT_V3_DLM_ONE_EPOCH_20260801.json",
+    "field": "frozen_dlm_one_epoch_plan.learning_rate",
+    "old_value": 0.000005,
+    "new_value": 0.00005
+  },
+  "risk_evidence_retained": {
+    "source": "completed 32-row B1/B2 two-update engineering smoke",
+    "B1_fixed_panel_relative_loss_change": 0.079,
+    "B2_fixed_panel_relative_loss_change": 0.0652,
+    "interpretation": "The user-directed historical learning rate is used despite adverse two-update engineering evidence; the smoke is retained and is not relabeled."
+  },
+  "unchanged_dlm_contract": {
+    "epochs": 1,
+    "train_rows": 27136,
+    "world_size": 2,
+    "per_device_batch": 1,
+    "gradient_accumulation": 8,
+    "global_effective_batch": 16,
+    "exact_optimizer_updates": 1696,
+    "lr_scheduler": "cosine",
+    "warmup_updates": 100,
+    "minimum_lr_ratio": 0.2,
+    "validation_steps": [
+      0,
+      212,
+      424,
+      636,
+      848,
+      1060,
+      1272,
+      1484,
+      1696
+    ],
+    "validation_global_fixed_panel_rows": 100,
+    "early_stopping": false,
+    "checkpoint_eligibility": "terminal_step_1696_only",
+    "maximum_concurrent_arms": 1
+  },
+  "authorized_scope": {
+    "Pcontrol_Pstar_400_update_training": true,
+    "B1_B2_one_epoch_1696_update_training": true,
+    "registered_likelihood_checkpoint_selection": true,
+    "fresh_source_execution_authorization_submission_records": true
+  },
+  "not_automatically_authorized": {
+    "Planner_512_generation": true,
+    "crystal_generation": true,
+    "SUN_or_energy_evaluation": true,
+    "G3_or_G4": true,
+    "automatic_promotion": true
+  },
+  "H1_fallback_read_only": true
+}

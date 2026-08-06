@@ -1,0 +1,98 @@
+{
+  "schema": "wq_parent_csp_bridge_v2_plan_v1",
+  "status": "diagnostic_p0_only_ready",
+  "motivation": {
+    "observed_failure": "All 768 quotient-refiner generations failed at the first reverse boundary.",
+    "training_inference_mismatch": "Training forward-noises coordinates and lattice at t, while the failed headline sampler injected an unnoised Llama proposal directly at tau=1.",
+    "endpoint_amplification": "The quotient lattice integrator uses alpha(1)=1e-8, while released parent CrysLLMGen starts at discrete t=800 on its 1000-step cosine schedule.",
+    "existing_initialization": "The current WQ refiner already strict-loads and inherits the released CrysLLMGen decoder and time embedding."
+  },
+  "p0_same_proposal_parent_probe": {
+    "experiment_id": "wq-parent-csp-same-proposal-probe-v1",
+    "pairing_id": "wq-epoch-selection-paired-noise-sup27104-v2",
+    "adapter_checkpoint": "formal_epoch_03_step_2544",
+    "training_seed": 11,
+    "sampling_seed": 101,
+    "ordinals": [0, 1, 2, 3],
+    "proposal_seed_contract": "identical_to_failed_epoch_panel",
+    "parent_sampler": "released_CSPDiffusion_parent_pc_skip_v1",
+    "reverse_steps": 32,
+    "csp_forwards_per_success": 64,
+    "resources": {
+      "partition": "gpu",
+      "a800": 1,
+      "cpus": 8,
+      "memory_gib": 64,
+      "time_limit_minutes": 45
+    },
+    "execution_acceptance": [
+      "four_terminal_attempts",
+      "immutable_attempt_ledger_audit_pass",
+      "proposal_text_and_state_preserved",
+      "no_retry_or_replacement"
+    ],
+    "scientific_gate": "at_least_one_finite_positive_volume_parent_output"
+  },
+  "decision": {
+    "parent_all_failed": "Stop. Diagnose WQ-Llama proposal expansion/chemistry; do not train a new diffusion.",
+    "parent_nonzero_success": "Proceed to P1 schedule/parity smoke; do not immediately launch long training."
+  },
+  "p1_bridge_model_design": {
+    "identity": "CrysLLMGenWQBridgeV2",
+    "initialization": [
+      "strict_load_released_parent_CSPDiffusion",
+      "reuse_parent_decoder_and_time_embedding",
+      "optionally_transfer_compatible_orbit_heads_from_refiner_27103"
+    ],
+    "required_changes": [
+      "use_parent_discrete_alpha_bar_and_sigma_tables for geometry reverse steps",
+      "separate clean proposal conditioning from the forward-noised diffusion state",
+      "train lattice-chart and atom-to-orbit tangent bridges against parent-CSP teacher trajectories",
+      "remove direct clean-proposal-as-tau1-state training/inference ambiguity"
+    ],
+    "training_stages": [
+      {
+        "name": "parent_trajectory_parity",
+        "backbone": "frozen",
+        "trainable": [
+          "lattice_chart_bridge",
+          "atom_to_orbit_tangent_bridge",
+          "proposal_condition_projection"
+        ],
+        "gate": "finite_32_step_trajectory_and_parent_update_parity"
+      },
+      {
+        "name": "proposal_conditioned_distillation",
+        "backbone": "frozen_then_last_blocks_low_lr",
+        "data": "MP20_forward_noised_clean_states_mixed_1_to_1_with_parent_refined_WQ_proposals",
+        "gate": "nonzero_raw_generation_success_on_held_out_fixed_proposals"
+      },
+      {
+        "name": "topology_head_coupling",
+        "backbone": "low_lr",
+        "gate": "geometry_gate_passed_before_event_revision_losses_enable"
+      }
+    ],
+    "pre_long_train_matrix": {
+      "fixed_attempts_per_cell": 8,
+      "start_timesteps": [100, 200, 400, 800],
+      "injections": [
+        "correctly_forward_noised_with_clean_proposal_condition",
+        "bounded_residual_noise_around_proposal"
+      ],
+      "required": [
+        "no_nonfinite_trajectory",
+        "no_invalid_lattice_first_step",
+        "raw_success_rate_at_least_parent_probe_rate",
+        "all_failures_retained_in_denominator"
+      ]
+    }
+  },
+  "forbidden_without_new_gate": [
+    "retry_or_replace_job_27323",
+    "retrain_formal_lora",
+    "retrain_refiner_27103_under_same_identity",
+    "submit_long_bridge_training_before_p0_and_p1_smokes_pass",
+    "select_on_final_test_or_MLIP"
+  ]
+}

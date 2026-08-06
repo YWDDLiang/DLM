@@ -1,0 +1,36 @@
+{
+  "authorization_version": 1,
+  "authorized_at": "2026-08-01",
+  "basis": [
+    "user_previously_authorized_bounded_engineering_repairs_with_logs",
+    "user_requested_that_the_live_todo_index_drive_experiment_execution",
+    "user_restored_the_frozen_transfer_connection_and_explicitly_allowed_scp"
+  ],
+  "scope": {
+    "cpu_only_terminal_assembly_repair": true,
+    "original_array_job_id": "29337",
+    "original_assembly_job_id": "29338",
+    "reuse_completed_gpu_arm_reports_read_only": true,
+    "rerun_gpu": false,
+    "scientific_planner_training_400_updates": false,
+    "scientific_dlm_training_400_updates": false,
+    "crystal_generation": false,
+    "sun_evaluation": false,
+    "g3": false,
+    "g4": false
+  },
+  "locks": {
+    "change_model": false,
+    "change_data": false,
+    "change_seed": false,
+    "change_denominator": false,
+    "change_scientific_gate": false,
+    "overwrite_failed_terminal": false,
+    "automatic_downstream": false,
+    "automatic_promotion": false,
+    "checkpoint_selection": false,
+    "eligible_for_later_initialization": false,
+    "modify_h1_assets": false
+  },
+  "notes": "The repair is limited to replacing sacct JobIDRaw matching with array-aware JobID matching. It preserves the failed 29338 report and writes a new terminal report under a new run root."
+}

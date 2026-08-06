@@ -1,0 +1,117 @@
+{
+  "schema": "crysllmgen_refiner_supersession_dependency_dag_v1",
+  "status": "active_user_authorized_ready_to_submit_once",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "authorization": {
+    "record": "runs/remote_audit/20260723_user_authorization_refiner_supersession26955_v2.json",
+    "sha256": "310549b49b8e0450892a37eceb0f10ed87bbd212831b36c3f2913840d3a70f64",
+    "quote": "同意授权"
+  },
+  "frozen_identity": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "protocol_v4_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+    "gate_a_lock_sha256": "534dbd55caf3599bad233bfd671bf304fe28891854101d2a201f1d1feaaa4bf5",
+    "formal_training_job_id": "26954",
+    "formal_training_report_sha256": "04d6b6f78668266508102ce018c3a4afc4077379d9f7d12f0eeffa661f4ba430",
+    "failed_refiner_job_id": "26955",
+    "failed_refiner_audit_sha256": "42d95fb977b82bab428f63a60686d47d961dadc58df1722e652f874a532f2bbe"
+  },
+  "prefetch_selection": {
+    "workers": 7,
+    "depth": 14,
+    "active_processes_including_main": 8,
+    "library_threads_per_process": 1,
+    "historical_profile_job_id": "26667",
+    "historical_batches_per_second": 5.719219302668881,
+    "historical_bitwise_parity": true,
+    "historical_profile_sha256": "4c27d42dee9d1f047587062d720fa0064f81a78b3d2579bb3cd1128b16c1c8a0",
+    "reason": "Job 26955 failed after one persisted update with a 15-worker BrokenProcessPool. The previously profiled 7-worker configuration retained bitwise parity, halves active process count, remains 1.46x faster than the 3-worker profile, and has a producer-only 100000-update estimate of 4.86 hours. A frozen 100-update exact-model smoke must pass before the formal supersession can start."
+  },
+  "outputs": {
+    "stability_smoke": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/refiner_prefetch7_stability_smoke_v2",
+    "formal_refiner": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/train_wq_refiner_seed11_formal_supersession26955_v2",
+    "epoch_panel": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/epoch_checkpoint_panel_sup26955_v2",
+    "epoch_evidence": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/epoch_checkpoint_evidence_sup26955_v2.json",
+    "checkpoint_selection_lock": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/epoch_checkpoint_selection_lock_sup26955_v2.json"
+  },
+  "jobs": [
+    {
+      "key": "prefetch_stability_smoke",
+      "script": "scripts/a800/refiner_supersession26955_v2/refiner_candidate.sbatch",
+      "script_sha256": "6a89572c573f3a3b14a1b25bebd55b83b03f17e24f0d78e2ad5e09240cd7c69a",
+      "dependency": "afterany_all_preexisting_user_gpu_jobs_if_any",
+      "partition": "gpu",
+      "gpus": 1,
+      "cpus": 16,
+      "memory": "64G",
+      "time_limit": "00:30:00",
+      "updates": 100,
+      "scientific_attempt": false
+    },
+    {
+      "key": "formal_refiner_supersession26955",
+      "script": "scripts/a800/refiner_supersession26955_v2/refiner_candidate.sbatch",
+      "script_sha256": "6a89572c573f3a3b14a1b25bebd55b83b03f17e24f0d78e2ad5e09240cd7c69a",
+      "dependency": "afterok:prefetch_stability_smoke",
+      "partition": "gpu",
+      "gpus": 1,
+      "cpus": 16,
+      "memory": "64G",
+      "time_limit": "08:00:00",
+      "updates": 100000,
+      "replacement_of_job_id": "26955"
+    },
+    {
+      "key": "epoch_evaluation_array",
+      "script": "scripts/a800/refiner_supersession26955_v2/epoch_eval.sbatch",
+      "script_sha256": "6ec7da4b31b70a812a7e743ca6f047d9307501e54b03e77dce7439fb6455d8b6",
+      "dependency": "afterok:formal_refiner_supersession26955",
+      "partition": "gpu",
+      "array": "0-2%2",
+      "gpus_per_task": 1,
+      "cpus_per_task": 16,
+      "time_limit_per_task": "18:00:00",
+      "attempts_per_epoch": 256,
+      "same_attempt_ids_pair_ids_and_paired_noise": true,
+      "r5c_hardware_wording": "R5-C A100 protocol on A800"
+    },
+    {
+      "key": "epoch_selection",
+      "script": "scripts/a800/refiner_supersession26955_v2/select_epoch.sbatch",
+      "script_sha256": "3268126e5e4f74822f1c7e9ca9b4ec67aa85535b0ab72aee011e41f0f70c91b6",
+      "dependency": "afterok:all_epoch_evaluation_array_tasks",
+      "partition": "short",
+      "gpus": 0,
+      "cpus": 4,
+      "time_limit": "00:30:00"
+    }
+  ],
+  "submission_accounting": {
+    "slurm_job_records": 4,
+    "slurm_submit_slots_including_array_elements": 6,
+    "maximum_concurrent_a800": 2,
+    "worst_case_new_gpu_hours_from_time_limits": 62.5,
+    "worst_case_critical_path_hours": 45.0,
+    "formal_refiner_producer_only_estimated_walltime_hours": 4.856,
+    "formal_refiner_producer_only_estimated_gpu_hours": 4.856,
+    "previously_authorized_epoch_evaluation_critical_path_reused": true,
+    "retry_or_replacement_policy": "no_resubmission; exactly one refiner supersession of failed job 26955"
+  },
+  "selection_policy": {
+    "crysllmgen_direct_metrics_first": true,
+    "primary": "R5-C A100 protocol on A800 strict full-SUN@0.0 all-attempt paired bootstrap 10000",
+    "secondary": "meta-like@0.1",
+    "legacy_reconstructed_denominator": "report",
+    "coverage_adjusted": "report_only_never_select"
+  },
+  "forbidden": [
+    "gpu_long_partition",
+    "DFT",
+    "silent_retry",
+    "attempt_replacement",
+    "overwriting_job_26955_outputs",
+    "more_than_two_concurrent_A800",
+    "coverage_adjusted_sun_for_checkpoint_selection",
+    "final_test_or_final_mlip_for_checkpoint_selection"
+  ]
+}

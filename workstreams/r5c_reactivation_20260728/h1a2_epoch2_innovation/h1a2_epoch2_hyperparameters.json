@@ -1,0 +1,196 @@
+{
+  "schema_version": 1,
+  "prepared_at": "2026-07-29",
+  "baseline": {
+    "name": "H1-A2 epoch-2",
+    "successful_run": "runs/20260603_034533-h1a2-epoch2-3-fullmetrics",
+    "historical_runtime_git_commit": null,
+    "runtime_git_commit_status": "not_recorded",
+    "epoch2_adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "plans_sha256": "444c909e73f53f47528d7a6a429320cb0dbe68f5974baf0ed54f8c3cb514e7dc",
+    "raw_body_sha256": "a4f061c1cac023609d82a94c01b2139c04f618e15fb766e9b367d85509ff80fa",
+    "proposal_graphs_sha256": "e9e0f05159592ab2c7d8cd77086c58d306f90fe83cf6d0ac5ac2128594950ffc",
+    "historical_tensor_sha256": "e69598591aeb1ac0d6bf3335c532bc16379670f443b74d72f5fc1841e0744446"
+  },
+  "data": {
+    "directory": "data/dlm_sft/mp_20_h1a2_rich_planner_noid_l3base",
+    "one_target_per_source_row": true,
+    "sample_id_in_historical_target": false,
+    "splits": {
+      "train": {
+        "rows": 27136,
+        "sha256": "d431dfec1de8c3240dbc5648867be1b4b676fd85276e805a177b9944f3a1a157"
+      },
+      "validation": {
+        "rows": 9047,
+        "sha256": "59327aa789ae5d2bbb66d8a8f0dc882d594bcc14623aa96ce95076ed1b6fc540"
+      },
+      "test": {
+        "rows": 9046,
+        "sha256": "032845826acf1fcb9e7893fc91da05bc0cd9d2363c80ae459d5c446c3c6d5ea8"
+      }
+    }
+  },
+  "plan_schema": {
+    "lines": [
+      "formula",
+      "anion",
+      "charge",
+      "lattice",
+      "spacegroup",
+      "volume",
+      "end"
+    ],
+    "formula_total_atoms_min": 1,
+    "formula_total_atoms_max": 20,
+    "volume_bin_width_per_atom": 5,
+    "joint_tuple_validity_enforced_by_historical_parser": false,
+    "anion_formula_match_enforced_by_historical_parser": false,
+    "charge_recomputed_at_parse_time": false
+  },
+  "planner_training": {
+    "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+    "epoch1_adapter": "runs/20260602_182700-h1a2-rich-l3base-256/outputs/h1a2_llama_rich_sft/final",
+    "precision": "bf16",
+    "gradient_checkpointing": true,
+    "lora": {
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "bias": "none",
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "per_device_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "effective_batch_per_process": 8,
+    "max_length": 768,
+    "optimizer": "AdamW",
+    "learning_rate": 2e-05,
+    "weight_decay": 0.0,
+    "scheduler": "cosine",
+    "warmup_updates": 100,
+    "max_grad_norm": 1.0,
+    "seed": 17,
+    "epoch2_updates": 3392,
+    "epoch2_additional_epochs": 1,
+    "lineage_total_epochs": 2,
+    "eval_every_updates": 500,
+    "max_eval_batches": 50,
+    "final_eval_loss": 0.31758024722337724,
+    "elapsed_seconds": 7316.21,
+    "optimizer_scheduler_restarted_for_epoch2": true
+  },
+  "planner_sampling": {
+    "requested": 1200,
+    "valid_parsed": 1186,
+    "historical_world_size": 2,
+    "batch_per_process": 4,
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "seed_base": 17,
+    "seed_rule": "seed_base_plus_rank",
+    "do_sample": true,
+    "retry": false,
+    "repair": false,
+    "rerank": false
+  },
+  "r5c_body": {
+    "base_model": "LLaDA-8B-Instruct",
+    "checkpoint": "runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "input_plans": 1186,
+    "historical_world_size": 2,
+    "batch_per_process": 8,
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "conditioning": "full_plan_state",
+    "exact_plan_schedule": true,
+    "schema_logit_mask": true,
+    "prefill_count_token": true,
+    "freeze_plan_composition": true,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "min_lattice_rad": 0.0001,
+    "output_length_rule": "7 + 4*N",
+    "retry": false,
+    "replacement": false,
+    "rerank": false,
+    "accepted_graph_rate": 0.987352445
+  },
+  "refiner": {
+    "parent_checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "input_selection": "first_1000_accepted_graphs",
+    "batch_size": 128,
+    "timesteps": 1000,
+    "diffusion_steps": 800,
+    "num_evals": 1,
+    "run_type": "train",
+    "historical_world_size": 2,
+    "model_training": false
+  },
+  "metrics": {
+    "h1a2_epoch2": {
+      "denominator": 1000,
+      "composition_valid_count": 878,
+      "structure_valid_count": 999,
+      "joint_valid_count": 877,
+      "strict_sun_count": 94,
+      "meta_sun_count": 474,
+      "strict_sun_rate": 0.094,
+      "meta_sun_rate": 0.474,
+      "coverage_adjusted_strict_rate": 0.0971,
+      "coverage_adjusted_meta_rate": 0.4894,
+      "novel_and_unique_count": 890,
+      "hull_evaluated_count": 862,
+      "hull_unknown_count": 28
+    },
+    "historical_crysllmgen": {
+      "denominator": 1000,
+      "composition_valid_count": 892,
+      "structure_valid_count": 999,
+      "joint_valid_count": 891,
+      "strict_sun_count": 90,
+      "meta_sun_count": 461,
+      "strict_sun_rate": 0.09,
+      "meta_sun_rate": 0.461,
+      "coverage_adjusted_strict_rate": 0.0931,
+      "coverage_adjusted_meta_rate": 0.4767
+    }
+  },
+  "composition_failure_decomposition": {
+    "denominator": 1186,
+    "valid_count": 1044,
+    "invalid_count": 142,
+    "invalid_reasons": {
+      "charge_neutrality_fail": 98,
+      "pauling_fail_or_ratio_rejected": 37,
+      "oxidation_state_missing": 7
+    },
+    "valid_reasons": {
+      "charge_neutral_pauling_valid": 685,
+      "all_metal_shortcut": 353,
+      "single_element_shortcut": 6
+    }
+  },
+  "resource_policy_for_future_jobs": {
+    "max_cpu_per_a800": 8,
+    "historical_world_size_is_not_future_authorization": true,
+    "historical_wrapper": {
+      "a800_count": 2,
+      "cpu_count": 16,
+      "memory_gb": 180,
+      "time_limit_hours": 30
+    }
+  },
+  "provenance_note": "Exact run artifacts and recorded SHAs are proven. Code SHAs refer to the restored frozen archive; the successful June run did not record a runtime source commit."
+}

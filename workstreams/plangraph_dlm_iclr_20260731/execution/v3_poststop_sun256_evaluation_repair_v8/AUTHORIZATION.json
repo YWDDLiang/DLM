@@ -1,0 +1,28 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_evaluation_repair_authorization_v1",
+  "created_at": "2026-08-02",
+  "status": "user_authorized",
+  "user_quote": "授权",
+  "authorized_scope": {
+    "new_isolated_v8": true,
+    "evaluation_only": true,
+    "reuse_exact_v7_four_arm_generation_outputs": true,
+    "reuse_exact_v7_refine800_outputs": true,
+    "reuse_exact_v7_direct_metrics": true,
+    "run_missing_frozen_cache_sun_only": true,
+    "packed_four_element_array": true,
+    "afterany_cpu_assembly": true
+  },
+  "prohibited": {
+    "generation_rerun": true,
+    "diffusion_refinement_rerun": true,
+    "direct_metrics_rerun": true,
+    "sample_retry_or_replacement": true,
+    "model_or_checkpoint_change": true,
+    "mp_api": true,
+    "formal_g3": true,
+    "promotion": true,
+    "automatic_downstream": true,
+    "training_feedback": true
+  }
+}

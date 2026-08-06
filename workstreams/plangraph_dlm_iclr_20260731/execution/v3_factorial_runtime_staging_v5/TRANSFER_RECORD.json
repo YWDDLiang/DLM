@@ -1,0 +1,21 @@
+{
+  "schema": "h1a2_factorial_runtime_transfer_record_v5",
+  "status": "complete",
+  "validated_at": "2026-08-01",
+  "local_staging": "workstreams/plangraph_dlm_iclr_20260731/execution/v3_factorial_runtime_staging_v5",
+  "outer_staging": "/home/ywliang/h1a2_v3_factorial_runtime_staging_v5",
+  "a800_staging": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_factorial_runtime_staging_v5",
+  "archive": "source_bundle.tar.gz",
+  "archive_sha256": "62328f3a31b30a8f31fd4f1b3ba4777cfd86f7d881a3577f2d2522814607c04c",
+  "archive_sha_match_local_outer_a800": true,
+  "key_source_sha_checks_passed": 11,
+  "py_compile_passed": true,
+  "runner_import_passed": true,
+  "local_targeted_tests": "50/50",
+  "a800_targeted_tests": "50/50",
+  "model_weights_loaded": false,
+  "gpu_used": false,
+  "slurm_job_submitted": false,
+  "job_ids": [],
+  "automatic_downstream": false
+}

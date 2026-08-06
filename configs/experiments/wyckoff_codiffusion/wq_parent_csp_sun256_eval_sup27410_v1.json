@@ -1,0 +1,68 @@
+{
+  "schema": "wq_parent_csp_sun256_evaluation_supersession_v1",
+  "status": "user_authorized_ready_to_submit_once",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "supersedes_failed_job_id": "27410",
+  "failure_class": "evaluation_environment_binary_abi_mismatch",
+  "scientific_reuse": {
+    "regenerate": false,
+    "source_generation": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_sun256_v1/generation.jsonl",
+    "source_generation_sha256": "b6eb7f80a29da699407d8d19bbedeb2d657f5d7940cd767d6d71aecb6c58a598",
+    "source_generation_report_sha256": "02307d57e863b50d88bcd52f147aad9217f71bdf0343b55013c39a47d468d95c",
+    "source_adapter_manifest_sha256": "38c4623e3035fbfe858f1f25952e66881431bc0c28f7589fabfeb1219dc0dd84",
+    "attempts": 256,
+    "ordinals": [
+      256,
+      511
+    ],
+    "generation_succeeded": 256,
+    "generation_failed": 0,
+    "retry_or_replacement_used": false
+  },
+  "evaluation_environment": {
+    "single_environment_for_all_evaluation_steps": true,
+    "conda_environment": "diff_meets_diff",
+    "conda_prefix": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+    "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "torch": "2.4.0+cu121",
+    "torch_cuda": "12.1",
+    "torch_scatter": "2.1.2+pt24cu121",
+    "torch_geometric": "1.7.2",
+    "chgnet": "0.4.2",
+    "forbidden_environment": "crysllm",
+    "compute_metrics_import_smoke": "required_before_scientific_evaluation"
+  },
+  "evaluation": {
+    "crysllmgen_direct_metrics": true,
+    "r5c_a100_sun": true,
+    "all_attempt_denominator": 256,
+    "strict_ehull_ev_per_atom": 0.0,
+    "meta_ehull_ev_per_atom": 0.1,
+    "coverage_adjusted_role": "report_only",
+    "dft": false
+  },
+  "slurm": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "cpu_per_a800_max": 8,
+    "memory_gib": 96,
+    "time_limit": "18:00:00",
+    "queue_policy": "record_only_do_not_modify_unrelated_jobs"
+  },
+  "immutable_paths": {
+    "output": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_sun256_eval_sup27410_v1",
+    "submission_record": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_parent_csp_sun256_eval_sup27410_v1_submission.json",
+    "submission_claim": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_parent_csp_sun256_eval_sup27410_v1_submission.json.claim",
+    "terminal_acceptance": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_sun256_eval_sup27410_v1/terminal_acceptance.json"
+  },
+  "forbidden": [
+    "regenerate_any_attempt",
+    "overwrite_job27410_outputs",
+    "activate_crysllm",
+    "more_than_8_cpu_per_A800",
+    "retry_or_replace_any_evaluation_attempt",
+    "train_any_model",
+    "cancel_or_modify_unrelated_jobs"
+  ]
+}

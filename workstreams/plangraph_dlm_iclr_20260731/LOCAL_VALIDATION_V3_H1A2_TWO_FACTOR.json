@@ -1,0 +1,88 @@
+{
+  "validation_version": 3,
+  "validated_at": "2026-08-01",
+  "scope": "targeted_local_validation_only",
+  "scientific_contract": {
+    "fully_denovo_baseline": "model_sampled_H1A2_epoch2_plan_plus_frozen_R5C_body",
+    "r5c_teacher_plan_is_model_proposed": false,
+    "r5c_teacher_plan_role": "body_dlm_supervision_and_likelihood_diagnostics_only",
+    "learned_factors": [
+      "planner_model",
+      "body_dlm"
+        ],
+        "shuffle_arm_allowed": false,
+        "io_alignment_gate_registered": true,
+        "body_dlm_historical_two_gpu_contract_verified": true,
+        "body_dlm_v3_registered_world_size": 2,
+        "body_dlm_planned_corruption_ddp_smoke_passed": false,
+        "planner_training_registered_mode": "single_gpu",
+        "paired_inference_multi_gpu_enabled": false,
+        "pstar_method_frozen": true,
+        "planner_stateless_ordinal_rng_locally_tested": true,
+        "planner_plan_and_body_prompt_hashes_locally_tested": true,
+        "planner_field_objective_reference_locally_tested": true,
+        "planner_deterministic_stream_builder_locally_tested": true,
+        "planner_additive_token_batch_preparation_locally_tested": true,
+        "planner_torch_training_runner_implemented": true,
+        "planner_torch_objective_tests_skipped_locally": true,
+        "planner_real_source_stream_built": false,
+        "execution_ready": false,
+        "job_submission_authorized": false
+  },
+  "checks": [
+    {
+      "command": "python3 -m unittest tests.test_h1a2_sidecar_dataset tests.test_planned_preflight tests.test_planned_corruption",
+      "status": "passed",
+      "tests_run": 21,
+      "tests_skipped": 2,
+      "skip_reason": "optional torch dependency is absent in the local planning environment"
+    },
+    {
+      "command": "python3 -m py_compile crystal_dlm/h1a2_sidecar_dataset.py crystal_dlm/planned_preflight.py crystal_dlm/planned_corruption.py scripts/build_h1a2_sidecar_plangraph_data.py scripts/llada_sft.py scripts/preflight_planned_corruption_data.py scripts/sample_llada_r5_exact_length.py",
+      "status": "passed"
+    },
+        {
+            "command": "python3 -m json.tool workstreams/plangraph_dlm_iclr_20260731/EXPERIMENT_REGISTRY_V3_H1A2_TWO_FACTOR.json",
+            "status": "passed"
+        },
+        {
+            "type": "static_launcher_inspection",
+            "path": "legacy_dlm_r5c/launchers/pre_wyckoff/a800/run_r5_crystal_state_dlm.sh",
+            "status": "passed",
+            "observed": {
+                "launcher": "torchrun",
+                "world_size": 2,
+                "gpu_type": "A800",
+                "per_device_batch": 1,
+                "gradient_accumulation": 8,
+                "global_effective_batch": 16,
+                "canonical_learning_rate": 5e-05
+            }
+        },
+        {
+            "command": "python3 -m unittest tests.test_h1a2_planner_batch tests.test_h1a2_lookahead_data tests.test_h1a2_planner_objective tests.test_ordinal_rng tests.test_h1_llm_planner",
+            "status": "passed",
+            "tests_run": 36,
+            "tests_skipped": 2,
+            "skip_reason": "optional torch dependency is absent; differentiable field/look-ahead numerical tests remain registered for A800 execution",
+            "result": "exact seven-line field accounting, reference field-balanced loss, look-ahead vocabularies, additive token/EOS/boundary preparation, Plan/body-prompt SHA identities, stateless ordinal seeds, strict ordinal ordering, deterministic joint-stratum quotas, shared-arm streams, and source-SHA fail-close passed"
+        },
+        {
+            "command": "python3 -m py_compile scripts/build_h1a2_lookahead_planner_data.py scripts/llama_h1a2_lookahead_sft.py crystal_dlm/h1a2_planner_batch.py crystal_dlm/h1a2_planner_objective.py crystal_dlm/ordinal_rng.py crystal_dlm/h1_llm_planner.py scripts/sample_llama_h1_formula_plans.py",
+            "status": "passed"
+        }
+    ],
+  "not_performed": [
+        "full_repository_test_suite",
+        "remote_model_or_dataset_hashing",
+        "real_H1A2_source_stream_materialization",
+        "A800_smoke",
+        "real_tokenizer_field_offset_preflight",
+        "pstar_torch_training_smoke",
+        "pstar_torch_objective_numerical_test",
+        "planned_corruption_two_gpu_integration_smoke",
+        "Slurm_submission",
+    "crystal_generation",
+    "SUN_evaluation"
+  ]
+}

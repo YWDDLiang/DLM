@@ -1,0 +1,37 @@
+{
+  "schema": "h1a2_dlm_b1_b2_2xa800_smoke32_assembly_repair_execution_v2",
+  "status": "prepared_not_submitted",
+  "created_at": "2026-08-01",
+  "purpose": "CPU-only repair of Slurm array scheduler identity parsing in the terminal assembler.",
+  "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_b1_b2_2xa800_smoke32_assembly_repair_v2",
+  "evidence_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_b1_b2_2xa800_smoke32_v1",
+  "authorization": "workstreams/plangraph_dlm_iclr_20260731/AUTHORIZATION_V3_DLM_SMOKE_ASSEMBLY_REPAIR_20260801.json",
+  "original_jobs": {
+    "array": "29337",
+    "failed_assembly": "29338"
+  },
+  "frozen_evidence": {
+    "failed_terminal_sha256": "894d4a704214d9ff56f51c09b1c35ad20fb3a108805b28920c3714c584ce2e6f",
+    "b1_engineering_report_sha256": "bedf0800f01344d6b67804d6859c003dca8bcd98648cd3544045243cc88bd35b",
+    "b2_engineering_report_sha256": "ccf8f8c283494266d11403134927cc71d81430dc8a65d398f291379a5557ba78",
+    "original_scheduler_record_sha256": "a89ddd0b8005cbc9dc33c9ebf72581665307122d32f1c8f75c32ed7cc569a2c2"
+  },
+  "root_cause": "The original assembler keyed records by sacct JobIDRaw. On this Slurm deployment array element 29337_0 had allocation JobIDRaw 29339 and element 29337_1 had JobIDRaw 29337. The stable display JobID values remained 29337_0 and 29337_1.",
+  "patch": "Request both JobID and JobIDRaw, match arms by array-aware JobID, retain JobIDRaw as evidence, and fail closed on duplicate display JobID.",
+  "resources": {
+    "partition": "short",
+    "cpus": 2,
+    "memory_gib": 4,
+    "walltime": "00:10:00",
+    "gpu": 0
+  },
+  "scientific_protocol_changed": false,
+  "gpu_rerun": false,
+  "model_changed": false,
+  "data_changed": false,
+  "seed_changed": false,
+  "denominator_changed": false,
+  "gate_changed": false,
+  "automatic_downstream": false,
+  "scientific_training_authorized": false
+}

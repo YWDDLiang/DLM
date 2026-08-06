@@ -1,0 +1,38 @@
+{
+  "schema": "wq_schedule_correct_bridge_exploratory_authorization_v1",
+  "recorded_date": "2026-07-26",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "user_quote": "\u6211\u89c9\u5f97\u95ee\u9898\u4e0d\u5927\uff0c\u53ef\u4ee5\u7ee7\u7eed\u63a8\u8fdb\u5b9e\u9a8c",
+  "interpretation": {
+    "authorized_now": [
+      "record an exploratory continuation without rewriting the formal all-22 gate",
+      "implement and locally test the MLIP-free schedule-correct bridge contract",
+      "prepare but do not execute one future A800 strict-load 4x8 parity preflight"
+    ],
+    "not_authorized_by_this_record": [
+      "rewrite the all-22 strict_2_of_22 meta_6_of_22 result or its FAIL conclusion",
+      "resume the stopped composition-projection or constrained-decode escalation",
+      "SCP or other remote transfer",
+      "Slurm submission or GPU allocation",
+      "short or long bridge training",
+      "CHGNet or any MLIP in training, guidance, reranking, checkpoint selection, or this preflight"
+    ]
+  },
+  "historical_gate_preserved": {
+    "terminal_audit": "runs/remote_audit/20260725_wq_existing22_mp_completion_v1/terminal_audit.json",
+    "terminal_audit_sha256": "97335e5e0d2851835f892ff5dee56d8cf492755d9714aa055a53face193f766f",
+    "strict_all22": "2/22",
+    "meta_all22": "6/22",
+    "unknown": "1/22",
+    "optimistic_meta_upper_bound": "7/22",
+    "frozen_meta_threshold": "11/22",
+    "formal_conclusion": "FAIL"
+  },
+  "new_stage": {
+    "identity": "wq_schedule_correct_bridge_parity_v1",
+    "scientific_role": "independent geometry-schedule diagnosis",
+    "clean_proposal_role": "immutable condition only",
+    "reverse_state_role": "released-parent forward-noised geometry",
+    "local_runtime_limitation": "local Python has NumPy but no torch; parent strict-load and trajectory evidence must remain pending until an explicitly authorized A800 preflight"
+  }
+}

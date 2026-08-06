@@ -1,0 +1,48 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_repair_log_v4",
+  "status": "repair_prepared_before_submission",
+  "failed_source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/v3_poststop_sun256_diagnostic_v4",
+  "failed_source_manifest_sha256": "ab77239c17a72c4982459e38b7777c5a91e704d2f4b9ffebeb58cc512d2d03f5",
+  "failed_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v4",
+  "failed_jobs": {
+    "end_to_end_arm_array": "29520_[0-3]%2",
+    "assembly": "29521"
+  },
+  "sacct": {
+    "29520_0": "FAILED 1:0 00:00:41",
+    "29520_1": "FAILED 1:0 00:00:41",
+    "29520_2": "FAILED 1:0 00:00:32",
+    "29520_3": "FAILED 1:0 00:00:26",
+    "29521": "FAILED 1:0 00:00:05"
+  },
+  "failed_arm_stderr_sha256": "e3d01979f7384513e17b98f949b2bbeb1c4887baed8cbd54988ada6f967e40b4",
+  "assembly_stderr_sha256": "58a3f539de7111945946fca602d6ec53406df3d1dd54315e9e3b605caf9746f4",
+  "root_cause": {
+    "class": "isolated_runtime_scripts_namespace_shadowing",
+    "error": "ModuleNotFoundError: No module named 'scripts.sample_llada_dynamic_crystals'",
+    "message": "The required module was present in runtime/scripts, but that directory lacked __init__.py. Python resolved an unrelated installed regular scripts package instead of the bundled namespace package.",
+    "plan_preparation_completed": true,
+    "body_generation_started": false,
+    "diffusion_refinement_started": false,
+    "direct_metrics_started": false,
+    "sun_evaluation_started": false,
+    "partial_scientific_outputs_reused": false
+  },
+  "repair": {
+    "new_source_version": "v3_poststop_sun256_diagnostic_v5",
+    "new_run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v5",
+    "behavior": "Add only runtime/scripts/__init__.py so imports resolve to the frozen bundled scripts package.",
+    "old_source_or_run_overwritten": false
+  },
+  "scientific_protocol_changes": {
+    "planner_checkpoint": false,
+    "body_checkpoint": false,
+    "refiner_checkpoint": false,
+    "diffusion_reverse_steps": false,
+    "ordinals_or_seeds": false,
+    "denominator": false,
+    "raw_plan_advisory_policy": false,
+    "retry_replacement_repair_filter_rerank": false,
+    "sun_cache_or_thresholds": false
+  }
+}

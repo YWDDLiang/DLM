@@ -1,0 +1,43 @@
+{
+  "schema": "h1a2_pstar_engineering_smoke_execution_v1",
+  "status": "prepared_not_submitted",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_smoke32_v1",
+  "prerequisite_job_id": 29318,
+  "prerequisite_gate": "COMPLETED_0:0_and_terminal_report_complete",
+  "arms": [
+    "pcontrol",
+    "pstar"
+  ],
+  "resources_per_array_element": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "walltime": "02:00:00"
+  },
+  "array": "0-1%1",
+  "data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_data_preflight_v1/data/smoke32",
+    "train_rows": 32,
+    "validation_rows": 32,
+    "same_order_for_arms": true
+  },
+  "initial_checkpoint": {
+    "role": "frozen_H1A2_epoch2_P0",
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
+  },
+  "optimizer": {
+    "updates": 4,
+    "microbatches": 32,
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "learning_rate": 0.000002,
+    "warmup_steps": 1,
+    "validation_at_step": 4
+  },
+  "engineering_only": true,
+  "scientific_result": false,
+  "scientific_training_authorized": false,
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

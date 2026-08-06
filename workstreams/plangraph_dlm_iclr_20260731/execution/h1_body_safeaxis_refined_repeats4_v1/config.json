@@ -1,0 +1,133 @@
+{
+  "schema": "h1_body_safeaxis_refined_repeats4_config_v1",
+  "run_id": "20260802_h1_body_safeaxis_refined_repeats4_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis_refined_repeats4_v1",
+  "status": "user_authorized_single_factor_diagnostic",
+  "protocol": {
+    "path": "workstreams/plangraph_dlm_iclr_20260731/H1_R03E_REFINER_REPEAT_PROTOCOL_V1.md",
+    "sha256": "634fcaf18ae9c4a92c41adf90e52ac70cad490ce6a451b2788e0f591f79eb671",
+    "repeats": 4,
+    "repeat_ids": [0, 1, 2, 3],
+    "arm_order": [
+      ["control", "candidate"],
+      ["candidate", "control"],
+      ["candidate", "control"],
+      ["control", "candidate"]
+    ],
+    "repeat_role": "independent_cuda_process_realization",
+    "new_scientific_seed_per_repeat": false,
+    "same_frozen_refiner_seed_ledger_each_repeat": true,
+    "raw_attempts_per_arm_per_repeat": 256,
+    "ordinals": "0..255",
+    "denominator": "raw_all_attempt"
+  },
+  "source_body_run": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis256_v1",
+    "source_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1",
+    "source_manifest_sha256": "6b0dd8298c9a423712a3965b00f8aeae9c06c824a37fbf1d94dbbf94aebcf15f",
+    "terminal_report_sha256": "fa03cfa22d0765311bd55e350d1547b6180cede410d8c12054e45306279f002c",
+    "generation_report_sha256": "f86790015fd090f5243e8785aabf7b0c9ee8ddd8c85dbf02fb5dafd0acb4b880",
+    "schedule_invariants_sha256": "560155678cad0ce00737b0052301d3be46da0ace18d00f871d83764477b61d3d",
+    "planner_ineligible_ordinals": [86, 211],
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  },
+  "attempt_ledger": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1/data/attempt_ledger.jsonl",
+    "sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f",
+    "seed_field": "refiner_noise_seed"
+  },
+  "arms": {
+    "control": {
+      "schedule": "D1",
+      "generation_policy": "d1",
+      "method": "H1-R03E-P0-B0-D1-REFINE800",
+      "expected_body_success": 246,
+      "body_attempts": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis256_v1/screen/control_body_attempts.jsonl",
+        "bytes": 920274,
+        "sha256": "7f486fd61dd4d73ebdf10a065e344a208a7dd274a499f40f9b8a9502cf6908c1"
+      },
+      "proposal_graphs": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis256_v1/screen/control_proposal_graphs.pt",
+        "bytes": 862722,
+        "sha256": "b7506859563b1282fd41cde19d740a5d7fb9f3bafd61ec3665c9718e13469e78"
+      }
+    },
+    "candidate": {
+      "schedule": "D2_SAFE_AXIS",
+      "generation_policy": "d2_safe_axis",
+      "method": "H1-R03E-P0-B0-D2-SAFE-AXIS-REFINE800",
+      "expected_body_success": 248,
+      "body_attempts": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis256_v1/screen/candidate_body_attempts.jsonl",
+        "bytes": 930124,
+        "sha256": "c030f5548e94f1bf4cdaaecf3614417acc998b9c320bb1c6a6436d740767364f"
+      },
+      "proposal_graphs": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis256_v1/screen/candidate_proposal_graphs.pt",
+        "bytes": 854322,
+        "sha256": "023fdd56dd786c788b8219f66d91eea2a9933991c522bbddfc04218ede8a8e8e"
+      }
+    }
+  },
+  "refiner": {
+    "name": "CrysLLMGen model_494",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "timesteps": 1000,
+    "diffusion_steps": 800,
+    "num_evals": 1,
+    "effective_batch_size": 1,
+    "seed_mode": "frozen_h1_ordinal_refiner_noise_seed",
+    "same_checkpoint_config_and_seed_ledger_all_arms_repeats": true
+  },
+  "direct": {
+    "gt_csv": "reference/crysllmgen/data/mp_20/test.csv",
+    "eval_model_name": "mp20",
+    "denominator": "all_generation_attempts"
+  },
+  "sun": {
+    "definition": "frozen R5-C A100 protocol executed on A800",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "mp_api_enabled": false,
+    "eval_sun_py": "reference/a100_eval_sun/eval_sun.py",
+    "eval_sun_resumable_py": "reference/a100_eval_sun/eval_sun_resumable.py",
+    "train_csv": "reference/crysllmgen/data/mp_20/train.csv",
+    "training_index_cache": "reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+    "mp_hull_cache": "data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+    "chgnet_relax_cache": "data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl",
+    "chgnet_model_asset": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+    "chgnet_runtime_checkpoint": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar"
+  },
+  "analysis": {
+    "bootstrap_seed": 20260802,
+    "bootstrap_replicates": 50000,
+    "primary_endpoints": ["joint_valid", "meta_full_sun"],
+    "secondary_endpoints": [
+      "generation_complete",
+      "composition_valid",
+      "structure_valid",
+      "strict_full_sun",
+      "novel",
+      "unique_representative",
+      "novel_unique"
+    ],
+    "joint_positive_repeats_min": 3,
+    "meta_nonnegative_repeats_min": 3,
+    "strict_mean_delta_min": -0.01,
+    "structure_mean_delta_min": -0.02
+  },
+  "decision_firewall": {
+    "diagnostic_single_factor_only": true,
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_training": false,
+    "automatic_downstream": false,
+    "checkpoint_reselection": false
+  }
+}

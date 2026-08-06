@@ -1,0 +1,32 @@
+{
+  "schema": "h1a2_v3_planner_endpoint_override_v1",
+  "created_at": "2026-08-01",
+  "status": "authorized_before_planner512_execution",
+  "user_decision": "P-control and P-star must both use the complete one-epoch step-400 endpoint for Planner-512.",
+  "reason": "Avoid confounding the Planner method comparison with unequal training exposure.",
+  "supersedes_for_downstream_plan_screen": {
+    "Pstar_likelihood_selected_step": 350
+  },
+  "frozen_downstream_checkpoints": {
+    "P-control": {
+      "step": 400,
+      "checkpoint_manifest_sha256": "8fa09305d22d113e7567daefaba886fe0774feb9ece7c13664214670d20d6c50",
+      "target_nll": 0.2913932800292969,
+      "field_loss": 0.5591583251953125,
+      "complete_epoch": true
+    },
+    "P-star": {
+      "step": 400,
+      "checkpoint_manifest_sha256": "617aebf19e9b13ec84d7751bdc3824c13eb4fb639f8ccc5067dcf5fc3f84e950",
+      "target_nll": 0.29236602783203125,
+      "field_loss": 0.5607757568359375,
+      "complete_epoch": true,
+      "target_nll_relative_to_P0": 0.9934695714671455,
+      "nll_noninferiority_passed": true
+    }
+  },
+  "selection_timing": "after_training_and_likelihood_report_but_before_any_Planner512_generation",
+  "adaptive_generation_metric_used": false,
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

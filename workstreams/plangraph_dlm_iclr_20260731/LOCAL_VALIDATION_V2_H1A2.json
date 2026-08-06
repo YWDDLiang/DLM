@@ -1,0 +1,44 @@
+{
+  "schema": "plangraph_dlm_h1a2_v2_local_validation_v2",
+  "date": "2026-08-01",
+  "status": "passed_local_only_not_submitted",
+  "scope": {
+    "h1_artifacts_modified": false,
+    "slurm_submission_performed": false,
+    "remote_a800_validation_performed": false,
+    "full_train_val_sidecar_published": false,
+    "shuffle_arm_registered": false
+  },
+  "targeted_regression": {
+    "command": "python3 -m unittest tests.test_planned_corruption tests.test_planned_preflight tests.test_h1a2_sidecar_dataset",
+    "tests_run": 21,
+    "failures": 0,
+    "errors": 0,
+    "skipped_optional_torch_tests": 2,
+    "removed_shuffle_policy_rejected": true
+  },
+  "static_validation": {
+    "python_compile": "passed",
+    "registry_json_parse": "passed"
+  },
+  "local_r5c_test_denominator": {
+    "validation_reused_from_pre_amendment_run": true,
+    "source": "data/dlm_sft/mp_20_r5_exact_length/test.jsonl",
+    "source_sha256": "9a5c542888029ee785c3f922e2922a61a6cb92abf028b1fe197c8920d48efe8b",
+    "attempted_rows": 9046,
+    "converted_rows": 9046,
+    "failed_rows": 0,
+    "prompt_answer_byte_identity": true,
+    "forbidden_metadata_absent": true,
+    "schedule_keys_inference_available": true,
+    "ordered_model_visible_sha256": "79f72e6458f32e46e4f784b0d78ef511ba477893263c9a734c95831e44875e5f",
+    "ordered_plan_condition_sha256": "cc9bdd7c78401680a6e1642bcf61e7b836309715a4252b8c2d34c60deccf90a0"
+  },
+  "remaining_gates": [
+    "publish all 45229 train/val/test rows on the execution cluster",
+    "run the real frozen LLaDA tokenizer preflight at max length 382",
+    "run a new 32-row A800 smoke for the V2 prompt and schedules",
+    "freeze and test the paired per-ordinal H1 body-noise runner",
+    "create fresh source, execution, authorization, run-root, and submission records"
+  ]
+}

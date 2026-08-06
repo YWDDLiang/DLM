@@ -1,0 +1,29 @@
+{
+  "schema": "h1a2_v3_pcontrol_pstar_scientific400_submission_v1",
+  "status": "complete",
+  "submitted_at": "2026-08-01T16:52:00+08:00",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pcontrol_pstar_scientific400_v1",
+  "source_archive_sha256": "b156e3ff8d5e09383abbe01841952f09834cc99a38fa1a21626f3f102930b842",
+  "source_inventory_sha256": "1454f2577bd474cbe5d1680b9e423fb63cb587ca68d79a9845f3ddf2ed14db42",
+  "execution_manifest_sha256": "410367a5905ede08fd1e9406bb75eab0d7cce3fd32ed8eae5259e88604f6ef55",
+  "authorization_sha256": "4220233e1b968e7a8c464554d7d1fa48c8ae7febe6d9fab62ff4433a55626fbd",
+  "jobs": {
+    "training_array": {
+      "job_id": "29391",
+      "array": "0-1%1",
+      "arms": {
+        "0": "pcontrol",
+        "1": "pstar"
+      },
+      "initial_state": "PENDING"
+    },
+    "terminal_assembly": {
+      "job_id": "29392",
+      "dependency": "afterany:29391",
+      "initial_state": "PENDING"
+    }
+  },
+  "planner_512_authorized": false,
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

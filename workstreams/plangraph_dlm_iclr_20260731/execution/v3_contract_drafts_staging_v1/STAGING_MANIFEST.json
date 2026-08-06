@@ -1,0 +1,19 @@
+{
+  "schema": "h1a2_v3_contract_drafts_staging_v1",
+  "status": "prepared_for_file_transfer_only",
+  "created_at": "2026-08-01",
+  "purpose": "Stage the tested factorial contract and blocked scientific drafts on A800 without submitting work.",
+  "proposed_remote_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_contract_drafts_staging_v1",
+  "source_inventory": "SOURCE_SHA256.txt",
+  "targeted_test_result": {
+    "tests_run": 27,
+    "passed": 27,
+    "failed": 0
+  },
+  "scientific_training_authorized": false,
+  "job_submission_authorized": false,
+  "job_ids": [],
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "H1_assets_modified": false
+}

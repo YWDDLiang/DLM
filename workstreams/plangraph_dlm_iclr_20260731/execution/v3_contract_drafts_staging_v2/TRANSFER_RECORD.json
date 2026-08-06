@@ -1,0 +1,33 @@
+{
+  "schema": "h1a2_v3_contract_drafts_transfer_record_v2",
+  "status": "complete",
+  "completed_at": "2026-08-01",
+  "remote_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_contract_drafts_staging_v2",
+  "archive_sha256": "35110bbae59a3bea7131ff0dd938fc9ca85a08375800daf5c26b87f575cbb06b",
+  "archive_sha_match_local_outer_A800": true,
+  "key_source_sha_checks": {
+    "checked": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "remote_targeted_tests": {
+    "command": "python -m unittest tests.test_h1a2_factorial_contract",
+    "tests_run": 7,
+    "passed": 7,
+    "failed": 0,
+    "marker": "__A800_V2_CONTRACT_7_PASS__"
+  },
+  "local_related_tests": {
+    "command": "python3 -m unittest tests.test_h1a2_factorial_contract tests.test_ordinal_rng tests.test_h1_llm_planner",
+    "tests_run": 27,
+    "passed": 27,
+    "failed": 0
+  },
+  "model_loaded": false,
+  "GPU_requested": false,
+  "slurm_job_submitted": false,
+  "job_ids": [],
+  "scientific_training_authorized": false,
+  "automatic_downstream": false,
+  "H1_assets_modified": false
+}

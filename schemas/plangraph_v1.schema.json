@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.crystal-dlm/schemas/plangraph_v1.schema.json",
+  "title": "PlanGraph v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_plan_state_version",
+    "site_group_strategy",
+    "composition",
+    "symmetry",
+    "lattice",
+    "site_groups",
+    "constraints",
+    "dependency_order"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "plangraph_v1"
+    },
+    "source_plan_state_version": {
+      "type": "string"
+    },
+    "site_group_strategy": {
+      "const": "element_multiplicity_v1"
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "N",
+        "elements",
+        "counts",
+        "formula",
+        "reduced_formula",
+        "charge_bucket",
+        "oxidation_candidates",
+        "anion_framework"
+      ],
+      "properties": {
+        "N": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "elements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][a-z]?$"
+          }
+        },
+        "counts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reduced_formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "charge_bucket": {
+          "type": "string",
+          "minLength": 1
+        },
+        "oxidation_candidates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "anion_framework": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "symmetry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lattice_system",
+        "spacegroup_bucket"
+      ],
+      "properties": {
+        "lattice_system": {
+          "type": "string"
+        },
+        "spacegroup_bucket": {
+          "type": "string"
+        }
+      }
+    },
+    "lattice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "volume_per_atom_bin"
+      ],
+      "properties": {
+        "volume_per_atom_bin": {
+          "type": "string",
+          "pattern": "^volpa_(unknown|[0-9]{3}_[0-9]{3})$"
+        }
+      }
+    },
+    "site_groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "group_id",
+          "element",
+          "multiplicity",
+          "slot_indices",
+          "depends_on"
+        ],
+        "properties": {
+          "group_id": {
+            "type": "string",
+            "pattern": "^site_group_[0-9]{3}$"
+          },
+          "element": {
+            "type": "string",
+            "pattern": "^[A-Z][a-z]?$"
+          },
+          "multiplicity": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "slot_indices": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 19
+            }
+          },
+          "depends_on": {
+            "const": [
+              "composition",
+              "symmetry_lattice"
+            ]
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "atom_count",
+        "element_counts",
+        "charge_bucket",
+        "composition_locked"
+      ],
+      "properties": {
+        "atom_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "element_counts": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "charge_bucket": {
+          "type": "string",
+          "minLength": 1
+        },
+        "composition_locked": {
+          "const": true
+        }
+      }
+    },
+    "dependency_order": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
+

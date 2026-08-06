@@ -1,0 +1,33 @@
+{
+  "schema": "h1_crplan_fourarm512_route_amendment_execution_manifest_v1",
+  "identity": "h1_crplan_fourarm512_route_amendment_v1",
+  "source_status": "new_immutable_sidecar",
+  "principal_question": "Does exact full-prefix charge reachability improve raw non-shortcut composition-valid Plan yield over the endpoint-identical terminal-only gate without harming parse, completion, or diversity?",
+  "causal_factor": "formula_token_legal_support_only",
+  "arms": [
+    "original_P0_off",
+    "grammar_only",
+    "terminal_only_fail_closed",
+    "full_prefix_fail_closed"
+  ],
+  "attempts_per_arm": 512,
+  "common_stateless_ordinal_ledger": true,
+  "ledger_independent_of_paired32_and_E1": true,
+  "one_sample_per_ordinal": true,
+  "body_rerun": false,
+  "refiner_rerun": false,
+  "direct_rerun": false,
+  "sun_rerun": false,
+  "network": false,
+  "retry": false,
+  "replacement": false,
+  "repair": false,
+  "filter": false,
+  "rerank": false,
+  "fallback": false,
+  "state_gate_reused_from_v4": false,
+  "semantic_states_report_only": true,
+  "automatic_training": false,
+  "automatic_promotion": false,
+  "automatic_downstream": false
+}

@@ -1,0 +1,172 @@
+{
+  "schema_version": "plangraph-dlm-g1-execution@1",
+  "identity": "plangraph_dlm_g1_v1",
+  "created_at": "2026-07-31",
+  "status": "frozen_authorized_ready_to_submit",
+  "purpose": {
+    "primary": "Test whether a dependency-explicit PlanGraph planner improves composition validity beyond an order-shuffled mechanism control.",
+    "planner_only": true,
+    "crystal_generation": false,
+    "refinement": false,
+    "SUN_evaluation": false,
+    "checkpoint_selection": false
+  },
+  "authorization": {
+    "authorization_file": "workstreams/plangraph_dlm_iclr_20260731/execution/G1_AUTHORIZATION_V1.json",
+    "authorization_sha256": "463bc80ad97898119c0176faa11a0888eabd2e8fedff1ea5cedc7061ab7ba8c1",
+    "automatic_continue_to_G2_on_G1_pass": true,
+    "automatic_continue_to_G3_on_G2_pass": true,
+    "automatic_G4": false,
+    "automatic_promotion": false
+  },
+  "prerequisite": {
+    "engineering_terminal_file": "workstreams/plangraph_dlm_iclr_20260731/ENGINEERING_PILOT_32_TERMINAL_V1.json",
+    "engineering_terminal_sha256": "f3380d267e6fa4b50710dc08ec895906aee46a60b7db8c35cdb22112582ea2db",
+    "engineering_gate_passed": true,
+    "frozen_G2_resource_envelope": {
+      "a800_per_arm": 1,
+      "cpus_per_arm": 8,
+      "memory_gib_per_arm": 64,
+      "time_limit_per_arm": "02:00:00",
+      "maximum_concurrent_arms": 1
+    }
+  },
+  "execution_identity": {
+    "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_g1_v1",
+    "run_root_must_be_absent_before_launch": true,
+    "environment_python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "source_install_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1",
+    "source_bundle": {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/plangraph_g1_source_v1.tar.gz",
+      "sha256": "7859c6fcf49e9d3faca65338032db76c342d9f2de13a6cd3bee3ff06bd15a928",
+      "bytes": 482736,
+      "inventory_entries": 143,
+      "inventory_sha256": "e9a00c3068ac2a4d4de23252f3e8393b9993132f3416b8b0a4250718ae76e782",
+      "local_protocol_tests": {
+        "passed": 4,
+        "failed": 0
+      }
+    }
+  },
+  "frozen_model": {
+    "base_model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+    "initial_adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "initial_adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "P0_uses_initial_adapter_unchanged": true,
+    "PG_and_PG_shuffle_start_from_same_initial_adapter": true
+  },
+  "frozen_data": {
+    "dataset_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/dlm_sft/mp_20_plangraph_v1_20260731",
+    "dataset_manifest_sha256": "2aac3b91a9cc5f0b18bfa0084886f7cb7e5eca689d0fdce3235f41ccfc0b2e2e",
+    "planner_train_rows": 27136,
+    "planner_train_sha256": "1fc12bdaf90d81851e70a3b484e08214368084601eed852685771661c14f594c",
+    "planner_validation_rows": 9047,
+    "planner_validation_sha256": "9a12174df84fd1a2bdf6b7ff4c0f637567415efc243fb04c321eae9cf421b085",
+    "exact_tokenizer_length_scan": {
+      "train_max_prompt_tokens": 84,
+      "train_max_answer_tokens": 532,
+      "train_max_total_tokens": 616,
+      "validation_max_prompt_tokens": 84,
+      "validation_max_answer_tokens": 487,
+      "validation_max_total_tokens": 571,
+      "frozen_max_length": 1024
+    }
+  },
+  "frozen_training": {
+    "arms": [
+      "PG",
+      "PG-shuffle"
+    ],
+    "maximum_optimizer_updates": 400,
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "learning_rate": 2e-06,
+    "warmup_updates": 25,
+    "scheduler": "cosine",
+    "weight_decay": 0,
+    "validation_every_updates": 50,
+    "fixed_validation_rows": 64,
+    "seed": 17,
+    "precision": "bf16",
+    "final_checkpoint_only": true,
+    "no_metric_based_checkpoint_selection": true
+  },
+  "frozen_sampling": {
+    "arms": [
+      "P0",
+      "PG",
+      "PG-shuffle"
+    ],
+    "attempts_per_arm": 512,
+    "ordinal_start": 0,
+    "ordinal_end_inclusive": 511,
+    "seed_base": 20260731,
+    "same_ordinal_seeds": true,
+    "stateless_per_token_inverse_cdf_noise": true,
+    "batch_size": 8,
+    "maximum_new_tokens": 640,
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "denominator": "all_attempt",
+    "sample_id_in_prompt": false,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  },
+  "G1_gate": {
+    "PG_parse_rate_minimum": 0.99,
+    "PG_plan_completion_rate_minimum": 0.98,
+    "PG_composition_validity_minimum": 0.95,
+    "PG_unique_formula_relative_to_P0_minimum": 0.95,
+    "PG_composition_validity_must_strictly_exceed_PG_shuffle": true,
+    "maximum_unexplained_categorical_JSD_bits": 0.15,
+    "maximum_single_or_all_metal_shortcut_inflation": 0.05,
+    "scientific_failure_stops_chain": true,
+    "scientific_failure_is_not_repairable": true
+  },
+  "slurm_DAG": {
+    "ledger": {
+      "partition": "short",
+      "cpus": 8,
+      "memory_gib": 32,
+      "time_limit": "01:00:00"
+    },
+    "training_array": {
+      "elements": 2,
+      "maximum_concurrent_elements": 1,
+      "partition": "gpu",
+      "a800_per_element": 1,
+      "cpus_per_element": 8,
+      "memory_gib_per_element": 64,
+      "time_limit_per_element": "04:00:00"
+    },
+    "sampling_array": {
+      "elements": 3,
+      "maximum_concurrent_elements": 1,
+      "partition": "gpu",
+      "a800_per_element": 1,
+      "cpus_per_element": 8,
+      "memory_gib_per_element": 64,
+      "time_limit_per_element": "08:00:00"
+    },
+    "assembly": {
+      "partition": "short",
+      "cpus": 4,
+      "memory_gib": 16,
+      "time_limit": "00:30:00"
+    },
+    "dependency_order": "ledger -> afterok training -> afterok sampling -> afterok assembly"
+  },
+  "forbidden_actions": [
+    "modify any H1 asset",
+    "run crystal generation, refinement, S.U.N., CHGNet, MLIP, or MP API",
+    "retry, replacement, repair, filtering, or reranking",
+    "adapt seeds, thresholds, denominator, model identity, or data after observing results",
+    "treat a scientific gate failure as an engineering fault",
+    "enter G4 automatically"
+  ]
+}

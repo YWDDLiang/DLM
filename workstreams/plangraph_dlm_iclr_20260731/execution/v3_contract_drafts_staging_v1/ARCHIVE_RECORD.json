@@ -1,0 +1,11 @@
+{
+  "schema": "h1a2_v3_contract_drafts_archive_record_v1",
+  "created_at": "2026-08-01",
+  "archive": "source_bundle.tar.gz",
+  "archive_bytes": 23074,
+  "archive_sha256": "67f21154316644eed2dc4c3d4f2127c07941c346897385241acce26e5ae3e8eb",
+  "staging_manifest_sha256": "03062fe1831f680b2eb158b70e70d94a37b0050e3a5659eec4497e0437245186",
+  "scientific_training_authorized": false,
+  "submitted": false,
+  "job_ids": []
+}

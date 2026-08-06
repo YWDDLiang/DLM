@@ -1,0 +1,248 @@
+{
+  "schema": "wqcodiff_existing22_mp_completion_contract_v1",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "purpose": "Resolve only the eight frozen Materials Project hull-cache unknowns from job27631 on the A800 login node, then recompute the unchanged all-22 exploratory decision without rerunning CHGNet or modifying the original evaluation.",
+  "authorization": {
+    "path": "runs/remote_audit/20260725_wq_existing22_mp_completion_v1/authorization_record.json",
+    "sha256": "d14e96f16385e0279c65a959ea778e078628a3c11d809be333480270982290b2",
+    "single_archive_transfer_per_hop": true,
+    "single_login_node_query_execution": true
+  },
+  "frozen_history": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "job27631_execution_patch_sha256": "37f621402b3000a524bc41f2bd28de6da4d52bd792e6685b99ed462bf6c0d235",
+    "job27631_terminal_audit_sha256": "bcb7b66c1ea83e7fcd277716275b3b4b8ccfd5197a53a30142ad16b7c1468b9f",
+    "job27631_scientific_decision": "INCONCLUSIVE_MP_COVERAGE",
+    "formal_survival_result": "FAIL_17_OF_22_BELOW_20_OF_22",
+    "formal_survival_result_rewritten": false,
+    "continuation_identity": "user_accepted_exploratory_gate"
+  },
+  "source_output": {
+    "directory": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_existing22_chgnet_sun_v1",
+    "original_contract": {
+      "path": "configs/experiments/wyckoff_codiffusion/wq_existing22_chgnet_sun_v1.json",
+      "sha256": "43ed097b3af67f211a968e9f4e73f25ed127174fdb50cd9470beb12a2086a823"
+    },
+    "terminal_acceptance": {
+      "path": "terminal_acceptance.json",
+      "sha256": "6746cb7bffbc41569e3e85557bea3cff8a662025d6cd1a471e39c6e1caca8ee7"
+    },
+    "adapter_manifest": {
+      "path": "adapter_manifest.json",
+      "sha256": "7f9f5fcaeeac23ddb331f410e90d1ede63d8ba6f4421ebe6525234b3de17136d"
+    },
+    "input_manifest": {
+      "path": "r5c_a100_sun/input_manifest.json",
+      "sha256": "8920495b5564e38d7c8a77a82c4ddd0c5e40cf0c466dd824cf4aebe1fb8cb1e3"
+    },
+    "attempt_results": {
+      "path": "r5c_a100_sun/attempt_results.jsonl",
+      "sha256": "6a12f14a6c1a84e532ca7c9a2a71cd50a78d1a0d7acf814da9ee1bcf9956a943"
+    },
+    "attempt_summary": {
+      "path": "r5c_a100_sun/attempt_summary.json",
+      "sha256": "abbcb2d89e96383460369ebc044723d2f2fed5f0e5323212801d47d58e957cd9"
+    },
+    "sun_run_contract": {
+      "path": "r5c_a100_sun/run_contract.json",
+      "sha256": "2c55a72f1121f38877751b47b505743f0e403f7b76b81d679d825038a73f12c8"
+    },
+    "strict_relax_results": {
+      "path": "r5c_a100_sun/exact_strict/relax_results.jsonl",
+      "sha256": "e2edb466eba0ef3fe59852dd9c7bf21818ea974cb9171c01400d9da7a9b0efb7"
+    },
+    "meta_relax_results": {
+      "path": "r5c_a100_sun/exact_meta_like/relax_results.jsonl",
+      "sha256": "e2edb466eba0ef3fe59852dd9c7bf21818ea974cb9171c01400d9da7a9b0efb7"
+    },
+    "frozen_a100_eval_sun": {
+      "path": "reference/a100_eval_sun/eval_sun.py",
+      "sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+    }
+  },
+  "denominator": {
+    "name": "all_existing_projected_states",
+    "attempts": 22,
+    "reconstructed_structures": 17,
+    "frozen_structural_failures": 5,
+    "original_strict_full_sun": 0,
+    "original_meta_full_sun": 3,
+    "original_hull_unknown": 8,
+    "known_structural_failures_relaxed_or_rescued": false
+  },
+  "unknown_records": [
+    {
+      "generation_ordinal": 2,
+      "source_ordinal": 276,
+      "reconstructed_index": 1,
+      "attempt_id": "a-454dbc33d78ceae4d2edd388",
+      "input_structure_sha256": "5df04a66c5f05f27d1c06fef29fa9cf63113adf286d425dea7ad19305612ca80",
+      "composition": {
+        "Cu": 2.0,
+        "K": 4.0,
+        "Se": 4.0
+      },
+      "chemsys": "Cu-K-Se",
+      "energy_per_atom": -3.5774223804473877
+    },
+    {
+      "generation_ordinal": 3,
+      "source_ordinal": 285,
+      "reconstructed_index": 2,
+      "attempt_id": "a-6961760c635b4326bccf8b27",
+      "input_structure_sha256": "8efdcd5c92e421c1c920e5ef22626222131412e22b504db4b4e60a79704c925b",
+      "composition": {
+        "La": 4.0,
+        "Li": 4.0,
+        "Si": 2.0
+      },
+      "chemsys": "La-Li-Si",
+      "energy_per_atom": -3.9795188903808594
+    },
+    {
+      "generation_ordinal": 4,
+      "source_ordinal": 292,
+      "reconstructed_index": 3,
+      "attempt_id": "a-afcb318fc70997f3e13b896d",
+      "input_structure_sha256": "9b0d40cdd1180edb77277568392b9fc7a2548570d8b2d1fff03bb9e9bd13fd62",
+      "composition": {
+        "Br": 12.0,
+        "Mo": 2.0
+      },
+      "chemsys": "Br-Mo",
+      "energy_per_atom": -3.7846922874450684
+    },
+    {
+      "generation_ordinal": 6,
+      "source_ordinal": 298,
+      "reconstructed_index": 4,
+      "attempt_id": "a-9cd3aa7e0c35c5b4a67c972a",
+      "input_structure_sha256": "43b138d8a44ec15d93f86beea10d03784aadf78d591864b11e41d24f4a22cfe8",
+      "composition": {
+        "Br": 3.0,
+        "Cl": 9.0
+      },
+      "chemsys": "Br-Cl",
+      "energy_per_atom": -2.021331787109375
+    },
+    {
+      "generation_ordinal": 7,
+      "source_ordinal": 316,
+      "reconstructed_index": 5,
+      "attempt_id": "a-47f5b22170d89c1338f2390b",
+      "input_structure_sha256": "5c5d1d25b3f7c06ee44626cb32f510d19736555ffae2d4c9520ac983ced6161c",
+      "composition": {
+        "Al": 4.0,
+        "O": 10.0,
+        "W": 4.0
+      },
+      "chemsys": "Al-O-W",
+      "energy_per_atom": -8.270502090454102
+    },
+    {
+      "generation_ordinal": 15,
+      "source_ordinal": 397,
+      "reconstructed_index": 11,
+      "attempt_id": "a-55c8318980c59366d05c611f",
+      "input_structure_sha256": "8514baa6846f988f9e1c1866fb523b5168e03a5515a4af17582b43321b9ccf3b",
+      "composition": {
+        "Ba": 1.0,
+        "O": 11.0,
+        "Yb": 3.0
+      },
+      "chemsys": "Ba-O-Yb",
+      "energy_per_atom": -5.21953010559082
+    },
+    {
+      "generation_ordinal": 19,
+      "source_ordinal": 479,
+      "reconstructed_index": 14,
+      "attempt_id": "a-1bc345c7427f3e10395ab23b",
+      "input_structure_sha256": "8a48326c1bb3c7cdc0b3d5ffce2dd4d2df72b00027751aeb4b59d89e9b2d413a",
+      "composition": {
+        "Ca": 1.0,
+        "Na": 4.0,
+        "O": 3.0
+      },
+      "chemsys": "Ca-Na-O",
+      "energy_per_atom": -3.997962474822998
+    },
+    {
+      "generation_ordinal": 21,
+      "source_ordinal": 508,
+      "reconstructed_index": 16,
+      "attempt_id": "a-a8882bdac1c94c805ae953cc",
+      "input_structure_sha256": "f814e71b5eded82163c3f8b0635a3f8b83de9d9a6c44dc1f543182c6b27b9e78",
+      "composition": {
+        "F": 8.0,
+        "Li": 4.0,
+        "Zn": 2.0
+      },
+      "chemsys": "F-Li-Zn",
+      "energy_per_atom": -4.497254371643066
+    }
+  ],
+  "materials_project": {
+    "client": "mp_api.client.MPRester",
+    "method": "get_entries_in_chemsys",
+    "sidecar_python": "/public/home/jiaosz/ywliang/ai4s/.venvs/mp_api_0_45_13_emmet0_85_1_py310_v4_system/bin/python",
+    "python_version": "3.10.18",
+    "mp_api_version": "0.45.13",
+    "emmet_core_version": "0.85.1",
+    "pymatgen_version": "2025.6.14",
+    "thermo_type": "GGA_GGA+U",
+    "additional_criteria": {
+      "thermo_types": [
+        "GGA_GGA+U"
+      ]
+    },
+    "compatible_only": true,
+    "a100_hull_semantics": "PhaseDiagram(reference_entries) + PDEntry(CHGNet_relaxed_energy), allow_negative=True",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "api_key_source": "MP_API_KEY process environment only",
+    "api_key_serialized": false,
+    "maximum_queries": 8,
+    "query_retry_or_replacement": false
+  },
+  "decision_rule": {
+    "minimum_strict_full_sun_count": 2,
+    "minimum_meta_full_sun_count": 11,
+    "pass": "strict_full_sun >= 2 and meta_full_sun >= 11 on the unchanged all-22 denominator",
+    "fail": "strict_full_sun + remaining_unknown < 2 or meta_full_sun + remaining_unknown < 11",
+    "inconclusive_mp_coverage": "resolved lower bound misses a threshold but remaining structured query errors could still change the decision",
+    "pass_consequence": "Permit design and preregistration of the MLIP-free feasibility-mask experiment; do not train automatically.",
+    "fail_consequence": "Stop escalation of this composition-projection mechanism.",
+    "inconclusive_consequence": "Stop with structured residual MP coverage errors; do not retry, replace, or train."
+  },
+  "execution": {
+    "location": "A800_login_node",
+    "slurm_allowed": false,
+    "gpu_allowed": false,
+    "original_outputs_modified": false,
+    "scientific_call_limit": 1,
+    "overwrite": false
+  },
+  "output": {
+    "claim": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_existing22_mp_completion_v1_claim.json",
+    "directory": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_existing22_mp_completion_v1",
+    "query_cache": "mp_query_cache.jsonl",
+    "completed_attempt_results": "all22_completed_attempt_results.jsonl",
+    "completion_report": "completion_report.json",
+    "terminal_acceptance": "terminal_acceptance.json",
+    "stdout_log": "runs/20260720_0401-crysllmgen-wq-final-v3/logs/wq-existing22-mp-completion-v1.out",
+    "stderr_log": "runs/20260720_0401-crysllmgen-wq-final-v3/logs/wq-existing22-mp-completion-v1.err"
+  },
+  "scope": {
+    "fixed_queries": 8,
+    "all22_recomputation": true,
+    "new_generation": false,
+    "chgnet_calls": 0,
+    "geometry_changes": 0,
+    "training": false,
+    "slurm_jobs": 0,
+    "gpu_jobs": 0,
+    "sample_retry_or_replacement": false,
+    "mp_query_retry_or_replacement": false
+  }
+}

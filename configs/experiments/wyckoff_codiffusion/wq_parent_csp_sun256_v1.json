@@ -1,0 +1,122 @@
+{
+  "schema": "wq_parent_csp_sun256_diagnostic_v1",
+  "status": "user_authorized_ready_to_submit_once",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "authorization": {
+    "record": "runs/remote_audit/20260724_wq_parent_csp_sun256_v1/authorization_record.json",
+    "record_sha256": "1da13c5b5623c67314cd042e2204c9adaa3d3eafcf0e3919da263ca1e5f962db"
+  },
+  "frozen_identities": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "protocol_v4_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+    "gate_a_lock_sha256": "534dbd55caf3599bad233bfd671bf304fe28891854101d2a201f1d1feaaa4bf5",
+    "adapter_training_execution_patch_sha256": "9577e00d71f38cecd585d6fd228a22794fc0f474014ba3b847e2417fb6121491",
+    "adapter_checkpoint": "formal_epoch_03_step_2544",
+    "adapter_model_sha256": "9e12192fbd9fd42a1cdc236a50a3e70f8f97e4b44353cb37986c72dafd21b45c",
+    "released_parent_csp_checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "p0_job_id": "27409",
+    "p0_terminal_audit_sha256": "04749ac74f617567cdcb43f4f86ae8c91ee5048ec1cca82ec870c2936926c824"
+  },
+  "generation": {
+    "experiment_id": "wq-parent-csp-sun256-v1",
+    "method": "DIAG-WQ-PROPOSAL-PARENT-CSP32",
+    "pairing_id": "wq-epoch-selection-paired-noise-sup27104-v2",
+    "training_seed": 11,
+    "sampling_seed": 101,
+    "start_ordinal": 256,
+    "attempts": 256,
+    "end_ordinal_inclusive": 511,
+    "ordinal_policy": "disjoint_confirmatory_panel_after_failed_epoch_panel_0_255_and_p0_ordinals_0_3",
+    "proposal_source": "selected_epoch_03_WQ_Llama_adapter",
+    "continuous_sampler": "released_CSPDiffusion_parent_pc_skip_v1",
+    "reverse_steps": 32,
+    "attempt_retry_or_replacement_used": false,
+    "all_terminal_attempts_remain_in_denominator": true
+  },
+  "evaluation_adapter": {
+    "source_schema": "wq_parent_csp_probe_attempt_v1",
+    "target_schema": "wqcodiff_generation_attempt_v1",
+    "mapping": "final_structure_to_structure",
+    "structure_coordinates_or_lattice_changed": false,
+    "attempt_ids_or_statuses_changed": false,
+    "provenance_hash_per_attempt": true
+  },
+  "crysllmgen_direct_metrics": {
+    "enabled": true,
+    "implementation": "unchanged_upstream_CrysLLMGen_compute_metrics",
+    "ground_truth": "reference/crysllmgen/data/mp_20/test.csv",
+    "denominator": 256,
+    "failed_generation_handling": "invalid_attempt_in_denominator",
+    "reported": [
+      "composition_validity",
+      "structure_validity",
+      "joint_validity",
+      "coverage_precision",
+      "coverage_recall",
+      "property_and_density_distances"
+    ]
+  },
+  "sun": {
+    "protocol": "exact_R5-C_A100_protocol_on_A800",
+    "denominator": 256,
+    "strict_ehull_ev_per_atom": 0.0,
+    "meta_ehull_ev_per_atom": 0.1,
+    "strict_primary": true,
+    "meta_secondary": true,
+    "coverage_adjusted_role": "report_only",
+    "final_test_or_MLIP_selection": false,
+    "dft": false,
+    "retry_or_replacement_used": false
+  },
+  "slurm": {
+    "job_name": "wq-parent-sun256-v1",
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 16,
+    "memory_gib": 96,
+    "time_limit": "18:00:00",
+    "single_job_pipeline": [
+      "generate_256",
+      "adapt_final_structure_without_mutation",
+      "crysllmgen_direct_metrics",
+      "strict_and_meta_SUN",
+      "write_terminal_acceptance"
+    ],
+    "queue_policy": "record_but_do_not_block_on_unrelated_user_jobs"
+  },
+  "immutable_paths": {
+    "submission_record": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_parent_csp_sun256_v1_submission.json",
+    "submission_claim": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_parent_csp_sun256_v1_submission.json.claim",
+    "output": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_sun256_v1",
+    "terminal_acceptance": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_sun256_v1/terminal_acceptance.json"
+  },
+  "execution_acceptance": [
+    "single_submit_once_claim_before_sbatch",
+    "COMPLETED_0_0",
+    "exactly_256_terminal_generation_attempts",
+    "ordinals_exactly_256_through_511",
+    "attempt_ledger_audit_pass",
+    "adapter_preserves_attempt_ids_statuses_and_final_structures",
+    "crysllmgen_metrics_denominator_256",
+    "SUN_denominator_256",
+    "strict_and_meta_outputs_complete",
+    "no_attempt_retry_or_replacement"
+  ],
+  "decision_role": {
+    "purpose": "decide whether the current WQ-Llama proposal path merits retention before P1 bridge work",
+    "automatic_long_training_after_pass": false,
+    "interpretation_requires": [
+      "generation_and_direct_metric_collapse_check",
+      "strict_and_meta_all_attempt_SUN",
+      "comparison_with_released_CrysLLMGen_reference_evidence"
+    ]
+  },
+  "forbidden": [
+    "retry_or_replace_any_of_the_256_attempts",
+    "cancel_or_modify_unrelated_jobs",
+    "retrain_Llama_LoRA",
+    "retrain_refiner_27103",
+    "submit_P1_or_long_diffusion_training",
+    "select_on_coverage_adjusted_SUN"
+  ]
+}

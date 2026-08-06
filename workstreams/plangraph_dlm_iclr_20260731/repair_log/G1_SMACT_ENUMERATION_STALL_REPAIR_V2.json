@@ -1,0 +1,72 @@
+{
+  "schema": "plangraph-dlm-repair-log@1",
+  "created_at": "2026-08-01T00:16:00+08:00",
+  "stage": "G1",
+  "repair_cycle": 1,
+  "failure_identity": "g1_fixed_stoichiometry_smact_enumeration_stall",
+  "classification": "implementation_runtime_failure",
+  "scientific_gate_failure": false,
+  "superseded": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_g1_v1",
+    "sampling_array_job": 29100,
+    "assembly_job": 29101,
+    "affected_arm": "PG",
+    "last_complete_attempt_count": 264,
+    "attempts_total": 512,
+    "last_progress_elapsed_seconds": 1258.058974981308,
+    "stdout_last_progress_at": "2026-07-31T23:22:21+08:00",
+    "diagnostic_observed_at": "2026-08-01T00:06:41+08:00",
+    "scheduler_state": "RUNNING",
+    "scheduler_internal_job_id": 29116,
+    "final_scheduler_state": "CANCELLED",
+    "cancelled_at": "2026-08-01T00:27:00+08:00",
+    "cancel_reason": "confirmed implementation stall; superseded by bounded repair cycle 1",
+    "batch_average_cpu": "01:06:02",
+    "batch_average_rss": "1389176K",
+    "gpu_memory_used_mib": 17196,
+    "gpu_utilization_percent": 0,
+    "stderr": "checkpoint load only",
+    "true_error_signature_found": false,
+    "partial_samples_accepted": false
+  },
+  "root_cause": {
+    "summary": "The fixed-stoichiometry SMACT classifier enumerated the full Cartesian product of element oxidation states even though nearly all prefixes could not reach zero total charge.",
+    "evidence": "The sampling loop stopped between batch progress events while one CPU remained busy and the GPU stayed idle. The only CPU-only unbounded path between those events is classify_smact_validity; SMACT neutral_ratios_iter confirms fixed stoichiometries are filtered by exact charge sum and gcd."
+  },
+  "patch": {
+    "summary": "Use exact suffix minimum/maximum charge bounds to prune only oxidation-state prefixes that cannot reach zero; retain original product order for surviving charge-neutral witnesses and retain the original Pauling test.",
+    "scientific_protocol_changed": false,
+    "seed_changed": false,
+    "denominator_changed": false,
+    "model_changed": false,
+    "data_changed": false,
+    "gate_changed": false,
+    "patch_file": "workstreams/plangraph_dlm_iclr_20260731/repair_log/G1_SMACT_ENUMERATION_STALL_REPAIR_V2.patch",
+    "patch_sha256": "831d604275a27cc3f85bfc088db42914f695c05fecb6d64595f840b50a5a32f3"
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -p test_g1_protocol.py -v",
+    "passed": 6,
+    "failed": 0,
+    "equivalence_test": true,
+    "impossible_high_arity_pruning_test": true,
+    "shell_syntax_test": true
+  },
+  "replacement": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_plangraph_dlm_g1_sampling_repair_v2",
+    "source_bundle_sha256": "e3990c1f2baf1675ab87a2379f2de4b2419aa4a04a68b9ebf71867935ecbac26",
+    "source_inventory_sha256": "d60ad76373bb1b189574692177832688f88d48b2c1b471f32a639483847c5acd",
+    "execution_manifest_sha256": "68954fb336a431f4a7f5ec1f0cbc9cf0366eeabf7c97fd449dc52c063c094e68",
+    "authorization_sha256": "47b40b72e7f9d8e69bb112616747453e58ce761764183fdeded3515c41189f0a",
+    "reuse_completed_ledger_job": 29098,
+    "reuse_completed_training_array_job": 29099,
+    "rerun_all_sampling_arms_from_ordinal_zero": true,
+    "partial_samples_merged": false,
+    "sampling_array_job": 29136,
+    "assembly_job": 29137,
+    "submission_record_sha256": "fb23e74bf40b989c3f16f22d3c7c1ff25e03a42f8dae5e8bd0099177fab781d2",
+    "submitted_at": "2026-08-01T00:28:20+08:00",
+    "current_state": "P0_sampling_running"
+  },
+  "status": "repair_submitted"
+}

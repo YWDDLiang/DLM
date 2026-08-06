@@ -1,0 +1,90 @@
+{
+  "schema": "h1_crplan_r0_paired32_runtime_repair_execution_manifest_v2",
+  "identity": "h1_crplan_r0_paired32_runtime_repair_v2",
+  "created_local_date": "2026-08-04",
+  "source_contract": {
+    "source_manifest_filename": "SOURCE_SHA256.txt",
+    "source_manifest_sha256_in_submission_record": true,
+    "immutable_run_source": true
+  },
+  "successful_anchor": {
+    "archive": "source_bundles/20260804_h1_success_anchor_pre_crplan_v1.tar.gz",
+    "archive_sha256": "16e18b2ea9a8a781a9f8f2e8919cbb5b179748035c1c884362bfe9fb9348fb80"
+  },
+  "remote_runtime": {
+    "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "conda_environment": "diff_meets_diff",
+    "smact_version": "3.1.0",
+    "pymatgen_version": "2025.6.14",
+    "transformers_version": "4.54.0",
+    "torch_version": "2.4.0+cu121",
+    "validated_partitions": [
+      "normal",
+      "gpu"
+    ],
+    "gpu_contract": "one NVIDIAA800-SXM4-80GB"
+  },
+  "planner_identity": {
+    "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+    "adapter": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "adapter_model_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
+  },
+  "historical_control_identity": {
+    "p0_raw_generations": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P0/plan512/raw_generations.jsonl",
+    "p0_raw_generations_sha256": "7c630cecd7654d103f67ad2edf69da869c22408cec95454c26f2ddd6870d3e70",
+    "required_first32_scientific_output_parity": true
+  },
+  "predecessor_runtime_failure": {
+    "job_id": "30325",
+    "state": "TIMEOUT",
+    "exit_code": "0:0",
+    "elapsed": "00:40:12",
+    "total_cpu_seconds": 1.44,
+    "maximum_rss_kib": 359292,
+    "maximum_disk_read": "273.06M",
+    "unit_tests": "26/26_passed_in_0.397s",
+    "terminal_report_present": false,
+    "paired32_submitted": false,
+    "observation_sha256": "39b7aa279f29851ccbfbf704035bc624c6af87abe1e103bd26320727ee07067b"
+  },
+  "runtime_repair": {
+    "scope": "CR-0_audit_runtime_only",
+    "removed_explicit_torch_import_from_probability_identity_audit": true,
+    "replacement": "full-vocabulary_python_binary64_stable_softmax_parity",
+    "phase_timing_added": true,
+    "cr0_walltime": "02:00:00",
+    "scientific_implementation_changed": false,
+    "scientific_protocol_changed": false
+  },
+  "scientific_contract": {
+    "principal_factor": "formula_token_legal_support_only",
+    "control": "off",
+    "candidate": "full_prefix",
+    "raw_attempts_per_arm": 32,
+    "all_attempt_ordinals": "0..31",
+    "paired_seed_role": "shared",
+    "mixed_valence_only_is_primary_gain": false,
+    "charge_not_applicable_is_primary_gain": false,
+    "pauling_is_hard_constraint": false,
+    "formula_prefill_allowed_for_constrained_arms": false,
+    "parser_fsm_exact_identity_required": true,
+    "repeated_lexical_elements": "allowed_then_canonicalized_and_reported",
+    "sun_used": false,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "fallback": false
+  },
+  "dag": {
+    "cr0_partition": "normal",
+    "paired32_partition": "gpu",
+    "paired32_dependency": "manual_release_only_after_observed_CR0_COMPLETED_0:0_and_terminal_pass",
+    "four_arm_512_submitted": false
+  },
+  "formal_g3": false,
+  "automatic_training": false,
+  "automatic_promotion": false,
+  "automatic_downstream": false
+}

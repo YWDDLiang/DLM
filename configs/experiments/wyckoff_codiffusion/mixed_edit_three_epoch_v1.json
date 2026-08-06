@@ -1,0 +1,177 @@
+{
+  "schema": "crysllmgen_mixed_edit_three_epoch_v1",
+  "status": "active_user_authorized_amendment",
+  "base_protocol": {
+    "name": "crysllmgen_wyckoff_georev_v4",
+    "sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0"
+  },
+  "scope": {
+    "representation": "wyckoff",
+    "training_stage": "mixed_edit",
+    "run_role": "main"
+  },
+  "training": {
+    "maximum_effective_epochs": 3,
+    "step_override": "forbidden",
+    "effective_batch_sequences": 64,
+    "distributed_batch": {
+      "world_size": 2,
+      "per_device_microbatch": 8,
+      "gradient_accumulation": 4,
+      "formula": "world_size * per_device_microbatch * gradient_accumulation = effective_batch_sequences"
+    },
+    "optimization": {
+      "learning_rate": 0.0001,
+      "warmup_fraction": 0.03,
+      "scheduler": "constant_with_warmup",
+      "rationale": "The cancelled 20k-step run showed stable gradients at 1e-4; under a three-epoch horizon cosine would confound later checkpoints by decaying almost to zero."
+    },
+    "save_strategy": "epoch",
+    "save_total_limit": 3,
+    "load_best_model_at_end": false,
+    "final_adapter_source": "epoch_3",
+    "required_checkpoint_epochs": [
+      1,
+      2,
+      3
+    ]
+  },
+  "evaluation": {
+    "evaluate_every_checkpoint": true,
+    "same_attempt_ids_across_epochs": true,
+    "smoke_attempts_per_configuration": 256,
+    "required_families": [
+      "mixed_corruption_answer_nll_and_recovery",
+      "parse_legality_and_failure_accounting",
+      "crysllmgen_validity_and_coverage",
+      "novelty_uniqueness_symmetry_and_wyckoff_fidelity",
+      "r5c_a100_sun_exact_legacy_and_same_attempt_denominators",
+      "efficiency_and_gpuh"
+    ],
+    "selection": {
+      "final_test_or_final_mlip_panel_selection": "forbidden",
+      "scope": "validation_smoke_panel_only_never_final_test_attempts",
+      "policy": "r5c_a100_strict_then_meta_with_crysllmgen_noninferiority_v1",
+      "r5c_a100_sun": {
+        "participates_in_checkpoint_selection": true,
+        "definition": "R5-C A100 CHGNet-0.3.0 relaxation plus frozen Materials Project hull cache",
+        "exact_executor": {
+          "eval_sun_py_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b",
+          "eval_sun_resumable_py_sha256": "44c7d9adf01de29d5bdd0eb6a0e6e5d77f1b47b47f0e4bcd9b35cd6c51e19baa",
+          "environment": "crysllm",
+          "chgnet_package_version": "0.4.2",
+          "chgnet_model_name": "0.3.0",
+          "chgnet_model_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+        },
+        "frozen_references": {
+          "mp20_train_csv_sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde",
+          "mp20_training_index_cache_sha256": "f26ea30d6f529cca2d743401049e0328227faa156c95af3e0641d35fe03ffc62",
+          "mp_hull_cache_sha256": "93d6532cd93c1cfebcbc969d0299852359d6a2950b66b259c028e971f8f7e4ff",
+          "chgnet_relax_cache_sha256": "9d29489fcf61544ed2420fee7f78c6d59a0dca4bc55f989223bb7000f4961c71",
+          "structure_matcher": {
+            "ltol": 0.2,
+            "stol": 0.3,
+            "angle_tol": 5.0
+          }
+        },
+        "thresholds_ev_per_atom": {
+          "strict": 0.0,
+          "meta_like": 0.1
+        },
+        "selection_metrics": {
+          "primary": "attempt_strict_full_sun_lower_bound",
+          "secondary": "attempt_meta_full_sun_lower_bound",
+          "legacy_reconstructed_denominator_rates": "report_only_for_exact_R5-C_A100_comparability",
+          "coverage_adjusted_estimates": "report_only_never_checkpoint_selection"
+        },
+        "attempt_denominator": 256,
+        "paired_bootstrap_draws": 10000,
+        "equivalence_rule": "paired_95pct_ci_for_difference_from_point_best_contains_zero",
+        "denominator_rule": "A100 novelty_uniqueness_CHGNet_and_MP_hull_numerators_are_unchanged; generation_failures_reconstruction_failures_relaxation_failures_and_missing_hull_remain_false_on_all_256_attempts"
+      },
+      "crysllmgen_direct_metrics": {
+        "source": "unchanged_upstream_compute_metrics.py",
+        "higher_is_better": [
+          "comp_valid",
+          "struct_valid",
+          "valid",
+          "cov_recall",
+          "cov_precision"
+        ],
+        "lower_is_better": [
+          "wdist_density",
+          "wdist_num_elems"
+        ],
+        "absolute_collapse_guards": {
+          "comp_valid_min_percent": 70.0,
+          "struct_valid_min_percent": 95.0,
+          "valid_min_percent": 70.0,
+          "cov_recall_min_percent": 80.0,
+          "cov_precision_min_percent": 90.0,
+          "wdist_density_max": 1.5,
+          "wdist_num_elems_max": 0.5
+        },
+        "noninferiority_from_metric_best": {
+          "comp_valid_drop_max_pp": 3.0,
+          "struct_valid_drop_max_pp": 1.0,
+          "valid_drop_max_pp": 3.0,
+          "cov_recall_drop_max_pp": 3.0,
+          "cov_precision_drop_max_pp": 2.0,
+          "wdist_density_increase_max": 0.15,
+          "wdist_num_elems_increase_max": 0.1
+        }
+      },
+      "procedure": [
+        "reject_any_checkpoint_failing_attempt_accounting_or_absolute_collapse_guards",
+        "retain_only_checkpoints_noninferior_to_the_per_metric_best_on_every_direct_crysllmgen_metric",
+        "find_the_highest_attempt_strict_full_sun_lower_bound_checkpoint",
+        "if_its_paired_95pct_strict_sun_difference_ci_is_strictly_positive_against_every_other_eligible_checkpoint_select_it",
+        "otherwise_form_the_strict_sun_equivalent_set_and_repeat_the_paired_rule_with_attempt_meta_full_sun_lower_bound",
+        "if_meta_like_is_also_equivalent_select_lexicographically_by_valid_cov_hmean_comp_valid_struct_valid_lower_density_wdist_lower_num_elem_wdist_novel_unique_lower_validation_nll_then_lower_epoch",
+        "always_report_exact_legacy_reconstructed_denominator_strict_and_meta_rates_but_never_use_coverage_adjusted_estimates_for_selection"
+      ],
+      "no_eligible_checkpoint_action": "selection_gate_fails_and_training_route_stops"
+    }
+  },
+  "execution": {
+    "partition": "gpu",
+    "launcher": "torchrun_standalone_single_node",
+    "training_world_size": 2,
+    "gpus_per_training_job": 2,
+    "cpus_per_training_job": 16,
+    "numerical_threads_per_rank": 4,
+    "ddp_backend": "nccl",
+    "ddp_find_unused_parameters": false,
+    "gradient_checkpointing": false,
+    "gradient_checkpointing_use_reentrant": null,
+    "data_loading": {
+      "mode": "pretokenized_memmap",
+      "dataloader_num_workers_per_rank": 4,
+      "cache_manifest_sha256": "afd954868f1f9c431068e92b444061079d741d6b23e8cdddccb1e9bedd9ddb23",
+      "examples": 54270,
+      "max_length": 512,
+      "example_id_order_sha256": "961a40e9bf76cca8df2b09bd3be932f813caa1a47fa0be2358b82c71449a735f"
+    },
+    "attention_selection": {
+      "record_schema": "crysllmgen_formal_execution_selection_v1",
+      "allowed_implementations": [
+        "sdpa",
+        "flash_attention_2"
+      ],
+      "flash_profile": "configs/experiments/wyckoff_codiffusion/ddp_flash_followup_v1.json",
+      "flash_profile_id": "cache4_mb8_acc4_gc_off_flash2",
+      "sdpa_reference_profile_id": "cache4_mb8_acc4_gc_off_sdpa",
+      "sdpa_seconds_per_update": 4.16302,
+      "flash_minimum_relative_speedup": 0.02,
+      "failed_or_ineligible_flash_fallback": "sdpa"
+    },
+    "profile": {
+      "required_before_full_training": true,
+      "maximum_optimizer_updates": 100,
+      "scientific_attempt": false
+    },
+    "long_job_user_approval_threshold_hours": 6,
+    "two_gpu_user_choice_record": "runs/remote_audit/20260721_mixed_edit_two_gpu_user_choice_v1.json",
+    "batch_submission": "one_manifest_one_dependency_dag"
+  }
+}

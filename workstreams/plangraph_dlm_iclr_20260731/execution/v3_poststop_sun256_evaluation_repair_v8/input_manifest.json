@@ -1,0 +1,145 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_evaluation_repair_input_v1",
+  "status": "frozen",
+  "source_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7",
+  "source_manifest_sha256": "5d05e23da6ba4e0e49f4646a5db8181c27f3dd47d67148cac9baaa842fa6a42f",
+  "source_terminal_report_sha256": "b249c982b4ede6b7fbfee20f9ab49a910e31f66a87f596f5b4b80a28ffae6e9f",
+  "attempts_per_arm": 256,
+  "ordinals": "0..255",
+  "denominator": "raw_all_attempt",
+  "retry": false,
+  "replacement": false,
+  "repair": false,
+  "filter": false,
+  "rerank": false,
+  "arms": {
+    "M00": {
+      "method": "H1A2-V3-DIAG-P0-B0-REFINE800",
+      "generation_jsonl": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M00/generation/generation.jsonl",
+        "bytes": 790015,
+        "sha256": "24c2c6a08fd9cb247c4e803adc7aca0ad210433057f1e736c75fbc5f4b6f5e0f"
+      },
+      "generation_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M00/generation/generation_report.json",
+        "sha256": "a7c54e968c0ae8979562c9dc683ff860aa1a2c35b08c8e09e46688c461f42940"
+      },
+      "generation_success": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M00/generation/_SUCCESS",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "direct_attempt_metrics": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M00/evaluation/crysllmgen_metrics/attempt_metrics.jsonl",
+        "bytes": 50832,
+        "sha256": "82375b6d4716017d60f7f7f2cd7fba694320370de93fa8bda6ab1c3cda973ff1"
+      },
+      "direct_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M00/evaluation/crysllmgen_metrics/report.json",
+        "sha256": "75c4cef33372fbd5df9fbb274d8c5129555a46b95b15397908c5689f8f1ff322"
+      },
+      "expected": {
+        "generation_succeeded": 243,
+        "composition_valid": 203,
+        "structure_valid": 241,
+        "joint_valid": 201
+      }
+    },
+    "M10": {
+      "method": "H1A2-V3-DIAG-PSTAR-B0-REFINE800",
+      "generation_jsonl": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M10/generation/generation.jsonl",
+        "bytes": 756902,
+        "sha256": "24394b5b695ea0742751ec64337801ebd0ed95efb10d4c35a5e5930a1aa90bdf"
+      },
+      "generation_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M10/generation/generation_report.json",
+        "sha256": "21f51ece5d4dde4e083f777a32b0b1ecb760f18b5b800e1a3b6658d458ff03a8"
+      },
+      "generation_success": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M10/generation/_SUCCESS",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "direct_attempt_metrics": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M10/evaluation/crysllmgen_metrics/attempt_metrics.jsonl",
+        "bytes": 51567,
+        "sha256": "e1a6a9ff450549bfdba0e4a250b9a0c06fd3af11af82f50025b0d1234a728f80"
+      },
+      "direct_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M10/evaluation/crysllmgen_metrics/report.json",
+        "sha256": "c265acce93c1deee322c721f824e3786293a1098ad6cca4b43eda626888c6cf1"
+      },
+      "expected": {
+        "generation_succeeded": 242,
+        "composition_valid": 204,
+        "structure_valid": 242,
+        "joint_valid": 204
+      }
+    },
+    "M01": {
+      "method": "H1A2-V3-DIAG-P0-B2-REFINE800",
+      "generation_jsonl": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M01/generation/generation.jsonl",
+        "bytes": 301945,
+        "sha256": "14bbeb2e224ba8a33df842396ccfe5aefc2ecc7ff513496cf6a4e088f719c8fd"
+      },
+      "generation_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M01/generation/generation_report.json",
+        "sha256": "c1ca86a4e2072610ac3ef84563ac77c4a3942bc04867e8b46b6277c092a89bf0"
+      },
+      "generation_success": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M01/generation/_SUCCESS",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "direct_attempt_metrics": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M01/evaluation/crysllmgen_metrics/attempt_metrics.jsonl",
+        "bytes": 60152,
+        "sha256": "d291e7e354bb1f7a5560b0a5d4a779eab5ee4a864b4a95cdb7de7056b5a58948"
+      },
+      "direct_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M01/evaluation/crysllmgen_metrics/report.json",
+        "sha256": "bdd86d720ca7f9ec9df138cb6aa7ca5aa750dc6a7b836c1716b20934b96676e5"
+      },
+      "expected": {
+        "generation_succeeded": 72,
+        "composition_valid": 62,
+        "structure_valid": 72,
+        "joint_valid": 62
+      }
+    },
+    "M11": {
+      "method": "H1A2-V3-DIAG-PSTAR-B2-REFINE800",
+      "generation_jsonl": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M11/generation/generation.jsonl",
+        "bytes": 335420,
+        "sha256": "d3cd98ad7183ceb43540294ccd3f6cb98d8ec29fcb77c6c0a15aead64b3da99e"
+      },
+      "generation_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M11/generation/generation_report.json",
+        "sha256": "f9d12d7f99627c580b4528cb96cf85cd81c7df75261e3821818bdb23306386b4"
+      },
+      "generation_success": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M11/generation/_SUCCESS",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "direct_attempt_metrics": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M11/evaluation/crysllmgen_metrics/attempt_metrics.jsonl",
+        "bytes": 59835,
+        "sha256": "f45c03b965b2cba1ff8ee22c6d59574932637570a5f0daf641bdc32a4ece7e04"
+      },
+      "direct_report": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M11/evaluation/crysllmgen_metrics/report.json",
+        "sha256": "a8f8bcaad1b50abf3bd159965a8b7d42909a47dd7d3b545f109fbcda234d1ccb"
+      },
+      "expected": {
+        "generation_succeeded": 92,
+        "composition_valid": 77,
+        "structure_valid": 92,
+        "joint_valid": 77
+      }
+    }
+  }
+}

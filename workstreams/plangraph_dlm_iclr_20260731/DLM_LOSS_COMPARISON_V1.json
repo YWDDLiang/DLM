@@ -1,0 +1,40 @@
+{
+  "schema": "h1a2_v3_dlm_loss_comparison_v1",
+  "created_at": "2026-08-01",
+  "status": "complete",
+  "common_fixed_panel": {
+    "rows": 100,
+    "corruption": "stateless_iid_baseline",
+    "force_iid_baseline": true,
+    "B0_initial_loss": 1.969803,
+    "B1_terminal_loss": 1.4607100467663259,
+    "B2_terminal_loss": 1.4660900968220085,
+    "B1_relative_reduction": 0.2584486762550462,
+    "B2_relative_reduction": 0.2557174078936284,
+    "B2_relative_to_B1": 1.003683175503672
+  },
+  "historical_R5C": {
+    "last_logged_validation_step": 1500,
+    "last_logged_validation_loss": 1.9667479924857616,
+    "terminal_step_1696_validation_logged": false
+  },
+  "configuration_alignment": {
+    "representation": "dynamic_v1",
+    "answer_token_count": 87,
+    "learning_rate": 0.00005,
+    "world_size": 2,
+    "global_effective_batch": 16,
+    "core_loss_weights_match_R5C": true,
+    "V3_difference": "B1/B2 add the frozen iid:planned 2:1 corruption policy and fixed-panel logging"
+  },
+  "interpretation": {
+    "absolute_training_loss_is_ordinary_token_cross_entropy": false,
+    "loss_definition": "diffusion token cross entropy divided by mask probability and normalized with registered answer-position weights",
+    "B1_B2_likelihood_gate_passed": true,
+    "B2_dependency_gain_still_pending": true
+  },
+  "decision": {
+    "change_loss": false,
+    "reason": "The comparable fixed-panel metric improved strongly and changing the loss after observing training would invalidate the registered B1/B2 comparison. The paired direct-dependency margin is the discriminating next test."
+  }
+}

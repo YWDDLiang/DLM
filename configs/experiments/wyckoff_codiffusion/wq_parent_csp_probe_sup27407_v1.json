@@ -1,0 +1,62 @@
+{
+  "schema": "wq_parent_csp_probe_sup27407_v1",
+  "status": "authorized_not_submitted",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "authorization": {
+    "identity": "user_wq_parent_csp_probe_sup27407_v1_2026-07-24",
+    "record": "runs/remote_audit/20260724_wq_parent_csp_probe_sup27407_v1_authorization.json",
+    "record_sha256": "dc9f170d3e7ac9d2585bec9750329e87a746ab5069d797f7a9ecd80b2f2ee36e"
+  },
+  "supersession": {
+    "job_id": "27407",
+    "state": "FAILED",
+    "exit_code": "1:0",
+    "scientific_attempts_started": 0,
+    "failure_audit_sha256": "3015a21aaaf86c607b0249b148ef2320b462dcef9f5dbe7e77a0c93a151d4f19",
+    "root_cause": "diagnostic_execution_patch_sha256_not_forwarded_to_GateALock.load",
+    "allowed_code_change": "Pass config.diagnostic_execution_patch_sha256 as execution_patch_manifest_sha256 to GateALock.load."
+  },
+  "immutable_identity": {
+    "experiment_id": "wq-parent-csp-same-proposal-sup27407-v1",
+    "slurm_job_name": "wq-parent-csp-sup27407-v1",
+    "submission_record": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_parent_csp_same_proposal_sup27407_v1_submission.json",
+    "submission_claim": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/wq_parent_csp_same_proposal_sup27407_v1_submission.json.claim",
+    "output": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_same_proposal_sup27407_v1",
+    "submit_once": true
+  },
+  "scientific_contract": {
+    "pairing_id": "wq-epoch-selection-paired-noise-sup27104-v2",
+    "adapter_checkpoint": "formal_epoch_03_step_2544",
+    "adapter_training_execution_patch_sha256": "9577e00d71f38cecd585d6fd228a22794fc0f474014ba3b847e2417fb6121491",
+    "training_seed": 11,
+    "sampling_seed": 101,
+    "ordinals": [0, 1, 2, 3],
+    "proposal_seed_contract": "identical_to_failed_epoch_panel",
+    "parent_sampler": "released_CSPDiffusion_parent_pc_skip_v1",
+    "reverse_steps": 32,
+    "scientific_gate": "at_least_one_finite_positive_volume_parent_output",
+    "retry_within_supersession": false
+  },
+  "resources": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit_minutes": 45
+  },
+  "execution_acceptance": [
+    "COMPLETED_0_0",
+    "exactly_four_terminal_attempts",
+    "immutable_attempt_ledger_audit_pass",
+    "proposal_text_and_state_preserved",
+    "diagnostic_execution_patch_sha256_matches_installed_cumulative_manifest",
+    "no_attempt_retry_or_replacement",
+    "no_long_training_submission"
+  ],
+  "forbidden": [
+    "reuse_or_mutate_job_27407",
+    "reuse_job_27407_submission_record_claim_output_experiment_or_job_name",
+    "submit_long_bridge_training_before_P0_and_P1_pass",
+    "retrain_formal_LoRA_or_refiner"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "h1a2_dlm_sidecar_preflight_execution_v1",
+  "status": "prepared_not_submitted",
+  "created_at": "2026-08-01",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/source",
+  "authorization": "../../AUTHORIZATION_V3_PREFLIGHT_SMOKE_20260801.json",
+  "scope": [
+    "publish_full_45229_row_teacher_plan_sidecar",
+    "verify_r5c_prompt_answer_byte_identity",
+    "real_r5c_tokenizer_full_train_validation_preflight_d1",
+    "real_r5c_tokenizer_full_train_validation_preflight_d2",
+    "bounded_32_row_cpu_mask_schedule_smoke"
+  ],
+  "source_data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/dlm_sft/mp_20_r5_exact_length",
+    "split_rows": {
+      "train": 27136,
+      "val": 9047,
+      "test": 9046
+    },
+    "split_bytes": {
+      "train": 111422704,
+      "val": 37082760,
+      "test": 37074802
+    },
+    "success_sha256": "8afb81283dfd769b50fe01c49ef997b9c99a9c83c76e39de64d5d7b18be16bd3",
+    "stats_sha256": "f3eda4befe498d948bed75315a1a7567164b6e17528469210e152d01570ae5ca",
+    "vocab_sha256": "71d3145913eb3496c82f28c654989e37b0031105f52291483788aca3a8bee56b"
+  },
+  "tokenizer": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "role": "frozen_R5C_checkpoint_real_tokenizer",
+    "max_length": 382
+  },
+  "protocol": {
+    "dataset_version": "h1a2_r5c_plangraph_sidecar_v2",
+    "source_plan_provenance": "structure_derived_teacher_plan_state",
+    "model_proposed_plan": false,
+    "eligible_as_end_to_end_planner_evidence": false,
+    "prompt_answer_byte_identity": true,
+    "plangraph_visibility": "collator_sidecar_only",
+    "policies": [
+      "d1",
+      "d2"
+    ],
+    "iid_to_planned": "2:1",
+    "validation_corruption": "stateless_iid_fixed_panel_v1",
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  },
+  "resources": {
+    "partition": "short",
+    "nodes": 1,
+    "tasks": 1,
+    "cpus": 8,
+    "memory_gib": 32,
+    "walltime": "02:00:00",
+    "gpus": 0
+  },
+  "mutates_h1_assets": false,
+  "loads_model_weights": false,
+  "crystal_generation": false,
+  "sun_evaluation": false,
+  "automatic_downstream": false,
+  "scientific_training_authorized": false,
+  "next_stage_submission_authorized": false
+}

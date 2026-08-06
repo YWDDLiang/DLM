@@ -1,0 +1,112 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_execution_manifest_v1",
+  "created_at": "2026-08-01",
+  "status": "frozen_ready_for_single_submission",
+  "run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v1",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/v3_poststop_sun256_diagnostic_v1",
+  "authorization": {
+    "path": "AUTHORIZATION.json",
+    "sha256": "b69b9745e1b07a8d43325e9bb8a241e16ab2314b139337231b4aba041781f074"
+  },
+  "config": {
+    "path": "config.json",
+    "sha256": "cdc89e96962752efc1d8564ce9d277421961edce7f4de6f366d8499bf481c81f"
+  },
+  "isolated_runtime": {
+    "root": "runtime",
+    "files": 71,
+    "manifest": "RUNTIME_REQUIRED_SHA256.txt",
+    "manifest_sha256": "10808c58290389ae60365607bb793c585a9151d18d1538b932d288bbec3a9c59",
+    "shared_project_runtime_overwrite": false
+  },
+  "scientific_context": {
+    "phase2_planner_gate_passed": false,
+    "phase2_body_gate_passed": false,
+    "purpose": "post-stop_factor_attribution_and_sun_diagnostic",
+    "formal_g3": false
+  },
+  "factorial_design": {
+    "arms": {
+      "M00": "P0+B0",
+      "M10": "Pstar+B0",
+      "M01": "P0+B2",
+      "M11": "Pstar+B2"
+    },
+    "attempts_per_arm": 256,
+    "ordinals": "0..255",
+    "denominator": "raw_all_attempt",
+    "same_ordinal_planner_seed": true,
+    "same_ordinal_body_seed": true,
+    "same_ordinal_refiner_seed": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  },
+  "diffusion_refinement": {
+    "required_for_every_arm": true,
+    "required_before_direct_metrics_and_sun": true,
+    "checkpoint": "CrysLLMGen model_494",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "reverse_steps": 800,
+    "num_evals": 1,
+    "successful_unrefined_output_may_enter_evaluation": false
+  },
+  "dag": [
+    {
+      "stage": "prepare",
+      "dependency": null,
+      "partition": "short",
+      "cpus": 8,
+      "memory_gib": 32,
+      "walltime": "02:00:00"
+    },
+    {
+      "stage": "generation_and_diffusion_refinement",
+      "dependency": "afterok:prepare",
+      "array": "0-3%2",
+      "partition": "gpu",
+      "gpus_per_element": 1,
+      "gpu_type": "NVIDIAA800-SXM4-80GB",
+      "cpus_per_element": 8,
+      "memory_gib_per_element": 96,
+      "walltime_per_element": "18:00:00"
+    },
+    {
+      "stage": "direct_metrics_and_sun",
+      "dependency": "afterok:generation_and_diffusion_refinement",
+      "array": "0-3%2",
+      "partition": "gpu",
+      "gpus_per_element": 1,
+      "gpu_type": "NVIDIAA800-SXM4-80GB",
+      "cpus_per_element": 8,
+      "memory_gib_per_element": 96,
+      "walltime_per_element": "18:00:00"
+    },
+    {
+      "stage": "assembly",
+      "dependency": "afterany:direct_metrics_and_sun",
+      "partition": "short",
+      "cpus": 4,
+      "memory_gib": 32,
+      "walltime": "01:00:00"
+    }
+  ],
+  "sun": {
+    "mp_api_enabled": false,
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "frozen_cache_only": true,
+    "credential_written_to_source_or_logs": false
+  },
+  "decision_firewall": {
+    "diagnostic_only": true,
+    "checkpoint_reselection_from_generation_or_sun": false,
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_downstream": false,
+    "automatic_training": false
+  }
+}

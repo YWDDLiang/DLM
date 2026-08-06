@@ -1,0 +1,230 @@
+{
+  "registry_version": 1,
+  "workstream": "plangraph_dlm_iclr_20260731",
+  "created_at": "2026-07-31",
+  "status": "g0_remote_preflight_complete_engineering32_manifest_frozen_no_submission",
+  "paper": {
+    "working_title": "PlanGraph-DLM: Chemically Structured Planning and Dependency-Aligned Denoising for Crystal Generation",
+    "method_freeze_deadline": "2026-08-31",
+    "full_draft_deadline": "2026-09-05",
+    "submission_deadline": "2026-09-17"
+  },
+  "authorization": {
+    "job_submission": false,
+    "automatic_downstream": false,
+    "automatic_promotion": false,
+    "modify_h1_artifacts": false,
+    "modify_continuous_refiner": false
+  },
+  "implementation": {
+    "phase": "G0_remote_preflight_complete",
+    "h1_output_guard": true,
+    "h1_integrity_verifier": true,
+    "plangraph_schema": true,
+    "deterministic_converter": true,
+    "leakage_safe_sft_records": true,
+    "d1_position_groups": true,
+    "d2_position_groups": true,
+    "cpu_mask_simulator": true,
+    "atomic_full_denominator_dataset_builder": true,
+    "frozen_train_val_dataset_published": true,
+    "real_tokenizer_preflight_entry": true,
+    "real_tokenizer_preflight_passed": true,
+    "training_loop_integrated": true,
+    "legacy_d0_rng_path_preserved": true,
+    "d2_shuffle_control_integrated": true,
+    "d2_shuffle_identity_policy": "same_rows_same_groups_content_keyed_order_only",
+    "fixed_validation_corruption": "stateless_iid_fixed_panel_v1",
+    "local_cpu_cuda_mask_parity": {
+      "passed": true,
+      "device": "NVIDIA GeForce RTX 5060",
+      "a800_preflight_substitute": false
+    },
+    "relevant_local_tests": {
+      "passed": 101,
+      "failed": 0
+    },
+    "remote_source_bundle": {
+      "sha256": "a95eda38e4baa435be95ad69881ffbdb9289be7bde343c3fc9ce0a0f03303215",
+      "entries": 139,
+      "unittest_passed": 34,
+      "unittest_failed": 0
+    },
+    "published_dataset": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/dlm_sft/mp_20_plangraph_v1_20260731",
+      "manifest_sha256": "2aac3b91a9cc5f0b18bfa0084886f7cb7e5eca689d0fdce3235f41ccfc0b2e2e",
+      "rows": 36183,
+      "fixed_validation_panel_ordered_sha256": "45da490d0d0dee2989802a6b7424343b5b32df2475039705622ecef75e61f00f"
+    },
+    "full_denominator_preflight": {
+      "max_length": 768,
+      "rows": 36183,
+      "failed_rows": 0,
+      "policies": [
+        "D1",
+        "D2",
+        "D2-shuffle"
+      ],
+      "mask_invariants_passed": true
+    },
+    "engineering_pilot_manifest": {
+      "path": "workstreams/plangraph_dlm_iclr_20260731/ENGINEERING_PILOT_32_MANIFEST_V1.json",
+      "sha256": "097943f6947ca166a07cb8dcbce0b68b938e52ba1e2d850ec6cca45e0aa69777",
+      "status": "frozen_review_point_not_authorized_not_submitted"
+    },
+    "gpu_execution_authorized": false,
+    "local_test_mirror_schema_audit": {
+      "input_sha256": "9a5c542888029ee785c3f922e2922a61a6cb92abf028b1fe197c8920d48efe8b",
+      "total_rows": 9046,
+      "converted_rows": 9046,
+      "allowed_use": "schema_feasibility_only",
+      "tuning_authorized": false
+    }
+  },
+  "h1_fallback": {
+    "state": "frozen_verified_canonical",
+    "activate_if_no_g4_path_by": "2026-08-31",
+    "read_only_roots": [
+      "workstreams/r5c_reactivation_20260728/h1a2_epoch2_innovation",
+      "workstreams/r5c_reactivation_20260728/r5c_frozen_baseline_20260728",
+      "runs/20260603_034533-h1a2-epoch2-3-fullmetrics",
+      "runs/20260729_h1a2c_jointchem_v1",
+      "runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1",
+      "runs/20260731_h1a2c_p0_p1_sun256_mpcomplete_v4"
+    ],
+    "identities": {
+      "h1a2_epoch2_planner_adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+      "r5c_body_adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+      "continuous_refiner_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+      "jointchem_execution_manifest_sha256": "aedd7e5b4b91720ea2e8490f563eb747886c848c64a9d98196a6ab1cf7b9f874",
+      "jointchem_corrected_terminal_sha256": "6bfb9cd2927fcfb6017b303f1eed993545c99d37877e968268b2417b3d921ea6",
+      "sun256_execution_manifest_sha256": "f4a4e94a6df1acb10e8c6ad8d0b712448371d1dcea79027f6c2b07b8a3303d34"
+    },
+    "integrity_observation": {
+      "canonical_local": {
+        "manifest_count": 6,
+        "entry_count": 68,
+        "ok_count": 68,
+        "ok": true
+      },
+      "a800_mirror": {
+        "authoritative_restore_source": false,
+        "existing_file_hash_mismatches": 0,
+        "missing_top_level_checksum_manifests": 2,
+        "missing_baseline_files": 19,
+        "classification": "incomplete_mirror_missing_only",
+        "action": "do_not_patch_or_use_as_restore_source"
+      }
+    }
+  },
+  "method": {
+    "planner": "plangraph_v1",
+    "representation": "dynamic_v1",
+    "primary_dlm_mix": {
+      "iid": 2,
+      "planned": 1
+    },
+    "secondary_ratio_ablation": {
+      "iid": 1,
+      "planned": 2,
+      "conditional_on_primary_preflight": true
+    },
+    "planned_policies": {
+      "d1": "current_inference_order",
+      "d2": "plangraph_dependency_order",
+      "primary": "d2",
+      "feasibility_fallback": "d1"
+    },
+    "self_training": false,
+    "test_time_retry_or_repair": false,
+    "energy_or_sun_training_signal": false
+  },
+  "arms": {
+    "planner_only": [
+      "P0",
+      "PG",
+      "PG-shuffle"
+    ],
+    "dlm_screen": [
+      "D0",
+      "D1",
+      "D2",
+      "D2-ratio",
+      "D2-shuffle"
+    ],
+    "primary_factorial": {
+      "M0": "H1_P0+D0",
+      "M1": "PlanGraph+D0",
+      "M2": "H1_P0+Dstar",
+      "M3": "PlanGraph+Dstar"
+    }
+  },
+  "stages": [
+    {
+      "name": "implementation_integrity",
+      "gate": "G0",
+      "gpu_authorized": false
+    },
+    {
+      "name": "planner_only",
+      "gate": "G1",
+      "attempts_per_arm": 512,
+      "denominator": "all_attempt"
+    },
+    {
+      "name": "dlm_preflight",
+      "gate": "G2",
+      "max_updates": 400,
+      "validation_interval_updates": 50
+    },
+    {
+      "name": "paired_screen",
+      "gate": "G3",
+      "attempts_per_arm": 256,
+      "denominator": "all_attempt"
+    },
+    {
+      "name": "confirmation",
+      "gate": "G4",
+      "seeds": 3,
+      "attempts_per_seed": 1000,
+      "protocols": [
+        "all_attempt",
+        "benchmark_accepted_n"
+      ]
+    },
+    {
+      "name": "final_scale",
+      "gate": "G5",
+      "accepted_n_per_system": 10000,
+      "conditional": true
+    }
+  ],
+  "success_targets": {
+    "planner_parse_rate_min": 0.99,
+    "planner_completion_rate_min": 0.98,
+    "planner_composition_valid_min": 0.95,
+    "generation_completion_min": 0.97,
+    "fixed_panel_nll_relative_max": 1.01,
+    "pooled_all_attempt_strict_sun_min_exclusive": 0.10,
+    "pooled_all_attempt_meta_sun_min_exclusive": 0.50,
+    "confirmation_seeds_crossing_both_targets_min": 2
+  },
+  "evaluation": {
+    "same_ordinal_seeds": true,
+    "sample_id_selection": false,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "paired_bootstrap": true,
+    "mcnemar": true,
+    "report_all_failure_causes": true
+  },
+  "resource_limits": {
+    "gpus_per_element_max": 1,
+    "gpu_type": "A800",
+    "cpus_per_gpu_max": 8
+  }
+}

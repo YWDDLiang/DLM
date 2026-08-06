@@ -1,0 +1,33 @@
+{
+  "schema": "h1a2_v3_b1_b2_scientific_one_epoch_lr5e5_submission_v1",
+  "status": "complete",
+  "submitted_at": "2026-08-01T16:52:00+08:00",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1",
+  "source_archive_sha256": "14de6308a66bf3088dff0341ec368f2a0c2c6282efea1eab2a6627d9b3582b7d",
+  "source_inventory_sha256": "587ba19da0d563fe0a1d43ae007b8196240f9acdcf107cfbedd2c22d54a64f26",
+  "execution_manifest_sha256": "f4a465ec9e83c1ec886bec8959269e66eb922dcfc3856bd66cc8f983c659bc0e",
+  "authorization_sha256": "4220233e1b968e7a8c464554d7d1fa48c8ae7febe6d9fab62ff4433a55626fbd",
+  "protocol_override_sha256": "248386b9499ed8aaffa5587d28b7ba9bfea9b03f61eb9cc12f2e3311bb6017ed",
+  "remote_preflight_scope_note_sha256": "c17d4933812a5aeb2c02dbe2df236c1c4eb69b86e328cef85c4e2a2b6fc97b66",
+  "jobs": {
+    "training_array": {
+      "job_id": "29393",
+      "array": "0-1%1",
+      "arms": {
+        "0": "B1",
+        "1": "B2"
+      },
+      "initial_state": "PENDING"
+    },
+    "terminal_assembly": {
+      "job_id": "29394",
+      "dependency": "afterany:29393",
+      "initial_state": "PENDING"
+    }
+  },
+  "DLM_learning_rate": 0.00005,
+  "complete_epochs": 1,
+  "exact_optimizer_updates": 1696,
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

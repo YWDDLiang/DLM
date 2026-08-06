@@ -1,0 +1,31 @@
+{
+  "schema_version": "plangraph-dlm-repair-log@1",
+  "stage": "G1",
+  "recorded_at": "2026-07-31",
+  "failure_scope": "pre_submission_remote_test_harness",
+  "slurm_job_submitted": false,
+  "run_root_created": false,
+  "root_cause": "The first remote command addressed tests.test_g1_protocol as an importable package even though tests/ intentionally has no __init__.py.",
+  "observed_failure": "ModuleNotFoundError: No module named 'tests.test_g1_protocol'",
+  "correction": "Invoke the unchanged frozen tests with unittest discovery: python -m unittest discover -s tests -p 'test_*.py' -q.",
+  "source_changed": false,
+  "execution_manifest_changed": false,
+  "authorization_changed": false,
+  "model_identity_changed": false,
+  "data_identity_changed": false,
+  "seeds_or_denominator_changed": false,
+  "thresholds_changed": false,
+  "resources_changed": false,
+  "rerun_result": {
+    "tests_run": 4,
+    "tests_failed": 0,
+    "py_compile_passed": true,
+    "shell_syntax_passed": true,
+    "json_validation_passed": true,
+    "remote_preflight_marker": "__PG_G1_REMOTE_PREFLIGHT_PASS__"
+  },
+  "classification": "bounded_engineering_fix_before_submission",
+  "repair_cycle": 1,
+  "maximum_authorized_repair_submissions_per_distinct_failure": 2,
+  "scientific_impact": "none"
+}

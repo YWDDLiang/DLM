@@ -1,0 +1,6 @@
+# Superseded protocol pointer. Launchers must reject this file for paper runs.
+protocol:
+  name: sun_iclr_stratified_wyckoff_v2_superseded
+  schema_version: 2
+  status: superseded
+  superseded_by: configs/experiments/wyckoff_codiffusion/protocol_v3.yaml

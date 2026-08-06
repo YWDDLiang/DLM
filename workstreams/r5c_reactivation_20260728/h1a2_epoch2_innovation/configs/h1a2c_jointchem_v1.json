@@ -1,0 +1,118 @@
+{
+  "schema": "h1a2c_jointchem_experiment_v1",
+  "identity": "h1a2c_jointchem_v1",
+  "run_id": "20260729_h1a2c_jointchem_v1",
+  "scientific_anchor": {
+    "name": "H1-A2 epoch-2",
+    "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "strict_sun_all_attempt": 0.094,
+    "meta_sun_all_attempt": 0.474,
+    "composition_valid": 0.878,
+    "structure_valid": 0.999,
+    "joint_valid": 0.877
+  },
+  "source": {
+    "directory": "data/dlm_sft/mp_20_h1a2_rich_planner_noid_l3base",
+    "train_sha256": "d431dfec1de8c3240dbc5648867be1b4b676fd85276e805a177b9944f3a1a157",
+    "val_sha256": "59327aa789ae5d2bbb66d8a8f0dc882d594bcc14623aa96ce95076ed1b6fc540",
+    "test_sha256": "032845826acf1fcb9e7893fc91da05bc0cd9d2363c80ae459d5c446c3c6d5ea8",
+    "sample_id_in_prompt": false
+  },
+  "data_build": {
+    "seed": 17,
+    "training_microbatches": 3200,
+    "chemistry_valid_fraction": 0.8,
+    "epoch2_anchor_fraction": 0.2,
+    "validation_rows": 1024,
+    "validation_batches_per_checkpoint": 128,
+    "max_chemistry_negative_candidates": 256,
+    "anchor_replay": "proportional_by_N_bucket_arity_anion_charge_lattice_spacegroup_volume"
+  },
+  "arms": {
+    "P0": "frozen_epoch2",
+    "P1": "valid_replay",
+    "P2": "jointchem"
+  },
+  "training": {
+    "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+    "initial_adapter": "runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "updates": 400,
+    "max_length": 768,
+    "learning_rate": 2e-06,
+    "weight_decay": 0.0,
+    "warmup_updates": 25,
+    "scheduler": "cosine",
+    "gradient_clip": 1.0,
+    "precision": "bf16",
+    "seed": 17,
+    "checkpoint_every_updates": 50,
+    "validation": {
+      "fixed_rows_per_checkpoint": 128,
+      "margin_aggregation": "mean_of_per_row_negative_nll_minus_positive_nll_on_identical_eligible_rows",
+      "ranking_positive_requires_composition_valid": true,
+      "max_relative_positive_nll_degradation_vs_epoch2": 0.01
+    },
+    "loss": {
+      "positive_target_only_ce": 0.75,
+      "chemistry_pairwise": 0.15,
+      "joint_tuple_pairwise": 0.1,
+      "margin": 0.1,
+      "renormalize_active_terms": true,
+      "anchor_rows_use_positive_ce_only": true
+    }
+  },
+  "plan_screen": {
+    "denominator_per_arm": 512,
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "max_atoms": 20,
+    "seed": 17029,
+    "prompt_style": "h1_rich_plan_v1",
+    "include_sample_id": false,
+    "retry_or_replacement": false
+  },
+  "resources": {
+    "data": {
+      "partition": "short",
+      "cpu": 8,
+      "memory": "32G",
+      "time": "02:00:00"
+    },
+    "arm_array": {
+      "partition": "gpu",
+      "gpu_type": "NVIDIAA800-SXM4-80GB",
+      "gpu_per_task": 1,
+      "cpu_per_task": 8,
+      "memory": "64G",
+      "time": "18:00:00",
+      "max_concurrent": 2
+    },
+    "assembly": {
+      "partition": "short",
+      "cpu": 4,
+      "memory": "16G",
+      "time": "00:30:00"
+    }
+  },
+  "firewall": {
+    "sun_used": false,
+    "chgnet_used": false,
+    "mlip_used": false,
+    "mp_api_used": false,
+    "hull_or_formation_energy_used": false,
+    "crystal_generation_used_for_checkpoint_selection": false,
+    "automatic_crystal_evaluation_authorized": false
+  },
+  "preflight": {
+    "real_tokenizer_target_mask": true,
+    "prompt_logit_perturbation_invariance": true,
+    "target_logit_sensitivity": true,
+    "pairwise_formula_exact": true,
+    "single_a800_bitwise_repeat": true,
+    "source_manifest_and_epoch2_adapter_sha_fail_closed": true
+  }
+}

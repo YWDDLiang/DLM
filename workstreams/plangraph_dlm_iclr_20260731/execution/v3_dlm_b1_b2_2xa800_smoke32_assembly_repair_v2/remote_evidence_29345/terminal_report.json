@@ -1,0 +1,131 @@
+{
+  "arms": {
+    "B1": {
+      "report": {
+        "a800_count": 2,
+        "arm": "B1",
+        "automatic_downstream": false,
+        "crystal_generation": false,
+        "distributed_runtime_report_sha256": "1a881da788b65146f37ccde777f2c5996537f98af0a03f482abdf1fa24412fef",
+        "eligible_for_checkpoint_selection": false,
+        "eligible_for_later_initialization": false,
+        "engineering_gate_passed": true,
+        "final_validation_loss": 2.467157136183232,
+        "global_effective_batch": 16,
+        "global_training_sequences": 32,
+        "gpu_monitor": {
+          "indices": [
+            "0",
+            "1"
+          ],
+          "names": [
+            "NVIDIA A800-SXM4-80GB"
+          ],
+          "peak_memory_mib": {
+            "0": 47036.0,
+            "1": 40516.0
+          },
+          "rows": 200
+        },
+        "initial_validation_loss": 2.28644045535475,
+        "maximum_cuda_peak_reserved_bytes": 41362128896,
+        "minimum_rank_gradient_norm": 12.957003593444824,
+        "minimum_rank_task_loss": 0.0206158310174942,
+        "optimizer_updates": 2,
+        "planned_corruption_policy": "d1",
+        "run_config_sha256": "333063baa8dc158e3c65518b124963bf2a73040e969772ccceee897752812140",
+        "schema": "h1a2_dlm_b1_b2_2xa800_arm_report_v1",
+        "scientific_result": false,
+        "scientific_training_authorized": false,
+        "status": "complete",
+        "sun_evaluation": false,
+        "training_log_sha256": "7694f2a879266b036e1e60514f055d72c2d896ed4fc195ec6c66631a0ebd0c25",
+        "validation_duplicate_count": 0,
+        "validation_missing_count": 0,
+        "validation_rows": 32,
+        "validation_sampler_report_sha256": "20f0844a5700dca7bf4082b787fa4a2eeea1af9b8c12e29ceedd24f42e02f958",
+        "world_size": 2
+      },
+      "report_sha256": "bedf0800f01344d6b67804d6859c003dca8bcd98648cd3544045243cc88bd35b",
+      "scheduler": {
+        "elapsed": "00:06:51",
+        "exit_code": "0:0",
+        "job_id": "29337_0",
+        "job_id_raw": "29339",
+        "state": "COMPLETED"
+      }
+    },
+    "B2": {
+      "report": {
+        "a800_count": 2,
+        "arm": "B2",
+        "automatic_downstream": false,
+        "crystal_generation": false,
+        "distributed_runtime_report_sha256": "b325e8fa2295f4eba089acca613c77a7aa335ac4d2bf3dbf366815dfc9088c28",
+        "eligible_for_checkpoint_selection": false,
+        "eligible_for_later_initialization": false,
+        "engineering_gate_passed": true,
+        "final_validation_loss": 2.4354479680769145,
+        "global_effective_batch": 16,
+        "global_training_sequences": 32,
+        "gpu_monitor": {
+          "indices": [
+            "0",
+            "1"
+          ],
+          "names": [
+            "NVIDIA A800-SXM4-80GB"
+          ],
+          "peak_memory_mib": {
+            "0": 47036.0,
+            "1": 40450.0
+          },
+          "rows": 200
+        },
+        "initial_validation_loss": 2.286440492607653,
+        "maximum_cuda_peak_reserved_bytes": 41360031744,
+        "minimum_rank_gradient_norm": 22.882585525512695,
+        "minimum_rank_task_loss": 0.02594335377216339,
+        "optimizer_updates": 2,
+        "planned_corruption_policy": "d2",
+        "run_config_sha256": "eca4d68987a948fc3b20d986b8cf5cff5a61d7c489c839080c02120669ce32c4",
+        "schema": "h1a2_dlm_b1_b2_2xa800_arm_report_v1",
+        "scientific_result": false,
+        "scientific_training_authorized": false,
+        "status": "complete",
+        "sun_evaluation": false,
+        "training_log_sha256": "30bb2e6fc1773c5d0523a30e5994f771aa2a515bcd606aee1700d9cfa3f6a2db",
+        "validation_duplicate_count": 0,
+        "validation_missing_count": 0,
+        "validation_rows": 32,
+        "validation_sampler_report_sha256": "20f0844a5700dca7bf4082b787fa4a2eeea1af9b8c12e29ceedd24f42e02f958",
+        "world_size": 2
+      },
+      "report_sha256": "ccf8f8c283494266d11403134927cc71d81430dc8a65d398f291379a5557ba78",
+      "scheduler": {
+        "elapsed": "00:04:00",
+        "exit_code": "0:0",
+        "job_id": "29337_1",
+        "job_id_raw": "29337",
+        "state": "COMPLETED"
+      }
+    }
+  },
+  "automatic_downstream": false,
+  "crystal_generation": false,
+  "eligible_for_checkpoint_selection": false,
+  "eligible_for_later_initialization": false,
+  "engineering_gate_passed": true,
+  "failure_reasons": [],
+  "next_gate": "freeze_resource_envelope_and_review_scientific_learning_rate",
+  "original_array_job_id": "29337",
+  "original_failed_assembly_job_id": "29338",
+  "original_failed_terminal_sha256": "894d4a704214d9ff56f51c09b1c35ad20fb3a108805b28920c3714c584ce2e6f",
+  "repair_kind": "array_aware_sacct_jobid_parser",
+  "scheduler_record_sha256": "46eb976c1a06d78be8e2d8ab77a658b5f8917f4185ff20a2c43287378e478a5c",
+  "schema": "h1a2_dlm_b1_b2_2xa800_smoke32_terminal_repair_v2",
+  "scientific_result": false,
+  "scientific_training_authorized": false,
+  "status": "complete",
+  "sun_evaluation": false
+}

@@ -1,0 +1,63 @@
+{
+  "schema": "h1_crplan_e1_physical_performance_probe_config_v1",
+  "identity": "h1_crplan_e1_physical_performance_probe_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260805_h1_crplan_e1_physical_performance_probe_v1",
+  "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+  "adapter_model_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+  "attempts": 18,
+  "engineering_base_seed": 26080517,
+  "reference_ordinals": [
+    2,
+    11
+  ],
+  "modes": [
+    "off",
+    "terminal_only",
+    "full_prefix"
+  ],
+  "order_cycle": [
+    [
+      "off",
+      "terminal_only",
+      "full_prefix"
+    ],
+    [
+      "terminal_only",
+      "full_prefix",
+      "off"
+    ],
+    [
+      "full_prefix",
+      "off",
+      "terminal_only"
+    ]
+  ],
+  "prompt_style": "h1_rich_plan_v1",
+  "include_sample_id": false,
+  "temperature": 0.9,
+  "top_p": 0.95,
+  "top_k": 50,
+  "max_new_tokens": 96,
+  "max_atoms": 20,
+  "seed_mode": "stateless_ordinal_v1",
+  "common_model_forward_warmup": true,
+  "mode_specific_support_warmup": false,
+  "missing_state_policy": "fail_closed",
+  "latency_gate": {
+    "full_median_over_p0_max": 1.5,
+    "full_p95_over_p0_max": 2.0
+  },
+  "mechanism_gate": {
+    "minimum_charge_applicable_affected_rate": 0.05
+  },
+  "logical_state_gate_reused_from_v4": false,
+  "logical_states_reported_with_original_definition": true,
+  "slurm": {
+    "partition": "gpu",
+    "gpus": "NVIDIAA800-SXM4-80GB:1",
+    "cpus": 8,
+    "memory": "64G",
+    "walltime": "02:00:00"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "h1_body_safeaxis_refined_repeats4_authorization_v1",
+  "status": "authorized",
+  "date": "2026-08-02",
+  "user_quotes": [
+    "好的，按照你说的，后续都要在H1的基础上改进，不要一次性改太多，防止像这次一样",
+    "开始推进",
+    "好的，去推进"
+  ],
+  "authorized_scope": [
+    "reuse frozen R03D control and safe-axis body outputs",
+    "four preregistered common-seed refiner process repeats",
+    "frozen model_494 exact refine800",
+    "direct metrics and frozen-cache S.U.N.",
+    "terminal paired statistical assembly"
+  ],
+  "not_authorized": [
+    "Planner change",
+    "body checkpoint change",
+    "body regeneration",
+    "new scientific seeds",
+    "MP API",
+    "training",
+    "checkpoint reselection",
+    "formal G3 or G4",
+    "promotion",
+    "automatic downstream"
+  ]
+}

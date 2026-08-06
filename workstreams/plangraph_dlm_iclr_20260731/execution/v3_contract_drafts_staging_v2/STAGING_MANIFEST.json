@@ -1,0 +1,22 @@
+{
+  "schema": "h1a2_v3_contract_drafts_staging_v2",
+  "status": "prepared_for_file_transfer_only",
+  "created_at": "2026-08-01",
+  "purpose": "Self-contained A800 staging and targeted tests for the factorial contract and blocked scientific drafts.",
+  "supersedes_staging_only": "v3_contract_drafts_staging_v1",
+  "v1_issue": "The transferred files passed SHA checks, but the minimal archive omitted imported repository modules and could not run as a self-contained test package.",
+  "scientific_protocol_changed": false,
+  "proposed_remote_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_contract_drafts_staging_v2",
+  "targeted_tests": [
+    "tests.test_h1a2_factorial_contract",
+    "tests.test_ordinal_rng",
+    "tests.test_h1_llm_planner"
+  ],
+  "expected_tests": 27,
+  "scientific_training_authorized": false,
+  "job_submission_authorized": false,
+  "job_ids": [],
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "H1_assets_modified": false
+}

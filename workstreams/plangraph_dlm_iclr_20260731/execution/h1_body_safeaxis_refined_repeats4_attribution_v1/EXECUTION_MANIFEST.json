@@ -1,0 +1,62 @@
+{
+  "schema": "h1_r03h_paired_ordinal_attribution_execution_manifest_v1",
+  "status": "frozen_before_execution",
+  "run_id": "20260803_h1_body_safeaxis_refined_repeats4_attribution_v1",
+  "scientific_role": "read-only paired ordinal attribution of the frozen R03G endpoints",
+  "source_r03g": {
+    "run_id": "20260803_h1_body_safeaxis_refined_repeats4_no_completed_hull_v1",
+    "source_manifest_sha256": "06fa4bcd2fc4e340906c9e2396af2c6cbe7f7fb9178156d4112eba96201f4858",
+    "terminal_report_sha256": "3cb705ea9b572f37dc46696a8aa59a8ae90a0ec90db4789d341052bab7d3bfff",
+    "decision_sha256": "0f9b33f53dcf066b9c77f92fc6adcd799bc18b2df6bce431c89fb6fe453dfa6b",
+    "input_contract_sha256": "69ad665631ac52ea6ff8e5a48e9df17ee1e580554f8e6da46da5d646cbc316fe"
+  },
+  "mapping": {
+    "repeats": 4,
+    "arms_per_repeat": 2,
+    "attempts_per_arm": 256,
+    "paired_records": 1024,
+    "ordinals": "0..255",
+    "denominator": "raw_all_attempts"
+  },
+  "frozen_endpoints": {
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "residual_hull_unknown_scored_false": true,
+    "threshold_change": false,
+    "endpoint_recomputation": false
+  },
+  "attribution": {
+    "state_transition_matrix": true,
+    "endpoint_discordance_mechanisms": true,
+    "paired_finite_hull_delta": true,
+    "threshold_margin_description": true,
+    "ordinal_recurrence": true,
+    "residual_unknown_pairing": true,
+    "residual_unknown_chemsys_balance": true,
+    "new_inferential_test": false,
+    "sample_selection": false
+  },
+  "runtime": {
+    "location": "A800 login node through user-maintained nested tmux",
+    "slurm": false,
+    "gpu": false,
+    "cuda_visible_devices": "",
+    "network": false,
+    "secret_carrier": "none"
+  },
+  "reruns": {
+    "generation": false,
+    "refinement": false,
+    "chgnet": false,
+    "direct_metrics": false,
+    "novelty": false,
+    "sun": false
+  },
+  "firewall": {
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_training": false,
+    "checkpoint_reselection": false,
+    "automatic_downstream": false
+  }
+}

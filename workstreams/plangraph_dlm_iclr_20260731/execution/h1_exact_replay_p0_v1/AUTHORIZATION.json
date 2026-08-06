@@ -1,0 +1,27 @@
+{
+  "schema": "h1_exact_replay_authorization_v1",
+  "date": "2026-08-02",
+  "user_directive": "Start from H1 and advance one change at a time; begin execution.",
+  "authorized": true,
+  "scope": {
+    "frozen_h1_p0_replay": true,
+    "arms": [
+      "P0"
+    ],
+    "attempts": 256,
+    "body_generation": true,
+    "frozen_refinement": true,
+    "diffusion_reverse_steps": 800,
+    "exact_output_comparison": true,
+    "direct_metrics": false,
+    "sun": false,
+    "training": false,
+    "checkpoint_reselection": false,
+    "planner_change": false,
+    "body_checkpoint_change": false,
+    "body_schedule_change": false,
+    "automatic_downstream": false
+  },
+  "historical_h1_read_only": true,
+  "new_output_root_required": true
+}

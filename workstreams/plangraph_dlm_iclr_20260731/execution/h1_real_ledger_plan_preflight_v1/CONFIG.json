@@ -1,0 +1,26 @@
+{
+  "arms": {
+    "P0": {
+      "expected_parsed": 253,
+      "factorial_arm": "M00",
+      "planner_input_contract": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M00/plans/P0/planner_input_contract.json",
+      "planner_input_contract_sha256": "94ae9215f448602bd76e85c92a489490156de178b7b18fd5250f21fc294a2e23",
+      "raw_generations": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P0/plan512/raw_generations.jsonl",
+      "raw_generations_sha256": "7c630cecd7654d103f67ad2edf69da869c22408cec95454c26f2ddd6870d3e70"
+    },
+    "Pstar": {
+      "expected_parsed": 253,
+      "factorial_arm": "M10",
+      "planner_input_contract": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7/arms/M10/plans/Pstar/planner_input_contract.json",
+      "planner_input_contract_sha256": "384c5258d8d0ffe3d58c5077aa27267bee91544497d022786c1acb916469363c",
+      "raw_generations": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1/arms/P-star/plan512/raw_generations.jsonl",
+      "raw_generations_sha256": "8a233c483c6104251480e309ecc666da30567831e5a1fa6cf77864d553858aa8"
+    }
+  },
+  "automatic_downstream": false,
+  "denominator": 256,
+  "planner_base_seed": 17029,
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_real_ledger_plan_preflight_v1",
+  "schema": "h1_real_ledger_plan_preflight_config_v1",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_real_ledger_plan_preflight_v1"
+}

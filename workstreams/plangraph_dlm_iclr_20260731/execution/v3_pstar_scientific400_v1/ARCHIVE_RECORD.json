@@ -1,0 +1,26 @@
+{
+  "schema": "h1a2_v3_pcontrol_pstar_scientific400_archive_v1",
+  "status": "complete",
+  "created_at": "2026-08-01",
+  "source_inventory": "SOURCE_SHA256.txt",
+  "source_inventory_sha256": "1454f2577bd474cbe5d1680b9e423fb63cb587ca68d79a9845f3ddf2ed14db42",
+  "source_archive": "source_bundle.tar.gz",
+  "source_archive_sha256": "b156e3ff8d5e09383abbe01841952f09834cc99a38fa1a21626f3f102930b842",
+  "execution_manifest_sha256": "410367a5905ede08fd1e9406bb75eab0d7cce3fd32ed8eae5259e88604f6ef55",
+  "authorization_sha256": "4220233e1b968e7a8c464554d7d1fa48c8ae7febe6d9fab62ff4433a55626fbd",
+  "focused_local_validation": {
+    "command": "python3 -m unittest tests.test_v3_scientific_terminal_assemblers tests.test_h1a2_planner_batch tests.test_h1a2_planner_objective tests.test_distributed_data tests.test_h1a2_dlm_fixed_panel_audit",
+    "tests_run": 21,
+    "passed": 19,
+    "skipped_missing_local_torch": 2,
+    "failed": 0
+  },
+  "focused_A800_validation": {
+    "source_hashes": "all passed",
+    "tests_run": 12,
+    "passed": 12,
+    "failed": 0
+  },
+  "H1_fallback_read_only": true,
+  "automatic_downstream": false
+}

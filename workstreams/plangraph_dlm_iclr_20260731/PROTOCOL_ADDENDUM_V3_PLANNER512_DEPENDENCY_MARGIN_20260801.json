@@ -1,0 +1,101 @@
+{
+  "schema": "h1a2_v3_planner512_dependency_margin_addendum_v1",
+  "created_at": "2026-08-01",
+  "status": "frozen_before_execution",
+  "authorization": "AUTHORIZATION_V3_PLANNER512_DEPENDENCY_SCREEN_20260801.json",
+  "planner_endpoint_override": "PROTOCOL_OVERRIDE_V3_PLANNER_FULL_EPOCH_ENDPOINT_20260801.json",
+  "planner_512": {
+    "arms": {
+      "P0": {
+        "checkpoint_role": "frozen_H1A2_epoch2"
+      },
+      "P-control": {
+        "checkpoint_role": "complete_one_epoch_step_400"
+      },
+      "P-star": {
+        "checkpoint_role": "complete_one_epoch_step_400"
+      }
+    },
+    "attempts_per_arm": 512,
+    "sample_idx": "0..511",
+    "seed": 17029,
+    "seed_mode": "stateless_ordinal_v1",
+    "prompt_style": "h1_rich_plan_v1",
+    "include_sample_id": false,
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "max_atoms": 20,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "denominator": "raw_all_attempt",
+    "composition_normalization": "gcd_reduced_atom_multiset_v1",
+    "registered_marginal_tvd_keys": [
+      "n_tvd",
+      "num_elements_tvd",
+      "element_presence_tvd",
+      "family_tvd",
+      "arity_tvd",
+      "size_tvd",
+      "anion_framework_tvd",
+      "charge_bucket_tvd",
+      "lattice_system_tvd",
+      "spacegroup_bucket_tvd",
+      "volume_per_atom_bin_tvd"
+    ],
+    "gate": {
+      "Pstar_parse_drop_points_max": 0.5,
+      "Pstar_completion_drop_points_max": 0.5,
+      "Pstar_composition_valid_gain_points_min": 2.0,
+      "Pstar_composition_valid_strictly_above_Pcontrol": true,
+      "Pstar_target_nll_relative_to_P0_max": 1.01,
+      "Pstar_unique_formula_ratio_to_P0_min": 0.95,
+      "Pstar_mean_atom_count_delta_max": 0.5,
+      "Pstar_each_registered_marginal_tvd_worsening_max": 0.02,
+      "Pstar_all_metal_rate_must_not_exceed_P0": true,
+      "Pstar_single_element_rate_must_not_exceed_P0": true
+    }
+  },
+  "direct_dependency_margin": {
+    "name": "paired_direct_dependency_margin_v1",
+    "arms": [
+      "B1",
+      "B2"
+    ],
+    "eligible_checkpoint": "terminal_step_1696_final_only",
+    "panel": "the same frozen validation ordinals 0..99 used for fixed-panel NLL",
+    "target_groups": "every non-root compiled PlanGraph group",
+    "matched_condition": "same-row prerequisite groups visible; active and future groups masked",
+    "counterfactual_condition": "same mask and visible positions, but prerequisite token values come from the next deterministic validation donor with the same N",
+    "donor_rule": "smallest validation ordinal greater than the target with the same N and a different answer, wrapping once",
+    "field_and_budget_matching": {
+      "same_prompt": true,
+      "same_target_tokens": true,
+      "same_sequence_length": true,
+      "same_visible_positions": true,
+      "same_visible_token_count": true,
+      "same_masked_positions": true,
+      "same_semantic_token_types": true
+    },
+    "pair_nll": "unweighted mean token cross entropy on the completely masked active group",
+    "row_margin": "mean over non-root groups of counterfactual_nll minus matched_nll",
+    "arm_margin": "mean of the 100 row margins",
+    "uncertainty": "10000 deterministic paired row-bootstrap replicates with seed 20260801",
+    "gate": {
+      "B2_arm_margin_strictly_positive": true,
+      "B2_arm_margin_strictly_above_B1": true
+    },
+    "interpretation": "likelihood-only dependency diagnostic; not a shuffle training arm and not body completion evidence"
+  },
+  "loss_decision": {
+    "change_loss_before_screen": false,
+    "reason": "B1 and B2 fixed-panel IID validation NLL fell by about 25.6 percent from the common B0 initialization; absolute training loss is a diffusion-weighted estimator and is not comparable to ordinary token CE",
+    "Bstar_cannot_be_selected_until_conditional_completion_is_measured": true
+  },
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

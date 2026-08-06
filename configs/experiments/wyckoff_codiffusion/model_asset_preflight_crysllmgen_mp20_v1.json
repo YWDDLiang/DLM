@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "record_status": "login_node_identity_verified_compute_gate_pending",
+  "recorded_date": "2026-07-20",
+  "asset_role": "CrysLLMGen MP20 CSPDiffusion checkpoint",
+  "source_path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+  "bytes": 147645242,
+  "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+  "owner": "jiaosz",
+  "group": "jlyang",
+  "mode": "0644",
+  "mtime": "2026-04-22T23:57:47.335862838+08:00",
+  "historical_use": {
+    "r5c_refinement_diff_steps": 800,
+    "evidence_report": "reports/20260531_r5c_full_pipeline_reproducibility_and_technical_evolution.md",
+    "checkpoint_label": "model_494"
+  },
+  "schedule_contract": {
+    "checkpoint_scheduler_timesteps": 1000,
+    "checkpoint_schedule_tensor_length": 1001,
+    "official_sampling_start_timestep": 800,
+    "official_sampling_run_type": "train",
+    "evidence": "preserved Gate-A job 26475 plus upstream defaults"
+  },
+  "access_gates": {
+    "existing_tmux_login_node_readable": true,
+    "compute_node_readable": true,
+    "state_dict_shape_audit": "1001-entry beta and sigma buffers observed in preserved job 26475",
+    "disabled_extension_forward_parity": null
+  },
+  "remaining_gate_a_actions": [
+    "Verify read permission from the allocated Slurm compute node.",
+    "Load the checkpoint offline and freeze the state-dict key/shape manifest.",
+    "Run upstream versus disabled-extension tensor and sampler parity tests."
+  ]
+}

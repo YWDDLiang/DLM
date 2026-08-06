@@ -1,0 +1,52 @@
+{
+  "schema": "wq_wyckoff_tangent_bridge_preflight_remote_install_authorization_v1",
+  "recorded_date": "2026-07-26",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "user_quote": "授权",
+  "interpretation": {
+    "authorized_now": [
+      "build exactly one immutable cumulative WTB-32 source archive from the frozen local implementation",
+      "transfer that one archive once through the established local-to-starteam-to-A800 route",
+      "atomically install that archive into the A800 project root",
+      "run the exact remote import, unit-test, installed-byte, and Gate-A preflight checks without creating a Slurm claim"
+    ],
+    "not_authorized_by_this_record": [
+      "submit the WTB-32 Slurm diagnostic",
+      "create a WTB-32 Slurm claim or submission record",
+      "retry or replace a failed archive, transfer, install, or runtime gate under the same identity",
+      "submit any training",
+      "generate new proposals",
+      "rerun immutable U job28081",
+      "run CHGNet, MatterSim, another MLIP, Materials Project API, S.U.N., hull, or final-test evaluation",
+      "change the frozen WTB-32 scientific contract, arms, call budgets, mechanics gates, or resource envelope"
+    ]
+  },
+  "frozen_local_audit": {
+    "path": "runs/remote_audit/20260726_wq_wyckoff_tangent_bridge_local_v1/local_implementation_audit.json",
+    "sha256": "a4c3699c97dfb7a42b0df776e3e967b849555cd39d9211624f3d09bd9bc9b44f"
+  },
+  "scientific_contract": {
+    "path": "configs/experiments/wyckoff_codiffusion/wq_wyckoff_tangent_bridge_preflight_v1.json",
+    "sha256": "125a19b6eca74fca8c7637830263406568c48ff51a0878f44202af0c3fa136f2"
+  },
+  "future_job_not_authorized": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit_minutes": 60,
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "connection_boundary": {
+    "local_to_starteam_tmux": "wq-starteam:1.0",
+    "starteam_to_a800_user_managed_tmux": "ssha800:1.0",
+    "nested_ssh_reconnect_by_agent_allowed": false,
+    "direct_a800_ssh_scp_sftp_allowed": false
+  },
+  "single_archive_transfer": {
+    "local_to_starteam_once": true,
+    "starteam_to_a800_once": true,
+    "reusable": false,
+    "scatter_file_transfer_allowed": false
+  }
+}

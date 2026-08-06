@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "record_status": "preregistered_before_protocol_v4",
+  "recorded_date": "2026-07-20",
+  "paper_scope": "CrysLLMGen-derived Wyckoff closed-loop crystal generation",
+  "training": {
+    "seeds": [
+      11,
+      23,
+      47
+    ],
+    "main_model_families": [
+      {
+        "id": "ATOM_LLAMA_MATCHED_LORA",
+        "role": "capacity-matched atom-text CrysLLMGen control",
+        "base_model": "/public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct",
+        "initialization": "fresh LoRA on the frozen base model",
+        "lora": {
+          "rank": 16,
+          "alpha": 32,
+          "dropout": 0.05,
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj"
+          ]
+        },
+        "seeds": [
+          11,
+          23,
+          47
+        ],
+        "training_runs": 3,
+        "consumed_by": [
+          "C-ATOM-MATCHED"
+        ],
+        "reason_retraining_is_required": "The discovered upstream MP20 adapters are rank-8 q/v-only adapters and therefore cannot provide the equal-capacity representation control required against the rank-16 WQ adapter."
+      },
+      {
+        "id": "WQ_LLAMA_SHARED_LORA",
+        "role": "shared Wyckoff coarse proposer and direct editor",
+        "base_model": "/public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct",
+        "initialization": "fresh LoRA on the frozen base model",
+        "lora": {
+          "rank": 16,
+          "alpha": 32,
+          "dropout": 0.05,
+          "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj",
+            "gate_proj",
+            "up_proj",
+            "down_proj"
+          ]
+        },
+        "training_stages": [
+          "three_epoch_random_orbit_order_coarse_proposal_sft",
+          "20000_update_mixed_initial_proposal_and_direct_edit_curriculum"
+        ],
+        "seeds": [
+          11,
+          23,
+          47
+        ],
+        "training_runs": 3,
+        "consumed_by": [
+          "C-WQ-HANDOFF",
+          "C-WQ-CONFEDIT",
+          "C-WQ-GEOREV",
+          "all_WQ_inference_controls"
+        ]
+      },
+      {
+        "id": "WQ_CSP_SHARED_REFINER",
+        "role": "CrysLLMGen-initialized WQ continuous refiner, bridge, evidence, event, and revision heads",
+        "base_checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+        "training_stages": [
+          "20000_update_frozen_backbone_chart_projection_bridge_warmup",
+          "40000_update_shared_joint_geometry",
+          "40000_update_event_revision_coupled_geometry"
+        ],
+        "total_optimizer_updates": 100000,
+        "seeds": [
+          11,
+          23,
+          47
+        ],
+        "training_runs": 3,
+        "consumed_by": [
+          "C-WQ-HANDOFF",
+          "C-WQ-CONFEDIT",
+          "C-WQ-GEOREV",
+          "all_WQ_inference_controls"
+        ]
+      }
+    ],
+    "trained_ablation_families": [
+      {
+        "id": "WQ_LLAMA_CANONICAL_ORDER_ABLATION",
+        "role": "isolate random orbit-order augmentation from a canonical-order presentation",
+        "seed": 11,
+        "training_runs": 1,
+        "scope": "validation proposal and diversity diagnostics only; no headline SUN selection"
+      }
+    ],
+    "phase_counts": {
+      "gate_a_before_any_training": 0,
+      "seed_11_screening_main_runs": 3,
+      "seed_11_trained_ablation_runs": 1,
+      "post_gate_missing_seed_main_runs": 6,
+      "maximum_scheduled_training_runs": 10
+    },
+    "summary": {
+      "main_model_families": 3,
+      "main_training_runs": 9,
+      "trained_ablation_runs": 1,
+      "maximum_scheduled_training_runs": 10,
+      "separately_trained_models_for_inference_controls": 0
+    },
+    "counting_rule": "A sequential stage that continues the same seed-specific checkpoint is one training run. Intermediate checkpoints are milestones, not new models. Every independently initialized seed or trained ablation is one run."
+  },
+  "fixed_assets_not_trained_in_this_cycle": {
+    "generation": [
+      {
+        "id": "LLAMA3_8B_INSTRUCT_BASE",
+        "role": "frozen base weights for all new LoRA runs",
+        "path": "/public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct"
+      },
+      {
+        "id": "CRYSLLMGEN_ATOM_LORA_OFFICIAL",
+        "role": "existing rank-8 q/v-only adapter for C-ATOM-OFFICIAL; exact candidate freezes at Gate A parity",
+        "candidate_paths": [
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/exp/8b-mp-llama3-v1",
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/exp/llama3-mp-20"
+        ],
+        "candidate_metadata": [
+          {
+            "path_suffix": "8b-mp-llama3-v1",
+            "rank": 8,
+            "alpha": 32,
+            "target_modules": [
+              "q_proj",
+              "v_proj"
+            ],
+            "epochs": 5,
+            "global_step": 1215
+          },
+          {
+            "path_suffix": "llama3-mp-20",
+            "rank": 8,
+            "alpha": 32,
+            "target_modules": [
+              "q_proj",
+              "v_proj"
+            ],
+            "epochs": 1,
+            "global_step": 848
+          }
+        ]
+      },
+      {
+        "id": "CRYSLLMGEN_MP20_CSPDIFFUSION",
+        "role": "fixed official atom refiner and initialization for the WQ refiner",
+        "path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+        "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e"
+      }
+    ],
+    "evaluators": [
+      {
+        "id": "CHGNET_030",
+        "role": "guide and third held-out panel member"
+      },
+      {
+        "id": "MATTERSIM_5M",
+        "role": "primary held-out MLIP-SUN evaluator"
+      },
+      {
+        "id": "MACE_MP_0B3_MEDIUM",
+        "role": "secondary held-out MLIP-SUN evaluator"
+      }
+    ]
+  },
+  "evaluation": {
+    "families": [
+      {
+        "id": "E1_UPSTREAM_PARITY_AND_FORMAL_AUDIT",
+        "scope": "source, parser, schedule, tensor, sampler, grammar-normalization, legality, padding, seed, and attempt-contract parity"
+      },
+      {
+        "id": "E2_LLAMA_PROPOSAL_AND_EDIT_QUALITY",
+        "scope": "answer NLL, exact match, parse/legality, event/orbit-pointer/payload accuracy, completion length, and collapse diagnostics"
+      },
+      {
+        "id": "E3_CRYSLLMGEN_VALIDITY_AND_COVERAGE",
+        "scope": "the unchanged upstream composition validity, structure validity, coverage precision/recall, and property-distribution definitions"
+      },
+      {
+        "id": "E4_MLIP_SUN_AND_RELAXATION",
+        "scope": "the frozen R5-C denominator-compatible pipeline with CHGNet, MatterSim, MACE, MLIP-SUN@0.0/@0.1, and consensus panels"
+      },
+      {
+        "id": "E5_NOVELTY_AND_UNIQUENESS",
+        "scope": "prototype, species-Wyckoff protostructure, full-structure, substitution-aware novelty, uniqueness, and Novel&Unique"
+      },
+      {
+        "id": "E6_DISTRIBUTIONAL_FIDELITY_AND_DIVERSITY",
+        "scope": "SG/crystal-system/Wyckoff-dimension JSD plus atom/orbit/density/element-count Wasserstein and mode-collapse panels"
+      },
+      {
+        "id": "E7_SYMMETRY_AND_WYCKOFF_FIDELITY",
+        "scope": "intended versus redetected space group, Wyckoff multiset, round-trip, ambiguity, and tolerance sensitivity"
+      },
+      {
+        "id": "E8_REVISION_MECHANISM_CAUSALITY",
+        "scope": "revision precision/recall, wrong-to-right, right-to-wrong, birth/death/type/species change, churn, and matched random/shuffled/extra-call controls"
+      },
+      {
+        "id": "E9_EFFICIENCY_AND_FAILURE_ACCOUNTING",
+        "scope": "attempt-level terminal status, Llama/CSP calls, tokens, FLOPs, wall time, peak memory, GPUh, and SUN candidates per GPUh"
+      },
+      {
+        "id": "E10_STATISTICAL_ROBUSTNESS",
+        "scope": "hierarchical bootstrap, seed direction, confidence intervals, Holm-controlled secondary comparisons, family/orbit-change subgroups, and matcher sensitivity"
+      }
+    ],
+    "summary": {
+      "evaluation_families": 10,
+      "primary_method_configurations": 5,
+      "additional_inference_control_configurations": 4,
+      "validation_only_diagnostic_configurations": 4,
+      "total_registered_configuration_ids": 13
+    },
+    "primary_methods": [
+      "C-ATOM-OFFICIAL",
+      "C-ATOM-MATCHED",
+      "C-WQ-HANDOFF",
+      "C-WQ-CONFEDIT",
+      "C-WQ-GEOREV"
+    ],
+    "additional_inference_controls": [
+      "C-WQ-BIRTH-DEATH-ONLY",
+      "C-WQ-RANDOM-MATCHED-COUNT",
+      "C-WQ-SHUFFLED-GEOMETRY",
+      "C-WQ-EXTRA-CALL-IGNORED"
+    ],
+    "validation_only_diagnostics": [
+      "C-WQ-FORWARD-NOISED-INJECTION",
+      "C-WQ-ORACLE-TRIGGER-PAYLOAD",
+      "C-WQ-CANONICAL-ORDER",
+      "C-WQ-FROZEN-LLAMA"
+    ],
+    "shared_axes": {
+      "mlip_evaluators": [
+        "CHGNet-0.3.0",
+        "MatterSim-v1.0.0-5M",
+        "MACE-MP-0b3-medium"
+      ],
+      "structure_stages": [
+        "raw",
+        "common_refiner",
+        "mlip_relaxed"
+      ],
+      "sun_thresholds_eV_per_atom": [
+        0.0,
+        0.1
+      ],
+      "structure_matcher_settings": [
+        "strict",
+        "standard",
+        "lenient"
+      ],
+      "consensus_panels": [
+        "per_evaluator",
+        "two_of_three",
+        "three_of_three",
+        "MatterSim_and_MACE_unanimous"
+      ]
+    },
+    "cartesian_product_warning": "The shared axes are cached views of the same fixed attempt set, not permission to generate or select additional samples. They must not be multiplied into best-of evaluation variants."
+  },
+  "execution_rules": {
+    "gate_a_must_pass_before_training": true,
+    "controls_reuse_main_checkpoints": true,
+    "retry_or_replacement_allowed": false,
+    "new_dft_allowed": false,
+    "blas_thread_count": 1,
+    "maximum_gpus": 4,
+    "maximum_calendar_days": 28,
+    "maximum_gpu_hours": 2050
+  }
+}

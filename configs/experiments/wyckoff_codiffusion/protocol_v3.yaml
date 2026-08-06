@@ -1,0 +1,551 @@
+# Sole authoritative protocol for the four-week ICLR Wyckoff co-diffusion cycle.
+protocol:
+  name: sun_iclr_stratified_wyckoff_v3
+  schema_version: 3
+  status: implementation_active_freeze_before_first_checkpoint
+  core_claim: geometry_adaptive_bidirectional_codenoising_on_stratified_wyckoff_quotient
+  created: 2026-07-17
+
+scope:
+  papers: 1
+  domain: unconditional_crystal_generation_only
+  dataset: mp20
+  dft: forbidden
+  external_generator_checkpoints_on_critical_path: false
+  large_llada_backbone: false
+  committed_space_group_rollback: false
+  genuine_cross_stratum_events:
+    - orbit_birth
+    - orbit_death
+    - wyckoff_type_change
+    - species_change
+  prohibited_claims:
+    - dlm_universally_better_than_diffusion
+    - dft_sun
+    - official_lemat_genbench_ranking
+    - exact_likelihood_without_proof
+    - detailed_balance_without_proof
+
+attempt_contract:
+  attempt_id:
+    purpose: immutable_method_specific_audit_identity
+    fields: [protocol_name, experiment_id, training_seed, sampling_seed, ordinal, method]
+  pair_id:
+    purpose: method_independent_matched_noise_and_subset_identity
+    fields: [protocol_name, pairing_id, training_seed, sampling_seed, ordinal]
+  audit_seed_fields:
+    - protocol_name
+    - experiment_id
+    - training_seed
+    - sampling_seed
+    - attempt_id
+    - stage
+  paired_seed_fields:
+    - protocol_name
+    - pairing_id
+    - training_seed
+    - sampling_seed
+    - ordinal
+    - stage
+  preserve_across_world_sizes: true
+  append_only_jsonl_and_parquet: true
+  output_dependent_selection: forbidden
+  replacement_sampling: forbidden
+  retry_failed_attempt: forbidden
+  generate_more_select_less: forbidden
+  best_of_seed: forbidden
+  one_terminal_status_per_attempt_stage: true
+  failures_timeouts_and_nonconvergence_remain_in_denominator: true
+
+seeds:
+  training_full: [11, 23, 47]
+  sampling_development: [101, 202, 303]
+  final_train_seed_allocation_order: [11, 23, 47]
+  final_train_seed_allocation: [3334, 3333, 3333]
+
+data:
+  train: mp20_standard_train
+  validation: mp20_standard_val
+  test: mp20_standard_test
+  total_reference_structures: 45229
+  task_atom_count: [1, 20]
+  novelty_reference: train_only
+  evaluator_reference_pool: all_train_val_test_frozen_before_model_selection
+  canonicalized_train_test_leakage: forbidden
+  failed_primary_decompositions:
+    train: false
+    retain_failure_record: true
+    audit_material_family_shift: true
+
+wyckoff_representation:
+  state_space: disjoint_union_of_topology_indexed_continuous_strata
+  unordered_orbit_multiset: true
+  permutation_equivariant: true
+  canonical_order_for_storage_and_hash_only: true
+  epoch_orbit_permutation: random
+  batching_representation: native_ragged_orbit_set
+  padding_enters_probability_loss_or_output: false
+  space_group_generation: masked_once_then_fixed
+  empty_set_start:
+    learned_start_token: true
+    heads:
+      - masked_space_group
+      - first_wyckoff_type
+      - first_species
+      - first_free_coordinate_chart
+      - lattice_chart
+  committed_space_group_change: false
+  allowed_topology_events:
+    - orbit_birth
+    - orbit_death
+    - wyckoff_type_change
+    - species_change
+  type_change_implementation: death_plus_birth_bridge
+  max_topology_events_per_reverse_step: 1
+  topology_event_budget_scope: explicit_topology_event_kernel
+  field_updates_may_be_parallel: true
+  parallel_field_update_semantics: categorical_chain_or_mask_commit_not_an_additional_event_kernel_draw
+  invalid_event_probability_zero_before_normalization: true
+  bridge_retry: forbidden
+  empty_structure: forbidden
+  max_primitive_atoms: 20
+  mp20_atom_limit_applies_to: primitive_atom_count
+  symmetry_tolerance_grid_angstrom: [0.001, 0.01, 0.1]
+  primary_symmetry_tolerance_angstrom: 0.01
+  symmetry_angle_tolerance_degrees: 5.0
+  retain_roundtrippable_ambiguous_primary: true
+  wyckoff_coordinate_convention:
+    implementation: pyxtal_1.1.4_official_free_xyz
+    conventional_cell: pymatgen_get_refined_structure_ita_setting
+    setyawan_curtarolo_conventional_cell: forbidden
+    hall_style: spglib
+    encode: get_free_xyzs
+    decode: get_position_from_free_xyzs
+    expand: get_all_positions
+    jacobian: exact_first_wyckoff_affine_operator_nonfrozen_axes
+    pymatgen_pyxtal_expansion_error_max_angstrom: 1.0e-6
+    custom_svd_chart_role: diagnostic_only
+    global_type_classes: 27
+    ita_label_mapping: lowercase_a_to_z_then_sg47_uppercase_A
+  store:
+    - primitive_and_conventional_cell
+    - hall_setting
+    - transformation_matrix
+    - origin_shift
+    - orbit_wyckoff_type_multiplicity_species
+    - free_coordinate_and_chart_dimension
+    - lattice_free_parameters
+    - canonical_hash
+    - roundtrip_structure
+    - three_tolerance_decompositions
+    - ambiguity_flags
+  p1_gates:
+    coverage_min: 0.95
+    roundtrip_structure_match_min: 0.99
+    atom_count_consistency: 1.0
+    canonicalized_split_leakage_max: 0
+    pyxtal_chart_error_max_angstrom: 1.0e-6
+    tangent_projector_error_max: 1.0e-6
+
+formal_process:
+  topology_event_kernel: required
+  target_stratum_bridge: required
+  compatibility_support_preservation: required
+  synthetic_transition_count_min: 1000000
+  tolerances:
+    kernel_normalization_error_max: 1.0e-6
+    chart_projector_reconstruction_error_max: 1.0e-6
+    permutation_posterior_difference_max: 1.0e-5
+    illegal_transition_count_max: 0
+    ground_truth_support_removal_count_max: 0
+    padding_dependence_failure_count_max: 0
+
+models:
+  shared:
+    continuous_backend: native_torch_cspnet_wyckoff_tangent
+    hidden_dim: 256
+    csp_layers: 6
+    orbit_set_layers: 4
+    attention_heads: 8
+    ffn_dim: 1024
+    time_embedding_dim: 256
+    periodic_graph: fully_connected
+    cutoff_angstrom: 7.0
+    max_primitive_atoms: 20
+    torch_geometric_dependency: false
+    parameter_delta_max_fraction: 0.05
+    training_flops_delta_max_fraction: 0.10
+    inference_batch_size: 64
+    transient_attention_padding: strict_key_mask_then_discard_before_heads
+  continuous:
+    lattice_charts:
+      triclinic: positive_diagonal_cholesky_6d
+      monoclinic: log_abc_and_bounded_beta_4d
+      orthorhombic: log_abc_3d
+      tetragonal: log_ac_2d
+      hexagonal: log_ac_2d
+      cubic: log_a_1d
+    orbit_noise: wrapped_gaussian
+    wrapped_score_target: periodic_log_density_gradient
+    wrapped_score_integer_image_radius: 8
+    wrapped_score_loss_weight: sigma_squared_denoising_score_matching
+    periodic_coordinate_likelihood: wrapped_normal_logsumexp
+    periodic_coordinate_integer_image_radius: 8
+    periodic_coordinate_scale_min: 0.02
+    periodic_coordinate_scale_max: 0.5
+    periodic_coordinate_heads: [first_orbit, birth, target_stratum_bridge]
+    lattice_noise: vp_cosine
+    atom_score_to_free_coordinate: float64_regularized_jacobian_pseudoinverse
+  discrete:
+    species_classes: 89_plus_mask
+    space_group_classes: 230_plus_mask
+    wyckoff_vocabulary: space_group_conditioned
+    shared_heads: [event, field, revision_calibration]
+  variants:
+    - B-WQ-AR
+    - B-WQ-D3PM
+    - B-WQ-DLM-MONO
+    - B-WQ-JOINT-NOREV
+    - B-WQ-DISC-ONCE
+    - M-WQ-STRAT-CONF
+    - M-WQ-STRAT-GEO
+    - B-ATOM-JOINT
+  legacy_llada_role: historical_diagnostic_only
+
+discrete_revision:
+  revisable_fields: [orbit_existence, wyckoff_type, species]
+  evidence:
+    - collision_deficit
+    - coordination_anomaly
+    - lattice_strain
+    - symmetry_residual
+    - continuous_score_norm
+    - denoising_basin_uncertainty
+  mlip_evidence_allowed: false
+  training_evidence_corruption_labels_allowed: false
+  continuous_score_norm_source: current_pre_evidence_coordinate_head_detached_orbit_rms_log1p200
+  per_field_rollback_max: 2
+  per_step_field_cap: max_1_or_ceil_0p1F
+  total_revision_event_cap: 0p5_initial_field_count
+  threshold_grid: [0.5, 0.6, 0.7, 0.8, 0.9]
+  threshold_selection:
+    split: validation_corruption_recovery_only
+    clean_calibration_operator: no_corruption
+    clean_false_remask_max: 0.05
+    objective_after_constraint: maximize_net_correction
+    tie_break: higher_threshold
+    freeze_day: 7
+    immutable_lock_required_for_paper_eligible_revision_sampling: true
+  controls:
+    - random_count_same_revision_count
+    - shuffled_geometry_same_revision_count
+    - extra_calls_same_initial_noise
+
+training:
+  full_optimizer_updates: 100000
+  shared_pretraining_updates: 60000
+  method_specific_updates: 40000
+  shared_stage_execution: train_once_then_fork_identical_model_optimizer_sampler_and_rng_state
+  shared_stage_variant: B-WQ-JOINT-NOREV
+  effective_batch_structures: 128
+  only_oom_fallback: microbatch_64_accumulation_2
+  optimizer: adamw
+  learning_rate: 2.0e-4
+  weight_decay: 1.0e-2
+  warmup_fraction: 0.05
+  schedule: cosine
+  gradient_clip: 1.0
+  ema: 0.999
+  precision: bf16
+  chart_and_projector_precision: float64
+  checkpoint_selection: final_100k_ema_only
+  test_or_mlip_checkpoint_selection: forbidden
+
+day7_falsification:
+  data: hash_fixed_validation_4096_x_3_corruption_seeds
+  intervention_subset: hash_fixed_1024
+  matrix_semantics:
+    primary: full_factorial_of_ar_d3pm_dlm_x_level_x_operator_at_noisy_fixed
+    interventions: preregistered_1024_cells_not_full_cartesian_product
+  methods:
+    - B-WQ-AR
+    - B-WQ-D3PM
+    - B-WQ-DLM-MONO
+    - M-WQ-STRAT-CONF
+    - M-WQ-STRAT-GEO
+  corruption_levels: [0.3, 0.5, 0.7, 0.9]
+  corruption_operators: [deletion, false-insertion, wrong-wyckoff, wrong-species, joint]
+  geometry_conditions: [clean, noisy, shuffled, absent]
+  schedules: [fixed, discrete-first, continuous-first, confidence-adaptive, geometry-adaptive]
+  calls: 16
+  attempt_denominator_failure_penalties:
+    exact_recovery: 0
+    topology_edit_distance: 20
+    tangent_coordinate_error: 1.0
+    net_correction: 0
+  promotion:
+    high_corruption_exact_recovery_ci_lower_vs_best_ar_d3pm_min: 0.0
+    one_high_corruption_gain_min: 0.03
+    edit_distance_levels_won_min: 3
+    geometry_to_discrete_positive: true
+    discrete_to_geometry_positive: true
+    controls_cannot_reproduce_gain: true
+  failure_action: delete_dlm_superiority_claim_and_keep_best_ar_or_d3pm
+
+screening:
+  day_8_to_14_routes:
+    - best_discrete_engine
+    - B-WQ-JOINT-NOREV
+    - B-WQ-DISC-ONCE
+    - B-ATOM-JOINT
+    - M-WQ-STRAT-GEO
+  shared_boundary_update: 60000
+  method_specific_screen_updates: 25000
+  screening_stop_update_on_full_100k_schedule: 85000
+  continuation: resume_full_optimizer_ema_sampler_and_rng_state_to_100000
+  disc_once_tau_over_T: [0.25, 0.5, 0.75, 1.0]
+  disc_once_topology_after_commit: frozen
+  invalid_proposals_remain_in_denominator: true
+  freeze_matched_wq_champion_day: 14
+
+common_refiner:
+  role: same_frozen_topology_preserving_continuous_refiner_for_every_main_method
+  freeze_day: 14
+  source_checkpoint: paper_eligible_ema_validation_selected_before_test
+  inference_variant: permutation_equivariant_noncausal
+  topology_updates: false
+  calls: 16
+  start_time: 0.1
+
+mlip:
+  label_prefix: MLIP-SUN
+  guide:
+    name: chgnet
+    package_version: 0.4.2
+    checkpoint: 0.3.0
+  primary_heldout:
+    name: mattersim
+    package_version: 1.1.2
+    checkpoint: MatterSim-v1.0.0-5M.pth
+  secondary_heldout:
+    name: mace
+    package_version: 0.3.13
+    checkpoint: mace-mp-0b3-medium.model
+  model_root: /public/home/jiaosz/ywliang/models/wqcodiff
+  runtime_isolation:
+    asset_lock_schema: wqcodiff_mlip_asset_lock_v4
+    asset_lock: mlip_asset_lock_v4.json
+    core_environment:
+      active_evaluator_stack: wqcodiff-evaluator-stack-v4
+      wheelhouse: wheelhouse_v4
+      wheelhouse_lock: wheelhouse_lock_v4.json
+      source_sdists: source_sdists_v4
+      dependency_waiver: chgnet_torch_metadata_waiver_v4.json
+      evaluators: [chgnet, mace]
+      torch: 2.4.0+cu121
+      e3nn: 0.4.4
+      torch_geometric_required_by_wq_model: false
+      no_deps_metadata_validated_packages: [chgnet, mace-torch]
+      source_built_pure_python_wheels:
+        nvidia-ml-py3: 7.352.0
+        python-hostlist: 2.3.0
+      source_build_isolation: false
+      source_build_reproducibility:
+        source_date_epoch: 315532800
+        python_hash_seed: 0
+        pip_cache: disabled
+      failed_predecessor_locks:
+        - filename: wheelhouse_lock.json
+          status: failed_source_wheel_rebuild_evidence_only
+          preservation: immutable
+          eligible_for_runtime_binding: false
+        - filename: wheelhouse_lock_v2.json
+          status: failed_mattersim_import_evidence_only
+          preservation: immutable
+          eligible_for_runtime_binding: false
+      global_pip_check_policy: hash_locked_preexisting_lines_must_be_unchanged
+      allowed_project_pip_check_mismatches:
+        - chgnet_0.4.2_requires_torch_ge_2.4.1_but_retained_2.4.0
+    mattersim_environment:
+      evaluator: mattersim
+      implementation: immutable_pythonpath_inference_target
+      relative_path: runtimes/mattersim-1.1.2-py310-v4
+      dependency_waiver: mattersim_inference_runtime_waiver_v4.json
+      runtime_lock: mattersim_runtime_lock_v4.json
+      tree_manifest: mattersim_runtime_tree_v4.json
+      e3nn_min: 0.5.0
+      compatibility_pins:
+        ase:
+          version: 3.27.0
+          wheel_sha256: 058c48ea504fe7fbbe7c932f778415243ef2df45b1ab869866f24efcc17f0538
+          reason: last_tested_release_exporting_stress_helper_from_ase_constraints
+        setuptools:
+          version: 81.0.0
+          wheel_sha256: fdd925d5c5d9f62e4b74b30d6dd7828ce236fd6ed998a08d81de62ce5a6310d6
+          reason: last_release_family_containing_pkg_resources_for_mattersim_1p1p2
+      torch_geometric_scope: evaluator_only
+      excluded_noninference_dependencies_locked: true
+      full_tree_sha256_required: true
+    one_evaluator_per_process: true
+    one_evaluator_per_slurm_lane: true
+  independent_energy_cache_and_hull_per_evaluator: true
+  mixing_energy_sources: forbidden
+  sun_executor:
+    lineage: r5c_full1000_sun
+    script: scripts/run_mattergen_sun_eval.py
+    script_sha256: 510bcf297247dfab7a77ff7aa564072806f49b0c212fe670d3221d1788ef305b
+    implementation: exact_frozen_r5c_mattergen_mattersim_executor
+    primary_checkpoint_override: MatterSim-v1.0.0-5M.pth
+    primary_reference: evaluator_specific_frozen_mp20_lmdb
+    frozen_arguments:
+      device: cuda
+      relax_max_steps: 500
+      relax_fmax: 0.05
+      max_natoms_per_batch: 512
+      structure_matcher: disordered
+    denominator: all_submitted_structures_including_unsupported_and_nonconverged
+    output_join: preserve_input_order_and_join_back_to_attempt_id
+    r5c_compatibility_panel:
+      headline: false
+      checkpoint: mattersim-v1.0.0-1M.pth
+      reference_dataset: mattergen/data-release/alex-mp/reference_MP2020correction.gz
+  reference_raw_single_points: 45229
+  hull_closure:
+    initial: all_unary_and_raw_ehull_le_0p2
+    max_rounds: 3
+    failure_after_round_3: evaluator_gate_failure
+  relaxation:
+    optimizer: ase_fire
+    degrees_of_freedom: positions_and_cell
+    fmax_ev_per_angstrom: 0.05
+    max_steps: 500
+    maxstep_angstrom: 0.1
+    failures_remain_in_denominator: true
+  lemat_genbench:
+    status: incompatible_with_locked_python_torch_stack
+    record_required_day: 3
+    official_ranking_claim: forbidden
+
+evaluation:
+  stages: [raw, common_refiner, relaxed]
+  thresholds_ev_per_atom: [0.0, 0.1]
+  denominator: all_submitted_attempts
+  main_matcher:
+    ltol: 0.2
+    stol: 0.3
+    angle_tol: 5.0
+  strict_matcher: {ltol: 0.1, stol: 0.15, angle_tol: 2.0}
+  lenient_matcher: {ltol: 0.3, stol: 0.5, angle_tol: 10.0}
+  matcher_shared:
+    primitive_cell: true
+    scale: true
+    attempt_supercell: false
+  novelty_panels:
+    - anonymous_prototype
+    - species_wyckoff_protostructure
+    - full_structure
+    - substitution_aware_threshold_1e_3
+  distribution_panels:
+    categorical_jsd: [space_group, crystal_system, occupied_wyckoff_dof]
+    wasserstein_1: [atom_count, orbit_count, density, element_count]
+    symmetry: [intended_redetected_space_group, intended_redetected_wyckoff_multiset]
+  material_family_definition:
+    mutually_exclusive: true
+    classes: [hydride, oxide, halide, chalcogenide, pnictide, mixed_anion, intermetallic, other]
+    confirmatory_comparison: same_family_attempt_pairs_with_failures_scored_zero
+    limitation: conditional_diagnostic_not_unconditional_attempt_level_causal_effect
+  final_primary_attempts_per_method: 10000
+  final_multi_mlip_common_attempts_per_method: 6000
+  common_subset_selection: lowest_sha256_method_independent_pair_id
+  panels:
+    - evaluator_specific_mlip_sun_at_0p0_and_0p1
+    - mattersim_mace_unanimous
+    - three_mlip_2_of_3
+    - three_mlip_3_of_3
+    - stability_uniqueness_novelty_and_joint
+    - revision_precision_recall_wrong_to_right_right_to_wrong_churn
+    - flops_walltime_peak_memory_gpuh_sun_per_gpuh
+  compute_accounting:
+    actual_slurm_gpuh_and_peak_memory_required: true
+    parameter_count_flops_proxy_label: lower_bound_not_actual_flops
+
+statistics:
+  bootstrap_repetitions: 10000
+  confidence_level: 0.95
+  paired_on: pair_id
+  hierarchy: [training_seed, sampling_seed, duplicate_cluster]
+  primary_hypothesis_multiple_correction: none
+  confirmatory_secondary_correction: holm
+  ordinary_bootstrap_recomputes_fixed_batch_uniqueness: false
+
+promotion_gates:
+  p5_development:
+    mattersim_mlip_sun_at_0p1_gain_min: 0.02
+    three_sampling_seeds_same_direction: true
+    novel_unique_drop_max: 0.02
+  final_oral:
+    mattersim_mlip_sun_at_0p1_gain_min: 0.05
+    gain_ci_lower_min: 0.02
+    mattersim_mace_unanimous_gain_min: 0.03
+    three_training_seeds_positive: true
+    raw_common_refiner_relaxed_positive: true
+    novel_unique_drop_max: 0.02
+    matcher_sensitivity_all_positive: true
+    orbit_count_changed_and_unchanged_positive: true
+    all_major_common_material_families_positive: true
+    compute_ratio_max_without_quality_compute_pareto: 2.0
+  poster_fallback:
+    gain_min: 0.02
+    gain_ci_lower_positive: true
+    mechanism_evidence_positive: true
+
+compute_funnel:
+  gpu_type: a800
+  gpu_count: 4
+  one_model_lane_per_gpu: true
+  calendar_days_hard_max: 28
+  usable_a800_gpu_hours_hard_ceiling: 2050
+  week1_gpu_hours_max: 180
+  week2_cumulative_gpu_hours_max: 750
+  week3_cumulative_gpu_hours_max: 1250
+  week4_frozen_champion_and_final_gpu_hours_reserved_min: 800
+  failed_job_buffer_gpu_hours: 80
+  failed_job_buffer_for_new_variants: false
+  backbone_call_grid: [16, 32, 64, 128]
+  main_backbone_calls: 64
+
+execution:
+  source_of_truth: local_only
+  server_git: forbidden
+  source_sync: one_source_only_scp_after_local_gates
+  remote_delete_sync: forbidden
+  preserved_remote_paths: [data, reference, runs, .secrets]
+  conda_environment: diff_meets_diff
+  login_node_has_network: true
+  gpu_nodes_offline: true
+  cuda_only_via_slurm: true
+  threads:
+    OPENBLAS_NUM_THREADS: 1
+    OMP_NUM_THREADS: 1
+    MKL_NUM_THREADS: 1
+    NUMEXPR_NUM_THREADS: 1
+  offline:
+    HF_HUB_OFFLINE: 1
+    TRANSFORMERS_OFFLINE: 1
+
+schedule:
+  day_1_to_3: source_environment_assets_p0_p1_p2_and_protocol_freeze
+  day_4_to_7: ten_percent_data_10k_update_dlm_falsification
+  day_8_to_14: five_route_screening_and_champion_refiner_freeze
+  day_15_to_21: revision_controls_optional_p6_and_final_freeze
+  day_22_to_28: missing_seeds_10k_attempts_6k_multi_mlip_statistics_and_audit
+  hard_freeze_day: 21
+
+failure_policy:
+  p0_p1_p2_not_passed_day_7: stop_oral_cycle
+  dlm_gate_failed: use_best_ar_or_d3pm_and_delete_dlm_superiority_claim
+  topology_revision_gain_below_2pp: stop_flagship_mechanism
+  use_mp_doob_to_rescue_failed_core: false
+  p6_not_transfer_to_mattersim_and_mace: delete_p6
+  final_gain_2pp_with_positive_ci_but_below_oral: package_as_honest_iclr_poster_candidate
+  formal_attempt_multi_mlip_or_day21_freeze_failure: prohibit_main_claim

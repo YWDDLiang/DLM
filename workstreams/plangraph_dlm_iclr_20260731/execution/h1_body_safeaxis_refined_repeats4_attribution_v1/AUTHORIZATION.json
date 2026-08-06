@@ -1,0 +1,23 @@
+{
+  "schema": "h1_r03h_paired_ordinal_attribution_authorization_v1",
+  "status": "authorized",
+  "date": "2026-08-03",
+  "user_quote": "去做吧",
+  "authorized_scope": [
+    "read-only reuse of the completed R03G eight-arm, 256-ordinal evidence",
+    "paired repeat-by-ordinal attribution of strict S.U.N. gains and meta S.U.N. losses",
+    "descriptive decomposition into finite-hull threshold crossings, novel-unique eligibility, and residual hull unknowns",
+    "read-only audit of residual-unknown ordinal and chemical-system balance",
+    "new report-only sidecar outputs"
+  ],
+  "not_authorized": [
+    "changing strict or meta thresholds",
+    "sample selection, filtering, repair, replacement, retry, or reranking",
+    "new Materials Project queries, API-key use, or network access",
+    "generation, refinement, CHGNet, direct-metric, novelty, or S.U.N. rerun",
+    "Slurm or GPU execution",
+    "training or checkpoint reselection",
+    "formal G3 or G4",
+    "promotion or automatic downstream"
+  ]
+}

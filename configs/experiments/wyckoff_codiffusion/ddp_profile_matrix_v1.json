@@ -1,0 +1,93 @@
+{
+  "schema": "crysllmgen_lora_ddp_profile_matrix_v1",
+  "status": "active_user_authorized_execution_profile",
+  "scientific_attempt": false,
+  "authorization": {
+    "record": "runs/remote_audit/20260722_llamafactory_aligned_ddp_profile_authorization_v1.json",
+    "sha256": "604db430aa6719ffe1ef72a08e4eeb1bd4b4bfb6933c70b28057e06be3de53b9"
+  },
+  "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+  "protocol_v4_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+  "frozen_invariants": {
+    "training_stage": "mixed_edit",
+    "representation": "wyckoff",
+    "training_seed": 11,
+    "world_size": 2,
+    "global_effective_batch": 64,
+    "optimizer_updates": 50,
+    "attention_implementation": "sdpa",
+    "learning_rate_scheduler_epochs_and_example_order": "inherited_unchanged"
+  },
+  "variants": [
+    {
+      "profile_id": "lazy_mb4_acc8_gc_nonreentrant_sdpa",
+      "per_device_microbatch": 4,
+      "gradient_accumulation": 8,
+      "data_mode": "lazy_jsonl",
+      "dataloader_num_workers": 0,
+      "gradient_checkpointing": true,
+      "gradient_checkpointing_use_reentrant": false
+    },
+    {
+      "profile_id": "cache4_mb4_acc8_gc_nonreentrant_sdpa",
+      "per_device_microbatch": 4,
+      "gradient_accumulation": 8,
+      "data_mode": "pretokenized_memmap",
+      "dataloader_num_workers": 4,
+      "gradient_checkpointing": true,
+      "gradient_checkpointing_use_reentrant": false
+    },
+    {
+      "profile_id": "cache4_mb4_acc8_gc_reentrant_sdpa",
+      "per_device_microbatch": 4,
+      "gradient_accumulation": 8,
+      "data_mode": "pretokenized_memmap",
+      "dataloader_num_workers": 4,
+      "gradient_checkpointing": true,
+      "gradient_checkpointing_use_reentrant": true
+    },
+    {
+      "profile_id": "cache4_mb4_acc8_gc_off_sdpa",
+      "per_device_microbatch": 4,
+      "gradient_accumulation": 8,
+      "data_mode": "pretokenized_memmap",
+      "dataloader_num_workers": 4,
+      "gradient_checkpointing": false,
+      "gradient_checkpointing_use_reentrant": null
+    },
+    {
+      "profile_id": "cache4_mb8_acc4_gc_reentrant_sdpa",
+      "per_device_microbatch": 8,
+      "gradient_accumulation": 4,
+      "data_mode": "pretokenized_memmap",
+      "dataloader_num_workers": 4,
+      "gradient_checkpointing": true,
+      "gradient_checkpointing_use_reentrant": true
+    },
+    {
+      "profile_id": "cache4_mb8_acc4_gc_off_sdpa",
+      "per_device_microbatch": 8,
+      "gradient_accumulation": 4,
+      "data_mode": "pretokenized_memmap",
+      "dataloader_num_workers": 4,
+      "gradient_checkpointing": false,
+      "gradient_checkpointing_use_reentrant": null
+    }
+  ],
+  "selection": {
+    "primary": "lowest_train_runtime_seconds_per_optimizer_update",
+    "required": [
+      "completed_exactly_50_updates",
+      "finite_train_loss",
+      "world_size_2",
+      "global_effective_batch_64",
+      "no_nan_oom_cuda_or_traceback",
+      "profile_scientific_attempt_false"
+    ],
+    "references_seconds_per_update": {
+      "historical_one_a800_mb4_acc16": 12.69,
+      "audited_two_a800_mb4_acc8": 14.094601
+    },
+    "formal_training_submission": "forbidden_until_independent_profile_audit"
+  }
+}

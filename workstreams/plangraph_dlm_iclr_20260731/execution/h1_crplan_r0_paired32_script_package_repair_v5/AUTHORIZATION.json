@@ -1,0 +1,70 @@
+{
+  "schema": "h1_crplan_r0_paired32_script_package_repair_authorization_v5",
+  "authorized_at_local_date": "2026-08-04",
+  "user_authorization": [
+    "开始按照plan推进新的实验，当前成功的代码和参数记得打包备份",
+    "分析一下为什么40m12s没有跑完，然后根据情况解决bug，然后继续推进实验"
+  ],
+  "authorized_scope": [
+    "freeze_and_verify_successful_H1_code_and_parameters",
+    "run_EVAL-0_CR-0",
+    "diagnose_CR-0_job_30325_timeout_without_mutating_v1_evidence",
+    "apply_audit_runtime_only_repair_in_independent_v2_run",
+    "repair_v2_isolated_source_test_import_in_independent_v3_run",
+    "diagnose_v3_CR0_gate_failure_without_mutating_v3_evidence",
+    "disable_unused_transformers_framework_probes_for_CR0_only",
+    "align_CR0_fixture_counts_to_Direct_GCD_reduction",
+    "add_frozen_HSi_Pauling_non_hard_counterexample",
+    "diagnose_failed_v4_paired32_job_30353_without_mutating_its_evidence",
+    "include_the_existing_scripts_package_marker_in_an_independent_v5_source_bundle",
+    "run_paired32_only_if_repaired_CR-0_passes"
+  ],
+  "not_authorized_automatically": [
+    "four_arm_512",
+    "end_to_end_64",
+    "end_to_end_256",
+    "RL_training",
+    "formal_G3_or_G4",
+    "promotion",
+    "automatic_downstream"
+  ],
+  "successful_anchor_archive_sha256": "16e18b2ea9a8a781a9f8f2e8919cbb5b179748035c1c884362bfe9fb9348fb80",
+  "predecessor_failure_evidence": [
+    {
+      "job_id": "30325",
+      "state": "TIMEOUT",
+      "elapsed": "00:40:12",
+      "observation_sha256": "39b7aa279f29851ccbfbf704035bc624c6af87abe1e103bd26320727ee07067b"
+    },
+    {
+      "job_id": "30342",
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:01:55",
+      "failure_stage": "unit_test_import_before_CR0_audit",
+      "paired32_submitted": false
+    },
+    {
+      "job_id": "30346",
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "elapsed": "00:45:22",
+      "failure_stage": "CR0_gate_after_complete_audit",
+      "failures": [
+        "exhaustive_frozen_evaluator_alignment",
+        "pauling_non_hard_constraint_fixture_missing"
+      ],
+      "terminal_report_sha256": "453291851e900ad8db7551f066c241a164c3786b0901464d0aab7ef56580194e",
+      "paired32_submitted": false
+    },
+    {
+      "job_id": "30353",
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:30:35",
+      "failure_stage": "first_sampler_import_before_model_load_or_sampling",
+      "raw_attempt_count": 0,
+      "stderr_sha256": "e1e9f91174a57fe4ad0f7dfdaf20abe048cab3758fcec678220034b81b5bbdf1"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "h1a2_v3_scientific_training_authorization_boundary_v1",
+  "status": "scientific_training_authorized",
+  "created_at": "2026-08-01",
+  "current_user_authorization": {
+    "file_transfer_after_connection_recovery": true,
+    "local_contract_implementation_and_testing": true,
+    "manifest_preparation": true,
+    "DLM_5e-6_two_update_engineering_recheck_submission": false,
+    "Pcontrol_Pstar_400_update_training": true,
+    "B1_B2_one_epoch_1696_update_training": true,
+    "registered_likelihood_checkpoint_selection": true,
+    "Planner_512_screen": false,
+    "factorial_crystal_generation": false,
+    "SUN_evaluation": false,
+    "G3": false,
+    "G4": false
+  },
+  "scientific_training_authorization": "../../AUTHORIZATION_V3_SCIENTIFIC_TRAINING_20260801.json",
+  "learning_rate_override": "../../PROTOCOL_OVERRIDE_V3_DLM_LR5E5_AUTHORIZED_20260801.json",
+  "submission_records": [
+    "../v3_pstar_scientific400_v1/SUBMISSION_RECORD.json",
+    "../v3_dlm_scientific1epoch_lr5e5_v1/SUBMISSION_RECORD.json"
+  ],
+  "protocol_amendment": "../../PROTOCOL_AMENDMENT_V3_DLM_ONE_EPOCH_20260801.json",
+  "job_ids": [
+    "29391",
+    "29392",
+    "29393",
+    "29394"
+  ],
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "H1_fallback_read_only": true
+}

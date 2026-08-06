@@ -1,0 +1,24 @@
+{
+  "authorization_version": 1,
+  "authorized_at": "2026-08-01",
+  "basis": "user_requested_to_use_the_live_todo_index_and_start_advancing_the_experiment",
+  "scope": {
+    "cpu_source_data_materialization": true,
+    "real_tokenizer_preflight": true,
+    "one_a800_32_row_planner_engineering_smoke": true,
+    "one_a800_32_row_dlm_engineering_smoke": true,
+    "scientific_planner_training_400_updates": false,
+    "scientific_dlm_training_400_updates": false,
+    "planner_512_screen": false,
+    "crystal_generation": false,
+    "sun_evaluation": false,
+    "g3": false,
+    "g4": false
+  },
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "modify_h1_assets": false,
+  "modify_frozen_refiner": false,
+  "retry_or_replacement": false,
+  "notes": "The scope starts only prerequisite materialization and bounded numerical smoke jobs. Passing smoke does not authorize scientific training."
+}

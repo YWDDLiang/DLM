@@ -1,0 +1,32 @@
+{
+  "schema": "h1a2_v3_b1_b2_scientific_one_epoch_lr5e5_archive_v1",
+  "status": "complete",
+  "created_at": "2026-08-01",
+  "source_inventory": "SOURCE_SHA256.txt",
+  "source_inventory_sha256": "587ba19da0d563fe0a1d43ae007b8196240f9acdcf107cfbedd2c22d54a64f26",
+  "source_archive": "source_bundle.tar.gz",
+  "source_archive_sha256": "14de6308a66bf3088dff0341ec368f2a0c2c6282efea1eab2a6627d9b3582b7d",
+  "execution_manifest_sha256": "f4a465ec9e83c1ec886bec8959269e66eb922dcfc3856bd66cc8f983c659bc0e",
+  "authorization_sha256": "4220233e1b968e7a8c464554d7d1fa48c8ae7febe6d9fab62ff4433a55626fbd",
+  "protocol_override_sha256": "248386b9499ed8aaffa5587d28b7ba9bfea9b03f61eb9cc12f2e3311bb6017ed",
+  "focused_local_validation": {
+    "command": "python3 -m unittest tests.test_planned_corruption tests.test_planned_preflight tests.test_llada_distributed_runtime tests.test_distributed_data tests.test_h1a2_dlm_fixed_panel_audit tests.test_v3_scientific_terminal_assemblers",
+    "tests_run": 27,
+    "passed": 23,
+    "skipped_missing_local_torch": 4,
+    "failed": 0
+  },
+  "focused_A800_validation": {
+    "source_hashes": "all passed",
+    "runtime_import": "passed",
+    "runtime_tests_run": 21,
+    "runtime_tests_passed": 21,
+    "runtime_tests_failed": 0,
+    "scope_note": "../../repair_log/V3_SCIENTIFIC_REMOTE_PREFLIGHT_SCOPE_NOTE_20260801.json"
+  },
+  "DLM_learning_rate": 0.00005,
+  "complete_epochs": 1,
+  "exact_optimizer_updates": 1696,
+  "H1_fallback_read_only": true,
+  "automatic_downstream": false
+}

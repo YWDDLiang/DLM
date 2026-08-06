@@ -1,0 +1,1290 @@
+{
+  "base_seed": 26080856,
+  "denominator": 256,
+  "identity": "h1_nocharge_ion_aux_sft_v1",
+  "independent_from_training_and_other_stages": true,
+  "rows": [
+    {
+      "ordinal": 0,
+      "planner_sampling_seed": 8487450173227633596,
+      "role": "shared"
+    },
+    {
+      "ordinal": 1,
+      "planner_sampling_seed": 4242157906083244086,
+      "role": "shared"
+    },
+    {
+      "ordinal": 2,
+      "planner_sampling_seed": 1439407878904397133,
+      "role": "shared"
+    },
+    {
+      "ordinal": 3,
+      "planner_sampling_seed": 618705823485077550,
+      "role": "shared"
+    },
+    {
+      "ordinal": 4,
+      "planner_sampling_seed": 7766659425378033121,
+      "role": "shared"
+    },
+    {
+      "ordinal": 5,
+      "planner_sampling_seed": 1591752351898965302,
+      "role": "shared"
+    },
+    {
+      "ordinal": 6,
+      "planner_sampling_seed": 3204031187598967923,
+      "role": "shared"
+    },
+    {
+      "ordinal": 7,
+      "planner_sampling_seed": 6437589622639750124,
+      "role": "shared"
+    },
+    {
+      "ordinal": 8,
+      "planner_sampling_seed": 1979200812142965224,
+      "role": "shared"
+    },
+    {
+      "ordinal": 9,
+      "planner_sampling_seed": 8400145259254213240,
+      "role": "shared"
+    },
+    {
+      "ordinal": 10,
+      "planner_sampling_seed": 4031653740067490634,
+      "role": "shared"
+    },
+    {
+      "ordinal": 11,
+      "planner_sampling_seed": 3381816139593757619,
+      "role": "shared"
+    },
+    {
+      "ordinal": 12,
+      "planner_sampling_seed": 283819780987494908,
+      "role": "shared"
+    },
+    {
+      "ordinal": 13,
+      "planner_sampling_seed": 2945602660825877352,
+      "role": "shared"
+    },
+    {
+      "ordinal": 14,
+      "planner_sampling_seed": 977469780451095081,
+      "role": "shared"
+    },
+    {
+      "ordinal": 15,
+      "planner_sampling_seed": 1584332943510487313,
+      "role": "shared"
+    },
+    {
+      "ordinal": 16,
+      "planner_sampling_seed": 6066242277700431416,
+      "role": "shared"
+    },
+    {
+      "ordinal": 17,
+      "planner_sampling_seed": 2568860782991736347,
+      "role": "shared"
+    },
+    {
+      "ordinal": 18,
+      "planner_sampling_seed": 5776013517036069741,
+      "role": "shared"
+    },
+    {
+      "ordinal": 19,
+      "planner_sampling_seed": 4597617695754000883,
+      "role": "shared"
+    },
+    {
+      "ordinal": 20,
+      "planner_sampling_seed": 2213022635930251353,
+      "role": "shared"
+    },
+    {
+      "ordinal": 21,
+      "planner_sampling_seed": 983317948770404254,
+      "role": "shared"
+    },
+    {
+      "ordinal": 22,
+      "planner_sampling_seed": 5614674698993837342,
+      "role": "shared"
+    },
+    {
+      "ordinal": 23,
+      "planner_sampling_seed": 8360765879996161433,
+      "role": "shared"
+    },
+    {
+      "ordinal": 24,
+      "planner_sampling_seed": 8919221687521839682,
+      "role": "shared"
+    },
+    {
+      "ordinal": 25,
+      "planner_sampling_seed": 3937164240272414558,
+      "role": "shared"
+    },
+    {
+      "ordinal": 26,
+      "planner_sampling_seed": 6956078610910987521,
+      "role": "shared"
+    },
+    {
+      "ordinal": 27,
+      "planner_sampling_seed": 463958783566621620,
+      "role": "shared"
+    },
+    {
+      "ordinal": 28,
+      "planner_sampling_seed": 5036979308744773631,
+      "role": "shared"
+    },
+    {
+      "ordinal": 29,
+      "planner_sampling_seed": 8442534548989220362,
+      "role": "shared"
+    },
+    {
+      "ordinal": 30,
+      "planner_sampling_seed": 3325443187574350031,
+      "role": "shared"
+    },
+    {
+      "ordinal": 31,
+      "planner_sampling_seed": 5818536601417501274,
+      "role": "shared"
+    },
+    {
+      "ordinal": 32,
+      "planner_sampling_seed": 6270765912847111159,
+      "role": "shared"
+    },
+    {
+      "ordinal": 33,
+      "planner_sampling_seed": 4111140143904313244,
+      "role": "shared"
+    },
+    {
+      "ordinal": 34,
+      "planner_sampling_seed": 8819273721144000186,
+      "role": "shared"
+    },
+    {
+      "ordinal": 35,
+      "planner_sampling_seed": 8581569291703518784,
+      "role": "shared"
+    },
+    {
+      "ordinal": 36,
+      "planner_sampling_seed": 4977730189297490335,
+      "role": "shared"
+    },
+    {
+      "ordinal": 37,
+      "planner_sampling_seed": 2874637206944958067,
+      "role": "shared"
+    },
+    {
+      "ordinal": 38,
+      "planner_sampling_seed": 778116561036176876,
+      "role": "shared"
+    },
+    {
+      "ordinal": 39,
+      "planner_sampling_seed": 5078559865955621150,
+      "role": "shared"
+    },
+    {
+      "ordinal": 40,
+      "planner_sampling_seed": 4471566802477314652,
+      "role": "shared"
+    },
+    {
+      "ordinal": 41,
+      "planner_sampling_seed": 2266852827503215435,
+      "role": "shared"
+    },
+    {
+      "ordinal": 42,
+      "planner_sampling_seed": 3397469503264719474,
+      "role": "shared"
+    },
+    {
+      "ordinal": 43,
+      "planner_sampling_seed": 8739949310731023385,
+      "role": "shared"
+    },
+    {
+      "ordinal": 44,
+      "planner_sampling_seed": 5236460443601884172,
+      "role": "shared"
+    },
+    {
+      "ordinal": 45,
+      "planner_sampling_seed": 3723469514196821200,
+      "role": "shared"
+    },
+    {
+      "ordinal": 46,
+      "planner_sampling_seed": 6679471838094622788,
+      "role": "shared"
+    },
+    {
+      "ordinal": 47,
+      "planner_sampling_seed": 2968716926598399831,
+      "role": "shared"
+    },
+    {
+      "ordinal": 48,
+      "planner_sampling_seed": 8302019955257334044,
+      "role": "shared"
+    },
+    {
+      "ordinal": 49,
+      "planner_sampling_seed": 8432162656924890336,
+      "role": "shared"
+    },
+    {
+      "ordinal": 50,
+      "planner_sampling_seed": 2271266559384091425,
+      "role": "shared"
+    },
+    {
+      "ordinal": 51,
+      "planner_sampling_seed": 8054660179665892474,
+      "role": "shared"
+    },
+    {
+      "ordinal": 52,
+      "planner_sampling_seed": 8190208869427637645,
+      "role": "shared"
+    },
+    {
+      "ordinal": 53,
+      "planner_sampling_seed": 431075726773921542,
+      "role": "shared"
+    },
+    {
+      "ordinal": 54,
+      "planner_sampling_seed": 7425811516368262737,
+      "role": "shared"
+    },
+    {
+      "ordinal": 55,
+      "planner_sampling_seed": 6534258542763569349,
+      "role": "shared"
+    },
+    {
+      "ordinal": 56,
+      "planner_sampling_seed": 4658763294085490342,
+      "role": "shared"
+    },
+    {
+      "ordinal": 57,
+      "planner_sampling_seed": 1437008668826305573,
+      "role": "shared"
+    },
+    {
+      "ordinal": 58,
+      "planner_sampling_seed": 2534568328898358388,
+      "role": "shared"
+    },
+    {
+      "ordinal": 59,
+      "planner_sampling_seed": 659075267719427656,
+      "role": "shared"
+    },
+    {
+      "ordinal": 60,
+      "planner_sampling_seed": 9166771306608306850,
+      "role": "shared"
+    },
+    {
+      "ordinal": 61,
+      "planner_sampling_seed": 187081451969577563,
+      "role": "shared"
+    },
+    {
+      "ordinal": 62,
+      "planner_sampling_seed": 7188205295561834997,
+      "role": "shared"
+    },
+    {
+      "ordinal": 63,
+      "planner_sampling_seed": 3193994690107496238,
+      "role": "shared"
+    },
+    {
+      "ordinal": 64,
+      "planner_sampling_seed": 5165191236839690844,
+      "role": "shared"
+    },
+    {
+      "ordinal": 65,
+      "planner_sampling_seed": 8497022807653654217,
+      "role": "shared"
+    },
+    {
+      "ordinal": 66,
+      "planner_sampling_seed": 1705934357132696550,
+      "role": "shared"
+    },
+    {
+      "ordinal": 67,
+      "planner_sampling_seed": 8492820068536510980,
+      "role": "shared"
+    },
+    {
+      "ordinal": 68,
+      "planner_sampling_seed": 8459514284862959785,
+      "role": "shared"
+    },
+    {
+      "ordinal": 69,
+      "planner_sampling_seed": 2496022180965494461,
+      "role": "shared"
+    },
+    {
+      "ordinal": 70,
+      "planner_sampling_seed": 5117191740749585030,
+      "role": "shared"
+    },
+    {
+      "ordinal": 71,
+      "planner_sampling_seed": 2930168691193891562,
+      "role": "shared"
+    },
+    {
+      "ordinal": 72,
+      "planner_sampling_seed": 6451028497686796677,
+      "role": "shared"
+    },
+    {
+      "ordinal": 73,
+      "planner_sampling_seed": 7242954839979368386,
+      "role": "shared"
+    },
+    {
+      "ordinal": 74,
+      "planner_sampling_seed": 6857396075309075628,
+      "role": "shared"
+    },
+    {
+      "ordinal": 75,
+      "planner_sampling_seed": 6098148209569080163,
+      "role": "shared"
+    },
+    {
+      "ordinal": 76,
+      "planner_sampling_seed": 8663056789724488315,
+      "role": "shared"
+    },
+    {
+      "ordinal": 77,
+      "planner_sampling_seed": 6627600730477496006,
+      "role": "shared"
+    },
+    {
+      "ordinal": 78,
+      "planner_sampling_seed": 5130401164515103756,
+      "role": "shared"
+    },
+    {
+      "ordinal": 79,
+      "planner_sampling_seed": 3464129134256612621,
+      "role": "shared"
+    },
+    {
+      "ordinal": 80,
+      "planner_sampling_seed": 1387356567447955378,
+      "role": "shared"
+    },
+    {
+      "ordinal": 81,
+      "planner_sampling_seed": 3712478648856619812,
+      "role": "shared"
+    },
+    {
+      "ordinal": 82,
+      "planner_sampling_seed": 3608092725111417750,
+      "role": "shared"
+    },
+    {
+      "ordinal": 83,
+      "planner_sampling_seed": 8440493031035691139,
+      "role": "shared"
+    },
+    {
+      "ordinal": 84,
+      "planner_sampling_seed": 8411586132093186994,
+      "role": "shared"
+    },
+    {
+      "ordinal": 85,
+      "planner_sampling_seed": 6736086459957817279,
+      "role": "shared"
+    },
+    {
+      "ordinal": 86,
+      "planner_sampling_seed": 6252466610306720139,
+      "role": "shared"
+    },
+    {
+      "ordinal": 87,
+      "planner_sampling_seed": 7057510229707818395,
+      "role": "shared"
+    },
+    {
+      "ordinal": 88,
+      "planner_sampling_seed": 6132124335602268974,
+      "role": "shared"
+    },
+    {
+      "ordinal": 89,
+      "planner_sampling_seed": 5411325018700501393,
+      "role": "shared"
+    },
+    {
+      "ordinal": 90,
+      "planner_sampling_seed": 4738145510097674910,
+      "role": "shared"
+    },
+    {
+      "ordinal": 91,
+      "planner_sampling_seed": 8170594274853664728,
+      "role": "shared"
+    },
+    {
+      "ordinal": 92,
+      "planner_sampling_seed": 2256542950877263258,
+      "role": "shared"
+    },
+    {
+      "ordinal": 93,
+      "planner_sampling_seed": 2550168848330138560,
+      "role": "shared"
+    },
+    {
+      "ordinal": 94,
+      "planner_sampling_seed": 2105439085554610824,
+      "role": "shared"
+    },
+    {
+      "ordinal": 95,
+      "planner_sampling_seed": 3005674295470851252,
+      "role": "shared"
+    },
+    {
+      "ordinal": 96,
+      "planner_sampling_seed": 3351161726177472908,
+      "role": "shared"
+    },
+    {
+      "ordinal": 97,
+      "planner_sampling_seed": 1111861762791044066,
+      "role": "shared"
+    },
+    {
+      "ordinal": 98,
+      "planner_sampling_seed": 1588863217416062002,
+      "role": "shared"
+    },
+    {
+      "ordinal": 99,
+      "planner_sampling_seed": 5710100716854832592,
+      "role": "shared"
+    },
+    {
+      "ordinal": 100,
+      "planner_sampling_seed": 3259810541720720003,
+      "role": "shared"
+    },
+    {
+      "ordinal": 101,
+      "planner_sampling_seed": 607768768562051772,
+      "role": "shared"
+    },
+    {
+      "ordinal": 102,
+      "planner_sampling_seed": 763425552723591927,
+      "role": "shared"
+    },
+    {
+      "ordinal": 103,
+      "planner_sampling_seed": 2455670391478928145,
+      "role": "shared"
+    },
+    {
+      "ordinal": 104,
+      "planner_sampling_seed": 4607926566237296010,
+      "role": "shared"
+    },
+    {
+      "ordinal": 105,
+      "planner_sampling_seed": 7618057799428827200,
+      "role": "shared"
+    },
+    {
+      "ordinal": 106,
+      "planner_sampling_seed": 4728740038113453950,
+      "role": "shared"
+    },
+    {
+      "ordinal": 107,
+      "planner_sampling_seed": 7565506727816942225,
+      "role": "shared"
+    },
+    {
+      "ordinal": 108,
+      "planner_sampling_seed": 2502267478136579676,
+      "role": "shared"
+    },
+    {
+      "ordinal": 109,
+      "planner_sampling_seed": 7566852610439169629,
+      "role": "shared"
+    },
+    {
+      "ordinal": 110,
+      "planner_sampling_seed": 8848532391741128384,
+      "role": "shared"
+    },
+    {
+      "ordinal": 111,
+      "planner_sampling_seed": 4071686885407893248,
+      "role": "shared"
+    },
+    {
+      "ordinal": 112,
+      "planner_sampling_seed": 2211413192423500950,
+      "role": "shared"
+    },
+    {
+      "ordinal": 113,
+      "planner_sampling_seed": 583811101468016786,
+      "role": "shared"
+    },
+    {
+      "ordinal": 114,
+      "planner_sampling_seed": 8470594801922482411,
+      "role": "shared"
+    },
+    {
+      "ordinal": 115,
+      "planner_sampling_seed": 466222318232435622,
+      "role": "shared"
+    },
+    {
+      "ordinal": 116,
+      "planner_sampling_seed": 7063890626289144073,
+      "role": "shared"
+    },
+    {
+      "ordinal": 117,
+      "planner_sampling_seed": 742336042467642894,
+      "role": "shared"
+    },
+    {
+      "ordinal": 118,
+      "planner_sampling_seed": 2015771115837586842,
+      "role": "shared"
+    },
+    {
+      "ordinal": 119,
+      "planner_sampling_seed": 3794316527475767656,
+      "role": "shared"
+    },
+    {
+      "ordinal": 120,
+      "planner_sampling_seed": 706486428282114091,
+      "role": "shared"
+    },
+    {
+      "ordinal": 121,
+      "planner_sampling_seed": 3083091259387690880,
+      "role": "shared"
+    },
+    {
+      "ordinal": 122,
+      "planner_sampling_seed": 5062882846350675842,
+      "role": "shared"
+    },
+    {
+      "ordinal": 123,
+      "planner_sampling_seed": 9209076957110577782,
+      "role": "shared"
+    },
+    {
+      "ordinal": 124,
+      "planner_sampling_seed": 2335392668775192052,
+      "role": "shared"
+    },
+    {
+      "ordinal": 125,
+      "planner_sampling_seed": 7037431245686456545,
+      "role": "shared"
+    },
+    {
+      "ordinal": 126,
+      "planner_sampling_seed": 3456792130438501478,
+      "role": "shared"
+    },
+    {
+      "ordinal": 127,
+      "planner_sampling_seed": 5379603637354483003,
+      "role": "shared"
+    },
+    {
+      "ordinal": 128,
+      "planner_sampling_seed": 415421976329824019,
+      "role": "shared"
+    },
+    {
+      "ordinal": 129,
+      "planner_sampling_seed": 6811375299949007079,
+      "role": "shared"
+    },
+    {
+      "ordinal": 130,
+      "planner_sampling_seed": 7577942414400260813,
+      "role": "shared"
+    },
+    {
+      "ordinal": 131,
+      "planner_sampling_seed": 3855738137151777874,
+      "role": "shared"
+    },
+    {
+      "ordinal": 132,
+      "planner_sampling_seed": 3880781298788149180,
+      "role": "shared"
+    },
+    {
+      "ordinal": 133,
+      "planner_sampling_seed": 7087318248074431706,
+      "role": "shared"
+    },
+    {
+      "ordinal": 134,
+      "planner_sampling_seed": 6196024919135849253,
+      "role": "shared"
+    },
+    {
+      "ordinal": 135,
+      "planner_sampling_seed": 7393185701716825,
+      "role": "shared"
+    },
+    {
+      "ordinal": 136,
+      "planner_sampling_seed": 2018812334423909406,
+      "role": "shared"
+    },
+    {
+      "ordinal": 137,
+      "planner_sampling_seed": 1425981360141037353,
+      "role": "shared"
+    },
+    {
+      "ordinal": 138,
+      "planner_sampling_seed": 657807349781423381,
+      "role": "shared"
+    },
+    {
+      "ordinal": 139,
+      "planner_sampling_seed": 8030238766671761914,
+      "role": "shared"
+    },
+    {
+      "ordinal": 140,
+      "planner_sampling_seed": 5611728112864872014,
+      "role": "shared"
+    },
+    {
+      "ordinal": 141,
+      "planner_sampling_seed": 5608966559040267699,
+      "role": "shared"
+    },
+    {
+      "ordinal": 142,
+      "planner_sampling_seed": 5212768699976867583,
+      "role": "shared"
+    },
+    {
+      "ordinal": 143,
+      "planner_sampling_seed": 817322528668744136,
+      "role": "shared"
+    },
+    {
+      "ordinal": 144,
+      "planner_sampling_seed": 4554332086006021203,
+      "role": "shared"
+    },
+    {
+      "ordinal": 145,
+      "planner_sampling_seed": 3332034012112941805,
+      "role": "shared"
+    },
+    {
+      "ordinal": 146,
+      "planner_sampling_seed": 5158047539092941157,
+      "role": "shared"
+    },
+    {
+      "ordinal": 147,
+      "planner_sampling_seed": 4855746627645859674,
+      "role": "shared"
+    },
+    {
+      "ordinal": 148,
+      "planner_sampling_seed": 3857090368110651612,
+      "role": "shared"
+    },
+    {
+      "ordinal": 149,
+      "planner_sampling_seed": 8305608538875182247,
+      "role": "shared"
+    },
+    {
+      "ordinal": 150,
+      "planner_sampling_seed": 963909832698640253,
+      "role": "shared"
+    },
+    {
+      "ordinal": 151,
+      "planner_sampling_seed": 7486701435130387402,
+      "role": "shared"
+    },
+    {
+      "ordinal": 152,
+      "planner_sampling_seed": 4148412681489930828,
+      "role": "shared"
+    },
+    {
+      "ordinal": 153,
+      "planner_sampling_seed": 6348591647480985366,
+      "role": "shared"
+    },
+    {
+      "ordinal": 154,
+      "planner_sampling_seed": 4246215742646394368,
+      "role": "shared"
+    },
+    {
+      "ordinal": 155,
+      "planner_sampling_seed": 6411057294199330858,
+      "role": "shared"
+    },
+    {
+      "ordinal": 156,
+      "planner_sampling_seed": 6405286316005698359,
+      "role": "shared"
+    },
+    {
+      "ordinal": 157,
+      "planner_sampling_seed": 3693926757075879061,
+      "role": "shared"
+    },
+    {
+      "ordinal": 158,
+      "planner_sampling_seed": 8739028584754342551,
+      "role": "shared"
+    },
+    {
+      "ordinal": 159,
+      "planner_sampling_seed": 4109948189393390275,
+      "role": "shared"
+    },
+    {
+      "ordinal": 160,
+      "planner_sampling_seed": 3880345128294931931,
+      "role": "shared"
+    },
+    {
+      "ordinal": 161,
+      "planner_sampling_seed": 3040179932561536026,
+      "role": "shared"
+    },
+    {
+      "ordinal": 162,
+      "planner_sampling_seed": 7158373035974742010,
+      "role": "shared"
+    },
+    {
+      "ordinal": 163,
+      "planner_sampling_seed": 3618375627123543137,
+      "role": "shared"
+    },
+    {
+      "ordinal": 164,
+      "planner_sampling_seed": 2355887600724019102,
+      "role": "shared"
+    },
+    {
+      "ordinal": 165,
+      "planner_sampling_seed": 7728968839908741140,
+      "role": "shared"
+    },
+    {
+      "ordinal": 166,
+      "planner_sampling_seed": 3243629836604425440,
+      "role": "shared"
+    },
+    {
+      "ordinal": 167,
+      "planner_sampling_seed": 7121281977359727607,
+      "role": "shared"
+    },
+    {
+      "ordinal": 168,
+      "planner_sampling_seed": 245396824252051875,
+      "role": "shared"
+    },
+    {
+      "ordinal": 169,
+      "planner_sampling_seed": 394825499964214656,
+      "role": "shared"
+    },
+    {
+      "ordinal": 170,
+      "planner_sampling_seed": 7418559844024088433,
+      "role": "shared"
+    },
+    {
+      "ordinal": 171,
+      "planner_sampling_seed": 1491449727317973291,
+      "role": "shared"
+    },
+    {
+      "ordinal": 172,
+      "planner_sampling_seed": 2376927346487242254,
+      "role": "shared"
+    },
+    {
+      "ordinal": 173,
+      "planner_sampling_seed": 1774677637557612342,
+      "role": "shared"
+    },
+    {
+      "ordinal": 174,
+      "planner_sampling_seed": 7283390484439750857,
+      "role": "shared"
+    },
+    {
+      "ordinal": 175,
+      "planner_sampling_seed": 4362879187658676644,
+      "role": "shared"
+    },
+    {
+      "ordinal": 176,
+      "planner_sampling_seed": 6872002495227315896,
+      "role": "shared"
+    },
+    {
+      "ordinal": 177,
+      "planner_sampling_seed": 1336707996064855637,
+      "role": "shared"
+    },
+    {
+      "ordinal": 178,
+      "planner_sampling_seed": 6056943268922157052,
+      "role": "shared"
+    },
+    {
+      "ordinal": 179,
+      "planner_sampling_seed": 9126802017502859704,
+      "role": "shared"
+    },
+    {
+      "ordinal": 180,
+      "planner_sampling_seed": 5956207143474823661,
+      "role": "shared"
+    },
+    {
+      "ordinal": 181,
+      "planner_sampling_seed": 4086915571051161865,
+      "role": "shared"
+    },
+    {
+      "ordinal": 182,
+      "planner_sampling_seed": 2541849773225119294,
+      "role": "shared"
+    },
+    {
+      "ordinal": 183,
+      "planner_sampling_seed": 3892249643087410561,
+      "role": "shared"
+    },
+    {
+      "ordinal": 184,
+      "planner_sampling_seed": 4429259256688646848,
+      "role": "shared"
+    },
+    {
+      "ordinal": 185,
+      "planner_sampling_seed": 5122951884768748338,
+      "role": "shared"
+    },
+    {
+      "ordinal": 186,
+      "planner_sampling_seed": 2269615248341948699,
+      "role": "shared"
+    },
+    {
+      "ordinal": 187,
+      "planner_sampling_seed": 2052483433801772690,
+      "role": "shared"
+    },
+    {
+      "ordinal": 188,
+      "planner_sampling_seed": 4887601074294220236,
+      "role": "shared"
+    },
+    {
+      "ordinal": 189,
+      "planner_sampling_seed": 7197519012197381926,
+      "role": "shared"
+    },
+    {
+      "ordinal": 190,
+      "planner_sampling_seed": 1051321820837774936,
+      "role": "shared"
+    },
+    {
+      "ordinal": 191,
+      "planner_sampling_seed": 6737153952141232516,
+      "role": "shared"
+    },
+    {
+      "ordinal": 192,
+      "planner_sampling_seed": 4005048406309388353,
+      "role": "shared"
+    },
+    {
+      "ordinal": 193,
+      "planner_sampling_seed": 5446736976104590493,
+      "role": "shared"
+    },
+    {
+      "ordinal": 194,
+      "planner_sampling_seed": 2392036314731225441,
+      "role": "shared"
+    },
+    {
+      "ordinal": 195,
+      "planner_sampling_seed": 7800895305793948587,
+      "role": "shared"
+    },
+    {
+      "ordinal": 196,
+      "planner_sampling_seed": 8183081847231022394,
+      "role": "shared"
+    },
+    {
+      "ordinal": 197,
+      "planner_sampling_seed": 1475324270842259056,
+      "role": "shared"
+    },
+    {
+      "ordinal": 198,
+      "planner_sampling_seed": 8653377936683610372,
+      "role": "shared"
+    },
+    {
+      "ordinal": 199,
+      "planner_sampling_seed": 8240461983542606287,
+      "role": "shared"
+    },
+    {
+      "ordinal": 200,
+      "planner_sampling_seed": 2181780983778498262,
+      "role": "shared"
+    },
+    {
+      "ordinal": 201,
+      "planner_sampling_seed": 1150717085243164012,
+      "role": "shared"
+    },
+    {
+      "ordinal": 202,
+      "planner_sampling_seed": 3194191060312499233,
+      "role": "shared"
+    },
+    {
+      "ordinal": 203,
+      "planner_sampling_seed": 8863386476139029992,
+      "role": "shared"
+    },
+    {
+      "ordinal": 204,
+      "planner_sampling_seed": 1562616317979552992,
+      "role": "shared"
+    },
+    {
+      "ordinal": 205,
+      "planner_sampling_seed": 58868651908447961,
+      "role": "shared"
+    },
+    {
+      "ordinal": 206,
+      "planner_sampling_seed": 2661251425387264597,
+      "role": "shared"
+    },
+    {
+      "ordinal": 207,
+      "planner_sampling_seed": 8939260592758108075,
+      "role": "shared"
+    },
+    {
+      "ordinal": 208,
+      "planner_sampling_seed": 4982797035550351742,
+      "role": "shared"
+    },
+    {
+      "ordinal": 209,
+      "planner_sampling_seed": 7260276709840447979,
+      "role": "shared"
+    },
+    {
+      "ordinal": 210,
+      "planner_sampling_seed": 5777648604220029904,
+      "role": "shared"
+    },
+    {
+      "ordinal": 211,
+      "planner_sampling_seed": 1973483423466031114,
+      "role": "shared"
+    },
+    {
+      "ordinal": 212,
+      "planner_sampling_seed": 3093459475568054229,
+      "role": "shared"
+    },
+    {
+      "ordinal": 213,
+      "planner_sampling_seed": 4826026910131431875,
+      "role": "shared"
+    },
+    {
+      "ordinal": 214,
+      "planner_sampling_seed": 2468019579999476670,
+      "role": "shared"
+    },
+    {
+      "ordinal": 215,
+      "planner_sampling_seed": 6741450985788422323,
+      "role": "shared"
+    },
+    {
+      "ordinal": 216,
+      "planner_sampling_seed": 4029319230769644364,
+      "role": "shared"
+    },
+    {
+      "ordinal": 217,
+      "planner_sampling_seed": 4155025266158188536,
+      "role": "shared"
+    },
+    {
+      "ordinal": 218,
+      "planner_sampling_seed": 721200051780918791,
+      "role": "shared"
+    },
+    {
+      "ordinal": 219,
+      "planner_sampling_seed": 5884003164243455762,
+      "role": "shared"
+    },
+    {
+      "ordinal": 220,
+      "planner_sampling_seed": 2534279916419285278,
+      "role": "shared"
+    },
+    {
+      "ordinal": 221,
+      "planner_sampling_seed": 500997848825259890,
+      "role": "shared"
+    },
+    {
+      "ordinal": 222,
+      "planner_sampling_seed": 7441571242451533726,
+      "role": "shared"
+    },
+    {
+      "ordinal": 223,
+      "planner_sampling_seed": 8775147590581060035,
+      "role": "shared"
+    },
+    {
+      "ordinal": 224,
+      "planner_sampling_seed": 6890548477692391026,
+      "role": "shared"
+    },
+    {
+      "ordinal": 225,
+      "planner_sampling_seed": 6423407174123277130,
+      "role": "shared"
+    },
+    {
+      "ordinal": 226,
+      "planner_sampling_seed": 5635414867739981673,
+      "role": "shared"
+    },
+    {
+      "ordinal": 227,
+      "planner_sampling_seed": 8960344101773712705,
+      "role": "shared"
+    },
+    {
+      "ordinal": 228,
+      "planner_sampling_seed": 1658282137126778702,
+      "role": "shared"
+    },
+    {
+      "ordinal": 229,
+      "planner_sampling_seed": 3459570249359981280,
+      "role": "shared"
+    },
+    {
+      "ordinal": 230,
+      "planner_sampling_seed": 285478394334488807,
+      "role": "shared"
+    },
+    {
+      "ordinal": 231,
+      "planner_sampling_seed": 1252812481809513676,
+      "role": "shared"
+    },
+    {
+      "ordinal": 232,
+      "planner_sampling_seed": 3619141068180710018,
+      "role": "shared"
+    },
+    {
+      "ordinal": 233,
+      "planner_sampling_seed": 2879046224173155364,
+      "role": "shared"
+    },
+    {
+      "ordinal": 234,
+      "planner_sampling_seed": 89770092351410693,
+      "role": "shared"
+    },
+    {
+      "ordinal": 235,
+      "planner_sampling_seed": 2997514657780847240,
+      "role": "shared"
+    },
+    {
+      "ordinal": 236,
+      "planner_sampling_seed": 7289983421732441095,
+      "role": "shared"
+    },
+    {
+      "ordinal": 237,
+      "planner_sampling_seed": 2968445048318739180,
+      "role": "shared"
+    },
+    {
+      "ordinal": 238,
+      "planner_sampling_seed": 1197237256202064700,
+      "role": "shared"
+    },
+    {
+      "ordinal": 239,
+      "planner_sampling_seed": 936414071909675824,
+      "role": "shared"
+    },
+    {
+      "ordinal": 240,
+      "planner_sampling_seed": 7958767258333933504,
+      "role": "shared"
+    },
+    {
+      "ordinal": 241,
+      "planner_sampling_seed": 7835525095297024554,
+      "role": "shared"
+    },
+    {
+      "ordinal": 242,
+      "planner_sampling_seed": 7535395781849860020,
+      "role": "shared"
+    },
+    {
+      "ordinal": 243,
+      "planner_sampling_seed": 4947121430345813602,
+      "role": "shared"
+    },
+    {
+      "ordinal": 244,
+      "planner_sampling_seed": 5753283043456242159,
+      "role": "shared"
+    },
+    {
+      "ordinal": 245,
+      "planner_sampling_seed": 6402254507108298400,
+      "role": "shared"
+    },
+    {
+      "ordinal": 246,
+      "planner_sampling_seed": 310038147500015567,
+      "role": "shared"
+    },
+    {
+      "ordinal": 247,
+      "planner_sampling_seed": 7559564001696417034,
+      "role": "shared"
+    },
+    {
+      "ordinal": 248,
+      "planner_sampling_seed": 700367362835208014,
+      "role": "shared"
+    },
+    {
+      "ordinal": 249,
+      "planner_sampling_seed": 7966478092325436342,
+      "role": "shared"
+    },
+    {
+      "ordinal": 250,
+      "planner_sampling_seed": 872968971339397718,
+      "role": "shared"
+    },
+    {
+      "ordinal": 251,
+      "planner_sampling_seed": 4237063149700314662,
+      "role": "shared"
+    },
+    {
+      "ordinal": 252,
+      "planner_sampling_seed": 8243686139311286635,
+      "role": "shared"
+    },
+    {
+      "ordinal": 253,
+      "planner_sampling_seed": 3511378532907445698,
+      "role": "shared"
+    },
+    {
+      "ordinal": 254,
+      "planner_sampling_seed": 7887906892168681653,
+      "role": "shared"
+    },
+    {
+      "ordinal": 255,
+      "planner_sampling_seed": 6640925596371974654,
+      "role": "shared"
+    }
+  ],
+  "schema": "h1_nocharge_planner_science_ledger_v1",
+  "stage": "planner256"
+}

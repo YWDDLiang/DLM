@@ -1,0 +1,42 @@
+{
+  "schema": "h1a2_factorial_runtime_test_dependency_repair_v1",
+  "status": "repair_complete",
+  "created_at": "2026-08-01",
+  "failed_staging": {
+    "version": "v4",
+    "remote_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_factorial_runtime_staging_v4",
+    "archive_sha256": "b9f898f29d2c94aca57a878eccef210547bd31902556521d5d86bff59f8444ba",
+    "archive_sha_match": true,
+    "key_source_sha_checks_passed": 9,
+    "py_compile_passed": true,
+    "runner_import_passed": true,
+    "failure_stage": "targeted_test_import",
+    "failure_type": "ModuleNotFoundError",
+    "failure_message": "No module named scripts.build_h1_llm_formula_sft_data"
+  },
+  "root_cause": "The v4 validation archive contained test_h1_llm_planner.py but omitted its two existing repository script dependencies: build_h1_llm_formula_sft_data.py and build_r5c_plan_body_sft_data.py.",
+  "repair": {
+    "version": "v5",
+    "change": "Add only the two missing existing test dependencies and rebuild a new immutable self-contained validation bundle.",
+    "remote_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_factorial_runtime_staging_v5",
+    "archive_sha256": "62328f3a31b30a8f31fd4f1b3ba4777cfd86f7d881a3577f2d2522814607c04c",
+    "archive_sha_match_local_outer_a800": true,
+    "key_source_sha_checks_passed": 11,
+    "py_compile_passed": true,
+    "runner_import_passed": true,
+    "local_targeted_tests": "50/50",
+    "a800_targeted_tests": "50/50",
+    "scientific_protocol_changed": false,
+    "runtime_implementation_changed": false,
+    "model_changed": false,
+    "data_changed": false,
+    "seed_changed": false,
+    "denominator_changed": false,
+    "threshold_changed": false
+  },
+  "model_loaded": false,
+  "gpu_used": false,
+  "slurm_job_submitted": false,
+  "job_ids": [],
+  "automatic_downstream": false
+}

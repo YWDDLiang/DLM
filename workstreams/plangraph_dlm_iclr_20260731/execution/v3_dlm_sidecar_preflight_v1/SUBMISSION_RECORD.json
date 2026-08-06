@@ -1,0 +1,69 @@
+{
+  "schema": "h1a2_dlm_sidecar_preflight_submission_v1",
+  "status": "complete",
+  "submitted_at_utc": "2026-08-01T05:03:47Z",
+  "submitted_at_local": "2026-08-01T13:03:47+08:00",
+  "job_id": "29331",
+  "initial_scheduler_state": "PENDING",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1",
+  "sbatch": "workstreams/plangraph_dlm_iclr_20260731/execution/v3_dlm_sidecar_preflight_v1/dlm_sidecar_preflight.sbatch",
+  "sbatch_sha256": "59df03cea14513232587177346d5cf4875772f59c93ec754e05d35c30d79838a",
+  "execution_manifest_sha256": "d881668659fb45c0fdaf5a80964d6a45caa1baa6145f9cfe89d1403ea5a89162",
+  "authorization_sha256": "07f1fb6f188209a314aa48b86e5d7cea8e7c70cd9b92c8371009c7a8f49e7c5b",
+  "source_archive_sha256": "df455438a3b00c6df3eaa54b99df43e95798dafa0d25355b00f985a367dcbde8",
+  "source_sha256_manifest_sha256": "1eabcb8186943f69e8e216582fa8d51e82136099f5693acb7d824d922a05df99",
+  "transfer": {
+    "method": "two_stage_scp",
+    "local_to_outer_sha256_verified": true,
+    "outer_to_a800_sha256_verified": true,
+    "remote_source_file_sha256_checks_passed": 34
+  },
+  "targeted_remote_tests": {
+    "run": 21,
+    "passed": 21,
+    "failed": 0,
+    "skipped": 0
+  },
+    "pre_submission_notes": [
+    {
+      "kind": "shell_install_invocation",
+      "result": "first invocation exited before creating the run root because an awk field expression was over-escaped",
+      "resolution": "retried with shell parameter expansion for SHA extraction; archive SHA and all source-file SHAs passed",
+      "scientific_protocol_changed": false
+    },
+    {
+      "kind": "targeted_test_invocation",
+      "result": "module-name invocation could not import tests because the minimal archive intentionally omitted tests/__init__.py",
+      "resolution": "ran the same three frozen test files with unittest discover; 21 of 21 passed",
+            "scientific_protocol_changed": false
+        }
+    ],
+    "terminal": {
+        "scheduler_state": "COMPLETED",
+        "exit_code": "0:0",
+        "elapsed": "00:07:33",
+        "report": "REMOTE_TERMINAL_REPORT.json",
+        "report_sha256": "75e9297a28b375cd594d9c55b77c313f13430cff1800b3c8c8287420cdd29ad8",
+        "status": "complete",
+        "sidecar_gate_passed": true,
+        "total_sidecar_rows": 45229,
+        "preflight_train_validation_rows_per_arm": 36183,
+        "d1_preflight_gate_passed": true,
+        "d1_preflight_report_sha256": "d49f32adf347a498631967271d266d4bb8d3f8314d05b248e7f4d6cf68bf2a2f",
+        "d2_preflight_gate_passed": true,
+        "d2_preflight_report_sha256": "2a275f2fd8881e4d2779fea193565b7d5e76d4f6834feaadcdd1665d4aad07ac",
+        "prompt_answer_byte_identity": true,
+        "max_length": 382,
+        "observed_max_model_length": {
+            "d1_train": 333,
+            "d1_val": 325,
+            "d2_train": 333,
+            "d2_val": 325
+        }
+    },
+    "gpus": 0,
+  "loads_model_weights": false,
+  "automatic_downstream": false,
+  "scientific_training_authorized": false,
+  "next_stage_submitted": false
+}

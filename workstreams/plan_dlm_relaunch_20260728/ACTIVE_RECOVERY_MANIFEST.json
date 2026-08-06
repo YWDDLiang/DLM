@@ -1,0 +1,107 @@
+{
+  "schema_version": "plan-dlm-active-recovery@1",
+  "date": "2026-07-28",
+  "status": "active_preparation_no_gpu_submission",
+  "mainline": "goal -> H1-A2 Planner -> shared Plan -> R5-C exact-length DLM draft -> Plan-conditioned CrysLLMGen diffusion",
+  "authoritative_documents": [
+    "docs/experiment_program/20260728_iclr_plan_dlm_relaunch.md",
+    "workstreams/r5c_reactivation_20260728/ALL_POST_R5C_RESULTS_REVIEW.md",
+    "workstreams/r5c_reactivation_20260728/configs/plan_dlm_shared_plan_null_repair256_v1.json",
+    "../llm_plan_diff/docs/ICLR_PLAN_DLM_RESTART_2026-07-28.md"
+  ],
+  "remote_model_assets": {
+    "h1a2_epoch2_planner": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+      "role": "frozen fully-de-novo Planner"
+    },
+    "r5c_exact_length_body": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+      "role": "frozen exact-length diffusion-language body"
+    },
+    "crysllmgen_parent": {
+      "path": "/public/home/jiaosz/ywliang/models/crysllmgen/mp20/diffusion-22042026-203930/model_494.pt",
+      "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+      "role": "frozen continuous diffusion parent"
+    },
+    "shared_plan_s2_adapter": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/llm_plan_diff_runs/r5c-shared-plan/s2/20260724T035025Z-093ce0b6a951/training/best_plan_adapter.pt",
+      "sha256": "533fd02fcc9ac5b77594350ee901fab77dc75c8ddef18a7b333edcf2183e097d",
+      "role": "conditional initialization and mechanism evidence only"
+    },
+    "shared_plan_s2_manifest": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/llm_plan_diff_runs/r5c-shared-plan/s2/20260724T035025Z-093ce0b6a951/training/run_manifest.json",
+      "sha256": "a1bac0ce87f6eb6d0e29839250b77257b9133b64e8b8b57676f598fc6a30cd28"
+    }
+  },
+  "frozen_data_and_evaluation": {
+    "r5c_raw_generations": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260531_0040-r5c-full1000-sun/outputs/r5c_sample1000/raw_generations.jsonl",
+      "sha256": "ff6d5ca132bcbfa2615f7e90bddc4c8d8ad427d9083e8ae5fe1eb7374b2526ca"
+    },
+    "environment": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+    "sun_protocol": "original A100 scripts with CHGNet; strict@0.0 and meta@0.1 all-attempt",
+    "mlip_in_training_or_selection": false,
+    "retry_repair_rerank": false
+  },
+  "active_source_roles": {
+    "legacy_dlm": [
+      "H1-A2 Planner representation, builder, sampler and tests",
+      "R5-C exact-length body representation, builder, sampler and tests",
+      "CrysLLMGen refinement adapter and direct metrics",
+      "original A100/CHGNet S.U.N. launch/evaluation path"
+    ],
+    "shared_plan_diffusion": [
+      "generation/conditioning/r5c_plan_lite.py",
+      "generation/data/r5c_shared_plan_dataset.py",
+      "generation/models/plan_conditioned_cspnet.py",
+      "generation/models/plan_conditioned_diffusion.py",
+      "R5-C shared-Plan S2 configs, loaders, evaluators and tests"
+    ]
+  },
+  "archival_only_branches": [
+    "R5-C DN1 through DN5",
+    "R5-D representation sweeps after extracting formula/count lessons",
+    "H1-A3, H1-A4, H1-G1 and H2-P1",
+    "free-geometry non-default variants",
+    "MP20 oracle executor and earlier 1024 shared-Plan factorial",
+    "minimal-Plan and Crys-origin terminal bridge",
+    "PlanBridge v1, v2, post-v2 sandbox and successor",
+    "PlanV2 directionality continuation",
+    "Wyckoff quotient, WTB and formula-plan branches"
+  ],
+  "archive_index": "archive/20260728_plan_dlm_relaunch/README.md",
+  "local_archives": {
+    "legacy_r5c": {
+      "path": "archive/20260728_plan_dlm_relaunch/r5c_legacy_frozen_baseline_20260728.tar.gz",
+      "sha256": "ad1b7f5b9ee0df0c06396ef1d3865f7a5e7b2e4d3f4b46216445288e04be8325",
+      "bytes": 4528007,
+      "entries": 359
+    },
+    "shared_plan_historical_head": {
+      "path": "archive/20260728_plan_dlm_relaunch/llm_plan_diff_historical_head_20260728.tar.gz",
+      "git_head": "0f5ea2293e3cc7a031be1acf645ed1c225e337a3",
+      "sha256": "6ac2c645cf0874820b94e1dbe8a8ae4e7b3c9b0584a9fcb2e6b47600d044ab88",
+      "bytes": 1434085,
+      "entries": 750
+    },
+    "paused_wq_branch": {
+      "path": "archive/20260728_wq_pause_checkpoint/wq_pause_checkpoint_20260728.tar.gz",
+      "sha256": "e22d5fc86d3b43e3a80b23ef0b660f98a12536cfe7bf8e99f41740ae037ac501",
+      "bytes": 35316116,
+      "entries": 5839
+    },
+    "null_repair_execution_patch": {
+      "path": "archive/20260728_plan_dlm_relaunch/plan_dlm_null_repair_patch_v1_77d90b6743a9.tar.gz",
+      "source_manifest_sha256": "77d90b6743a91894886d9db5b3c9b4252f57651b3afb20800d97f885e9167122",
+      "sha256": "ab6638b5d06047a9eb3aae6f65a6bc4c4a2bd86905469332b6f51f8261e22d0a",
+      "bytes": 100295,
+      "entries": 30
+    }
+  },
+  "resource_rule": {
+    "a800_gpu_count": 1,
+    "maximum_cpu_per_a800": 8
+  },
+  "automatic_training_authorized": false,
+  "automatic_gpu_submission_authorized": false
+}

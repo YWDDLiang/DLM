@@ -1,0 +1,65 @@
+{
+  "schema": "h1a2_v3_paired_direct_dependency_margin_execution_v1",
+  "status": "prepared_authorized_not_submitted",
+  "created_at": "2026-08-01",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_dependency_margin_v1",
+  "authorization": "../../AUTHORIZATION_V3_PLANNER512_DEPENDENCY_SCREEN_20260801.json",
+  "authorization_sha256": "c6f2a4b38f0b95294619b456911e169fce18797984dc19529d16d7a100ecd476",
+  "protocol": "../../PROTOCOL_ADDENDUM_V3_PLANNER512_DEPENDENCY_MARGIN_20260801.json",
+  "protocol_sha256": "60bcc2908025f25b87a3ed47fc9e2ddbd9bef6789747d3673558e71d91e732f6",
+  "loss_decision": "../../DLM_LOSS_COMPARISON_V1.json",
+  "loss_decision_sha256": "4a3f10ed1e7ce683b3ea07da9b46a43e4ce1901564ee18500928e416e91181d2",
+  "dlm_training_terminal": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1/terminal_report.json",
+  "dlm_training_terminal_sha256": "ea22ced98f1712efdc8f6b33e7ffff17471a82eef48abeadb7203d3708fd9a89",
+  "arms": {
+    "0": {
+      "arm": "B1",
+      "policy": "d1",
+      "step": 1696,
+      "complete_epoch": true,
+      "adapter_sha256": "ace1a0d1f935e32881773228de5fcd5e91a76ca6e261ea132d609b84293bea8c"
+    },
+    "1": {
+      "arm": "B2",
+      "policy": "d2",
+      "step": 1696,
+      "complete_epoch": true,
+      "adapter_sha256": "e3451c94822ca83d1fa1f91680e24880ce9ced022379865b76705554f31f8cb8"
+    }
+  },
+  "array": "0-1%1",
+  "data": {
+    "validation_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2/val.jsonl",
+    "validation_jsonl_sha256": "0a6802afec4c497a12e4069b049d97114b079b2d29ef1e577011b17cfccb8498",
+    "manifest": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2/manifest.json",
+    "manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+    "panel_ordinals": "0..99"
+  },
+  "screen": {
+    "metric": "paired_direct_dependency_margin_v1",
+    "target_groups": "all_non_root_compiled_plangraph_groups",
+    "donor_rule": "next_same_N_different_answer_wrap_once",
+    "same_prompt_target_length_positions_count_and_semantic_types": true,
+    "arm_margin": "mean_of_100_row_margins",
+    "bootstrap_replicates": 10000,
+    "bootstrap_seed": 20260801,
+    "gate": "B2_margin_gt_0_and_B2_margin_gt_B1",
+    "generation_sun_energy_or_hull_used": false,
+    "shuffle_training_arm_used": false
+  },
+  "resources_per_arm": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "walltime": "02:00:00",
+    "maximum_concurrent_arms": 1
+  },
+  "loss_changed_before_screen": false,
+  "conditional_body_completion_pending_after_pass": true,
+  "paired_direct_dependency_margin_screen_authorized": true,
+  "crystal_generation_or_sun_authorized": false,
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "job_ids": []
+}

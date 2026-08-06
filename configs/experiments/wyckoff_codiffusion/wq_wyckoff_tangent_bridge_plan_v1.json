@@ -1,0 +1,136 @@
+{
+  "schema": "wq_wyckoff_tangent_bridge_plan_v1",
+  "status": "local_implementation_frozen_remote_execution_not_authorized",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "scientific_hypothesis": "A released full-atom CrysLLMGen parent can transfer continuous geometry priors to an LLM-fixed Wyckoff quotient when the parent schedule is preserved and every reverse update is projected into the fixed orbit and lattice tangent charts.",
+  "claim_boundary": {
+    "not_novel_by_itself": "using Wyckoff information in diffusion",
+    "candidate_contribution": "training-free schedule-correct tangent projection from an LLM-fixed WQ state into a released full-atom parent",
+    "composition_limitation": "fixed-topology geometry projection preserves source composition and cannot repair composition-invalid proposals",
+    "mlip_policy": "no MLIP in training, sampling, guidance, reranking, checkpoint selection, or failure handling; CHGNet held-out evaluation only"
+  },
+  "immutable_reference": {
+    "job_id": 28081,
+    "identity": "wq_schedule_correct_bridge_parity_sup28054_v1",
+    "status": "COMPLETED_0_0",
+    "cells": 32,
+    "timesteps": [100, 200, 400, 800],
+    "sources_per_timestep": 8,
+    "first_step_invalid_lattice": 0,
+    "nonfinite_trajectory": 0,
+    "finite_positive_volume": 32,
+    "schedule_max_abs_error": 0.0,
+    "retry_or_replacement_used": false,
+    "terminal_audit_sha256": "4b77a10d632c33b53b2208d49db19f542081a7fd91d52f038ebe7e5280e2cf41"
+  },
+  "implementation": {
+    "state_type": "crystal_dlm.wqcodiff.state.StratifiedState",
+    "orbit_projection": "reuse_crystal_dlm.wqcodiff.runtime.project_atom_scores",
+    "orbit_regularization_lambda": 1e-8,
+    "lattice_codec": "crystal_dlm.wqcodiff.charts.LatticeChartCodec",
+    "lattice_projection": "float64_local_jacobian_regularized_least_squares_then_decode",
+    "lattice_frame_adapter": "audited_proper_orthogonal_right_frame_map_between_WQ_primitive_matrix_and_CrysLLMGen_canonical_matrix",
+    "periodic_delta": "minimum_image_fractional",
+    "fixed_discrete_fields": [
+      "space_group",
+      "orbit_count",
+      "orbit_id",
+      "wyckoff_type",
+      "species",
+      "multiplicity",
+      "primitive_multiplicity",
+      "atom_count"
+    ],
+    "forward_process": {
+      "parent_timestep_schedule_unchanged": true,
+      "noise": "chart_gaussian_expanded_with_jacobian_covariance_normalization",
+      "registered_name": "parent_schedule_manifold_restricted_forward_process"
+    },
+    "tangent_bridge_source": "crystal_dlm/wqcodiff/crysllmgen/tangent_bridge.py",
+    "tangent_bridge_source_sha256": "175c98dcf36ced9b4f0fee6a30845ba78c9a275114fdca3c55392bf9dafa97e8",
+    "wtb32_runner": "scripts/a800/run_wq_wyckoff_tangent_bridge_preflight_v1.py",
+    "wtb32_runner_sha256": "edddded5bbf3aca16b47bfd3e060a374f60e22ff3473e852e88a8c72b7cec3c3",
+    "scientific_contract": "configs/experiments/wyckoff_codiffusion/wq_wyckoff_tangent_bridge_preflight_v1.json",
+    "scientific_contract_sha256": "125a19b6eca74fca8c7637830263406568c48ff51a0878f44202af0c3fa136f2",
+    "submission_wrapper": "scripts/a800/wq_wyckoff_tangent_bridge_preflight_v1/submit_once.sh",
+    "slurm_script": "scripts/a800/wq_wyckoff_tangent_bridge_preflight_v1/preflight.sbatch",
+    "local_remote_actions_performed": false
+  },
+  "preflight": {
+    "identity": "wq_wyckoff_tangent_bridge_preflight_v1",
+    "status": "local_built_remote_execution_not_authorized",
+    "arms": {
+      "U": "immutable_job28081_unconstrained_reference_no_rerun",
+      "F": "final_only_projection_of_U_terminal_output_diagnostic",
+      "T": "manifold_restricted_noise_and_every_reverse_step_projection_candidate"
+    },
+    "matrix": {
+      "sources": 8,
+      "timesteps": [100, 200, 400, 800],
+      "cells_per_new_arm": 32,
+      "new_arms": ["F", "T"],
+      "proposal_generation": 0,
+      "retry": 0,
+      "replacement": 0
+    },
+    "mechanics_acceptance": [
+      "F_and_T_each_32_of_32_terminal",
+      "F_and_T_each_32_of_32_finite_positive_volume",
+      "F_and_T_nonfinite_zero",
+      "T_space_group_and_topology_hash_unchanged_every_step",
+      "all_discrete_fields_byte_identical",
+      "orbit_chart_roundtrip_max_error_le_1e-6",
+      "lattice_chart_roundtrip_max_error_le_1e-6",
+      "fixed_site_orbit_drift_le_1e-8",
+      "parent_timestep_and_schedule_identical_to_job28081",
+      "single_terminal_output_per_cell",
+      "no_retry_replacement_best_of_mlip_api_or_new_generation"
+    ],
+    "resources_if_later_authorized": {
+      "partition": "gpu",
+      "a800": 1,
+      "cpus": 8,
+      "memory_gib": 64,
+      "hard_constraint": "cpus_le_8_times_a800"
+    }
+  },
+  "confirmatory_256": {
+    "status": "blocked_on_preflight_pass_and_new_contract",
+    "development_overlap": 0,
+    "arms": [
+      "raw_WQ",
+      "U_unconstrained_schedule_correct",
+      "T_every_step_tangent",
+      "released_CrysLLMGen_exact_panel_if_frozen"
+    ],
+    "all_attempt_denominator": 256,
+    "held_out_evaluator": "diff_meets_diff_CHGNet_R5C_strict_meta_SUN",
+    "directional_thresholds_to_copy_into_independent_contract_before_outputs": {
+      "composition_byte_identical_to_source": true,
+      "T_exact_topology_retention": "256/256",
+      "T_generation_success_not_below_U": true,
+      "T_joint_valid_gain_vs_raw_WQ_pp": 3.0,
+      "T_strict_SUN_percent_at_least": 9.0,
+      "T_meta_SUN_percent_at_least": 46.1,
+      "paired_T_minus_U_strict_nonnegative": true,
+      "paired_T_minus_U_joint_nonnegative": true,
+      "novel_unique_drop_vs_U_pp_at_most": 2.0
+    }
+  },
+  "forbidden": [
+    "retry_or_replace_job28054",
+    "rerun_job28081_under_same_identity",
+    "remote_transfer_or_submission_without_new_authorization",
+    "bridge_training_before_WTB256_evidence",
+    "select_on_CHGNet_SUN_hull_or_final_test",
+    "MatterSim_or_other_MLIP_guidance",
+    "repair_composition_with_geometry_projection",
+    "claim_Wyckoff_diffusion_alone_as_novelty"
+  ],
+  "next_action": {
+    "scope": "user_review",
+    "task_ids": ["WT601"],
+    "description": "review the frozen local implementation and audit; a unique archive and any remote action require separate explicit authorization",
+    "remote_actions_authorized": false
+  }
+}

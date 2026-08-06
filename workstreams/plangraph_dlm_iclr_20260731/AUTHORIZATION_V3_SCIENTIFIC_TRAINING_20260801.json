@@ -1,0 +1,42 @@
+{
+  "schema": "h1a2_v3_scientific_training_authorization_v1",
+  "status": "authorized",
+  "created_at": "2026-08-01",
+  "authority": "user",
+  "user_directive": "DLM lr用以前的5e-5，别的都授权",
+  "authorized_runs": {
+    "planner": {
+      "arms": [
+        "Pcontrol",
+        "Pstar"
+      ],
+      "optimizer_updates_per_arm": 400,
+      "complete_epochs": 1,
+      "learning_rate": 0.000002,
+      "a800_per_arm": 1,
+      "maximum_concurrent_arms": 1
+    },
+    "body_dlm": {
+      "arms": [
+        "B1",
+        "B2"
+      ],
+      "optimizer_updates_per_arm": 1696,
+      "complete_epochs": 1,
+      "learning_rate": 0.00005,
+      "a800_per_arm": 2,
+      "maximum_concurrent_arms": 1
+    },
+    "registered_likelihood_checkpoint_selection": true
+  },
+  "authorization_excludes": [
+    "Planner_512_sampling",
+    "crystal_generation",
+    "SUN_or_energy_evaluation",
+    "G3",
+    "G4",
+    "automatic_promotion"
+  ],
+  "automatic_downstream": false,
+  "H1_fallback_read_only": true
+}

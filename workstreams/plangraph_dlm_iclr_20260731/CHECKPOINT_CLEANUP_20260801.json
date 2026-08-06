@@ -1,0 +1,62 @@
+{
+  "schema": "checkpoint-cleanup-summary@1",
+  "status": "complete",
+  "date": "2026-08-01",
+  "policy": {
+    "scope": "one training arm/checkpoint parent at a time",
+    "retain": "selected best checkpoint union latest two numeric-step checkpoints",
+    "timing": "after likelihood-only checkpoint selection",
+    "dry_run_default": true,
+    "apply_requires_flag": true
+  },
+  "protection": {
+    "h1a2_all_checkpoints": "untouched",
+    "canonical_r5c_run": "20260529_212834-r5c-exactlen-256",
+    "formal_crysllmgen_anchor": "20260720_0401-crysllmgen-wq-final-v3",
+    "external_r5c_root": "/public/home/jiaosz/ywliang/ai4s/llm_plan_diff_runs/crysllmgen-llama31",
+    "protected_snapshot_before_after_equal": true
+  },
+  "cleanup": {
+    "failed_or_no_promotion_run_count": 36,
+    "pre_checkpoint_count": 113,
+    "pre_checkpoint_bytes": 184092106752,
+    "deleted_checkpoint_count": 59,
+    "deleted_bytes": 118287679488,
+    "deleted_gib": 110.1640,
+    "post_checkpoint_count": 54,
+    "post_checkpoint_bytes": 65804427264,
+    "post_checkpoint_gib": 61.2851,
+    "run_directories_deleted": 0,
+    "final_directories_deleted": 0,
+    "reports_or_logs_deleted": 0
+  },
+  "current_usage_after_cleanup": {
+    "main_project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+    "main_project_bytes": 216485027840,
+    "main_project_gib": 201.6174,
+    "main_runs_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs",
+    "main_runs_bytes": 201922678784,
+    "main_runs_gib": 188.0551,
+    "external_r5c_root_bytes": 35830538240,
+    "external_r5c_root_gib": 33.3698,
+    "main_project_plus_external_r5c_bytes": 252315566080,
+    "main_project_plus_external_r5c_gib": 234.9872,
+    "public_filesystem_total_bytes": 71996545171456,
+    "public_filesystem_used_bytes": 65703967744000,
+    "public_filesystem_used_tib": 59.7574,
+    "public_filesystem_available_bytes": 6292577427456,
+    "public_filesystem_available_tib": 5.7231,
+    "public_filesystem_use_percent": 92
+  },
+  "implementation": {
+    "library": "crystal_dlm/checkpoint_retention.py",
+    "cli": "scripts/prune_checkpoints.py",
+    "test": "tests/test_checkpoint_retention.py",
+    "focused_test_result": "7/7 passed",
+    "current_frozen_h1a2_source_bundles_modified": false
+  },
+  "remote_exact_manifest": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/CHECKPOINT_CLEANUP_20260801.json",
+    "sha256": "7ad74966416923b1a41d241704522e6caace8f79ca1056d3b80a678e453ec925"
+  }
+}

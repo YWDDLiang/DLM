@@ -1,0 +1,64 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_evaluation_repair_execution_v1",
+  "created_at": "2026-08-02",
+  "status": "frozen_pending_submission",
+  "run_id": "20260802_h1a2_v3_poststop_sun256_evaluation_repair_v8",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/v3_poststop_sun256_evaluation_repair_v8",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1a2_v3_poststop_sun256_evaluation_repair_v8",
+  "config_sha256": "e938103c0ee2f5d9a2446119df17bb9517156ca13b4e75abfb27fe8430e2538e",
+  "input_manifest_sha256": "7c8a92b64b4f39a2e072a56134ce24f2fa2fe4fd1d5f4bfe59aa7b3d55476608",
+  "source_v7": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v7",
+    "source_manifest_sha256": "5d05e23da6ba4e0e49f4646a5db8181c27f3dd47d67148cac9baaa842fa6a42f",
+    "terminal_report_sha256": "b249c982b4ede6b7fbfee20f9ab49a910e31f66a87f596f5b4b80a28ffae6e9f"
+  },
+  "frozen_inputs": {
+    "arms": ["M00", "M10", "M01", "M11"],
+    "attempts_per_arm": 256,
+    "ordinals": "0..255",
+    "generation_refine800_direct_reused_by_exact_sha256": true,
+    "generation_or_refinement_rerun": false,
+    "direct_metrics_rerun": false
+  },
+  "isolated_sun_runtime": {
+    "assembled_by": "scripts/a800/stage_crysllmgen_a100_sun_runtime.py",
+    "stager_sha256": "890c743f31e3f860fd4a10f0380e75c2c149cf4b2593ec16c48e71160d4c226f",
+    "job_start_python_I_import_origin_preflight": true,
+    "files": {
+      "crystal_dlm/__init__.py": "ead782e01a314ca027c9dfb0ffc1794b561939a143de7d1a8ac65cd21062afcd",
+      "crystal_dlm/wqcodiff/__init__.py": "228e8c59f7dfbaebcadfba1392f2933d0b878888d739f30c0461424974cbc759",
+      "crystal_dlm/wqcodiff/contracts.py": "5eebb10f3fb8ce25e786f2c2b93e616596f96d44323e8cd537e3bbe2f5f02cdb",
+      "crystal_dlm/wqcodiff/crysllmgen/__init__.py": "ee5a0f6b781ed0c103c9d8c350f11f664bbb42e8372749e4f36568bec20da606",
+      "crystal_dlm/wqcodiff/crysllmgen/epoch_training.py": "62f69581571faccac6e3ae96d3a427b409e768284942464c263af576be5e907c",
+      "crystal_dlm/wqcodiff/crysllmgen/a100_sun.py": "61c8e13c194028c4ab514902827575de41a2d06e502824b8355fcf3530d7f968",
+      "scripts/a800/run_crysllmgen_a100_sun.py": "e952795c32efe1be328165d99389ae3934a6698d29027569376bbb984cf788de"
+    }
+  },
+  "dag": [
+    {
+      "stage": "packed_sun_array",
+      "array": "0-3%2",
+      "partition": "gpu",
+      "gpu": "1xA800",
+      "cpus": 8,
+      "memory_gib": 96,
+      "walltime": "36:00:00"
+    },
+    {
+      "stage": "assembly",
+      "dependency": "afterany:packed_sun_array",
+      "partition": "short",
+      "cpus": 4,
+      "memory_gib": 32,
+      "walltime": "01:00:00"
+    }
+  ],
+  "decision_firewall": {
+    "diagnostic_only": true,
+    "formal_g3": false,
+    "checkpoint_reselection": false,
+    "automatic_promotion": false,
+    "automatic_downstream": false,
+    "training_feedback": false
+  }
+}

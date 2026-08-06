@@ -1,0 +1,251 @@
+{
+  "registry_version": 3,
+  "workstream": "plangraph_dlm_iclr_20260731",
+  "protocol": "h1a2_model_planner_plus_plangraph_dlm_two_factor_v3",
+  "created_at": "2026-08-01",
+  "status": "pstar_method_frozen_local_implementation_in_progress",
+  "supersedes_for_future_execution": "EXPERIMENT_REGISTRY_V2_H1A2.json",
+  "execution_ready": false,
+  "authorization": {
+    "job_submission": true,
+    "job_submission_scope": [
+      "cpu_source_data_materialization",
+      "real_tokenizer_preflight",
+      "one_a800_32_row_planner_engineering_smoke",
+      "one_a800_32_row_dlm_engineering_smoke"
+    ],
+    "scientific_training_submission": false,
+    "automatic_downstream": false,
+    "automatic_promotion": false,
+    "modify_h1_artifacts": false,
+    "modify_continuous_refiner": false
+  },
+  "scientific_correction": {
+    "r5c_teacher_plan_is_model_proposed": false,
+    "r5c_teacher_plan_role": "body_supervision_and_conditional_upper_bound_only",
+    "fully_denovo_baseline": "sampled_H1A2_epoch2_plan_plus_frozen_R5C_body",
+    "learned_factors": [
+      "planner_model",
+      "body_dlm"
+    ]
+  },
+  "frozen_identity": {
+    "planner_P0": {
+      "name": "H1-A2 epoch-2",
+      "base": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+      "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+      "schema": "h1_rich_plan_v1_seven_lines",
+      "model_proposed_plan": true
+    },
+    "planner_source_data": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/dlm_sft/mp_20_h1a2_rich_planner_noid_l3base",
+      "train_rows": 27136,
+      "train_sha256": "d431dfec1de8c3240dbc5648867be1b4b676fd85276e805a177b9944f3a1a157",
+      "validation_rows": 9047,
+      "validation_sha256": "59327aa789ae5d2bbb66d8a8f0dc882d594bcc14623aa96ce95076ed1b6fc540",
+      "bad_seven_line_schema_rows": 0,
+      "prompt_style": "h1_rich_plan_v1",
+      "sample_weight": 1.0
+    },
+    "body_B0": {
+      "name": "R5-C exact-length body",
+      "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+      "representation": "dynamic_v1",
+      "teacher_plan_provenance": "structure_derived_not_model_proposed"
+    },
+    "refiner": {
+      "name": "CrysLLMGen model_494",
+      "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+      "reverse_steps": 800
+    }
+  },
+  "planner_factor": {
+    "P0": "frozen_H1A2_epoch2",
+    "Pstar": {
+      "name": "h1a2_lookahead_consistent_planner_v1",
+      "method_spec": "workstreams/plangraph_dlm_iclr_20260731/PLANNER_PSTAR_METHOD_V1.md",
+      "method_frozen": true,
+      "implemented": true,
+      "numerical_smoke_passed": false,
+      "initialization": "P0",
+      "output_schema_changed": false,
+      "model_must_propose_all_plan_values": true,
+      "posthoc_formula_replacement": false,
+      "training_microbatches": 3200,
+      "optimizer_updates": 400,
+      "validation_interval_updates": 50,
+      "validation_rows": 256,
+      "learning_rate": 2e-06,
+      "field_group_weights": {
+        "formula": 0.35,
+        "chemistry": 0.25,
+        "geometry": 0.35,
+        "terminator": 0.05
+      },
+      "loss_weights": {
+        "field_balanced_target_nll": 0.8,
+        "lookahead_consistency": 0.2
+      },
+      "control": "same_stream_budget_and_field_loss_without_lookahead"
+    },
+    "ineligible_prior_candidates": [
+      "generated_JSON_PlanGraph",
+      "H1A2C_ValidReplay_stop_no_plan_candidate",
+      "H1A2C_JointChem_stop_no_plan_candidate"
+    ],
+    "plan_screen": {
+      "attempts_per_arm": 512,
+      "denominator": "raw_all_attempt",
+      "composition_valid_gain_points_min": 2.0,
+      "positive_nll_relative_to_P0_max": 1.01,
+      "parse_completion_drop_points_max": 0.5,
+      "unique_formula_ratio_to_P0_min": 0.95,
+      "mean_atom_count_delta_max": 0.5,
+      "marginal_tvd_worsening_max": 0.02
+    }
+  },
+  "dlm_factor": {
+    "training_plan_provenance": "structure_derived_teacher_plan_state",
+    "training_plan_is_planner_evidence": false,
+    "initialization_for_candidates": "frozen_body_B0_adapter",
+    "maximum_updates": 400,
+    "validation_interval_updates": 50,
+    "learning_rate": null,
+    "learning_rate_frozen": false,
+    "arms": {
+      "B0": {
+        "training": "none",
+        "inference_schedule": "h1a2_exact_plan"
+      },
+      "B1": {
+        "planned_policy": "d1",
+        "iid_fraction": 2,
+        "planned_fraction": 1,
+        "inference_schedule": "h1a2_exact_plan",
+        "role": "same_budget_continuation_control"
+      },
+      "B2": {
+        "planned_policy": "d2",
+        "iid_fraction": 2,
+        "planned_fraction": 1,
+        "inference_schedule": "compiled_plangraph",
+        "role": "proposed_dlm_method"
+      }
+    },
+    "selection": {
+      "Bstar_must_be": "B2",
+      "fixed_panel_nll_relative_to_B0_max": 1.01,
+      "conditional_completion_drop_points_max": 1.0,
+      "matched_dependency_margin_positive": true,
+      "B2_beats_B1_on_registered_margin": true,
+      "generation_or_sun_selection": false
+    }
+  },
+  "factorial_arms": {
+    "M00": "P0+B0",
+    "M10": "Pstar+B0",
+    "M01": "P0+Bstar",
+    "M11": "Pstar+Bstar"
+  },
+  "pairing": {
+    "attempts_per_arm": 256,
+    "denominator": "raw_all_attempt",
+    "same_prompt_and_planner_seed_across_planners": true,
+    "same_realized_plan_within_each_body_pair": true,
+    "same_body_noise_within_each_planner_pair": true,
+    "same_refiner_noise_and_evaluation_order": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  },
+  "io_alignment_gate": {
+    "planner_prompt_template_identical_across_P0_Pstar": true,
+    "planner_tokenizer_and_chat_template_identical": true,
+    "planner_output_schema": "h1_rich_plan_v1_seven_lines",
+    "persist_raw_model_sampled_plan_before_body": true,
+    "sampled_plan_sha256_required": true,
+    "teacher_plan_substitution_at_inference": false,
+    "same_body_prompt_bytes_within_each_planner_pair": true,
+    "additive_prompt_answer_tokenization_required": true,
+    "dynamic_answer_token_count": "7+4*N",
+    "same_tokenizer_vocab_train_val_inference": true,
+    "same_body_to_refiner_conversion_all_arms": true,
+    "mismatch_policy": "fatal_fail_closed"
+  },
+  "distributed_execution": {
+    "official_multi_gpu_enabled": {
+      "body_dlm_training": true,
+      "planner_training": false,
+      "paired_inference": false
+    },
+    "planner_training": {
+      "code_support": false,
+      "registered_mode": "single_gpu"
+    },
+    "planner_sampling": {
+      "rank_sharding_code_support": true,
+      "stateless_per_ordinal_rng": true,
+      "seed_schema": "h1a2_ordinal_seed_v1",
+      "ordered_merge_and_duplicate_rejection": true,
+      "registered_mode": "multi_gpu_pending_real_model_parity_smoke"
+    },
+    "body_dlm_training": {
+      "ddp_code_support": true,
+      "backend": "nccl",
+      "historical_two_gpu_contract_verified": true,
+      "historical_launcher": "legacy_dlm_r5c/launchers/pre_wyckoff/a800/run_r5_crystal_state_dlm.sh",
+      "historical_world_size": 2,
+      "historical_gpu_type": "A800",
+      "historical_per_device_batch": 1,
+      "historical_gradient_accumulation": 8,
+      "historical_global_effective_batch": 16,
+      "historical_learning_rate": 5e-05,
+      "planned_corruption_two_gpu_integration_smoke_passed": false,
+      "registered_mode": "two_gpu_a800_after_targeted_planned_corruption_smoke"
+    },
+    "body_sampling": {
+      "rank_sharding_code_support": true,
+      "paired_noise_parity_validated": false,
+      "registered_mode": "single_gpu"
+    },
+    "required_before_body_dlm_training": [
+      "targeted_planned_corruption_two_gpu_integration_smoke",
+      "fixed_global_effective_batch_16",
+      "freeze_candidate_learning_rate_and_update_count",
+      "unique_validation_denominator_without_padding_duplicates",
+      "rank0_only_atomic_checkpoint_and_report_publication"
+    ],
+    "required_before_paired_multi_gpu_inference": [
+      "stateless_seed_from_frozen_seed_sample_idx_stage",
+      "same_world_size_rank_mapping_and_merge_order_across_arms"
+    ]
+  },
+  "allowed": {
+    "shuffle_arm": false,
+    "conditional_R5C_as_factorial_arm": false,
+    "model_visible_plangraph_json": false,
+    "self_training": false,
+    "energy_or_sun_training_signal": false,
+    "automatic_G4": false
+  },
+  "current_local_implementation": {
+    "teacher_plan_sidecar_builder": true,
+    "teacher_plan_provenance_fail_closed": true,
+    "B1_current_order_training_and_inference": true,
+    "B2_plangraph_training_and_inference": true,
+    "planner_plan_and_body_prompt_sha256": true,
+    "planner_stateless_ordinal_rng": true,
+    "planner_ordered_distributed_merge": true,
+    "planner_field_span_and_reference_loss": true,
+    "planner_additive_token_batch_preparation": true,
+    "planner_deterministic_stream_builder": true,
+    "planner_real_source_audited": true,
+    "planner_real_source_stream_materialized": false,
+    "planner_Pstar_training_runner": true,
+    "planner_Pstar_torch_numerical_smoke": false,
+    "planner_Pstar": false,
+    "factorial_runner": false
+  }
+}

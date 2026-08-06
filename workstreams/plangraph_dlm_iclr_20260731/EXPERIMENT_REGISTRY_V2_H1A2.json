@@ -1,0 +1,170 @@
+{
+  "registry_version": 2,
+  "workstream": "plangraph_dlm_iclr_20260731",
+  "protocol": "h1a2_aligned_sidecar_plangraph_v2",
+  "created_at": "2026-08-01",
+  "amended_at": "2026-08-01",
+  "amendment": "remove_shuffle_arm_before_submission",
+  "status": "locally_implemented_not_submitted",
+  "supersedes_for_future_execution": "EXPERIMENT_REGISTRY_V1.json",
+  "v1_scientific_result": {
+    "status": "stop",
+    "reason": "generated PlanGraph JSON failed planner parse/completion/schema and did not beat shuffle",
+    "reuse_v1_planner_checkpoints": false,
+    "reuse_v1_scientific_outputs": false,
+    "retain_as_evidence": true
+  },
+  "authorization": {
+    "job_submission": false,
+    "automatic_downstream": false,
+    "automatic_promotion": false,
+    "modify_h1_artifacts": false,
+    "modify_continuous_refiner": false
+  },
+  "h1a2_frozen_identity": {
+    "successful_run": "runs/20260603_034533-h1a2-epoch2-3-fullmetrics",
+    "planner_schema": "h1_rich_plan_v1_seven_lines",
+    "planner_base": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+    "planner_adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "planner_sampler_sha256": "d38743f2f647d798800724b09537fbe492706805c00d7ee34c5ca8d74e39adc8",
+    "r5c_adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "refiner_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "h1_roots_read_only": true
+  },
+  "planner_sampling": {
+    "official_script_only": "workstreams/r5c_reactivation_20260728/baseline/scripts/sample_llama_h1_formula_plans.py",
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "do_sample": true,
+    "include_sample_id": false,
+    "retry": false,
+    "repair": false,
+    "filter": false,
+    "replacement": false,
+    "rerank": false
+  },
+  "method": {
+    "planner_output": "unchanged_h1a2_seven_line_plan",
+    "plangraph_role": "deterministic_non_visible_sidecar",
+    "plangraph_in_model_prompt": false,
+    "body_prompt_changed_from_r5c": false,
+    "body_answer_changed_from_r5c": false,
+    "d2_order": [
+      "composition",
+      "symmetry_lattice",
+      "element_multiplicity_site_groups"
+    ],
+    "d2_train_inference_schedule_matched": true,
+    "schedule_key_source": "h1a2_model_visible_prompt_plus_compiled_graph",
+    "schedule_key_uses_target_answer": false,
+    "registered_control": "D1_same_mixture_and_budget_with_h1a2_current_order",
+    "shuffle_arm_in_v2": false,
+    "self_training": false,
+    "energy_or_sun_training_signal": false
+  },
+  "data": {
+    "source": "data/dlm_sft/mp_20_r5_exact_length",
+    "source_split_rows": {
+      "train": 27136,
+      "val": 9047,
+      "test": 9046
+    },
+    "sidecar_builder": "scripts/build_h1a2_sidecar_plangraph_data.py",
+    "sidecar_dataset_version": "h1a2_r5c_plangraph_sidecar_v2",
+    "publication_requires_all_rows": true,
+    "model_visible_prompt_answer_sha_registered": true,
+    "source_metadata_copied": false,
+    "sample_ids_copied": false
+  },
+  "training": {
+    "initialization": "raw_frozen_llada_base_for_all_scientific_train_arms",
+    "world_size": 2,
+    "a800_per_arm": 2,
+    "cpu_per_a800_max": 8,
+    "epochs": 1,
+    "expected_optimizer_updates": 1696,
+    "per_device_batch": 1,
+    "gradient_accumulation": 8,
+    "global_effective_batch": 16,
+    "max_length": 382,
+    "answer_token_count": 87,
+    "learning_rate": 5e-05,
+    "scheduler": "cosine",
+    "warmup_updates": 100,
+    "min_lr_ratio": 0.2,
+    "weight_decay": 0.0,
+    "data_seed": 20260515,
+    "validation_interval_updates": 500,
+    "validation_max_batches": 50,
+    "precision": "bf16",
+    "lora_rank": 8,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "lora_target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "ff_proj",
+      "up_proj"
+    ],
+    "modules_to_save": [
+      "model.transformer.wte",
+      "model.transformer.ff_out"
+    ]
+  },
+  "arms": {
+    "H0": "frozen_h1a2_planner_plus_frozen_historical_r5c",
+    "D0": {
+      "planned_policy": "none",
+      "iid_fraction": 1,
+      "planned_fraction": 0,
+      "inference_schedule": "h1a2_exact_plan"
+    },
+    "D1": {
+      "planned_policy": "d1",
+      "iid_fraction": 2,
+      "planned_fraction": 1,
+      "inference_schedule": "h1a2_exact_plan"
+    },
+    "D2": {
+      "planned_policy": "d2",
+      "iid_fraction": 2,
+      "planned_fraction": 1,
+      "inference_schedule": "compiled_plangraph"
+    }
+  },
+  "gates": {
+    "G0": "sidecar_full_denominator_and_d0_r5c_parity",
+    "G1": {
+      "fixed_panel_nll_relative_to_d0_max": 1.01,
+      "conditional_body_completion_drop_max_points": 1.0,
+      "d2_matched_margin_positive": true,
+      "d2_beats_d1_on_registered_dependency_margin": true
+    },
+    "G2": {
+      "attempts_per_arm": 256,
+      "denominator": "raw_all_attempt",
+      "generation_completion_min": 0.97,
+      "structure_valid_drop_vs_h0_max_points": 2.0,
+      "strict_sun_gain_points_or_cross_10": 1.0,
+      "meta_sun_gain_points_or_cross_50": 3.0
+    }
+  },
+  "evaluation": {
+    "primary_plan_ledger": "frozen_h1a2_p0_first_256",
+    "same_plan_ledger": true,
+    "same_r5c_noise": true,
+    "same_refiner_noise": true,
+    "same_evaluation_order": true,
+    "schedule_is_inference_available": true,
+    "schedule_uses_target_answer": false,
+    "report_planner_vs_dlm_failure_attribution": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  }
+}

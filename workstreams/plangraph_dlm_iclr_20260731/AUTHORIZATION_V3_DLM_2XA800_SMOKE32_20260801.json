@@ -1,0 +1,48 @@
+{
+  "authorization_version": 1,
+  "authorized_at": "2026-08-01",
+  "basis": [
+    "user_requested_that_the_live_todo_index_drive_experiment_execution",
+    "user_confirmed_that_body_DLM_historically_used_multi_GPU_training",
+    "user_requested_to_start_and_continue_advancing_the_experiment",
+    "user_restored_the_frozen_transfer_connection_and_explicitly_allowed_scp"
+  ],
+  "scope": {
+    "one_sequential_two_arm_dlm_engineering_array": true,
+    "arms": [
+      "B1_current_order",
+      "B2_compiled_plangraph"
+    ],
+    "rows_per_arm": 32,
+    "validation_rows_per_arm": 32,
+    "a800_per_arm": 2,
+    "world_size": 2,
+    "maximum_concurrent_arms": 1,
+    "cpu_terminal_assembly": true,
+    "scientific_planner_training_400_updates": false,
+    "scientific_dlm_training_400_updates": false,
+    "planner_512_screen": false,
+    "crystal_generation": false,
+    "sun_evaluation": false,
+    "g3": false,
+    "g4": false
+  },
+  "locks": {
+    "historical_global_effective_batch": 16,
+    "initialization": "frozen_R5C_B0",
+    "iid_to_planned": "2:1",
+    "shuffle_arm": false,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "automatic_downstream": false,
+    "automatic_promotion": false,
+    "checkpoint_selection": false,
+    "eligible_for_later_initialization": false,
+    "modify_h1_assets": false,
+    "modify_frozen_refiner": false
+  },
+  "notes": "This fresh amendment replaces the obsolete one-A800 DLM smoke scope only for one bounded 2xA800 B1/B2 engineering DAG. Passing it does not authorize 400-update scientific training or any generation/evaluation downstream."
+}

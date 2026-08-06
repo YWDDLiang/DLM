@@ -1,0 +1,20 @@
+{
+  "schema": "h1_crplan_r0_paired32_authorization_v1",
+  "authorized_at_local_date": "2026-08-04",
+  "user_authorization": "开始按照plan推进新的实验，当前成功的代码和参数记得打包备份",
+  "authorized_scope": [
+    "freeze_and_verify_successful_H1_code_and_parameters",
+    "run_EVAL-0_CR-0",
+    "run_paired32_only_if_CR-0_passes"
+  ],
+  "not_authorized_automatically": [
+    "four_arm_512",
+    "end_to_end_64",
+    "end_to_end_256",
+    "RL_training",
+    "formal_G3_or_G4",
+    "promotion",
+    "automatic_downstream"
+  ],
+  "successful_anchor_archive_sha256": "16e18b2ea9a8a781a9f8f2e8919cbb5b179748035c1c884362bfe9fb9348fb80"
+}

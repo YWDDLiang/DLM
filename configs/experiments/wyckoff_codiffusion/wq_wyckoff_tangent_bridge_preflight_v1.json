@@ -1,0 +1,156 @@
+{
+  "schema": "wq_wyckoff_tangent_preflight_contract_v1",
+  "status": "local_built_remote_execution_not_authorized",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "identity": "wq_wyckoff_tangent_bridge_preflight_v1",
+  "authorization": {
+    "remote_transfer_authorized": false,
+    "remote_install_authorized": false,
+    "slurm_submission_authorized": false
+  },
+  "scientific_question": "Does every-step Wyckoff tangent restriction transfer useful released-CrysLLMGen geometry while preserving one LLM-fixed quotient, beyond a final-only projection?",
+  "immutable_u_reference": {
+    "job_id": 28081,
+    "identity": "wq_schedule_correct_bridge_parity_sup28054_v1",
+    "rerun": false,
+    "terminal_audit": "runs/remote_audit/20260726_wq_schedule_correct_bridge_parity_sup28054_v1/terminal_audit.json",
+    "terminal_audit_sha256": "4b77a10d632c33b53b2208d49db19f542081a7fd91d52f038ebe7e5280e2cf41",
+    "selection_manifest": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_schedule_correct_bridge_parity_sup28054_v1/selection_manifest.json",
+    "selection_manifest_sha256": "547c521c96e3375ffc0665d07c9104d605d14cef2e79c92159339eefb5065cc1",
+    "attempts_jsonl": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_schedule_correct_bridge_parity_sup28054_v1/attempts.jsonl",
+    "attempts_jsonl_sha256": "888caaba6683d1b953bf6a7f5a42d9da3d2b432df7a3b1b810b525328b555e94",
+    "terminal_report": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_schedule_correct_bridge_parity_sup28054_v1/terminal_report.json",
+    "terminal_report_sha256": "730dc0f005676f08d160b37006f1d2d9ababddef5e6ebeb0b200f129e062032e",
+    "execution_patch_manifest_sha256": "da08f1eb929e71d5a798863361b6c6a9416cae22150f23ccefa2df360ba32c36",
+    "status": "COMPLETED_0_0",
+    "cells": 32,
+    "retry_or_replacement_used": false
+  },
+  "source_panel": {
+    "generation_jsonl": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_parent_csp_sun256_v1/generation.jsonl",
+    "generation_jsonl_sha256": "b6eb7f80a29da699407d8d19bbedeb2d657f5d7940cd767d6d71aecb6c58a598",
+    "rows": 256,
+    "ordinals": "256-511",
+    "required_schema": "wqcodiff_generation_attempt_v1",
+    "required_status": "succeeded",
+    "proposal_field": "proposal_state",
+    "selection_count": 8,
+    "selection_rule": "lowest_sha256(selection_salt_colon_attempt_id)",
+    "selection_salt": "wq-schedule-correct-bridge-parity-v1-panel8",
+    "selection_uses_scientific_outcomes": false,
+    "new_generation": false
+  },
+  "parent": {
+    "name": "released_CrysLLMGen_MP20",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "run_type": "train",
+    "strict_load_required": true,
+    "scheduler_timesteps": 1000,
+    "schedule_tensor_length": 1001,
+    "decoder_state_sha256": "23832dbb8117fad8cacc32cc664cfa2e528faa1db737348c31c6ff83cc451c84",
+    "beta_scheduler_state_sha256": "b6f21e709194a4270932694664a818e0df36bd562cd177226f99f375a78618ff",
+    "sigma_scheduler_state_sha256": "40690291a9b96fd8f2627931d16d66df746b947411f8f4f3572f40058658267d"
+  },
+  "implementation": {
+    "tangent_bridge_source": "crystal_dlm/wqcodiff/crysllmgen/tangent_bridge.py",
+    "tangent_bridge_source_sha256": "175c98dcf36ced9b4f0fee6a30845ba78c9a275114fdca3c55392bf9dafa97e8",
+    "runner_source": "scripts/a800/run_wq_wyckoff_tangent_bridge_preflight_v1.py",
+    "runner_source_sha256": "edddded5bbf3aca16b47bfd3e060a374f60e22ff3473e852e88a8c72b7cec3c3",
+    "u_reference_runner_source": "scripts/a800/run_wq_schedule_correct_bridge_parity_v1.py",
+    "u_reference_runner_source_sha256": "22dd1ad3884fd6bf7fc8832e12372cecba53c35e89a2eca977fef121177f310b",
+    "orbit_projection_solver": "crystal_dlm.wqcodiff.runtime.project_atom_scores",
+    "orbit_regularization_lambda": 1e-08,
+    "lattice_regularization_lambda": 1e-08,
+    "lattice_finite_difference_step": 1e-06,
+    "lattice_frame_rule": "one audited rigid right-frame transform from WQ primitive matrix to the CrysLLMGen canonical primitive matrix",
+    "parent_schedule_changed": false,
+    "parent_checkpoint_changed": false,
+    "parent_decoder_changed": false
+  },
+  "matrix": {
+    "timesteps": [
+      100,
+      200,
+      400,
+      800
+    ],
+    "sources": 8,
+    "reference_u_cells": 32,
+    "new_arms": [
+      "F",
+      "T"
+    ],
+    "new_cells_per_arm": 32,
+    "new_total_cells": 64,
+    "base_noise_seed": 2026072601,
+    "paired_parent_base_noise_transform": true,
+    "reverse_steps_per_t_cell": 32,
+    "u_rerun": false,
+    "proposal_generation": 0,
+    "retry": 0,
+    "replacement": 0
+  },
+  "arms": {
+    "U": "immutable job28081 schedule-correct full-atom reference, loaded by exact hashes and never rerun",
+    "F": "one final-only projection of each stored U terminal structure into its fixed source WQ state",
+    "T": "parent-schedule manifold-restricted forward noise plus atom/lattice WQ projection after every corrector and predictor substep"
+  },
+  "mechanics_gates": {
+    "terminal_cells_per_arm": 32,
+    "successful_cells_per_arm": 32,
+    "positive_volume_outputs_per_arm": 32,
+    "orbit_chart_roundtrip_max_abs_error": 1e-06,
+    "lattice_chart_roundtrip_max_abs_error": 1e-06,
+    "lattice_matrix_roundtrip_max_abs_error": 1e-06,
+    "fixed_site_drift_max_abs": 1e-08,
+    "parent_schedule_max_absolute_error": 1e-06,
+    "F_parent_decoder_calls_per_cell": 0,
+    "F_projection_calls_per_cell": 1,
+    "T_parent_decoder_calls_per_cell": 64,
+    "T_projection_calls_per_cell": 64,
+    "first_reverse_invalid_lattice_count": 0,
+    "nonfinite_trajectory_count": 0,
+    "input_identity_failure_count": 0,
+    "topology_revision_count": 0,
+    "retry_or_replacement_count": 0
+  },
+  "future_resource_envelope_not_authorized": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit_minutes": 60,
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "immutable_future_outputs": {
+    "output_directory": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_wyckoff_tangent_bridge_preflight_v1",
+    "u_reference_manifest": "u_reference_manifest.json",
+    "attempts_jsonl": "attempts.jsonl",
+    "terminal_report": "terminal_report.json",
+    "overwrite": false
+  },
+  "forbidden_actions": {
+    "training_forbidden": true,
+    "new_generation_forbidden": true,
+    "u_rerun_forbidden": true,
+    "mlip_forbidden": true,
+    "external_api_forbidden": true,
+    "scientific_outcome_selection_forbidden": true,
+    "retry_forbidden": true,
+    "replacement_forbidden": true,
+    "topology_revision_forbidden": true,
+    "best_of_forbidden": true,
+    "remote_execution_without_new_authorization_forbidden": true
+  },
+  "stop_rules": [
+    "any immutable U evidence hash mismatch stops before F/T cells",
+    "any source or released-parent hash mismatch stops before F/T cells",
+    "any lattice-frame mismatch stops the affected cell and is never retried",
+    "any missing or failed F/T cell makes the mechanics gate FAIL",
+    "any discrete topology change makes the mechanics gate FAIL",
+    "any round-trip, volume, finite, call-budget, or identity gate failure makes the mechanics gate FAIL",
+    "all failures remain in append-only evidence",
+    "a WTB-32 PASS authorizes neither transfer, confirmatory generation, nor training"
+  ]
+}

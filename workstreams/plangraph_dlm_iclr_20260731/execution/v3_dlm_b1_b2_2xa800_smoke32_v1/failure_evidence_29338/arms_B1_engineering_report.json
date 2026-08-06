@@ -1,0 +1,45 @@
+{
+  "a800_count": 2,
+  "arm": "B1",
+  "automatic_downstream": false,
+  "crystal_generation": false,
+  "distributed_runtime_report_sha256": "1a881da788b65146f37ccde777f2c5996537f98af0a03f482abdf1fa24412fef",
+  "eligible_for_checkpoint_selection": false,
+  "eligible_for_later_initialization": false,
+  "engineering_gate_passed": true,
+  "final_validation_loss": 2.467157136183232,
+  "global_effective_batch": 16,
+  "global_training_sequences": 32,
+  "gpu_monitor": {
+    "indices": [
+      "0",
+      "1"
+    ],
+    "names": [
+      "NVIDIA A800-SXM4-80GB"
+    ],
+    "peak_memory_mib": {
+      "0": 47036.0,
+      "1": 40516.0
+    },
+    "rows": 200
+  },
+  "initial_validation_loss": 2.28644045535475,
+  "maximum_cuda_peak_reserved_bytes": 41362128896,
+  "minimum_rank_gradient_norm": 12.957003593444824,
+  "minimum_rank_task_loss": 0.0206158310174942,
+  "optimizer_updates": 2,
+  "planned_corruption_policy": "d1",
+  "run_config_sha256": "333063baa8dc158e3c65518b124963bf2a73040e969772ccceee897752812140",
+  "schema": "h1a2_dlm_b1_b2_2xa800_arm_report_v1",
+  "scientific_result": false,
+  "scientific_training_authorized": false,
+  "status": "complete",
+  "sun_evaluation": false,
+  "training_log_sha256": "7694f2a879266b036e1e60514f055d72c2d896ed4fc195ec6c66631a0ebd0c25",
+  "validation_duplicate_count": 0,
+  "validation_missing_count": 0,
+  "validation_rows": 32,
+  "validation_sampler_report_sha256": "20f0844a5700dca7bf4082b787fa4a2eeea1af9b8c12e29ceedd24f42e02f958",
+  "world_size": 2
+}

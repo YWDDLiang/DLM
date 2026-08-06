@@ -1,0 +1,26 @@
+{
+  "schema": "h1_r03f_mp_completion_authorization_v1",
+  "status": "authorized",
+  "date": "2026-08-02",
+  "user_quote": "哦对，全部完成S.U.N以后补齐所有缺失的E_hull再测一次全部S.U.N",
+  "authorized_scope": [
+    "read-only reuse of the clean-terminal R03E four-repeat, eight-arm evidence",
+    "deduplicated Materials Project thermo completion for every missing E_hull chemical system",
+    "one common compatible-entry snapshot for all eight arms",
+    "full strict and meta S.U.N. recomputation over every original 256-attempt arm",
+    "per-repeat McNemar and deterministic hierarchical paired bootstrap reporting"
+  ],
+  "not_authorized": [
+    "generation or body rerun",
+    "diffusion refinement rerun",
+    "CHGNet relaxation rerun",
+    "direct metric or novelty rerun",
+    "sample retry, replacement, repair, filtering, or reranking",
+    "Slurm or GPU execution",
+    "training",
+    "checkpoint reselection",
+    "formal G3 or G4",
+    "promotion",
+    "automatic downstream"
+  ]
+}

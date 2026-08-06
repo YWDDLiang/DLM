@@ -1,0 +1,26 @@
+# Restored frozen source hashes. These are not a recorded June runtime git commit.
+2be00f068df7d3e5cdf7a56a51e332a87739e3cf2efce3623ea7392e6991557a  ../baseline/crystal_dlm/crysllmgen_text.py
+d45ccc23fad4284fdeef53d7bbdc5e4044fb6b598092461663473ed8f5a4f8ad  ../baseline/crystal_dlm/h1_llm_planner.py
+6bc1e446afdbe405df601f609a2326c9f376a7f036e9d27dafcecd57965866fc  ../baseline/crystal_dlm/r5_plan_state.py
+3478ddf657873ea055e5816c423ce36be5ecf0cd1a73c6ee1e5514648047be83  ../baseline/crystal_dlm/r5_plan_body.py
+c022ddda92caac1c60b91b239c1bc155c734cad86b595282ce9724e239d002c6  ../baseline/crystal_dlm/r5_dynamic_length.py
+ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178  ../baseline/crystal_dlm/composition_validity.py
+81b9851c4e50cc2821923ccb9addb3590e2115402754198cd79eec8e31f05e26  ../baseline/scripts/build_h1_llm_formula_sft_data.py
+a45e8027e7732fe12057c934b5a2dfa9bc3151fc4f30a50a3b94d40b342f2dba  ../baseline/scripts/llama_formula_sft.py
+d38743f2f647d798800724b09537fbe492706805c00d7ee34c5ca8d74e39adc8  ../baseline/scripts/sample_llama_h1_formula_plans.py
+eea26b5bcc6d767d733babf289257f9cfb7253fd2395708897cc650162747a29  ../baseline/scripts/evaluate_h1_planner_gate.py
+686bb2a2612f3dbf65272d6ec49dea9d5b2d5e80d1c9cd955673e4dadb8e6db6  ../baseline/scripts/sample_llada_r5_exact_length.py
+3cc539f43e11885353f760b68c362e8c161a81f71cf7c546f1c8d6f8d54e57da  ../baseline/scripts/evaluate_h1_hybrid_gate.py
+a0cb2c54c149aee0a4f36c147d93eca6799e3b17879f76c108721c934f087b2a  ../baseline/scripts/refine_dlm_with_crysllmgen.py
+fd89897f61ddc672bc877f700ecd7ed3d5e1b0f3c2c3e67e335d740f3601fa9b  ../baseline/scripts/run_crysllmgen_metrics.py
+a5e958d033a36927a2785cd9c383527cc2228f54ef9a62fb9161c67ca7bdcd1f  ../baseline/scripts/analyze_composition_validity.py
+47427e01f33d7e577baa00c0e850796d2202e552e8796e80e926515f42a9d1ec  ../baseline/scripts/evaluate_r5b_gate.py
+6544515e0ca21e29b33b2ad53942269b48ca7c21c5a8d5a37bd003e8c6f957f9  ../baseline/launchers/pre_wyckoff/a800/run_a100_eval_sun_dlm_only.sh
+9f289133005f5cd37b284311fdd2e9a2701a4523ca5ac4a685cfd7891b51ef52  ../baseline/launchers/pre_wyckoff/a800/run_h1a2_epoch_extension_fullmetrics.sh
+7519b60232edb40495d56632de0fda87fe724eee91f9d9fa99e30399fcf5a191  ../baseline/launchers/pre_wyckoff/a800/run_h1a2_rich_planner_retrain.sh
+# Recovered installed CrysLLMGen upstream snapshot used to locate a future residual insertion.
+9bb0b99e86a052bec3963eb0521c3b015635dcfc127e61e703006e79f323586c  ../../../crystal_dlm/wqcodiff/crysllmgen/upstream/models_ddpm/cspnet.py
+d27eff3839e1a0da0098a287225e3c4f2239188cbffed3387d37dc8b95bdb6ca  ../../../crystal_dlm/wqcodiff/crysllmgen/upstream/models_ddpm/diffusion.py
+45251cb7dbf13d56560a7a7684a809ba50d2074c090406bf8ca6cc3828eb5d88  ../../../crystal_dlm/wqcodiff/crysllmgen/upstream/models_ddpm/model.py
+a238762a90c9b6a166b0cd6ad709a0ea67e8fcfbc85be6f334d7f1b90ee7a738  ../../../crystal_dlm/wqcodiff/crysllmgen/upstream/diff_refinement.py
+050137ba8f69fdb2a779bea2eb12c0e54a5af230a8dffeffdeb8ca835d0a3c67  ../../../crystal_dlm/wqcodiff/crysllmgen/upstream/diff_train.py

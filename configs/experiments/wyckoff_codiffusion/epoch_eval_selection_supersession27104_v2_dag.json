@@ -1,0 +1,122 @@
+{
+  "schema": "crysllmgen_epoch_eval_selection_supersession_dag_v2",
+  "status": "active_user_authorized_ready_to_submit_once",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "authorization": {
+    "record": "runs/remote_audit/20260724_user_authorization_epoch_eval_selection_supersession27104_v2_bash42.json",
+    "sha256": "81b4c80cca71e15e75a6b4e7658485d918717aba1956be4c5761ef5d4a25a2f3",
+    "quote": "同意"
+  },
+  "failure_being_superseded": {
+    "entrypoint_identity": "epoch_eval_selection_supersession27104_v1",
+    "epoch_evaluation_array_job_id": "27104",
+    "selection_job_id": "27105",
+    "audit": "runs/remote_audit/20260723_epoch_eval_selection_supersession27104_v1_presbatch_failure_v1.json",
+    "audit_sha256": "b4a02875ce58af1b8e33d774ee6005013cbd4e5a1e95ebff2ca3268ae9781d39",
+    "classification": "deterministic_presbatch_bash42_empty_array_compatibility_error",
+    "bash_version": "GNU bash, version 4.2.46(2)-release",
+    "prior_identity_audit": "PASS",
+    "prior_claim_created": false,
+    "prior_sbatch_invoked": false,
+    "scientific_attempts_started": 0
+  },
+  "frozen_identity": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "protocol_v4_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+    "gate_a_lock_sha256": "534dbd55caf3599bad233bfd671bf304fe28891854101d2a201f1d1feaaa4bf5",
+    "formal_lora_training_job_id": "26954",
+    "formal_lora_training_execution_patch_sha256": "9577e00d71f38cecd585d6fd228a22794fc0f474014ba3b847e2417fb6121491",
+    "formal_lora_training_report_sha256": "04d6b6f78668266508102ce018c3a4afc4077379d9f7d12f0eeffa661f4ba430",
+    "refiner_training_job_id": "27103",
+    "refiner_training_execution_patch_sha256": "a868de4ac99d833628eca08304b6ca6066be58f138b5f03d1dd0e508a61beadc",
+    "refiner_checkpoint_sha256": "8abb6ba966e0a7153fecf7141c97e659977692bc74ee4573317cbb26bddc4b70",
+    "refiner_training_report_sha256": "87e9b64a7154b8b451b118f18f80f4bcb575550cbef2b67fc0c9d507a9a70316",
+    "prior_evaluation_execution_patch_sha256": "5dd8ec04f3834249af8ef1d18ee43ca114d1038a9025024320ab9b93e80da958"
+  },
+  "separated_execution_identity_contract": {
+    "adapter_training_execution_patch_source": "immutable formal LoRA training reports",
+    "refiner_training_execution_patch_source": "immutable completed refiner report and checkpoint",
+    "evaluation_execution_patch_source": "new authorized cumulative patch manifest",
+    "relabel_existing_artifacts": false,
+    "backward_compatible_legacy_single_patch_evidence": true
+  },
+  "outputs": {
+    "epoch_panel": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/epoch_checkpoint_panel_sup27104_v2",
+    "epoch_evidence": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/epoch_checkpoint_evidence_sup27104_v2.json",
+    "checkpoint_selection_lock": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/epoch_checkpoint_selection_lock_sup27104_v2.json",
+    "submission_record": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/epoch_eval_selection_supersession27104_v2_submission.json",
+    "submission_claim": "runs/20260720_0401-crysllmgen-wq-final-v3/notes/epoch_eval_selection_supersession27104_v2_submission.json.claim"
+  },
+  "jobs": [
+    {
+      "key": "epoch_evaluation_array_superseding_27104_v2",
+      "script": "scripts/a800/epoch_eval_selection_supersession27104_v2/epoch_eval.sbatch",
+      "script_sha256": "5cf1440165c38c903cd3b816efe9537fda06451dc823edfc31027538c9a8eb08",
+      "dependency": "none_after_zero_preexisting_user_gpu_jobs_preflight",
+      "partition": "gpu",
+      "array": "0-2%2",
+      "gpus_per_task": 1,
+      "cpus_per_task": 16,
+      "memory_per_task": "96G",
+      "time_limit_per_task": "18:00:00",
+      "attempts_per_epoch": 256,
+      "same_attempt_ids_pair_ids_and_paired_noise": true,
+      "r5c_hardware_wording": "R5-C A100 protocol on A800"
+    },
+    {
+      "key": "epoch_selection_superseding_27105_v2",
+      "script": "scripts/a800/epoch_eval_selection_supersession27104_v2/select_epoch.sbatch",
+      "script_sha256": "0ac4087b8aaf73313fd5e53b05f1876a68b6f3b8e08b27da9a7dbc03a355fdd7",
+      "dependency": "afterok:all_epoch_evaluation_array_tasks",
+      "partition": "short",
+      "gpus": 0,
+      "cpus": 4,
+      "memory": "16G",
+      "time_limit": "00:30:00"
+    }
+  ],
+  "submission_accounting": {
+    "slurm_job_records": 2,
+    "slurm_submit_slots_including_array_elements": 4,
+    "maximum_concurrent_a800": 2,
+    "required_preexisting_pending_or_running_user_gpu_jobs": 0,
+    "worst_case_new_gpu_hours_from_time_limits": 54,
+    "worst_case_critical_path_hours": 36.5,
+    "formal_lora_training_resubmitted": false,
+    "refiner_training_resubmitted": false,
+    "retry_or_replacement_policy": "one explicitly authorized Bash-4.2 compatibility supersession of a pre-claim pre-sbatch entry; no task resubmission or attempt replacement"
+  },
+  "selection_policy": {
+    "crysllmgen_direct_metrics_first": true,
+    "primary": "R5-C A100 protocol on A800 strict full-SUN@0.0 all-attempt paired bootstrap 10000",
+    "secondary": "meta-like@0.1",
+    "legacy_reconstructed_denominator": "report",
+    "coverage_adjusted": "report_only_never_select",
+    "dft": false
+  },
+  "forbidden": [
+    "LoRA retraining",
+    "refiner retraining",
+    "editing immutable training reports",
+    "editing the v1 submission identity in place",
+    "overwriting jobs 26954, 27103, 27104, or 27105 outputs",
+    "overwriting v1 submission record, claim, panel, evidence, or selection paths",
+    "more than two concurrent A800",
+    "silent retry",
+    "submission without an exclusive pre-sbatch claim",
+    "task resubmission after v2 sbatch",
+    "attempt replacement",
+    "coverage-adjusted SUN for checkpoint selection",
+    "final test or final MLIP for checkpoint selection",
+    "DFT"
+  ],
+  "scientific_protocol_changed": false,
+  "compatibility_revision": {
+    "target_shell": "GNU Bash 4.2.46(2)-release",
+    "root_cause_removed": "empty mapfile-populated array expansion under set -u",
+    "implementation": "newline-delimited scalar queue snapshot with Python JSON splitlines",
+    "empty_queue_regression_required": true,
+    "exclusive_claim_before_any_sbatch": true,
+    "v1_entrypoint_modified_in_place": false
+  }
+}

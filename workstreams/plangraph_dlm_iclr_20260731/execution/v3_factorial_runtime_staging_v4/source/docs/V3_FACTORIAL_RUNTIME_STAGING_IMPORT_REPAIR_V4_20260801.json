@@ -1,0 +1,32 @@
+{
+  "schema": "h1a2_factorial_runtime_staging_repair_v1",
+  "status": "repair_prepared",
+  "created_at": "2026-08-01",
+  "failed_staging": {
+    "version": "v3",
+    "remote_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_factorial_runtime_staging_v3",
+    "archive_sha256": "4fe5000849acf55662ce5d59e95bef57f486dc3bda814b57f5808e03bb67d074",
+    "archive_sha_match": true,
+    "key_source_sha_checks_passed": 8,
+    "py_compile_passed": true,
+    "failure_stage": "runner_import",
+    "failure_type": "ModuleNotFoundError",
+    "failure_message": "No module named scripts.sample_llama_h1a2_factorial_plans"
+  },
+  "root_cause": "The A800 environment contains another regular package named scripts. The staged repository scripts directory lacked __init__.py, so Python resolved the unrelated installed package instead of the repository-local namespace directory.",
+  "repair": {
+    "version": "v4",
+    "change": "Add a repository-local scripts/__init__.py package marker and rebuild a new immutable staging bundle.",
+    "scientific_protocol_changed": false,
+    "model_changed": false,
+    "data_changed": false,
+    "seed_changed": false,
+    "denominator_changed": false,
+    "threshold_changed": false
+  },
+  "model_loaded": false,
+  "gpu_used": false,
+  "slurm_job_submitted": false,
+  "job_ids": [],
+  "automatic_downstream": false
+}

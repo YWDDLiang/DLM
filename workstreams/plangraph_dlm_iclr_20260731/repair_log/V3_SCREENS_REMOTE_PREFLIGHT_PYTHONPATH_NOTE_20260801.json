@@ -1,0 +1,30 @@
+{
+  "schema": "h1a2_v3_pre_submit_repair_note_v1",
+  "created_at": "2026-08-01",
+  "status": "repair_authorized_before_submission",
+  "scope": [
+    "20260801_h1a2_v3_planner512_v1",
+    "20260801_h1a2_v3_dependency_margin_v1"
+  ],
+  "failed_action": "remote pure-Python pre-submit unit test invocation",
+  "root_cause": "The immutable source archive was extracted correctly and its SHA-256 inventory passed, but the first test was invoked without setting PYTHONPATH to the staged source root. Importing crystal_dlm therefore failed before any model load, GPU work, sampling, metric computation, or Slurm submission.",
+  "evidence": {
+    "planner_source_inventory_passed": true,
+    "planner_bash_syntax_passed": true,
+    "failed_test": "v3_planner512_v1/test_planner512.py",
+    "exception": "ModuleNotFoundError: No module named 'crystal_dlm'",
+    "slurm_jobs_submitted": false,
+    "scientific_outputs_created": false
+  },
+  "repair": {
+    "action": "Repeat the pre-submit tests with PYTHONPATH set to each staged source root.",
+    "source_changed": false,
+    "protocol_changed": false,
+    "model_changed": false,
+    "data_changed": false,
+    "seed_or_denominator_changed": false,
+    "threshold_changed": false,
+    "resource_request_changed": false
+  },
+  "automatic_downstream": false
+}

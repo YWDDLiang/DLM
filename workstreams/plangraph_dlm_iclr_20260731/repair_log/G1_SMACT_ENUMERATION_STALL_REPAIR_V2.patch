@@ -1,0 +1,313 @@
+diff -ruN '--exclude=SOURCE_SHA256.txt' '--exclude=__pycache__' workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/crystal_dlm/composition_validity.py workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/crystal_dlm/composition_validity.py
+--- workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/crystal_dlm/composition_validity.py	2026-05-21 15:11:51.000000000 +0800
++++ workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/crystal_dlm/composition_validity.py	2026-08-01 00:12:12.504731700 +0800
+@@ -64,6 +64,52 @@
+     return "".join(parts)
+ 
+ 
++def _iter_fixed_stoich_neutral_oxidations(
++    oxidation_choices: Sequence[Sequence[int]],
++    counts: Sequence[int],
++) -> Iterable[Tuple[int, ...]]:
++    """Yield the same fixed-stoichiometry witnesses as SMACT, with exact pruning."""
++
++    fixed_counts = tuple(int(value) for value in counts)
++    if not fixed_counts or any(not choices for choices in oxidation_choices):
++        return
++    if reduce(math.gcd, fixed_counts) != 1:
++        return
++
++    size = len(fixed_counts)
++    suffix_min = [0] * (size + 1)
++    suffix_max = [0] * (size + 1)
++    for index in range(size - 1, -1, -1):
++        contributions = [
++            fixed_counts[index] * int(oxidation)
++            for oxidation in oxidation_choices[index]
++        ]
++        suffix_min[index] = suffix_min[index + 1] + min(contributions)
++        suffix_max[index] = suffix_max[index + 1] + max(contributions)
++
++    chosen: List[int] = []
++
++    def visit(index: int, charge: int) -> Iterable[Tuple[int, ...]]:
++        if index == size:
++            if charge == 0:
++                yield tuple(chosen)
++            return
++        for oxidation in oxidation_choices[index]:
++            oxidation = int(oxidation)
++            next_charge = charge + fixed_counts[index] * oxidation
++            if not (
++                next_charge + suffix_min[index + 1]
++                <= 0
++                <= next_charge + suffix_max[index + 1]
++            ):
++                continue
++            chosen.append(oxidation)
++            yield from visit(index + 1, next_charge)
++            chosen.pop()
++
++    yield from visit(0, 0)
++
++
+ @lru_cache(maxsize=200_000)
+ def _smact_validity_cached(
+     elems: Tuple[int, ...],
+@@ -178,14 +224,9 @@
+     if any(len(combo) == 0 for combo in ox_combos):
+         return {"valid": False, "reason": "oxidation_state_missing"}
+ 
+-    threshold = np.max(counts)
+     charge_neutral_seen = False
+     pauling_error_seen = False
+-    for ox_states in itertools.product(*ox_combos):
+-        stoichs = [(count,) for count in counts]
+-        cn_e, cn_r = _neutral_ratios_compat(smact, ox_states, stoichs, threshold)
+-        if not cn_e:
+-            continue
++    for ox_states in _iter_fixed_stoich_neutral_oxidations(ox_combos, counts):
+         charge_neutral_seen = True
+         if use_pauling_test:
+             try:
+@@ -195,7 +236,7 @@
+                 pauling_error_seen = True
+         else:
+             electroneg_ok = True
+-        if electroneg_ok and cn_r:
++        if electroneg_ok:
+             return {
+                 "valid": True,
+                 "reason": "charge_neutral_pauling_valid",
+diff -ruN '--exclude=SOURCE_SHA256.txt' '--exclude=__pycache__' workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/slurm/assemble.sbatch workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/slurm/assemble.sbatch
+--- workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/slurm/assemble.sbatch	2026-07-31 21:43:47.000000000 +0800
++++ workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/slurm/assemble.sbatch	2026-08-01 00:13:20.689760300 +0800
+@@ -1,23 +1,23 @@
+ #!/usr/bin/env bash
+-#SBATCH --job-name=pg-g1-assemble-v1
++#SBATCH --job-name=pg-g1-assemble-v2
+ #SBATCH --partition=short
+ #SBATCH --nodes=1
+ #SBATCH --ntasks=1
+ #SBATCH --cpus-per-task=4
+ #SBATCH --mem=16G
+ #SBATCH --time=00:30:00
+-#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_g1_v1/slurm/%x-%j.out
+-#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_g1_v1/slurm/%x-%j.err
++#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_plangraph_dlm_g1_sampling_repair_v2/slurm/%x-%j.out
++#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_plangraph_dlm_g1_sampling_repair_v2/slurm/%x-%j.err
+ 
+ set -Eeuo pipefail
+ umask 077
+ 
+ PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
+-RUN_ROOT="${PROJECT_ROOT}/runs/20260731_plangraph_dlm_g1_v1"
+-SOURCE_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1"
++RUN_ROOT="${PROJECT_ROOT}/runs/20260801_plangraph_dlm_g1_sampling_repair_v2"
++SOURCE_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2"
+ EXECUTION_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution"
+-MANIFEST="${EXECUTION_ROOT}/G1_EXECUTION_MANIFEST_V1.json"
+-AUTHORIZATION="${EXECUTION_ROOT}/G1_AUTHORIZATION_V1.json"
++MANIFEST="${EXECUTION_ROOT}/G1_EXECUTION_MANIFEST_V2.json"
++AUTHORIZATION="${EXECUTION_ROOT}/G1_AUTHORIZATION_V2.json"
+ INITIAL_ADAPTER_SHA256=65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a
+ PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
+ 
+@@ -48,4 +48,3 @@
+ test -s "${RUN_ROOT}/terminal_report.json"
+ test -s "${RUN_ROOT}/decision.json"
+ echo "G1_ASSEMBLY_ACCEPTANCE=PASS"
+-
+diff -ruN '--exclude=SOURCE_SHA256.txt' '--exclude=__pycache__' workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/slurm/sample.sbatch workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/slurm/sample.sbatch
+--- workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/slurm/sample.sbatch	2026-07-31 21:43:47.000000000 +0800
++++ workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/slurm/sample.sbatch	2026-08-01 00:13:20.671693900 +0800
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env bash
+-#SBATCH --job-name=pg-g1-sample-v1
++#SBATCH --job-name=pg-g1-sample-v2
+ #SBATCH --partition=gpu
+ #SBATCH --nodes=1
+ #SBATCH --ntasks=1
+@@ -8,18 +8,18 @@
+ #SBATCH --mem=64G
+ #SBATCH --time=08:00:00
+ #SBATCH --array=0-2%1
+-#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_g1_v1/slurm/%x-%A_%a.out
+-#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_plangraph_dlm_g1_v1/slurm/%x-%A_%a.err
++#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_plangraph_dlm_g1_sampling_repair_v2/slurm/%x-%A_%a.out
++#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_plangraph_dlm_g1_sampling_repair_v2/slurm/%x-%A_%a.err
+ 
+ set -Eeuo pipefail
+ umask 077
+ 
+ PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
+-RUN_ROOT="${PROJECT_ROOT}/runs/20260731_plangraph_dlm_g1_v1"
+-SOURCE_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1"
++RUN_ROOT="${PROJECT_ROOT}/runs/20260801_plangraph_dlm_g1_sampling_repair_v2"
++SOURCE_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2"
+ EXECUTION_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution"
+-MANIFEST="${EXECUTION_ROOT}/G1_EXECUTION_MANIFEST_V1.json"
+-AUTHORIZATION="${EXECUTION_ROOT}/G1_AUTHORIZATION_V1.json"
++MANIFEST="${EXECUTION_ROOT}/G1_EXECUTION_MANIFEST_V2.json"
++AUTHORIZATION="${EXECUTION_ROOT}/G1_AUTHORIZATION_V2.json"
+ MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
+ INITIAL_ADAPTER="${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
+ INITIAL_ADAPTER_SHA256=65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a
+@@ -103,4 +103,3 @@
+ 
+ test -s "${OUTPUT_DIR}/planner_report.json"
+ echo "G1_SAMPLE_ACCEPTANCE=PASS ARM=${ARM}"
+-
+diff -ruN '--exclude=SOURCE_SHA256.txt' '--exclude=__pycache__' workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/submit_once.sh workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/submit_once.sh
+--- workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/submit_once.sh	2026-07-31 21:44:19.000000000 +0800
++++ workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/submit_once.sh	2026-08-01 00:14:24.185309100 +0800
+@@ -3,11 +3,12 @@
+ umask 077
+ 
+ PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
+-RUN_ROOT="${PROJECT_ROOT}/runs/20260731_plangraph_dlm_g1_v1"
+-SOURCE_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1"
++V1_RUN_ROOT="${PROJECT_ROOT}/runs/20260731_plangraph_dlm_g1_v1"
++RUN_ROOT="${PROJECT_ROOT}/runs/20260801_plangraph_dlm_g1_sampling_repair_v2"
++SOURCE_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2"
+ EXECUTION_ROOT="${PROJECT_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution"
+-MANIFEST="${EXECUTION_ROOT}/G1_EXECUTION_MANIFEST_V1.json"
+-AUTHORIZATION="${EXECUTION_ROOT}/G1_AUTHORIZATION_V1.json"
++MANIFEST="${EXECUTION_ROOT}/G1_EXECUTION_MANIFEST_V2.json"
++AUTHORIZATION="${EXECUTION_ROOT}/G1_AUTHORIZATION_V2.json"
+ RECORD="${RUN_ROOT}/submission_record.json"
+ PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
+ 
+@@ -17,21 +18,27 @@
+ test "$(sha256sum "${MANIFEST}" | awk '{print $1}')" = "${G1_EXECUTION_MANIFEST_SHA256}"
+ test "$(sha256sum "${AUTHORIZATION}" | awk '{print $1}')" = "${G1_AUTHORIZATION_SHA256}"
+ (cd "${SOURCE_ROOT}" && sha256sum -c SOURCE_SHA256.txt)
+-
+-mkdir -p "${RUN_ROOT}/slurm" "${RUN_ROOT}/status" "${RUN_ROOT}/submission_claim"
++test -s "${V1_RUN_ROOT}/data/ledger_report.json"
++test -s "${V1_RUN_ROOT}/data/ledger/seed_ledger.jsonl"
++test -s "${V1_RUN_ROOT}/training/PG/training_report.json"
++test -s "${V1_RUN_ROOT}/training/PG-shuffle/training_report.json"
++
++mkdir -p \
++  "${RUN_ROOT}/slurm" \
++  "${RUN_ROOT}/status" \
++  "${RUN_ROOT}/submission_claim" \
++  "${RUN_ROOT}/training/PG" \
++  "${RUN_ROOT}/training/PG-shuffle"
++cp -a "${V1_RUN_ROOT}/data" "${RUN_ROOT}/data"
++cp -a \
++  "${V1_RUN_ROOT}/training/PG/training_report.json" \
++  "${RUN_ROOT}/training/PG/training_report.json"
++cp -a \
++  "${V1_RUN_ROOT}/training/PG-shuffle/training_report.json" \
++  "${RUN_ROOT}/training/PG-shuffle/training_report.json"
+ trap 'status=$?; if [ "${status}" -ne 0 ]; then printf "{\"status\":\"failed_before_complete\",\"exit_status\":%s}\\n" "${status}" > "${RECORD}"; fi; exit "${status}"' EXIT
+ 
+-ledger_job="$(sbatch --parsable \
+-  --export=ALL,G1_EXECUTION_MANIFEST_SHA256="${G1_EXECUTION_MANIFEST_SHA256}",G1_AUTHORIZATION_SHA256="${G1_AUTHORIZATION_SHA256}" \
+-  "${SOURCE_ROOT}/slurm/ledger.sbatch")"
+-case "${ledger_job}" in *[!0-9]*|'') echo "invalid ledger job ${ledger_job}" >&2; exit 3;; esac
+-train_job="$(sbatch --parsable \
+-  --dependency=afterok:"${ledger_job}" \
+-  --export=ALL,G1_EXECUTION_MANIFEST_SHA256="${G1_EXECUTION_MANIFEST_SHA256}",G1_AUTHORIZATION_SHA256="${G1_AUTHORIZATION_SHA256}" \
+-  "${SOURCE_ROOT}/slurm/train.sbatch")"
+-case "${train_job}" in *[!0-9]*|'') echo "invalid train job ${train_job}" >&2; exit 3;; esac
+ sample_job="$(sbatch --parsable \
+-  --dependency=afterok:"${train_job}" \
+   --export=ALL,G1_EXECUTION_MANIFEST_SHA256="${G1_EXECUTION_MANIFEST_SHA256}",G1_AUTHORIZATION_SHA256="${G1_AUTHORIZATION_SHA256}" \
+   "${SOURCE_ROOT}/slurm/sample.sbatch")"
+ case "${sample_job}" in *[!0-9]*|'') echo "invalid sample job ${sample_job}" >&2; exit 3;; esac
+@@ -41,22 +48,27 @@
+   "${SOURCE_ROOT}/slurm/assemble.sbatch")"
+ case "${assembly_job}" in *[!0-9]*|'') echo "invalid assembly job ${assembly_job}" >&2; exit 3;; esac
+ 
+-"${PYTHON}" - "${RECORD}" "${ledger_job}" "${train_job}" "${sample_job}" "${assembly_job}" "${G1_EXECUTION_MANIFEST_SHA256}" "${G1_AUTHORIZATION_SHA256}" <<'PY'
++"${PYTHON}" - "${RECORD}" "${sample_job}" "${assembly_job}" "${G1_EXECUTION_MANIFEST_SHA256}" "${G1_AUTHORIZATION_SHA256}" <<'PY'
+ import json
+ import sys
+ from pathlib import Path
+ 
+-path, ledger, train, sample, assembly, manifest_sha, authorization_sha = sys.argv[1:]
++path, sample, assembly, manifest_sha, authorization_sha = sys.argv[1:]
+ payload = {
+-    "schema": "plangraph-dlm-g1-submission@1",
++    "schema": "plangraph-dlm-g1-repair-submission@1",
+     "status": "complete",
+     "submission_count": 1,
+-    "ledger_job": int(ledger),
+-    "training_array_job": int(train),
++    "repair_cycle": 1,
++    "reused_ledger_job": 29098,
++    "reused_training_array_job": 29099,
++    "superseded_sampling_array_job": 29100,
++    "superseded_assembly_job": 29101,
+     "sampling_array_job": int(sample),
+     "assembly_job": int(assembly),
+     "execution_manifest_sha256": manifest_sha,
+     "authorization_sha256": authorization_sha,
++    "partial_samples_merged": False,
++    "all_sampling_arms_rerun_from_ordinal_zero": True,
+     "automatic_downstream_within_authorized_chain": True,
+     "automatic_G4": False,
+ }
+diff -ruN '--exclude=SOURCE_SHA256.txt' '--exclude=__pycache__' workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/tests/test_g1_protocol.py workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/tests/test_g1_protocol.py
+--- workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v1/tests/test_g1_protocol.py	2026-07-31 21:41:29.000000000 +0800
++++ workstreams/plangraph_dlm_iclr_20260731/execution/g1_source_v2/tests/test_g1_protocol.py	2026-08-01 00:12:33.265417200 +0800
+@@ -1,6 +1,8 @@
+ from __future__ import annotations
+ 
++import itertools
+ import json
++import math
+ from pathlib import Path
+ import sys
+ import unittest
+@@ -17,6 +19,9 @@
+     ledger_sha256,
+     shuffle_dependency_links,
+ )
++from crystal_dlm.composition_validity import (  # noqa: E402
++    _iter_fixed_stoich_neutral_oxidations,
++)
+ 
+ 
+ def graph() -> dict:
+@@ -136,7 +141,36 @@
+         tied["PG-shuffle"]["composition_valid_count"] = 492
+         self.assertFalse(evaluate_g1_gate(tied)["passed"])
+ 
++    def test_fixed_stoich_pruning_matches_smact_enumeration(self) -> None:
++        choices = [(-3, -1, 1, 3), (-2, 0, 2), (-1, 1, 4)]
++        counts = (1, 2, 3)
++        expected = [
++            states
++            for states in itertools.product(*choices)
++            if sum(count * state for count, state in zip(counts, states)) == 0
++            and math.gcd(*counts) == 1
++        ]
++        self.assertEqual(
++            list(_iter_fixed_stoich_neutral_oxidations(choices, counts)),
++            expected,
++        )
++        self.assertEqual(
++            list(_iter_fixed_stoich_neutral_oxidations(choices, (2, 4, 6))),
++            [],
++        )
++
++    def test_fixed_stoich_pruning_rejects_impossible_high_arity(self) -> None:
++        choices = [(1, 2, 3, 4, 5, 6)] * 16
++        self.assertEqual(
++            list(
++                _iter_fixed_stoich_neutral_oxidations(
++                    choices,
++                    tuple(range(1, 17)),
++                )
++            ),
++            [],
++        )
++
+ 
+ if __name__ == "__main__":
+     unittest.main()
+-

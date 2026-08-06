@@ -1,0 +1,49 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_repair_log_v5",
+  "status": "repair_prepared_before_submission",
+  "failed_source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/v3_poststop_sun256_diagnostic_v5",
+  "failed_source_manifest_sha256": "e8176a67db5568f881ee60673b26f330474aa238247d16f9c7aaeb8259dd217a",
+  "failed_source_archive_sha256": "cfa26e929145799f225172e4297b982036bf1c89956e042e59438d7afaea37b1",
+  "failed_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v5",
+  "failed_jobs": {
+    "end_to_end_arm_array": "29531_[0-3]%2",
+    "assembly": "29532"
+  },
+  "sacct": {
+    "29531_0": "FAILED 1:0 00:00:52",
+    "29531_1": "FAILED 1:0 00:00:52",
+    "29531_2": "FAILED 1:0 00:00:51",
+    "29531_3": "FAILED 1:0 00:00:51",
+    "29532": "FAILED 1:0 00:00:09"
+  },
+  "failed_arm_stderr_sha256": "18abef57b99b1528bf92f4a7684a6a549fc333050b5a76c4c44df7fba2059387",
+  "assembly_stderr_sha256": "ea497c31be7420919a4b6c0c373deb53060bf59a1fe397af2bffbbce46f5dc32",
+  "root_cause": {
+    "class": "generated_python_bytecode_misclassified_as_source_change",
+    "error": "execution source file set changed: missing=[], extra=[__pycache__/*.pyc]",
+    "message": "A local import before archive creation and the A800 pre-submission import generated Python bytecode caches that were not source-manifest entries. The strict file-set check treated those non-source cache files as mutation.",
+    "plan_preparation_started": false,
+    "body_generation_started": false,
+    "diffusion_refinement_started": false,
+    "direct_metrics_started": false,
+    "sun_evaluation_started": false,
+    "partial_scientific_outputs_reused": false
+  },
+  "repair": {
+    "new_source_version": "v3_poststop_sun256_diagnostic_v6",
+    "new_run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v6",
+    "behavior": "Create a cache-free source bundle; retain PYTHONDONTWRITEBYTECODE=1 in both Slurm scripts; ignore only __pycache__ directories and .pyc/.pyo bytecode when comparing the source file set. Every real source file remains exact-SHA checked.",
+    "old_source_or_run_overwritten": false
+  },
+  "scientific_protocol_changes": {
+    "planner_checkpoint": false,
+    "body_checkpoint": false,
+    "refiner_checkpoint": false,
+    "diffusion_reverse_steps": false,
+    "ordinals_or_seeds": false,
+    "denominator": false,
+    "raw_plan_advisory_policy": false,
+    "retry_replacement_repair_filter_rerank": false,
+    "sun_cache_or_thresholds": false
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "wq_wyckoff_chart_retraction_preflight_sup28185_v2_remote_execution_authorization_v1",
+  "recorded_date": "2026-07-26",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "user_quote": "继续",
+  "interpretation": {
+    "authorized_now": [
+      "build exactly one immutable cumulative v2 archive bound to the reviewed global-chart-retraction implementation and contract",
+      "transfer that archive exactly once from local to starteam5090 and exactly once from starteam5090 to A800 using the established two-hop route",
+      "atomically install the archive on A800 and run installed-byte, exact-import, unit-test, frozen-input, released-checkpoint, and submission-absence gates",
+      "after every remote gate passes, create one exclusive submission claim and invoke the v2 submit-once wrapper exactly once",
+      "submit exactly one development-only mechanics regression job using one A800, eight CPU, 64 GiB, and a one-hour limit",
+      "read-only monitor and audit the unique job to terminal state"
+    ],
+    "not_authorized": [
+      "retry, replace, cancel, split, or resubmit job28185 or the v2 development job",
+      "rerun immutable U job28081",
+      "submit training or generate new proposals",
+      "run CHGNet, MatterSim, another MLIP, Materials Project API, S.U.N., hull, held-out, confirmatory, or final-test evaluation",
+      "change the reviewed 8-source by 4-timestep panel, paired noise, F/T call budgets, numerical mechanics gates, released parent, or resource envelope",
+      "claim confirmatory evidence from the reused development panel",
+      "transfer scattered files, use base64 transfer, reconnect the nested A800 SSH session, or connect directly from the local machine to A800"
+    ]
+  },
+  "frozen_identities": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "parent_authorized_patch_manifest_sha256": "b8e987569f9794821921aea149b511f98d192673e39054848955a4cf2e39e134",
+    "v2_contract_sha256": "518e44cc1a94334f8232ee54f4199a3c01436c0768defb9e61e2628a27324a6a",
+    "v2_runner_sha256": "63925aa0b877914b35240e55459026cf10e660665a14304a427c20253ef57a35",
+    "legacy_execution_engine_sha256": "edddded5bbf3aca16b47bfd3e060a374f60e22ff3473e852e88a8c72b7cec3c3",
+    "tangent_bridge_sha256": "127e3c707b1bf79f2fc44d97bccecd8a6de3cb39b8e989a2806c5c7b377bfbaf",
+    "runtime_sha256": "8b5ba104ee1be25ff7f8a14b703193b33920bfd71abd52b1ba1e0d082e909ea4",
+    "source_generation_sha256": "b6eb7f80a29da699407d8d19bbedeb2d657f5d7940cd767d6d71aecb6c58a598",
+    "released_checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "immutable_u_terminal_audit_sha256": "4b77a10d632c33b53b2208d49db19f542081a7fd91d52f038ebe7e5280e2cf41",
+    "immutable_u_selection_sha256": "547c521c96e3375ffc0665d07c9104d605d14cef2e79c92159339eefb5065cc1",
+    "immutable_u_attempts_sha256": "888caaba6683d1b953bf6a7f5a42d9da3d2b432df7a3b1b810b525328b555e94",
+    "immutable_u_terminal_report_sha256": "730dc0f005676f08d160b37006f1d2d9ababddef5e6ebeb0b200f129e062032e",
+    "immutable_job28185_terminal_audit_sha256": "2f686b881479f12b4abdc4c0ece217947c5aeb99c072f6119137e97887905f22"
+  },
+  "authorized_job": {
+    "identity": "wq_wyckoff_chart_retraction_preflight_sup28185_v2",
+    "job_name": "wq-chart-ret-wtb32-v2",
+    "evidence_class": "development_mechanics_regression_only",
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "time_limit_minutes": 60,
+    "cpu_per_a800_gate": "cpus<=8*a800",
+    "evaluation_only": true,
+    "u_rerun": false,
+    "training": false,
+    "new_generation": false,
+    "mlip": false,
+    "external_api": false,
+    "retry_or_replacement_allowed": false
+  },
+  "connection_boundary": {
+    "local_to_starteam_tmux": "wq-starteam:1.0",
+    "starteam_to_a800_user_managed_tmux": "ssha800:1.0",
+    "outer_reconnect_attempts_per_heartbeat": 1,
+    "nested_ssh_reconnect_by_agent_allowed": false,
+    "direct_a800_ssh_scp_sftp_allowed": false,
+    "starteam_to_a800_port": 7001,
+    "starteam_to_a800_explicit_private_key_flag": false
+  },
+  "single_archive_transfer": {
+    "local_to_starteam_once": true,
+    "starteam_to_a800_once": true,
+    "reusable": false,
+    "scatter_file_transfer_allowed": false
+  }
+}

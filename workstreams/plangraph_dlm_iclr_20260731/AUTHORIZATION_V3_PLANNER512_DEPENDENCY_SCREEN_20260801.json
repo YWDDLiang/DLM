@@ -1,0 +1,40 @@
+{
+  "schema": "h1a2_v3_downstream_authorization_v1",
+  "created_at": "2026-08-01",
+  "status": "authorized",
+  "user_authorization": {
+    "planner_512": true,
+    "paired_direct_dependency_margin_screen": true,
+    "verbatim_summary": "授权 Planner-512 和 paired direct-dependency margin screen"
+  },
+  "authorized_scope": {
+    "planner_512_arms": [
+      "P0",
+      "P-control",
+      "P-star"
+    ],
+    "planner_attempts_per_arm": 512,
+    "planner_denominator": "raw_all_attempt",
+    "dlm_dependency_arms": [
+      "B1",
+      "B2"
+    ],
+    "dlm_panel_rows": 100,
+    "dlm_metric": "paired_direct_dependency_margin_v1",
+    "likelihood_only": true,
+    "planner_full_epoch_endpoint_override": "PROTOCOL_OVERRIDE_V3_PLANNER_FULL_EPOCH_ENDPOINT_20260801.json"
+  },
+  "not_authorized": {
+    "body_or_crystal_generation": true,
+    "continuous_refiner_execution": true,
+    "sun_or_mp_api": true,
+    "energy_hull_chgnet_or_mlip": true,
+    "G3_or_G4": true,
+    "automatic_promotion": true,
+    "automatic_downstream": true,
+    "adaptive_threshold_seed_denominator_data_or_checkpoint_change": true
+  },
+  "h1_fallback_read_only": true,
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

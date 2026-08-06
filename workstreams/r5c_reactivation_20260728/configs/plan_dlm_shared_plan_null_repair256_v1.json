@@ -1,0 +1,132 @@
+{
+  "identity": "plan_dlm_shared_plan_null_repair256_v1",
+  "status": "prepared_not_authorized_for_submission",
+  "purpose": "no-training single-trajectory exact-null repair and conditional shared-Plan mechanism confirmation before fully-de-novo H1-A2 evaluation",
+  "claim_boundary": "conditional mechanism gate; not a fully-de-novo or headline S.U.N. result",
+  "training": false,
+  "resources": {
+    "partition": "gpu",
+    "a800_gpus": 1,
+    "cpus": 4,
+    "memory_gb": 64,
+    "time_limit_hours": 8,
+    "hard_rule": "cpus <= 8 * a800_gpus"
+  },
+  "environment": {
+    "path": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+    "network": "offline",
+    "single_environment_for_all_phases": true
+  },
+  "assets": {
+    "dlm_project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+    "shared_plan_project_root": "/public/home/jiaosz/ywliang/ai4s/llm_plan_diff",
+    "raw_r5c_generations": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260531_0040-r5c-full1000-sun/outputs/r5c_sample1000/raw_generations.jsonl",
+      "sha256": "ff6d5ca132bcbfa2615f7e90bddc4c8d8ad427d9083e8ae5fe1eb7374b2526ca",
+      "records": 1200,
+      "eligible_records": 1167
+    },
+    "crysllmgen_checkpoint": {
+      "path": "/public/home/jiaosz/ywliang/models/crysllmgen/mp20/diffusion-22042026-203930/model_494.pt",
+      "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e"
+    },
+    "s2_manifest": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/llm_plan_diff_runs/r5c-shared-plan/s2/20260724T035025Z-093ce0b6a951/training/run_manifest.json",
+      "sha256": "a1bac0ce87f6eb6d0e29839250b77257b9133b64e8b8b57676f598fc6a30cd28"
+    },
+    "s2_best_adapter": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/llm_plan_diff_runs/r5c-shared-plan/s2/20260724T035025Z-093ce0b6a951/training/best_plan_adapter.pt",
+      "sha256": "533fd02fcc9ac5b77594350ee901fab77dc75c8ddef18a7b333edcf2183e097d",
+      "best_validation_step": 250
+    },
+    "future_de_novo_planner": "runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "future_de_novo_body": "runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final"
+  },
+  "implementation_contract": {
+    "condition_present_applied_after_every_learned_transform": true,
+    "null_adapter_delta_bitwise_zero": true,
+    "null_film_delta_bitwise_zero": true,
+    "null_lattice_delta_bitwise_zero": true,
+    "force_null_routes_frozen_parent_decoder_directly": true,
+    "parent_and_exact_null_share_one_reverse_execution": true,
+    "independent_parent_null_cuda_replay_forbidden": true,
+    "stock_parent_source_unchanged": true,
+    "composition_atom_count_and_atom_order_immutable": true
+  },
+  "panels": {
+    "trajectory_parity_smoke": {
+      "attempts": 32,
+      "source": "frozen engineering rows",
+      "scientific_inference": false
+    },
+    "mechanism_confirmation": {
+      "attempts": 256,
+      "source": "eligible frozen R5-C drafts excluding every identity used by the prior 256-record gold gate",
+      "selection": "lowest SHA256 rank under a new frozen seed",
+      "selection_receipt_required_before_execution": true,
+      "prior_outcome_overlap_forbidden": true
+    }
+  },
+  "frozen_mechanism_panel": {
+    "lock": "workstreams/plan_dlm_relaunch_20260728/NULL_REPAIR_SELECTION_LOCK.json",
+    "records": 256,
+    "prior_outcome_overlap_count": 0,
+    "selected_positions_sha256": "1d3d670092da45c78d3adaaddaeeaadee2ffe7efe410660d106b8a7b73cd7e18",
+    "selected_identities_jsonl_sha256": "686a37a826d8c14d41b94238e715e2e5aa6e99c0f92260a76f70f01e9bcbd841",
+    "shuffle_permutation_sha256": "3b75d6133ebe049e759fed94e48c7ad996f13fb486804a4ef343567c909df772",
+    "shuffle_effective_mask_sha256": "9d1176e2b7cc1d0adfc47e4802abc98befe7e70b5b0003d356754d3c351a4e0a"
+  },
+  "arms": {
+    "R0_stock_draft_only": "one untouched CrysLLMGen parent trajectory",
+    "R1_repaired_adapter_null": "semantic alias of the exact same immutable R0 trajectory; no second CUDA replay",
+    "R2_repaired_adapter_matched": "same draft and noise, matched PlanLite",
+    "R3_repaired_adapter_shuffled": "same draft and noise, deterministic within-stratum shuffled PlanLite"
+  },
+  "pairing": {
+    "same_draft": true,
+    "same_composition": true,
+    "same_atom_order": true,
+    "same_reverse_schedule": true,
+    "same_reverse_random_tensors": true,
+    "retry_or_replacement": false,
+    "repair": false,
+    "candidate_pool_or_rerank": false
+  },
+  "gates": {
+    "parent_null_coordinate_hash_equal": true,
+    "parent_null_lattice_hash_equal": true,
+    "parent_null_reverse_execution_count": 1,
+    "matched_minus_shuffled_lattice_family_hit_minimum_fraction": 0.05,
+    "matched_minus_shuffled_paired_95ci_lower_bound_gt_zero": true,
+    "composition_validity_noninferiority_percentage_points": 2.0,
+    "structure_validity_noninferiority_percentage_points": 1.0,
+    "joint_validity_noninferiority_percentage_points": 2.0,
+    "density_wasserstein_noninferiority_absolute": 0.05,
+    "element_count_wasserstein_noninferiority_absolute": 0.05,
+    "coverage_recall_noninferiority_percentage_points": 2.0
+  },
+  "evaluation": {
+    "crysllmgen_direct_metrics": true,
+    "lattice_family_identity": true,
+    "sun": false,
+    "mlip": false,
+    "materials_project_api": false,
+    "dft": false,
+    "note": "S.U.N. begins only in the later fully-de-novo H1-A2 paired panel"
+  },
+  "pre_execution_receipts_required": [
+    "source_patch_sha256",
+    "selection_jsonl_sha256",
+    "prior_identity_exclusion_sha256",
+    "matched_plan_jsonl_sha256",
+    "shuffled_plan_jsonl_sha256",
+    "common_noise_manifest_sha256"
+  ],
+  "outputs": {
+    "new_run_id_required": true,
+    "historical_overwrite_forbidden": true,
+    "terminal_report_count": 1,
+    "per_poll_audit_sidecars": false,
+    "automatic_training_or_downstream_authorized": false
+  }
+}

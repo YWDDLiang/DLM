@@ -1,0 +1,31 @@
+{
+  "schema": "h1a2_v3_scientific_remote_preflight_scope_note_v1",
+  "status": "resolved_without_source_or_protocol_change",
+  "created_at": "2026-08-01",
+  "stage": "pre_submission_A800_source_validation",
+  "observation": {
+    "command_scope": "initially included tests.test_planned_preflight",
+    "failure": "ModuleNotFoundError: crystal_dlm.plangraph_dataset",
+    "tests_before_failure_summary": {
+      "run": 22,
+      "errors": 1
+    }
+  },
+  "root_cause": "The immutable training archive contains the already-materialized training runtime, not the historical CPU dataset-builder module imported only by tests.test_planned_preflight. The real sidecar dataset and its byte/tokenizer preflight had already completed separately.",
+  "resolution": {
+    "source_changed": false,
+    "scientific_protocol_changed": false,
+    "data_changed": false,
+    "model_changed": false,
+    "seed_or_denominator_changed": false,
+    "action": "Narrow the A800 pre-submission suite to modules imported by scientific training and their registered planned-corruption/distributed-runtime tests.",
+    "runtime_import": "passed",
+    "focused_runtime_tests": {
+      "run": 21,
+      "passed": 21,
+      "failed": 0
+    }
+  },
+  "source_archive_sha256": "14de6308a66bf3088dff0341ec368f2a0c2c6282efea1eab2a6627d9b3582b7d",
+  "automatic_downstream": false
+}

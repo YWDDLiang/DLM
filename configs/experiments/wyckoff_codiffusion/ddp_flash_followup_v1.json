@@ -1,0 +1,55 @@
+{
+  "schema": "crysllmgen_lora_ddp_flash_followup_v1",
+  "status": "active_user_authorized_execution_profile",
+  "scientific_attempt": false,
+  "authorization": {
+    "record": "runs/remote_audit/20260723_user_authorization_flash_profile_and_formal_progression_v1.json",
+    "sha256": "912479c51ed022f13d28754ec520da7417747ce19d655738f3f8140eba89cbe0"
+  },
+  "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+  "protocol_v4_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+  "frozen_invariants": {
+    "training_stage": "mixed_edit",
+    "representation": "wyckoff",
+    "training_seed": 11,
+    "world_size": 2,
+    "global_effective_batch": 64,
+    "optimizer_updates": 50,
+    "attention_implementation": "flash_attention_2",
+    "learning_rate_scheduler_epochs_and_example_order": "inherited_unchanged"
+  },
+  "variants": [
+    {
+      "profile_id": "cache4_mb8_acc4_gc_off_flash2",
+      "per_device_microbatch": 8,
+      "gradient_accumulation": 4,
+      "data_mode": "pretokenized_memmap",
+      "dataloader_num_workers": 4,
+      "gradient_checkpointing": false,
+      "gradient_checkpointing_use_reentrant": null
+    }
+  ],
+  "selection": {
+    "primary": "lowest_train_runtime_seconds_per_optimizer_update",
+    "flash_minimum_relative_speedup": 0.02,
+    "flash_maximum_seconds_per_update": 4.0797596,
+    "fallback": "cache4_mb8_acc4_gc_off_sdpa",
+    "sdpa_reference": {
+      "profile_id": "cache4_mb8_acc4_gc_off_sdpa",
+      "seconds_per_update": 4.16302,
+      "report_sha256": "d3d1948088439f8ea0da0d89cbee7551a734308aa51748cfbca88b9de6d57960",
+      "summary_sha256": "c7505653b717d0e072f4d5394347aa9b6b8fc8e1280c376d8fccffe4212170f1"
+    },
+    "required": [
+      "completed_exactly_50_updates",
+      "finite_train_loss",
+      "world_size_2",
+      "global_effective_batch_64",
+      "attention_implementation_flash_attention_2",
+      "no_nan_oom_cuda_traceback_or_nccl_error",
+      "profile_scientific_attempt_false"
+    ],
+    "failed_or_ineligible_flash_policy": "retain_failure_and_select_frozen_sdpa_without_retry",
+    "formal_training_submission": "allowed_only_after_exclusive_execution_selection_record"
+  }
+}

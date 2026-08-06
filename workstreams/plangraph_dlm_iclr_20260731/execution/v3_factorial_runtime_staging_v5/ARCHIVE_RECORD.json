@@ -1,0 +1,19 @@
+{
+  "schema": "h1a2_factorial_runtime_archive_record_v5",
+  "created_at": "2026-08-01",
+  "archive": "source_bundle.tar.gz",
+  "archive_bytes": 717703,
+  "archive_sha256": "62328f3a31b30a8f31fd4f1b3ba4777cfd86f7d881a3577f2d2522814607c04c",
+  "staging_manifest_sha256": "fc37cf63ae18fcfe2417843805993ba6092c588b453c575a3fa17fee46c9a096",
+  "key_source_sha256_file": "4ddec6bb68bb75e2161af3ac9c0e69f3382b6d6222331ad5508cd83da27226bd",
+  "full_source_sha256_file": "55331f77f0b7f23a253b903d42a38944841bd6631f95e3c14abe1b19e2f13936",
+  "archive_file_count": 165,
+  "local_targeted_tests": {
+    "tests_run": 50,
+    "tests_passed": 50
+  },
+  "self_contained_targeted_test_bundle": true,
+  "scientific_training_authorized": false,
+  "submitted": false,
+  "job_ids": []
+}

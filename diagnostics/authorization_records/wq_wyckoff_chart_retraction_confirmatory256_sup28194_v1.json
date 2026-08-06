@@ -1,0 +1,72 @@
+{
+  "schema": "wq_wyckoff_chart_retraction_confirmatory256_sup28194_authorization_v1",
+  "recorded_date": "2026-07-27",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "execution_identity": "wq_wyckoff_chart_retraction_confirmatory256_sup28194_v1",
+  "scientific_identity": "wq_wyckoff_chart_retraction_confirmatory256_v1",
+  "supersedes_failed_job_id": 28194,
+  "user_quote": "同意",
+  "bound_request": "Authorize exactly one audit-sidecar supersession of pre-scientific failed job28194: repair authorization-registry consistency, add regression and pre-claim GateALock validation, build and deploy one new immutable execution patch, and submit the unchanged evaluation-only WTB-256 scientific contract once.",
+  "authorized_once": [
+    "register the previously installed WTB-256 local-preparation label in the runtime Gate-A registry",
+    "register one new exact sup28194 authorization label in both installer and runtime Gate-A registries",
+    "add a registry-parity regression and an exact pre-claim GateALock.load check",
+    "build one deterministic cumulative archive with a new patch-manifest identity",
+    "transfer the exact tar.gz once to starteam and once from starteam to A800 using port 7001 without an explicit private-key flag",
+    "atomically install and verify the exact new patch on A800",
+    "create one new immutable claim and submit the evaluation-only WTB-256 job once with one A800 and eight CPU",
+    "perform read-only monitoring and immutable terminal auditing"
+  ],
+  "scientific_scope_unchanged": {
+    "scientific_contract": "configs/experiments/wyckoff_codiffusion/wq_wyckoff_chart_retraction_confirmatory256_v1.json",
+    "scientific_contract_sha256": "293c026d2f371b592a81e8e4d3982b4cb65ae3b0d90b82bf72a639caae24b77a",
+    "training_seed": 11,
+    "sampling_seed": 101,
+    "ordinal_range": [
+      512,
+      767
+    ],
+    "attempts_per_arm": 256,
+    "arms": [
+      "R",
+      "U",
+      "T"
+    ],
+    "paired_source_and_noise": true,
+    "evaluation_only": true,
+    "training": false,
+    "retry_or_replacement_allowed": false
+  },
+  "preserved_immutable_evidence": {
+    "job28194_terminal_audit": "runs/remote_audit/20260727_wq_wyckoff_chart_retraction_confirmatory256_job28194_terminal_failure_v1.json",
+    "job28194_terminal_audit_sha256": "9d98688876d13e0b84607dba25647c18b37d133a385303a9d4cd8103dd8bad6e",
+    "job28194_submission_record_sha256": "e660623c3fcdb606667379a1d3659d16defdfda8340f64cce3ebb68cc54399a7",
+    "job28194_claim_sha256": "a7870e476ddb2d69dfb9a517bbb6d811c64a4021695ae9cab6c5acf82223caea",
+    "job28194_scientific_attempts": 0
+  },
+  "resource_boundary": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 96,
+    "time_limit": "18:00:00",
+    "cpu_per_a800_gate": "cpus<=8*a800"
+  },
+  "not_authorized": [
+    "training or fine-tuning",
+    "changing the frozen scientific contract, ordinal panel, arms, seeds, pair ids, metrics, S.U.N. protocol, or promotion rule",
+    "retrying, reusing, overwriting, deleting, or renaming job28194 or its claim, record, logs, audit, or empty output directory",
+    "submitting more than one sup28194 scientific job",
+    "reranking, best-of selection, replacement sampling, or changing all-attempt denominators",
+    "using more than eight CPU per A800",
+    "cancelling or modifying unrelated jobs",
+    "reconnecting the user-maintained nested A800 SSH session",
+    "connecting directly from the local machine to A800"
+  ],
+  "connection_boundary": {
+    "local_outer_tmux": "wq-starteam:1.0",
+    "a800_nested_user_managed_tmux": "ssha800:1.0",
+    "starteam_to_a800_port": 7001,
+    "starteam_to_a800_explicit_private_key_flag": false
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "schema_version": "plan-dlm-null-repair-source-patch@1",
+  "identity": "plan_dlm_null_repair_v1",
+  "status": "prepared_not_installed_or_submitted",
+  "created_date": "2026-07-28",
+  "target_project_root": "/public/home/jiaosz/ywliang/ai4s/llm_plan_diff",
+  "historical_source_git_head": "0f5ea2293e3cc7a031be1acf645ed1c225e337a3",
+  "environment": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "resources": {
+    "partition": "gpu",
+    "a800_gpus": 1,
+    "cpus": 4,
+    "memory_gb": 64,
+    "time_limit_hours": 8,
+    "cpus_per_a800_hard_maximum": 8
+  },
+  "training": false,
+  "sun_or_mlip": false,
+  "selection_lock": {
+    "path": "workstreams/plan_dlm_relaunch_20260728/NULL_REPAIR_SELECTION_LOCK.json",
+    "records": 256,
+    "prior_outcome_overlap_count": 0,
+    "selected_positions_sha256": "1d3d670092da45c78d3adaaddaeeaadee2ffe7efe410660d106b8a7b73cd7e18",
+    "selected_identities_jsonl_sha256": "686a37a826d8c14d41b94238e715e2e5aa6e99c0f92260a76f70f01e9bcbd841"
+  },
+  "files": [
+    {
+      "target": "configs/experiments/mp20_plan_dlm_null_repair_v1.yaml",
+      "sha256": "4336edb490e524abc91ab71bf9adabe30513520b2c071425c2f2594791042d4f",
+      "bytes": 5672,
+      "allowed_preinstall_sha256": ["ABSENT"],
+      "mode": "0644"
+    },
+    {
+      "target": "generation/models/plan_conditioned_cspnet.py",
+      "sha256": "508e9dd5184213ed052dd327f3140174864743fb325027e224767501daf14ae6",
+      "bytes": 15205,
+      "allowed_preinstall_sha256": ["508e9dd5184213ed052dd327f3140174864743fb325027e224767501daf14ae6"],
+      "mode": "0644"
+    },
+    {
+      "target": "generation/models/plan_conditioned_diffusion.py",
+      "sha256": "43a6c8e284c41468500c103bfcf08678bbd9a427032b7d4fc77dedf42158eb8f",
+      "bytes": 60043,
+      "allowed_preinstall_sha256": ["7e0cc6167eb2bb40a1a17e87a1d836afdd7c4f15e535cb4b811472e06e18f12f"],
+      "mode": "0644"
+    },
+    {
+      "target": "scripts/evaluate_plan_dlm_null_repair.py",
+      "sha256": "c0e01b031029049624ea2288bbf7889d242aa1842fccc89e4579a19a504d2432",
+      "bytes": 41468,
+      "allowed_preinstall_sha256": ["ABSENT"],
+      "mode": "0755"
+    },
+    {
+      "target": "scripts/assemble_plan_dlm_null_repair.py",
+      "sha256": "c48a96c0712222bf6ce74078fb3bb4660e2934fc9138691fa772864855b142b0",
+      "bytes": 17758,
+      "allowed_preinstall_sha256": ["ABSENT"],
+      "mode": "0755"
+    },
+    {
+      "target": "scripts/prepare_plan_dlm_null_repair_selection.py",
+      "sha256": "2e511b71d11748a0df033dc4532cc930b25b1dbd019eb06a4cdd26bf744a718e",
+      "bytes": 5171,
+      "allowed_preinstall_sha256": ["ABSENT"],
+      "mode": "0755"
+    },
+    {
+      "target": "scripts/run_crysllmgen_metrics.py",
+      "sha256": "9f8b6005fede9bccd0cecd1a00f8eb8a1a29411c6d304227b65e849b2d86241d",
+      "bytes": 5040,
+      "allowed_preinstall_sha256": ["9f8b6005fede9bccd0cecd1a00f8eb8a1a29411c6d304227b65e849b2d86241d"],
+      "mode": "0755"
+    },
+    {
+      "target": "scripts/server/slurm/plan_dlm_null_repair.sbatch",
+      "sha256": "8edafc0b10ac12ead8a8ab462e24e126de4017c44aeab72a853898d346eece09",
+      "bytes": 5168,
+      "allowed_preinstall_sha256": ["ABSENT"],
+      "mode": "0755"
+    },
+    {
+      "target": "scripts/server/submit_plan_dlm_null_repair.sh",
+      "sha256": "f39a8c8c918eeca5bd414a67b5e856d2bcf859a37992cf5b30af19b60a8fe9bb",
+      "bytes": 4526,
+      "allowed_preinstall_sha256": ["ABSENT"],
+      "mode": "0755"
+    },
+    {
+      "target": "tests/test_plan_dlm_null_repair.py",
+      "sha256": "484582ed3dd81c0194612c222b6601ab1c6e3792618303dd2aa5d6406b58a22b",
+      "bytes": 7384,
+      "allowed_preinstall_sha256": ["ABSENT"],
+      "mode": "0644"
+    },
+    {
+      "target": "tests/test_paired_raw_draft_objective.py",
+      "sha256": "381a13a389fceb53b00cabfed3c54489dba5a3c68fc3a32f5c3f6ead6640f0d7",
+      "bytes": 12562,
+      "allowed_preinstall_sha256": ["901911fd6e0de4db8cd74b0da3793118fc7da4a919eb1ef94384fa3911929617"],
+      "mode": "0644"
+    },
+    {
+      "target": "tests/test_plan_conditioned_cspnet_exact_null.py",
+      "sha256": "ce0d3063483016c038e372602d4d19b91a8ad2fe98f505b1123141af4d534418",
+      "bytes": 4836,
+      "allowed_preinstall_sha256": ["7da6ca93a0a0cea7d936490e359d7ece0abe31cd14602758fffdc0b788bbb21a"],
+      "mode": "0644"
+    }
+  ],
+  "local_validation": {
+    "unittest": "42 tests passed; 10 server-only torch/torch_scatter tests skipped",
+    "python_compile": "passed",
+    "bash_syntax": "passed",
+    "selection_recomputation": "passed; frozen_config_matches=true"
+  },
+  "automatic_gpu_submission_authorized": false
+}

@@ -1,0 +1,82 @@
+#!/bin/bash
+set -Eeuo pipefail
+umask 077
+
+PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
+RUN_ROOT="${PROJECT_ROOT}/runs/20260804_h1_crplan_r0_paired32_backend_probe_repair_v4"
+SOURCE_ROOT="${RUN_ROOT}/source"
+EXECUTION_DIR="${SOURCE_ROOT}/workstreams/plangraph_dlm_iclr_20260731/execution/h1_crplan_r0_paired32_backend_probe_repair_v4"
+ADAPTER="${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final/adapter_model.safetensors"
+EXPECTED_ADAPTER_SHA256=65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a
+
+test -d "${SOURCE_ROOT}"
+test -f "${SOURCE_ROOT}/SOURCE_SHA256.txt"
+test -f "${EXECUTION_DIR}/cr0.sbatch"
+test -f "${ADAPTER}"
+test ! -e "${RUN_ROOT}/status/cr0_submission_record.json"
+
+partitions="$(sinfo -h -o '%P' | sed 's/*$//' | sort -u)"
+grep -qx normal <<<"${partitions}"
+
+cd "${SOURCE_ROOT}"
+sha256sum -c SOURCE_SHA256.txt
+SOURCE_MANIFEST_SHA256="$(sha256sum SOURCE_SHA256.txt | cut -d' ' -f1)"
+test "$(sha256sum "${ADAPTER}" | cut -d' ' -f1)" = "${EXPECTED_ADAPTER_SHA256}"
+
+mkdir -p "${RUN_ROOT}/logs" "${RUN_ROOT}/status"
+CR0_JOB_ID="$(
+  sbatch --parsable \
+    --export=ALL,EXPECTED_SOURCE_MANIFEST_SHA256="${SOURCE_MANIFEST_SHA256}",EXPECTED_ADAPTER_SHA256="${EXPECTED_ADAPTER_SHA256}" \
+    "${EXECUTION_DIR}/cr0.sbatch"
+)"
+
+export CR0_JOB_ID SOURCE_MANIFEST_SHA256
+/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python - <<'PY'
+import json
+import os
+from pathlib import Path
+
+path = Path(
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/"
+    "runs/20260804_h1_crplan_r0_paired32_backend_probe_repair_v4/status/"
+    "cr0_submission_record.json"
+)
+payload = {
+    "schema": "h1_crplan_r0_cr0_submission_record_v4",
+    "status": "cr0_submitted",
+    "cr0_job_id": os.environ["CR0_JOB_ID"],
+    "paired32_job_id": None,
+    "paired32_submit_requires_observed_clean_cr0_terminal": True,
+    "source_manifest_sha256": os.environ["SOURCE_MANIFEST_SHA256"],
+    "adapter_model_sha256": (
+        "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
+    ),
+    "partitions_preflight": ["normal"],
+    "runtime_repair": {
+        "predecessor_job_id": "30325",
+        "predecessor_state": "TIMEOUT",
+        "predecessor_elapsed": "00:40:12",
+        "explicit_torch_probability_audit_removed": True,
+        "scientific_protocol_changed": False,
+        "requested_walltime": "02:00:00",
+        "v2_test_import_failure_job_id": "30342",
+        "v2_test_import_failure_state": "FAILED",
+        "v2_test_import_failure_exit_code": "1:0",
+        "v3_gate_failure_job_id": "30346",
+        "v3_gate_failure_state": "FAILED",
+        "v3_gate_failure_exit_code": "2:0",
+        "v3_terminal_report_sha256": (
+            "453291851e900ad8db7551f066c241a164c3786b0901464d0aab7ef56580194e"
+        ),
+        "test_import_targets_immutable_v4_evaluator": True,
+        "cr0_unused_framework_probes_disabled": True,
+        "direct_fixture_gcd_reduction_restored": True,
+        "registered_pauling_fixture": "HSi",
+    },
+    "automatic_four_arm_512": False,
+    "automatic_downstream": False,
+}
+path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+PY
+
+printf 'CR0_JOB_ID=%s\n' "${CR0_JOB_ID}"

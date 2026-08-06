@@ -1,0 +1,33 @@
+{
+  "schema": "h1a2_v3_scientific_training_draft_index_v1",
+  "status": "superseded_by_executable_submissions",
+  "created_at": "2026-08-01",
+  "planner_manifest": "PLANNER_SCIENTIFIC_EXECUTION_MANIFEST_DRAFT.json",
+  "dlm_manifest": "DLM_SCIENTIFIC_EXECUTION_MANIFEST_DRAFT.json",
+  "authorization_boundary": "AUTHORIZATION_BOUNDARY.json",
+  "dlm_learning_rate_decision": "DLM_LEARNING_RATE_DECISION_REQUIRED.json",
+  "blocking_items": [],
+  "completed_prerequisites": {
+    "explicit_scientific_training_authorization": {
+      "record": "../../AUTHORIZATION_V3_SCIENTIFIC_TRAINING_20260801.json",
+      "status": "authorized"
+    },
+    "DLM_fixed_100_row_validation_panel_audit": {
+      "report": "../../DLM_FIXED_PANEL_AUDIT_V1.json",
+      "report_sha256": "47c3a5916ef72b701903ed9a319688eb449d671eecdeec4a50029569123659b5",
+      "panel_ledger_sha256": "f4fad13216eefe51b073c80df5b6d91507db12dbfb7f95603b01ed9858ab03cd"
+    }
+  },
+  "executable_submission_records": [
+    "../v3_pstar_scientific400_v1/SUBMISSION_RECORD.json",
+    "../v3_dlm_scientific1epoch_lr5e5_v1/SUBMISSION_RECORD.json"
+  ],
+  "job_ids": [
+    "29391",
+    "29392",
+    "29393",
+    "29394"
+  ],
+  "submitted": true,
+  "automatic_downstream": false
+}

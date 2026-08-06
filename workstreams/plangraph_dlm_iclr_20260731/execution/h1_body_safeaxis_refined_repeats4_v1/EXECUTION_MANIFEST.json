@@ -1,0 +1,54 @@
+{
+  "schema": "h1_body_safeaxis_refined_repeats4_execution_manifest_v1",
+  "status": "frozen_before_submission",
+  "run_id": "20260802_h1_body_safeaxis_refined_repeats4_v1",
+  "scientific_change": "D1 versus D2-safe-axis body decoding schedule only",
+  "body_generation_rerun": false,
+  "source_body_run": "20260802_h1_body_safeaxis256_v1",
+  "repeats": 4,
+  "repeat_array": "0-3%2",
+  "packed_arms_per_repeat": 2,
+  "balanced_arm_order": [
+    ["control", "candidate"],
+    ["candidate", "control"],
+    ["candidate", "control"],
+    ["control", "candidate"]
+  ],
+  "resources": {
+    "repeat_element": {
+      "gpus": 1,
+      "gpu_type": "NVIDIAA800-SXM4-80GB",
+      "cpus": 8,
+      "memory_gib": 96,
+      "time": "12:00:00"
+    },
+    "assembly": {
+      "partition": "cpu",
+      "cpus": 4,
+      "memory_gib": 16,
+      "time": "01:00:00"
+    },
+    "max_concurrent_repeat_elements": 2
+  },
+  "refiner": {
+    "checkpoint": "model_494",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "reverse_steps": 800,
+    "batch_size": 1,
+    "seed_source": "frozen H1 attempt ledger refiner_noise_seed",
+    "new_seed_per_repeat": false
+  },
+  "evaluation": {
+    "direct": "frozen CrysLLMGen metrics snapshot",
+    "sun": "official staged isolated v8 dependency closure",
+    "mp_api": false,
+    "denominator": "256 raw all-attempt per arm per repeat",
+    "bootstrap_replicates": 50000
+  },
+  "firewall": {
+    "formal_g3": false,
+    "automatic_promotion": false,
+    "automatic_training": false,
+    "automatic_downstream": false
+  }
+}

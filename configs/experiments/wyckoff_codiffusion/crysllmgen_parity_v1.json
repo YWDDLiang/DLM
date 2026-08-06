@@ -1,0 +1,46 @@
+{
+  "schema": "crysllmgen_disabled_extension_parity_v1",
+  "record_status": "corrected_before_gate_a_pass_from_checkpoint_shape_evidence",
+  "upstream_repository": "https://github.com/kdmsit/crysllmgen.git",
+  "upstream_commit": "94bb287751cd20a882c7c1df7ca736633d78e5e1",
+  "upstream_relative_manifest_sha256": "6151615ab1d34ec8d5091d6d1ee89cca2edfde6d07a38e83fe9094098e0a6b7f",
+  "proposal_source": "reference/crysllmgen/data/mp_20/val.csv",
+  "proposal_identity_field": "material_id",
+  "proposal_count": 256,
+  "selection_salt": "crysllmgen-disabled-extension-gate-a-v1",
+  "numeric_tolerance": {
+    "absolute": 1e-6,
+    "relative": 0.0
+  },
+  "required_checks": [
+    "source_snapshot",
+    "atom_parser",
+    "beta_sigma_tables",
+    "checkpoint_mapping",
+    "one_step_csp_tensors",
+    "deterministic_sampler",
+    "attempt_accounting"
+  ],
+  "parser_contract": {
+    "valid_and_invalid_raw_outputs_remain_in_denominator": true,
+    "repair_or_prefix_search": false,
+    "retry_or_replacement": false
+  },
+  "tensor_contract": {
+    "dtype": "float32_unless_upstream_requires_float64",
+    "one_step_batch_size": 8,
+    "one_step_device": "cpu",
+    "deterministic_sampler_batch_size": 4,
+    "scheduler_timesteps": 1000,
+    "parent_run_type": "train",
+    "deterministic_sampler_reverse_steps": 4,
+    "step_lr": 1e-5
+  },
+  "runtime_contract": {
+    "environment": "diff_meets_diff",
+    "gpu_runner": "slurm",
+    "network": "offline",
+    "blas_threads": 1,
+    "world_size": 1
+  }
+}

@@ -1,0 +1,174 @@
+# Machine-readable execution registry. It expands to immutable job cells; it is
+# deliberately separate from protocol_v3, which defines the scientific claim.
+registry:
+  name: wqcodiff_iclr_four_week_v1
+  schema_version: 1
+  protocol: configs/experiments/wyckoff_codiffusion/protocol_v3.yaml
+  status: freeze_with_source_bundle_before_first_gpu_checkpoint
+
+required_environment:
+  MP20_TRAIN_CSV: server_path_discovered_and_recorded_day1
+  MP20_VAL_CSV: server_path_discovered_and_recorded_day1
+  MP20_TEST_CSV: server_path_discovered_and_recorded_day1
+  WQ_MODEL_ROOT: /public/home/jiaosz/ywliang/models/wqcodiff
+  WQ_PROJECT_ROOT: /public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
+
+execution_contract:
+  one_model_lane_per_gpu: true
+  maximum_concurrent_lanes: 4
+  gpu_type: NVIDIAA800-SXM4-80GB
+  gpu_nodes_offline: true
+  all_cuda_through_slurm: true
+  append_only_outputs: true
+  retry_attempts: false
+  training_shared_state: model_optimizer_scheduler_ema_sampler_torch_rng_cuda_rng
+
+week1:
+  cumulative_gpu_hours_max: 180
+  p0_p1_p2:
+    preprocess_shards_per_split: 8
+    preprocess_device: cpu
+    dataset_gate_expected_records: 45229
+    formal_synthetic_transitions: 1000000
+    cuda_smoke_attempts: 2
+  development_data:
+    train_subset_fraction: 0.10
+    selection: lowest_sha256_salt_material_id
+    salt: day7-train-v1
+  training:
+    target_updates: 10000
+    shared_boundary_update: 6000
+    training_seed: 11
+    variants:
+      - B-WQ-AR
+      - B-WQ-D3PM
+      - B-WQ-DLM-MONO
+      - M-WQ-STRAT-CONF
+      - M-WQ-STRAT-GEO
+  threshold_calibration:
+    method: M-WQ-STRAT-GEO
+    thresholds: [0.5, 0.6, 0.7, 0.8, 0.9]
+    structures: 1024
+    corruption_seeds: [101, 202, 303]
+    calls: 16
+    cells:
+      - {level: 0.3, operator: none, geometry: clean, schedule: geometry-adaptive, control: none}
+      - {level: 0.7, operator: joint, geometry: noisy, schedule: geometry-adaptive, control: none}
+      - {level: 0.9, operator: joint, geometry: noisy, schedule: geometry-adaptive, control: none}
+    selection: clean_false_remask_le_0p05_then_max_net_correction_then_higher_threshold
+    output: revision_threshold_lock.json
+  day7_primary_falsification:
+    semantics: full_factorial_only_over_the_listed_primary_axes
+    methods: [B-WQ-AR, B-WQ-D3PM, B-WQ-DLM-MONO]
+    corruption_levels: [0.3, 0.5, 0.7, 0.9]
+    operators: [deletion, false-insertion, wrong-wyckoff, wrong-species, joint]
+    corruption_seeds: [101, 202, 303]
+    structures: 4096
+    geometry: noisy
+    schedule: fixed
+    control: none
+    calls: 16
+    expected_jobs: 180
+    expected_attempts: 737280
+  day7_interventions:
+    semantics: preregistered_1024_subset_not_a_full_cartesian_product
+    corruption_levels: [0.7, 0.9]
+    operator: joint
+    corruption_seeds: [101, 202, 303]
+    structures: 1024
+    calls: 16
+    cells:
+      - {method: M-WQ-STRAT-GEO, geometry: noisy, schedule: fixed, control: none}
+      - {method: M-WQ-STRAT-GEO, geometry: noisy, schedule: discrete-first, control: none}
+      - {method: M-WQ-STRAT-GEO, geometry: noisy, schedule: continuous-first, control: none}
+      - {method: M-WQ-STRAT-GEO, geometry: noisy, schedule: geometry-adaptive, control: none}
+      - {method: M-WQ-STRAT-GEO, geometry: clean, schedule: geometry-adaptive, control: none}
+      - {method: M-WQ-STRAT-GEO, geometry: absent, schedule: geometry-adaptive, control: none}
+      - {method: M-WQ-STRAT-GEO, geometry: shuffled, schedule: geometry-adaptive, control: none}
+      - {method: M-WQ-STRAT-GEO, geometry: noisy, schedule: geometry-adaptive, control: random-count}
+      - {method: M-WQ-STRAT-GEO, geometry: noisy, schedule: geometry-adaptive, control: shuffled-geometry}
+      - {method: M-WQ-STRAT-GEO, geometry: noisy, schedule: geometry-adaptive, control: extra-call}
+      - {method: M-WQ-STRAT-CONF, geometry: noisy, schedule: fixed, control: none}
+      - {method: M-WQ-STRAT-CONF, geometry: noisy, schedule: confidence-adaptive, control: none}
+    expected_jobs: 72
+    expected_attempts: 73728
+
+week2:
+  cumulative_gpu_hours_max: 750
+  full_schedule_updates: 100000
+  shared_boundary_update: 60000
+  screening_stop_update: 85000
+  method_specific_screen_updates: 25000
+  training_seed: 11
+  shared_checkpoints:
+    wyckoff: {variant: B-WQ-JOINT-NOREV, representation: wyckoff_quotient}
+    atom: {variant: B-ATOM-JOINT, representation: dynamic_atom_set_p1}
+  routes:
+    - {name: best_discrete_engine, shared: wyckoff, variant_from_day7_gate: true}
+    - {name: joint_no_revision, shared: wyckoff, variant: B-WQ-JOINT-NOREV}
+    - {name: disc_once, shared: wyckoff, variant: B-WQ-DISC-ONCE, sample_tau: [0.25, 0.5, 0.75, 1.0]}
+    - {name: atom_joint, shared: atom, variant: B-ATOM-JOINT}
+    - {name: stratified_geometry, shared: wyckoff, variant: M-WQ-STRAT-GEO}
+  development_sampling:
+    attempts_per_sampling_seed: 1000
+    sampling_seeds: [101, 202, 303]
+    preflight_attempts: 256
+    backbone_calls: 64
+    pairing_id: week2-matched-screen-v1
+  day14_freeze:
+    comparator: strongest_matched_wyckoff_baseline_only
+    refiner: frozen_topology_preserving_16_call_common_refiner
+    checkpoint_selection: validation_only_then_final_update_ema
+
+week3:
+  cumulative_gpu_hours_max: 1250
+  p5_controls:
+    - fixed-topology
+    - birth-death-only
+    - confidence
+    - geometry
+    - random-count
+    - shuffled-geometry
+    - no-revision
+    - extra-call
+  development_attempts_per_control: 3000
+  sampling_seeds: [101, 202, 303]
+  calls: 64
+  threshold_source: week1.revision_threshold_lock.json
+  p5_gate:
+    mattersim_mlip_sun_at_0p1_gain_min: 0.02
+    all_sampling_seed_directions_positive: true
+    novel_unique_drop_max: 0.02
+  p6:
+    enabled_only_if_p5_passes_by_day17: true
+    updates: 10000
+    guide: chgnet_only
+    heldout_transfer_once: [mattersim, mace]
+    delete_if_transfer_fails: true
+  freeze_day: 21
+
+week4:
+  total_gpu_hours_hard_max: 2050
+  reserved_gpu_hours_min: 800
+  failed_job_buffer_gpu_hours: 80
+  methods: [frozen_champion, frozen_final]
+  missing_training_seeds: [23, 47]
+  checkpoint_deadline_day: 24
+  attempts_per_method: 10000
+  train_seed_allocation_order: [11, 23, 47]
+  train_seed_allocation: [3334, 3333, 3333]
+  multi_mlip_common_attempts_per_method: 6000
+  common_subset: lowest_sha256_method_independent_pair_id
+  stages: [raw, common-refiner, relaxed]
+  evaluators: [chgnet, mattersim, mace]
+  bootstrap_repetitions: 10000
+  artifact_deadline_day: 28
+
+hard_stops:
+  - ssh_session_disconnected
+  - required_model_asset_missing_after_authorized_login_download
+  - protected_python_torch_cuda_numpy_abi_replacement
+  - p0_p1_p2_gate_failure_by_day7
+  - formal_attempt_accounting_failure
+  - day21_freeze_missed
+  - gpu_hours_would_exceed_2050

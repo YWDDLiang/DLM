@@ -1,0 +1,379 @@
+# Immutable scientific contract for the CrysLLMGen-derived Wyckoff cycle.
+protocol:
+  name: crysllmgen_wyckoff_georev_v4
+  schema_version: 4
+  status: preregistered_immutable
+  created: 2026-07-20
+  parent_protocol: configs/experiments/wyckoff_codiffusion/protocol_v3.yaml
+  parent_role: historical_day7_dlm_diagnostic_only
+  paper_claim: symmetry_native_wyckoff_handoff_with_geometry_triggered_dimension_changing_feedback
+
+scope:
+  papers: 1
+  domain: unconditional_crystal_generation_only
+  dataset: MP20
+  primitive_atom_count: [1, 20]
+  dft: forbidden
+  mlip_values_may_be_called_dft: false
+  initial_global_mask: forbidden
+  semantic_padding_or_null_canvas: forbidden
+  committed_space_group_rollback: forbidden
+  active_topology_events: [orbit_birth, orbit_death, wyckoff_type_change, species_change]
+  prohibited_rescue_routes: [DLM, D3PM, MP-Doob, relaxation_guidance]
+  legacy_dlm_location: legacy_dlm_r5c
+
+upstream_lineage:
+  repository: https://github.com/kdmsit/crysllmgen.git
+  commit: 94bb287751cd20a882c7c1df7ca736633d78e5e1
+  license: MIT
+  snapshot_root: crystal_dlm/wqcodiff/crysllmgen/upstream
+  snapshot_manifest: crystal_dlm/wqcodiff/crysllmgen/UPSTREAM_MANIFEST.json
+  snapshot_manifest_sha256: 334dda2240aa90c007e13222410d08241a25ff9ba50d6f36c99db368debe28bb
+  disabled_extension_contract: configs/experiments/wyckoff_codiffusion/crysllmgen_parity_v1.json
+  disabled_extension_contract_sha256: 05ba51c341c63473d865d79110e18a29ffa572244eb9fd35a5ae7009ef0ff977
+  parity_numeric_tolerance: 1.0e-6
+  parity_proposals: 256
+
+assets:
+  llama:
+    path: /public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct
+    preflight: configs/experiments/wyckoff_codiffusion/model_asset_preflight_meta_llama3_8b_instruct_v1.json
+    preflight_sha256: 6785a879c804338a9a38b8303f2ecbfc783392f04f21028e84be000b6fcee5f0
+    architecture: LlamaForCausalLM
+    dtype: bfloat16
+    local_files_only: true
+    trust_remote_code: false
+  official_atom_lora:
+    path: /public/home/jiaosz/hengzhang/Code/crysllmgen-main/exp/8b-mp-llama3-v1
+    preflight: configs/experiments/wyckoff_codiffusion/model_asset_preflight_crysllmgen_atom_lora_v1.json
+    preflight_sha256: ea8f18697924c5093d8044325c92a1815ac249dc89b66c4e7ee43f748ead362e
+    use: C-ATOM-OFFICIAL_only
+    rank: 8
+    target_modules: [q_proj, v_proj]
+  cspdiffusion:
+    path: /public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt
+    preflight: configs/experiments/wyckoff_codiffusion/model_asset_preflight_crysllmgen_mp20_v1.json
+    preflight_sha256: 14d48bfd58ee69833ec9ccf85dd61c976cb32c49ce4bebacf959f204c467f8a1
+    sha256: 573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e
+    scheduler_timesteps: 1000
+    official_reverse_start_timestep: 800
+    upstream_run_type: train
+  missing_or_compute_inaccessible_action: stop_and_ask_user
+
+grammar:
+  contract: configs/experiments/wyckoff_codiffusion/crysllmgen_wq_grammar_v1.json
+  contract_sha256: ef01137ece7745ea1d353d86bcd9512d709d15880b1b87f495537c8ad560df98
+  proposal_layout: SG_Q_ordered_presentation_orbits_STOP
+  exact_byte_parser: true
+  finite_state_constrained_decoding: true
+  answer_only_supervision: true
+  tokenizer_vocabulary_resize: false
+  continuous_bins: 256
+  orbit_training_presentation: seed_derived_random_per_epoch
+  canonical_orbit_order_use: [storage, hashing, evaluation]
+  de_novo_initial_mask: false
+  edit_commands: [NOOP, BIRTH, DEATH, TYPE, SPECIES]
+  edit_commands_per_llama_invocation_max: 1
+  invalid_next_probability_zero_before_normalization: true
+
+attempt_contract:
+  attempt_id_fields: [protocol_name, experiment_id, training_seed, sampling_seed, ordinal, method]
+  pair_id_fields: [protocol_name, pairing_id, training_seed, sampling_seed, ordinal]
+  seed_derivation: SHA256
+  preserve_across_world_sizes: true
+  one_terminal_status_per_stage: true
+  append_only_jsonl_and_parquet: true
+  retry_failed_attempt: forbidden
+  replacement_sampling: forbidden
+  output_dependent_selection: forbidden
+  generate_more_select_less: forbidden
+  best_of_seed: forbidden
+  failures_timeouts_nonconvergence_in_denominator: true
+  model_identity_required: [llama_base_sha, lora_sha, csp_checkpoint_sha]
+  compute_fields_required: [prompt_tokens, generated_tokens, llama_forwards, csp_forwards, flops, walltime, gpu_hours]
+
+methods:
+  primary:
+    C-ATOM-OFFICIAL:
+      representation: official_atom_text
+      llama_adapter: official_rank8
+      csp_reverse_steps: 800
+      csp_forwards: 1600
+      topology_feedback: none
+      role: upstream_reproduction
+    C-ATOM-MATCHED:
+      representation: attempt_compliant_atom_text
+      llama_adapter: matched_rank16
+      csp_reverse_steps: 32
+      csp_forwards: 64
+      topology_feedback: none
+      role: matched_engineering_compute_control
+    C-WQ-HANDOFF:
+      representation: wyckoff_quotient
+      llama_adapter: shared_wq_rank16
+      csp_reverse_steps: 32
+      csp_forwards: 64
+      topology_feedback: none
+      role: representation_and_one_way_control
+    C-WQ-CONFEDIT:
+      representation: wyckoff_quotient
+      llama_adapter: shared_wq_rank16
+      csp_reverse_steps: 32
+      csp_forwards: 64
+      topology_feedback: confidence_only
+      role: non_geometric_edit_control
+    C-WQ-GEOREV:
+      representation: wyckoff_quotient
+      llama_adapter: shared_wq_rank16
+      csp_reverse_steps: 32
+      csp_forwards: 64
+      topology_feedback: geometry_triggered
+      role: final_candidate
+  inference_controls:
+    - C-WQ-BIRTH-DEATH-ONLY
+    - C-WQ-RANDOM-MATCHED-COUNT
+    - C-WQ-SHUFFLED-GEOMETRY
+    - C-WQ-EXTRA-CALL-IGNORED
+  validation_only_diagnostics:
+    - C-WQ-FORWARD-NOISED-INJECTION
+    - C-WQ-ORACLE-TRIGGER-PAYLOAD
+    - C-WQ-CANONICAL-ORDER
+    - C-WQ-FROZEN-LLAMA
+  controls_train_separate_models: false
+  matched_count_control_reference: frozen_C-WQ-GEOREV_pair_id_revision_steps
+
+llama_training:
+  base_frozen: true
+  precision: bf16
+  # Full MP20 atom records cannot be represented losslessly at 256 tokens
+  # (empirical pre-Gate audit: 19,545/81,405 overlength).  Both matched
+  # representations therefore share the same 512-token optimizer contract.
+  max_sequence_length: 512
+  chat_template: registered_checkpoint_official
+  system_prompt: Return exactly one crystal record in the registered grammar.
+  answer_only_supervision: true
+  lora:
+    rank: 16
+    alpha: 32
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+  optimizer: AdamW
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-2
+  warmup_fraction: 0.03
+  scheduler: cosine
+  gradient_clip: 1.0
+  gradient_checkpointing: true
+  effective_batch_sequences: 64
+  only_oom_fallback: microbatch_half_and_double_accumulation
+  coarse_proposal:
+    train_split_only: true
+    epochs: 3
+    checkpoint: final_epoch
+    matched_atom_same_optimizer_tokens: true
+  shared_wq_edit_stage:
+    optimizer_updates: 20000
+    initial_proposal_fraction: 0.5
+    direct_edit_fraction: 0.5
+    direct_edit_clean_negative_fraction: 0.2
+    corruption_levels: [0.3, 0.5, 0.7, 0.9]
+    corruption_operators: [deletion, false_insertion, wrong_wyckoff, wrong_species, joint]
+    geometry_conditions: [clean, noisy, shuffled, absent]
+    checkpoint: final_update
+
+wq_refiner_training:
+  initialization: registered_crysllmgen_cspdiffusion
+  compatible_parameter_mapping_report_required: true
+  total_optimizer_updates: 100000
+  stages:
+    - {name: chart_projection_bridge_warmup, updates: 20000, inherited_csp_frozen: true}
+    - {name: shared_joint_geometry, updates: 40000, inherited_csp_frozen: false}
+    - {name: event_revision_coupled_geometry, updates: 40000, inherited_csp_frozen: false}
+  effective_batch_structures: 128
+  only_oom_fallback: microbatch_64_accumulation_2
+  optimizer: AdamW
+  learning_rate: 2.0e-4
+  weight_decay: 1.0e-2
+  warmup_fraction: 0.05
+  scheduler: cosine
+  gradient_clip: 1.0
+  ema: 0.999
+  endpoint_checkpoint_only: true
+  component_gradient_audit_required: true
+
+closed_loop:
+  space_group_fixed_after_proposal: true
+  target_stratum_bridge_retry: forbidden
+  topology_events_per_reverse_step_max: 1
+  llama_called_only_when_triggered: true
+  edits_per_field_max: 2
+  total_edits_max: half_initial_field_count
+  geometry_evidence:
+    - collision_deficit
+    - coordination_anomaly
+    - lattice_strain
+    - symmetry_residual
+    - continuous_score_norm
+    - denoising_basin_uncertainty
+  llama_evidence_bins: 16
+  mlip_evidence_allowed: false
+  threshold_grid: [0.5, 0.6, 0.7, 0.8, 0.9]
+  threshold_selection: clean_false_edit_le_5_percent_then_max_net_correction_then_higher_threshold
+  threshold_split: validation_corruption_only
+  threshold_calibration_attempts: 1024
+  threshold_calibration_uses_actual_llama_edit: true
+  threshold_lock_required_for_all_editing_methods: true
+  matched_controls:
+    random_count: same_pair_same_initial_noise_same_georev_revision_steps
+    shuffled_geometry: same_pair_same_initial_noise_same_georev_revision_steps
+    extra_call_ignored: same_pair_same_initial_noise_one_ignored_csp_call_per_georev_revision
+
+sampling:
+  development_sampling_seeds: [101, 202, 303]
+  smoke_attempts: 256
+  development_attempts_per_seed: 1000
+  final_training_seeds: [11, 23, 47]
+  final_attempt_allocation: [3334, 3333, 3333]
+  final_attempts_per_method: 10000
+  common_multi_mlip_attempts_per_method: 6000
+  handoff_tau_grid: [0.25, 0.5, 0.75, 1.0]
+  main_injection: direct_crysllmgen_injection
+  sensitivity_injection: correctly_forward_noised_validation_only
+  checkpoint_selection_by_test_or_mlip: forbidden
+  matched_atom_respacing:
+    algorithm: parent_pc_skip_v1
+    direct_crysllmgen_injection: true
+    csp_calls_per_timestep: 2
+    timesteps: [800, 774, 748, 723, 697, 671, 645, 620, 594, 568, 542, 516, 491, 465, 439, 413, 388, 362, 336, 310, 285, 259, 233, 207, 181, 156, 130, 104, 78, 53, 27, 1]
+
+gates:
+  A:
+    before_training: true
+    required:
+      - source_and_disabled_extension_parity
+      - compute_node_asset_readability
+      - offline_llama_bf16_forward
+      - one_million_legal_grammar_transitions
+      - constrained_256_parse_and_topology_legality_100_percent
+      - no_retry_or_replacement
+    failure_action: stop_llama_route_and_ask_user
+  B:
+    smoke_attempts_per_configuration: 256
+    handoff_tau_selection_rule: max_r5c_sun0p1_then_novel_unique_then_success_then_lower_flops_then_higher_tau
+    official_reproduction_reference:
+      comp_valid_percent: 89.2
+      struct_valid_percent: 99.9
+      cov_recall_percent: 94.1079
+      cov_precision_percent: 99.5
+    official_reproduction_tolerances:
+      comp_valid_absolute_pp_max: 15.0
+      struct_valid_percent_min: 95.0
+      cov_recall_percent_min: 80.0
+      cov_precision_percent_min: 90.0
+    wq_roundtrip_rate_min: 0.99
+    wq_topology_validity_margin_vs_atom_min: 0.0
+    collapse_guard:
+      valid_percent_min: 70.0
+      cov_recall_percent_min: 80.0
+      cov_precision_percent_min: 90.0
+      density_wasserstein_max: 1.5
+      element_count_wasserstein_max: 0.5
+    required:
+      - validation_answer_nll_better_than_frozen_backbone
+      - all_sampling_seeds_parser_and_legality_pass
+      - no_severe_distribution_collapse
+      - wq_not_worse_than_atom_matched_topology_validity
+      - official_atom_reproduction_credible
+      - wq_parser_valid_expand_refine_roundtrip_at_least_99_percent
+    failure_action: remove_large_llama_main_route
+  C:
+    development_attempts: 3000
+    sampling_seed_attempts: {101: 1000, 202: 1000, 303: 1000}
+    paired_revision_precision: sun_wrong_to_right_over_all_sun_changed_pairs
+    comparator: frozen_best_C-WQ-HANDOFF
+    causal_controls:
+      - C-WQ-CONFEDIT
+      - C-WQ-BIRTH-DEATH-ONLY
+      - C-WQ-RANDOM-MATCHED-COUNT
+      - C-WQ-SHUFFLED-GEOMETRY
+      - C-WQ-EXTRA-CALL-IGNORED
+    mattersim_mlip_sun_at_0p1_gain_min_pp: 2.0
+    all_sampling_seed_directions_positive: true
+    novel_unique_drop_max_pp: 2.0
+    revision_precision_above_right_to_wrong: true
+    causal_controls_cannot_reproduce_gain: true
+    compute_ratio_max: 2.0
+    failure_action: remove_flagship_revision_claim
+  oral:
+    mattersim_mlip_sun_at_0p1_gain_min_pp: 5.0
+    gain_95ci_lower_bound_min_pp: 2.0
+    mattersim_mace_unanimous_gain_min_pp: 3.0
+    all_training_seeds_and_structure_stages_positive: true
+    novel_unique_drop_max_pp: 2.0
+    major_family_matcher_orbit_subgroups_positive: true
+    compute_ratio_max: 2.0
+
+evaluation:
+  families: 10
+  configuration_ids: 13
+  inherited_crysllmgen_metrics_unchanged: true
+  crysllmgen_metric_workers: 1
+  structure_stages: [raw, common_refiner, mlip_relaxed]
+  mlip:
+    guide: CHGNet-0.3.0
+    primary: MatterSim-v1.0.0-5M
+    secondary: MACE-MP-0b3-medium
+    thresholds_ev_per_atom: [0.0, 0.1]
+    evaluator_specific_energy_cache_and_hull: true
+    consensus: [per_evaluator, two_of_three, three_of_three, MatterSim_and_MACE_unanimous]
+  sun_executor:
+    lineage: r5c_full1000_sun
+    script: scripts/run_mattergen_sun_eval.py
+    script_sha256: 510bcf297247dfab7a77ff7aa564072806f49b0c212fe670d3221d1788ef305b
+    denominator: every_attempt_including_failure_unsupported_nonconverged
+    primary_checkpoint_override: MatterSim-v1.0.0-5M.pth
+    relax_max_steps: 500
+    relax_fmax: 0.05
+    max_natoms_per_batch: 512
+  novelty_reference: train_only
+  structure_matcher:
+    strict: {ltol: 0.1, stol: 0.15, angle_tol: 2.0}
+    standard: {ltol: 0.2, stol: 0.3, angle_tol: 5.0}
+    lenient: {ltol: 0.3, stol: 0.5, angle_tol: 10.0}
+    primitive_cell: true
+    scale: true
+    attempt_supercell: false
+  bootstrap_repetitions: 10000
+  bootstrap_levels: [training_seed, sampling_seed, duplicate_cluster]
+  secondary_confirmatory_correction: Holm
+
+execution:
+  project_root: /public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
+  conda_environment: diff_meets_diff
+  maximum_a800_gpus: 4
+  one_model_lane_per_gpu: true
+  gpu_nodes_offline: true
+  cuda_only_through_slurm: true
+  server_git_operations: forbidden
+  local_source_is_authoritative: true
+  source_transfer: scp_from_local_then_hash_verify
+  threads:
+    OPENBLAS_NUM_THREADS: 1
+    OMP_NUM_THREADS: 1
+    MKL_NUM_THREADS: 1
+    NUMEXPR_NUM_THREADS: 1
+  offline:
+    HF_HUB_OFFLINE: 1
+    TRANSFORMERS_OFFLINE: 1
+
+compute_funnel:
+  calendar_days_max: 28
+  a800_gpu_hours_hard_ceiling: 2050
+  already_consumed_counts_toward_ceiling: true
+  gate_a_new_gpu_hours_max: 70
+  gate_b_cumulative_new_gpu_hours_max: 320
+  matched_screening_cumulative_new_gpu_hours_max: 670
+  mechanism_cumulative_new_gpu_hours_max: 970
+  final_reserve_gpu_hours_min: 800
+  failure_buffer_gpu_hours: 80
+  freeze_day: 21

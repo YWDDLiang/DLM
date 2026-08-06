@@ -1,0 +1,77 @@
+{
+  "schema": "h1a2_v3_b1_b2_scientific_one_epoch_lr5e5_execution_v1",
+  "status": "prepared_authorized_not_submitted",
+  "created_at": "2026-08-01",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1",
+  "authorization": "../../AUTHORIZATION_V3_SCIENTIFIC_TRAINING_20260801.json",
+  "authorization_sha256": "4220233e1b968e7a8c464554d7d1fa48c8ae7febe6d9fab62ff4433a55626fbd",
+  "protocol_override": "../../PROTOCOL_OVERRIDE_V3_DLM_LR5E5_AUTHORIZED_20260801.json",
+  "protocol_override_sha256": "248386b9499ed8aaffa5587d28b7ba9bfea9b03f61eb9cc12f2e3311bb6017ed",
+  "arms": {
+    "0": {
+      "arm": "B1",
+      "policy": "d1"
+    },
+    "1": {
+      "arm": "B2",
+      "policy": "d2"
+    }
+  },
+  "array": "0-1%1",
+  "initialization": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+  },
+  "data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2",
+    "manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+    "train_rows": 27136,
+    "validation_rows": 9047
+  },
+  "training": {
+    "epochs": 1,
+    "optimizer_updates": 1696,
+    "world_size": 2,
+    "batch_size_per_rank": 1,
+    "gradient_accumulation": 8,
+    "global_effective_batch": 16,
+    "learning_rate": 0.00005,
+    "scheduler": "cosine",
+    "warmup_updates": 100,
+    "minimum_lr_ratio": 0.2,
+    "validation_steps": [
+      0,
+      212,
+      424,
+      636,
+      848,
+      1060,
+      1272,
+      1484,
+      1696
+    ],
+    "validation_rows": 100,
+    "validation_panel_report_sha256": "47c3a5916ef72b701903ed9a319688eb449d671eecdeec4a50029569123659b5",
+    "early_stopping": false,
+    "eligible_checkpoint": "terminal_step_1696_only"
+  },
+  "resources_per_arm": {
+    "partition": "gpu",
+    "a800": 2,
+    "cpus": 8,
+    "memory_gib": 64,
+    "walltime": "02:00:00",
+    "maximum_concurrent_arms": 1
+  },
+  "risk_evidence": {
+    "two_update_smoke_at_same_lr_adverse": true,
+    "B1_relative_validation_increase": 0.079,
+    "B2_relative_validation_increase": 0.0652,
+    "user_override_authorized": true
+  },
+  "scientific_training_authorized": true,
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "job_ids": []
+}

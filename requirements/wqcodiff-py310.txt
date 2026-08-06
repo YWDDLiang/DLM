@@ -1,0 +1,6 @@
+# Top-level, login-node-resolved dependencies for the registered evaluator stack.
+# Torch is constrained separately and must never be replaced by the resolver.
+pyxtal==1.1.4
+chgnet==0.4.2
+mattersim==1.1.2
+mace-torch==0.3.13

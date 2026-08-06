@@ -1,0 +1,16 @@
+{
+  "authorization_basis": "User said '开始推进' on 2026-08-02 after requiring all future work to start from H1 and change only one factor at a time.",
+  "automatic_downstream": false,
+  "scope": {
+    "body_generation": false,
+    "checkpoint_selection": false,
+    "crystal_generation": false,
+    "model_inference": false,
+    "model_training": false,
+    "plan_conversion_preflight": true,
+    "refinement": false,
+    "sun_evaluation": false
+  },
+  "schema": "h1_real_ledger_plan_preflight_authorization_v1",
+  "status": "user_authorized"
+}

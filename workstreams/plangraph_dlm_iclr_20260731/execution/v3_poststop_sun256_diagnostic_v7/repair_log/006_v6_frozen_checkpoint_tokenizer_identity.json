@@ -1,0 +1,62 @@
+{
+  "schema": "h1a2_v3_poststop_sun256_repair_log_v6",
+  "status": "repair_prepared_before_submission",
+  "failed_source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/v3_poststop_sun256_diagnostic_v6",
+  "failed_source_manifest_sha256": "f23b5a01be28d23f3c71f6bdd41347259d1ed52293b7072bb49e1fa5bd32f0cf",
+  "failed_source_archive_sha256": "20d966eb26a0409c3dcd6334313c35daeff62505d4512e273ff69749bbeb85fe",
+  "failed_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_poststop_sun256_diagnostic_v6",
+  "failed_jobs": {
+    "end_to_end_arm_array": "29540_[0-3]%2",
+    "assembly": "29541"
+  },
+  "sacct": {
+    "29540_0": "FAILED 1:0",
+    "29540_1": "FAILED 1:0",
+    "29540_2": "FAILED 1:0",
+    "29540_3": "FAILED 1:0",
+    "29541": "FAILED 1:0"
+  },
+  "root_cause": {
+    "class": "preflight_reconstructed_tokenizer_identity_used_for_checkpoint_inference",
+    "error": "body tokenizer vocabulary SHA mismatch",
+    "incorrect_expected_vocab_sha256": "dd3968132cdd9f75f92363a842d26a8d083a4a05f0411ee856ba5e473090815d",
+    "observed_frozen_checkpoint_vocab_sha256": "3acc073da85047265769f2dccd93543fa9d7cbfa95021aef54ef282b13ce2f37",
+    "message": "The gate used a tokenizer identity from a standalone preflight reconstruction rather than the tokenizer serialized with the frozen R5-C/B1/B2 checkpoints. The runner correctly loads the checkpoint tokenizer, so the mismatched constant stopped every arm before body generation.",
+    "plan_preparation_completed": true,
+    "body_generation_started": false,
+    "diffusion_refinement_started": false,
+    "direct_metrics_started": false,
+    "sun_evaluation_started": false,
+    "partial_scientific_outputs_reused": false
+  },
+  "frozen_checkpoint_tokenizer_audit": {
+    "r5c_b0_b1_b2_vocabularies_exactly_equal": true,
+    "r5c_b0_b1_b2_data_token_ids_exactly_equal": true,
+    "tokenizer_size": 128830,
+    "data_vocab_tokens": 2481,
+    "missing_data_vocab_tokens": 0,
+    "tokenizer_vocab_sha256": "3acc073da85047265769f2dccd93543fa9d7cbfa95021aef54ef282b13ce2f37",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "tokenizer_config_sha256": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+    "pad_token_id": 126081,
+    "eos_token_id": 126081
+  },
+  "repair": {
+    "new_source_version": "v3_poststop_sun256_diagnostic_v7",
+    "new_run_id": "20260801_h1a2_v3_poststop_sun256_diagnostic_v7",
+    "behavior": "Keep the exact fail-closed vocabulary gate, point it at the audited tokenizer serialized identically with B0 and B2, and add exact tokenizer.json and tokenizer_config.json SHA checks before model loading.",
+    "old_source_or_run_overwritten": false
+  },
+  "scientific_protocol_changes": {
+    "planner_checkpoint": false,
+    "body_checkpoint": false,
+    "body_tokenizer_or_token_ids": false,
+    "refiner_checkpoint": false,
+    "diffusion_reverse_steps": false,
+    "ordinals_or_seeds": false,
+    "denominator": false,
+    "raw_plan_advisory_policy": false,
+    "retry_replacement_repair_filter_rerank": false,
+    "sun_cache_or_thresholds": false
+  }
+}

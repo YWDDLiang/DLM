@@ -1,0 +1,35 @@
+{
+  "schema": "h1_exact_replay_execution_manifest_v1",
+  "identity": "h1_exact_replay_p0_v1",
+  "date": "2026-08-02",
+  "mode": "zero_scientific_change_reproducibility_gate",
+  "frozen_source": {
+    "directory": "workstreams/r5c_reactivation_20260728/h1a2_epoch2_innovation/sun_exploratory_p0_p1_v1",
+    "source_manifest_sha256": "f4a4e94a6df1acb10e8c6ad8d0b712448371d1dcea79027f6c2b07b8a3303d34"
+  },
+  "frozen_input": {
+    "run_root": "runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1",
+    "attempt_ledger_sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f",
+    "planner_arm": "P0",
+    "attempts": 256,
+    "body_adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "refiner_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "reverse_steps": 800
+  },
+  "frozen_reference_output": {
+    "body_attempts_sha256": "d1970e1499e8837d1b837a085005fdcbbc24c9ca12e2999d2f0e3c36d015816f",
+    "generation_jsonl_sha256": "d740b48be9ed83717ffd0575e9111afc69df1195a320ecac4abf48ee483d3e0e"
+  },
+  "new_run_root": "runs/20260802_h1_exact_replay_p0_v1",
+  "resources": {
+    "partition": "gpu",
+    "gpu": "1x NVIDIA A800-SXM4-80GB",
+    "cpus": 8,
+    "memory": "96G",
+    "time_limit": "02:00:00"
+  },
+  "scientific_changes": [],
+  "direct_metrics": false,
+  "sun": false,
+  "automatic_downstream": false
+}

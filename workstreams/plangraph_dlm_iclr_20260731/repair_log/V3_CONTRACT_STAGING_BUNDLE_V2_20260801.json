@@ -1,0 +1,22 @@
+{
+  "schema": "h1a2_v3_staging_bundle_repair_v1",
+  "status": "repair_complete",
+  "created_at": "2026-08-01",
+  "scope": "file_transfer_and_remote_test_staging_only",
+  "failed_staging_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_contract_drafts_staging_v1",
+  "root_cause": "Minimal archive transferred the new module and test but omitted imported repository modules and the existing tests package, so remote unittest discovery could not import the test target.",
+  "preserved_evidence": true,
+  "repair": "Build a new v2 archive containing the complete crystal_dlm Python package plus only the three targeted test modules and blocked draft documents.",
+  "scientific_protocol_changed": false,
+  "model_data_seed_denominator_changed": false,
+  "job_submitted": false,
+  "GPU_used": false,
+  "H1_assets_modified": false,
+  "repair_result": {
+    "archive_sha_match_local_outer_A800": true,
+    "key_source_sha_checks_passed": "5/5",
+    "new_contract_tests_passed_on_A800": "7/7",
+    "model_loaded": false,
+    "slurm_job_submitted": false
+  }
+}

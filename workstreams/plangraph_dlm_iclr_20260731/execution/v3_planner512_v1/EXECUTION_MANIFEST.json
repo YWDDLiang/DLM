@@ -1,0 +1,74 @@
+{
+  "schema": "h1a2_v3_planner512_execution_v1",
+  "status": "prepared_authorized_not_submitted",
+  "created_at": "2026-08-01",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_v3_planner512_v1",
+  "authorization": "../../AUTHORIZATION_V3_PLANNER512_DEPENDENCY_SCREEN_20260801.json",
+  "authorization_sha256": "c6f2a4b38f0b95294619b456911e169fce18797984dc19529d16d7a100ecd476",
+  "protocol": "../../PROTOCOL_ADDENDUM_V3_PLANNER512_DEPENDENCY_MARGIN_20260801.json",
+  "protocol_sha256": "60bcc2908025f25b87a3ed47fc9e2ddbd9bef6789747d3673558e71d91e732f6",
+  "full_epoch_endpoint_override": "../../PROTOCOL_OVERRIDE_V3_PLANNER_FULL_EPOCH_ENDPOINT_20260801.json",
+  "full_epoch_endpoint_override_sha256": "37dcf618d761706c35a17ec5792390cebe71f743b6162a392001bed7bde69e3b",
+  "planner_training_terminal": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pcontrol_pstar_scientific400_v1/terminal_report.json",
+  "planner_training_terminal_sha256": "ecaf779e8a892d211362480729f02913454cab8a3e5b86ac520dad9fbd134e12",
+  "arms": {
+    "0": {
+      "arm": "P0",
+      "step": 2,
+      "checkpoint_identity_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
+    },
+    "1": {
+      "arm": "P-control",
+      "step": 400,
+      "complete_epoch": true,
+      "checkpoint_identity_sha256": "8fa09305d22d113e7567daefaba886fe0774feb9ece7c13664214670d20d6c50"
+    },
+    "2": {
+      "arm": "P-star",
+      "step": 400,
+      "complete_epoch": true,
+      "checkpoint_identity_sha256": "617aebf19e9b13ec84d7751bdc3824c13eb4fb639f8ccc5067dcf5fc3f84e950"
+    }
+  },
+  "array": "0-2%1",
+  "sampling": {
+    "attempts_per_arm": 512,
+    "ordinals": "0..511",
+    "denominator": "raw_all_attempt",
+    "seed": 17029,
+    "seed_mode": "stateless_ordinal_v1",
+    "prompt_style": "h1_rich_plan_v1",
+    "include_sample_id": false,
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "max_atoms": 20,
+    "retry_replacement_repair_filter_or_rerank": false
+  },
+  "resources_per_arm": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "walltime": "04:00:00",
+    "maximum_concurrent_arms": 1
+  },
+  "composition_validity_engineering_fix": {
+    "source": "../g1_source_v2/crystal_dlm/composition_validity.py",
+    "source_sha256": "3dd5982a9dd69a1402c3e5be75d1c4eeae00ec33d8b293e02cdb0b9905539918",
+    "repair_log": "../../repair_log/G1_SMACT_ENUMERATION_STALL_REPAIR_V2.json",
+    "repair_log_sha256": "3aa26690019310610ede1a88de9b09fca257ec9bb3c50a4d7890f1215fab04c7",
+    "semantics": "exact_suffix_charge_bounds_pruning_preserves_product_order_and_validity"
+  },
+  "selection": {
+    "registered_before_sampling": true,
+    "generation_or_sun_or_energy_used_for_checkpoint_selection": false,
+    "scientific_stop_retains_P0": true
+  },
+  "planner_512_authorized": true,
+  "crystal_generation_or_sun_authorized": false,
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "job_ids": []
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "npdlm_parallel_plan_release_manifest_v1",
+  "status": "decision_only_parallel_track_no_execution_authorization",
+  "date": "2026-08-04",
+  "working_name": "H1-NPDLM",
+  "user_decision": "register an N-conditioned external-Planner-free DLM plan in parallel with the existing Planner plan",
+  "plan": {
+    "path": "workstreams/plangraph_dlm_iclr_20260731/H1_NOPLAN_NCONDITIONED_PARALLEL_PLAN_V1.md",
+    "sha256": "14578ad8f9de7cdcb9c228e5c8b962f1d3f7afa217db0a6d718f554383f25942"
+  },
+  "historical_portfolio_evidence": {
+    "roadmap_path": "workstreams/plangraph_dlm_iclr_20260731/ICLR2027_TIMEBOXED_FULL_IMPROVEMENT_ROADMAP_V1.md",
+    "roadmap_sha256": "47e0b9fe1ce1a891edf0df9744e8e8d68cd9fa6225f2339bc49e99608cbf2bc7",
+    "release_manifest_path": "workstreams/plangraph_dlm_iclr_20260731/roadmap_reviews/ROADMAP_RELEASE_MANIFEST_V1.json",
+    "release_manifest_sha256": "930bb76612bb5fe1ec295e41a2d438eea1ed9d6635f11f5e915efd6971f52d16",
+    "mutated": false
+  },
+  "portfolio_amendment": {
+    "superseded": [
+      "single_active_research_track_planning_allocation"
+    ],
+    "retained": [
+      "CR-Plan is the only currently allocated ICLR headline method",
+      "CR-Plan compute caps remain ring-fenced",
+      "PILS-L remains the CR-Plan cold backup",
+      "RL remains allocated zero A800 GPU hours",
+      "the independent-confirmation claim ladder remains mandatory",
+      "the 2026-09-05 science freeze remains mandatory",
+      "neither track automatically promotes or replaces the other"
+    ],
+    "npdlm_role_without_further_amendment": "parallel_exploratory_appendix_or_future_method",
+    "npdlm_authorized_gpu_hours": 0
+  },
+  "scientific_contract": {
+    "conditioning": "N_only",
+    "external_planner_free": true,
+    "fully_unconditional": false,
+    "exact_semantic_length": "7+4N",
+    "serialized_layout": "N,lattice6,(E_i,X_i,Y_i,Z_i)*N",
+    "reveal_order": [
+      "elements",
+      "lattice",
+      "x",
+      "y",
+      "z"
+    ],
+    "committed_generated_positions": "6+4N",
+    "required_model_arms": [
+      "R_cont",
+      "N_only"
+    ],
+    "required_evaluation_views": [
+      "N_from_P0_paired_plan_information_ablation",
+      "N_train_prior_operational_external_planner_free"
+    ],
+    "first_cycle_additional_factors_forbidden": [
+      "CR-Plan",
+      "safe-axis",
+      "PILS-L",
+      "chemistry mask",
+      "new tokenizer",
+      "RL",
+      "repair",
+      "filter",
+      "retry",
+      "replacement",
+      "rerank"
+    ]
+  },
+  "stage_ladder": [
+    "gate_minus_1_cpu_read_only",
+    "r0_32_engineering",
+    "r1_64_mechanism",
+    "r2_256_preliminary_science",
+    "r3_four_independent_paired_256_confirmation"
+  ],
+  "required_before_r0": [
+    "global portfolio and execution annex",
+    "exact source model data tokenizer and ledger identities",
+    "numeric gates and primary endpoint",
+    "multiplicity and checkpoint rule",
+    "NPDLM and global compute caps",
+    "resource priority",
+    "paper allocation rule frozen before R1"
+  ],
+  "review": {
+    "independent_review_domains": [
+      "causal control and estimand",
+      "chemistry and conditioning leakage",
+      "special-token DLM and future RL mechanics"
+    ],
+    "execution_blockers_closed_in_plan": [
+      "interleaved serialization separated from grouped reveal order",
+      "P0-derived count ablation separated from train-prior operational view",
+      "same updates separated from equal compute",
+      "immutable-visible corruption sets and overlapping semantic streams specified",
+      "full-vocabulary SFT CE separated from inference dynamic hard masks",
+      "committed token positions separated from full RL action trace",
+      "qualitative post-selection gates prohibited",
+      "portfolio superseded and retained clauses enumerated"
+    ]
+  },
+  "validation": {
+    "command": "python3 -m unittest tests.test_dynamic_crystal tests.test_r5_dynamic_length tests.test_planned_corruption -v",
+    "result": "19_passed_0_failed",
+    "scientific_work_started": false
+  },
+  "execution_authorized": false,
+  "automatic_training": false,
+  "automatic_generation": false,
+  "automatic_refinement": false,
+  "automatic_evaluation": false,
+  "automatic_checkpoint_selection": false,
+  "automatic_promotion": false,
+  "automatic_downstream": false
+}

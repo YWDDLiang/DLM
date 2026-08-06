@@ -1,0 +1,186 @@
+{
+  "schema": "wqcodiff_existing22_chgnet_sun_contract_v1",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "purpose": "Evaluate whether the fixed composition projections retain enough exact CHGNet R5-C S.U.N. signal to justify a later MLIP-free feasibility-mask experiment.",
+  "authorization": {
+    "path": "runs/remote_audit/20260725_wq_existing22_chgnet_sun_v1/authorization_record.json",
+    "sha256": "1d3e99578417ef192817ba3d0e3d0caa60b1013bb78e3b54936da68a4c1ca570",
+    "formal_survival_gate_rewritten": false,
+    "user_accepted_exploratory_continuation": true
+  },
+  "frozen_history": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "survival_v1_contract_sha256": "4743a2129597b0f68483aa0feb9e2dd286089da3926bbb9ab2b119bf783e540b",
+    "survival_v2_contract_sha256": "fe296ad119ed066b8c70af633a3eafc50e0971d29b52278068cabeeac701f4fe",
+    "survival_terminal_audit_sha256": "59d08149cc10818c3d80ff5402bf0f4988de28a623d876371f6ecec683680c55",
+    "formal_survival_result": "FAIL",
+    "formal_threshold": {
+      "minimum_structural_valid_count": 20,
+      "minimum_joint_valid_count": 20
+    },
+    "observed_survival": {
+      "attempts": 22,
+      "rendered_count": 22,
+      "composition_valid_count": 22,
+      "structural_valid_count": 17,
+      "joint_valid_count": 17
+    }
+  },
+  "inputs": {
+    "directory": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_composition_existing22_survival_v2_order_alignment",
+    "claim": {
+      "path": "claim.json",
+      "sha256": "b710d66e26331486c909f510e94267647a13195f2ecd1024362ca646690695f5"
+    },
+    "structures": {
+      "path": "structures.jsonl",
+      "sha256": "47c4cf0b858bb846a5f9dc4df6dafa31b4ce4f20bdfc40be63d5226aac6e475e",
+      "rows": 22
+    },
+    "attempt_metrics": {
+      "path": "attempt_metrics.jsonl",
+      "sha256": "360514adaf189db5ec0f6618cfae84068f8919df048535e17397c24c55fd4f69",
+      "rows": 22
+    },
+    "report": {
+      "path": "report.json",
+      "sha256": "03cd5f5e8c95391775e2b129296c309113c8e54aef29b3975eab7e82bd70f209"
+    },
+    "terminal_acceptance": {
+      "path": "terminal_acceptance.json",
+      "sha256": "a9903b8e8012b5992117e4872735c5e5b46d67e009805e0dd7588c7b0ed4c7cc"
+    }
+  },
+  "denominator": {
+    "name": "all_existing_projected_states",
+    "attempts": 22,
+    "expected_ordinals": [
+      262,
+      275,
+      276,
+      285,
+      292,
+      295,
+      298,
+      316,
+      322,
+      323,
+      324,
+      328,
+      354,
+      380,
+      383,
+      397,
+      442,
+      445,
+      457,
+      479,
+      502,
+      508
+    ],
+    "joint_valid_ordinals": [
+      275,
+      276,
+      285,
+      292,
+      298,
+      316,
+      322,
+      324,
+      354,
+      380,
+      383,
+      397,
+      442,
+      457,
+      479,
+      502,
+      508
+    ],
+    "frozen_structural_failure_ordinals": [
+      262,
+      295,
+      323,
+      328,
+      445
+    ],
+    "frozen_failure_handling": "Map the five known structural failures to explicit failed placeholders before CHGNet. They remain zero in the all-22 denominator and cannot be relaxed as a post-hoc geometry rescue.",
+    "reconstructed_structures_exact": 17
+  },
+  "evaluation": {
+    "environment": "diff_meets_diff",
+    "environment_prefix": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+    "python_version": "3.10.18",
+    "torch_version": "2.4.0+cu121",
+    "torch_scatter_version": "2.1.2+pt24cu121",
+    "chgnet_package_version": "0.4.2",
+    "chgnet_model_semantics": "0.3.0",
+    "chgnet_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+    "protocol": "exact R5-C A100 protocol on A800",
+    "strict_e_above_hull_ev_per_atom": 0.0,
+    "meta_like_e_above_hull_ev_per_atom": 0.1,
+    "mp_api_key": null,
+    "mp_hull_source": "frozen_cache_only",
+    "coverage_adjusted_role": "report_only",
+    "unknown_hull_handling": "count_as_zero_in_primary_all_attempt_lower_bound",
+    "retry_or_replacement_used": false
+  },
+  "historical_directional_reference": {
+    "name": "CrysLLMGen_baseline_1000_exact_R5C_A100_CHGNet",
+    "strict": {
+      "count": 90,
+      "attempts": 1000,
+      "rate": 0.09,
+      "summary_path": "runs/20260531_2200-a100-eval-sun-mpapi-cache-final2/notes/baseline_a100_eval_sun_strict_summary.md",
+      "summary_sha256": "f19400c2a0f2ad34846922174b9810e6ef47b293739d422df57c86ef9b136bca"
+    },
+    "meta_like": {
+      "count": 461,
+      "attempts": 1000,
+      "rate": 0.461,
+      "summary_path": "runs/20260531_2200-a100-eval-sun-mpapi-cache-final2/notes/baseline_a100_eval_sun_meta_like_summary.md",
+      "summary_sha256": "32f41b0592b47387ebc466ee1ea3aa191c320301ad359d9b779be69db514529e"
+    },
+    "comparison_role": "small-panel directional continuation threshold, not a population-level equivalence or headline claim"
+  },
+  "decision_rule": {
+    "minimum_strict_full_sun_count": 2,
+    "minimum_meta_full_sun_count": 11,
+    "threshold_derivation": {
+      "strict": "ceil(22 * 0.09) = 2",
+      "meta_like": "ceil(22 * 0.461) = 11"
+    },
+    "pass": "strict_full_sun >= 2 and meta_full_sun >= 11 on the all-22 denominator",
+    "fail": "strict_full_sun + unknown < 2 or meta_full_sun + unknown < 11",
+    "inconclusive_mp_coverage": "lower bound misses a threshold but adding every frozen-cache unknown could reach both thresholds",
+    "pass_consequence": "Permit design and preregistration of an MLIP-free geometry plus atom-total/orbit-partition feasibility-mask experiment; do not train automatically.",
+    "fail_consequence": "Stop escalation of this composition-projection mechanism.",
+    "inconclusive_consequence": "Stop and request a separately authorized login-node MP-cache completion; do not query MP from Slurm and do not train."
+  },
+  "resources": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 96,
+    "time_limit": "04:00:00",
+    "cpu_per_a800_hard_limit": 8
+  },
+  "scope": {
+    "new_generation": false,
+    "candidate_reselection": false,
+    "geometry_modification": false,
+    "training": false,
+    "external_api": false,
+    "slurm_jobs": 1,
+    "scientific_call_limit": 1,
+    "retry_or_replacement": false,
+    "overwrite": false
+  },
+  "output": {
+    "directory": "runs/20260720_0401-crysllmgen-wq-final-v3/outputs/wq_existing22_chgnet_sun_v1",
+    "adapter_generation": "all22_attempts.jsonl",
+    "adapter_manifest": "adapter_manifest.json",
+    "sun_directory": "r5c_a100_sun",
+    "terminal_acceptance": "terminal_acceptance.json"
+  }
+}

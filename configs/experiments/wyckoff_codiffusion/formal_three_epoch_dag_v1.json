@@ -1,0 +1,104 @@
+{
+  "schema": "crysllmgen_formal_three_epoch_dependency_dag_v1",
+  "status": "active_user_authorized_ready_to_submit_once",
+  "run_id": "20260720_0401-crysllmgen-wq-final-v3",
+  "scientific_scope": "three_epoch_checkpoint_selection_validation_only",
+  "authorization": {
+    "record": "runs/remote_audit/20260723_user_authorization_flash_profile_and_formal_progression_v1.json",
+    "sha256": "912479c51ed022f13d28754ec520da7417747ce19d655738f3f8140eba89cbe0"
+  },
+  "frozen_identity": {
+    "base_source_bundle_sha256": "6eeb48310454199a37d622e9dade6ccbe0f5c280b14999a6ca5c26c7e11e5908",
+    "protocol_v4_sha256": "22efb63d3b7e37353206022d3ce9e43f0c19ed02dbd5fa75a71a053339707af0",
+    "gate_a_lock_sha256": "534dbd55caf3599bad233bfd671bf304fe28891854101d2a201f1d1feaaa4bf5",
+    "training_amendment_sha256": "af6e72ce842d5c604ebd80f4d90c31edea55f406a1c2da0ea41e89adfcf96afd",
+    "flash_profile_matrix_sha256": "3d2f7276d04f9c36ea3c962d52d2e553ee0dd2f79ed445625aae6785337dbfc3"
+  },
+  "selection_policy": {
+    "sdpa_reference_seconds_per_update": 4.16302,
+    "flash_minimum_relative_speedup": 0.02,
+    "flash_maximum_seconds_per_update": 4.0797596,
+    "flash_failure_or_ineligibility": "select_sdpa_without_retry",
+    "checkpoint_selection": "crysllmgen_direct_noninferiority_then_r5c_a100_strict_sun_then_meta_sun_then_registered_tiebreak"
+  },
+  "jobs": [
+    {
+      "key": "flash_profile",
+      "script": "scripts/a800/formal_three_epoch_v1/flash_profile.sbatch",
+      "script_sha256": "4db215b35ba347ad0a5efdaf06effbe758fd6155358d6315caabcef726377b59",
+      "dependency": "afterany_all_preexisting_user_gpu_jobs_if_any",
+      "partition": "gpu",
+      "gpus": 2,
+      "cpus": 16,
+      "time_limit": "00:30:00",
+      "scientific_attempt": false
+    },
+    {
+      "key": "formal_train",
+      "script": "scripts/a800/formal_three_epoch_v1/formal_train.sbatch",
+      "script_sha256": "99735b6ec492ea679881a538be8e878877440761e67a8361e41d4b45702cd904",
+      "dependency": "afterany:flash_profile",
+      "partition": "gpu",
+      "gpus": 2,
+      "cpus": 16,
+      "time_limit": "06:00:00",
+      "effective_epochs": 3,
+      "checkpoint_steps": [848, 1696, 2544]
+    },
+    {
+      "key": "formal_refiner_supersession",
+      "script": "scripts/a800/formal_three_epoch_v1/refiner.sbatch",
+      "script_sha256": "f6210768752affe234d260fc210c731cb7db56297cca6332f536178643e74efc",
+      "dependency": "afterok:formal_train",
+      "partition": "gpu",
+      "gpus": 1,
+      "cpus": 16,
+      "time_limit": "08:00:00",
+      "updates": 100000,
+      "replacement_of_job_id": "26679"
+    },
+    {
+      "key": "epoch_evaluation_array",
+      "script": "scripts/a800/formal_three_epoch_v1/epoch_eval.sbatch",
+      "script_sha256": "adb9b17939dfd9ae56aeef3b5c475d8adbf23decf2d3dd936860e81ce8ea5cab",
+      "dependency": "afterok:formal_refiner_supersession",
+      "partition": "gpu",
+      "array": "0-2%2",
+      "gpus_per_task": 1,
+      "cpus_per_task": 16,
+      "time_limit_per_task": "18:00:00",
+      "attempts_per_epoch": 256,
+      "same_attempt_ids_pair_ids_and_paired_noise": true,
+      "r5c_hardware_wording": "R5-C A100 protocol on A800"
+    },
+    {
+      "key": "epoch_selection",
+      "script": "scripts/a800/formal_three_epoch_v1/select_epoch.sbatch",
+      "script_sha256": "298190d41ff4334b12f453ef54cb94c03f147259418735798282d020f252756b",
+      "dependency": "afterok:all_epoch_evaluation_array_tasks",
+      "partition": "short",
+      "gpus": 0,
+      "cpus": 4,
+      "time_limit": "00:30:00"
+    }
+  ],
+  "submission_accounting": {
+    "slurm_job_records": 5,
+    "slurm_submit_slots_including_array_elements": 7,
+    "maximum_concurrent_a800": 2,
+    "worst_case_new_gpu_hours_from_time_limits": 75.0,
+    "worst_case_critical_path_hours": 51.0,
+    "formal_lora_expected_gpu_hours_from_sdpa_profile": 5.8838,
+    "user_approved_identified_over_six_hour_path": true,
+    "retry_or_replacement_policy": "none_except_the_explicit_unique_refiner_supersession_of_26679"
+  },
+  "forbidden": [
+    "gpu_long_partition",
+    "dft",
+    "silent_retry",
+    "attempt_replacement",
+    "more_than_three_effective_epochs",
+    "coverage_adjusted_sun_for_checkpoint_selection",
+    "final_test_or_final_mlip_for_checkpoint_selection"
+  ]
+}

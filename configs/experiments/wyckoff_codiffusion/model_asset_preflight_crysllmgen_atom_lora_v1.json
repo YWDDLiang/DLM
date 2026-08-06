@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "record_status": "login_node_identity_verified_compute_gate_pending",
+  "recorded_date": "2026-07-20",
+  "asset_role": "existing CrysLLMGen atom-text LoRA for C-ATOM-OFFICIAL only",
+  "selection_rule": "Select the completed five-epoch upstream execution artifact before generation evaluation; do not select by SUN, test metrics, or best-of sampling.",
+  "selected": {
+    "path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/exp/8b-mp-llama3-v1",
+    "base_model_name_or_path": "/public/home/jiaosz/hengzhang/models/LLM-Research/Meta-Llama-3-8B-Instruct",
+    "rank": 8,
+    "alpha": 32,
+    "target_modules": ["q_proj", "v_proj"],
+    "epochs": 5.0,
+    "global_step": 1215,
+    "terminal_training_loss": 0.4943060398101807,
+    "validation_loss_available": false,
+    "tensor_count": 128,
+    "parameter_count": 3407872,
+    "dtype": "BF16",
+    "files": [
+      {
+        "name": "adapter_model.safetensors",
+        "bytes": 6832728,
+        "sha256": "b251dcee3e2fac4d252b302b97114741eda20a79fbbba283250ad1f555fdd385"
+      },
+      {
+        "name": "adapter_config.json",
+        "bytes": 699,
+        "sha256": "214b5ed3081ad52fd04569cd35a2bc2ef93e30187722f2c9e3f2a84ea6a9b870"
+      },
+      {
+        "name": "trainer_state.json",
+        "bytes": 22549,
+        "sha256": "81d307978d693858a5fc483cc118ef44bc20eab6d27ed8f7598697dfb05ba29f"
+      },
+      {
+        "name": "README.md",
+        "bytes": 5148,
+        "sha256": "557767e55bb2f88f64343e4988077862e9b4e03d59771c5579777f94b228a9d0"
+      }
+    ]
+  },
+  "nonselected_registered_candidate": {
+    "path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/exp/llama3-mp-20",
+    "rank": 8,
+    "alpha": 32,
+    "target_modules": ["q_proj", "v_proj"],
+    "epochs": 1.0,
+    "global_step": 848,
+    "terminal_training_loss": 0.5087,
+    "validation_loss_available": false,
+    "tensor_count": 128,
+    "parameter_count": 3407872,
+    "dtype": "F32",
+    "files": [
+      {
+        "name": "adapter_model.safetensors",
+        "bytes": 13648432,
+        "sha256": "551cff1db08efff46812e43fd3128fda2352fdfa647a60362a5bc24cd5f8abcf"
+      },
+      {
+        "name": "adapter_config.json",
+        "bytes": 699,
+        "sha256": "214b5ed3081ad52fd04569cd35a2bc2ef93e30187722f2c9e3f2a84ea6a9b870"
+      },
+      {
+        "name": "trainer_state.json",
+        "bytes": 15353,
+        "sha256": "29ab69cfdfc43e5f414e355d4ba031d5b17fd88fe1c54611381ec9da9e5a3f82"
+      },
+      {
+        "name": "README.md",
+        "bytes": 5148,
+        "sha256": "557767e55bb2f88f64343e4988077862e9b4e03d59771c5579777f94b228a9d0"
+      }
+    ]
+  },
+  "scope_guards": {
+    "selected_adapter_used_by": ["C-ATOM-OFFICIAL"],
+    "may_replace_rank16_matched_atom_adapter": false,
+    "may_replace_rank16_wq_adapter": false,
+    "sun_or_test_selected": false
+  },
+  "access_gates": {
+    "existing_tmux_login_node_readable": true,
+    "compute_node_readable": null,
+    "offline_base_plus_adapter_load": null,
+    "bf16_forward": null
+  }
+}

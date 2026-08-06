@@ -1,0 +1,67 @@
+{
+  "schema": "h1_body_safeaxis64_execution_manifest_v1",
+  "identity": "h1_body_safeaxis64_v1",
+  "date": "2026-08-02",
+  "mode": "h1_single_variable_body_schedule_screen",
+  "parent": {
+    "identity": "h1_body_safeaxis32_v1",
+    "source_manifest_sha256": "cd21ee664f5c227698e96187906944a7d29016bd270da645c56ed6501cb3c866",
+    "terminal_report_sha256": "57d53922bd62e96aca2becee0b6f9c48d067111421c8e20a0b30dc1507b735c7",
+    "decision": "safe_axis32_safe_to_expand"
+  },
+  "principal_variable": {
+    "name": "body_generation_schedule",
+    "control": "h1_exact_plan_d1",
+    "candidate": "plangraph_d2_safe_axis"
+  },
+  "held_fixed": [
+    "P0 model-sampled Plan",
+    "first 64 raw all-attempt ordinals",
+    "body prompt",
+    "R5-C exact-length output contract (7 + 4N positions)",
+    "R5-C count and element prefill",
+    "R5-C dynamic schema constraints",
+    "R5-C B0 base model and adapter",
+    "tokenizer",
+    "per-ordinal body noise seed",
+    "temperature",
+    "CFG",
+    "remasking",
+    "schema and lightweight decoding masks",
+    "maximum body batch size"
+  ],
+  "paired_execution": {
+    "control_and_candidate_generated_in_same_job": true,
+    "same_loaded_model_instance": true,
+    "same_batch_partition": true,
+    "historical_h1_control_used_read_only_for_calibration": true
+  },
+  "runtime_identity": {
+    "frozen_h1_body_runtime_manifest": "H1_BODY_RUNTIME_SHA256.json",
+    "frozen_h1_body_runtime_byte_exact": true,
+    "intentional_non_h1_component": "D2-safe-axis schedule compiler only"
+  },
+  "resources": {
+    "slurm_jobs": 1,
+    "partition": "gpu",
+    "gpu": "1x NVIDIA A800-SXM4-80GB",
+    "cpus": 8,
+    "memory": "96G",
+    "time_limit": "06:00:00"
+  },
+  "excluded": [
+    "Planner sampling",
+    "training",
+    "body checkpoint change",
+    "diffusion refinement",
+    "direct metrics",
+    "S.U.N.",
+    "retry",
+    "replacement",
+    "repair",
+    "filter",
+    "rerank",
+    "promotion",
+    "automatic downstream"
+  ]
+}

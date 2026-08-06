@@ -1,0 +1,20 @@
+{
+  "schema": "h1_body_safeaxis32_frozen_runtime_v1",
+  "files": {
+    "paired_llada.py": "cf9eb581c202e739525b8446b31b1469de1ffb03f0c758d2c28ce2fde097049f",
+    "paired_noise.py": "288b7b94fdc8aec764474c787c32f4e9036581dc4b13696be03c5e3d7d7d26ba",
+    "runtime/crystal_dlm/dynamic_crystal.py": "911e032eefbaf9b38dd856732adaf261307dad6793d6b7c044ffc3f9f87146e5",
+    "runtime/crystal_dlm/fixed_slot.py": "aa06e8c240a47c3f3696239bcf07adbcf73c95cab1b3f0d7be07ba560a6476eb",
+    "runtime/crystal_dlm/generation_schedule.py": "6950fe0aa2df761da30e59471f854edafa06ecc8e186ad1bd70f0a1524bd9c8e",
+    "runtime/crystal_dlm/h1_formula_only_body.py": "8542d6f2d4f60e8113052896eda1a5c6f24df2643091c79a090a22fe17caf209",
+    "runtime/crystal_dlm/lattice_geometry.py": "e1a5cedcb53d553714e4d79b7b0deca590dd2d9e7d83ae3244598845652385e7",
+    "runtime/crystal_dlm/llada_generation.py": "427243edf454d2157b232b439223e3cd4a4fab8353b8a4746c3861c6f7ae3d28",
+    "runtime/crystal_dlm/llada_resize.py": "eefc782912e9b40d453308859fce6c3841125031f3bd1b2e6b3c18830d52e43e",
+    "runtime/crystal_dlm/r5_dynamic_length.py": "c022ddda92caac1c60b91b239c1bc155c734cad86b595282ce9724e239d002c6",
+    "runtime/crystal_dlm/r5_plan_state.py": "6bc1e446afdbe405df601f609a2326c9f376a7f036e9d27dafcecd57965866fc",
+    "runtime/crystal_dlm/transformers_compat.py": "e492f3b34bbe9c6852748f4c5a0a8816f660c3738ae3d7c84cb7c9619fc5b382",
+    "runtime/scripts/sample_llada_dynamic_crystals.py": "7425629710c7e7b1bb6eec72b0f6b1053cb22a491f4180359409e4c49108ff12",
+    "runtime/scripts/sample_llada_r5_exact_length.py": "686bb2a2612f3dbf65272d6ec49dea9d5b2d5e80d1c9cd955673e4dadb8e6db6"
+  },
+  "intentional_non_h1_component": "D2-safe-axis schedule compiler only"
+}

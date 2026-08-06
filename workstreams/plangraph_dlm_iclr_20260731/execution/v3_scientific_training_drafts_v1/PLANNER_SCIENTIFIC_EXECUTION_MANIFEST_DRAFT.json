@@ -1,0 +1,75 @@
+{
+  "schema": "h1a2_pcontrol_pstar_scientific400_execution_draft_v1",
+  "status": "authorized_pending_executable_bundle",
+  "created_at": "2026-08-01",
+  "proposed_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pcontrol_pstar_scientific400_v1",
+  "arms": {
+    "0": "Pcontrol",
+    "1": "Pstar"
+  },
+  "array": {
+    "indices": [
+      0,
+      1
+    ],
+    "maximum_concurrent_elements": 1
+  },
+  "frozen_initialization": {
+    "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+    "adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "ineligible_initializations": [
+      "generated_JSON_PlanGraph",
+      "H1A2C_ValidReplay",
+      "H1A2C_JointChem"
+    ]
+  },
+  "frozen_data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_pstar_data_preflight_v1/data/full",
+    "train_microbatches": 3200,
+    "validation_rows": 256,
+    "same_order_for_both_arms": true,
+    "data_manifest_sha256": "4c2ba66923ccea16244cbc7ec138e69e07f50c4bca6ec7bfa1c631cd7f406c4d",
+    "real_tokenizer_preflight_sha256": "6f6802ff9ad77dd2e50b24761b72bbe8c748bdf90a251363b4a2e0927e3d61e4"
+  },
+  "frozen_training": {
+    "precision": "bf16",
+    "per_device_batch": 1,
+    "gradient_accumulation": 8,
+    "optimizer_updates": 400,
+    "learning_rate": 0.000002,
+    "weight_decay": 0,
+    "scheduler": "cosine",
+    "warmup_updates": 25,
+    "gradient_clip": 1.0,
+    "maximum_sequence_length": 768,
+    "validation_interval_updates": 50,
+    "seed": 17,
+    "shuffle": false
+  },
+  "resources_per_arm": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 64,
+    "proposed_walltime": "12:00:00",
+    "resource_status": "proposed_from_completed_32_row_smoke_not_yet_executable"
+  },
+  "selection": {
+    "generation_used": false,
+    "sun_or_energy_used": false,
+    "target_nll_relative_to_P0_max": 1.01,
+    "primary_within_eligible_checkpoints": "lowest_field_balanced_loss",
+    "tie_break": "earlier_update"
+  },
+  "downstream_after_training": {
+    "checkpoint_selection_report_required": true,
+    "planner_512_screen_requires_separate_executable_manifest": true,
+    "automatic_submission": false
+  },
+  "scientific_training_authorized": true,
+  "submitted": false,
+  "job_ids": [],
+  "automatic_downstream": false,
+  "automatic_promotion": false
+}

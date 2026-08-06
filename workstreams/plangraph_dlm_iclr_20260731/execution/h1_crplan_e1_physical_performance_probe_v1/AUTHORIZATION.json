@@ -1,0 +1,33 @@
+{
+  "schema": "h1_crplan_e1_physical_performance_probe_authorization_v1",
+  "authorized_at_local_date": "2026-08-05",
+  "user_authorization": "好的，去尝试吧",
+  "authorized_context": "Run only the previously proposed tiny bounded CRPlan-E1 same-node physical feasibility probe.",
+  "authorized_scope": [
+    "create_new_immutable_E1_source_and_run",
+    "run_18_engineering_ordinals_in_balanced_off_terminal_full_order",
+    "run_two_preregistered_scalar_reference_reruns",
+    "use_at_most_one_A800_job_with_two_hour_walltime",
+    "report_kill_or_go_only"
+  ],
+  "not_authorized": [
+    "rewrite_or_reinterpret_V4",
+    "four_arm_512",
+    "end_to_end_64",
+    "end_to_end_256",
+    "independent_scientific_panels",
+    "Body_generation",
+    "refinement",
+    "Direct_or_SUN_evaluation",
+    "network_or_MP_API",
+    "training_or_RL",
+    "checkpoint_reselection",
+    "promotion",
+    "automatic_downstream"
+  ],
+  "v4_terminal_report_sha256": "55df7801e24f3bfd013e2e41f0cb96babe2a20ff3c5fb8a5b8e0b23073a5e627",
+  "formal_g3": false,
+  "automatic_training": false,
+  "automatic_promotion": false,
+  "automatic_downstream": false
+}
