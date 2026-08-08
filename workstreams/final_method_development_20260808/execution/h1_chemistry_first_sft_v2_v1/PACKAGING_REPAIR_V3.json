@@ -1,0 +1,31 @@
+{
+  "schema": "h1_chemistry_first_packaging_repair_v1",
+  "repair_identity": "h1_chemistry_first_sft_v2_evaluator_byte_identity_repair_v3",
+  "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2",
+  "parent_terminal_sha256": "1fc5776c66c3ba34f9afc991200cec81734a35168092e14fd5da2b633956765d",
+  "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
+  "failure_stage": "a800_source_runtime_preflight",
+  "failure_class": "legacy_evaluator_source_raw_line_ending_identity_mismatch",
+  "expected_legacy_evaluator_sha256": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178",
+  "failed_archive_legacy_evaluator_sha256": "c078c1ca61a6d876de66eaa92699e96c54497b81cdbdb4a605c219c71760c58c",
+  "lf_normalized_failed_archive_sha256": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178",
+  "root_cause": "The Windows source-input packaging path converted LF Python bytes to CRLF even though the committed Git blob was LF; semantic content was unchanged but the fail-closed raw evaluator identity correctly rejected it.",
+  "repair_scope": [
+    "create the source-input archive by direct git archive --format=tar.gz --output without a text pipeline",
+    "enforce LF attributes for all source text classes",
+    "verify the archived evaluator member SHA before bootstrap",
+    "use new transfer, staging, freeze, isolated-check and run paths",
+    "replace duplicate broad source audits with one protocol test, isolated inventory verification and one focused preflight"
+  ],
+  "unchanged": [
+    "scientific method identity and source semantics",
+    "Planner P0 initialization and protected roots",
+    "MP20 records and POS/ALL data contract",
+    "SMACT 3.1 primary and local exact SMACT 4 secondary evaluator contracts",
+    "optimizer, schedule, seeds, ledgers, denominators and gates",
+    "DLM, Body, refiner and all downstream contracts"
+  ],
+  "result_conditioned": false,
+  "slurm_submitted_in_parent": false,
+  "gpu_used_in_parent": false
+}

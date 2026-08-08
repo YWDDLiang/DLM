@@ -1,8 +1,8 @@
 # Current state
 
-Updated: 2026-08-08 16:22 (Asia/Shanghai)
+Updated: 2026-08-08 17:26 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_SMACT_SPLIT_SOURCE_IN_REVIEW`
+Overall status: `PLANNER_SFT_V2_PACKAGING_REPAIR_V3_IN_REVIEW`
 
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3,
@@ -74,11 +74,35 @@ requirements, and launcher, so the A800 snapshot contains no dormant SMACT4
 runtime entry point. The immutable failed runtime run remains preserved as
 historical evidence outside this source.
 
+## Split-source audit terminal and minimal repair
+
+The first split-source run reached an engineering terminal before Slurm:
+
+- run root:
+  `/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2`;
+- source tests `48/48`, isolated tests `48/48`, and preflight-focused tests
+  `35/35` all passed;
+- the only failed check was `legacy_evaluator_source_sha`;
+- archived `composition_validity.py` had CRLF SHA `c078c1ca...`, while its LF
+  normalization exactly matched the frozen evaluator SHA `ca1c94f5...`;
+- terminal SHA:
+  `1fc5776c66c3ba34f9afc991200cec81734a35168092e14fd5da2b633956765d`;
+- no Slurm, GPU, training, generation, SMACT4-on-A800, or science occurred.
+
+The allowed repair is packaging-only. It writes the Git archive directly to
+its output file, requires LF for source text classes, checks the evaluator
+member SHA before extraction, and uses new transfer/staging/freeze/run paths.
+The new run root is
+`20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3`.
+Following the user's audit-budget instruction, its source gate runs one
+protocol test, one isolated inventory/SHA check, and one focused preflight;
+the duplicate broad source/isolated test pass is not repeated.
+
 ## Immediate critical path
 
-1. Complete static review, commit, and push the split-source package.
-2. Transfer it after the ten-minute SCP interval, freeze it into a new
-   immutable A800 run root, and run SMACT3-only source/isolated/preflight tests.
+1. Complete static review, commit, and push packaging repair v3.
+2. Transfer it after the ten-minute SCP interval, freeze it into the new
+   immutable A800 run root, and run only the reduced SMACT3 source gate.
 3. Submit only the legacy snapshot job after fresh partition checks.
 4. Pull that snapshot, build the local exact-SMACT4 witness ledger, return it,
    and submit data plus minimal GPU smoke only.

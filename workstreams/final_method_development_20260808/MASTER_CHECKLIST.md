@@ -23,6 +23,12 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       a manylinux compatibility boundary and the user retired this route.
 - [x] Freeze the replacement evaluator firewall: A800 SMACT3 only, exact
       SMACT4 local witness/raw-audit ledgers only, complete one-to-one SHA join.
+- [x] Preserve the split-source v2 pre-Slurm terminal: all tests passed, but
+      raw evaluator SHA failed because the Windows package converted LF to
+      CRLF; normalized content matched the frozen evaluator exactly.
+- [x] Freeze packaging repair v3 with direct Git archive output, archived
+      evaluator-member SHA precheck, new immutable paths, and reduced audit
+      scope.
 - [ ] Pass SMACT3-only A800 source tests, isolated archive tests, runtime
       preflight, and one minimal GPU smoke for each new source family.
 - [ ] Export and seal the complete A800 MP20 legacy snapshot.

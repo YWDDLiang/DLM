@@ -3,13 +3,15 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_v3"
-STAGING_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_source_staging_v2"
-FREEZE_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_source_freeze_v2"
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2"
+TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_v4"
+STAGING_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_source_staging_v3"
+FREEZE_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_source_freeze_v3"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3"
 LEGACY_PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 SOURCE_INPUT_ARCHIVE="${1:?source input archive path}"
 EXPECTED_SOURCE_INPUT_SHA256="${2:?source input archive SHA256}"
+EXPECTED_LEGACY_EVALUATOR_SHA256=ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178
+LEGACY_EVALUATOR_ENTRY=crystal_dlm/composition_validity.py
 
 test -x "${LEGACY_PYTHON}"
 test -d "${TRANSFER_ROOT}"
@@ -18,12 +20,15 @@ for path in "${STAGING_ROOT}" "${FREEZE_ROOT}" "${RUN_ROOT}"; do
   test ! -e "${path}"
 done
 test "$(sha256sum "${SOURCE_INPUT_ARCHIVE}" | cut -d' ' -f1)" = "${EXPECTED_SOURCE_INPUT_SHA256}"
+test "$(tar -xOf "${SOURCE_INPUT_ARCHIVE}" "${LEGACY_EVALUATOR_ENTRY}" | sha256sum | cut -d' ' -f1)" = \
+  "${EXPECTED_LEGACY_EVALUATOR_SHA256}"
 
 mkdir "${STAGING_ROOT}"
 tar -xzf "${SOURCE_INPUT_ARCHIVE}" -C "${STAGING_ROOT}" --no-same-owner --no-same-permissions
 EXECUTION_DIR="${STAGING_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
 test -f "${EXECUTION_DIR}/freeze_source.py"
 test -f "${EXECUTION_DIR}/LOCAL_SMACT4_SPLIT_EXECUTION_RECORD.json"
+test -f "${EXECUTION_DIR}/PACKAGING_REPAIR_V3.json"
 
 export CUDA_VISIBLE_DEVICES=
 export PYTHONNOUSERSITE=1

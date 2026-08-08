@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B

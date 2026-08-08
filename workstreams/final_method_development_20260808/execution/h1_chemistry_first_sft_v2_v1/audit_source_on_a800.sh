@@ -3,10 +3,10 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
-ISOLATED_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_isolated_archive_test_v2"
+ISOLATED_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_isolated_archive_test_v3"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
 P0_ADAPTER="${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
 MP20_DIR="${PROJECT_ROOT}/reference/crysllmgen/data/mp_20"
@@ -25,28 +25,17 @@ export PYTHONPATH="${SOURCE_ROOT}"
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_DATASETS_OFFLINE=1
 cd "${SOURCE_ROOT}"
 "${LEGACY_PYTHON}" -m unittest \
-  tests.test_h1_chemistry_first_sft \
-  tests.test_h1_nocharge_sft_tokenizer_audit \
-  tests.test_h1_nocharge_planner_gate \
-  tests.test_h1_nocharge_ion_aux \
   workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.test_protocol \
-  > "${RUN_ROOT}/logs/a800_source_tests.out" \
-  2> "${RUN_ROOT}/logs/a800_source_tests.err"
+  > "${RUN_ROOT}/logs/a800_protocol_tests.out" \
+  2> "${RUN_ROOT}/logs/a800_protocol_tests.err"
 
 mkdir "${ISOLATED_ROOT}"
 tar -xzf "${RUN_ROOT}/source_archive.tar.gz" -C "${ISOLATED_ROOT}" \
   --no-same-owner --no-same-permissions
 cd "${ISOLATED_ROOT}"
 sha256sum -c SOURCE_SHA256.txt
-export PYTHONPATH="${ISOLATED_ROOT}"
-"${LEGACY_PYTHON}" -m unittest \
-  tests.test_h1_chemistry_first_sft \
-  tests.test_h1_nocharge_sft_tokenizer_audit \
-  tests.test_h1_nocharge_planner_gate \
-  tests.test_h1_nocharge_ion_aux \
-  workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.test_protocol \
-  > "${RUN_ROOT}/logs/a800_isolated_tests.out" \
-  2> "${RUN_ROOT}/logs/a800_isolated_tests.err"
+test "$(sha256sum crystal_dlm/composition_validity.py | cut -d' ' -f1)" = \
+  ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178
 
 mkdir "${RUN_ROOT}/preflight"
 export PYTHONPATH="${SOURCE_ROOT}"

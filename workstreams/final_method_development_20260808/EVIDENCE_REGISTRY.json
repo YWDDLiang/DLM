@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-08T16:22:00+08:00",
+  "updated_at": "2026-08-08T17:26:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -100,6 +100,13 @@
         "raw256 secondary audit ledger"
       ],
       "fail_closed_one_to_one_sha_join": true
+    },
+    {
+      "evidence_id": "packaging_repair_v3_contract",
+      "record_path": "workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1/PACKAGING_REPAIR_V3.json",
+      "record_sha256": "9c54ed3283c2e86ffba2f84273bcd2cf6e17a1487772f32a456720fde3fad891",
+      "scientific_contract_changed": false,
+      "audit_scope": "single_protocol_test_plus_isolated_inventory_plus_focused_preflight"
     }
   ],
   "transfers": [
@@ -159,6 +166,17 @@
       "remote_source_inventory_sha256": "f429f63ef42ead9162149ddce135bb35da7fc2ad94d3e86c8135506063f6a801",
       "remote_source_archive_sha256": "555fdcc59901aad4bd4ceae685b28827ab3d5b312434706ce5a319d2c815de25",
       "remote_source_manifest_sha256": "b0fab254166928df999ffeb81199aeca699904508895fb98f73645687e8faf5d"
+    },
+    {
+      "evidence_id": "smact_split_source_input_v2_a800_terminal",
+      "source_commit": "0f9fda0",
+      "source_input_archive_bytes": 10182451,
+      "source_input_archive_sha256": "de5a38dfddf86155631e0c572acbc29b28b2f6b546df51027d6a24378c66f7c2",
+      "a800_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2",
+      "remote_source_inventory_sha256": "78ab075007f4ccf70fb198e015a82a026727074d0cc9958ffa3d25f98ff819dd",
+      "remote_source_archive_sha256": "65d89b071302fbc57ea2dd276083f183ea202def7a472c838d9cd2445cd85623",
+      "status": "engineering_failure_before_slurm_due_raw_evaluator_line_end_identity",
+      "slurm_or_gpu_used": false
     }
   ],
   "engineering_failures": [
@@ -188,6 +206,21 @@
       "repair_attempted": false,
       "route_retired_by_user": true,
       "replacement_identity": "h1_chemistry_first_sft_v2_smact_split_v2"
+    },
+    {
+      "evidence_id": "a800_split_source_raw_evaluator_identity_failure_v2",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2",
+      "terminal_sha256": "1fc5776c66c3ba34f9afc991200cec81734a35168092e14fd5da2b633956765d",
+      "runtime_preflight_sha256": "4b7cad2221db1bfd356b4fb14f9dc3e430678ee38179e2e141f68b6a85049fd5",
+      "expected_evaluator_sha256": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178",
+      "observed_crlf_evaluator_sha256": "c078c1ca61a6d876de66eaa92699e96c54497b81cdbdb4a605c219c71760c58c",
+      "lf_normalized_content_match": true,
+      "source_tests": "48/48_pass",
+      "isolated_tests": "48/48_pass",
+      "preflight_focused_tests": "35/35_pass",
+      "slurm_or_gpu_used": false,
+      "smact4_executed_on_a800": false,
+      "repair_identity": "h1_chemistry_first_sft_v2_evaluator_byte_identity_repair_v3"
     }
   ],
   "terminal_evidence": []
