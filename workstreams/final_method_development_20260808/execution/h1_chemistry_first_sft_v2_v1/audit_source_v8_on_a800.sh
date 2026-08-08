@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_optimizer_zero_lr_audit_repair_v8"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
 ISOLATED_ROOT="${RUN_ROOT}/isolated_archive_test"
@@ -16,6 +16,7 @@ test -d "${SOURCE_ROOT}"
 test -f "${RUN_ROOT}/source_archive.tar.gz"
 test -x "${LEGACY_PYTHON}"
 test ! -e "${ISOLATED_ROOT}"
+test -f "${EXECUTION_DIR}/OPTIMIZER_ZERO_LR_AUDIT_REPAIR_V8.json"
 SOURCE_INVENTORY_SHA256="$(sha256sum "${SOURCE_ROOT}/SOURCE_SHA256.txt" | cut -d' ' -f1)"
 
 export CUDA_VISIBLE_DEVICES=
@@ -27,8 +28,8 @@ cd "${SOURCE_ROOT}"
 "${LEGACY_PYTHON}" -m unittest \
   workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.test_protocol \
   tests.test_h1_chemistry_first_optimizer_audit \
-  > "${RUN_ROOT}/logs/a800_protocol_tests.out" \
-  2> "${RUN_ROOT}/logs/a800_protocol_tests.err"
+  > "${RUN_ROOT}/logs/a800_v8_protocol_tests.out" \
+  2> "${RUN_ROOT}/logs/a800_v8_protocol_tests.err"
 
 mkdir "${ISOLATED_ROOT}"
 tar -xzf "${RUN_ROOT}/source_archive.tar.gz" -C "${ISOLATED_ROOT}" \
@@ -59,5 +60,5 @@ sha256sum "${RUN_ROOT}/preflight/a800_runtime_preflight.json" \
   > "${RUN_ROOT}/preflight/a800_runtime_preflight.sha256"
 find "${ISOLATED_ROOT}" -type f -exec chmod 400 {} +
 find "${ISOLATED_ROOT}" -type d -exec chmod 500 {} +
-printf '%s\n' 'pass' > "${RUN_ROOT}/status/a800_source_audit.status"
+printf '%s\n' pass > "${RUN_ROOT}/status/a800_source_audit.status"
 printf '%s\n' "${SOURCE_INVENTORY_SHA256}"

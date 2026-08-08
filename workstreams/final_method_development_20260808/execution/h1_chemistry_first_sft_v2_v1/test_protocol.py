@@ -356,6 +356,67 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
             self.assertIn("-o JobID,State,ExitCode", text, name)
             self.assertNotIn("-o JobIDRaw,State,ExitCode", text, name)
 
+    def test_v8_zero_lr_audit_repair_preserves_training_contract(self) -> None:
+        repair = json.loads(
+            (ROOT / "OPTIMIZER_ZERO_LR_AUDIT_REPAIR_V8.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        run_name = (
+            "20260808_h1_chemistry_first_sft_v2_smact_split_v2_"
+            "optimizer_zero_lr_audit_repair_v8"
+        )
+        self.assertFalse(repair["scientific_contract_changes"])
+        self.assertFalse(
+            repair[
+                "model_data_prompt_seed_optimizer_scheduler_ledger_evaluator_gate_changes"
+            ]
+        )
+        self.assertFalse(repair["repair"]["operation_order_changed"])
+        self.assertFalse(repair["repair"]["optimizer_or_scheduler_math_changed"])
+        self.assertTrue(repair["repair"]["restart_from_protected_p0"])
+        self.assertFalse(repair["repair"]["resume_parent_optimizer_state"])
+        self.assertEqual(repair["required_smoke"]["optimizer_updates"], 2)
+        self.assertEqual(repair["required_smoke"]["microbatches"], 16)
+        self.assertEqual(repair["required_smoke"]["full_scheduler_total_updates"], 4505)
+        self.assertEqual(repair["required_smoke"]["full_scheduler_warmup_steps"], 135)
+        self.assertFalse(repair["required_smoke"]["scientific_checkpoint_saved"])
+        self.assertFalse(repair["required_smoke"]["smact4_execution_on_a800"])
+        for name in (
+            "bootstrap_source_v8_on_a800.sh",
+            "audit_source_v8_on_a800.sh",
+            "reuse_v7_data_for_v8_on_a800.sh",
+            "optimizer_smoke_v8.sbatch",
+            "submit_optimizer_smoke_v8_once.sh",
+            "train_v8.sbatch",
+            "planner64_v8.sbatch",
+            "submit_training64_v8_once.sh",
+        ):
+            text = (ROOT / name).read_text(encoding="utf-8")
+            self.assertIn(run_name, text, name)
+            self.assertNotIn("SMACT4_PYTHON", text, name)
+        optimizer_smoke = (ROOT / "optimizer_smoke_v8.sbatch").read_text(
+            encoding="utf-8"
+        )
+        trainer = (
+            ROOT.parents[3] / "scripts" / "llama_h1_chemistry_first_sft.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn("--optimizer-smoke-updates 2", optimizer_smoke)
+        self.assertIn("scientific_checkpoint_saved", optimizer_smoke)
+        self.assertIn("audited_warmup_optimizer_step", trainer)
+        self.assertIn("scheduled_zero_lr_state_update", trainer)
+        self.assertIn("first_positive_lr_parameter_update", trainer)
+        self.assertIn("candidate_gradient_health_report", trainer)
+        self.assertIn("optimizer_state_health_report", trainer)
+        training_submit = (ROOT / "submit_training64_v8_once.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("optimizer_smoke_admission_sft_v2_before_training", training_submit)
+        self.assertIn("optimizer_smoke_admission_sft_v2_c_before_training", training_submit)
+        self.assertIn("train_v8.sbatch", training_submit)
+        self.assertIn("planner64_v8.sbatch", training_submit)
+        self.assertIn("--dependency=afterany:", training_submit)
+
     def test_fixed_adapter_resolver_supports_named_peft_subdirectory(self) -> None:
         from workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.resolve_fixed_adapter import (
             resolve_fixed_adapter,

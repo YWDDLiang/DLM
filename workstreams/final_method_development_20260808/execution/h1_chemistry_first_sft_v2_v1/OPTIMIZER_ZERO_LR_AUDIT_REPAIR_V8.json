@@ -1,0 +1,92 @@
+{
+  "schema": "h1_chemistry_first_optimizer_zero_lr_audit_repair_v8",
+  "status": "preregistered_engineering_repair",
+  "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7",
+  "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_optimizer_zero_lr_audit_repair_v8",
+  "parent_terminal_evidence": {
+    "training_job": "31105",
+    "sft_v2": {
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:12:08",
+      "valid_checkpoint": false
+    },
+    "sft_v2_c": {
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:18:30",
+      "valid_checkpoint": false
+    },
+    "planner64_job": "31106",
+    "planner64_p0": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:17:21",
+      "raw_attempts": 64
+    },
+    "planner64_sft_v2": {
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:02:46",
+      "raw_attempts": 0,
+      "failure_semantics": "missing_checkpoint_fail_closed"
+    },
+    "planner64_sft_v2_c": {
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:02:08",
+      "raw_attempts": 0,
+      "failure_semantics": "missing_checkpoint_fail_closed"
+    }
+  },
+  "root_cause": {
+    "classification": "engineering_audit_false_positive",
+    "warmup_steps": 135,
+    "total_updates": 4505,
+    "step_1_lr_used": 0.0,
+    "step_1_expected_parameter_change": false,
+    "step_1_expected_optimizer_state_step": 1,
+    "step_1_expected_lr_next": 1.4814814814814815e-08,
+    "step_2_expected_lr_used": 1.4814814814814815e-08,
+    "step_2_expected_parameter_change": true,
+    "step_2_expected_optimizer_state_step": 2,
+    "v7_incorrect_assertion": "candidate parameters must change after the zero-LR first optimizer call"
+  },
+  "repair": {
+    "operation_order_changed": false,
+    "optimizer_or_scheduler_math_changed": false,
+    "data_or_record_order_changed": false,
+    "seed_changed": false,
+    "learning_rate_or_warmup_changed": false,
+    "token_weights_changed": false,
+    "denominator_or_gate_changed": false,
+    "resume_parent_optimizer_state": false,
+    "restart_from_protected_p0": true,
+    "step_1_gate": "lr_used_zero_parameters_unchanged_nonzero_finite_candidate_gradients_adamw_moments_step_1_reference_unchanged",
+    "step_2_gate": "lr_used_2e-6_over_135_candidate_changed_adamw_moments_step_2_reference_unchanged",
+    "gradient_none_or_all_zero": "fail_closed",
+    "telemetry": [
+      "lr_used",
+      "lr_next",
+      "scheduler_last_epoch_before_after",
+      "gradient_tensor_count_and_norm",
+      "adamw_step_and_moments",
+      "candidate_reference_sha",
+      "consumed_record_order_sha"
+    ]
+  },
+  "required_smoke": {
+    "candidates": ["sft_v2", "sft_v2_c"],
+    "optimizer_updates": 2,
+    "microbatches": 16,
+    "full_scheduler_total_updates": 4505,
+    "full_scheduler_warmup_steps": 135,
+    "scientific_checkpoint_saved": false,
+    "generation": false,
+    "smact4_execution_on_a800": false,
+    "formal_training_allowed_only_after_both_pass": true
+  },
+  "scientific_contract_changes": false,
+  "model_data_prompt_seed_optimizer_scheduler_ledger_evaluator_gate_changes": false,
+  "automatic_rl": false
+}

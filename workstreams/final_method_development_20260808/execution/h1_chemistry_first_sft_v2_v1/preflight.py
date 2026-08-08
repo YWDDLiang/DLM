@@ -145,6 +145,7 @@ print(json.dumps(payload, sort_keys=True))
 def focused_tests(python: Path, source_root: Path) -> dict[str, Any]:
     modules = (
         "tests.test_h1_chemistry_first_sft",
+        "tests.test_h1_chemistry_first_optimizer_audit",
         "tests.test_h1_nocharge_sft_tokenizer_audit",
         "tests.test_h1_nocharge_planner_gate",
         "tests.test_h1_nocharge_ion_aux",

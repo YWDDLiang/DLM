@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 from pathlib import Path
 import random
@@ -256,6 +257,269 @@ def optimizer_parameter_identity_report(model, optimizer) -> dict[str, Any]:
     }
 
 
+def candidate_gradient_health_report(model, trainable) -> dict[str, Any]:
+    """Fail closed on absent, non-finite, or misrouted candidate gradients."""
+
+    trainable_ids = {id(parameter) for parameter in trainable}
+    candidate = {
+        id(parameter): name
+        for name, parameter in model.named_parameters()
+        if ".candidate." in name
+    }
+    gradients = [
+        (name, parameter, parameter.grad)
+        for name, parameter in model.named_parameters()
+        if parameter.grad is not None
+    ]
+    candidate_gradients = [
+        (name, gradient)
+        for name, parameter, gradient in gradients
+        if id(parameter) in candidate
+    ]
+    unexpected = sorted(
+        name
+        for name, parameter in model.named_parameters()
+        if parameter.grad is not None and id(parameter) not in candidate
+    )
+    missing_from_trainable = sorted(
+        name for parameter_id, name in candidate.items() if parameter_id not in trainable_ids
+    )
+    finite = bool(candidate_gradients) and all(
+        bool(torch.isfinite(gradient).all().item())
+        for _, gradient in candidate_gradients
+    )
+    return {
+        "candidate_parameter_count": len(candidate),
+        "candidate_gradient_tensor_count": len(candidate_gradients),
+        "all_gradient_tensor_count": len(gradients),
+        "finite_candidate_gradients": finite,
+        "unexpected_gradient_names": unexpected,
+        "candidate_missing_from_trainable": missing_from_trainable,
+        "passed_before_clip": bool(
+            candidate
+            and candidate_gradients
+            and finite
+            and not unexpected
+            and not missing_from_trainable
+        ),
+    }
+
+
+def optimizer_state_health_report(
+    model,
+    optimizer,
+    *,
+    expected_step: int | None,
+) -> dict[str, Any]:
+    """Summarize AdamW state without treating a tensor container as one step."""
+
+    candidate_parameters = [
+        (name, parameter)
+        for name, parameter in model.named_parameters()
+        if ".candidate." in name
+    ]
+    step_values: list[float] = []
+    moment_tensor_count = 0
+    nonzero_moment_tensor_count = 0
+    finite_moments = True
+    state_parameter_count = 0
+    for _, parameter in candidate_parameters:
+        state = optimizer.state.get(parameter) or {}
+        if not state:
+            continue
+        state_parameter_count += 1
+        step = state.get("step")
+        if step is not None:
+            step_values.append(
+                float(step.detach().item()) if torch.is_tensor(step) else float(step)
+            )
+        for key in ("exp_avg", "exp_avg_sq"):
+            moment = state.get(key)
+            if moment is None:
+                continue
+            moment_tensor_count += 1
+            finite_moments = bool(
+                finite_moments and torch.isfinite(moment).all().item()
+            )
+            if bool(torch.count_nonzero(moment).item()):
+                nonzero_moment_tensor_count += 1
+    expected_step_match = bool(
+        expected_step is not None
+        and state_parameter_count > 0
+        and len(step_values) == state_parameter_count
+        and all(value == float(expected_step) for value in step_values)
+    )
+    return {
+        "candidate_parameter_count": len(candidate_parameters),
+        "state_parameter_count": state_parameter_count,
+        "step_values_min": min(step_values) if step_values else None,
+        "step_values_max": max(step_values) if step_values else None,
+        "expected_step": expected_step,
+        "expected_step_match": expected_step_match,
+        "moment_tensor_count": moment_tensor_count,
+        "nonzero_moment_tensor_count": nonzero_moment_tensor_count,
+        "finite_moments": finite_moments,
+        "passed": bool(
+            expected_step_match
+            and moment_tensor_count == 2 * state_parameter_count
+            and nonzero_moment_tensor_count > 0
+            and finite_moments
+        ),
+    }
+
+
+def active_adapter_value(model) -> str:
+    value = getattr(model, "active_adapter", None)
+    if callable(value):
+        value = value()
+    if isinstance(value, (list, tuple)):
+        return ",".join(str(item) for item in value)
+    return str(value)
+
+
+def audited_warmup_optimizer_step(
+    model,
+    trainable,
+    optimizer,
+    scheduler,
+    *,
+    step_number: int,
+    base_lr: float,
+    warmup_steps: int,
+    reference_sha_initial: str,
+    candidate_sha_initial: str,
+    consumed_record_ids: list[str],
+    expected_record_order_sha256: str,
+) -> dict[str, Any]:
+    """Execute one of the first two updates and attest its exact warmup semantics."""
+
+    if step_number not in {1, 2}:
+        raise ValueError("warmup optimizer audit is registered only for steps 1 and 2")
+    if warmup_steps <= 1:
+        raise ValueError("warmup optimizer audit requires at least two warmup steps")
+    gradient = candidate_gradient_health_report(model, trainable)
+    lr_values = [float(group["lr"]) for group in optimizer.param_groups]
+    lr_used = lr_values[0] if lr_values else math.nan
+    expected_lr_used = 0.0 if step_number == 1 else float(base_lr) / warmup_steps
+    expected_lr_next = float(base_lr) * step_number / warmup_steps
+    scheduler_epoch_before = int(scheduler.last_epoch)
+    candidate_sha_before = adapter_value_sha256(model, "candidate")
+    reference_sha_before = adapter_value_sha256(model, "reference")
+    state_before = optimizer_state_health_report(
+        model,
+        optimizer,
+        expected_step=None if step_number == 1 else step_number - 1,
+    )
+    record_order_sha = record_order_sha256(
+        [{"record_id": value} for value in consumed_record_ids]
+    )
+    failures = []
+    if not gradient["passed_before_clip"]:
+        failures.append("candidate_gradient_health")
+    if not lr_values or not all(
+        math.isclose(value, expected_lr_used, rel_tol=1e-12, abs_tol=1e-18)
+        for value in lr_values
+    ):
+        failures.append("lr_used")
+    if scheduler_epoch_before != step_number - 1:
+        failures.append("scheduler_epoch_before")
+    if active_adapter_value(model) != "candidate":
+        failures.append("active_adapter")
+    if reference_sha_before != reference_sha_initial:
+        failures.append("reference_before")
+    if candidate_sha_before != candidate_sha_initial:
+        failures.append("candidate_before")
+    if record_order_sha != expected_record_order_sha256:
+        failures.append("record_order")
+    if step_number == 1:
+        if state_before["state_parameter_count"] != 0:
+            failures.append("optimizer_state_before")
+    elif not state_before["passed"]:
+        failures.append("optimizer_state_before")
+
+    clip_norm = math.nan
+    if not failures:
+        clip_norm_value = torch.nn.utils.clip_grad_norm_(trainable, 1.0)
+        clip_norm = float(clip_norm_value.detach().item())
+        if not math.isfinite(clip_norm) or clip_norm <= 0.0:
+            failures.append("zero_or_nonfinite_gradient_norm")
+    gradient["preclip_l2_norm"] = clip_norm
+    gradient["nonzero_after_health_check"] = bool(
+        math.isfinite(clip_norm) and clip_norm > 0.0
+    )
+
+    optimizer_step_performed = False
+    if not failures:
+        optimizer.step()
+        scheduler.step()
+        optimizer_step_performed = True
+    lr_next_values = [float(group["lr"]) for group in optimizer.param_groups]
+    lr_next = lr_next_values[0] if lr_next_values else math.nan
+    scheduler_epoch_after = int(scheduler.last_epoch)
+    state_after = optimizer_state_health_report(
+        model,
+        optimizer,
+        expected_step=step_number,
+    )
+    candidate_sha_after = adapter_value_sha256(model, "candidate")
+    reference_sha_after = adapter_value_sha256(model, "reference")
+    optimizer.zero_grad(set_to_none=True)
+
+    if optimizer_step_performed:
+        if not all(
+            math.isclose(value, expected_lr_next, rel_tol=1e-12, abs_tol=1e-18)
+            for value in lr_next_values
+        ):
+            failures.append("lr_next")
+        if scheduler_epoch_after != step_number:
+            failures.append("scheduler_epoch_after")
+        if not state_after["passed"]:
+            failures.append("optimizer_state_after")
+        if reference_sha_after != reference_sha_initial:
+            failures.append("reference_after")
+        candidate_changed = candidate_sha_after != candidate_sha_before
+        if candidate_changed != (step_number == 2):
+            failures.append("candidate_change_semantics")
+    else:
+        candidate_changed = False
+
+    return {
+        "schema": "h1_chemistry_first_warmup_optimizer_step_audit_v1",
+        "step": step_number,
+        "semantic_role": (
+            "scheduled_zero_lr_state_update"
+            if step_number == 1
+            else "first_positive_lr_parameter_update"
+        ),
+        "active_adapter": active_adapter_value(model),
+        "consumed_record_count": len(consumed_record_ids),
+        "consumed_record_order_sha256": record_order_sha,
+        "expected_record_order_sha256": expected_record_order_sha256,
+        "gradient": gradient,
+        "clip_grad_norm_calls": 1 if math.isfinite(clip_norm) else 0,
+        "lr_used": lr_used,
+        "lr_used_values": lr_values,
+        "expected_lr_used": expected_lr_used,
+        "lr_next": lr_next,
+        "lr_next_values": lr_next_values,
+        "expected_lr_next": expected_lr_next,
+        "scheduler_last_epoch_before": scheduler_epoch_before,
+        "scheduler_last_epoch_after": scheduler_epoch_after,
+        "optimizer_state_before": state_before,
+        "optimizer_state_after": state_after,
+        "reference_sha_initial": reference_sha_initial,
+        "reference_sha_before": reference_sha_before,
+        "reference_sha_after": reference_sha_after,
+        "candidate_sha_initial": candidate_sha_initial,
+        "candidate_sha_before": candidate_sha_before,
+        "candidate_sha_after": candidate_sha_after,
+        "candidate_changed": candidate_changed,
+        "optimizer_step_performed": optimizer_step_performed,
+        "failures": failures,
+        "passed": not failures,
+    }
+
+
 @torch.no_grad()
 def validation_anchor_nll(
     model,
@@ -291,6 +555,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=H1_CHEMISTRY_FIRST_SFT_SEED)
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--preflight-only", action="store_true")
+    parser.add_argument("--optimizer-smoke-updates", type=int, default=0)
     parser.add_argument("--allow-nonfrozen-fixture", action="store_true")
     parser.add_argument(
         "--expected-p0-adapter-weight-sha256",
@@ -301,6 +566,11 @@ def main() -> None:
         default=PROTECTED_P0_ADAPTER_CONFIG_SHA256,
     )
     args = parser.parse_args()
+
+    if args.preflight_only and int(args.optimizer_smoke_updates) != 0:
+        raise RuntimeError("preflight-only and optimizer smoke are mutually exclusive")
+    if int(args.optimizer_smoke_updates) not in {0, 2}:
+        raise RuntimeError("optimizer smoke is frozen at exactly two real updates")
 
     report = load_and_verify_data_contract(
         args.data_dir,
@@ -536,6 +806,7 @@ def main() -> None:
         "one_epoch_exact": True,
         "fixed_endpoint_only": True,
         "generated_metric_checkpoint_selection": False,
+        "optimizer_smoke_updates": int(args.optimizer_smoke_updates),
         "device": str(device),
         "bf16": device.type == "cuda",
         "dual_adapter_identity": identity,
@@ -655,6 +926,8 @@ def main() -> None:
     consumed_ids: list[str] = []
     global_step = 0
     first_optimizer_step_identity: dict[str, Any] | None = None
+    first_positive_optimizer_step_identity: dict[str, Any] | None = None
+    optimizer_step_audits: list[dict[str, Any]] = []
     running_loss = 0.0
     running_microbatches = 0
     model.zero_grad(set_to_none=True)
@@ -681,44 +954,68 @@ def main() -> None:
             grad_accum=int(args.grad_accum),
         ):
             continue
-        if not all(
-            torch.isfinite(parameter.grad).all().item()
-            for parameter in trainable
-            if parameter.grad is not None
-        ):
-            raise RuntimeError(f"non-finite gradient before update {global_step + 1}")
-        torch.nn.utils.clip_grad_norm_(trainable, 1.0)
-        optimizer.step()
-        scheduler.step()
-        optimizer.zero_grad(set_to_none=True)
-        global_step += 1
-        if global_step == 1:
-            reference_sha_after_first_step = adapter_value_sha256(model, "reference")
-            candidate_sha_after_first_step = adapter_value_sha256(model, "candidate")
-            first_optimizer_step_identity = {
-                "reference_sha_initial": reference_sha_initial,
-                "reference_sha_after_first_step": reference_sha_after_first_step,
-                "candidate_sha_initial": candidate_sha_initial,
-                "candidate_sha_after_first_step": candidate_sha_after_first_step,
-                "reference_unchanged": reference_sha_after_first_step
-                == reference_sha_initial,
-                "candidate_changed": candidate_sha_after_first_step
-                != candidate_sha_initial,
-            }
-            first_optimizer_step_identity["passed"] = bool(
-                first_optimizer_step_identity["reference_unchanged"]
-                and first_optimizer_step_identity["candidate_changed"]
+        step_number = global_step + 1
+        if step_number <= 2:
+            expected_prefix_sha = record_order_sha256(
+                train_ds.rows[: len(consumed_ids)]
             )
-            if not first_optimizer_step_identity["passed"]:
-                raise RuntimeError("first optimizer step violated adapter identity invariants")
+            audit = audited_warmup_optimizer_step(
+                model,
+                trainable,
+                optimizer,
+                scheduler,
+                step_number=step_number,
+                base_lr=float(args.lr),
+                warmup_steps=warmup_steps,
+                reference_sha_initial=reference_sha_initial,
+                candidate_sha_initial=candidate_sha_initial,
+                consumed_record_ids=consumed_ids,
+                expected_record_order_sha256=expected_prefix_sha,
+            )
+            optimizer_step_audits.append(audit)
+            (args.output_dir / "optimizer_step_audits.json").write_text(
+                json.dumps(optimizer_step_audits, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            if step_number == 1:
+                first_optimizer_step_identity = audit
+            else:
+                first_positive_optimizer_step_identity = audit
+            if not audit["passed"]:
+                raise RuntimeError(
+                    f"warmup optimizer step {step_number} audit failed: "
+                    f"{audit['failures']}"
+                )
+            lr_used = float(audit["lr_used"])
+            lr_next = float(audit["lr_next"])
+        else:
+            gradient = candidate_gradient_health_report(model, trainable)
+            if not gradient["passed_before_clip"]:
+                raise RuntimeError(
+                    f"gradient routing/finite audit failed before update {step_number}"
+                )
+            clip_norm_value = torch.nn.utils.clip_grad_norm_(trainable, 1.0)
+            clip_norm = float(clip_norm_value.detach().item())
+            if not math.isfinite(clip_norm) or clip_norm <= 0.0:
+                raise RuntimeError(
+                    f"zero or non-finite gradient norm before update {step_number}"
+                )
+            lr_used = float(optimizer.param_groups[0]["lr"])
+            optimizer.step()
+            scheduler.step()
+            lr_next = float(optimizer.param_groups[0]["lr"])
+            optimizer.zero_grad(set_to_none=True)
+        global_step = step_number
         progress.update(1)
-        if global_step == 1 or global_step % int(args.logging_steps) == 0 or global_step == total_updates:
+        if global_step <= 2 or global_step % int(args.logging_steps) == 0 or global_step == total_updates:
             event = {
                 "event": "train",
                 "step": global_step,
                 "loss": running_loss / max(1, running_microbatches),
                 "microbatches": running_microbatches,
-                "lr": float(scheduler.get_last_lr()[0]),
+                "lr": lr_next,
+                "lr_used": lr_used,
+                "lr_next": lr_next,
                 "elapsed_sec": time.time() - start,
             }
             with history_path.open("a", encoding="utf-8") as handle:
@@ -726,7 +1023,72 @@ def main() -> None:
             print(json.dumps(event), flush=True)
             running_loss = 0.0
             running_microbatches = 0
+        if (
+            int(args.optimizer_smoke_updates) > 0
+            and global_step == int(args.optimizer_smoke_updates)
+        ):
+            break
     progress.close()
+
+    if int(args.optimizer_smoke_updates) > 0:
+        expected_microbatches = int(args.optimizer_smoke_updates) * int(args.grad_accum)
+        consumed_order_sha = record_order_sha256(
+            [{"record_id": value} for value in consumed_ids]
+        )
+        expected_order_sha = record_order_sha256(
+            train_ds.rows[:expected_microbatches]
+        )
+        reference_sha_smoke = adapter_value_sha256(model, "reference")
+        candidate_sha_smoke = adapter_value_sha256(model, "candidate")
+        smoke_failures = []
+        if global_step != 2:
+            smoke_failures.append("optimizer_update_count")
+        if len(consumed_ids) != expected_microbatches:
+            smoke_failures.append("microbatch_count")
+        if consumed_order_sha != expected_order_sha:
+            smoke_failures.append("record_order")
+        if len(optimizer_step_audits) != 2 or not all(
+            report["passed"] for report in optimizer_step_audits
+        ):
+            smoke_failures.append("optimizer_step_audits")
+        if reference_sha_smoke != reference_sha_initial:
+            smoke_failures.append("reference_identity")
+        if candidate_sha_smoke == candidate_sha_initial:
+            smoke_failures.append("candidate_identity")
+        smoke_report = {
+            "schema": "h1_chemistry_first_two_step_optimizer_smoke_v1",
+            "status": "pass" if not smoke_failures else "fail",
+            "candidate": str(args.candidate),
+            "full_training_total_updates": total_updates,
+            "full_training_warmup_steps": warmup_steps,
+            "optimizer_updates": global_step,
+            "microbatch_count": len(consumed_ids),
+            "consumed_record_order_sha256": consumed_order_sha,
+            "expected_record_order_sha256": expected_order_sha,
+            "optimizer_step_audits": optimizer_step_audits,
+            "reference_adapter_sha256_initial": reference_sha_initial,
+            "reference_adapter_sha256_terminal": reference_sha_smoke,
+            "candidate_adapter_sha256_initial": candidate_sha_initial,
+            "candidate_adapter_sha256_terminal": candidate_sha_smoke,
+            "scientific_checkpoint_saved": False,
+            "generation": False,
+            "smact4_executed_on_a800": False,
+            "failures": smoke_failures,
+            "elapsed_sec": time.time() - start,
+        }
+        (args.output_dir / "optimizer_smoke_report.json").write_text(
+            json.dumps(smoke_report, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        marker = "_SUCCESS" if not smoke_failures else "_FAILED"
+        (args.output_dir / marker).write_text(
+            json.dumps(smoke_report, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        print(json.dumps(smoke_report, ensure_ascii=False, indent=2), flush=True)
+        if smoke_failures:
+            raise RuntimeError(f"two-step optimizer smoke failed: {smoke_failures}")
+        return
 
     if global_step != total_updates or len(consumed_ids) != len(train_ds):
         raise RuntimeError(
@@ -788,6 +1150,8 @@ def main() -> None:
         "candidate_validation_anchor_nll": candidate_anchor,
         "optimizer_parameter_identity": optimizer_identity,
         "first_optimizer_step_identity": first_optimizer_step_identity,
+        "first_positive_optimizer_step_identity": first_positive_optimizer_step_identity,
+        "optimizer_step_audits": optimizer_step_audits,
         "reference_adapter_sha256_initial": reference_sha_initial,
         "reference_adapter_sha256_terminal": reference_sha_terminal,
         "candidate_adapter_sha256_initial": candidate_sha_initial,
