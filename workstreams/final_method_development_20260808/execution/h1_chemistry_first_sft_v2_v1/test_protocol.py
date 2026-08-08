@@ -417,6 +417,53 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertIn("planner64_v8.sbatch", training_submit)
         self.assertIn("--dependency=afterany:", training_submit)
 
+    def test_v9_gpu_partition_override_is_partition_only(self) -> None:
+        repair = json.loads(
+            (ROOT / "GPU_PARTITION_OVERRIDE_V9.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        run_name = (
+            "20260808_h1_chemistry_first_sft_v2_smact_split_v2_"
+            "gpu_partition_override_v9"
+        )
+        self.assertFalse(repair["scientific_contract_changes"])
+        self.assertFalse(repair["training_math_changes"])
+        self.assertFalse(
+            repair[
+                "model_data_prompt_seed_optimizer_scheduler_lr_warmup_"
+                "token_weight_ledger_denominator_gate_changes"
+            ]
+        )
+        self.assertEqual(repair["partition_contract"]["training"], "gpu")
+        self.assertTrue(
+            repair["partition_contract"]["gpu_long_forbidden_for_new_jobs"]
+        )
+        self.assertTrue(repair["reuse_contract"]["restart_training_from_protected_p0"])
+        self.assertFalse(repair["reuse_contract"]["resume_cancelled_training_state"])
+        self.assertFalse(repair["smact4_execution_on_a800"])
+        for name in (
+            "prepare_gpu_partition_override_v9_on_a800.sh",
+            "train_v9.sbatch",
+            "planner64_v9.sbatch",
+            "submit_training64_v9_once.sh",
+        ):
+            text = (ROOT / name).read_text(encoding="utf-8")
+            self.assertIn(run_name, text, name)
+            self.assertNotIn("SMACT4_PYTHON", text, name)
+        train = (ROOT / "train_v9.sbatch").read_text(encoding="utf-8")
+        self.assertIn("#SBATCH --partition=gpu\n", train)
+        self.assertNotIn("#SBATCH --partition=gpu_long", train)
+        self.assertIn('test "${SLURM_JOB_PARTITION:-}" = gpu', train)
+        self.assertIn("--time=30:00:00", train)
+        submit = (ROOT / "submit_training64_v9_once.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("train_v9.sbatch", submit)
+        self.assertIn("planner64_v9.sbatch", submit)
+        self.assertNotIn("gpu_long", submit)
+        self.assertIn("--dependency=afterany:", submit)
+
     def test_fixed_adapter_resolver_supports_named_peft_subdirectory(self) -> None:
         from workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.resolve_fixed_adapter import (
             resolve_fixed_adapter,

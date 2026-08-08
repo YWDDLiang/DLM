@@ -1,0 +1,32 @@
+{
+  "schema": "h1_chemistry_first_gpu_partition_override_v9",
+  "identity": "h1_chemistry_first_sft_v2_smact_split_v2_gpu_partition_override_v9",
+  "parent_identity": "h1_chemistry_first_sft_v2_smact_split_v2_optimizer_zero_lr_audit_repair_v8",
+  "reason": "User requires every new training job to use the gpu partition and explicitly withdrew the submitted gpu_long DAG.",
+  "user_authorized_cancellation": {
+    "training_job_id": "31136",
+    "planner64_job_id": "31137",
+    "required_terminal_state": "CANCELLED"
+  },
+  "partition_contract": {
+    "training": "gpu",
+    "planner_generation": "gpu",
+    "gpu_long_forbidden_for_new_jobs": true,
+    "training_walltime": "30:00:00",
+    "runtime_sinfo_check_required": true
+  },
+  "reuse_contract": {
+    "parent_v8_data_byte_identical": true,
+    "parent_v8_legacy_snapshot_byte_identical": true,
+    "parent_v8_optimizer_smoke_reports_byte_identical": true,
+    "repeat_optimizer_smoke": false,
+    "restart_training_from_protected_p0": true,
+    "resume_cancelled_training_state": false
+  },
+  "scientific_contract_changes": false,
+  "training_math_changes": false,
+  "model_data_prompt_seed_optimizer_scheduler_lr_warmup_token_weight_ledger_denominator_gate_changes": false,
+  "a800_smact_version": "3.1.0",
+  "smact4_execution_on_a800": false,
+  "automatic_rl": false
+}
