@@ -2,7 +2,7 @@
 
 Updated: 2026-08-08 18:39 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_SOURCE_GATE_PATH_REPAIR_V5_PREPARING`
+Overall status: `PLANNER_SFT_V2_V5_SMOKE_31064_RUNNING`
 
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3,
@@ -184,12 +184,20 @@ scoped under `${RUN_ROOT}/isolated_archive_test`. V4's PEFT repair, all model
 and science code, data, prompts, seeds, optimizers, ledgers, evaluators, and
 gates remain unchanged. SMACT4 remains forbidden on A800.
 
+V5 source inventory `7cef386be864eef760088fe8bb7c7073b7d1e908ca92e33f7d8a9a951ffebc91`,
+archive `e37b073b34f1d55f55e96683534bcdeb56ed33f52b60baa1d7fa579e849e1958`,
+and manifest `10ddf8a7be3678b3440842ba66f4f97a7943862d4983be32ed62b7012a41829a`
+are frozen. The reduced A800 source gate passed: 16 protocol tests, isolated
+inventory/evaluator identity and 35 focused preflight tests all passed under
+Python 3.10.18 and SMACT 3.1.0; SMACT4 was not executed. V3 data reuse also
+passed with reused-tree manifest `951aa186b37fd821d35f6a9fe63919abfc8753c4bd4ffce2d96968a039457981`.
+Fresh dual-arm smoke array `31064_[0-1]` is the only active job; formal training
+and scientific generation remain unsubmitted.
+
 ## Immediate critical path
 
 1. Preserve V3 job `31036` plus V3/V4 source evidence unchanged.
-2. Freeze, transfer, and minimally verify the V5 path-only source plus byte-
-   identical parent-data reuse record; submit only the replacement dual-arm
-   smoke.
+2. Monitor only V5 smoke array `31064_[0-1]` and freeze its terminal evidence.
 3. Submit fixed-endpoint training and raw64 generation only after both V5 smoke
    tasks are `COMPLETED 0:0`; do not queue assembly before the local audit.
 4. Continue C0/C1 and the B3 portfolio after this source family reaches its

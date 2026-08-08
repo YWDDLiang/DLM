@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-08T18:55:00+08:00",
+  "updated_at": "2026-08-08T19:02:00+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -44,13 +44,21 @@
       "node": "node99",
       "failure_stage": "candidate_reference_identity_before_forward",
       "optimizer_step_performed": false
+    },
+    {
+      "stage": "chemistry_first_v5_identity_repair_smoke",
+      "job_id": 31064,
+      "array": "0-1%2",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "cpus_per_task": 4,
+      "state": "RUNNING",
+      "formal_training_submitted": false,
+      "scientific_generation_submitted": false
     }
   ],
-  "current_allocations": [],
-  "pending_submission": {
-    "stage": "chemistry_first_v5_dual_arm_smoke_after_source_gate",
-    "gpus_per_task": 1,
-    "cpus_per_task": 4,
-    "submitted": false
-  }
+  "current_allocations": [
+    {"job_id": "31064_0", "stage": "smoke_sft_v2", "gpus": 1, "cpus": 4},
+    {"job_id": "31064_1", "stage": "smoke_sft_v2_c", "gpus": 1, "cpus": 4}
+  ]
 }

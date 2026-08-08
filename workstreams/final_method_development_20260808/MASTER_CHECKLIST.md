@@ -37,8 +37,8 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       PEFT loaded the trainable/frozen P0 copies at different precision; V4
       same-load-path repair source froze successfully, but a pre-gate static
       check found its isolated path still bound to immutable V3 evidence. Two
-      independent reviews approved only a new path-closed V5; its minimal
-      source gate and fresh dual-arm smoke remain pending.
+      independent reviews approved only a new path-closed V5. Its minimal
+      source gate passed and fresh dual-arm smoke array 31064 is running.
 - [x] Export and seal the complete A800 MP20 legacy snapshot (job 31025).
 - [x] Build the exact local SMACT4 witness ledger and verify its immutable
       data-only import on A800; SMACT4 was not executed there.

@@ -262,7 +262,19 @@
       "repair_identity": "h1_chemistry_first_sft_v2_evaluator_byte_identity_repair_v3"
     }
   ],
-  "active_submissions": [],
+  "active_submissions": [
+    {
+      "evidence_id": "planner_sft_v2_v5_dual_arm_smoke",
+      "job_id": 31064,
+      "array": "0-1%2",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
+      "source_inventory_sha256": "7cef386be864eef760088fe8bb7c7073b7d1e908ca92e33f7d8a9a951ffebc91",
+      "source_archive_sha256": "e37b073b34f1d55f55e96683534bcdeb56ed33f52b60baa1d7fa579e849e1958",
+      "state": "RUNNING",
+      "formal_training_submitted": false,
+      "scientific_generation_submitted": false
+    }
+  ],
   "pending_repairs": [
     {
       "evidence_id": "planner_sft_v2_source_gate_path_repair_v5",
@@ -271,7 +283,8 @@
       "repair_scope": "new_path_identity_closure_with_isolated_archive_scoped_under_run_root",
       "parent_data_reuse": "byte_identical_manifest_bound",
       "independent_review_count": 2,
-      "new_source_gate_required": true,
+      "new_source_gate_required": false,
+      "source_gate_status": "pass",
       "new_gpu_smoke_required": true,
       "formal_training_submitted": false
     }

@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_planner_candidate_registry_v1",
-  "updated_at": "2026-08-08T18:55:00+08:00",
+  "updated_at": "2026-08-08T19:02:00+08:00",
   "selection_limit_non_p0_downstream": 2,
   "candidates": [
     {
@@ -28,7 +28,7 @@
     {
       "candidate_id": "SFT-v2",
       "role": "chemistry_first_minimal_plan_hash_shuffle",
-      "status": "data_terminal_pass_v3_smoke_failure_v4_source_gate_collision_v5_repair_preparing",
+      "status": "v5_source_and_data_reuse_pass_smoke_running",
       "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
       "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
       "data_job_id": 31035,
@@ -37,6 +37,7 @@
       "smoke_failure": "peft_candidate_reference_dtype_asymmetry_before_forward",
       "identity_repair_v4_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
       "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
+      "repair_smoke_job_id": "31064_0",
       "formal_training_submitted": false,
       "execution_rule": "always_execute",
       "results": null
@@ -44,7 +45,7 @@
     {
       "candidate_id": "SFT-v2-C",
       "role": "chemistry_first_minimal_plan_curriculum",
-      "status": "data_terminal_pass_v3_smoke_failure_v4_source_gate_collision_v5_repair_preparing",
+      "status": "v5_source_and_data_reuse_pass_smoke_running",
       "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
       "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
       "data_job_id": 31035,
@@ -53,6 +54,7 @@
       "smoke_failure": "peft_candidate_reference_dtype_asymmetry_before_forward",
       "identity_repair_v4_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
       "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
+      "repair_smoke_job_id": "31064_1",
       "formal_training_submitted": false,
       "execution_rule": "always_execute",
       "results": null
