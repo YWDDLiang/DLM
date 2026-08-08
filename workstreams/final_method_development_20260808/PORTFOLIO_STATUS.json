@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_portfolio_status_v1",
-  "updated_at": "2026-08-08T19:02:00+08:00",
-  "overall": "planner_sft_v2_v5_source_data_reuse_pass_smoke_31064_running_no_science_submitted",
+  "updated_at": "2026-08-08T19:22:00+08:00",
+  "overall": "planner_sft_v2_v5_smoke_engineering_failure_diagnostic_hold_no_science_submitted",
   "planner": {
     "status": "active",
     "terminal": false,
@@ -17,7 +17,11 @@
       "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
       "v5_source_gate_status": "PASS",
       "v5_smoke_array_job_id": 31064,
-      "v5_smoke_status": "RUNNING",
+      "v5_smoke_status": "FAILED_1_0_BOTH_TASKS_BEFORE_FORWARD",
+      "v5_smoke_elapsed": "00:15:02",
+      "v5_identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
+      "v5_failure_report_sha256": "3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8",
+      "engineering_hold": "independent_propose_redteam_and_focused_runtime_probe_required_before_new_repair",
       "formal_training_submitted": false,
       "scientific_generation_submitted": false
     },

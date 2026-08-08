@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_planner_candidate_registry_v1",
-  "updated_at": "2026-08-08T19:02:00+08:00",
+  "updated_at": "2026-08-08T19:22:00+08:00",
   "selection_limit_non_p0_downstream": 2,
   "candidates": [
     {
@@ -28,7 +28,7 @@
     {
       "candidate_id": "SFT-v2",
       "role": "chemistry_first_minimal_plan_hash_shuffle",
-      "status": "v5_source_and_data_reuse_pass_smoke_running",
+      "status": "engineering_hold_after_repeated_exact_identity_failure",
       "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
       "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
       "data_job_id": 31035,
@@ -38,6 +38,10 @@
       "identity_repair_v4_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
       "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
       "repair_smoke_job_id": "31064_0",
+      "repair_smoke_sacct": "FAILED|1:0|00:15:02",
+      "repair_smoke_identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
+      "repair_smoke_failure_report_sha256": "3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8",
+      "next_gate": "independent_reviews_and_focused_runtime_probe",
       "formal_training_submitted": false,
       "execution_rule": "always_execute",
       "results": null
@@ -45,7 +49,7 @@
     {
       "candidate_id": "SFT-v2-C",
       "role": "chemistry_first_minimal_plan_curriculum",
-      "status": "v5_source_and_data_reuse_pass_smoke_running",
+      "status": "engineering_hold_after_repeated_exact_identity_failure",
       "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
       "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
       "data_job_id": 31035,
@@ -55,6 +59,10 @@
       "identity_repair_v4_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
       "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
       "repair_smoke_job_id": "31064_1",
+      "repair_smoke_sacct": "FAILED|1:0|00:15:02",
+      "repair_smoke_identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
+      "repair_smoke_failure_report_sha256": "3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8",
+      "next_gate": "independent_reviews_and_focused_runtime_probe",
       "formal_training_submitted": false,
       "execution_rule": "always_execute",
       "results": null

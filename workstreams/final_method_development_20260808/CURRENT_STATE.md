@@ -1,14 +1,17 @@
 # Current state
 
-Updated: 2026-08-08 18:39 (Asia/Shanghai)
+Updated: 2026-08-08 19:22 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_V5_SMOKE_31064_RUNNING`
+Overall status: `PLANNER_SFT_V2_V5_SMOKE_ENGINEERING_FAILURE_DIAGNOSTIC_HOLD`
 
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3,
 integration, or final-evaluation scientific result has been read or created
 under this workstream. The sealed data passed, while the first minimal GPU
-smoke reached a repairable engineering failure before model forward; no formal training, raw generation,
+smoke reached a repairable engineering failure before model forward. The V5
+repair repeated the same failure byte-for-byte, so no further repair is
+eligible until independent propose/red-team review and a focused runtime probe
+identify the exact conversion step. No formal training, raw generation,
 Direct, refiner, S.U.N., or RL job has been submitted.
 
 ## Connection and read-only audit
@@ -18,6 +21,8 @@ Direct, refiner, S.U.N., or RL job has been submitted.
   `pane_dead=0` and `pane_current_command=ssh` at the last audit.
 - A800 access remains restricted to those existing sessions. Neither may be
   recreated or reconnected; if both fail the workstream stops.
+- Local-to-5090 transfers are unrestricted. Only 5090-to-A800 SCP attempts are
+  rate-limited, with at least ten minutes between attempts.
 - A800 had no user jobs at the initial audit. Every submission still requires
   a fresh `sinfo`/`squeue` snapshot.
 - Audit marker: `__EF_AUDIT_DONE__` at 2026-08-08T12:59:52+08:00.
@@ -191,16 +196,32 @@ are frozen. The reduced A800 source gate passed: 16 protocol tests, isolated
 inventory/evaluator identity and 35 focused preflight tests all passed under
 Python 3.10.18 and SMACT 3.1.0; SMACT4 was not executed. V3 data reuse also
 passed with reused-tree manifest `951aa186b37fd821d35f6a9fe63919abfc8753c4bd4ffce2d96968a039457981`.
-Fresh dual-arm smoke array `31064_[0-1]` is the only active job; formal training
-and scientific generation remain unsubmitted.
+Fresh dual-arm smoke array `31064_[0-1]` also reached `FAILED 1:0` for both
+tasks after `00:15:02`. Both arms stopped at the protected-P0 identity gate
+before the first forward or optimizer construction. Their identity reports
+are byte-identical to V3 (SHA
+`ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c`):
+all 448 keys match, all 448 values differ, and maximum absolute difference is
+`6.103515625e-05`. The V4 loader-flag change therefore did not alter the
+runtime tensors. The immutable V5 failure report SHA is
+`3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8`.
+Formal training and scientific generation remain unsubmitted.
 
 ## Immediate critical path
 
-1. Preserve V3 job `31036` plus V3/V4 source evidence unchanged.
-2. Monitor only V5 smoke array `31064_[0-1]` and freeze its terminal evidence.
-3. Submit fixed-endpoint training and raw64 generation only after both V5 smoke
-   tasks are `COMPLETED 0:0`; do not queue assembly before the local audit.
-4. Continue C0/C1 and the B3 portfolio after this source family reaches its
+1. Preserve V3/V4/V5 source, job, logs, identity reports, and terminal evidence
+   unchanged.
+2. Complete two independent propose/red-team reviews of the repeated PEFT
+   identity failure.
+3. Run one minimal A800 runtime probe that compares candidate, reference, and
+   protected source tensors after each load/freeze/device/activation step. It
+   must not perform model forward, optimizer construction, or training.
+4. Freeze a new immutable repair and rerun the dual-arm smoke only if the
+   reviews and probe support one exact-identity implementation. The exact gate
+   may not be relaxed.
+5. Submit fixed-endpoint training and raw64 only after both repaired smoke
+   tasks complete `0:0`; do not queue assembly before the local audit.
+6. Continue C0/C1 and the B3 portfolio after this source family reaches its
    registered terminal.
 
 No Planner or DLM RL is authorized.
