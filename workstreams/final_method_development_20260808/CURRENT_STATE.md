@@ -82,4 +82,13 @@ is present. Its single local-to-5090 SCP completed at
 `2026-08-08T15:16:43+08:00` with matching SHA; A800 transfer input v2 remains
 empty pending the required next SCP interval.
 
+Before that next hop, a static submission audit found the candidate still
+pre-submitted training and raw64 behind smoke dependencies. Although those
+jobs could not execute before smoke, pre-submission violates the frozen rule
+that minimal GPU smoke must pass before any scientific job is submitted.
+Therefore the `b6b9ae3` archive remains 5090-only and is superseded without
+execution. The source now has distinct one-shot engineering-smoke and
+training/raw64 submissions; the latter requires both smoke markers plus exact
+`sacct COMPLETED|0:0` rows and takes a fresh preflight/resource snapshot.
+
 No Planner or DLM RL is authorized.

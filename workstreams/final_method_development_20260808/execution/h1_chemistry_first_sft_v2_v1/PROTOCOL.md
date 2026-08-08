@@ -45,3 +45,11 @@ all project programs, tests, data construction, training, generation, and
 evaluation run only on A800 through the existing `ssha800` or `ssha800_2`
 tmux sessions. The local machine remains the source-editing, evidence, and Git
 control plane only.
+
+Submission is deliberately split. `submit_once.sh` creates only the CPU data
+job and the two-candidate GPU smoke array. It does not submit training or raw
+sampling. After both smoke tasks have terminal pass markers and `sacct`
+reports `COMPLETED 0:0`, `submit_training64_once.sh` performs a fresh preflight
+and resource audit, then submits the fixed-endpoint training and raw64 DAG.
+Raw256 remains a third, separately locked submission. Thus no scientific job
+is even queued before the minimal A800 smoke has passed.

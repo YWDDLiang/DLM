@@ -17,7 +17,11 @@ def required(name: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage", choices=("initial64", "planner256"), required=True)
+    parser.add_argument(
+        "--stage",
+        choices=("engineering_smoke", "planner64", "planner256"),
+        required=True,
+    )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     common = {
@@ -37,14 +41,22 @@ def main() -> None:
         "automatic_downstream": False,
         "automatic_rl": False,
     }
-    if args.stage == "initial64":
+    if args.stage == "engineering_smoke":
         common["jobs"] = {
             "data": required("DATA_JOB_ID"),
             "smoke": required("SMOKE_JOB_ID"),
+        }
+        common["selection_role"] = "engineering_only_no_scientific_sampling"
+        common["candidate_list"] = ["sft_v2", "sft_v2_c"]
+    elif args.stage == "planner64":
+        common["jobs"] = {
             "train": required("TRAIN_JOB_ID"),
             "planner64": required("PLANNER_JOB_ID"),
             "assemble64": required("ASSEMBLY_JOB_ID"),
         }
+        common["prior_engineering_submission_sha256"] = required(
+            "PRIOR_ENGINEERING_SUBMISSION_SHA"
+        )
         common["candidate_list"] = ["sft_v2", "sft_v2_c"]
     else:
         common["jobs"] = {

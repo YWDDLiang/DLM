@@ -108,9 +108,13 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
             planner = (ROOT / f"planner{stage}.sbatch").read_text(encoding="utf-8")
             self.assertIn("#SBATCH --cpus-per-task=8", planner)
             self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", planner)
-        initial = (ROOT / "submit_once.sh").read_text(encoding="utf-8")
-        self.assertIn("--array=0-1%2", initial)
-        self.assertIn("--array=0-2%2", initial)
+        engineering = (ROOT / "submit_once.sh").read_text(encoding="utf-8")
+        science64 = (ROOT / "submit_training64_once.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("--array=0-1%2", engineering)
+        self.assertIn("--array=0-1%2", science64)
+        self.assertIn("--array=0-2%2", science64)
 
     def test_dual_runtime_data_firewall(self) -> None:
         data = (ROOT / "data.sbatch").read_text(encoding="utf-8")
@@ -154,7 +158,11 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         preflight = (ROOT / "preflight.py").read_text(encoding="utf-8")
         submissions = "".join(
             (ROOT / name).read_text(encoding="utf-8")
-            for name in ("submit_once.sh", "submit_256_once.sh")
+            for name in (
+                "submit_once.sh",
+                "submit_training64_once.sh",
+                "submit_256_once.sh",
+            )
         )
         self.assertIn("safe_regular_tar_members", prepare)
         self.assertIn("safe_python_tar_members", prepare)
@@ -165,17 +173,25 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertNotIn("--base-python", prepare)
         self.assertIn("validate_shared_smact4_runtime", preflight)
         self.assertIn("shared_smact4_runtime_terminal", preflight)
-        self.assertEqual(submissions.count('test -f "${SMACT4_RUNTIME_ROOT}/_SUCCESS"'), 2)
+        self.assertEqual(submissions.count('test -f "${SMACT4_RUNTIME_ROOT}/_SUCCESS"'), 3)
 
     def test_initial_submission_stops_at_raw64(self) -> None:
-        initial = (ROOT / "submit_once.sh").read_text(encoding="utf-8")
+        engineering = (ROOT / "submit_once.sh").read_text(encoding="utf-8")
+        initial = (ROOT / "submit_training64_once.sh").read_text(encoding="utf-8")
         followup = (ROOT / "submit_256_once.sh").read_text(encoding="utf-8")
+        self.assertIn("smoke.sbatch", engineering)
+        self.assertNotIn("train.sbatch", engineering)
+        self.assertNotIn("planner64.sbatch", engineering)
+        self.assertIn("sacct_smoke_before_science64.txt", initial)
+        self.assertIn('test "${matches}" = "COMPLETED|0:0"', initial)
+        self.assertIn("train.sbatch", initial)
         self.assertIn("planner64.sbatch", initial)
         self.assertNotIn("planner256.sbatch", initial)
         self.assertIn("planner256.sbatch", followup)
         self.assertIn("passing_candidates", followup)
-        self.assertNotIn("downstream.sbatch", initial + followup)
-        self.assertNotIn("rl.sbatch", initial + followup)
+        all_submissions = engineering + initial + followup
+        self.assertNotIn("downstream.sbatch", all_submissions)
+        self.assertNotIn("rl.sbatch", all_submissions)
 
     def test_fixed_adapter_resolver_supports_named_peft_subdirectory(self) -> None:
         from workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.resolve_fixed_adapter import (

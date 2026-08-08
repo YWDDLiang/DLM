@@ -107,8 +107,8 @@
       "runtime_bundle_sha256": "4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc",
       "destination": "/home/ywliang/codex_transfer/20260808_evidence_first_transfer_batch_v3",
       "completed_at": "2026-08-08T14:55:25+08:00",
-      "status": "verified_on_5090_waiting_for_A800_scp_window",
-      "a800_files_transferred": false,
+      "status": "transferred_to_A800_then_bootstrap_crlf_failure",
+      "a800_files_transferred": true,
       "run_or_job_created": false
     },
     {
@@ -121,7 +121,7 @@
       "exact_smact4_wheel_present": true,
       "destination": "/home/ywliang/codex_transfer/20260808_evidence_first_transfer_batch_v4",
       "completed_at": "2026-08-08T15:16:43+08:00",
-      "status": "verified_on_5090_waiting_for_A800_scp_window",
+      "status": "superseded_on_5090_before_A800_due_submission_order_audit",
       "a800_files_transferred": false,
       "run_or_job_created": false
     }
