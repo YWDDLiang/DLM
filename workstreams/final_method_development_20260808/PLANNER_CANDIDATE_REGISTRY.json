@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_planner_candidate_registry_v1",
-  "updated_at": "2026-08-08T14:35:00+08:00",
+  "updated_at": "2026-08-08T16:22:00+08:00",
   "selection_limit_non_p0_downstream": 2,
   "candidates": [
     {
@@ -28,14 +28,16 @@
     {
       "candidate_id": "SFT-v2",
       "role": "chemistry_first_minimal_plan_hash_shuffle",
-      "status": "source_candidate_ready_for_a800_audit",
+      "status": "smact_split_source_in_review_not_submitted",
+      "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
       "execution_rule": "always_execute",
       "results": null
     },
     {
       "candidate_id": "SFT-v2-C",
       "role": "chemistry_first_minimal_plan_curriculum",
-      "status": "source_candidate_ready_for_a800_audit",
+      "status": "smact_split_source_in_review_not_submitted",
+      "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
       "execution_rule": "always_execute",
       "results": null
     }

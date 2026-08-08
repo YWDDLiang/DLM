@@ -1,7 +1,7 @@
 {
   "base_seed": 26080964,
   "denominator": 64,
-  "identity": "h1_chemistry_first_sft_v2_v1",
+  "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
   "independent_from_training_and_other_stages": true,
   "rows": [
     {

@@ -1,6 +1,6 @@
 # H1 chemistry-first SFT-v2 immutable execution protocol
 
-Identity: `h1_chemistry_first_sft_v2_v1`.
+Identity: `h1_chemistry_first_sft_v2_smact_split_v2`.
 
 This package executes the two preregistered Planner candidates `sft_v2` and
 `sft_v2_c`. Both start from the protected P0 adapter and consume exactly the
@@ -9,15 +9,16 @@ versus the registered chemistry-first curriculum. The generated Plan remains
 the existing six-line no-charge representation. Oxidation witnesses are
 training-only and cannot appear as an unconditional invalid formula target.
 
-The data stage first exports a read-only legacy SMACT 3.1 snapshot, then uses
-the exact SMACT 4.0.0 ICSD24 contract to identify POS and build both ledgers.
-The build fails closed on source counts, evaluator identity, witness parity,
-split leakage, multiset/order identity, weight masks, or tokenizer truncation.
-Exact SMACT 4.0 runs through a portable CPython 3.12.13 bundle containing 54
-SHA-locked Linux wheels. The bundle is installed with `--no-index --no-deps`
-inside a new run-local directory, with user-site imports disabled, and is
-published atomically only after `pip check`, exact contract, and Transformers
-tokenizer probes pass. It never mutates a shared Conda environment.
+The data path is split across a hard evaluator firewall. A800 exports a
+read-only MP20 snapshot under its existing SMACT 3.1 runtime and does not
+install, import, or execute SMACT 4.0. The exact SMACT 4.0.0 ICSD24 witness
+ledger is produced only on the local machine. Its manifest binds every source
+row to the frozen source-inventory SHA, parent snapshot SHA, split, ordinal,
+material identity, formula, legacy verdict, exact witness and contract SHA.
+A800 consumes that immutable ledger with JSON/hash checks only. Missing,
+duplicate, extra, stale or
+mismatched rows are engineering failures. The resulting POS intersection is
+therefore exact without running SMACT 4.0 on A800.
 
 Training uses batch 1, accumulation 8, LR 2e-6, zero weight decay, cosine
 schedule, the derived warmup, and exactly one complete ledger epoch. The last
@@ -27,11 +28,16 @@ and after training; degradation above 1% is a scientific stop for that
 candidate, while the other candidate continues.
 
 Raw64 compares each candidate with one common P0 realization on the same
-stateless ordinal ledger. Raw256 is a separate submission and may include only
-candidates whose raw64 terminal passes every gate. Every raw attempt remains in
-the denominator. There is no retry, replacement, repair, filter, rerank,
-best-of-n, Body generation, refiner, Direct structure evaluation, S.U.N.,
-checkpoint reselection, downstream submission, or RL in this package.
+stateless ordinal ledger. Generation stops before assembly. The complete raw
+files are transferred to the local machine, audited with exact SMACT 4.0, and
+returned as a sealed per-arm bundle. A800 verifies each report against the
+current raw-file SHA, source inventory, science ledger, exact denominator and
+contract SHA before its SMACT 3.1 gate assembly. Raw256 repeats the same split
+and may include only candidates whose raw64 terminal passes every gate. Every
+raw attempt remains in the denominator. There is no retry, replacement,
+repair, filter, rerank, best-of-n, Body generation, refiner, Direct structure
+evaluation, S.U.N., checkpoint reselection, downstream submission, or RL in
+this package.
 
 All remote paths must be new. The source inventory, archive, P0 adapter,
 runtime contracts, MP20 counts, ledgers, partitions, and submission records are
@@ -39,17 +45,19 @@ verified before the first `sbatch`. Scientific failures return completed
 terminal evidence; engineering failures fail closed and require a new
 immutable repair version.
 
-The one-time local construction and offline probe of the portable runtime
-bundle is the explicit exception authorized on 2026-08-08. After that freeze,
-all project programs, tests, data construction, training, generation, and
-evaluation run only on A800 through the existing `ssha800` or `ssha800_2`
-tmux sessions. The local machine remains the source-editing, evidence, and Git
-control plane only.
+The local-machine exception is restricted to the exact SMACT 4.0 witness and
+raw secondary-audit producers. All model code, source tests, tokenizer checks,
+data assembly, training, generation and primary SMACT 3.1 evaluation run on
+A800 through the existing `ssha800` or `ssha800_2` tmux sessions. No exact
+SMACT 4.0 executable path exists in any A800 submission, and the retired
+portable-runtime builders are excluded from this source snapshot.
 
-Submission is deliberately split. `submit_once.sh` creates only the CPU data
-job and the two-candidate GPU smoke array. It does not submit training or raw
-sampling. After both smoke tasks have terminal pass markers and `sacct`
-reports `COMPLETED 0:0`, `submit_training64_once.sh` performs a fresh preflight
-and resource audit, then submits the fixed-endpoint training and raw64 DAG.
-Raw256 remains a third, separately locked submission. Thus no scientific job
-is even queued before the minimal A800 smoke has passed.
+Submission is deliberately split at every cross-machine boundary.
+`submit_snapshot_once.sh` creates only the legacy snapshot. After the local
+witness ledger returns, `submit_once.sh` creates the CPU data job and the
+two-candidate GPU smoke array. `submit_training64_once.sh` submits only fixed-
+endpoint training and raw64 generation. `submit_assemble64_once.sh` is allowed
+only after the sealed local raw64 audit returns. Raw256 generation and assembly
+use two further separately locked submissions. Thus no job crosses a local
+SMACT4 boundary automatically, and no scientific job is queued before the
+minimal A800 smoke has passed.

@@ -1,101 +1,90 @@
 # Current state
 
-Updated: 2026-08-08 (Asia/Shanghai)
+Updated: 2026-08-08 16:22 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_SOURCE_CANDIDATE_READY_FOR_A800_AUDIT`
+Overall status: `PLANNER_SFT_V2_SMACT_SPLIT_SOURCE_IN_REVIEW`
 
-The Evidence-First workstream has begun on branch
-`codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3, integration,
-or final-evaluation scientific result has been read or created under this
-workstream.
+The Evidence-First workstream is active on branch
+`codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3,
+integration, or final-evaluation scientific result has been read or created
+under this workstream. No training, generation, Direct, refiner, S.U.N., or RL
+job has been submitted.
 
-## Read-only execution audit
+## Connection and read-only audit
 
-- 5090 host: reachable through the configured port-2213 key path.
-- Existing A800 tmux sessions `ssha800` and `ssha800_2`: present,
-  `pane_dead=0`, `pane_current_command=ssh`.
-- A800 user queue at audit time: empty.
-- `gpu` and `gpu_long`: available/up; exact allocation is rechecked immediately
-  before each submission.
-- No installed A800 Python runtime satisfies SMACT 4.0's Python
-  `>=3.11,<3.14` contract; discovered Conda runtimes are Python 3.10 with
-  SMACT 3.1 or 3.2.
-- Frozen C0/C1 remote source and run roots: absent.
-- `final_method_development_20260808` remote root: absent.
-- `final_paper_closure_20260808` remote root: absent.
-- Duplicate submission risk found: none.
+- 5090 is reachable only through port 2213 and the configured private key.
+- Existing A800 tmux sessions `ssha800` and `ssha800_2` were present with
+  `pane_dead=0` and `pane_current_command=ssh` at the last audit.
+- A800 access remains restricted to those existing sessions. Neither may be
+  recreated or reconnected; if both fail the workstream stops.
+- A800 had no user jobs at the initial audit. Every submission still requires
+  a fresh `sinfo`/`squeue` snapshot.
+- Audit marker: `__EF_AUDIT_DONE__` at 2026-08-08T12:59:52+08:00.
 
-Audit marker: `__EF_AUDIT_DONE__` at 2026-08-08T12:59:52+08:00.
+## Frozen evidence already obtained
+
+- Protected P0/B0/model_494 identities remain unchanged.
+- Transfer v1 failed before source creation because archived executable files
+  contained CRLF. The immutable failure evidence is retained.
+- Corrected archive from commit `ef82ffc` has SHA
+  `79d1e6e60b06e61e0654ebdafcfad828cb86888b7f17fff9bcbfeae2a97e42b9`.
+- The corrected A800 source bootstrap passed under run
+  `/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_v1`:
+  source inventory SHA
+  `f429f63ef42ead9162149ddce135bb35da7fc2ad94d3e86c8135506063f6a801`,
+  source archive SHA
+  `555fdcc59901aad4bd4ceae685b28827ab3d5b312434706ce5a319d2c815de25`,
+  source manifest SHA
+  `b0fab254166928df999ffeb81199aeca699904508895fb98f73645687e8faf5d`,
+  590 files.
+- The attempted A800 portable SMACT4 runtime failed before project tests or
+  science because `contourpy-1.3.3` required a newer manylinux tag. Its partial
+  build and logs remain immutable; it is not repaired or reused.
+- Two independent engineering reviewers converged on the same safe remedy:
+  exact SMACT4 must be machine-separated, complete, SHA-bound, and joined
+  one-to-one; stale, missing, duplicate, extra or substituted rows must fail.
+
+## User-frozen evaluator split
+
+A800 now uses only its existing Python 3.10/SMACT 3.1 environment. Exact
+SMACT 4.0 must never be installed or executed on A800. The earlier foreground
+zip-overlay probe was already active when this rule was frozen; it is ignored,
+is not a gate, and must not be interrupted under the tmux safety contract.
+
+The replacement identity is `h1_chemistry_first_sft_v2_smact_split_v2`:
+
+1. A800 exports the complete immutable MP20 legacy snapshot using SMACT 3.1.
+2. The local machine runs only the explicitly authorized exact-SMACT4 witness
+   builder from the same frozen source inventory and returns a sealed
+   one-row-per-source ledger.
+3. A800 verifies parent/source/ordinal/material/formula/witness hashes and uses
+   the exact POS intersection to build data, smoke, train, and generate raw64.
+4. Raw64 generation stops. The local machine produces complete exact-SMACT4
+   per-arm audit reports; A800 verifies every report against its current raw
+   bytes before SMACT3 gate assembly.
+5. Raw256 repeats the same generation/local-audit/assembly split only for
+   raw64-passing candidates.
+
+No A800 submission contains `SMACT4_PYTHON` or an exact-SMACT4 executable
+path. The local exception is limited to witness and raw secondary-audit
+production; all model tests, tokenizer checks, data assembly, training,
+generation, and primary evaluation remain on A800.
+The replacement source also excludes the retired portable-runtime builders,
+requirements, and launcher, so the A800 snapshot contains no dormant SMACT4
+runtime entry point. The immutable failed runtime run remains preserved as
+historical evidence outside this source.
 
 ## Immediate critical path
 
-1. Transfer the committed source snapshot and frozen portable SMACT4 bundle in
-   one SCP batch, then freeze the canonical source on A800.
-2. Atomically prepare the run-local SMACT4 runtime and run source, isolated-
-   archive, exact-tokenizer, and evaluator preflights on A800.
-3. Submit the SFT-v2/SFT-v2-C data/smoke/training/raw64 DAG only after those
-   gates and a fresh `sinfo`/`squeue` audit.
-4. Freeze and execute C0/C1, then audit B0/B1/B2 and construct B3 state panels.
-
-The chemistry-first implementation includes the common-record data builder,
-deterministic base/curriculum orderings, fixed-endpoint trainer, named-PEFT
-endpoint resolver, separate exact-SMACT4 audit, and raw64/raw256 gate
-assembler. Before the portable-runtime changes, 47 focused local/regression
-tests passed. Those changes are intentionally not re-run locally: by explicit
-user instruction, all subsequent project programs and tests run on A800 only.
-
-The one-time authorized local runtime exception produced a portable CPython
-3.12.13 + 54-wheel bundle. Offline installation passed `pip check`; the probe
-reported SMACT 4.0.0, Transformers 4.54.0, 93 oxidation elements, and contract
-SHA `ad070f3a...`. Frozen bundle archive SHA is
-`4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc`.
-The full 27,136-row census, post-bundle A800 tests, exact-tokenizer audit,
-isolated archive test, and A800 smoke remain pending and are not represented
-as passed.
-
-Transfer batch v1 reached 5090 only and was superseded before any A800 copy or
-source/run creation because static Git-tree review found the frozen SMACT wheel
-was excluded by the repository-wide `*.whl` ignore rule. Commit `0ec8940`
-force-adds the exact 2 MB wheel; the unused v1 inputs remain immutable evidence
-and are never submitted.
-
-Corrected transfer batch v3 is frozen from commit `1b7b51d`: source archive
-SHA `e084fbd66093f158662dd4ada3a0c3fad8be4d3008a64aa16bff1acfc2578eb4`
-(10,179,180 bytes). A single local-to-5090 SCP completed at
-`2026-08-08T14:55:25+08:00`; both source and runtime bundle hashes matched on
-5090. The A800 transfer completed and both inputs matched there.
-
-The first A800 bootstrap then failed before creating staging, source-freeze,
-runtime, or scientific run paths. Exact byte inspection found CRLF in the
-archived shell scripts (`bootstrap_source_on_a800.sh` SHA `b682ff01...`), so
-`set -Eeuo pipefail` was parsed with a trailing carriage return. This is a
-packaging-only engineering failure. Transfer input v1 is retained read-only;
-the bounded v2 repair freezes `*.sh` and `*.sbatch` to LF and changes only the
-transfer-input path. All scientific contracts and the first formal run
-identity remain unchanged because none was created.
-
-The repair archive is frozen from commit `b6b9ae3`: SHA
-`5fbc73259011a34041f101dd5031d800d69a083806fdb63647bf461b9b0d0635`
-(10,177,969 bytes). A packaging-only audit found zero carriage-return bytes
-across all 369 archived shell/sbatch files and confirmed the exact SMACT4 wheel
-is present. Its single local-to-5090 SCP completed at
-`2026-08-08T15:16:43+08:00` with matching SHA; A800 transfer input v2 remains
-empty pending the required next SCP interval.
-
-Before that next hop, a static submission audit found the candidate still
-pre-submitted training and raw64 behind smoke dependencies. Although those
-jobs could not execute before smoke, pre-submission violates the frozen rule
-that minimal GPU smoke must pass before any scientific job is submitted.
-Therefore the `b6b9ae3` archive remains 5090-only and is superseded without
-execution. The source now has distinct one-shot engineering-smoke and
-training/raw64 submissions; the latter requires both smoke markers plus exact
-`sacct COMPLETED|0:0` rows and takes a fresh preflight/resource snapshot.
-
-The resulting execution candidate is commit `ef82ffc`, archive SHA
-`79d1e6e60b06e61e0654ebdafcfad828cb86888b7f17fff9bcbfeae2a97e42b9`
-(10,180,252 bytes). Its packaging audit covered 370 shell/sbatch files with
-zero carriage-return bytes and retained the exact evaluator wheel. The single
-local-to-5090 transfer completed at `2026-08-08T15:27:06+08:00` with matching
-SHA. Transfer input v2 on A800 remains empty until the next legal SCP window.
+1. Complete static review, commit, and push the split-source package.
+2. Transfer it after the ten-minute SCP interval, freeze it into a new
+   immutable A800 run root, and run SMACT3-only source/isolated/preflight tests.
+3. Submit only the legacy snapshot job after fresh partition checks.
+4. Pull that snapshot, build the local exact-SMACT4 witness ledger, return it,
+   and submit data plus minimal GPU smoke only.
+5. Submit fixed-endpoint training and raw64 generation only after both smoke
+   tasks are `COMPLETED 0:0`; do not queue assembly before the local audit.
+6. Continue C0/C1 and the B3 portfolio after this source family reaches its
+   registered terminal.
 
 No Planner or DLM RL is authorized.

@@ -13,7 +13,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from crystal_dlm.ordinal_rng import derive_ordinal_seed
 
 
-IDENTITY = "h1_chemistry_first_sft_v2_v1"
+IDENTITY = "h1_chemistry_first_sft_v2_smact_split_v2"
 SCHEMA = "h1_chemistry_first_planner_science_ledger_v1"
 
 

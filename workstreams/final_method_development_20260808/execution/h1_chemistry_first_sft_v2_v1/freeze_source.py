@@ -13,7 +13,7 @@ import tarfile
 from typing import Iterable
 
 
-IDENTITY = "h1_chemistry_first_sft_v2_v1"
+IDENTITY = "h1_chemistry_first_sft_v2_smact_split_v2"
 WORKSTREAM_REL = Path("workstreams/final_method_development_20260808")
 TEXT_SUFFIXES = {
     ".py",

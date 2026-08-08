@@ -24,7 +24,10 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         )
 
     def test_identity_and_protected_roots(self) -> None:
-        self.assertEqual(self.config["identity"], "h1_chemistry_first_sft_v2_v1")
+        self.assertEqual(
+            self.config["identity"],
+            "h1_chemistry_first_sft_v2_smact_split_v2",
+        )
         self.assertEqual(
             self.config["p0_adapter_weight_sha256"],
             "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
@@ -116,69 +119,75 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertIn("--array=0-1%2", science64)
         self.assertIn("--array=0-2%2", science64)
 
-    def test_dual_runtime_data_firewall(self) -> None:
+    def test_cross_machine_evaluator_firewall(self) -> None:
+        snapshot = (ROOT / "snapshot.sbatch").read_text(encoding="utf-8")
         data = (ROOT / "data.sbatch").read_text(encoding="utf-8")
         self.assertIn(
             '"${LEGACY_PYTHON}" scripts/export_h1_nocharge_mp20_legacy_snapshot.py',
-            data,
+            snapshot,
         )
         self.assertIn(
-            '"${SMACT4_PYTHON}" scripts/build_h1_chemistry_first_sft_data.py',
+            '"${LEGACY_PYTHON}" scripts/build_h1_chemistry_first_sft_data.py',
             data,
         )
+        self.assertIn("--smact4-witness-bundle-dir", data)
+        self.assertIn("--expected-source-inventory-sha256", data)
         self.assertIn("--tokenizer-path", data)
-
-    def test_exact_smact4_wheel_is_frozen_and_offline(self) -> None:
-        runtime = self.config["shared_smact4_runtime"]
-        wheel = ROOT / "vendor" / runtime["wheel"]
-        bundle_freeze = json.loads(
-            (ROOT / "SMACT4_RUNTIME_BUNDLE_FREEZE_RECORD.json").read_text(
-                encoding="utf-8"
-            )
+        assembly = (ROOT / "assemble_stage.sbatch").read_text(encoding="utf-8")
+        self.assertIn("verify_h1_local_smact4_stage_audit_bundle.py", assembly)
+        a800_scripts = "".join(
+            path.read_text(encoding="utf-8")
+            for path in ROOT.iterdir()
+            if path.suffix in {".sh", ".sbatch"}
         )
+        self.assertNotIn("SMACT4_PYTHON", a800_scripts)
+        self.assertNotIn("audit_h1_chemistry_first_planner_smact4.py", assembly)
+        for obsolete_runtime_entry in (
+            "prepare_runtime_on_a800.sh",
+            "prepare_shared_smact4_runtime.py",
+            "freeze_smact4_runtime_bundle.py",
+            "shared_smact4_python.sh",
+            "smact4_runtime_requirements.in",
+        ):
+            self.assertFalse((ROOT / obsolete_runtime_entry).exists())
+
+    def test_exact_smact4_is_local_only_and_sha_bound(self) -> None:
+        runtime = self.config["local_smact4_ledger"]
+        wheel = ROOT / "vendor" / runtime["wheel"]
         self.assertEqual(
             hashlib.sha256(wheel.read_bytes()).hexdigest(),
             runtime["wheel_sha256"],
         )
-        self.assertFalse(runtime["network_install"])
-        self.assertFalse(runtime["global_environment_mutation"])
-        self.assertEqual(runtime["base_python_requirement"], ">=3.11,<3.14")
-        self.assertEqual(runtime["portable_python_version"], "3.12.13")
-        self.assertEqual(runtime["wheel_count"], 54)
-        self.assertEqual(
-            runtime["bundle_archive_sha256"], bundle_freeze["archive_sha256"]
-        )
-        self.assertEqual(
-            runtime["bundle_manifest_sha256"],
-            bundle_freeze["bundle_manifest_sha256"],
-        )
-        prepare = (ROOT / "prepare_shared_smact4_runtime.py").read_text(
-            encoding="utf-8"
-        )
+        self.assertEqual(runtime["execution_location"], "local_windows_only")
+        self.assertFalse(runtime["a800_execution"])
+        self.assertFalse(self.config["a800_smact4_execution"])
+        self.assertEqual(runtime["contract_sha256"], self.config["evaluators"]["secondary"]["contract_sha256"])
         preflight = (ROOT / "preflight.py").read_text(encoding="utf-8")
         submissions = "".join(
             (ROOT / name).read_text(encoding="utf-8")
             for name in (
+                "submit_snapshot_once.sh",
                 "submit_once.sh",
                 "submit_training64_once.sh",
+                "submit_assemble64_once.sh",
                 "submit_256_once.sh",
+                "submit_assemble256_once.sh",
             )
         )
-        self.assertIn("safe_regular_tar_members", prepare)
-        self.assertIn("safe_python_tar_members", prepare)
-        self.assertIn('"--no-index"', prepare)
-        self.assertIn('"--no-deps"', prepare)
-        self.assertIn('"PYTHONNOUSERSITE": "1"', prepare)
-        self.assertIn("build_root.rename(output_root)", prepare)
-        self.assertNotIn("--base-python", prepare)
-        self.assertIn("validate_shared_smact4_runtime", preflight)
-        self.assertIn("shared_smact4_runtime_terminal", preflight)
-        self.assertEqual(submissions.count('test -f "${SMACT4_RUNTIME_ROOT}/_SUCCESS"'), 3)
+        self.assertNotIn("validate_shared_smact4_runtime", preflight)
+        self.assertNotIn("SMACT4_PYTHON", submissions)
+        self.assertNotIn("smact4-python", submissions)
+        self.assertIn("LOCAL_SMACT4_WITNESS_ROOT", submissions)
+        self.assertIn("LOCAL_SMACT4_AUDIT_ROOT", submissions)
 
-    def test_initial_submission_stops_at_raw64(self) -> None:
+    def test_submissions_stop_at_each_local_smact4_boundary(self) -> None:
+        snapshot = (ROOT / "submit_snapshot_once.sh").read_text(encoding="utf-8")
         engineering = (ROOT / "submit_once.sh").read_text(encoding="utf-8")
         initial = (ROOT / "submit_training64_once.sh").read_text(encoding="utf-8")
+        assembly64 = (ROOT / "submit_assemble64_once.sh").read_text(encoding="utf-8")
         followup = (ROOT / "submit_256_once.sh").read_text(encoding="utf-8")
+        assembly256 = (ROOT / "submit_assemble256_once.sh").read_text(encoding="utf-8")
+        self.assertIn("snapshot.sbatch", snapshot)
         self.assertIn("smoke.sbatch", engineering)
         self.assertNotIn("train.sbatch", engineering)
         self.assertNotIn("planner64.sbatch", engineering)
@@ -186,10 +195,16 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertIn('test "${matches}" = "COMPLETED|0:0"', initial)
         self.assertIn("train.sbatch", initial)
         self.assertIn("planner64.sbatch", initial)
+        self.assertNotIn("assemble64.sbatch", initial)
         self.assertNotIn("planner256.sbatch", initial)
+        self.assertIn("assemble64.sbatch", assembly64)
+        self.assertIn("sacct_planner64_before_assembly.txt", assembly64)
         self.assertIn("planner256.sbatch", followup)
+        self.assertNotIn("assemble256.sbatch", followup)
+        self.assertIn("assemble256.sbatch", assembly256)
+        self.assertIn("sacct_planner256_before_assembly.txt", assembly256)
         self.assertIn("passing_candidates", followup)
-        all_submissions = engineering + initial + followup
+        all_submissions = snapshot + engineering + initial + assembly64 + followup + assembly256
         self.assertNotIn("downstream.sbatch", all_submissions)
         self.assertNotIn("rl.sbatch", all_submissions)
 

@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_v1"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
@@ -12,8 +12,6 @@ MP20_DIR="${PROJECT_ROOT}/reference/crysllmgen/data/mp_20"
 LEGACY_PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 EXPECTED_SOURCE_INVENTORY_SHA256="${1:?expected SOURCE_SHA256.txt digest}"
 EXPECTED_ARCHIVE_SHA256="${2:?expected source archive digest}"
-SMACT4_PYTHON="${3:?exact SMACT 4.0.0 Python path}"
-SMACT4_RUNTIME_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_smact4_400_runtime_v1
 
 test -d "${RUN_ROOT}"
 test -d "${SOURCE_ROOT}"
@@ -26,15 +24,10 @@ test -f "${RUN_ROOT}/status/smoke_sft_v2_SUCCESS"
 test -f "${RUN_ROOT}/status/smoke_sft_v2_c_SUCCESS"
 test -f "${RUN_ROOT}/status/submitted_smoke_job_id.txt"
 test -x "${LEGACY_PYTHON}"
-test -x "${SMACT4_PYTHON}"
-test "${SMACT4_PYTHON}" = "${SMACT4_RUNTIME_ROOT}/python"
-test -f "${SMACT4_RUNTIME_ROOT}/terminal_report.json"
-test -f "${SMACT4_RUNTIME_ROOT}/terminal_report.sha256"
-test -f "${SMACT4_RUNTIME_ROOT}/_SUCCESS"
 test ! -e "${RUN_ROOT}/submission_record.json"
 test ! -e "${RUN_ROOT}/training"
 test ! -e "${RUN_ROOT}/planner64"
-mkdir "${RUN_ROOT}/.submit_science64_lock"
+mkdir "${RUN_ROOT}/.submit_science64_generation_lock"
 
 observed_source_sha="$(sha256sum "${SOURCE_ROOT}/SOURCE_SHA256.txt" | cut -d' ' -f1)"
 observed_archive_sha="$(sha256sum "${RUN_ROOT}/source_archive.tar.gz" | cut -d' ' -f1)"
@@ -47,61 +40,49 @@ LEDGER256_SHA="$(sha256sum "${EXECUTION_DIR}/LEDGER256.json" | cut -d' ' -f1)"
 PRIOR_ENGINEERING_SUBMISSION_SHA="$(sha256sum "${RUN_ROOT}/engineering_submission_record.json" | cut -d' ' -f1)"
 
 SMOKE_JOB_ID="$(tr -d '[:space:]' < "${RUN_ROOT}/status/submitted_smoke_job_id.txt")"
-case "${SMOKE_JOB_ID}" in
-  ''|*[!0-9]*) echo "invalid smoke job id: ${SMOKE_JOB_ID}" >&2; exit 3 ;;
-esac
-sacct -n -X -j "${SMOKE_JOB_ID}" -o JobIDRaw,State,ExitCode -P \
-  > "${RUN_ROOT}/status/sacct_smoke_before_science64.txt"
+case "${SMOKE_JOB_ID}" in ''|*[!0-9]*) echo "invalid smoke job id: ${SMOKE_JOB_ID}" >&2; exit 3 ;; esac
+sacct -n -X -j "${SMOKE_JOB_ID}" -o JobIDRaw,State,ExitCode -P > "${RUN_ROOT}/status/sacct_smoke_before_science64.txt"
 for task in 0 1; do
   expected_id="${SMOKE_JOB_ID}_${task}"
-  matches="$(awk -F'|' -v wanted="${expected_id}" '$1 == wanted {print $2 "|" $3}' \
-    "${RUN_ROOT}/status/sacct_smoke_before_science64.txt")"
+  matches="$(awk -F'|' -v wanted="${expected_id}" '$1 == wanted {print $2 "|" $3}' "${RUN_ROOT}/status/sacct_smoke_before_science64.txt")"
   test "${matches}" = "COMPLETED|0:0"
 done
 
 test -d "${RUN_ROOT}/preflight"
-test ! -e "${RUN_ROOT}/preflight/preflight_science64_report.json"
+test ! -e "${RUN_ROOT}/preflight/preflight_science64_generation_report.json"
 export CUDA_VISIBLE_DEVICES=
 export PYTHONPATH="${SOURCE_ROOT}"
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_DATASETS_OFFLINE=1
 "${LEGACY_PYTHON}" "${EXECUTION_DIR}/preflight.py" \
-  --source-root "${SOURCE_ROOT}" \
-  --config "${EXECUTION_DIR}/CONFIG.json" \
+  --source-root "${SOURCE_ROOT}" --config "${EXECUTION_DIR}/CONFIG.json" \
   --authorization "${EXECUTION_DIR}/AUTHORIZATION.json" \
-  --ledger64 "${EXECUTION_DIR}/LEDGER64.json" \
-  --ledger256 "${EXECUTION_DIR}/LEDGER256.json" \
-  --legacy-python "${LEGACY_PYTHON}" --smact4-python "${SMACT4_PYTHON}" \
+  --ledger64 "${EXECUTION_DIR}/LEDGER64.json" --ledger256 "${EXECUTION_DIR}/LEDGER256.json" \
+  --legacy-python "${LEGACY_PYTHON}" \
   --model-path "${MODEL_PATH}" --p0-adapter-path "${P0_ADAPTER}" \
-  --mp20-dir "${MP20_DIR}" \
-  --expected-source-inventory-sha256 "${EXPECTED_SOURCE_INVENTORY_SHA256}" \
-  --output "${RUN_ROOT}/preflight/preflight_science64_report.json"
-PREFLIGHT_SHA="$(sha256sum "${RUN_ROOT}/preflight/preflight_science64_report.json" | cut -d' ' -f1)"
+  --mp20-dir "${MP20_DIR}" --expected-source-inventory-sha256 "${EXPECTED_SOURCE_INVENTORY_SHA256}" \
+  --output "${RUN_ROOT}/preflight/preflight_science64_generation_report.json"
+PREFLIGHT_SHA="$(sha256sum "${RUN_ROOT}/preflight/preflight_science64_generation_report.json" | cut -d' ' -f1)"
 
 partition_snapshot="$(sinfo -h -o '%P|%a|%l|%G' | sed 's/[*]//g')"
-for partition in normal gpu gpu_long; do
-  printf '%s\n' "${partition_snapshot}" \
-    | awk -F'|' -v wanted="${partition}" '$1 == wanted && $2 == "up" {found=1} END {exit found ? 0 : 1}'
+for partition in gpu gpu_long; do
+  printf '%s\n' "${partition_snapshot}" | awk -F'|' -v wanted="${partition}" '$1 == wanted && $2 == "up" {found=1} END {exit found ? 0 : 1}'
 done
-printf '%s\n' "${partition_snapshot}" > "${RUN_ROOT}/status/sinfo_before_science64.txt"
-squeue -h -u "${USER}" -o '%i|%j|%T|%M|%l|%P|%b|%R' \
-  > "${RUN_ROOT}/status/squeue_before_science64.txt"
-SINFO_SHA="$(sha256sum "${RUN_ROOT}/status/sinfo_before_science64.txt" | cut -d' ' -f1)"
-SQUEUE_SHA="$(sha256sum "${RUN_ROOT}/status/squeue_before_science64.txt" | cut -d' ' -f1)"
+printf '%s\n' "${partition_snapshot}" > "${RUN_ROOT}/status/sinfo_before_science64_generation.txt"
+squeue -h -u "${USER}" -o '%i|%j|%T|%M|%l|%P|%b|%R' > "${RUN_ROOT}/status/squeue_before_science64_generation.txt"
+SINFO_SHA="$(sha256sum "${RUN_ROOT}/status/sinfo_before_science64_generation.txt" | cut -d' ' -f1)"
+SQUEUE_SHA="$(sha256sum "${RUN_ROOT}/status/squeue_before_science64_generation.txt" | cut -d' ' -f1)"
 
-common_export="ALL,EXPECTED_SOURCE_INVENTORY_SHA256=${EXPECTED_SOURCE_INVENTORY_SHA256},LEGACY_PYTHON=${LEGACY_PYTHON},SMACT4_PYTHON=${SMACT4_PYTHON}"
+common_export="ALL,EXPECTED_SOURCE_INVENTORY_SHA256=${EXPECTED_SOURCE_INVENTORY_SHA256},LEGACY_PYTHON=${LEGACY_PYTHON}"
 TRAIN_JOB_ID="$(sbatch --parsable --array=0-1%2 --export="${common_export}" "${EXECUTION_DIR}/train.sbatch")"
 printf '%s\n' "${TRAIN_JOB_ID}" > "${RUN_ROOT}/status/submitted_train_job_id.txt"
 PLANNER_JOB_ID="$(sbatch --parsable --array=0-2%2 --dependency=afterany:"${TRAIN_JOB_ID}" --export="${common_export},EXPECTED_LEDGER_SHA256=${LEDGER64_SHA}" "${EXECUTION_DIR}/planner64.sbatch")"
 printf '%s\n' "${PLANNER_JOB_ID}" > "${RUN_ROOT}/status/submitted_planner64_job_id.txt"
-ASSEMBLY_JOB_ID="$(sbatch --parsable --dependency=afterany:"${PLANNER_JOB_ID}" --export="${common_export},EXPECTED_LEDGER_SHA256=${LEDGER64_SHA}" "${EXECUTION_DIR}/assemble64.sbatch")"
-printf '%s\n' "${ASSEMBLY_JOB_ID}" > "${RUN_ROOT}/status/submitted_assemble64_job_id.txt"
 
 export SOURCE_INVENTORY_SHA="${EXPECTED_SOURCE_INVENTORY_SHA256}"
 export ARCHIVE_SHA="${EXPECTED_ARCHIVE_SHA256}"
-export LEDGER64_SHA LEDGER256_SHA LEGACY_PYTHON SMACT4_PYTHON PREFLIGHT_SHA SINFO_SHA SQUEUE_SHA
-export TRAIN_JOB_ID PLANNER_JOB_ID ASSEMBLY_JOB_ID PRIOR_ENGINEERING_SUBMISSION_SHA
+export LEDGER64_SHA LEDGER256_SHA LEGACY_PYTHON PREFLIGHT_SHA SINFO_SHA SQUEUE_SHA
+export TRAIN_JOB_ID PLANNER_JOB_ID PRIOR_ENGINEERING_SUBMISSION_SHA
 "${LEGACY_PYTHON}" "${EXECUTION_DIR}/write_submission_record.py" \
-  --stage planner64 --output "${RUN_ROOT}/submission_record.json"
+  --stage planner64_generation --output "${RUN_ROOT}/submission_record.json"
 sha256sum "${RUN_ROOT}/submission_record.json" > "${RUN_ROOT}/submission_record.sha256"
-printf 'train=%s\nplanner64=%s\nassemble64=%s\n' \
-  "${TRAIN_JOB_ID}" "${PLANNER_JOB_ID}" "${ASSEMBLY_JOB_ID}"
+printf 'train=%s\nplanner64=%s\n' "${TRAIN_JOB_ID}" "${PLANNER_JOB_ID}"

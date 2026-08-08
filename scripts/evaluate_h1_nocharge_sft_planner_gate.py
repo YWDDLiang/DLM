@@ -27,6 +27,9 @@ from crystal_dlm.h1_llm_planner import (  # noqa: E402
 from crystal_dlm.h1_nocharge_ion_aux import (  # noqa: E402
     SMACT4_VERSION,
 )
+from crystal_dlm.h1_local_smact4_ledger import (  # noqa: E402
+    EXPECTED_SMACT4_CONTRACT_SHA256,
+)
 
 
 SCHEMA = "h1_nocharge_ion_aux_planner_gate_v1"
@@ -109,7 +112,11 @@ def load_smact4_audit(
     ):
         raise ValueError(f"{arm} SMACT4 audit identity mismatch")
     contract = report.get("smact4_contract")
-    if not isinstance(contract, Mapping) or contract.get("smact_version") != SMACT4_VERSION:
+    if (
+        not isinstance(contract, Mapping)
+        or contract.get("smact_version") != SMACT4_VERSION
+        or contract.get("contract_sha256") != EXPECTED_SMACT4_CONTRACT_SHA256
+    ):
         raise ValueError(f"{arm} did not use exact SMACT {SMACT4_VERSION}")
     attempts = report.get("attempts")
     if not isinstance(attempts, list) or len(attempts) != denominator:

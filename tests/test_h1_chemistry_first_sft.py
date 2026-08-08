@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from collections import Counter
 import copy
+from pathlib import Path
+import tempfile
 import unittest
 
 from crystal_dlm.h1_chemistry_first_sft import (
@@ -22,6 +24,14 @@ from crystal_dlm.h1_chemistry_first_sft import (
 from crystal_dlm.h1_llm_planner import (
     H1_PLANNER_PROMPT_STYLE_RICH_NOCHARGE,
     build_planner_messages,
+)
+from crystal_dlm.h1_local_smact4_ledger import (
+    EXPECTED_SMACT4_CONTRACT_SHA256,
+    EXPECTED_SMACT4_VERSION,
+    EXPECTED_SMACT4_WHEEL_SHA256,
+    build_witness_ledger_payload,
+    load_and_attach_witness_bundle,
+    write_witness_bundle,
 )
 from crystal_dlm.h1_nocharge_ion_aux import (
     formula_from_atom_sequence,
@@ -74,6 +84,7 @@ def fixture_row(row_idx: int, *, positive: bool = True) -> dict:
                 "valid": True,
                 "stratum": "uniform_primary",
                 "witness": witness,
+                "official_witness_parity": True,
             }
             if positive
             else None
@@ -161,6 +172,69 @@ class ChemistryFirstSFTTests(unittest.TestCase):
         audit = audit_records(records, expected_all_count=2, expected_pos_count=1)
         self.assertTrue(audit["passed"], audit["failures"])
         self.assertEqual(audit["invalid_unconditional_formula_target_count"], 0)
+
+    def test_local_smact4_witness_bundle_is_complete_and_fail_closed(self):
+        source_rows = {}
+        legacy_report = {"contract_sha256": "legacy-parent", "splits": {}}
+        witness_reports = {}
+        for split in ("train", "val"):
+            positive = fixture_row(0, positive=True)
+            positive["split"] = split
+            negative = fixture_row(1, positive=False)
+            negative["split"] = split
+            source_rows[split] = [positive, negative]
+            legacy_report["splits"][split] = {
+                "snapshot_jsonl_sha256": f"{split}-snapshot",
+                "source_csv_sha256": f"{split}-csv",
+            }
+            witness_reports[split] = {
+                "official_witness_parity": True,
+                "stable_primary_indices": [0],
+            }
+        contract = {
+            "smact_version": EXPECTED_SMACT4_VERSION,
+            "release_wheel_sha256": EXPECTED_SMACT4_WHEEL_SHA256,
+            "contract_sha256": EXPECTED_SMACT4_CONTRACT_SHA256,
+        }
+        payload = build_witness_ledger_payload(
+            source_rows,
+            source_inventory_sha256="a" * 64,
+            legacy_report=legacy_report,
+            smact4_contract=contract,
+            witness_reports=witness_reports,
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "bundle"
+            manifest = write_witness_bundle(root, payload)
+            clean_rows = {
+                split: [
+                    {key: copy.deepcopy(value) for key, value in row.items() if key != "smact4"}
+                    for row in rows
+                ]
+                for split, rows in source_rows.items()
+            }
+            imported, reports = load_and_attach_witness_bundle(
+                root,
+                clean_rows,
+                legacy_report=legacy_report,
+                expected_source_inventory_sha256="a" * 64,
+                expected_manifest_sha256=manifest["manifest_sha256"],
+            )
+            self.assertEqual(
+                imported["smact4_contract"]["contract_sha256"],
+                EXPECTED_SMACT4_CONTRACT_SHA256,
+            )
+            self.assertEqual(reports["train"]["stable_primary_indices"], [0])
+            self.assertNotIn("smact4", clean_rows["train"][1])
+            clean_rows["train"][0]["material_id"] = "tampered"
+            with self.assertRaisesRegex(ValueError, "join mismatch"):
+                load_and_attach_witness_bundle(
+                    root,
+                    clean_rows,
+                    legacy_report=legacy_report,
+                    expected_source_inventory_sha256="a" * 64,
+                    expected_manifest_sha256=manifest["manifest_sha256"],
+                )
 
     def test_all_four_auxiliary_tasks_are_exact_and_weighted(self):
         row = fixture_row(0)

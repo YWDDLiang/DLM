@@ -1,0 +1,20 @@
+{
+  "schema": "h1_local_smact4_split_execution_record_v1",
+  "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
+  "user_decision": "A800 uses SMACT 3.1; exact SMACT 4.0 runs locally only",
+  "a800_smact4_execution": false,
+  "local_smact4_scope": [
+    "MP20 stable uniform-primary witness ledger",
+    "raw64 secondary audit ledger",
+    "raw256 secondary audit ledger"
+  ],
+  "smact4_version": "4.0.0",
+  "smact4_wheel_sha256": "e3eb968da92d47a8ef9a4af42af5589a6de61cccbca9d329937e1f4e402f0551",
+  "smact4_contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19",
+  "join_key": ["parent_sha256", "split_or_stage", "ordinal", "material_id_or_arm", "formula_or_raw_row_sha256"],
+  "missing_duplicate_extra_or_mismatch": "engineering_failure",
+  "scientific_contract_changed": false,
+  "thresholds_changed": false,
+  "models_changed": false,
+  "seeds_changed": false
+}

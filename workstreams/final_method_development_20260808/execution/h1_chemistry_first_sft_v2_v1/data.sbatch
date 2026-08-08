@@ -1,28 +1,33 @@
 #!/bin/bash
-#SBATCH --job-name=h1-cf-data-v1
+#SBATCH --job-name=h1-cf-data-v2
 #SBATCH --partition=normal
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=120G
 #SBATCH --time=08:00:00
-#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_v1/logs/%j_data.out
-#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_v1/logs/%j_data.err
+#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2/logs/%j_data.out
+#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2/logs/%j_data.err
 
 set -Eeuo pipefail
 umask 077
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_v1"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2"
 SOURCE_ROOT="${RUN_ROOT}/source"
-MP20_DIR="${PROJECT_ROOT}/reference/crysllmgen/data/mp_20"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
+FROZEN_WITNESS_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact4_witness_input_v1"
 
 : "${EXPECTED_SOURCE_INVENTORY_SHA256:?missing source identity}"
 : "${LEGACY_PYTHON:?missing legacy runtime}"
-: "${SMACT4_PYTHON:?missing exact SMACT4 runtime}"
+: "${LOCAL_SMACT4_WITNESS_ROOT:?missing local SMACT4 witness root}"
+: "${EXPECTED_LOCAL_SMACT4_WITNESS_MANIFEST_SHA256:?missing local witness manifest identity}"
 test "${SLURM_JOB_PARTITION:-}" = normal
 test -x "${LEGACY_PYTHON}"
-test -x "${SMACT4_PYTHON}"
+test "${LOCAL_SMACT4_WITNESS_ROOT}" = "${FROZEN_WITNESS_ROOT}"
+test -f "${LOCAL_SMACT4_WITNESS_ROOT}/MANIFEST.json"
+test -f "${LOCAL_SMACT4_WITNESS_ROOT}/_SUCCESS"
+test -f "${RUN_ROOT}/status/snapshot_SUCCESS"
+test -f "${RUN_ROOT}/legacy_snapshot/_SUCCESS"
 test ! -e "${RUN_ROOT}/data"
 test "$(sha256sum "${SOURCE_ROOT}/SOURCE_SHA256.txt" | cut -d' ' -f1)" = "${EXPECTED_SOURCE_INVENTORY_SHA256}"
 cd "${SOURCE_ROOT}"
@@ -31,6 +36,7 @@ sha256sum -c SOURCE_SHA256.txt
 export CUDA_VISIBLE_DEVICES=
 export PYTHONPATH="${SOURCE_ROOT}"
 export PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+export PYTHONNOUSERSITE=1
 export PYTHONPYCACHEPREFIX="${RUN_ROOT}/.pycache/${SLURM_JOB_ID}"
 export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 HF_DATASETS_OFFLINE=1
 export TOKENIZERS_PARALLELISM=false PYTHONHASHSEED=0
@@ -46,12 +52,11 @@ on_error() {
 }
 trap on_error ERR
 
-"${LEGACY_PYTHON}" scripts/export_h1_nocharge_mp20_legacy_snapshot.py \
-  --input-dir "${MP20_DIR}" \
-  --output-dir "${RUN_ROOT}/data/legacy_snapshot"
-
-"${SMACT4_PYTHON}" scripts/build_h1_chemistry_first_sft_data.py \
-  --legacy-snapshot-dir "${RUN_ROOT}/data/legacy_snapshot" \
+"${LEGACY_PYTHON}" scripts/build_h1_chemistry_first_sft_data.py \
+  --legacy-snapshot-dir "${RUN_ROOT}/legacy_snapshot" \
+  --smact4-witness-bundle-dir "${LOCAL_SMACT4_WITNESS_ROOT}" \
+  --expected-smact4-witness-manifest-sha256 "${EXPECTED_LOCAL_SMACT4_WITNESS_MANIFEST_SHA256}" \
+  --expected-source-inventory-sha256 "${EXPECTED_SOURCE_INVENTORY_SHA256}" \
   --output-dir "${RUN_ROOT}/data/sft" \
   --tokenizer-path "${MODEL_PATH}" \
   --max-length 512 --seed 26080817
@@ -60,7 +65,8 @@ test -f "${RUN_ROOT}/data/sft/_SUCCESS"
 test -f "${RUN_ROOT}/data/sft/audit_report.json"
 test -f "${RUN_ROOT}/data/sft/ORDER_LEDGER.json"
 sha256sum \
-  "${RUN_ROOT}/data/legacy_snapshot/report.json" \
+  "${RUN_ROOT}/legacy_snapshot/report.json" \
+  "${LOCAL_SMACT4_WITNESS_ROOT}/MANIFEST.json" \
   "${RUN_ROOT}/data/sft/audit_report.json" \
   "${RUN_ROOT}/data/sft/ORDER_LEDGER.json" \
   "${RUN_ROOT}/data/sft/sft_v2/train.jsonl" \

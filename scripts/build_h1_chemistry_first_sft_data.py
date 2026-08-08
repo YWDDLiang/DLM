@@ -45,19 +45,19 @@ from crystal_dlm.h1_llm_planner import (  # noqa: E402
 )
 from crystal_dlm.h1_nocharge_ion_aux import (  # noqa: E402
     SMACT4_ICSD24_FILTER,
-    SMACT4_VERSION,
     format_atom_sequence,
     format_ion_sequence,
     formula_from_atom_sequence,
     formula_from_ion_sequence,
     ion_charge_sum,
-    load_smact4_icsd24_oxidation_map,
+)
+from crystal_dlm.h1_local_smact4_ledger import (  # noqa: E402
+    load_and_attach_witness_bundle,
 )
 from crystal_dlm.r5_plan_state import PLAN_STATE_VERSION  # noqa: E402
 from scripts.build_h1_nocharge_ion_aux_sft_data import (  # noqa: E402
     LEGACY_EVALUATOR_SHA256,
     LEGACY_SMACT_VERSION,
-    attach_smact4_witnesses,
     format_messages,
     leakage_report,
     load_legacy_snapshot,
@@ -515,6 +515,9 @@ def write_candidate_dataset(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--legacy-snapshot-dir", type=Path, required=True)
+    parser.add_argument("--smact4-witness-bundle-dir", type=Path, required=True)
+    parser.add_argument("--expected-smact4-witness-manifest-sha256", required=True)
+    parser.add_argument("--expected-source-inventory-sha256", required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--tokenizer-path", required=True)
     parser.add_argument("--max-length", type=int, default=512)
@@ -534,13 +537,14 @@ def main() -> None:
                     f"frozen MP20 {split} count mismatch: {len(source_rows[split])} != {expected}"
                 )
 
-    oxidation_map, smact4_contract = load_smact4_icsd24_oxidation_map()
-    if str(smact4_contract.get("smact_version")) != SMACT4_VERSION:
-        raise RuntimeError("exact SMACT4 runtime identity mismatch")
-    witness_reports = {
-        split: attach_smact4_witnesses(source_rows[split], oxidation_map)
-        for split in ("train", "val")
-    }
+    local_witness_bundle, witness_reports = load_and_attach_witness_bundle(
+        args.smact4_witness_bundle_dir,
+        source_rows,
+        legacy_report=legacy_report,
+        expected_source_inventory_sha256=args.expected_source_inventory_sha256,
+        expected_manifest_sha256=args.expected_smact4_witness_manifest_sha256,
+    )
+    smact4_contract = local_witness_bundle["smact4_contract"]
     if any(not report["official_witness_parity"] for report in witness_reports.values()):
         raise RuntimeError("SMACT4 official/witness parity failed")
 
@@ -652,6 +656,14 @@ def main() -> None:
         },
         "smact4_contract": smact4_contract,
         "smact4_filter": dict(SMACT4_ICSD24_FILTER),
+        "local_smact4_witness_bundle": {
+            "execution_location": "local_windows_only",
+            "a800_smact4_execution": False,
+            "manifest_sha256": local_witness_bundle["manifest_sha256"],
+            "witness_ledger_sha256": local_witness_bundle[
+                "witness_ledger_sha256"
+            ],
+        },
         "source_counts": {key: len(value) for key, value in source_rows.items()},
         "source_csv_sha256": {
             split: legacy_report["splits"][split]["source_csv_sha256"]

@@ -1,7 +1,7 @@
 {
   "schema": "h1_chemistry_first_execution_config_v1",
-  "identity": "h1_chemistry_first_sft_v2_v1",
-  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_v1",
+  "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2",
   "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
   "model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
   "p0_adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
@@ -27,23 +27,19 @@
       "contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19"
     }
   },
-  "shared_smact4_runtime": {
-    "identity": "smact4_400_runtime_v1",
-    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_smact4_400_runtime_v1",
+  "local_smact4_ledger": {
+    "identity": "h1_local_smact4_ledger_v1",
+    "execution_location": "local_windows_only",
+    "a800_execution": false,
     "wheel": "smact-4.0.0-py3-none-any.whl",
     "wheel_sha256": "e3eb968da92d47a8ef9a4af42af5589a6de61cccbca9d329937e1f4e402f0551",
-    "bundle_archive": "smact4_400_runtime_v1_bundle.tar.gz",
-    "bundle_archive_bytes": 177305931,
-    "bundle_archive_sha256": "4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc",
-    "bundle_manifest_sha256": "90a0ad62af379d8c88a622f7b6ae6bd46994963dbb92199f044efa742b4aa2e4",
-    "portable_python_archive_sha256": "506191be3ee7bd190a8834dcdc1b3bc70aab50608deccc711935aa007239cabd",
-    "portable_python_version": "3.12.13",
-    "wheel_count": 54,
-    "base_python_requirement": ">=3.11,<3.14",
-    "network_install": false,
-    "global_environment_mutation": false,
-    "user_site_isolation": true,
-    "atomic_publish": true
+    "contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19",
+    "training_input_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact4_witness_input_v1",
+    "raw64_input_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_raw64_smact4_audit_input_v1",
+    "raw256_input_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_raw256_smact4_audit_input_v1",
+    "one_to_one_sha_join": true,
+    "fail_closed_missing_or_extra": true,
+    "network": false
   },
   "data": {
     "mp20_counts": {"train": 27136, "val": 9047, "test": 9046},
@@ -103,8 +99,10 @@
     "maximum_total_a800_authorized": 4
   },
   "body_dlm_changed": false,
-  "execution_location": "A800_existing_tmux_only",
-  "local_program_execution_after_runtime_bundle_freeze": false,
+  "execution_location": "A800_SMACT3_training_generation_and_primary_eval_plus_local_SMACT4_ledgers",
+  "a800_smact_version": "3.1.0",
+  "a800_smact4_execution": false,
+  "local_program_execution_scope": "exact_SMACT4_witness_and_raw_secondary_audits_only",
   "automatic_downstream": false,
   "automatic_rl": false
 }

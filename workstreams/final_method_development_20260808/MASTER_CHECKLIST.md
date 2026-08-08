@@ -19,12 +19,14 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [x] Implement common-record builder, deterministic curriculum, fixed-endpoint
       trainer, SMACT4 audit, and raw64/raw256 gate code.
 - [x] Pass focused local chemistry-first and no-charge regression tests.
-- [x] Freeze the one-time portable CPython 3.12.13/SMACT4 input bundle and
-      verify its 54-wheel closure with an offline probe and standard resolver.
-- [x] Record the post-bundle A800-only execution rule; do not run further
-      project programs or environment installation locally.
-- [ ] Pass local tests, isolated archive tests, A800 runtime preflight, and one
-      minimal GPU smoke for each new source family.
+- [-] Run the portable SMACT4 bundle on A800; the immutable attempt failed on
+      a manylinux compatibility boundary and the user retired this route.
+- [x] Freeze the replacement evaluator firewall: A800 SMACT3 only, exact
+      SMACT4 local witness/raw-audit ledgers only, complete one-to-one SHA join.
+- [ ] Pass SMACT3-only A800 source tests, isolated archive tests, runtime
+      preflight, and one minimal GPU smoke for each new source family.
+- [ ] Export and seal the complete A800 MP20 legacy snapshot.
+- [ ] Build the exact local SMACT4 witness ledger and verify its import on A800.
 - [ ] Execute C0 and C1 to fixed checkpoint 400.
 - [ ] Execute SFT-v2 and SFT-v2-C to their fixed final endpoints.
 - [ ] Complete P0/C0/C1/SFT-v2/SFT-v2-C raw64 gate.

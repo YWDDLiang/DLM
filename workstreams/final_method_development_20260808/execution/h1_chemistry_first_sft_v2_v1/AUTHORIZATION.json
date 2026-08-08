@@ -1,12 +1,12 @@
 {
   "schema": "h1_chemistry_first_authorization_v1",
-  "identity": "h1_chemistry_first_sft_v2_v1",
+  "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
   "user_authorized": true,
   "authorized_at": "2026-08-08",
   "scope": [
     "build frozen full MP20 chemistry-first SFT-v2 and SFT-v2-C ledgers",
     "train both fixed-endpoint single-GPU Planner candidates from protected P0",
-    "run paired raw64 for P0 and both candidates",
+    "run paired raw64 for P0 and both candidates with local-only exact-SMACT4 secondary ledgers",
     "run paired raw256 only for candidates passing every raw64 gate"
   ],
   "always_execute_candidates": ["sft_v2", "sft_v2_c"],
@@ -22,7 +22,9 @@
     "rerank": false,
     "best_of_n": false,
     "checkpoint_reselection": false,
-    "automatic_downstream": false
+    "automatic_downstream": false,
+    "smact4_on_a800": false,
+    "smact4_local_only": true
   },
   "terminal_scope": "Planner portfolio evidence only; downstream requires a later audited decision"
 }

@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-08T14:35:00+08:00",
+  "updated_at": "2026-08-08T16:22:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -86,6 +86,22 @@
       "global_environment_mutation": false
     }
   ],
+  "execution_contracts": [
+    {
+      "evidence_id": "local_smact4_split_execution_v2",
+      "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
+      "record_path": "workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1/LOCAL_SMACT4_SPLIT_EXECUTION_RECORD.json",
+      "record_sha256": "ef5d4a38925e0f9838e9f7152e2f3cf6b347a24155a1949c2425abd7c5693bc0",
+      "a800_smact_version": "3.1.0",
+      "a800_smact4_execution": false,
+      "local_smact4_scope": [
+        "MP20 stable uniform-primary witness ledger",
+        "raw64 secondary audit ledger",
+        "raw256 secondary audit ledger"
+      ],
+      "fail_closed_one_to_one_sha_join": true
+    }
+  ],
   "transfers": [
     {
       "evidence_id": "transfer_batch_v1_5090_only_superseded",
@@ -136,9 +152,13 @@
       "science_submission_requires_completed_smoke": true,
       "destination": "/home/ywliang/codex_transfer/20260808_evidence_first_transfer_batch_v5",
       "completed_at": "2026-08-08T15:27:06+08:00",
-      "status": "verified_on_5090_waiting_for_A800_scp_window",
-      "a800_files_transferred": false,
-      "run_or_job_created": false
+      "status": "transferred_to_A800_source_bootstrap_v2_passed_then_runtime_route_retired",
+      "a800_files_transferred": true,
+      "run_or_job_created": true,
+      "slurm_or_gpu_used": false,
+      "remote_source_inventory_sha256": "f429f63ef42ead9162149ddce135bb35da7fc2ad94d3e86c8135506063f6a801",
+      "remote_source_archive_sha256": "555fdcc59901aad4bd4ceae685b28827ab3d5b312434706ce5a319d2c815de25",
+      "remote_source_manifest_sha256": "b0fab254166928df999ffeb81199aeca699904508895fb98f73645687e8faf5d"
     }
   ],
   "engineering_failures": [
@@ -155,6 +175,19 @@
       "scientific_run_created": false,
       "gpu_or_slurm_used": false,
       "repair_identity": "h1_chemistry_first_sft_v2_bootstrap_line_end_repair_v2"
+    },
+    {
+      "evidence_id": "a800_portable_smact4_runtime_manylinux_failure_v1",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_smact4_400_runtime_v1",
+      "partial_build_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/.20260808_smact4_400_runtime_v1.building",
+      "failure_message": "contourpy-1.3.3 manylinux_2_27 wheel is not supported by the target A800 runtime",
+      "root_cause": "portable dependency wheel platform incompatibility before project tests",
+      "project_tests_started": false,
+      "training_or_generation_started": false,
+      "slurm_or_gpu_used": false,
+      "repair_attempted": false,
+      "route_retired_by_user": true,
+      "replacement_identity": "h1_chemistry_first_sft_v2_smact_split_v2"
     }
   ],
   "terminal_evidence": []

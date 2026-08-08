@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-08T13:05:00+08:00",
+  "updated_at": "2026-08-08T16:22:00+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -9,6 +9,10 @@
     "sun_threads_per_gpu_max": 8
   },
   "preferred_four_gpu_layout": ["B3", "B3", "Planner", "evaluation"],
+  "evaluator_location_contract": {
+    "a800": "SMACT_3.1_only",
+    "local": "exact_SMACT_4.0_witness_and_raw_secondary_audits_only"
+  },
   "submissions": [],
   "current_allocations": []
 }

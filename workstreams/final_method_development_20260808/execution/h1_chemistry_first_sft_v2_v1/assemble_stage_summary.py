@@ -61,7 +61,7 @@ def main() -> None:
     )
     payload = {
         "schema": "h1_chemistry_first_stage_summary_v1",
-        "identity": "h1_chemistry_first_sft_v2_v1",
+        "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
         "stage": args.stage,
         "status": status,
         "candidates": candidates,

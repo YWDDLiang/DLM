@@ -14,12 +14,11 @@ import sys
 from typing import Any, Mapping
 
 
-IDENTITY = "h1_chemistry_first_sft_v2_v1"
+IDENTITY = "h1_chemistry_first_sft_v2_smact_split_v2"
 LEDGER_SCHEMA = "h1_chemistry_first_planner_science_ledger_v1"
 EXPECTED_COUNTS = {"train": 27136, "val": 9047, "test": 9046}
 EXPECTED_LEGACY_SMACT = "3.1.0"
 EXPECTED_SECONDARY_SMACT = "4.0.0"
-EXPECTED_SMACT4_RUNTIME_IDENTITY = "smact4_400_runtime_v1"
 EXPECTED_SMACT4_WHEEL_SHA256 = (
     "e3eb968da92d47a8ef9a4af42af5589a6de61cccbca9d329937e1f4e402f0551"
 )
@@ -95,50 +94,32 @@ def runtime_probe(
     *,
     source_root: Path,
     expected_smact: str,
-    secondary: bool,
-    tokenizer_path: Path,
 ) -> dict[str, Any]:
     if not python.is_file():
         raise FileNotFoundError(python)
     code = r'''
 import json, os, sys
 from importlib.metadata import version
-payload = {"python": sys.version.split()[0], "smact": version("SMACT")}
-if os.environ["H1_SECONDARY"] == "1":
-    import transformers
-    from transformers import AutoTokenizer
-    from crystal_dlm.h1_nocharge_ion_aux import load_smact4_icsd24_oxidation_map
-    mapping, contract = load_smact4_icsd24_oxidation_map()
-    tokenizer = AutoTokenizer.from_pretrained(
-        os.environ["H1_TOKENIZER_PATH"], trust_remote_code=True, use_fast=True
-    )
-    payload.update({
-        "transformers": transformers.__version__,
-        "contract_sha256": contract["contract_sha256"],
-        "oxidation_elements": len(mapping),
-        "tokenizer_vocab": len(tokenizer),
-    })
-else:
-    import peft, torch, transformers
-    payload.update({
-        "torch": torch.__version__,
-        "transformers": transformers.__version__,
-        "peft": getattr(peft, "__version__", "unknown"),
-        "cuda_available": bool(torch.cuda.is_available()),
-    })
+import peft, torch, transformers
+payload = {
+    "python": sys.version.split()[0],
+    "smact": version("SMACT"),
+    "torch": torch.__version__,
+    "transformers": transformers.__version__,
+    "peft": getattr(peft, "__version__", "unknown"),
+    "cuda_available": bool(torch.cuda.is_available()),
+}
 print(json.dumps(payload, sort_keys=True))
 '''
     env = dict(os.environ)
     env.update(
         {
             "PYTHONPATH": str(source_root),
-            "H1_SECONDARY": "1" if secondary else "0",
-            "H1_TOKENIZER_PATH": str(tokenizer_path),
             "CUDA_VISIBLE_DEVICES": "",
             "HF_HUB_OFFLINE": "1",
             "TRANSFORMERS_OFFLINE": "1",
             "HF_DATASETS_OFFLINE": "1",
-            "USE_TORCH": "0" if secondary else "1",
+            "USE_TORCH": "1",
             "USE_TF": "0",
             "USE_FLAX": "0",
         }
@@ -158,97 +139,7 @@ print(json.dumps(payload, sort_keys=True))
         raise RuntimeError(
             f"{python} has SMACT {report.get('smact')!r}, expected {expected_smact}"
         )
-    if secondary and report.get("contract_sha256") != EXPECTED_SMACT4_CONTRACT_SHA256:
-        raise RuntimeError("SMACT4 oxidation contract mismatch")
     return report
-
-
-def validate_shared_smact4_runtime(
-    python: Path, config: Mapping[str, Any]
-) -> dict[str, Any]:
-    runtime_config = config.get("shared_smact4_runtime")
-    if not isinstance(runtime_config, Mapping):
-        raise RuntimeError("shared SMACT4 runtime config is missing")
-    runtime_root = python.parent.resolve()
-    expected_root = Path(str(runtime_config.get("run_root", ""))).resolve()
-    if python.name != "python" or runtime_root != expected_root:
-        raise RuntimeError("shared SMACT4 wrapper path is not the frozen runtime")
-    terminal_path = runtime_root / "terminal_report.json"
-    terminal_sha_path = runtime_root / "terminal_report.sha256"
-    success_path = runtime_root / "_SUCCESS"
-    copied_wheel = runtime_root / str(runtime_config.get("wheel", ""))
-    base_python_path_file = runtime_root / "base_python_path.txt"
-    site_inventory = runtime_root / "SITE_SHA256.txt"
-    for path in (
-        terminal_path,
-        terminal_sha_path,
-        success_path,
-        copied_wheel,
-        base_python_path_file,
-        site_inventory,
-    ):
-        if not path.is_file():
-            raise FileNotFoundError(path)
-    terminal = read_json(terminal_path)
-    success = read_json(success_path)
-    terminal_sha256 = sha256_file(terminal_path)
-    recorded_sha = terminal_sha_path.read_text(encoding="utf-8").split()[0]
-    base_python_relative = Path(
-        base_python_path_file.read_text(encoding="utf-8").strip()
-    )
-    if base_python_relative.is_absolute() or ".." in base_python_relative.parts:
-        raise RuntimeError("shared SMACT4 base Python path is unsafe")
-    base_python = (runtime_root / base_python_relative).resolve()
-    if runtime_root not in base_python.parents:
-        raise RuntimeError("shared SMACT4 base Python escapes runtime root")
-    checks = {
-        "schema": terminal.get("schema") == "smact4_400_runtime_manifest_v2",
-        "identity": terminal.get("identity") == EXPECTED_SMACT4_RUNTIME_IDENTITY,
-        "status": terminal.get("status") == "pass",
-        "wheel_sha": terminal.get("wheel_sha256") == EXPECTED_SMACT4_WHEEL_SHA256
-        and sha256_file(copied_wheel) == EXPECTED_SMACT4_WHEEL_SHA256,
-        "wrapper_sha": terminal.get("wrapper_sha256") == sha256_file(python),
-        "bundle_identity": terminal.get("bundle_archive")
-        == runtime_config.get("bundle_archive")
-        and terminal.get("bundle_archive_sha256")
-        == runtime_config.get("bundle_archive_sha256")
-        and terminal.get("bundle_manifest_sha256")
-        == runtime_config.get("bundle_manifest_sha256")
-        and terminal.get("bundle_validation", {}).get("wheel_count")
-        == runtime_config.get("wheel_count"),
-        "probe": terminal.get("probe", {}).get("smact") == EXPECTED_SECONDARY_SMACT
-        and terminal.get("probe", {}).get("contract_sha256")
-        == EXPECTED_SMACT4_CONTRACT_SHA256,
-        "supported_python": [3, 11, 0]
-        <= list(terminal.get("base_python_version") or [])
-        < [3, 14, 0],
-        "base_python_identity": base_python_relative.as_posix()
-        == terminal.get("base_python_relative")
-        and base_python.is_file()
-        and sha256_file(base_python) == terminal.get("base_python_sha256"),
-        "site_inventory": terminal.get("site_inventory_sha256")
-        == sha256_file(site_inventory)
-        and int(terminal.get("site_file_count", 0)) > 0,
-        "terminal_sha": recorded_sha == terminal_sha256
-        and success.get("terminal_sha256") == terminal_sha256,
-        "success_identity": success.get("identity")
-        == EXPECTED_SMACT4_RUNTIME_IDENTITY,
-        "offline": terminal.get("network") is False
-        and terminal.get("global_environment_mutation") is False
-        and terminal.get("user_site_isolation") is True
-        and terminal.get("atomic_publish") is True,
-    }
-    if not all(checks.values()):
-        failed = sorted(name for name, value in checks.items() if not value)
-        raise RuntimeError(f"shared SMACT4 runtime terminal mismatch: {failed}")
-    return {
-        "root": str(runtime_root),
-        "terminal_sha256": terminal_sha256,
-        "wheel_sha256": EXPECTED_SMACT4_WHEEL_SHA256,
-        "bundle_archive_sha256": runtime_config.get("bundle_archive_sha256"),
-        "bundle_manifest_sha256": runtime_config.get("bundle_manifest_sha256"),
-        "checks": checks,
-    }
 
 
 def focused_tests(python: Path, source_root: Path) -> dict[str, Any]:
@@ -329,6 +220,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         == EXPECTED_SECONDARY_SMACT
         and config["evaluators"]["secondary"]["contract_sha256"]
         == EXPECTED_SMACT4_CONTRACT_SHA256,
+        "a800_smact3_only": config.get("a800_smact_version")
+        == EXPECTED_LEGACY_SMACT
+        and config.get("a800_smact4_execution") is False
+        and execution.get("a800_smact4_execution") is False,
+        "local_smact4_ledger_contract": config["local_smact4_ledger"][
+            "execution_location"
+        ]
+        == "local_windows_only"
+        and config["local_smact4_ledger"]["a800_execution"] is False
+        and config["local_smact4_ledger"]["wheel_sha256"]
+        == EXPECTED_SMACT4_WHEEL_SHA256
+        and config["local_smact4_ledger"]["contract_sha256"]
+        == EXPECTED_SMACT4_CONTRACT_SHA256,
     }
     evaluator = source_root / "crystal_dlm/composition_validity.py"
     checks["legacy_evaluator_source_sha"] = evaluator.is_file() and sha256_file(
@@ -349,37 +253,23 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     )
 
     runtimes: dict[str, Any] = {}
-    shared_runtime: dict[str, Any] = {}
+    local_smact4_contract: dict[str, Any] = {
+        "execution_location": "local_windows_only",
+        "a800_execution": False,
+        "wheel_sha256": EXPECTED_SMACT4_WHEEL_SHA256,
+        "contract_sha256": EXPECTED_SMACT4_CONTRACT_SHA256,
+    }
     assets: dict[str, Any] = {}
     tests: dict[str, Any] = {}
     if not args.defer_remote:
         legacy_python = args.legacy_python.resolve()
-        smact4_python = args.smact4_python.resolve()
-        if legacy_python == smact4_python:
-            raise RuntimeError("legacy and exact SMACT4 runtimes must differ")
-        shared_runtime = validate_shared_smact4_runtime(smact4_python, config)
-        checks["shared_smact4_runtime_terminal"] = all(
-            shared_runtime["checks"].values()
-        )
         runtimes["legacy"] = runtime_probe(
             legacy_python,
             source_root=source_root,
             expected_smact=EXPECTED_LEGACY_SMACT,
-            secondary=False,
-            tokenizer_path=args.model_path,
         )
-        runtimes["secondary"] = runtime_probe(
-            smact4_python,
-            source_root=source_root,
-            expected_smact=EXPECTED_SECONDARY_SMACT,
-            secondary=True,
-            tokenizer_path=args.model_path,
-        )
-        checks["runtime_firewall"] = (
-            runtimes["legacy"]["smact"] == EXPECTED_LEGACY_SMACT
-            and runtimes["secondary"]["smact"] == EXPECTED_SECONDARY_SMACT
-            and runtimes["secondary"]["tokenizer_vocab"] > 100000
-        )
+        checks["runtime_firewall"] = runtimes["legacy"]["smact"] == EXPECTED_LEGACY_SMACT
+        checks["no_smact4_runtime_probe_on_a800"] = True
         tests = focused_tests(legacy_python, source_root)
         checks["focused_tests"] = tests["passed"]
         for name, path in (
@@ -416,7 +306,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "checks": checks,
         "ledgers": ledgers,
         "runtimes": runtimes,
-        "shared_smact4_runtime": shared_runtime,
+        "local_smact4_ledger_contract": local_smact4_contract,
         "assets": assets,
         "focused_tests": tests,
         "remote_checks_deferred": bool(args.defer_remote),
@@ -424,6 +314,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "generation": False,
         "training": False,
         "body_or_downstream": False,
+        "smact4_executed_on_a800": False,
     }
     if args.output:
         if args.output.exists():
@@ -446,7 +337,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ledger64", type=Path, required=True)
     parser.add_argument("--ledger256", type=Path, required=True)
     parser.add_argument("--legacy-python", type=Path)
-    parser.add_argument("--smact4-python", type=Path)
     parser.add_argument("--model-path", type=Path)
     parser.add_argument("--p0-adapter-path", type=Path)
     parser.add_argument("--mp20-dir", type=Path)
@@ -458,13 +348,12 @@ def parse_args() -> argparse.Namespace:
         value is None
         for value in (
             args.legacy_python,
-            args.smact4_python,
             args.model_path,
             args.p0_adapter_path,
             args.mp20_dir,
         )
     ):
-        parser.error("remote preflight requires both runtimes and all asset paths")
+        parser.error("remote preflight requires the legacy runtime and all asset paths")
     return args
 
 
