@@ -265,16 +265,33 @@
   "active_submissions": [],
   "pending_repairs": [
     {
-      "evidence_id": "planner_sft_v2_smoke_identity_repair_v4",
-      "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
-      "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
-      "repair_scope": "same_protected_p0_fp32_load_path_for_candidate_and_reference_then_freeze_reference",
+      "evidence_id": "planner_sft_v2_source_gate_path_repair_v5",
+      "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
+      "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
+      "repair_scope": "new_path_identity_closure_with_isolated_archive_scoped_under_run_root",
       "parent_data_reuse": "byte_identical_manifest_bound",
+      "independent_review_count": 2,
+      "new_source_gate_required": true,
       "new_gpu_smoke_required": true,
       "formal_training_submitted": false
     }
   ],
   "terminal_evidence": [
+    {
+      "evidence_id": "chemistry_first_sft_v2_source_gate_static_collision_v4",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
+      "source_inventory_sha256": "2e7997cfc9894db5ba099d4fc3bfa18440b10d0c29e36927768dc35eaef03968",
+      "source_manifest_sha256": "02fcb50da21bd54e314aeaa0e09cf2b9cbb71300f24a9dddeaca009f01beffc1",
+      "source_archive_sha256": "193816fb1aa6919f0bed755f5fae9459f7a0bd63afc797b579dc741f43cb8b73",
+      "failure_stage": "static_check_before_a800_source_gate",
+      "failure_reason": "isolated_archive_path_reused_immutable_v3_identity",
+      "source_gate_executed": false,
+      "pass_marker_written": false,
+      "slurm_or_gpu_used": false,
+      "formal_training_submitted": false,
+      "scientific_generation_submitted": false,
+      "smact4_executed_on_a800": false
+    },
     {
       "evidence_id": "chemistry_first_sft_v2_smoke_engineering_failure_v3",
       "job_id": 31036,

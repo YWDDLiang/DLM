@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-08T18:39:00+08:00",
+  "updated_at": "2026-08-08T18:55:00+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -46,5 +46,11 @@
       "optimizer_step_performed": false
     }
   ],
-  "current_allocations": []
+  "current_allocations": [],
+  "pending_submission": {
+    "stage": "chemistry_first_v5_dual_arm_smoke_after_source_gate",
+    "gpus_per_task": 1,
+    "cpus_per_task": 4,
+    "submitted": false
+  }
 }

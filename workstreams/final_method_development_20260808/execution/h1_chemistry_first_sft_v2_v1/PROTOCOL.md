@@ -75,3 +75,16 @@ The sealed V3 data and legacy snapshot are reused byte-for-byte under a
 dedicated reuse manifest; data, task order, prompts, optimizer, seeds, ledgers,
 models, evaluators, and gates are unchanged. V4 must pass a fresh dual-arm GPU
 smoke before `submit_training64_once.sh` is eligible.
+
+## V5 source-gate path repair
+
+V4 source freezing completed, but a static check before its source gate found
+that `audit_source_on_a800.sh` still targeted the existing immutable V3
+isolated-extraction directory. The gate was not run and no marker or job was
+created. V5 changes only active transfer, staging, freeze, run, log and
+isolated-extraction paths. Isolated extraction is now scoped under the V5 run
+root. The V4 adapter-load repair and every model, data, task, optimizer, seed,
+ledger, evaluator and gate byte remain unchanged. Existing V3/V4 evidence is
+never deleted or reused. V5 must pass the same reduced A800 source gate and a
+fresh dual-arm GPU smoke before training is eligible; SMACT4 is not executed
+on A800.

@@ -1,0 +1,45 @@
+{
+  "schema": "h1_chemistry_first_source_gate_path_repair_v5",
+  "status": "frozen_before_repair_execution",
+  "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
+  "parent_source": {
+    "source_inventory_sha256": "2e7997cfc9894db5ba099d4fc3bfa18440b10d0c29e36927768dc35eaef03968",
+    "source_manifest_sha256": "02fcb50da21bd54e314aeaa0e09cf2b9cbb71300f24a9dddeaca009f01beffc1",
+    "source_archive_sha256": "193816fb1aa6919f0bed755f5fae9459f7a0bd63afc797b579dc741f43cb8b73"
+  },
+  "failure": {
+    "stage": "static_check_before_a800_source_gate",
+    "reason": "isolated_archive_path_reused_immutable_v3_identity",
+    "source_gate_executed": false,
+    "gpu_job_submitted": false,
+    "training_submitted": false,
+    "scientific_generation_submitted": false
+  },
+  "repair": {
+    "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
+    "isolated_archive_root": "${RUN_ROOT}/isolated_archive_test",
+    "method": "move every active execution path to one new immutable V5 identity and scope isolated extraction inside that run root",
+    "models_changed": false,
+    "training_code_changed": false,
+    "data_changed": false,
+    "optimizer_changed": false,
+    "seed_changed": false,
+    "prompt_changed": false,
+    "ledger_changed": false,
+    "evaluator_changed": false,
+    "gate_changed": false,
+    "smact4_execution_on_a800": false,
+    "parent_data_reuse": "byte-identical sealed V3 data and legacy snapshot only",
+    "new_gpu_smoke_required": true
+  },
+  "protected_file_sha256": {
+    "scripts/llama_h1_chemistry_first_sft.py": "c66f10c8ca757f9d94a13a90f43df2e36af7782fe20c9dec64f81280b95a6516",
+    "AUTHORIZATION.json": "d17d9e22e174a4913944119c07926f6b339705e686e3734b93a4e06b54a83372",
+    "LEDGER64.json": "f513ff012ec83095e6445735cce843b1feabae67703a582ef92ed51b603c8b3d",
+    "LEDGER256.json": "4cee628c7a1a8b9d28cffaa76229f370a13d254026d29bd289cd043989dd51b1"
+  },
+  "independent_review": {
+    "reviewer_count": 2,
+    "consensus": "new immutable V5 path-only repair; preserve V3/V4 evidence; source gate then fresh dual-arm smoke"
+  }
+}

@@ -242,6 +242,29 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertNotIn("planner64.sbatch", smoke)
         self.assertNotIn("SMACT4_PYTHON", reuse + smoke)
 
+    def test_v5_source_gate_path_repair_is_closed(self) -> None:
+        repair = json.loads(
+            (ROOT / "SOURCE_GATE_PATH_REPAIR_V5.json").read_text(encoding="utf-8")
+        )
+        self.assertFalse(repair["repair"]["models_changed"])
+        self.assertFalse(repair["repair"]["training_code_changed"])
+        self.assertFalse(repair["repair"]["data_changed"])
+        self.assertFalse(repair["repair"]["smact4_execution_on_a800"])
+        old_run = "20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4"
+        new_run = "20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5"
+        active_paths = [ROOT / "CONFIG.json"]
+        active_paths.extend(ROOT.glob("*.sh"))
+        active_paths.extend(ROOT.glob("*.sbatch"))
+        for path in active_paths:
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn(old_run, text, path.name)
+        self.assertEqual(self.config["run_root"].rsplit("/", 1)[-1], new_run)
+        audit = (ROOT / "audit_source_on_a800.sh").read_text(encoding="utf-8")
+        self.assertIn('ISOLATED_ROOT="${RUN_ROOT}/isolated_archive_test"', audit)
+        bootstrap = (ROOT / "bootstrap_source_on_a800.sh").read_text(encoding="utf-8")
+        self.assertIn("SOURCE_GATE_PATH_REPAIR_V5.json", bootstrap)
+        self.assertNotIn("smact4_400_runtime", audit + bootstrap)
+
     def test_fixed_adapter_resolver_supports_named_peft_subdirectory(self) -> None:
         from workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.resolve_fixed_adapter import (
             resolve_fixed_adapter,

@@ -35,7 +35,10 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       preflight, and one minimal GPU smoke for each new source family. Source
       and data gates passed. Smoke array 31036 failed before forward because
       PEFT loaded the trainable/frozen P0 copies at different precision; V4
-      same-load-path repair is frozen and requires a fresh dual-arm smoke.
+      same-load-path repair source froze successfully, but a pre-gate static
+      check found its isolated path still bound to immutable V3 evidence. Two
+      independent reviews approved only a new path-closed V5; its minimal
+      source gate and fresh dual-arm smoke remain pending.
 - [x] Export and seal the complete A800 MP20 legacy snapshot (job 31025).
 - [x] Build the exact local SMACT4 witness ledger and verify its immutable
       data-only import on A800; SMACT4 was not executed there.

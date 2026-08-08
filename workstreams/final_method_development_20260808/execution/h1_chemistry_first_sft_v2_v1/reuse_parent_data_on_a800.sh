@@ -4,7 +4,7 @@ umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 PARENT_RUN="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3"
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5"
 EXPECTED_SOURCE_INVENTORY_SHA256="${1:?expected repaired source inventory digest}"
 EXPECTED_ARCHIVE_SHA256="${2:?expected repaired source archive digest}"
 EXPECTED_PARENT_DATA_AUDIT_SHA256=1c9a5e2cba51a1258acf107255ca308c7c9f7122d50f5ae3a09ed97d2681612a

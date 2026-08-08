@@ -2,7 +2,7 @@
 
 Updated: 2026-08-08 18:39 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_SMOKE_IDENTITY_REPAIR_V4_PREPARING`
+Overall status: `PLANNER_SFT_V2_SOURCE_GATE_PATH_REPAIR_V5_PREPARING`
 
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3,
@@ -164,16 +164,33 @@ The frozen V4 repair loads both copies through the same protected-P0 FP32 PEFT
 path, then freezes every reference parameter before forward or optimizer
 construction. It changes no model payload, data, task order, prompt, seed,
 optimizer, ledger, evaluator, or gate. The V3 data/legacy snapshot will be
-reused byte-for-byte under a new manifest in the new run root
-`20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4`; a fresh
-dual-arm GPU smoke is mandatory before training.
+reused byte-for-byte under a new manifest; a fresh dual-arm GPU smoke remains
+mandatory before training.
+
+V4 source freezing itself completed with source inventory
+`2e7997cfc9894db5ba099d4fc3bfa18440b10d0c29e36927768dc35eaef03968`,
+archive `193816fb1aa6919f0bed755f5fae9459f7a0bd63afc797b579dc741f43cb8b73`,
+and manifest `02fcb50da21bd54e314aeaa0e09cf2b9cbb71300f24a9dddeaca009f01beffc1`.
+Before executing its A800 source gate, a static check found that the isolated
+archive path was still bound to the existing immutable V3 directory. The gate
+was not executed, no pass marker was written, and no job was submitted.
+
+Two independent propose/red-team reviews agreed that deleting or reusing V3,
+hand-writing the pass marker, or changing only one path would be indefensible.
+The active repair is therefore a new path-only V5 identity:
+`20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5`.
+Every active script/SBatch/config path moves to V5 and isolated extraction is
+scoped under `${RUN_ROOT}/isolated_archive_test`. V4's PEFT repair, all model
+and science code, data, prompts, seeds, optimizers, ledgers, evaluators, and
+gates remain unchanged. SMACT4 remains forbidden on A800.
 
 ## Immediate critical path
 
-1. Preserve V3 job `31036` and its per-arm identity/error evidence unchanged.
-2. Freeze, transfer, and minimally verify the V4 source plus byte-identical
-   parent-data reuse record; submit only the replacement dual-arm smoke.
-3. Submit fixed-endpoint training and raw64 generation only after both V4 smoke
+1. Preserve V3 job `31036` plus V3/V4 source evidence unchanged.
+2. Freeze, transfer, and minimally verify the V5 path-only source plus byte-
+   identical parent-data reuse record; submit only the replacement dual-arm
+   smoke.
+3. Submit fixed-endpoint training and raw64 generation only after both V5 smoke
    tasks are `COMPLETED 0:0`; do not queue assembly before the local audit.
 4. Continue C0/C1 and the B3 portfolio after this source family reaches its
    registered terminal.
