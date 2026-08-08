@@ -74,4 +74,12 @@ the bounded v2 repair freezes `*.sh` and `*.sbatch` to LF and changes only the
 transfer-input path. All scientific contracts and the first formal run
 identity remain unchanged because none was created.
 
+The repair archive is frozen from commit `b6b9ae3`: SHA
+`5fbc73259011a34041f101dd5031d800d69a083806fdb63647bf461b9b0d0635`
+(10,177,969 bytes). A packaging-only audit found zero carriage-return bytes
+across all 369 archived shell/sbatch files and confirmed the exact SMACT4 wheel
+is present. Its single local-to-5090 SCP completed at
+`2026-08-08T15:16:43+08:00` with matching SHA; A800 transfer input v2 remains
+empty pending the required next SCP interval.
+
 No Planner or DLM RL is authorized.
