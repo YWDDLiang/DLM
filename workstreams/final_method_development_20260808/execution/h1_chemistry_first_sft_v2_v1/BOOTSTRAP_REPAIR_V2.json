@@ -1,0 +1,24 @@
+{
+  "schema": "h1_chemistry_first_bootstrap_repair_v1",
+  "repair_identity": "h1_chemistry_first_sft_v2_bootstrap_line_end_repair_v2",
+  "supersedes_transfer_input": "20260808_evidence_first_transfer_input_v1",
+  "new_transfer_input": "20260808_evidence_first_transfer_input_v2",
+  "failure_stage": "pre_source_bootstrap_shell_parse",
+  "failure_message": ": invalid option namepefail",
+  "root_cause": "Git archive exported executable shell and sbatch files with CRLF line endings",
+  "failed_bootstrap_script_sha256": "b682ff017b18c8999c65a3f20ab0c83dc402ae46a6ba4212b84d9b928621e27d",
+  "created_scientific_paths": [],
+  "repair_scope": [
+    "freeze *.sh and *.sbatch archive bytes to LF via .gitattributes",
+    "use a new immutable transfer-input v2 path"
+  ],
+  "unchanged": [
+    "scientific source and method identity",
+    "Planner P0 initialization",
+    "MP20 records and data contract",
+    "SMACT 3.1 and exact SMACT 4 evaluator contracts",
+    "optimizer, schedule, seed ledgers, denominators, and gates",
+    "formal source-freeze and run-root identities"
+  ],
+  "result_conditioned": false
+}

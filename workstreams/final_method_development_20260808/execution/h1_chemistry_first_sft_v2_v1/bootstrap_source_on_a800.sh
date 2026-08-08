@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_v1"
+TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_v2"
 STAGING_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_source_staging_v1"
 FREEZE_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_source_freeze_v1"
 RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_v1"

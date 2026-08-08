@@ -112,5 +112,21 @@
       "run_or_job_created": false
     }
   ],
+  "engineering_failures": [
+    {
+      "evidence_id": "a800_pre_source_bootstrap_crlf_failure_v1",
+      "transfer_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_evidence_first_transfer_input_v1",
+      "source_archive_sha256": "e084fbd66093f158662dd4ada3a0c3fad8be4d3008a64aa16bff1acfc2578eb4",
+      "bootstrap_script_sha256": "b682ff017b18c8999c65a3f20ab0c83dc402ae46a6ba4212b84d9b928621e27d",
+      "failure_message": ": invalid option namepefail",
+      "root_cause": "CRLF archive bytes in executable shell scripts",
+      "source_staging_created": false,
+      "source_freeze_created": false,
+      "runtime_created": false,
+      "scientific_run_created": false,
+      "gpu_or_slurm_used": false,
+      "repair_identity": "h1_chemistry_first_sft_v2_bootstrap_line_end_repair_v2"
+    }
+  ],
   "terminal_evidence": []
 }
