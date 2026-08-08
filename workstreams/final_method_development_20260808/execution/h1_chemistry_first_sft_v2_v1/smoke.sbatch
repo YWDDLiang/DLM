@@ -7,13 +7,13 @@
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
 #SBATCH --mem=96G
 #SBATCH --time=02:00:00
-#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5/logs/%A_%a_smoke.out
-#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5/logs/%A_%a_smoke.err
+#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6/logs/%A_%a_smoke.out
+#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6/logs/%A_%a_smoke.err
 
 set -Eeuo pipefail
 umask 077
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6"
 SOURCE_ROOT="${RUN_ROOT}/source"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
 P0_ADAPTER="${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
@@ -65,6 +65,13 @@ PY
   --grad-accum 8 --lr 0.000002 --weight-decay 0 --seed 26080817 \
   --preflight-only
 test -f "${RUN_ROOT}/smoke/${CANDIDATE}/train_config.json"
+"${LEGACY_PYTHON}" scripts/a800/validate_h1_peft_identity_gate_v1.py smoke \
+  --smoke-dir "${RUN_ROOT}/smoke/${CANDIDATE}" \
+  --candidate "${CANDIDATE}" \
+  --expected-source-inventory-sha256 "${EXPECTED_SOURCE_INVENTORY_SHA256}" \
+  --output "${RUN_ROOT}/smoke/${CANDIDATE}/identity_gate_report.json"
+sha256sum "${RUN_ROOT}/smoke/${CANDIDATE}/identity_gate_report.json" \
+  > "${RUN_ROOT}/smoke/${CANDIDATE}/identity_gate_report.sha256"
 printf '0\n' > "${RUN_ROOT}/status/smoke_${CANDIDATE}_exit_code.txt"
 touch "${RUN_ROOT}/status/smoke_${CANDIDATE}_SUCCESS"
 echo "H1_CHEMISTRY_FIRST_SMOKE_PASS candidate=${CANDIDATE}"

@@ -32,6 +32,13 @@ from crystal_dlm.h1_nocharge_ion_aux import (  # noqa: E402
     H1_NOCHARGE_ION_AUX_SCHEMA,
     validation_anchor_nll_gate,
 )
+from crystal_dlm.peft_adapter_identity import (  # noqa: E402
+    PROTECTED_P0_ADAPTER_CONFIG_SHA256,
+    PROTECTED_P0_ADAPTER_WEIGHT_SHA256,
+    adapter_source_identity_report,
+    adapter_pair_identity_report,
+    copy_adapter_state_exact,
+)
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -205,40 +212,14 @@ def tensor_batch_to_device(batch: Mapping[str, Any], device: torch.device) -> di
     return {key: value.to(device) if torch.is_tensor(value) else value for key, value in batch.items()}
 
 
-def normalized_adapter_tensors(model, adapter_name: str) -> dict[str, torch.Tensor]:
-    needle = f".{adapter_name}."
-    tensors = {}
-    for name, tensor in model.state_dict().items():
-        if needle in name:
-            tensors[name.replace(needle, ".{adapter}.")] = tensor.detach().cpu()
-    return tensors
-
-
 def dual_adapter_identity_report(model) -> dict[str, Any]:
-    candidate = normalized_adapter_tensors(model, "candidate")
-    reference = normalized_adapter_tensors(model, "reference")
-    missing_candidate = sorted(set(reference) - set(candidate))
-    missing_reference = sorted(set(candidate) - set(reference))
-    maximum = 0.0
-    mismatched = []
-    for key in sorted(set(candidate) & set(reference)):
-        difference = float((candidate[key].float() - reference[key].float()).abs().max().item())
-        maximum = max(maximum, difference)
-        if difference != 0.0:
-            mismatched.append({"key": key, "max_abs_diff": difference})
-    trainable = [name for name, parameter in model.named_parameters() if parameter.requires_grad]
-    bad_trainable = [name for name in trainable if "candidate" not in name]
-    return {
-        "candidate_tensor_count": len(candidate),
-        "reference_tensor_count": len(reference),
-        "missing_candidate": missing_candidate,
-        "missing_reference": missing_reference,
-        "max_abs_diff": maximum,
-        "mismatched": mismatched,
-        "trainable_parameter_names": trainable,
-        "noncandidate_trainable": bad_trainable,
-        "passed": bool(candidate) and not missing_candidate and not missing_reference and maximum == 0.0 and not bad_trainable,
-    }
+    return adapter_pair_identity_report(
+        model,
+        candidate_name="candidate",
+        reference_name="reference",
+        expected_dtype=torch.float32,
+        expected_active_adapter="candidate",
+    )
 
 
 def reference_logits(model, batch: Mapping[str, Any]) -> torch.Tensor | None:
@@ -430,6 +411,14 @@ def main() -> None:
     parser.add_argument("--checkpoint-steps", default="100,200,300,400")
     parser.add_argument("--preflight-only", action="store_true")
     parser.add_argument("--allow-nonfrozen-fixture", action="store_true")
+    parser.add_argument(
+        "--expected-p0-adapter-weight-sha256",
+        default=PROTECTED_P0_ADAPTER_WEIGHT_SHA256,
+    )
+    parser.add_argument(
+        "--expected-p0-adapter-config-sha256",
+        default=PROTECTED_P0_ADAPTER_CONFIG_SHA256,
+    )
     args = parser.parse_args()
 
     expected_arm = "c0_neutral_aux" if args.arm == "c0" else "c1_ion_aux"
@@ -472,11 +461,30 @@ def main() -> None:
         args.p0_adapter_path,
         adapter_name="candidate",
         is_trainable=True,
+        autocast_adapter_dtype=True,
     )
-    model.load_adapter(args.p0_adapter_path, adapter_name="reference", is_trainable=False)
-    for name, parameter in model.named_parameters():
-        if "reference" in name:
-            parameter.requires_grad_(False)
+    candidate_source_before_reference = adapter_source_identity_report(
+        model,
+        "candidate",
+        Path(args.p0_adapter_path),
+        expected_weight_sha256=str(args.expected_p0_adapter_weight_sha256),
+        expected_config_sha256=str(args.expected_p0_adapter_config_sha256),
+    )
+    if not candidate_source_before_reference["passed"]:
+        raise RuntimeError("candidate adapter is not byte-identical to protected P0")
+    model.load_adapter(
+        args.p0_adapter_path,
+        adapter_name="reference",
+        is_trainable=True,
+        autocast_adapter_dtype=True,
+    )
+    pre_copy_identity = dual_adapter_identity_report(model)
+    copy_report = copy_adapter_state_exact(
+        model,
+        source_adapter="candidate",
+        target_adapter="reference",
+        expected_dtype=torch.float32,
+    )
     model.set_adapter("candidate")
     model.to(device)
     model.gradient_checkpointing_enable()
@@ -485,10 +493,44 @@ def main() -> None:
     model.train()
 
     identity = dual_adapter_identity_report(model)
+    candidate_source_after_setup = adapter_source_identity_report(
+        model,
+        "candidate",
+        Path(args.p0_adapter_path),
+        expected_weight_sha256=str(args.expected_p0_adapter_weight_sha256),
+        expected_config_sha256=str(args.expected_p0_adapter_config_sha256),
+    )
+    reference_source_after_setup = adapter_source_identity_report(
+        model,
+        "reference",
+        Path(args.p0_adapter_path),
+        expected_weight_sha256=str(args.expected_p0_adapter_weight_sha256),
+        expected_config_sha256=str(args.expected_p0_adapter_config_sha256),
+    )
+    protected_identity = {
+        "schema": "h1_protected_p0_candidate_reference_identity_v2",
+        "candidate_source_before_reference": candidate_source_before_reference,
+        "pre_copy_pair_diagnostic": pre_copy_identity,
+        "copy_report": copy_report,
+        "post_setup_pair_identity": identity,
+        "candidate_source_after_setup": candidate_source_after_setup,
+        "reference_source_after_setup": reference_source_after_setup,
+        "passed": bool(
+            candidate_source_before_reference["passed"]
+            and copy_report["passed"]
+            and identity["passed"]
+            and candidate_source_after_setup["passed"]
+            and reference_source_after_setup["passed"]
+        ),
+    }
+    (args.output_dir / "protected_p0_triplet_identity.json").write_text(
+        json.dumps(protected_identity, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     (args.output_dir / "dual_adapter_identity.json").write_text(
         json.dumps(identity, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    if not identity["passed"]:
+    if not protected_identity["passed"]:
         raise RuntimeError("candidate/reference P0 adapter identity failed")
 
     train_ds = NochargeIonAuxDataset(args.data_dir / "train.jsonl", tokenizer, args.max_length, expected_arm=expected_arm)
@@ -551,6 +593,7 @@ def main() -> None:
         "device": str(device),
         "bf16": device.type == "cuda",
         "dual_adapter_identity": identity,
+        "protected_p0_triplet_identity": protected_identity,
     }
     if args.preflight_only:
         raw_batch = next(

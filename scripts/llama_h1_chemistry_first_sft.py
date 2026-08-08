@@ -41,6 +41,13 @@ from crystal_dlm.h1_llm_planner import (  # noqa: E402
     load_llama3_compatible_config,
 )
 from crystal_dlm.h1_nocharge_ion_aux import validation_anchor_nll_gate  # noqa: E402
+from crystal_dlm.peft_adapter_identity import (  # noqa: E402
+    PROTECTED_P0_ADAPTER_CONFIG_SHA256,
+    PROTECTED_P0_ADAPTER_WEIGHT_SHA256,
+    adapter_source_identity_report,
+    adapter_value_sha256,
+    copy_adapter_state_exact,
+)
 from scripts.build_h1_nocharge_ion_aux_sft_data import sha256_file  # noqa: E402
 from scripts.llama_nocharge_ion_aux_sft import (  # noqa: E402
     answer_token_weights,
@@ -180,6 +187,76 @@ def candidate_sft_loss(model, batch: Mapping[str, Any]) -> torch.Tensor:
 
 
 @torch.no_grad()
+def fixed_adapter_logits(
+    model,
+    batch: Mapping[str, Any],
+    *,
+    adapter_name: str,
+) -> torch.Tensor:
+    """Return one deterministic smoke logit tensor with every adapter frozen."""
+
+    model.set_adapter(adapter_name)
+    for name, parameter in model.named_parameters():
+        if ".candidate." in name or ".reference." in name:
+            parameter.requires_grad_(False)
+    model.eval()
+    return model(
+        input_ids=batch["input_ids"],
+        attention_mask=batch["attention_mask"],
+        use_cache=False,
+    ).logits.detach()
+
+
+def restore_candidate_training_state(model, *, was_training: bool = True) -> None:
+    model.set_adapter("candidate")
+    for name, parameter in model.named_parameters():
+        if ".candidate." in name:
+            parameter.requires_grad_(True)
+        elif ".reference." in name:
+            parameter.requires_grad_(False)
+    model.train(was_training)
+
+
+def optimizer_parameter_identity_report(model, optimizer) -> dict[str, Any]:
+    named = list(model.named_parameters())
+    candidate = {id(parameter): name for name, parameter in named if ".candidate." in name}
+    reference = {id(parameter): name for name, parameter in named if ".reference." in name}
+    trainable = {id(parameter): name for name, parameter in named if parameter.requires_grad}
+    optimizer_parameters = [
+        parameter
+        for group in optimizer.param_groups
+        for parameter in group["params"]
+    ]
+    optimizer_ids = [id(parameter) for parameter in optimizer_parameters]
+    optimizer_id_set = set(optimizer_ids)
+    passed = bool(
+        candidate
+        and set(candidate) == set(trainable) == optimizer_id_set
+        and len(optimizer_ids) == len(optimizer_id_set)
+        and not (optimizer_id_set & set(reference))
+        and all(not parameter.requires_grad for name, parameter in named if ".reference." in name)
+    )
+    return {
+        "candidate_parameter_count": len(candidate),
+        "reference_parameter_count": len(reference),
+        "trainable_parameter_count": len(trainable),
+        "optimizer_parameter_count": len(optimizer_ids),
+        "optimizer_unique_parameter_count": len(optimizer_id_set),
+        "missing_candidate_in_optimizer": sorted(
+            candidate[parameter_id] for parameter_id in set(candidate) - optimizer_id_set
+        ),
+        "unexpected_optimizer_parameters": sorted(
+            trainable.get(parameter_id, f"unknown_parameter_id:{parameter_id}")
+            for parameter_id in optimizer_id_set - set(candidate)
+        ),
+        "reference_in_optimizer": sorted(
+            reference[parameter_id] for parameter_id in optimizer_id_set & set(reference)
+        ),
+        "passed": passed,
+    }
+
+
+@torch.no_grad()
 def validation_anchor_nll(
     model,
     loader: DataLoader,
@@ -215,6 +292,14 @@ def main() -> None:
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--preflight-only", action="store_true")
     parser.add_argument("--allow-nonfrozen-fixture", action="store_true")
+    parser.add_argument(
+        "--expected-p0-adapter-weight-sha256",
+        default=PROTECTED_P0_ADAPTER_WEIGHT_SHA256,
+    )
+    parser.add_argument(
+        "--expected-p0-adapter-config-sha256",
+        default=PROTECTED_P0_ADAPTER_CONFIG_SHA256,
+    )
     args = parser.parse_args()
 
     report = load_and_verify_data_contract(
@@ -326,21 +411,42 @@ def main() -> None:
         args.p0_adapter_path,
         adapter_name="candidate",
         is_trainable=True,
+        autocast_adapter_dtype=True,
     )
+    candidate_source_before_reference = adapter_source_identity_report(
+        model,
+        "candidate",
+        Path(args.p0_adapter_path),
+        expected_weight_sha256=str(args.expected_p0_adapter_weight_sha256),
+        expected_config_sha256=str(args.expected_p0_adapter_config_sha256),
+    )
+    (args.output_dir / "candidate_source_identity_before_reference.json").write_text(
+        json.dumps(candidate_source_before_reference, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    if not candidate_source_before_reference["passed"]:
+        raise RuntimeError("candidate adapter is not byte-identical to protected P0")
     model.load_adapter(
         args.p0_adapter_path,
         adapter_name="reference",
-        # PEFT 0.16 loads a frozen adapter directly in the BF16 base-model
-        # dtype, while the trainable candidate is autocast to FP32.  Loading
-        # both through the trainable path preserves byte-identical P0 weights;
-        # the reference parameters are frozen immediately below, before any
-        # forward or optimizer construction.
+        # PEFT 0.16 writes this second adapter while its destination follows
+        # the BF16 base-layer dtype and only upcasts after checkpoint loading.
+        # The exact source-attested candidate is copied into independent FP32
+        # reference storage immediately below, before forward or optimizer.
         is_trainable=True,
         autocast_adapter_dtype=True,
     )
-    for name, parameter in model.named_parameters():
-        if ".reference." in name:
-            parameter.requires_grad_(False)
+    pre_copy_identity = dual_adapter_identity_report(model)
+    (args.output_dir / "dual_adapter_identity_before_copy.json").write_text(
+        json.dumps(pre_copy_identity, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    copy_report = copy_adapter_state_exact(
+        model,
+        source_adapter="candidate",
+        target_adapter="reference",
+        expected_dtype=torch.float32,
+    )
     model.set_adapter("candidate")
     model.to(device)
     model.gradient_checkpointing_enable()
@@ -349,11 +455,45 @@ def main() -> None:
     model.train()
 
     identity = dual_adapter_identity_report(model)
+    candidate_source_after_setup = adapter_source_identity_report(
+        model,
+        "candidate",
+        Path(args.p0_adapter_path),
+        expected_weight_sha256=str(args.expected_p0_adapter_weight_sha256),
+        expected_config_sha256=str(args.expected_p0_adapter_config_sha256),
+    )
+    reference_source_after_setup = adapter_source_identity_report(
+        model,
+        "reference",
+        Path(args.p0_adapter_path),
+        expected_weight_sha256=str(args.expected_p0_adapter_weight_sha256),
+        expected_config_sha256=str(args.expected_p0_adapter_config_sha256),
+    )
+    protected_identity = {
+        "schema": "h1_protected_p0_candidate_reference_identity_v2",
+        "candidate_source_before_reference": candidate_source_before_reference,
+        "pre_copy_pair_diagnostic": pre_copy_identity,
+        "copy_report": copy_report,
+        "post_setup_pair_identity": identity,
+        "candidate_source_after_setup": candidate_source_after_setup,
+        "reference_source_after_setup": reference_source_after_setup,
+        "passed": bool(
+            candidate_source_before_reference["passed"]
+            and copy_report["passed"]
+            and identity["passed"]
+            and candidate_source_after_setup["passed"]
+            and reference_source_after_setup["passed"]
+        ),
+    }
+    (args.output_dir / "protected_p0_triplet_identity.json").write_text(
+        json.dumps(protected_identity, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     (args.output_dir / "dual_adapter_identity.json").write_text(
         json.dumps(identity, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    if not identity["passed"]:
+    if not protected_identity["passed"]:
         raise RuntimeError("candidate/reference protected P0 identity failed")
 
     trainable = [parameter for parameter in model.parameters() if parameter.requires_grad]
@@ -362,6 +502,9 @@ def main() -> None:
         lr=float(args.lr),
         weight_decay=float(args.weight_decay),
     )
+    optimizer_identity = optimizer_parameter_identity_report(model, optimizer)
+    if not optimizer_identity["passed"]:
+        raise RuntimeError("optimizer parameter identity is not candidate-only")
     scheduler = get_cosine_schedule_with_warmup(
         optimizer,
         num_warmup_steps=warmup_steps,
@@ -396,9 +539,33 @@ def main() -> None:
         "device": str(device),
         "bf16": device.type == "cuda",
         "dual_adapter_identity": identity,
+        "protected_p0_triplet_identity": protected_identity,
+        "optimizer_parameter_identity": optimizer_identity,
     }
 
     if args.preflight_only:
+        reference_sha_before = adapter_value_sha256(model, "reference")
+        candidate_sha_before = adapter_value_sha256(model, "candidate")
+        val_batch = tensor_batch_to_device(next(iter(val_loader)), device)
+        reference_logits = fixed_adapter_logits(
+            model,
+            val_batch,
+            adapter_name="reference",
+        )
+        candidate_logits = fixed_adapter_logits(
+            model,
+            val_batch,
+            adapter_name="candidate",
+        )
+        logits_identical = bool(torch.equal(candidate_logits, reference_logits))
+        logits_finite = bool(
+            torch.isfinite(candidate_logits).all().item()
+            and torch.isfinite(reference_logits).all().item()
+        )
+        del candidate_logits, reference_logits
+        restore_candidate_training_state(model)
+        if not logits_identical or not logits_finite:
+            raise RuntimeError("candidate/reference fixed-record logits differ or are non-finite")
         raw_batch = next(iter(train_loader))
         batch = tensor_batch_to_device(raw_batch, device)
         smoke_loss = candidate_sft_loss(model, batch)
@@ -413,13 +580,33 @@ def main() -> None:
             for parameter in trainable
             if parameter.grad is not None
         )
+        unexpected_gradient_names = sorted(
+            name
+            for name, parameter in model.named_parameters()
+            if parameter.grad is not None and ".candidate." not in name
+        )
+        reference_sha_after_backward = adapter_value_sha256(model, "reference")
+        candidate_sha_after_backward = adapter_value_sha256(model, "candidate")
         model.zero_grad(set_to_none=True)
-        if gradient_tensor_count == 0 or not finite_gradients:
+        if (
+            gradient_tensor_count == 0
+            or not finite_gradients
+            or unexpected_gradient_names
+            or reference_sha_after_backward != reference_sha_before
+            or candidate_sha_after_backward != candidate_sha_before
+        ):
             raise RuntimeError("preflight gradients are absent or non-finite")
         config_payload["preflight_smoke"] = {
+            "fixed_validation_record_candidate_reference_logits_identical": logits_identical,
+            "fixed_validation_record_logits_finite": logits_finite,
             "loss": float(smoke_loss.item()),
             "gradient_tensor_count": gradient_tensor_count,
             "finite_gradients": finite_gradients,
+            "unexpected_gradient_names": unexpected_gradient_names,
+            "reference_sha_before": reference_sha_before,
+            "reference_sha_after_backward": reference_sha_after_backward,
+            "candidate_sha_before": candidate_sha_before,
+            "candidate_sha_after_backward": candidate_sha_after_backward,
             "optimizer_step_performed": False,
         }
         (args.output_dir / "train_config.json").write_text(
@@ -435,13 +622,29 @@ def main() -> None:
         )
         return
 
+    reference_sha_initial = adapter_value_sha256(model, "reference")
+    candidate_sha_initial = adapter_value_sha256(model, "candidate")
     reference_anchor = validation_anchor_nll(
         model,
         val_loader,
         device,
         adapter_name="reference",
     )
+    reference_sha_after_anchor = adapter_value_sha256(model, "reference")
+    candidate_sha_after_reference_anchor = adapter_value_sha256(model, "candidate")
+    if (
+        reference_sha_after_anchor != reference_sha_initial
+        or candidate_sha_after_reference_anchor != candidate_sha_initial
+    ):
+        raise RuntimeError("reference-anchor evaluation mutated an adapter")
     config_payload["reference_validation_anchor_nll"] = reference_anchor
+    config_payload["reference_anchor_identity"] = {
+        "reference_sha_before": reference_sha_initial,
+        "reference_sha_after": reference_sha_after_anchor,
+        "candidate_sha_before": candidate_sha_initial,
+        "candidate_sha_after": candidate_sha_after_reference_anchor,
+        "passed": True,
+    }
     (args.output_dir / "train_config.json").write_text(
         json.dumps(config_payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -451,6 +654,7 @@ def main() -> None:
     history_path = args.output_dir / "history.jsonl"
     consumed_ids: list[str] = []
     global_step = 0
+    first_optimizer_step_identity: dict[str, Any] | None = None
     running_loss = 0.0
     running_microbatches = 0
     model.zero_grad(set_to_none=True)
@@ -488,6 +692,25 @@ def main() -> None:
         scheduler.step()
         optimizer.zero_grad(set_to_none=True)
         global_step += 1
+        if global_step == 1:
+            reference_sha_after_first_step = adapter_value_sha256(model, "reference")
+            candidate_sha_after_first_step = adapter_value_sha256(model, "candidate")
+            first_optimizer_step_identity = {
+                "reference_sha_initial": reference_sha_initial,
+                "reference_sha_after_first_step": reference_sha_after_first_step,
+                "candidate_sha_initial": candidate_sha_initial,
+                "candidate_sha_after_first_step": candidate_sha_after_first_step,
+                "reference_unchanged": reference_sha_after_first_step
+                == reference_sha_initial,
+                "candidate_changed": candidate_sha_after_first_step
+                != candidate_sha_initial,
+            }
+            first_optimizer_step_identity["passed"] = bool(
+                first_optimizer_step_identity["reference_unchanged"]
+                and first_optimizer_step_identity["candidate_changed"]
+            )
+            if not first_optimizer_step_identity["passed"]:
+                raise RuntimeError("first optimizer step violated adapter identity invariants")
         progress.update(1)
         if global_step == 1 or global_step % int(args.logging_steps) == 0 or global_step == total_updates:
             event = {
@@ -539,6 +762,12 @@ def main() -> None:
         device,
         adapter_name="candidate",
     )
+    reference_sha_terminal = adapter_value_sha256(model, "reference")
+    candidate_sha_terminal = adapter_value_sha256(model, "candidate")
+    if reference_sha_terminal != reference_sha_initial:
+        raise RuntimeError("frozen reference adapter changed during training")
+    if candidate_sha_terminal == candidate_sha_initial:
+        raise RuntimeError("candidate adapter did not change during training")
     anchor_gate = validation_anchor_nll_gate(
         reference_anchor["nll"],
         candidate_anchor["nll"],
@@ -557,6 +786,12 @@ def main() -> None:
         "fixed_adapter_weight_sha256": fixed_adapter_weight_sha256,
         "reference_validation_anchor_nll": reference_anchor,
         "candidate_validation_anchor_nll": candidate_anchor,
+        "optimizer_parameter_identity": optimizer_identity,
+        "first_optimizer_step_identity": first_optimizer_step_identity,
+        "reference_adapter_sha256_initial": reference_sha_initial,
+        "reference_adapter_sha256_terminal": reference_sha_terminal,
+        "candidate_adapter_sha256_initial": candidate_sha_initial,
+        "candidate_adapter_sha256_terminal": candidate_sha_terminal,
         "conditional_structural_anchor_nll_gate": anchor_gate,
         "generated_metric_checkpoint_selection": False,
         "intermediate_checkpoint_count": 0,

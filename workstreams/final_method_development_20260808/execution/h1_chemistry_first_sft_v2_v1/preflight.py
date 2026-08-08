@@ -148,6 +148,7 @@ def focused_tests(python: Path, source_root: Path) -> dict[str, Any]:
         "tests.test_h1_nocharge_sft_tokenizer_audit",
         "tests.test_h1_nocharge_planner_gate",
         "tests.test_h1_nocharge_ion_aux",
+        "tests.test_peft_adapter_identity",
     )
     env = dict(os.environ)
     env.update(
@@ -282,6 +283,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         checks["p0_adapter_sha"] = adapter_weight.is_file() and sha256_file(
             adapter_weight
         ) == config["p0_adapter_weight_sha256"]
+        adapter_config = args.p0_adapter_path / "adapter_config.json"
+        checks["p0_adapter_config_sha"] = adapter_config.is_file() and sha256_file(
+            adapter_config
+        ) == config["p0_adapter_config_sha256"]
         for split, expected in EXPECTED_COUNTS.items():
             path = args.mp20_dir / f"{split}.csv"
             observed = csv_record_count(path)

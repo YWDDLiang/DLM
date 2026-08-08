@@ -52,15 +52,17 @@ A800 through the existing `ssha800` or `ssha800_2` tmux sessions. No exact
 SMACT 4.0 executable path exists in any A800 submission, and the retired
 portable-runtime builders are excluded from this source snapshot.
 
-Submission is deliberately split at every cross-machine boundary.
-`submit_snapshot_once.sh` creates only the legacy snapshot. After the local
-witness ledger returns, `submit_once.sh` creates the CPU data job and the
-two-candidate GPU smoke array. `submit_training64_once.sh` submits only fixed-
-endpoint training and raw64 generation. `submit_assemble64_once.sh` is allowed
-only after the sealed local raw64 audit returns. Raw256 generation and assembly
-use two further separately locked submissions. Thus no job crosses a local
-SMACT4 boundary automatically, and no scientific job is queued before the
-minimal A800 smoke has passed.
+Submission is deliberately split at every cross-machine boundary. In the
+current V6 repair, the sealed V3 snapshot/data are reused byte-for-byte and the
+old `submit_snapshot_once.sh` / `submit_once.sh` entrypoints are disabled.
+`submit_identity_probe_once.sh` authorizes only the real-P0 identity probe;
+`submit_identity_repair_smoke_once.sh` can submit the two-candidate smoke only
+after that probe passes. `submit_training64_once.sh` submits only fixed-endpoint
+training and raw64 generation. `submit_assemble64_once.sh` is allowed only
+after the sealed local raw64 audit returns. Raw256 generation and assembly use
+two further separately locked submissions. Thus no job crosses a local SMACT4
+boundary automatically, and no scientific job is queued before independently
+validated A800 probe and smoke evidence has passed.
 
 ## V4 smoke identity repair
 
@@ -88,3 +90,29 @@ ledger, evaluator and gate byte remain unchanged. Existing V3/V4 evidence is
 never deleted or reused. V5 must pass the same reduced A800 source gate and a
 fresh dual-arm GPU smoke before training is eligible; SMACT4 is not executed
 on A800.
+
+## V6 exact protected-P0 identity-copy repair
+
+V5 reached the two-candidate A800 smoke and failed before the first model
+forward or optimizer step. Candidate and reference exposed the same 448 LoRA
+keys and no unrelated trainables, but every value differed by the PEFT 0.16
+second-adapter BF16-load rounding signature. The frozen V5 failure report and
+both independent reviews bind this diagnosis. The exact gate is not relaxed.
+
+V6 first attests the trainable candidate against the protected on-disk FP32 P0
+weight and config SHA. It then loads an independently stored reference adapter,
+copies candidate values into that storage with in-place tensor copy, freezes the
+reference, and requires source/candidate/reference byte identity, FP32 finite
+values, non-overlapping storage, candidate-only trainables, and the expected
+active adapter after device and checkpointing setup. Assignment or storage
+aliasing is forbidden.
+
+Before smoke, one new real-P0 A800 probe loads the frozen 8B model and protected
+adapter but performs no forward, optimizer construction, training, generation,
+or SMACT4 work. Its immutable report is independently validated. Each fresh
+smoke then additionally requires exact candidate/reference logits on one fixed
+validation record, finite candidate-only backward gradients, unchanged adapter
+value hashes, and no optimizer step. Smoke markers alone cannot authorize
+training: the science submission re-parses all probe and smoke reports and
+records their admission SHAs. Data, record order, prompts, optimizer, model,
+seeds, ledgers, evaluator contracts, and scientific gates are unchanged.

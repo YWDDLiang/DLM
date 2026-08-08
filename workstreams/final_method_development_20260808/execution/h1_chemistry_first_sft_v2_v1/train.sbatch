@@ -7,13 +7,13 @@
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
 #SBATCH --mem=96G
 #SBATCH --time=30:00:00
-#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5/logs/%A_%a_train.out
-#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5/logs/%A_%a_train.err
+#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6/logs/%A_%a_train.out
+#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6/logs/%A_%a_train.err
 
 set -Eeuo pipefail
 umask 077
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6"
 SOURCE_ROOT="${RUN_ROOT}/source"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
 P0_ADAPTER="${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
@@ -28,6 +28,20 @@ case "${SLURM_ARRAY_TASK_ID}" in
 esac
 test "${SLURM_JOB_PARTITION:-}" = gpu_long
 test -f "${RUN_ROOT}/status/smoke_${CANDIDATE}_SUCCESS"
+test -f "${RUN_ROOT}/smoke/${CANDIDATE}/identity_gate_report.json"
+sha256sum -c "${RUN_ROOT}/smoke/${CANDIDATE}/identity_gate_report.sha256"
+"${LEGACY_PYTHON}" - "${RUN_ROOT}/smoke/${CANDIDATE}/identity_gate_report.json" \
+  "${EXPECTED_SOURCE_INVENTORY_SHA256}" "${CANDIDATE}" <<'PY'
+import json, sys
+report = json.load(open(sys.argv[1], encoding="utf-8"))
+if not (
+    report.get("passed") is True
+    and report.get("candidate") == sys.argv[3]
+    and report.get("expected_source_inventory_sha256") == sys.argv[2]
+    and report.get("failures") == []
+):
+    raise SystemExit("smoke identity gate is not admissible")
+PY
 test ! -e "${RUN_ROOT}/training/${CANDIDATE}"
 test "$(sha256sum "${SOURCE_ROOT}/SOURCE_SHA256.txt" | cut -d' ' -f1)" = "${EXPECTED_SOURCE_INVENTORY_SHA256}"
 cd "${SOURCE_ROOT}"

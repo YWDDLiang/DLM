@@ -33,6 +33,10 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
             "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
         )
         self.assertEqual(
+            self.config["p0_adapter_config_sha256"],
+            "a40299dfbef59bd74210707240d0908e8e2b219fba10ae3f24c9b6ef7cbfbfda",
+        )
+        self.assertEqual(
             self.config["protected_body_b0_sha256"],
             "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
         )
@@ -111,7 +115,9 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
             planner = (ROOT / f"planner{stage}.sbatch").read_text(encoding="utf-8")
             self.assertIn("#SBATCH --cpus-per-task=8", planner)
             self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", planner)
-        engineering = (ROOT / "submit_once.sh").read_text(encoding="utf-8")
+        engineering = (ROOT / "submit_identity_repair_smoke_once.sh").read_text(
+            encoding="utf-8"
+        )
         science64 = (ROOT / "submit_training64_once.sh").read_text(
             encoding="utf-8"
         )
@@ -119,19 +125,33 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertIn("--array=0-1%2", science64)
         self.assertIn("--array=0-2%2", science64)
 
-    def test_reference_adapter_uses_same_fp32_load_path_then_freezes(self) -> None:
+    def test_reference_adapter_uses_source_attested_exact_copy_then_freezes(self) -> None:
         trainer = (
             ROOT.parents[3] / "scripts" / "llama_h1_chemistry_first_sft.py"
         ).read_text(encoding="utf-8")
-        reference_load = trainer.split('adapter_name="reference",', 1)[1].split(
-            ")", 1
-        )[0]
-        self.assertIn("is_trainable=True", reference_load)
-        self.assertIn("autocast_adapter_dtype=True", reference_load)
-        self.assertIn(
-            'if ".reference." in name:\n            parameter.requires_grad_(False)',
-            trainer,
+        self.assertIn("candidate_source_before_reference", trainer)
+        self.assertIn("adapter_source_identity_report", trainer)
+        self.assertIn("copy_adapter_state_exact", trainer)
+        self.assertIn("protected_p0_triplet_identity.json", trainer)
+        self.assertIn("fixed_validation_record_candidate_reference_logits_identical", trainer)
+        self.assertIn("optimizer_parameter_identity_report", trainer)
+        self.assertIn("first_optimizer_step_identity", trainer)
+        self.assertIn("reference_adapter_sha256_terminal", trainer)
+        helper = (
+            ROOT.parents[3] / "crystal_dlm" / "peft_adapter_identity.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn("right.copy_(left)", helper)
+        self.assertNotIn("right.data = left.data", helper)
+        self.assertIn("storage_overlap_count", helper)
+        self.assertIn("nonfinite_count", helper)
+
+    def test_protected_adapter_config_is_hash_bound(self) -> None:
+        self.assertEqual(
+            self.config["p0_adapter_config_sha256"],
+            "a40299dfbef59bd74210707240d0908e8e2b219fba10ae3f24c9b6ef7cbfbfda",
         )
+        preflight = (ROOT / "preflight.py").read_text(encoding="utf-8")
+        self.assertIn('checks["p0_adapter_config_sha"]', preflight)
 
     def test_cross_machine_evaluator_firewall(self) -> None:
         snapshot = (ROOT / "snapshot.sbatch").read_text(encoding="utf-8")
@@ -182,6 +202,8 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
             for name in (
                 "submit_snapshot_once.sh",
                 "submit_once.sh",
+                "submit_identity_probe_once.sh",
+                "submit_identity_repair_smoke_once.sh",
                 "submit_training64_once.sh",
                 "submit_assemble64_once.sh",
                 "submit_256_once.sh",
@@ -196,12 +218,19 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
 
     def test_submissions_stop_at_each_local_smact4_boundary(self) -> None:
         snapshot = (ROOT / "submit_snapshot_once.sh").read_text(encoding="utf-8")
-        engineering = (ROOT / "submit_once.sh").read_text(encoding="utf-8")
+        probe = (ROOT / "submit_identity_probe_once.sh").read_text(encoding="utf-8")
+        engineering = (ROOT / "submit_identity_repair_smoke_once.sh").read_text(
+            encoding="utf-8"
+        )
         initial = (ROOT / "submit_training64_once.sh").read_text(encoding="utf-8")
         assembly64 = (ROOT / "submit_assemble64_once.sh").read_text(encoding="utf-8")
         followup = (ROOT / "submit_256_once.sh").read_text(encoding="utf-8")
         assembly256 = (ROOT / "submit_assemble256_once.sh").read_text(encoding="utf-8")
-        self.assertIn("snapshot.sbatch", snapshot)
+        self.assertIn("disabled in exact_identity_copy_repair_v6", snapshot)
+        self.assertNotIn("snapshot.sbatch", snapshot)
+        self.assertIn("identity_probe.sbatch", probe)
+        self.assertNotIn("smoke.sbatch", probe)
+        self.assertNotIn("train.sbatch", probe)
         self.assertIn("smoke.sbatch", engineering)
         self.assertNotIn("train.sbatch", engineering)
         self.assertNotIn("planner64.sbatch", engineering)
@@ -218,7 +247,7 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertIn("assemble256.sbatch", assembly256)
         self.assertIn("sacct_planner256_before_assembly.txt", assembly256)
         self.assertIn("passing_candidates", followup)
-        all_submissions = snapshot + engineering + initial + assembly64 + followup + assembly256
+        all_submissions = snapshot + probe + engineering + initial + assembly64 + followup + assembly256
         self.assertNotIn("downstream.sbatch", all_submissions)
         self.assertNotIn("rl.sbatch", all_submissions)
 
@@ -242,7 +271,7 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertNotIn("planner64.sbatch", smoke)
         self.assertNotIn("SMACT4_PYTHON", reuse + smoke)
 
-    def test_v5_source_gate_path_repair_is_closed(self) -> None:
+    def test_v5_source_gate_path_repair_evidence_is_closed(self) -> None:
         repair = json.loads(
             (ROOT / "SOURCE_GATE_PATH_REPAIR_V5.json").read_text(encoding="utf-8")
         )
@@ -250,20 +279,54 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertFalse(repair["repair"]["training_code_changed"])
         self.assertFalse(repair["repair"]["data_changed"])
         self.assertFalse(repair["repair"]["smact4_execution_on_a800"])
-        old_run = "20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4"
-        new_run = "20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5"
-        active_paths = [ROOT / "CONFIG.json"]
-        active_paths.extend(ROOT.glob("*.sh"))
-        active_paths.extend(ROOT.glob("*.sbatch"))
-        for path in active_paths:
-            text = path.read_text(encoding="utf-8")
-            self.assertNotIn(old_run, text, path.name)
-        self.assertEqual(self.config["run_root"].rsplit("/", 1)[-1], new_run)
+        self.assertTrue(
+            repair["repair"]["new_run_root"].endswith("source_gate_path_repair_v5")
+        )
         audit = (ROOT / "audit_source_on_a800.sh").read_text(encoding="utf-8")
         self.assertIn('ISOLATED_ROOT="${RUN_ROOT}/isolated_archive_test"', audit)
         bootstrap = (ROOT / "bootstrap_source_on_a800.sh").read_text(encoding="utf-8")
         self.assertIn("SOURCE_GATE_PATH_REPAIR_V5.json", bootstrap)
         self.assertNotIn("smact4_400_runtime", audit + bootstrap)
+
+    def test_v6_exact_identity_copy_repair_is_fail_closed(self) -> None:
+        repair = json.loads(
+            (ROOT / "EXACT_IDENTITY_COPY_REPAIR_V6.json").read_text(encoding="utf-8")
+        )
+        run_name = (
+            "20260808_h1_chemistry_first_sft_v2_smact_split_v2_"
+            "exact_identity_copy_repair_v6"
+        )
+        self.assertFalse(repair["scientific_contract_changes"])
+        self.assertFalse(
+            repair[
+                "model_data_prompt_seed_optimizer_ledger_evaluator_gate_changes"
+            ]
+        )
+        self.assertFalse(repair["smact4_executed_on_a800"])
+        self.assertEqual(self.config["run_root"].rsplit("/", 1)[-1], run_name)
+        for name in (
+            "identity_probe.sbatch",
+            "smoke.sbatch",
+            "train.sbatch",
+            "submit_identity_probe_once.sh",
+            "submit_identity_repair_smoke_once.sh",
+            "submit_training64_once.sh",
+        ):
+            self.assertIn(run_name, (ROOT / name).read_text(encoding="utf-8"), name)
+
+        probe = (ROOT / "identity_probe.sbatch").read_text(encoding="utf-8")
+        smoke_submit = (ROOT / "submit_identity_repair_smoke_once.sh").read_text(
+            encoding="utf-8"
+        )
+        training_submit = (ROOT / "submit_training64_once.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("validate_h1_peft_identity_gate_v1.py probe", probe)
+        self.assertIn("identity_probe_admission_before_smoke.json", smoke_submit)
+        self.assertIn("sacct_identity_probe_before_smoke.txt", smoke_submit)
+        self.assertIn("validate_h1_peft_identity_gate_v1.py smoke", training_submit)
+        self.assertIn("smoke_admission_sft_v2_before_training.json", training_submit)
+        self.assertIn("smoke_admission_sft_v2_c_before_training.json", training_submit)
 
     def test_fixed_adapter_resolver_supports_named_peft_subdirectory(self) -> None:
         from workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.resolve_fixed_adapter import (

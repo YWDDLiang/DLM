@@ -1,0 +1,40 @@
+{
+  "schema": "h1_chemistry_first_exact_identity_copy_repair_v6",
+  "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
+  "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
+  "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6",
+  "parent_smoke_job_id": 31064,
+  "parent_failure_report_sha256": "3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8",
+  "parent_identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
+  "protected_p0_adapter_weight_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+  "protected_p0_adapter_config_sha256": "a40299dfbef59bd74210707240d0908e8e2b219fba10ae3f24c9b6ef7cbfbfda",
+  "root_cause": "PEFT_0_16_load_adapter_writes_FP32_checkpoint_into_BF16_second_adapter_before_post_load_FP32_cast",
+  "review": {
+    "independent_review_count": 2,
+    "consensus": "candidate_to_reference_copy_in_place_only_after_candidate_to_disk_source_exact_attestation",
+    "tiny_runtime_probe_report_sha256": "26c3b5a8da16572b46890a5733381d16b8cbf37409b7d6c8e46f35fcca4e0b55"
+  },
+  "repair": {
+    "copy_direction": "candidate_to_reference",
+    "copy_operation": "torch_tensor_copy_in_place",
+    "parameter_or_storage_aliasing": false,
+    "source_candidate_reference_byte_identity_required": true,
+    "all_adapter_tensors_fp32_and_finite_required": true,
+    "storage_nonoverlap_required": true,
+    "candidate_only_trainable_set_required": true,
+    "optimizer_parameter_set_must_equal_candidate": true,
+    "reference_hash_must_survive_anchor_first_step_and_terminal": true,
+    "exact_gate_relaxed": false
+  },
+  "gates": {
+    "new_source_gate_required": true,
+    "real_p0_no_forward_no_optimizer_probe_required": true,
+    "fresh_dual_arm_smoke_required": true,
+    "probe_and_smoke_reports_independently_reparsed": true,
+    "legacy_snapshot_and_engineering_entrypoints_disabled": true,
+    "training_before_both_gates": false
+  },
+  "scientific_contract_changes": false,
+  "model_data_prompt_seed_optimizer_ledger_evaluator_gate_changes": false,
+  "smact4_executed_on_a800": false
+}

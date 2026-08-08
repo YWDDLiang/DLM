@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
@@ -23,17 +23,38 @@ test -f "${RUN_ROOT}/DATA_REUSE_RECORD.json"
 sha256sum -c "${RUN_ROOT}/DATA_REUSE_RECORD.sha256"
 test -f "${RUN_ROOT}/snapshot_submission_record.json"
 sha256sum -c "${RUN_ROOT}/snapshot_submission_record.sha256"
+test -f "${RUN_ROOT}/identity_probe_submission_record.json"
+sha256sum -c "${RUN_ROOT}/identity_probe_submission_record.sha256"
+test -f "${RUN_ROOT}/status/identity_probe_SUCCESS"
+test -f "${RUN_ROOT}/status/submitted_identity_probe_job_id.txt"
+test -f "${RUN_ROOT}/probe/real_p0_identity_report.json"
+test -f "${RUN_ROOT}/probe/real_p0_identity_gate.json"
+sha256sum -c "${RUN_ROOT}/probe/real_p0_identity_report.sha256"
+sha256sum -c "${RUN_ROOT}/probe/real_p0_identity_gate.sha256"
 test "$(sha256sum "${LOCAL_SMACT4_WITNESS_ROOT}/MANIFEST.json" | cut -d' ' -f1)" = "${EXPECTED_LOCAL_SMACT4_WITNESS_MANIFEST_SHA256}"
 test ! -e "${RUN_ROOT}/engineering_submission_record.json"
 test ! -e "${RUN_ROOT}/smoke"
 test ! -e "${RUN_ROOT}/training"
 test ! -e "${RUN_ROOT}/planner64"
-mkdir "${RUN_ROOT}/.submit_identity_repair_smoke_lock"
 
 test "$(sha256sum "${SOURCE_ROOT}/SOURCE_SHA256.txt" | cut -d' ' -f1)" = "${EXPECTED_SOURCE_INVENTORY_SHA256}"
 test "$(sha256sum "${RUN_ROOT}/source_archive.tar.gz" | cut -d' ' -f1)" = "${EXPECTED_ARCHIVE_SHA256}"
 cd "${SOURCE_ROOT}"
 sha256sum -c SOURCE_SHA256.txt
+PROBE_JOB_ID="$(tr -d '[:space:]' < "${RUN_ROOT}/status/submitted_identity_probe_job_id.txt")"
+case "${PROBE_JOB_ID}" in ''|*[!0-9]*) echo "invalid identity probe job id: ${PROBE_JOB_ID}" >&2; exit 3 ;; esac
+sacct -n -X -j "${PROBE_JOB_ID}" -o JobIDRaw,State,ExitCode -P \
+  > "${RUN_ROOT}/status/sacct_identity_probe_before_smoke.txt"
+test "$(awk -F'|' -v wanted="${PROBE_JOB_ID}" '$1 == wanted {print $2 "|" $3}' "${RUN_ROOT}/status/sacct_identity_probe_before_smoke.txt")" = "COMPLETED|0:0"
+test ! -e "${RUN_ROOT}/preflight/identity_probe_admission_before_smoke.json"
+"${LEGACY_PYTHON}" scripts/a800/validate_h1_peft_identity_gate_v1.py probe \
+  --report "${RUN_ROOT}/probe/real_p0_identity_report.json" \
+  --expected-source-inventory-sha256 "${EXPECTED_SOURCE_INVENTORY_SHA256}" \
+  --output "${RUN_ROOT}/preflight/identity_probe_admission_before_smoke.json"
+IDENTITY_PROBE_REPORT_SHA="$(sha256sum "${RUN_ROOT}/probe/real_p0_identity_report.json" | cut -d' ' -f1)"
+IDENTITY_PROBE_GATE_SHA="$(sha256sum "${RUN_ROOT}/probe/real_p0_identity_gate.json" | cut -d' ' -f1)"
+IDENTITY_PROBE_ADMISSION_SHA="$(sha256sum "${RUN_ROOT}/preflight/identity_probe_admission_before_smoke.json" | cut -d' ' -f1)"
+mkdir "${RUN_ROOT}/.submit_identity_repair_smoke_lock"
 LEDGER64_SHA="$(sha256sum "${EXECUTION_DIR}/LEDGER64.json" | cut -d' ' -f1)"
 LEDGER256_SHA="$(sha256sum "${EXECUTION_DIR}/LEDGER256.json" | cut -d' ' -f1)"
 
@@ -69,6 +90,8 @@ export LEDGER64_SHA LEDGER256_SHA LEGACY_PYTHON PREFLIGHT_SHA SINFO_SHA SQUEUE_S
 export DATA_JOB_ID=31035 SMOKE_JOB_ID LOCAL_SMACT4_WITNESS_ROOT
 export LOCAL_SMACT4_WITNESS_MANIFEST_SHA="${EXPECTED_LOCAL_SMACT4_WITNESS_MANIFEST_SHA256}"
 export PRIOR_SNAPSHOT_SUBMISSION_SHA="$(sha256sum "${RUN_ROOT}/snapshot_submission_record.json" | cut -d' ' -f1)"
+export PRIOR_IDENTITY_PROBE_SUBMISSION_SHA="$(sha256sum "${RUN_ROOT}/identity_probe_submission_record.json" | cut -d' ' -f1)"
+export IDENTITY_PROBE_REPORT_SHA IDENTITY_PROBE_GATE_SHA IDENTITY_PROBE_ADMISSION_SHA
 "${LEGACY_PYTHON}" "${EXECUTION_DIR}/write_submission_record.py" \
   --stage engineering_smoke --output "${RUN_ROOT}/engineering_submission_record.json"
 sha256sum "${RUN_ROOT}/engineering_submission_record.json" > "${RUN_ROOT}/engineering_submission_record.sha256"

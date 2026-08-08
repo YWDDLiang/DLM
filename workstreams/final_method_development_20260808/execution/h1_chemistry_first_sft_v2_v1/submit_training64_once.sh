@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
@@ -23,6 +23,12 @@ test -f "${RUN_ROOT}/status/data_SUCCESS"
 test -f "${RUN_ROOT}/status/smoke_sft_v2_SUCCESS"
 test -f "${RUN_ROOT}/status/smoke_sft_v2_c_SUCCESS"
 test -f "${RUN_ROOT}/status/submitted_smoke_job_id.txt"
+test -f "${RUN_ROOT}/identity_probe_submission_record.json"
+sha256sum -c "${RUN_ROOT}/identity_probe_submission_record.sha256"
+test -f "${RUN_ROOT}/probe/real_p0_identity_report.json"
+sha256sum -c "${RUN_ROOT}/probe/real_p0_identity_report.sha256"
+test -f "${RUN_ROOT}/probe/real_p0_identity_gate.json"
+sha256sum -c "${RUN_ROOT}/probe/real_p0_identity_gate.sha256"
 test -x "${LEGACY_PYTHON}"
 test ! -e "${RUN_ROOT}/submission_record.json"
 test ! -e "${RUN_ROOT}/training"
@@ -47,6 +53,26 @@ for task in 0 1; do
   matches="$(awk -F'|' -v wanted="${expected_id}" '$1 == wanted {print $2 "|" $3}' "${RUN_ROOT}/status/sacct_smoke_before_science64.txt")"
   test "${matches}" = "COMPLETED|0:0"
 done
+
+test ! -e "${RUN_ROOT}/preflight/identity_probe_admission_before_training.json"
+"${LEGACY_PYTHON}" scripts/a800/validate_h1_peft_identity_gate_v1.py probe \
+  --report "${RUN_ROOT}/probe/real_p0_identity_report.json" \
+  --expected-source-inventory-sha256 "${EXPECTED_SOURCE_INVENTORY_SHA256}" \
+  --output "${RUN_ROOT}/preflight/identity_probe_admission_before_training.json"
+IDENTITY_PROBE_ADMISSION_SHA="$(sha256sum "${RUN_ROOT}/preflight/identity_probe_admission_before_training.json" | cut -d' ' -f1)"
+for candidate in sft_v2 sft_v2_c; do
+  test -f "${RUN_ROOT}/smoke/${candidate}/identity_gate_report.json"
+  sha256sum -c "${RUN_ROOT}/smoke/${candidate}/identity_gate_report.sha256"
+  admission="${RUN_ROOT}/preflight/smoke_admission_${candidate}_before_training.json"
+  test ! -e "${admission}"
+  "${LEGACY_PYTHON}" scripts/a800/validate_h1_peft_identity_gate_v1.py smoke \
+    --smoke-dir "${RUN_ROOT}/smoke/${candidate}" \
+    --candidate "${candidate}" \
+    --expected-source-inventory-sha256 "${EXPECTED_SOURCE_INVENTORY_SHA256}" \
+    --output "${admission}"
+done
+SMOKE_ADMISSION_SFT_V2_SHA="$(sha256sum "${RUN_ROOT}/preflight/smoke_admission_sft_v2_before_training.json" | cut -d' ' -f1)"
+SMOKE_ADMISSION_SFT_V2_C_SHA="$(sha256sum "${RUN_ROOT}/preflight/smoke_admission_sft_v2_c_before_training.json" | cut -d' ' -f1)"
 
 test -d "${RUN_ROOT}/preflight"
 test ! -e "${RUN_ROOT}/preflight/preflight_science64_generation_report.json"
@@ -82,6 +108,7 @@ export SOURCE_INVENTORY_SHA="${EXPECTED_SOURCE_INVENTORY_SHA256}"
 export ARCHIVE_SHA="${EXPECTED_ARCHIVE_SHA256}"
 export LEDGER64_SHA LEDGER256_SHA LEGACY_PYTHON PREFLIGHT_SHA SINFO_SHA SQUEUE_SHA
 export TRAIN_JOB_ID PLANNER_JOB_ID PRIOR_ENGINEERING_SUBMISSION_SHA
+export IDENTITY_PROBE_ADMISSION_SHA SMOKE_ADMISSION_SFT_V2_SHA SMOKE_ADMISSION_SFT_V2_C_SHA
 "${LEGACY_PYTHON}" "${EXECUTION_DIR}/write_submission_record.py" \
   --stage planner64_generation --output "${RUN_ROOT}/submission_record.json"
 sha256sum "${RUN_ROOT}/submission_record.json" > "${RUN_ROOT}/submission_record.sha256"

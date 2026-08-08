@@ -21,6 +21,7 @@ def main() -> None:
         "--stage",
         choices=(
             "legacy_snapshot",
+            "identity_probe",
             "engineering_smoke",
             "planner64_generation",
             "planner64_assembly",
@@ -54,6 +55,13 @@ def main() -> None:
         common["jobs"] = {"legacy_snapshot": required("SNAPSHOT_JOB_ID")}
         common["selection_role"] = "immutable_source_snapshot_only"
         common["candidate_list"] = []
+    elif args.stage == "identity_probe":
+        common["jobs"] = {"identity_probe": required("IDENTITY_PROBE_JOB_ID")}
+        common["parent_v5_failure_report_sha256"] = required(
+            "PARENT_V5_FAILURE_SHA"
+        )
+        common["selection_role"] = "no_forward_no_optimizer_engineering_identity_probe"
+        common["candidate_list"] = []
     elif args.stage == "engineering_smoke":
         common["jobs"] = {
             "data": required("DATA_JOB_ID"),
@@ -68,6 +76,18 @@ def main() -> None:
         common["local_smact4_witness_manifest_sha256"] = required(
             "LOCAL_SMACT4_WITNESS_MANIFEST_SHA"
         )
+        common["prior_identity_probe_submission_sha256"] = required(
+            "PRIOR_IDENTITY_PROBE_SUBMISSION_SHA"
+        )
+        common["identity_probe_report_sha256"] = required(
+            "IDENTITY_PROBE_REPORT_SHA"
+        )
+        common["identity_probe_gate_sha256"] = required(
+            "IDENTITY_PROBE_GATE_SHA"
+        )
+        common["identity_probe_admission_sha256"] = required(
+            "IDENTITY_PROBE_ADMISSION_SHA"
+        )
         common["selection_role"] = "engineering_only_no_scientific_sampling"
         common["candidate_list"] = ["sft_v2", "sft_v2_c"]
     elif args.stage == "planner64_generation":
@@ -78,6 +98,13 @@ def main() -> None:
         common["prior_engineering_submission_sha256"] = required(
             "PRIOR_ENGINEERING_SUBMISSION_SHA"
         )
+        common["identity_probe_admission_sha256"] = required(
+            "IDENTITY_PROBE_ADMISSION_SHA"
+        )
+        common["smoke_admission_sha256"] = {
+            "sft_v2": required("SMOKE_ADMISSION_SFT_V2_SHA"),
+            "sft_v2_c": required("SMOKE_ADMISSION_SFT_V2_C_SHA"),
+        }
         common["candidate_list"] = ["sft_v2", "sft_v2_c"]
     elif args.stage == "planner64_assembly":
         common["jobs"] = {"assemble64": required("ASSEMBLY_JOB_ID")}
