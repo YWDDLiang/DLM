@@ -124,6 +124,21 @@
       "status": "superseded_on_5090_before_A800_due_submission_order_audit",
       "a800_files_transferred": false,
       "run_or_job_created": false
+    },
+    {
+      "evidence_id": "smoke_gated_transfer_batch_v5_5090_verified",
+      "source_commit": "ef82ffc",
+      "source_archive_bytes": 10180252,
+      "source_archive_sha256": "79d1e6e60b06e61e0654ebdafcfad828cb86888b7f17fff9bcbfeae2a97e42b9",
+      "archive_shell_files_audited": 370,
+      "archive_shell_cr_bytes": 0,
+      "exact_smact4_wheel_present": true,
+      "science_submission_requires_completed_smoke": true,
+      "destination": "/home/ywliang/codex_transfer/20260808_evidence_first_transfer_batch_v5",
+      "completed_at": "2026-08-08T15:27:06+08:00",
+      "status": "verified_on_5090_waiting_for_A800_scp_window",
+      "a800_files_transferred": false,
+      "run_or_job_created": false
     }
   ],
   "engineering_failures": [

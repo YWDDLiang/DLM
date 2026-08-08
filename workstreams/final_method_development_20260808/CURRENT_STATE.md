@@ -91,4 +91,11 @@ execution. The source now has distinct one-shot engineering-smoke and
 training/raw64 submissions; the latter requires both smoke markers plus exact
 `sacct COMPLETED|0:0` rows and takes a fresh preflight/resource snapshot.
 
+The resulting execution candidate is commit `ef82ffc`, archive SHA
+`79d1e6e60b06e61e0654ebdafcfad828cb86888b7f17fff9bcbfeae2a97e42b9`
+(10,180,252 bytes). Its packaging audit covered 370 shell/sbatch files with
+zero carriage-return bytes and retained the exact evaluator wheel. The single
+local-to-5090 transfer completed at `2026-08-08T15:27:06+08:00` with matching
+SHA. Transfer input v2 on A800 remains empty until the next legal SCP window.
+
 No Planner or DLM RL is authorized.
