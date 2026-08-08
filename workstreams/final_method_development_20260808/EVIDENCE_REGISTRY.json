@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-08T13:05:00+08:00",
+  "updated_at": "2026-08-08T14:35:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -56,6 +56,34 @@
       },
       "target_roots_absent": true,
       "read_only": true
+    },
+    {
+      "evidence_id": "a800_python_smact_runtime_inventory",
+      "timestamp": "2026-08-08T14:05:00+08:00",
+      "result": "no_installed_python_ge_3_11_lt_3_14_with_exact_smact4",
+      "read_only": true
+    }
+  ],
+  "runtime_bundles": [
+    {
+      "evidence_id": "smact4_400_portable_runtime_bundle_v1",
+      "path": "source_bundles/20260808_smact4_400_runtime_bundle_v1/smact4_400_runtime_v1_bundle.tar.gz",
+      "archive_bytes": 177305931,
+      "archive_sha256": "4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc",
+      "bundle_manifest_sha256": "90a0ad62af379d8c88a622f7b6ae6bd46994963dbb92199f044efa742b4aa2e4",
+      "portable_python_version": "3.12.13",
+      "portable_python_archive_sha256": "506191be3ee7bd190a8834dcdc1b3bc70aab50608deccc711935aa007239cabd",
+      "smact_version": "4.0.0",
+      "wheel_count": 54,
+      "standard_resolver_report_sha256": "1dc4404b002630d5d45588950ccb0c843da8afced26c3cb5d161b8ec83326613",
+      "offline_probe": {
+        "pip_check": "pass",
+        "transformers": "4.54.0",
+        "oxidation_elements": 93,
+        "contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19"
+      },
+      "remote_network_install": false,
+      "global_environment_mutation": false
     }
   ],
   "terminal_evidence": []

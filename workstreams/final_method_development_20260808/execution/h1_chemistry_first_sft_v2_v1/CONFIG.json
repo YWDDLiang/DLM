@@ -1,0 +1,110 @@
+{
+  "schema": "h1_chemistry_first_execution_config_v1",
+  "identity": "h1_chemistry_first_sft_v2_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_v1",
+  "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+  "model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+  "p0_adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+  "p0_adapter_weight_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+  "protected_body_b0_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+  "protected_refiner_model494_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+  "prompt": {
+    "style": "h1_rich_nocharge_plan_v1",
+    "inference_messages_sha256": "b6231c94cda80ee9762ea247827ef98c69c4226d8130ea85be9fee0fc2f53bcd",
+    "generated_lines": ["formula", "anion", "lattice", "spacegroup", "volume", "end"],
+    "generated_charge_field": false
+  },
+  "evaluators": {
+    "legacy": {
+      "smact_version": "3.1.0",
+      "composition_validity_sha256": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178"
+    },
+    "secondary": {
+      "smact_version": "4.0.0",
+      "wheel_sha256": "e3eb968da92d47a8ef9a4af42af5589a6de61cccbca9d329937e1f4e402f0551",
+      "source_commit": "c2b4d3ce6fa3a8c39fd21ab252934253dc66e131",
+      "oxidation_map_sha256": "9789ef90afc08faed4eb082bb762c22a4a7675dfc0ae9a21a6951d2f583efad6",
+      "contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19"
+    }
+  },
+  "shared_smact4_runtime": {
+    "identity": "smact4_400_runtime_v1",
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_smact4_400_runtime_v1",
+    "wheel": "smact-4.0.0-py3-none-any.whl",
+    "wheel_sha256": "e3eb968da92d47a8ef9a4af42af5589a6de61cccbca9d329937e1f4e402f0551",
+    "bundle_archive": "smact4_400_runtime_v1_bundle.tar.gz",
+    "bundle_archive_bytes": 177305931,
+    "bundle_archive_sha256": "4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc",
+    "bundle_manifest_sha256": "90a0ad62af379d8c88a622f7b6ae6bd46994963dbb92199f044efa742b4aa2e4",
+    "portable_python_archive_sha256": "506191be3ee7bd190a8834dcdc1b3bc70aab50608deccc711935aa007239cabd",
+    "portable_python_version": "3.12.13",
+    "wheel_count": 54,
+    "base_python_requirement": ">=3.11,<3.14",
+    "network_install": false,
+    "global_environment_mutation": false,
+    "user_site_isolation": true,
+    "atomic_publish": true
+  },
+  "data": {
+    "mp20_counts": {"train": 27136, "val": 9047, "test": 9046},
+    "all_definition": "all frozen MP20 train rows",
+    "pos_definition": "legacy_SMACT3.1_nonshortcut_primary_intersection_exact_SMACT4_uniform_primary",
+    "records": "one anchor per ALL plus one direct and one deterministic auxiliary per POS",
+    "auxiliary_cycle": [
+      "atoms_to_formula",
+      "ions_to_charge_sum_formula",
+      "masked_oxidation",
+      "formula_to_elements_counts_n"
+    ],
+    "invalid_formula_unconditional_target_count": 0,
+    "candidate_record_multiset_identical": true
+  },
+  "training": {
+    "candidates": ["sft_v2", "sft_v2_c"],
+    "always_execute": true,
+    "initialization": "protected_P0",
+    "seed": 26080817,
+    "max_length": 512,
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "learning_rate": 0.000002,
+    "weight_decay": 0.0,
+    "scheduler": "cosine",
+    "warmup": "max(25,round(0.03*ceil(record_count/8)))",
+    "epochs": 1,
+    "drop_last": false,
+    "repeat_records": false,
+    "fixed_endpoint": "checkpoint-{ceil(record_count/8):06d}",
+    "intermediate_checkpoints": false,
+    "generated_metric_checkpoint_selection": false,
+    "critical_answer_token_weight": 2.0,
+    "other_answer_token_weight": 1.0,
+    "sample_weight": 1.0,
+    "anchor_nll_relative_degradation_max": 0.01
+  },
+  "planner": {
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "max_atoms": 20,
+    "seed_mode": "stateless_ordinal_v1",
+    "include_sample_id": false,
+    "stage64_base_seed": 26080964,
+    "stage256_base_seed": 26081256
+  },
+  "resources": {
+    "data_partition": "normal",
+    "training_partition": "gpu_long",
+    "generation_partition": "gpu",
+    "training_gpus_per_candidate": 1,
+    "training_cpus_per_gpu": 4,
+    "generation_cpus_per_gpu": 8,
+    "maximum_total_a800_authorized": 4
+  },
+  "body_dlm_changed": false,
+  "execution_location": "A800_existing_tmux_only",
+  "local_program_execution_after_runtime_bundle_freeze": false,
+  "automatic_downstream": false,
+  "automatic_rl": false
+}

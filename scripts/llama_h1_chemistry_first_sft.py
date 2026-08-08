@@ -515,6 +515,18 @@ def main() -> None:
     endpoint_name = f"checkpoint-{total_updates:06d}"
     endpoint_dir = args.output_dir / endpoint_name
     save_candidate_adapter(model, tokenizer, endpoint_dir)
+    adapter_location = json.loads(
+        (endpoint_dir / "adapter_location.json").read_text(encoding="utf-8")
+    )
+    adapter_relative = Path(str(adapter_location["adapter_directory_relative"]))
+    if adapter_relative.is_absolute() or ".." in adapter_relative.parts:
+        raise RuntimeError("saved candidate adapter location escaped fixed endpoint")
+    adapter_dir = endpoint_dir / adapter_relative
+    adapter_weight = adapter_dir / str(adapter_location["weight_file"])
+    if not adapter_weight.is_file():
+        raise RuntimeError("saved candidate adapter weight is missing")
+    fixed_adapter_relative = adapter_dir.relative_to(args.output_dir).as_posix()
+    fixed_adapter_weight_sha256 = sha256_file(adapter_weight)
     candidate_anchor = validation_anchor_nll(
         model,
         val_loader,
@@ -534,6 +546,9 @@ def main() -> None:
         "microbatch_count": len(consumed_ids),
         "consumed_record_order_sha256": consumed_order_sha,
         "fixed_endpoint": endpoint_name,
+        "fixed_adapter_relative": fixed_adapter_relative,
+        "fixed_adapter_weight_file": adapter_weight.name,
+        "fixed_adapter_weight_sha256": fixed_adapter_weight_sha256,
         "reference_validation_anchor_nll": reference_anchor,
         "candidate_validation_anchor_nll": candidate_anchor,
         "conditional_structural_anchor_nll_gate": anchor_gate,

@@ -1,0 +1,14 @@
+# Frozen top-level requirements for the isolated Linux CPython 3.12 SMACT4 runtime.
+# The transferred bundle additionally freezes every resolved wheel filename and SHA256.
+ase==3.24.0
+numpy==2.2.6
+pandarallel==1.6.5
+pandas==2.2.3
+pathos==0.3.4
+pymatgen==2025.4.24
+scipy==1.15.3
+spglib==2.6.0
+tabulate==0.9.0
+tqdm==4.67.1
+transformers==4.54.0
+typing-extensions==4.14.1

@@ -173,8 +173,14 @@ ledger, authorization record, submission record, and terminal. Local files are
 the code source of truth. Remote paths must not already exist. Existing running
 jobs are never modified or cancelled.
 
+After the explicitly authorized one-time local construction of the portable
+SMACT4 runtime bundle, local execution of project programs or environment
+installation is prohibited. Tests, data jobs, training, generation, and
+evaluation execute on A800 only through the two pre-existing 5090 tmux
+sessions. Local work is limited to source editing, evidence registration,
+transfer preparation, and Git operations.
+
 After each terminal, preserve fixed endpoints, promoted checkpoints, manifests,
 hashes, logs, results, and a deletion manifest. Other intermediate payloads may
 be removed only after the deletion list and hashes are frozen. Protected
 checkpoints are never deleted.
-

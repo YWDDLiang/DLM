@@ -8,7 +8,7 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [x] Freeze protected Planner, Body, and refiner identities.
 - [x] Complete initial local/5090/A800 read-only duplicate-run audit.
 - [x] Freeze the workstream specification before candidate science results.
-- [ ] Validate governance JSON/JSONL and commit/push frozen spec.
+- [x] Validate governance JSON/JSONL and commit/push frozen spec.
 - [ ] Compare local/remote TODO SHA before every documentation sync.
 
 ## Planner portfolio
@@ -19,6 +19,10 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [x] Implement common-record builder, deterministic curriculum, fixed-endpoint
       trainer, SMACT4 audit, and raw64/raw256 gate code.
 - [x] Pass focused local chemistry-first and no-charge regression tests.
+- [x] Freeze the one-time portable CPython 3.12.13/SMACT4 input bundle and
+      verify its 54-wheel closure with an offline probe and standard resolver.
+- [x] Record the post-bundle A800-only execution rule; do not run further
+      project programs or environment installation locally.
 - [ ] Pass local tests, isolated archive tests, A800 runtime preflight, and one
       minimal GPU smoke for each new source family.
 - [ ] Execute C0 and C1 to fixed checkpoint 400.

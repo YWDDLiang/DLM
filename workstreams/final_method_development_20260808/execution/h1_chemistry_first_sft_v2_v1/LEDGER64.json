@@ -1,0 +1,330 @@
+{
+  "base_seed": 26080964,
+  "denominator": 64,
+  "identity": "h1_chemistry_first_sft_v2_v1",
+  "independent_from_training_and_other_stages": true,
+  "rows": [
+    {
+      "ordinal": 0,
+      "planner_sampling_seed": 8993520572205692129,
+      "role": "shared"
+    },
+    {
+      "ordinal": 1,
+      "planner_sampling_seed": 7987608588618889879,
+      "role": "shared"
+    },
+    {
+      "ordinal": 2,
+      "planner_sampling_seed": 9136682412100283733,
+      "role": "shared"
+    },
+    {
+      "ordinal": 3,
+      "planner_sampling_seed": 3887257637803359219,
+      "role": "shared"
+    },
+    {
+      "ordinal": 4,
+      "planner_sampling_seed": 1498905620019342027,
+      "role": "shared"
+    },
+    {
+      "ordinal": 5,
+      "planner_sampling_seed": 8241058213526043752,
+      "role": "shared"
+    },
+    {
+      "ordinal": 6,
+      "planner_sampling_seed": 8836085135087545058,
+      "role": "shared"
+    },
+    {
+      "ordinal": 7,
+      "planner_sampling_seed": 924254469119622262,
+      "role": "shared"
+    },
+    {
+      "ordinal": 8,
+      "planner_sampling_seed": 1258150180293702898,
+      "role": "shared"
+    },
+    {
+      "ordinal": 9,
+      "planner_sampling_seed": 18041551173389421,
+      "role": "shared"
+    },
+    {
+      "ordinal": 10,
+      "planner_sampling_seed": 2890952796933401316,
+      "role": "shared"
+    },
+    {
+      "ordinal": 11,
+      "planner_sampling_seed": 274444085104973154,
+      "role": "shared"
+    },
+    {
+      "ordinal": 12,
+      "planner_sampling_seed": 2745801116648733996,
+      "role": "shared"
+    },
+    {
+      "ordinal": 13,
+      "planner_sampling_seed": 2852288010790169620,
+      "role": "shared"
+    },
+    {
+      "ordinal": 14,
+      "planner_sampling_seed": 7441406031155858468,
+      "role": "shared"
+    },
+    {
+      "ordinal": 15,
+      "planner_sampling_seed": 5466609290281397426,
+      "role": "shared"
+    },
+    {
+      "ordinal": 16,
+      "planner_sampling_seed": 1011010723574876504,
+      "role": "shared"
+    },
+    {
+      "ordinal": 17,
+      "planner_sampling_seed": 3079101351891884636,
+      "role": "shared"
+    },
+    {
+      "ordinal": 18,
+      "planner_sampling_seed": 501327525047629868,
+      "role": "shared"
+    },
+    {
+      "ordinal": 19,
+      "planner_sampling_seed": 3251742409212339782,
+      "role": "shared"
+    },
+    {
+      "ordinal": 20,
+      "planner_sampling_seed": 5074974744684221958,
+      "role": "shared"
+    },
+    {
+      "ordinal": 21,
+      "planner_sampling_seed": 5917390864395993686,
+      "role": "shared"
+    },
+    {
+      "ordinal": 22,
+      "planner_sampling_seed": 1362419637104926333,
+      "role": "shared"
+    },
+    {
+      "ordinal": 23,
+      "planner_sampling_seed": 5133874254193130714,
+      "role": "shared"
+    },
+    {
+      "ordinal": 24,
+      "planner_sampling_seed": 8910013802439348785,
+      "role": "shared"
+    },
+    {
+      "ordinal": 25,
+      "planner_sampling_seed": 5433810341384853680,
+      "role": "shared"
+    },
+    {
+      "ordinal": 26,
+      "planner_sampling_seed": 2260028857472365434,
+      "role": "shared"
+    },
+    {
+      "ordinal": 27,
+      "planner_sampling_seed": 7336218311772859329,
+      "role": "shared"
+    },
+    {
+      "ordinal": 28,
+      "planner_sampling_seed": 8284448363379829755,
+      "role": "shared"
+    },
+    {
+      "ordinal": 29,
+      "planner_sampling_seed": 8283544267965506390,
+      "role": "shared"
+    },
+    {
+      "ordinal": 30,
+      "planner_sampling_seed": 1325439628504196569,
+      "role": "shared"
+    },
+    {
+      "ordinal": 31,
+      "planner_sampling_seed": 3225888160589090101,
+      "role": "shared"
+    },
+    {
+      "ordinal": 32,
+      "planner_sampling_seed": 246555016513459880,
+      "role": "shared"
+    },
+    {
+      "ordinal": 33,
+      "planner_sampling_seed": 861698543206811390,
+      "role": "shared"
+    },
+    {
+      "ordinal": 34,
+      "planner_sampling_seed": 2632794007149124312,
+      "role": "shared"
+    },
+    {
+      "ordinal": 35,
+      "planner_sampling_seed": 692753475691053007,
+      "role": "shared"
+    },
+    {
+      "ordinal": 36,
+      "planner_sampling_seed": 4995422806974819825,
+      "role": "shared"
+    },
+    {
+      "ordinal": 37,
+      "planner_sampling_seed": 3857072874435922219,
+      "role": "shared"
+    },
+    {
+      "ordinal": 38,
+      "planner_sampling_seed": 2836587252370258927,
+      "role": "shared"
+    },
+    {
+      "ordinal": 39,
+      "planner_sampling_seed": 109307090677814531,
+      "role": "shared"
+    },
+    {
+      "ordinal": 40,
+      "planner_sampling_seed": 4482460486113741204,
+      "role": "shared"
+    },
+    {
+      "ordinal": 41,
+      "planner_sampling_seed": 6181652240571846898,
+      "role": "shared"
+    },
+    {
+      "ordinal": 42,
+      "planner_sampling_seed": 4156581202337630486,
+      "role": "shared"
+    },
+    {
+      "ordinal": 43,
+      "planner_sampling_seed": 3785666966799023346,
+      "role": "shared"
+    },
+    {
+      "ordinal": 44,
+      "planner_sampling_seed": 8397173434837071534,
+      "role": "shared"
+    },
+    {
+      "ordinal": 45,
+      "planner_sampling_seed": 5595763621872006095,
+      "role": "shared"
+    },
+    {
+      "ordinal": 46,
+      "planner_sampling_seed": 4047304669339191246,
+      "role": "shared"
+    },
+    {
+      "ordinal": 47,
+      "planner_sampling_seed": 4744719770275078572,
+      "role": "shared"
+    },
+    {
+      "ordinal": 48,
+      "planner_sampling_seed": 8204791664582340929,
+      "role": "shared"
+    },
+    {
+      "ordinal": 49,
+      "planner_sampling_seed": 5746740766129796061,
+      "role": "shared"
+    },
+    {
+      "ordinal": 50,
+      "planner_sampling_seed": 8462465125778263070,
+      "role": "shared"
+    },
+    {
+      "ordinal": 51,
+      "planner_sampling_seed": 5748669855786212083,
+      "role": "shared"
+    },
+    {
+      "ordinal": 52,
+      "planner_sampling_seed": 6017276628388357475,
+      "role": "shared"
+    },
+    {
+      "ordinal": 53,
+      "planner_sampling_seed": 3070729349813021648,
+      "role": "shared"
+    },
+    {
+      "ordinal": 54,
+      "planner_sampling_seed": 7038355087287366486,
+      "role": "shared"
+    },
+    {
+      "ordinal": 55,
+      "planner_sampling_seed": 8511345696505153678,
+      "role": "shared"
+    },
+    {
+      "ordinal": 56,
+      "planner_sampling_seed": 6334711604435716063,
+      "role": "shared"
+    },
+    {
+      "ordinal": 57,
+      "planner_sampling_seed": 3582496022450165592,
+      "role": "shared"
+    },
+    {
+      "ordinal": 58,
+      "planner_sampling_seed": 276896155820557955,
+      "role": "shared"
+    },
+    {
+      "ordinal": 59,
+      "planner_sampling_seed": 8333733129682596592,
+      "role": "shared"
+    },
+    {
+      "ordinal": 60,
+      "planner_sampling_seed": 8225696829181076176,
+      "role": "shared"
+    },
+    {
+      "ordinal": 61,
+      "planner_sampling_seed": 8140578548067007616,
+      "role": "shared"
+    },
+    {
+      "ordinal": 62,
+      "planner_sampling_seed": 8795699309654118281,
+      "role": "shared"
+    },
+    {
+      "ordinal": 63,
+      "planner_sampling_seed": 2337611183431473390,
+      "role": "shared"
+    }
+  ],
+  "schema": "h1_chemistry_first_planner_science_ledger_v1",
+  "stage": "planner64"
+}

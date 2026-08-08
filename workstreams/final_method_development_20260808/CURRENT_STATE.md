@@ -2,7 +2,7 @@
 
 Updated: 2026-08-08 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_LOCAL_CONTRACT_TESTS_PASS`
+Overall status: `PLANNER_SFT_V2_SOURCE_CANDIDATE_READY_FOR_A800_AUDIT`
 
 The Evidence-First workstream has begun on branch
 `codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3, integration,
@@ -17,6 +17,9 @@ workstream.
 - A800 user queue at audit time: empty.
 - `gpu` and `gpu_long`: available/up; exact allocation is rechecked immediately
   before each submission.
+- No installed A800 Python runtime satisfies SMACT 4.0's Python
+  `>=3.11,<3.14` contract; discovered Conda runtimes are Python 3.10 with
+  SMACT 3.1 or 3.2.
 - Frozen C0/C1 remote source and run roots: absent.
 - `final_method_development_20260808` remote root: absent.
 - `final_paper_closure_20260808` remote root: absent.
@@ -26,19 +29,28 @@ Audit marker: `__EF_AUDIT_DONE__` at 2026-08-08T12:59:52+08:00.
 
 ## Immediate critical path
 
-1. Freeze and test SFT-v2/SFT-v2-C data, ledger, trainer, and evaluator code
-   before reading C0/C1 scientific outputs.
-2. Freeze execution packages for the already-authored C0/C1 path and both new
-   SFT candidates.
-3. Audit B0/B1/B2 artifacts and construct the B3 state panels/package.
-4. Submit only after source/archive/SCP/runtime/GPU-smoke identity gates.
+1. Transfer the committed source snapshot and frozen portable SMACT4 bundle in
+   one SCP batch, then freeze the canonical source on A800.
+2. Atomically prepare the run-local SMACT4 runtime and run source, isolated-
+   archive, exact-tokenizer, and evaluator preflights on A800.
+3. Submit the SFT-v2/SFT-v2-C data/smoke/training/raw64 DAG only after those
+   gates and a fresh `sinfo`/`squeue` audit.
+4. Freeze and execute C0/C1, then audit B0/B1/B2 and construct B3 state panels.
 
-The local chemistry-first implementation now includes the common-record data
-builder, deterministic base/curriculum orderings, fixed-endpoint trainer,
-separate exact-SMACT4 audit, and raw64/raw256 gate assembler. A focused
-34-test suite (10 new chemistry-first tests plus 24 no-charge regressions)
-passes, as does Python bytecode compilation. The full 27,136-row census,
-exact-tokenizer audit, isolated archive test, and A800 smoke remain pending and
-are not represented as passed.
+The chemistry-first implementation includes the common-record data builder,
+deterministic base/curriculum orderings, fixed-endpoint trainer, named-PEFT
+endpoint resolver, separate exact-SMACT4 audit, and raw64/raw256 gate
+assembler. Before the portable-runtime changes, 47 focused local/regression
+tests passed. Those changes are intentionally not re-run locally: by explicit
+user instruction, all subsequent project programs and tests run on A800 only.
+
+The one-time authorized local runtime exception produced a portable CPython
+3.12.13 + 54-wheel bundle. Offline installation passed `pip check`; the probe
+reported SMACT 4.0.0, Transformers 4.54.0, 93 oxidation elements, and contract
+SHA `ad070f3a...`. Frozen bundle archive SHA is
+`4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc`.
+The full 27,136-row census, post-bundle A800 tests, exact-tokenizer audit,
+isolated archive test, and A800 smoke remain pending and are not represented
+as passed.
 
 No Planner or DLM RL is authorized.

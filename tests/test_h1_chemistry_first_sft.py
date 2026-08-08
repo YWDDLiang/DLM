@@ -190,6 +190,15 @@ class ChemistryFirstSFTTests(unittest.TestCase):
             self.assertEqual(labels, EXPECTED_WEIGHT_LABELS[task])
             self.assertTrue(all(span["weight"] == 2.0 for span in record["weighted_answer_spans"]))
             self.assertEqual(record["sample_weight"], 1.0)
+        self.assertNotIn(
+            "N",
+            {
+                span["label"]
+                for span in records["formula_to_elements_counts_n"][
+                    "weighted_answer_spans"
+                ]
+            },
+        )
 
     def test_auxiliary_cycle_is_deterministic_and_balanced(self):
         rows = [fixture_row(index) for index in range(19)]

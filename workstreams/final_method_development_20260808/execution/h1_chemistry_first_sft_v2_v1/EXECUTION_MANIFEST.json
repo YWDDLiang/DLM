@@ -1,0 +1,18 @@
+{
+  "schema": "h1_chemistry_first_execution_manifest_v1",
+  "identity": "h1_chemistry_first_sft_v2_v1",
+  "stages": ["data", "smoke", "train", "planner64", "assemble64", "planner256", "assemble256"],
+  "initial_submission_terminal": "planner64",
+  "planner256_requires_raw64_pass": true,
+  "source_is_immutable": true,
+  "new_run_root_only": true,
+  "legacy_and_smact4_runtime_firewall": true,
+  "network": false,
+  "body_generation": false,
+  "refinement": false,
+  "direct_structure_evaluation": false,
+  "sun_evaluation": false,
+  "dlm_model_changed": false,
+  "automatic_downstream": false,
+  "automatic_rl": false
+}
