@@ -53,4 +53,10 @@ The full 27,136-row census, post-bundle A800 tests, exact-tokenizer audit,
 isolated archive test, and A800 smoke remain pending and are not represented
 as passed.
 
+Transfer batch v1 reached 5090 only and was superseded before any A800 copy or
+source/run creation because static Git-tree review found the frozen SMACT wheel
+was excluded by the repository-wide `*.whl` ignore rule. Commit `0ec8940`
+force-adds the exact 2 MB wheel; the unused v1 inputs remain immutable evidence
+and are never submitted.
+
 No Planner or DLM RL is authorized.

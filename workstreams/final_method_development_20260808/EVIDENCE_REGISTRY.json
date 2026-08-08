@@ -86,5 +86,18 @@
       "global_environment_mutation": false
     }
   ],
+  "transfers": [
+    {
+      "evidence_id": "transfer_batch_v1_5090_only_superseded",
+      "source_commit": "84b4a8a27d6aacb25e20a06dba8f2dd79ef1e4cb",
+      "source_archive_sha256": "cf956dee945a6229722c4765f708df6725c5e3519ab0371275f455a6b97d8ace",
+      "runtime_bundle_sha256": "4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc",
+      "destination": "5090_only",
+      "status": "superseded_before_A800",
+      "reason": "tracked source archive omitted ignored exact SMACT wheel",
+      "a800_files_transferred": false,
+      "run_or_job_created": false
+    }
+  ],
   "terminal_evidence": []
 }
