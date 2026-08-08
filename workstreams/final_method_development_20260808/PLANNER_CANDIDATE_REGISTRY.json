@@ -28,14 +28,14 @@
     {
       "candidate_id": "SFT-v2",
       "role": "chemistry_first_minimal_plan_hash_shuffle",
-      "status": "spec_frozen_implementation_pending",
+      "status": "local_contract_tests_pass_source_freeze_pending",
       "execution_rule": "always_execute",
       "results": null
     },
     {
       "candidate_id": "SFT-v2-C",
       "role": "chemistry_first_minimal_plan_curriculum",
-      "status": "spec_frozen_implementation_pending",
+      "status": "local_contract_tests_pass_source_freeze_pending",
       "execution_rule": "always_execute",
       "results": null
     }

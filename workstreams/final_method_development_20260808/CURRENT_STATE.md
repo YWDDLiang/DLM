@@ -2,7 +2,7 @@
 
 Updated: 2026-08-08 (Asia/Shanghai)
 
-Overall status: `SPEC_FROZEN_IMPLEMENTATION_IN_PROGRESS`
+Overall status: `PLANNER_SFT_V2_LOCAL_CONTRACT_TESTS_PASS`
 
 The Evidence-First workstream has begun on branch
 `codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3, integration,
@@ -33,5 +33,12 @@ Audit marker: `__EF_AUDIT_DONE__` at 2026-08-08T12:59:52+08:00.
 3. Audit B0/B1/B2 artifacts and construct the B3 state panels/package.
 4. Submit only after source/archive/SCP/runtime/GPU-smoke identity gates.
 
-No Planner or DLM RL is authorized.
+The local chemistry-first implementation now includes the common-record data
+builder, deterministic base/curriculum orderings, fixed-endpoint trainer,
+separate exact-SMACT4 audit, and raw64/raw256 gate assembler. A focused
+34-test suite (10 new chemistry-first tests plus 24 no-charge regressions)
+passes, as does Python bytecode compilation. The full 27,136-row census,
+exact-tokenizer audit, isolated archive test, and A800 smoke remain pending and
+are not represented as passed.
 
+No Planner or DLM RL is authorized.

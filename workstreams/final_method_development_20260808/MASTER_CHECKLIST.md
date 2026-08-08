@@ -16,6 +16,9 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] Freeze C0/C1 immutable execution package on A800.
 - [ ] Freeze SFT-v2 data/evaluator identities and complete census.
 - [ ] Freeze SFT-v2-C order ledger and prove multiset identity.
+- [x] Implement common-record builder, deterministic curriculum, fixed-endpoint
+      trainer, SMACT4 audit, and raw64/raw256 gate code.
+- [x] Pass focused local chemistry-first and no-charge regression tests.
 - [ ] Pass local tests, isolated archive tests, A800 runtime preflight, and one
       minimal GPU smoke for each new source family.
 - [ ] Execute C0 and C1 to fixed checkpoint 400.
@@ -61,4 +64,3 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] Update README only with terminal evidence.
 - [ ] Push each frozen specification and terminal commit.
 - [ ] Produce final reproducibility and paper-claim report.
-
