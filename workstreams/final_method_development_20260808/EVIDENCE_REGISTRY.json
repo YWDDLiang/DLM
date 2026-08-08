@@ -1,0 +1,62 @@
+{
+  "schema": "crystal_dlm_evidence_registry_v1",
+  "workstream": "final_method_development_20260808",
+  "updated_at": "2026-08-08T13:05:00+08:00",
+  "protected_assets": [
+    {
+      "evidence_id": "protected_planner_p0",
+      "kind": "model_adapter",
+      "sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+      "mutable": false
+    },
+    {
+      "evidence_id": "protected_body_b0",
+      "kind": "model_adapter",
+      "sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+      "mutable": false
+    },
+    {
+      "evidence_id": "protected_refiner_model_494",
+      "kind": "checkpoint",
+      "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+      "mutable": false
+    }
+  ],
+  "source_documents": [
+    {
+      "evidence_id": "evidence_first_prompt_v5",
+      "path": "C:/Users/admin/Desktop/audit/CODEX_PROMPT_CRYSTAL_DLM_EVIDENCE_FIRST_V5.md",
+      "sha256": "e00f0003b356888156d5767456b8613ef0f4ffdc043f26a9ad7dbe9bcc4fd2b5"
+    },
+    {
+      "evidence_id": "execution_audit_v2_5",
+      "path": "C:/Users/admin/Desktop/audit/crystal_dlm_final_execution_audit_v2_5.md",
+      "sha256": "6a9b65d2487646315063602996a9642047571748668925725b6a001c7fd010ef"
+    },
+    {
+      "evidence_id": "gpu_workflow",
+      "path": "C:/Users/admin/Desktop/a100_a800_gpu_workflow.md",
+      "sha256": "65673d16c08a6697a1aa20cc21e62b87869ab7f89795248f10364fb5991f028a"
+    },
+    {
+      "evidence_id": "sun_guide",
+      "path": "C:/Users/admin/Desktop/sun计算指导.md",
+      "sha256": "93e744a860cd508b1d4d24a8af54801f3873ee7f81e638e323f8b7cc5b053d7e"
+    }
+  ],
+  "audits": [
+    {
+      "evidence_id": "initial_remote_readonly_audit",
+      "timestamp": "2026-08-08T12:59:52+08:00",
+      "marker": "__EF_AUDIT_DONE__",
+      "a800_user_jobs": 0,
+      "sessions": {
+        "ssha800": {"pane_dead": 0, "pane_current_command": "ssh"},
+        "ssha800_2": {"pane_dead": 0, "pane_current_command": "ssh"}
+      },
+      "target_roots_absent": true,
+      "read_only": true
+    }
+  ],
+  "terminal_evidence": []
+}

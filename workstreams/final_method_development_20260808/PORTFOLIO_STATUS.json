@@ -1,0 +1,27 @@
+{
+  "schema": "crystal_dlm_portfolio_status_v1",
+  "updated_at": "2026-08-08T13:05:00+08:00",
+  "overall": "spec_frozen_implementation_in_progress",
+  "planner": {
+    "status": "active",
+    "terminal": false,
+    "required_candidates": ["C0", "C1", "SFT-v2", "SFT-v2-C"],
+    "shortlist": []
+  },
+  "dlm": {
+    "status": "active",
+    "terminal": false,
+    "required_candidate": "B3",
+    "shortlist": []
+  },
+  "integration": {
+    "status": "blocked_on_both_portfolios_terminal",
+    "cells": []
+  },
+  "final_evaluation": {
+    "status": "blocked_on_integration",
+    "methods": [],
+    "maximum_methods": 3
+  },
+  "rl_authorized": false
+}

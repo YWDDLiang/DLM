@@ -1,0 +1,14 @@
+{
+  "schema": "crystal_dlm_resource_ledger_v1",
+  "updated_at": "2026-08-08T13:05:00+08:00",
+  "maximum_a800_gpus_total": 4,
+  "contracts": {
+    "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
+    "planner_training": {"gpus": 1, "cpus_per_gpu": 4},
+    "generation_direct_refine_sun": {"gpus_per_task": 1, "cpus_per_gpu": 8},
+    "sun_threads_per_gpu_max": 8
+  },
+  "preferred_four_gpu_layout": ["B3", "B3", "Planner", "evaluation"],
+  "submissions": [],
+  "current_allocations": []
+}

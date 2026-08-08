@@ -1,0 +1,50 @@
+{
+  "schema": "crystal_dlm_dlm_candidate_registry_v1",
+  "updated_at": "2026-08-08T13:05:00+08:00",
+  "selection_limit_downstream": 2,
+  "candidates": [
+    {
+      "candidate_id": "B0",
+      "role": "protected_control",
+      "status": "protected_inventory_pending",
+      "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+    },
+    {
+      "candidate_id": "B1",
+      "role": "historical_inventory_only",
+      "status": "inventory_pending"
+    },
+    {
+      "candidate_id": "B2",
+      "role": "historical_stopped_candidate",
+      "status": "inventory_pending_not_revivable"
+    },
+    {
+      "candidate_id": "B3",
+      "role": "dynamic_v1_iid_safe_planned_2_to_1",
+      "status": "authorized_spec_frozen_implementation_pending",
+      "results": null
+    },
+    {
+      "candidate_id": "B3-R-1to1",
+      "role": "ratio_extension",
+      "status": "conditional_on_b3_gate"
+    },
+    {
+      "candidate_id": "B3-R-1to2",
+      "role": "ratio_extension",
+      "status": "conditional_on_b3_gate"
+    },
+    {
+      "candidate_id": "B4",
+      "role": "actual_rollout_state_matched_sft",
+      "status": "conditional_on_synthetic_transfer_failure"
+    },
+    {
+      "candidate_id": "B5",
+      "role": "decoder_mapped_objective",
+      "status": "conditional_on_strict_derivation_and_parity"
+    }
+  ],
+  "forbidden_candidates": ["B6", "TraceRL", "DLM-RL"]
+}

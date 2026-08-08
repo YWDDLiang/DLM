@@ -1,0 +1,43 @@
+{
+  "schema": "crystal_dlm_planner_candidate_registry_v1",
+  "updated_at": "2026-08-08T13:05:00+08:00",
+  "selection_limit_non_p0_downstream": 2,
+  "candidates": [
+    {
+      "candidate_id": "P0",
+      "role": "protected_control",
+      "status": "protected",
+      "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
+    },
+    {
+      "candidate_id": "C0",
+      "role": "frozen_nocharge_neutral_aux_control",
+      "status": "authorized_not_submitted",
+      "execution_rule": "always_execute",
+      "fixed_checkpoint": 400,
+      "results": null
+    },
+    {
+      "candidate_id": "C1",
+      "role": "frozen_nocharge_ion_aux_candidate",
+      "status": "authorized_not_submitted",
+      "execution_rule": "always_execute",
+      "fixed_checkpoint": 400,
+      "results": null
+    },
+    {
+      "candidate_id": "SFT-v2",
+      "role": "chemistry_first_minimal_plan_hash_shuffle",
+      "status": "spec_frozen_implementation_pending",
+      "execution_rule": "always_execute",
+      "results": null
+    },
+    {
+      "candidate_id": "SFT-v2-C",
+      "role": "chemistry_first_minimal_plan_curriculum",
+      "status": "spec_frozen_implementation_pending",
+      "execution_rule": "always_execute",
+      "results": null
+    }
+  ]
+}

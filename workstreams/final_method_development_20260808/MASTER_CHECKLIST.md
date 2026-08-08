@@ -1,0 +1,64 @@
+# Evidence-First master checklist
+
+Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
+
+## Governance and identity
+
+- [x] Create `codex/evidence-first-sun-msun`.
+- [x] Freeze protected Planner, Body, and refiner identities.
+- [x] Complete initial local/5090/A800 read-only duplicate-run audit.
+- [x] Freeze the workstream specification before candidate science results.
+- [ ] Validate governance JSON/JSONL and commit/push frozen spec.
+- [ ] Compare local/remote TODO SHA before every documentation sync.
+
+## Planner portfolio
+
+- [ ] Freeze C0/C1 immutable execution package on A800.
+- [ ] Freeze SFT-v2 data/evaluator identities and complete census.
+- [ ] Freeze SFT-v2-C order ledger and prove multiset identity.
+- [ ] Pass local tests, isolated archive tests, A800 runtime preflight, and one
+      minimal GPU smoke for each new source family.
+- [ ] Execute C0 and C1 to fixed checkpoint 400.
+- [ ] Execute SFT-v2 and SFT-v2-C to their fixed final endpoints.
+- [ ] Complete P0/C0/C1/SFT-v2/SFT-v2-C raw64 gate.
+- [ ] Complete raw256 for every raw64-passing candidate.
+- [ ] Freeze Planner shortlist of at most two non-P0 candidates.
+- [ ] Complete shortlisted Planner downstream256 with B0+safe-axis+model_494;
+      also complete C1's frozen D1 downstream if C1 passes its registered path.
+- [ ] Mark Planner portfolio terminal/saturated.
+
+## DLM portfolio
+
+- [ ] Inventory B0/B1/B2 immutable artifacts.
+- [ ] Freeze IID, D1, synthetic safe-axis, and actual-rollout state panels.
+- [ ] Report NLL, calibration, commit/group width, and state distributions.
+- [ ] Freeze and execute B3 under historical two-GPU contract.
+- [ ] Complete B3 body64 point-estimate gate.
+- [ ] If eligible, execute B3-R 1:1 and 1:2.
+- [ ] If and only if needed, execute B4 state-matched SFT.
+- [ ] If and only if derivable and needed, execute B5 parity gate.
+- [ ] Complete fixed-Plan paired-noise body64/body256.
+- [ ] Complete top-two DLM downstream256.
+- [ ] Mark DLM portfolio terminal/saturated.
+
+## Integration and final evaluation
+
+- [ ] Freeze integration256 cells after both portfolios are terminal.
+- [ ] Complete integration256 and choose only fully passing candidates.
+- [ ] Freeze up to three final methods and two independent ledgers per method.
+- [ ] Freeze generation and Novel-intersection-Unique union.
+- [ ] Prefetch one common MP cache without serializing credentials.
+- [ ] Complete raw1000 and accepted1000 Direct/S.U.N. evaluation offline.
+- [ ] Report all counts, denominators, intervals, failure classes, and costs.
+- [ ] Apply final promotion rule or retain protected root.
+
+## Evidence, cleanup, and delivery
+
+- [ ] Create CARD/RESULT/DECISION for every terminal experiment.
+- [ ] Update registries and resource ledger after every submission/terminal.
+- [ ] Freeze checkpoint deletion manifests before deleting intermediates.
+- [ ] Preserve protected and promoted/fixed endpoint checkpoints.
+- [ ] Update README only with terminal evidence.
+- [ ] Push each frozen specification and terminal commit.
+- [ ] Produce final reproducibility and paper-claim report.
+
