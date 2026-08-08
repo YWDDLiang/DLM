@@ -59,4 +59,10 @@ was excluded by the repository-wide `*.whl` ignore rule. Commit `0ec8940`
 force-adds the exact 2 MB wheel; the unused v1 inputs remain immutable evidence
 and are never submitted.
 
+Corrected transfer batch v3 is frozen from commit `1b7b51d`: source archive
+SHA `e084fbd66093f158662dd4ada3a0c3fad8be4d3008a64aa16bff1acfc2578eb4`
+(10,179,180 bytes). A single local-to-5090 SCP completed at
+`2026-08-08T14:55:25+08:00`; both source and runtime bundle hashes matched on
+5090. The A800 transfer remains pending the required ten-minute SCP interval.
+
 No Planner or DLM RL is authorized.

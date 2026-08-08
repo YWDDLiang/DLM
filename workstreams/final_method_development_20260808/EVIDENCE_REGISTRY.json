@@ -97,6 +97,19 @@
       "reason": "tracked source archive omitted ignored exact SMACT wheel",
       "a800_files_transferred": false,
       "run_or_job_created": false
+    },
+    {
+      "evidence_id": "transfer_batch_v3_5090_verified",
+      "source_commit": "1b7b51d",
+      "source_archive_bytes": 10179180,
+      "source_archive_sha256": "e084fbd66093f158662dd4ada3a0c3fad8be4d3008a64aa16bff1acfc2578eb4",
+      "runtime_bundle_bytes": 177305931,
+      "runtime_bundle_sha256": "4ffac0ce561483fcacbb592cb9287b2e24bb4fbca67217396f7a2743a3de44bc",
+      "destination": "/home/ywliang/codex_transfer/20260808_evidence_first_transfer_batch_v3",
+      "completed_at": "2026-08-08T14:55:25+08:00",
+      "status": "verified_on_5090_waiting_for_A800_scp_window",
+      "a800_files_transferred": false,
+      "run_or_job_created": false
     }
   ],
   "terminal_evidence": []
