@@ -1,0 +1,39 @@
+{
+  "schema": "h1_chemistry_first_slurm_array_jobid_repair_v7",
+  "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
+  "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6",
+  "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7",
+  "parent_smoke_job_id": 31086,
+  "parent_smoke_state": "COMPLETED_0_0_both_arms",
+  "parent_smoke_elapsed": "00:22:48",
+  "parent_smoke_sft_v2_identity_gate_sha256": "410968ca793389995951bbe61f1fe98f5a30817946d0ea0425294aa7804a2ed8",
+  "parent_smoke_sft_v2_c_identity_gate_sha256": "7f35f5cb2115006d2469d2f854ed6837093e9c5e8d879716da80f76c3b977d53",
+  "parent_engineering_submission_record_sha256": "c3c837d4d46da55f9067497c029d1efbd6eb04b2f759b0de405518217b0f42cb",
+  "parent_data_reuse_record_sha256": "feab2f0cb8e3b5ce35ffcea4b01b16496d373e30327e94229d5b75b52bdd0b9a",
+  "observed_slurm_behavior": {
+    "jobidraw_rows": [
+      "31087|COMPLETED|0:0",
+      "31086|COMPLETED|0:0"
+    ],
+    "jobid_rows": [
+      "31086_0|COMPLETED|0:0",
+      "31086_1|COMPLETED|0:0"
+    ]
+  },
+  "root_cause": "cluster_sacct_JobIDRaw_returns_internal_numeric_database_ids_for_array_tasks",
+  "repair": {
+    "array_join_field": "JobID",
+    "changed_submission_scripts": [
+      "submit_training64_once.sh",
+      "submit_assemble64_once.sh",
+      "submit_assemble256_once.sh"
+    ],
+    "non_array_jobidraw_checks_retained": true,
+    "fresh_immutable_source_and_run_required": true,
+    "fresh_source_gate_identity_probe_and_dual_arm_smoke_required": true
+  },
+  "scientific_contract_changes": false,
+  "model_data_prompt_seed_optimizer_ledger_evaluator_gate_changes": false,
+  "python_training_or_generation_code_changes": false,
+  "smact4_executed_on_a800": false
+}

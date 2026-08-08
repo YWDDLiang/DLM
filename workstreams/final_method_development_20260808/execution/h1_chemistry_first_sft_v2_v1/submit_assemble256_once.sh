@@ -3,7 +3,7 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/h1_chemistry_first_sft_v2_v1"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
@@ -47,7 +47,7 @@ case "${EXPECTED_CANDIDATES}" in
   sft_v2,sft_v2_c) expected_tasks+=(1 2) ;;
   *) echo "invalid planner256 candidate list: ${EXPECTED_CANDIDATES}" >&2; exit 3 ;;
 esac
-sacct -n -X -j "${PLANNER_JOB_ID}" -o JobIDRaw,State,ExitCode -P \
+sacct -n -X -j "${PLANNER_JOB_ID}" -o JobID,State,ExitCode -P \
   > "${RUN_ROOT}/status/sacct_planner256_before_assembly.txt"
 for task in "${expected_tasks[@]}"; do
   expected_id="${PLANNER_JOB_ID}_${task}"

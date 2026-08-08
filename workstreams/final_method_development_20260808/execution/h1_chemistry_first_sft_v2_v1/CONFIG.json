@@ -1,7 +1,7 @@
 {
   "schema": "h1_chemistry_first_execution_config_v1",
   "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
-  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7",
   "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
   "model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
   "p0_adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",

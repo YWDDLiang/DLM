@@ -3,10 +3,10 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_exact_identity_v6"
-STAGING_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_source_staging_exact_identity_v6"
-FREEZE_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_source_freeze_exact_identity_v6"
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6"
+TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_slurm_array_jobid_v7"
+STAGING_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_source_staging_slurm_array_jobid_v7"
+FREEZE_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_source_freeze_slurm_array_jobid_v7"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7"
 LEGACY_PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 SOURCE_INPUT_ARCHIVE="${1:?source input archive path}"
 EXPECTED_SOURCE_INPUT_SHA256="${2:?source input archive SHA256}"
@@ -32,6 +32,7 @@ test -f "${EXECUTION_DIR}/PACKAGING_REPAIR_V3.json"
 test -f "${EXECUTION_DIR}/SMOKE_IDENTITY_REPAIR_V4.json"
 test -f "${EXECUTION_DIR}/SOURCE_GATE_PATH_REPAIR_V5.json"
 test -f "${EXECUTION_DIR}/EXACT_IDENTITY_COPY_REPAIR_V6.json"
+test -f "${EXECUTION_DIR}/SLURM_ARRAY_JOBID_REPAIR_V7.json"
 
 export CUDA_VISIBLE_DEVICES=
 export PYTHONNOUSERSITE=1

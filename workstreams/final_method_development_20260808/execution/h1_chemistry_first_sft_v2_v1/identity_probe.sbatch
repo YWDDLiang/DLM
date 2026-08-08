@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=h1-p0-id-probe-v6
+#SBATCH --job-name=h1-p0-id-probe-v7
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -7,13 +7,13 @@
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
 #SBATCH --mem=96G
 #SBATCH --time=01:00:00
-#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6/logs/%j_identity_probe.out
-#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6/logs/%j_identity_probe.err
+#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7/logs/%j_identity_probe.out
+#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7/logs/%j_identity_probe.err
 
 set -Eeuo pipefail
 umask 077
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_exact_identity_copy_repair_v6"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_slurm_array_jobid_repair_v7"
 SOURCE_ROOT="${RUN_ROOT}/source"
 MODEL_PATH=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
 P0_ADAPTER="${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"

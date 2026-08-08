@@ -292,10 +292,6 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         repair = json.loads(
             (ROOT / "EXACT_IDENTITY_COPY_REPAIR_V6.json").read_text(encoding="utf-8")
         )
-        run_name = (
-            "20260808_h1_chemistry_first_sft_v2_smact_split_v2_"
-            "exact_identity_copy_repair_v6"
-        )
         self.assertFalse(repair["scientific_contract_changes"])
         self.assertFalse(
             repair[
@@ -303,17 +299,6 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
             ]
         )
         self.assertFalse(repair["smact4_executed_on_a800"])
-        self.assertEqual(self.config["run_root"].rsplit("/", 1)[-1], run_name)
-        for name in (
-            "identity_probe.sbatch",
-            "smoke.sbatch",
-            "train.sbatch",
-            "submit_identity_probe_once.sh",
-            "submit_identity_repair_smoke_once.sh",
-            "submit_training64_once.sh",
-        ):
-            self.assertIn(run_name, (ROOT / name).read_text(encoding="utf-8"), name)
-
         probe = (ROOT / "identity_probe.sbatch").read_text(encoding="utf-8")
         smoke_submit = (ROOT / "submit_identity_repair_smoke_once.sh").read_text(
             encoding="utf-8"
@@ -327,6 +312,49 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertIn("validate_h1_peft_identity_gate_v1.py smoke", training_submit)
         self.assertIn("smoke_admission_sft_v2_before_training.json", training_submit)
         self.assertIn("smoke_admission_sft_v2_c_before_training.json", training_submit)
+
+    def test_v7_slurm_array_jobid_repair_is_exact_and_fail_closed(self) -> None:
+        repair = json.loads(
+            (ROOT / "SLURM_ARRAY_JOBID_REPAIR_V7.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        run_name = (
+            "20260808_h1_chemistry_first_sft_v2_smact_split_v2_"
+            "slurm_array_jobid_repair_v7"
+        )
+        self.assertFalse(repair["scientific_contract_changes"])
+        self.assertFalse(
+            repair[
+                "model_data_prompt_seed_optimizer_ledger_evaluator_gate_changes"
+            ]
+        )
+        self.assertFalse(repair["python_training_or_generation_code_changes"])
+        self.assertFalse(repair["smact4_executed_on_a800"])
+        self.assertEqual(self.config["run_root"].rsplit("/", 1)[-1], run_name)
+        for name in (
+            "identity_probe.sbatch",
+            "smoke.sbatch",
+            "train.sbatch",
+            "planner64.sbatch",
+            "planner256.sbatch",
+            "assemble64.sbatch",
+            "assemble256.sbatch",
+            "submit_identity_probe_once.sh",
+            "submit_identity_repair_smoke_once.sh",
+            "submit_training64_once.sh",
+            "submit_assemble64_once.sh",
+            "submit_assemble256_once.sh",
+        ):
+            self.assertIn(run_name, (ROOT / name).read_text(encoding="utf-8"), name)
+        for name in (
+            "submit_training64_once.sh",
+            "submit_assemble64_once.sh",
+            "submit_assemble256_once.sh",
+        ):
+            text = (ROOT / name).read_text(encoding="utf-8")
+            self.assertIn("-o JobID,State,ExitCode", text, name)
+            self.assertNotIn("-o JobIDRaw,State,ExitCode", text, name)
 
     def test_fixed_adapter_resolver_supports_named_peft_subdirectory(self) -> None:
         from workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.resolve_fixed_adapter import (

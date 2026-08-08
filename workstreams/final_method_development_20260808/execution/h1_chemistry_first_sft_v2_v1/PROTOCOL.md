@@ -53,7 +53,7 @@ SMACT 4.0 executable path exists in any A800 submission, and the retired
 portable-runtime builders are excluded from this source snapshot.
 
 Submission is deliberately split at every cross-machine boundary. In the
-current V6 repair, the sealed V3 snapshot/data are reused byte-for-byte and the
+current V7 repair, the sealed V3 snapshot/data are reused byte-for-byte and the
 old `submit_snapshot_once.sh` / `submit_once.sh` entrypoints are disabled.
 `submit_identity_probe_once.sh` authorizes only the real-P0 identity probe;
 `submit_identity_repair_smoke_once.sh` can submit the two-candidate smoke only
@@ -116,3 +116,20 @@ value hashes, and no optimizer step. Smoke markers alone cannot authorize
 training: the science submission re-parses all probe and smoke reports and
 records their admission SHAs. Data, record order, prompts, optimizer, model,
 seeds, ledgers, evaluator contracts, and scientific gates are unchanged.
+
+## V7 Slurm array JobID repair
+
+V6 passed its real-P0 probe and both fresh GPU smoke arms. Job 31086 completed
+both array tasks with exit `0:0`, and both independently parsed identity gates
+passed. The subsequent training submission stopped before `sbatch` because
+this cluster's `sacct JobIDRaw` field reports internal numeric database IDs
+(`31086` and `31087`) rather than array labels. The `JobID` field reports the
+required stable labels (`31086_0` and `31086_1`).
+
+V7 changes only the Slurm array-record join field from `JobIDRaw` to `JobID` in
+the three array-terminal admission scripts for smoke, planner64, and
+planner256. Non-array `JobIDRaw` checks remain unchanged. A new immutable
+source/run, source gate, real-P0 probe, and dual-arm smoke are required before
+training. Python training/generation code, model, data, prompt, optimizer,
+seeds, ledgers, evaluators, thresholds, and the A800 SMACT3/local-SMACT4
+firewall are unchanged.

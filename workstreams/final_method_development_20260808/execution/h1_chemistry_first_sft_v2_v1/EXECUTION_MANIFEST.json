@@ -7,6 +7,8 @@
   "independent_smoke_report_admission_must_pass_before_training": true,
   "v3_snapshot_and_data_reused_byte_identically": true,
   "legacy_submit_once_entrypoints_disabled_in_v6": true,
+  "slurm_array_admission_field": "JobID",
+  "slurm_array_jobidraw_internal_numeric_ids_observed_in_v6": true,
   "engineering_smoke_must_complete_before_scientific_submission": true,
   "initial_scientific_submission_terminal": "planner64",
   "planner256_requires_raw64_pass": true,
