@@ -1956,3 +1956,40 @@ Prepared, non-executable drafts:
   `diagnostic_only_retain_phase2_scientific_stops`. Both Phase-2 gates,
   formal G3, checkpoint reselection, promotion, and automatic downstream
   remain false.
+
+### 2026-08-08 — Evidence-First chemistry-first SFT-v2 split route active
+
+- Protected `P0+B0+safe-axis+model_494` remains unchanged. The active Planner
+  route is the minimal six-line no-charge SFT-v2 / SFT-v2-C pair; DLM stays
+  frozen while this stage executes.
+- Immutable A800 run root:
+  `/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3`.
+  Source inventory/archive/manifest SHAs are `410fb34d…c20c`,
+  `3c5d93f…7559`, and `50f9e541…f89a`; the reduced source gate passed with
+  A800 SMACT 3.1 only.
+- Legacy snapshot job 31025 completed `0:0` with exactly 27,136/9,047/9,046
+  train/val/test rows. Bundle SHA is `d65a682c…a13bf`; report SHA is
+  `351a13f8…eefb`.
+- Exact SMACT4 ran only in the explicitly authorized isolated local witness
+  environment. Witness manifest/ledger/archive SHAs are `d21698e2…ccd32`,
+  `ab687c5f…2c93`, and `b8965163…22c3`. Train legacy-primary/exact-uniform
+  counts are 7,079/4,451; validation counts are 2,264/1,406; parity passed.
+  A800 received the sealed witness as immutable data and did not execute
+  SMACT4.
+- Data assembly job 31035 completed `0:0` in `00:15:47`: both candidates have
+  36,038 train/9,047 validation rows, identical record multisets, valid
+  distinct order ledgers, zero invalid unconditional formula targets or
+  tokenizer failures, and fixed 4,505-update geometry. Minimal GPU smoke array
+  31036_[0-1] failed `1:0` in both arms before its first forward. PEFT 0.16
+  loaded the trainable P0 copy in FP32 and the frozen reference copy in BF16;
+  all 448 keys matched, no unrelated parameter was trainable, and the maximum
+  rounding difference was `6.103515625e-05`. Failure-report SHA is
+  `e1b08b25…a537`. No optimizer step, formal candidate training, raw
+  generation, Direct, refiner, S.U.N., Meta S.U.N., or RL job is submitted.
+- The frozen V4 engineering repair uses the same protected P0 FP32 load path
+  for both copies and freezes the reference immediately. It reuses V3 data
+  byte-for-byte under a manifest and changes no science contract. New run root:
+  `/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4`.
+- Next gate: both replacement smoke elements must complete `0:0`, with complete ledgers
+  and no identity/new-failure class, before fixed-endpoint SFT-v2/SFT-v2-C
+  training or raw64 is authorized. Only necessary stage checks are run.

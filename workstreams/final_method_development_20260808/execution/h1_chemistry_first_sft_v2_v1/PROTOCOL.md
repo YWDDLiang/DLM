@@ -61,3 +61,17 @@ only after the sealed local raw64 audit returns. Raw256 generation and assembly
 use two further separately locked submissions. Thus no job crosses a local
 SMACT4 boundary automatically, and no scientific job is queued before the
 minimal A800 smoke has passed.
+
+## V4 smoke identity repair
+
+The V3 engineering smoke stopped before its first model forward because PEFT
+0.16 loaded the trainable candidate P0 adapter in FP32 but the frozen reference
+copy in the BF16 base-model dtype. All 448 tensor keys matched, no unrelated
+parameter was trainable, and no optimizer step or scientific generation ran.
+V4 changes only the adapter construction path: both copies are loaded from the
+same protected FP32 P0 payload through the same PEFT autocast path, and every
+reference parameter is then frozen before forward or optimizer construction.
+The sealed V3 data and legacy snapshot are reused byte-for-byte under a
+dedicated reuse manifest; data, task order, prompts, optimizer, seeds, ledgers,
+models, evaluators, and gates are unchanged. V4 must pass a fresh dual-arm GPU
+smoke before `submit_training64_once.sh` is eligible.

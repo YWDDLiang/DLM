@@ -1,11 +1,21 @@
 {
   "schema": "crystal_dlm_portfolio_status_v1",
-  "updated_at": "2026-08-08T16:22:00+08:00",
-  "overall": "planner_smact_split_source_in_review_no_science_submitted",
+  "updated_at": "2026-08-08T18:39:00+08:00",
+  "overall": "planner_sft_v2_data_terminal_pass_v3_smoke_failed_v4_repair_preparing_no_science_submitted",
   "planner": {
     "status": "active",
     "terminal": false,
     "required_candidates": ["C0", "C1", "SFT-v2", "SFT-v2-C"],
+    "active_stage": {
+      "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
+      "data_job_id": 31035,
+      "smoke_array_job_id": 31036,
+      "data_status": "COMPLETED_0_0",
+      "smoke_status": "FAILED_1_0_BOTH_TASKS_BEFORE_FORWARD",
+      "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
+      "formal_training_submitted": false,
+      "scientific_generation_submitted": false
+    },
     "shortlist": []
   },
   "dlm": {

@@ -330,7 +330,13 @@ def main() -> None:
     model.load_adapter(
         args.p0_adapter_path,
         adapter_name="reference",
-        is_trainable=False,
+        # PEFT 0.16 loads a frozen adapter directly in the BF16 base-model
+        # dtype, while the trainable candidate is autocast to FP32.  Loading
+        # both through the trainable path preserves byte-identical P0 weights;
+        # the reference parameters are frozen immediately below, before any
+        # forward or optimizer construction.
+        is_trainable=True,
+        autocast_adapter_dtype=True,
     )
     for name, parameter in model.named_parameters():
         if ".reference." in name:

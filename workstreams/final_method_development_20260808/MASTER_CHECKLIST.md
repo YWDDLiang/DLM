@@ -14,8 +14,10 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 ## Planner portfolio
 
 - [ ] Freeze C0/C1 immutable execution package on A800.
-- [ ] Freeze SFT-v2 data/evaluator identities and complete census.
-- [ ] Freeze SFT-v2-C order ledger and prove multiset identity.
+- [x] Freeze SFT-v2 data/evaluator identities and complete the 36,038-record
+      training census.
+- [x] Freeze SFT-v2-C order ledger and prove identical record multiset with a
+      distinct registered curriculum order.
 - [x] Implement common-record builder, deterministic curriculum, fixed-endpoint
       trainer, SMACT4 audit, and raw64/raw256 gate code.
 - [x] Pass focused local chemistry-first and no-charge regression tests.
@@ -30,9 +32,13 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       evaluator-member SHA precheck, new immutable paths, and reduced audit
       scope.
 - [ ] Pass SMACT3-only A800 source tests, isolated archive tests, runtime
-      preflight, and one minimal GPU smoke for each new source family.
-- [ ] Export and seal the complete A800 MP20 legacy snapshot.
-- [ ] Build the exact local SMACT4 witness ledger and verify its import on A800.
+      preflight, and one minimal GPU smoke for each new source family. Source
+      and data gates passed. Smoke array 31036 failed before forward because
+      PEFT loaded the trainable/frozen P0 copies at different precision; V4
+      same-load-path repair is frozen and requires a fresh dual-arm smoke.
+- [x] Export and seal the complete A800 MP20 legacy snapshot (job 31025).
+- [x] Build the exact local SMACT4 witness ledger and verify its immutable
+      data-only import on A800; SMACT4 was not executed there.
 - [ ] Execute C0 and C1 to fixed checkpoint 400.
 - [ ] Execute SFT-v2 and SFT-v2-C to their fixed final endpoints.
 - [ ] Complete P0/C0/C1/SFT-v2/SFT-v2-C raw64 gate.

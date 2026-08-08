@@ -3,10 +3,10 @@ set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_v4"
-STAGING_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_source_staging_v3"
-FREEZE_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_source_freeze_v3"
-RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3"
+TRANSFER_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_transfer_input_v5"
+STAGING_ROOT="${PROJECT_ROOT}/runs/20260808_evidence_first_source_staging_v4"
+FREEZE_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_source_freeze_v4"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4"
 LEGACY_PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 SOURCE_INPUT_ARCHIVE="${1:?source input archive path}"
 EXPECTED_SOURCE_INPUT_SHA256="${2:?source input archive SHA256}"
@@ -29,6 +29,7 @@ EXECUTION_DIR="${STAGING_ROOT}/workstreams/final_method_development_20260808/exe
 test -f "${EXECUTION_DIR}/freeze_source.py"
 test -f "${EXECUTION_DIR}/LOCAL_SMACT4_SPLIT_EXECUTION_RECORD.json"
 test -f "${EXECUTION_DIR}/PACKAGING_REPAIR_V3.json"
+test -f "${EXECUTION_DIR}/SMOKE_IDENTITY_REPAIR_V4.json"
 
 export CUDA_VISIBLE_DEVICES=
 export PYTHONNOUSERSITE=1

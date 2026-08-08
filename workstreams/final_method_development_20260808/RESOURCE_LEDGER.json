@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-08T16:22:00+08:00",
+  "updated_at": "2026-08-08T18:39:00+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -13,6 +13,38 @@
     "a800": "SMACT_3.1_only",
     "local": "exact_SMACT_4.0_witness_and_raw_secondary_audits_only"
   },
-  "submissions": [],
+  "submissions": [
+    {
+      "stage": "chemistry_first_legacy_snapshot",
+      "job_id": 31025,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "COMPLETED",
+      "exit_code": "0:0"
+    },
+    {
+      "stage": "chemistry_first_data",
+      "job_id": 31035,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:15:47"
+    },
+    {
+      "stage": "chemistry_first_smoke",
+      "job_id": 31036,
+      "array": "0-1%2",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "cpus_per_task": 4,
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "00:13:08",
+      "node": "node99",
+      "failure_stage": "candidate_reference_identity_before_forward",
+      "optimizer_step_performed": false
+    }
+  ],
   "current_allocations": []
 }

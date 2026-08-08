@@ -1,0 +1,43 @@
+{
+  "schema": "h1_chemistry_first_smoke_identity_repair_v4",
+  "status": "frozen_before_repair_execution",
+  "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
+  "parent_smoke_job_id": "31036",
+  "parent_smoke_sacct": {
+    "31036_0": "FAILED|1:0|00:13:08",
+    "31036_1": "FAILED|1:0|00:13:08"
+  },
+  "failure": {
+    "stage": "engineering_smoke_before_forward",
+    "reason": "candidate_reference_protected_p0_identity_failed",
+    "candidate_tensor_count": 448,
+    "reference_tensor_count": 448,
+    "missing_candidate_count": 0,
+    "missing_reference_count": 0,
+    "noncandidate_trainable_count": 0,
+    "mismatched_tensor_count": 448,
+    "maximum_absolute_difference": 0.00006103515625,
+    "optimizer_step_performed": false,
+    "formal_training_submitted": false,
+    "scientific_generation_submitted": false
+  },
+  "root_cause": {
+    "peft_version": "0.16.0",
+    "p0_adapter_source_dtype": "torch.float32",
+    "description": "PEFT loaded the trainable candidate adapter through its FP32 autocast path but loaded the frozen reference adapter in the BF16 base-model dtype. The source keys and trainable ownership were otherwise identical."
+  },
+  "repair": {
+    "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
+    "method": "load candidate and reference from the same protected P0 FP32 adapter through PEFT is_trainable=true plus autocast_adapter_dtype=true, then freeze every reference parameter before forward and optimizer construction",
+    "parent_data_reuse": "byte-identical sealed data and legacy snapshot only",
+    "new_gpu_smoke_required": true,
+    "models_changed": false,
+    "data_changed": false,
+    "optimizer_changed": false,
+    "seed_changed": false,
+    "prompt_changed": false,
+    "ledger_changed": false,
+    "gate_changed": false,
+    "smact4_execution_on_a800": false
+  }
+}

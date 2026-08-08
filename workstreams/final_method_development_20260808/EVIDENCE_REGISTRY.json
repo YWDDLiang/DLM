@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-08T17:26:00+08:00",
+  "updated_at": "2026-08-08T18:40:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -83,6 +83,20 @@
         "contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19"
       },
       "remote_network_install": false,
+      "global_environment_mutation": false
+    },
+    {
+      "evidence_id": "local_smact4_persistent_isolated_runtime_v2",
+      "path": "/home/ywl/codex_runtimes/h1_smact4_runtime_v2",
+      "terminal_sha256": "0853bbea0c714f8a3150b08f3c94bdf1ec03b9cd49585d3a16533a9f88ea67d6",
+      "python_version": "3.12.13",
+      "smact_version": "4.0.0",
+      "transformers_version": "4.54.0",
+      "smact_wheel_sha256": "e3eb968da92d47a8ef9a4af42af5589a6de61cccbca9d329937e1f4e402f0551",
+      "contract_sha256": "ad070f3ad8d025ec9d7918dc1aa84e3f8faaf4ee0a124fbe8602208d5609ca19",
+      "execution_location": "local_wsl_only",
+      "a800_execution": false,
+      "network_used": false,
       "global_environment_mutation": false
     }
   ],
@@ -177,6 +191,31 @@
       "remote_source_archive_sha256": "65d89b071302fbc57ea2dd276083f183ea202def7a472c838d9cd2445cd85623",
       "status": "engineering_failure_before_slurm_due_raw_evaluator_line_end_identity",
       "slurm_or_gpu_used": false
+    },
+    {
+      "evidence_id": "packaging_repair_v3_a800_source_freeze",
+      "source_input_archive_bytes": 10121936,
+      "source_input_archive_sha256": "d64bf8790fe9a2df4926e25e045883f0f6077d2b8c1d8c86d73b3b3bb7c8f0cf",
+      "a800_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
+      "remote_source_inventory_sha256": "410fb34d2543f620fff012fde574a75a935bcaf54e41449fb529c12eb913c20c",
+      "remote_source_archive_sha256": "3c5d93f697e97e29ee233bcefab41c8636599711e6decaf971eeb383f8137559",
+      "remote_source_manifest_sha256": "50f9e541a8fcafe13a4d953b1907f949259be4564bffd576379db72fcdbcf89a",
+      "archived_legacy_evaluator_sha256": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178",
+      "source_file_count": 595,
+      "reduced_source_gate": "pass",
+      "a800_smact_version": "3.1.0",
+      "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "local_exact_smact4_witness_transfer_v1",
+      "local_bundle_path": "source_bundles/20260808_h1_chemistry_first_sft_v2_smact4_witness_v1.tar.gz",
+      "archive_bytes": 2395757,
+      "archive_sha256": "b896516351a76b869cc10d8c95a321ee53bb1cf25e3ed38d207d1dd40b7322c3",
+      "manifest_sha256": "d21698e29664c607541d7ab644250e93e18cfb2a0cd03d1687a270b42c8ccd32",
+      "ledger_sha256": "ab687c5f16dc64887de2446c3aae20c0e15021a3bfa4ffe71dd6cfe09b482c93",
+      "a800_frozen_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact4_witness_input_v1",
+      "status": "frozen_data_bytes_only",
+      "smact4_executed_on_a800": false
     }
   ],
   "engineering_failures": [
@@ -223,5 +262,87 @@
       "repair_identity": "h1_chemistry_first_sft_v2_evaluator_byte_identity_repair_v3"
     }
   ],
-  "terminal_evidence": []
+  "active_submissions": [],
+  "pending_repairs": [
+    {
+      "evidence_id": "planner_sft_v2_smoke_identity_repair_v4",
+      "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
+      "new_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
+      "repair_scope": "same_protected_p0_fp32_load_path_for_candidate_and_reference_then_freeze_reference",
+      "parent_data_reuse": "byte_identical_manifest_bound",
+      "new_gpu_smoke_required": true,
+      "formal_training_submitted": false
+    }
+  ],
+  "terminal_evidence": [
+    {
+      "evidence_id": "chemistry_first_sft_v2_smoke_engineering_failure_v3",
+      "job_id": 31036,
+      "tasks": {
+        "31036_0": "FAILED|1:0|00:13:08",
+        "31036_1": "FAILED|1:0|00:13:08"
+      },
+      "failure_report_sha256": "e1b08b258467fc80d21580ae1f02180687d8b1d7d2b9995d5fa38a99f1d1a537",
+      "identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
+      "candidate_tensor_count": 448,
+      "reference_tensor_count": 448,
+      "mismatched_tensor_count": 448,
+      "maximum_absolute_difference": 0.00006103515625,
+      "missing_tensor_count": 0,
+      "noncandidate_trainable_count": 0,
+      "failure_stage": "before_first_forward",
+      "optimizer_step_performed": false,
+      "formal_training_submitted": false,
+      "scientific_generation_submitted": false,
+      "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "chemistry_first_sft_v2_data_terminal_v3",
+      "job_id": 31035,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:15:47",
+      "audit_report_file_sha256": "1c9a5e2cba51a1258acf107255ca308c7c9f7122d50f5ae3a09ed97d2681612a",
+      "summary_sha256": "811735beda42cb79260a4f2ebce6ebad8086bde188b84e6eca8bc88f5087cc4f",
+      "order_ledger_sha256": "c31df9dd44bbe1ea75a99131899d4e6ea7131d1f230b39ecfb25f730d5406a43",
+      "record_multiset_sha256": "2728a1019fb440913a9a50f64e2c6c5401a2e54530fa8686ed752bdcf26c9785",
+      "train_rows_per_candidate": 36038,
+      "validation_rows_per_candidate": 9047,
+      "pos_count": 4451,
+      "total_updates": 4505,
+      "warmup_steps": 135,
+      "final_accumulation_microbatches": 6,
+      "record_multiset_equal": true,
+      "orders_differ": true,
+      "curriculum_prefix_count": 3603,
+      "invalid_unconditional_formula_target_count": 0,
+      "generated_charge_field_leak_count": 0,
+      "tokenizer_failure_count": 0,
+      "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "legacy_mp20_snapshot_terminal_v3",
+      "job_id": 31025,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:03:38",
+      "bundle_sha256": "d65a682c8e29820938a8e4637963dd56f18f2f6d893abd77add02043fb6a13bf",
+      "report_sha256": "351a13f8c462a9a0ee377c1d07ebaafb426a0b64cffc2c9c3ad950725e3deefb",
+      "submission_record_sha256": "5e091091d6654a13f93db1015d0a14bfeb80eb58b11fb911627701a2fd3abd1f",
+      "counts": {"train": 27136, "val": 9047, "test": 9046},
+      "smact_version": "3.1.0",
+      "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "local_exact_smact4_witness_terminal_v1",
+      "manifest_sha256": "d21698e29664c607541d7ab644250e93e18cfb2a0cd03d1687a270b42c8ccd32",
+      "ledger_sha256": "ab687c5f16dc64887de2446c3aae20c0e15021a3bfa4ffe71dd6cfe09b482c93",
+      "success_marker_sha256": "5bc0e18cc6d8792dcbde9977cdf8c92a40c30e5e0c0ebd73b4a644fe5996116e",
+      "train": {"rows": 27136, "legacy_primary": 7079, "exact_uniform_primary": 4451},
+      "val": {"rows": 9047, "legacy_primary": 2264, "exact_uniform_primary": 1406},
+      "official_witness_parity": true,
+      "execution_location": "local_wsl_only",
+      "a800_execution": false
+    }
+  ]
 }

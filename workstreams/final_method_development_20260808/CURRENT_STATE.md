@@ -1,14 +1,15 @@
 # Current state
 
-Updated: 2026-08-08 17:26 (Asia/Shanghai)
+Updated: 2026-08-08 18:39 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_PACKAGING_REPAIR_V3_IN_REVIEW`
+Overall status: `PLANNER_SFT_V2_SMOKE_IDENTITY_REPAIR_V4_PREPARING`
 
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3,
 integration, or final-evaluation scientific result has been read or created
-under this workstream. No training, generation, Direct, refiner, S.U.N., or RL
-job has been submitted.
+under this workstream. The sealed data passed, while the first minimal GPU
+smoke reached a repairable engineering failure before model forward; no formal training, raw generation,
+Direct, refiner, S.U.N., or RL job has been submitted.
 
 ## Connection and read-only audit
 
@@ -98,17 +99,83 @@ Following the user's audit-budget instruction, its source gate runs one
 protocol test, one isolated inventory/SHA check, and one focused preflight;
 the duplicate broad source/isolated test pass is not repeated.
 
+## Packaging repair v3 and evaluator-split inputs
+
+The packaging-only v3 repair passed its reduced A800 source gate and is now
+the immutable active run root:
+
+- run root:
+  `/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3`;
+- source-input archive SHA:
+  `d64bf8790fe9a2df4926e25e045883f0f6077d2b8c1d8c86d73b3b3bb7c8f0cf`;
+- source inventory SHA:
+  `410fb34d2543f620fff012fde574a75a935bcaf54e41449fb529c12eb913c20c`;
+- frozen source archive SHA:
+  `3c5d93f697e97e29ee233bcefab41c8636599711e6decaf971eeb383f8137559`;
+- source manifest SHA:
+  `50f9e541a8fcafe13a4d953b1907f949259be4564bffd576379db72fcdbcf89a`;
+- archived legacy evaluator member SHA:
+  `ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178`;
+- the one protocol test, isolated inventory/evaluator identity check, and
+  focused 35-test preflight all passed; A800 used Python 3.10.18 and
+  SMACT 3.1.0, and did not import or execute SMACT 4.
+
+Legacy snapshot job `31025` completed `0:0` in `00:03:38`. Its sealed bundle
+SHA is `d65a682c8e29820938a8e4637963dd56f18f2f6d893abd77add02043fb6a13bf`
+and report SHA is
+`351a13f8c462a9a0ee377c1d07ebaafb426a0b64cffc2c9c3ad950725e3deefb`.
+It contains exactly 27,136 train, 9,047 validation, and 9,046 test rows.
+
+The explicitly authorized local-only exact-SMACT4 witness build also passed.
+Its persistent isolated runtime terminal SHA is
+`0853bbea0c714f8a3150b08f3c94bdf1ec03b9cd49585d3a16533a9f88ea67d6`.
+The witness manifest SHA is
+`d21698e29664c607541d7ab644250e93e18cfb2a0cd03d1687a270b42c8ccd32`,
+ledger SHA is
+`ab687c5f16dc64887de2446c3aae20c0e15021a3bfa4ffe71dd6cfe09b482c93`,
+and deterministic archive SHA is
+`b896516351a76b869cc10d8c95a321ee53bb1cf25e3ed38d207d1dd40b7322c3`.
+The train census is 7,079 legacy-primary and 4,451 exact uniform-primary;
+validation is 2,264 and 1,406 respectively. Official/witness parity is true.
+The sealed ledger was transferred and frozen as data bytes only; SMACT 4 was
+not run on A800.
+
+Data job `31035` completed `0:0` in `00:15:47`. Both candidates contain
+36,038 train and 9,047 validation records. The record multiset is identical;
+base and curriculum order SHAs differ as registered, the 3,603-record
+curriculum prefix alternates correctly, and all data/tokenizer audits pass.
+There are zero invalid unconditional formula targets, generated charge-field
+leaks, token-weight failures, or truncation failures. Frozen optimizer
+geometry is 4,505 updates, 135 warmup steps, and six microbatches in the final
+accumulation group. Audit-report SHA is
+`1c9a5e2cba51a1258acf107255ca308c7c9f7122d50f5ae3a09ed97d2681612a`;
+order-ledger SHA is
+`c31df9dd44bbe1ea75a99131899d4e6ea7131d1f230b39ecfb25f730d5406a43`.
+
+Minimal smoke array `31036_[0-1]` reached `FAILED 1:0` for both tasks after
+`00:13:08`. It loaded the base model but stopped before the first model forward:
+all 448 candidate/reference tensor keys matched and no noncandidate parameter
+was trainable, but PEFT 0.16 had loaded the trainable candidate copy in FP32
+and the frozen reference copy in the BF16 base dtype. The resulting maximum
+absolute difference was `6.103515625e-05` for both candidates. No optimizer
+step, formal training, scientific generation, or SMACT4-on-A800 occurred.
+
+The frozen V4 repair loads both copies through the same protected-P0 FP32 PEFT
+path, then freezes every reference parameter before forward or optimizer
+construction. It changes no model payload, data, task order, prompt, seed,
+optimizer, ledger, evaluator, or gate. The V3 data/legacy snapshot will be
+reused byte-for-byte under a new manifest in the new run root
+`20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4`; a fresh
+dual-arm GPU smoke is mandatory before training.
+
 ## Immediate critical path
 
-1. Complete static review, commit, and push packaging repair v3.
-2. Transfer it after the ten-minute SCP interval, freeze it into the new
-   immutable A800 run root, and run only the reduced SMACT3 source gate.
-3. Submit only the legacy snapshot job after fresh partition checks.
-4. Pull that snapshot, build the local exact-SMACT4 witness ledger, return it,
-   and submit data plus minimal GPU smoke only.
-5. Submit fixed-endpoint training and raw64 generation only after both smoke
+1. Preserve V3 job `31036` and its per-arm identity/error evidence unchanged.
+2. Freeze, transfer, and minimally verify the V4 source plus byte-identical
+   parent-data reuse record; submit only the replacement dual-arm smoke.
+3. Submit fixed-endpoint training and raw64 generation only after both V4 smoke
    tasks are `COMPLETED 0:0`; do not queue assembly before the local audit.
-6. Continue C0/C1 and the B3 portfolio after this source family reaches its
+4. Continue C0/C1 and the B3 portfolio after this source family reaches its
    registered terminal.
 
 No Planner or DLM RL is authorized.

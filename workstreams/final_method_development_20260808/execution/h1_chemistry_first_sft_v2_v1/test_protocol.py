@@ -119,6 +119,20 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         self.assertIn("--array=0-1%2", science64)
         self.assertIn("--array=0-2%2", science64)
 
+    def test_reference_adapter_uses_same_fp32_load_path_then_freezes(self) -> None:
+        trainer = (
+            ROOT.parents[3] / "scripts" / "llama_h1_chemistry_first_sft.py"
+        ).read_text(encoding="utf-8")
+        reference_load = trainer.split('adapter_name="reference",', 1)[1].split(
+            ")", 1
+        )[0]
+        self.assertIn("is_trainable=True", reference_load)
+        self.assertIn("autocast_adapter_dtype=True", reference_load)
+        self.assertIn(
+            'if ".reference." in name:\n            parameter.requires_grad_(False)',
+            trainer,
+        )
+
     def test_cross_machine_evaluator_firewall(self) -> None:
         snapshot = (ROOT / "snapshot.sbatch").read_text(encoding="utf-8")
         data = (ROOT / "data.sbatch").read_text(encoding="utf-8")
@@ -207,6 +221,26 @@ class ChemistryFirstExecutionProtocolTest(unittest.TestCase):
         all_submissions = snapshot + engineering + initial + assembly64 + followup + assembly256
         self.assertNotIn("downstream.sbatch", all_submissions)
         self.assertNotIn("rl.sbatch", all_submissions)
+
+    def test_v4_smoke_repair_reuses_data_but_resubmits_gpu_smoke(self) -> None:
+        repair = json.loads(
+            (ROOT / "SMOKE_IDENTITY_REPAIR_V4.json").read_text(encoding="utf-8")
+        )
+        self.assertFalse(repair["repair"]["models_changed"])
+        self.assertFalse(repair["repair"]["data_changed"])
+        self.assertFalse(repair["repair"]["optimizer_changed"])
+        self.assertFalse(repair["repair"]["smact4_execution_on_a800"])
+        reuse = (ROOT / "reuse_parent_data_on_a800.sh").read_text(encoding="utf-8")
+        smoke = (ROOT / "submit_identity_repair_smoke_once.sh").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("byte_identical_reuse_only", reuse)
+        self.assertIn("EXPECTED_PARENT_DATA_AUDIT_SHA256", reuse)
+        self.assertNotIn("data.sbatch", smoke)
+        self.assertIn("smoke.sbatch", smoke)
+        self.assertNotIn("train.sbatch", smoke)
+        self.assertNotIn("planner64.sbatch", smoke)
+        self.assertNotIn("SMACT4_PYTHON", reuse + smoke)
 
     def test_fixed_adapter_resolver_supports_named_peft_subdirectory(self) -> None:
         from workstreams.final_method_development_20260808.execution.h1_chemistry_first_sft_v2_v1.resolve_fixed_adapter import (
