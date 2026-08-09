@@ -1,0 +1,72 @@
+{
+  "schema": "evidence_first_dlm_b3_v1",
+  "identity": "h1_dlm_b3_safe_axis_2to1_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_v1",
+  "initialization": {
+    "arm": "B0",
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "adapter_sha256_recorded": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "adapter_bytes": 6391016776,
+    "adapter_config_sha256": "2b69a62cc62fdb89ecc8178a6a6fdd6bc03cac702d7bcef2dd282ea7a0bca868",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+  },
+  "data": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2",
+    "manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+    "train_rows": 27136,
+    "validation_rows": 9047,
+    "prompt_answer_bytes": "identical_to_historical_r5c_b1_b2"
+  },
+  "training": {
+    "representation": "dynamic_v1",
+    "planned_corruption_policy": "d2_safe_axis",
+    "iid_fraction": 2,
+    "planned_fraction": 1,
+    "corruption_seed": 20260731,
+    "data_seed": 20260515,
+    "epochs": 1,
+    "optimizer_updates": 1696,
+    "world_size": 2,
+    "batch_size_per_rank": 1,
+    "gradient_accumulation": 8,
+    "global_effective_batch": 16,
+    "learning_rate": 0.00005,
+    "scheduler": "cosine",
+    "warmup_updates": 100,
+    "minimum_lr_ratio": 0.2,
+    "weight_decay": 0,
+    "validation_steps": [0, 212, 424, 636, 848, 1060, 1272, 1484, 1696],
+    "eligible_checkpoint": "terminal_step_1696_only",
+    "checkpoint_selection_uses_sun": false
+  },
+  "safe_axis": {
+    "group_order": "composition_lattice_all_x_all_y_all_z",
+    "mixed_axis_groups": 0,
+    "z_before_xy": 0,
+    "inference": "fixed_historical_safe_axis"
+  },
+  "frozen_state_panel": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_state_panels_b0_v1/panels",
+    "manifest": "state_panel_manifest.json",
+    "terminal": "terminal_report.json",
+    "sha_bound_at_submission": true
+  },
+  "resources": {
+    "training_partition": "gpu",
+    "training_a800": 2,
+    "training_cpus": 8,
+    "training_memory_gib": 64,
+    "training_walltime": "02:00:00",
+    "scoring_partition": "gpu",
+    "scoring_a800": 1,
+    "scoring_cpus": 8,
+    "scoring_memory_gib": 80,
+    "scoring_walltime": "04:00:00"
+  },
+  "automatic_body64_submission": false,
+  "automatic_ratio_sweep": false,
+  "automatic_downstream": false,
+  "automatic_sun": false,
+  "automatic_rl": false
+}

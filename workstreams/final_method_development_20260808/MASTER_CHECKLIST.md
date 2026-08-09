@@ -69,7 +69,10 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       commitments retained and counted.
 - [ ] Execute B0 panel construction and freeze the resulting state bytes/SHA.
 - [ ] Report NLL, calibration, commit/group width, and state distributions.
-- [ ] Freeze and execute B3 under historical two-GPU contract.
+- [x] Freeze the B3 source/submission package under the historical two-GPU,
+      1,696-update contract; no extra unit-test matrix and no result-dependent
+      method edits.
+- [ ] Execute B3 after the B0 state-panel terminal is SHA-bound.
 - [ ] Complete B3 body64 point-estimate gate.
 - [ ] If eligible, execute B3-R 1:1 and 1:2.
 - [ ] If and only if needed, execute B4 state-matched SFT.

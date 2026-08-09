@@ -57,6 +57,15 @@ zero mixed-axis groups and no Z-before-XY. No state-panel or B3 job has yet
 been submitted while both permitted A800 panes remain occupied by earlier
 read-only commands.
 
+The B3 execution package is also frozen before any state-panel or B3 result.
+It is a one-arm reuse of the successful historical two-A800, 1,696-update
+training shell: B0 initialization, the same R5-C bytes/order/seeds, LR 5e-5,
+and terminal checkpoint only. The sole scientific change is
+`d2_safe_axis` at IID:planned 2:1. Its dependent job scores B3 on the exact
+B0-frozen panel bytes; neither job can submit body64, a ratio sweep, S.U.N.,
+or downstream work. Submission remains blocked until the B0 panel terminal
+and manifest SHA exist.
+
 ## Connection and read-only audit
 
 - 5090 is reachable only through port 2213 and the configured private key.

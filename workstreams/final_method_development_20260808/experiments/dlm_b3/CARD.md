@@ -32,3 +32,12 @@ group, a lattice group, all PlanGraph X groups, all Y groups, then all Z
 groups. It reuses the existing stateless mask sampler and loss path. No data,
 prompt/answer bytes, model, optimizer, update count, inference decoder, or
 checkpoint-selection rule changes.
+
+The frozen execution package directly reuses the completed B1/B2 shell:
+2xA800 on `gpu`, eight CPUs total, one full 27,136-row epoch, global batch 16,
+1,696 updates, LR 5e-5, cosine/warmup100/min-ratio0.2, the same data and
+corruption seeds, and terminal checkpoint only. A dependent one-A800 scorer
+uses the byte-frozen B0 state panel. Both jobs explicitly disable automatic
+body64, ratio sweep, downstream, S.U.N., and RL. The package performs only
+syntax/runtime identity checks needed for training and scoring; it does not
+repeat the earlier broad unit-test suite.
