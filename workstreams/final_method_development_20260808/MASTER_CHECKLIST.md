@@ -45,6 +45,9 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] Complete the user-authorized SFT-v2 diagnostic raw256 and
       B0+safe-axis+model_494 Direct/S.U.N. chain without treating it as a
       raw64-passing promotion.
+      V13 stopped before its lock/SBatch boundary on a relative-manifest CWD
+      check. V14 changes only that check to run inside the immutable run root;
+      diagnostic raw256 array `31236_[0-1]%2` is now submitted on `gpu`.
 - [ ] Complete raw256 for every raw64-passing candidate.
 - [ ] Freeze Planner shortlist of at most two non-P0 candidates.
 - [ ] Complete shortlisted Planner downstream256 with B0+safe-axis+model_494;

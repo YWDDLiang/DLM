@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-09T11:53:25+08:00",
+  "updated_at": "2026-08-09T12:19:51+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -112,7 +112,37 @@
       "elapsed": "00:04:33",
       "science_recomputation_complete": true,
       "failure_stage": "registered_identity_and_scientific_gate_classification"
+    },
+    {
+      "stage": "chemistry_first_v13_diagnostic_raw256_submission_precheck",
+      "job_id": null,
+      "partition": "gpu",
+      "gpus": 0,
+      "state": "FAILED_BEFORE_SBATCH",
+      "failure_stage": "relative_manifest_paths_checked_outside_run_root",
+      "submission_lock_created": false,
+      "generation_started": false
+    },
+    {
+      "stage": "chemistry_first_v14_diagnostic_raw256",
+      "job_id": 31236,
+      "array": "0-1%2",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "cpus_per_task": 8,
+      "state": "SUBMITTED",
+      "attempts_per_task": 256,
+      "arms": ["P0", "SFT-v2"],
+      "diagnostic_user_override": true,
+      "automatic_assembly": false,
+      "automatic_downstream": false
     }
   ],
-  "current_allocations": []
+  "current_allocations": [
+    {
+      "job_id": 31236,
+      "stage": "chemistry_first_v14_diagnostic_raw256",
+      "maximum_gpus": 2
+    }
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_portfolio_status_v1",
-  "updated_at": "2026-08-09T11:53:25+08:00",
+  "updated_at": "2026-08-09T12:19:51+08:00",
   "overall": "planner_raw64_composition_gain_safety_stop_diagnostic_sun_and_dlm_active",
   "planner": {
     "status": "active",
@@ -17,7 +17,7 @@
       "formal_passing_candidates": [],
       "user_authorized_diagnostic_candidates": ["SFT-v2"]
     },
-    "active_stage": "SFT-v2_diagnostic_raw256_then_B0_safe_axis_model494_Direct_SUN",
+    "active_stage": "SFT-v2_diagnostic_raw256_job_31236_then_B0_safe_axis_model494_Direct_SUN",
     "shortlist": []
   },
   "dlm": {

@@ -23,6 +23,14 @@ protected B0+safe-axis+model_494 Direct/S.U.N. chain. Independently of its
 outcome, the mandatory DLM B0/B1/B2 inventory and B3 route now proceed. No RL
 is authorized.
 
+V13 preparation passed but its one-time submit command stopped before the
+lock/SBatch boundary because it checked relative manifest entries outside the
+run root; no V13 job or generation output exists. Immutable V14 changes only
+that working directory. Its diagnostic raw256 array `31236_[0-1]%2` is now
+submitted on `gpu` for P0 and SFT-v2 (256 raw attempts per arm, common ledger
+SHA `d5a3ac87458969816a0b27313fd9deecae47d2ddb10289ec08b9d93c5db48669`).
+Assembly and downstream remain deliberately manual.
+
 ## Connection and read-only audit
 
 - 5090 is reachable only through port 2213 and the configured private key.
