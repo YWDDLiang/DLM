@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_portfolio_status_v1",
-  "updated_at": "2026-08-09T12:19:51+08:00",
+  "updated_at": "2026-08-09T12:28:00+08:00",
   "overall": "planner_raw64_composition_gain_safety_stop_diagnostic_sun_and_dlm_active",
   "planner": {
     "status": "active",
@@ -27,7 +27,16 @@
     "active_stage": "B0_B1_B2_and_state_panel_inventory",
     "shortlist": []
   },
-  "integration": {"status": "blocked_on_both_portfolios_terminal", "cells": []},
+  "integration": {
+    "status": "required_cells_frozen_execution_dependency_pending",
+    "recorded_best_pipeline": "safe_axis+model_494+Direct+SUN",
+    "cells": [
+      {"planner": "P0", "body": "B0", "role": "protected_best_pipeline_control", "status": "pending_complete_evaluation"},
+      {"planner": "SFT-v2", "body": "B0", "role": "planner_main_effect", "status": "raw256_running"},
+      {"planner": "P0", "body": "B3", "role": "dlm_main_effect", "status": "blocked_on_B3_endpoint"},
+      {"planner": "SFT-v2", "body": "B3", "role": "joint_interaction", "status": "blocked_on_B3_endpoint"}
+    ]
+  },
   "final_evaluation": {"status": "blocked_on_integration", "methods": [], "maximum_methods": 3},
   "rl_authorized": false
 }

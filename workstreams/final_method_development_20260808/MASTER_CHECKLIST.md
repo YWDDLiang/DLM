@@ -52,6 +52,9 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] Freeze Planner shortlist of at most two non-P0 candidates.
 - [ ] Complete shortlisted Planner downstream256 with B0+safe-axis+model_494;
       also complete C1's frozen D1 downstream if C1 passes its registered path.
+- [ ] Complete the user-required full Planner head-to-head under the recorded
+      best pipeline: P0 versus SFT-v2 with identical B0, safe-axis, model_494,
+      Direct, S.U.N., ledgers, denominators, and evaluator assets.
 - [ ] Mark Planner portfolio terminal/saturated.
 
 ## DLM portfolio
@@ -68,6 +71,9 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] If and only if derivable and needed, execute B5 parity gate.
 - [ ] Complete fixed-Plan paired-noise body64/body256.
 - [ ] Complete top-two DLM downstream256.
+- [ ] Complete the user-required full DLM head-to-head under the same recorded
+      best pipeline: B0 versus B3 at fixed P0, followed by the orthogonal
+      SFT-v2+B3 joint cell. Report main effects separately from interaction.
 - [ ] Mark DLM portfolio terminal/saturated.
 
 ## Integration and final evaluation

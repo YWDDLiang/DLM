@@ -9,3 +9,9 @@ groups, and `z_before_xy=0`. Synthetic and actual-rollout NLL point estimates,
 body64 completion, duplicate failures, and new failure classes determine
 whether B3-R is eligible. S.U.N. cannot choose its checkpoint.
 
+The user-required complete comparison uses the documented best pipeline as a
+fixed shell around the DLM factor. At fixed P0, B0 and B3 both run safe-axis,
+model_494 refine800, Direct, and S.U.N. with common identities and raw
+denominators. A separate SFT-v2+B3 cell measures interaction. Thus the report
+must distinguish the Planner main effect, DLM main effect, and joint effect;
+historical aggregate metrics cannot substitute for any requested new arm.

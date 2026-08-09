@@ -38,6 +38,14 @@ non-revivable scientific stop because its dependency margin did not exceed
 B1. The active DLM boundary is now the four frozen state panels; no B3 job is
 submitted before those panel identities are sealed.
 
+The user has additionally required complete same-pipeline comparisons, not
+candidate-only diagnostics. The frozen matrix is P0+B0 (protected control),
+SFT-v2+B0 (Planner main effect), P0+B3 (DLM main effect), and SFT-v2+B3
+(interaction), all using safe-axis, model_494 refine800, Direct, and S.U.N.
+Historical summary rows remain context only; every requested cell must produce
+its own current-run raw-denominator evidence. Scientific gate failures remain
+visible labels, while engineering failures still fail closed.
+
 ## Connection and read-only audit
 
 - 5090 is reachable only through port 2213 and the configured private key.
