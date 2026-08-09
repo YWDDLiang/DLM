@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=h1-dlm-panels-b0
+#SBATCH --job-name=h1-dlm-panels-b0-v5
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -7,14 +7,14 @@
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
 #SBATCH --mem=80G
 #SBATCH --time=04:00:00
-#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_state_panels_b0_v1/logs/%j.out
-#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_state_panels_b0_v1/logs/%j.err
+#SBATCH --output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_state_panels_b0_v5/logs/%j.out
+#SBATCH --error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_state_panels_b0_v5/logs/%j.err
 
 set -Eeuo pipefail
 umask 077
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260809_h1_dlm_state_panels_b0_v1"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260809_h1_dlm_state_panels_b0_v5"
 SOURCE_ROOT="${RUN_ROOT}/source"
 EXECUTION_DIR="${SOURCE_ROOT}/workstreams/final_method_development_20260808/execution/dlm_state_panels_v1"
 PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
@@ -79,6 +79,7 @@ import sys
 
 report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
 summary = report.get("summary", {})
+producer_audit = report.get("producer_rescore_audit", {})
 if (
     report.get("status") != "complete"
     or set(summary) != {"iid", "d1", "safe_axis_synthetic", "safe_axis_actual_b0"}
@@ -86,6 +87,11 @@ if (
     or summary["d1"].get("states") != 600
     or summary["safe_axis_synthetic"].get("validation_rows") != 100
     or summary["safe_axis_actual_b0"].get("validation_rows") != 64
+    or producer_audit.get("status") != "pass"
+    or producer_audit.get("batch_geometry")
+    != "exact_original_rollout_batch_members_and_order"
+    or producer_audit.get("max_abs_delta_threshold") != 0.0005
+    or report.get("scientific_score_batch_size") != 1
     or report.get("automatic_b3_submission") is not False
 ):
     raise SystemExit("state-panel terminal gate failed")

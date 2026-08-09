@@ -442,6 +442,14 @@ def build_actual_rollout_states(
         bucket = sorted(buckets[key], key=lambda item: item["ordinal"])
         for offset in range(0, len(bucket), max_batch):
             batch = bucket[offset : offset + max_batch]
+            producer_batch_ordinals = [int(task["ordinal"]) for task in batch]
+            producer_batch_id = canonical_sha256(
+                {
+                    "num_atoms": int(key[0]),
+                    "schedule_sha256": str(key[1]),
+                    "validation_ordinals": producer_batch_ordinals,
+                }
+            )
             prompts = [task["tokenized"]["prompt"] for task in batch]
             encoded = tokenizer(
                 prompts,
@@ -615,6 +623,9 @@ def build_actual_rollout_states(
                                 task["row"]["training_pair_sha256"]
                             ),
                             "num_atoms": num_atoms,
+                            "producer_batch_id": producer_batch_id,
+                            "producer_batch_row_index": row_index,
+                            "producer_batch_size": len(batch),
                             "active_group_index": group_index,
                             "active_group": groups[group_index].name,
                             "step_in_group": step_in_group,
@@ -662,6 +673,9 @@ def build_actual_rollout_states(
                         "num_atoms": num_atoms,
                         "noise_seed": int(task["noise_seed"]),
                         "schedule_sha256": str(task["schedule_sha256"]),
+                        "producer_batch_id": producer_batch_id,
+                        "producer_batch_row_index": row_index,
+                        "producer_batch_size": len(batch),
                         "generated_token_ids": generated,
                         "ground_truth_token_ids": truth,
                         "exact_token_match": generated == truth,
@@ -685,6 +699,111 @@ def build_actual_rollout_states(
     if [row["validation_ordinal"] for row in attempts] != list(range(len(rows))):
         raise ValueError("actual rollout attempts lost or duplicated an ordinal")
     return states, attempts
+
+
+@torch.no_grad()
+def audit_actual_rollout_producer_rescore(
+    states: Sequence[Mapping[str, Any]],
+    *,
+    model,
+    max_abs_delta: float,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """Replay serialized actual states in their original producer batches."""
+
+    if not states:
+        raise ValueError("producer replay requires at least one actual state")
+    device = next(model.parameters()).device
+    grouped: dict[tuple[str, int, int], list[Mapping[str, Any]]] = defaultdict(list)
+    for state in states:
+        if state.get("panel_type") != "safe_axis_actual_b0":
+            raise ValueError("producer replay received a non-actual state")
+        grouped[
+            (
+                str(state["producer_batch_id"]),
+                int(state["active_group_index"]),
+                int(state["step_in_group"]),
+            )
+        ].append(state)
+
+    rows: list[dict[str, Any]] = []
+    for group_key in sorted(grouped):
+        batch = sorted(
+            grouped[group_key],
+            key=lambda row: int(row["producer_batch_row_index"]),
+        )
+        expected_size = int(batch[0]["producer_batch_size"])
+        observed_indices = [
+            int(row["producer_batch_row_index"]) for row in batch
+        ]
+        if (
+            len(batch) != expected_size
+            or observed_indices != list(range(expected_size))
+            or any(int(row["producer_batch_size"]) != expected_size for row in batch)
+            or len({len(row["input_ids"]) for row in batch}) != 1
+            or len({len(row["attention_mask"]) for row in batch}) != 1
+        ):
+            raise ValueError(f"producer replay batch geometry changed: {group_key}")
+        input_ids = torch.tensor(
+            [row["input_ids"] for row in batch],
+            dtype=torch.long,
+            device=device,
+        )
+        attention_mask = torch.tensor(
+            [row["attention_mask"] for row in batch],
+            dtype=torch.long,
+            device=device,
+        )
+        logits = model(input_ids=input_ids, attention_mask=attention_mask).logits
+        for row_index, state in enumerate(batch):
+            metrics = _raw_state_metrics(
+                logits[row_index],
+                positions=state["target_positions"],
+                targets=state["target_token_ids"],
+            )
+            delta = abs(
+                float(metrics["mean_nll"])
+                - float(state["producer_mean_nll"])
+            )
+            rows.append(
+                {
+                    "schema": "evidence_first_dlm_producer_rescore_audit_row_v1",
+                    "state_id": str(state["state_id"]),
+                    "producer_batch_id": str(state["producer_batch_id"]),
+                    "producer_batch_row_index": int(
+                        state["producer_batch_row_index"]
+                    ),
+                    "active_group_index": int(state["active_group_index"]),
+                    "step_in_group": int(state["step_in_group"]),
+                    "producer_mean_nll": float(state["producer_mean_nll"]),
+                    "replayed_mean_nll": float(metrics["mean_nll"]),
+                    "abs_delta": delta,
+                }
+            )
+        del logits, input_ids, attention_mask
+
+    deltas = [float(row["abs_delta"]) for row in rows]
+    maximum = max(deltas) if deltas else float("inf")
+    report = {
+        "schema": "evidence_first_dlm_producer_rescore_audit_v1",
+        "status": "pass" if maximum <= float(max_abs_delta) else "failed",
+        "batch_geometry": "exact_original_rollout_batch_members_and_order",
+        "states": len(rows),
+        "forward_batches": len(grouped),
+        "producer_batch_ids": len(
+            {str(row["producer_batch_id"]) for row in states}
+        ),
+        "max_abs_delta_threshold": float(max_abs_delta),
+        "max_abs_delta": maximum,
+        "p50_abs_delta": quantile(deltas, 0.5),
+        "p95_abs_delta": quantile(deltas, 0.95),
+        "mean_abs_delta": sum(deltas) / len(deltas) if deltas else None,
+        "max_delta_state_id": (
+            max(rows, key=lambda row: float(row["abs_delta"]))["state_id"]
+            if rows
+            else None
+        ),
+    }
+    return report, rows
 
 
 def score_states(
@@ -753,16 +872,6 @@ def score_states(
                     "calibration_bins": bins,
                     **metrics,
                 }
-                if state["panel_type"] == "safe_axis_actual_b0":
-                    delta = abs(
-                        float(score["mean_nll"])
-                        - float(state["producer_mean_nll"])
-                    )
-                    score["producer_rescore_abs_delta"] = delta
-                    if delta > 5e-4:
-                        raise ValueError(
-                            f"actual rollout producer/rescore NLL changed by {delta}"
-                        )
                 scored.append(score)
             del logits, input_ids, attention_mask
     scored.sort(key=lambda row: str(row["state_id"]))
@@ -872,6 +981,15 @@ def main() -> int:
         or config.get("automatic_b3_submission") is not False
         or config.get("retry_replacement_repair_filter_rerank") is not False
         or config["checkpoint"].get("arm") != "B0"
+        or int(config["decoder"].get("score_batch_size", -1)) != 1
+        or config["decoder"].get("scientific_score_batch_geometry")
+        != "historical_fixed_panel_per_device_batch_1"
+        or config["decoder"].get("producer_rescore_batch_geometry")
+        != "exact_original_rollout_batch_members_and_order"
+        or float(
+            config["decoder"].get("producer_rescore_max_abs_nll_delta", -1.0)
+        )
+        != 0.0005
     ):
         raise ValueError("state-panel configuration changed")
     output = args.output_dir.resolve()
@@ -946,7 +1064,26 @@ def main() -> int:
     write_jsonl_exclusive(actual_path, actual_states)
     write_jsonl_exclusive(attempts_path, actual_attempts)
 
-    all_states = [*synthetic_states, *actual_states]
+    frozen_synthetic_states = read_jsonl(synthetic_path)
+    frozen_actual_states = read_jsonl(actual_path)
+    producer_audit, producer_audit_rows = audit_actual_rollout_producer_rescore(
+        frozen_actual_states,
+        model=model,
+        max_abs_delta=float(
+            config["decoder"]["producer_rescore_max_abs_nll_delta"]
+        ),
+    )
+    producer_audit_rows_path = output / "actual_rollout_producer_rescore_rows.jsonl"
+    producer_audit_path = output / "actual_rollout_producer_rescore_audit.json"
+    write_jsonl_exclusive(producer_audit_rows_path, producer_audit_rows)
+    write_json_exclusive(producer_audit_path, producer_audit)
+    if producer_audit["status"] != "pass":
+        raise ValueError(
+            "actual rollout producer replay changed under identical batch geometry: "
+            f"{producer_audit['max_abs_delta']}"
+        )
+
+    all_states = [*frozen_synthetic_states, *frozen_actual_states]
     scored = score_states(
         all_states,
         model=model,
@@ -996,8 +1133,18 @@ def main() -> int:
             "synthetic_states.jsonl": sha256_file(synthetic_path),
             "actual_rollout_states.jsonl": sha256_file(actual_path),
             "actual_rollout_attempts.jsonl": sha256_file(attempts_path),
+            "actual_rollout_producer_rescore_rows.jsonl": sha256_file(
+                producer_audit_rows_path
+            ),
+            "actual_rollout_producer_rescore_audit.json": sha256_file(
+                producer_audit_path
+            ),
             "B0_state_scores.jsonl": sha256_file(score_path),
         },
+        "producer_rescore_audit": producer_audit,
+        "scientific_score_batch_size": int(
+            config["decoder"]["score_batch_size"]
+        ),
         "retry_replacement_repair_filter_rerank": False,
         "training": False,
         "sun": False,
@@ -1026,6 +1173,10 @@ def main() -> int:
                 int(row["token_error_count"]) for row in actual_attempts
             ),
         },
+        "producer_rescore_audit": producer_audit,
+        "scientific_score_batch_size": int(
+            config["decoder"]["score_batch_size"]
+        ),
         "cuda_peak_memory_bytes": int(torch.cuda.max_memory_reserved(0)),
         "walltime_s": time.monotonic() - started,
         "training": False,

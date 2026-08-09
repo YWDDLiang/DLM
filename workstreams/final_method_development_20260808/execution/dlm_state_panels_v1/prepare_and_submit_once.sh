@@ -8,7 +8,7 @@ if [ "$#" -ne 1 ]; then
 fi
 
 PROJECT_ROOT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
-RUN_ROOT="${PROJECT_ROOT}/runs/20260809_h1_dlm_state_panels_b0_v1"
+RUN_ROOT="${PROJECT_ROOT}/runs/20260809_h1_dlm_state_panels_b0_v5"
 ARCHIVE="$(readlink -f "$1")"
 PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 
@@ -50,6 +50,7 @@ export PYTHONPYCACHEPREFIX="${RUN_ROOT}/.pycache/preflight"
   tests.test_planned_corruption.PlannedCorruptionTests.test_safe_axis_groups_are_axis_pure_and_put_all_z_last \
   > "${RUN_ROOT}/status/focused_test.log" 2>&1
 "${PYTHON}" -m py_compile "${EXECUTION_DIR}/evaluate_state_panels.py"
+"${PYTHON}" -m py_compile "${EXECUTION_DIR}/score_frozen_state_panels.py"
 
 sinfo -h -p gpu -o '%P|%a|%D|%t|%G' > "${RUN_ROOT}/status/sinfo.txt"
 squeue -h -u "${USER}" -o '%i|%P|%j|%T|%M|%R' > "${RUN_ROOT}/status/squeue.txt"
@@ -71,7 +72,7 @@ root = Path(sys.argv[1])
 record = {
     "schema": "evidence_first_dlm_state_panel_submission_v1",
     "status": "complete",
-    "identity": "h1_dlm_state_panels_b0_v1",
+    "identity": "h1_dlm_state_panels_b0_v5",
     "job_id": sys.argv[2],
     "partition": "gpu",
     "source_archive_sha256": sys.argv[3],

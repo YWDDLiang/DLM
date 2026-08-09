@@ -33,6 +33,7 @@ scripts/llada_sft.py
 scripts/__init__.py
 scripts/sample_llada_dynamic_crystals.py
 scripts/sample_llada_r5_exact_length.py
+tests/__init__.py
 tests/test_planned_corruption.py
 workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1/paired_llada.py
 workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1/paired_noise.py

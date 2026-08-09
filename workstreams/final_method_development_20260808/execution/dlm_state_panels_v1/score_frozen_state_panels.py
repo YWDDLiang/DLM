@@ -47,6 +47,18 @@ def main() -> int:
     started = time.monotonic()
     device = validate_runtime()
     config = read_json(args.config.resolve())
+    if (
+        int(config["decoder"].get("score_batch_size", -1)) != 1
+        or config["decoder"].get("scientific_score_batch_geometry")
+        != "historical_fixed_panel_per_device_batch_1"
+        or config["decoder"].get("producer_rescore_batch_geometry")
+        != "exact_original_rollout_batch_members_and_order"
+        or float(
+            config["decoder"].get("producer_rescore_max_abs_nll_delta", -1.0)
+        )
+        != 0.0005
+    ):
+        raise ValueError("frozen scientific scoring geometry changed")
     output = args.output_dir.resolve()
     if output.exists():
         raise FileExistsError(output)
@@ -76,6 +88,19 @@ def main() -> int:
         files["actual_rollout_states.jsonl"],
         "frozen actual rollout states",
     )
+    producer_audit_path = require_sha(
+        panel_root / "actual_rollout_producer_rescore_audit.json",
+        files["actual_rollout_producer_rescore_audit.json"],
+        "frozen producer-rescore audit",
+    )
+    producer_audit = read_json(producer_audit_path)
+    if (
+        producer_audit.get("status") != "pass"
+        or producer_audit.get("batch_geometry")
+        != "exact_original_rollout_batch_members_and_order"
+        or producer_audit.get("max_abs_delta_threshold") != 0.0005
+    ):
+        raise ValueError("frozen producer-rescore audit changed")
     b0_terminal_path = panel_root / "terminal_report.json"
     if not b0_terminal_path.is_file():
         raise FileNotFoundError("frozen B0 state-panel terminal is missing")
@@ -138,6 +163,12 @@ def main() -> int:
             args.checkpoint_adapter_sha256
         ),
         "frozen_panel_manifest_sha256": sha256_file(manifest_path),
+        "frozen_producer_rescore_audit_sha256": sha256_file(
+            producer_audit_path
+        ),
+        "scientific_score_batch_size": int(
+            config["decoder"]["score_batch_size"]
+        ),
         "state_scores_sha256": sha256_file(score_path),
         "summary": summary,
         "versus_b0": {
