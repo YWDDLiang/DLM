@@ -56,7 +56,9 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 
 ## DLM portfolio
 
-- [ ] Inventory B0/B1/B2 immutable artifacts.
+- [x] Inventory B0/B1/B2 immutable artifacts. Protected B0 and the historical
+      B1/B2 fixed endpoints are path/SHA bound; B2 remains a non-revivable
+      scientific stop after its dependency margin failed to exceed B1.
 - [ ] Freeze IID, D1, synthetic safe-axis, and actual-rollout state panels.
 - [ ] Report NLL, calibration, commit/group width, and state distributions.
 - [ ] Freeze and execute B3 under historical two-GPU contract.

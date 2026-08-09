@@ -1,23 +1,42 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-08T13:05:00+08:00",
+  "updated_at": "2026-08-09T12:24:00+08:00",
   "selection_limit_downstream": 2,
   "candidates": [
     {
       "candidate_id": "B0",
       "role": "protected_control",
-      "status": "protected_inventory_pending",
-      "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+      "status": "protected_inventory_complete",
+      "checkpoint_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+      "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+      "adapter_bytes": 6391016776
     },
     {
       "candidate_id": "B1",
       "role": "historical_inventory_only",
-      "status": "inventory_pending"
+      "status": "inventory_complete_not_promotable",
+      "checkpoint_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1/arms/B1/output/final",
+      "adapter_sha256": "ace1a0d1f935e32881773228de5fcd5e91a76ca6e261ea132d609b84293bea8c",
+      "adapter_bytes": 6391016776,
+      "training": {"policy": "d1", "updates": 1696, "epochs": 1},
+      "fixed_panel_nll": {"initial": 1.9698030331730843, "terminal": 1.4607100467663259},
+      "dependency_margin": 0.25980860452105603
     },
     {
       "candidate_id": "B2",
       "role": "historical_stopped_candidate",
-      "status": "inventory_pending_not_revivable"
+      "status": "inventory_complete_scientific_stop_not_revivable",
+      "checkpoint_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_b1_b2_scientific1epoch_lr5e5_v1/arms/B2/output/final",
+      "adapter_sha256": "e3451c94822ca83d1fa1f91680e24880ce9ced022379865b76705554f31f8cb8",
+      "adapter_bytes": 6391016776,
+      "training": {"policy": "d2", "updates": 1696, "epochs": 1},
+      "fixed_panel_nll": {"initial": 1.9698030188679696, "terminal": 1.4660900968220085},
+      "dependency_margin": 0.23306726496697713,
+      "dependency_margin_minus_b1": {
+        "point": -0.026741339554078876,
+        "bootstrap_ci95": [-0.05559215929811665, 0.00198614307822039]
+      },
+      "terminal_sha256": "ea22ced98f1712efdc8f6b33e7ffff17471a82eef48abeadb7203d3708fd9a89"
     },
     {
       "candidate_id": "B3",

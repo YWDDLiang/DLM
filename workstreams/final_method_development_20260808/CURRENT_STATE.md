@@ -31,6 +31,13 @@ submitted on `gpu` for P0 and SFT-v2 (256 raw attempts per arm, common ledger
 SHA `d5a3ac87458969816a0b27313fd9deecae47d2ddb10289ec08b9d93c5db48669`).
 Assembly and downstream remain deliberately manual.
 
+The mandatory DLM artifact inventory is also complete. Protected B0 is bound
+to its frozen checkpoint/SHA; historical B1/B2 are bound to their terminal
+1,696-update checkpoints and fixed-panel/dependency evidence. B2 remains a
+non-revivable scientific stop because its dependency margin did not exceed
+B1. The active DLM boundary is now the four frozen state panels; no B3 job is
+submitted before those panel identities are sealed.
+
 ## Connection and read-only audit
 
 - 5090 is reachable only through port 2213 and the configured private key.
