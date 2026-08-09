@@ -1,0 +1,45 @@
+{
+  "schema": "h1_evidence_first_four_cell_predecessor_failure_v3",
+  "status": "three_predecessors_failed_closed_before_sbatch",
+  "predecessors": [
+    {
+      "revision": "v1",
+      "commit": "6c97ffb",
+      "archive_sha256": "58d1b99df3b8caac548e015d90467f23d430a95fd5b156d5d3ad8dfdeb2106ea",
+      "prepare_sha256_on_a800": "11e75ba911bb654392d24642cb52fc8de4eadca679a54f977c1b9ca53b8f67a4",
+      "failure": "CRLF shell bytes caused set pipefail invalid-option failure",
+      "run_root_present": false,
+      "jobs_submitted": 0,
+      "rerun_allowed": false
+    },
+    {
+      "revision": "v2",
+      "commit": "91d4d4e",
+      "archive_sha256": "a467366a667d531df2cacbcc5152ca89817e9ac40f4be55fcee29008cb302f60",
+      "failure": "CONFIG referenced the absent B3 arms/B3/terminal_training_report.json instead of status/training_terminal_report.json",
+      "failed_evidence_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/.20260810_h1_evidence_first_four_cell_direct_sun_lf_repair_v2.preparing.27736.FAILED",
+      "run_root_present": false,
+      "jobs_submitted": 0,
+      "rerun_allowed": false
+    },
+    {
+      "revision": "v3",
+      "commit": "394df54",
+      "archive_sha256": "dc957b3a7cf9937a53cd14ba9b9e8238a3c47744611441d4830c6643f8e70f26",
+      "failure": "physical cache rows (11661) were incorrectly compared with the R03F loader's distinct-chemsys set (11163)",
+      "failed_evidence_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/.20260810_h1_evidence_first_four_cell_direct_sun_gcd_mp_cache_v3.preparing.43279.FAILED",
+      "base_cache_sha256_unchanged": true,
+      "physical_nonempty_rows": 11661,
+      "distinct_chemsys": 11163,
+      "duplicate_rows": 498,
+      "duplicate_identities": 498,
+      "maximum_multiplicity": 2,
+      "external_queries_started": 0,
+      "run_root_present": false,
+      "jobs_submitted": 0,
+      "rerun_allowed": false
+    }
+  ],
+  "v4_scope": "freeze physical rows and distinct chemsys as separate identities, then complete exactly the unchanged Planner-union MP cache gap before Slurm",
+  "user_authorized_v4": true
+}
