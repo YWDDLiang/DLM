@@ -1,0 +1,30 @@
+{
+  "schema": "h1_evidence_first_four_cell_direct_sun_authorization_v1",
+  "status": "authorized",
+  "date": "2026-08-09",
+  "user_quotes": [
+    "你去做 SMACT3.1 assembly64，得到同一ledger下P0、SFT-v2、SFT-v2-C的正式 legacy comp_valid，如果有提升，则去做SUN,无论结果如何，都按照计划进入下一步DLM的部分，记得去填checklist和结果表",
+    "我认为还要对比之前最好结果的plan模型与本次训练出来的SFT模型的差异，两者的完整实验都要做，然后DLM也是（文档中记录最好的那个pipeline）"
+  ],
+  "authorized_scope": [
+    "one current-run P0+B0 protected-control cell",
+    "one current-run SFT-v2+B0 Planner-main-effect cell",
+    "one current-run P0+B3 DLM-main-effect cell",
+    "one current-run SFT-v2+B3 interaction cell",
+    "frozen D2 safe-axis body generation",
+    "frozen model_494 diffusion refinement for exactly 800 steps",
+    "Direct metrics and frozen-cache S.U.N. for every cell",
+    "complete paired four-cell terminal report"
+  ],
+  "not_authorized": [
+    "retry",
+    "replacement",
+    "repair",
+    "filter",
+    "rerank",
+    "checkpoint reselection",
+    "new training",
+    "automatic downstream",
+    "reinforcement learning"
+  ]
+}

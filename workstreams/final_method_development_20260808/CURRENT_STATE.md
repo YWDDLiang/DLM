@@ -1,10 +1,10 @@
 # Current state
 
-Updated: 2026-08-09 (Asia/Shanghai)
+Updated: 2026-08-10 (Asia/Shanghai)
 
-Overall status: `PLANNER_RAW64_COMPOSITION_GAIN_SAFETY_STOP_DIAGNOSTIC_SUN_AND_DLM_ACTIVE`
+Overall status: `PLANNER_AND_B3_TERMINAL_FOUR_CELL_DIRECT_SUN_FREEZING`
 
-## Active edge: raw256 terminal and B3
+## Active edge: complete current-run four-cell Direct/S.U.N.
 
 The user-authorized V14 diagnostic now has exactly 256 all-attempt rows for
 both P0 and SFT-v2. The local-only exact SMACT4 audit is complete and
@@ -42,11 +42,24 @@ because its strict adapter expected the old run-root once in each sbatch file,
 whereas the frozen train and scorer files each contain it three times. V3
 fixed only those counts and passed every source identity, then stopped before
 SBatch because A800's tar lacks `--sort=name`. V4 commit `3b5d775` reuses the
-already successful B0 portable `tar -czf` pattern. Training job `31330` is
-running on `gpu`/node99 with two A800s, with GPU/torch identity confirmed;
-dependent frozen-panel scorer `31331` is pending on `afterany:31330`.
-Submission-record SHA is `d1c78cbe...`; no
-body64, ratio sweep, downstream, S.U.N., or RL job was auto-submitted.
+already successful B0 portable `tar -czf` pattern. Training job `31330`
+completed `0:0` in `00:56:59` at exactly 1,696 updates, and dependent scorer
+`31331` completed `0:0` in `00:10:42`. The terminal adapter SHA is
+`ab4f3b82...`; training and score terminal SHAs are `1f9ab27d...` and
+`755b5b86...`. B3 improves token-weighted NLL on IID (-0.276611), D1
+(-0.337032), and synthetic safe-axis (-0.363534), but worsens the actual
+protected-B0 rollout (+0.161890). The required two-panel transfer condition
+is false, so B3 is not promoted and no ratio sweep was launched. No automatic
+downstream, S.U.N., or RL job was submitted.
+
+The active work is now the user-mandated complete current-run matrix:
+P0+B0, SFT-v2+B0, P0+B3, and SFT-v2+B3, each using the common 256-ordinal
+seed ledger, D2 safe-axis body generation, model_494 refine800, Direct, and
+frozen-cache S.U.N. Historical R03 evidence is shell/reference context only;
+it cannot replace a new cell. The immutable package is being frozen for a
+four-element `gpu` array with at most two concurrent A800 tasks and an
+`afterany` normal-CPU terminal assembler. All failures remain in denominator;
+there is no retry, repair, filter, rerank, automatic promotion, or RL.
 
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. The V8 optimizer audit repair passed both
@@ -97,9 +110,10 @@ wrong commitments remain visible and are counted, while NLL targets only the
 frozen ground-truth tokens still masked in the active group. B3 will be scored
 on these exact frozen state bytes. The new `d2_safe_axis` training policy is
 composition, lattice, every X group, every Y group, then every Z group, with
-zero mixed-axis groups and no Z-before-XY. B0-v5 panel job `31323` completed;
-B3 training `31330` and dependent scorer `31331` now consume those frozen
-bytes without changing this contract.
+zero mixed-axis groups and no Z-before-XY. B0-v5 panel job `31323`, B3
+training `31330`, and dependent scorer `31331` all completed. Their mixed
+terminal evidence is frozen without changing the contract; the complete
+four-cell evaluation now consumes B0 and B3 read-only.
 
 The B3 execution package is also frozen before any state-panel or B3 result.
 It is a one-arm reuse of the successful historical two-A800, 1,696-update
@@ -107,8 +121,9 @@ training shell: B0 initialization, the same R5-C bytes/order/seeds, LR 5e-5,
 and terminal checkpoint only. The sole scientific change is
 `d2_safe_axis` at IID:planned 2:1. Its dependent job scores B3 on the exact
 B0-frozen panel bytes; neither job can submit body64, a ratio sweep, S.U.N.,
-or downstream work. The B0 terminal and manifest are frozen; V4 training is
-running and the scorer is waiting on its registered dependency.
+or downstream work. The B0 terminal and manifest are frozen. V4 training and
+its scorer are terminal; B3 remains an unpromoted diagnostic checkpoint used
+only in the explicitly authorized four-cell comparison.
 
 ## Connection and read-only audit
 

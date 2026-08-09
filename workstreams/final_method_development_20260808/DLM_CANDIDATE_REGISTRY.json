@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-09T22:54:00+08:00",
+  "updated_at": "2026-08-10T00:20:00+08:00",
   "selection_limit_downstream": 2,
   "candidates": [
     {
@@ -57,8 +57,8 @@
     {
       "candidate_id": "B3",
       "role": "dynamic_v1_iid_safe_planned_2_to_1",
-      "status": "b3_v4_training_running_frozen_panel_score_dependency",
-      "active_execution": {
+      "status": "terminal_mixed_no_promotion_four_cell_evaluation_authorized",
+      "terminal_execution": {
         "identity": "h1_dlm_b3_safe_axis_2to1_b0v5_v4",
         "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4",
         "training_job_id": 31330,
@@ -74,23 +74,43 @@
         "source_archive_sha256": "52a61fa0f2025e5eecfed9878798d778e3216ded678e0da6ad52d73f5b85b0ba",
         "source_files_manifest_sha256": "74bc9639297f9ecaa5077b66fc648ba5a5d3b1c8b832e46f85b703db3e9eb15e",
         "submission_record_sha256": "d1c78cbed83863498640bd2f48f7db1c6458ce26554050065e7424fa244a21dc",
-        "last_observed_training_state": "RUNNING_NODE99_GPU_TORCH_READY",
-        "last_observed_score_state": "PENDING_DEPENDENCY",
+        "last_observed_training_state": "COMPLETED_0_0_00_56_59",
+        "last_observed_score_state": "COMPLETED_0_0_00_10_42",
+        "training_terminal_report_sha256": "1f9ab27d4d2286f55088448af2940387d9e0c55e7757a4a64f695034fa5da514",
+        "score_terminal_report_sha256": "755b5b8687ea117aaf491b298f52bf15ce22594fc905468ccb7faadfff394143",
+        "adapter_sha256": "ab4f3b82dfcafd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+        "state_scores_sha256": "467cfd979b848a688290f7b886a6fa27558d925df5b72c090e66d8f4bb3737b8",
         "automatic_body64_submission": false,
         "automatic_sun": false,
         "automatic_rl": false
       },
-      "results": null
+      "results": {
+        "token_weighted_mean_nll": {
+          "iid": 1.8843846605413488,
+          "d1": 1.7240345461373439,
+          "safe_axis_synthetic": 1.761587996150686,
+          "safe_axis_actual_b0": 4.812232939763428
+        },
+        "delta_vs_b0": {
+          "iid": -0.2766106655586512,
+          "d1": -0.3370324256626561,
+          "safe_axis_synthetic": -0.36353366686800914,
+          "safe_axis_actual_b0": 0.16189041988646213
+        },
+        "both_required_point_estimates_improved": false,
+        "formal_promotion": false,
+        "four_cell_current_run_evaluation_authorized": true
+      }
     },
     {
       "candidate_id": "B3-R-1to1",
       "role": "ratio_extension",
-      "status": "conditional_on_b3_gate"
+      "status": "not_auto_launched_b3_transfer_gate_failed"
     },
     {
       "candidate_id": "B3-R-1to2",
       "role": "ratio_extension",
-      "status": "conditional_on_b3_gate"
+      "status": "not_auto_launched_b3_transfer_gate_failed"
     },
     {
       "candidate_id": "B4",

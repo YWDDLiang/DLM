@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-09T22:54:00+08:00",
+  "updated_at": "2026-08-10T00:20:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -314,31 +314,7 @@
       "scientific_contract_changed": false
     }
   ],
-  "active_submissions": [
-    {
-      "evidence_id": "dlm_b3_b0v5_v4_training_and_panel_score_submission",
-      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4",
-      "training_job_id": 31330,
-      "state_panel_score_job_id": 31331,
-      "score_dependency": "afterany:31330",
-      "partition": "gpu",
-      "training_a800": 2,
-      "source_commit": "3b5d775",
-      "outer_repair_sha256": "ad813ba3e7c220dc4ad02f0b4350a3fe7955683b3d00e69d20b198d9200b1cf5",
-      "generated_adapter_sha256": "e982f084bb93c06d633be1f59b7d44eac505b705458e77cd89223a96c75f52dc",
-      "generation_record_sha256": "519377a01ab773d43e68d43966f73d349ac08b92f6b3180c9456dc61b3670e7f",
-      "adaptation_record_sha256": "dda9a5288e1d33a8faa9f39a8ddc23527a90526b7fdc65abb7621c996293c640",
-      "source_archive_sha256": "52a61fa0f2025e5eecfed9878798d778e3216ded678e0da6ad52d73f5b85b0ba",
-      "source_files_manifest_sha256": "74bc9639297f9ecaa5077b66fc648ba5a5d3b1c8b832e46f85b703db3e9eb15e",
-      "submission_record_sha256": "d1c78cbed83863498640bd2f48f7db1c6458ce26554050065e7424fa244a21dc",
-      "last_observed_training_state": "RUNNING_NODE99_GPU_TORCH_READY",
-      "last_observed_score_state": "PENDING_DEPENDENCY",
-      "automatic_body64_submission": false,
-      "automatic_downstream": false,
-      "automatic_sun": false,
-      "automatic_rl": false
-    }
-  ],
+  "active_submissions": [],
   "pending_repairs": [
     {
       "evidence_id": "planner_sft_v2_post_v5_identity_diagnostic",
@@ -536,6 +512,36 @@
       "producer_replay_max_abs_delta": 0.0,
       "scientific_score_batch_size": 1,
       "automatic_b3_submission": false
+    },
+    {
+      "evidence_id": "dlm_b3_b0v5_v4_training_and_panel_score_terminal",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4",
+      "training_job_id": 31330,
+      "training_state": "COMPLETED",
+      "training_exit_code": "0:0",
+      "training_elapsed": "00:56:59",
+      "state_panel_score_job_id": 31331,
+      "state_panel_score_state": "COMPLETED",
+      "state_panel_score_exit_code": "0:0",
+      "state_panel_score_elapsed": "00:10:42",
+      "score_dependency": "afterany:31330",
+      "partition": "gpu",
+      "training_a800": 2,
+      "optimizer_updates": 1696,
+      "learning_rate": 0.00005,
+      "submission_record_sha256": "d1c78cbed83863498640bd2f48f7db1c6458ce26554050065e7424fa244a21dc",
+      "training_terminal_report_sha256": "1f9ab27d4d2286f55088448af2940387d9e0c55e7757a4a64f695034fa5da514",
+      "score_terminal_report_sha256": "755b5b8687ea117aaf491b298f52bf15ce22594fc905468ccb7faadfff394143",
+      "adapter_sha256": "ab4f3b82dfcafd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+      "state_scores_sha256": "467cfd979b848a688290f7b886a6fa27558d925df5b72c090e66d8f4bb3737b8",
+      "safe_axis_synthetic_nll_delta_vs_b0": -0.36353366686800914,
+      "actual_b0_rollout_nll_delta_vs_b0": 0.16189041988646213,
+      "both_required_point_estimates_improved": false,
+      "formal_promotion": false,
+      "automatic_ratio_sweep": false,
+      "automatic_downstream": false,
+      "automatic_sun": false,
+      "automatic_rl": false
     }
   ]
 }

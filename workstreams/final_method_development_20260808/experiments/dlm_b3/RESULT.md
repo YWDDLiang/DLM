@@ -1,6 +1,6 @@
 # Result: DLM B3
 
-Status: `B0_B1_B2_INVENTORY_COMPLETE_B0_V5_PANEL_FROZEN_B3_V4_TRAINING_RUNNING`
+Status: `B3_V4_TERMINAL_MIXED_NO_PROMOTION_FOUR_CELL_EVALUATION_AUTHORIZED`
 
 The immutable artifact inventory is complete without rehashing the protected
 6.39 GB payloads. B0 remains
@@ -43,11 +43,33 @@ V3 commit `fa405b9` changed only those two identity-count expectations from
 one to three and passed all source identities, then stopped before SBatch
 because the A800 tar lacks `--sort=name`. V4 commit `3b5d775` reuses the
 successful B0 `tar -czf` compatibility pattern and changes no science or
-training setting. It uniquely submitted two-A800 `gpu` training job `31330`
-and dependent frozen-panel scorer `31331` (`afterany:31330`); submission-record
-SHA is `d1c78cbed83863498640bd2f48f7db1c6458ce26554050065e7424fa244a21dc`.
-Training is running on node99 while the scorer waits on dependency. The B0
-initialization, R5-C bytes/order/seeds, `dynamic_v1`, IID:safe-axis 2:1
-sampling, 1,696 updates, LR `5e-5`, terminal-checkpoint-only contract, and
-batch-one panel score remain unchanged. No body64, ratio sweep, downstream,
-S.U.N., or RL job was auto-submitted.
+training setting.
+
+Two-A800 `gpu` training job `31330` completed `0:0` in `00:56:59` at exactly
+1,696 updates. Its dependent batch-one frozen-panel scorer `31331` completed
+`0:0` in `00:10:42`. Submission-record SHA is
+`d1c78cbed83863498640bd2f48f7db1c6458ce26554050065e7424fa244a21dc`;
+training-terminal SHA is
+`1f9ab27d4d2286f55088448af2940387d9e0c55e7757a4a64f695034fa5da514`;
+score-terminal SHA is
+`755b5b8687ea117aaf491b298f52bf15ce22594fc905468ccb7faadfff394143`.
+The terminal adapter SHA is
+`ab4f3b82dfcafd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7`.
+
+| frozen panel token-weighted mean NLL | B0 | B3 | B3-B0 |
+|---|---:|---:|---:|
+| IID | 2.1609953261 | 1.8843846605 | -0.2766106656 |
+| D1 | 2.0610669718 | 1.7240345461 | -0.3370324257 |
+| synthetic safe-axis | 2.1251216630 | 1.7615879962 | -0.3635336669 |
+| actual B0 rollout | 4.6503425199 | 4.8122329398 | +0.1618904199 |
+
+B3 transfers in the desired direction on all three synthetic/fixed panels
+but regresses on the actual protected-B0 rollout states. The registered
+requirement that both synthetic safe-axis and actual-rollout point estimates
+improve is false. B3 is a mixed diagnostic terminal, not a promoted body
+checkpoint; no ratio sweep, automatic downstream, or RL was launched.
+
+The user-authorized complete same-pipeline matrix still proceeds independently
+of promotion: P0+B0, SFT-v2+B0, P0+B3, and SFT-v2+B3 will each produce new
+256-attempt safe-axis + model_494 refine800 + Direct + frozen-cache S.U.N.
+evidence. Historical summaries cannot substitute for a current-run cell.
