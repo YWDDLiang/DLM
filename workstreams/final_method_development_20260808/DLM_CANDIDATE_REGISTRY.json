@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-09T12:24:00+08:00",
+  "updated_at": "2026-08-09T13:20:00+08:00",
   "selection_limit_downstream": 2,
   "candidates": [
     {
@@ -41,7 +41,7 @@
     {
       "candidate_id": "B3",
       "role": "dynamic_v1_iid_safe_planned_2_to_1",
-      "status": "authorized_spec_frozen_implementation_pending",
+      "status": "spec_and_safe_axis_policy_implementation_frozen_state_panel_execution_pending",
       "results": null
     },
     {

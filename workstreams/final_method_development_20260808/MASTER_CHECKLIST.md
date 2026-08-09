@@ -62,7 +62,12 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [x] Inventory B0/B1/B2 immutable artifacts. Protected B0 and the historical
       B1/B2 fixed endpoints are path/SHA bound; B2 remains a non-revivable
       scientific stop after its dependency margin failed to exceed B1.
-- [ ] Freeze IID, D1, synthetic safe-axis, and actual-rollout state panels.
+- [x] Freeze the IID, D1, synthetic safe-axis, and actual-rollout panel
+      construction/scoring contract before B3 results: validation ordinals
+      0..99 for synthetic states, 0..63 for B0 actual rollout, ground-truth
+      targets only at currently masked active positions, and wrong visible
+      commitments retained and counted.
+- [ ] Execute B0 panel construction and freeze the resulting state bytes/SHA.
 - [ ] Report NLL, calibration, commit/group width, and state distributions.
 - [ ] Freeze and execute B3 under historical two-GPU contract.
 - [ ] Complete B3 body64 point-estimate gate.

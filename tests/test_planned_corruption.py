@@ -15,6 +15,7 @@ from crystal_dlm.planned_corruption import (
     sample_iid_corruption,
     sample_mixture_policy,
     sample_planned_corruption,
+    safe_axis_dependency_groups,
     simulate_planned_policy,
     stateless_uniform,
     validate_position_groups,
@@ -79,6 +80,20 @@ class PlannedCorruptionTests(unittest.TestCase):
         self.assertEqual(encoded[1:7], (1, 1, 1, 1, 1, 1))
         self.assertEqual(encoded[8:11], (2, 2, 2))
         self.assertEqual(encoded[12:15], (3, 3, 3))
+
+    def test_safe_axis_groups_are_axis_pure_and_put_all_z_last(self):
+        groups = safe_axis_dependency_groups(self.make_graph())
+        names = [group.name for group in groups]
+        self.assertEqual(names[:2], ["composition", "symmetry_lattice"])
+        x_indices = [index for index, name in enumerate(names) if name.endswith("_x")]
+        y_indices = [index for index, name in enumerate(names) if name.endswith("_y")]
+        z_indices = [index for index, name in enumerate(names) if name.endswith("_z")]
+        self.assertTrue(x_indices and y_indices and z_indices)
+        self.assertLess(max([*x_indices, *y_indices]), min(z_indices))
+        for group in groups[2:]:
+            axes = {(position - 7) % 4 for position in group.positions}
+            self.assertEqual(len(axes), 1)
+        validate_position_groups(groups, answer_length=19)
 
     def test_planned_mask_keeps_prerequisites_and_masks_future(self):
         groups = plangraph_dependency_groups(self.make_graph())
@@ -194,10 +209,15 @@ class PlannedCorruptionTests(unittest.TestCase):
         }
         d1 = h1a2_generation_schedule(plan, policy="d1")
         d2 = h1a2_generation_schedule(plan, policy="d2")
+        safe_axis = h1a2_generation_schedule(plan, policy="d2_safe_axis")
         self.assertEqual(d1, exact_dynamic_generation_schedule(plan["N"]))
         self.assertEqual(
             sorted(position for group in d2 for position in group),
             list(range(7 + 4 * int(plan["N"]))),
+        )
+        self.assertEqual(
+            safe_axis,
+            [list(group.positions) for group in safe_axis_dependency_groups(graph)],
         )
         with self.assertRaises(CorruptionScheduleError):
             h1a2_generation_schedule(plan, policy="d2_shuffle")

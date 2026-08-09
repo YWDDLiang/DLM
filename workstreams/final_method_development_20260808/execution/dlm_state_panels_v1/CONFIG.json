@@ -1,0 +1,67 @@
+{
+  "schema": "evidence_first_dlm_state_panels_v1",
+  "identity": "h1_dlm_state_panels_b0_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_state_panels_b0_v1",
+  "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+  "checkpoint": {
+    "arm": "B0",
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "adapter_file": "adapter_model.safetensors",
+    "adapter_bytes": 6391016776,
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "tokenizer_config_sha256": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+    "tokenizer_vocab_sha256": "3acc073da85047265769f2dccd93543fa9d7cbfa95021aef54ef282b13ce2f37",
+    "tokenizer_size": 128830
+  },
+  "data": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260801_h1a2_dlm_sidecar_preflight_v1/data/h1a2_r5c_plangraph_sidecar_v2",
+    "manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+    "validation_jsonl_sha256": "0a6802afec4c497a12e4069b049d97114b079b2d29ef1e577011b17cfccb8498",
+    "validation_rows": 9047,
+    "ordered_model_visible_sha256": "555ee39e83ce1d19535799767cc2ce208cb435852ce13e3d4dd334fb00175e90"
+  },
+  "panels": {
+    "synthetic_validation_ordinals": {"start": 0, "end_inclusive": 99},
+    "actual_rollout_validation_ordinals": {"start": 0, "end_inclusive": 63},
+    "seed": 20260809,
+    "iid_states_per_row": 1,
+    "planned_active_groups": "all",
+    "planned_current_group_mask": "deterministic_partial_at_least_one",
+    "planned_future_groups": "all_masked_no_loss",
+    "actual_rollout_target": "frozen_ground_truth_tokens_at_currently_masked_active_group_positions",
+    "actual_wrong_visible_commitments": "retain_visible_and_count_never_correct_or_mask",
+    "nll_primary_reduction": "token_weighted_mean_cross_entropy",
+    "nll_secondary_reduction": "state_weighted_mean_cross_entropy",
+    "calibration": "raw_logits_top1_ece10_and_multiclass_brier",
+    "panel_types": ["iid", "d1", "safe_axis_synthetic", "safe_axis_actual_b0"]
+  },
+  "decoder": {
+    "generation_policy": "d2_safe_axis",
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "schema_logit_mask": true,
+    "prefill_count_token": true,
+    "freeze_plan_composition": true,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "min_lattice_rad": 0.0001,
+    "max_batch_size": 8,
+    "score_batch_size": 8,
+    "answer_token_count_formula": "7+4N"
+  },
+  "resources": {
+    "partition": "gpu",
+    "a800": 1,
+    "cpus": 8,
+    "memory_gib": 80,
+    "walltime": "04:00:00"
+  },
+  "training": false,
+  "generation_science_endpoint": false,
+  "sun": false,
+  "automatic_b3_submission": false,
+  "automatic_downstream": false,
+  "retry_replacement_repair_filter_rerank": false
+}

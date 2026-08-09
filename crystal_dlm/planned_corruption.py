@@ -2,7 +2,8 @@
 
 This module does not depend on PyTorch and does not modify the training loop.
 It defines and validates answer-relative groups, then samples the exact masks
-needed by the D1 current-order control and D2 PlanGraph policy:
+needed by the D1 current-order control, D2 PlanGraph policy, and legal
+safe-axis PlanGraph policy:
 
 * prerequisite groups remain visible;
 * a stochastic subset of the active group is masked and supervised;
@@ -302,6 +303,38 @@ def plangraph_dependency_groups(
     return groups
 
 
+def safe_axis_dependency_groups(
+    graph: Mapping[str, Any],
+) -> tuple[PositionGroup, ...]:
+    """PlanGraph groups matching the legal grouped-X, grouped-Y, then Z path.
+
+    Composition and lattice are resolved first.  Each PlanGraph site group then
+    owns one coordinate-axis group, with every X and Y group strictly preceding
+    every Z group.  No coordinate group mixes axes.
+    """
+
+    ensure_valid_plangraph(graph)
+    num_atoms = int(graph["composition"]["N"])
+    answer_length = dynamic_answer_token_count(num_atoms)
+    element_positions = [7 + 4 * slot for slot in range(num_atoms)]
+    named_positions: list[tuple[str, Sequence[int]]] = [
+        ("composition", [0, *element_positions]),
+        ("symmetry_lattice", [1, 2, 3, 4, 5, 6]),
+    ]
+    for axis_name, axis_offset in (("x", 1), ("y", 2), ("z", 3)):
+        for site_group in graph["site_groups"]:
+            positions = sorted(
+                7 + 4 * int(slot) + axis_offset
+                for slot in site_group["slot_indices"]
+            )
+            named_positions.append(
+                (f"{site_group['group_id']}_{axis_name}", positions)
+            )
+    groups = _sequential_groups(named_positions)
+    validate_position_groups(groups, answer_length=answer_length)
+    return groups
+
+
 def h1a2_generation_schedule(
     plan_state: Mapping[str, Any],
     *,
@@ -310,7 +343,8 @@ def h1a2_generation_schedule(
     """Build an H1-A2 body schedule from inference-available plan fields.
 
     ``d1`` is exactly the frozen R5-C ``exact-plan`` order. ``d2`` compiles
-    the same non-visible graph used by training.
+    the historical mixed-axis graph. ``d2_safe_axis`` compiles the legal
+    grouped-X, grouped-Y, then grouped-Z graph used by B3.
     """
 
     normalized = str(policy).strip().lower().replace("-", "_")
@@ -319,9 +353,12 @@ def h1a2_generation_schedule(
     elif normalized == "d2":
         graph = plangraph_from_plan_state(plan_state)
         groups = plangraph_dependency_groups(graph)
+    elif normalized == "d2_safe_axis":
+        graph = plangraph_from_plan_state(plan_state)
+        groups = safe_axis_dependency_groups(graph)
     else:
         raise CorruptionScheduleError(
-            "H1-A2 generation policy must be d1 or d2"
+            "H1-A2 generation policy must be d1, d2, or d2_safe_axis"
         )
     return [list(group.positions) for group in groups]
 
@@ -529,6 +566,7 @@ __all__ = [
     "sample_iid_corruption",
     "sample_mixture_policy",
     "sample_planned_corruption",
+    "safe_axis_dependency_groups",
     "simulate_planned_policy",
     "stateless_uniform",
     "validate_position_groups",

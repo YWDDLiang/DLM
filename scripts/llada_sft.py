@@ -85,6 +85,7 @@ from crystal_dlm.planned_corruption import (
     current_order_groups,
     plangraph_dependency_groups,
     position_group_ids,
+    safe_axis_dependency_groups,
 )
 from crystal_dlm.transformers_compat import (
     ensure_create_bidirectional_mask,
@@ -105,7 +106,7 @@ LOSS_PROFILE_TO_ID = {
 }
 ID_TO_LOSS_PROFILE = {value: key for key, value in LOSS_PROFILE_TO_ID.items()}
 PLANNED_CORRUPTION_POLICIES = frozenset(
-    {"none", "d1", "d2"}
+    {"none", "d1", "d2", "d2_safe_axis"}
 )
 TEXT_ONLY_REPRESENTATIONS = {
     "cif_lite_modular",
@@ -427,14 +428,18 @@ def _planned_groups_for_record(
             )
     if policy == "d1":
         groups = current_order_groups(num_atoms)
-    elif policy == "d2":
+    elif policy in {"d2", "d2_safe_axis"}:
         graph = row.get("plangraph")
         if not isinstance(graph, dict):
             raise ValueError(
                 f"{policy} planned corruption requires a validated 'plangraph' "
                 "object on every body record"
             )
-        groups = plangraph_dependency_groups(graph)
+        groups = (
+            plangraph_dependency_groups(graph)
+            if policy == "d2"
+            else safe_axis_dependency_groups(graph)
+        )
         if int(graph["composition"]["N"]) != num_atoms:
             raise ValueError(
                 f"{policy} PlanGraph composition.N disagrees with the "
@@ -625,7 +630,7 @@ class CsvCrystalSftDataset(Dataset):
         self.planned_corruption_policy = normalize_planned_corruption_policy(
             planned_corruption_policy
         )
-        if self.planned_corruption_policy == "d2":
+        if self.planned_corruption_policy in {"d2", "d2_safe_axis"}:
             raise ValueError(
                 f"{self.planned_corruption_policy} planned corruption requires "
                 "JSONL PlanGraph body records; online CSV augmentation can only "

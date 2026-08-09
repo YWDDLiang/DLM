@@ -46,6 +46,17 @@ Historical summary rows remain context only; every requested cell must produce
 its own current-run raw-denominator evidence. Scientific gate failures remain
 visible labels, while engineering failures still fail closed.
 
+The DLM state-panel contract and minimal B3 grouping implementation are now
+frozen locally before reading any B3 result. Synthetic IID/D1/safe-axis panels
+use validation ordinals 0..99; the real B0+safe-axis trace uses 0..63. Actual
+wrong commitments remain visible and are counted, while NLL targets only the
+frozen ground-truth tokens still masked in the active group. B3 will be scored
+on these exact frozen state bytes. The new `d2_safe_axis` training policy is
+composition, lattice, every X group, every Y group, then every Z group, with
+zero mixed-axis groups and no Z-before-XY. No state-panel or B3 job has yet
+been submitted while both permitted A800 panes remain occupied by earlier
+read-only commands.
+
 ## Connection and read-only audit
 
 - 5090 is reachable only through port 2213 and the configured private key.
