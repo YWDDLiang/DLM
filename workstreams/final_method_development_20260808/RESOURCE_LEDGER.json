@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-08T19:22:00+08:00",
+  "updated_at": "2026-08-09T11:53:25+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -60,6 +60,58 @@
       "optimizer_step_performed": false,
       "formal_training_submitted": false,
       "scientific_generation_submitted": false
+    },
+    {
+      "stage": "chemistry_first_v8_optimizer_smoke",
+      "job_id": 31126,
+      "array": "0-1%2",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "cpus_per_task": 4,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed_per_task": "00:35:49"
+    },
+    {
+      "stage": "chemistry_first_v10_fixed_endpoint_training",
+      "job_id": 31147,
+      "array": "0-1%2",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "cpus_per_task": 4,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "optimizer_updates_per_task": 4505
+    },
+    {
+      "stage": "chemistry_first_v10_raw64",
+      "job_id": 31148,
+      "array": "0-2%2",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "attempts_per_task": 64
+    },
+    {
+      "stage": "chemistry_first_v11_assembly64_launcher_failure",
+      "job_id": 31229,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "failure_stage": "slurm_comma_list_export_truncation"
+    },
+    {
+      "stage": "chemistry_first_v12_formal_smact31_assembly64",
+      "job_id": 31231,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "elapsed": "00:04:33",
+      "science_recomputation_complete": true,
+      "failure_stage": "registered_identity_and_scientific_gate_classification"
     }
   ],
   "current_allocations": []

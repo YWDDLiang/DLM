@@ -1,18 +1,27 @@
 # Current state
 
-Updated: 2026-08-08 19:22 (Asia/Shanghai)
+Updated: 2026-08-09 (Asia/Shanghai)
 
-Overall status: `PLANNER_SFT_V2_V5_SMOKE_ENGINEERING_FAILURE_DIAGNOSTIC_HOLD`
+Overall status: `PLANNER_RAW64_COMPOSITION_GAIN_SAFETY_STOP_DIAGNOSTIC_SUN_AND_DLM_ACTIVE`
 
 The Evidence-First workstream is active on branch
-`codex/evidence-first-sun-msun`. No C0/C1, SFT-v2, SFT-v2-C, B3,
-integration, or final-evaluation scientific result has been read or created
-under this workstream. The sealed data passed, while the first minimal GPU
-smoke reached a repairable engineering failure before model forward. The V5
-repair repeated the same failure byte-for-byte, so no further repair is
-eligible until independent propose/red-team review and a focused runtime probe
-identify the exact conversion step. No formal training, raw generation,
-Direct, refiner, S.U.N., or RL job has been submitted.
+`codex/evidence-first-sun-msun`. The V8 optimizer audit repair passed both
+two-update smoke arms, and V10 completed both fixed-endpoint 4,505-update
+training arms plus the common-ledger P0/SFT-v2/SFT-v2-C raw64 generation.
+V12 then completed the requested formal SMACT 3.1 recomputation. On the same
+64-attempt ledger, P0 is 34/64 legacy composition-valid, while SFT-v2 and
+SFT-v2-C are both 52/64: an absolute gain of 18/64 (+28.125 pp). SFT-v2's
+paired exact McNemar p-value is 0.000912234.
+
+Neither candidate is formally promoted. SFT-v2 misses the registered element
+coverage, mean-N drift, and no-new-failure-class gates; SFT-v2-C additionally
+misses parse and unique-formula gates and has larger distribution drift. The
+V12 evaluator also exposes a schema-asymmetric P0 embedded-validator identity
+check; this does not alter the recomputed SMACT 3.1 counts. Per the user's
+explicit override, SFT-v2 alone proceeds through a diagnostic raw256 and
+protected B0+safe-axis+model_494 Direct/S.U.N. chain. Independently of its
+outcome, the mandatory DLM B0/B1/B2 inventory and B3 route now proceed. No RL
+is authorized.
 
 ## Connection and read-only audit
 

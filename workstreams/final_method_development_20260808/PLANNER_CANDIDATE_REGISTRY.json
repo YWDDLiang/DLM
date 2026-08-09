@@ -1,13 +1,14 @@
 {
   "schema": "crystal_dlm_planner_candidate_registry_v1",
-  "updated_at": "2026-08-08T19:22:00+08:00",
+  "updated_at": "2026-08-09T11:53:25+08:00",
   "selection_limit_non_p0_downstream": 2,
   "candidates": [
     {
       "candidate_id": "P0",
       "role": "protected_control",
-      "status": "protected",
-      "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
+      "status": "protected_raw64_complete",
+      "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+      "raw64": {"parse": 64, "completion": 64, "legacy_comp_valid": 34, "denominator": 64}
     },
     {
       "candidate_id": "C0",
@@ -28,44 +29,67 @@
     {
       "candidate_id": "SFT-v2",
       "role": "chemistry_first_minimal_plan_hash_shuffle",
-      "status": "engineering_hold_after_repeated_exact_identity_failure",
+      "status": "raw64_scientific_stop_user_authorized_diagnostic_downstream",
       "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
-      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
-      "data_job_id": 31035,
-      "smoke_job_id": "31036_0",
-      "smoke_sacct": "FAILED|1:0|00:13:08",
-      "smoke_failure": "peft_candidate_reference_dtype_asymmetry_before_forward",
-      "identity_repair_v4_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
-      "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
-      "repair_smoke_job_id": "31064_0",
-      "repair_smoke_sacct": "FAILED|1:0|00:15:02",
-      "repair_smoke_identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
-      "repair_smoke_failure_report_sha256": "3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8",
-      "next_gate": "independent_reviews_and_focused_runtime_probe",
-      "formal_training_submitted": false,
-      "execution_rule": "always_execute",
-      "results": null
+      "formal_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_gpu_partition_cancel_array_parser_repair_v10",
+      "assembly_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_v10_slurm_list_serialization_repair_v12",
+      "training_job_id": "31147_0",
+      "raw64_job_id": "31148_1",
+      "fixed_endpoint_updates": 4505,
+      "terminal_report_sha256": "5342a4f8e0f5695bfff8680406569d55916cdb66ce8a1d7aabd9f6c2d06a9f0c",
+      "raw64": {
+        "denominator": 64,
+        "parse": 63,
+        "completion": 64,
+        "legacy_comp_valid": 52,
+        "legacy_nonshortcut_primary": 51,
+        "all_metal_shortcut": 1,
+        "exact_smact4_valid_secondary": 36,
+        "exact_smact4_uniform_primary_secondary": 32,
+        "unique_formula": 63,
+        "element_coverage_count": 60,
+        "element_alphabet_denominator": 94,
+        "mean_n": 10.34920634920635,
+        "legacy_gain_count_vs_p0": 18,
+        "mcnemar_two_sided_exact_p": 0.0009122341871261597
+      },
+      "failed_scientific_gates": [
+        "element_coverage_rate_loss_at_most_2pp",
+        "absolute_mean_N_drift_at_most_0p5",
+        "no_new_generation_failure_class"
+      ],
+      "formal_promotion": false,
+      "diagnostic_downstream_authorized": true
     },
     {
       "candidate_id": "SFT-v2-C",
       "role": "chemistry_first_minimal_plan_curriculum",
-      "status": "engineering_hold_after_repeated_exact_identity_failure",
+      "status": "raw64_scientific_stop_not_shortlisted",
       "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
-      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_packaging_repair_v3",
-      "data_job_id": 31035,
-      "smoke_job_id": "31036_1",
-      "smoke_sacct": "FAILED|1:0|00:13:08",
-      "smoke_failure": "peft_candidate_reference_dtype_asymmetry_before_forward",
-      "identity_repair_v4_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
-      "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
-      "repair_smoke_job_id": "31064_1",
-      "repair_smoke_sacct": "FAILED|1:0|00:15:02",
-      "repair_smoke_identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
-      "repair_smoke_failure_report_sha256": "3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8",
-      "next_gate": "independent_reviews_and_focused_runtime_probe",
-      "formal_training_submitted": false,
-      "execution_rule": "always_execute",
-      "results": null
+      "formal_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_gpu_partition_cancel_array_parser_repair_v10",
+      "assembly_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_v10_slurm_list_serialization_repair_v12",
+      "training_job_id": "31147_1",
+      "raw64_job_id": "31148_2",
+      "fixed_endpoint_updates": 4505,
+      "terminal_report_sha256": "f88060e026c666c6a7d8d0a79dae29bb60786b95aa1ed5fe9029b768cd9dd0f4",
+      "raw64": {
+        "denominator": 64,
+        "parse": 62,
+        "completion": 64,
+        "legacy_comp_valid": 52,
+        "legacy_nonshortcut_primary": 51,
+        "all_metal_shortcut": 1,
+        "exact_smact4_valid_secondary": 31,
+        "exact_smact4_uniform_primary_secondary": 26,
+        "unique_formula": 61,
+        "element_coverage_count": 54,
+        "element_alphabet_denominator": 94,
+        "mean_n": 9.790322580645162,
+        "legacy_gain_count_vs_p0": 18,
+        "mcnemar_two_sided_exact_p": 0.001430906355381012
+      },
+      "formal_promotion": false,
+      "diagnostic_downstream_authorized": false
     }
   ]
 }

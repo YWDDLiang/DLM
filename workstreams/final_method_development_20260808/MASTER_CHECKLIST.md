@@ -31,23 +31,20 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [x] Freeze packaging repair v3 with direct Git archive output, archived
       evaluator-member SHA precheck, new immutable paths, and reduced audit
       scope.
-- [ ] Pass SMACT3-only A800 source tests, isolated archive tests, runtime
-      preflight, and one minimal GPU smoke for each new source family. Source
-      and data gates passed. Smoke array 31036 failed before forward because
-      PEFT loaded the trainable/frozen P0 copies at different precision; V4
-      same-load-path repair source froze successfully, but a pre-gate static
-      check found its isolated path still bound to immutable V3 evidence. Two
-      independent reviews approved only a new path-closed V5. Its minimal
-      source gate passed, but dual-arm smoke array 31064 repeated the exact V3
-      448/448 identity mismatch before forward. Training remains unsubmitted;
-      a second independent propose/red-team review and focused runtime probe
-      are now mandatory before another immutable repair.
+- [x] Pass the focused SMACT3-only A800 source/preflight path and final V8
+      two-update optimizer smoke. V3/V5 precision failures and V7's zero-LR
+      audit false positive remain preserved as immutable engineering evidence.
 - [x] Export and seal the complete A800 MP20 legacy snapshot (job 31025).
 - [x] Build the exact local SMACT4 witness ledger and verify its immutable
       data-only import on A800; SMACT4 was not executed there.
 - [ ] Execute C0 and C1 to fixed checkpoint 400.
-- [ ] Execute SFT-v2 and SFT-v2-C to their fixed final endpoints.
-- [ ] Complete P0/C0/C1/SFT-v2/SFT-v2-C raw64 gate.
+- [x] Execute SFT-v2 and SFT-v2-C to their fixed 4,505-update endpoints.
+- [x] Complete same-ledger P0/SFT-v2/SFT-v2-C raw64 generation, local exact
+      SMACT4 secondary audit, and formal SMACT3.1 assembly64.
+- [ ] Complete C0/C1 fixed endpoints and their registered raw64 gate.
+- [ ] Complete the user-authorized SFT-v2 diagnostic raw256 and
+      B0+safe-axis+model_494 Direct/S.U.N. chain without treating it as a
+      raw64-passing promotion.
 - [ ] Complete raw256 for every raw64-passing candidate.
 - [ ] Freeze Planner shortlist of at most two non-P0 candidates.
 - [ ] Complete shortlisted Planner downstream256 with B0+safe-axis+model_494;

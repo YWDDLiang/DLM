@@ -1,46 +1,33 @@
 {
   "schema": "crystal_dlm_portfolio_status_v1",
-  "updated_at": "2026-08-08T19:22:00+08:00",
-  "overall": "planner_sft_v2_v5_smoke_engineering_failure_diagnostic_hold_no_science_submitted",
+  "updated_at": "2026-08-09T11:53:25+08:00",
+  "overall": "planner_raw64_composition_gain_safety_stop_diagnostic_sun_and_dlm_active",
   "planner": {
     "status": "active",
     "terminal": false,
     "required_candidates": ["C0", "C1", "SFT-v2", "SFT-v2-C"],
-    "active_stage": {
+    "completed_stage": {
       "identity": "h1_chemistry_first_sft_v2_smact_split_v2",
-      "data_job_id": 31035,
-      "smoke_array_job_id": 31036,
-      "data_status": "COMPLETED_0_0",
-      "smoke_status": "FAILED_1_0_BOTH_TASKS_BEFORE_FORWARD",
-      "identity_repair_v4_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_identity_repair_v4",
-      "v4_source_gate_status": "NOT_EXECUTED_STATIC_ISOLATED_PATH_COLLISION",
-      "repair_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
-      "v5_source_gate_status": "PASS",
-      "v5_smoke_array_job_id": 31064,
-      "v5_smoke_status": "FAILED_1_0_BOTH_TASKS_BEFORE_FORWARD",
-      "v5_smoke_elapsed": "00:15:02",
-      "v5_identity_report_sha256": "ac04b54094136dddb3fe5f6bbe9b10b369ec76b0f736345d00b858ae3e29889c",
-      "v5_failure_report_sha256": "3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8",
-      "engineering_hold": "independent_propose_redteam_and_focused_runtime_probe_required_before_new_repair",
-      "formal_training_submitted": false,
-      "scientific_generation_submitted": false
+      "training_array_job_id": 31147,
+      "raw64_array_job_id": 31148,
+      "assembly64_job_id": 31231,
+      "science_ledger_sha256": "f9d6f1bd99f80b37a46ace88d226ce16d92a5692f925d17c757a53434b74c6d1",
+      "formal_legacy_comp_valid": {"P0": "34/64", "SFT-v2": "52/64", "SFT-v2-C": "52/64"},
+      "stage_summary_sha256": "9b922c112ce707712706d27842a5450efd4bd870594bcb5c241a76e21a8d54da",
+      "formal_passing_candidates": [],
+      "user_authorized_diagnostic_candidates": ["SFT-v2"]
     },
+    "active_stage": "SFT-v2_diagnostic_raw256_then_B0_safe_axis_model494_Direct_SUN",
     "shortlist": []
   },
   "dlm": {
-    "status": "active",
+    "status": "active_inventory",
     "terminal": false,
     "required_candidate": "B3",
+    "active_stage": "B0_B1_B2_and_state_panel_inventory",
     "shortlist": []
   },
-  "integration": {
-    "status": "blocked_on_both_portfolios_terminal",
-    "cells": []
-  },
-  "final_evaluation": {
-    "status": "blocked_on_integration",
-    "methods": [],
-    "maximum_methods": 3
-  },
+  "integration": {"status": "blocked_on_both_portfolios_terminal", "cells": []},
+  "final_evaluation": {"status": "blocked_on_integration", "methods": [], "maximum_methods": 3},
   "rl_authorized": false
 }

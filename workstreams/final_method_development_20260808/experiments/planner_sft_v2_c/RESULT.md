@@ -1,16 +1,16 @@
 # Result: Planner SFT-v2-C
 
-Status: `ENGINEERING_HOLD_AFTER_V5_SMOKE_FAILURE_JOB_31064_1`
+Status: `RAW64_COMPOSITION_GAIN_SCIENTIFIC_STOP_NOT_SHORTLISTED`
 
-V3 smoke task `31036_1` failed `1:0` before the first forward with the same
-PEFT candidate/reference precision asymmetry as SFT-v2. Curriculum data passed
-and no optimizer step or scientific generation ran. The V4 same-load-path
-repair source froze, but its gate was not run after a stale immutable V3
-isolated-extraction path was found. Two independent reviews approved a V5
-path-only repair. Scientific results remain pending.
-V5 source/data-reuse gates passed, but smoke task `31064_1` failed `1:0` after
-`00:15:02` at the same pre-forward identity gate. Its identity report is
-byte-identical to V3 (SHA `ac04b540...`) with all 448 tensor values different
-and maximum absolute difference `6.103515625e-05`. Independent propose/red-team
-review and a focused runtime probe are mandatory before any new repair.
-Training and raw generation are not submitted.
+Fixed endpoint training completed at 4,505 optimizer updates on the identical
+record multiset. On the same raw64 ledger, formal legacy SMACT3.1 comp_valid is
+52/64 (81.25%), versus P0 34/64 (53.125%): +18/64 (+28.125 pp). Parse is
+62/64, completion 64/64, nonshortcut primary 51/64, all-metal shortcut 1/64,
+unique formula 61/64, element coverage 54/94, and parsed mean N 9.79032.
+Exact SMACT4 secondary counts are 31/64 valid and 26/64 uniform primary.
+
+Paired legacy flips are 24 candidate-only versus 6 P0-only; exact two-sided
+McNemar p=`0.001430906355381012`, with fixed 10,000-draw paired-bootstrap gain
+interval `[12.5 pp, 43.75 pp]`. The candidate fails parse, uniqueness, element
+coverage, mean-N, and no-new-`ValueError` gates. Terminal report SHA:
+`f88060e026c666c6a7d8d0a79dae29bb60786b95aa1ed5fe9029b768cd9dd0f4`.

@@ -1,16 +1,32 @@
 # Result: Planner SFT-v2
 
-Status: `ENGINEERING_HOLD_AFTER_V5_SMOKE_FAILURE_JOB_31064_0`
+Status: `RAW64_COMPOSITION_GAIN_SAFETY_GATE_STOP_USER_AUTHORIZED_DIAGNOSTIC_DOWNSTREAM`
 
-V3 smoke task `31036_0` failed `1:0` before the first forward because PEFT
-loaded the candidate/reference copies of the protected P0 adapter at different
-precision. Data passed and no optimizer step or scientific generation ran.
-The V4 same-load-path repair source froze, but its source gate was not run
-because a static check found a stale immutable V3 isolated-extraction path.
-Two independent reviews approved a V5 path-only repair. Scientific results
-remain pending. V5 source/data-reuse gates passed, but smoke task `31064_0`
-failed `1:0` after `00:15:02` at the same pre-forward identity gate. Its
-identity report is byte-identical to V3 (SHA `ac04b540...`) with all 448 tensor
-values different and maximum absolute difference `6.103515625e-05`.
-Independent propose/red-team review and a focused runtime probe are mandatory
-before any new repair. Training and raw generation are not submitted.
+Fixed endpoint training completed at 4,505 optimizer updates with one complete
+36,038-record ledger pass and final accumulation size 6. The common raw64
+ledger SHA is
+`f9d6f1bd99f80b37a46ace88d226ce16d92a5692f925d17c757a53434b74c6d1`.
+
+| metric | P0 | SFT-v2 | delta |
+|---|---:|---:|---:|
+| parse | 64/64 | 63/64 | -1 |
+| completion | 64/64 | 64/64 | 0 |
+| legacy SMACT3.1 comp_valid | 34/64 (53.125%) | 52/64 (81.25%) | +18/64 (+28.125 pp) |
+| legacy nonshortcut primary | 17/64 | 51/64 | +34 |
+| all-metal shortcut | 17/64 | 1/64 | -16 |
+| exact SMACT4 valid (secondary) | 33/64 | 36/64 | +3 |
+| exact SMACT4 uniform primary | 14/64 | 32/64 | +18 |
+| unique formula | 64/64 | 63/64 | -1.5625 pp |
+| fixed-alphabet element coverage | 64/94 | 60/94 | -4.2553 pp |
+| parsed mean N | 10.90625 | 10.34921 | -0.55704 |
+
+Paired legacy flips are 23 candidate-only versus 5 P0-only. Exact two-sided
+McNemar p=`0.0009122341871261597`; the fixed 10,000-draw paired bootstrap
+95% interval for the absolute gain is `[14.0625 pp, 42.1875 pp]`.
+
+The registered raw64 scientific gate fails on element coverage, absolute
+mean-N drift, and a new `ValueError` generation failure class. V12 also labels
+the stage engineering-failed because the old P0 schema lacks the embedded
+validator field expected by the new no-charge identity check; the formal
+SMACT3.1 recomputation itself is complete and unaffected. Terminal report SHA:
+`5342a4f8e0f5695bfff8680406569d55916cdb66ce8a1d7aabd9f6c2d06a9f0c`.

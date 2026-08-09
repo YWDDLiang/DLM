@@ -1,8 +1,8 @@
 # Decision: Planner SFT-v2-C
 
-Status: `HOLD_ENGINEERING_DIAGNOSTIC`
+Status: `SCIENTIFIC_STOP_NOT_SHORTLISTED`
 
-V5 smoke repeated the exact V3 protected-P0 candidate/reference identity
-failure before forward. Do not submit training or relax the equality gate.
-Require two independent reviews and one focused A800 runtime probe before any
-new immutable repair.
+Retain the fixed endpoint and all raw evidence, but do not spend downstream
+compute on SFT-v2-C. It ties SFT-v2 on legacy comp_valid while being worse on
+parse, unique-formula rate, element coverage, mean-N drift, and exact-SMACT4
+secondary validity. SFT-v2 is the sole user-authorized diagnostic Planner arm.

@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-08T18:40:00+08:00",
+  "updated_at": "2026-08-09T11:53:25+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -268,7 +268,7 @@
       "evidence_id": "planner_sft_v2_post_v5_identity_diagnostic",
       "parent_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_source_gate_path_repair_v5",
       "repair_scope": "independent_propose_redteam_and_focused_runtime_localization_before_any_new_source",
-      "status": "in_progress",
+      "status": "superseded_by_v8_v10_success",
       "independent_review_count_required": 2,
       "focused_runtime_probe_required": true,
       "exact_identity_gate_relaxation_allowed": false,
@@ -383,6 +383,32 @@
       "official_witness_parity": true,
       "execution_location": "local_wsl_only",
       "a800_execution": false
+    },
+    {
+      "evidence_id": "chemistry_first_sft_v2_v10_v12_raw64_terminal",
+      "formal_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_gpu_partition_cancel_array_parser_repair_v10",
+      "assembly_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_v10_slurm_list_serialization_repair_v12",
+      "source_inventory_sha256": "4d8e7bdeeb50aaa175e6b7620ef7ba84c882de5f9f5333db77511d2c9c231c60",
+      "source_archive_sha256": "cb1f33dab60d65448dfa92c2f1ef7b13f41307481cb4cf77989e11e23faee87b",
+      "science_ledger_sha256": "f9d6f1bd99f80b37a46ace88d226ce16d92a5692f925d17c757a53434b74c6d1",
+      "training_job_id": 31147,
+      "raw64_job_id": 31148,
+      "assembly64_job_id": 31231,
+      "raw_sha256": {
+        "p0": "a76554e6e09774c0186f2e9d642eaf72095b6b54eb7cb152b43691993e413fd1",
+        "sft_v2": "3411dd1b3afcee0a9e92867d229eb89395c4255040108f80194c22ebf12a6453",
+        "sft_v2_c": "31b842722d1eae59ed5316e32709cbb77ee35285e5c95706c458d64ee0785993"
+      },
+      "local_exact_smact4_manifest_sha256": "21e813fe3c351cde900dfda51506892f616a375904a1beb6d30241e1a32b33e3",
+      "formal_legacy_smact31_comp_valid": {"p0": 34, "sft_v2": 52, "sft_v2_c": 52, "denominator": 64},
+      "terminal_sha256": {
+        "sft_v2": "5342a4f8e0f5695bfff8680406569d55916cdb66ce8a1d7aabd9f6c2d06a9f0c",
+        "sft_v2_c": "f88060e026c666c6a7d8d0a79dae29bb60786b95aa1ed5fe9029b768cd9dd0f4",
+        "stage_summary": "9b922c112ce707712706d27842a5450efd4bd870594bcb5c241a76e21a8d54da"
+      },
+      "formal_promotion": false,
+      "diagnostic_downstream_user_authorized": true,
+      "smact4_executed_on_a800": false
     }
   ]
 }
