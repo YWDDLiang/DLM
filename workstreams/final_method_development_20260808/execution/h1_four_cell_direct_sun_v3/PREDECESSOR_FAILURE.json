@@ -1,0 +1,28 @@
+{
+  "schema": "h1_evidence_first_four_cell_predecessor_failure_v2",
+  "status": "two_predecessors_failed_closed_before_sbatch",
+  "predecessors": [
+    {
+      "revision": "v1",
+      "commit": "6c97ffb",
+      "archive_sha256": "58d1b99df3b8caac548e015d90467f23d430a95fd5b156d5d3ad8dfdeb2106ea",
+      "prepare_sha256_on_a800": "11e75ba911bb654392d24642cb52fc8de4eadca679a54f977c1b9ca53b8f67a4",
+      "failure": "CRLF shell bytes caused set pipefail invalid-option failure",
+      "run_root_present": false,
+      "jobs_submitted": 0,
+      "rerun_allowed": false
+    },
+    {
+      "revision": "v2",
+      "commit": "91d4d4e",
+      "archive_sha256": "a467366a667d531df2cacbcc5152ca89817e9ac40f4be55fcee29008cb302f60",
+      "failure": "CONFIG referenced the absent B3 arms/B3/terminal_training_report.json instead of status/training_terminal_report.json",
+      "failed_evidence_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/.20260810_h1_evidence_first_four_cell_direct_sun_lf_repair_v2.preparing.27736.FAILED",
+      "run_root_present": false,
+      "jobs_submitted": 0,
+      "rerun_allowed": false
+    }
+  ],
+  "v3_scope": "correct the single B3 terminal-report path; assert the already-byte-frozen R03 GCD-before-comp_valid implementation; complete exactly the frozen Planner-union MP cache before Slurm",
+  "user_authorized_v3": true
+}

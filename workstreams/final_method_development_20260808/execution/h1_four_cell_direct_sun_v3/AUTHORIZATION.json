@@ -1,0 +1,35 @@
+{
+  "schema": "h1_evidence_first_four_cell_direct_sun_authorization_v2",
+  "status": "authorized",
+  "date": "2026-08-10",
+  "user_quotes": [
+    "我认为还要对比之前最好结果的plan模型与本次训练出来的SFT模型的差异，两者的完整实验都要做，然后DLM也是（文档中记录最好的那个pipeline）",
+    "授权",
+    "授权，别忘了计算comp_valid之前要GCD（使用之前最成功的那个评分代码），然后别忘了补缺失的mp cache"
+  ],
+  "authorized_v3_scope": "new immutable V3 package fixing only the B3 terminal-report path while adding explicit byte-frozen R03 GCD-before-comp_valid evidence and pre-Slurm completion of the frozen Planner-union MP cache",
+  "credential_handling": "Materials Project credential supplied out of band through one owner-only, mode-0600, one-time carrier; consumed and destroyed before any Slurm submission; never serialized",
+  "authorized_scope": [
+    "one current-run P0+B0 protected-control cell",
+    "one current-run SFT-v2+B0 Planner-main-effect cell",
+    "one current-run P0+B3 DLM-main-effect cell",
+    "one current-run SFT-v2+B3 interaction cell",
+    "frozen D2 safe-axis body generation",
+    "frozen model_494 diffusion refinement for exactly 800 steps",
+    "byte-frozen R03 Direct scorer with GCD reduction before comp_valid",
+    "one pre-Slurm completion query for exactly the frozen missing Planner-union chemical systems",
+    "byte-frozen R03 S.U.N. evaluator using the completed immutable cache and no Slurm credential",
+    "complete paired four-cell terminal report"
+  ],
+  "not_authorized": [
+    "sample retry",
+    "sample replacement",
+    "scientific-output repair",
+    "filter",
+    "rerank",
+    "checkpoint reselection",
+    "new training",
+    "automatic downstream",
+    "reinforcement learning"
+  ]
+}
