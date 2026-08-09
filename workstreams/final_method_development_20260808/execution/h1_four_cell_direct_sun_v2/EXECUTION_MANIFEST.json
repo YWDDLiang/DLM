@@ -1,0 +1,66 @@
+{
+  "schema": "h1_evidence_first_four_cell_direct_sun_execution_manifest_v1",
+  "status": "frozen_before_submission",
+  "run_id": "20260810_h1_evidence_first_four_cell_direct_sun_lf_repair_v2",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_evidence_first_four_cell_direct_sun_lf_repair_v2",
+  "package_revision": "v2_lf_normalized",
+  "scientific_contract_changed": false,
+  "predecessor_failure_evidence": "source/PREDECESSOR_FAILURE.json",
+  "current_run_cells": [
+    "M00=P0+B0",
+    "M10=SFT-v2+B0",
+    "M01=P0+B3",
+    "M11=SFT-v2+B3"
+  ],
+  "held_fixed": [
+    "256 all-attempt ordinals per cell",
+    "common body and refiner seed ledger",
+    "D2 safe-axis schedule",
+    "R5-C exact-length generation contract",
+    "model_494 checkpoint",
+    "800 refiner diffusion steps",
+    "Direct evaluator",
+    "frozen-cache S.U.N. evaluator",
+    "all failures retained in the denominator"
+  ],
+  "resources": {
+    "cell_array": {
+      "partition": "gpu",
+      "array": "0-3%2",
+      "gpu": "1x NVIDIAA800-SXM4-80GB",
+      "cpus": 8,
+      "memory": "96G",
+      "time_limit": "12:00:00"
+    },
+    "terminal_assembly": {
+      "partition": "normal",
+      "cpus": 4,
+      "memory": "24G",
+      "time_limit": "02:00:00",
+      "dependency": "afterany:cell_array"
+    }
+  },
+  "evaluation": {
+    "raw_attempts_per_cell": 256,
+    "body_schedule": "d2_safe_axis",
+    "refiner": "model_494",
+    "refiner_steps": 800,
+    "direct": true,
+    "sun": true,
+    "mp_api": false,
+    "bootstrap_draws": 10000
+  },
+  "firewall": {
+    "historical_summary_substitution": false,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "formal_promotion": false,
+    "automatic_checkpoint_reselection": false,
+    "automatic_training": false,
+    "automatic_downstream": false,
+    "automatic_rl": false
+  }
+}

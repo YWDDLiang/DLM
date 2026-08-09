@@ -1,0 +1,157 @@
+{
+  "schema": "h1_evidence_first_four_cell_direct_sun_config_v1",
+  "run_id": "20260810_h1_evidence_first_four_cell_direct_sun_lf_repair_v2",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_evidence_first_four_cell_direct_sun_lf_repair_v2",
+  "status": "user_authorized_complete_four_cell_evaluation",
+  "denominator": 256,
+  "ordinals": "0..255",
+  "source_dependencies": {
+    "r03d": {
+      "source_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1",
+      "source_manifest_sha256": "6b0dd8298c9a423712a3965b00f8aeae9c06c824a37fbf1d94dbbf94aebcf15f"
+    },
+    "r03e": {
+      "source_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1",
+      "source_manifest_sha256": "7beaf38b7d378ecf8fb31627f195f5fe6095350b60d99882c0a11b39cbf211a4"
+    }
+  },
+  "planner_sources": {
+    "P0": {
+      "raw_generations": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_v10_user_override_diagnostic_raw256_submission_cwd_repair_v14/planner256/p0/raw_generations.jsonl",
+      "raw_generations_sha256": "201ca978486260fd19ddd5908f847b8b4aa00f6d3593d4e7a3862bc373583151",
+      "expected_parsed": 254
+    },
+    "SFT-v2": {
+      "raw_generations": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_v10_user_override_diagnostic_raw256_submission_cwd_repair_v14/planner256/sft_v2/raw_generations.jsonl",
+      "raw_generations_sha256": "eebb958a75343b11de91e66808232a4c9aba3052dfa540298d9f3149f4ddcaf1",
+      "expected_parsed": 255
+    }
+  },
+  "attempt_ledger": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1/data/attempt_ledger.jsonl",
+    "sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f",
+    "body_seed_field": "body_noise_seed",
+    "refiner_seed_field": "refiner_noise_seed"
+  },
+  "body": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "adapter_file": "adapter_model.safetensors",
+    "adapter_expected_bytes": 6391016776,
+    "tokenizer_vocab_sha256": "3acc073da85047265769f2dccd93543fa9d7cbfa95021aef54ef282b13ce2f37",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "tokenizer_config_sha256": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+    "tokenizer_size": 128830,
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "max_batch_size": 8,
+    "exact_length_generation": true,
+    "answer_token_count_formula": "7+4N",
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "min_lattice_rad": 0.0001,
+    "models": {
+      "B0": {
+        "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+        "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+      },
+      "B3": {
+        "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4/arms/B3/output/final",
+        "adapter_sha256": "ab4f3b82dfcafdcd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+        "training_terminal_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4/arms/B3/terminal_training_report.json",
+        "training_terminal_report_sha256": "1f9ab27d4d2286f55088448af2940387d9e0c55e7757a4a64f695034fa5da514"
+      }
+    }
+  },
+  "schedule": {
+    "policy": "d2_safe_axis",
+    "all_xy_must_precede_all_z": true,
+    "mixed_axis_coordinate_groups_allowed": false,
+    "required_z_before_xy_count": 0
+  },
+  "refiner": {
+    "name": "CrysLLMGen model_494",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "timesteps": 1000,
+    "diffusion_steps": 800,
+    "num_evals": 1,
+    "effective_batch_size": 1,
+    "seed_mode": "frozen_h1_ordinal_refiner_noise_seed"
+  },
+  "cells": {
+    "M00": {
+      "planner": "P0",
+      "body": "B0",
+      "role": "protected_control",
+      "method": "EF-H1-P0-B0-SAFEAXIS-REFINE800-DIRECT-SUN"
+    },
+    "M10": {
+      "planner": "SFT-v2",
+      "body": "B0",
+      "role": "planner_main_effect",
+      "method": "EF-H1-SFTV2-B0-SAFEAXIS-REFINE800-DIRECT-SUN"
+    },
+    "M01": {
+      "planner": "P0",
+      "body": "B3",
+      "role": "dlm_main_effect",
+      "method": "EF-H1-P0-B3-SAFEAXIS-REFINE800-DIRECT-SUN"
+    },
+    "M11": {
+      "planner": "SFT-v2",
+      "body": "B3",
+      "role": "joint_interaction",
+      "method": "EF-H1-SFTV2-B3-SAFEAXIS-REFINE800-DIRECT-SUN"
+    }
+  },
+  "direct": {
+    "gt_csv": "reference/crysllmgen/data/mp_20/test.csv",
+    "eval_model_name": "mp20",
+    "denominator": "all_generation_attempts"
+  },
+  "sun": {
+    "definition": "frozen R5-C A100 protocol executed on A800",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "mp_api_enabled": false,
+    "frozen_cache_only": true,
+    "eval_sun_py": "reference/a100_eval_sun/eval_sun.py",
+    "eval_sun_resumable_py": "reference/a100_eval_sun/eval_sun_resumable.py",
+    "train_csv": "reference/crysllmgen/data/mp_20/train.csv",
+    "training_index_cache": "reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+    "mp_hull_cache": "data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+    "chgnet_relax_cache": "data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl",
+    "chgnet_model_asset": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+    "chgnet_runtime_checkpoint": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar"
+  },
+  "analysis": {
+    "bootstrap_seed": 20260810,
+    "bootstrap_draws": 10000,
+    "endpoints": [
+      "generation_complete",
+      "composition_valid",
+      "structure_valid",
+      "joint_valid",
+      "novel",
+      "unique_representative",
+      "novel_unique",
+      "strict_full_sun",
+      "meta_full_sun"
+    ]
+  },
+  "retry": false,
+  "replacement": false,
+  "repair": false,
+  "filter": false,
+  "rerank": false,
+  "decision_firewall": {
+    "complete_four_cell_reporting_required": true,
+    "historical_summary_may_replace_current_cell": false,
+    "formal_promotion": false,
+    "automatic_checkpoint_reselection": false,
+    "automatic_training": false,
+    "automatic_downstream": false,
+    "automatic_rl": false
+  }
+}
