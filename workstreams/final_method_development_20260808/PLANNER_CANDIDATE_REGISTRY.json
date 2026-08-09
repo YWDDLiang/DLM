@@ -1,14 +1,33 @@
 {
   "schema": "crystal_dlm_planner_candidate_registry_v1",
-  "updated_at": "2026-08-09T11:53:25+08:00",
+  "updated_at": "2026-08-09T22:54:00+08:00",
   "selection_limit_non_p0_downstream": 2,
   "candidates": [
     {
       "candidate_id": "P0",
       "role": "protected_control",
-      "status": "protected_raw64_complete",
+      "status": "protected_raw256_diagnostic_complete_assembly_v24_scientific_stop",
       "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
-      "raw64": {"parse": 64, "completion": 64, "legacy_comp_valid": 34, "denominator": 64}
+      "raw64": {"parse": 64, "completion": 64, "legacy_comp_valid": 34, "denominator": 64},
+      "raw256_diagnostic": {
+        "denominator": 256,
+        "parse": 254,
+        "legacy_comp_valid": 128,
+        "legacy_nonshortcut_primary": 56,
+        "all_metal_shortcut": 72,
+        "exact_smact4_valid_secondary": 135,
+        "exact_smact4_uniform_primary_secondary": 56,
+        "element_coverage_count": 80,
+        "element_alphabet_denominator": 94
+      },
+      "legacy_assembly_v24": {
+        "job_id": 31329,
+        "partition": "normal",
+        "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_raw256_assembly_stale_marker_scope_repair_v24",
+        "terminal_report_sha256": "cf51e4067981dfecee6e07e508edc84a138b0b7a93003e91a487db66f1938e5b",
+        "stage_summary_sha256": "445d58c2b567acb688e554b511917340eb1ff172de22df8d49d11c0045945f46",
+        "last_observed_state": "COMPLETED_0_0_SCIENTIFIC_STOP"
+      }
     },
     {
       "candidate_id": "C0",
@@ -29,7 +48,7 @@
     {
       "candidate_id": "SFT-v2",
       "role": "chemistry_first_minimal_plan_hash_shuffle",
-      "status": "raw64_scientific_stop_user_authorized_diagnostic_downstream",
+      "status": "raw64_scientific_stop_raw256_diagnostic_complete_assembly_v24_scientific_stop",
       "execution_identity": "h1_chemistry_first_sft_v2_smact_split_v2",
       "formal_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact_split_v2_gpu_partition_cancel_array_parser_repair_v10",
       "assembly_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_v10_slurm_list_serialization_repair_v12",
@@ -58,6 +77,27 @@
         "absolute_mean_N_drift_at_most_0p5",
         "no_new_generation_failure_class"
       ],
+      "raw256_diagnostic": {
+        "denominator": 256,
+        "parse": 255,
+        "legacy_comp_valid": 195,
+        "legacy_nonshortcut_primary": 186,
+        "all_metal_shortcut": 9,
+        "exact_smact4_valid_secondary": 122,
+        "exact_smact4_uniform_primary_secondary": 101,
+        "element_coverage_count": 78,
+        "element_alphabet_denominator": 94,
+        "legacy_gain_count_vs_p0": 67,
+        "formal_report_sha256": "1503bb66d670174edd30bef401c6ebbf4f4f8c05f53a8f7326a7b760dfe45b61"
+      },
+      "legacy_assembly_v24": {
+        "job_id": 31329,
+        "partition": "normal",
+        "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_raw256_assembly_stale_marker_scope_repair_v24",
+        "terminal_report_sha256": "cf51e4067981dfecee6e07e508edc84a138b0b7a93003e91a487db66f1938e5b",
+        "stage_summary_sha256": "445d58c2b567acb688e554b511917340eb1ff172de22df8d49d11c0045945f46",
+        "last_observed_state": "COMPLETED_0_0_SCIENTIFIC_STOP"
+      },
       "formal_promotion": false,
       "diagnostic_downstream_authorized": true
     },

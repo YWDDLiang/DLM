@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-09T11:53:25+08:00",
+  "updated_at": "2026-08-09T22:54:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -260,9 +260,85 @@
       "slurm_or_gpu_used": false,
       "smact4_executed_on_a800": false,
       "repair_identity": "h1_chemistry_first_sft_v2_evaluator_byte_identity_repair_v3"
+    },
+    {
+      "evidence_id": "raw256_v20_manifest_source_identity_failure",
+      "job_id": 31318,
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "partition": "normal",
+      "stderr_sha256": "72d87816fb969a57bbd013a387300c3191eb2cee13afa22ceb70e358a8968477",
+      "failure_reason": "assembly_source_inventory_was_passed_to_raw_generation_manifest_identity",
+      "assembly_source_inventory_sha256": "319b75917ac5f09d73be84a1c8adf266948f27005ae9a561c693f4b5a62f19d2",
+      "raw_generation_source_inventory_sha256": "4d8e7bdeeb50aaa175e6b7620ef7ba84c882de5f9f5333db77511d2c9c231c60",
+      "science_bytes_changed": false,
+      "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "raw256_v21_v22_v23_pre_sbatch_generator_failures",
+      "v21_source_sha256": "fc9424fd3fad24eae87889fb021a00339c063addf9e6234430e1ec5d3cd9811c",
+      "v21_failure_reason": "guard_anchor_expected_REPAIR_ROOT_instead_of_RUN_ROOT",
+      "v22_source_sha256": "3fc35c7facd4d23b66152f1c57cdb3548461a7c1567a8324a5ed6a80909e2434",
+      "v22_failure_reason": "new_root_parent_version_marker_rewritten_twice",
+      "v23_source_sha256": "b112ca400cc2413af69363fed68f3879bfda4edad7dee02be85c7f9e3be1e02c",
+      "v23_generated_sha256": "f50d1be95f1b098de8b98c6fdcdf82909ff0bbff84ecfe3642c13d82e73fa8c2",
+      "v23_generation_record_sha256": "45d2c6ab6ce954425321ccf09fd46babfd4fc16b37f8f0727d1210bbdb6f5b30",
+      "v23_failure_reason": "new_root_retained_v20_and_triggered_exact_stale_launcher_guard",
+      "slurm_job_submitted": false,
+      "science_bytes_changed": false
+    },
+    {
+      "evidence_id": "dlm_b0_v4_rescore_batch_geometry_failure",
+      "job_id": 31308,
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "partition": "gpu",
+      "stderr_sha256": "f8e48b3d51849cd9410fcb70bcf32e59f504ad32810f98f7b8841148f958ae34",
+      "actual_state_sha256": "19845f037ddc0ae70b0e1c8ff6156639d52093091fd599206c44cd602cf0997b",
+      "actual_attempt_sha256": "732f0cbf36158aaa03d93fe74927048f4e16904cdaec687ad11d0fef69d3c630",
+      "synthetic_state_sha256": "0a61fd761af2cffe371cc8ced46595bd61d8c4f046b07fb077a40406260d71f7",
+      "failure_reason": "producer_and_rescore_bf16_batch_geometry_differed",
+      "maximum_nll_delta": 0.01802229881286621
+    },
+    {
+      "evidence_id": "dlm_b3_b0v5_v2_v3_pre_sbatch_failures",
+      "v2_adapter_sha256": "0eca13cb57bc0f15cbcd00b2d4de744e9bd3ec22398997d744bb9d4930a1d82e",
+      "v2_failure_reason": "frozen_train_and_score_sbatch_old_run_root_count_was_3_not_1",
+      "v3_outer_repair_sha256": "de2124f15f6777c126c0fa14c0d3ddf48663d7c68a619362203cee074b538d31",
+      "v3_generated_adapter_sha256": "51317582e78fca29c5989b28b3f4ebbe73a8111b844f43c918a07d53f8067a55",
+      "v3_generation_record_sha256": "d17a8827f8fcc69d60b867193c8b8317227c70767b5a1bc9749713274586f2b2",
+      "v3_source_files_manifest_sha256": "ed3e5e16d0d91171142c0ab88a01e84ef1cefbc05e6056440af59b7c82653db0",
+      "v3_failure_reason": "a800_tar_does_not_support_gnu_sort_option",
+      "slurm_job_submitted": false,
+      "training_contract_changed": false,
+      "scientific_contract_changed": false
     }
   ],
-  "active_submissions": [],
+  "active_submissions": [
+    {
+      "evidence_id": "dlm_b3_b0v5_v4_training_and_panel_score_submission",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4",
+      "training_job_id": 31330,
+      "state_panel_score_job_id": 31331,
+      "score_dependency": "afterany:31330",
+      "partition": "gpu",
+      "training_a800": 2,
+      "source_commit": "3b5d775",
+      "outer_repair_sha256": "ad813ba3e7c220dc4ad02f0b4350a3fe7955683b3d00e69d20b198d9200b1cf5",
+      "generated_adapter_sha256": "e982f084bb93c06d633be1f59b7d44eac505b705458e77cd89223a96c75f52dc",
+      "generation_record_sha256": "519377a01ab773d43e68d43966f73d349ac08b92f6b3180c9456dc61b3670e7f",
+      "adaptation_record_sha256": "dda9a5288e1d33a8faa9f39a8ddc23527a90526b7fdc65abb7621c996293c640",
+      "source_archive_sha256": "52a61fa0f2025e5eecfed9878798d778e3216ded678e0da6ad52d73f5b85b0ba",
+      "source_files_manifest_sha256": "74bc9639297f9ecaa5077b66fc648ba5a5d3b1c8b832e46f85b703db3e9eb15e",
+      "submission_record_sha256": "d1c78cbed83863498640bd2f48f7db1c6458ce26554050065e7424fa244a21dc",
+      "last_observed_training_state": "RUNNING_NODE99_GPU_TORCH_READY",
+      "last_observed_score_state": "PENDING_DEPENDENCY",
+      "automatic_body64_submission": false,
+      "automatic_downstream": false,
+      "automatic_sun": false,
+      "automatic_rl": false
+    }
+  ],
   "pending_repairs": [
     {
       "evidence_id": "planner_sft_v2_post_v5_identity_diagnostic",
@@ -409,6 +485,57 @@
       "formal_promotion": false,
       "diagnostic_downstream_user_authorized": true,
       "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "chemistry_first_sft_v2_v18_raw256_legacy_terminal",
+      "job_id": 31293,
+      "state": "FAILED",
+      "exit_code": "2:0",
+      "partition": "normal",
+      "report_sha256": "1503bb66d670174edd30bef401c6ebbf4f4f8c05f53a8f7326a7b760dfe45b61",
+      "formal_legacy_smact31_comp_valid": {"p0": 128, "sft_v2": 195, "denominator": 256},
+      "legacy_nonshortcut_primary": {"p0": 56, "sft_v2": 186},
+      "all_metal_shortcut": {"p0": 72, "sft_v2": 9},
+      "parse": {"p0": 254, "sft_v2": 255},
+      "failure_reason": "old_p0_schema_false_identity_gate_after_complete_metrics",
+      "formal_promotion": false,
+      "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "chemistry_first_sft_v2_v24_raw256_legacy_terminal",
+      "job_id": 31329,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "partition": "normal",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_chemistry_first_sft_v2_raw256_assembly_stale_marker_scope_repair_v24",
+      "source_commit": "5bac30e",
+      "source_sha256": "6e614e5a135899bb4beeedada7cc2c79592c1cd691d51af49c1a86c279eb7a5c",
+      "repair_record_sha256": "08788bbcc07f7f9340c22ff946e506110eb58bd2bd555134500227c21d3e57b7",
+      "submission_record_sha256": "e686925ac146df20370d4045467337687b85eaf9e7519c3f113607597ab3b770",
+      "terminal_report_sha256": "cf51e4067981dfecee6e07e508edc84a138b0b7a93003e91a487db66f1938e5b",
+      "stage_summary_sha256": "445d58c2b567acb688e554b511917340eb1ff172de22df8d49d11c0045945f46",
+      "formal_legacy_smact31_comp_valid": {"p0": 128, "sft_v2": 195, "denominator": 256},
+      "scientific_stop": true,
+      "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "dlm_b0_v5_state_panel_terminal",
+      "job_id": 31323,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "partition": "gpu",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_state_panels_b0_v5",
+      "source_commit": "2803439",
+      "source_archive_sha256": "ce94d79311c468d7f3aa11a881cce1f9bcd2ee0e51732fa09d9bc68434d1c3c5",
+      "panel_manifest_sha256": "6cc3d81074a3e472b39c93090d3d4a85c6565d92eb7eb3c5c18a57cf9f966937",
+      "terminal_report_sha256": "18c51f6e86bb1bfe666b8dfb531b23cee5338d979729db84540d49e53ee5758c",
+      "producer_replay_audit_sha256": "7374e8e5649315da05cb52970dc1d0c331ce1dbdd4b127d21fd661a62595408d",
+      "synthetic_states_sha256": "0a61fd761af2cffe371cc8ced46595bd61d8c4f046b07fb077a40406260d71f7",
+      "actual_states_sha256": "1f46d5d37af5dbb32ecb04071a13c09cead4b9167f8e13d31157e3972231edb3",
+      "actual_attempts_sha256": "b9186abaa4ba6729625daf35edb4fd820d0eecf16c0afc207ebfd5a7613a176f",
+      "producer_replay_max_abs_delta": 0.0,
+      "scientific_score_batch_size": 1,
+      "automatic_b3_submission": false
     }
   ]
 }

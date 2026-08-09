@@ -53,5 +53,30 @@ witness parity and manifest SHA
 
 Thus the chemistry-first SFT signal transfers strongly to uniform-primary
 generation and suppresses shortcuts, but does not improve the broader exact
-SMACT4-valid count on this ledger. Formal legacy SMACT3.1 assembly256, Direct,
-and S.U.N. metrics remain pending; no promotional claim is made.
+SMACT4-valid count on this ledger.
+
+V18 completed the formal legacy SMACT3.1 computation on the same raw256
+ledger before an old-P0-schema identity gate returned job exit `2:0`:
+
+| raw256 legacy SMACT3.1 metric | P0 | SFT-v2 | delta |
+|---|---:|---:|---:|
+| composition-valid | 128/256 (50.0%) | 195/256 (76.171875%) | +67 (+26.171875 pp) |
+| nonshortcut primary | 56/256 | 186/256 | +130 |
+| all-metal shortcut | 72/256 | 9/256 | -63 |
+| parse | 254/256 | 255/256 | +1 |
+| fixed-alphabet coverage | 80/94 | 78/94 | -2 |
+
+The complete V18 report SHA is
+`1503bb66d670174edd30bef401c6ebbf4f4f8c05f53a8f7326a7b760dfe45b61`.
+V20 then failed only because it passed the repaired assembly-source SHA to a
+manifest that intentionally binds the earlier raw-generation source SHA.
+V21 and V22 stopped before SBatch on generator guards and are immutable. V23
+also stopped before SBatch because its new root retained `_v20_` and hit the
+exact stale-marker guard. V24 used a clean root; normal-CPU assembly job
+`31329` completed `0:0`, with SFT terminal-report SHA
+`cf51e4067981dfecee6e07e508edc84a138b0b7a93003e91a487db66f1938e5b`
+and stage-summary SHA
+`445d58c2b567acb688e554b511917340eb1ff172de22df8d49d11c0045945f46`.
+Raw, model, ledger, evaluator, and reported science counts remain unchanged.
+The formal result is a scientific stop rather than a promotion; the
+user-authorized Direct and S.U.N. comparison remains pending.

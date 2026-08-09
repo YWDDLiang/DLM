@@ -46,8 +46,12 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       B0+safe-axis+model_494 Direct/S.U.N. chain without treating it as a
       raw64-passing promotion.
       V14 raw generation is complete at exact 256/256 for P0 and SFT-v2, and
-      the complete local exact-SMACT4 secondary audit is SHA-bound. Formal
-      SMACT3.1 assembly256 and the downstream Direct/S.U.N. chain remain.
+      the complete local exact-SMACT4 secondary audit is SHA-bound. V18
+      computed complete legacy SMACT3.1 counts (P0 128/256, SFT-v2 195/256)
+      before an old-P0-schema false engineering gate. V20/V21/V22/V23
+      failures are sealed; provenance-only V24 normal-CPU assembly job 31329
+      completed 0:0 and preserved the same full metrics under a formal
+      scientific stop. The downstream Direct/S.U.N. chain remains.
 - [ ] Complete raw256 for every raw64-passing candidate.
 - [ ] Freeze Planner shortlist of at most two non-P0 candidates.
 - [ ] Complete shortlisted Planner downstream256 with B0+safe-axis+model_494;
@@ -67,12 +71,20 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       0..99 for synthetic states, 0..63 for B0 actual rollout, ground-truth
       targets only at currently masked active positions, and wrong visible
       commitments retained and counted.
-- [ ] Execute B0 panel construction and freeze the resulting state bytes/SHA.
+- [x] Execute B0 panel construction and freeze the resulting state bytes/SHA.
+      B0-v4 produced the complete state census but failed because rescore
+      batch geometry differed from rollout production. B0-v5 job 31323
+      completed 0:0 on `gpu`/node99; exact producer-batch replay had zero
+      delta and frozen panel-manifest SHA `6cc3d810...`. Historical fixed-panel
+      batch size one is retained for B0/B3 science.
 - [ ] Report NLL, calibration, commit/group width, and state distributions.
 - [x] Freeze the B3 source/submission package under the historical two-GPU,
       1,696-update contract; no extra unit-test matrix and no result-dependent
       method edits.
 - [ ] Execute B3 after the B0 state-panel terminal is SHA-bound.
+      B3-v2 and B3-v3 pre-SBatch packaging failures are sealed. Portable-tar
+      V4 uniquely submitted two-A800 `gpu` training job 31330 and dependent
+      frozen-panel scorer 31331; training is running on node99.
 - [ ] Complete B3 body64 point-estimate gate.
 - [ ] If eligible, execute B3-R 1:1 and 1:2.
 - [ ] If and only if needed, execute B4 state-matched SFT.

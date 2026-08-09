@@ -4,6 +4,50 @@ Updated: 2026-08-09 (Asia/Shanghai)
 
 Overall status: `PLANNER_RAW64_COMPOSITION_GAIN_SAFETY_STOP_DIAGNOSTIC_SUN_AND_DLM_ACTIVE`
 
+## Active edge: raw256 terminal and B3
+
+The user-authorized V14 diagnostic now has exactly 256 all-attempt rows for
+both P0 and SFT-v2. The local-only exact SMACT4 audit is complete and
+SHA-bound. V18's normal-CPU SMACT3.1 assembly computed the complete formal
+legacy result before an old-P0-schema identity gate labeled the job failed:
+P0 is 128/256 (50.0%) and SFT-v2 is 195/256 (76.171875%), a gain of 67/256.
+The same ledger shows exact-SMACT4 valid 135 versus 122, but uniform-primary
+56 versus 101 and all-metal shortcuts 72 versus 10. Thus SFT-v2 strongly
+changes the chemistry mode while not improving broad exact validity.
+
+V20 job `31318` failed closed because the local audit manifest correctly
+binds the raw-generation source inventory `4d8e7bde...`, while the repaired
+assembly source inventory is `319b7591...`. No science bytes changed. V21 and
+V22 then stopped before SBatch on two generator-anchor checks. V23 also
+stopped before SBatch because its new root retained `_v20_` and therefore
+triggered the launcher's exact stale-marker guard. None was rerun or created
+an assembly job. V24 kept the same raw/assembly source separation and exact
+guard, but used a clean immutable root without a parent-version marker.
+Normal-CPU assembly job `31329` completed `0:0`; its SFT terminal-report SHA
+is `cf51e406...` and stage-summary SHA is `445d58c2...`. It preserves the
+complete V18 science above, emits the scientific-stop marker, and launches no
+downstream or RL work. No A800 SMACT4 execution occurred.
+
+DLM B0-v4 job `31308` produced all 1,773 synthetic states, 2,208 actual
+rollout states, and 64 actual attempts, then failed a rescore identity gate.
+The cause is BF16 batch geometry: rollout production used registered batches
+up to eight, while the rescore regrouped states differently. B0-v5 kept
+producer rollout bytes/batching unchanged, replays each serialized state in
+its exact producer batch under the original `5e-4` gate, and uses the
+historical fixed-panel batch size one for B0/B3 scientific scores. Its frozen
+archive SHA is `ce94d793...`; gpu job `31323` completed `0:0` on node99. The
+producer replay passed with maximum/mean/p95 absolute delta all zero, and the
+frozen panel-manifest SHA is `6cc3d810...`. B3-v2 then stopped before SBatch
+because its strict adapter expected the old run-root once in each sbatch file,
+whereas the frozen train and scorer files each contain it three times. V3
+fixed only those counts and passed every source identity, then stopped before
+SBatch because A800's tar lacks `--sort=name`. V4 commit `3b5d775` reuses the
+already successful B0 portable `tar -czf` pattern. Training job `31330` is
+running on `gpu`/node99 with two A800s, with GPU/torch identity confirmed;
+dependent frozen-panel scorer `31331` is pending on `afterany:31330`.
+Submission-record SHA is `d1c78cbe...`; no
+body64, ratio sweep, downstream, S.U.N., or RL job was auto-submitted.
+
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. The V8 optimizer audit repair passed both
 two-update smoke arms, and V10 completed both fixed-endpoint 4,505-update
@@ -26,17 +70,17 @@ is authorized.
 V13 preparation passed but its one-time submit command stopped before the
 lock/SBatch boundary because it checked relative manifest entries outside the
 run root; no V13 job or generation output exists. Immutable V14 changes only
-that working directory. Its diagnostic raw256 array `31236_[0-1]%2` is now
-submitted on `gpu` for P0 and SFT-v2 (256 raw attempts per arm, common ledger
+that working directory. Its diagnostic raw256 array `31236_[0-1]%2`
+completed on `gpu` for P0 and SFT-v2 (256 raw attempts per arm, common ledger
 SHA `d5a3ac87458969816a0b27313fd9deecae47d2ddb10289ec08b9d93c5db48669`).
-Assembly and downstream remain deliberately manual.
+V24 completed formal assembly; downstream remains deliberately manual.
 
 The mandatory DLM artifact inventory is also complete. Protected B0 is bound
 to its frozen checkpoint/SHA; historical B1/B2 are bound to their terminal
 1,696-update checkpoints and fixed-panel/dependency evidence. B2 remains a
 non-revivable scientific stop because its dependency margin did not exceed
-B1. The active DLM boundary is now the four frozen state panels; no B3 job is
-submitted before those panel identities are sealed.
+B1. The four B0-v5 state panels are now frozen, and B3 V4 training plus its
+dependent scorer were submitted only after those identities were sealed.
 
 The user has additionally required complete same-pipeline comparisons, not
 candidate-only diagnostics. The frozen matrix is P0+B0 (protected control),
@@ -53,9 +97,9 @@ wrong commitments remain visible and are counted, while NLL targets only the
 frozen ground-truth tokens still masked in the active group. B3 will be scored
 on these exact frozen state bytes. The new `d2_safe_axis` training policy is
 composition, lattice, every X group, every Y group, then every Z group, with
-zero mixed-axis groups and no Z-before-XY. No state-panel or B3 job has yet
-been submitted while both permitted A800 panes remain occupied by earlier
-read-only commands.
+zero mixed-axis groups and no Z-before-XY. B0-v5 panel job `31323` completed;
+B3 training `31330` and dependent scorer `31331` now consume those frozen
+bytes without changing this contract.
 
 The B3 execution package is also frozen before any state-panel or B3 result.
 It is a one-arm reuse of the successful historical two-A800, 1,696-update
@@ -63,8 +107,8 @@ training shell: B0 initialization, the same R5-C bytes/order/seeds, LR 5e-5,
 and terminal checkpoint only. The sole scientific change is
 `d2_safe_axis` at IID:planned 2:1. Its dependent job scores B3 on the exact
 B0-frozen panel bytes; neither job can submit body64, a ratio sweep, S.U.N.,
-or downstream work. Submission remains blocked until the B0 panel terminal
-and manifest SHA exist.
+or downstream work. The B0 terminal and manifest are frozen; V4 training is
+running and the scorer is waiting on its registered dependency.
 
 ## Connection and read-only audit
 
@@ -257,7 +301,8 @@ all 448 keys match, all 448 values differ, and maximum absolute difference is
 `6.103515625e-05`. The V4 loader-flag change therefore did not alter the
 runtime tensors. The immutable V5 failure report SHA is
 `3f161979bef1de77351ba9178aa59cbbaa794cfcb29e9f9bb7b11884022d9be8`.
-Formal training and scientific generation remain unsubmitted.
+At that historical V5 boundary, formal training and scientific generation
+remained unsubmitted; later V10/V14/V24 evidence supersedes that status.
 
 ## Immediate critical path
 

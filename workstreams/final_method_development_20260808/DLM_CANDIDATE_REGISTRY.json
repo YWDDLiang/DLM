@@ -1,15 +1,31 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-09T13:09:00+08:00",
+  "updated_at": "2026-08-09T22:54:00+08:00",
   "selection_limit_downstream": 2,
   "candidates": [
     {
       "candidate_id": "B0",
       "role": "protected_control",
-      "status": "protected_inventory_complete",
+      "status": "protected_inventory_complete_b0_v5_state_panel_frozen",
       "checkpoint_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
       "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
-      "adapter_bytes": 6391016776
+      "adapter_bytes": 6391016776,
+      "frozen_state_panel": {
+        "identity": "h1_dlm_state_panels_b0_v5",
+        "job_id": 31323,
+        "partition": "gpu",
+        "source_commit": "2803439",
+        "source_archive_sha256": "ce94d79311c468d7f3aa11a881cce1f9bcd2ee0e51732fa09d9bc68434d1c3c5",
+        "source_files_manifest_sha256": "f18f4ed56a6af9c8e054106274e532af0a7831c958f69b6789750aea19c17c3d",
+        "submission_record_sha256": "652fcb5b7c8dcff031dea7a7a1cc676b1d0f0b9e2da4c446a34844b2fb0c7b17",
+        "panel_manifest_sha256": "6cc3d81074a3e472b39c93090d3d4a85c6565d92eb7eb3c5c18a57cf9f966937",
+        "terminal_report_sha256": "18c51f6e86bb1bfe666b8dfb531b23cee5338d979729db84540d49e53ee5758c",
+        "producer_replay_audit_sha256": "7374e8e5649315da05cb52970dc1d0c331ce1dbdd4b127d21fd661a62595408d",
+        "producer_replay_max_abs_delta": 0.0,
+        "scientific_score_batch_size": 1,
+        "state_counts": {"iid": 100, "d1": 600, "safe_axis_synthetic": 1073, "safe_axis_actual_b0": 2208},
+        "last_observed_state": "COMPLETED_0_0"
+      }
     },
     {
       "candidate_id": "B1",
@@ -41,7 +57,29 @@
     {
       "candidate_id": "B3",
       "role": "dynamic_v1_iid_safe_planned_2_to_1",
-      "status": "spec_policy_and_execution_package_frozen_blocked_on_b0_state_panel_terminal",
+      "status": "b3_v4_training_running_frozen_panel_score_dependency",
+      "active_execution": {
+        "identity": "h1_dlm_b3_safe_axis_2to1_b0v5_v4",
+        "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4",
+        "training_job_id": 31330,
+        "state_panel_score_job_id": 31331,
+        "score_dependency": "afterany:31330",
+        "partition": "gpu",
+        "training_a800": 2,
+        "optimizer_updates": 1696,
+        "learning_rate": 0.00005,
+        "source_commit": "3b5d775",
+        "outer_repair_sha256": "ad813ba3e7c220dc4ad02f0b4350a3fe7955683b3d00e69d20b198d9200b1cf5",
+        "generated_adapter_sha256": "e982f084bb93c06d633be1f59b7d44eac505b705458e77cd89223a96c75f52dc",
+        "source_archive_sha256": "52a61fa0f2025e5eecfed9878798d778e3216ded678e0da6ad52d73f5b85b0ba",
+        "source_files_manifest_sha256": "74bc9639297f9ecaa5077b66fc648ba5a5d3b1c8b832e46f85b703db3e9eb15e",
+        "submission_record_sha256": "d1c78cbed83863498640bd2f48f7db1c6458ce26554050065e7424fa244a21dc",
+        "last_observed_training_state": "RUNNING_NODE99_GPU_TORCH_READY",
+        "last_observed_score_state": "PENDING_DEPENDENCY",
+        "automatic_body64_submission": false,
+        "automatic_sun": false,
+        "automatic_rl": false
+      },
       "results": null
     },
     {
