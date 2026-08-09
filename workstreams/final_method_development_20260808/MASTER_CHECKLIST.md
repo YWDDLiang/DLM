@@ -45,9 +45,9 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] Complete the user-authorized SFT-v2 diagnostic raw256 and
       B0+safe-axis+model_494 Direct/S.U.N. chain without treating it as a
       raw64-passing promotion.
-      V13 stopped before its lock/SBatch boundary on a relative-manifest CWD
-      check. V14 changes only that check to run inside the immutable run root;
-      diagnostic raw256 array `31236_[0-1]%2` is now submitted on `gpu`.
+      V14 raw generation is complete at exact 256/256 for P0 and SFT-v2, and
+      the complete local exact-SMACT4 secondary audit is SHA-bound. Formal
+      SMACT3.1 assembly256 and the downstream Direct/S.U.N. chain remain.
 - [ ] Complete raw256 for every raw64-passing candidate.
 - [ ] Freeze Planner shortlist of at most two non-P0 candidates.
 - [ ] Complete shortlisted Planner downstream256 with B0+safe-axis+model_494;

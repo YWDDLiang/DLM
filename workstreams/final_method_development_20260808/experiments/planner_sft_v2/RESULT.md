@@ -31,10 +31,27 @@ validator field expected by the new no-charge identity check; the formal
 SMACT3.1 recomputation itself is complete and unaffected. Terminal report SHA:
 `5342a4f8e0f5695bfff8680406569d55916cdb66ce8a1d7aabd9f6c2d06a9f0c`.
 
-The user-authorized, non-promotional raw256 diagnostic is active as V14 array
-`31236_[0-1]%2` on `gpu` (0=P0, 1=SFT-v2), with 256 raw all-attempt ordinals
-per arm and common ledger SHA
-`d5a3ac87458969816a0b27313fd9deecae47d2ddb10289ec08b9d93c5db48669`.
-V13 created no lock, job, or generation output: its only failure was checking
-relative manifest paths outside the run root. V14 repairs only that submission
-working directory. Raw256, Direct, and S.U.N. metrics remain pending.
+The user-authorized, non-promotional V14 raw256 diagnostic produced exactly
+256 raw all-attempt rows for both P0 and SFT-v2, with zero exit codes and
+per-arm success markers. The common ledger SHA is
+`d5a3ac87458969816a0b27313fd9deecae47d2ddb10289ec08b9d93c5db48669`;
+the P0 and SFT-v2 raw SHAs are respectively
+`201ca978486260fd19ddd5908f847b8b4aa00f6d3593d4e7a3862bc373583151`
+and
+`eebb958a75343b11de91e66808232a4c9aba3052dfa540298d9f3149f4ddcaf1`.
+Parse counts are 254/256 and 255/256.
+
+The complete local-only exact SMACT4 secondary audit passed with 100% official
+witness parity and manifest SHA
+`ed17201d01a5f4f3a601892309ad671b45fe55d41cd15b1252aac8053bf4c6c4`:
+
+| raw256 exact SMACT4 metric | P0 | SFT-v2 | delta |
+|---|---:|---:|---:|
+| valid | 135/256 | 122/256 | -13 |
+| uniform primary | 56/256 | 101/256 | +45 |
+| all-metal shortcut | 72/256 | 10/256 | -62 |
+
+Thus the chemistry-first SFT signal transfers strongly to uniform-primary
+generation and suppresses shortcuts, but does not improve the broader exact
+SMACT4-valid count on this ledger. Formal legacy SMACT3.1 assembly256, Direct,
+and S.U.N. metrics remain pending; no promotional claim is made.
