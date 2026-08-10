@@ -2,7 +2,47 @@
 
 Updated: 2026-08-10 (Asia/Shanghai)
 
-Overall status: `PLANNER_AND_B3_TERMINAL_FOUR_CELL_DIRECT_SUN_COMPLETE_NO_PROMOTION`
+Overall status: `R03_RAW_PLAN_B3_REPEATS_TERMINAL_STRICT_SUN_REGRESSION_NO_PROMOTION`
+
+## Terminal edge: R03 raw Plan × B3 repeated S.U.N. comparison complete
+
+The requested fixed-Plan comparison is terminal. GPU repeat array `31549`
+completed four independent A800 process realizations at 256 all-attempt
+ordinals each, and normal-CPU paired assembler `31550` completed `0:0`.
+The candidate is byte-frozen R03 P0 raw first256 + B3 + D2 safe-axis +
+model_494 refine800; the control is the historical R03G result with the same
+raw Plan and protected B0. The control was not rerun. Pairing is by repeat and
+generation ordinal; each repeat has exact McNemar results, and formal
+uncertainty uses a 50,000-draw hierarchical paired bootstrap over repeat
+blocks and then ordinals. Pooled 1,024-attempt counts are descriptive only.
+
+| repeat | B3 Direct comp/struct | B0→B3 novel | B0→B3 unique | B0→B3 strict S.U.N. | B0→B3 meta S.U.N. | B0→B3 hull evaluated |
+|---|---:|---:|---:|---:|---:|---:|
+| 0 | 216/251 | 227→234 | 248→251 | 28→26 | 122→132 | 218→220 |
+| 1 | 216/251 | 224→227 | 248→251 | 31→26 | 123→120 | 215→214 |
+| 2 | 216/251 | 226→225 | 248→251 | 29→24 | 125→127 | 217→213 |
+| 3 | 216/251 | 227→228 | 248→251 | 29→23 | 126→125 | 218→215 |
+
+Strict full S.U.N. is the decisive result: B3 changes the endpoint by
+`-1.7578125` percentage points, with hierarchical 95% CI
+`[-3.22265625, -0.390625]`, `P(Δ>0)=0.00414`, and repeat differences
+`[-2,-5,-5,-6]`. Meta full S.U.N. changes by `+0.78125` pp but is mixed
+across repeats (`[+10,-3,+2,-1]`; 95% CI `[-2.24609375,4.1015625]`).
+Novel and novel-unique each change by `+0.9765625` pp with intervals crossing
+zero; unique representatives increase by `+1.171875` pp with a lower CI
+bound of zero; hull-evaluated changes by `-0.5859375` pp with an interval
+crossing zero. The descriptive pooled strict count is 117→99, whereas meta
+is 496→504 and novel is 904→914.
+
+Thus B3 improves completion/uniqueness slightly but reproducibly converts
+fewer R03 raw plans into strict full-S.U.N. successes. It is not promoted.
+Composition validity and other Direct metrics are retained only as
+descriptive pipeline diagnostics: `comp_valid` is not a DLM endpoint and is
+not used to attribute this S.U.N. difference to B3. There was no MP query,
+retry, replacement, repair, filter, rerank, checkpoint reselection, automatic
+downstream, or RL. The frozen terminal report is
+`execution/h1_r03_raw_plan_b3_repeats4_direct_sun_v5/TERMINAL_REPORT.json`,
+SHA `101382719310c35f643dfd5b9051834946582058c7a42c0fbd524741b4da6f91`.
 
 ## Terminal edge: current-run four-cell Direct/S.U.N. complete
 

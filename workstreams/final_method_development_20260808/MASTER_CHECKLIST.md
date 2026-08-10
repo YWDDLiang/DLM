@@ -101,6 +101,13 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       best pipeline: B0 versus B3 at fixed P0, followed by the orthogonal
       SFT-v2+B3 joint cell. Array 31374 and assembler 31375 completed all four
       current-run cells and reported paired main effects plus interaction.
+- [x] Complete the frozen R03 raw-Plan B3 four-repeat paired S.U.N. evaluation.
+      Array 31549 and assembler 31550 completed `0:0`. Strict full S.U.N.
+      changed by -1.7578125 pp (hierarchical 95% CI
+      [-3.22265625, -0.390625]) with all four repeat differences negative;
+      meta S.U.N. changed by +0.78125 pp with a wide interval and 2+/2-
+      repeat signs. B3 remains unpromoted; Direct/comp-valid is descriptive
+      and is not attributed to the DLM.
 - [ ] Mark DLM portfolio terminal/saturated.
 
 ## Integration and final evaluation
@@ -122,6 +129,8 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] Create CARD/RESULT/DECISION for every terminal experiment.
 - [x] Freeze the four-cell V4 terminal report, update both Planner/DLM RESULT
       files and candidate/evidence registries, and retain protected M00.
+- [x] Freeze the R03 raw Plan × B3 V5 repeated terminal report, paired
+      statistics, DLM RESULT, and candidate/evidence registries; retain B0.
 - [ ] Update registries and resource ledger after every submission/terminal.
 - [ ] Freeze checkpoint deletion manifests before deleting intermediates.
 - [ ] Preserve protected and promoted/fixed endpoint checkpoints.

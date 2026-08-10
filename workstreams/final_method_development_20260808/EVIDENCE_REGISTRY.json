@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-10T08:48:00+08:00",
+  "updated_at": "2026-08-10T22:21:10+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -575,6 +575,55 @@
       "mp_api_used_during_slurm": false,
       "decision": "complete_evidence_report_no_automatic_promotion",
       "protected_incumbent": "M00",
+      "formal_promotion": false,
+      "automatic_rl": false
+    },
+    {
+      "evidence_id": "h1_r03_raw_plan_b3_repeats4_direct_sun_v5_terminal",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_r03g_schema_repair_v5",
+      "repeat_array_job_id": 31549,
+      "repeat_array_state": "COMPLETED",
+      "repeat_array_exit_code": "0:0",
+      "repeat_task_states": ["COMPLETED_0_0", "COMPLETED_0_0", "COMPLETED_0_0", "COMPLETED_0_0"],
+      "assembly_job_id": 31550,
+      "assembly_state": "COMPLETED",
+      "assembly_exit_code": "0:0",
+      "source_commit": "ff0012f",
+      "source_manifest_sha256": "5b50a90044cde2480641aea512ac5f6d51ff3e6b194ba521246dab174a2bb5a1",
+      "terminal_report_path": "workstreams/final_method_development_20260808/execution/h1_r03_raw_plan_b3_repeats4_direct_sun_v5/TERMINAL_REPORT.json",
+      "terminal_report_sha256": "101382719310c35f643dfd5b9051834946582058c7a42c0fbd524741b4da6f91",
+      "r03_raw_plan_first256_sha256": "c29857e33bd89e94e2257d3b752a0c15bbe6953ac1b7d9f11e575056c6114f79",
+      "b3_adapter_sha256": "ab4f3b82dfcafdcd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+      "refiner_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+      "r03f_cache_sha256": "56f91774c798854d253c0726773593c415456a8b5361f31802c44d8e1bbad917",
+      "historical_control": "R03G_raw_P0_B0",
+      "historical_control_rerun": false,
+      "historical_control_terminal_sha256": "3cb705ea9b572f37dc46696a8aa59a8ae90a0ec90db4789d341052bab7d3bfff",
+      "candidate": "R03_raw_P0_B3",
+      "process_repeats": 4,
+      "all_attempt_denominator_per_repeat": 256,
+      "per_repeat_candidate_counts": [
+        {"repeat": 0, "composition_valid": 216, "structure_valid": 251, "novel_unique": 234, "unique_representative": 251, "strict_full_sun": 26, "meta_full_sun": 132, "hull_evaluated": 220, "hull_unknown": 14},
+        {"repeat": 1, "composition_valid": 216, "structure_valid": 251, "novel_unique": 227, "unique_representative": 251, "strict_full_sun": 26, "meta_full_sun": 120, "hull_evaluated": 214, "hull_unknown": 13},
+        {"repeat": 2, "composition_valid": 216, "structure_valid": 251, "novel_unique": 225, "unique_representative": 251, "strict_full_sun": 24, "meta_full_sun": 127, "hull_evaluated": 213, "hull_unknown": 12},
+        {"repeat": 3, "composition_valid": 216, "structure_valid": 251, "novel_unique": 228, "unique_representative": 251, "strict_full_sun": 23, "meta_full_sun": 125, "hull_evaluated": 215, "hull_unknown": 13}
+      ],
+      "paired_hierarchical_bootstrap": {
+        "draws": 50000,
+        "design": "resample_repeat_blocks_then_paired_ordinals",
+        "strict_full_sun": {"delta_percentage_points": -1.7578125, "ci95": [-3.22265625, -0.390625], "probability_gt_zero": 0.00414, "repeat_differences": [-2, -5, -5, -6]},
+        "meta_full_sun": {"delta_percentage_points": 0.78125, "ci95": [-2.24609375, 4.1015625], "repeat_differences": [10, -3, 2, -1]},
+        "novel_unique": {"delta_percentage_points": 0.9765625, "ci95": [-0.9765625, 2.9296875], "repeat_differences": [7, 3, -1, 1]},
+        "unique_representative": {"delta_percentage_points": 1.171875, "ci95": [0.0, 2.34375], "repeat_differences": [3, 3, 3, 3]},
+        "hull_evaluated": {"delta_percentage_points": -0.5859375, "ci95": [-2.24609375, 0.9765625], "repeat_differences": [2, -1, -4, -3]}
+      },
+      "pooled_1024_role": "descriptive_only_not_independent",
+      "direct_comp_valid_role": "descriptive_only_not_a_dlm_endpoint",
+      "raw_failures_in_denominator": true,
+      "retry_replacement_repair_filter_rerank": false,
+      "mp_api_used_during_slurm": false,
+      "decision": "strict_sun_regression_no_automatic_promotion",
+      "protected_body": "B0",
       "formal_promotion": false,
       "automatic_rl": false
     }

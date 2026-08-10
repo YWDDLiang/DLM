@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-10T08:48:00+08:00",
+  "updated_at": "2026-08-10T22:21:10+08:00",
   "selection_limit_downstream": 2,
   "protected_incumbent": "B0",
   "four_cell_terminal": {
@@ -26,6 +26,38 @@
     },
     "decision": "complete_evidence_report_no_automatic_promotion",
     "formal_promotion": false
+  },
+  "r03_raw_plan_b3_repeats_terminal": {
+    "run_id": "20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_r03g_schema_repair_v5",
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_r03g_schema_repair_v5",
+    "repeat_array_job_id": 31549,
+    "assembly_job_id": 31550,
+    "state": "COMPLETED_0_0",
+    "source_commit": "ff0012f",
+    "source_manifest_sha256": "5b50a90044cde2480641aea512ac5f6d51ff3e6b194ba521246dab174a2bb5a1",
+    "terminal_report_path": "workstreams/final_method_development_20260808/execution/h1_r03_raw_plan_b3_repeats4_direct_sun_v5/TERMINAL_REPORT.json",
+    "terminal_report_sha256": "101382719310c35f643dfd5b9051834946582058c7a42c0fbd524741b4da6f91",
+    "historical_control": "R03G_raw_P0_B0",
+    "historical_control_rerun": false,
+    "historical_control_terminal_sha256": "3cb705ea9b572f37dc46696a8aa59a8ae90a0ec90db4789d341052bab7d3bfff",
+    "candidate": "R03_raw_P0_B3",
+    "process_repeats": 4,
+    "all_attempt_denominator_per_repeat": 256,
+    "ordinal_pairing": true,
+    "inference": "per_repeat_exact_mcnemar_and_50000_draw_hierarchical_paired_bootstrap",
+    "pooled_1024_role": "descriptive_only",
+    "paired_b3_minus_b0_percentage_points": {
+      "generation_complete": {"point": 1.171875, "ci95": [0.0, 2.34375], "repeat_differences": [3, 3, 3, 3]},
+      "unique_representative": {"point": 1.171875, "ci95": [0.0, 2.34375], "repeat_differences": [3, 3, 3, 3]},
+      "novel_unique": {"point": 0.9765625, "ci95": [-0.9765625, 2.9296875], "repeat_differences": [7, 3, -1, 1]},
+      "meta_full_sun": {"point": 0.78125, "ci95": [-2.24609375, 4.1015625], "repeat_differences": [10, -3, 2, -1]},
+      "hull_evaluated": {"point": -0.5859375, "ci95": [-2.24609375, 0.9765625], "repeat_differences": [2, -1, -4, -3]},
+      "strict_full_sun": {"point": -1.7578125, "ci95": [-3.22265625, -0.390625], "probability_gt_zero": 0.00414, "repeat_differences": [-2, -5, -5, -6]}
+    },
+    "direct_comp_valid_role": "descriptive_only_not_a_dlm_endpoint",
+    "decision": "strict_sun_regression_no_promotion",
+    "formal_promotion": false,
+    "automatic_rl": false
   },
   "candidates": [
     {
@@ -82,7 +114,7 @@
     {
       "candidate_id": "B3",
       "role": "dynamic_v1_iid_safe_planned_2_to_1",
-      "status": "terminal_mixed_no_promotion_four_cell_evaluation_complete",
+      "status": "terminal_r03_raw_repeat_strict_sun_regression_no_promotion",
       "terminal_execution": {
         "identity": "h1_dlm_b3_safe_axis_2to1_b0v5_v4",
         "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4",
@@ -125,7 +157,20 @@
         "both_required_point_estimates_improved": false,
         "formal_promotion": false,
         "four_cell_current_run_evaluation_authorized": true,
-        "four_cell_current_run_evaluation_complete": true
+        "four_cell_current_run_evaluation_complete": true,
+        "r03_raw_plan_repeat_evaluation": {
+          "complete": true,
+          "process_repeats": 4,
+          "attempts_per_repeat": 256,
+          "strict_full_sun_delta_percentage_points": -1.7578125,
+          "strict_full_sun_ci95_percentage_points": [-3.22265625, -0.390625],
+          "strict_repeat_differences": [-2, -5, -5, -6],
+          "meta_full_sun_delta_percentage_points": 0.78125,
+          "meta_full_sun_ci95_percentage_points": [-2.24609375, 4.1015625],
+          "meta_repeat_differences": [10, -3, 2, -1],
+          "direct_comp_valid_role": "descriptive_only_not_a_dlm_endpoint",
+          "formal_promotion": false
+        }
       }
     },
     {

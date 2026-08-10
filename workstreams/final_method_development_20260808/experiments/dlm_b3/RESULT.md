@@ -1,6 +1,6 @@
 # Result: DLM B3
 
-Status: `B3_V4_AND_FOUR_CELL_TERMINAL_MIXED_NO_PROMOTION`
+Status: `B3_R03_RAW_REPEATS_TERMINAL_STRICT_SUN_REGRESSION_NO_PROMOTION`
 
 The immutable artifact inventory is complete without rehashing the protected
 6.39 GB payloads. B0 remains
@@ -92,3 +92,48 @@ is authorized.
 
 Array `31374` and assembler `31375` both completed `0:0`. Terminal report SHA:
 `cdd23113f86e97c5f747e7c97cf24a531231d68b32420cdf03909d8de2806fb6`.
+
+## Frozen R03 raw-Plan contrast
+
+The requested fixed-Plan test removes the Planner change from the contrast.
+It byte-freezes R03 P0 raw first256 and compares B3 against the historical
+R03G protected-B0 control under D2 safe-axis, model_494 refine800, and R03E
+S.U.N. Historical B0 was not rerun. Array `31549` supplied four independent
+A800 process repeats of the same 256 paired ordinals; assembler `31550`
+completed `0:0`. Every raw failure remains in the denominator, and there is
+no retry, replacement, repair, filter, rerank, MP query, or RL.
+
+| repeat | B3 Direct comp/struct | B0→B3 novel | B0→B3 unique | B0→B3 strict | B0→B3 meta | B0→B3 hull evaluated |
+|---|---:|---:|---:|---:|---:|---:|
+| 0 | 216/251 | 227→234 | 248→251 | 28→26 | 122→132 | 218→220 |
+| 1 | 216/251 | 224→227 | 248→251 | 31→26 | 123→120 | 215→214 |
+| 2 | 216/251 | 226→225 | 248→251 | 29→24 | 125→127 | 217→213 |
+| 3 | 216/251 | 227→228 | 248→251 | 29→23 | 126→125 | 218→215 |
+
+Inference is repeat-aware: exact McNemar is reported separately per repeat,
+and the registered 50,000-draw hierarchical paired bootstrap resamples
+repeat blocks and then paired ordinals. The pooled 1,024 rows are only a
+descriptive aggregation.
+
+| paired B3-B0 endpoint | Δ percentage points | hierarchical 95% CI | repeat count differences | conclusion |
+|---|---:|---:|---:|---|
+| generation complete | +1.171875 | [0, 2.34375] | +3,+3,+3,+3 | small completion gain |
+| unique representative | +1.171875 | [0, 2.34375] | +3,+3,+3,+3 | small uniqueness gain |
+| novel / novel-unique | +0.9765625 | [-0.9765625, 2.9296875] | +7,+3,-1,+1 | uncertain |
+| meta full S.U.N. | +0.78125 | [-2.24609375, 4.1015625] | +10,-3,+2,-1 | mixed, 2+/2- |
+| hull evaluated | -0.5859375 | [-2.24609375, 0.9765625] | +2,-1,-4,-3 | uncertain |
+| strict full S.U.N. | **-1.7578125** | **[-3.22265625, -0.390625]** | **-2,-5,-5,-6** | reproducible regression |
+
+For strict full S.U.N., `P(Δ>0)=0.00414` and `P(Δ<0)=0.99352`; the
+descriptive pooled count is 117→99 (pooled exact McNemar p=0.0113516).
+Meta is 496→504 descriptively but has no repeat-stable improvement. This is
+the requested answer from the S.U.N. mouth: B3 slightly improves completion
+and uniqueness, but loses strict successes in every repeat and therefore does
+not improve the end-to-end scientific endpoint.
+
+Direct composition validity is shown only to document execution (B3 is
+216/256 composition-valid and 251/256 structure-valid in each repeat).
+`comp_valid` is not a DLM metric, and no causal DLM claim is made from that
+number. B3 remains a terminal diagnostic and is not promoted; B0 remains the
+protected body. Terminal report SHA:
+`101382719310c35f643dfd5b9051834946582058c7a42c0fbd524741b4da6f91`.
