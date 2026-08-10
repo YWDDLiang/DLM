@@ -6,6 +6,7 @@ PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 RUN_ROOT="$PROJECT/runs/20260810_h1_p0_plan1200_r03_b3_prepost_repeats3_v1"
 SOURCE="$RUN_ROOT/planner_source"
 EXECUTION="$SOURCE/workstreams/final_method_development_20260808/execution/h1_p0_plan1200_r03_b3_prepost_repeats3_v1"
+PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 SOURCE_SHA="$(sha256sum "$SOURCE/SOURCE_SHA256.txt" | cut -d' ' -f1)"
 
 test -f "$RUN_ROOT/status/preparation_SUCCESS"
@@ -20,7 +21,7 @@ export H1_PLAN1200_ARRAY_JOB_ID="$ARRAY_JOB_ID"
 ASSEMBLY_JOB_ID="$(sbatch --parsable --dependency="afterany:$ARRAY_JOB_ID" "$EXECUTION/planner_assembly.sbatch")"
 [[ "$ASSEMBLY_JOB_ID" =~ ^[0-9]+$ ]]
 
-python - "$RUN_ROOT/status/submission.lock/submission.json" "$ARRAY_JOB_ID" "$ASSEMBLY_JOB_ID" "$SOURCE_SHA" <<'PY'
+"$PYTHON" - "$RUN_ROOT/status/submission.lock/submission.json" "$ARRAY_JOB_ID" "$ASSEMBLY_JOB_ID" "$SOURCE_SHA" <<'PY'
 import json
 import os
 import sys
