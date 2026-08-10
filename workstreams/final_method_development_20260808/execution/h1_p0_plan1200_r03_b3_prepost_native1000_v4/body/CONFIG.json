@@ -1,0 +1,156 @@
+{
+  "schema": "h1_p0_plan1200_r03_b3_prepost_native1000_body_config_v4",
+  "run_id": "20260811_h1_p0_plan1200_r03_b3_prepost_native1000_cohort_contract_repair_v4",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_p0_plan1200_r03_b3_prepost_native1000_cohort_contract_repair_v4",
+  "paired_seed_namespace": "20260810_h1_p0_plan1200_r03_b3_prepost_repeats3_v1",
+  "denominator": 1000,
+  "repeat_count": 3,
+  "planner": {
+    "name": "P0",
+    "raw_attempts_per_repeat": 1200,
+    "cohort_selection": "first_1000_parse_successes_by_planner_ordinal",
+    "repeat_seeds": [17029, 27183, 31415],
+    "shared_between_arms": true,
+    "cross_repeat_reuse": false
+  },
+  "body": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "adapter_file": "adapter_model.safetensors",
+    "adapter_expected_bytes": 6391016776,
+    "tokenizer_vocab_sha256": "3acc073da85047265769f2dccd93543fa9d7cbfa95021aef54ef282b13ce2f37",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "tokenizer_config_sha256": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+    "tokenizer_size": 128830,
+    "prompt_contract": "historical_r5c_plan_state_json_exact_length",
+    "raw_rich_seven_line_forwarded": false,
+    "canonical_charge_bucket_visible": true,
+    "schedule": "d2_safe_axis",
+    "exact_length_generation": true,
+    "answer_token_count_formula": "7+4N",
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "max_batch_size": 8,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "min_lattice_rad": 0.0001,
+    "models": {
+      "R03": {
+        "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+        "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+      },
+      "B3": {
+        "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4/arms/B3/output/final",
+        "adapter_sha256": "ab4f3b82dfcafdcd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+        "training_manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+        "training_prompt_answer_identity": "historical_r5c",
+        "rich_plan_visibility": "collator_sidecar_only"
+      }
+    }
+  },
+  "refiner": {
+    "name": "CrysLLMGen model_494",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "timesteps": 1000,
+    "diffusion_steps": 800,
+    "num_evals": 1,
+    "effective_batch_size": 1,
+    "seed_mode": "paired_sha256_repeat_ordinal_v1"
+  },
+  "runtime": {
+    "v4_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_evidence_first_four_cell_direct_sun_gcd_mp_cache_identity_repair_v4/source",
+    "v4_source_manifest_sha256": "cb9391a919bea71a8a96c4fb576901101aed6a40069b89f27c16fc38ea9c518d",
+    "r03d": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1",
+    "r03e": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1",
+    "r03d_source_manifest_sha256": "6b0dd8298c9a423712a3965b00f8aeae9c06c824a37fbf1d94dbbf94aebcf15f",
+    "r03e_source_manifest_sha256": "7beaf38b7d378ecf8fb31627f195f5fe6095350b60d99882c0a11b39cbf211a4"
+  },
+  "direct": {
+    "gt_csv": "reference/crysllmgen/data/mp_20/test.csv",
+    "eval_model_name": "mp20",
+    "denominator": "all_generation_attempts",
+    "required_order": "gcd_then_smact_validity",
+    "runner": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/scripts/a800/run_crysllmgen_metrics.py",
+    "runner_sha256": "556d4e14c96a7a89c96eaf7c07fda04c0f399526f733de0e8cbbd08d1f24e7a4",
+    "upstream_compute_metrics": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream/compute_metrics.py",
+    "upstream_compute_metrics_sha256": "c48730ee405c205a912f450c297cc787ed61cefbc3723b3a7dbf2926c60434cd"
+  },
+  "sun": {
+    "runner_sha256": "e952795c32efe1be328165d99389ae3934a6698d29027569376bbb984cf788de",
+    "module_sha256": "61c8e13c194028c4ab514902827575de41a2d06e502824b8355fcf3530d7f968",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "mp_api_inside_slurm": false,
+    "mp_api_completion_before_sbatch": true,
+    "eval_sun_py": "reference/a100_eval_sun/eval_sun.py",
+    "eval_sun_resumable_py": "reference/a100_eval_sun/eval_sun_resumable.py",
+    "train_csv": "reference/crysllmgen/data/mp_20/train.csv",
+    "training_index_cache": "reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+    "base_mp_hull_cache": "data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+    "base_mp_hull_cache_sha256": "93d6532cd93c1cfebcbc969d0299852359d6a2950b66b259c028e971f8f7e4ff",
+    "base_mp_hull_cache_bytes": 104820449,
+    "base_mp_hull_cache_rows": 11661,
+    "base_mp_hull_cache_distinct_chemsys": 11163,
+    "supplemental_completed_caches": [
+      {
+        "role": "completed_20260810_fourcell_planner_union",
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_evidence_first_four_cell_direct_sun_gcd_mp_cache_identity_repair_v4/mp_cache/planner_union_completed_mp_hull_cache.jsonl",
+        "sha256": "165458334295920c7d15769895d5c56d152c932ba02e27c15c6e20b64db18d0d",
+        "rows": 455
+      }
+    ],
+    "completed_cache": "mp_cache/completed_mp_hull_cache.jsonl",
+    "completed_cache_sha256_file": "mp_cache/completed_mp_hull_cache.sha256",
+    "completion_manifest": "mp_cache/completion_manifest.json",
+    "completion_success_marker": "mp_cache/completion_SUCCESS",
+    "completion_module": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_mpcomplete_v1/complete_sun.py",
+    "completion_module_sha256": "c457a9539154706b7d4408243d89013242a18361b6f5ea2422760b87c3f94abb",
+    "maximum_transport_attempts_per_chemsys": 5,
+    "runner": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/scripts/a800/run_crysllmgen_a100_sun.py",
+    "chgnet_relax_cache": "data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl",
+    "chgnet_model_asset": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+    "chgnet_runtime_checkpoint": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar"
+  },
+  "evaluation": {
+    "stages": ["pre_model494", "post_model494"],
+    "crysllmgen": "complete_upstream_and_all_attempt_detail",
+    "sun": "complete_r03e_detail",
+    "headline_sun_denominator": "reconstructed_structures_exact_legacy",
+    "secondary_sun_denominator": "all_1000_attempts",
+    "stable_or_evaluated_denominator": "diagnostic_only"
+  },
+  "statistics": {
+    "paired_within_repeat": true,
+    "hierarchical_paired_bootstrap_draws": 50000,
+    "bootstrap_seed": 20260810,
+    "pooled_3000_per_arm": "descriptive_only",
+    "binary_endpoints": [
+      "generation_complete",
+      "composition_valid",
+      "structure_valid",
+      "joint_valid",
+      "reconstructed",
+      "novel",
+      "unique_representative",
+      "novel_unique",
+      "strict_full_sun",
+      "meta_full_sun",
+      "hull_evaluated"
+    ],
+    "comparisons": [
+      "B3_minus_R03_pre_model494",
+      "B3_minus_R03_post_model494",
+      "post_minus_pre_R03",
+      "post_minus_pre_B3"
+    ]
+  },
+  "retry": false,
+  "replacement": false,
+  "repair": false,
+  "filter": false,
+  "rerank": false,
+  "automatic_training": false,
+  "automatic_promotion": false,
+  "automatic_rl": false
+}
