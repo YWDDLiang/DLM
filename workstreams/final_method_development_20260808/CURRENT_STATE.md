@@ -1,8 +1,36 @@
 # Current state
 
-Updated: 2026-08-10 (Asia/Shanghai)
+Updated: 2026-08-11 (Asia/Shanghai)
 
-Overall status: `R03_RAW_PLAN_B3_REPEATS_TERMINAL_STRICT_SUN_REGRESSION_NO_PROMOTION`
+Overall status: `P0_PLAN1200_R03_B3_PREPOST_ENGINEERING_FAILURE_NO_BODY_SUBMISSION`
+
+## Terminal engineering failure: P0 plan1200 three-batch route stopped before sampling
+
+The requested raw1200/first1000 three-repeat P0 plan experiment is terminal
+as an engineering failure. GPU planner array `31561` launched all three
+repeats with seeds `17029`, `27183`, and `31415`. Every task passed the A800,
+PyTorch `2.4.0+cu121`, and SMACT `3.1.0` gates, entered
+`planner_sample1200`, and then failed `1:0` at the same import:
+`ModuleNotFoundError: No module named
+'scripts.sample_llada_dynamic_crystals'`. The referenced module file exists
+in the frozen source inventory, but the packaged `scripts` directory was not
+made an unambiguous regular Python package. No plan row was emitted.
+
+Dependent normal-CPU assembler `31562` sealed `status=failed`, an empty
+repeat list, and `three_independent_plan_batches=false`. It did not submit
+the separate R03 or B3 body arrays. Consequently no pre-refine or post-refine
+CrysLLMGen/S.U.N. metric exists for this route, and the failure must not be
+interpreted as a P0, R03, B3, refiner, or metric result. No repair, retry,
+replacement, filter, rerank, training, or RL occurred.
+
+The two-hop-returned minimal evidence bundle is
+`execution/h1_p0_plan1200_r03_b3_prepost_repeats3_v1/evidence/planner_failure_evidence_31561_31562.tar.gz`
+(3377 bytes; SHA
+`ecadf983ac9f1676d637c7c239299729f39cf0e667c0823962c981452efa2da3`).
+The detailed terminal record is
+`H1_P0_PLAN1200_R03_B3_PREPOST_REPEATS3_FAILURE_REPORT_V1.md`. Continuing
+requires explicit authorization for a new immutable V2; V1 will not be
+modified or resubmitted.
 
 ## Terminal edge: R03 raw Plan × B3 repeated S.U.N. comparison complete
 
@@ -386,14 +414,15 @@ remained unsubmitted; later V10/V14/V24 evidence supersedes that status.
 
 ## Immediate critical path
 
-1. Preserve the four-cell V4 source, completed cache, Slurm records, per-cell
-   artifacts, and terminal report byte-for-byte.
-2. Retain P0+B0 (M00) as the protected incumbent; neither SFT-v2 nor B3 is
-   formally promoted from this diagnostic matrix.
-3. Complete the still-pending C0/C1 fixed endpoints and registered raw64 gates
-   before declaring the Planner portfolio saturated.
-4. Freeze any later integration/raw1000 package only from the terminal
-   registries and under a new immutable authorization; do not infer automatic
-   training, checkpoint reselection, downstream work, or RL from this report.
+1. Preserve V1 run root, Slurm records, terminal report, and returned failure
+   bundle byte-for-byte; do not repair or resubmit V1.
+2. Do not submit the prepared R03/B3 body package because none of the three
+   required frozen P0 cohorts exists.
+3. If explicitly authorized, create a new immutable V2 with only the
+   packaging/import preflight repair, then regenerate all three plan batches
+   from scratch under the unchanged scientific contract.
+4. Retain P0+B0 (M00) as the protected incumbent. Neither this engineering
+   failure nor the prior diagnostics promote B3, SFT-v2, or any downstream
+   route.
 
 No Planner or DLM RL is authorized.

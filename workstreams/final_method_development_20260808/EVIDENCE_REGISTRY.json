@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-10T22:21:10+08:00",
+  "updated_at": "2026-08-11T01:05:06+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -216,6 +216,18 @@
       "a800_frozen_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260808_h1_chemistry_first_sft_v2_smact4_witness_input_v1",
       "status": "frozen_data_bytes_only",
       "smact4_executed_on_a800": false
+    },
+    {
+      "evidence_id": "h1_p0_plan1200_failure_evidence_two_hop_return_v1",
+      "source_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_p0_plan1200_r03_b3_prepost_repeats3_v1",
+      "direction": "A800_to_relay_to_local",
+      "transport": "two_hop_scp",
+      "local_path": "workstreams/final_method_development_20260808/execution/h1_p0_plan1200_r03_b3_prepost_repeats3_v1/evidence/planner_failure_evidence_31561_31562.tar.gz",
+      "archive_bytes": 3377,
+      "archive_sha256": "ecadf983ac9f1676d637c7c239299729f39cf0e667c0823962c981452efa2da3",
+      "hashes_identical_at_all_three_locations": true,
+      "completed_at": "2026-08-11T01:05:06+08:00",
+      "status": "terminal_failure_evidence_returned"
     }
   ],
   "engineering_failures": [
@@ -312,6 +324,42 @@
       "slurm_job_submitted": false,
       "training_contract_changed": false,
       "scientific_contract_changed": false
+    },
+    {
+      "evidence_id": "h1_p0_plan1200_three_repeat_import_failure_v1",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_p0_plan1200_r03_b3_prepost_repeats3_v1",
+      "planner_array_job_id": 31561,
+      "planner_internal_job_ids": [31561, 31563, 31564],
+      "planner_task_states": ["FAILED_1_0", "FAILED_1_0", "FAILED_1_0"],
+      "planner_task_elapsed": ["00:14:17", "00:14:17", "00:14:17"],
+      "planner_assembly_job_id": 31562,
+      "planner_source_commits": [
+        "fbe94e6447e917899f650bb752f349b1e4d4afe4",
+        "be4254878dc09e3df78580ad6d3a95a7d91e0bba"
+      ],
+      "planner_source_manifest_sha256": "f945a8a847dfecb84c47d789a0dd71181fad7ea6a6cd92a020194863fe922887",
+      "repeat_seeds": [17029, 27183, 31415],
+      "runtime_gate": {
+        "gpu": "NVIDIA A800-SXM4-80GB",
+        "torch": "2.4.0+cu121",
+        "smact": "3.1.0",
+        "passed_all_repeats": true
+      },
+      "failure_message": "ModuleNotFoundError: No module named 'scripts.sample_llada_dynamic_crystals'",
+      "failure_boundary": "before_first_plan_record",
+      "root_cause": "frozen_source_packaging_did_not_make_local_scripts_module_unambiguously_importable",
+      "raw_plan_rows_per_repeat": [0, 0, 0],
+      "frozen_cohorts_created": false,
+      "r03_body_jobs_submitted": false,
+      "b3_body_jobs_submitted": false,
+      "scientific_metrics_produced": false,
+      "repair_or_retry_attempted": false,
+      "automatic_training": false,
+      "automatic_rl": false,
+      "terminal_status": "engineering_failure_fail_closed",
+      "failure_report_path": "workstreams/final_method_development_20260808/H1_P0_PLAN1200_R03_B3_PREPOST_REPEATS3_FAILURE_REPORT_V1.md",
+      "failure_report_sha256": "006764d3c5ed374697a59f0344d694245fca9a9a6207b29e9f6e69e79ba8da79",
+      "evidence_bundle_sha256": "ecadf983ac9f1676d637c7c239299729f39cf0e667c0823962c981452efa2da3"
     }
   ],
   "active_submissions": [],
