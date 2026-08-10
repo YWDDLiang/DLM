@@ -1,0 +1,101 @@
+{
+  "schema": "h1_p0_plan1200_r03_b3_prepost_repeats3_config_v2",
+  "run_id": "20260811_h1_p0_plan1200_r03_b3_prepost_repeats3_import_repair_v2",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_p0_plan1200_r03_b3_prepost_repeats3_import_repair_v2",
+  "paired_seed_namespace": "20260810_h1_p0_plan1200_r03_b3_prepost_repeats3_v1",
+  "status": "user_authorized_three_independent_plan_batches_two_parallel_body_jobs_prepost_full_metrics",
+  "planner": {
+    "name": "P0",
+    "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "attempts_per_repeat": 1200,
+    "repeat_seeds": [17029, 27183, 31415],
+    "seed_mode": "stateless_ordinal_v1",
+    "prompt_style": "h1_rich_plan_v1",
+    "include_sample_id": false,
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "max_atoms": 20,
+    "stop_after_plan_marker": true,
+    "truncate_after_plan_marker": true,
+    "formula_constraint_mode": "off"
+  },
+  "cohort": {
+    "evaluation_attempts_per_repeat": 1000,
+    "selection": "first_1000_parse_successes_by_planner_ordinal",
+    "reserve_candidates": 200,
+    "shared_between_body_arms": true,
+    "arm_outcome_dependent_replacement": false,
+    "cross_repeat_reuse": false,
+    "body_prompt_builder": "crystal_dlm.r5_plan_state.build_body_prompt",
+    "model_visible_contract": "historical_r5c_plan_state_json_exact_length",
+    "raw_rich_seven_line_forwarded": false,
+    "canonical_charge_bucket_visible": true
+  },
+  "body": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "arms": {
+      "R03": {
+        "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+        "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+      },
+      "B3": {
+        "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4/arms/B3/output/final",
+        "adapter_sha256": "ab4f3b82dfcafdcd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+        "training_manifest_sha256": "b38f6e414893b086fa03e5d049a4d3105a4ac153e6baf68faabe6b2a1ff4616b",
+        "training_model_visible_prompt_answer": "identical_to_historical_r5c",
+        "rich_seven_line_visibility": "collator_sidecar_only"
+      }
+    },
+    "slurm_jobs": "separate_R03_and_B3_arrays_submitted_concurrently",
+    "schedule": "d2_safe_axis",
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "exact_length": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false
+  },
+  "refiner": {
+    "name": "CrysLLMGen model_494",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "parent_timesteps": 1000,
+    "diffusion_steps": 800,
+    "effective_batch_size": 1
+  },
+  "evaluation": {
+    "stages": ["pre_model494", "post_model494"],
+    "crysllmgen": "complete_upstream_and_all_attempt_detail",
+    "sun": "complete_r03e_detail",
+    "sun_batch_attempts": 1000,
+    "headline_sun_denominator": "reconstructed_structures_exact_legacy",
+    "secondary_sun_denominator": "all_1000_attempts",
+    "stable_or_evaluated_denominator": "diagnostic_only",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "direct_composition_order": "gcd_then_smact_validity",
+    "mp_query_inside_slurm": false
+  },
+  "statistics": {
+    "repeat_count": 3,
+    "paired_within_repeat": true,
+    "hierarchical_paired_bootstrap_draws": 50000,
+    "pooled_3000_per_arm": "descriptive_only"
+  },
+  "resources": {
+    "planner_partition": "gpu",
+    "body_partition": "gpu",
+    "assembly_partition": "normal",
+    "gpu_long_allowed": false
+  },
+  "automatic_training": false,
+  "automatic_checkpoint_reselection": false,
+  "automatic_promotion": false,
+  "automatic_rl": false
+}
