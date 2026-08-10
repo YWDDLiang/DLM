@@ -1,0 +1,13 @@
+{
+  "schema": "h1_r03_raw_plan_b3_predecessor_failure_v1",
+  "predecessor_run_id": "20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_v1",
+  "status": "failed_closed_before_run_root_and_sbatch",
+  "root_cause": "A800 project checkout lacked the locally referenced V4 workstream source path",
+  "observed_missing_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/final_method_development_20260808/execution/h1_four_cell_direct_sun_v4/SOURCE_SHA256.txt",
+  "replacement_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_evidence_first_four_cell_direct_sun_gcd_mp_cache_identity_repair_v4/source",
+  "replacement_source_manifest_sha256": "cb9391a919bea71a8a96c4fb576901101aed6a40069b89f27c16fc38ea9c518d",
+  "predecessor_run_root_created": false,
+  "predecessor_jobs_submitted": 0,
+  "scientific_contract_changed_in_v2": false,
+  "automatic_retry": false
+}

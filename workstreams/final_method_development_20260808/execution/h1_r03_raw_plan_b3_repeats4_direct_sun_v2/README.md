@@ -1,0 +1,29 @@
+# R03 raw Plan × B3 repeated Direct/S.U.N. evaluation — V2
+
+V1 failed closed before creating a run root or submitting Slurm work because
+the A800 checkout did not contain the locally referenced V4 workstream path.
+V2 changes only immutable execution identity and points the byte-identical V4
+runtime manifest to the already successful V4 run's `source/` directory.
+Scientific inputs, models, cache, repeats, seeds, scorers, and statistics are
+unchanged.
+
+This immutable execution package answers one narrow question: what happens when
+the frozen R03 raw planner cohort is kept fixed and the frozen B0 body is
+replaced by B3?
+
+The registered candidate consists of four independent A800 process repeats.
+Every repeat uses the first 256 records of the byte-frozen R03 P0 raw Plan,
+the common H1 body/refiner seed ledger, D2 safe-axis body generation,
+CrysLLMGen `model_494` with 800 refinement steps, the byte-frozen R03 Direct
+scorer (GCD before SMACT composition validity), and the exact 227-system R03F
+Materials Project snapshot. No MP network query is made.
+
+The control is not rerun. Each new B3 repeat is paired by repeat and ordinal
+with the corresponding completed historical R03G B0 safe-axis artifact.
+Pooled 1024-attempt counts are descriptive only. Inferential reporting uses
+per-repeat exact McNemar tests and a hierarchical paired bootstrap that
+resamples repeat blocks and then ordinals within repeats.
+
+There is no sample retry, replacement, repair, filter, rerank, checkpoint
+selection, training, downstream automation, or RL. Any engineering failure is
+preserved fail-closed and is not automatically retried.
