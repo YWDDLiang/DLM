@@ -1,0 +1,15 @@
+{
+  "schema": "h1_r03_raw_plan_b3_predecessor_failure_v4",
+  "predecessor_run_id": "20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_repeat_validator_repair_v4",
+  "status": "failed_closed_before_sbatch",
+  "root_cause": "historical R03G baseline rows were incorrectly required to use the current candidate S.U.N. schema",
+  "failed_evidence_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/.20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_repeat_validator_repair_v4.preparing.25132.FAILED",
+  "observed_historical_schema": "crysllmgen_r5c_a100_sun_no_completed_hull_attempt_v1",
+  "current_candidate_schema": "crysllmgen_r5c_a100_sun_attempt_v1",
+  "historical_rows_per_repeat": 256,
+  "historical_retry_or_replacement_used": false,
+  "predecessor_run_root_created": false,
+  "predecessor_jobs_submitted": 0,
+  "scientific_contract_changed_in_v5": false,
+  "automatic_retry": false
+}
