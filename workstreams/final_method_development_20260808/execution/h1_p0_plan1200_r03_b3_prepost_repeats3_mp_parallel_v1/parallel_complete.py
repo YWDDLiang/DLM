@@ -202,12 +202,34 @@ def validate_serial_prefix(
     progress_path = checkpoint / "mp_query_progress.jsonl"
     fragments = read_jsonl(fragment_path)
     progress = read_jsonl(progress_path)
-    if len(fragments) != len(progress) or not fragments:
+    if not progress or len(fragments) not in {len(progress), len(progress) + 1}:
         raise ParallelCompletionError("serial checkpoint rows are incomplete")
     if len(progress) >= len(missing):
         raise ParallelCompletionError("serial checkpoint is already total")
+    uncommitted_trailing_fragment: dict[str, Any] | None = None
+    if len(fragments) == len(progress) + 1:
+        candidate = fragments[-1]
+        expected = missing[len(progress)]
+        entries = candidate.get("entries")
+        if (
+            candidate.get("chemsys") != expected
+            or not isinstance(entries, list)
+            or not entries
+        ):
+            raise ParallelCompletionError(
+                "serial checkpoint trailing fragment is not the next frozen query"
+            )
+        uncommitted_trailing_fragment = {
+            "query_index": len(progress) + 1,
+            "chemsys": expected,
+            "entry_count": len(entries),
+            "reused": False,
+            "reason": "fragment fsynced but progress row absent at operator-approved interrupt",
+        }
     queried: dict[str, list[dict[str, Any]]] = {}
-    for offset, (fragment, row) in enumerate(zip(fragments, progress), start=1):
+    for offset, (fragment, row) in enumerate(
+        zip(fragments[: len(progress)], progress), start=1
+    ):
         expected = missing[offset - 1]
         entries = fragment.get("entries")
         if (
@@ -231,6 +253,9 @@ def validate_serial_prefix(
         "resolved_prefix_count": len(progress),
         "fragment": identity(fragment_path),
         "progress": identity(progress_path),
+        "physical_fragment_rows": len(fragments),
+        "physical_progress_rows": len(progress),
+        "uncommitted_trailing_fragment": uncommitted_trailing_fragment,
     }
 
 

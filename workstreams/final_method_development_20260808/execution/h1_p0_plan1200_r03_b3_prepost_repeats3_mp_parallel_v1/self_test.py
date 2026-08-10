@@ -99,12 +99,28 @@ def main() -> None:
             }
             for index, chemsys in enumerate(missing[:3], start=1)
         ]
+        serial_fragments.append(
+            {
+                "chemsys": missing[3],
+                "entries": [
+                    {
+                        "entry_id": f"uncommitted-{missing[3]}",
+                        "composition": {"A": 1.0},
+                        "energy": -1.0,
+                    }
+                ],
+            }
+        )
         write_jsonl(checkpoint / "mp_query_fragment.jsonl", serial_fragments)
         write_jsonl(checkpoint / "mp_query_progress.jsonl", serial_progress)
         queried, progress, report = subject.validate_serial_prefix(checkpoint, missing)
         assert set(queried) == set(missing[:3])
         assert len(progress) == 3
         assert report["resolved_prefix_count"] == 3
+        assert report["physical_fragment_rows"] == 4
+        assert report["physical_progress_rows"] == 3
+        assert report["uncommitted_trailing_fragment"]["query_index"] == 4
+        assert report["uncommitted_trailing_fragment"]["reused"] is False
 
         spool = root / "spool"
         spool.mkdir()
