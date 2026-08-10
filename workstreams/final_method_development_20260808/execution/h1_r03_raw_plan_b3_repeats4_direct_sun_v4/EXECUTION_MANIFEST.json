@@ -1,0 +1,34 @@
+{
+  "schema": "h1_r03_raw_plan_b3_repeats4_execution_manifest_v4",
+  "status": "frozen_pre_execution_repeat_validator_repair",
+  "run_id": "20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_repeat_validator_repair_v4",
+  "scientific_question": "B3 minus historical B0 under the exact R03 raw Plan and R03 evaluation mouth",
+  "candidate_repeats": 4,
+  "attempts_per_repeat": 256,
+  "array": "0-3%2",
+  "partition": "gpu",
+  "historical_control": "R03G B0 safe-axis repeats 0..3",
+  "r03_raw_plan512_sha256": "bfaf2f9aa92ef4212d11bc71484ae6a60be13fd7239f107f08e419190afedb3e",
+  "r03_raw_plan_first256_sha256": "c29857e33bd89e94e2257d3b752a0c15bbe6953ac1b7d9f11e575056c6114f79",
+  "r03f_cache_rows": 227,
+  "r03f_cache_sha256": "56f91774c798854d253c0726773593c415456a8b5361f31802c44d8e1bbad917",
+  "b3_adapter_sha256": "ab4f3b82dfcafdcd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+  "refiner_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+  "direct_order": "gcd_then_smact_validity",
+  "bootstrap": {
+    "design": "paired hierarchical repeat-block then ordinal resampling",
+    "draws": 50000,
+    "seed": 20260810
+  },
+  "pooled_1024_is_descriptive_only": true,
+  "engineering_repair": {
+    "predecessor": "20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_adapter_sha_identity_repair_v3",
+    "predecessor_submitted_jobs": 0,
+    "change": "bind byte-identical successful V4 runtime scripts to a strict repeat-panel validator instead of the incompatible Planner-by-Body matrix validator",
+    "scientific_contract_changed": false
+  },
+  "formal_promotion": false,
+  "automatic_training": false,
+  "automatic_downstream": false,
+  "automatic_rl": false
+}
