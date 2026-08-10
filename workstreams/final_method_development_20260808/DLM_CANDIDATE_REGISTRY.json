@@ -1,12 +1,37 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-10T00:20:00+08:00",
+  "updated_at": "2026-08-10T08:48:00+08:00",
   "selection_limit_downstream": 2,
+  "protected_incumbent": "B0",
+  "four_cell_terminal": {
+    "run_id": "20260810_h1_evidence_first_four_cell_direct_sun_gcd_mp_cache_identity_repair_v4",
+    "cell_array_job_id": 31374,
+    "assembly_job_id": 31375,
+    "state": "COMPLETED_0_0",
+    "all_attempt_denominator_per_cell": 256,
+    "terminal_report_sha256": "cdd23113f86e97c5f747e7c97cf24a531231d68b32420cdf03909d8de2806fb6",
+    "cells": {
+      "M00": {"planner": "P0", "body": "B0", "comp_joint": 216, "structure": 247, "novel_unique": 219, "strict_sun": 21, "meta_sun": 116},
+      "M10": {"planner": "SFT-v2", "body": "B0", "comp_joint": 214, "structure": 246, "novel_unique": 207, "strict_sun": 13, "meta_sun": 91},
+      "M01": {"planner": "P0", "body": "B3", "comp_joint": 223, "structure": 252, "novel_unique": 223, "strict_sun": 19, "meta_sun": 119},
+      "M11": {"planner": "SFT-v2", "body": "B3", "comp_joint": 213, "structure": 247, "novel_unique": 210, "strict_sun": 16, "meta_sun": 102}
+    },
+    "body_effect_at_p0": {
+      "composition_difference_count": 7,
+      "composition_difference_percentage_points": 2.734375,
+      "composition_ci95_percentage_points": [0.78125, 4.6875],
+      "composition_mcnemar_p": 0.015625,
+      "strict_sun_difference_count": -2,
+      "meta_sun_difference_count": 3
+    },
+    "decision": "complete_evidence_report_no_automatic_promotion",
+    "formal_promotion": false
+  },
   "candidates": [
     {
       "candidate_id": "B0",
       "role": "protected_control",
-      "status": "protected_inventory_complete_b0_v5_state_panel_frozen",
+      "status": "protected_b0_v5_and_four_cell_terminal_incumbent_retained",
       "checkpoint_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
       "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
       "adapter_bytes": 6391016776,
@@ -57,7 +82,7 @@
     {
       "candidate_id": "B3",
       "role": "dynamic_v1_iid_safe_planned_2_to_1",
-      "status": "terminal_mixed_no_promotion_four_cell_evaluation_authorized",
+      "status": "terminal_mixed_no_promotion_four_cell_evaluation_complete",
       "terminal_execution": {
         "identity": "h1_dlm_b3_safe_axis_2to1_b0v5_v4",
         "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260809_h1_dlm_b3_safe_axis_2to1_b0v5_v4",
@@ -99,7 +124,8 @@
         },
         "both_required_point_estimates_improved": false,
         "formal_promotion": false,
-        "four_cell_current_run_evaluation_authorized": true
+        "four_cell_current_run_evaluation_authorized": true,
+        "four_cell_current_run_evaluation_complete": true
       }
     },
     {

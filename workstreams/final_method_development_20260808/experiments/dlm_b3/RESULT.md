@@ -1,6 +1,6 @@
 # Result: DLM B3
 
-Status: `B3_V4_TERMINAL_MIXED_NO_PROMOTION_FOUR_CELL_EVALUATION_AUTHORIZED`
+Status: `B3_V4_AND_FOUR_CELL_TERMINAL_MIXED_NO_PROMOTION`
 
 The immutable artifact inventory is complete without rehashing the protected
 6.39 GB payloads. B0 remains
@@ -69,7 +69,26 @@ requirement that both synthetic safe-axis and actual-rollout point estimates
 improve is false. B3 is a mixed diagnostic terminal, not a promoted body
 checkpoint; no ratio sweep, automatic downstream, or RL was launched.
 
-The user-authorized complete same-pipeline matrix still proceeds independently
-of promotion: P0+B0, SFT-v2+B0, P0+B3, and SFT-v2+B3 will each produce new
-256-attempt safe-axis + model_494 refine800 + Direct + frozen-cache S.U.N.
-evidence. Historical summaries cannot substitute for a current-run cell.
+The user-authorized complete same-pipeline matrix also completed independently
+of promotion. It used new 256-attempt cells throughout; no historical summary
+substituted for a current-run arm.
+
+| cell | comp/joint | structure | COV-P | COV-R | novel-unique | strict S.U.N. | meta S.U.N. |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| P0+B0 (M00) | 216/256 | 247/256 | 96.4844 | 85.2200 | 219/256 | 21/256 | 116/256 |
+| SFT-v2+B0 (M10) | 214/256 | 246/256 | 96.4844 | 67.5768 | 207/256 | 13/256 | 91/256 |
+| P0+B3 (M01) | 223/256 | 252/256 | 98.4375 | 83.2854 | 223/256 | 19/256 | 119/256 |
+| SFT-v2+B3 (M11) | 213/256 | 247/256 | 96.4844 | 71.6781 | 210/256 | 16/256 | 102/256 |
+
+At fixed P0, B3 improves composition/joint by 7/256 (+2.734375 pp;
+paired-bootstrap 95% CI [0.78125, 4.6875] pp; exact McNemar p=0.015625),
+but strict S.U.N. changes by -2/256 and meta S.U.N. by +3/256, neither
+significant. At fixed SFT-v2, B3 changes composition/joint by -1/256,
+strict S.U.N. by +3/256, and meta S.U.N. by +11/256, again without a
+promotion-grade interval. The joint M11 endpoint is below protected M00 on
+composition, novelty, strict S.U.N., and meta S.U.N. B3 remains a mixed,
+unpromoted diagnostic endpoint; no ratio sweep, checkpoint reselection, or RL
+is authorized.
+
+Array `31374` and assembler `31375` both completed `0:0`. Terminal report SHA:
+`cdd23113f86e97c5f747e7c97cf24a531231d68b32420cdf03909d8de2806fb6`.

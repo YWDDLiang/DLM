@@ -42,7 +42,7 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [x] Complete same-ledger P0/SFT-v2/SFT-v2-C raw64 generation, local exact
       SMACT4 secondary audit, and formal SMACT3.1 assembly64.
 - [ ] Complete C0/C1 fixed endpoints and their registered raw64 gate.
-- [ ] Complete the user-authorized SFT-v2 diagnostic raw256 and
+- [x] Complete the user-authorized SFT-v2 diagnostic raw256 and
       B0+safe-axis+model_494 Direct/S.U.N. chain without treating it as a
       raw64-passing promotion.
       V14 raw generation is complete at exact 256/256 for P0 and SFT-v2, and
@@ -51,14 +51,17 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       before an old-P0-schema false engineering gate. V20/V21/V22/V23
       failures are sealed; provenance-only V24 normal-CPU assembly job 31329
       completed 0:0 and preserved the same full metrics under a formal
-      scientific stop. The downstream Direct/S.U.N. chain remains.
+      scientific stop. Four-cell array 31374 and assembler 31375 then
+      completed 0:0; the frozen decision retains P0+B0 and promotes neither
+      SFT-v2 nor B3.
 - [ ] Complete raw256 for every raw64-passing candidate.
 - [ ] Freeze Planner shortlist of at most two non-P0 candidates.
 - [ ] Complete shortlisted Planner downstream256 with B0+safe-axis+model_494;
       also complete C1's frozen D1 downstream if C1 passes its registered path.
-- [ ] Complete the user-required full Planner head-to-head under the recorded
+- [x] Complete the user-required full Planner head-to-head under the recorded
       best pipeline: P0 versus SFT-v2 with identical B0, safe-axis, model_494,
-      Direct, S.U.N., ledgers, denominators, and evaluator assets.
+      Direct, S.U.N., ledgers, denominators, and evaluator assets. M00 and M10
+      completed at 256 attempts each under terminal report SHA `cdd23113...`.
 - [ ] Mark Planner portfolio terminal/saturated.
 
 ## DLM portfolio
@@ -77,23 +80,27 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       completed 0:0 on `gpu`/node99; exact producer-batch replay had zero
       delta and frozen panel-manifest SHA `6cc3d810...`. Historical fixed-panel
       batch size one is retained for B0/B3 science.
-- [ ] Report NLL, calibration, commit/group width, and state distributions.
+- [x] Report NLL, calibration, commit/group width, and state distributions in
+      the frozen B0-v5/B3-v4 state-panel terminal artifacts.
 - [x] Freeze the B3 source/submission package under the historical two-GPU,
       1,696-update contract; no extra unit-test matrix and no result-dependent
       method edits.
-- [ ] Execute B3 after the B0 state-panel terminal is SHA-bound.
+- [x] Execute B3 after the B0 state-panel terminal is SHA-bound.
       B3-v2 and B3-v3 pre-SBatch packaging failures are sealed. Portable-tar
       V4 uniquely submitted two-A800 `gpu` training job 31330 and dependent
-      frozen-panel scorer 31331; training is running on node99.
-- [ ] Complete B3 body64 point-estimate gate.
-- [ ] If eligible, execute B3-R 1:1 and 1:2.
+      frozen-panel scorer 31331; both completed 0:0 at 1,696/1,696 updates.
+- [-] Complete B3 body64 point-estimate gate; the frozen B3 transfer gate is
+      mixed because actual-B0 rollout NLL regressed, so no automatic body64
+      route is eligible. The separately authorized full matrix is complete.
+- [-] If eligible, execute B3-R 1:1 and 1:2; B3 was not eligible.
 - [ ] If and only if needed, execute B4 state-matched SFT.
 - [ ] If and only if derivable and needed, execute B5 parity gate.
 - [ ] Complete fixed-Plan paired-noise body64/body256.
 - [ ] Complete top-two DLM downstream256.
-- [ ] Complete the user-required full DLM head-to-head under the same recorded
+- [x] Complete the user-required full DLM head-to-head under the same recorded
       best pipeline: B0 versus B3 at fixed P0, followed by the orthogonal
-      SFT-v2+B3 joint cell. Report main effects separately from interaction.
+      SFT-v2+B3 joint cell. Array 31374 and assembler 31375 completed all four
+      current-run cells and reported paired main effects plus interaction.
 - [ ] Mark DLM portfolio terminal/saturated.
 
 ## Integration and final evaluation
@@ -103,6 +110,9 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [ ] Freeze up to three final methods and two independent ledgers per method.
 - [ ] Freeze generation and Novel-intersection-Unique union.
 - [ ] Prefetch one common MP cache without serializing credentials.
+- [x] Complete the current four-cell Planner-union MP cache at 455 systems,
+      consume/delete the one-time credential before Slurm, and bind all cells
+      to cache SHA `16545833...`.
 - [ ] Complete raw1000 and accepted1000 Direct/S.U.N. evaluation offline.
 - [ ] Report all counts, denominators, intervals, failure classes, and costs.
 - [ ] Apply final promotion rule or retain protected root.
@@ -110,6 +120,8 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 ## Evidence, cleanup, and delivery
 
 - [ ] Create CARD/RESULT/DECISION for every terminal experiment.
+- [x] Freeze the four-cell V4 terminal report, update both Planner/DLM RESULT
+      files and candidate/evidence registries, and retain protected M00.
 - [ ] Update registries and resource ledger after every submission/terminal.
 - [ ] Freeze checkpoint deletion manifests before deleting intermediates.
 - [ ] Preserve protected and promoted/fixed endpoint checkpoints.

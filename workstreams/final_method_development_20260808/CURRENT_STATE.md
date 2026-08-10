@@ -2,9 +2,9 @@
 
 Updated: 2026-08-10 (Asia/Shanghai)
 
-Overall status: `PLANNER_AND_B3_TERMINAL_FOUR_CELL_DIRECT_SUN_FREEZING`
+Overall status: `PLANNER_AND_B3_TERMINAL_FOUR_CELL_DIRECT_SUN_COMPLETE_NO_PROMOTION`
 
-## Active edge: complete current-run four-cell Direct/S.U.N.
+## Terminal edge: current-run four-cell Direct/S.U.N. complete
 
 The user-authorized V14 diagnostic now has exactly 256 all-attempt rows for
 both P0 and SFT-v2. The local-only exact SMACT4 audit is complete and
@@ -52,14 +52,39 @@ protected-B0 rollout (+0.161890). The required two-panel transfer condition
 is false, so B3 is not promoted and no ratio sweep was launched. No automatic
 downstream, S.U.N., or RL job was submitted.
 
-The active work is now the user-mandated complete current-run matrix:
-P0+B0, SFT-v2+B0, P0+B3, and SFT-v2+B3, each using the common 256-ordinal
-seed ledger, D2 safe-axis body generation, model_494 refine800, Direct, and
-frozen-cache S.U.N. Historical R03 evidence is shell/reference context only;
-it cannot replace a new cell. The immutable package is being frozen for a
-four-element `gpu` array with at most two concurrent A800 tasks and an
-`afterany` normal-CPU terminal assembler. All failures remain in denominator;
-there is no retry, repair, filter, rerank, automatic promotion, or RL.
+The user-mandated current-run matrix is now terminal. GPU array `31374`
+completed all four tasks `0:0`, and its `afterany` normal-CPU assembler
+`31375` completed `0:0`. Every cell used the same 256-ordinal seed ledger,
+D2 safe-axis body generation, model_494 refine800, GCD-before-comp-valid R03
+Direct scoring, and the same completed-cache R03E S.U.N. path. All raw
+failures remain in the 256-attempt denominator; there was no retry,
+replacement, repair, filter, or rerank.
+
+| cell | comp/joint | structure | COV-P | COV-R | novel | unique | novel-unique | strict S.U.N. | meta S.U.N. | hull evaluated/unknown |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| M00 P0+B0 | 216/256 | 247/256 | 96.4844 | 85.2200 | 220 | 246 | 219 | 21/256 | 116/256 | 216/3 |
+| M10 SFT-v2+B0 | 214/256 | 246/256 | 96.4844 | 67.5768 | 207 | 246 | 207 | 13/256 | 91/256 | 201/6 |
+| M01 P0+B3 | 223/256 | 252/256 | 98.4375 | 83.2854 | 223 | 252 | 223 | 19/256 | 119/256 | 220/3 |
+| M11 SFT-v2+B3 | 213/256 | 247/256 | 96.4844 | 71.6781 | 211 | 245 | 210 | 16/256 | 102/256 | 203/7 |
+
+M01 is the descriptive leader on composition/joint, structure, novelty,
+uniqueness, and meta S.U.N.; M00 remains the strict-S.U.N. leader and the
+protected incumbent. At P0, B3 improves composition/joint by 7/256
+(+2.734375 pp; paired-bootstrap 95% CI [0.78125, 4.6875] pp; exact McNemar
+p=0.015625), while strict S.U.N. changes by -2/256 and is not significant.
+SFT-v2 does not improve composition or strict S.U.N. at either body and
+reduces meta S.U.N. at B0 by 25/256 (-9.765625 pp; 95% CI
+[-17.96875, -1.5625] pp; p=0.0260756). The frozen decision is therefore
+`complete_evidence_report_no_automatic_promotion`; formal promotion is false
+and M00 remains protected.
+
+The common Planner-union MP cache is complete at 455 chemical systems after
+resolving 257 missing systems. Its SHA is
+`165458334295920c7d15769895d5c56d152c932ba02e27c15c6e20b64db18d0d`;
+the API credential was destroyed before Slurm and no MP API access occurred
+inside the jobs. The complete terminal report is frozen at
+`execution/h1_four_cell_direct_sun_v4/TERMINAL_REPORT.json`, SHA
+`cdd23113f86e97c5f747e7c97cf24a531231d68b32420cdf03909d8de2806fb6`.
 
 The Evidence-First workstream is active on branch
 `codex/evidence-first-sun-msun`. The V8 optimizer audit repair passed both
@@ -321,19 +346,14 @@ remained unsubmitted; later V10/V14/V24 evidence supersedes that status.
 
 ## Immediate critical path
 
-1. Preserve V3/V4/V5 source, job, logs, identity reports, and terminal evidence
-   unchanged.
-2. Complete two independent propose/red-team reviews of the repeated PEFT
-   identity failure.
-3. Run one minimal A800 runtime probe that compares candidate, reference, and
-   protected source tensors after each load/freeze/device/activation step. It
-   must not perform model forward, optimizer construction, or training.
-4. Freeze a new immutable repair and rerun the dual-arm smoke only if the
-   reviews and probe support one exact-identity implementation. The exact gate
-   may not be relaxed.
-5. Submit fixed-endpoint training and raw64 only after both repaired smoke
-   tasks complete `0:0`; do not queue assembly before the local audit.
-6. Continue C0/C1 and the B3 portfolio after this source family reaches its
-   registered terminal.
+1. Preserve the four-cell V4 source, completed cache, Slurm records, per-cell
+   artifacts, and terminal report byte-for-byte.
+2. Retain P0+B0 (M00) as the protected incumbent; neither SFT-v2 nor B3 is
+   formally promoted from this diagnostic matrix.
+3. Complete the still-pending C0/C1 fixed endpoints and registered raw64 gates
+   before declaring the Planner portfolio saturated.
+4. Freeze any later integration/raw1000 package only from the terminal
+   registries and under a new immutable authorization; do not infer automatic
+   training, checkpoint reselection, downstream work, or RL from this report.
 
 No Planner or DLM RL is authorized.

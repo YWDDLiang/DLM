@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-09T12:19:51+08:00",
+  "updated_at": "2026-08-10T08:48:00+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -130,19 +130,71 @@
       "partition": "gpu",
       "gpus_per_task": 1,
       "cpus_per_task": 8,
-      "state": "SUBMITTED",
+      "state": "COMPLETED",
+      "exit_code": "0:0",
       "attempts_per_task": 256,
       "arms": ["P0", "SFT-v2"],
       "diagnostic_user_override": true,
       "automatic_assembly": false,
       "automatic_downstream": false
+    },
+    {
+      "stage": "chemistry_first_v24_formal_raw256_assembly",
+      "job_id": 31329,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "scientific_stop": true
+    },
+    {
+      "stage": "dlm_b0_v5_state_panel",
+      "job_id": 31323,
+      "partition": "gpu",
+      "gpus": 1,
+      "state": "COMPLETED",
+      "exit_code": "0:0"
+    },
+    {
+      "stage": "dlm_b3_v4_training",
+      "job_id": 31330,
+      "partition": "gpu",
+      "gpus": 2,
+      "cpus": 8,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "optimizer_updates": 1696,
+      "elapsed": "00:56:59"
+    },
+    {
+      "stage": "dlm_b3_v4_frozen_panel_score",
+      "job_id": 31331,
+      "partition": "gpu",
+      "gpus": 1,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:10:42"
+    },
+    {
+      "stage": "h1_four_cell_direct_sun_v4",
+      "job_id": 31374,
+      "array": "0-3%2",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "cpus_per_task": 8,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "attempts_per_task": 256
+    },
+    {
+      "stage": "h1_four_cell_direct_sun_v4_assembly",
+      "job_id": 31375,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:02:49"
     }
   ],
-  "current_allocations": [
-    {
-      "job_id": 31236,
-      "stage": "chemistry_first_v14_diagnostic_raw256",
-      "maximum_gpus": 2
-    }
-  ]
+  "current_allocations": []
 }

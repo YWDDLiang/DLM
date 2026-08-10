@@ -1,6 +1,6 @@
 # Result: Planner SFT-v2
 
-Status: `RAW64_COMPOSITION_GAIN_SAFETY_GATE_STOP_USER_AUTHORIZED_DIAGNOSTIC_DOWNSTREAM`
+Status: `RAW256_AND_FOUR_CELL_TERMINAL_NO_PROMOTION_PROTECTED_P0`
 
 Fixed endpoint training completed at 4,505 optimizer updates with one complete
 36,038-record ledger pass and final accumulation size 6. The common raw64
@@ -78,5 +78,30 @@ exact stale-marker guard. V24 used a clean root; normal-CPU assembly job
 and stage-summary SHA
 `445d58c2b567acb688e554b511917340eb1ff172de22df8d49d11c0045945f46`.
 Raw, model, ledger, evaluator, and reported science counts remain unchanged.
-The formal result is a scientific stop rather than a promotion; the
-user-authorized Direct and S.U.N. comparison remains pending.
+The formal result is a scientific stop rather than a promotion.
+
+## Current-run four-cell Direct/S.U.N. terminal
+
+The user-authorized comparison completed under one current-run pipeline and
+one 256-attempt denominator per cell. Direct composition validity applies GCD
+before the frozen R03 validity code; all four cells share the same completed
+455-system MP cache and frozen R03E S.U.N. evaluator.
+
+| cell | comp/joint | structure | COV-P | COV-R | novel-unique | strict S.U.N. | meta S.U.N. |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| P0+B0 (M00) | 216/256 | 247/256 | 96.4844 | 85.2200 | 219/256 | 21/256 | 116/256 |
+| SFT-v2+B0 (M10) | 214/256 | 246/256 | 96.4844 | 67.5768 | 207/256 | 13/256 | 91/256 |
+| P0+B3 (M01) | 223/256 | 252/256 | 98.4375 | 83.2854 | 223/256 | 19/256 | 119/256 |
+| SFT-v2+B3 (M11) | 213/256 | 247/256 | 96.4844 | 71.6781 | 210/256 | 16/256 | 102/256 |
+
+At fixed B0, SFT-v2 changes composition/joint by -2/256 (-0.78125 pp;
+95% CI [-6.640625, 5.078125] pp; exact McNemar p=0.893853), strict S.U.N.
+by -8/256, and meta S.U.N. by -25/256 (-9.765625 pp; 95% CI
+[-17.96875, -1.5625] pp; p=0.0260756). At fixed B3, it changes
+composition/joint by -10/256 and meta S.U.N. by -17/256, with intervals that
+include zero. The raw256 legacy composition gain therefore does not transfer
+to the complete downstream pipeline. SFT-v2 is not promoted and P0 remains
+the protected Planner.
+
+Array `31374` and assembler `31375` both completed `0:0`. Terminal report SHA:
+`cdd23113f86e97c5f747e7c97cf24a531231d68b32420cdf03909d8de2806fb6`.
