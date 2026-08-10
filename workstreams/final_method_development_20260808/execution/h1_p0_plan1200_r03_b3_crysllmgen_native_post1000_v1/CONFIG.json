@@ -1,0 +1,43 @@
+{
+  "schema": "h1_p0_plan1200_r03_b3_crysllmgen_native_post1000_config_v1",
+  "run_id": "20260811_h1_p0_plan1200_r03_b3_prepost_repeats3_execmode_repair_v3",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_p0_plan1200_r03_b3_prepost_repeats3_execmode_repair_v3",
+  "body_source_manifest_sha256": "080db87fc12319b02000e121b306b7d26eed194b26afe2921276a1647ccc7ed8",
+  "planner_raw_attempts": 1200,
+  "native_refined_denominator": 1000,
+  "repeat_count": 3,
+  "arms": ["R03", "B3"],
+  "candidate_order": "planner_parse_success_rank_by_planner_ordinal",
+  "selection": "first_1000_body_successes_by_frozen_candidate_order_per_arm_repeat",
+  "prefix_reuse": true,
+  "prefix_candidate_count": 1000,
+  "reserve_generation": "all_remaining_parse_success_candidates_once",
+  "same_plan_retry": false,
+  "stochastic_replacement": false,
+  "repair": false,
+  "filter": false,
+  "rerank": false,
+  "refiner": {
+    "name": "CrysLLMGen model_494",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "diffusion_steps": 800,
+    "prefix_refinement_reused": true,
+    "reserve_refinement_attempts": "selected_reserve_candidates_only_once"
+  },
+  "evaluation": {
+    "stage": "post_model494",
+    "crysllmgen_denominator": "all_1000_refined_structures",
+    "sun_headline_denominator": "reconstructed_structures_exact_legacy",
+    "sun_secondary_denominator": "all_1000_refined_structures"
+  },
+  "upstream_sampling_contract": {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/crysllmgen_sample.py",
+    "source_sha256": "6c641e2d873184d0301d824c256cf27b07c1e59cf6c547d38162ee49866fc0d9",
+    "success_counter": "idx += len(data_dicts)",
+    "diffusion_input": "SampleDataset(collected_data)",
+    "interpretation": "num_samples counts process_one-success candidates and every collected candidate enters diffusion"
+  },
+  "automatic_training": false,
+  "automatic_rl": false
+}
