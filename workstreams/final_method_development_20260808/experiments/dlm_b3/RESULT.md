@@ -137,3 +137,20 @@ Direct composition validity is shown only to document execution (B3 is
 number. B3 remains a terminal diagnostic and is not promoted; B0 remains the
 protected body. Terminal report SHA:
 `101382719310c35f643dfd5b9051834946582058c7a42c0fbd524741b4da6f91`.
+
+## P0 Plan1200 pre/post and native-1000 attempt
+
+The later three-repeat P0 Plan1200 evaluation does not add a B3 scientific
+result. Planner array `31565` completed three distinct batches and froze
+1,000 shared plans per repeat, but all R03 (`31569`) and B3 (`31570`) body
+tasks failed before their first model generation. Frozen cohort rows omit a
+top-level `parsed` field while the body consumer requires it to be exactly
+`true`; preflight did not assert that producer/consumer field.
+
+The CrysLLMGen-native supplement—select the first 1,000 body-success outputs
+and refine all 1,000—also stopped before reserve generation because the main
+body successes were absent. There are no pre/post CrysLLMGen metrics, no
+S.U.N. metrics, and no paired three-repeat B3 contrast from this route. It
+does not revise the earlier R03 raw-Plan finding or B3's unpromoted status.
+The terminal diagnosis is recorded in
+`H1_P0_PLAN1200_R03_B3_PREPOST_REPEATS3_EXECMODE_FAILURE_V3.md`.

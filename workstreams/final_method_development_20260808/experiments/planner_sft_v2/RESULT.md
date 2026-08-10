@@ -105,3 +105,18 @@ the protected Planner.
 
 Array `31374` and assembler `31375` both completed `0:0`. Terminal report SHA:
 `cdd23113f86e97c5f747e7c97cf24a531231d68b32420cdf03909d8de2806fb6`.
+
+## Separate P0 Plan1200 downstream attempt
+
+A later P0-only planner stage successfully produced three distinct raw1200
+batches with 1,189/1,193/1,194 parse successes and froze the first 1,000
+parse successes per repeat. The downstream R03/B3 comparison nevertheless
+failed before body generation because those frozen rows do not carry the
+top-level `parsed` key required by the body runtime; the preflight omitted
+that exact schema assertion.
+
+Consequently this route yields no new Planner, CrysLLMGen, S.U.N., or
+post-refine result and does not change the protected-P0 decision or the
+SFT-v2 scientific stop. The requested native full-1,000 diffusion-refine
+supplement also remains unfulfilled. See
+`H1_P0_PLAN1200_R03_B3_PREPOST_REPEATS3_EXECMODE_FAILURE_V3.md`.

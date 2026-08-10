@@ -120,6 +120,13 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
 - [x] Complete the current four-cell Planner-union MP cache at 455 systems,
       consume/delete the one-time credential before Slurm, and bind all cells
       to cache SHA `16545833...`.
+- [-] Complete the authorized P0 Plan1200 × R03/B3 three-repeat V3 pre/post
+      evaluation and CrysLLMGen-native post-refine 1,000 supplement. Planner
+      batches and both MP caches completed, but all six main body tasks failed
+      before generation because frozen cohort rows omit the top-level `parsed`
+      field required by the body consumer. Native reserve generation/refine
+      consequently did not start. V3/native V1 are sealed fail-closed; no
+      CrysLLMGen/S.U.N. metric or model inference exists.
 - [ ] Complete raw1000 and accepted1000 Direct/S.U.N. evaluation offline.
 - [ ] Report all counts, denominators, intervals, failure classes, and costs.
 - [ ] Apply final promotion rule or retain protected root.
@@ -131,6 +138,11 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       files and candidate/evidence registries, and retain protected M00.
 - [x] Freeze the R03 raw Plan × B3 V5 repeated terminal report, paired
       statistics, DLM RESULT, and candidate/evidence registries; retain B0.
+- [x] Freeze the Plan1200 V3/native1000 engineering-failure report, complete
+      Slurm/accounting and source evidence, both terminal artifact bundles,
+      and the exact producer/consumer/preflight schema diagnosis. Preserve the
+      ignored local evidence bundles at their recorded SHAs and do not
+      resubmit the failed identities.
 - [ ] Update registries and resource ledger after every submission/terminal.
 - [ ] Freeze checkpoint deletion manifests before deleting intermediates.
 - [ ] Preserve protected and promoted/fixed endpoint checkpoints.

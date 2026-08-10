@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_planner_candidate_registry_v1",
-  "updated_at": "2026-08-10T08:48:00+08:00",
+  "updated_at": "2026-08-11T05:54:00+08:00",
   "selection_limit_non_p0_downstream": 2,
   "protected_incumbent": "P0",
   "four_cell_terminal": {
@@ -31,6 +31,24 @@
     "decision": "complete_evidence_report_no_automatic_promotion",
     "formal_promotion": false
   },
+  "p0_plan1200_prepost_terminal": {
+    "run_id": "20260811_h1_p0_plan1200_r03_b3_prepost_repeats3_execmode_repair_v3",
+    "planner_array_job_id": 31565,
+    "planner_assembly_job_id": 31566,
+    "planner_state": "COMPLETED_0_0",
+    "raw_plan_attempts_per_repeat": 1200,
+    "parse_success_counts": [1189, 1193, 1194],
+    "frozen_cohort_count_per_repeat": 1000,
+    "three_repeat_cohorts_distinct": true,
+    "within_repeat_r03_b3_cohort_shared": true,
+    "downstream_state": "ENGINEERING_FAILURE_BEFORE_BODY_GENERATION",
+    "failure_message": "ValueError: frozen cohort contract changed at ordinal 0",
+    "root_cause": "cohort_rows_omit_top_level_parsed_key_body_consumer_requires_parsed_true_and_preflight_omitted_exact_schema_assertion",
+    "planner_scientific_inference_role": "none_downstream_engineering_failure",
+    "failure_report_sha256": "3f3b32b904563c40258483fcf7d2c21a27522f536702ab75ea310dfde5d98d8f",
+    "changes_protected_incumbent": false,
+    "automatic_rl": false
+  },
   "candidates": [
     {
       "candidate_id": "P0",
@@ -56,6 +74,17 @@
         "terminal_report_sha256": "cf51e4067981dfecee6e07e508edc84a138b0b7a93003e91a487db66f1938e5b",
         "stage_summary_sha256": "445d58c2b567acb688e554b511917340eb1ff172de22df8d49d11c0045945f46",
         "last_observed_state": "COMPLETED_0_0_SCIENTIFIC_STOP"
+      },
+      "plan1200_downstream_attempt": {
+        "planner_completed": true,
+        "parse_success_counts": [1189, 1193, 1194],
+        "frozen_cohort_count_per_repeat": 1000,
+        "body_generation_started": false,
+        "pre_refine_metrics_available": false,
+        "post_refine_metrics_available": false,
+        "native_full_1000_post_refine_available": false,
+        "status": "engineering_failure_no_planner_inference",
+        "failure_report_sha256": "3f3b32b904563c40258483fcf7d2c21a27522f536702ab75ea310dfde5d98d8f"
       }
     },
     {

@@ -2,7 +2,36 @@
 
 Updated: 2026-08-11 (Asia/Shanghai)
 
-Overall status: `P0_PLAN1200_R03_B3_PREPOST_ENGINEERING_FAILURE_NO_BODY_SUBMISSION`
+Overall status: `P0_PLAN1200_R03_B3_V3_BODY_SCHEMA_FAILURE_NO_SCIENTIFIC_METRICS`
+
+## Terminal engineering failure: Plan1200 V3 and native post-refine 1000
+
+The authorized V3 planner stage completed: array `31565` and assembler
+`31566` finished `0:0`, raw1200 repeats yielded 1,189/1,193/1,194 parse
+successes, and three distinct first-1000 cohorts were frozen with each repeat
+shared between R03 and B3. The main 2,464-row MP cache and native 2,865-row
+extension are complete at SHAs `bf0dc8ed...` and `bc622ae4...`; the latter
+resolved 401 missing systems with zero transport retries and destroyed its
+one-time credential carrier.
+
+All main body tasks then failed before generation. R03 array `31569` and B3
+array `31570` each have three `FAILED 1:0` tasks; assembler `31571` failed
+closed `3:0`. Every frozen cohort row lacks a top-level `parsed` key, while
+`run_body_safeaxis1000.py` requires `row.get("parsed") is True`. The body
+preflight checked the other prompt invariants but omitted this field, so the
+producer/consumer schema mismatch first surfaced at ordinal 0 in every task.
+
+The requested CrysLLMGen-native supplement was frozen separately: select the
+first 1,000 body/`process_one` successes in planner order and pass all 1,000
+through model_494. Its arrays `31576`/`31577` and assembler `31578` also
+failed closed because the required main successes were absent; reserve
+generation and diffusion refine never began.
+
+Therefore V3 has no pre-refine or post-refine CrysLLMGen/S.U.N. metric and no
+three-repeat inference. This is an engineering failure, not a P0, R03, B3,
+refiner, or evaluator result. V1, V2, V3, and native supplement V1 are sealed;
+none may be repaired or resubmitted in place. The complete terminal record is
+`H1_P0_PLAN1200_R03_B3_PREPOST_REPEATS3_EXECMODE_FAILURE_V3.md`.
 
 ## Terminal engineering failure: P0 plan1200 three-batch route stopped before sampling
 
@@ -414,15 +443,18 @@ remained unsubmitted; later V10/V14/V24 evidence supersedes that status.
 
 ## Immediate critical path
 
-1. Preserve V1 run root, Slurm records, terminal report, and returned failure
-   bundle byte-for-byte; do not repair or resubmit V1.
-2. Do not submit the prepared R03/B3 body package because none of the three
-   required frozen P0 cohorts exists.
-3. If explicitly authorized, create a new immutable V2 with only the
-   packaging/import preflight repair, then regenerate all three plan batches
-   from scratch under the unchanged scientific contract.
-4. Retain P0+B0 (M00) as the protected incumbent. Neither this engineering
-   failure nor the prior diagnostics promote B3, SFT-v2, or any downstream
-   route.
+1. Preserve V1, V2, V3, native supplement V1, all Slurm records, terminal
+   reports, frozen cohorts, caches, and returned evidence byte-for-byte; do
+   not repair, requeue, or resubmit any of those identities.
+2. Make no scientific interpretation from V3: body generation never started,
+   so all requested CrysLLMGen/S.U.N. and native full-1,000 post-refine metrics
+   remain unavailable.
+3. Continuing requires explicit authorization for a new immutable repair that
+   aligns the cohort `parsed` schema with the body consumer and extends
+   preflight to assert the exact producer/consumer schema. Reuse of planner
+   cohorts or MP caches must be separately justified and authorized; there is
+   no automatic submission.
+4. Retain P0+B0 (M00) as the protected incumbent. V3 promotes neither B3,
+   SFT-v2, nor any downstream route.
 
 No Planner or DLM RL is authorized.

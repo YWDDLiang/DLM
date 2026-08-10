@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-10T22:21:10+08:00",
+  "updated_at": "2026-08-11T05:54:00+08:00",
   "selection_limit_downstream": 2,
   "protected_incumbent": "B0",
   "four_cell_terminal": {
@@ -56,6 +56,30 @@
     },
     "direct_comp_valid_role": "descriptive_only_not_a_dlm_endpoint",
     "decision": "strict_sun_regression_no_promotion",
+    "formal_promotion": false,
+    "automatic_rl": false
+  },
+  "plan1200_prepost_terminal": {
+    "run_id": "20260811_h1_p0_plan1200_r03_b3_prepost_repeats3_execmode_repair_v3",
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_p0_plan1200_r03_b3_prepost_repeats3_execmode_repair_v3",
+    "planner_array_job_id": 31565,
+    "planner_assembly_job_id": 31566,
+    "planner_state": "COMPLETED_0_0",
+    "planner_parse_success_counts": [1189, 1193, 1194],
+    "main_r03_array_job_id": 31569,
+    "main_b3_array_job_id": 31570,
+    "main_assembly_job_id": 31571,
+    "native_r03_array_job_id": 31576,
+    "native_b3_array_job_id": 31577,
+    "native_assembly_job_id": 31578,
+    "state": "ENGINEERING_FAILURE_BEFORE_BODY_GENERATION",
+    "failure_message": "ValueError: frozen cohort contract changed at ordinal 0",
+    "root_cause": "cohort_rows_omit_top_level_parsed_key_body_consumer_requires_parsed_true_and_preflight_omitted_exact_schema_assertion",
+    "pre_refine_metrics_available": false,
+    "post_refine_metrics_available": false,
+    "native_full_1000_post_refine_available": false,
+    "scientific_inference_role": "none_engineering_failure_only",
+    "failure_report_sha256": "3f3b32b904563c40258483fcf7d2c21a27522f536702ab75ea310dfde5d98d8f",
     "formal_promotion": false,
     "automatic_rl": false
   },
@@ -170,6 +194,15 @@
           "meta_repeat_differences": [10, -3, 2, -1],
           "direct_comp_valid_role": "descriptive_only_not_a_dlm_endpoint",
           "formal_promotion": false
+        },
+        "plan1200_prepost_evaluation": {
+          "status": "engineering_failure_before_body_generation",
+          "b3_samples_generated": 0,
+          "pre_refine_metrics_available": false,
+          "post_refine_metrics_available": false,
+          "native_full_1000_post_refine_available": false,
+          "changes_prior_b3_conclusion": false,
+          "failure_report_sha256": "3f3b32b904563c40258483fcf7d2c21a27522f536702ab75ea310dfde5d98d8f"
         }
       }
     },
