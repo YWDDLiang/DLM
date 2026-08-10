@@ -1,0 +1,20 @@
+{
+  "schema": "h1_r03_raw_plan_b3_repeats4_authorization_v3",
+  "status": "user_authorized",
+  "authorized_at_local_date": "2026-08-10",
+  "authorized_scope": [
+    "use the byte-frozen R03 raw Plan with B3",
+    "run four B3 process repeats on the gpu partition",
+    "reuse historical R03 B0 repeats as the paired control",
+    "run Direct with GCD before composition validity",
+    "run S.U.N. against the byte-frozen R03F cache",
+    "apply the minimal V3 adapter-SHA identity repair after the V2 pre-sbatch failure"
+  ],
+  "forbidden": [
+    "sample retry or replacement",
+    "repair, filter, or rerank",
+    "automatic training or checkpoint reselection",
+    "automatic downstream execution",
+    "reinforcement learning"
+  ]
+}

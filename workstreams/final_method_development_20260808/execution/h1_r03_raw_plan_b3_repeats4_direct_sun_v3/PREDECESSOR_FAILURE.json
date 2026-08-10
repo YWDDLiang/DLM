@@ -1,0 +1,14 @@
+{
+  "schema": "h1_r03_raw_plan_b3_predecessor_failure_v2",
+  "predecessor_run_id": "20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_runtime_path_repair_v2",
+  "status": "failed_closed_before_sbatch",
+  "root_cause": "B3 adapter identity was malformed at 62 hexadecimal characters",
+  "failed_evidence_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/.20260810_h1_r03_raw_plan_b3_safeaxis_direct_sun_runtime_path_repair_v2.preparing.61468.FAILED",
+  "malformed_adapter_sha256": "ab4f3b82dfcafd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+  "replacement_adapter_sha256": "ab4f3b82dfcafdcd0d111bc7ee424ff08ea0932a1a1466beaf91539917922bc7",
+  "replacement_identity_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_evidence_first_four_cell_direct_sun_gcd_mp_cache_identity_repair_v4/source/CONFIG.json",
+  "predecessor_run_root_created": false,
+  "predecessor_jobs_submitted": 0,
+  "scientific_contract_changed_in_v3": false,
+  "automatic_retry": false
+}
