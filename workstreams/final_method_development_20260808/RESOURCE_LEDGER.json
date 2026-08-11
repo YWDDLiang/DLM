@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-11T20:25:00+08:00",
+  "updated_at": "2026-08-12T03:08:48+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -248,6 +248,29 @@
       "state": "COMPLETED",
       "exit_code": "0:0",
       "elapsed": "00:01:03"
+    },
+    {
+      "stage": "h1_sun_official_gga_u_skip_unknown_reeval_v2",
+      "job_id": 31737,
+      "partition": "normal",
+      "gpus": 0,
+      "cpus_per_task": 16,
+      "memory_gb": 96,
+      "parallel_frozen_cells": 16,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:11:54",
+      "new_mp_queries": 0
+    },
+    {
+      "stage": "h1_sun_official_gga_u_skip_unknown_reeval_v2_assembly",
+      "job_id": 31738,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:59",
+      "hierarchical_paired_bootstrap_draws": 50000
     }
   ],
   "current_allocations": []

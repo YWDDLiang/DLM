@@ -1,8 +1,42 @@
 # Current state
 
-Updated: 2026-08-11 (Asia/Shanghai)
+Updated: 2026-08-12 (Asia/Shanghai)
 
-Overall status: `R03_REFINED256_CURRENT_SUN_REPLAY_COMPLETE_PLAN1200_V4_STAGE_RESULTS_COMPLETE_ASSEMBLY_FAILED_CLOSED`
+Overall status: `OFFICIAL_MP_SKIP_UNKNOWN_SUN_REEVALUATION_COMPLETE_PLAN1200_GAP_PERSISTS`
+
+## Terminal diagnostic: official MP stability repair does not close the Plan1200 gap
+
+The stability-only repair is complete. Normal jobs `31737` (16 frozen cells
+evaluated in parallel) and `31738` (assembly) both completed `0:0`. The run
+issued no new MP request and reran no Planner, body/DLM, model-494, CHGNet,
+reconstruction, novelty, or uniqueness work. It adopted the completed fresh
+official `MPRester.get_entries_in_chemsys()` spool with
+`compatible_only=True` and `GGA_GGA+U`: 2,550/2,630 systems have complete
+official references. The other 80 all lack a Yb unary reference and are
+reported as explicit `hull_unknown`; they are excluded only from denominators
+labelled `skip MP unknown`.
+
+The official-clean correction is small. Historical R03 refined256 strict
+S.U.N. is 10.94--12.50% on fixed all-attempt denominators and
+11.34--12.96% after skipping explicit MP unknowns. V4 post-model494 strict
+S.U.N. remains 6.00--7.30% for R03 and 6.00--7.10% for B3 on fixed
+all-attempt denominators; skip-unknown values are 6.15--7.48% and
+6.15--7.29%, respectively. Mean clean-minus-old `E_hull` shifts range only
+from -0.000938 to +0.000075 eV/atom. Thus neither the 80 Yb systems nor the
+old compatibility path explains the large historical-versus-Plan1200 gap.
+
+The paired clean analysis confirms model-494 as a large positive effect:
+strict post-minus-pre is +4.425 pp for R03 (95% CI +3.402 to +5.449) and
++4.665 pp for B3 (+3.536 to +5.763). B3-minus-R03 is not resolved on these
+three cohorts, either pre (-0.514 pp, CI -1.338 to +0.378) or post
+(-0.274 pp, CI -1.094 to +0.479). The remaining diagnostic focus is therefore
+the Plan sampling/cohort distribution, not further S.U.N. cache repair.
+
+Complete strict and meta tables are in
+`evidence/h1_sun_official_gga_u_skip_unknown_reeval_v2/RESULTS_COMPLETE.md`;
+the interpretation and paired table are in the adjacent `ANALYSIS.md`.
+Terminal JSON SHA is `651588b7...f254b` and Markdown SHA is
+`b6daf991...53544`.
 
 ## Terminal diagnostic: historical R03 remains high under current S.U.N./MP cache
 

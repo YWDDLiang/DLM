@@ -187,3 +187,29 @@ to float. Consequently no V4 formal three-repeat inference exists and the
 gated native1000 continuation was not submitted. Full point estimates and
 provenance are in
 `H1_R03_REFINED256_CURRENT_SUN_CACHE_REPLAY_AND_PLAN_SAMPLING_AUDIT_V1.md`.
+
+## Official-MP stability-only re-evaluation
+
+A subsequent clean stability audit removes the remaining ambiguity about the
+MP compatibility path. Job `31737` evaluated 16 frozen V4/historical cells in
+parallel and assembler `31738` completed `0:0`. The audit used only official
+`MPRester.get_entries_in_chemsys()` entries with `compatible_only=True` and
+`GGA_GGA+U`; no historical/August cache row was reused. Of 2,630 required
+chemical systems, 2,550 have complete official references. The 80 systems
+without a Yb unary reference are explicit `hull_unknown` and are omitted only
+from separately labelled skip-unknown denominators.
+
+The correction does not close the gap. Official-clean fixed-all strict rates
+remain 10.94--12.50% for historical R03 refined256, 6.00--7.30% for V4 R03
+post-model494, and 6.00--7.10% for V4 B3 post-model494. Mean clean-minus-old
+`E_hull` is between -0.000938 and +0.000075 eV/atom. The 50,000-draw paired
+bootstrap gives B3-minus-R03 post-model494 strict = -0.274 pp (95% CI
+-1.094 to +0.479), while model-494 post-minus-pre is +4.425 pp for R03
+(+3.402 to +5.449) and +4.665 pp for B3 (+3.536 to +5.763).
+
+Therefore official MP cleanup changes a few labels but not the scientific
+interpretation: refinement is strongly beneficial, the three-cohort
+R03-versus-B3 difference is unresolved, and the historical-versus-Plan1200
+gap remains upstream of stability evaluation. B3 stays unpromoted. Full
+strict/meta tables are frozen under
+`evidence/h1_sun_official_gga_u_skip_unknown_reeval_v2/`.

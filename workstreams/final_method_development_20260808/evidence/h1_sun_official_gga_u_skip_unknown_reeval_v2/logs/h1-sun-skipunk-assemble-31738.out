@@ -1,0 +1,12 @@
+adopt_failed_spool.py: OK
+assemble.py: OK
+assemble.sbatch: OK
+collect_inputs.py: OK
+CONFIG.json: OK
+prepare_and_submit_once.sh: OK
+protocol.py: OK
+README.md: OK
+reevaluate_cell.py: OK
+reevaluate.sbatch: OK
+self_test.py: OK
+{"cells":16,"engineering_status":"complete","markdown":"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_sun_official_gga_u_skip_unknown_reeval_v2/RESULTS_COMPLETE.md","terminal_report":"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_sun_official_gga_u_skip_unknown_reeval_v2/terminal_report.json"}

@@ -133,6 +133,14 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       attempt labels are identical old versus current (zero discordant pairs),
       proving that evaluator/cache drift does not explain the Plan1200 drop.
       The active Plan prompt is byte-identical; the RNG/cohort protocol changed.
+- [x] Re-evaluate stability for all 12 V4 stages and four historical R03
+      refined256 cells with official `MPRester.get_entries_in_chemsys`,
+      `compatible_only=True`, `GGA_GGA+U`, and a fresh cache. Jobs 31737 and
+      31738 completed `0:0`; 2,550/2,630 systems resolved and the 80 missing
+      Yb-unary systems are explicit `hull_unknown`. The clean correction is
+      small and does not close the Plan1200 gap; model-494 remains strongly
+      positive and the Plan sampling/cohort distribution remains the leading
+      diagnostic locus.
 - [-] Complete the immutable V4 Plan1200 formal assembly/native continuation.
       All six R03/B3 repeat tasks and twelve pre/post stage reports completed,
       but assembly 31585 failed closed on an integer-to-float overflow in the
@@ -158,6 +166,10 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       prompt/sampling audit, four repeat validations, 12 V4 comparison stage
       reports, and transferred SHA manifest. Preserve V4's failed-closed
       assembly status and do not submit its gated native continuation.
+- [x] Freeze the official-MP skip-unknown S.U.N. terminal report, complete
+      strict/meta denominator tables, 16 cell reports, exact McNemar tests,
+      50,000-draw hierarchical paired bootstraps, source identities, Slurm
+      evidence, and transferred SHA manifest.
 - [ ] Update registries and resource ledger after every submission/terminal.
 - [ ] Freeze checkpoint deletion manifests before deleting intermediates.
 - [ ] Preserve protected and promoted/fixed endpoint checkpoints.

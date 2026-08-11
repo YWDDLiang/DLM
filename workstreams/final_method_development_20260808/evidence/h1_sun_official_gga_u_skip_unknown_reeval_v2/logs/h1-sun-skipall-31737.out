@@ -1,0 +1,11 @@
+adopt_failed_spool.py: OK
+assemble.py: OK
+assemble.sbatch: OK
+collect_inputs.py: OK
+CONFIG.json: OK
+prepare_and_submit_once.sh: OK
+protocol.py: OK
+README.md: OK
+reevaluate_cell.py: OK
+reevaluate.sbatch: OK
+self_test.py: OK

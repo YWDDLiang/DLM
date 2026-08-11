@@ -1,0 +1,74 @@
+{
+  "schema": "h1_sun_official_gga_u_clean_reeval_config_v1",
+  "run_id": "20260811_h1_sun_official_gga_u_clean_reeval_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_sun_official_gga_u_clean_reeval_v1",
+  "purpose": "Replace only the contaminated MP stability reference path while preserving every frozen generation, reconstruction, novelty, uniqueness, and CHGNet relaxed-energy result.",
+  "runtime": {
+    "official_mp_python": "/public/home/jiaosz/ywliang/ai4s/.venvs/mp_api_0_45_13_emmet0_85_1_py310_v4_system/bin/python",
+    "official_mp_python_version": "3.10.18",
+    "official_mp_packages": {
+      "mp-api": "0.45.13",
+      "emmet-core": "0.85.1",
+      "pymatgen": "2025.6.14"
+    },
+    "evaluation_python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python"
+  },
+  "thermo": {
+    "query_method": "mp_api.client.MPRester.get_entries_in_chemsys",
+    "compatible_only": true,
+    "thermo_type": "GGA_GGA+U",
+    "additional_criteria": {
+      "thermo_types": [
+        "GGA_GGA+U"
+      ]
+    },
+    "fresh_empty_cache": true,
+    "reuse_any_historical_or_august_cache": false,
+    "local_compatibility_reprocessing": false,
+    "required_unary_reference_per_element": true,
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1
+  },
+  "query": {
+    "workers": 6,
+    "max_http_requests_per_second": 8,
+    "max_transport_attempts": 5
+  },
+  "panels": [
+    {
+      "name": "V4_ALL_ATTEMPT_1000",
+      "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_p0_plan1200_r03_b3_prepost_native1000_cohort_contract_repair_v4",
+      "evaluation_dir_template": "arms/{arm}/repeats/{repeat}/stages/{stage}/evaluation/r5c_a100_sun",
+      "success_marker_relative_to_evaluation": "../_SUCCESS",
+      "arms": ["R03", "B3"],
+      "repeats": [0, 1, 2],
+      "stages": ["pre_model494", "post_model494"],
+      "expected_attempts": 1000,
+      "paired_by_generation_ordinal": true
+    },
+    {
+      "name": "R03_REFINED256_CURRENT_REPLAY",
+      "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2",
+      "evaluation_dir_template": "repeats/{repeat}/current_sun",
+      "success_marker_relative_to_evaluation": "_SUCCESS",
+      "arms": ["R03"],
+      "repeats": [0, 1, 2, 3],
+      "stages": ["post_model494"],
+      "expected_attempts": 256,
+      "paired_by_generation_ordinal": false
+    }
+  ],
+  "expected_cell_count": 16,
+  "authorization": {
+    "generation_rerun": false,
+    "planner_rerun": false,
+    "body_rerun": false,
+    "diffusion_refine_rerun": false,
+    "chgnet_relax_rerun": false,
+    "novelty_or_uniqueness_recompute": false,
+    "mp_official_clean_query": true,
+    "stability_only_reevaluation": true,
+    "training": false,
+    "rl": false
+  }
+}
