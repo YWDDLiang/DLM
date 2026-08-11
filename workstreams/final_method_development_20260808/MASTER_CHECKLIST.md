@@ -127,6 +127,17 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       field required by the body consumer. Native reserve generation/refine
       consequently did not start. V3/native V1 are sealed fail-closed; no
       CrysLLMGen/S.U.N. metric or model inference exists.
+- [x] Re-evaluate the four historical frozen R03 refined256 realizations with
+      the current exact S.U.N. implementation and a cohort-complete current MP
+      cache. Array 31650 and assembly 31651 completed 0:0; all strict/meta
+      attempt labels are identical old versus current (zero discordant pairs),
+      proving that evaluator/cache drift does not explain the Plan1200 drop.
+      The active Plan prompt is byte-identical; the RNG/cohort protocol changed.
+- [-] Complete the immutable V4 Plan1200 formal assembly/native continuation.
+      All six R03/B3 repeat tasks and twelve pre/post stage reports completed,
+      but assembly 31585 failed closed on an integer-to-float overflow in the
+      statistics path. Per-stage point estimates are retained; no assembled
+      three-repeat inference or native1000 submission exists.
 - [ ] Complete raw1000 and accepted1000 Direct/S.U.N. evaluation offline.
 - [ ] Report all counts, denominators, intervals, failure classes, and costs.
 - [ ] Apply final promotion rule or retain protected root.
@@ -143,6 +154,10 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       and the exact producer/consumer/preflight schema diagnosis. Preserve the
       ignored local evidence bundles at their recorded SHAs and do not
       resubmit the failed identities.
+- [x] Freeze the R03 refined256 current-S.U.N./MP replay terminal report,
+      prompt/sampling audit, four repeat validations, 12 V4 comparison stage
+      reports, and transferred SHA manifest. Preserve V4's failed-closed
+      assembly status and do not submit its gated native continuation.
 - [ ] Update registries and resource ledger after every submission/terminal.
 - [ ] Freeze checkpoint deletion manifests before deleting intermediates.
 - [ ] Preserve protected and promoted/fixed endpoint checkpoints.

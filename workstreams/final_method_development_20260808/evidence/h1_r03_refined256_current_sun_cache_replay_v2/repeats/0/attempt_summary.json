@@ -1,0 +1,171 @@
+{
+  "assets": {
+    "chgnet_model_asset": {
+      "bytes": 4863221,
+      "path": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    },
+    "chgnet_relax_cache": {
+      "bytes": 5912113,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis_refined_repeats4_v1/repeats/0/arms/candidate/evaluation/r5c_a100_sun/working_chgnet_relax_cache.jsonl",
+      "sha256": "12eb590f909c42ac16c52bf2d976437ea855ad75bc705f28f014ca374990b6ce"
+    },
+    "chgnet_runtime_checkpoint": {
+      "bytes": 4863221,
+      "path": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    },
+    "eval_sun_py": {
+      "bytes": 24360,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun.py",
+      "sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+    },
+    "eval_sun_resumable_py": {
+      "bytes": 9754,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun_resumable.py",
+      "sha256": "44c7d9adf01de29d5bdd0eb6a0e6e5d77f1b47b47f0e4bcd9b35cd6c51e19baa"
+    },
+    "mp_hull_cache": {
+      "bytes": 3527776,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/mp_cache/completed_mp_hull_cache.jsonl",
+      "sha256": "ede6921bda43c1ae65d4bb57a26cb8ebf130b679c0128e504ea7c7757678140d"
+    },
+    "train_csv": {
+      "bytes": 83154915,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+      "sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde"
+    },
+    "training_index_cache": {
+      "bytes": 34707238,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+      "sha256": "f26ea30d6f529cca2d743401049e0328227faa156c95af3e0641d35fe03ffc62"
+    }
+  },
+  "attempt_results": {
+    "bytes": 168874,
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/repeats/0/current_sun/attempt_results.jsonl",
+    "sha256": "0359e9f6643817c38ce9ca2b99bf60aa3e127d5f3498df07ff4214c4d8c977b1"
+  },
+  "base_source_bundle_sha256": "6b0dd8298c9a423712a3965b00f8aeae9c06c824a37fbf1d94dbbf94aebcf15f",
+  "counts": {
+    "meta_full_sun": 122,
+    "novel": 227,
+    "novel_unique": 227,
+    "reconstructed": 248,
+    "relaxation_or_hull_unknown": 9,
+    "strict_full_sun": 28,
+    "total_attempts": 256,
+    "unique": 248
+  },
+  "coverage_adjusted_selection_role": "report_only_never_checkpoint_selection",
+  "definition": "frozen R5-C A100 CHGNet-0.3.0 plus MP hull cache",
+  "denominator": "all_generation_attempts",
+  "exact_legacy_r5c_a100": {
+    "denominator": "reconstructed_structures",
+    "meta_like": {
+      "coverage_adjusted_percent": 51.22,
+      "e_hull_evaluated": {
+        "denominator": 227,
+        "numerator": 218
+      },
+      "e_hull_unknown": {
+        "denominator": 227,
+        "numerator": 9
+      },
+      "full_sun_lower_bound_percent": 49.19,
+      "novel": {
+        "denominator": 248,
+        "numerator": 227
+      },
+      "novel_unique": {
+        "denominator": 248,
+        "numerator": 227
+      },
+      "reconstructed": 248,
+      "stable": {
+        "denominator": 218,
+        "numerator": 122
+      },
+      "total_generated": 256,
+      "unique": {
+        "denominator": 248,
+        "numerator": 248
+      }
+    },
+    "selection_role": "report_only",
+    "strict": {
+      "coverage_adjusted_percent": 11.76,
+      "e_hull_evaluated": {
+        "denominator": 227,
+        "numerator": 218
+      },
+      "e_hull_unknown": {
+        "denominator": 227,
+        "numerator": 9
+      },
+      "full_sun_lower_bound_percent": 11.29,
+      "novel": {
+        "denominator": 248,
+        "numerator": 227
+      },
+      "novel_unique": {
+        "denominator": 248,
+        "numerator": 227
+      },
+      "reconstructed": 248,
+      "stable": {
+        "denominator": 218,
+        "numerator": 28
+      },
+      "total_generated": 256,
+      "unique": {
+        "denominator": 248,
+        "numerator": 248
+      }
+    }
+  },
+  "execution_patch_sha256": "2626de50aa724e1de489b5059b07d73ed4d2bd3d2d3f7d73ebe06aa349e37dae",
+  "input_manifest": {
+    "bytes": 77857,
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/repeats/0/current_sun/input_manifest.json",
+    "sha256": "586a8929611482250974bb4f3c600516de9b919f765300ca6a51f6abab6caf30"
+  },
+  "meta_relax_results": {
+    "bytes": 22621,
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/repeats/0/current_sun/exact_meta_like/relax_results.jsonl",
+    "sha256": "d3d1ecd31e333f87f5e2aaaf6af505c8250b007ecaf1c9e39708d7a22f00e536"
+  },
+  "meta_summary": {
+    "bytes": 521,
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/repeats/0/current_sun/exact_meta_like/RESULTS_SUMMARY.md",
+    "sha256": "3e9329c991d6550b372bf3f523fa0719174656c75547a6b2f0f96faf94cf1862"
+  },
+  "method": "H1-R03E-P0-B0-D2-SAFE-AXIS-REFINE800",
+  "ok": true,
+  "rates": {
+    "attempt_meta_full_sun_lower_bound": 0.4765625,
+    "attempt_novel_unique": 0.88671875,
+    "attempt_strict_full_sun_lower_bound": 0.109375
+  },
+  "retry_or_replacement_used": false,
+  "schema": "crysllmgen_r5c_a100_sun_summary_v1",
+  "strict_relax_results": {
+    "bytes": 22621,
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/repeats/0/current_sun/exact_strict/relax_results.jsonl",
+    "sha256": "d3d1ecd31e333f87f5e2aaaf6af505c8250b007ecaf1c9e39708d7a22f00e536"
+  },
+  "strict_summary": {
+    "bytes": 520,
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/repeats/0/current_sun/exact_strict/RESULTS_SUMMARY.md",
+    "sha256": "ef2ad879423cc33e1106a977459c4c1b3addd1ba4677252b66d638843e60b24c"
+  },
+  "thresholds_ev_per_atom": {
+    "meta_like": 0.1,
+    "strict": 0.0
+  },
+  "working_mp_hull_cache": {
+    "bytes": 3527776,
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2/repeats/0/current_sun/working_mp_hull_cache.jsonl",
+    "sha256": "ede6921bda43c1ae65d4bb57a26cb8ebf130b679c0128e504ea7c7757678140d"
+  }
+}

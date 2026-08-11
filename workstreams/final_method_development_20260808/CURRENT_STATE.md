@@ -2,7 +2,48 @@
 
 Updated: 2026-08-11 (Asia/Shanghai)
 
-Overall status: `P0_PLAN1200_R03_B3_V3_BODY_SCHEMA_FAILURE_NO_SCIENTIFIC_METRICS`
+Overall status: `R03_REFINED256_CURRENT_SUN_REPLAY_COMPLETE_PLAN1200_V4_STAGE_RESULTS_COMPLETE_ASSEMBLY_FAILED_CLOSED`
+
+## Terminal diagnostic: historical R03 remains high under current S.U.N./MP cache
+
+An immutable evaluation-only replay of the four historical byte-frozen R03
+refined256 process realizations is complete. Repeat array `31650` and assembly
+`31651` completed `0:0`. The replay reran no Planner, body/DLM, model_494, or
+CHGNet work; all generation and relax-energy caches remained byte-identical.
+It completed the historical cohort's 224-system MP snapshot by resolving the
+only 92 missing systems, with zero transport retry, then applied the current
+exact S.U.N. path offline.
+
+The current result is exactly identical to the historical result at every
+attempt. Strict counts are `[28,31,29,29]/248` reconstructed and meta counts
+are `[122,123,125,126]/248`; every strict and meta old/current comparison has
+zero discordant pairs and exact McNemar `p=1`. Thus the low Plan1200 values
+are not caused by the current evaluator or MP cache.
+
+The Plan prompt audit also found the active H1A2/current seven-line
+`h1_rich_plan_v1` branch byte-identical with the same P0 adapter and sampling
+knobs. The meaningful change is the sampling/cohort protocol: legacy used one
+global RNG stream at seed 17029 and reused one first256 cohort, whereas
+Plan1200 uses stateless ordinals, three base seeds, and three disjoint
+raw1200→first1000 parse-success cohorts. Only 19/254 comparable historical
+formula identities overlap the current 3000-plan union, and only 4/254 after
+including prototype identity.
+
+All six V4 arm×repeat tasks (`31583`/`31584`) and all twelve pre/post stage
+reports completed successfully. model_494 raises structure validity from
+46.1–53.4% to 96.8–98.1%, strict S.U.N. from 1.12–2.68% to 5.93–7.22%, and
+meta S.U.N. from 12.07–15.06% to 42.12–46.34%. Current R03 post-model494 is
+still below historical R03 (strict 6.14–7.22% versus 11.29–12.50%; meta
+44.48–46.34% versus 49.19–50.81%), making cohort/RNG distribution the leading
+remaining explanation rather than prompt text, cache, or lack of refinement.
+
+V4 assembly `31585` failed closed `3:0` after the twelve successful stage
+reports because its statistics path raised `OverflowError: int too large to
+convert to float`. Therefore the per-stage point estimates are complete but
+V4 has no valid assembled three-repeat inference, and native1000 was not
+submitted. The complete diagnostic is
+`H1_R03_REFINED256_CURRENT_SUN_CACHE_REPLAY_AND_PLAN_SAMPLING_AUDIT_V1.md`;
+the replay terminal report SHA is `b4f449c4...9ea2`.
 
 ## Terminal engineering failure: Plan1200 V3 and native post-refine 1000
 

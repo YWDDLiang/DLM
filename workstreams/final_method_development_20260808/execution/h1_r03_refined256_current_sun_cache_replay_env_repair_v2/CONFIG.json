@@ -1,0 +1,118 @@
+{
+  "schema": "h1_r03_refined256_current_sun_cache_replay_config_v1",
+  "run_id": "20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2",
+  "repair_provenance": {
+    "supersedes_failed_run_id": "20260811_h1_r03_refined256_current_sun_cache_replay_v1",
+    "failed_before_http_queries": true,
+    "failed_before_slurm_submission": true,
+    "one_time_key_destroyed": true,
+    "only_code_change": "activate_diff_meets_diff_before_login_node_mp_completion"
+  },
+  "purpose": "Re-evaluate the four frozen historical R03 refined256 process realizations with the current exact S.U.N. implementation and a current, cohort-complete MP thermo snapshot.",
+  "authorization": {
+    "generation_rerun": false,
+    "planner_rerun": false,
+    "body_rerun": false,
+    "refinement_rerun": false,
+    "chgnet_rerun": false,
+    "historical_relax_energy_reuse": true,
+    "novelty_and_hull_evaluation_rerun": true,
+    "mp_completion_queries_for_missing_historical_chemsys": true,
+    "training": false,
+    "rl": false,
+    "retry_replacement_repair_filter_rerank": false
+  },
+  "historical": {
+    "r03e_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis_refined_repeats4_v1",
+    "r03e_terminal_sha256": "7fa49a6feb372d4d5e5dc442a187657a39001b6190dd6a64af0bf7f53c293b02",
+    "r03g_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260803_h1_body_safeaxis_refined_repeats4_no_completed_hull_v1",
+    "repeat_role": "independent_cuda_process_realization_on_same_frozen_first256_cohort",
+    "attempts_per_repeat": 256,
+    "reconstructed_per_repeat": 248,
+    "repeats": [
+      {
+        "repeat": 0,
+        "generation_sha256": "c4498bb85089610c0ccff93e0e5ab603ed3f2633abcf3dea9343c4092a220a69",
+        "frozen_relax_cache_sha256": "12eb590f909c42ac16c52bf2d976437ea855ad75bc705f28f014ca374990b6ce",
+        "old_attempt_results_sha256": "4e7ba8c7227f937158421bfbc11014a6ee104ec684d010fe58dde1ec8531b050"
+      },
+      {
+        "repeat": 1,
+        "generation_sha256": "8175c3899a207ed0ecd83ebf74227f3459598ef93899efa18f85c94e9358b886",
+        "frozen_relax_cache_sha256": "90ae5aa222df73e7ad4d61903e1d417d1c8c50cc225c033396f6f268653c0964",
+        "old_attempt_results_sha256": "2d3fbdc3c2df14566e279ad84d7612abd8310dfce349a3363180625990cbf940"
+      },
+      {
+        "repeat": 2,
+        "generation_sha256": "0aacdeb605b15cf2392bb91b7535450a25a2ea289c7234bcdac09475e51d8be4",
+        "frozen_relax_cache_sha256": "051d792ccf941439546d3987f24d3b6a82cdff0deae2374320e351815ccec1fe",
+        "old_attempt_results_sha256": "d197c6a172e150360232204c3f3abf71c4f6d7dc4aca8ec9a4cbd9a85a211395"
+      },
+      {
+        "repeat": 3,
+        "generation_sha256": "f835434c3638b8340657e5131663d6cdb82ad28f020160cbcc5a4b1391088112",
+        "frozen_relax_cache_sha256": "9511b17bbd4e9b1512b23b1b2d49d86ff6306bb4242eb1acb54c48eca8e17971",
+        "old_attempt_results_sha256": "bb50ba0c4c67aef46b930aa91ba49588ef3292ce8ca1b5371b4d036a7c379687"
+      }
+    ]
+  },
+  "current_mp": {
+    "wanted_chemsys_count": 224,
+    "existing_resolved_count": 132,
+    "missing_chemsys_count": 92,
+    "missing_chemsys_sha256": "6eea55b16ebdd947271b523a5e4b640074d90a5b72f353b6fc0784dfd7edc29f",
+    "workers": 6,
+    "max_requests_per_second": 10,
+    "maximum_transport_attempts_per_chemsys": 5,
+    "sources_oldest_to_newest": [
+      {
+        "role": "frozen_base",
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+        "sha256": "93d6532cd93c1cfebcbc969d0299852359d6a2950b66b259c028e971f8f7e4ff"
+      },
+      {
+        "role": "completed_20260810_fourcell_planner_union",
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260810_h1_evidence_first_four_cell_direct_sun_gcd_mp_cache_identity_repair_v4/mp_cache/planner_union_completed_mp_hull_cache.jsonl",
+        "sha256": "165458334295920c7d15769895d5c56d152c932ba02e27c15c6e20b64db18d0d"
+      },
+      {
+        "role": "completed_20260811_plan1200_union",
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_p0_plan1200_r03_b3_prepost_native1000_cohort_contract_repair_v4/mp_cache/completed_mp_hull_cache.jsonl",
+        "sha256": "bf0dc8edd2f38f121286adbc97ff3f889b3c520135b29492a56ba562c86eaade"
+      }
+    ],
+    "completion_module": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_mpcomplete_v1/complete_sun.py",
+    "completion_module_sha256": "c457a9539154706b7d4408243d89013242a18361b6f5ea2422760b87c3f94abb"
+  },
+  "sun": {
+    "runtime_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime",
+    "runner_sha256": "e952795c32efe1be328165d99389ae3934a6698d29027569376bbb984cf788de",
+    "module_sha256": "61c8e13c194028c4ab514902827575de41a2d06e502824b8355fcf3530d7f968",
+    "eval_sun_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b",
+    "eval_sun_resumable_sha256": "44c7d9adf01de29d5bdd0eb6a0e6e5d77f1b47b47f0e4bcd9b35cd6c51e19baa",
+    "train_csv_sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde",
+    "training_index_sha256": "f26ea30d6f529cca2d743401049e0328227faa156c95af3e0641d35fe03ffc62",
+    "chgnet_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "headline_denominator": "reconstructed_structures_exact_legacy",
+    "secondary_denominator": "all_256_attempts"
+  },
+  "prompt_audit": {
+    "old_prompt_style": "h1_rich_plan_v1",
+    "current_prompt_style": "h1_rich_plan_v1",
+    "old_include_sample_id": false,
+    "current_include_sample_id": false,
+    "old_prompt_module_sha256": "d45ccc23fad4284fdeef53d7bbdc5e4044fb6b598092461663473ed8f5a4f8ad",
+    "current_prompt_module_sha256": "ea41ba5c16e1b0dce1521dcf070cb74d5d042c43305a8890836ecd1df0b2355f",
+    "shared_prompt_prelude_sha256": "2be00f068df7d3e5cdf7a56a51e332a87739e3cf2efce3623ea7392e6991557a",
+    "active_seven_line_branch_byte_equal": true,
+    "current_system_prompt_sha256": "4b00f195b2899b72d77b23fc512f0d2499264ef8eeb6c7737a9367e0d6de9050",
+    "current_user_prompt_sha256": "79e7e3bfc3fe3b26f51883f2a8236c5ed75f7f9a8260f30ec71de99e499ed44e",
+    "current_formatted_prompt_sha256": "ec0aed374b537b0d4fbe2891baaca4702da95fed6fd220cf837a6ec08e7b4c3f",
+    "current_prompt_token_ids_sha256": "d4b78b8b078f32a6c13849c8a6971357f5a0e34b0f96f4ec2a4fd3071c6917cb",
+    "old_seed_mode": "legacy_single_global_rng_stream_seed_17029",
+    "current_seed_mode": "stateless_ordinal_v1_three_independent_base_seeds"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-10T08:48:00+08:00",
+  "updated_at": "2026-08-11T20:25:00+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -194,6 +194,60 @@
       "state": "COMPLETED",
       "exit_code": "0:0",
       "elapsed": "00:02:49"
+    },
+    {
+      "stage": "h1_plan1200_v4_r03_prepost",
+      "job_id": 31583,
+      "array": "0-2%3",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "attempts_per_task": 1000,
+      "successful_stage_reports": 6
+    },
+    {
+      "stage": "h1_plan1200_v4_b3_prepost",
+      "job_id": 31584,
+      "array": "0-2%3",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "attempts_per_task": 1000,
+      "successful_stage_reports": 6
+    },
+    {
+      "stage": "h1_plan1200_v4_formal_assembly",
+      "job_id": 31585,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "FAILED",
+      "exit_code": "3:0",
+      "elapsed": "00:01:34",
+      "failure": "OverflowError_int_too_large_to_convert_to_float",
+      "native1000_submitted": false
+    },
+    {
+      "stage": "h1_r03_refined256_current_sun_cache_replay_v2",
+      "job_id": 31650,
+      "array": "0-3%4",
+      "partition": "gpu",
+      "gpus_per_task": 1,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:23:40",
+      "attempts_per_task": 256,
+      "generation_or_refinement_rerun": false
+    },
+    {
+      "stage": "h1_r03_refined256_current_sun_cache_replay_v2_assembly",
+      "job_id": 31651,
+      "partition": "normal",
+      "gpus": 0,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:01:03"
     }
   ],
   "current_allocations": []

@@ -154,3 +154,36 @@ S.U.N. metrics, and no paired three-repeat B3 contrast from this route. It
 does not revise the earlier R03 raw-Plan finding or B3's unpromoted status.
 The terminal diagnosis is recorded in
 `H1_P0_PLAN1200_R03_B3_PREPOST_REPEATS3_EXECMODE_FAILURE_V3.md`.
+
+## V4 stage-complete context and historical-R03 evaluator audit
+
+Immutable V4 repaired the cohort schema without changing the scientific
+protocol. All three R03 tasks (`31583`) and all three B3 tasks (`31584`)
+completed `0:0`; each emitted successful pre- and post-model494 reports.
+model_494 changes structure validity from 46.1–53.4% pre to 96.8–98.1% post.
+Across R03/B3, reconstructed-denominator strict S.U.N. changes from
+1.12–2.68% to 5.93–7.22%, and meta S.U.N. changes from 12.07–15.06% to
+42.12–46.34%. Thus the early low B3 numbers were substantially a pre-refine
+stage effect, but the post-refine values still do not reach historical R03.
+
+The comparison is not an evaluator artifact. Evaluation-only array `31650`
+and assembly `31651` reapplied the current exact S.U.N. implementation and a
+current, cohort-complete MP cache to the four byte-frozen historical R03
+refined256 realizations. Historical/current strict counts remain exactly
+`[28,31,29,29]`; meta counts remain `[122,123,125,126]`; every endpoint has
+zero discordant labels and exact McNemar `p=1`. No Planner, body, refiner, or
+CHGNet execution occurred in this replay.
+
+The active H1A2/current P0 seven-line prompt is byte-identical. The changed
+factor is the Plan sampling/cohort contract: one legacy seed-17029 global RNG
+stream and one reused first256 cohort versus three stateless-ordinal,
+raw1200→first1000 parse-success cohorts. Therefore the remaining post-refine
+gap is most consistent with Plan-cohort/RNG distribution, not B3 alone, prompt
+text, or S.U.N./MP drift. This does not change B3's non-promotion decision.
+
+V4 assembly `31585` failed closed after writing the successful per-stage
+artifacts because its statistics path overflowed while converting an integer
+to float. Consequently no V4 formal three-repeat inference exists and the
+gated native1000 continuation was not submitted. Full point estimates and
+provenance are in
+`H1_R03_REFINED256_CURRENT_SUN_CACHE_REPLAY_AND_PLAN_SAMPLING_AUDIT_V1.md`.

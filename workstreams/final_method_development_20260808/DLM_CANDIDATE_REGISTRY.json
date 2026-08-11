@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-11T05:54:00+08:00",
+  "updated_at": "2026-08-11T20:25:00+08:00",
   "selection_limit_downstream": 2,
   "protected_incumbent": "B0",
   "four_cell_terminal": {
@@ -80,6 +80,47 @@
     "native_full_1000_post_refine_available": false,
     "scientific_inference_role": "none_engineering_failure_only",
     "failure_report_sha256": "3f3b32b904563c40258483fcf7d2c21a27522f536702ab75ea310dfde5d98d8f",
+    "formal_promotion": false,
+    "automatic_rl": false
+  },
+  "plan1200_v4_stage_complete_assembly_failure": {
+    "run_id": "20260811_h1_p0_plan1200_r03_b3_prepost_native1000_cohort_contract_repair_v4",
+    "r03_array_job_id": 31583,
+    "b3_array_job_id": 31584,
+    "repeat_task_states": ["COMPLETED_0_0", "COMPLETED_0_0", "COMPLETED_0_0", "COMPLETED_0_0", "COMPLETED_0_0", "COMPLETED_0_0"],
+    "successful_stage_reports": 12,
+    "r03_reconstructed": [969, 978, 977],
+    "r03_strict_pre_post_counts": [[26, 70], [22, 65], [22, 60]],
+    "r03_meta_pre_post_counts": [[130, 449], [122, 435], [138, 441]],
+    "b3_reconstructed": [981, 978, 983],
+    "b3_strict_pre_post_counts": [[20, 70], [11, 58], [21, 60]],
+    "b3_meta_pre_post_counts": [[129, 450], [118, 444], [148, 414]],
+    "post_refine_strict_reconstructed_percent_range": [5.93, 7.22],
+    "post_refine_meta_reconstructed_percent_range": [42.12, 46.34],
+    "assembly_job_id": 31585,
+    "assembly_state": "FAILED_3_0",
+    "assembly_failure": "OverflowError_int_too_large_to_convert_to_float",
+    "formal_three_repeat_inference": false,
+    "native1000_submitted": false,
+    "formal_promotion": false,
+    "automatic_rl": false
+  },
+  "r03_refined256_current_sun_cache_replay": {
+    "run_id": "20260811_h1_r03_refined256_current_sun_cache_replay_env_repair_v2",
+    "repeat_array_job_id": 31650,
+    "assembly_job_id": 31651,
+    "state": "COMPLETED_0_0",
+    "terminal_report_sha256": "b4f449c476a0e75ab61a4f1de2dc033c76151420bad44fc3bf8f67f1e6179ea2",
+    "completed_mp_cache_sha256": "ede6921bda43c1ae65d4bb57a26cb8ebf130b679c0128e504ea7c7757678140d",
+    "attempts_per_repeat": 256,
+    "reconstructed_per_repeat": 248,
+    "strict_counts_historical_and_current": [28, 31, 29, 29],
+    "meta_counts_historical_and_current": [122, 123, 125, 126],
+    "all_endpoint_discordant_counts": 0,
+    "exact_mcnemar_p": 1.0,
+    "active_plan_prompt_byte_equal": true,
+    "sampling_protocol_changed": true,
+    "interpretation": "evaluator_cache_drift_excluded_plan_rng_cohort_distribution_is_leading_remaining_explanation",
     "formal_promotion": false,
     "automatic_rl": false
   },
@@ -203,6 +244,20 @@
           "native_full_1000_post_refine_available": false,
           "changes_prior_b3_conclusion": false,
           "failure_report_sha256": "3f3b32b904563c40258483fcf7d2c21a27522f536702ab75ea310dfde5d98d8f"
+        },
+        "plan1200_v4_stage_context": {
+          "status": "six_repeat_tasks_and_twelve_stage_reports_complete_assembly_failed_closed",
+          "pre_model494_strict_counts": [20, 11, 21],
+          "post_model494_strict_counts": [70, 58, 60],
+          "pre_model494_meta_counts": [129, 118, 148],
+          "post_model494_meta_counts": [450, 444, 414],
+          "reconstructed_counts": [981, 978, 983],
+          "post_strict_reconstructed_percent": [7.14, 5.93, 6.10],
+          "post_meta_reconstructed_percent": [45.87, 45.40, 42.12],
+          "historical_r03_current_cache_replay_excludes_evaluator_drift": true,
+          "formal_cross_repeat_inference": false,
+          "changes_prior_b3_conclusion": false,
+          "native1000_submitted": false
         }
       }
     },
