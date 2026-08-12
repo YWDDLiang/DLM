@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-13T01:02:00+08:00",
+  "updated_at": "2026-08-13T06:10:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -438,6 +438,39 @@
       "automatic_training": false,
       "automatic_rl": false,
       "failure_evidence_path": "workstreams/final_method_development_20260808/evidence/h1_r03_refined256_current_sun_cache_replay_v2/v4_context/logs/body-assembly-31585.err"
+    },
+    {
+      "evidence_id": "h1a2_retrained_world2_r03_recovery_engineering_lineage",
+      "planner_body_v5": {
+        "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_retrained_world2_r03_sun_recovery_contract_repair_v5",
+        "job_id": 31900,
+        "state": "FAILED_1_0",
+        "reusable_output": "five_planner_cohorts_complete_and_frozen",
+        "failure_boundary": "fresh_body_before_model_load",
+        "root_cause": "immutable_body_config_missing_required_adapter_fields"
+      },
+      "postplanner_v7": {
+        "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_retrained_world2_r03_postplanner_contract_repair_v7",
+        "job_id": 31965,
+        "state": "FAILED_1_0",
+        "reusable_body_succeeded": [246, 242, 250, 245],
+        "failure_boundary": "before_first_model494_refinement",
+        "root_cause": "old_r03d_pythonpath_selected_runtime_without_required_refiner_module"
+      },
+      "official_combined_v4": {
+        "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260813_h1a2_retrained_world2_r03_sun_official_v8_combined_v4",
+        "job_id": 32049,
+        "state": "FAILED_1_0",
+        "elapsed": "01:40:55",
+        "successful_preliminary_cells": 9,
+        "precompleted_clean_cache": true,
+        "failure_boundary": "official_input_freeze_after_all_preliminary_cells",
+        "root_cause": "empty_bash_array_expansion_under_set_u"
+      },
+      "all_reusable_outputs_preserved": true,
+      "blind_retry": false,
+      "scientific_contract_changed": false,
+      "automatic_rl": false
     }
   ],
   "active_submissions": [],
@@ -903,6 +936,71 @@
       "credential_serialized": false,
       "key_carrier_destroyed_before_first_http_request": true,
       "decision": "official_ehull_completion_recovers_r03_historical_strict_best_28_of_256",
+      "formal_promotion": false,
+      "automatic_rl": false
+    },
+    {
+      "evidence_id": "h1a2_retrained_world2_r03_sun_official_v8_terminal",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260813_h1a2_retrained_world2_r03_sun_official_v8_finalization_continuation_v5",
+      "upstream_generation_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_retrained_world2_r03_refine_import_contract_repair_v8",
+      "generation_job_id": 31983,
+      "generation_job_state": "COMPLETED_0_0",
+      "generation_elapsed": "05:51:14",
+      "official_preliminary_job_id": 32049,
+      "official_preliminary_job_state": "FAILED_1_0_AFTER_ALL_NINE_CELLS_SUCCESS",
+      "finalization_continuation_slurm_jobs": 0,
+      "state": "COMPLETE",
+      "attempts_per_cell": 256,
+      "post_model494_cells": 9,
+      "pre_refine_evaluated": false,
+      "diffusion_steps_all_cells": 800,
+      "generation_source_manifest_sha256": "79f1aa3a198e1b9cb7133735f59c75d58902fdfb6e4fd8976d34d561e07852b8",
+      "source_manifest_sha256": "e4b8ff9ae369ec449b8ce70b713caf60bc2bdd8a3ef7eeca5cbb7a5c9c312695",
+      "terminal_report_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260813_h1a2_retrained_world2_r03_sun_official_v8_finalization_continuation_v5/terminal_report.json",
+      "terminal_report_sha256": "c74a4fdc0b6f51117316263384166c9ca82672a42514904076e356e9b700527c",
+      "results_markdown_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260813_h1a2_retrained_world2_r03_sun_official_v8_finalization_continuation_v5/RESULTS_COMPLETE.md",
+      "results_markdown_sha256": "204ef06bf2cb1f8a29499f38c29e6e90a2c9e4be580ee5f8ea1f2b27f272fd55",
+      "local_interpretation_path": "workstreams/final_method_development_20260808/H1A2_RETRAINED_WORLD2_R03_OFFICIAL_SUN_RECOVERY_RESULT_V1.md",
+      "fresh": {
+        "seeds": [52021, 62023, 72031, 82037],
+        "generation_succeeded": [246, 242, 250, 245],
+        "direct_joint_valid": [205, 217, 215, 206],
+        "strict_fixed_all256": [16, 13, 7, 18],
+        "meta_fixed_all256": [111, 106, 106, 110]
+      },
+      "topology": {
+        "seed": 17,
+        "generation_succeeded": [242, 242, 242, 242],
+        "direct_joint_valid": [207, 206, 207, 207],
+        "strict_fixed_all256": [13, 15, 12, 15],
+        "meta_fixed_all256": [115, 113, 107, 114],
+        "historical_strict_fixed_all256": [28, 32, 30, 30],
+        "historical_meta_fixed_all256": [122, 125, 126, 127]
+      },
+      "h1a2_b0_d1_control": {
+        "generation_succeeded": 244,
+        "direct_joint_valid": 207,
+        "strict_fixed_all256": 16,
+        "meta_fixed_all256": 113
+      },
+      "planner_seed17_byte_identical_to_historical": false,
+      "official_mp": {
+        "query_method": "MPRester.get_entries_in_chemsys",
+        "compatible_only": true,
+        "thermo_type": "GGA_GGA+U",
+        "cache_superset_wanted": 1076,
+        "new_queries": 822,
+        "new_resolved": 798,
+        "new_unresolved": 24,
+        "used_union_wanted": 983,
+        "used_union_resolved": 952,
+        "used_union_unresolved": 31,
+        "unresolved_policy": "explicit_hull_unknown_never_unstable"
+      },
+      "credential_serialized": false,
+      "large_artifact_rehashed": false,
+      "retry_replacement_scientific_repair_filter_rerank": false,
+      "decision": "terminal_historical_best_not_reproduced_exact_planner_cohort_and_trajectory_remain_explanation",
       "formal_promotion": false,
       "automatic_rl": false
     }

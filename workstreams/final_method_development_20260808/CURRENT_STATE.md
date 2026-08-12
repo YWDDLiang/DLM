@@ -2,7 +2,61 @@
 
 Updated: 2026-08-13 (Asia/Shanghai)
 
-Overall status: `ARCHIVED_FIRST256_OFFICIAL_EHULL_COMPLETE_R03_STRICT_BEST_RECOVERED`
+Overall status: `RETRAINED_WORLD2_R03_OFFICIAL_TERMINAL_HISTORICAL_BEST_NOT_REPRODUCED`
+
+## Terminal result: retrained H1-A2 world2 route does not reproduce the historical R03 best
+
+The user-requested recovery is complete through the only evaluated endpoint,
+post-`model_494` refine800. Exact epoch-2 H1-A2 retraining completed in job
+`31856` (`eval_loss=0.3186934978`), and the immutable V8 continuation completed
+all nine post-only cells in job `31983` (`COMPLETED 0:0`, `05:51:14`) using at
+most four A800 GPUs and 32 CPUs. No pre-refine row was evaluated and no retry,
+replacement, scientific repair, filter, rerank, training continuation, or RL
+was used.
+
+| panel/cell | generated | Direct joint | novel+unique | evaluated/unknown | strict S.U.N. | meta-S.U.N. |
+|---|---:|---:|---:|---:|---:|---:|
+| fresh 52021 | 246/256 | 205/256 | 225 | 221/4 | 16/256 | 111/256 |
+| fresh 62023 | 242/256 | 217/256 | 217 | 212/5 | 13/256 | 106/256 |
+| fresh 72031 | 250/256 | 215/256 | 224 | 210/14 | 7/256 | 106/256 |
+| fresh 82037 | 245/256 | 206/256 | 221 | 217/4 | 18/256 | 110/256 |
+| topology repeats | 242/256 each | 207,206,207,207 | 213,212,209,216 | 207/6,207/5,204/5,211/5 | **13,15,12,15** | **115,113,107,114** |
+| H1-A2 B0/D1 control | 244/256 | 207/256 | 212 | 207/5 | 16/256 | 113/256 |
+
+The four topology strict counts `[13,15,12,15]` are below the registered
+historical clean counts `[28,32,30,30]` by `[15,17,18,15]`; meta counts
+`[115,113,107,114]` are below `[122,125,126,127]` by `[7,12,19,13]`. All nine
+generation reports independently record `diffusion_steps=800` and
+`model_494`, so the historical gap is not caused by a different refinement
+step count.
+
+The seed-17 planner cohort is not byte-identical to the historical seed-17
+cohort. Historical/retrained planner rows are 252/251 parsed, 4/5 failed,
+251/250 unique formulas, and 247/236 unique chemical systems. Formula and
+chemical-system total-variation distances are `0.79365` and `0.75790`, while
+coarser anion-framework/lattice-system distances are only `0.05801/0.07450`.
+The historical best therefore depends on the exact archived planner cohort
+and downstream trajectory, not merely nominal seed/world2/batch4/R03/refine800
+settings. This is consistent with the separate archived first256 replay,
+which did recover official-clean R03 strict `28/256` when exact archived
+planner/body bytes were preserved.
+
+Official stability used fresh-clean
+`MPRester.get_entries_in_chemsys(..., compatible_only=True)` with
+`GGA_GGA+U`. The cache superset covered 1,076 systems; 822 fresh queries
+resolved 798 and left 24 unresolved. The nine-cell union used 983 systems,
+952 resolved and 31 explicit `hull_unknown`. Unknowns are skipped only in
+explicit skip-unknown denominators and are never classified as unstable.
+
+Combined official job `32049` completed all nine preliminary cells but failed
+closed after them on an empty Bash-array `set -u` error. The immutable
+zero-Slurm V5 finalization continuation reused those cells and the completed
+cache, then successfully froze inputs, assembled, adopted the cache, and
+finalized. The authoritative run is
+`20260813_h1a2_retrained_world2_r03_sun_official_v8_finalization_continuation_v5`;
+terminal JSON SHA is `c74a4fdc...0527c` and Markdown SHA is
+`204ef06b...2fd55`. The complete interpretation is in
+`H1A2_RETRAINED_WORLD2_R03_OFFICIAL_SUN_RECOVERY_RESULT_V1.md`.
 
 ## Terminal result: official E_hull completion recovers R03 strict 28/256
 
@@ -577,18 +631,18 @@ remained unsubmitted; later V10/V14/V24 evidence supersedes that status.
 
 ## Immediate critical path
 
-1. Preserve V1, V2, V3, native supplement V1, all Slurm records, terminal
-   reports, frozen cohorts, caches, and returned evidence byte-for-byte; do
-   not repair, requeue, or resubmit any of those identities.
-2. Make no scientific interpretation from V3: body generation never started,
-   so all requested CrysLLMGen/S.U.N. and native full-1,000 post-refine metrics
-   remain unavailable.
-3. Continuing requires explicit authorization for a new immutable repair that
-   aligns the cohort `parsed` schema with the body consumer and extends
-   preflight to assert the exact producer/consumer schema. Reuse of planner
-   cohorts or MP caches must be separately justified and authorized; there is
-   no automatic submission.
-4. Retain P0+B0 (M00) as the protected incumbent. V3 promotes neither B3,
-   SFT-v2, nor any downstream route.
+1. Preserve V5 planner cohorts, V7 body outputs, V8 post-model494 cells, the
+   clean official cache, job `32049` failure evidence, and the successful
+   zero-Slurm finalization continuation byte-for-byte. Do not rerun or mutate
+   any of these identities.
+2. Retain the archived first256 official-clean R03 strict `28/256` result as
+   the protected historical best. None of the retrained world2 cells is
+   promoted.
+3. Treat the retrained recovery as terminal scientific evidence: nominal
+   refine800 parity is proven, while exact planner/cohort bytes are not
+   reproduced. Do not launch a refine-step sweep or another automatic sample.
+4. Any future recovery requires a new explicit hypothesis and immutable
+   contract for the exact historical planner/checkpoint trajectory. Broader
+   Planner C0/C1 and formal integration tasks remain separate portfolio work.
 
 No Planner or DLM RL is authorized.

@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-13T01:02:00+08:00",
+  "updated_at": "2026-08-13T06:10:00+08:00",
   "selection_limit_downstream": 2,
   "protected_incumbent": "B0",
   "four_cell_terminal": {
@@ -224,6 +224,99 @@
     "results_markdown_sha256": "f89bd7109a437d9fb9ae0e62f170db6c9a18fb59822551114ff7f0558aad64a3",
     "interpretation": "archived_generation_refinement_reproduced_and_official_ehull_completion_recovers_r03_strict_best_28_of_256",
     "formal_promotion": false,
+    "automatic_rl": false
+  },
+  "h1a2_retrained_world2_r03_official_recovery": {
+    "state": "TERMINAL_COMPLETE_HISTORICAL_BEST_NOT_REPRODUCED",
+    "training": {
+      "run_id": "20260812_h1a2_epoch2_exact_retrain_recovery_v1",
+      "job_id": 31856,
+      "state": "COMPLETED_0_0",
+      "eval_loss": 0.3186934978,
+      "adapter_sha256_registered_not_rehashed": "3ccc2012222214b7b50a0642cc8e203621b032a3a7ca044d9b355847cdd2ab94"
+    },
+    "generation": {
+      "run_id": "20260812_h1a2_retrained_world2_r03_refine_import_contract_repair_v8",
+      "job_id": 31983,
+      "state": "COMPLETED_0_0",
+      "elapsed": "05:51:14",
+      "source_manifest_sha256": "79f1aa3a198e1b9cb7133735f59c75d58902fdfb6e4fd8976d34d561e07852b8",
+      "post_model494_cells": 9,
+      "pre_refine_evaluated": false,
+      "diffusion_refiner": "CrysLLMGen_model_494",
+      "diffusion_steps_all_cells": 800,
+      "max_a800_gpus": 4,
+      "max_cpus": 32
+    },
+    "official_finalization": {
+      "run_id": "20260813_h1a2_retrained_world2_r03_sun_official_v8_finalization_continuation_v5",
+      "combined_preliminary_job_id": 32049,
+      "combined_preliminary_job_state": "FAILED_1_0_AFTER_ALL_NINE_CELLS_SUCCESS",
+      "continuation_slurm_jobs": 0,
+      "continuation_state": "COMPLETE",
+      "source_manifest_sha256": "e4b8ff9ae369ec449b8ce70b713caf60bc2bdd8a3ef7eeca5cbb7a5c9c312695",
+      "terminal_report_sha256": "c74a4fdc0b6f51117316263384166c9ca82672a42514904076e356e9b700527c",
+      "results_markdown_sha256": "204ef06bf2cb1f8a29499f38c29e6e90a2c9e4be580ee5f8ea1f2b27f272fd55"
+    },
+    "fresh_cohort": {
+      "seeds": [52021, 62023, 72031, 82037],
+      "generation_succeeded": [246, 242, 250, 245],
+      "direct_joint_valid": [205, 217, 215, 206],
+      "strict_fixed_all256": [16, 13, 7, 18],
+      "meta_fixed_all256": [111, 106, 106, 110],
+      "strict_mean_rate": 0.052734375,
+      "strict_hierarchical_ci95": [0.0322265625, 0.07421875],
+      "meta_mean_rate": 0.4228515625,
+      "meta_hierarchical_ci95": [0.3916015625, 0.4541015625]
+    },
+    "topology_match": {
+      "seed": 17,
+      "process_repeats": 4,
+      "generation_succeeded": [242, 242, 242, 242],
+      "direct_joint_valid": [207, 206, 207, 207],
+      "strict_fixed_all256": [13, 15, 12, 15],
+      "meta_fixed_all256": [115, 113, 107, 114],
+      "historical_strict_fixed_all256": [28, 32, 30, 30],
+      "historical_meta_fixed_all256": [122, 125, 126, 127],
+      "strict_count_differences": [-15, -17, -18, -15],
+      "meta_count_differences": [-7, -12, -19, -13],
+      "strict_mean_rate": 0.0537109375,
+      "strict_hierarchical_ci95": [0.0390625, 0.068359375],
+      "meta_mean_rate": 0.4384765625,
+      "meta_hierarchical_ci95": [0.40625, 0.4716796875]
+    },
+    "h1a2_b0_d1_control": {
+      "generation_succeeded": 244,
+      "direct_joint_valid": 207,
+      "strict_fixed_all256": 16,
+      "meta_fixed_all256": 113
+    },
+    "planner_diagnostic": {
+      "seed17_byte_identical_to_historical": false,
+      "historical_parsed_failed_unique_formula_unique_chemsys": [252, 4, 251, 247],
+      "retrained_parsed_failed_unique_formula_unique_chemsys": [251, 5, 250, 236],
+      "formula_total_variation": 0.7936507936507923,
+      "chemsys_total_variation": 0.7579048883829749,
+      "anion_framework_total_variation": 0.05800607095427814,
+      "lattice_system_total_variation": 0.07449566812116613,
+      "interpretation": "exact_planner_cohort_and_downstream_trajectory_not_nominal_refine800_settings_explain_recovery_gap"
+    },
+    "official_mp": {
+      "method": "MPRester.get_entries_in_chemsys",
+      "compatible_only": true,
+      "thermo_type": "GGA_GGA+U",
+      "cache_superset_wanted": 1076,
+      "new_queries": 822,
+      "new_resolved": 798,
+      "new_unresolved": 24,
+      "used_union_wanted": 983,
+      "used_union_resolved": 952,
+      "used_union_unresolved": 31,
+      "unresolved_policy": "explicit_hull_unknown_never_unstable"
+    },
+    "decision": "terminal_scientific_nonrecovery_retain_archived_first256_r03_as_protected_best",
+    "formal_promotion": false,
+    "automatic_retry": false,
     "automatic_rl": false
   },
   "candidates": [

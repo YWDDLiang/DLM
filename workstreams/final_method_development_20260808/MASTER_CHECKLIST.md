@@ -149,6 +149,25 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       101/223 and 104/224 novel-unique structures hull-unknown, so the observed
       12/256 versus 14/256 strict counts are lower bounds and do not exactly
       reproduce the historical absolute best counts.
+- [x] Complete the extra user-requested H1-A2 epoch-2 DLM generation route and
+      the four-repeat retrained-world2 R03 recovery panel. Training job 31856
+      completed with `eval_loss=0.3186934978`; generation/refinement job 31983
+      completed `0:0` with nine post-model494 cells. All nine independently
+      record model-494 `diffusion_steps=800`; no pre-refine row was evaluated.
+- [-] Reproduce the registered historical R03 best from nominally matched
+      retrained-world2 settings. Official-clean topology strict counts are
+      `[13,15,12,15]`, versus historical `[28,32,30,30]`; meta counts are
+      `[115,113,107,114]`, versus `[122,125,126,127]`. The terminal seed-17
+      planner audit is not byte-identical and shows large formula/chemical-
+      system support shifts. This route is scientifically terminal with no
+      promotion or automatic retry.
+- [x] Complete official post-only stability for all nine recovery cells using
+      fresh-clean `get_entries_in_chemsys`, `compatible_only=True`, and
+      `GGA_GGA+U`. The used union has 952/983 resolved systems and 31 explicit
+      `hull_unknown`; unknowns are never silently counted unstable. Combined
+      job 32049 completed all nine preliminary cells before a pure Bash
+      finalization failure, and the immutable zero-Slurm V5 continuation
+      reused them and reached complete terminal results.
 - [-] Complete the immutable V4 Plan1200 formal assembly/native continuation.
       All six R03/B3 repeat tasks and twelve pre/post stage reports completed,
       but assembly 31585 failed closed on an integer-to-float overflow in the
@@ -182,6 +201,13 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       complete Direct and strict/meta tables, body byte-identity gate, paired
       exact McNemar tests, source packages, Slurm evidence, and transfer SHA
       manifest. Preserve the archived-cache/official-clean distinction.
+- [x] Freeze the retrained-world2 recovery terminal report, all nine Direct
+      and official strict/meta denominator rows, four-repeat bootstrap
+      intervals, same-cohort H1-A2 comparisons, planner-distribution audits,
+      refine800 parity, clean-cache coverage, V5/V7/V8/official engineering
+      lineage, and the zero-Slurm finalization markers. Update current state,
+      DLM/evidence registries, portfolio status, and resource ledger while
+      retaining the archived first256 result as the protected best.
 - [ ] Update registries and resource ledger after every submission/terminal.
 - [ ] Freeze checkpoint deletion manifests before deleting intermediates.
 - [ ] Preserve protected and promoted/fixed endpoint checkpoints.

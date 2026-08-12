@@ -1,0 +1,261 @@
+{
+  "schema": "h1a2_retrained_world2_r03_refine_import_contract_repair_config_v3",
+  "run_id": "20260812_h1a2_retrained_world2_r03_refine_import_contract_repair_v8",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_retrained_world2_r03_refine_import_contract_repair_v8",
+  "continuation": {
+    "upstream_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_retrained_world2_r03_sun_recovery_contract_repair_v5",
+    "upstream_source_manifest_sha256": "29ca85d57d311f455a4f91d83e6d1c4c896d62b47835958dd37719fdd4d9f162",
+    "upstream_slurm_job_id": "31900",
+    "upstream_slurm_state": "FAILED",
+    "upstream_slurm_exit_code": "1:0",
+    "required_planner_terminal_sha256": "5a9676dcc10a4c4938d29aa39bbe509a4635f08f2215d49f756ea165729ca966",
+    "required_planner_distribution_sha256": "649eddbc90148f74fb11cab865e59a21282750f134d2345522880754f61a9953",
+    "required_planner_topology_sha256": "dce0b7cdcb2ad24b3aa7f418e9ede3e3a32689c61e1a7b3cbe34470ac4120b3a",
+    "required_cohort_sha256": {
+      "retrained_seed52021_world2_b4": "b5a897c029947e1cf88d3abbd2b48efed4cfc1694e4dc73ab9a447ce9f3d178c",
+      "retrained_seed62023_world2_b4": "3913bae3e07d6a06902dc15e8ff8f484cdf32754b204d5fdaeb86b176c663dd9",
+      "retrained_seed72031_world2_b4": "daf5b2fa9ec0e00929a91521fac5978e0d8d55008fcf6a2da93ca01224d44b5b",
+      "retrained_seed82037_world2_b4": "63d764ecb63dd522ffd0fe1844298461fd9525e2169d38c57f2a79e8e8a9c93f",
+      "retrained_seed17_world2_b4_topology_match": "3a3107489866b551069870cac12a40f02b7c6a8f313845c6df91bc450e529f39"
+    },
+    "failure_stage": "v7_fresh_r03_after_body_before_model494_load",
+    "failure_signature": "ModuleNotFoundError: No module named 'scripts.refine_dlm_with_crysllmgen'",
+    "planner_sampling_rerun": false,
+    "planner_outputs_byte_reused": true,
+    "generation_outputs_reused": true,
+    "slurm_job_ordinal_since_v5": 3,
+    "remaining_official_slurm_jobs": 0
+  },
+  "body_continuation": {
+    "upstream_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_retrained_world2_r03_postplanner_contract_repair_v7",
+    "upstream_slurm_job_id": "31965",
+    "upstream_slurm_state": "FAILED",
+    "upstream_slurm_exit_code": "1:0",
+    "reuse_scope": "four_completed_fresh_r03_body256_outputs_only",
+    "body_generation_rerun": false,
+    "refinement_started": false,
+    "required_body_succeeded": [246, 242, 250, 245],
+    "import_root_cause": "R03D_PYTHONPATH_not_switched_to_R03E_before_refine1000",
+    "corrected_refine_pythonpath": "SOURCE:R03E_RUNTIME:R03E:R03D:PROJECT"
+  },
+  "preparation_history": {
+    "aborted_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_retrained_world2_r03_postplanner_contract_repair_v6",
+    "aborted_before_submission": true,
+    "abort_reason": "user_requested_no_large_artifact_rehash",
+    "large_artifact_rehash": false,
+    "body_adapter_identity_basis": "previously_registered_sha256_plus_current_path_and_byte_size",
+    "refiner_identity_basis": "previously_registered_sha256_plus_current_path_and_byte_size"
+  },
+  "scheduler_repair": {
+    "variant": "refine_import_continuation_single_job_max4_a800_32cpu_v8",
+    "slurm_job_count": 1,
+    "requested_cpus": 32,
+    "maximum_concurrent_cpu_threads": 32,
+    "requested_a800_gpus": 4,
+    "maximum_visible_a800_gpus": 4,
+    "requested_memory_gb": 500,
+    "planner_sampler_sha256": "d38743f2f647d798800724b09537fbe492706805c00d7ee34c5ca8d74e39adc8",
+    "legacy_rank_rng_interface": "implicit_seed_plus_rank_no_seed_mode_cli",
+    "formula_constraint_interface": "absent_in_historical_sampler_equivalent_to_off",
+    "planner_waves": [],
+    "generation_waves": [
+      ["fresh_r03_refine_0", "fresh_r03_refine_1", "fresh_r03_refine_2", "fresh_r03_refine_3"],
+      ["h1a2_b0_d1", "topology_body"],
+      ["topology_refine_0", "topology_refine_1", "topology_refine_2", "topology_refine_3"]
+    ],
+    "pre_refine_evaluated": false
+  },
+  "denominator": 256,
+  "training_upstream": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_epoch2_exact_retrain_recovery_v1",
+    "source_manifest_sha256": "e40ba6b88b7df399634b269de8737e2680604d31a46a9b3733566277fc40c782",
+    "required_marker": "status/training_SUCCESS",
+    "terminal_report": "training_terminal_report.json",
+    "adapter_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_epoch2_exact_retrain_recovery_v1/outputs/h1a2_epoch2_llama_rich_sft/final",
+    "adapter_sha256": "3ccc2012222214b7b50a0642cc8e203621b032a3a7ca044d9b355847cdd2ab94",
+    "adapter_config_sha256": "e1cdca4981f47587461cab1936e5d8a34d24a41d74cef22a69a4b3b3d8b9b03a",
+    "historical_adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "historical_final_eval_loss": 0.31758024722337724
+  },
+  "planner": {
+    "base_model": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+    "sampler": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/scripts/sample_llama_h1_formula_plans.py",
+    "sampler_sha256": "d38743f2f647d798800724b09537fbe492706805c00d7ee34c5ca8d74e39adc8",
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 50,
+    "max_new_tokens": 96,
+    "batch_size_per_rank": 4,
+    "world_size": 2,
+    "num_samples_per_cohort": 1200,
+    "frozen_attempts_per_cohort": 256,
+    "prompt_style": "h1_rich_plan_v1",
+    "include_sample_id": false,
+    "seed_mode": "legacy_rank",
+    "do_sample": true,
+    "stop_after_plan_marker": true,
+    "truncate_after_plan_marker": true,
+    "formula_constraint_mode": "off",
+    "rng": "stateful_torch_seed_plus_rank",
+    "merge_order": "rank_concatenated_file_order",
+    "selection": "first_256_raw_records_in_merged_file_order_with_failures_preserved",
+    "historical_sampling_contract": "generate_1200_world2_rank_concatenated_then_freeze_first256",
+    "cohorts": [
+      {"cohort_id": "retrained_seed52021_world2_b4", "seed": 52021},
+      {"cohort_id": "retrained_seed62023_world2_b4", "seed": 62023},
+      {"cohort_id": "retrained_seed72031_world2_b4", "seed": 72031},
+      {"cohort_id": "retrained_seed82037_world2_b4", "seed": 82037}
+    ]
+  },
+  "downstream_cohorts": [
+    "retrained_seed52021_world2_b4",
+    "retrained_seed62023_world2_b4",
+    "retrained_seed72031_world2_b4",
+    "retrained_seed82037_world2_b4"
+  ],
+  "topology_match": {
+    "panel_id": "historical_best_topology_match",
+    "planner": {
+      "cohort_id": "retrained_seed17_world2_b4_topology_match",
+      "seed": 17
+    },
+    "body_process_realizations": 1,
+    "refiner_process_realizations": 4,
+    "refiner_array_concurrency": 2,
+    "reuse_identical_body_and_proposal_graphs": true,
+    "reuse_identical_refiner_seed_vector": true,
+    "historical_target_strict_counts": [28, 32, 30, 30]
+  },
+  "historical_h1a2_dlm_control": {
+    "panel_id": "retrained_seed17_world2_historical_h1a2_b0_d1",
+    "planner_cohort_id": "retrained_seed17_world2_b4_topology_match",
+    "planner_seed": 17,
+    "body_arm": "B0",
+    "body_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "body_adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "generation_policy": "d1_exact_plan_schedule",
+    "body_world_size": 2,
+    "body_effective_batch_size": 1,
+    "refiner_world_size": 2,
+    "refiner_effective_batch_size": 1,
+    "refiner_steps": 800,
+    "evaluate_stage": "post_model494_only",
+    "controlled_seed_source": "frozen_20260731_attempt_ledger"
+  },
+  "historical_planner_reference": {
+    "cohort_id": "h1a2_original_seed17_world2_b4",
+    "cohort256": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_planner_h1a2_scientific_replay_r03_sun_recovery_v5/planner/h1a2_original_seed17_world2_b4/frozen/cohort256.jsonl",
+    "cohort256_sha256": "26df9e9c3f995de155d67477adac72c0dcba5e0d19dbc84dfa3795eca8d20e54",
+    "role": "deep_distribution_reference_only"
+  },
+  "reference_seed_ledger": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1/data/attempt_ledger.jsonl",
+    "sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f",
+    "reuse_across_cohorts": true
+  },
+  "body": {
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "adapter_file": "adapter_model.safetensors",
+    "adapter_expected_bytes": 6391016776,
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "large_artifact_rehash": false,
+    "tokenizer_vocab_sha256": "3acc073da85047265769f2dccd93543fa9d7cbfa95021aef54ef282b13ce2f37",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "tokenizer_config_sha256": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+    "tokenizer_size": 128830,
+    "prompt_contract": "historical_r5c_plan_state_json_exact_length",
+    "schedule": "d2_safe_axis",
+    "temperature": 0.7,
+    "cfg_scale": 0.0,
+    "remasking": "low_confidence",
+    "max_batch_size": 8,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "min_lattice_rad": 0.0001,
+    "models": {
+      "R03": {
+        "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+        "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d"
+      }
+    }
+  },
+  "refiner": {
+    "name": "CrysLLMGen model_494",
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "checkpoint_expected_bytes": 147645242,
+    "large_artifact_rehash": false,
+    "timesteps": 1000,
+    "diffusion_steps": 800,
+    "num_evals": 1,
+    "effective_batch_size": 1,
+    "seed_mode": "exact_frozen_20260731_attempt_ledger_reused_across_cohorts",
+    "historical_best_provenance": {
+      "historical_best_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260802_h1_body_safeaxis_refined_repeats4_v1",
+      "historical_wrapper": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/refine_safeaxis_arm.py",
+      "historical_wrapper_sha256": "71ab6a55a793a991c8a677c285f9cad1a79bf4c1667ccedf4c5c5199b4092f54",
+      "current_wrapper": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260811_h1_p0_plan1200_r03_b3_prepost_native1000_cohort_contract_repair_v4/body_source/refine1000.py",
+      "current_wrapper_sha256": "12c5db21a15b7245d00b4388e2f5204a7dd91b3e10af9831e2a18b347f6cf3a6",
+      "runtime_loader": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/scripts/refine_dlm_with_crysllmgen.py",
+      "runtime_loader_sha256": "a0cb2c54c149aee0a4f36c147d93eca6799e3b17879f76c108721c934f087b2a",
+      "diffusion_kernel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/reference/crysllmgen/models_ddpm/diffusion.py",
+      "diffusion_kernel_sha256": "d27eff3839e1a0da0098a287225e3c4f2239188cbffed3387d37dc8b95bdb6ca",
+      "refiner_seed_vector_sha256": "af6332eb92ad64c8c5244913025fa2153db94a04f4f86fe6812b8bdb0e9a9be0",
+      "historical_refined_counts": [248, 248, 248, 248],
+      "historical_clean_strict_sun_counts": [28, 32, 30, 30],
+      "historical_clean_meta_sun_counts": [122, 125, 126, 127],
+      "repeat_semantics": "same frozen body/proposal graphs and same seed ledger in four independent one-A800 CUDA processes"
+    }
+  },
+  "direct": {
+    "gt_csv": "reference/crysllmgen/data/mp_20/test.csv",
+    "eval_model_name": "mp20",
+    "runner_sha256": "556d4e14c96a7a89c96eaf7c07fda04c0f399526f733de0e8cbbd08d1f24e7a4"
+  },
+  "official_sun": {
+    "query_method": "mp_api.client.MPRester.get_entries_in_chemsys",
+    "compatible_only": true,
+    "thermo_type": "GGA_GGA+U",
+    "unresolved_policy": "explicit_hull_unknown_skip_unknown_headline",
+    "fresh_query_only_for_missing_new_chemsys": true,
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1
+  },
+  "frozen_runtime_dependencies": {
+    "old_freeze_source_manifest_sha256": "b895b0f5867fddb00214a64b088e062d4e8fe0e55a9439333f74cc82977ceebf",
+    "old_freeze_cohort_sha256": "22a4605edf546d18bbd03962ee664eb1724f27b5dac5883f59511efdc38090dc",
+    "v5_source_manifest_sha256": "37b89598e5124fac291acdf1bc836eb44bbfd1b0cdd4b9fa70e11895af69b5a0",
+    "v5_run_body_replay_sha256": "aca6635cb670ba831b8bc433e0867c2a7de9f73fa4a18061daedc6fbe6785b34",
+    "v5_run_frozen_v4_sha256": "219cb3f0b21cb07f22934593a8c86c2559cb47d18ce6ab4eb65290fc0f88b5f7"
+  },
+  "inference": {
+    "evaluated_stage": "post_model494_only",
+    "pre_refine_role": "intermediate_only_not_scored",
+    "exact_mcnemar_per_cohort_pre_post": false,
+    "hierarchical_paired_bootstrap_draws": 50000,
+    "bootstrap_seed": 20260812,
+    "pooled_1024_role": "descriptive_only"
+  },
+  "retry": false,
+  "replacement": false,
+  "repair": false,
+  "filter": false,
+  "rerank": false,
+  "training": false,
+  "rl": false,
+  "authorization": {
+    "planner_sampling": false,
+    "body_generation": true,
+    "diffusion_refinement": true,
+    "direct_evaluation": true,
+    "official_sun_incremental_query": true,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "training": false,
+    "rl": false
+  }
+}

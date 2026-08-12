@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_portfolio_status_v1",
-  "updated_at": "2026-08-10T08:48:00+08:00",
-  "overall": "four_cell_terminal_no_promotion_planner_c0_c1_pending",
+  "updated_at": "2026-08-13T06:10:00+08:00",
+  "overall": "four_cell_terminal_h1a2_r03_official_nonreproduction_no_promotion_planner_c0_c1_pending",
   "planner": {
     "status": "active",
     "terminal": false,
@@ -41,6 +41,24 @@
       {"planner": "P0", "body": "B3", "role": "dlm_main_effect", "status": "complete_256"},
       {"planner": "SFT-v2", "body": "B3", "role": "joint_interaction", "status": "complete_256"}
     ]
+  },
+  "h1a2_retrained_world2_r03_recovery": {
+    "status": "terminal_engineering_complete_historical_best_not_reproduced",
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260813_h1a2_retrained_world2_r03_sun_official_v8_finalization_continuation_v5",
+    "terminal_report_sha256": "c74a4fdc0b6f51117316263384166c9ca82672a42514904076e356e9b700527c",
+    "results_complete_sha256": "204ef06bf2cb1f8a29499f38c29e6e90a2c9e4be580ee5f8ea1f2b27f272fd55",
+    "post_model494_cells": 9,
+    "pre_refine_evaluated": false,
+    "refiner": {"checkpoint": "model_494", "diffusion_steps": 800, "identical_across_current_and_historical": true},
+    "fresh_strict_sun": [16, 13, 7, 18],
+    "topology_strict_sun": [13, 15, 12, 15],
+    "historical_clean_strict_sun": [28, 32, 30, 30],
+    "fresh_meta_sun": [111, 106, 106, 110],
+    "topology_meta_sun": [115, 113, 107, 114],
+    "historical_clean_meta_sun": [122, 125, 126, 127],
+    "planner_seed17_byte_identical_to_historical": false,
+    "protected_historical_result": "archived_r03_first256_official_strict_28_of_256",
+    "decision": "no_promotion_no_automatic_retry_preserve_historical_best"
   },
   "final_evaluation": {"status": "blocked_on_planner_C0_C1_and_formal_integration_freeze", "methods": [], "maximum_methods": 3},
   "rl_authorized": false

@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_planner_candidate_registry_v1",
-  "updated_at": "2026-08-11T05:54:00+08:00",
+  "updated_at": "2026-08-13T06:10:00+08:00",
   "selection_limit_non_p0_downstream": 2,
   "protected_incumbent": "P0",
   "four_cell_terminal": {
@@ -48,6 +48,42 @@
     "failure_report_sha256": "3f3b32b904563c40258483fcf7d2c21a27522f536702ab75ea310dfde5d98d8f",
     "changes_protected_incumbent": false,
     "automatic_rl": false
+  },
+  "h1a2_retrained_world2_planner_recovery_audit": {
+    "status": "terminal_no_promotion",
+    "seed": 17,
+    "historical": {
+      "attempts": 256,
+      "parsed": 252,
+      "failed": 4,
+      "unique_formulas": 251,
+      "unique_chemsys": 247,
+      "duplicate_chemsys": 5
+    },
+    "retrained": {
+      "attempts": 256,
+      "parsed": 251,
+      "failed": 5,
+      "unique_formulas": 250,
+      "unique_chemsys": 236,
+      "duplicate_chemsys": 15
+    },
+    "byte_identical": false,
+    "total_variation_distance": {
+      "formula": 0.7936507936507923,
+      "chemsys": 0.7579048883829749,
+      "anion_framework": 0.05800607095427814,
+      "lattice": 0.07449566812116613
+    },
+    "fresh_vs_historical_total_variation_range": {
+      "formula": [0.98824, 0.99608],
+      "chemsys": [0.93324, 0.96471]
+    },
+    "refine_checkpoint": "model_494",
+    "diffusion_steps": 800,
+    "conclusion": "historical_gap_tracks_exact_planner_cohort_and_downstream_stochastic_trajectory_not_refine_step_count",
+    "formal_promotion": false,
+    "automatic_retry": false
   },
   "candidates": [
     {

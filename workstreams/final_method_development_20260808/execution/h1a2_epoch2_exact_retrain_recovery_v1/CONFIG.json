@@ -1,0 +1,129 @@
+{
+  "schema": "h1a2_epoch2_exact_retrain_recovery_config_v1",
+  "run_id": "20260812_h1a2_epoch2_exact_retrain_recovery_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1a2_epoch2_exact_retrain_recovery_v1",
+  "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+  "environment": {
+    "conda": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+    "python": "3.10.18",
+    "packages": {
+      "accelerate": "1.9.0",
+      "numpy": "1.26.4",
+      "peft": "0.16.0",
+      "safetensors": "0.5.3",
+      "tokenizers": "0.21.4",
+      "torch": "2.4.0+cu121",
+      "transformers": "4.54.0"
+    }
+  },
+  "historical_anchor": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics",
+    "job_id": 21312,
+    "training_start": "2026-06-03 03:44:53 CST",
+    "training_end": "2026-06-03 05:47:05 CST",
+    "global_step": 3392,
+    "final_eval_loss": 0.31758024722337724,
+    "elapsed_seconds": 7316.211495637894,
+    "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "adapter_config_sha256": "a40299dfbef59bd74210707240d0908e8e2b219fba10ae3f24c9b6ef7cbfbfda"
+  },
+  "base_model": {
+    "path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+    "files": {
+      "config.json": "2430cee764b6530ff8673cf9ba8561e1d5a33152d503cd0de909ff5718261441",
+      "generation_config.json": "93caf96e269e32b9ee33ad78b0d76d910408d11a63a8b2c49241030836759311",
+      "model.safetensors.index.json": "146776fce3f6db1103aa6f249e65ee5544c5923ce6f971b092eee79aa6e5d37b",
+      "special_tokens_map.json": "462d91939dbc37178aa5a3eae7068d1990ccc92e09f288cc71f42cdf139d69cc",
+      "tokenizer.json": "e134af98b985517b4f068e3755ae90d4e9cd2d45d328325dc503f1c6b2d06cc7",
+      "tokenizer_config.json": "690727b4fed286383df1c7ca5e805124cb70c6eb4529f807c7b2e60ff741da7e"
+    },
+    "model_shards": {
+      "model-00001-of-00004.safetensors": {"bytes": 4976698672},
+      "model-00002-of-00004.safetensors": {"bytes": 4999802720},
+      "model-00003-of-00004.safetensors": {"bytes": 4915916176},
+      "model-00004-of-00004.safetensors": {"bytes": 1168138808}
+    },
+    "shard_identity_basis": "index_sha256_plus_exact_filename_and_bytes; historical_epoch2_adapter_and_plans_are_byte_exact_on_this_base"
+  },
+  "epoch1_adapter": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260602_182700-h1a2-rich-l3base-256/outputs/h1a2_llama_rich_sft/final",
+    "files": {
+      "adapter_model.safetensors": "cea6de7bd958536d5211acc574bac00f92a719eaab223ff151974786d037aeab",
+      "adapter_config.json": "8cb806bcaae73aa5a201c9942e9a9098ec97ef0a397fc1e7f115c8638eaa9976",
+      "special_tokens_map.json": "849070cae53bd45439e64ce5b1ddd650a66081b1bd47895c5a58939a05055579",
+      "tokenizer.json": "3c5cf44023714fb39b05e71e425f8d7b92805ff73f7988b083b8c87f0bf87393",
+      "tokenizer_config.json": "0c3b1e945bb39b585d9fd6a12b21aec73e8545eae873e8968cb265e1e3bf9074"
+    }
+  },
+  "data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/dlm_sft/mp_20_h1a2_rich_planner_noid_l3base",
+    "splits": {
+      "train.jsonl": {"rows": 27136, "sha256": "d431dfec1de8c3240dbc5648867be1b4b676fd85276e805a177b9944f3a1a157"},
+      "val.jsonl": {"rows": 9047, "sha256": "59327aa789ae5d2bbb66d8a8f0dc882d594bcc14623aa96ce95076ed1b6fc540"},
+      "test.jsonl": {"rows": 9046, "sha256": "032845826acf1fcb9e7893fc91da05bc0cd9d2363c80ae459d5c446c3c6d5ea8"}
+    }
+  },
+  "runtime_files": {
+    "scripts/llama_formula_sft.py": "a45e8027e7732fe12057c934b5a2dfa9bc3151fc4f30a50a3b94d40b342f2dba",
+    "crystal_dlm/crysllmgen_text.py": "2be00f068df7d3e5cdf7a56a51e332a87739e3cf2efce3623ea7392e6991557a",
+    "crystal_dlm/h1_llm_planner.py": "d45ccc23fad4284fdeef53d7bbdc5e4044fb6b598092461663473ed8f5a4f8ad",
+    "crystal_dlm/r5_plan_state.py": "6bc1e446afdbe405df601f609a2326c9f376a7f036e9d27dafcecd57965866fc",
+    "crystal_dlm/r5_plan_body.py": "3478ddf657873ea055e5816c423ce36be5ecf0cd1a73c6ee1e5514648047be83",
+    "crystal_dlm/r5_dynamic_length.py": "c022ddda92caac1c60b91b239c1bc155c734cad86b595282ce9724e239d002c6",
+    "crystal_dlm/composition_validity.py": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178"
+  },
+  "training": {
+    "command_model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B/",
+    "command_checkpoint_path": "runs/20260602_182700-h1a2-rich-l3base-256/outputs/h1a2_llama_rich_sft/final",
+    "command_data_dir": "data/dlm_sft/mp_20_h1a2_rich_planner_noid_l3base",
+    "precision": "bf16",
+    "gradient_checkpointing": true,
+    "single_process": true,
+    "seed": 17,
+    "max_length": 768,
+    "epochs": 1.0,
+    "batch_size": 1,
+    "gradient_accumulation": 8,
+    "effective_batch_size": 8,
+    "optimizer": "AdamW",
+    "learning_rate": 0.00002,
+    "weight_decay": 0.0,
+    "scheduler": "cosine",
+    "warmup_steps": 100,
+    "max_grad_norm": 1.0,
+    "logging_steps": 20,
+    "eval_steps": 500,
+    "eval_max_batches": 50,
+    "expected_updates": 3392,
+    "lora": {
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "bias": "none",
+      "targets": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+    }
+  },
+  "resource_policy": {
+    "partition": "gpu",
+    "gpu_type": "NVIDIAA800-SXM4-80GB",
+    "gpus": 1,
+    "cpus": 8,
+    "memory_gb": 180,
+    "time_hours": 8,
+    "historical_two_gpu_allocation_scientific_role": "none_plain_python_used_cuda0_only"
+  },
+  "authorization": {
+    "training": true,
+    "sampling": false,
+    "body_generation": false,
+    "refinement": false,
+    "sun": false,
+    "materials_project_query": false,
+    "retry": false,
+    "replacement": false,
+    "repair": false,
+    "filter": false,
+    "rerank": false,
+    "rl": false
+  }
+}
