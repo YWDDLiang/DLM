@@ -1,0 +1,82 @@
+{
+  "schema": "h1_r03_h1a2_archived_first256_official_ehull_completion_config_v1",
+  "run_id": "20260813_h1_r03_h1a2_archived_first256_official_ehull_completion_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260813_h1_r03_h1a2_archived_first256_official_ehull_completion_v1",
+  "upstream": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4",
+    "terminal_report_sha256": "1357008340603c741ac4cf96e0f29114e6d050e593c7aa5503f2a636fa600fd3",
+    "attempts_per_arm": 256,
+    "arms": {
+      "control": {
+        "label": "original_H1A2_DLM",
+        "generation_sha256": "e215fbad4603542fc62a0b233d4917c4a46f6a24f92b80ab1da690b8ccd9bf0f",
+        "attempt_results_sha256": "8ef0cbf429951c166820d1f26fb76e2a46e3e2792e91885bd763fe920ef44043",
+        "attempt_summary_sha256": "42953951edcba60af43576e41674df3aa7f2fb1014a6fcbdfeb982c2c891ad69",
+        "input_manifest_sha256": "590bdeae8ec9b27b21b799f8ca6d7e9f534d528e8868b143b5e8f3a6462064c4",
+        "relax_results_sha256": "b4bee294a68fb83afeba84b97591290cd52964aeaba0bf39f77d7c6c483d5931",
+        "direct_report_sha256": "fd41f6ff0cf3cc7dfb47573b440e346481f68da4fcb4f58597897285369b1f93",
+        "expected_novel_unique": 223,
+        "historical_strict": 27,
+        "historical_meta": 133
+      },
+      "candidate": {
+        "label": "R03_safe_axis_DLM",
+        "generation_sha256": "d1e050b80b5db62ce984dafdf20a011199b9f4099b6bc3d5eb99f65fb01e2dfa",
+        "attempt_results_sha256": "7a57e9af1b45f13248402f7360404f37bbc25de6bcafd5809f09f67d87e13505",
+        "attempt_summary_sha256": "0da7243181e865a4ead330f0ef4fb79e84224b8c2973e4fab4cf0875e9e3bed4",
+        "input_manifest_sha256": "3dd4083070dae7ba7a0d4adfa944f157f858ca0bda7ddb5fff5cc020205de2a0",
+        "relax_results_sha256": "246a4632e54bc0ab2cb28879dd9242125e22078f3b36b7afd4bc8cc94b3dbba2",
+        "direct_report_sha256": "3315a2fa52764ebb7d6c51ca89b7a01a52e72ed4792d44dd9026a577e8511136",
+        "expected_novel_unique": 224,
+        "historical_strict": 28,
+        "historical_meta": 122
+      }
+    }
+  },
+  "base_official_cache": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_sun_official_gga_u_skip_unknown_reeval_v2/official_mp_cache",
+    "completion_manifest_sha256": "a88d37ea5388cbe9edb1f8176cad1f55fc9bb20ad7212dd6c6fce9fb87b0da53",
+    "slim_cache_sha256": "c940f10935611076490f424515f02c667996454e35a694accea7564e7199ca4d",
+    "unresolved_sha256": "35dacf8372a8b6cd20f895855d1b61bcc2875ae0eb8b1f1c2762688424af8efc",
+    "resolved_count": 2550,
+    "unresolved_count": 80
+  },
+  "official_mp": {
+    "python": "/public/home/jiaosz/ywliang/ai4s/.venvs/mp_api_0_45_13_emmet0_85_1_py310_v4_system/bin/python",
+    "python_version": "3.10.18",
+    "packages": {
+      "mp-api": "0.45.13",
+      "emmet-core": "0.85.1",
+      "pymatgen": "2025.6.14"
+    },
+    "query_method": "mp_api.client.MPRester.get_entries_in_chemsys",
+    "compatible_only": true,
+    "thermo_type": "GGA_GGA+U",
+    "additional_criteria": {
+      "thermo_types": ["GGA_GGA+U"]
+    },
+    "expected_wanted_chemsys": 221,
+    "expected_base_resolved": 211,
+    "expected_base_unresolved": 9,
+    "expected_genuinely_missing": 1,
+    "expected_query_targets": 10,
+    "max_transport_attempts": 4,
+    "request_interval_seconds": 0.35,
+    "strict_threshold_ev_per_atom": 0.0,
+    "meta_threshold_ev_per_atom": 0.1,
+    "unresolved_policy": "explicit_hull_unknown_never_counted_unstable"
+  },
+  "authorization": {
+    "generation_rerun": false,
+    "planner_rerun": false,
+    "body_rerun": false,
+    "diffusion_refine_rerun": false,
+    "chgnet_relax_rerun": false,
+    "novelty_or_uniqueness_recompute": false,
+    "official_mp_query_only_for_10_unresolved_or_missing_chemsys": true,
+    "stability_only_reevaluation": true,
+    "training": false,
+    "rl": false,
+    "retry_or_replacement": false
+  }
+}

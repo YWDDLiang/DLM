@@ -2,7 +2,34 @@
 
 Updated: 2026-08-13 (Asia/Shanghai)
 
-Overall status: `ARCHIVED_FIRST256_REPRODUCTION_COMPLETE_FROZEN_CACHE_COVERAGE_LIMITED`
+Overall status: `ARCHIVED_FIRST256_OFFICIAL_EHULL_COMPLETE_R03_STRICT_BEST_RECOVERED`
+
+## Terminal result: official E_hull completion recovers R03 strict 28/256
+
+The archived first256 pair has now been reevaluated with the official-clean
+stability contract while freezing generation, model-494 refine800, CHGNet
+energies, novelty, and uniqueness. No Slurm job or scientific rerun was used.
+The union contains 221 novel-unique chemical systems: 211 clean-cache rows
+were reused and exactly ten systems were queried once through official
+`MPRester.get_entries_in_chemsys()`, `compatible_only=True`, `GGA_GGA+U`.
+`C-S` resolved; nine Yb systems remain explicit hull-unknown. Final coverage
+is 212 resolved and 9 unresolved systems.
+
+| arm | generated | joint valid | novel+unique | evaluated/unknown | strict S.U.N. | meta-S.U.N. |
+|---|---:|---:|---:|---:|---:|---:|
+| original H1-A2 D1 | 246/256 | 212/256 | 223/256 | 214/9 | 24/256 (9.38%) | 118/256 (46.09%) |
+| R03 D2 safe-axis | 248/256 | 213/256 | 224/256 | 215/9 | **28/256 (10.94%)** | **128/256 (50.00%)** |
+
+R03 strict exactly recovers the registered historical best count of 28/256.
+The archived-cache lower bound was 14/256 because 104 novel-unique attempts
+lacked hull values; official completion resolves 95 of those, with strict
+flips `15` false-to-true and `1` true-to-false. Exact paired McNemar remains
+non-significant (`p=0.2890625` strict, `p=0.14330665` meta). The detailed
+result is `H1_R03_H1A2_ARCHIVED_FIRST256_OFFICIAL_EHULL_COMPLETION_RESULT_V1.md`;
+evidence is under
+`evidence/h1_r03_h1a2_archived_first256_official_ehull_completion_v1/`.
+Terminal JSON SHA is `63128c86...f85b0` and the returned archive SHA is
+`6e2d0995...f4af4`.
 
 ## Terminal diagnostic: archived first256 generation chain reproduced
 

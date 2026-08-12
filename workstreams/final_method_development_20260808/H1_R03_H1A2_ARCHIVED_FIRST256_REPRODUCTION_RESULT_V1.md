@@ -1,6 +1,14 @@
 # Archived R03 versus original H1-A2 first256 reproduction
 
-Status: `TERMINAL_COMPLETE_ARCHIVED_CACHE_COVERAGE_LIMITED`
+Status: `TERMINAL_COMPLETE_ARCHIVED_CACHE_WITH_OFFICIAL_FOLLOWUP`
+
+Official follow-up: the coverage gap has now been closed for every system
+except nine Yb systems. Under official-clean `GGA_GGA+U`, H1-A2 is 24/256
+strict and 118/256 meta, while R03 is **28/256 strict and 128/256 meta**.
+R03 strict therefore exactly recovers the historical best absolute count.
+See `H1_R03_H1A2_ARCHIVED_FIRST256_OFFICIAL_EHULL_COMPLETION_RESULT_V1.md`.
+The archived-cache values below remain frozen provenance rather than the
+current completed-stability result.
 
 ## Outcome
 

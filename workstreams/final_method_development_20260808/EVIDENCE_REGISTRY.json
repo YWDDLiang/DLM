@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-13T00:20:00+08:00",
+  "updated_at": "2026-08-13T01:02:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -865,6 +865,44 @@
       "paired_meta_mcnemar_p": 0.6900379657745361,
       "sun_protocol": "archived_frozen_cache_not_official_clean_mp",
       "decision": "archived_generation_refinement_reproduced_absolute_best_sun_not_exact_due_hull_unknown_coverage",
+      "formal_promotion": false,
+      "automatic_rl": false
+    },
+    {
+      "evidence_id": "h1_r03_h1a2_archived_first256_official_ehull_completion_v1_terminal",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260813_h1_r03_h1a2_archived_first256_official_ehull_completion_v1",
+      "upstream_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4",
+      "state": "COMPLETE",
+      "exit_code": 0,
+      "slurm_jobs": 0,
+      "attempts_per_arm": 256,
+      "source_manifest_sha256": "5f82b415fca42718229baa68f06b649c0b1678b14c0f74c678d1008613b9d813",
+      "terminal_report_path": "workstreams/final_method_development_20260808/evidence/h1_r03_h1a2_archived_first256_official_ehull_completion_v1/terminal_report.json",
+      "terminal_report_sha256": "63128c86b9ba0f1688c3f8db543512e6c19d5a68bbabd6dc538f10c1b79f85b0",
+      "results_markdown_path": "workstreams/final_method_development_20260808/evidence/h1_r03_h1a2_archived_first256_official_ehull_completion_v1/RESULTS_COMPLETE.md",
+      "results_markdown_sha256": "f89bd7109a437d9fb9ae0e62f170db6c9a18fb59822551114ff7f0558aad64a3",
+      "returned_archive_sha256": "6e2d09954328eccb09c75793745490af932ea0fd9244ef68d44677bc280f4af4",
+      "official_mp": {
+        "query_method": "MPRester.get_entries_in_chemsys",
+        "compatible_only": true,
+        "thermo_type": "GGA_GGA+U",
+        "database_version": "2026.04.13",
+        "wanted_chemsys": 221,
+        "base_resolved": 211,
+        "query_targets": 10,
+        "query_resolved": 1,
+        "query_unresolved": 9,
+        "final_resolved": 212,
+        "final_unresolved": 9
+      },
+      "generation_refinement_energy_novelty_uniqueness_rerun": false,
+      "control": {"generated": 246, "composition_joint_valid": 212, "novel_unique": 223, "hull_evaluated": 214, "hull_unknown": 9, "strict_sun": 24, "meta_sun": 118},
+      "candidate": {"generated": 248, "composition_joint_valid": 213, "novel_unique": 224, "hull_evaluated": 215, "hull_unknown": 9, "strict_sun": 28, "meta_sun": 128},
+      "paired_strict_mcnemar_p": 0.2890625,
+      "paired_meta_mcnemar_p": 0.14330665429588407,
+      "credential_serialized": false,
+      "key_carrier_destroyed_before_first_http_request": true,
+      "decision": "official_ehull_completion_recovers_r03_historical_strict_best_28_of_256",
       "formal_promotion": false,
       "automatic_rl": false
     }
