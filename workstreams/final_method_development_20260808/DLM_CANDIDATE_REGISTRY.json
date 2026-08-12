@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_dlm_candidate_registry_v1",
-  "updated_at": "2026-08-12T03:08:48+08:00",
+  "updated_at": "2026-08-13T00:20:00+08:00",
   "selection_limit_downstream": 2,
   "protected_incumbent": "B0",
   "four_cell_terminal": {
@@ -121,6 +121,55 @@
     "active_plan_prompt_byte_equal": true,
     "sampling_protocol_changed": true,
     "interpretation": "evaluator_cache_drift_excluded_plan_rng_cohort_distribution_is_leading_remaining_explanation",
+    "formal_promotion": false,
+    "automatic_rl": false
+  },
+  "archived_h1a2_r03_first256_reproduction": {
+    "run_id": "20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4",
+    "upstream_body_run_id": "20260812_h1_r03_h1a2_archived_first256_once_v2",
+    "body_job_id": 31931,
+    "body_job_state": "FAILED_AFTER_BODY_IDENTITY_SUCCESS",
+    "downstream_job_id": 31963,
+    "downstream_job_state": "COMPLETED_0_0",
+    "attempts_per_arm": 256,
+    "planner": "archived_P0_first256_no_resampling",
+    "body_artifacts_byte_identical_to_20260802_success": true,
+    "refiner": "model_494",
+    "diffusion_steps": 800,
+    "sun_protocol": "archived_R5C_A100_frozen_cache_on_A800",
+    "official_clean_mp": false,
+    "control": {
+      "method": "original_H1A2_D1_exact_plan",
+      "generation_succeeded": 246,
+      "composition_joint_valid": 212,
+      "structure_valid": 246,
+      "novel_unique": 223,
+      "hull_evaluated": 122,
+      "hull_unknown": 101,
+      "strict_sun_lower_bound": 12,
+      "meta_sun_lower_bound": 70,
+      "coverage_adjusted_strict_percent_report_only": 8.92,
+      "coverage_adjusted_meta_percent_report_only": 52.01
+    },
+    "candidate": {
+      "method": "R03_D2_safe_axis",
+      "generation_succeeded": 248,
+      "composition_joint_valid": 213,
+      "structure_valid": 248,
+      "novel_unique": 224,
+      "hull_evaluated": 120,
+      "hull_unknown": 104,
+      "strict_sun_lower_bound": 14,
+      "meta_sun_lower_bound": 73,
+      "coverage_adjusted_strict_percent_report_only": 10.54,
+      "coverage_adjusted_meta_percent_report_only": 54.95
+    },
+    "paired_exact_mcnemar": {
+      "strict": {"candidate_only": 4, "control_only": 2, "p": 0.6875},
+      "meta": {"candidate_only": 14, "control_only": 11, "p": 0.6900379657745361}
+    },
+    "terminal_report_sha256": "1357008340603c741ac4cf96e0f29114e6d050e593c7aa5503f2a636fa600fd3",
+    "interpretation": "generation_refinement_contract_reproduced_historical_absolute_sun_not_exactly_recovered_due_incomplete_archived_hull_cache",
     "formal_promotion": false,
     "automatic_rl": false
   },

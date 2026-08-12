@@ -1,8 +1,40 @@
 # Current state
 
-Updated: 2026-08-12 (Asia/Shanghai)
+Updated: 2026-08-13 (Asia/Shanghai)
 
-Overall status: `OFFICIAL_MP_SKIP_UNKNOWN_SUN_REEVALUATION_COMPLETE_PLAN1200_GAP_PERSISTS`
+Overall status: `ARCHIVED_FIRST256_REPRODUCTION_COMPLETE_FROZEN_CACHE_COVERAGE_LIMITED`
+
+## Terminal diagnostic: archived first256 generation chain reproduced
+
+The requested single-repeat, 256-attempt archived-code reproduction is
+complete. Job `31963` completed `0:0` in `04:10:02` using one A800 and eight
+CPUs. It reused the body artifacts from job `31931`; the control and candidate
+attempt ledgers and proposal graphs are all byte-identical to the 2026-08-02
+successful archive. The downstream repair changed Python import precedence
+only. Both arms then ran model-494 exact refine800, Direct, and the archived
+R5-C/A100 frozen-cache S.U.N. evaluator without retry, replacement, repair,
+filtering, reranking, training, or RL.
+
+| arm | generated | comp/joint | structure | COV-P | COV-R | strict S.U.N. | meta-S.U.N. | hull evaluated/unknown |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| original H1-A2 D1 | 246/256 | 212/256 | 246/256 | 96.09% | 84.31% | 12/256 | 70/256 | 122/101 of 223 |
+| R03 D2 safe-axis | 248/256 | 213/256 | 248/256 | 96.48% | 83.76% | 14/256 | 73/256 | 120/104 of 224 |
+
+Paired exact McNemar is non-significant: strict has R03-only/control-only
+`4/2`, `p=0.6875`; meta has `14/11`, `p=0.690038`. The exact historical
+absolute counts (`27/133` for H1-A2 and `28/122` for R03) were not recovered
+under this bundled cache because 101 and 104 novel-unique structures have no
+hull value. Report-only coverage-adjusted estimates are 8.92/52.01% for
+H1-A2 and 10.54/54.95% for R03. Thus the archived generation/refinement
+machinery is reproduced, but this incomplete frozen cache cannot support an
+exact best-count reproduction. This result is not the official-clean MP
+protocol and does not supersede the completed current-cache historical replay.
+
+Full interpretation is in
+`H1_R03_H1A2_ARCHIVED_FIRST256_REPRODUCTION_RESULT_V1.md`; returned evidence
+is under `evidence/h1_r03_h1a2_archived_first256_downstream_repair_v4/`.
+Terminal JSON SHA is `13570083...00fd3` and the returned archive SHA is
+`a5582814...bca35`.
 
 ## Terminal diagnostic: official MP stability repair does not close the Plan1200 gap
 

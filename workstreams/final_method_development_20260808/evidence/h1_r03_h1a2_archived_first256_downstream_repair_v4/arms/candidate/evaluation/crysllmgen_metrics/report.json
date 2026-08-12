@@ -1,0 +1,33 @@
+{
+  "attempt_metrics": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/evaluation/crysllmgen_metrics/attempt_metrics.jsonl",
+  "attempt_metrics_sha256": "e32a28c9970865917c9f211ca5967883798bbfddcd409bc95ea406e88b43e92b",
+  "attempts": 256,
+  "comp_valid_count": 213,
+  "denominator": "all_generation_attempts",
+  "generation_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/generation/generation.jsonl",
+  "generation_jsonl_sha256": "d1e050b80b5db62ce984dafdf20a011199b9f4099b6bc3d5eb99f65fb01e2dfa",
+  "generation_succeeded": 248,
+  "gt_csv": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/test.csv",
+  "gt_csv_sha256": "b4a2ae467ccab230a1b726778bf1539e3e89ecccaa6925a7c0eeeced46966c7c",
+  "gt_structures": 9046,
+  "method": "H1-R03E-P0-B0-D2-SAFE-AXIS-REFINE800",
+  "metric_worker_count": 1,
+  "metrics_unchanged_upstream": {
+    "comp_valid": 83.2031,
+    "cov_precision": 96.4844,
+    "cov_recall": 83.7608,
+    "struct_valid": 96.875,
+    "valid": 83.2031,
+    "wdist_density": 0.7826,
+    "wdist_num_elems": 0.0702
+  },
+  "numerical_threads": 8,
+  "ok": true,
+  "retry_or_replacement_used": false,
+  "schema": "crysllmgen_generation_metrics_report_v1",
+  "struct_valid_count": 248,
+  "upstream_compute_metrics_sha256": "c48730ee405c205a912f450c297cc787ed61cefbc3723b3a7dbf2926c60434cd",
+  "upstream_eval_utils_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+  "valid_count": 213,
+  "walltime_s": 2257.8612602353096
+}

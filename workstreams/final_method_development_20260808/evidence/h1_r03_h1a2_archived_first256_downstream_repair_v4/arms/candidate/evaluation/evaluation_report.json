@@ -1,0 +1,66 @@
+{
+  "all_generation_successes_diffusion_refined": true,
+  "arm": "candidate",
+  "artifacts": {
+    "direct_attempts": {
+      "bytes": 50982,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/evaluation/crysllmgen_metrics/attempt_metrics.jsonl",
+      "sha256": "e32a28c9970865917c9f211ca5967883798bbfddcd409bc95ea406e88b43e92b"
+    },
+    "direct_report": {
+      "bytes": 1730,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/evaluation/crysllmgen_metrics/report.json",
+      "sha256": "3315a2fa52764ebb7d6c51ca89b7a01a52e72ed4792d44dd9026a577e8511136"
+    },
+    "generation": {
+      "bytes": 824700,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/generation/generation.jsonl",
+      "sha256": "d1e050b80b5db62ce984dafdf20a011199b9f4099b6bc3d5eb99f65fb01e2dfa"
+    },
+    "sun_attempts": {
+      "bytes": 169290,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/evaluation/r5c_a100_sun/attempt_results.jsonl",
+      "sha256": "7a57e9af1b45f13248402f7360404f37bbc25de6bcafd5809f09f67d87e13505"
+    },
+    "sun_summary": {
+      "bytes": 7187,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/evaluation/r5c_a100_sun/attempt_summary.json",
+      "sha256": "0da7243181e865a4ead330f0ef4fb79e84224b8c2973e4fab4cf0875e9e3bed4"
+    }
+  },
+  "attempts": 256,
+  "automatic_downstream": false,
+  "automatic_promotion": false,
+  "automatic_training": false,
+  "diffusion_steps": 800,
+  "direct_counts": {
+    "composition_valid": 213,
+    "joint_valid": 213,
+    "structure_valid": 248
+  },
+  "formal_g3": false,
+  "generation_succeeded": 248,
+  "method": "H1-R03E-P0-B0-D2-SAFE-AXIS-REFINE800",
+  "ok": true,
+  "rates": {
+    "composition_valid": 0.83203125,
+    "joint_valid": 0.83203125,
+    "meta_full_sun": 0.28515625,
+    "novel": 0.875,
+    "novel_unique": 0.875,
+    "strict_full_sun": 0.0546875,
+    "structure_valid": 0.96875,
+    "unique_representative": 0.96875
+  },
+  "repeat": 0,
+  "schema": "h1_r03e_arm_evaluation_v1",
+  "source_manifest_sha256": "7beaf38b7d378ecf8fb31627f195f5fe6095350b60d99882c0a11b39cbf211a4",
+  "status": "complete",
+  "sun_counts": {
+    "meta_full_sun": 73,
+    "novel": 224,
+    "novel_unique": 224,
+    "strict_full_sun": 14,
+    "unique_representative": 248
+  }
+}

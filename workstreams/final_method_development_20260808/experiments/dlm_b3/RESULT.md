@@ -213,3 +213,26 @@ R03-versus-B3 difference is unresolved, and the historical-versus-Plan1200
 gap remains upstream of stability evaluation. B3 stays unpromoted. Full
 strict/meta tables are frozen under
 `evidence/h1_sun_official_gga_u_skip_unknown_reeval_v2/`.
+
+## Archived first256 H1-A2 versus R03 reproduction
+
+The requested one-repeat archived-code reproduction completed in job `31963`
+(`COMPLETED 0:0`). The P0 first256 cohort was not resampled. Original H1-A2
+used D1 exact-plan and R03 used D2 safe-axis; both used model-494 refine800.
+All four reused body artifacts are byte-identical to the 2026-08-02 success.
+
+| arm | generated | comp/joint | structure | COV-P | COV-R | strict | meta |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| original H1-A2 | 246/256 | 212/256 | 246/256 | 96.09% | 84.31% | 12/256 | 70/256 |
+| R03 safe-axis | 248/256 | 213/256 | 248/256 | 96.48% | 83.76% | 14/256 | 73/256 |
+
+R03-minus-control is not significant in this single repeat: exact McNemar
+`p=0.6875` for strict and `p=0.690038` for meta. These S.U.N. values are
+archived frozen-cache lower bounds, not official-clean MP results. Only
+122/223 control and 120/224 R03 novel-unique structures have a hull value;
+the remaining 101 and 104 are unknown. Report-only coverage-adjusted strict
+estimates are 8.92% and 10.54%. Consequently the generation/refinement
+contract is reproduced, but the incomplete bundled cache does not exactly
+recover historical absolute counts. This diagnostic does not change B3's
+non-promotion or the protected-B0 decision. Full evidence is in
+`H1_R03_H1A2_ARCHIVED_FIRST256_REPRODUCTION_RESULT_V1.md`.

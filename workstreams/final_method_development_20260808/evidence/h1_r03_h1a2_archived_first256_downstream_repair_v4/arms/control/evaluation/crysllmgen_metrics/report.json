@@ -1,0 +1,33 @@
+{
+  "attempt_metrics": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/crysllmgen_metrics/attempt_metrics.jsonl",
+  "attempt_metrics_sha256": "3b9f7b21811e7bfe0a205f6aae3fe64f8780c6b8dcd72ba52eabc9165dff1c6d",
+  "attempts": 256,
+  "comp_valid_count": 212,
+  "denominator": "all_generation_attempts",
+  "generation_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/generation/generation.jsonl",
+  "generation_jsonl_sha256": "e215fbad4603542fc62a0b233d4917c4a46f6a24f92b80ab1da690b8ccd9bf0f",
+  "generation_succeeded": 246,
+  "gt_csv": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/test.csv",
+  "gt_csv_sha256": "b4a2ae467ccab230a1b726778bf1539e3e89ecccaa6925a7c0eeeced46966c7c",
+  "gt_structures": 9046,
+  "method": "H1-R03E-P0-B0-D1-REFINE800",
+  "metric_worker_count": 1,
+  "metrics_unchanged_upstream": {
+    "comp_valid": 82.8125,
+    "cov_precision": 96.0938,
+    "cov_recall": 84.3135,
+    "struct_valid": 96.0938,
+    "valid": 82.8125,
+    "wdist_density": 0.7698,
+    "wdist_num_elems": 0.0468
+  },
+  "numerical_threads": 8,
+  "ok": true,
+  "retry_or_replacement_used": false,
+  "schema": "crysllmgen_generation_metrics_report_v1",
+  "struct_valid_count": 246,
+  "upstream_compute_metrics_sha256": "c48730ee405c205a912f450c297cc787ed61cefbc3723b3a7dbf2926c60434cd",
+  "upstream_eval_utils_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+  "valid_count": 212,
+  "walltime_s": 2286.6270006895065
+}

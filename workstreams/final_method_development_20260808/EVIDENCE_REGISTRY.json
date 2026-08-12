@@ -1,7 +1,7 @@
 {
   "schema": "crystal_dlm_evidence_registry_v1",
   "workstream": "final_method_development_20260808",
-  "updated_at": "2026-08-12T03:08:48+08:00",
+  "updated_at": "2026-08-13T00:20:00+08:00",
   "protected_assets": [
     {
       "evidence_id": "protected_planner_p0",
@@ -832,6 +832,39 @@
       "b3_post_minus_pre_strict_percentage_points": 4.665229939860904,
       "b3_post_minus_pre_strict_ci95_percentage_points": [3.535873669756265, 5.7630836437765155],
       "decision": "official_mp_cleanup_does_not_close_plan1200_gap_plan_sampling_cohort_distribution_remains_leading_locus",
+      "formal_promotion": false,
+      "automatic_rl": false
+    },
+    {
+      "evidence_id": "h1_r03_h1a2_archived_first256_downstream_repair_v4_terminal",
+      "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4",
+      "upstream_body_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2",
+      "upstream_body_job_id": 31931,
+      "upstream_body_job_state": "FAILED_1_0_AFTER_BODY_IDENTITY_SUCCESS",
+      "downstream_job_id": 31963,
+      "downstream_job_state": "COMPLETED",
+      "downstream_job_exit_code": "0:0",
+      "downstream_elapsed": "04:10:02",
+      "partition": "gpu",
+      "gpus": 1,
+      "cpus": 8,
+      "memory_gb": 96,
+      "attempts_per_arm": 256,
+      "body_byte_identical_to_archived_success": true,
+      "planner_resampled": false,
+      "diffusion_steps": 800,
+      "retry_replacement_repair_filter_rerank": false,
+      "terminal_report_path": "workstreams/final_method_development_20260808/evidence/h1_r03_h1a2_archived_first256_downstream_repair_v4/terminal_report.json",
+      "terminal_report_sha256": "1357008340603c741ac4cf96e0f29114e6d050e593c7aa5503f2a636fa600fd3",
+      "results_markdown_path": "workstreams/final_method_development_20260808/evidence/h1_r03_h1a2_archived_first256_downstream_repair_v4/RESULTS_COMPLETE.md",
+      "results_markdown_sha256": "11e6d538ce7fb986349ab40a2508d86030f9dd8ce88debda015026506b9689ed",
+      "returned_archive_sha256": "a55828140f41fbfb369736037173c31dc0a4b07d7763e1926fbd7cf0a3abca35",
+      "control": {"generated": 246, "composition_joint_valid": 212, "structure_valid": 246, "novel_unique": 223, "hull_evaluated": 122, "hull_unknown": 101, "strict_sun": 12, "meta_sun": 70},
+      "candidate": {"generated": 248, "composition_joint_valid": 213, "structure_valid": 248, "novel_unique": 224, "hull_evaluated": 120, "hull_unknown": 104, "strict_sun": 14, "meta_sun": 73},
+      "paired_strict_mcnemar_p": 0.6875,
+      "paired_meta_mcnemar_p": 0.6900379657745361,
+      "sun_protocol": "archived_frozen_cache_not_official_clean_mp",
+      "decision": "archived_generation_refinement_reproduced_absolute_best_sun_not_exact_due_hull_unknown_coverage",
       "formal_promotion": false,
       "automatic_rl": false
     }

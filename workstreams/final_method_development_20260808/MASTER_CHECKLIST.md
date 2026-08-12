@@ -141,6 +141,14 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       small and does not close the Plan1200 gap; model-494 remains strongly
       positive and the Plan sampling/cohort distribution remains the leading
       diagnostic locus.
+- [x] Complete the user-requested archived-code first256 reproduction of
+      original H1-A2 D1 versus R03 D2 safe-axis. Job 31963 completed `0:0`;
+      the shared body artifacts are byte-identical to the 2026-08-02 archive,
+      and both arms completed model-494 refine800, Direct, and archived-cache
+      S.U.N. on fixed 256-attempt denominators. The bundled MP cache leaves
+      101/223 and 104/224 novel-unique structures hull-unknown, so the observed
+      12/256 versus 14/256 strict counts are lower bounds and do not exactly
+      reproduce the historical absolute best counts.
 - [-] Complete the immutable V4 Plan1200 formal assembly/native continuation.
       All six R03/B3 repeat tasks and twelve pre/post stage reports completed,
       but assembly 31585 failed closed on an integer-to-float overflow in the
@@ -170,6 +178,10 @@ Legend: `[ ]` pending, `[x]` complete, `[-]` terminally inapplicable.
       strict/meta denominator tables, 16 cell reports, exact McNemar tests,
       50,000-draw hierarchical paired bootstraps, source identities, Slurm
       evidence, and transferred SHA manifest.
+- [x] Freeze and return the archived first256 H1-A2/R03 terminal report,
+      complete Direct and strict/meta tables, body byte-identity gate, paired
+      exact McNemar tests, source packages, Slurm evidence, and transfer SHA
+      manifest. Preserve the archived-cache/official-clean distinction.
 - [ ] Update registries and resource ledger after every submission/terminal.
 - [ ] Freeze checkpoint deletion manifests before deleting intermediates.
 - [ ] Preserve protected and promoted/fixed endpoint checkpoints.

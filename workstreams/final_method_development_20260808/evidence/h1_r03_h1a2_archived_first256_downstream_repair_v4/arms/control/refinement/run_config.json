@@ -1,0 +1,23 @@
+{
+  "arm": "control",
+  "attempt_ledger": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1/data/attempt_ledger.jsonl",
+  "body_attempts": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2/body/control_body_attempts.jsonl",
+  "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+  "checkpoint_rehashed": false,
+  "checkpoint_sha256_recorded": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+  "diff_steps": 800,
+  "effective_batch_size": 1,
+  "filter": false,
+  "new_scientific_seed_per_repeat": false,
+  "num_evals": 1,
+  "num_samples": 256,
+  "proposal_graphs": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2/body/control_proposal_graphs.pt",
+  "repair": false,
+  "repeat": 0,
+  "replacement": false,
+  "rerank": false,
+  "retry": false,
+  "schema": "h1_r03e_refiner_run_v1",
+  "seed_mode": "frozen_h1_ordinal_refiner_noise_seed",
+  "timesteps": 1000
+}

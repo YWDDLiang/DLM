@@ -1,0 +1,92 @@
+{
+  "a100_wording": "frozen R5-C A100 evaluation protocol; actual device reported separately",
+  "assets": {
+    "chgnet_model_asset": {
+      "bytes": 4863221,
+      "path": "/public/home/jiaosz/ywliang/models/wqcodiff/chgnet-0.3.0.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    },
+    "chgnet_relax_cache": {
+      "bytes": 5874627,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl",
+      "sha256": "9d29489fcf61544ed2420fee7f78c6d59a0dca4bc55f989223bb7000f4961c71"
+    },
+    "chgnet_runtime_checkpoint": {
+      "bytes": 4863221,
+      "path": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar",
+      "sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1"
+    },
+    "eval_sun_py": {
+      "bytes": 24360,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun.py",
+      "sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+    },
+    "eval_sun_resumable_py": {
+      "bytes": 9754,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun_resumable.py",
+      "sha256": "44c7d9adf01de29d5bdd0eb6a0e6e5d77f1b47b47f0e4bcd9b35cd6c51e19baa"
+    },
+    "mp_hull_cache": {
+      "bytes": 104820449,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/data/a100_eval_sun_cache/mp_hull_entries_cache_merged_slim_plus_mpapi.jsonl",
+      "sha256": "93d6532cd93c1cfebcbc969d0299852359d6a2950b66b259c028e971f8f7e4ff"
+    },
+    "train_csv": {
+      "bytes": 83154915,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+      "sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde"
+    },
+    "training_index_cache": {
+      "bytes": 34707238,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/.cache/train.csv.3a814f7b7bf29b1a.training_index.pkl",
+      "sha256": "f26ea30d6f529cca2d743401049e0328227faa156c95af3e0641d35fe03ffc62"
+    }
+  },
+  "base_source_bundle_sha256": "6b0dd8298c9a423712a3965b00f8aeae9c06c824a37fbf1d94dbbf94aebcf15f",
+  "coverage_adjusted_selection_role": "report_only",
+  "cuda_device": "NVIDIA A800-SXM4-80GB",
+  "environment": "diff_meets_diff",
+  "environment_prefix": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff",
+  "execution_patch_sha256": "7beaf38b7d378ecf8fb31627f195f5fe6095350b60d99882c0a11b39cbf211a4",
+  "expected_attempts": 256,
+  "meta_like_command": [
+    "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun_resumable.py",
+    "--gen_file",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/generated_attempt_preserving.pt",
+    "--train_csv",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+    "--output_dir",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/exact_meta_like",
+    "--stable_threshold",
+    "0.1",
+    "--mp_cache_path",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/working_mp_hull_cache.jsonl",
+    "--global_relax_cache_path",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/working_chgnet_relax_cache.jsonl"
+  ],
+  "offline": true,
+  "python_executable": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "retry_or_replacement_used": false,
+  "schema": "crysllmgen_r5c_a100_sun_run_contract_v1",
+  "slurm_job_id": "31963",
+  "strict_command": [
+    "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun_resumable.py",
+    "--gen_file",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/generated_attempt_preserving.pt",
+    "--train_csv",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+    "--output_dir",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/exact_strict",
+    "--stable_threshold",
+    "0.0",
+    "--mp_cache_path",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/working_mp_hull_cache.jsonl",
+    "--global_relax_cache_path",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/evaluation/r5c_a100_sun/working_chgnet_relax_cache.jsonl"
+  ],
+  "threads": 8,
+  "torch_scatter_version": "2.1.2+pt24cu121",
+  "torch_version": "2.4.0+cu121"
+}

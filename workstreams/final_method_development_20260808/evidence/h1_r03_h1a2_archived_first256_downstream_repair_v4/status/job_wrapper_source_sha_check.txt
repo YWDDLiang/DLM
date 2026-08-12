@@ -1,0 +1,4 @@
+CONFIG.json: OK
+downstream_once.sbatch: OK
+prepare_and_submit_once.sh: OK
+README.md: OK

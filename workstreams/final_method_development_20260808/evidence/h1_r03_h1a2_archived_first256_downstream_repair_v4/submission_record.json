@@ -1,0 +1,17 @@
+{
+  "attempts_per_arm": 256,
+  "body_generation_rerun": false,
+  "body_reused_from_v2": true,
+  "checkpoint_rehash_performed": false,
+  "cpus": 8,
+  "engineering_repair": "python_import_precedence_only",
+  "gpus": 1,
+  "job_id": "31963",
+  "repeat": 0,
+  "schema": "h1_r03_h1a2_archived_first256_downstream_submission_v4",
+  "slurm_jobs": 1,
+  "source_manifest_sha256": "eb0c4f7686ff47d9556648bd898ec277c46d64da89065c0657c7045d70e90c38",
+  "status": "complete",
+  "submitted_at_utc": "2026-08-12T11:59:06.664073+00:00",
+  "v3_submission_created": false
+}

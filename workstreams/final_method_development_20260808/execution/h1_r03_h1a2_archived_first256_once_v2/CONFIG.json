@@ -1,0 +1,63 @@
+{
+  "schema": "h1_r03_h1a2_archived_first256_once_config_v2",
+  "status": "user_authorized_registered_checkpoint_identity",
+  "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion",
+  "source_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/final_method_development_20260808/execution/h1_r03_h1a2_archived_first256_once_v2",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2",
+  "archived_wrapper_v1": {
+    "source_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/final_method_development_20260808/execution/h1_r03_h1a2_archived_first256_once_v1",
+    "source_manifest_sha256": "98ae9b796421bff251d20f5c186fc54b7e34023fd0baefee14479aa4e5843167",
+    "scientific_config": "CONFIG.json",
+    "scientific_config_sha256": "13c7b298198f58b4f05b0590219916cc7982b4013419743df37f5f97c6dddde8"
+  },
+  "denominator": 256,
+  "repeat": 0,
+  "arm_order": ["control", "candidate"],
+  "attempt_ledger": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260731_h1a2c_p0_p1_sun256_exploratory_v1/data/attempt_ledger.jsonl",
+    "sha256": "24295854aac87f3eb9ad7cc293f2bf2d2eb1d8c292b7f05aeaad8348b6665c8f"
+  },
+  "body_source": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1",
+    "manifest_sha256": "6b0dd8298c9a423712a3965b00f8aeae9c06c824a37fbf1d94dbbf94aebcf15f"
+  },
+  "refiner_source": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1",
+    "manifest_sha256": "7beaf38b7d378ecf8fb31627f195f5fe6095350b60d99882c0a11b39cbf211a4"
+  },
+  "registered_checkpoints": {
+    "body_adapter": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final/adapter_model.safetensors",
+      "bytes": 6391016776,
+      "mtime_unix": 1780063833,
+      "registered_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+      "rehash_for_this_run": false
+    },
+    "model_494": {
+      "path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+      "bytes": 147645242,
+      "mtime_unix": 1776873467,
+      "registered_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+      "rehash_for_this_run": false
+    }
+  },
+  "resource_contract": {
+    "partition": "gpu",
+    "gpus": 1,
+    "cpus": 8,
+    "memory": "96G",
+    "time": "24:00:00"
+  },
+  "scientific_contract": {
+    "planner_resample": false,
+    "cohort": "archived_P0_first256",
+    "body_checkpoint": "original_H1A2_B0",
+    "control_schedule": "D1_exact_plan",
+    "candidate_schedule": "D2_safe_axis_R03",
+    "refiner": "model_494",
+    "diffusion_steps": 800,
+    "sun_protocol": "archived_R5C_A100_frozen_cache_on_A800",
+    "sun_denominator": "all_generation_attempts",
+    "retry_replacement_repair_filter_rerank": false
+  }
+}

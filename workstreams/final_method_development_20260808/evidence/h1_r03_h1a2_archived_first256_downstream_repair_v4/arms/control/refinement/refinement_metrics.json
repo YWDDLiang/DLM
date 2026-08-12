@@ -1,0 +1,24 @@
+{
+  "all_attempt_denominator": 256,
+  "arm": "control",
+  "body_complete": 246,
+  "diff_steps": 800,
+  "effective_batch_size": 1,
+  "failures": {
+    "body_graph:body": 8,
+    "planner:planner_parse_failed": 2
+  },
+  "filter": false,
+  "new_scientific_seed_per_repeat": false,
+  "num_evals": 1,
+  "output_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/refinement/dlm_refined_mp_246.pt",
+  "refiner_complete": 246,
+  "repair": false,
+  "repeat": 0,
+  "replacement": false,
+  "rerank": false,
+  "retry": false,
+  "schema": "h1_r03e_refiner_metrics_v1",
+  "status": "complete",
+  "time_sec": 2540.153152814135
+}

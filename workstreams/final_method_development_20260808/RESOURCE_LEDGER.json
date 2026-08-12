@@ -1,6 +1,6 @@
 {
   "schema": "crystal_dlm_resource_ledger_v1",
-  "updated_at": "2026-08-12T03:08:48+08:00",
+  "updated_at": "2026-08-13T00:20:00+08:00",
   "maximum_a800_gpus_total": 4,
   "contracts": {
     "b3_training": {"gpus": 2, "cpus_per_gpu": 4},
@@ -271,6 +271,34 @@
       "exit_code": "0:0",
       "elapsed": "00:00:59",
       "hierarchical_paired_bootstrap_draws": 50000
+    },
+    {
+      "stage": "h1_r03_h1a2_archived_first256_once_v2_body_then_import_failure",
+      "job_id": 31931,
+      "partition": "gpu",
+      "gpus": 1,
+      "cpus_per_task": 8,
+      "memory_gb": 96,
+      "state": "FAILED",
+      "exit_code": "1:0",
+      "elapsed": "01:26:54",
+      "body_identity_success": true,
+      "failure_stage": "downstream_refiner_python_import_precedence"
+    },
+    {
+      "stage": "h1_r03_h1a2_archived_first256_downstream_repair_v4",
+      "job_id": 31963,
+      "partition": "gpu",
+      "gpus": 1,
+      "cpus_per_task": 8,
+      "memory_gb": 96,
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "04:10:02",
+      "attempts_per_arm": 256,
+      "arms": 2,
+      "planner_or_body_rerun": false,
+      "official_mp_queries": 0
     }
   ],
   "current_allocations": []

@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "candidate_body_attempts.jsonl": {
+      "bytes": 930124,
+      "matches_archived_success": true,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2/body/candidate_body_attempts.jsonl",
+      "sha256": "c030f5548e94f1bf4cdaaecf3614417acc998b9c320bb1c6a6436d740767364f"
+    },
+    "candidate_proposal_graphs.pt": {
+      "bytes": 854322,
+      "matches_archived_success": true,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2/body/candidate_proposal_graphs.pt",
+      "sha256": "023fdd56dd786c788b8219f66d91eea2a9933991c522bbddfc04218ede8a8e8e"
+    },
+    "control_body_attempts.jsonl": {
+      "bytes": 920274,
+      "matches_archived_success": true,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2/body/control_body_attempts.jsonl",
+      "sha256": "7f486fd61dd4d73ebdf10a065e344a208a7dd274a499f40f9b8a9502cf6908c1"
+    },
+    "control_proposal_graphs.pt": {
+      "bytes": 862722,
+      "matches_archived_success": true,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260812_h1_r03_h1a2_archived_first256_once_v2/body/control_proposal_graphs.pt",
+      "sha256": "b7506859563b1282fd41cde19d740a5d7fb9f3bafd61ec3665c9718e13469e78"
+    }
+  },
+  "byte_identical_to_archived_success": true,
+  "schema": "h1_r03_h1a2_archived_body_identity_gate_v1",
+  "status": "pass"
+}
