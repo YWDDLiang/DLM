@@ -22,6 +22,11 @@ class RefinerAttributionTests(unittest.TestCase):
                 "final_good": True,
                 "arm": "full",
                 "plan_source": "learned",
+                "plan_id": "learned:0",
+                "plan_lattice_match_pre": True,
+                "plan_lattice_match_post": False,
+                "pre_structure_cluster": 0,
+                "post_structure_cluster": 0,
             },
         ]
         report = summarize_refiner_rows(rows)
@@ -31,6 +36,13 @@ class RefinerAttributionTests(unittest.TestCase):
         self.assertEqual(report["paired_deltas"]["energy"]["mean_delta"], -0.5)
         self.assertEqual(report["paired_deltas"]["minimum_distance"]["improved"], 1)
         self.assertEqual(report["body_to_final"]["counts"]["bad_body->good_final"], 1)
+        self.assertEqual(
+            report["plan_adherence_transitions"]["lattice"]["counts"]["1->0"], 1
+        )
+        self.assertEqual(
+            report["multiplicity_retention"]["learned:0/full"]["cluster_count_retention"],
+            1.0,
+        )
 
 
 if __name__ == "__main__":

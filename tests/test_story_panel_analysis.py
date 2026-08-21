@@ -1,10 +1,22 @@
 import math
 import unittest
 
-from h1a2_repro.story_panel_analysis import effective_multiplicity, multiplicity_gate, summarize_story_records
+from h1a2_repro.story_panel_analysis import (
+    cluster_with_matcher,
+    effective_multiplicity,
+    multiplicity_gate,
+    summarize_story_records,
+)
 
 
 class StoryPanelAnalysisTests(unittest.TestCase):
+    def test_cluster_with_matcher(self) -> None:
+        class Matcher:
+            def fit(self, left, right):
+                return left == right
+
+        self.assertEqual(cluster_with_matcher(["a", "a", "b"], Matcher()), [0, 0, 1])
+
     def test_effective_multiplicity(self) -> None:
         self.assertEqual(effective_multiplicity([]), 0.0)
         self.assertAlmostEqual(effective_multiplicity([0, 0]), 1.0)

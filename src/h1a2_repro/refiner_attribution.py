@@ -6,6 +6,8 @@ from collections import Counter, defaultdict
 from statistics import median
 from typing import Any, Mapping, Sequence
 
+from .story_panel_analysis import effective_multiplicity
+
 
 IDENTITY_FIELDS = ("n_invariant", "composition_invariant")
 BOOLEAN_FIELDS = (
@@ -106,6 +108,40 @@ def _grouped_final_rate(rows: Sequence[Mapping[str, Any]], field: str) -> dict[s
     }
 
 
+def _boolean_transition(rows: Sequence[Mapping[str, Any]], before: str, after: str) -> dict[str, Any]:
+    counts: Counter[str] = Counter()
+    for row in rows:
+        if row.get(before) is None or row.get(after) is None:
+            continue
+        left = int(bool(row[before]))
+        right = int(bool(row[after]))
+        counts[f"{left}->{right}"] += 1
+    return {"known_pairs": sum(counts.values()), "counts": dict(sorted(counts.items()))}
+
+
+def _multiplicity_retention(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    groups: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
+    for row in rows:
+        if row.get("pre_structure_cluster") is None or row.get("post_structure_cluster") is None:
+            continue
+        groups[(str(row.get("plan_id")), str(row.get("arm")))].append(row)
+    result: dict[str, Any] = {}
+    for (plan_id, arm), group in sorted(groups.items()):
+        pre_labels = [int(row["pre_structure_cluster"]) for row in group]
+        post_labels = [int(row["post_structure_cluster"]) for row in group]
+        pre_count = len(set(pre_labels))
+        post_count = len(set(post_labels))
+        result[f"{plan_id}/{arm}"] = {
+            "n": len(group),
+            "pre_clusters": pre_count,
+            "post_clusters": post_count,
+            "cluster_count_retention": None if pre_count == 0 else post_count / pre_count,
+            "pre_effective_multiplicity": effective_multiplicity(pre_labels),
+            "post_effective_multiplicity": effective_multiplicity(post_labels),
+        }
+    return result
+
+
 def summarize_refiner_rows(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     requested = len(rows)
     body_success_rows = [row for row in rows if bool(row.get("body_success"))]
@@ -126,6 +162,15 @@ def summarize_refiner_rows(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             "energy": _delta(refined_rows, "energy_pre", "energy_post", lower_is_better=True),
             "e_hull": _delta(refined_rows, "e_hull_pre", "e_hull_post", lower_is_better=True),
         },
+        "plan_adherence_transitions": {
+            field: _boolean_transition(
+                refined_rows,
+                f"plan_{field}_match_pre",
+                f"plan_{field}_match_post",
+            )
+            for field in ("lattice", "spacegroup", "volume")
+        },
+        "multiplicity_retention": _multiplicity_retention(refined_rows),
         "body_to_final": _conversion_matrix(refined_rows),
         "final_rate_by_body_feature": {
             field: _grouped_final_rate(refined_rows, field)

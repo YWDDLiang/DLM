@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -83,6 +84,7 @@ def main() -> None:
     from pymatgen.analysis.structure_matcher import StructureMatcher
     from crystal_dlm.composition_validity import smact_validity_from_atom_types
     from crystal_dlm.r5_plan_state import lattice_system_from_lattice, spacegroup_bucket, volume_per_atom_bin
+    from h1a2_repro.story_panel_analysis import cluster_with_matcher
 
     chgnet_calculator = None
     if args.chgnet_model is not None:
@@ -124,6 +126,7 @@ def main() -> None:
         raise ValueError("refined flattened atom arrays do not match num_atoms")
 
     matcher = StructureMatcher()
+    structures_by_group: dict[tuple[str, str], list[tuple[int, Any, Any]]] = defaultdict(list)
     for attempt in ledger:
         task_id = str(attempt["task_id"])
         row = dict(attempt)
@@ -165,6 +168,9 @@ def main() -> None:
         try:
             pre_structure, pre_info = structure_metrics(pre_lengths, pre_angles, pre_types, pre_frac)
             post_structure, post_info = structure_metrics(post_lengths, post_angles, post_types, post_frac)
+            structures_by_group[(str(row.get("plan_id")), str(row.get("arm")))].append(
+                (len(rows), pre_structure, post_structure)
+            )
             row.update(
                 {
                     "structure_match": bool(matcher.fit(pre_structure, post_structure)),
@@ -231,6 +237,19 @@ def main() -> None:
         except Exception as exc:  # keep the requested attempt in the output
             row["structure_metrics_error"] = f"{type(exc).__name__}: {exc}"
         rows.append(row)
+
+    for indexed_structures in structures_by_group.values():
+        pre_labels = cluster_with_matcher(
+            [pre_structure for _, pre_structure, _ in indexed_structures], matcher
+        )
+        post_labels = cluster_with_matcher(
+            [post_structure for _, _, post_structure in indexed_structures], matcher
+        )
+        for (row_index, _, _), pre_label, post_label in zip(
+            indexed_structures, pre_labels, post_labels
+        ):
+            rows[row_index]["pre_structure_cluster"] = int(pre_label)
+            rows[row_index]["post_structure_cluster"] = int(post_label)
 
     if len(rows) != len(ledger):
         raise RuntimeError("output row count changed from requested-attempt ledger")

@@ -15,6 +15,26 @@ def effective_multiplicity(labels: Sequence[int]) -> float:
     return exp(-sum((count / total) * log(count / total) for count in counts.values()))
 
 
+def cluster_with_matcher(structures: Sequence[Any], matcher: Any) -> list[int]:
+    labels: list[int] = []
+    representatives: list[Any] = []
+    for structure in structures:
+        label = None
+        for index, representative in enumerate(representatives):
+            try:
+                matches = bool(matcher.fit(representative, structure))
+            except Exception:
+                matches = False
+            if matches:
+                label = index
+                break
+        if label is None:
+            label = len(representatives)
+            representatives.append(structure)
+        labels.append(label)
+    return labels
+
+
 def summarize_story_records(records: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     groups: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
     for row in records:
@@ -82,6 +102,7 @@ def multiplicity_gate(plan_clusters: Mapping[str, Mapping[str, Any]]) -> dict[st
 
 
 __all__ = [
+    "cluster_with_matcher",
     "effective_multiplicity",
     "multiplicity_gate",
     "summarize_plan_clusters",

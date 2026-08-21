@@ -10,7 +10,12 @@ from pathlib import Path
 from typing import Any
 
 from .attribution_cli import load_jsonl
-from .story_panel_analysis import multiplicity_gate, summarize_plan_clusters, summarize_story_records
+from .story_panel_analysis import (
+    cluster_with_matcher,
+    multiplicity_gate,
+    summarize_plan_clusters,
+    summarize_story_records,
+)
 
 
 def minimum_distance(structure) -> float | None:
@@ -23,22 +28,6 @@ def minimum_distance(structure) -> float | None:
         for j in range(len(structure))
         if i != j
     )
-
-
-def cluster_structures(structures, matcher) -> list[int]:
-    labels: list[int] = []
-    representatives: list[Any] = []
-    for structure in structures:
-        label = None
-        for index, representative in enumerate(representatives):
-            if matcher.fit(representative, structure):
-                label = index
-                break
-        if label is None:
-            label = len(representatives)
-            representatives.append(structure)
-        labels.append(label)
-    return labels
 
 
 def local_environment_fingerprint(structure, crystal_nn) -> str | None:
@@ -160,7 +149,7 @@ def main() -> None:
         records.append(record)
 
     for indexed_structures in structures_by_group.values():
-        labels = cluster_structures([structure for _, structure in indexed_structures], matcher)
+        labels = cluster_with_matcher([structure for _, structure in indexed_structures], matcher)
         for (record_index, _), label in zip(indexed_structures, labels):
             records[record_index]["structure_cluster"] = int(label)
 
