@@ -45,19 +45,11 @@
 - non-prefix意味着atom-permutation invariance；
 - DLM普遍优于AR、更快、更多样或更稳定。
 
-## 零训练后能提升什么
+## 当前大致缺什么
 
-E0可以补齐funnel、chemistry attribution、Plan记忆和refiner conversion；E1可以验证
-rich fields是否真的影响realization并估计同Plan multiplicity；E2可以检验refiner是否
-保留或擦除DLM差异。这些会增强解释力，不会自动证明DLM优于AR。
+- 更公平的matched baseline和少量关键消融；
+- rich Plan与DLM各自贡献的直接证据；
+- 更多独立seed和统计支持；
+- 完整公开资产、评价协议与端到端复现。
 
-## 达到约7/10仍缺什么
-
-1. matched constrained AR：相同Plan、state、anchors、support、数据、参数预算、
-   refiner和evaluator，只改causal/masked factorization；
-2. support-consistent DLM training：训练期legal support、dependency-aligned corruption、
-   field-balanced diagnostics，并优于vanilla与inference-only support；
-3. 独立Planner seeds；
-4. 更强下一代species-site reverse kernel与violation-attributed block revision。
-
-前两项未完成前，不写“DLM优于AR”或“提出新的通用DLM算法”。
+这些补齐前，不写“DLM普遍优于AR”或“提出新的通用DLM算法”。具体实验矩阵暂不锁定。

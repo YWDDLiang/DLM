@@ -55,4 +55,4 @@ body state长度为`7+4N`，因此`N`必须在state实例化前存在；composit
 - rich fields相对formula/shuffle没有adherence差异：将条件收缩为formula/N/composition；
 - 一个Plan的有效结构几乎只有一个cluster：删除multiple realizations主张。
 
-这些判断由E1/E2预注册面板给出，而不是根据最终energy挑样本。
+这些判断后续需要由事先确定、且不按最终energy挑样本的对照证据支持。

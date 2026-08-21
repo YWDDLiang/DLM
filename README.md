@@ -52,5 +52,3 @@ Fully de novo边界、learned Planner与R5C/Plan replay控制的区别见
 [`docs/NEXT_CONVERSATION_PROMPT.md`](docs/NEXT_CONVERSATION_PROMPT.md)。
 对应的concept-only reviewer结论见
 [`docs/STORY_REVIEW_INTERNAL.md`](docs/STORY_REVIEW_INTERNAL.md)。
-无新增训练的E0/E1/E2实施状态见
-[`docs/NO_TRAINING_IMPLEMENTATION_STATUS.md`](docs/NO_TRAINING_IMPLEMENTATION_STATUS.md)。
