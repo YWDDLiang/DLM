@@ -67,11 +67,9 @@ tests; they are not currently hard-enforced invariants.
    over an exact `7+4N` state, with non-prefix context, field-specific support,
    and a dependency-respecting commitment schedule coupled to selected lattice
    and periodic-coordinate legality checks.
-3. **Attribution and evaluation.** We separate condition-source effects,
-   discrete realization, and continuous refinement through gold-Plan R5-C
-   controls, pre/post-refiner analysis, and chemistry-standardized
-   decomposition of aggregate stability into composition-mix and
-   within-chemistry conversion.
+3. **Stage-aware evaluation.** We report the condition source, discrete body,
+   and continuous refiner as separate stages, so an end-to-end gain is not
+   automatically attributed to the DLM alone.
 
 The third item is an evaluation contribution, not a claim that the inherited
 refiner or hybrid pipeline is new.
@@ -91,24 +89,13 @@ R5-C is not Planner-free and is not a mathematical upper bound. It is named
 numbers are legacy context until rerun under the same raw-attempt, evaluator,
 and selection contract as `A_learned`.
 
-## Chemistry-aware attribution
+## Evaluation perspective
 
-Aggregate stability can be written as
-
-```text
-P_m(Y=1) = sum_h p_m(h) mu_m(h),
-```
-
-where `p_m(h)` is the chemistry mix sampled by method `m`, and `mu_m(h)` is
-the outcome rate within chemistry stratum `h`. H1-A2 reports both parts rather
-than treating a higher aggregate stability rate as proof of better structural
-generation. The primary strata are composition family, arity, atom-count bin,
-and all-metal/unary shortcut status.
-
-This analysis is motivated by reward-guided materials work that explicitly
-changes elemental distributions or can concentrate on safe regions. It is not
-an argument that reinforcement learning only changes composition: fixed-
-composition guidance can also improve structure.
+The final score depends on the chemistry sampled by the Planner, the geometry
+proposed by the DLM, and the correction performed by the refiner. These stages
+should be inspected separately at a high level. In particular, a stability
+gain should not be described as better structure generation without checking
+whether the generated chemistry distribution also changed.
 
 ## Claims explicitly out of scope
 
@@ -136,9 +123,19 @@ These are future method candidates, not current contributions.
 4. H1-A2 anchors composition and count, completes quantized geometry with a
    typed masked executor and dependency-aware field order, and refines only
    continuous geometry.
-5. A learned-vs-gold Plan decomposition, chemistry-standardized outcomes, and
-   pre/post-refiner analysis test whether gains arise from condition selection,
-   discrete realization, or continuous conversion.
+5. Stage-aware evaluation asks whether observed gains arise from condition
+   selection, discrete realization, or continuous refinement.
+
+## What is still missing
+
+At a high level, the project still needs:
+
+- the final release assets and an end-to-end public run;
+- stronger matched baselines and a small number of decisive ablations;
+- clearer evidence for what the rich Plan contributes;
+- broader seed/statistical support and final evaluator documentation.
+
+The exact experiment matrix is intentionally left open for now.
 
 ## Suggested abstract
 
@@ -153,8 +150,8 @@ These are future method candidates, not current contributions.
 > and periodic-coordinate legality checks. An equivariant continuous model
 > subsequently refines lattice and coordinates while preserving atom count and
 > composition. We distinguish learned de novo Plans, MP-20-derived gold Plans,
-> and frozen replay Plans, and decompose aggregate stability into chemistry-mix
-> and within-chemistry structural conversion. This formulation treats
+> and frozen replay Plans, and evaluate condition generation, discrete
+> realization, and continuous refinement separately. This formulation treats
 > serialization as an interface rather than a mandatory commitment order and
 > makes condition quality, discrete proposal quality, and continuous
 > refinement separately auditable.

@@ -44,10 +44,6 @@ bash scripts/submit_quick_256x4.sh
 # If a Planner checkpoint is present, regenerate 256 Plans with the fixed
 # Planner sampling seed instead of replaying the frozen Plan file.
 RESAMPLE_PLANS=true bash scripts/submit_quick_256x4.sh
-
-# Build and submit the preregistered no-training E1/E2 story panels once the
-# learned-Plan, gold-Plan, DLM, and refiner assets have been populated.
-bash scripts/submit_story_panels.sh
 ```
 
 The full route is fully de novo only when it samples Plans from the learned
@@ -69,9 +65,9 @@ The distinction between learned de novo Plans and replay/control Plans is in
 [`docs/DE_NOVO_SCOPE.md`](docs/DE_NOVO_SCOPE.md).
 The concept-only ICLR review is recorded in
 [`docs/STORY_REVIEW.md`](docs/STORY_REVIEW.md).
-The zero-training evidence matrix and the accepted analysis-table schema are
-in [`docs/NO_TRAINING_EVIDENCE_PLAN.md`](docs/NO_TRAINING_EVIDENCE_PLAN.md)
-and [`docs/ATTRIBUTION_INPUT_SCHEMA.md`](docs/ATTRIBUTION_INPUT_SCHEMA.md).
+
+The remaining evidence and release gaps are intentionally listed only at a
+high level in [`docs/BUILD_STATUS.md`](docs/BUILD_STATUS.md).
 
 ## Current asset status
 

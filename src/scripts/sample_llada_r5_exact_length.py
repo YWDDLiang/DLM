@@ -135,34 +135,7 @@ def merge_prefill_maps(*maps: Mapping[int, List[int]]) -> Dict[int, List[int]]:
     return merged
 
 
-def read_task_ledger(path: Path) -> List[Dict[str, Any]]:
-    tasks: List[Dict[str, Any]] = []
-    with path.open(encoding="utf-8") as handle:
-        for line_number, line in enumerate(handle, 1):
-            if not line.strip():
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ValueError(f"{path}:{line_number}: expected JSON object")
-            plan = row.get("plan_state")
-            if not isinstance(plan, dict) or "N" not in plan:
-                raise ValueError(f"{path}:{line_number}: task has no plan_state with N")
-            if "prompt" not in row or "scientific_seed" not in row or "task_id" not in row:
-                raise ValueError(f"{path}:{line_number}: task must contain task_id, prompt, and scientific_seed")
-            task = dict(row)
-            task["sample_idx"] = int(task.get("sample_idx", len(tasks)))
-            task["scientific_seed"] = int(task["scientific_seed"])
-            task["prompt_record_idx"] = None
-            task["prompt_record"] = None
-            tasks.append(task)
-    if not tasks:
-        raise ValueError(f"{path}: no task rows")
-    return tasks
-
-
 def build_tasks(args) -> List[Dict[str, Any]]:
-    if args.task_ledger is not None:
-        return read_task_ledger(args.task_ledger)
     if args.prompt_jsonl is not None:
         records = read_plan_records(args.prompt_jsonl, args.prompt_field, body_prompt_style=args.body_prompt_style)
         tasks = []
@@ -203,7 +176,6 @@ def merge_distributed_outputs(output_dir: Path, world_size: int) -> None:
         "plan_match_success": 0,
         "pymatgen_success": 0,
         "graph_success": 0,
-        "sum_model_forward_calls_per_sample": 0,
         "failures": {},
         "time_sec": 0.0,
         "distributed": True,
@@ -211,7 +183,6 @@ def merge_distributed_outputs(output_dir: Path, world_size: int) -> None:
     }
     valid_arrays: List[Dict[str, Any]] = []
     proposal_graphs: List[Dict[str, Any]] = []
-    accepted_tasks: List[Dict[str, Any]] = []
     with (output_dir / "raw_generations.jsonl").open("w", encoding="utf-8") as raw_out, (
         output_dir / "failure_cases.jsonl"
     ).open("w", encoding="utf-8") as failure_out:
@@ -219,15 +190,7 @@ def merge_distributed_outputs(output_dir: Path, world_size: int) -> None:
             metrics_path = rank_path(output_dir, "sample_metrics.json", rank, True)
             if metrics_path.exists():
                 metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
-                for key in (
-                    "requested_samples",
-                    "decoded_samples",
-                    "parse_success",
-                    "plan_match_success",
-                    "pymatgen_success",
-                    "graph_success",
-                    "sum_model_forward_calls_per_sample",
-                ):
+                for key in ("requested_samples", "decoded_samples", "parse_success", "plan_match_success", "pymatgen_success", "graph_success"):
                     merged_metrics[key] += int(metrics.get(key, 0))
                 merged_metrics["time_sec"] = max(merged_metrics["time_sec"], float(metrics.get("time_sec") or 0.0))
                 for reason, count in metrics.get("failures", {}).items():
@@ -240,10 +203,6 @@ def merge_distributed_outputs(output_dir: Path, world_size: int) -> None:
             graph_path = rank_path(output_dir, "proposal_graphs.pt", rank, True)
             if graph_path.exists():
                 proposal_graphs.extend(torch.load(graph_path, map_location="cpu"))
-            metadata_path = rank_path(output_dir, "accepted_tasks.jsonl", rank, True)
-            if metadata_path.exists():
-                with metadata_path.open(encoding="utf-8") as handle:
-                    accepted_tasks.extend(json.loads(line) for line in handle if line.strip())
     merged_metrics["parse_rate"] = merged_metrics["parse_success"] / max(1, merged_metrics["decoded_samples"])
     merged_metrics["plan_match_rate"] = merged_metrics["plan_match_success"] / max(1, merged_metrics["decoded_samples"])
     merged_metrics["graph_acceptance_rate"] = merged_metrics["graph_success"] / max(1, merged_metrics["decoded_samples"])
@@ -254,10 +213,6 @@ def merge_distributed_outputs(output_dir: Path, world_size: int) -> None:
         payload["time"] = merged_metrics["time_sec"]
         torch.save(payload, output_dir / "raw_dlm_samples.pt")
         torch.save(proposal_graphs, output_dir / "proposal_graphs.pt")
-    if accepted_tasks:
-        with (output_dir / "accepted_tasks.jsonl").open("w", encoding="utf-8") as handle:
-            for row in accepted_tasks:
-                handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
 
 
 def wait_for_rank_metrics(output_dir: Path, world_size: int, *, timeout_sec: float = 120.0) -> list[str]:
@@ -316,7 +271,6 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--crysllmgen-dir", type=Path, required=True)
     parser.add_argument("--prompt-jsonl", type=Path, default=None)
-    parser.add_argument("--task-ledger", type=Path, default=None)
     parser.add_argument("--prompt-field", default="prompt")
     parser.add_argument("--prompt", default=None)
     parser.add_argument("--body-prompt-style", choices=["full_plan_state", "formula_only"], default="full_plan_state")
@@ -353,11 +307,6 @@ def main() -> None:
     parser.add_argument("--skip-graph-validation", action="store_true")
     args = parser.parse_args()
 
-    if args.task_ledger is not None and args.prompt_jsonl is not None:
-        raise ValueError("--task-ledger and --prompt-jsonl are mutually exclusive")
-    if args.task_ledger is not None and int(args.batch_size) != 1:
-        raise ValueError("--task-ledger requires --batch-size 1 for per-task scientific seeds")
-
     if not 1 <= int(args.num_atoms) <= 20:
         raise ValueError("--num-atoms must be in 1..20")
 
@@ -371,8 +320,7 @@ def main() -> None:
     model, tokenizer = load_model_and_tokenizer(args.model_path, args.checkpoint_path, dist_info["device"])
     tasks = build_tasks(args)
     tasks = [task for idx, task in enumerate(tasks) if idx % world_size == rank]
-    if args.task_ledger is None:
-        tasks.sort(key=lambda item: (int(item["plan_state"]["N"]), int(item["sample_idx"])))
+    tasks.sort(key=lambda item: (int(item["plan_state"]["N"]), int(item["sample_idx"])))
 
     run_config = {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}
     r5_representation = (
@@ -398,7 +346,6 @@ def main() -> None:
     valid_arrays_path = rank_path(args.output_dir, "valid_arrays.jsonl", rank, distributed)
     valid_arrays: List[Dict[str, Any]] = []
     proposal_graphs: List[Dict[str, Any]] = []
-    accepted_tasks: List[Dict[str, Any]] = []
     metrics = {
         "requested_samples": len(tasks),
         "decoded_samples": 0,
@@ -406,7 +353,6 @@ def main() -> None:
         "plan_match_success": 0,
         "pymatgen_success": 0,
         "graph_success": 0,
-        "sum_model_forward_calls_per_sample": 0,
         "failures": {},
         "time_sec": None,
         "rank": rank,
@@ -424,11 +370,6 @@ def main() -> None:
                 batch.append(tasks[offset])
                 offset += 1
             prompts = [item["prompt"] for item in batch]
-            if "scientific_seed" in batch[0]:
-                scientific_seed = int(batch[0]["scientific_seed"])
-                torch.manual_seed(scientific_seed)
-                if torch.cuda.is_available():
-                    torch.cuda.manual_seed_all(scientific_seed)
             gen_length = exact_body_token_count(num_atoms)
             allowed = exact_dynamic_schema_constraints(tokenizer, num_atoms) if args.schema_logit_mask else None
             prefill_maps: List[Mapping[int, List[int]]] = []
@@ -438,14 +379,6 @@ def main() -> None:
                 prefill_maps.append(element_prefill_for_batch(tokenizer, [item["plan_state"] for item in batch]))
             prefill = merge_prefill_maps(*prefill_maps) if prefill_maps else None
             schedule = exact_dynamic_generation_schedule(num_atoms) if args.generation_schedule == "exact-plan" else None
-            if schedule is None:
-                model_forward_calls_per_sample = gen_length
-            else:
-                model_forward_calls_per_sample = gen_length
-                if args.prefill_count_token:
-                    model_forward_calls_per_sample -= 1
-                if args.freeze_plan_composition:
-                    model_forward_calls_per_sample -= num_atoms
             lightweight_constraints = build_dynamic_lightweight_constraints(
                 tokenizer,
                 duplicate_coordinate_mask=args.duplicate_coordinate_mask,
@@ -483,27 +416,12 @@ def main() -> None:
                     "plan_state": item["plan_state"],
                     "conditioning_prompt": item["prompt"].rstrip(),
                     "prompt_record_idx": item["prompt_record_idx"],
-                    "model_forward_calls": model_forward_calls_per_sample,
                 }
-                for key in (
-                    "task_id",
-                    "pair_id",
-                    "plan_id",
-                    "plan_source",
-                    "arm",
-                    "replicate",
-                    "scientific_seed",
-                    "shuffle_fields",
-                    "shuffle_donor_plan_id",
-                ):
-                    if key in item:
-                        raw_record[key] = item[key]
                 if item.get("prompt_record") is not None:
                     source = dict(item["prompt_record"])
                     source.pop(args.prompt_field, None)
                     raw_record["prompt_record"] = source
                 metrics["decoded_samples"] += 1
-                metrics["sum_model_forward_calls_per_sample"] += model_forward_calls_per_sample
                 try:
                     arrays = validate_answer_matches_plan(item["plan_state"], text)
                     metrics["parse_success"] += 1
@@ -512,25 +430,6 @@ def main() -> None:
                         graph, cif = graph_from_arrays(arrays, process_one)
                         metrics["graph_success"] += 1
                         proposal_graphs.append(graph)
-                        accepted_tasks.append(
-                            {
-                                key: raw_record[key]
-                                for key in (
-                                    "sample_idx",
-                                    "task_id",
-                                    "pair_id",
-                                    "plan_id",
-                                    "plan_source",
-                                    "arm",
-                                    "replicate",
-                                    "scientific_seed",
-                                    "shuffle_fields",
-                                    "shuffle_donor_plan_id",
-                                    "plan_state",
-                                )
-                                if key in raw_record
-                            }
-                        )
                         raw_record["cif"] = cif
                     else:
                         metrics["graph_success"] += 1
@@ -552,10 +451,6 @@ def main() -> None:
     write_valid_arrays(valid_arrays_path, valid_arrays)
     if proposal_graphs:
         torch.save(proposal_graphs, rank_path(args.output_dir, "proposal_graphs.pt", rank, distributed))
-    if accepted_tasks:
-        with rank_path(args.output_dir, "accepted_tasks.jsonl", rank, distributed).open("w", encoding="utf-8") as handle:
-            for row in accepted_tasks:
-                handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
     if valid_arrays:
         torch.save(arrays_to_torch_payload(valid_arrays), rank_path(args.output_dir, "raw_dlm_samples.pt", rank, distributed))
     if distributed:

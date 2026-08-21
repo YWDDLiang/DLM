@@ -45,8 +45,8 @@ as the principal deferred experiment.
 - masked fields condition on the whole current partial state;
 - selected legality checks require a dependency-respecting field order;
 - the refiner preserves atom count/species and changes geometry;
-- stagewise attribution can distinguish chemistry selection, body realization,
-  and refinement conversion.
+- stagewise reporting can keep chemistry selection, body realization, and
+  refinement from being conflated.
 
 ## What is not currently defensible
 
@@ -69,7 +69,7 @@ as the principal deferred experiment.
   permutation, and symmetry axes that non-prefix decoding does not solve.
 
 The remaining current contribution is a crystal-specific composition-anchored
-completion interface plus an unusually explicit attribution protocol.
+completion interface plus a transparent stage-aware evaluation framing.
 
 ## Separate evidence/repro/code audit
 

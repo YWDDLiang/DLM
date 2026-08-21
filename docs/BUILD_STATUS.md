@@ -12,9 +12,6 @@
 - User-supplied `MP_API_KEY` policy with resumable final evaluation.
 - Data, checkpoint, environment, and Plan placeholders with documentation.
 - Standard-library contract tests and local syntax validation.
-- Attempt-level E0 chemistry-mix/within-chemistry attribution tooling.
-- Preregistered E1 768-body and E2 192-attempt no-training panel builders,
-  deterministic paired seed ledgers, and one-command Slurm submission.
 
 ## Read-only A800 audit
 
@@ -126,22 +123,12 @@ slow; no scientific count was inferred from file size.
 
 ## Remaining local release work
 
-- Export and transfer the two confirmed Python environments.
-- Transfer the base models, adapters, refiner, and CHGNet checkpoint.
-- Transfer the frozen MP-20 CSV/JSONL datasets.
-- Transfer the H1-A2 Plan fallback and extract the R03 first-256 Plan bundle
-  plus ordinal seed ledger.
-- Decide and document a new release seed for any from-scratch B0 training;
-  the historical global seed cannot currently be recovered.
-- Document `model_494`'s partial seed coverage and avoid a bitwise training
-  reproducibility claim.
-- Rebuild the Direct/N/U/CHGNet/S.U.N. adapter around relative paths and the
-  confirmed package versions.
-- Wire and validate the public quick body/refiner/evaluator route against the
-  transferred 256-row ledger on A800.
-- Populate the two rich-Plan panel assets and run E1/E2 only after the frozen
-  checkpoints are transferred; these routes do not require additional
-  training.
+- Publish the frozen environments, datasets, Plans, and model checkpoints.
+- Finish and validate the relative-path inference/evaluation path end to end.
+- Clearly document the few historical seeds and runtime details that cannot be
+  recovered exactly.
+- Add stronger matched comparisons, a few decisive ablations, and broader
+  statistical support before submission.
 
 The placeholder-aware launchers stop with readable messages for these items;
 they do not silently invent assets, seeds, or package versions.

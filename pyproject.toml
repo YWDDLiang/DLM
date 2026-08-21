@@ -12,11 +12,6 @@ dependencies = []
 [project.scripts]
 h1a2-assets = "h1a2_repro.assets:main"
 h1a2-results = "h1a2_repro.report:main"
-h1a2-attribution = "h1a2_repro.attribution_cli:main"
-h1a2-story-panel = "h1a2_repro.story_panel_cli:main"
-h1a2-plan-audit = "h1a2_repro.plan_audit_cli:main"
-h1a2-refiner-audit = "h1a2_repro.refiner_attribution_cli:main"
-h1a2-story-panel-analysis = "h1a2_repro.story_panel_analysis_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
