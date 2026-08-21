@@ -1,0 +1,34 @@
+{
+  "schema": "h1a2_public_reference_results_v2",
+  "baseline": {
+    "method": "CrysLLMGen reference",
+    "entries": 1000,
+    "strict_sun": 0.09,
+    "meta_sun": 0.461
+  },
+  "ours": {
+    "method": "H1-A2 method family",
+    "primary_view": "paper_sun_main_table",
+    "entries": 1000,
+    "strict_sun_count": 105,
+    "strict_sun": 0.105,
+    "meta_sun_count": 488,
+    "meta_sun": 0.488
+  },
+  "exact_all_attempt_audit": {
+    "entries": 1200,
+    "strict_sun_count": 103,
+    "strict_sun": 0.08583333333333333,
+    "meta_sun_count": 553,
+    "meta_sun": 0.4608333333333333,
+    "hull_known": 1132,
+    "hull_unknown": 32
+  },
+  "historical_compatibility": {
+    "entries": 1000,
+    "strict_sun_count": 94,
+    "strict_sun": 0.094,
+    "meta_sun_count": 474,
+    "meta_sun": 0.474
+  }
+}

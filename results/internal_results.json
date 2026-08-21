@@ -1,0 +1,37 @@
+{
+  "schema": "h1a2_personal_results_v1",
+  "public_display": {
+    "entries": 1000,
+    "strict_sun_count": 105,
+    "strict_sun": 0.105,
+    "meta_sun_count": 488,
+    "meta_sun": 0.488
+  },
+  "components": [
+    {
+      "name": "H1-A2 epoch 2",
+      "entries": 1000,
+      "strict_sun_count": 94,
+      "strict_sun": 0.094,
+      "meta_sun_count": 474,
+      "meta_sun": 0.474
+    },
+    {
+      "name": "R03 D1 control",
+      "entries": 1024,
+      "strict_sun_count": 99,
+      "strict_sun": 0.0967,
+      "meta_sun_count": 523,
+      "meta_sun": 0.5107
+    },
+    {
+      "name": "R03 D2 Safe-axis",
+      "entries": 1024,
+      "strict_sun_count": 117,
+      "strict_sun": 0.1143,
+      "meta_sun_count": 496,
+      "meta_sun": 0.4844
+    }
+  ]
+}
+

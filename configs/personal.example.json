@@ -1,0 +1,36 @@
+{
+  "paths": {
+    "planner_checkpoint": "checkpoints/planner",
+    "dlm_checkpoint": "checkpoints/dlm",
+    "diffusion_checkpoint": "checkpoints/diffusion/model_494.pt",
+    "mp20": "data/mp20",
+    "frozen_plans": "data/plans/r03_parsed_256.jsonl",
+    "seed_ledger": "data/plans/r03_seed_ledger_256.jsonl",
+    "runs": "runs"
+  },
+  "science": {
+    "planner_train_seed": 17,
+    "planner_sample_seed": 17,
+    "quick_planner_sample_seed": 17029,
+    "dlm_data_seed": 20260515,
+    "dlm_train_seed": null,
+    "dlm_inference_seed": null,
+    "diffusion_train_seed": null,
+    "diffusion_inference_seed": null,
+    "planner_attempts": 1200,
+    "refined_target": 1000,
+    "quick_attempts": 256,
+    "quick_repeats": 4,
+    "safe_axis": false,
+    "resample_plans": false,
+    "diffusion_steps": 800
+  },
+  "runtime": {
+    "checkpoint_action": "train",
+    "conda_env": "h1a2-personal",
+    "partition": "gpu",
+    "training_gpus": 2,
+    "quick_parallelism": 2
+  }
+}
+
