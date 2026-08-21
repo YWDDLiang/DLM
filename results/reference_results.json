@@ -1,0 +1,18 @@
+{
+  "schema": "h1a2_public_reference_results_v1",
+  "baseline": {
+    "method": "CrysLLMGen reference",
+    "entries": 1000,
+    "strict_sun": 0.09,
+    "meta_sun": 0.461
+  },
+  "ours": {
+    "method": "H1-A2 method family",
+    "entries": 1000,
+    "strict_sun_count": 105,
+    "strict_sun": 0.105,
+    "meta_sun_count": 488,
+    "meta_sun": 0.488
+  }
+}
+

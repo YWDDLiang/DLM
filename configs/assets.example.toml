@@ -1,0 +1,16 @@
+[models]
+planner_base = "checkpoints/planner/base"
+planner = "checkpoints/planner"
+dlm_base = "checkpoints/dlm/base"
+dlm = "checkpoints/dlm"
+diffusion = "checkpoints/diffusion/model_494.pt"
+
+[data]
+mp20 = "data/mp20"
+frozen_plans = "data/plans/r03_parsed_256.jsonl"
+frozen_plan_raw = "data/plans/r03_raw_256.jsonl"
+seed_ledger = "data/plans/r03_seed_ledger_256.jsonl"
+
+[outputs]
+runs = "runs"
+
