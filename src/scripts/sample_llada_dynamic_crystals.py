@@ -439,8 +439,20 @@ def main() -> None:
     parser.add_argument("--no-atom-count-grammar-mask", dest="atom_count_grammar_mask", action="store_false")
     parser.add_argument("--duplicate-coordinate-mask", action="store_true", default=True)
     parser.add_argument("--no-duplicate-coordinate-mask", dest="duplicate_coordinate_mask", action="store_false")
-    parser.add_argument("--lattice-volume-mask", action="store_true", default=True)
-    parser.add_argument("--no-lattice-volume-mask", dest="lattice_volume_mask", action="store_false")
+    parser.add_argument(
+        "--lattice-legality-mask",
+        dest="lattice_volume_mask",
+        action="store_true",
+        default=True,
+        help="reject zero lengths and degenerate gamma choices after alpha/beta are known",
+    )
+    parser.add_argument(
+        "--no-lattice-legality-mask",
+        dest="lattice_volume_mask",
+        action="store_false",
+    )
+    parser.add_argument("--lattice-volume-mask", dest="lattice_volume_mask", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--no-lattice-volume-mask", dest="lattice_volume_mask", action="store_false", help=argparse.SUPPRESS)
     parser.add_argument("--min-lattice-rad", type=float, default=1e-4)
     parser.add_argument("--prefill-atom-count-prior", choices=["none", "uniform", "train", "val", "test"], default="none")
     parser.add_argument("--atom-count-stats-json", type=Path, default=PROJECT_ROOT / "data/dlm_sft/mp_20_dynamic_v1/stats.json")

@@ -167,6 +167,7 @@ def main() -> None:
     parser.add_argument("--num-evals", type=int, default=1)
     parser.add_argument("--run-type", default="train")
     parser.add_argument("--max-proposals", type=int, default=1000)
+    parser.add_argument("--metadata-jsonl", type=Path, default=None)
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -197,10 +198,25 @@ def main() -> None:
     device = dist_info["device"]
 
     proposal_graphs = torch.load(args.proposal_graphs, map_location="cpu")
+    proposal_metadata = None
+    if args.metadata_jsonl is not None:
+        with args.metadata_jsonl.open(encoding="utf-8") as handle:
+            proposal_metadata = [json.loads(line) for line in handle if line.strip()]
+        if len(proposal_metadata) != len(proposal_graphs):
+            raise ValueError(
+                f"metadata rows {len(proposal_metadata)} != proposal graphs {len(proposal_graphs)}"
+            )
     if args.max_proposals:
         proposal_graphs = proposal_graphs[: args.max_proposals]
+        if proposal_metadata is not None:
+            proposal_metadata = proposal_metadata[: args.max_proposals]
     total_proposals = len(proposal_graphs)
     rank_graphs = proposal_graphs[rank::world_size] if distributed else proposal_graphs
+    rank_metadata = None if proposal_metadata is None else (
+        proposal_metadata[rank::world_size] if distributed else proposal_metadata
+    )
+    if rank_metadata is not None and int(args.batch_size) != 1:
+        raise ValueError("--metadata-jsonl requires --batch-size 1 for per-proposal refiner seeds")
     dataset = ProposalDataset(rank_graphs, Data)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False)
 
@@ -213,8 +229,15 @@ def main() -> None:
     frac_coords_all, num_atoms_all, atom_types_all, lattices_all = [], [], [], []
     start = time.time()
     with torch.no_grad():
-        for batch in tqdm(dataloader, desc=f"CrysLLMGen refinement rank{rank}", disable=distributed and not is_main):
+        for batch_index, batch in enumerate(
+            tqdm(dataloader, desc=f"CrysLLMGen refinement rank{rank}", disable=distributed and not is_main)
+        ):
             batch = batch.to(device)
+            if rank_metadata is not None and "refiner_seed" in rank_metadata[batch_index]:
+                refiner_seed = int(rank_metadata[batch_index]["refiner_seed"])
+                torch.manual_seed(refiner_seed)
+                if torch.cuda.is_available():
+                    torch.cuda.manual_seed_all(refiner_seed)
             batch_frac, batch_num, batch_atom, batch_lat = [], [], [], []
             for _ in range(args.num_evals):
                 outputs, _ = model.sample(batch, diff_steps=args.diff_steps)
@@ -251,6 +274,14 @@ def main() -> None:
         payload = empty_payload(args.num_evals)
         payload["time"] = elapsed
     torch.save(payload, output_file)
+
+    if rank_metadata is not None:
+        metadata_name = f"refined_metadata.rank{rank}.jsonl" if distributed else "refined_metadata.jsonl"
+        with (args.output_dir / metadata_name).open("w", encoding="utf-8") as handle:
+            for proposal_index, row in enumerate(rank_metadata):
+                enriched = dict(row)
+                enriched.update({"proposal_index": proposal_index, "num_evals": int(args.num_evals), "refined": True})
+                handle.write(json.dumps(enriched, ensure_ascii=False, sort_keys=True) + "\n")
 
     metrics_name = f"refinement_metrics.rank{rank}.json" if distributed else "refinement_metrics.json"
     write_json(

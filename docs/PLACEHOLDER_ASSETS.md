@@ -6,8 +6,12 @@
 | Planner checkpoint | `checkpoints/planner/` | verified on A800; transfer pending | Plan sampling |
 | DLM checkpoint | `checkpoints/dlm/` | verified on A800; transfer pending | body generation |
 | Diffusion checkpoint | `checkpoints/diffusion/model_494.pt` | verified on A800; transfer pending | refinement |
+| CHGNet checkpoint | `checkpoints/chgnet/chgnet_0.3.0_e29f68s314m37.pth.tar` | verified in A800 environment; transfer pending | held-out E2 energy/evaluation |
 | MP-20 train/val/test | `data/mp20/` | rows/files verified; transfer pending | training/evaluation |
 | Historical H1-A2 parsed Plans | `data/plans/h1a2_parsed_1186.jsonl` | source file verified; transfer pending | full-route Planner fallback |
+| Learned rich Plans for E1 | `data/plans/h1a2_learned_rich.jsonl` | extraction/transfer pending | learned-Plan half of E1/E2 |
+| Held-out gold Plans for E1 | `data/plans/r5c_gold_rich.jsonl` | extraction/transfer pending | R5-C conditional reference in E1/E2 |
+| MP-20 training rich Plans | `data/plans/mp20_train_rich.jsonl` | extraction/transfer pending | Plan collision/nearest-tuple audit |
 | Raw frozen Plans | `data/plans/r03_raw_256.jsonl` | source512 verified; first256 extraction pending | audit/resampling |
 | Parsed frozen Plans | `data/plans/r03_parsed_256.jsonl` | source512 verified; first256 extraction pending | quick reproduction |
 | Scientific seed ledger | `data/plans/r03_seed_ledger_256.jsonl` | verified 256-row ledger; transfer pending | paired body/refiner noise |

@@ -12,6 +12,9 @@
 - User-supplied `MP_API_KEY` policy with resumable final evaluation.
 - Data, checkpoint, environment, and Plan placeholders with documentation.
 - Standard-library contract tests and local syntax validation.
+- Attempt-level E0 chemistry-mix/within-chemistry attribution tooling.
+- Preregistered E1 768-body and E2 192-attempt no-training panel builders,
+  deterministic paired seed ledgers, and one-command Slurm submission.
 
 ## Read-only A800 audit
 
@@ -136,6 +139,9 @@ slow; no scientific count was inferred from file size.
   confirmed package versions.
 - Wire and validate the public quick body/refiner/evaluator route against the
   transferred 256-row ledger on A800.
+- Populate the two rich-Plan panel assets and run E1/E2 only after the frozen
+  checkpoints are transferred; these routes do not require additional
+  training.
 
 The placeholder-aware launchers stop with readable messages for these items;
 they do not silently invent assets, seeds, or package versions.

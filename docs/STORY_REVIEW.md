@@ -1,111 +1,86 @@
-# Concept-only area-chair review
+# Concept-only story review
 
-This review evaluates research framing and novelty after comparison with
-recent ICLR, ICML, NeurIPS, and AAAI work. It assumes that supporting evidence
-will be supplied separately and does not score reproducibility or empirical
-completeness.
+Evidence, code readiness, and reproducibility are audited separately. The score
+below evaluates the intended research story while requiring its method
+description to match the implemented scientific object.
 
 ## Verdict
 
-**Story score: 7/10 — credible weak accept at the concept level.**
+| Story | Concept-only score | Status |
+|---|---:|---|
+| current audited H1-A2 | 5.5–6/10 | clear interface/mechanism paper; not yet a new general DLM method |
+| support-consistent training added and validated | about 7/10 | credible near-term method upgrade |
+| exact-multiset species assignment plus physical revision | about 7.5/10 | higher ceiling, but a new project rather than current H1-A2 |
 
-| Criterion | Score (1–10) |
-|---|---:|
-| Importance | 7 |
-| Research-question precision | 8 |
-| Novelty | 6 |
-| Conceptual soundness | 7 |
-| Positioning clarity | 8 |
-| Overall story | 7 |
+The current story cannot be raised to a stable ICLR weak accept by prose alone.
+Its strongest honest positioning is **composition-anchored quantized geometry
+completion**, not joint species-geometry generation.
 
-The earlier story was vulnerable to a 5/10 summary: “CrysLLMGen with its AR
-proposer replaced by a masked LM.” The revised story reaches 7/10 because its
-central object is now the **Plan-to-realization interface**:
+## Strongest current thesis
 
-```text
-underdetermined global intent
-        -> exact-cardinality partial crystal state
-        -> set of compatible discrete realizations
-        -> continuous geometric refinement.
-```
+> A model-sampled formula fixes crystal cardinality and composition but not
+> periodic geometry. H1-A2 completes the remaining exact-size typed geometry
+> with a masked model whose commitment order respects the prerequisites of
+> selected legality checks, followed by continuous refinement that preserves
+> the discrete identity.
 
-The DLM is essential to the implementation of this interface, but the paper is
-not merely about choosing a different decoder backbone. The main task remains
-fully de novo because the global Plan is sampled from a learned prior rather
-than replayed from MP-20.
+## Strongest rejection
 
-## Strongest defensible claim
+> This is CrysLLMGen with its autoregressive proposer replaced by a masked,
+> composition-prefilled quantized-geometry decoder. Exact length follows from
+> known `N`; species are not generated; the rules are hand-written inference
+> masks; revealed tokens cannot be revised; and the continuous refiner is
+> inherited. Without a representation-, constraint-, and compute-matched AR
+> baseline, no gain can be attributed to masked factorization.
 
-> Fully de novo crystal generation can be factorized into a learned prior over
-> intentionally underdetermined global Plans, constrained completion of typed
-> variable-cardinality realizations, and continuous periodic refinement.
-> H1-A2 samples global chemistry and cardinality, realizes each Plan without
-> tying commitment order to serialization order, and lets an equivariant
-> refiner act only on continuous geometry.
+The rejection is not fully answerable with the current evidence. The paper
+must therefore avoid claims of universal DLM superiority and present matched AR
+as the principal deferred experiment.
 
-This claim is narrower and more defensible than “crystals require DLMs.” It
-states which problem has been defined, why masked completion matches it, and
-what each module may change.
+## What is currently defensible
 
-## Why the positioning survives recent work
+- learned-Plan fully de novo inference is distinct from gold/frozen Plan
+  controls;
+- cardinality selects an exact typed state before geometry realization;
+- masked fields condition on the whole current partial state;
+- selected legality checks require a dependency-respecting field order;
+- the refiner preserves atom count/species and changes geometry;
+- stagewise attribution can distinguish chemistry selection, body realization,
+  and refinement conversion.
 
-- **CrysLLMGen and FlowLLM** already establish discrete proposal plus
-  continuous refinement. H1-A2 claims the next step: an explicit conditional
-  completion contract for the discrete proposal.
-- **Mat2Seq, WyFormer, SymmCD, and SGEquiDiff** solve canonicalization,
-  permutation, or symmetry. H1-A2 does not conflate those properties with
-  non-prefix information flow.
-- **DiffCSP, FlowMM, CrysBFN, TGDMat, and CrystalDiT** show that unified or
-  geometry-native generation is viable. H1-A2 presents factorization as a
-  deliberate, diagnosable design choice rather than a universally superior
-  theorem.
-- **Masked-DLM theory** supports randomized information orders and
-  state-dependent masking, while also warning against universal efficiency
-  claims. The revised story is about the completion interface, not speed or
-  diffusion mystique.
+## What is not currently defensible
 
-## Three fatal wording risks
+- free species-site generation;
+- rich Plan compliance without counterfactual evidence;
+- support-consistent training;
+- general constrained-DLM novelty over DINGO, DDPD, or domain-validity losses;
+- revisable commitments or violation-guided repair;
+- exact symmetry, permutation invariance, or global satisfiability;
+- an empirical superiority claim over a matched constrained AR executor.
 
-1. **“Crystals are not naturally ordered sequences” as the novelty claim.**
-   Representation and symmetry papers already address ordering ambiguity. Use
-   “serialization order need not determine commitment order.”
-2. **“DLM natively guarantees diversity, consistency, or correctness.”**
-   It permits non-prefix context and delayed commitment; none of the stronger
-   properties follows automatically.
-3. **“Planner--DLM--refiner is the contribution.”** A three-module pipeline is
-   not enough after CrysLLMGen, FlowLLM, and SGEquiDiff. The contribution is the
-   semantics of the interfaces: what the Plan fixes, what remains uncertain,
-   what the DLM completes, and what the refiner preserves.
+## Closest novelty boundaries
 
-## Contribution verdicts
+- CrysLLMGen and FlowLLM establish discrete/text proposal followed by
+  continuous refinement.
+- DINGO establishes constrained dLLM inference for formal languages.
+- DDPD and planned diffusion establish denoising-order planning.
+- PepTune establishes domain-dependent corruption and invalid-loss design.
+- Mat2Seq, Wyckoff Transformer, and SGEquiDiff address representation,
+  permutation, and symmetry axes that non-prefix decoding does not solve.
 
-1. **Plan-conditioned structured completion:** strongest intellectual
-   contribution and the paper's central research question.
-2. **Exact-cardinality crystal completion interface:** method contribution only
-   when exact length, typed support, anchors, and evolving constraints are
-   presented as one coherent object.
-3. **Discrete-to-continuous contract:** meaningful because it defines
-   invariants and diagnoses proposal versus refinement, not because a hybrid
-   architecture is new.
+The remaining current contribution is a crystal-specific composition-anchored
+completion interface plus an unusually explicit attribution protocol.
 
-## What blocks an 8+
+## Separate evidence/repro/code audit
 
-Four conceptual points still require precise treatment in the paper:
+The following findings do not alter the concept-only score but must be fixed
+before release:
 
-1. define the learned Plan prior and the Plan as an intentionally
-   underdetermined specification, including exactly which degrees of freedom
-   remain and why replayed Plans are only controls;
-2. formalize the partial state and state-dependent support operator, rather
-   than listing masks as engineering rules;
-3. state refiner invariants explicitly and distinguish them from soft Plan
-   semantics;
-4. keep non-prefix information flow, atom-permutation invariance, and
-   space-group equivariance separate throughout the manuscript.
-
-If these remain precise, the story is coherent at roughly a 7/10 level. If the
-paper falls back to “DLM instead of AR,” it returns to 5/10.
-
-## Recommended title
-
-> **Serialization Is Not Generation Order: Discrete Crystal Completion and
-> Continuous Refinement**
+- the 105/488 method-family main-table value and its underlying cohort-level
+  audit views must remain explicitly separated;
+- execution stages and assets remain incomplete in the release scaffold;
+- previous documents overstated refiner conditioning and support semantics;
+- first-success selection and N-sorted processing can create chemistry survivor
+  bias unless an immutable raw-ordinal ledger is retained;
+- the current hull evaluation is a shared ML-potential/reference proxy, not
+  candidate-level DFT and cannot be mixed with published DFT S.U.N. rankings.

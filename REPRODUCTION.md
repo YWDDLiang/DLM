@@ -25,6 +25,9 @@ data/mp20/test.csv         # 9,046 rows
 data/plans/r03_raw_256.jsonl
 data/plans/r03_parsed_256.jsonl
 data/plans/r03_seed_ledger_256.jsonl
+data/plans/h1a2_learned_rich.jsonl
+data/plans/r5c_gold_rich.jsonl
+data/plans/mp20_train_rich.jsonl
 ```
 
 The full frozen split will be tracked with Git LFS. A deterministic download
@@ -112,7 +115,46 @@ When `RESAMPLE_PLANS=true`, a present Planner checkpoint is used to sample 256
 Plans with the fixed Planner seed. If the checkpoint is absent, the launcher
 prints the fallback reason and uses the frozen Plan file.
 
-## 7. Evaluation
+## 7. No-training attribution and story panels
+
+The repository contains two evidence routes that do not update model
+parameters.
+
+First, E0 analyzes an attempt-level table and keeps chemistry selection apart
+from within-chemistry conversion:
+
+```bash
+python scripts/analyze_story_attribution.py \
+  --cohort h1=runs/analysis/h1_attempts.jsonl \
+  --cohort r5c=runs/analysis/r5c_attempts.jsonl \
+  --cohort mp20=runs/analysis/mp20_reference.jsonl \
+  --pair h1:r5c --reference h1 --reference mp20 \
+  --paired-key ordinal --paired-known-stage hull_known \
+  --output-json runs/analysis/e0/report.json \
+  --output-md runs/analysis/e0/report.md
+```
+
+The required columns and denominator rules are defined in
+`docs/ATTRIBUTION_INPUT_SCHEMA.md`.
+
+Second, E1/E2 compare intact rich conditions, formula-only conditions, and
+coarse-field shuffles on a preregistered matched Plan panel. E1 requests 768
+bodies; E2 refines the first four paired seeds for 192 requested attempts.
+Selection uses only Plan-side `N`, arity, and anion family, never a generated
+outcome.
+
+```bash
+bash scripts/submit_story_panels.sh
+```
+
+This route requires `data/plans/h1a2_learned_rich.jsonl`,
+`data/plans/r5c_gold_rich.jsonl`, the released DLM checkpoint, and
+`checkpoints/diffusion/model_494.pt`. E2 additionally requires the frozen
+CHGNet checkpoint for paired single-point energies. It performs inference,
+refinement, and held-out evaluation only; it does not retrain the Planner,
+DLM, refiner, or evaluator.
+
+## 8. Evaluation
 
 The evaluation chain reports Direct composition/structure/joint validity,
 coverage, novelty, uniqueness, CHGNet relaxation, and Strict/Meta S.U.N.
@@ -122,7 +164,7 @@ If `MP_API_KEY` is absent, all completed upstream outputs are retained and the
 workflow stops before S.U.N. The user can export the key and resume only the
 evaluation stage.
 
-## 8. Outputs
+## 9. Outputs
 
 All outputs are written under relative paths:
 
@@ -132,6 +174,10 @@ runs/quick_256x4/repeat_0/
 runs/quick_256x4/repeat_1/
 runs/quick_256x4/repeat_2/
 runs/quick_256x4/repeat_3/
+runs/story_e1/contracts/
+runs/story_e1/body/
+runs/story_e2/prepared/
+runs/story_e2/refined/
 ```
 
 The launchers use readable errors for missing assets and environment

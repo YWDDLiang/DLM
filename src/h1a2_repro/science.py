@@ -45,7 +45,24 @@ INFERENCE = InferenceDefaults()
 
 PUBLIC_RESULT = {
     "method": "H1-A2 method family",
+    "primary_view": "paper_sun_main_table",
     "entries": 1000,
     "strict_sun": {"numerator": 105, "denominator": 1000, "rate": 0.105},
     "meta_sun": {"numerator": 488, "denominator": 1000, "rate": 0.488},
+    "exact_all_attempt_view": {
+        "description": "exact parsed-Plan replay; all requested attempts",
+        "entries": 1200,
+        "strict_sun": {"numerator": 103, "denominator": 1200, "rate": 103 / 1200},
+        "meta_sun": {"numerator": 553, "denominator": 1200, "rate": 553 / 1200},
+        "hull_known": 1132,
+        "hull_unknown": 32,
+        "hull_known_strict_sun": {"numerator": 103, "denominator": 1132, "rate": 103 / 1132},
+        "hull_known_meta_sun": {"numerator": 553, "denominator": 1132, "rate": 553 / 1132},
+    },
+    "historical_compatibility_view": {
+        "description": "historical frozen first-1000 refined artifact",
+        "entries": 1000,
+        "strict_sun": {"numerator": 94, "denominator": 1000, "rate": 0.094},
+        "meta_sun": {"numerator": 474, "denominator": 1000, "rate": 0.474},
+    },
 }

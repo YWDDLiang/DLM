@@ -32,12 +32,12 @@ sample counts differ across papers.
 | [CrysLLMGen](https://proceedings.neurips.cc/paper_files/paper/2025/hash/f789a628fca473e922c806657512a20f-Abstract-Conference.html) | NeurIPS 2025 | An LLM proposes atom types and geometry; equivariant diffusion retains species and refines geometry. | Can the proposal become plan-conditioned, exact-cardinality typed completion rather than an irreversible AR sequence? |
 
 CrysLLMGen is the closest foundation. It establishes that the hybrid split is
-useful, so H1-A2 must not claim the split itself. The defensible gap is a
-hierarchical de novo interface: a learned prior first samples an
-underdetermined Plan, cardinality selects the body dimension, and a masked
-model completes mutually constrained categorical fields before continuous
-refinement. Replaying a Plan from MP-20 can isolate downstream realization but
-cannot replace the learned prior in the fully de novo claim.
+useful, so H1-A2 must not claim the split itself. The current defensible gap is
+narrower: a learned prior samples formula and coarse fields; formula-derived
+cardinality and species instantiate an exact typed state; and a masked model
+completes quantized lattice and coordinates before continuous refinement.
+Replaying a Plan from MP-20 isolates downstream realization but cannot replace
+the learned prior in the fully de novo claim.
 
 ## Masked discrete generation
 
@@ -49,6 +49,37 @@ cannot replace the learned prior in the fully de novo claim.
 | [Masked Diffusion Models are Secretly Time-Agnostic Masked Models](https://proceedings.iclr.cc/paper_files/paper/2025/hash/9e3b203e72c4e058de26d02a92a81844-Abstract-Conference.html) | ICLR 2025 | “Diffusion time” and categorical-sampling claims require care; H1-A2 relies on iterative masked completion, not mystique about diffusion. |
 | [Diffusion Beats Autoregressive in Data-Constrained Settings](https://proceedings.neurips.cc/paper_files/paper/2025/hash/0f705a932553c08ebf0d1bc520b7cbc6-Abstract-Conference.html) | NeurIPS 2025 | Random masking trains across many information orders rather than one fixed factorization. |
 | [Theoretical Benefit and Limitation of Diffusion Language Models](https://proceedings.neurips.cc/paper_files/paper/2025/hash/2318d75a06437eaa257737a5cf3ab83c-Abstract-Conference.html) | NeurIPS 2025 | Efficiency depends on the target metric; H1-A2 should not claim automatic sampling-speed superiority. |
+
+Constrained and ordered denoising are also established research areas:
+
+- [DINGO](https://proceedings.neurips.cc/paper_files/paper/2025/hash/eb17a2030d1bd4a1bd29531bcd626705-Abstract-Conference.html)
+  gives distribution-aware constrained inference for formal-language outputs.
+- [DDPD](https://proceedings.iclr.cc/paper_files/paper/2025/hash/cbf883a744952d4a40591271a58ab9d0-Abstract-Conference.html)
+  learns which positions to denoise or revisit.
+- [PepTune](https://proceedings.mlr.press/v267/tang25n.html) combines a
+  domain-dependent masking schedule with an invalid-loss objective.
+- [Anchored DLM](https://proceedings.neurips.cc/paper_files/paper/2025/hash/8143b8c73073a9a23b9c18e400066471-Abstract-Conference.html)
+  predicts important anchors before completing remaining tokens.
+
+H1-A2 therefore does not claim constrained DLM inference, denoising order, or
+anchoring in general. Its current contribution is their audited use in a
+composition-anchored periodic-geometry executor.
+
+## Reward guidance and distribution attribution
+
+[Reward-guided crystal generation](https://www.nature.com/articles/s42256-026-01262-4)
+reports both improved discovery metrics and a substantial shift in elemental
+composition, including increased transition-metal and reduced non-metal
+content. [PRO-MOF](https://proceedings.iclr.cc/paper_files/paper/2026/hash/f7f47a73d631c0410cbc2748a8015241-Abstract-Conference.html)
+shows that naive Pass@1 policy optimization can collapse onto a small set of
+safe regions, while diversity-aware rewards mitigate that failure. Conversely,
+[fixed-composition energy guidance](https://www.nature.com/articles/s41467-026-72362-3)
+shows that structural improvement is possible without changing composition.
+
+The correct conclusion is not that reward optimization only selects easy
+chemistry. Aggregate stability must be decomposed into chemistry-mix change and
+within-chemistry structural conversion. H1-A2 uses its explicit Plan/body/
+refiner stages to make that attribution visible.
 
 ## 2026 horizon, not core accepted baselines
 
@@ -70,10 +101,10 @@ periodic manifolds, exact space-group symmetry, unified diffusion and flow,
 hybrid proposal plus refinement, and stability-oriented feedback. H1-A2
 targets a narrower slot:
 
-> **Learn a prior over underdetermined global Plans, construct each sampled
-> Plan as a variable-cardinality typed discrete crystal by non-prefix
-> constrained completion, then pass only continuous geometry to physical
-> refinement.**
+> **Sample global chemistry, instantiate its exact-cardinality typed state,
+> complete quantized periodic geometry by non-prefix masked generation, and
+> audit separately what is gained by chemistry selection, discrete realization,
+> and continuous refinement.**
 
 This is interesting only if the interface is precise. “Replacing an AR model
 with a DLM” is insufficient; the contribution is the coupling of Plan
@@ -85,7 +116,8 @@ refiner invariants.
 Safe claims:
 
 - crystal serialization need not define the generation order;
-- masked completion is a natural inductive bias under a global Plan;
+- masked completion is a plausible inductive bias for composition-anchored
+  periodic geometry;
 - typed discrete and continuous variables benefit from explicit interfaces;
 - H1-A2 exposes proposal quality and refinement conversion as separate stages.
 

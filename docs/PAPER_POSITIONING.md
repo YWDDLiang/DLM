@@ -1,258 +1,160 @@
-# From serialization to completion
+# Serialization is not commitment order
 
-## One-sentence thesis
+## Plain-language story
 
-> Fully de novo crystal generation must generate both what to explore and how
-> to realize it. H1-A2 first samples an underdetermined global Plan, then forms
-> a compatible discrete crystal by typed non-prefix completion, and finally
-> refines its geometry in continuous periodic space.
-
-H1-A2 realizes this thesis with a learned prior over compact Plans, an
-exact-cardinality masked discrete language model, and an equivariant continuous
-diffusion refiner. A crystal may be serialized left to right, but that storage
-order need not determine when its variables are generated.
-
-## The small observation and the larger principle
-
-The small observation is that changing the order of crystal tokens does not
-change the crystal. The larger principle is:
-
-> **Serialization order is an interface choice, not a scientific dependency
-> order.**
-
-This distinction matters when a scientific object has four properties:
-
-1. a global condition is available before local details are known;
-2. the number of local variables is part of that condition;
-3. discrete fields constrain one another across distant sequence positions;
-4. a continuous relaxation stage follows the discrete proposal.
-
-Crystals are a concrete instance: composition and atom count are global;
-species, lattice fields, and sites are mutually constrained; coordinates are
-periodic; and final geometry is continuous. H1-A2 uses this instance to study a
-broader modeling question without claiming that every structured domain must
-use the same architecture.
-
-## Starting from CrysLLMGen
-
-CrysLLMGen established an important division of labor: a language model is
-strong at proposing discrete chemistry, while an equivariant diffusion model
-is strong at refining lattice and coordinates. It retains the proposed atom
-types and sends geometry to a continuous refiner.
-
-H1-A2 accepts that decomposition and asks two next questions:
-
-> How should a fully de novo model first sample global chemistry and
-> cardinality, and should the resulting discrete crystal realization still be
-> generated as an irreversible text prefix?
-
-Our answer factorizes the full de novo distribution. A learned Planner samples
-an underdetermined global problem; a masked model completes an
-exact-cardinality typed crystal state; and the continuous refiner receives a
-discrete structural hypothesis whose composition and cardinality are fixed.
-The novelty claim is therefore not “an LLM plus diffusion,” and not a backbone
-swap in isolation. It is a **Plan-generation-to-realization interface** that
-separates global sampling, discrete commitment order, and continuous physical
-refinement.
+> A formula tells us which atoms a crystal contains and how many there are.
+> H1-A2 lets a masked model fill an exactly sized table of quantized periodic
+> geometry instead of writing that geometry irreversibly from left to right;
+> a continuous diffusion model then polishes the geometry without changing the
+> chemistry.
 
 ## Research question
 
-> How can fully de novo crystal generation be factorized into learning a prior
-> over underdetermined global Plans, sampling compatible variable-cardinality
-> discrete realizations through non-prefix masked completion, and refining
-> those realizations in continuous periodic geometry?
+> **How should a masked discrete language model realize a model-sampled
+> composition as an exact-cardinality periodic crystal body when different
+> crystallographic legality checks become evaluable at different partial
+> states, without letting serialization order dictate commitment order?**
 
-This question contains two coupled hypotheses: global chemistry and atom count
-should be sampled before body realization, while the body should not make its
-serialization prefix the irreversible decision schedule. It is an
-inductive-bias claim, not an expressivity claim. Any joint distribution can be
-autoregressively factorized, and an AR system can add grammar constraints,
-search, or repair.
+This is an inductive-bias and interface question. It does not claim that an
+autoregressive model is inexpressive or that masked generation is universally
+faster, more diverse, or more stable.
 
-## Why the Planner is required for fully de novo generation
+## Implemented factorization
 
-An exact-cardinality body model needs `N` before it can instantiate its state,
-and composition must be defined before it can be anchored. In the main H1-A2
-route these variables are not supplied by a dataset row or a user: they are
-sampled from a learned Plan prior.
-
-Training crystals may be deterministically converted into Plan labels for
-supervision. At inference, however, the fully de novo route samples
-`P ~ p_phi(P)` from the learned Planner. Replaying a Plan extracted from MP-20,
-using a frozen Plan file, or accepting a user Plan is useful for controlled
-downstream evaluation, but it is conditional at the Plan level and does not by
-itself close the fully de novo loop.
-
-Let `P` denote the global Plan, `B` the discrete body, and `M` the final
-continuous crystal. H1-A2 models the hierarchy
+Let `P` be the learned source's formula and coarse fields. The formula defines
+the anchored state `A(P)`: atom count `N` and the ordered element sequence.
+Let `G` contain the fields the standard body executor actually generates: six
+quantized lattice/angle fields and `3N` quantized fractional coordinates. Let
+`B=(A(P),G)` be the complete discrete proposal and `M` the refined crystal.
 
 ```text
-p(M) = sum_P p_phi(P) sum_B p_theta(B | P) p_psi(M | B, P).
+P ~ p_phi(P)
+G ~ p_theta(G | P, A(P))
+M ~ p_psi(M | B)
 ```
 
-The Planner answers what to explore, the DLM answers how that Plan can be
-realized, and the refiner answers whether the realization can be improved in
-continuous geometry. The learned Planner architecture is not claimed as a
-standalone novelty; its role is to provide the global generative prior required
-by the fully de novo task.
+The full state has length `7+4N`: one count field, six lattice/angle fields,
+and one element plus X/Y/Z per atom. Because count and element fields are
+prefilled in the standard route, the DLM freely generates `6+3N` fields. The
+continuous refiner consumes the proposal graph rather than the Plan, so the
+implemented last factor is `p_psi(M|B)`, not `p_psi(M|B,P)`.
 
-## The Plan-to-realization interface
+## What is implemented
 
-Let `P` denote a Plan and let `N(P)` be its atom count. H1-A2 constructs a
-crystal body of length
+- a learned rich-Plan source for the fully de novo route;
+- exact-cardinality typed body states indexed by formula-derived `N`;
+- hard count and composition anchors;
+- field-specific token vocabularies;
+- non-prefix masked prediction from the whole current partial state;
+- an effective commitment order of lattice, all X, all Y, then all Z;
+- lightweight inference-time checks for nonzero lattice lengths, selected
+  degenerate-angle combinations, and exact PBC duplicate coordinates once
+  X/Y prerequisites are visible;
+- an equivariant continuous refiner that preserves atom count and atom types
+  while modifying lattice and fractional coordinates.
+
+The learned Plan's coarse lattice, space-group, and volume fields are prompt
+conditions. Their actual effect must be established by counterfactual Plan
+tests; they are not currently hard-enforced invariants.
+
+## Exactly three contributions
+
+1. **Problem and interface.** We formulate fully de novo generation as
+   model-sampled global chemistry followed by composition-anchored,
+   exact-cardinality typed realization, while separating learned-Plan inference
+   from gold-Plan and frozen-Plan controls.
+2. **Crystal DLM executor.** We develop a typed masked completion interface
+   over an exact `7+4N` state, with non-prefix context, field-specific support,
+   and a dependency-respecting commitment schedule coupled to selected lattice
+   and periodic-coordinate legality checks.
+3. **Attribution and evaluation.** We separate condition-source effects,
+   discrete realization, and continuous refinement through gold-Plan R5-C
+   controls, pre/post-refiner analysis, and chemistry-standardized
+   decomposition of aggregate stability into composition-mix and
+   within-chemistry conversion.
+
+The third item is an evaluation contribution, not a claim that the inherited
+refiner or hybrid pipeline is new.
+
+## R5-C in the paper
+
+Three Plan sources have different scientific meanings:
+
+| Name | Source | Role | Fully de novo |
+|---|---|---|---:|
+| `A_learned` | learned H1-A2 Plan source | main system | yes |
+| `C_gold / R5-C` | held-out MP-20-derived gold Plan | conditional executor reference | no |
+| `C_replay` | frozen generated Plans | downstream replay control | no |
+
+R5-C is not Planner-free and is not a mathematical upper bound. It is named
+**Gold Plan (R5-C; conditional executor reference)**. Historical adjusted R5-C
+numbers are legacy context until rerun under the same raw-attempt, evaluator,
+and selection contract as `A_learned`.
+
+## Chemistry-aware attribution
+
+Aggregate stability can be written as
 
 ```text
-L(P) = 7 + 4 N(P),
+P_m(Y=1) = sum_h p_m(h) mu_m(h),
 ```
 
-with seven lattice fields and, for every atom, one element field plus three
-fractional-coordinate fields. The Plan anchors composition and count. During
-generation, unresolved positions are predicted from the entire partial state
-and `P`, with each position restricted to a state-dependent legal token set.
+where `p_m(h)` is the chemistry mix sampled by method `m`, and `mu_m(h)` is
+the outcome rate within chemistry stratum `h`. H1-A2 reports both parts rather
+than treating a higher aggregate stability rate as proof of better structural
+generation. The primary strata are composition family, arity, atom-count bin,
+and all-metal/unary shortcut status.
 
-Conceptually, each reverse step applies
+This analysis is motivated by reward-guided materials work that explicitly
+changes elemental distributions or can concentrate on safe regions. It is not
+an argument that reinforcement learning only changes composition: fixed-
+composition guidance can also improve structure.
 
-```text
-underdetermined Plan
-        -> exact-cardinality partial crystal state
-        -> legal support for each unresolved field
-        -> compatible discrete realization
-        -> continuous geometric refinement.
-```
+## Claims explicitly out of scope
 
-This formulation makes three distinctions explicit:
+- joint generation of species-site assignments and geometry;
+- a novel variable-length DLM—the state is fixed after `N` is sampled;
+- support-consistent training or a legal-mass objective;
+- violation-guided remasking, revision, or dead-end recovery;
+- exact Plan-volume, lattice-family, or space-group enforcement;
+- permutation invariance or symmetry equivariance from non-prefix decoding;
+- global satisfiability guarantees from local support masks;
+- universal quality or speed superiority over autoregression.
 
-- **cardinality before realization:** atom count chooses the state dimension;
-- **type before value:** lattice, element, and coordinate slots have different
-  categorical support;
-- **constraint availability before commitment:** an unresolved field can wait
-  for information outside its serialization prefix.
-
-The method does not rely on the claim that masked diffusion has a unique notion
-of continuous diffusion time. Its scientific role is iterative, non-prefix
-masked generation with a probabilistic corruption objective and programmable
-support. It is also not sold as an automatic speed advantage over AR.
-
-## Contribution 1: a hierarchical fully de novo formulation
-
-H1-A2 factorizes fully de novo crystal generation into a learned prior over
-global Plans, Plan-conditioned structured completion, and continuous physical
-refinement. The sampled Plan is deliberately underdetermined: it specifies
-composition, atom count, and coarse structural intent, while exact lattice
-values, site realization, fractional coordinates, and the compatible
-structural hypothesis remain for the body model.
-
-The modeled object is not “text with unusual tokens.” It is a variable-size,
-heterogeneously typed state whose dependencies do not follow its stored order.
-
-## Contribution 2: a crystal-specific masked generator
-
-A generic masked language model is insufficient. H1-A2 combines:
-
-- an exact `7 + 4N` state selected by the planned cardinality;
-- crystal-specific token families for elements, lattice fields, and periodic
-  coordinates;
-- composition and count anchoring;
-- generation-time schema, count, volume, periodic-coordinate, and
-  duplicate-site support restrictions;
-- non-prefix masked completion conditioned on the full partial state.
-
-These restrictions make generation constraint-aware rather than proving that
-every locally legal partial state has a globally valid completion. Exact length
-is not presented as a standalone novelty; it enables the complete
-Plan-to-variable-cardinality-state interface.
-
-## Contribution 3: a typed discrete--continuous factorization
-
-H1-A2 assigns different scientific variables to different inductive biases:
-
-| Stage | Responsibility | Interface contract |
-|---|---|---|
-| Planner | samples global chemistry, atom count, and coarse structural intent | produces an underdetermined Plan rather than replaying a dataset row |
-| masked DLM | discrete, typed, mutually constrained realization | obeys planned composition and count |
-| equivariant refiner | continuous periodic lattice and coordinates | preserves composition and count |
-
-This factorization is intentionally diagnostic. The Planner determines what
-problem is posed, the DLM determines a discrete structural hypothesis, and the
-refiner determines whether that hypothesis can be improved in continuous
-geometry. Stability is interpreted as proposal-to-physical-refinement
-conversion, while Unique and Novel candidates describe the supply presented to
-that conversion stage.
-
-## Why a DLM here?
-
-Masked discrete generation contributes four native capabilities:
-
-1. **Non-prefix context.** An unresolved field conditions on information
-   revealed anywhere in the current state.
-2. **Delayed commitment.** Fields may remain masked until relevant context is
-   available; this does not imply unlimited revision of revealed tokens.
-3. **State-dependent support.** Legal token families and crystal constraints
-   can change as the partial state evolves.
-4. **Randomized information order.** Training does not bind every dependency
-   to one fixed left-to-right factorization.
-
-The claim is not that these properties guarantee stable crystals or that AR
-cannot emulate them with additional machinery. The claim is that they directly
-match the conditional completion problem defined above.
-
-## What the paper does not claim
-
-- H1-A2 is not atom-permutation invariant merely because decoding is
-  non-prefix; invariant tokenization is an orthogonal improvement.
-- A space-group range in the Plan is not exact symmetry enforcement; H1-A2 is
-  not a replacement for symmetry-native generators.
-- Local legal support is not a proof of global constraint satisfiability.
-- The continuous refiner cannot repair an incorrect formula if composition is
-  frozen.
-- High Unique/Novel supply is a system-level operating point, not a theorem of
-  masked diffusion.
-- The hybrid use of language and continuous diffusion is inherited from prior
-  work; the contribution is the structured interface between global intent,
-  discrete realization, and continuous refinement.
-- MP-20-derived, frozen, or user-provided Plans are conditional controls. They
-  can test downstream realization, but are not presented as the fully de novo
-  Plan source.
+These are future method candidates, not current contributions.
 
 ## Five-paragraph introduction arc
 
-1. **Scientific mismatch.** Many scientific objects are stored as sequences
-   even when their variables are globally coupled and have no physical token
-   order. A crystal is a globally compatible realization, not a sentence.
-2. **What prior work solved.** Language generators model discrete chemistry;
-   continuous, flow, Bayesian, and symmetry-aware models handle periodic
-   geometry; CrysLLMGen and FlowLLM show that proposal and refinement are
-   complementary. The underdesigned component is a hierarchy that generates
-   both the global specification and its compatible realizations.
-3. **The missing abstraction.** Fully de novo generation must learn a prior
-   over underdetermined Plans; once a Plan is sampled, storage order need not
-   become the body's commitment schedule.
-4. **Method.** H1-A2 samples a global Plan, turns it into an
-   exact-cardinality typed state, completes that state by constrained masked
-   generation, and refines only continuous geometry with an equivariant
-   diffusion model.
-5. **Scientific payoff.** The decomposition exposes the conversion from
-   discrete hypotheses to low-energy structures and illustrates a broader
-   principle for serialized mixed-variable scientific objects.
+1. Crystals are serialized for computation, but composition, cardinality,
+   lattice, and periodic coordinates form a globally coupled object.
+2. Crystal LMs establish text generation; geometry-native models establish
+   periodic continuous generation; CrysLLMGen and FlowLLM establish proposal
+   followed by refinement. The hybrid split itself is not new.
+3. The remaining question is how to realize model-sampled chemistry on an
+   exact-size heterogeneous state without making storage order the only
+   commitment order.
+4. H1-A2 anchors composition and count, completes quantized geometry with a
+   typed masked executor and dependency-aware field order, and refines only
+   continuous geometry.
+5. A learned-vs-gold Plan decomposition, chemistry-standardized outcomes, and
+   pre/post-refiner analysis test whether gains arise from condition selection,
+   discrete realization, or continuous conversion.
 
 ## Suggested abstract
 
-> Scientific objects are often serialized for computation even when their
-> variables have no causal left-to-right order. Crystal generation makes this
-> mismatch explicit: global composition, atom count, lattice fields, species,
-> and periodic coordinates are mutually constrained, while final geometry is
-> continuous. Building on the discrete-proposal/continuous-refinement insight
-> of hybrid crystal generators, we factorize the fully de novo distribution
-> through an underdetermined global Plan. H1-A2 first samples chemistry,
-> cardinality, and coarse structural intent from a learned Plan prior;
-> instantiates an exact-length
-> `7+4N` typed crystal state, and uses a masked discrete language model to
-> complete unresolved fields from non-prefix context under evolving crystal
-> support constraints. An equivariant diffusion model then refines lattice and
-> coordinates while preserving composition and cardinality. This
-> Planner--completion--refinement factorization separates global-plan
-> generation,
-> discrete realizability, and continuous physical relaxation. More broadly, it
-> treats serialization as an interface rather than a generative causal graph,
-> and provides a diagnostic view of crystal discovery as the conversion of a
-> diverse discrete proposal set into physically stable structures.
+> Crystal structures are commonly serialized as text although composition,
+> cardinality, lattice, and periodic coordinates are globally coupled. We
+> study composition-anchored crystal realization with a masked language model.
+> A learned condition source first samples a formula and coarse structural
+> fields. The formula fixes atom count and species, defining an exact
+> `7+4N` typed state. A Crystal DLM then completes six quantized lattice fields
+> and `3N` fractional-coordinate fields from non-prefix context, using a
+> dependency-respecting commitment order and selected state-dependent lattice
+> and periodic-coordinate legality checks. An equivariant continuous model
+> subsequently refines lattice and coordinates while preserving atom count and
+> composition. We distinguish learned de novo Plans, MP-20-derived gold Plans,
+> and frozen replay Plans, and decompose aggregate stability into chemistry-mix
+> and within-chemistry structural conversion. This formulation treats
+> serialization as an interface rather than a mandatory commitment order and
+> makes condition quality, discrete proposal quality, and continuous
+> refinement separately auditable.

@@ -9,6 +9,12 @@ class PublicContractTests(unittest.TestCase):
         self.assertEqual(PUBLIC_RESULT["strict_sun"]["numerator"], 105)
         self.assertEqual(PUBLIC_RESULT["meta_sun"]["numerator"], 488)
 
+    def test_exact_audit_view(self) -> None:
+        exact = PUBLIC_RESULT["exact_all_attempt_view"]
+        self.assertEqual(exact["strict_sun"]["numerator"], 103)
+        self.assertEqual(exact["meta_sun"]["numerator"], 553)
+        self.assertEqual(exact["hull_known"], 1132)
+
     def test_known_seeds(self) -> None:
         self.assertEqual(SEEDS.planner_train, 17)
         self.assertEqual(SEEDS.planner_sample_base, 17)
@@ -24,4 +30,3 @@ class PublicContractTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
