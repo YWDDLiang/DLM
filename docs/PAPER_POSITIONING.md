@@ -1,157 +1,349 @@
-# Serialization is not commitment order
+# Constraint timing and commitment in crystal generation
 
-## Plain-language story
+## Main research question
 
-> A formula tells us which atoms a crystal contains and how many there are.
-> H1-A2 lets a masked model fill an exactly sized table of quantized periodic
-> geometry instead of writing that geometry irreversibly from left to right;
-> a continuous diffusion model then polishes the geometry without changing the
-> chemistry.
+> **When different crystal-validity checks can only be evaluated after
+> different information has been generated, do restricting invalid choices
+> whenever the prerequisite information is available and choosing which
+> geometric variables are eligible for commitment at each stage affect how
+> reliably a model-proposed composition is realized as a periodic crystal?**
 
-## Research question
+Scope:
 
-> **How should a masked discrete language model realize a model-sampled
-> composition as an exact-cardinality periodic crystal body when different
-> crystallographic legality checks become evaluable at different partial
-> states, without letting serialization order dictate commitment order?**
+> **The composition and atom count are held fixed, and the question is
+> evaluated over eligible Plans sampled by the learned source.**
 
-This is an inductive-bias and interface question. It does not claim that an
-autoregressive model is inexpressive or that masked generation is universally
-faster, more diverse, or more stable.
+In plain language:
+
+> Some crystal errors can only be detected after particular fields have been
+> generated. We ask whether restricting an invalid choice once the required
+> information is available, and restricting which related geometry fields may
+> compete next before committing one selected field per model call, actually
+> makes periodic-crystal realization more reliable.
+
+The question does not assume a positive answer. Early restrictions may help,
+have no effect, or push probability mass toward worse candidates. A grouped
+commitment policy may likewise outperform, match, or underperform a fixed
+positional policy.
+
+The policy treatment is the bundle of **group restriction and confidence-
+adaptive position selection within each group**. It is not an isolated test of
+grouping alone.
+
+## Why this is a scientific ML question
+
+The prerequisite information for selected crystallographic checks appears at
+different partial states. This is an objective property of the representation;
+whether generation should use that information immediately is an empirical
+question. The experimental variables are:
+
+1. whether selected invalid token choices are restricted when their
+   prerequisites are already visible; and
+2. which unresolved geometry positions are eligible to compete for the next
+   commitment at each stage.
+
+The primary outcome is not the pass rate of an individual hard mask. It is the
+all-request yield of bodies that are reconstructable and pass the same
+independent post-hoc selected checks. Generation, parsing, and reconstruction
+failures remain in the denominator.
+
+## Problem evolution
+
+The paper question was built from a sequence of increasingly complete,
+falsifiable questions. Each level adds one concept and preserves the earlier
+question as a special case.
+
+| Level | Added concept | Question answered | Claim boundary |
+|---|---|---|---|
+| Q1 | one intervention | Does a duplicate-Z token restriction improve reconstructable-and-duplicate-free yield? | A local causal sub-question, not the paper claim. |
+| Q2 | constraint prerequisites | Does the implemented selected-support bundle help when its required information is visible? | Only three implemented checks; no general constraint guarantee. |
+| Q3 | learned-Plan scope | Does the Q2 effect hold over the eligible Plan distribution sampled by the learned source, and is it heterogeneous? | The Plan is the statistical unit; this is not an end-to-end effect. |
+| Q4 | commitment policy | Does a grouped confidence-adaptive policy differ from a fixed positional policy under one frozen masked checkpoint? | It does not compare DLM with AR or prove an optimal order. |
+| Q5 | continuous conversion | Does a fixed identity-preserving refiner improve successful discrete bodies, and does the proposal-stage policy gap persist? | The refiner is a downstream consequence, not the primary mechanism. |
+
+Two proposed branches were explicitly rejected during review:
+
+- hard anchors were not promoted as a causal performance contribution; they
+  define the realization task and paired controls; and
+- the selected checks were not claimed to derive the complete lattice-to-X-to-
+  Y-to-Z order or a universal constraint system.
+
+## Three sub-questions
+
+### 1. Prerequisite-aware selected support
+
+With checkpoint and commitment policy fixed, does restricting a selected
+invalid choice when its required information is visible change joint body
+realization yield?
+
+The implemented scope is limited to:
+
+- nonzero lattice-length tokens;
+- an opportunistic gamma-degeneracy restriction when alpha and beta are
+  already visible; and
+- a discrete PBC duplicate-Z restriction after the relevant X/Y information
+  is visible.
+
+This does not cover minimum atomic distance, approximate continuous overlap,
+exact space-group constraints, Plan-volume enforcement, or global physical
+satisfiability.
+
+Operationally, the three post-hoc predicates use the same mathematical rules
+as the generation-time restrictions but are invoked independently of the mask
+state:
+
+- a lattice length must be finite and strictly positive;
+- for parsed integer-degree angles, the lattice angle factor
+  `1 + 2 cos(a) cos(b) cos(g) - cos(a)^2 - cos(b)^2 - cos(g)^2` must be finite
+  and greater than `1e-4`; and
+- two active sites are discrete PBC duplicates when all three 100-bin
+  fractional-coordinate indices are equal modulo 100, independent of species.
+
+Generation-time masks cannot serve as outcome labels.
+
+### 2. Commitment policy and its interaction with support
+
+Under the same masked checkpoint, Plans, attempt ordering, sampling settings,
+number of model calls, and call-indexed random stream, does a group-restricted
+confidence-adaptive policy differ from a fixed positional policy? Does the
+selected-support effect depend on the policy?
+
+The grouped policy opens lattice fields, then all X, all Y, and all Z, while
+using confidence inside each group. The positional control commits unfilled
+positions in the fixed representation order. The treatment is therefore the
+whole group-restriction plus confidence-selection policy, not grouping alone.
+
+The paired execution contract fixes the policy details:
+
+- both policies skip prefilled count/element anchors and commit exactly one
+  unresolved position per denoising call for `6+3N` calls;
+- the grouped policy selects the highest current `low_confidence`-remasking
+  confidence inside the active group, with lowest position index as the fixed
+  tie-break;
+- the positional policy uses the unique order `LA, LB, LC, alpha, beta,
+  gamma, X1, Y1, Z1, ..., XN, YN, ZN`;
+- both arms use the same call-indexed full noise tensors and model-call budget;
+  and
+- empty token support is a recorded generation failure with no retry,
+  backtracking, mask relaxation or replacement.
+
+### 3. Fixed-refiner downstream consequence
+
+For every reconstructable discrete body, how does a fixed identity-preserving
+continuous refiner change the same body's structure and physical evaluation?
+Is a proposal-stage policy gap preserved, attenuated, or reversed after
+refinement?
+
+This is a downstream system question. It is not part of the primary mechanism
+and does not make the inherited refiner a contribution.
+
+## Analysis populations and denominators
+
+The documents use three distinct populations:
+
+1. **Source-request population:** every Planner request, including raw outputs
+   that cannot form an eligible Plan. This is the end-to-end denominator.
+2. **Eligible-Plan mechanism population:** complete Plan records whose parsed
+   formula, `N`, elements and counts define a realization task, with
+   `1 <= N <= 20` and counts summing to `N`. This is the Plan-level paired
+   mechanism scope.
+3. **Successful-body conversion population:** every body that completes the
+   common typed parse, periodic-Structure construction and graph conversion.
+   This is the fixed-refiner pre/post population; unsuccessful bodies remain in
+   end-to-end rates but do not have a pre/post structure pair.
+
+These populations must never be given the same unlabeled rate. Hull coverage,
+hull-known conditional rates and all-request lower-bound yields are reported
+separately.
+
+## Short glossary
+
+- **Plan:** one complete record sampled by the learned source. Formula-derived
+  composition and cardinality are hard anchors; lattice, space-group and volume
+  fields are soft prompt context.
+- **Selected support:** the three implemented token restrictions listed above,
+  not a general constraint solver.
+- **Commitment policy:** the rule controlling which unresolved positions may be
+  submitted after each model call.
+- **S.U.N.:** the cohort-level intersection of stable, unique and novel
+  candidates; Strict and Meta use different frozen stability thresholds.
+
+The exact Strict/Meta numerical thresholds and StructureMatcher settings are
+part of the still-pending public evaluator contract. Until those settings are
+published, the headline counts are reference results rather than a complete
+standalone evaluation specification.
+
+## Plan-level mechanism estimand
+
+For eligible Plan `P_j`, repeat `r`, support setting `s` and policy `p`, let
+`Y_jr(s,p)` be the all-request binary body-realization outcome. With `K`
+paired repeats, define the Plan-level cell mean:
+
+```text
+mu_j(s,p) = average_r Y_jr(s,p)
+```
+
+The paired design contains four cells: selected support on/off crossed with
+grouped/positional policy. The support main effect, policy main effect and
+interaction are computed within each Plan before averaging over the `J` Plan
+records. In particular, the interaction is:
+
+```text
+[mu_j(on, grouped) - mu_j(off, grouped)]
+- [mu_j(on, positional) - mu_j(off, positional)]
+```
+
+Plan records, not individual body repeats, are the statistical units. The
+mechanism estimand is conditional on the eligible Plan cohort; source-level
+ineligible outputs remain part of the separate end-to-end denominator.
 
 ## Implemented factorization
 
-Let `P` be the learned source's formula and coarse fields. The formula defines
-the anchored state `A(P)`: atom count `N` and the ordered element sequence.
-Let `G` contain the fields the standard body executor actually generates: six
-quantized lattice/angle fields and `3N` quantized fractional coordinates. Let
-`B=(A(P),G)` be the complete discrete proposal and `M` the refined crystal.
+Let `P` be the complete learned Plan record, including formula and soft coarse
+fields. Let `A(P)` contain the hard formula-derived anchors: atom count `N` and
+the element multiset/counts. Let `G` contain the generated geometry, `B` the
+complete discrete body, and `M` the refined crystal.
 
 ```text
 P ~ p_phi(P)
-G ~ p_theta(G | P, A(P))
+G ~ p_theta(G | P, A(P), commitment policy, selected support)
+B = (A(P), G)
 M ~ p_psi(M | B)
 ```
 
-The full state has length `7+4N`: one count field, six lattice/angle fields,
-and one element plus X/Y/Z per atom. Because count and element fields are
-prefilled in the standard route, the DLM freely generates `6+3N` fields. The
-continuous refiner consumes the proposal graph rather than the Plan, so the
-implemented last factor is `p_psi(M|B)`, not `p_psi(M|B,P)`.
+The refiner reads `B`, not `P`; the final factor is `p_psi(M|B)`, not
+`p_psi(M|B,P)`.
 
-## What is implemented
+The complete state has length `7+4N`:
 
-- a learned rich-Plan source for the fully de novo route;
-- exact-cardinality typed body states indexed by formula-derived `N`;
-- hard count and composition anchors;
-- field-specific token vocabularies;
-- non-prefix masked prediction from the whole current partial state;
-- an effective commitment order of lattice, all X, all Y, then all Z;
-- lightweight inference-time checks for nonzero lattice lengths, selected
-  degenerate-angle combinations, and exact PBC duplicate coordinates once
-  X/Y prerequisites are visible;
-- an equivariant continuous refiner that preserves atom count and atom types
-  while modifying lattice and fractional coordinates.
+```text
+1 count + 6 lattice/angle + N * (1 element + X + Y + Z)
+```
 
-The learned Plan's coarse lattice, space-group, and volume fields are prompt
-conditions. Their actual effect must be established by counterfactual Plan
-tests; they are not currently hard-enforced invariants.
+Count and element positions are prefilled in the standard route. The masked
+executor freely generates `6+3N` lattice/coordinate tokens. The exact state
+size is a deterministic consequence of known `N`, not a novel variable-length
+algorithm.
+
+## Why each component appears
+
+### Learned Plan source
+
+The learned source closes the fully de novo loop and defines the actual Plan
+distribution. It is not claimed as a new planning algorithm. Ineligible raw
+outputs are upstream attrition and are not hidden inside downstream metrics.
+
+### Anchors and typed state
+
+Composition, `N`, and element counts are held constant so every paired arm
+solves the same realization task. Soft lattice, space-group, and volume fields
+remain prompt context; they are not hard-enforced invariants.
+
+### Masked partial-state executor
+
+The executor keeps unresolved positions masked, conditions on the current
+partial state, applies the implemented selected support when its prerequisites
+are visible, and permits an explicit commitment policy to choose the next
+eligible positions. This makes masked completion a natural concrete answer to
+the research question, but not the only theoretically possible answer.
+
+### Fixed continuous refiner
+
+The inherited `model_494` preserves atom count and the ordered atom-type array,
+while changing lattice and fractional coordinates. “Identity-preserving” in
+this document means only those atom-identity invariants; it does not mean that
+the structural prototype or every material property is preserved. The refiner
+tests the discrete-to-continuous interface and the downstream persistence of
+proposal-stage effects. It is not a new algorithmic contribution and does not
+read the Plan.
 
 ## Exactly three contributions
 
-1. **Problem and interface.** We formulate fully de novo generation as
-   model-sampled global chemistry followed by composition-anchored,
-   exact-cardinality typed realization, while separating learned-Plan inference
-   from gold-Plan and frozen-Plan controls.
-2. **Crystal DLM executor.** We develop a typed masked completion interface
-   over an exact `7+4N` state, with non-prefix context, field-specific support,
-   and a dependency-respecting commitment schedule coupled to selected lattice
-   and periodic-coordinate legality checks.
-3. **Stage-aware evaluation.** We report the condition source, discrete body,
-   and continuous refiner as separate stages, so an end-to-end gain is not
-   automatically attributed to the DLM alone.
+1. **Problem formulation.** We formulate crystal realization from
+   model-sampled Plans as a partial-state problem in which selected validity
+   checks require different prerequisite information and geometry commitment
+   is an explicit, testable decision.
+2. **Core executor.** We develop a composition-anchored, exact-cardinality,
+   typed masked executor with state-conditional selected support and an
+   explicitly testable grouped confidence-adaptive commitment policy.
+3. **Plan-level paired evaluation protocol.** We specify how to estimate
+   selected support, commitment policy, their interaction and heterogeneity
+   over eligible Plans, and how to trace downstream conversion under a fixed
+   identity-preserving refiner.
 
-The third item is an evaluation contribution, not a claim that the inherited
-refiner or hybrid pipeline is new.
+The third item is currently a paired evaluation design. It becomes an empirical
+contribution only after the strict paired wiring and results are complete.
 
-## R5-C in the paper
-
-Three Plan sources have different scientific meanings:
+## Plan-source taxonomy
 
 | Name | Source | Role | Fully de novo |
 |---|---|---|---:|
-| `A_learned` | learned H1-A2 Plan source | main system | yes |
+| `A_learned` | learned H1-A2 Plan source | main system and mechanism scope | yes |
 | `C_gold / R5-C` | held-out MP-20-derived gold Plan | conditional executor reference | no |
 | `C_replay` | frozen generated Plans | downstream replay control | no |
 
-R5-C is not Planner-free and is not a mathematical upper bound. It is named
-**Gold Plan (R5-C; conditional executor reference)**. Historical adjusted R5-C
-numbers are legacy context until rerun under the same raw-attempt, evaluator,
-and selection contract as `A_learned`.
+R5-C is neither Planner-free nor a mathematical upper bound. It remains a
+conditional reference rather than the source of the fully de novo claim.
 
-## Evaluation perspective
+## Falsification contract
 
-The final score depends on the chemistry sampled by the Planner, the geometry
-proposed by the DLM, and the correction performed by the refiner. These stages
-should be inspected separately at a high level. In particular, a stability
-gain should not be described as better structure generation without checking
-whether the generated chemistry distribution also changed.
+| Result | Required claim revision |
+|---|---|
+| Selected support has zero effect | Remove the claim that the implemented restrictions improve realization; retain only the interface. |
+| Selected support is harmful | Do not recommend the bundle; report that early restriction distorted the proposal distribution. |
+| Grouped and positional policies are equivalent | Remove commitment-policy performance claims; retain only reorderability of the interface. |
+| Grouped policy is worse | Do not present it as the preferred policy. |
+| Effects vary strongly across Plan strata | Report heterogeneity; do not claim a uniform effect over the Plan domain. |
+| The refiner attenuates the proposal-stage gap | Restrict the policy claim to discrete proposals. |
+| Support and policy effects are both absent | The primary method claim is unsupported even if the end-to-end score is competitive. |
+
+## Related-work boundary
+
+- DDPD learns which positions to denoise or revise; H1-A2 compares fixed,
+  crystal-specific policies and does not reopen committed tokens.
+- ADLM learns important anchors; H1-A2's hard anchors are formula-derived and
+  are not learned importance predictions.
+- DINGO enforces formal regular-language constraints with stronger guarantees;
+  H1-A2 implements only three selected crystal checks.
+- CrysLLMGen already establishes language-model proposal followed by
+  identity-preserving continuous refinement. The hybrid split and refiner are
+  not H1-A2 contributions.
+- CrystalDiT is a strong unified-generation counterexample; H1-A2 does not
+  claim that modular generation is inherently superior.
+
+## End-to-end context
+
+The future paper table retains H1-A2 at `105/1000` Strict S.U.N. and
+`488/1000` Meta S.U.N. The locally reproduced CrysLLMGen result is the closest
+external hybrid-system context; its exact public comparison contract remains
+to be frozen. End-to-end values do not establish the causal effect of selected
+support, commitment policy, or refinement.
 
 ## Claims explicitly out of scope
 
-- joint generation of species-site assignments and geometry;
-- a novel variable-length DLM—the state is fixed after `N` is sampled;
+- joint species-site and geometry generation;
+- DLM superiority over autoregression;
+- a universally optimal commitment order;
 - support-consistent training or a legal-mass objective;
-- violation-guided remasking, revision, or dead-end recovery;
+- backtracking, revision, or reopening committed tokens;
 - exact Plan-volume, lattice-family, or space-group enforcement;
-- permutation invariance or symmetry equivariance from non-prefix decoding;
-- global satisfiability guarantees from local support masks;
-- universal quality or speed superiority over autoregression.
+- permutation invariance, exact symmetry, or global satisfiability;
+- algorithmic novelty of the learned Plan source or `model_494` refiner.
 
-These are future method candidates, not current contributions.
+## Current review status
 
-## Five-paragraph introduction arc
+The proposer-reviewer process approved the problem-method-contribution logic
+at a concept score of approximately `7/10`. The strongest remaining risk is
+empirical: if the three selected checks and the grouped policy do not produce
+clear Plan-level effects that remain meaningful after refinement, the work may
+be judged a hand-designed decoding heuristic rather than a consequential ML
+method.
 
-1. Crystals are serialized for computation, but composition, cardinality,
-   lattice, and periodic coordinates form a globally coupled object.
-2. Crystal LMs establish text generation; geometry-native models establish
-   periodic continuous generation; CrysLLMGen and FlowLLM establish proposal
-   followed by refinement. The hybrid split itself is not new.
-3. The remaining question is how to realize model-sampled chemistry on an
-   exact-size heterogeneous state without making storage order the only
-   commitment order.
-4. H1-A2 anchors composition and count, completes quantized geometry with a
-   typed masked executor and dependency-aware field order, and refines only
-   continuous geometry.
-5. Stage-aware evaluation asks whether observed gains arise from condition
-   selection, discrete realization, or continuous refinement.
+The remaining implementation gap is narrow but real: the strict positional
+control, call-indexed paired randomness, stable Plan/attempt metadata and
+uniform pre/post evaluation must be wired before contribution 3 is claimed as
+evidence. No checkpoint retraining is required for that mechanism test.
 
-## What is still missing
-
-At a high level, the project still needs:
-
-- the final release assets and an end-to-end public run;
-- stronger matched baselines and a small number of decisive ablations;
-- clearer evidence for what the rich Plan contributes;
-- broader seed/statistical support and final evaluator documentation.
-
-The exact experiment matrix is intentionally left open for now.
-
-## Suggested abstract
-
-> Crystal structures are commonly serialized as text although composition,
-> cardinality, lattice, and periodic coordinates are globally coupled. We
-> study composition-anchored crystal realization with a masked language model.
-> A learned condition source first samples a formula and coarse structural
-> fields. The formula fixes atom count and species, defining an exact
-> `7+4N` typed state. A Crystal DLM then completes six quantized lattice fields
-> and `3N` fractional-coordinate fields from non-prefix context, using a
-> dependency-respecting commitment order and selected state-dependent lattice
-> and periodic-coordinate legality checks. An equivariant continuous model
-> subsequently refines lattice and coordinates while preserving atom count and
-> composition. We distinguish learned de novo Plans, MP-20-derived gold Plans,
-> and frozen replay Plans, and evaluate condition generation, discrete
-> realization, and continuous refinement separately. This formulation treats
-> serialization as an interface rather than a mandatory commitment order and
-> makes condition quality, discrete proposal quality, and continuous
-> refinement separately auditable.
+The core H1-A2 method and selected restrictions already exist. What remains
+unfinished is the strict causal-comparison and evaluation wiring; this document
+does not claim that the paired evidence already exists.

@@ -1,86 +1,87 @@
-# Concept-only story review
+# Concept-only proposer–reviewer verdict
 
-Evidence, code readiness, and reproducibility are audited separately. The score
-below evaluates the intended research story while requiring its method
-description to match the implemented scientific object.
+## Final disposition
 
-## Verdict
+> **APPROVED — approximately 7/10 at the concept level.**
 
-| Story | Concept-only score | Status |
-|---|---:|---|
-| current audited H1-A2 | 5.5–6/10 | clear interface/mechanism paper; not yet a new general DLM method |
-| support-consistent training added and validated | about 7/10 | credible near-term method upgrade |
-| exact-multiset species assignment plus physical revision | about 7.5/10 | higher ceiling, but a new project rather than current H1-A2 |
+This approves the research-question, method and contribution logic. It does
+not pre-approve positive empirical claims. Zero or negative mechanism results
+remain valid answers and must remove the corresponding method claims.
 
-The current story cannot be raised to a stable ICLR weak accept by prose alone.
-Its strongest honest positioning is **composition-anchored quantized geometry
-completion**, not joint species-geometry generation.
+## Approved main question
 
-## Strongest current thesis
+> **When different crystal-validity checks can only be evaluated after
+> different information has been generated, do restricting invalid choices
+> whenever the prerequisite information is available and choosing which
+> geometric variables are eligible for commitment at each stage affect how
+> reliably a model-proposed composition is realized as a periodic crystal?**
 
-> A model-sampled formula fixes crystal cardinality and composition but not
-> periodic geometry. H1-A2 completes the remaining exact-size typed geometry
-> with a masked model whose commitment order respects the prerequisites of
-> selected legality checks, followed by continuous refinement that preserves
-> the discrete identity.
+The composition and atom count are held fixed. The scope is the eligible Plan
+distribution sampled by the learned source.
+
+## Why the question passes review
+
+- It describes an empirical unknown rather than naming the proposed model.
+- It has explicit positive, null and negative answers.
+- It leads naturally to partial-state execution, selected support and a
+  testable commitment policy.
+- It is limited to the three implemented checks and does not claim a general
+  constraint theory.
+- It separates the primary discrete mechanism from learned-Plan scope and the
+  downstream fixed refiner.
+
+## Approved contribution hierarchy
+
+1. **Problem formulation:** prerequisite-dependent selected checks and
+   geometry commitment as testable variables in crystal realization.
+2. **Core method:** a composition-anchored typed masked executor with selected
+   state-conditional support and a grouped confidence-adaptive policy.
+3. **Paired evaluation protocol:** Plan-level estimates of support, policy,
+   their interaction, heterogeneity and fixed-refiner downstream conversion;
+   this becomes an empirical contribution only after results are complete.
+
+The learned condition source and `model_494` have defined roles in the intended
+end-to-end route; neither is an algorithmic contribution.
 
 ## Strongest rejection
 
-> This is CrysLLMGen with its autoregressive proposer replaced by a masked,
-> composition-prefilled quantized-geometry decoder. Exact length follows from
-> known `N`; species are not generated; the rules are hand-written inference
-> masks; revealed tokens cannot be revised; and the continuous refiner is
-> inherited. Without a representation-, constraint-, and compute-matched AR
-> baseline, no gain can be attributed to masked factorization.
+> The method may still be viewed as a hand-designed lattice-to-X-to-Y-to-Z
+> policy plus a few local inference masks around a pretrained masked model and
+> an inherited refiner. Unless strict paired results show that selected support
+> and commitment policy materially affect realization, and that the proposal
+> differences remain meaningful after refinement, the problem framing may be
+> judged a renaming of constrained-decoding details.
 
-The rejection is not fully answerable with the current evidence. The paper
-must therefore avoid claims of universal DLM superiority and present matched AR
-as the principal deferred experiment.
+This objection cannot be solved by further prose.
 
-## What is currently defensible
+## Defensible boundaries
 
-- learned-Plan fully de novo inference is distinct from gold/frozen Plan
-  controls;
-- cardinality selects an exact typed state before geometry realization;
-- masked fields condition on the whole current partial state;
-- selected legality checks require a dependency-respecting field order;
-- the refiner preserves atom count/species and changes geometry;
-- stagewise reporting can keep chemistry selection, body realization, and
-  refinement from being conflated.
+The paper may claim that:
 
-## What is not currently defensible
+- selected crystal checks become evaluable under different partial states;
+- the masked interface makes commitment policy an explicit inference variable;
+- the implemented support and policy can be evaluated under one frozen
+  checkpoint with Plan-level pairing; and
+- a fixed refiner permits downstream pre/post conversion analysis.
 
-- free species-site generation;
-- rich Plan compliance without counterfactual evidence;
-- support-consistent training;
-- general constrained-DLM novelty over DINGO, DDPD, or domain-validity losses;
-- revisable commitments or violation-guided repair;
-- exact symmetry, permutation invariance, or global satisfiability;
-- an empirical superiority claim over a matched constrained AR executor.
+The paper may not claim:
 
-## Closest novelty boundaries
+- DLM superiority over AR;
+- a universal or learned optimal commitment order;
+- general constraint satisfaction or support-consistent training;
+- minimum-distance, exact-space-group or Plan-volume guarantees;
+- revision or reopening of committed tokens;
+- hard execution of soft rich-Plan fields; or
+- algorithmic novelty of the Planner backbone or continuous refiner.
 
-- CrysLLMGen and FlowLLM establish discrete/text proposal followed by
-  continuous refinement.
-- DINGO establishes constrained dLLM inference for formal languages.
-- DDPD and planned diffusion establish denoising-order planning.
-- PepTune establishes domain-dependent corruption and invalid-loss design.
-- Mat2Seq, Wyckoff Transformer, and SGEquiDiff address representation,
-  permutation, and symmetry axes that non-prefix decoding does not solve.
+## Evidence status
 
-The remaining current contribution is a crystal-specific composition-anchored
-completion interface plus a transparent stage-aware evaluation framing.
+The existing implementation matches the approved conceptual scope, but the
+strict mechanism evidence still requires a fixed positional skip-anchor
+control, equal model-call budgets, call-indexed paired randomness, stable
+Plan/attempt metadata and identical pre/post evaluators. These are experiment
+wiring changes rather than checkpoint retraining.
 
-## Separate evidence/repro/code audit
-
-The following findings do not alter the concept-only score but must be fixed
-before release:
-
-- the 105/488 method-family main-table value and its underlying cohort-level
-  audit views must remain explicitly separated;
-- execution stages and assets remain incomplete in the release scaffold;
-- previous documents overstated refiner conditioning and support semantics;
-- first-success selection and N-sorted processing can create chemistry survivor
-  bias unless an immutable raw-ordinal ledger is retained;
-- the current hull evaluation is a shared ML-potential/reference proxy, not
-  candidate-level DFT and cannot be mixed with published DFT S.U.N. rankings.
+The `105/1000` Strict and `488/1000` Meta future paper results, and the external
+CrysLLMGen context, remain end-to-end results. They cannot substitute for the
+paired mechanism evidence.
