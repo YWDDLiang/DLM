@@ -1,55 +1,114 @@
-# 严格reviewer的concept-only冻结结论
+# H1-A2严格Proposer–Reviewer最终裁决
 
-本文件只评问题、方法与故事。代码、checkpoint、seed和统计审计单列，不因工程缺口
-直接扣concept分；但代码事实决定哪些主张可以成立。
+## Disposition
 
-## Verdict
+> **APPROVED，concept约7/10。**
 
-当前诚实故事：`5.5–6/10`，Borderline/Weak Reject区间。
+这是对科学问题、方法演绎和贡献层级的批准。它不批准尚未产生的正向经验结论。若
+selected support或commitment policy得到零/负结果，Research Question仍成立，但对应
+方法claim必须删除。
 
-最强中心主张是：
+## 冻结Main RQ
 
-> Serialization order need not determine commitment order. Given a
-> model-sampled composition, H1-A2 anchors cardinality and element identity,
-> then uses masked completion to realize the remaining periodic geometry
-> before identity-preserving continuous refinement.
+> **When different crystal-validity checks can only be evaluated after
+> different information has been generated, do restricting invalid choices
+> whenever the prerequisite information is available and choosing which
+> geometric variables are eligible for commitment at each stage affect how
+> reliably a model-proposed composition is realized as a periodic crystal?**
 
-它比“把CrysLLMGen的AR换成DLM”更清楚，但当前还不是新的通用DLM算法。
+Scope：composition和atom count固定；研究域为learned source采样的eligible Plans。
 
-## Reviewer认可的三点
+## 为什么通过严格review
 
-1. composition/N先于geometry realization，任务接口清楚；
-2. `7+4N`state与实际`6+3N`自由geometry tokens区分明确；
-3. non-prefix context、typed schema、依赖顺序和局部legality checks形成可解释executor。
+- 问题不包含H1-A2、DLM或正向答案；
+- support和policy均有明确反事实；
+- 允许正、零、负和Plan-stratum异质性；
+- 方法事实与代码吻合；
+- masked executor由partial-state和policy问题自然引出；
+- Planner和refiner被正确降为scope与downstream consequence；
+- claim仅覆盖当前三个selected checks。
+
+## Concept评分
+
+| 维度 | 分数 |
+|---|---:|
+| 科学问题清晰度 | 8/10 |
+| 可证伪性 | 8/10 |
+| 与H1-A2匹配度 | 8/10 |
+| 方法新颖性 | 6.5/10 |
+| 综合concept | **7/10** |
+
+## 最强方法贡献
+
+> A composition-anchored typed masked executor in which selected validity
+> support is activated from the current partial state and commitment policy is
+> an explicit, testable inference variable.
+
+它比“用DLM生成晶体”更具体，但新颖性仍是conditional：只有support、policy及其
+interaction产生清晰Plan-level结果，且proposal差异在refinement后仍有意义，方法贡献
+才达到ICLR强度。
 
 ## 最强拒稿理由
 
-> 现有训练仍是vanilla random-mask CE；主要新意可能是领域接口与inference policy，
-> 而不是学习算法。没有matched AR时，也不能把结果优势归因于masked factorization。
+> 这可能只是一个预训练masked checkpoint，加上手工grouped policy、三个局部logit
+> masks和继承的model494。若paired结果不支持support与policy机制，最终高S.U.N.不能
+> 挽救核心方法claim。
 
-## 当前可守主张
+这个风险不能靠进一步改写解决。
 
-- composition-anchored exact-cardinality geometry completion；
-- serialization order与commitment order可以解耦；
-- selected checks在依赖信息出现后才可计算；
-- learned/gold/replay Plan来源可以分解端到端失败；
-- chemistry mix与within-chemistry conversion应分别报告。
+## 冻结贡献层级
 
-## 当前不可守主张
+1. **问题贡献**：selected crystal checks的prerequisite information和geometry
+   commitment成为可检验变量。
+2. **方法贡献**：composition-anchored typed masked executor＋state-conditional
+   selected support＋grouped confidence-adaptive policy。
+3. **证据贡献**：Plan-level paired mechanism、pretreatment heterogeneity及fixed-refiner
+   downstream conversion。
 
-- DLM联合生成species-site assignment；
-- legal support被训练目标学习；
-- Plan volume/SG得到硬执行；
-- revealed tokens会被revision；
-- refiner由Plan条件化；
-- non-prefix意味着atom-permutation invariance；
-- DLM普遍优于AR、更快、更多样或更稳定。
+Contribution 3在严格wiring和结果完成前只能写成“we evaluate”。
 
-## 当前大致缺什么
+## Claims lock
 
-- 更公平的matched baseline和少量关键消融；
-- rich Plan与DLM各自贡献的直接证据；
-- 更多独立seed和统计支持；
-- 完整公开资产、评价协议与端到端复现。
+禁止：
 
-这些补齐前，不写“DLM普遍优于AR”或“提出新的通用DLM算法”。具体实验矩阵暂不锁定。
+- DLM普遍优于AR；
+- serialization普遍有害；
+- 当前policy唯一或最优；
+- 三项checks构成通用constraint system；
+- support-consistent training；
+- rich Plan soft fields被硬执行；
+- committed token revision；
+- Planner backbone或model494属于算法创新；
+- 用`10.5/48.8`对`9/44`替代机制证据。
+
+允许：
+
+- 同一masked checkpoint支持显式commitment-policy intervention；
+- 当前partial state决定哪些selected checks可计算；
+- Plan-level paired对照可估计support、policy及interaction；
+- fixed model494可用于identity-preserving pre/post conversion；
+- end-to-end数字在协议注明后作外部context。
+
+## Evidence readiness
+
+现有checkpoint无需重训。概念落地仍需：
+
+- strict positional skip-anchor control；
+- equal model-call budgets；
+- call-indexed paired randomness；
+- Plan/attempt/body ID贯穿；
+- 所有successful bodies进入fixed refiner；
+- 相同pre/post Direct、CHGNet与hull评价；
+- 以Plan为统计单位；
+- 最终确认CrysLLMGen内部约数与public精确记录口径。
+
+## 与旧故事的关系
+
+旧的“Serialization Is Not Commitment Order”保留为Methods insight，不再作为Main RQ。
+旧的“哪个模块是瓶颈”保留为secondary stage analysis。当前Main RQ只研究：
+
+```text
+selected support timing × commitment policy
+```
+
+其fully de novo scope由learned Plans定义，其end-to-end后果由fixed refiner观察。

@@ -137,12 +137,19 @@ reasonable continuous periodic geometry.
 
 The current main research question is:
 
-> How can fully de novo crystal generation be factorized into learning a prior
-> over underdetermined global crystal Plans, sampling compatible
-> variable-cardinality discrete realizations through non-prefix masked
-> completion, and refining those realizations in continuous periodic geometry?
+> When different crystal-validity checks can only be evaluated after different
+> information has been generated, do restricting invalid choices whenever the
+> prerequisite information is available and choosing which geometric variables
+> are eligible for commitment at each stage affect how reliably a model-proposed
+> composition is realized as a periodic crystal?
 
-Do not accept this wording automatically. Try to falsify and improve it.
+Composition and atom count are fixed; the scope is eligible Plans sampled by
+the learned source. The primary mechanism is selected support × commitment
+policy. The learned Plan source defines fully de novo scope, and the fixed
+continuous refiner is a downstream consequence rather than part of the Main
+RQ. The wording has passed a proposer–reviewer process; future analysis should
+stress-test evidence and boundaries rather than replace it with a broader
+composition-to-structure question.
 
 ## Critical de novo boundary
 

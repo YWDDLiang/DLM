@@ -1,155 +1,332 @@
-# H1-A2论文故事冻结版
+# H1-A2论文问题演化与内部冻结稿
 
-本文件冻结当前已经实现的方法，不把未来算法写成现有贡献。工程与复现问题另见
-`ICLR_REVIEW_STRATEGY.md`，不参与本文件的concept-only评分。
+## 最终裁决
 
-## 一句话
+经过逐级Proposer–Reviewer、Constraint Guardian、User Advocate和Arbiter审查：
 
-> Formula告诉模型晶体里有哪些原子、共有多少个；H1-A2不按文本顺序逐个写坐标，
-> 而是在一个大小刚好的typed state中补全量化周期几何，最后由连续扩散在不改变化学
-> 身份的前提下精修几何。
+> **APPROVED，当前concept约7/10。**
 
-## 30秒故事
+批准的是问题、方法和贡献的逻辑，不是尚未得到的正向结果。每个机制问题都允许零
+结果和负结果；若出现，必须删除对应的性能claim。
 
-现有语言模型把晶体序列化后生成，但晶格和所有原子坐标彼此关联，文件顺序并不等于
-合理的科学承诺顺序。H1-A2先由learned Planner采样formula与粗粒度条件；formula派生
-并锚定composition、原子数和element multiset。Crystal DLM随后在exact-cardinality
-typed state中补全六个lattice/angle字段与全部坐标，并按照
-`lattice -> X -> Y -> Z`的依赖顺序提交字段。CrysLLMGen式continuous refiner最后只接收
-离散proposal并精修连续几何。评价时把condition-source、discrete realization和
-continuous refinement分开归因。
+## 最终Main Research Question
 
-## Main research question
+> **When different crystal-validity checks can only be evaluated after
+> different information has been generated, do restricting invalid choices
+> whenever the prerequisite information is available and choosing which
+> geometric variables are eligible for commitment at each stage affect how
+> reliably a model-proposed composition is realized as a periodic crystal?**
 
-> **How should a masked discrete language model realize a model-sampled
-> composition as an exact-cardinality periodic crystal body when different
-> crystallographic legality checks become evaluable at different partial
-> states, without letting serialization order dictate commitment order?**
+中文：
 
-这个问题没有声称DLM是唯一可能方案，也没有声称AR无法表达相同联合分布。主张是：
-在这个接口中，masked completion允许我们显式安排信息何时可见、字段何时提交。
+> **当不同晶体合法性检查只有在生成出不同前提信息后才能判断时，在前提信息具备时
+> 限制违规候选，并决定每个阶段哪些几何变量有资格竞争下一次提交，是否会影响模型
+> 提出的composition被可靠实现为周期晶体？**
 
-## 当前真实概率合同
+Scope：
 
-令：
+> **Composition与原子数保持固定，研究域限定为learned source采样得到的eligible
+> Plans。**
 
-- `P`：learned Planner输出的formula与coarse fields；
-- `A(P)`：由formula派生并预填的`N`与ordered element multiset；
-- `G`：DLM自由生成的六个lattice/angle字段与`3N`个坐标字段；
-- `B=(A(P),G)`：完整离散proposal；
-- `M`：continuous refiner输出。
+最通俗的一句话：
 
-则当前实现是：
+> 有些晶体错误只有生成到特定步骤才能发现；我们研究在错误已经能判断时限制生成，
+> 并改变相关几何字段的提交策略，是否真的能提高可用周期晶体的实现产率。
+
+## 为什么先前问题被否决
+
+### Composition-to-structure
+
+“如何把composition变成structure”是所有晶体生成工作的共同任务，无法区分H1-A2。
+
+### Pipeline bottleneck
+
+“Planner、DLM还是refiner是瓶颈”是正经问题，但只自然引出漏斗分析，不能自然引出
+masked DLM，因此降为secondary analysis。
+
+### Serialization mismatch
+
+直接主张serialization不应决定commitment过于solution-first，并与DDPD、ADLM、
+DINGO相邻。最终将其改成可证伪的policy intervention，而不是先验真理。
+
+## 问题演化图
+
+```text
+Q1  单一duplicate-Z restriction的介入
+ ↓
+Q2  当前partial state上可计算的selected-support bundle
+ ↓
+Q3  effect在self-sampled eligible Plan分布上的scope与异质性
+ ↓
+Q4  同masked checkpoint下的commitment-policy intervention
+ ↓
+Q5  fixed continuous refiner的downstream conversion
+ ↓
+Main RQ只保留support timing × commitment policy
+```
+
+## Q1：最小可证伪问题
+
+> 在冻结的同一组Plan–attempt配对及全部非干预条件下，仅在每个Z token提交前屏蔽
+> 会形成离散PBC重复位点的候选token，相比不施加该屏蔽，是否提高全部请求中得到
+> “可重构且duplicate-free”body的概率？
+
+### 冻结终点
+
+```text
+Y1(B) = reconstructable(B) AND duplicate_free(B)
+```
+
+`reconstructable`要求：
+
+- Plan-matching typed parse；
+- pymatgen periodic Structure构建；
+- CrysLLMGen graph conversion；
+- finite字段与一致的`n_atom`。
+
+Post-hoc duplicate detector独立于generation mask：对全部active sites按100-bin PBC模
+等价检查坐标，忽略species。两个arms使用同一detector，mask状态不能作为label。
+
+### Reviewer修订
+
+- 删除“early rejection/backtrack”说法：当前只是在Z提交前屏蔽token；
+- 主终点必须同时包含reconstructability，否则duplicate-free提升接近机械结论；
+- 固定all-request denominator、NFE和attempt-local随机流；
+- 允许零或负效果。
+
+最终状态：`APPROVED`。
+
+## Q2：Selected support bundle
+
+> 在schedule不变时，若某项selected check的前提变量已经存在于当前partial state，
+> 对违反它的候选token施加mask，相比生成期间不施加mask、只做统一post-hoc检查，
+> 是否改变联合有效body产率？
+
+真实范围仅包括：
+
+1. length zero-token restriction；
+2. alpha/beta恰已提交时的opportunistic gamma-degeneracy restriction；
+3. X/Y及相关site信息可见时的discrete PBC duplicate-Z restriction。
+
+```text
+Y2(B) = R(B) AND L(B) AND G(B) AND NOT D(B)
+```
+
+### 关键Reviewer发现
+
+六个lattice fields处于同一confidence group，不能保证alpha/beta早于gamma。因此：
+
+- 不写“每项约束都在最早时刻激活”；
+- 只写“prerequisites在当前partial state已可见时激活”；
+- 不声称三项检查推出完整`lattice→X→Y→Z`顺序；
+- Q2只识别三个masks作为bundle的净效应。
+
+最终状态：`APPROVED`。
+
+## Q3：Fully de novo Plan scope
+
+最初尝试把anchors当作causal treatment，但被Reviewer否决：
+
+- 固定`7+4N`时让count真正变化缺少一致语义；
+- Plan-matching parser本身已经包含identity条件；
+- hard element prefill还固定了任意slot顺序；
+- anchors是任务合同，不应硬包装成性能贡献。
+
+最终Q3改成：
+
+> Q2的paired effect在冻结learned-source sampling contract得到的eligible完整Plan-record
+> 分布上是否非零，并在只用pretreatment Plan字段定义的strata中表现出怎样的异质性？
+
+完整Plan `P`包含formula、`N`、elements/counts和soft coarse fields。DLM读取完整P；
+只有formula-derived composition、`N`和elements/counts属于hard anchors。
+
+Plan-level effect：
+
+```text
+delta(P) = average_repeat [Y2(mask_on) - Y2(mask_off)]
+```
+
+Finite-cohort effect以Plan为统计单位；Plan内repeat不是独立Planner样本。Planner
+ineligible outputs只作upstream attrition，不进入downstream mechanism effect。
+
+Q3只解释learned condition source为何用于闭合fully de novo scope，不把其backbone
+作为算法贡献。
+
+最终状态：`APPROVED`。
+
+## Q4：Commitment policy
+
+> 在相同masked checkpoint、Plans、anchors、typed schema、selected support、NFE和
+> call-indexed随机流下，group-restricted confidence-adaptive policy与fixed positional
+> policy是否产生不同的联合realization yield？Support效果是否依赖policy？
+
+Grouped policy：
+
+```text
+[six lattice fields] → [all X] → [all Y] → [all Z]
+```
+
+Group内部按confidence提交一个position。因此正式treatment是：
+
+```text
+group restriction + confidence-adaptive position selection
+```
+
+Fixed positional policy：
+
+```text
+LA, LB, LC, alpha, beta, gamma,
+X1, Y1, Z1, ..., XN, YN, ZN
+```
+
+count和element anchors跳过。两臂严格执行`6+3N`denoising forwards，并读取相同的
+call-indexed full suffix×vocab noise ledger。
+
+### Q4能够支持
+
+> 对同一masked checkpoint，commitment policy是可操纵、可能影响crystal-body
+> realization的inference变量。
+
+### Q4不能支持
+
+- DLM优于AR；
+- grouped policy是唯一或最优order；
+- dependency grouping单独产生收益；
+- DDPD式learned planning；
+- committed token revision。
+
+当前代码已有grouped接口，但strict positional skip-anchor control、paired noise ledger
+和实际model-call验证仍需最小wiring；历史default/exact结果不能重解释成Q4证据。
+
+最终状态：`APPROVED`。
+
+## Q5：Discrete-to-continuous consequence
+
+> 对Q4每个policy产生的全部`R(B)=1` discrete bodies，固定model494相较于原body，
+> 是否改善同一body的统一评价；proposal-stage policy gap在refinement后是否保留、
+> 衰减或反转？
+
+所有且仅有`R=1` bodies进入，不按Q2、energy、stability、N/U筛选。
+
+```text
+B = (A, quantized lattice, quantized coordinates)
+M(B) = (A, continuous lattice, continuous coordinates)
+```
+
+Refiner必须逐位置保持`N`和atom types，只修改lattice与fractional coordinates，不读
+Plan。异常、identity violation、NaN或shape mismatch作为post failure保留在分母中。
+
+严格区分：
+
+- successful-body paired conversion；
+- hull known-both及known/unknown coverage；
+- all-request lower-bound yield；
+- cohort-level N/U/S.U.N.重算。
+
+Uniqueness不是逐body独立标签。Policy gap缩小只能称observed attenuation，不称causal
+mediation。
+
+model494是继承组件；贡献在于identity-preserving interface和conversion evidence，
+不是refiner算法。
+
+最终状态：`APPROVED`。
+
+## 最终三层论文结构
+
+### Primary mechanism
+
+```text
+state-conditional selected support × commitment policy
+```
+
+### Fully de novo scope
+
+```text
+eligible complete Plans sampled by the learned source
+```
+
+### Downstream consequence
+
+```text
+fixed identity-preserving continuous refinement
+```
+
+## 当前真实方法合同
 
 ```text
 P ~ p_phi(P)
-G ~ p_theta(G | P, A(P))
+A(P) = formula-derived N + element multiset/counts
+G ~ p_theta(G | P, A(P), support, policy)
+B = (A(P), G)
 M ~ p_psi(M | B)
 ```
 
-refiner不读取Plan，因此不能写`p_psi(M|B,P)`。
-
-## `7+4N`究竟表示什么
-
-完整state包含：
-
-```text
-1 count + 6 lattice/angle + N * (1 element + X + Y + Z)
-```
-
-总长度为`7+4N`。但默认H1-A2中count和全部element slots已由formula预填并冻结，
-DLM实际自由生成的是`6+3N`个geometry tokens。论文必须写成
-**composition-anchored geometry completion**，不能写成species与geometry联合生成。
-
-## 当前support边界
-
-已实现：
-
-- typed token schema；
-- 非零lattice lengths；
-- alpha/beta已知后对degenerate gamma的条件检查；
-- X/Y已知后对PBC-equivalent duplicate Z的排除；
-- `lattice -> X -> Y -> Z`提交顺序。
-
-未实现：
-
-- Plan volume-bin硬约束；
-- exact space-group执行；
-- minimum-distance或全局可满足性保证；
-- revealed token重新打开；
-- violation-guided revision。
-
-训练仍是random masking加masked-token cross entropy。support-consistent training、
-legal-mass objective、stoichiometric assignment都属于未来工作。
+完整state为`7+4N`，实际自由生成`6+3N`个geometry tokens。Refiner只读B，不能写成
+`p_psi(M|B,P)`。
 
 ## Exactly three contributions
 
-1. **Problem/interface contribution.** 将fully de novo generation写成model-sampled
-   global chemistry之后的composition-anchored、exact-cardinality typed realization，
-   并明确区分learned-Plan inference、gold-Plan reference与frozen replay。
-2. **Crystal DLM executor.** 在`7+4N`state上结合non-prefix context、field-specific
-   token support和`lattice -> X -> Y -> Z`提交顺序，并使用当前确实可计算的局部
-   lattice/PBC legality checks。
-3. **Attribution/evaluation contribution.** 通过Gold Plan（R5-C）、refiner前后分析和
-   chemistry-standardized decomposition，把condition-source、discrete realization、
-   continuous refinement以及composition-mix effect分开。
+1. **问题形式化**：selected validity checks需要不同前提信息，检查何时介入以及每个
+   阶段哪些geometry变量有资格竞争下一次提交成为可检验问题。
+2. **Core executor**：composition-anchored、exact-cardinality typed masked executor，
+   结合state-conditional selected support与显式commitment-policy bundle。
+3. **Plan-level paired empirical analysis**：以Plan为统计单位隔离support、policy及其
+   interaction，分析pretreatment strata异质性和fixed-refiner downstream conversion。
 
-## R5-C的论文身份
+Contribution 3在paired wiring和结果完成前只能写“we evaluate”，不能写“we
+demonstrate”。
 
-| 名称 | Plan来源 | 科学身份 | Fully de novo |
-|---|---|---|---:|
-| `A_learned` | learned H1-A2 Planner | 主系统 | 是 |
-| `C_gold / R5-C` | held-out MP-20派生gold Plan | conditional executor reference | 否 |
-| `C_replay` | frozen generated Plans | downstream/replay control | 否 |
+## 最通俗故事
 
-R5-C不是Planner-free，也不是数学upper bound。它的作用是拆出learned Plan gap、
-given-Plan DLM realization和continuous refinement conversion。历史adjusted R5-C只作
-legacy context；新的matched comparison必须统一schema、DLM、schedule、refiner、
-evaluator和raw denominator。
+> 系统先自己提出一个材料Plan，formula固定有哪些原子以及数量。随后生成晶格和
+> 坐标，但有些错误只有相关字段出现后才能判断，而且先决定哪些字段也可能影响后续
+> 结构。我们用同一个masked模型严格比较：信息够用时是否应限制明显违规候选，以及
+> 按字段组限制下一次可竞争的位置是否比机械按位置提交更可靠。每次model call仍只
+> 提交一个选中的字段。最后再看这些离散阶段差异经过固定连续
+> 精修后是否仍然存在。
 
-## S.U.N.结果合同
+## Results context
 
-`105/1000` Strict与`488/1000` Meta继续作为未来论文S.U.N.主表值，不降为deprecated
-descriptive aggregate。`103/1200`、`553/1200`是exact all-requested-attempt audit；
-`94/1000`、`474/1000`是historical frozen compatibility。三个视图必须分别命名，
-不能互相替换。
+未来论文主表继续保留：
 
-## 化学mix与structure conversion
+- H1-A2 Strict S.U.N.：`105/1000 = 10.50%`；
+- H1-A2 Meta S.U.N.：`488/1000 = 48.80%`。
 
-总体稳定性可写成：
+用户当前给出的本地CrysLLMGen参考约为：
 
-```text
-P_m(Y=1) = sum_h p_m(h) * mu_m(h)
-```
+- Strict约`9%`；
+- Meta约`44%`。
 
-其中`p_m(h)`是方法采到的化学分层分布，`mu_m(h)`是固定化学分层下的结构转化率。
-这允许我们问提升来自更容易稳定的composition mix、相同chemistry下更好的结构实现，
-还是两者兼有。不能把该分析预先写成“RL只会选容易稳定的composition”。
+外部数值只说明最终系统处于有竞争力区间。协议冻结前不能证明strict superiority，也
+不能替代support、policy或refiner的paired mechanism evidence。public表中当前精确
+CrysLLMGen记录与该内部约数仍需最终核对。
 
-## 禁止进入当前摘要/贡献的表述
+## 最强剩余拒稿风险
 
-- DLM联合生成species-site assignment与geometry；
-- exact length本身是新的variable-length DLM；
-- support-consistent training或legal-mass objective；
-- violation-guided reopening/revision；
-- Plan volume、lattice family或space group被硬执行；
-- refiner读取Plan；
-- non-prefix等价于permutation invariance；
-- DLM天然更快、更多样或更稳定。
+> H1-A2仍可能被视为预训练masked模型外加手工`lattice→X→Y→Z`policy、三个局部
+> masks和继承refiner。若support、policy及interaction没有清晰Plan-level效果，或效果
+> 在refinement后失去意义，constraint-prerequisite framing会退化成constrained-decoding
+> 工程。
 
-## 标题
+该风险不能继续靠改写故事解决，只能由冻结的paired evidence回答。
 
-首选：
+## Decision Log
 
-> **Serialization Is Not Commitment Order: Composition-Anchored Masked
-> Completion for Crystal Generation**
+| 阶段 | 新增概念 | Reviewer保留 | Reviewer删除 |
+|---|---|---|---|
+| Q1 | duplicate-Z intervention | 最小paired因果问题 | duplicate-rate机械终点、计算节省claim |
+| Q2 | constraint prerequisites | 当前三项selected-support bundle | “最早激活”、完整schedule由约束推出 |
+| Q3 | self-sampled Plan domain | eligible Plan finite cohort与异质性 | anchor causal effect、revisable count、easy-condition事后定义 |
+| Q4 | commitment policy | 同checkpoint grouped vs positional policy | DLM>AR、最优order、grouping单独归因 |
+| Q5 | continuous conversion | fixed-refiner paired consequence | refiner算法创新、最终不稳定全归refiner、causal mediation |
+| Paper压缩 | 主次层级 | support×policy为primary | 将Plan source、refiner和瓶颈分析并列进Main RQ |
 
-保守版：
+## 当前大致缺口
 
-> **Composition-Anchored Crystal Completion with Masked Language Models**
+- strict positional skip-anchor control；
+- call-indexed paired random stream和稳定Plan/attempt metadata；
+- 相同pre/post评价合同与Plan-level统计；
+- 最终核对CrysLLMGen约`9%/44%`和public精确记录的口径；
+- paired结果本身。
 
-## 当前评分
-
-当前诚实故事约`5.5–6/10`。补充分析可让论证更完整，但不能单靠写作变成稳健
-Weak Accept。要达到可信`7/10`，优先缺少matched constrained AR与经过验证的
-support-consistent DLM training；它们是未来方法升级，不冒充本轮已完成工作。
+这些属于最小实验与评价wiring，不需要重新训练Planner、DLM或model494。

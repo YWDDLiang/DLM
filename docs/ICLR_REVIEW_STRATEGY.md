@@ -58,43 +58,41 @@ hull unknown仍按lower-bound失败处理。这些行不能用于论文中的直
 
 ## 三、推荐的问题定义
 
-> 在fully-de-novo晶体生成中，如何学习并采样一个包含global chemistry、atom count和
-> coarse structural mode但不决定具体结构的欠定Plan，再通过non-prefix discrete
-> completion生成兼容的variable-cardinality realization，并将其精修为连续周期几何？
+> **当不同晶体合法性检查只有在生成出不同前提信息后才能判断时，在前提信息具备时
+> 限制违规候选，并决定每个阶段哪些几何变量有资格竞争下一次提交，是否会影响模型
+> 提出的composition被可靠实现为周期晶体？**
 
-这比“为什么必须用DLM”更稳。DLM是解决该问题的一种具有可编程揭示顺序的机制，
-不是未经证明的唯一选择。
+Scope：composition和atom count固定，研究域为learned source采样的eligible完整
+Plans。Main RQ只研究selected support timing与commitment policy。Learned Plan source
+定义fully de novo scope；fixed model494只作downstream consequence。
 
 ## 四、推荐的三个贡献点
 
-### 贡献1：Hierarchical fully de novo formulation
+### 贡献1：Constraint-prerequisite问题形式化
 
-将完整分布分解为learned global Plan prior `p(P)`、composition-anchored realization
-`p(G|P,A(P))`和continuous refinement `p(M|B)`，并明确Plan replay只隔离downstream，
-不替代de novo Plan generation。
+不同selected checks需要不同前提信息，因此可判断时机不同；每个阶段哪些几何变量
+有资格竞争下一次提交也是一个独立、可证伪的inference决策。
 
-### 贡献2：Plan-conditioned crystal completion interface
+### 贡献2：Core masked executor
 
-把sampled欠定Plan、`7+4N` complete state、typed token schema、
-composition/count/element anchors与
-non-prefix masked completion组合成一个完整接口。创新不在任一单独mask，而在Plan
-如何实例化partial state、DLM如何生成实际自由的`6+3N` geometry tokens。
+Composition-anchored、exact-cardinality typed masked executor，在当前partial state上
+施加三项selected support，并支持group-restricted confidence-adaptive与fixed
+positional commitment policies的严格对照。
 
-### 贡献3：Plan–body–refiner因果分解
+### 贡献3：Plan-level paired empirical analysis
 
-把全局formula/coarse mode、离散body执行、连续局部refinement分离，在同一raw
-attempt ledger上定位失败来源。该分解同时解释为什么refiner能修结构但不能修
-formula，以及为什么高comp_valid不自动转化为S.U.N.。
+以完整Plan为统计单位，在相同checkpoint、NFE和call-indexed随机流下成对估计
+selected support、commitment policy及其interaction，并追踪fixed refiner的pre/post
+conversion。严格wiring和结果完成前只能写“we evaluate”。
 
 ## 五、为什么这样设计
 
 | 失败机制 | 设计选择 | 证据边界 |
 |---|---|---|
-| 固定107-token canvas产生padding/slot噪声 | `7+4N` exact length | conditional body成功；需正式消融 |
-| formula与geometry联合生成难以归因 | 七行Plan＋body | Planner仍是chemistry瓶颈 |
-| AR前缀无法回看后续约束 | masked bidirectional DLM | 需matched AR对照证明收益 |
-| partial state中不同检查在不同阶段才可计算 | lattice→X→Y→Z schedule与selected checks | 当前不包含Plan volume-bin、exact SG或全局可满足性保证 |
-| token坐标有限精度 | model494连续refiner | refiner不改变formula |
+| model-sampled condition必须在realization中保持 | composition/N/elements anchors | anchors是任务合同，不是性能贡献 |
+| selected checks需要不同前提变量 | partial-state selected support | 只覆盖zero length、opportunistic gamma和discrete PBC duplicate |
+| commitment trajectory可能改变上下文和mask机会 | 同checkpoint grouped vs positional policy | 不比较DLM与AR，不声称当前order最优 |
+| token坐标有限精度 | fixed model494 continuous refiner | inherited组件，只作downstream conversion |
 | 稳定性优化可能造成模式收缩 | 同报UN、stability与SUN | 需要统一评价器Pareto图 |
 
 ## 六、严格reviewer会攻击什么

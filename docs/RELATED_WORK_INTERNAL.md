@@ -67,8 +67,9 @@ executor reference，
 
 不足：Mat2Seq、WyFormer已经从表示和排列角度讲过类似直觉。
 
-修复：把命题收窄为`serialization order != commitment order`，并将研究对象定义为
-underdetermined Plan下的partial-state completion。
+修复：Main RQ不再断言serialization有害，而是检验两件事：selected checks在其
+prerequisites可见时介入是否有效，以及grouped confidence-adaptive policy与fixed
+positional policy是否产生不同realization yield。
 
 ### 2. Planner可能只是structured prompt
 
@@ -145,7 +146,7 @@ generation、hybrid refinement和feedback optimization；这个空位足够窄�
 ## 七、评分
 
 - 若摘要写成“we replace AR with DLM”：`5/10`；
-- 若全文围绕真实的composition-anchored geometry completion并守住边界：
-  `5.5–6/10`；
-- 若要可信`7/10`，需要matched constrained AR与经过验证的support-consistent
-  training，而不只是更强措辞。
+- 当前经Proposer–Reviewer冻结的support×commitment framing：concept约`7/10`；
+- 该评分以严格Plan-level paired evidence为条件，不要求声称DLM优于AR；
+- 若support与policy均无正向或有意义的异质性，方法故事应降至`4.5–5/10`，不能用
+  end-to-end S.U.N.替代机制证据。
