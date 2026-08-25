@@ -90,6 +90,7 @@ class ProposalDataset(Dataset):
             atom_types=torch.LongTensor(s["a_type"]),
             edge_index=torch.LongTensor(s["edge_indices"].T).contiguous(),
             to_jimages=torch.LongTensor(s["to_jimages"]),
+            sample_idx=torch.LongTensor([int(s.get("sample_idx", index))]),
         )
 
 
@@ -106,6 +107,7 @@ def empty_payload(num_evals: int) -> Dict[str, torch.Tensor | float]:
         "atom_types": torch.empty((num_evals, 0), dtype=torch.long),
         "lengths": torch.empty((num_evals, 0, 3), dtype=torch.float32),
         "angles": torch.empty((num_evals, 0, 3), dtype=torch.float32),
+        "sample_indices": torch.empty((0,), dtype=torch.long),
         "time": 0.0,
     }
 
@@ -132,6 +134,13 @@ def merge_distributed_outputs(output_dir: Path, world_size: int, total_proposals
             "atom_types": torch.cat([item["atom_types"] for item in payloads], dim=1),
             "lengths": torch.cat([item["lengths"] for item in payloads], dim=1),
             "angles": torch.cat([item["angles"] for item in payloads], dim=1),
+            "sample_indices": torch.cat(
+                [
+                    item.get("sample_indices", torch.arange(item["num_atoms"].shape[1], dtype=torch.long))
+                    for item in payloads
+                ],
+                dim=0,
+            ),
             "time": wall_time,
         }
     else:
@@ -163,6 +172,7 @@ def main() -> None:
     parser.add_argument("--crysllmgen-dir", type=Path, required=True)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--seed", type=int, default=27017)
+    parser.add_argument("--seed-by-sample-index", action="store_true")
     parser.add_argument("--timesteps", type=int, default=1000)
     parser.add_argument("--diff-steps", type=int, default=800)
     parser.add_argument("--num-evals", type=int, default=1)
@@ -216,13 +226,22 @@ def main() -> None:
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(rank_seed)
 
-    frac_coords_all, num_atoms_all, atom_types_all, lattices_all = [], [], [], []
+    frac_coords_all, num_atoms_all, atom_types_all, lattices_all, sample_indices_all = [], [], [], [], []
     start = time.time()
     with torch.no_grad():
         for batch in tqdm(dataloader, desc=f"CrysLLMGen refinement rank{rank}", disable=distributed and not is_main):
             batch = batch.to(device)
+            if args.seed_by_sample_index and int(batch.num_graphs) != 1:
+                raise ValueError("--seed-by-sample-index requires --batch-size 1")
             batch_frac, batch_num, batch_atom, batch_lat = [], [], [], []
-            for _ in range(args.num_evals):
+            sample_idx = int(batch.sample_idx.view(-1)[0].item())
+            for eval_idx in range(args.num_evals):
+                if args.seed_by_sample_index:
+                    sample_seed = int(args.seed) + sample_idx * max(1, int(args.num_evals)) + eval_idx
+                    np.random.seed(sample_seed)
+                    torch.manual_seed(sample_seed)
+                    if torch.cuda.is_available():
+                        torch.cuda.manual_seed_all(sample_seed)
                 outputs, _ = model.sample(batch, diff_steps=args.diff_steps)
                 batch_frac.append(outputs["frac_coords"].detach().cpu())
                 batch_num.append(outputs["num_atoms"].detach().cpu())
@@ -232,6 +251,7 @@ def main() -> None:
             num_atoms_all.append(torch.stack(batch_num))
             atom_types_all.append(torch.stack(batch_atom))
             lattices_all.append(torch.stack(batch_lat))
+            sample_indices_all.append(batch.sample_idx.detach().cpu().view(-1))
 
     elapsed = time.time() - start
     output_file = (
@@ -251,6 +271,7 @@ def main() -> None:
             "atom_types": atom_types,
             "lengths": lengths,
             "angles": angles,
+            "sample_indices": torch.cat(sample_indices_all, dim=0),
             "time": elapsed,
         }
     else:

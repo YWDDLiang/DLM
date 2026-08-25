@@ -278,6 +278,7 @@ def main() -> None:
     parser.add_argument("--num-samples", type=int, default=256)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--seed", type=int, default=17017)
+    parser.add_argument("--seed-by-sample-index", action="store_true")
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--cfg-scale", type=float, default=0.0)
     parser.add_argument("--remasking", default="low_confidence")
@@ -327,7 +328,7 @@ def main() -> None:
             "r5_representation": r5_representation,
             "distributed": distributed,
             "world_size": world_size,
-            "rank_seed_rule": "seed + rank",
+            "rank_seed_rule": "seed + sample_idx" if args.seed_by_sample_index else "seed + rank",
         }
     )
     if is_main:
@@ -371,6 +372,13 @@ def main() -> None:
                 batch.append(tasks[offset])
                 offset += 1
             prompts = [item["prompt"] for item in batch]
+            if args.seed_by_sample_index:
+                if len(batch) != 1:
+                    raise ValueError("--seed-by-sample-index requires --batch-size 1")
+                sample_seed = int(args.seed) + int(batch[0]["sample_idx"])
+                torch.manual_seed(sample_seed)
+                if torch.cuda.is_available():
+                    torch.cuda.manual_seed_all(sample_seed)
             gen_length = exact_body_token_count(num_atoms)
             allowed = exact_dynamic_schema_constraints(tokenizer, num_atoms) if args.schema_logit_mask else None
             prefill_maps: List[Mapping[int, List[int]]] = []
@@ -429,6 +437,7 @@ def main() -> None:
                     metrics["plan_match_success"] += 1
                     if process_one is not None:
                         graph, cif = graph_from_arrays(arrays, process_one)
+                        graph["sample_idx"] = sample_idx
                         metrics["graph_success"] += 1
                         proposal_graphs.append(graph)
                         raw_record["cif"] = cif
