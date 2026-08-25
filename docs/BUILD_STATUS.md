@@ -7,6 +7,14 @@
 - Candidate A/B在独立branch开发，默认均关闭；
 - 远端训练和fixed-256 screen尚未产生结果。
 
+2026-08-26远端执行：
+
+- Candidate A：Slurm `34698`，4×A800，control/grounding同job；
+- Candidate B：Slurm `34697`，4×A800，two-seed control/candidate同job；
+- 两项均固定每GPU 4 CPU，标准H1-A2 schedule，不使用MP网络；
+- `34693/34694`为2秒启动路径失败，`34695`为模型启动前的Bash兼容失败，
+  `34696`因慢donor builder主动取消；均不产生科学结果。
+
 ## 已完成
 
 - 独立Git repo与`codex/personal-research`分支；
