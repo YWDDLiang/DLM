@@ -162,6 +162,7 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--crysllmgen-dir", type=Path, required=True)
     parser.add_argument("--batch-size", type=int, default=128)
+    parser.add_argument("--seed", type=int, default=27017)
     parser.add_argument("--timesteps", type=int, default=1000)
     parser.add_argument("--diff-steps", type=int, default=800)
     parser.add_argument("--num-evals", type=int, default=1)
@@ -209,6 +210,11 @@ def main() -> None:
     checkpoint = torch.load(args.checkpoint, map_location=device)
     model.load_state_dict(checkpoint["model"] if "model" in checkpoint else checkpoint)
     model.eval()
+    rank_seed = int(args.seed) + int(rank)
+    np.random.seed(rank_seed)
+    torch.manual_seed(rank_seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(rank_seed)
 
     frac_coords_all, num_atoms_all, atom_types_all, lattices_all = [], [], [], []
     start = time.time()

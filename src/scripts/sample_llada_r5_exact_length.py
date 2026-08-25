@@ -277,6 +277,7 @@ def main() -> None:
     parser.add_argument("--num-atoms", type=int, default=8)
     parser.add_argument("--num-samples", type=int, default=256)
     parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--seed", type=int, default=17017)
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--cfg-scale", type=float, default=0.0)
     parser.add_argument("--remasking", default="low_confidence")
@@ -306,6 +307,10 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     process_one = None if args.skip_graph_validation else import_process_one(args.crysllmgen_dir)
     model, tokenizer = load_model_and_tokenizer(args.model_path, args.checkpoint_path, dist_info["device"])
+    rank_seed = int(args.seed) + int(rank)
+    torch.manual_seed(rank_seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(rank_seed)
     tasks = build_tasks(args)
     tasks = [task for idx, task in enumerate(tasks) if idx % world_size == rank]
     tasks.sort(key=lambda item: (int(item["plan_state"]["N"]), int(item["sample_idx"])))
@@ -316,7 +321,15 @@ def main() -> None:
         if args.body_prompt_style == "formula_only"
         else "r5_exact_dynamic_v1"
     )
-    run_config.update({"representation": "dynamic_v1", "r5_representation": r5_representation, "distributed": distributed, "world_size": world_size})
+    run_config.update(
+        {
+            "representation": "dynamic_v1",
+            "r5_representation": r5_representation,
+            "distributed": distributed,
+            "world_size": world_size,
+            "rank_seed_rule": "seed + rank",
+        }
+    )
     if is_main:
         write_json(str(args.output_dir / "run_config.json"), run_config)
         write_json(
