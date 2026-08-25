@@ -197,7 +197,7 @@ def main() -> None:
     parser.add_argument("--top-p", type=float, default=0.95)
     parser.add_argument("--top-k", type=int, default=50)
     parser.add_argument("--max-atoms", type=int, default=20)
-    parser.add_argument("--prompt-style", default="chat_formula_end_v1")
+    parser.add_argument("--prompt-style", default="h1_rich_plan_v1")
     parser.add_argument("--include-sample-id", dest="include_sample_id", action="store_true", default=True)
     parser.add_argument("--no-include-sample-id", dest="include_sample_id", action="store_false")
     parser.add_argument("--seed", type=int, default=17)
