@@ -10,6 +10,33 @@
 得到的正向结果。每个机制问题都允许零结果和负结果；若出现，必须删除对应的性能
 claim。
 
+## 2026-08-26 Candidate终态更新
+
+双候选实验已经给出负结论：
+
+- Candidate B difficulty-decomposed Planner在两个Plan-256 seed中均使projected
+  Strict/Meta chemistry mix下降，按规则停止；
+- Candidate A counterfactual grounding完成4次独立fixed-256、逐sample_idx配对的
+  control/candidate比较；
+- Candidate A在body、Direct joint、novelty和Strict方向上没有退化，pooled Strict
+  known为`103/985 → 105/988`（`+0.171 pp`）；
+- 但pooled Meta known为`472/985 → 460/988`（`-1.360 pp`），未通过`-1.0 pp`
+  非劣门；Strict exact McNemar `p=0.8506`，也没有显著增益。
+
+因此：
+
+> **Counterfactual grounding不能晋升为已成立的论文技术贡献；双候选计划没有解决
+> “最后一个新增技术贡献”缺口。标准H1-A2继续作为fallback。**
+
+这不否定Main RQ：固定同一Plan cohort后，proposal mix严格相同，仍能观察到realization
+结果变化；但该变化不是可靠的正向S.U.N.提升。它支持“proposal与realization必须分开
+评价”的科学动机，不支持“我们的grounding loss提高了最终realization”的方法claim。
+
+完整内部证据见
+[`GROUNDING_FINAL_REPEAT4.md`](../results/remote_screens/GROUNDING_FINAL_REPEAT4.md)。
+Public headline继续冻结为`105/1000 Strict、488/1000 Meta`，不得用本次Candidate的
+`105/1024`替换或混称。
+
 ## 最终Main Research Question
 
 > **In generative materials discovery, to what extent do gains in discovery
@@ -354,6 +381,12 @@ cohort-level functions，必须在固定size/mix下单独重算，不能进入�
 Contribution 3在distribution、standardized accounting和fixed-condition结果完成前
 只能写“we evaluate”，不能写“we demonstrate”。
 
+Candidate A/B终态后还必须增加一条限制：上述三点是当前最稳妥的论文层级，
+不是“两个新技术模块均已验证”。Specification-compiled exact-cardinality executor仍是
+核心技术贡献；counterfactual grounding和difficulty-decomposed Planner均不能列入摘要、
+contribution list或主方法图。若投稿目标要求另一个独立而正向的算法贡献，当前证据尚未
+满足，不能靠包装负结果补齐。
+
 ## 最通俗故事
 
 > Aggregate discovery yield同时混合了“系统提出/探索什么材料规格”和“它能否把这些
@@ -369,6 +402,10 @@ Contribution 3在distribution、standardized accounting和fixed-condition结果�
 
 - H1-A2 Strict S.U.N.：`105/1000 = 10.50%`；
 - H1-A2 Meta S.U.N.：`488/1000 = 48.80%`。
+
+Candidate A四重复只作为内部方法筛选：Control/Candidate pooled Strict known为
+`10.46%/10.63%`，Meta known为`47.92%/46.56%`。由于Meta非劣失败，它不进入
+未来论文主表的“proposed method”行，也不改变105/488。
 
 若该headline不是具有1:1逐attempt记录的raw cohort，则proposal–realization分析必须使用
 单独命名的raw standard-H1-A2 cohort；不得为105/488构造伪microdata。
@@ -412,7 +449,9 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 - 与当前masked-completion crystal RQ匹配的AR executor comparison；
 - DLM→refiner conversion和cohort-level uniqueness重算；
 - 最终核对CrysLLMGen约`9%/44%`和public精确记录的口径；
-- 对所有负向或证据不足类别完整披露。
+- 对所有负向或证据不足类别完整披露；
+- 若仍要求第二个独立算法贡献，需要新的方法假设；不得继续把已判负的Candidate A/B
+  扩写成正贡献。
 
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。

@@ -5,24 +5,37 @@
 - 冻结H1-A2保持只读fallback；
 - 历史难度分析使用纯Python实现并去除evaluator replay；
 - Candidate A/B在独立branch开发，默认均关闭；
-- 远端训练和fixed-256 screen尚未产生结果。
+- 两个候选的远端screen均已完成并判负，公开H1-A2结果保持不变。
 
-2026-08-26远端执行：
+2026-08-26 Candidate B：
 
-- Candidate A：Slurm `34700`，4×A800，control/grounding同job；
-- Candidate B：Slurm `34697`，4×A800，two-seed control/candidate同job；
-- 两项均固定每GPU 4 CPU，标准H1-A2 schedule，不使用MP网络；
-- `34693/34694`为2秒启动路径失败，`34695`为模型启动前的Bash兼容失败，
-  `34696`因慢donor builder主动取消，`34698`因sidecar显式plan_state缺失而
-  在训练前取消；均不产生科学结果。
+- `34697`完成Planner训练，`34704`完成two-seed Plan-256；
+- 两个seed均少1个parsed Plan，projected Strict/Meta chemistry mix均下降；
+- 按预注册选择规则停止，不进入DLM/refiner downstream，不重跑。
+
+2026-08-26 Candidate A：
+
+- `34700`完成control/counterfactual-grounding训练；final factual CE为
+  `1.289004`与`1.288558`，candidate true-vs-counterfactual mean margin为`+0.7592`；
+- `34711` fixed-256 screen两臂均为`256 parsed / 253 body / 253 refined`；
+- `34714`完成4次独立fixed-256、逐sample_idx配对body/refine；
+- `34721`完成8-cell Direct、N/U、CHGNet，随后在登录节点完成fresh official
+  `GGA_GGA+U` hull；
+- pooled Strict known差`+0.171 pp`，但Meta known差`-1.360 pp`，低于
+  `-1.0 pp`非劣门，因此Candidate A最终判负；
+- 完整证据见
+  [`GROUNDING_FINAL_REPEAT4.md`](../results/remote_screens/GROUNDING_FINAL_REPEAT4.md)。
+
+工程谱系：`34700`训练后导入失败、`34710`环境预检失败、`34719`因冻结V3只接受
+1000/1200分母而在科学评价前失败；它们均被最小恢复，成功阶段未重跑。fixed-256
+adapter只放宽active denominator，不改变Direct、N/U、CHGNet、hull或S.U.N.阈值。
 
 当前决定：
 
-- Candidate B完成`34697`训练和`34704` Plan-256后停止；两个seed均少1个
-  parsed Plan，projected Strict/Meta mix均下降，不进入downstream；
-- Candidate A继续`34700`，step500 factual val CE为1.6240，对照为1.9153。
-  Preliminary证据见
-  [`GROUNDING_34700_PRELIMINARY.md`](../results/remote_screens/GROUNDING_34700_PRELIMINARY.md)。
+- Candidate A/B均不进入public方法贡献；
+- 标准H1-A2继续作为论文fallback；
+- public headline继续是`105/1000 Strict、488/1000 Meta`；
+- 论文“最后一个新增技术贡献”目前仍未由这两个候选解决。
 
 ## 已完成
 
@@ -37,11 +50,11 @@
 
 ## 等待A800
 
-- Conda环境与依赖版本；
+- 对外Conda环境文件与依赖版本的最终清理；
 - 全部checkpoint与完整MP-20数据；
 - H1-A2/R03 Plan文件和逐ordinal seed ledger；
 - B0与model_494训练seed证据；
-- 最终评价环境与相对路径适配器；
-- 在真实A800上完成端到端smoke与256×4验证。
+- 将内部fixed-256评价adapter整理成对外相对路径版本；
+- 发布资产安装后再做公开repo的一键端到端smoke。
 
 所有A800绝对源路径只填写在`ASSET_TRANSFER_LEDGER.md`，不会同步到公开repo。

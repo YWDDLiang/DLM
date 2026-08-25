@@ -1,0 +1,99 @@
+{
+  "cell_count": 8,
+  "cells": [
+    {
+      "attempts": 256,
+      "cell_id": "r1_control",
+      "labels": {
+        "bytes": 132549,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat01/control/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "531db8b23ebcc6d6458a66ccdfdfa252cd99e3c42b944f9e45d53f71774bdb4e"
+      },
+      "reconstructed": 255,
+      "unique_chemsys": 250
+    },
+    {
+      "attempts": 256,
+      "cell_id": "r1_candidate",
+      "labels": {
+        "bytes": 133593,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat01/candidate/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "35675937fc3e925cd0d7bcbaebee4d478bbd03dac68391277b034d94bb98bd5d"
+      },
+      "reconstructed": 255,
+      "unique_chemsys": 250
+    },
+    {
+      "attempts": 256,
+      "cell_id": "r2_control",
+      "labels": {
+        "bytes": 132514,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat02/control/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "a36409ae3c7f6b4ade770699c320b86dae5b353d55271a1124f7c16492df761f"
+      },
+      "reconstructed": 254,
+      "unique_chemsys": 249
+    },
+    {
+      "attempts": 256,
+      "cell_id": "r2_candidate",
+      "labels": {
+        "bytes": 133596,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat02/candidate/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "3996545071b98106cbb293cbbfacb4a0c621007468552a68e198135247869559"
+      },
+      "reconstructed": 255,
+      "unique_chemsys": 250
+    },
+    {
+      "attempts": 256,
+      "cell_id": "r3_control",
+      "labels": {
+        "bytes": 132556,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat03/control/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "78bd02ccdf01eaab656a2159f2f4657a043a2b2e23354d8c762f2fc984d7277b"
+      },
+      "reconstructed": 255,
+      "unique_chemsys": 250
+    },
+    {
+      "attempts": 256,
+      "cell_id": "r3_candidate",
+      "labels": {
+        "bytes": 133597,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat03/candidate/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "0f483a2f0d373b5348be5732e4b2a7e8f47322abfffecb6b905c9fbdb5381c2d"
+      },
+      "reconstructed": 255,
+      "unique_chemsys": 250
+    },
+    {
+      "attempts": 256,
+      "cell_id": "r4_control",
+      "labels": {
+        "bytes": 132452,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat04/control/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "2a572b341f477a4195e13c8b88b1a51263a22eae4901486c76cb33dc772d929c"
+      },
+      "reconstructed": 253,
+      "unique_chemsys": 248
+    },
+    {
+      "attempts": 256,
+      "cell_id": "r4_candidate",
+      "labels": {
+        "bytes": 133560,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/repeat04/candidate/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+        "sha256": "bdf9cb074bcc6d7e78d35962ff93b433af51f156c7e9b6d4b66e5bf38b292895"
+      },
+      "reconstructed": 255,
+      "unique_chemsys": 250
+    }
+  ],
+  "fresh_official_query": true,
+  "historical_cache_reuse": false,
+  "schema": "h1a2_epoch2_exactplan_official_input_manifest_v1",
+  "stability_scope": "all_reconstructed_before_NU_intersection",
+  "wanted_chemsys_count": 251,
+  "wanted_chemsys_sha256": "fa399e8f77f7d4e9bdb26babb0f2d3471b54bb1c8eaac2deb1b679156902708e"
+}

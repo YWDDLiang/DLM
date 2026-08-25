@@ -1,0 +1,72 @@
+{
+  "additional_criteria": {
+    "thermo_types": [
+      "GGA_GGA+U"
+    ]
+  },
+  "all_resolved_elemental_references_present": true,
+  "all_resolved_phase_diagrams_constructed": true,
+  "api_key_carrier_destroyed_before_first_query": true,
+  "api_key_serialized": false,
+  "august_cache_rows_reused": 0,
+  "compatible_only": true,
+  "completed_at_utc": "2026-08-25T22:30:32.241413+00:00",
+  "database_version": "2026.04.13",
+  "fresh_empty_cache": true,
+  "historical_cache_rows_reused": 0,
+  "inputs": {
+    "input_manifest": {
+      "bytes": 4609,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/inputs/input_manifest.json",
+      "sha256": "51b2a451ad9d25c135ff94cda513a5c2e4e8aee138e8dfe445da6bb4fbe520b2"
+    },
+    "wanted_chemsys": {
+      "bytes": 16823,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/inputs/wanted_chemsys.jsonl",
+      "sha256": "ecddc5f04e68c7548a8ff71e5099ef490b0108082c76cc5861b6ceb60ed77990"
+    }
+  },
+  "local_compatibility_reprocessing": false,
+  "manual_transport_retries": 0,
+  "max_http_requests_per_second": 8,
+  "max_transport_attempts": 5,
+  "outputs": {
+    "full_mson_snapshot": {
+      "bytes": 34078466,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/official_mp_cache/official_full_entries.jsonl.gz",
+      "sha256": "e7f678fec78865408639fb71c4db06df73587789d807f839a07bb326040679b4"
+    },
+    "query_audit": {
+      "bytes": 169975,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/official_mp_cache/query_audit.jsonl",
+      "sha256": "c1d10a390935cdfc04920dd3315b1fa765f909cc390f47058c1f107f0b379853"
+    },
+    "slim_evaluation_cache": {
+      "bytes": 4702068,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/official_mp_cache/official_slim_cache.jsonl",
+      "sha256": "10bde44a6b0fe64c507986d94dd6ba48e7d4f69b7a4563b62d6e332200269519"
+    },
+    "unresolved_chemsys": {
+      "bytes": 1502,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/grounding_repeat4_eval_34721/official_mp_cache/unresolved_chemsys.jsonl",
+      "sha256": "00e91b20a183fdbb2c337cd2eecfbc03c8adde59f4a136c73f5ac8a053d05e53"
+    }
+  },
+  "package_versions": {
+    "emmet-core": "0.85.1",
+    "monty": "2025.3.3",
+    "mp-api": "0.45.13",
+    "pymatgen": "2025.6.14"
+  },
+  "python_executable": "/public/home/jiaosz/ywliang/ai4s/.venvs/mp_api_0_45_13_emmet0_85_1_py310_v4_system/bin/python",
+  "python_version": "3.10.18",
+  "query_count": 251,
+  "query_method": "mp_api.client.MPRester.get_entries_in_chemsys",
+  "query_resolved": 243,
+  "query_status": "complete_with_explicit_unresolved",
+  "query_unresolved": 8,
+  "schema": "h1_official_mp_gga_u_clean_cache_manifest_v1",
+  "started_at_utc": "2026-08-25T22:17:47.195555+00:00",
+  "thermo_type": "GGA_GGA+U",
+  "workers": 6
+}
