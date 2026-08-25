@@ -69,6 +69,7 @@ from crystal_dlm.transformers_compat import (
     ensure_create_bidirectional_mask,
     ensure_llada2_rope_parameters,
 )
+from h1a2_repro.counterfactual import geometry_relative_positions, pairwise_logistic_from_margins
 
 
 MASK_POLICY_TO_ID = {
@@ -361,14 +362,32 @@ class JsonlSftDataset(Dataset):
         prompt_length = len(
             self.tokenizer(prompt_text, add_special_tokens=False)["input_ids"]
         )
-        return {
+        item = {
             "input_ids": torch.tensor(input_ids, dtype=torch.long),
             "prompt_length": min(prompt_length, len(input_ids)),
             "mask_policy_id": mask_policy_id(row.get("mask_policy") or row.get("sft_mask_policy")),
             "loss_profile_id": loss_profile_id(row.get("loss_profile")),
             "module_id": int(row.get("module_id") or MODULE_TO_ID.get(str(row.get("module", "")), 0)),
             "sample_weight": float(row.get("sample_weight", 1.0) or 1.0),
+            "num_atoms": int(row.get("num_atoms") or (row.get("plan_state") or {}).get("N") or 0),
+            "grounding_eligible": bool(row.get("counterfactual_grounding_eligible", False)),
         }
+        counterfactual_prompt = row.get("counterfactual_prompt")
+        if counterfactual_prompt:
+            cf_prompt_text = str(counterfactual_prompt).rstrip() + "\n"
+            cf_ids = self.tokenizer(
+                cf_prompt_text + row["answer"],
+                add_special_tokens=False,
+                truncation=True,
+                max_length=self.max_length,
+            )["input_ids"]
+            cf_prompt_length = len(self.tokenizer(cf_prompt_text, add_special_tokens=False)["input_ids"])
+            cf_prompt_length = min(cf_prompt_length, len(cf_ids))
+            if input_ids[min(prompt_length, len(input_ids)) :] != cf_ids[cf_prompt_length:]:
+                raise ValueError("factual and counterfactual prompts do not retain an identical answer suffix")
+            item["counterfactual_input_ids"] = torch.tensor(cf_ids, dtype=torch.long)
+            item["counterfactual_prompt_length"] = cf_prompt_length
+        return item
 
     def sample_weights(
         self,
@@ -486,7 +505,10 @@ class DataCollator:
         self.tokenizer = tokenizer
 
     def __call__(self, batch: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
-        max_len = max(item["input_ids"].shape[0] for item in batch)
+        max_len = max(
+            max(item["input_ids"].shape[0], item.get("counterfactual_input_ids", item["input_ids"]).shape[0])
+            for item in batch
+        )
         input_ids = torch.full(
             (len(batch), max_len),
             self.tokenizer.pad_token_id,
@@ -498,6 +520,15 @@ class DataCollator:
         loss_profile_ids = torch.zeros((len(batch),), dtype=torch.long)
         module_ids = torch.zeros((len(batch),), dtype=torch.long)
         sample_weights = torch.ones((len(batch),), dtype=torch.float32)
+        counterfactual_input_ids = torch.full(
+            (len(batch), max_len),
+            self.tokenizer.pad_token_id,
+            dtype=torch.long,
+        )
+        counterfactual_attention_mask = torch.zeros((len(batch), max_len), dtype=torch.long)
+        counterfactual_prompt_lengths = torch.zeros((len(batch),), dtype=torch.long)
+        grounding_eligible = torch.zeros((len(batch),), dtype=torch.bool)
+        num_atoms = torch.zeros((len(batch),), dtype=torch.long)
         for i, item in enumerate(batch):
             ids = item["input_ids"]
             input_ids[i, : ids.shape[0]] = ids
@@ -507,6 +538,12 @@ class DataCollator:
             loss_profile_ids[i] = int(item.get("loss_profile_id", LOSS_PROFILE_TO_ID["fixed_slot"]))
             module_ids[i] = int(item.get("module_id", 0))
             sample_weights[i] = float(item.get("sample_weight", 1.0) or 1.0)
+            cf_ids = item.get("counterfactual_input_ids", ids)
+            counterfactual_input_ids[i, : cf_ids.shape[0]] = cf_ids
+            counterfactual_attention_mask[i, : cf_ids.shape[0]] = 1
+            counterfactual_prompt_lengths[i] = int(item.get("counterfactual_prompt_length", item["prompt_length"]))
+            grounding_eligible[i] = bool(item.get("grounding_eligible", False))
+            num_atoms[i] = int(item.get("num_atoms", 0))
         return {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
@@ -515,6 +552,11 @@ class DataCollator:
             "loss_profile_ids": loss_profile_ids,
             "module_ids": module_ids,
             "sample_weights": sample_weights,
+            "counterfactual_input_ids": counterfactual_input_ids,
+            "counterfactual_attention_mask": counterfactual_attention_mask,
+            "counterfactual_prompt_lengths": counterfactual_prompt_lengths,
+            "grounding_eligible": grounding_eligible,
+            "num_atoms": num_atoms,
         }
 
 
@@ -1618,7 +1660,7 @@ def build_answer_position_weights(
     return weights
 
 
-def compute_loss(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, Any]) -> torch.Tensor:
+def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, Any]) -> Dict[str, Any]:
     input_ids = batch["input_ids"]
     attention_mask = batch["attention_mask"]
     prompt_lengths = batch["prompt_lengths"]
@@ -1634,7 +1676,8 @@ def compute_loss(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, A
     outputs = model(input_ids=processed["noisy"], attention_mask=attention_mask)
     masked = processed["masked_indices"]
     if not masked.any():
-        return outputs.logits.sum() * 0.0
+        zero = outputs.logits.sum() * 0.0
+        return {"loss": zero, "processed": processed, "outputs": outputs}
     max_target = int(input_ids[masked].max().detach().cpu())
     if max_target >= outputs.logits.shape[-1]:
         raise RuntimeError(
@@ -1665,9 +1708,94 @@ def compute_loss(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, A
     sample_loss.scatter_add_(0, sample_indices, weighted_token_loss)
     sample_weights = batch.get("sample_weights")
     if sample_weights is None:
-        return sample_loss.sum() / input_ids.shape[0]
-    sample_weights = sample_weights.to(device=input_ids.device, dtype=sample_loss.dtype).clamp_min(0.0)
-    return (sample_loss * sample_weights).sum() / sample_weights.sum().clamp_min(1.0)
+        task_loss = sample_loss.sum() / input_ids.shape[0]
+    else:
+        sample_weights = sample_weights.to(device=input_ids.device, dtype=sample_loss.dtype).clamp_min(0.0)
+        task_loss = (sample_loss * sample_weights).sum() / sample_weights.sum().clamp_min(1.0)
+    return {"loss": task_loss, "processed": processed, "outputs": outputs}
+
+
+def compute_loss(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, Any]) -> torch.Tensor:
+    return compute_loss_components(model, batch, loss_config)["loss"]
+
+
+def counterfactual_grounding_loss(
+    model,
+    batch: Dict[str, torch.Tensor],
+    components: Dict[str, Any],
+    *,
+    temperature: float,
+) -> Dict[str, Any]:
+    positive_logits = components["outputs"].logits
+    positive_mask = components["processed"]["masked_indices"]
+    eligible = batch["grounding_eligible"].bool()
+    zero = positive_logits.sum() * 0.0
+    if not eligible.any():
+        return {"loss": zero, "mean_margin": zero.detach(), "eligible_samples": 0}
+
+    counterfactual_ids = batch["counterfactual_input_ids"]
+    counterfactual_attention = batch["counterfactual_attention_mask"]
+    counterfactual_prompt_lengths = batch["counterfactual_prompt_lengths"]
+    positive_prompt_lengths = batch["prompt_lengths"]
+    counterfactual_mask = torch.zeros_like(counterfactual_ids, dtype=torch.bool)
+    aligned: list[list[tuple[int, int]]] = [[] for _ in range(counterfactual_ids.shape[0])]
+
+    for sample_index in range(counterfactual_ids.shape[0]):
+        if not bool(eligible[sample_index].item()):
+            continue
+        atoms = int(batch["num_atoms"][sample_index].item())
+        if atoms <= 0:
+            continue
+        geometry = set(geometry_relative_positions(atoms))
+        positive_prompt = int(positive_prompt_lengths[sample_index].item())
+        counterfactual_prompt = int(counterfactual_prompt_lengths[sample_index].item())
+        for positive_position in torch.nonzero(positive_mask[sample_index], as_tuple=False).flatten().tolist():
+            relative_position = int(positive_position) - positive_prompt
+            if relative_position not in geometry:
+                continue
+            counterfactual_position = counterfactual_prompt + relative_position
+            if counterfactual_position >= counterfactual_ids.shape[1]:
+                raise ValueError("counterfactual answer is shorter than the factual answer")
+            if not bool(counterfactual_attention[sample_index, counterfactual_position].item()):
+                raise ValueError("counterfactual geometry position is outside its attention mask")
+            if int(batch["input_ids"][sample_index, positive_position].item()) != int(
+                counterfactual_ids[sample_index, counterfactual_position].item()
+            ):
+                raise ValueError("factual and counterfactual geometry targets are not identical")
+            counterfactual_mask[sample_index, counterfactual_position] = True
+            aligned[sample_index].append((int(positive_position), int(counterfactual_position)))
+
+    if not counterfactual_mask.any():
+        return {"loss": zero, "mean_margin": zero.detach(), "eligible_samples": 0}
+    counterfactual_noisy = torch.where(
+        counterfactual_mask,
+        torch.full_like(counterfactual_ids, MASK_TOKEN_ID),
+        counterfactual_ids,
+    )
+    counterfactual_logits = model(
+        input_ids=counterfactual_noisy,
+        attention_mask=counterfactual_attention,
+    ).logits
+    margins = []
+    for sample_index, pairs in enumerate(aligned):
+        if not pairs:
+            continue
+        positive_positions = torch.tensor([pair[0] for pair in pairs], device=positive_logits.device)
+        counterfactual_positions = torch.tensor([pair[1] for pair in pairs], device=positive_logits.device)
+        targets = batch["input_ids"][sample_index, positive_positions]
+        positive_logp = F.log_softmax(positive_logits[sample_index, positive_positions], dim=-1).gather(
+            1, targets.unsqueeze(1)
+        ).squeeze(1)
+        counterfactual_logp = F.log_softmax(
+            counterfactual_logits[sample_index, counterfactual_positions], dim=-1
+        ).gather(1, targets.unsqueeze(1)).squeeze(1)
+        margins.append((positive_logp - counterfactual_logp).mean())
+    margin_tensor = torch.stack(margins)
+    return {
+        "loss": pairwise_logistic_from_margins(margin_tensor, temperature=temperature),
+        "mean_margin": margin_tensor.detach().mean(),
+        "eligible_samples": len(margins),
+    }
 
 
 @torch.no_grad()
@@ -2084,6 +2212,12 @@ def main() -> None:
         help="Use primitive structure before dynamic fixed-slot encoding.",
     )
     parser.add_argument("--data-seed", type=int, default=20260515)
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Optional explicit training RNG root. Omitted preserves the historical trainer behavior.",
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--max-length", type=int, default=256)
     parser.add_argument(
@@ -2119,6 +2253,18 @@ def main() -> None:
         type=float,
         default=1.0,
         help="Relative weight for aligning output/head rows in the element-token semantic regularizer.",
+    )
+    parser.add_argument(
+        "--counterfactual-grounding-weight",
+        type=float,
+        default=0.0,
+        help="Pairwise factual-vs-counterfactual geometry loss weight. Zero preserves H1-A2 training.",
+    )
+    parser.add_argument(
+        "--counterfactual-grounding-temperature",
+        type=float,
+        default=1.0,
+        help="Positive temperature for the pairwise grounding loss.",
     )
     parser.add_argument(
         "--save-embedding-layers",
@@ -2216,6 +2362,12 @@ def main() -> None:
     )
     parser.add_argument("--modules-to-save", default="model.transformer.wte,model.transformer.ff_out")
     args = parser.parse_args()
+    if args.counterfactual_grounding_weight < 0:
+        parser.error("counterfactual-grounding-weight must be non-negative")
+    if args.counterfactual_grounding_temperature <= 0:
+        parser.error("counterfactual-grounding-temperature must be positive")
+    if args.counterfactual_grounding_weight > 0 and args.representation != "dynamic_v1":
+        parser.error("counterfactual grounding is implemented only for exact dynamic_v1 bodies")
     if args.answer_token_count is None:
         args.answer_token_count = infer_answer_token_count(args.data_dir)
     if args.representation == "dynamic_v1" and args.answer_token_count is None:
@@ -2226,6 +2378,12 @@ def main() -> None:
     dist_info = init_distributed()
     is_main = dist_info["is_main"]
     device = dist_info["device"]
+    if args.seed is not None:
+        process_seed = int(args.seed) + int(dist_info["rank"])
+        random.seed(process_seed)
+        torch.manual_seed(process_seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(process_seed)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     log_path = args.output_dir / "training_log.jsonl"
     run_config = vars(args).copy()
@@ -2372,6 +2530,13 @@ def main() -> None:
         train_ds.rows = train_ds.rows[: args.limit_train]
     if args.limit_val:
         val_ds.rows = val_ds.rows[: args.limit_val]
+    grounding_rows = sum(
+        int(bool(row.get("counterfactual_grounding_eligible", False)))
+        for row in getattr(train_ds, "rows", [])
+        if isinstance(row, dict)
+    )
+    if args.counterfactual_grounding_weight > 0 and grounding_rows == 0:
+        raise ValueError("counterfactual grounding is enabled but the train dataset has no eligible rows")
     collator = DataCollator(tokenizer)
     sample_weight_multipliers = parse_sample_weight_multipliers(args.sample_weight_multipliers)
     raw_train_weights = (
@@ -2478,6 +2643,12 @@ def main() -> None:
                                 else element_alignment_targets.get("report", {}).get("mean_input_cosine_to_alias_target")
                             ),
                         },
+                        "counterfactual_grounding": {
+                            "enabled": bool(args.counterfactual_grounding_weight > 0),
+                            "weight": args.counterfactual_grounding_weight,
+                            "temperature": args.counterfactual_grounding_temperature,
+                            "eligible_train_rows": grounding_rows,
+                        },
                     },
                     ensure_ascii=False,
                 )
@@ -2501,19 +2672,29 @@ def main() -> None:
                     else nullcontext()
                 )
                 with sync_context:
-                    task_loss = compute_loss(model, batch, loss_config)
+                    grounding = None
+                    if args.counterfactual_grounding_weight > 0:
+                        components = compute_loss_components(model, batch, loss_config)
+                        task_loss = components["loss"]
+                        grounding = counterfactual_grounding_loss(
+                            model,
+                            batch,
+                            components,
+                            temperature=args.counterfactual_grounding_temperature,
+                        )
+                    else:
+                        task_loss = compute_loss(model, batch, loss_config)
                     alignment_component = element_semantic_alignment_loss(
                         model,
                         element_alignment_targets,
                         output_weight=args.element_token_alignment_output_weight,
                     )
+                    combined_loss = task_loss
+                    if grounding is not None:
+                        combined_loss = combined_loss + float(args.counterfactual_grounding_weight) * grounding["loss"]
                     if alignment_component is not None:
-                        loss = (
-                            task_loss
-                            + float(args.element_token_alignment_loss_weight) * alignment_component
-                        ) / args.grad_accum
-                    else:
-                        loss = task_loss / args.grad_accum
+                        combined_loss = combined_loss + float(args.element_token_alignment_loss_weight) * alignment_component
+                    loss = combined_loss / args.grad_accum
                     loss.backward()
                 if (micro_step + 1) % args.grad_accum != 0:
                     continue
@@ -2530,6 +2711,9 @@ def main() -> None:
                         if alignment_component is None
                         else float(alignment_component.detach().cpu())
                     )
+                    grounding_value = None if grounding is None else float(grounding["loss"].detach().cpu())
+                    grounding_margin = None if grounding is None else float(grounding["mean_margin"].cpu())
+                    grounding_samples = 0 if grounding is None else int(grounding["eligible_samples"])
                     log_handle.write(
                         json.dumps(
                             {
@@ -2539,6 +2723,9 @@ def main() -> None:
                                 "loss": float(loss.detach().cpu()) * args.grad_accum,
                                 "task_loss": float(task_loss.detach().cpu()),
                                 "element_alignment_loss": alignment_value,
+                                "counterfactual_grounding_loss": grounding_value,
+                                "counterfactual_grounding_margin": grounding_margin,
+                                "counterfactual_grounding_samples": grounding_samples,
                                 "lr": optimizer.param_groups[0]["lr"],
                             },
                             ensure_ascii=False,
