@@ -37,21 +37,30 @@ def plan_key(plan: Mapping[str, Any]) -> str:
 
 
 def choose_donors(plans: Sequence[Mapping[str, Any]], *, seed: int = 17) -> list[int | None]:
-    groups: dict[tuple[str, str, str], list[int]] = defaultdict(list)
+    groups: dict[tuple[str, str, str], dict[tuple[str, str, str], list[int]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
     for index, plan in enumerate(plans):
-        groups[plan_stratum(plan)].append(index)
+        groups[plan_stratum(plan)][structural_tuple(plan)].append(index)
+    alternatives: dict[tuple[str, str, str], dict[tuple[str, str, str], tuple[tuple[str, str, str], ...]]] = {}
+    for stratum, buckets in groups.items():
+        tuples = tuple(sorted(buckets))
+        alternatives[stratum] = {
+            current: tuple(value for value in tuples if value != current)
+            for current in tuples
+        }
     result: list[int | None] = []
-    for index, plan in enumerate(plans):
-        candidates = [
-            donor
-            for donor in groups[plan_stratum(plan)]
-            if donor != index and structural_tuple(plans[donor]) != structural_tuple(plan)
-        ]
-        if not candidates:
+    for plan in plans:
+        stratum = plan_stratum(plan)
+        current = structural_tuple(plan)
+        donor_tuples = alternatives[stratum][current]
+        if not donor_tuples:
             result.append(None)
             continue
         digest = sha256(f"{seed}:{plan_key(plan)}".encode("utf-8")).hexdigest()
-        result.append(candidates[int(digest[:16], 16) % len(candidates)])
+        donor_tuple = donor_tuples[int(digest[:16], 16) % len(donor_tuples)]
+        candidates = groups[stratum][donor_tuple]
+        result.append(candidates[int(digest[16:32], 16) % len(candidates)])
     return result
 
 
