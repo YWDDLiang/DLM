@@ -10,7 +10,8 @@
 #SBATCH --output=h1a2-grounding-%j.out
 
 set -Eeuo pipefail
-source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+readonly CANDIDATE_ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT before sbatch}"
+source "${CANDIDATE_ROOT}/slurm/_common.sh"
 activate_environment
 
 readonly MODEL="${H1A2_DLM_MODEL_PATH:-${REPO_ROOT}/checkpoints/dlm/base}"
