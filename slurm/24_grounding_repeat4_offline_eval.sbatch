@@ -20,10 +20,11 @@ readonly R03E="${V3_RUN}/frozen/best/workstreams/plangraph_dlm_iclr_20260731/exe
 readonly GT_CSV="${PROJECT}/reference/crysllmgen/data/mp_20/test.csv"
 readonly BASE_RELAX_CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl"
 readonly EVAL_RUN="${ROOT}/runs/grounding_repeat4_eval_${SLURM_JOB_ID}"
+readonly EVAL_RUNTIME="${ROOT}/eval_runtime"
 readonly DLM_SEEDS=(17117 17217 17317 17417)
 readonly REFINER_SEEDS=(27117 27217 27317 27417)
 
-for path in "${REPEAT_RUN}/_SUCCESS" "${V3_SOURCE}/CONFIG.json" "${R03E}/runtime/scripts/a800/run_crysllmgen_metrics.py" "${GT_CSV}" "${BASE_RELAX_CACHE}"; do
+for path in "${REPEAT_RUN}/_SUCCESS" "${V3_SOURCE}/CONFIG.json" "${EVAL_RUNTIME}/run_full_reconstructed_eval.py" "${EVAL_RUNTIME}/collect_official_inputs.py" "${R03E}/runtime/scripts/a800/run_crysllmgen_metrics.py" "${GT_CSV}" "${BASE_RELAX_CACHE}"; do
   [[ -e "${path}" ]] || { echo "missing ${path}" >&2; exit 2; }
 done
 mkdir -p "${EVAL_RUN}/logs"
@@ -59,8 +60,8 @@ run_cell() {
     >"${EVAL_RUN}/logs/r${repeat}-${arm}-direct.out" 2>"${EVAL_RUN}/logs/r${repeat}-${arm}-direct.err" &
   local direct_pid="$!"
   env CUDA_VISIBLE_DEVICES="${gpu}" OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 \
-    H1_ACTIVE_DENOMINATOR=256 PYTHONPATH="${V3_SOURCE}:${R03E}/runtime" \
-    "${PYTHON}" "${V3_SOURCE}/run_full_reconstructed_eval.py" \
+    H1_ACTIVE_DENOMINATOR=256 PYTHONPATH="${EVAL_RUNTIME}:${R03E}/runtime" \
+    "${PYTHON}" "${EVAL_RUNTIME}/run_full_reconstructed_eval.py" \
     --arm "${arm}" --repeat 0 \
     --generation-jsonl "${cell_root}/generation/generation.jsonl" \
     --config "${V3_SOURCE}/CONFIG.json" --r03e-root "${R03E}" \
@@ -89,8 +90,8 @@ for repeat in 1 2 3 4; do
     cells+=(--cell "${cell_id}=${labels}")
   done
 done
-env H1_ACTIVE_DENOMINATOR=256 PYTHONPATH="${V3_SOURCE}" \
-  "${PYTHON}" "${V3_SOURCE}/collect_official_inputs.py" \
+env H1_ACTIVE_DENOMINATOR=256 PYTHONPATH="${EVAL_RUNTIME}" \
+  "${PYTHON}" "${EVAL_RUNTIME}/collect_official_inputs.py" \
   --run-root "${EVAL_RUN}" "${cells[@]}" \
   >"${EVAL_RUN}/logs/collect-official-inputs.out" 2>"${EVAL_RUN}/logs/collect-official-inputs.err"
 
