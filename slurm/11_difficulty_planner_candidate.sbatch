@@ -10,7 +10,8 @@
 #SBATCH --output=h1a2-difficulty-plan-%j.out
 
 set -Eeuo pipefail
-source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/_common.sh"
+readonly CANDIDATE_ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT before sbatch}"
+source "${CANDIDATE_ROOT}/slurm/_common.sh"
 activate_environment
 
 readonly MODEL="${H1A2_PLANNER_MODEL_PATH:-${REPO_ROOT}/checkpoints/planner/base}"
@@ -98,4 +99,3 @@ wait "${p0}"; wait "${p1}"; wait "${p2}"; wait "${p3}"
 
 touch "${RUN_DIR}/_SUCCESS"
 log "Difficulty Planner control/candidate training and Plan-256 screens complete: ${RUN_DIR}"
-
