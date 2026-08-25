@@ -1,5 +1,12 @@
 # 个人repo构建状态
 
+## Proposal/Realization双候选
+
+- 冻结H1-A2保持只读fallback；
+- 历史难度分析使用纯Python实现并去除evaluator replay；
+- Candidate A/B在独立branch开发，默认均关闭；
+- 远端训练和fixed-256 screen尚未产生结果。
+
 ## 已完成
 
 - 独立Git repo与`codex/personal-research`分支；
@@ -21,4 +28,3 @@
 - 在真实A800上完成端到端smoke与256×4验证。
 
 所有A800绝对源路径只填写在`ASSET_TRANSFER_LEDGER.md`，不会同步到公开repo。
-

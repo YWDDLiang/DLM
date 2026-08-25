@@ -15,6 +15,14 @@ CrystaLLM, Mat2Seq, DiffCSP, FlowMM, FlowLLM, CrysBFN, TGDMat, SymmCD,
 Wyckoff Transformer, SGEquiDiff, CrystalDiT, and recent masked discrete
 diffusion-language-model theory. Cite the sources used.
 
+The frozen paper-level theme is **Proposal versus Realization**: aggregate
+generative-materials yield may improve because a model changes which material
+specifications it explores, because it better realizes an explored
+specification as a structure, or both. The paper evaluates this general
+distinction only in de novo inorganic crystals. Do not replace it with a
+solution-first decoding question or extrapolate the crystal evidence to other
+scientific domains.
+
 ## GitHub repository and source of truth
 
 Repository:
@@ -39,12 +47,13 @@ Before evaluating the story, browse and read the following files from
 
 1. `README.md`
 2. `docs/PAPER_POSITIONING.md`
-3. `docs/DE_NOVO_SCOPE.md`
-4. `docs/RELATED_WORK.md`
-5. `docs/STORY_REVIEW.md`
-6. `docs/PLANNER_PROMPT.md`
-7. `docs/SEEDS.md`
-8. `REPRODUCTION.md`
+3. `docs/PROPOSAL_REALIZATION_EVIDENCE.md`
+4. `docs/DE_NOVO_SCOPE.md`
+5. `docs/RELATED_WORK.md`
+6. `docs/STORY_REVIEW.md`
+7. `docs/PLANNER_PROMPT.md`
+8. `docs/SEEDS.md`
+9. `REPRODUCTION.md`
 
 Then inspect the relevant implementation rather than relying only on the
 narrative documents:
@@ -135,21 +144,44 @@ where the Planner answers “what to explore,” the Crystal DLM answers “how 
 Plan can be realized,” and the refiner asks whether that realization can become
 reasonable continuous periodic geometry.
 
-The current main research question is:
+The frozen Main Scientific RQ is:
 
-> When different crystal-validity checks can only be evaluated after different
-> information has been generated, do restricting invalid choices whenever the
-> prerequisite information is available and choosing which geometric variables
-> are eligible for commitment at each stage affect how reliably a model-proposed
-> composition is realized as a periodic crystal?
+> In generative materials discovery, to what extent do gains in discovery
+> yield arise from changing the distribution of material specifications being
+> explored, versus improving structural realization conditional on an
+> explored specification?
 
-Composition and atom count are fixed; the scope is eligible Plans sampled by
-the learned source. The primary mechanism is selected support × commitment
-policy. The learned Plan source defines fully de novo scope, and the fixed
-continuous refiner is a downstream consequence rather than part of the Main
-RQ. The wording has passed a proposer–reviewer process; future analysis should
-stress-test evidence and boundaries rather than replace it with a broader
-composition-to-structure question.
+The frozen crystal instantiation is:
+
+> For de novo crystal generation, can composition-anchored masked completion
+> improve structural realization across model-sampled chemistries beyond gains
+> explained by measured changes in the proposed-chemistry distribution,
+> without collapsing cohort-level diversity?
+
+For H1-A2, an explored material specification is the composition, atom count
+`N`, and element multiset fixed before body generation. H1-A2's method
+hypothesis is that anchoring those variables and using masked discrete
+completion for periodic geometry, followed by identity-preserving continuous
+refinement, defines a system whose standardized within-stratum outcomes and
+cohort-level uniqueness are tested across prespecified chemical regimes.
+
+The former Main RQ is retained as the Mechanism RQ:
+
+> At fixed composition and atom count, do prerequisite-aware restrictions on
+> selected invalid token choices and a dependency-aware commitment policy
+> improve discrete periodic-body realization and downstream conversion under
+> an unchanged identity-preserving refiner?
+
+The learned Plan source defines fully de novo scope. Selected support ×
+commitment policy explains the masked-executor mechanism; the fixed refiner is
+the downstream conversion stage. Do not promote the mechanism question back to
+the paper-level scientific motivation.
+
+The future paper main table is locked to `105/1000 = 10.50%` Strict S.U.N. and
+`488/1000 = 48.80%` Meta S.U.N. These are aggregate headline results, not a
+substitute for proposal-versus-realization evidence. Historical
+`94/1000 = 9.40%` and `474/1000 = 47.40%` values are compatibility views and
+must not replace the headline.
 
 ## Critical de novo boundary
 
@@ -159,7 +191,12 @@ model rather than replayed from MP-20. A frozen, empirical, or user-provided
 Plan can still produce a structurally novel realization, but it is conditional
 at the Plan level.
 
-## Three architectural routes to compare
+## Frozen route roles and counterfactual alternatives
+
+Route A is the frozen paper method. Route C is a conditional diagnostic. Route
+B is an unimplemented future alternative. Compare them to expose boundaries,
+but do not reopen the paper configuration or replace the frozen Main RQ unless
+you find a genuine conceptual contradiction.
 
 ### Route A — separate learned Planner
 
@@ -191,9 +228,8 @@ pass 2 completes body -> continuous refiner`
 - Is not fully de novo at the Plan level.
 - Is currently available as a downstream control.
 
-I may eventually present A and C together, present only A, or reformulate the
-paper around C. Route B should be recommended only if its additional method and
-experiments are worth the cost.
+The paper presents Route A as the fully de novo system and may use Route C as a
+separately labeled conditional reference. Route B remains future work.
 
 ## Scientific boundaries
 
@@ -214,45 +250,67 @@ experiments are worth the cost.
 - Evidence will be expanded later. For this task, prioritize conceptual
   positioning, falsifiability, and a coherent story rather than
   reproducibility engineering.
+- Do not characterize reward-guided, Wyckoff, or symmetry-aware methods as
+  cheating. The academically defensible statement is that aggregate metrics
+  do not identify selection, conditional realization, or both.
+- Treat full compound distributions and within-stratum stability as breadth
+  evidence; common-mix standardization as anti-shortcut evidence; fixed-
+  condition comparisons as selected-support/policy evidence under one masked
+  checkpoint; and pre/post-refiner conversion as conditional refiner evidence.
+  These roles are not interchangeable.
+- Uniqueness is cohort-level. Do not analyze it as an independent per-body
+  Bernoulli outcome.
+- Do not linearly decompose full S.U.N. with `sum_h p(h)r(h)`. Use additive
+  per-request endpoints for accounting and equal-size standardized cohorts for
+  nonlinear U/S.U.N. comparison.
+- The executor reads soft rich-Plan context in addition to composition/N.
+  Require a full-Plan-versus-anchors-only ablation before calling all residual
+  differences composition-only realization.
+- A matched executor is required to attribute a system-level difference to
+  masked completion rather than to the H1-A2 package.
 
 ## Questions you must answer
 
-1. Is a separate learned Planner scientifically justified, or does it merely
-   satisfy the implementation requirement that `N` be known before creating a
-   `7+4N` body?
-2. What evidence would distinguish a useful learned `p_phi(P)` from training-
-   Plan replay or memorization?
-3. Is the Plan sufficiently underdetermined to support a distribution of
+1. Why is proposal-versus-realization a substantive generative-materials
+   question rather than a post-hoc metric decomposition, and why is the
+   current empirical claim limited to crystals?
+2. Does frozen Route A naturally identify what chemistry is attempted and how
+   attempted chemistry is realized, or are important variables still mixed?
+3. What evidence would distinguish a useful learned `p_phi(P)` from training-
+   Plan replay, memorization, or coarse-stratum selection effects?
+4. Is the Plan sufficiently underdetermined to support a distribution of
    realizations, or is the DLM only filling a template?
-4. Is Route A genuinely different from CrysLLMGen, FlowLLM, SGEquiDiff,
-   CrysBFN, and CrystalDiT?
-5. Does Route B create a stronger paper, or merely hide the Planner inside the
-   DLM?
-6. Could Route C support a cleaner and more defensible paper if the claim is
-   changed from fully de novo generation to specification-conditioned crystal
-   completion?
-7. Should the paper present A plus C, only A, or only C? Give an explicit
-   recommendation and explain the trade-off.
-8. How should the partial crystal state, state-dependent support operator,
+5. How is frozen Route A scientifically different from CrysLLMGen, FlowLLM,
+   SGEquiDiff, CrysBFN, and CrystalDiT without claiming DLM superiority?
+6. What can Route C diagnose without being mistaken for the fully de novo
+   system, and what remains future-only in Route B?
+7. How should the partial crystal state, state-dependent support operator,
    Plan entropy/coverage, compatible-realization multiplicity, and refiner
    invariants be formalized?
-9. What is the strongest rejection argument against each route?
+8. What is the strongest “easier exact formulas within every coarse stratum”
+   rejection, and which measured conclusions survive it?
+9. What is the strongest “the refiner caused the final gain” rejection?
 10. What is the broad principle beyond crystals, and what conditions limit its
     generalization?
+11. Which preregistered chemistry strata, standardization targets, and
+    common-support diagnostics are needed to separate proposal-distribution
+    components from within-stratum residuals without claiming causal mediation
+    or exact-specification balance?
+12. What exact evidence would justify “broadly improved across chemical
+    regimes,” and what result would falsify that conclusion?
 
 ## Required output
 
 Return a structured report containing:
 
-1. A decision table comparing Routes A, B, and C on task scope, novelty,
-   scientific cleanliness, implementation cost, reviewer risk, and required
-   evidence.
-2. Your recommended paper configuration: A+C, only A, only C, or a justified
-   transition to B.
-3. The strongest main research question and 2–3 sub-questions for each viable
-   paper configuration.
-4. Exactly three contribution statements suitable for the Introduction for
-   each viable configuration.
+1. A stress test of the frozen Main RQ and H1-A2 method hypothesis, preserving
+   them unless a genuine conceptual contradiction is found.
+2. A compact scope table for frozen Route A, conditional Route C, and future
+   Route B; do not reopen the paper configuration.
+3. Two or three sub-questions under the frozen Main RQ, including the existing
+   support/commitment Mechanism RQ.
+4. Exactly three contribution statements suitable for the Introduction of
+   frozen Route A.
 5. A formal factorization and explicit contract stating what every stage may
    condition on, generate, preserve, and modify.
 6. A Planner evaluation protocol covering validity, coverage, novelty versus
@@ -264,6 +322,9 @@ Return a structured report containing:
 9. A recommended title, five-paragraph Introduction arc, and approximately
    150-word abstract for the final recommended configuration.
 10. A prioritized list of conceptual and empirical gaps to resolve next.
+11. A minimal main-text figure/table plan for complete compound distributions,
+    within-stratum conversion, common-mix standardization, fixed-condition
+    mechanism evidence, and pre/post-refiner attribution.
 
 After the primary report, add two clearly separated appendices:
 

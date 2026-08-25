@@ -18,6 +18,7 @@
 | exact symmetry likelihood | [SGEquiDiff, NeurIPS 2025](https://proceedings.neurips.cc/paper_files/paper/2025/hash/697b2f31f99fb79f8a0a16e923b2471d-Abstract-Conference.html) | discrete sampler＋permutation-invariant AR＋space-group-equivariant diffusion | 与H1-A2分解最接近，必须突出接口而非模块数量 |
 | hybrid LM＋diffusion | [CrysLLMGen, NeurIPS 2025](https://proceedings.neurips.cc/paper_files/paper/2025/hash/f789a628fca473e922c806657512a20f-Abstract-Conference.html) | AR LLM提议species/geometry，固定species后continuous diffusion精修 | 最大威胁：H1-A2可能被视为换decoder |
 | unified simple diffusion | [CrystalDiT, AAAI 2026](https://ojs.aaai.org/index.php/AAAI/article/view/37121) | unified DiT、periodic-table encoding、balanced objective | 反例：简单统一建模可能优于复杂分解 |
+| reward-guided discovery | [Chemeleon2, Nature Machine Intelligence 2026](https://www.nature.com/articles/s42256-026-01262-4) | RL同时优化creativity、stability与diversity，并报告明显element-distribution shift | 说明aggregate mSUN可伴随chemical-space reallocation，必须区分selection与realization；不能据此指控RL作弊 |
 
 ## 二、masked DLM文献给我们的支持和限制
 
@@ -43,8 +44,11 @@ CrysLLMGen不是普通baseline，而是H1-A2故事的起点。其论文已经明
 所以最强承接句是：
 
 > CrysLLMGen establishes the value of separating discrete proposal from
-> continuous refinement; H1-A2 asks the next question—whether the discrete
-> proposal itself should remain autoregressive.
+> continuous refinement; H1-A2 asks the next question—whether higher aggregate
+> discovery yield comes from changing which material specifications are
+> explored or from improving structural realization conditional on a
+> specification. H1-A2 instantiates this question through model-sampled
+> composition/N and a composition-anchored masked executor.
 
 H1-A2必须把差异落在以下hierarchy和合同上：
 
@@ -67,9 +71,9 @@ executor reference，
 
 不足：Mat2Seq、WyFormer已经从表示和排列角度讲过类似直觉。
 
-修复：Main RQ不再断言serialization有害，而是检验两件事：selected checks在其
-prerequisites可见时介入是否有效，以及grouped confidence-adaptive policy与fixed
-positional policy是否产生不同realization yield。
+修复：Main RQ升级为Proposal versus Realization，并明确只在晶体上实证。
+Serialization、selected checks和grouped-vs-positional policy只保留为Mechanism RQ，
+用于解释composition-conditioned realization可能为何提高。
 
 ### 2. Planner可能只是structured prompt
 
@@ -115,6 +119,13 @@ equivariance分为三个正交维度。
 修复：把candidate supply / conversion作为H1-A2架构的诊断视角，不把trade-off本身
 当贡献，也不把高UN归因成DLM定理。
 
+新的Main RQ泛化为：generative materials discovery中的aggregate gain究竟来自
+explored-specification distribution改变，还是给定specification后的structural
+realization提高。晶体实例以composition/N作为specification；完整化学分布证明广泛性，
+common-mix standardization与accounting decomposition回答anti-shortcut问题，
+fixed-condition evidence再连接到H1-A2的selected-support/policy mechanism；若要归因
+masked architecture本身，仍需matched executor。
+
 ### 8. “Diffusion”名称可能反受攻击
 
 不足：ICLR 2025指出MDM可被视为time-agnostic masked model。
@@ -134,19 +145,23 @@ equivariance分为三个正交维度。
 
 ## 六、最终可占据的空位
 
-> 从learned prior生成一个欠定global Plan，用其cardinality实例化typed partial crystal
-> state，再用non-prefix masked generation从compatible realization distribution中采样，
-> 最后只把continuous geometry交给physical refiner。
+> 研究de novo discovery的aggregate gain来自选择了什么chemistry，还是更可靠地实现
+> 了已尝试的chemistry；以learned prior保留化学探索，以composition/N anchors固定
+> realization任务，再用non-prefix masked generation与identity-preserving refiner完成
+> 结构实现。
 
 顶会相关工作已经分别解决representation、periodic manifold、symmetry、joint
-generation、hybrid refinement和feedback optimization；这个空位足够窄，因而可信，
-又可以上升到“serialized scientific object的storage/inference/optimization order解耦”
-这一更一般原则。
+generation、hybrid refinement和feedback optimization，但aggregate yield的proposal/
+realization来源通常没有被统一识别。这个问题具有跨方法的一般性，H1-A2则因
+Planner→anchored DLM→fixed refiner接口而天然适合回答。Storage/inference order解耦
+保留为机制层，不再承担Main Scientific RQ。
 
 ## 七、评分
 
 - 若摘要写成“we replace AR with DLM”：`5/10`；
-- 当前经Proposer–Reviewer冻结的support×commitment framing：concept约`7/10`；
-- 该评分以严格Plan-level paired evidence为条件，不要求声称DLM优于AR；
-- 若support与policy均无正向或有意义的异质性，方法故事应降至`4.5–5/10`，不能用
-  end-to-end S.U.N.替代机制证据。
+- 只有support×commitment framing作为Main RQ：约`6/10`；
+- Proposal-versus-Realization Main RQ＋composition-anchored crystal instance：
+  concept约`7/10`；
+- 只有粗类别表而无common-mix standardization：约`6/10`；
+- 完整分布、standardized accounting、fixed-condition mechanism与refiner attribution
+  形成闭环后，故事才稳定达到`7/10`。

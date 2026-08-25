@@ -18,7 +18,7 @@ Planner → DLM body → Diffusion refiner → Direct/N/U/S.U.N.
 | R03 D1 control | 1,024 | 99/1024 = 9.67% | 523/1024 = 51.07% |
 | R03 D2 Safe-axis | 1,024 | 117/1024 = 11.43% | 496/1024 = 48.44% |
 
-B3、Halide和Legacy adjusted不进入当前主结果集合。R5-C作为Gold Plan
+B3和Legacy adjusted不进入当前主结果集合。R5-C作为Gold Plan
 conditional executor reference进入机制分析，但不作为fully de novo headline。
 
 `105/1000`与`488/1000`继续作为未来论文S.U.N.主表值；exact all-attempt和
@@ -44,6 +44,10 @@ checkpoints和seed ledger记录在
 [`docs/ICLR_REVIEW_STRATEGY.md`](docs/ICLR_REVIEW_STRATEGY.md)。
 只关注论文故事和概念贡献的内部版本见
 [`docs/PAPER_STORY_INTERNAL.md`](docs/PAPER_STORY_INTERNAL.md)。
+Proposal–Realization故事与现有分析、最小新增推理的优先级见
+[`docs/EXPERIMENT_PRIORITIES_INTERNAL.md`](docs/EXPERIMENT_PRIORITIES_INTERNAL.md)。
+双候选方法、选择规则和fallback见
+[`docs/DUAL_CANDIDATE_PROGRAM_INTERNAL.md`](docs/DUAL_CANDIDATE_PROGRAM_INTERNAL.md)。
 最新顶会相关工作、CrysLLMGen最近邻分析与故事缺口见
 [`docs/RELATED_WORK_INTERNAL.md`](docs/RELATED_WORK_INTERNAL.md)。
 Fully de novo边界、learned Planner与R5C/Plan replay控制的区别见

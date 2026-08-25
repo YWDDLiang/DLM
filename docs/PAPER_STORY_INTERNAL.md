@@ -1,4 +1,4 @@
-# H1-A2论文问题演化与内部冻结稿
+# H1-A2 Proposal-versus-Realization论文内部冻结稿
 
 ## 最终裁决
 
@@ -6,34 +6,62 @@
 
 > **APPROVED，当前concept约7/10。**
 
-批准的是问题、方法和贡献的逻辑，不是尚未得到的正向结果。每个机制问题都允许零
-结果和负结果；若出现，必须删除对应的性能claim。
+批准的是Proposal-versus-Realization科学问题、H1-A2方法假设和机制层级，不是尚未
+得到的正向结果。每个机制问题都允许零结果和负结果；若出现，必须删除对应的性能
+claim。
 
 ## 最终Main Research Question
 
-> **When different crystal-validity checks can only be evaluated after
-> different information has been generated, do restricting invalid choices
-> whenever the prerequisite information is available and choosing which
-> geometric variables are eligible for commitment at each stage affect how
-> reliably a model-proposed composition is realized as a periodic crystal?**
+> **In generative materials discovery, to what extent do gains in discovery
+> yield arise from changing the distribution of material specifications being
+> explored, versus improving structural realization conditional on an
+> explored specification?**
 
 中文：
 
-> **当不同晶体合法性检查只有在生成出不同前提信息后才能判断时，在前提信息具备时
-> 限制违规候选，并决定每个阶段哪些几何变量有资格竞争下一次提交，是否会影响模型
-> 提出的composition被可靠实现为周期晶体？**
+> **在生成式材料发现中，发现产率的提升，在多大程度上来自所探索材料规格分布的
+> 改变，又在多大程度上来自给定已探索规格后的结构实现能力提升？**
 
 Scope：
 
-> **Composition与原子数保持固定，研究域限定为learned source采样得到的eligible
-> Plans。**
+> **Main RQ在generative materials discovery层面提出，但当前只在de novo inorganic
+> crystals上验证，不外推到molecule、protein、真实合成或其他科学领域。**
+
+晶体实例化：
+
+> **For de novo crystal generation, can composition-anchored masked completion
+> improve structural realization across model-sampled chemistries beyond gains
+> explained by measured changes in the proposed-chemistry distribution,
+> without collapsing cohort-level diversity?**
+
+这里的material specification操作化为body生成前确定的composition、原子数`N`和
+element multiset。Main RQ区分“提出/探索了什么specification”和“提出后实现得怎样”。
 
 最通俗的一句话：
 
-> 有些晶体错误只有生成到特定步骤才能发现；我们研究在错误已经能判断时限制生成，
-> 并改变相关几何字段的提交策略，是否真的能提高可用周期晶体的实现产率。
+> 一个生成模型产率更高，究竟是因为它改变了探索什么材料，还是因为它真正更擅长
+> 把已经提出的材料规格实现成结构？
 
-## 为什么先前问题被否决
+H1-A2方法假设：
+
+> 给定模型提出的composition和原子数，H1-A2固定化学身份与基数，以masked
+> discrete completion生成周期几何，再进行identity-preserving continuous refinement；
+> 我们检验该系统是否在预注册化学层上保留正的standardized within-stratum difference，
+> 并在等规模标准化cohort中保持uniqueness。将差异因果归于masked architecture需要
+> matched executor comparison。
+
+机制RQ降为：
+
+> 在composition和原子数固定后，根据当前前置信息限制部分违规token，并按信息依赖
+> 决定哪些几何变量有资格竞争下一次提交，能否在同一个identity-preserving refiner下
+> 提高离散周期body的实现率及最终转化率？
+
+## 为什么先前问题被否决或降级
+
+### Constraint timing and commitment
+
+这是合格且可证伪的机制问题，但只描述H1-A2内部的inference intervention，不足以
+承担整篇论文的材料发现动机。它保留为解释realization提升来源的Mechanism RQ。
 
 ### Composition-to-structure
 
@@ -52,17 +80,23 @@ DINGO相邻。最终将其改成可证伪的policy intervention，而不是先�
 ## 问题演化图
 
 ```text
-Q1  单一duplicate-Z restriction的介入
- ↓
-Q2  当前partial state上可计算的selected-support bundle
- ↓
-Q3  effect在self-sampled eligible Plan分布上的scope与异质性
- ↓
-Q4  同masked checkpoint下的commitment-policy intervention
- ↓
-Q5  fixed continuous refiner的downstream conversion
- ↓
-Main RQ只保留support timing × commitment policy
+Main Scientific RQ
+proposal-distribution gain  vs  specification-conditioned realization gain
+                    ↓
+Crystal Instantiation
+model-sampled composition/N  vs  periodic-structure realization
+                    ↓
+H1-A2 Method Hypothesis
+learned chemistry → anchored composition/N → masked geometry → fixed refiner
+                    ↓
+Mechanism RQ
+selected support timing × commitment policy
+                    ↓
+Q1 duplicate-Z intervention
+→ Q2 selected-support bundle
+→ Q3 eligible learned-Plan scope与异质性
+→ Q4 commitment-policy intervention
+→ Q5 fixed-refiner downstream conversion
 ```
 
 ## Q1：最小可证伪问题
@@ -148,6 +182,9 @@ delta(P) = average_repeat [Y2(mask_on) - Y2(mask_off)]
 
 Finite-cohort effect以Plan为统计单位；Plan内repeat不是独立Planner样本。Planner
 ineligible outputs只作upstream attrition，不进入downstream mechanism effect。
+当最小面板每Plan仅一个body seed时，`average_repeat`退化为单一paired block，只估计
+frozen Plan population的平均干预效果；不能估计Plan-specific seed-averaged effect、
+seed variance或seed robustness。
 
 Q3只解释learned condition source为何用于闭合fully de novo scope，不把其backbone
 作为算法贡献。
@@ -231,7 +268,26 @@ model494是继承组件；贡献在于identity-preserving interface和conversion
 
 最终状态：`APPROVED`。
 
-## 最终三层论文结构
+## 最终论文层级
+
+### Main scientific problem
+
+```text
+explored material-specification distribution
+vs
+specification-conditioned structural realization
+```
+
+当前实证实例严格限定为composition/N → periodic crystal structure。
+
+### Method hypothesis
+
+```text
+learned composition/N
+→ anchored exact-cardinality state
+→ masked periodic-geometry completion
+→ identity-preserving continuous refinement
+```
 
 ### Primary mechanism
 
@@ -239,16 +295,14 @@ model494是继承组件；贡献在于identity-preserving interface和conversion
 state-conditional selected support × commitment policy
 ```
 
-### Fully de novo scope
+### Evidence hierarchy
 
 ```text
-eligible complete Plans sampled by the learned source
-```
-
-### Downstream consequence
-
-```text
-fixed identity-preserving continuous refinement
+完整化学分布与条件稳定率：广泛性
+→ common-mix标准化与accounting decomposition：反shortcut
+→ matched AR-versus-DLM：masked architecture attribution
+→ fixed-condition paired analysis：selected-support/policy mechanism
+→ pre/post refiner conversion：refiner attribution
 ```
 
 ## 当前真实方法合同
@@ -264,26 +318,50 @@ M ~ p_psi(M | B)
 完整state为`7+4N`，实际自由生成`6+3N`个geometry tokens。Refiner只读B，不能写成
 `p_psi(M|B,P)`。
 
+主RQ的统计对象按预注册化学层`h`定义：
+
+```text
+p_m(h) = 方法m尝试化学层h的概率
+r_m(h) = 方法m在h内的additive per-request outcome rate
+theta_m = sum_h p_m(h) * r_m(h)
+```
+
+`p_m`差异是proposal-distribution associated；shared measured support中的`r_m`差异
+首先称within-stratum residual。只有层内specification difficulty充分平衡时，才能解释为
+realization-associated。对称分解只称accounting decomposition，不称causal mediation。
+Primary strata为formula-derived family × arity × N-bin；exact element set、训练集稀疏度
+和独立baseline-difficulty只作预先定义的敏感性分析。
+
+因此primary standardization严格识别的是`within measured coarse chemical strata`的
+residual difference，不是固定同一个exact formula的效果。Exact-condition结论只能由
+同composition/Plan的paired mechanism evidence给出。
+
+该线性identity只用于body success、Direct validity、stable all-request yield、novel或
+stable-and-novel等可加per-request endpoints。Uniqueness和完整S.U.N.是非线性
+cohort-level functions，必须在固定size/mix下单独重算，不能进入上述分解。
+
 ## Exactly three contributions
 
-1. **问题形式化**：selected validity checks需要不同前提信息，检查何时介入以及每个
-   阶段哪些geometry变量有资格竞争下一次提交成为可检验问题。
+1. **科学与评价问题形式化**：区分explored material-specification分布变化与给定
+   specification后的structural realization提升；在晶体实例中将specification操作化为
+   composition/N，并将uniqueness正确处理为cohort-level outcome。
 2. **Core executor**：composition-anchored、exact-cardinality typed masked executor，
    结合state-conditional selected support与显式commitment-policy bundle。
-3. **Plan-level paired empirical analysis**：以Plan为统计单位隔离support、policy及其
-   interaction，分析pretreatment strata异质性和fixed-refiner downstream conversion。
+3. **Attribution framework**：完整报告化学分布和stagewise conversion，进行common-mix
+   标准化，再以matched executor、fixed-condition mechanism与pre/post-refiner analysis
+   区分系统广泛性、masked architecture、execution policy和continuous refinement。
 
-Contribution 3在paired wiring和结果完成前只能写“we evaluate”，不能写“we
-demonstrate”。
+Contribution 3在distribution、standardized accounting和fixed-condition结果完成前
+只能写“we evaluate”，不能写“we demonstrate”。
 
 ## 最通俗故事
 
-> 系统先自己提出一个材料Plan，formula固定有哪些原子以及数量。随后生成晶格和
-> 坐标，但有些错误只有相关字段出现后才能判断，而且先决定哪些字段也可能影响后续
-> 结构。我们用同一个masked模型严格比较：信息够用时是否应限制明显违规候选，以及
-> 按字段组限制下一次可竞争的位置是否比机械按位置提交更可靠。每次model call仍只
-> 提交一个选中的字段。最后再看这些离散阶段差异经过固定连续
-> 精修后是否仍然存在。
+> Aggregate discovery yield同时混合了“系统提出/探索什么材料规格”和“它能否把这些
+> 规格真正实现成结构”。在晶体实例中，S.U.N.具有同样混杂。H1-A2让Planner保留
+> de novo化学探索，但在body阶段固定composition和N，
+> 迫使masked DLM直面给定chemistry的周期几何实现；固定refiner随后只修几何。完整
+> 化合物分布、每类稳定转化率和common-mix标准化用来判断增益是否主要来自选择容易
+> chemistry，fixed-condition机制与pre/post-refiner则解释realization增益来自哪里。
 
 ## Results context
 
@@ -291,6 +369,9 @@ demonstrate”。
 
 - H1-A2 Strict S.U.N.：`105/1000 = 10.50%`；
 - H1-A2 Meta S.U.N.：`488/1000 = 48.80%`。
+
+若该headline不是具有1:1逐attempt记录的raw cohort，则proposal–realization分析必须使用
+单独命名的raw standard-H1-A2 cohort；不得为105/488构造伪microdata。
 
 用户当前给出的本地CrysLLMGen参考约为：
 
@@ -303,12 +384,12 @@ CrysLLMGen记录与该内部约数仍需最终核对。
 
 ## 最强剩余拒稿风险
 
-> H1-A2仍可能被视为预训练masked模型外加手工`lattice→X→Y→Z`policy、三个局部
-> masks和继承refiner。若support、policy及interaction没有清晰Plan-level效果，或效果
-> 在refinement后失去意义，constraint-prerequisite framing会退化成constrained-decoding
-> 工程。
+> 即使oxide、halide、arity和各N-bin都提升，Planner仍可能在每个粗类别内部选择更
+> 容易的exact formulas；最终增益也可能主要由继承的model494产生。粗类别表不能单独
+> 识别composition-conditioned realization，更不能单独证明DLM因果有效。
 
-该风险不能继续靠改写故事解决，只能由冻结的paired evidence回答。
+防线是完整预注册分层、common-support diagnostics、composition standardization、
+fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强措辞。
 
 ## Decision Log
 
@@ -319,14 +400,19 @@ CrysLLMGen记录与该内部约数仍需最终核对。
 | Q3 | self-sampled Plan domain | eligible Plan finite cohort与异质性 | anchor causal effect、revisable count、easy-condition事后定义 |
 | Q4 | commitment policy | 同checkpoint grouped vs positional policy | DLM>AR、最优order、grouping单独归因 |
 | Q5 | continuous conversion | fixed-refiner paired consequence | refiner算法创新、最终不稳定全归refiner、causal mediation |
-| Paper压缩 | 主次层级 | support×policy为primary | 将Plan source、refiner和瓶颈分析并列进Main RQ |
+| 旧Paper压缩 | 机制主次层级 | support×policy保留为Mechanism RQ | 将其继续当作论文级科学问题 |
+| 新Main RQ | proposal vs realization | explored specification与conditional realization分离 | 向非晶体领域过度外推、指控其他方法作弊、把accounting写成causal mediation |
 
 ## 当前大致缺口
 
-- strict positional skip-anchor control；
-- call-indexed paired random stream和稳定Plan/attempt metadata；
-- 相同pre/post评价合同与Plan-level统计；
+- 完整且预先固定的compound-family、arity、N-bin和元素分布；
+- common-support coverage、proposal-distribution/within-stratum residual accounting；
+- fixed-condition mechanism evidence与相同pre/post评价合同；
+- full-Plan versus anchors-only conditioning-scope ablation；
+- 与当前masked-completion crystal RQ匹配的AR executor comparison；
+- DLM→refiner conversion和cohort-level uniqueness重算；
 - 最终核对CrysLLMGen约`9%/44%`和public精确记录的口径；
-- paired结果本身。
+- 对所有负向或证据不足类别完整披露。
 
-这些属于最小实验与评价wiring，不需要重新训练Planner、DLM或model494。
+除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
+Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。
