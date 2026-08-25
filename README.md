@@ -61,6 +61,8 @@ Reviewer-safe problem and contribution framing is developed in
 [`docs/PAPER_POSITIONING.md`](docs/PAPER_POSITIONING.md).
 The disabled candidate methods and their promotion boundary are recorded in
 [`docs/CANDIDATE_STATUS.md`](docs/CANDIDATE_STATUS.md).
+The deduplicated broad-stratum H1-A2 difficulty table is in
+[`results/historical_difficulty/analysis.md`](results/historical_difficulty/analysis.md).
 The mapping from the proposal--realization story to required analyses and
 minimum additional inference is in
 [`docs/PROPOSAL_REALIZATION_EVIDENCE.md`](docs/PROPOSAL_REALIZATION_EVIDENCE.md).
