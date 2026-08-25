@@ -16,6 +16,12 @@
   `34696`因慢donor builder主动取消，`34698`因sidecar显式plan_state缺失而
   在训练前取消；均不产生科学结果。
 
+当前决定：
+
+- Candidate B完成`34697`训练和`34704` Plan-256后停止；两个seed均少1个
+  parsed Plan，projected Strict/Meta mix均下降，不进入downstream；
+- Candidate A继续`34700`，step500 factual val CE为1.6240，对照为1.9153。
+
 ## 已完成
 
 - 独立Git repo与`codex/personal-research`分支；
