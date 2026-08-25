@@ -230,6 +230,34 @@ def summarize(attempts: Sequence[Attempt], feature: str) -> list[dict[str, Any]]
     return rows
 
 
+def element_presence_summary(attempts: Sequence[Attempt], *, min_attempts: int = 20) -> list[dict[str, Any]]:
+    groups: dict[str, list[Attempt]] = defaultdict(list)
+    for attempt in attempts:
+        for element in sorted(set(attempt.elements)):
+            groups[element].append(attempt)
+    rows = []
+    for element, group in sorted(groups.items()):
+        if len(group) < int(min_attempts):
+            continue
+        known = [item for item in group if item.reward is not None]
+        strict = sum(int(bool(item.strict_sun)) for item in known)
+        meta = sum(int(bool(item.meta_sun)) for item in known)
+        rows.append(
+            {
+                "element": element,
+                "attempts": len(group),
+                "hull_known": len(known),
+                "strict": strict,
+                "strict_rate": strict / len(known) if known else None,
+                "strict_ci95": wilson_interval(strict, len(known)) if known else None,
+                "meta": meta,
+                "meta_rate": meta / len(known) if known else None,
+                "meta_ci95": wilson_interval(meta, len(known)) if known else None,
+            }
+        )
+    return rows
+
+
 def _stable_fold(key: str, folds: int) -> int:
     return int(sha256(key.encode("utf-8")).hexdigest()[:16], 16) % int(folds)
 
@@ -395,6 +423,7 @@ __all__ = [
     "cross_fitted_difficulty",
     "deduplicate",
     "difficulty_weights",
+    "element_presence_summary",
     "effective_sample_size",
     "kitagawa_decomposition",
     "load_jsonl",
