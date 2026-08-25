@@ -46,7 +46,7 @@ train_arm() {
   local output="$3"
   local seed="$4"
   local difficulty="$5"
-  local extra=()
+  local extra=(--max-updates 400)
   if [[ "${difficulty}" == true ]]; then
     extra+=(--difficulty-decomposed-weighting --difficulty-manifest "${WEIGHTED_DATA}/difficulty_manifest.json")
   fi
