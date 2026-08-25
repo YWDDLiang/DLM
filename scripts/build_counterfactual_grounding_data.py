@@ -33,9 +33,23 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
 
 
+def extract_plan(row: dict) -> dict:
+    explicit = row.get("plan_state") or row.get("r5_plan_state")
+    if isinstance(explicit, dict):
+        return explicit
+    prompt = str(row.get("prompt") or "")
+    marker = "plan_state:"
+    body_marker = "\ndynamic_crystal_body:"
+    if marker not in prompt or body_marker not in prompt:
+        return {}
+    payload = prompt.split(marker, 1)[1].split(body_marker, 1)[0].strip()
+    value = json.loads(payload)
+    return value if isinstance(value, dict) else {}
+
+
 def build_split(source: Path, destination: Path, *, seed: int) -> dict:
     rows = read_jsonl(source)
-    plans = [row.get("plan_state") or row.get("r5_plan_state") or {} for row in rows]
+    plans = [extract_plan(row) for row in rows]
     donor_indices = choose_donors(plans, seed=seed)
     grounded = 0
     for row, plan, donor_index in zip(rows, plans, donor_indices):
@@ -82,4 +96,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
