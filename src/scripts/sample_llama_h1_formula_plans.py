@@ -34,7 +34,10 @@ from crystal_dlm.h1_llm_planner import (  # noqa: E402
 )
 from crystal_dlm.r5_plan_body import has_plan_end_marker, has_plan_tail_after_end_marker  # noqa: E402
 from crystal_dlm.fixed_slot import write_json  # noqa: E402
-from scripts.sample_llada_dynamic_crystals import init_distributed, rank_path  # noqa: E402
+try:
+    from scripts.sample_llada_dynamic_crystals import init_distributed, rank_path  # noqa: E402
+except ModuleNotFoundError:
+    from sample_llada_dynamic_crystals import init_distributed, rank_path  # type: ignore[no-redef] # noqa: E402
 
 
 def model_device(model) -> torch.device:
