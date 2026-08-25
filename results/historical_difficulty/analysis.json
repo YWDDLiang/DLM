@@ -1,0 +1,436 @@
+{
+  "decomposition": null,
+  "duplicates_removed": 0,
+  "exploratory_only": [
+    "individual_halogen",
+    "oxyhalide",
+    "exact_formula",
+    "exact_element_set"
+  ],
+  "methods": {
+    "H1A2": {
+      "all_metal": [
+        {
+          "attempts": 876,
+          "feature": "all_metal",
+          "hull_known": 845,
+          "hull_unknown": 31,
+          "meta": 332,
+          "meta_ci95": [
+            0.3605251919091009,
+            0.4262429988771203
+          ],
+          "meta_rate": 0.39289940828402364,
+          "strict": 46,
+          "strict_ci95": [
+            0.04105898837585986,
+            0.07184956224306001
+          ],
+          "strict_rate": 0.054437869822485205,
+          "value": "no"
+        },
+        {
+          "attempts": 404,
+          "feature": "all_metal",
+          "hull_known": 374,
+          "hull_unknown": 30,
+          "meta": 244,
+          "meta_ci95": [
+            0.6028156748662861,
+            0.6988981718773004
+          ],
+          "meta_rate": 0.6524064171122995,
+          "strict": 48,
+          "strict_ci95": [
+            0.09818488327491927,
+            0.16605678870124735
+          ],
+          "strict_rate": 0.12834224598930483,
+          "value": "yes"
+        }
+      ],
+      "arity": [
+        {
+          "attempts": 8,
+          "feature": "arity",
+          "hull_known": 8,
+          "hull_unknown": 0,
+          "meta": 7,
+          "meta_ci95": [
+            0.5291118177871464,
+            0.9775825085499433
+          ],
+          "meta_rate": 0.875,
+          "strict": 1,
+          "strict_ci95": [
+            0.02241749145005667,
+            0.4708881822128535
+          ],
+          "strict_rate": 0.125,
+          "value": "1"
+        },
+        {
+          "attempts": 217,
+          "feature": "arity",
+          "hull_known": 205,
+          "hull_unknown": 12,
+          "meta": 116,
+          "meta_ci95": [
+            0.49740966577937307,
+            0.6318750085973822
+          ],
+          "meta_rate": 0.5658536585365853,
+          "strict": 18,
+          "strict_ci95": [
+            0.05626181905630094,
+            0.13451188577067485
+          ],
+          "strict_rate": 0.08780487804878048,
+          "value": "2"
+        },
+        {
+          "attempts": 768,
+          "feature": "arity",
+          "hull_known": 731,
+          "hull_unknown": 37,
+          "meta": 360,
+          "meta_ci95": [
+            0.4563683847048869,
+            0.5286624000066162
+          ],
+          "meta_rate": 0.49247606019151846,
+          "strict": 66,
+          "strict_ci95": [
+            0.07159740987967873,
+            0.11326077577399744
+          ],
+          "strict_rate": 0.09028727770177838,
+          "value": "3"
+        },
+        {
+          "attempts": 260,
+          "feature": "arity",
+          "hull_known": 256,
+          "hull_unknown": 4,
+          "meta": 84,
+          "meta_ci95": [
+            0.2735197547273731,
+            0.38781219591902016
+          ],
+          "meta_rate": 0.328125,
+          "strict": 9,
+          "strict_ci95": [
+            0.018604096092635542,
+            0.0654527704282918
+          ],
+          "strict_rate": 0.03515625,
+          "value": "4"
+        },
+        {
+          "attempts": 19,
+          "feature": "arity",
+          "hull_known": 19,
+          "hull_unknown": 0,
+          "meta": 9,
+          "meta_ci95": [
+            0.2732980516117956,
+            0.6829219075488682
+          ],
+          "meta_rate": 0.47368421052631576,
+          "strict": 0,
+          "strict_ci95": [
+            0.0,
+            0.16817922405261626
+          ],
+          "strict_rate": 0.0,
+          "value": "5"
+        },
+        {
+          "attempts": 8,
+          "feature": "arity",
+          "hull_known": 0,
+          "hull_unknown": 8,
+          "meta": 0,
+          "meta_ci95": null,
+          "meta_rate": null,
+          "strict": 0,
+          "strict_ci95": null,
+          "strict_rate": null,
+          "value": "unknown"
+        }
+      ],
+      "family": [
+        {
+          "attempts": 404,
+          "feature": "family",
+          "hull_known": 374,
+          "hull_unknown": 30,
+          "meta": 244,
+          "meta_ci95": [
+            0.6028156748662861,
+            0.6988981718773004
+          ],
+          "meta_rate": 0.6524064171122995,
+          "strict": 48,
+          "strict_ci95": [
+            0.09818488327491927,
+            0.16605678870124735
+          ],
+          "strict_rate": 0.12834224598930483,
+          "value": "all_metal"
+        },
+        {
+          "attempts": 142,
+          "feature": "family",
+          "hull_known": 134,
+          "hull_unknown": 8,
+          "meta": 50,
+          "meta_ci95": [
+            0.2958545269988361,
+            0.4574852860669295
+          ],
+          "meta_rate": 0.373134328358209,
+          "strict": 9,
+          "strict_ci95": [
+            0.03573460604589504,
+            0.1227188738255402
+          ],
+          "strict_rate": 0.06716417910447761,
+          "value": "chalcogenide"
+        },
+        {
+          "attempts": 128,
+          "feature": "family",
+          "hull_known": 127,
+          "hull_unknown": 1,
+          "meta": 83,
+          "meta_ci95": [
+            0.5673771187184453,
+            0.7306935413881943
+          ],
+          "meta_rate": 0.6535433070866141,
+          "strict": 20,
+          "strict_ci95": [
+            0.10431811033073023,
+            0.23075503250830454
+          ],
+          "strict_rate": 0.15748031496062992,
+          "value": "halide"
+        },
+        {
+          "attempts": 19,
+          "feature": "family",
+          "hull_known": 19,
+          "hull_unknown": 0,
+          "meta": 3,
+          "meta_ci95": [
+            0.05520471638534141,
+            0.37565475270329074
+          ],
+          "meta_rate": 0.15789473684210525,
+          "strict": 2,
+          "strict_ci95": [
+            0.02935856029887013,
+            0.31394082711109006
+          ],
+          "strict_rate": 0.10526315789473684,
+          "value": "nitride"
+        },
+        {
+          "attempts": 122,
+          "feature": "family",
+          "hull_known": 110,
+          "hull_unknown": 12,
+          "meta": 47,
+          "meta_ci95": [
+            0.3388228926127975,
+            0.520630770703299
+          ],
+          "meta_rate": 0.42727272727272725,
+          "strict": 7,
+          "strict_ci95": [
+            0.031164518014477616,
+            0.125557461882102
+          ],
+          "strict_rate": 0.06363636363636363,
+          "value": "other"
+        },
+        {
+          "attempts": 370,
+          "feature": "family",
+          "hull_known": 364,
+          "hull_unknown": 6,
+          "meta": 114,
+          "meta_ci95": [
+            0.2677019288685195,
+            0.3625735696138477
+          ],
+          "meta_rate": 0.3131868131868132,
+          "strict": 4,
+          "strict_ci95": [
+            0.004281480315161545,
+            0.027910265712211335
+          ],
+          "strict_rate": 0.01098901098901099,
+          "value": "oxide"
+        },
+        {
+          "attempts": 50,
+          "feature": "family",
+          "hull_known": 49,
+          "hull_unknown": 1,
+          "meta": 14,
+          "meta_ci95": [
+            0.178495944588126,
+            0.42408883507780093
+          ],
+          "meta_rate": 0.2857142857142857,
+          "strict": 1,
+          "strict_ci95": [
+            0.0036116725898252405,
+            0.10693521523391616
+          ],
+          "strict_rate": 0.02040816326530612,
+          "value": "oxyhalide"
+        },
+        {
+          "attempts": 45,
+          "feature": "family",
+          "hull_known": 42,
+          "hull_unknown": 3,
+          "meta": 21,
+          "meta_ci95": [
+            0.3552598959637448,
+            0.6447401040362553
+          ],
+          "meta_rate": 0.5,
+          "strict": 3,
+          "strict_ci95": [
+            0.02459040987330592,
+            0.19009426801158313
+          ],
+          "strict_rate": 0.07142857142857142,
+          "value": "pnictide"
+        }
+      ],
+      "n_bin": [
+        {
+          "attempts": 178,
+          "feature": "n_bin",
+          "hull_known": 166,
+          "hull_unknown": 12,
+          "meta": 85,
+          "meta_ci95": [
+            0.43660076812207427,
+            0.5869506075418789
+          ],
+          "meta_rate": 0.5120481927710844,
+          "strict": 23,
+          "strict_ci95": [
+            0.09413242881394443,
+            0.1993263012674605
+          ],
+          "strict_rate": 0.13855421686746988,
+          "value": "01-04"
+        },
+        {
+          "attempts": 272,
+          "feature": "n_bin",
+          "hull_known": 257,
+          "hull_unknown": 15,
+          "meta": 134,
+          "meta_ci95": [
+            0.46046259709529797,
+            0.581708613147632
+          ],
+          "meta_rate": 0.5214007782101168,
+          "strict": 21,
+          "strict_ci95": [
+            0.05406390793344381,
+            0.12168061913656522
+          ],
+          "strict_rate": 0.08171206225680934,
+          "value": "05-08"
+        },
+        {
+          "attempts": 368,
+          "feature": "n_bin",
+          "hull_known": 357,
+          "hull_unknown": 11,
+          "meta": 176,
+          "meta_ci95": [
+            0.4414874265889889,
+            0.5446560725079802
+          ],
+          "meta_rate": 0.49299719887955185,
+          "strict": 32,
+          "strict_ci95": [
+            0.06420856831615063,
+            0.12380047876622816
+          ],
+          "strict_rate": 0.0896358543417367,
+          "value": "09-12"
+        },
+        {
+          "attempts": 255,
+          "feature": "n_bin",
+          "hull_known": 241,
+          "hull_unknown": 14,
+          "meta": 93,
+          "meta_ci95": [
+            0.3266798673982262,
+            0.44868497373238325
+          ],
+          "meta_rate": 0.38589211618257263,
+          "strict": 11,
+          "strict_ci95": [
+            0.025674706115020256,
+            0.07986893402322415
+          ],
+          "strict_rate": 0.04564315352697095,
+          "value": "13-16"
+        },
+        {
+          "attempts": 199,
+          "feature": "n_bin",
+          "hull_known": 198,
+          "hull_unknown": 1,
+          "meta": 88,
+          "meta_ci95": [
+            0.37694237538801073,
+            0.5140611868705056
+          ],
+          "meta_rate": 0.4444444444444444,
+          "strict": 7,
+          "strict_ci95": [
+            0.017228867488134375,
+            0.07116456231036697
+          ],
+          "strict_rate": 0.03535353535353535,
+          "value": "17-20"
+        },
+        {
+          "attempts": 8,
+          "feature": "n_bin",
+          "hull_known": 0,
+          "hull_unknown": 8,
+          "meta": 0,
+          "meta_ci95": null,
+          "meta_rate": null,
+          "strict": 0,
+          "strict_ci95": null,
+          "strict_rate": null,
+          "value": "unknown"
+        }
+      ]
+    }
+  },
+  "primary_features": [
+    "family",
+    "arity",
+    "n_bin",
+    "all_metal"
+  ],
+  "schema": "h1a2-sun-difficulty-analysis@1",
+  "unique_attempts": 1280
+}
