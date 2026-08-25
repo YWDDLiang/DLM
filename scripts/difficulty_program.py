@@ -19,6 +19,7 @@ from h1a2_repro.difficulty import (  # noqa: E402
     cross_fitted_difficulty,
     deduplicate,
     difficulty_weights,
+    element_presence_summary,
     kitagawa_decomposition,
     load_jsonl,
     summarize,
@@ -58,6 +59,12 @@ def _markdown(report: dict[str, Any]) -> str:
                 meta = "NA" if row["meta_rate"] is None else f"{row['meta']}/{row['hull_known']} ({100*row['meta_rate']:.2f}%)"
                 lines.append(f"| {row['value']} | {row['attempts']} | {row['hull_known']} | {strict} | {meta} |")
             lines.append("")
+        lines.extend(["### exploratory element presence", "", "| element | attempts | hull known | Strict | Meta |", "|---|---:|---:|---:|---:|"])
+        for row in payload["element_presence"]:
+            strict = "NA" if row["strict_rate"] is None else f"{row['strict']}/{row['hull_known']} ({100*row['strict_rate']:.2f}%)"
+            meta = "NA" if row["meta_rate"] is None else f"{row['meta']}/{row['hull_known']} ({100*row['meta_rate']:.2f}%)"
+            lines.append(f"| {row['element']} | {row['attempts']} | {row['hull_known']} | {strict} | {meta} |")
+        lines.append("")
     if report.get("decomposition"):
         lines.extend(["## Proposal/realization decomposition", "", "```json", json.dumps(report["decomposition"], indent=2), "```", ""])
     lines.append("Exact formulas and individual halogens are exploratory only and are not used as headline strata.")
@@ -73,6 +80,7 @@ def analyze(args: argparse.Namespace) -> None:
     for method in sorted({item.method for item in unique}):
         selected = [item for item in unique if item.method == method]
         methods[method] = {feature: summarize(selected, feature) for feature in PRIMARY_FEATURES}
+        methods[method]["element_presence"] = element_presence_summary(selected, min_attempts=20)
     decomposition = None
     if args.baseline and args.candidate:
         baseline = [item for item in unique if item.method == args.baseline]
