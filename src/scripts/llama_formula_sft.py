@@ -144,6 +144,7 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--max-length", type=int, default=512)
     parser.add_argument("--epochs", type=float, default=1.0)
+    parser.add_argument("--max-updates", type=int, default=0, help="Optional optimizer-update cap; zero uses full epochs.")
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--grad-accum", type=int, default=8)
     parser.add_argument("--lr", type=float, default=2e-5)
@@ -153,6 +154,12 @@ def main() -> None:
     parser.add_argument("--eval-steps", type=int, default=500)
     parser.add_argument("--eval-max-batches", type=int, default=50)
     parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument(
+        "--difficulty-decomposed-weighting",
+        action="store_true",
+        help="Require and record a difficulty-decomposed self-improvement manifest.",
+    )
+    parser.add_argument("--difficulty-manifest", type=Path, default=None)
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--lora-dropout", type=float, default=0.05)
@@ -207,6 +214,20 @@ def main() -> None:
 
     train_ds = FormulaPlanDataset(args.data_dir / "train.jsonl", tokenizer, args.max_length)
     val_ds = FormulaPlanDataset(args.data_dir / "val.jsonl", tokenizer, args.max_length)
+    difficulty_manifest = None
+    if args.difficulty_decomposed_weighting:
+        manifest_path = args.difficulty_manifest or (args.data_dir / "difficulty_manifest.json")
+        if not manifest_path.is_file():
+            raise ValueError(f"difficulty weighting requires manifest {manifest_path}")
+        difficulty_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        weighted_rows = sum(
+            int(row.get("source_kind") == "difficulty_decomposed_self_improvement")
+            for row in train_ds.rows
+        )
+        if weighted_rows <= 0:
+            raise ValueError("difficulty manifest is present but no self-improvement rows were found")
+    elif args.difficulty_manifest is not None:
+        raise ValueError("difficulty-manifest requires --difficulty-decomposed-weighting")
     train_loader = DataLoader(
         train_ds,
         batch_size=int(args.batch_size),
@@ -222,6 +243,8 @@ def main() -> None:
 
     updates_per_epoch = math.ceil(len(train_loader) / max(1, int(args.grad_accum)))
     total_updates = max(1, int(math.ceil(float(args.epochs) * updates_per_epoch)))
+    if int(args.max_updates) > 0:
+        total_updates = min(total_updates, int(args.max_updates))
     optimizer = torch.optim.AdamW(model.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay))
     scheduler = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_steps), num_training_steps=total_updates)
 
@@ -235,6 +258,7 @@ def main() -> None:
         "grad_accum": int(args.grad_accum),
         "lr": float(args.lr),
         "total_updates": total_updates,
+        "max_updates": int(args.max_updates),
         "train_rows": len(train_ds),
         "val_rows": len(val_ds),
         "lora": {
@@ -242,6 +266,10 @@ def main() -> None:
             "alpha": int(args.lora_alpha),
             "dropout": float(args.lora_dropout),
             "continued_from_checkpoint": bool(args.checkpoint_path),
+        },
+        "difficulty_decomposed_weighting": {
+            "enabled": bool(args.difficulty_decomposed_weighting),
+            "manifest": difficulty_manifest,
         },
     }
     (args.output_dir / "train_config.json").write_text(json.dumps(write_payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
