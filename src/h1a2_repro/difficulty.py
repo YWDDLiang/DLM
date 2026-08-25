@@ -293,12 +293,28 @@ def difficulty_weights(
     mean_baseline = sum(float(baselines[item.key]) for item in eligible) / len(eligible)
 
     def build(scale: float) -> list[float]:
-        values = []
+        shift_factors: list[float] = []
+        within_factors: list[float] = []
+        strata: list[tuple[str, ...]] = []
         for item in eligible:
             baseline = float(baselines[item.key])
             advantage = float(item.reward) - baseline
-            exponent = scale * (alpha * (baseline - mean_baseline) + beta * advantage) / temperature
-            values.append(min(max_weight, math.exp(max(-20.0, min(20.0, exponent)))))
+            shift_exponent = scale * alpha * (baseline - mean_baseline) / temperature
+            within_exponent = scale * beta * advantage / temperature
+            shift_factors.append(math.exp(max(-20.0, min(20.0, shift_exponent))))
+            within_factors.append(math.exp(max(-20.0, min(20.0, within_exponent))))
+            strata.append(tuple(item.feature(feature) for feature in PRIMARY_FEATURES))
+        within_by_stratum: dict[tuple[str, ...], list[float]] = defaultdict(list)
+        for stratum, value in zip(strata, within_factors):
+            within_by_stratum[stratum].append(value)
+        within_means = {
+            stratum: sum(values) / len(values)
+            for stratum, values in within_by_stratum.items()
+        }
+        values = [
+            min(max_weight, shift * within / within_means[stratum])
+            for shift, within, stratum in zip(shift_factors, within_factors, strata)
+        ]
         mean = sum(values) / len(values)
         return [value / mean for value in values]
 
@@ -321,6 +337,7 @@ def difficulty_weights(
         "count": len(weights),
         "alpha": alpha,
         "beta": beta,
+        "factorization": "proposal_shift_times_within_stratum_normalized_advantage",
         "temperature": temperature,
         "scale": scale,
         "max_weight": max(weights),
@@ -386,4 +403,3 @@ __all__ = [
     "summarize",
     "wilson_interval",
 ]
-
