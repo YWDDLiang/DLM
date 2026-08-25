@@ -59,6 +59,11 @@ Construction progress and A800 handoff items are tracked in
 
 Reviewer-safe problem and contribution framing is developed in
 [`docs/PAPER_POSITIONING.md`](docs/PAPER_POSITIONING.md).
+The disabled candidate methods and their promotion boundary are recorded in
+[`docs/CANDIDATE_STATUS.md`](docs/CANDIDATE_STATUS.md).
+The mapping from the proposal--realization story to required analyses and
+minimum additional inference is in
+[`docs/PROPOSAL_REALIZATION_EVIDENCE.md`](docs/PROPOSAL_REALIZATION_EVIDENCE.md).
 The top-conference related-work map and claim boundaries are in
 [`docs/RELATED_WORK.md`](docs/RELATED_WORK.md).
 The distinction between learned de novo Plans and replay/control Plans is in

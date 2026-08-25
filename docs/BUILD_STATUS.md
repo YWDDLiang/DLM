@@ -1,5 +1,15 @@
 # Build status
 
+## Proposal/realization candidate program
+
+- Main research question and `composition + N` specification are frozen.
+- Historical S.U.N. difficulty analysis is implemented with replay
+  deduplication and broad-stratum uncertainty.
+- Both candidate training features are disabled by default and have no
+  confirmed result yet.
+- No candidate changes `105/1000` Strict or `488/1000` Meta before a
+  1,000-attempt confirmation.
+
 ## Implemented
 
 - Independent paper-facing Git repository and branch.

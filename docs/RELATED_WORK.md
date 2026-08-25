@@ -77,9 +77,13 @@ safe regions, while diversity-aware rewards mitigate that failure. Conversely,
 shows that structural improvement is possible without changing composition.
 
 The correct conclusion is not that reward optimization only selects easy
-chemistry. Aggregate stability must be decomposed into chemistry-mix change and
-within-chemistry structural conversion. H1-A2 uses its explicit Plan/body/
-refiner stages to make that attribution visible.
+chemistry. More generally, aggregate generative-materials yield does not
+identify whether improvement comes from changing the distribution of explored
+material specifications, increasing structural realization conditional on a
+specification, or both. This proposal-versus-realization ambiguity is the Main
+Scientific RQ. H1-A2 instantiates it for crystals through explicit Planner/
+anchored-body/refiner stages, while treating the decomposition as accounting
+rather than causal mediation.
 
 ## 2026 horizon, not core accepted baselines
 
@@ -98,12 +102,15 @@ top-conference-accepted core comparisons.
 
 Strong recent methods have addressed invariant representations, continuous
 periodic manifolds, exact space-group symmetry, unified diffusion and flow,
-hybrid proposal plus refinement, and stability-oriented feedback. H1-A2
-targets a narrower slot:
+hybrid proposal plus refinement, and stability-oriented feedback. A remaining
+scientific ambiguity is whether higher aggregate discovery yield reflects
+which material specifications were explored or how well each was structurally
+realized. H1-A2 targets that question in crystals through a narrower
+methodological slot:
 
-> **Sample global chemistry, instantiate its exact-cardinality typed state,
-> complete quantized periodic geometry by non-prefix masked generation, and
-> audit separately what is gained by chemistry selection, discrete realization,
+> **Sample global chemistry, anchor its exact-cardinality typed state, complete
+> quantized periodic geometry by non-prefix masked generation, and audit
+> separately what is gained by chemistry selection, conditional realization,
 > and continuous refinement.**
 
 This is interesting only if the interface is precise. “Replacing an AR model
@@ -115,7 +122,12 @@ refiner invariants.
 
 Safe claims:
 
-- crystal serialization need not define the generation order;
+- aggregate S.U.N. conflates attempted-chemistry selection and conditional
+  structural realization;
+- composition-standardized conversion can test whether measured chemistry
+  reweighting explains an aggregate gain;
+- crystal serialization need not define the generation order inside the
+  mechanism analysis;
 - masked completion is a plausible inductive bias for composition-anchored
   periodic geometry;
 - typed discrete and continuous variables benefit from explicit interfaces;

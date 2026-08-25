@@ -7,6 +7,12 @@ time replay of an MP-20-derived or frozen Plan is conditioning. The main
 H1-A2 route is fully de novo at the Plan level only when its Plan is sampled
 from the learned condition source.
 
+This distinction also instantiates the paper's proposal-versus-realization
+analysis. The learned source determines which compositions are proposed;
+anchoring composition and `N` defines the conditional realization task for the
+Crystal DLM and refiner. Aggregate gains are therefore reported alongside the
+proposed-composition distribution and composition-standardized conversion.
+
 ## Three Plan sources
 
 ### A_learned: main fully de novo system
@@ -33,14 +39,15 @@ Recommended name:
 
 > **Gold Plan (R5-C; conditional executor reference)**
 
-It is not Planner-free, not fully de novo at the Plan level, and not a
-mathematical upper bound on novelty, diversity, or S.U.N.
+It may be free of a learned Planner-model call at inference, but it is not
+Plan-unconditioned, not fully de novo at the Plan level, and not a mathematical
+upper bound on novelty, diversity, or S.U.N.
 
 ### C_replay: frozen generated-Plan control
 
-A frozen H1-A2 or R03 Plan bundle fixes the scientific conditions so body and
-refiner changes can be paired. It is a downstream reproducibility and mechanism
-control, not a gold Plan and not a new learned-Plan cohort.
+A frozen generated-Plan bundle fixes the scientific conditions so body and
+refiner changes can be paired. It is a downstream reproducibility and
+mechanism control, not a gold Plan and not a new learned-Plan cohort.
 
 ## Paper use
 

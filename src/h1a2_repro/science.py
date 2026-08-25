@@ -43,6 +43,28 @@ class InferenceDefaults:
 SEEDS = SeedDefaults()
 INFERENCE = InferenceDefaults()
 
+MAIN_RESEARCH_QUESTION = (
+    "In generative materials discovery, to what extent do gains in discovery "
+    "yield arise from changing the distribution of material specifications "
+    "being explored, versus improving structural realization conditional on "
+    "an explored specification?"
+)
+
+MATERIAL_SPECIFICATION = "composition + atom count N"
+
+CONTRIBUTION_ONE = {
+    "name": "Specification-compiled exact-cardinality Crystal DLM",
+    "state_length": "7+4N",
+    "anchored": ("N", "element multiset"),
+    "generated": "6+3N lattice/coordinate tokens",
+    "schedule": ("lattice", "X", "Y", "Z"),
+}
+
+CANDIDATE_METHODS = {
+    "counterfactual_plan_grounding": {"enabled_by_default": False, "status": "unconfirmed"},
+    "difficulty_decomposed_planner": {"enabled_by_default": False, "status": "unconfirmed"},
+}
+
 PUBLIC_RESULT = {
     "method": "H1-A2 method family",
     "primary_view": "paper_sun_main_table",
