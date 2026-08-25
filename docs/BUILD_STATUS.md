@@ -21,6 +21,8 @@
 - Candidate B完成`34697`训练和`34704` Plan-256后停止；两个seed均少1个
   parsed Plan，projected Strict/Meta mix均下降，不进入downstream；
 - Candidate A继续`34700`，step500 factual val CE为1.6240，对照为1.9153。
+  Preliminary证据见
+  [`GROUNDING_34700_PRELIMINARY.md`](../results/remote_screens/GROUNDING_34700_PRELIMINARY.md)。
 
 ## 已完成
 
