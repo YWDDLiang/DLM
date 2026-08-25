@@ -48,6 +48,8 @@ Proposal–Realization故事与现有分析、最小新增推理的优先级见
 [`docs/EXPERIMENT_PRIORITIES_INTERNAL.md`](docs/EXPERIMENT_PRIORITIES_INTERNAL.md)。
 双候选方法、选择规则和fallback见
 [`docs/DUAL_CANDIDATE_PROGRAM_INTERNAL.md`](docs/DUAL_CANDIDATE_PROGRAM_INTERNAL.md)。
+去重后的H1-A2化学难度表见
+[`results/historical_difficulty/analysis.md`](results/historical_difficulty/analysis.md)。
 最新顶会相关工作、CrysLLMGen最近邻分析与故事缺口见
 [`docs/RELATED_WORK_INTERNAL.md`](docs/RELATED_WORK_INTERNAL.md)。
 Fully de novo边界、learned Planner与R5C/Plan replay控制的区别见
