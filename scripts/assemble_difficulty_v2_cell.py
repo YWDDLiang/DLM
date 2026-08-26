@@ -71,7 +71,11 @@ def main() -> None:
     parser.add_argument("--dlm-seed", type=int, required=True)
     parser.add_argument("--refiner-seed", type=int, required=True)
     parser.add_argument("--denominator", type=int, default=256)
-    parser.add_argument("--variant", choices=("v2", "strong20-v3"), default="v2")
+    parser.add_argument(
+        "--variant",
+        choices=("v2", "strong20-v3", "meta-guard-v4"),
+        default="v2",
+    )
     args = parser.parse_args()
 
     planner_raw = read_jsonl(args.planner_dir / "raw_generations.jsonl")
@@ -102,7 +106,7 @@ def main() -> None:
         planner_arm = "V1-control" if args.arm == "control" else "difficulty-normalized-v2"
         attempt_prefix = "h1a2-diff-v2"
         report_schema = "h1a2_difficulty_v2_generation_report_v1"
-    else:
+    elif args.variant == "strong20-v3":
         method = (
             "H1-A2-DIFFICULTY-STRONG20-V3-CONTROL"
             if args.arm == "control"
@@ -111,6 +115,15 @@ def main() -> None:
         planner_arm = "strong20-matched-control" if args.arm == "control" else "difficulty-strong20-v3"
         attempt_prefix = "h1a2-diff-strong20-v3"
         report_schema = "h1a2_difficulty_strong20_v3_generation_report_v1"
+    else:
+        method = (
+            "H1-A2-PLANNER-P0-CONTROL"
+            if args.arm == "control"
+            else "H1-A2-PLANNER-META-GUARD-V4"
+        )
+        planner_arm = "original-p0" if args.arm == "control" else "meta-guard-v4"
+        attempt_prefix = "h1a2-planner-meta-guard-v4"
+        report_schema = "h1a2_planner_meta_guard_v4_generation_report_v1"
     rows: list[dict] = []
     for ordinal in range(args.denominator):
         planner_row = planner_by_idx[ordinal]

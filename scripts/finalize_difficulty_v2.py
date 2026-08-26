@@ -31,6 +31,12 @@ def rate(numerator: int, denominator: int) -> float:
     return 0.0 if denominator == 0 else numerator / denominator
 
 
+def optional_delta(candidate: float | None, control: float | None) -> float | None:
+    if candidate is None or control is None:
+        return None
+    return candidate - control
+
+
 def n_bin(value: int) -> str:
     if value <= 4:
         return "01-04"
@@ -51,11 +57,25 @@ def chemistry_signature(plan: dict) -> dict[str, str | bool]:
         "arity": str(len(set(elements))),
         "n_bin": n_bin(n_atoms),
         "all_metal": bool(elements) and all(Element(symbol).is_metal for symbol in elements),
+        "lattice_system": str(plan.get("lattice_system") or "unknown"),
+        "spacegroup_bucket": str(plan.get("spacegroup_bucket") or "unknown"),
+        "volume_per_atom_bin": str(plan.get("volume_per_atom_bin") or "unknown"),
     }
 
 
 def distribution(rows: list[dict], selected: set[int]) -> dict:
-    counters = {key: Counter() for key in ("family", "arity", "n_bin", "all_metal")}
+    counters = {
+        key: Counter()
+        for key in (
+            "family",
+            "arity",
+            "n_bin",
+            "all_metal",
+            "lattice_system",
+            "spacegroup_bucket",
+            "volume_per_atom_bin",
+        )
+    }
     observed = 0
     missing_plan = 0
     for row in rows:
@@ -126,12 +146,18 @@ def main() -> None:
     parser.add_argument("--downstream-run", type=Path, required=True)
     parser.add_argument("--eval-runtime", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--control-nll-seed17", type=float, required=True)
-    parser.add_argument("--candidate-nll-seed17", type=float, required=True)
-    parser.add_argument("--control-nll-seed18", type=float, required=True)
-    parser.add_argument("--candidate-nll-seed18", type=float, required=True)
-    parser.add_argument("--variant", choices=("v2", "strong20-v3"), default="v2")
+    parser.add_argument("--control-nll-seed17", type=float)
+    parser.add_argument("--candidate-nll-seed17", type=float)
+    parser.add_argument("--control-nll-seed18", type=float)
+    parser.add_argument("--candidate-nll-seed18", type=float)
+    parser.add_argument(
+        "--variant",
+        choices=("v2", "strong20-v3", "meta-guard-v4"),
+        default="v2",
+    )
     args = parser.parse_args()
+    is_v3 = args.variant == "strong20-v3"
+    is_v4 = args.variant == "meta-guard-v4"
 
     sys.path.insert(0, str(args.eval_runtime.resolve()))
     import protocol  # noqa: PLC0415
@@ -157,6 +183,16 @@ def main() -> None:
     training_metrics = {}
     for seed in SEEDS:
         for arm in ARMS:
+            if is_v4 and arm == "control":
+                training_metrics[f"s{seed}_{arm}"] = {
+                    "training_mode": "original_P0_no_extra_sft",
+                    "global_step": 0,
+                    "final_eval_loss": None,
+                    "sampled_rows": 0,
+                    "sampled_self_improvement": 0,
+                    "sampled_self_improvement_fraction": 0.0,
+                }
+                continue
             metrics_path = plan_run / f"{arm}_seed{seed}" / "train_metrics.json"
             if not metrics_path.is_file() and arm == "control":
                 parent_file = plan_run / "matched_control_parent.txt"
@@ -165,6 +201,7 @@ def main() -> None:
                     metrics_path = parent / f"control_seed{seed}" / "train_metrics.json"
             metrics = read_json(metrics_path)
             training_metrics[f"s{seed}_{arm}"] = {
+                "training_mode": "weighted_replay_sft",
                 "global_step": int(metrics["global_step"]),
                 "final_eval_loss": float(metrics["final_eval_loss"]),
                 "sampled_rows": metrics.get("sampled_rows"),
@@ -305,6 +342,15 @@ def main() -> None:
                 "family_tvd": tvd(control["family"], candidate["family"]),
                 "arity_tvd": tvd(control["arity"], candidate["arity"]),
                 "n_bin_tvd": tvd(control["n_bin"], candidate["n_bin"]),
+                "lattice_system_tvd": tvd(
+                    control["lattice_system"], candidate["lattice_system"]
+                ),
+                "spacegroup_bucket_tvd": tvd(
+                    control["spacegroup_bucket"], candidate["spacegroup_bucket"]
+                ),
+                "volume_per_atom_bin_tvd": tvd(
+                    control["volume_per_atom_bin"], candidate["volume_per_atom_bin"]
+                ),
                 "all_metal_rate_delta": rate(
                     candidate["all_metal"].get("True", 0), candidate["observed_plans"]
                 )
@@ -323,6 +369,13 @@ def main() -> None:
         "novelty_noninferiority_1pp": pooled_deltas["novel_rate"] >= -0.01
         and pooled_deltas["unique_rate"] >= -0.01,
     }
+    if is_v4:
+        criteria.update(
+            {
+                "candidate_strict_at_least_52_of_512": pooled["candidate"]["strict"] >= 52,
+                "candidate_meta_at_least_256_of_512": pooled["candidate"]["meta"] >= 256,
+            }
+        )
     criteria["route_b_screen_useful"] = all(criteria.values())
 
     pooled_stats = {}
@@ -342,25 +395,33 @@ def main() -> None:
         "seed17": {
             "control": args.control_nll_seed17,
             "candidate": args.candidate_nll_seed17,
-            "candidate_minus_control": args.candidate_nll_seed17 - args.control_nll_seed17,
+            "candidate_minus_control": optional_delta(
+                args.candidate_nll_seed17, args.control_nll_seed17
+            ),
         },
         "seed18": {
             "control": args.control_nll_seed18,
             "candidate": args.candidate_nll_seed18,
-            "candidate_minus_control": args.candidate_nll_seed18 - args.control_nll_seed18,
+            "candidate_minus_control": optional_delta(
+                args.candidate_nll_seed18, args.control_nll_seed18
+            ),
         },
     }
-    is_v3 = args.variant == "strong20-v3"
-    file_stem = (
-        "PLANNER_DIFFICULTY_V3_STRONG20_FINAL"
-        if is_v3
-        else "PLANNER_DIFFICULTY_V2_FINAL"
-    )
+    if is_v4:
+        file_stem = "PLANNER_DIFFICULTY_V4_META_GUARD_FINAL"
+    elif is_v3:
+        file_stem = "PLANNER_DIFFICULTY_V3_STRONG20_FINAL"
+    else:
+        file_stem = "PLANNER_DIFFICULTY_V2_FINAL"
     summary = {
         "schema": (
-            "h1a2_difficulty_decomposed_planner_strong20_v3_final_v1"
-            if is_v3
-            else "h1a2_difficulty_decomposed_planner_v2_final_v1"
+            "h1a2_planner_meta_guard_v4_final_v1"
+            if is_v4
+            else (
+                "h1a2_difficulty_decomposed_planner_strong20_v3_final_v1"
+                if is_v3
+                else "h1a2_difficulty_decomposed_planner_v2_final_v1"
+            )
         ),
         "variant": args.variant,
         "unknown_policy": "excluded from hull-known denominators; never mapped to unstable",
@@ -370,6 +431,11 @@ def main() -> None:
             "downstream": "frozen CE-control DLM + model494; D1 exact-plan; no safe-axis",
             "pairing": "same Planner seed and ordinal; common DLM/refiner random numbers",
             "pairing_caveat": "compositions differ across arms; this is not a fixed-composition realization effect",
+            "absolute_targets": (
+                {"strict_attempts": 52, "meta_attempts": 256, "denominator": 512}
+                if is_v4
+                else None
+            ),
         },
         "difficulty_manifest": difficulty_manifest,
         "training_metrics": training_metrics,
@@ -405,9 +471,13 @@ def main() -> None:
 
     lines = [
         (
-            "# Difficulty-Decomposed Self-Improving Planner strong20 V3 — final two-seed screen"
-            if is_v3
-            else "# Difficulty-Decomposed Self-Improving Planner V2 — final two-seed screen"
+            "# Planner Meta-guard V4 — final two-seed screen"
+            if is_v4
+            else (
+                "# Difficulty-Decomposed Self-Improving Planner strong20 V3 — final two-seed screen"
+                if is_v3
+                else "# Difficulty-Decomposed Self-Improving Planner V2 — final two-seed screen"
+            )
         ),
         "",
         f"Route-B screen useful: **{criteria['route_b_screen_useful']}**",
@@ -455,6 +525,18 @@ def main() -> None:
     lines.extend(["", "## Decision criteria", ""])
     for key, value in criteria.items():
         lines.append(f"- {key}: `{value}`")
+    if is_v4:
+        lines.extend(
+            [
+                "",
+                "## Absolute 10/50 target",
+                "",
+                f"- Candidate Strict: `{pooled['candidate']['strict']}/512` "
+                f"(`{pooled['candidate']['strict_attempt_rate']:.2%}`), target `>=52/512`.",
+                f"- Candidate Meta: `{pooled['candidate']['meta']}/512` "
+                f"(`{pooled['candidate']['meta_attempt_rate']:.2%}`), target `>=256/512`.",
+            ]
+        )
     lines.extend(["", "## Seed stability and statistics", ""])
     for row in per_seed:
         lines.append(
@@ -478,7 +560,11 @@ def main() -> None:
             "",
         ]
     )
-    if is_v3:
+    if is_v4:
+        lines.append(
+            "V4 uses the original P0 Planner as control and 20% non-RL weighted replay with reward 2×Meta+Strict. Alpha=0 removes the explicit proposal-shift multiplier, but the replay buffer does not match P0 stratum mass, so V4 must not be described as composition-preserving."
+        )
+    elif is_v3:
         lines.append(
             "This is the corrected strong20 treatment: dedicated replacement weighted sampling, 20% self-improvement probability, and 800 matched control/candidate updates."
         )
