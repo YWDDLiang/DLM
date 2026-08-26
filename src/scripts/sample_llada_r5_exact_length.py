@@ -139,8 +139,15 @@ def build_tasks(args) -> List[Dict[str, Any]]:
     if args.prompt_jsonl is not None:
         records = read_plan_records(args.prompt_jsonl, args.prompt_field, body_prompt_style=args.body_prompt_style)
         tasks = []
-        for sample_idx in range(args.num_samples):
-            record = records[sample_idx % len(records)]
+        task_count = args.num_samples if args.repeat_prompt_records else min(args.num_samples, len(records))
+        for task_idx in range(task_count):
+            record = records[task_idx % len(records)]
+            sample_idx = task_idx
+            if args.preserve_prompt_sample_idx:
+                source_sample_idx = record["source_row"].get("sample_idx")
+                if source_sample_idx is None:
+                    raise ValueError("--preserve-prompt-sample-idx requires sample_idx in every prompt row")
+                sample_idx = int(source_sample_idx)
             tasks.append(
                 {
                     "sample_idx": sample_idx,
@@ -150,6 +157,8 @@ def build_tasks(args) -> List[Dict[str, Any]]:
                     "prompt_record": record["source_row"],
                 }
             )
+        if len({int(task["sample_idx"]) for task in tasks}) != len(tasks):
+            raise ValueError("prompt sample_idx values must be unique")
         return tasks
     plan = fallback_plan(args.num_atoms)
     if args.prompt is not None and args.body_prompt_style != "formula_only":
@@ -272,6 +281,9 @@ def main() -> None:
     parser.add_argument("--crysllmgen-dir", type=Path, required=True)
     parser.add_argument("--prompt-jsonl", type=Path, default=None)
     parser.add_argument("--prompt-field", default="prompt")
+    parser.add_argument("--repeat-prompt-records", action="store_true", default=True)
+    parser.add_argument("--no-repeat-prompt-records", dest="repeat_prompt_records", action="store_false")
+    parser.add_argument("--preserve-prompt-sample-idx", action="store_true")
     parser.add_argument("--prompt", default=None)
     parser.add_argument("--body-prompt-style", choices=["full_plan_state", "formula_only"], default="full_plan_state")
     parser.add_argument("--num-atoms", type=int, default=8)
