@@ -40,6 +40,8 @@ sample_cell() {
     --prompt-jsonl "${plans}" \
     --num-samples 256 \
     --batch-size 1 \
+    --no-repeat-prompt-records \
+    --preserve-prompt-sample-idx \
     --seed "${seed}" \
     --seed-by-sample-index \
     --temperature 0.7 \
