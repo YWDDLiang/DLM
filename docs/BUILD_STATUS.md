@@ -32,10 +32,16 @@
   sample weight在每个microbatch内完全约掉。因此V2只能解释为“加入buffer rows”的
   pilot，不能作为正确difficulty weighting的负证据；
 - strong20 V3使用独立`difficulty_sampling_weight`做replacement weighted sampling，
-  self-improvement目标概率20%，control/candidate均为800 matched updates；不做超参扫表；
+  self-improvement实际抽样19.875%/20.063%，control/candidate均为800 matched updates；
+  `34766/34771/34776`及fresh official MP终态均已完成；
+- V3 pooled body `+2`、Direct joint `+8`、novel `+6`、N∩U `+5`、Strict
+  `+3/512 = +0.59pp`；Meta all-attempt `-3/512 = -0.59pp`，但Meta hull-known
+  `-2.50pp`，因此仅失败冻结的known-Meta gate；归类为promising scoped signal，
+  不是完整通过；
 - 完整证据见
   [`PLANNER_DIFFICULTY_V2_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V2_FINAL.md)
-  及同名JSON/CSV。H1-A2继续作为fallback；路线B只追加这一项修正版V3。
+  和[`PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md)
+  及同名JSON/CSV。H1-A2继续作为fallback，public headline不变。
 
 ## 已完成
 

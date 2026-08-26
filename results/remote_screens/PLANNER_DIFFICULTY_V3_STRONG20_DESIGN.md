@@ -31,3 +31,12 @@ Planner parse failures remain in the 256-attempt denominator.
 Report both seeds and pooled results. A positive conclusion requires Strict
 direction, Meta non-inferiority within 1pp, and no material body, Direct or
 novelty collapse. Public 105/488 remains unchanged during the screen.
+
+## Final status
+
+The completed report is
+[`PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md`](PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md).
+V3 improved pooled body, Direct joint, novelty, N∩U and Strict, and its
+all-attempt Meta delta stayed within 1pp. It did not pass the conjunctive screen
+because Meta among hull-known structures fell by 2.50pp after hull-known
+coverage increased from 478 to 499.

@@ -1,0 +1,1194 @@
+{
+  "cell_reports": {
+    "s17_candidate": {
+      "cell_id": "s17_candidate",
+      "counts": {
+        "chgnet_energy_known": 253,
+        "generation_succeeded": 253,
+        "hull_known_novel_unique": 225,
+        "hull_known_reconstructed": 248,
+        "hull_unknown_reconstructed": 5,
+        "meta_stable_all_hull_known": 129,
+        "meta_sun": 107,
+        "novel": 231,
+        "novel_unique": 230,
+        "raw_attempts": 256,
+        "reconstructed": 253,
+        "strict_stable_all_hull_known": 32,
+        "strict_sun": 22,
+        "unique_representatives": 252
+      },
+      "direct": {
+        "composition_valid": 222,
+        "joint_valid": 221,
+        "metrics": {
+          "comp_valid": 86.7188,
+          "cov_precision": 98.4375,
+          "cov_recall": 80.8645,
+          "struct_valid": 98.8281,
+          "valid": 86.3281,
+          "wdist_density": 0.9627,
+          "wdist_num_elems": 0.2091
+        },
+        "structure_valid": 253
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.47555555555555556,
+        "meta_sun_all_attempts": 0.41796875,
+        "meta_sun_hull_known_reconstructed": 0.4314516129032258,
+        "strict_among_hull_known_novel_unique": 0.09777777777777778,
+        "strict_sun_all_attempts": 0.0859375,
+        "strict_sun_hull_known_reconstructed": 0.08870967741935484
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 248,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    },
+    "s17_control": {
+      "cell_id": "s17_control",
+      "counts": {
+        "chgnet_energy_known": 254,
+        "generation_succeeded": 254,
+        "hull_known_novel_unique": 208,
+        "hull_known_reconstructed": 237,
+        "hull_unknown_reconstructed": 17,
+        "meta_stable_all_hull_known": 140,
+        "meta_sun": 112,
+        "novel": 222,
+        "novel_unique": 222,
+        "raw_attempts": 256,
+        "reconstructed": 254,
+        "strict_stable_all_hull_known": 28,
+        "strict_sun": 21,
+        "unique_representatives": 254
+      },
+      "direct": {
+        "composition_valid": 219,
+        "joint_valid": 218,
+        "metrics": {
+          "comp_valid": 85.5469,
+          "cov_precision": 98.8281,
+          "cov_recall": 82.5337,
+          "struct_valid": 99.2188,
+          "valid": 85.1562,
+          "wdist_density": 0.768,
+          "wdist_num_elems": 0.1793
+        },
+        "structure_valid": 254
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.5384615384615384,
+        "meta_sun_all_attempts": 0.4375,
+        "meta_sun_hull_known_reconstructed": 0.47257383966244726,
+        "strict_among_hull_known_novel_unique": 0.10096153846153846,
+        "strict_sun_all_attempts": 0.08203125,
+        "strict_sun_hull_known_reconstructed": 0.08860759493670886
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 237,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    },
+    "s18_candidate": {
+      "cell_id": "s18_candidate",
+      "counts": {
+        "chgnet_energy_known": 253,
+        "generation_succeeded": 253,
+        "hull_known_novel_unique": 210,
+        "hull_known_reconstructed": 251,
+        "hull_unknown_reconstructed": 2,
+        "meta_stable_all_hull_known": 147,
+        "meta_sun": 106,
+        "novel": 212,
+        "novel_unique": 212,
+        "raw_attempts": 256,
+        "reconstructed": 253,
+        "strict_stable_all_hull_known": 21,
+        "strict_sun": 15,
+        "unique_representatives": 253
+      },
+      "direct": {
+        "composition_valid": 224,
+        "joint_valid": 224,
+        "metrics": {
+          "comp_valid": 87.5,
+          "cov_precision": 98.0469,
+          "cov_recall": 83.5839,
+          "struct_valid": 98.8281,
+          "valid": 87.5,
+          "wdist_density": 1.0512,
+          "wdist_num_elems": 0.0862
+        },
+        "structure_valid": 253
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.5047619047619047,
+        "meta_sun_all_attempts": 0.4140625,
+        "meta_sun_hull_known_reconstructed": 0.42231075697211157,
+        "strict_among_hull_known_novel_unique": 0.07142857142857142,
+        "strict_sun_all_attempts": 0.05859375,
+        "strict_sun_hull_known_reconstructed": 0.05976095617529881
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 251,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    },
+    "s18_control": {
+      "cell_id": "s18_control",
+      "counts": {
+        "chgnet_energy_known": 250,
+        "generation_succeeded": 250,
+        "hull_known_novel_unique": 207,
+        "hull_known_reconstructed": 241,
+        "hull_unknown_reconstructed": 9,
+        "meta_stable_all_hull_known": 137,
+        "meta_sun": 104,
+        "novel": 215,
+        "novel_unique": 215,
+        "raw_attempts": 256,
+        "reconstructed": 250,
+        "strict_stable_all_hull_known": 19,
+        "strict_sun": 13,
+        "unique_representatives": 250
+      },
+      "direct": {
+        "composition_valid": 219,
+        "joint_valid": 219,
+        "metrics": {
+          "comp_valid": 85.5469,
+          "cov_precision": 97.2656,
+          "cov_recall": 81.174,
+          "struct_valid": 97.6562,
+          "valid": 85.5469,
+          "wdist_density": 0.8151,
+          "wdist_num_elems": 0.1601
+        },
+        "structure_valid": 250
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.5024154589371981,
+        "meta_sun_all_attempts": 0.40625,
+        "meta_sun_hull_known_reconstructed": 0.4315352697095436,
+        "strict_among_hull_known_novel_unique": 0.06280193236714976,
+        "strict_sun_all_attempts": 0.05078125,
+        "strict_sun_hull_known_reconstructed": 0.05394190871369295
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 241,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    }
+  },
+  "cells": [
+    {
+      "arm": "control",
+      "body": 254,
+      "body_attempted": 255,
+      "body_rate": 0.9921875,
+      "direct_comp": 219,
+      "direct_joint": 218,
+      "direct_joint_rate": 0.8515625,
+      "direct_struct": 254,
+      "hull_known": 237,
+      "hull_unknown": 17,
+      "meta": 112,
+      "meta_attempt_rate": 0.4375,
+      "meta_known_rate": 0.47257383966244726,
+      "novel": 222,
+      "novel_rate": 0.8740157480314961,
+      "novel_unique": 222,
+      "novel_unique_rate": 0.8740157480314961,
+      "planner_parse_rate": 0.99609375,
+      "planner_parsed": 255,
+      "reconstructed": 254,
+      "refined": 254,
+      "requested": 256,
+      "seed": 17,
+      "strict": 21,
+      "strict_attempt_rate": 0.08203125,
+      "strict_known_rate": 0.08860759493670886,
+      "unique": 254,
+      "unique_rate": 1.0
+    },
+    {
+      "arm": "candidate",
+      "body": 253,
+      "body_attempted": 255,
+      "body_rate": 0.98828125,
+      "direct_comp": 222,
+      "direct_joint": 221,
+      "direct_joint_rate": 0.86328125,
+      "direct_struct": 253,
+      "hull_known": 248,
+      "hull_unknown": 5,
+      "meta": 107,
+      "meta_attempt_rate": 0.41796875,
+      "meta_known_rate": 0.4314516129032258,
+      "novel": 231,
+      "novel_rate": 0.9130434782608695,
+      "novel_unique": 230,
+      "novel_unique_rate": 0.9090909090909091,
+      "planner_parse_rate": 0.99609375,
+      "planner_parsed": 255,
+      "reconstructed": 253,
+      "refined": 253,
+      "requested": 256,
+      "seed": 17,
+      "strict": 22,
+      "strict_attempt_rate": 0.0859375,
+      "strict_known_rate": 0.08870967741935484,
+      "unique": 252,
+      "unique_rate": 0.9960474308300395
+    },
+    {
+      "arm": "control",
+      "body": 250,
+      "body_attempted": 254,
+      "body_rate": 0.9765625,
+      "direct_comp": 219,
+      "direct_joint": 219,
+      "direct_joint_rate": 0.85546875,
+      "direct_struct": 250,
+      "hull_known": 241,
+      "hull_unknown": 9,
+      "meta": 104,
+      "meta_attempt_rate": 0.40625,
+      "meta_known_rate": 0.4315352697095436,
+      "novel": 215,
+      "novel_rate": 0.86,
+      "novel_unique": 215,
+      "novel_unique_rate": 0.86,
+      "planner_parse_rate": 0.9921875,
+      "planner_parsed": 254,
+      "reconstructed": 250,
+      "refined": 250,
+      "requested": 256,
+      "seed": 18,
+      "strict": 13,
+      "strict_attempt_rate": 0.05078125,
+      "strict_known_rate": 0.05394190871369295,
+      "unique": 250,
+      "unique_rate": 1.0
+    },
+    {
+      "arm": "candidate",
+      "body": 253,
+      "body_attempted": 254,
+      "body_rate": 0.98828125,
+      "direct_comp": 224,
+      "direct_joint": 224,
+      "direct_joint_rate": 0.875,
+      "direct_struct": 253,
+      "hull_known": 251,
+      "hull_unknown": 2,
+      "meta": 106,
+      "meta_attempt_rate": 0.4140625,
+      "meta_known_rate": 0.42231075697211157,
+      "novel": 212,
+      "novel_rate": 0.8379446640316206,
+      "novel_unique": 212,
+      "novel_unique_rate": 0.8379446640316206,
+      "planner_parse_rate": 0.9921875,
+      "planner_parsed": 254,
+      "reconstructed": 253,
+      "refined": 253,
+      "requested": 256,
+      "seed": 18,
+      "strict": 15,
+      "strict_attempt_rate": 0.05859375,
+      "strict_known_rate": 0.05976095617529881,
+      "unique": 253,
+      "unique_rate": 1.0
+    }
+  ],
+  "chemistry": {
+    "s17_candidate": {
+      "body_success": {
+        "all_metal": {
+          "False": 204,
+          "True": 49
+        },
+        "arity": {
+          "2": 31,
+          "3": 145,
+          "4": 71,
+          "5": 6
+        },
+        "family": {
+          "carbide_boride": 29,
+          "chalcogenide": 19,
+          "halide": 16,
+          "intermetallic": 49,
+          "mixed_anion": 37,
+          "oxide": 66,
+          "oxychalcogenide": 4,
+          "oxyhalide": 13,
+          "pnictide": 20
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 21,
+          "05-08": 57,
+          "09-12": 76,
+          "13-20": 99
+        },
+        "observed_plans": 253,
+        "selected": 253
+      },
+      "novel_unique": {
+        "all_metal": {
+          "False": 190,
+          "True": 40
+        },
+        "arity": {
+          "2": 26,
+          "3": 132,
+          "4": 66,
+          "5": 6
+        },
+        "family": {
+          "carbide_boride": 27,
+          "chalcogenide": 19,
+          "halide": 14,
+          "intermetallic": 40,
+          "mixed_anion": 33,
+          "oxide": 62,
+          "oxychalcogenide": 4,
+          "oxyhalide": 12,
+          "pnictide": 19
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 16,
+          "05-08": 50,
+          "09-12": 66,
+          "13-20": 98
+        },
+        "observed_plans": 230,
+        "selected": 230
+      },
+      "planner_parsed": {
+        "all_metal": {
+          "False": 206,
+          "True": 49
+        },
+        "arity": {
+          "2": 32,
+          "3": 145,
+          "4": 72,
+          "5": 6
+        },
+        "family": {
+          "carbide_boride": 31,
+          "chalcogenide": 19,
+          "halide": 16,
+          "intermetallic": 49,
+          "mixed_anion": 37,
+          "oxide": 66,
+          "oxychalcogenide": 4,
+          "oxyhalide": 13,
+          "pnictide": 20
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 21,
+          "05-08": 59,
+          "09-12": 76,
+          "13-20": 99
+        },
+        "observed_plans": 255,
+        "selected": 255
+      },
+      "reconstructed": {
+        "all_metal": {
+          "False": 204,
+          "True": 49
+        },
+        "arity": {
+          "2": 31,
+          "3": 145,
+          "4": 71,
+          "5": 6
+        },
+        "family": {
+          "carbide_boride": 29,
+          "chalcogenide": 19,
+          "halide": 16,
+          "intermetallic": 49,
+          "mixed_anion": 37,
+          "oxide": 66,
+          "oxychalcogenide": 4,
+          "oxyhalide": 13,
+          "pnictide": 20
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 21,
+          "05-08": 57,
+          "09-12": 76,
+          "13-20": 99
+        },
+        "observed_plans": 253,
+        "selected": 253
+      }
+    },
+    "s17_control": {
+      "body_success": {
+        "all_metal": {
+          "False": 198,
+          "True": 56
+        },
+        "arity": {
+          "2": 33,
+          "3": 150,
+          "4": 63,
+          "5": 8
+        },
+        "family": {
+          "carbide_boride": 33,
+          "chalcogenide": 25,
+          "halide": 11,
+          "intermetallic": 56,
+          "mixed_anion": 26,
+          "oxide": 68,
+          "oxychalcogenide": 7,
+          "oxyhalide": 11,
+          "pnictide": 17
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 25,
+          "05-08": 56,
+          "09-12": 79,
+          "13-20": 94
+        },
+        "observed_plans": 254,
+        "selected": 254
+      },
+      "novel_unique": {
+        "all_metal": {
+          "False": 174,
+          "True": 48
+        },
+        "arity": {
+          "2": 24,
+          "3": 133,
+          "4": 58,
+          "5": 7
+        },
+        "family": {
+          "carbide_boride": 25,
+          "chalcogenide": 25,
+          "halide": 10,
+          "intermetallic": 48,
+          "mixed_anion": 25,
+          "oxide": 57,
+          "oxychalcogenide": 6,
+          "oxyhalide": 10,
+          "pnictide": 16
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 22,
+          "05-08": 45,
+          "09-12": 71,
+          "13-20": 84
+        },
+        "observed_plans": 222,
+        "selected": 222
+      },
+      "planner_parsed": {
+        "all_metal": {
+          "False": 199,
+          "True": 56
+        },
+        "arity": {
+          "2": 33,
+          "3": 150,
+          "4": 64,
+          "5": 8
+        },
+        "family": {
+          "carbide_boride": 33,
+          "chalcogenide": 25,
+          "halide": 11,
+          "intermetallic": 56,
+          "mixed_anion": 27,
+          "oxide": 68,
+          "oxychalcogenide": 7,
+          "oxyhalide": 11,
+          "pnictide": 17
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 25,
+          "05-08": 56,
+          "09-12": 79,
+          "13-20": 95
+        },
+        "observed_plans": 255,
+        "selected": 255
+      },
+      "reconstructed": {
+        "all_metal": {
+          "False": 198,
+          "True": 56
+        },
+        "arity": {
+          "2": 33,
+          "3": 150,
+          "4": 63,
+          "5": 8
+        },
+        "family": {
+          "carbide_boride": 33,
+          "chalcogenide": 25,
+          "halide": 11,
+          "intermetallic": 56,
+          "mixed_anion": 26,
+          "oxide": 68,
+          "oxychalcogenide": 7,
+          "oxyhalide": 11,
+          "pnictide": 17
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 25,
+          "05-08": 56,
+          "09-12": 79,
+          "13-20": 94
+        },
+        "observed_plans": 254,
+        "selected": 254
+      }
+    },
+    "s18_candidate": {
+      "body_success": {
+        "all_metal": {
+          "False": 188,
+          "True": 65
+        },
+        "arity": {
+          "2": 36,
+          "3": 163,
+          "4": 49,
+          "5": 5
+        },
+        "family": {
+          "carbide_boride": 26,
+          "chalcogenide": 22,
+          "halide": 22,
+          "intermetallic": 65,
+          "mixed_anion": 24,
+          "other": 2,
+          "oxide": 61,
+          "oxychalcogenide": 8,
+          "oxyhalide": 13,
+          "pnictide": 10
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 32,
+          "05-08": 57,
+          "09-12": 74,
+          "13-20": 90
+        },
+        "observed_plans": 253,
+        "selected": 253
+      },
+      "novel_unique": {
+        "all_metal": {
+          "False": 168,
+          "True": 44
+        },
+        "arity": {
+          "2": 25,
+          "3": 143,
+          "4": 39,
+          "5": 5
+        },
+        "family": {
+          "carbide_boride": 20,
+          "chalcogenide": 22,
+          "halide": 16,
+          "intermetallic": 44,
+          "mixed_anion": 23,
+          "other": 2,
+          "oxide": 55,
+          "oxychalcogenide": 8,
+          "oxyhalide": 12,
+          "pnictide": 10
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 22,
+          "05-08": 45,
+          "09-12": 61,
+          "13-20": 84
+        },
+        "observed_plans": 212,
+        "selected": 212
+      },
+      "planner_parsed": {
+        "all_metal": {
+          "False": 189,
+          "True": 65
+        },
+        "arity": {
+          "2": 36,
+          "3": 164,
+          "4": 49,
+          "5": 5
+        },
+        "family": {
+          "carbide_boride": 26,
+          "chalcogenide": 22,
+          "halide": 22,
+          "intermetallic": 65,
+          "mixed_anion": 24,
+          "other": 2,
+          "oxide": 61,
+          "oxychalcogenide": 9,
+          "oxyhalide": 13,
+          "pnictide": 10
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 32,
+          "05-08": 58,
+          "09-12": 74,
+          "13-20": 90
+        },
+        "observed_plans": 254,
+        "selected": 254
+      },
+      "reconstructed": {
+        "all_metal": {
+          "False": 188,
+          "True": 65
+        },
+        "arity": {
+          "2": 36,
+          "3": 163,
+          "4": 49,
+          "5": 5
+        },
+        "family": {
+          "carbide_boride": 26,
+          "chalcogenide": 22,
+          "halide": 22,
+          "intermetallic": 65,
+          "mixed_anion": 24,
+          "other": 2,
+          "oxide": 61,
+          "oxychalcogenide": 8,
+          "oxyhalide": 13,
+          "pnictide": 10
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 32,
+          "05-08": 57,
+          "09-12": 74,
+          "13-20": 90
+        },
+        "observed_plans": 253,
+        "selected": 253
+      }
+    },
+    "s18_control": {
+      "body_success": {
+        "all_metal": {
+          "False": 197,
+          "True": 53
+        },
+        "arity": {
+          "2": 36,
+          "3": 143,
+          "4": 65,
+          "5": 6
+        },
+        "family": {
+          "carbide_boride": 32,
+          "chalcogenide": 22,
+          "halide": 16,
+          "intermetallic": 53,
+          "mixed_anion": 25,
+          "other": 1,
+          "oxide": 66,
+          "oxychalcogenide": 10,
+          "oxyhalide": 11,
+          "pnictide": 14
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 25,
+          "05-08": 46,
+          "09-12": 73,
+          "13-20": 106
+        },
+        "observed_plans": 250,
+        "selected": 250
+      },
+      "novel_unique": {
+        "all_metal": {
+          "False": 173,
+          "True": 42
+        },
+        "arity": {
+          "2": 28,
+          "3": 123,
+          "4": 59,
+          "5": 5
+        },
+        "family": {
+          "carbide_boride": 29,
+          "chalcogenide": 20,
+          "halide": 11,
+          "intermetallic": 42,
+          "mixed_anion": 23,
+          "other": 1,
+          "oxide": 57,
+          "oxychalcogenide": 10,
+          "oxyhalide": 11,
+          "pnictide": 11
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 16,
+          "05-08": 37,
+          "09-12": 63,
+          "13-20": 99
+        },
+        "observed_plans": 215,
+        "selected": 215
+      },
+      "planner_parsed": {
+        "all_metal": {
+          "False": 200,
+          "True": 54
+        },
+        "arity": {
+          "2": 37,
+          "3": 145,
+          "4": 66,
+          "5": 6
+        },
+        "family": {
+          "carbide_boride": 33,
+          "chalcogenide": 22,
+          "halide": 16,
+          "intermetallic": 54,
+          "mixed_anion": 25,
+          "other": 1,
+          "oxide": 68,
+          "oxychalcogenide": 10,
+          "oxyhalide": 11,
+          "pnictide": 14
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 27,
+          "05-08": 46,
+          "09-12": 73,
+          "13-20": 108
+        },
+        "observed_plans": 254,
+        "selected": 254
+      },
+      "reconstructed": {
+        "all_metal": {
+          "False": 197,
+          "True": 53
+        },
+        "arity": {
+          "2": 36,
+          "3": 143,
+          "4": 65,
+          "5": 6
+        },
+        "family": {
+          "carbide_boride": 32,
+          "chalcogenide": 22,
+          "halide": 16,
+          "intermetallic": 53,
+          "mixed_anion": 25,
+          "other": 1,
+          "oxide": 66,
+          "oxychalcogenide": 10,
+          "oxyhalide": 11,
+          "pnictide": 14
+        },
+        "missing_plan": 0,
+        "n_bin": {
+          "01-04": 25,
+          "05-08": 46,
+          "09-12": 73,
+          "13-20": 106
+        },
+        "observed_plans": 250,
+        "selected": 250
+      }
+    }
+  },
+  "chemistry_drift": {
+    "seed17": {
+      "body_success": {
+        "all_metal_rate_delta": -0.026796551616818653,
+        "arity_tvd": 0.0326009150042015,
+        "family_tvd": 0.08401543680557719,
+        "n_bin_tvd": 0.026049609411471802
+      },
+      "novel_unique": {
+        "all_metal_rate_delta": -0.042303172737955363,
+        "arity_tvd": 0.030630630630630616,
+        "family_tvd": 0.08194281237759499,
+        "n_bin_tvd": 0.06239717978848411
+      },
+      "planner_parsed": {
+        "all_metal_rate_delta": -0.02745098039215685,
+        "arity_tvd": 0.03137254901960787,
+        "family_tvd": 0.0784313725490196,
+        "n_bin_tvd": 0.027450980392156876
+      },
+      "reconstructed": {
+        "all_metal_rate_delta": -0.026796551616818653,
+        "arity_tvd": 0.0326009150042015,
+        "family_tvd": 0.08401543680557719,
+        "n_bin_tvd": 0.026049609411471802
+      }
+    },
+    "seed18": {
+      "body_success": {
+        "all_metal_rate_delta": 0.04491699604743085,
+        "arity_tvd": 0.07226877470355736,
+        "family_tvd": 0.0791620553359684,
+        "n_bin_tvd": 0.0682687747035573
+      },
+      "novel_unique": {
+        "all_metal_rate_delta": 0.012198332602018441,
+        "arity_tvd": 0.10276437033786753,
+        "family_tvd": 0.058995173321632295,
+        "n_bin_tvd": 0.06952610794207986
+      },
+      "planner_parsed": {
+        "all_metal_rate_delta": 0.04330708661417321,
+        "arity_tvd": 0.07480314960629919,
+        "family_tvd": 0.07874015748031496,
+        "n_bin_tvd": 0.07086614173228348
+      },
+      "reconstructed": {
+        "all_metal_rate_delta": 0.04491699604743085,
+        "arity_tvd": 0.07226877470355736,
+        "family_tvd": 0.0791620553359684,
+        "n_bin_tvd": 0.0682687747035573
+      }
+    }
+  },
+  "criteria": {
+    "body_noninferiority_1pp": true,
+    "direct_joint_noninferiority_1pp": true,
+    "meta_noninferiority_1pp": false,
+    "novelty_noninferiority_1pp": true,
+    "planner_parse_noninferiority_1pp": true,
+    "route_b_screen_useful": false,
+    "strict_direction": true
+  },
+  "design": {
+    "attempts_per_cell": 256,
+    "downstream": "frozen CE-control DLM + model494; D1 exact-plan; no safe-axis",
+    "pairing": "same Planner seed and ordinal; common DLM/refiner random numbers",
+    "pairing_caveat": "compositions differ across arms; this is not a fixed-composition realization effect",
+    "planner_seeds": [
+      17,
+      18
+    ]
+  },
+  "difficulty_manifest": {
+    "anchor_rows": 3200,
+    "buffer_fraction_by_total_weight": 0.2,
+    "buffer_rows": 1219,
+    "cross_fitting": {
+      "folds": 5,
+      "prior_strength": 20.0
+    },
+    "duplicates_removed": 0,
+    "features": [
+      "family",
+      "arity",
+      "n_bin",
+      "all_metal"
+    ],
+    "reward": "I(meta_sun)+I(strict_sun); hull_unknown excluded",
+    "sampling_weight_key": "difficulty_sampling_weight",
+    "sampling_weight_summary": {
+      "by_source_count": {
+        "anchor": 3200,
+        "difficulty_decomposed_self_improvement": 1219
+      },
+      "by_source_probability": {
+        "anchor": 0.8000000000000027,
+        "difficulty_decomposed_self_improvement": 0.20000000000000023
+      },
+      "by_source_weight": {
+        "anchor": 3200.0,
+        "difficulty_decomposed_self_improvement": 799.9999999999982
+      },
+      "count": 4419,
+      "ess": 4031.4783782801956,
+      "max_weight": 2.650106774591043,
+      "min_weight": 0.15044934391057882,
+      "total_weight": 3999.9999999999864,
+      "weight_key": "difficulty_sampling_weight"
+    },
+    "schema": "difficulty-decomposed-planner-buffer@2",
+    "weighting": {
+      "alpha": 1.0,
+      "beta": 1.0,
+      "count": 1219,
+      "ess": 832.5014719075864,
+      "ess_ratio": 0.6829380409414162,
+      "factorization": "proposal_shift_times_within_stratum_normalized_advantage",
+      "max_weight": 4.038100197783092,
+      "min_weight": 0.22924718778374392,
+      "scale": 1.0,
+      "temperature": 1.0
+    }
+  },
+  "per_seed": [
+    {
+      "deltas": {
+        "body_rate": -0.00390625,
+        "direct_joint_rate": 0.01171875,
+        "meta_attempt_rate": -0.01953125,
+        "meta_known_rate": -0.04112222675922145,
+        "novel_rate": 0.03902773022937345,
+        "novel_unique_rate": 0.035075161059412996,
+        "planner_parse_rate": 0.0,
+        "strict_attempt_rate": 0.00390625,
+        "strict_known_rate": 0.00010208248264598208,
+        "unique_rate": -0.0039525691699604515
+      },
+      "known_both": 232,
+      "meta_mcnemar": {
+        "candidate_only": 57,
+        "control_only": 65,
+        "discordant": 122,
+        "two_sided_exact_p": 0.5264163099662331
+      },
+      "seed": 17,
+      "strict_mcnemar": {
+        "candidate_only": 17,
+        "control_only": 18,
+        "discordant": 35,
+        "two_sided_exact_p": 1.0
+      }
+    },
+    {
+      "deltas": {
+        "body_rate": 0.01171875,
+        "direct_joint_rate": 0.01953125,
+        "meta_attempt_rate": 0.0078125,
+        "meta_known_rate": -0.009224512737432022,
+        "novel_rate": -0.022055335968379386,
+        "novel_unique_rate": -0.022055335968379386,
+        "planner_parse_rate": 0.0,
+        "strict_attempt_rate": 0.0078125,
+        "strict_known_rate": 0.0058190474616058585,
+        "unique_rate": 0.0
+      },
+      "known_both": 237,
+      "meta_mcnemar": {
+        "candidate_only": 49,
+        "control_only": 51,
+        "discordant": 100,
+        "two_sided_exact_p": 0.9204107626128213
+      },
+      "seed": 18,
+      "strict_mcnemar": {
+        "candidate_only": 11,
+        "control_only": 10,
+        "discordant": 21,
+        "two_sided_exact_p": 1.0
+      }
+    }
+  ],
+  "pooled": {
+    "candidate": {
+      "body": 506,
+      "body_attempted": 509,
+      "body_rate": 0.98828125,
+      "direct_comp": 446,
+      "direct_joint": 445,
+      "direct_joint_rate": 0.869140625,
+      "direct_struct": 506,
+      "hull_known": 499,
+      "hull_unknown": 7,
+      "meta": 213,
+      "meta_attempt_rate": 0.416015625,
+      "meta_known_rate": 0.42685370741482964,
+      "novel": 443,
+      "novel_rate": 0.8754940711462451,
+      "novel_unique": 442,
+      "novel_unique_rate": 0.8735177865612648,
+      "planner_parse_rate": 0.994140625,
+      "planner_parsed": 509,
+      "reconstructed": 506,
+      "refined": 506,
+      "requested": 512,
+      "strict": 37,
+      "strict_attempt_rate": 0.072265625,
+      "strict_known_rate": 0.07414829659318638,
+      "unique": 505,
+      "unique_rate": 0.9980237154150198
+    },
+    "control": {
+      "body": 504,
+      "body_attempted": 509,
+      "body_rate": 0.984375,
+      "direct_comp": 438,
+      "direct_joint": 437,
+      "direct_joint_rate": 0.853515625,
+      "direct_struct": 504,
+      "hull_known": 478,
+      "hull_unknown": 26,
+      "meta": 216,
+      "meta_attempt_rate": 0.421875,
+      "meta_known_rate": 0.45188284518828453,
+      "novel": 437,
+      "novel_rate": 0.8670634920634921,
+      "novel_unique": 437,
+      "novel_unique_rate": 0.8670634920634921,
+      "planner_parse_rate": 0.994140625,
+      "planner_parsed": 509,
+      "reconstructed": 504,
+      "refined": 504,
+      "requested": 512,
+      "strict": 34,
+      "strict_attempt_rate": 0.06640625,
+      "strict_known_rate": 0.07112970711297072,
+      "unique": 504,
+      "unique_rate": 1.0
+    }
+  },
+  "pooled_deltas": {
+    "body_rate": 0.00390625,
+    "direct_joint_rate": 0.015625,
+    "meta_attempt_rate": -0.005859375,
+    "meta_known_rate": -0.02502913777345489,
+    "novel_rate": 0.00843057908275302,
+    "novel_unique_rate": 0.0064542944977726835,
+    "planner_parse_rate": 0.0,
+    "strict_attempt_rate": 0.005859375,
+    "strict_known_rate": 0.003018589480215661,
+    "unique_rate": -0.0019762845849802257
+  },
+  "pooled_statistics": {
+    "meta_attempt_unpaired_z": {
+      "two_sided_p": 0.8492986729925894,
+      "z": -0.19001334531866187
+    },
+    "meta_known_both_mcnemar": {
+      "candidate_only": 106,
+      "control_only": 116,
+      "discordant": 222,
+      "two_sided_exact_p": 0.5459134899887825
+    },
+    "strict_attempt_unpaired_z": {
+      "two_sided_p": 0.7120838700972263,
+      "z": 0.36905883659697564
+    },
+    "strict_known_both_mcnemar": {
+      "candidate_only": 28,
+      "control_only": 28,
+      "discordant": 56,
+      "two_sided_exact_p": 1.0
+    }
+  },
+  "schema": "h1a2_difficulty_decomposed_planner_strong20_v3_final_v1",
+  "seed_delta_statistics": {
+    "meta_attempt_rate": {
+      "ci95_high": 0.16785546875,
+      "ci95_low": -0.17957421875,
+      "mean": -0.005859375,
+      "sd": 0.01933495104806966
+    },
+    "strict_attempt_rate": {
+      "ci95_high": 0.03067578125,
+      "ci95_low": -0.01895703125,
+      "mean": 0.005859375,
+      "sd": 0.0027621358640099515
+    }
+  },
+  "statistics_scope": {
+    "mcnemar": "exact test on common-random-number ordinal pairs; end-to-end only, not fixed-composition",
+    "planner_inference_unit": "Planner training seed; n=2, so this remains a screen rather than population-level confirmation",
+    "unpaired_z": "descriptive attempt-level comparison of different proposal distributions"
+  },
+  "training_metrics": {
+    "s17_candidate": {
+      "final_eval_loss": 0.28425854742527007,
+      "global_step": 800,
+      "sampled_rows": 6400,
+      "sampled_self_improvement": 1272,
+      "sampled_self_improvement_fraction": 0.19875
+    },
+    "s17_control": {
+      "final_eval_loss": 0.283758265376091,
+      "global_step": 800,
+      "sampled_rows": 6400,
+      "sampled_self_improvement": 0,
+      "sampled_self_improvement_fraction": 0.0
+    },
+    "s18_candidate": {
+      "final_eval_loss": 0.28466465443372724,
+      "global_step": 800,
+      "sampled_rows": 6400,
+      "sampled_self_improvement": 1284,
+      "sampled_self_improvement_fraction": 0.200625
+    },
+    "s18_control": {
+      "final_eval_loss": 0.28409449458122255,
+      "global_step": 800,
+      "sampled_rows": 6400,
+      "sampled_self_improvement": 0,
+      "sampled_self_improvement_fraction": 0.0
+    }
+  },
+  "unknown_policy": "excluded from hull-known denominators; never mapped to unstable",
+  "validation_nll": {
+    "seed17": {
+      "candidate": 0.28425854742527007,
+      "candidate_minus_control": 0.0005002820491790683,
+      "control": 0.283758265376091
+    },
+    "seed18": {
+      "candidate": 0.28466465443372724,
+      "candidate_minus_control": 0.0005701598525046925,
+      "control": 0.28409449458122255
+    }
+  },
+  "variant": "strong20-v3"
+}

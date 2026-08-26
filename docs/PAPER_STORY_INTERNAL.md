@@ -393,7 +393,7 @@ hull-known约`-1.36pp`，因此不能包装成全面提升，也不能替换现�
 当前最诚实的身份是：counterfactual grounding改善了部分realization与Strict行为，
 但存在Meta trade-off，值得作为最终技术贡献候选继续保留。
 
-### Candidate B：Difficulty-Decomposed Self-Improving Planner V2
+### Candidate B：Difficulty-Decomposed Self-Improving Planner V2→strong20 V3
 
 未归一化V1（`34697/34704`）冻结为负结果。修正版V2采用
 `proposal_shift × within-stratum-normalized advantage`，历史buffer为1219条，
@@ -421,6 +421,23 @@ V2实际测试的是加入1219条self-improvement rows后的近似uniform buffer
 修正版strong20 V3采用独立sampling-weight字段与replacement weighted sampling，
 将self-improvement真实抽样概率设为20%，并将control/candidate统一为800 updates。
 
+strong20 V3实际抽样率为`19.875%/20.063%`。在两个Planner seed、每cell 256 attempts
+的冻结下游中，pooled结果为：
+
+- body：`504 → 506`，`+0.39pp`；
+- Direct joint：`437 → 445`，`+1.56pp`；
+- novel：`437 → 443`，N∩U：`437 → 442`；
+- Strict：`34/512 → 37/512`，`+0.59pp`，且两个seed方向均为正；
+- Meta all-attempt：`216/512 → 213/512`，`-0.59pp`；
+- hull known/unknown：`478/26 → 499/7`。
+
+这说明正确加权后出现了比V2更一致的realization、novelty和Strict正信号，支持“Plan
+优化有效但效应较小”的解释。不过，新增21个hull-known结构扩大了known denominator，
+Meta hull-known rate由`45.19%`降至`42.69%`（`-2.50pp`），因此未通过事前要求的
+all-attempt与known-rate双重Meta non-inferiority gate。该结果应称promising scoped
+Planner improvement，不能称完整通过或替换public headline。Pooled exact McNemar的
+Strict/Meta p值分别为`1.0/0.5459`，两个Planner seed仍不足以作强显著性主张。
+
 这项负结果仍直接服务主RQ：Planner改变proposal distribution、甚至提高Direct joint，
 并不自动意味着S.U.N.提升。它是proposal-mix与downstream conversion必须分开报告的
 内部证据，但两个Planner seed不足以支持面向全领域的普遍结论。不同arms的composition
@@ -431,6 +448,8 @@ V2实际测试的是加入1219条self-improvement rows后的近似uniform buffer
 [`PLANNER_DIFFICULTY_V2_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V2_FINAL.md)、
 同名JSON和CSV。论文主线继续以冻结H1-A2为fallback，并优先保留Candidate A；
 public `105/1000 Strict、488/1000 Meta`保持不变。V3在独立run中评价，不覆盖V2。
+完整证据见
+[`PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md)。
 
 ## 最强剩余拒稿风险
 
