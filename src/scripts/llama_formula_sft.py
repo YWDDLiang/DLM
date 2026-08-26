@@ -19,7 +19,7 @@ if str(PROJECT_ROOT) not in sys.path:
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer, get_cosine_schedule_with_warmup
 
@@ -28,6 +28,7 @@ from crystal_dlm.h1_llm_planner import (  # noqa: E402
     ensure_peft_cache_compat,
     load_llama3_compatible_config,
 )
+from h1a2_repro.difficulty import sample_weight_summary  # noqa: E402
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -82,7 +83,15 @@ class FormulaPlanDataset(Dataset):
             "input_ids": torch.tensor(input_ids, dtype=torch.long),
             "labels": torch.tensor(labels, dtype=torch.long),
             "sample_weight": float(row.get("sample_weight", 1.0) or 1.0),
+            "self_improvement": int(
+                row.get("source_kind") == "difficulty_decomposed_self_improvement"
+            ),
         }
+
+    def sampling_weights(self, weight_key: str, *, require_key: bool) -> list[float]:
+        if require_key and any(weight_key not in row for row in self.rows):
+            raise ValueError(f"training row misses required sampling weight {weight_key!r}")
+        return [float(row.get(weight_key, 1.0) or 1.0) for row in self.rows]
 
 
 def collate(batch: list[dict[str, Any]], pad_token_id: int) -> dict[str, torch.Tensor]:
@@ -91,13 +100,21 @@ def collate(batch: list[dict[str, Any]], pad_token_id: int) -> dict[str, torch.T
     attention_mask = torch.zeros((len(batch), max_len), dtype=torch.long)
     labels = torch.full((len(batch), max_len), -100, dtype=torch.long)
     weights = torch.ones((len(batch),), dtype=torch.float32)
+    self_improvement = torch.zeros((len(batch),), dtype=torch.long)
     for idx, item in enumerate(batch):
         length = item["input_ids"].numel()
         input_ids[idx, :length] = item["input_ids"]
         attention_mask[idx, :length] = 1
         labels[idx, :length] = item["labels"]
         weights[idx] = float(item["sample_weight"])
-    return {"input_ids": input_ids, "attention_mask": attention_mask, "labels": labels, "sample_weight": weights}
+        self_improvement[idx] = int(item["self_improvement"])
+    return {
+        "input_ids": input_ids,
+        "attention_mask": attention_mask,
+        "labels": labels,
+        "sample_weight": weights,
+        "self_improvement": self_improvement,
+    }
 
 
 def weighted_token_loss(logits: torch.Tensor, labels: torch.Tensor, sample_weight: torch.Tensor) -> torch.Tensor:
@@ -160,6 +177,19 @@ def main() -> None:
         help="Require and record a difficulty-decomposed self-improvement manifest.",
     )
     parser.add_argument("--difficulty-manifest", type=Path, default=None)
+    parser.add_argument(
+        "--weighted-sampling",
+        action="store_true",
+        help=(
+            "Sample training rows in proportion to JSONL sample_weight. This is the "
+            "effective weighting mode for batch_size=1 and avoids per-batch weight cancellation."
+        ),
+    )
+    parser.add_argument(
+        "--sampling-weight-key",
+        default="sample_weight",
+        help="JSONL field used by --weighted-sampling.",
+    )
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--lora-dropout", type=float, default=0.05)
@@ -228,10 +258,31 @@ def main() -> None:
             raise ValueError("difficulty manifest is present but no self-improvement rows were found")
     elif args.difficulty_manifest is not None:
         raise ValueError("difficulty-manifest requires --difficulty-decomposed-weighting")
+    if args.weighted_sampling and not args.difficulty_decomposed_weighting:
+        raise ValueError("weighted-sampling requires --difficulty-decomposed-weighting")
+    train_weight_summary = sample_weight_summary(
+        train_ds.rows,
+        args.sampling_weight_key if args.weighted_sampling else "sample_weight",
+        require_key=bool(args.weighted_sampling),
+    )
+    train_sampler = None
+    if args.weighted_sampling:
+        sampler_generator = torch.Generator()
+        sampler_generator.manual_seed(int(args.seed))
+        train_sampler = WeightedRandomSampler(
+            weights=torch.as_tensor(
+                train_ds.sampling_weights(args.sampling_weight_key, require_key=True),
+                dtype=torch.double,
+            ),
+            num_samples=len(train_ds),
+            replacement=True,
+            generator=sampler_generator,
+        )
     train_loader = DataLoader(
         train_ds,
         batch_size=int(args.batch_size),
-        shuffle=True,
+        shuffle=train_sampler is None,
+        sampler=train_sampler,
         collate_fn=lambda batch: collate(batch, int(tokenizer.pad_token_id)),
     )
     val_loader = DataLoader(
@@ -271,6 +322,14 @@ def main() -> None:
             "enabled": bool(args.difficulty_decomposed_weighting),
             "manifest": difficulty_manifest,
         },
+        "weighted_sampling": {
+            "enabled": bool(args.weighted_sampling),
+            "weight_key": args.sampling_weight_key,
+            "replacement": bool(args.weighted_sampling),
+            "num_samples_per_loader_pass": len(train_ds),
+            "weight_summary": train_weight_summary,
+            "loss_sample_weights_forced_to_one": bool(args.weighted_sampling),
+        },
     }
     (args.output_dir / "train_config.json").write_text(json.dumps(write_payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -279,13 +338,20 @@ def main() -> None:
     micro_step = 0
     running = 0.0
     history: list[dict[str, Any]] = []
+    sampled_rows = 0
+    sampled_self_improvement = 0
     model.zero_grad(set_to_none=True)
     progress = tqdm(total=total_updates, desc="H1 Llama planner SFT")
     while global_step < total_updates:
         for batch in train_loader:
             batch = {key: value.to(device) for key, value in batch.items()}
+            sampled_rows += int(batch["input_ids"].shape[0])
+            sampled_self_improvement += int(batch["self_improvement"].sum().item())
             outputs = model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"])
-            loss = weighted_token_loss(outputs.logits, batch["labels"], batch["sample_weight"])
+            loss_sample_weight = batch["sample_weight"]
+            if args.weighted_sampling:
+                loss_sample_weight = torch.ones_like(loss_sample_weight)
+            loss = weighted_token_loss(outputs.logits, batch["labels"], loss_sample_weight)
             (loss / max(1, int(args.grad_accum))).backward()
             running += float(loss.item())
             micro_step += 1
@@ -325,6 +391,9 @@ def main() -> None:
         "global_step": global_step,
         "final_eval_loss": final_eval,
         "elapsed_sec": time.time() - start,
+        "sampled_rows": sampled_rows,
+        "sampled_self_improvement": sampled_self_improvement,
+        "sampled_self_improvement_fraction": sampled_self_improvement / max(1, sampled_rows),
         "history": history,
     }
     (args.output_dir / "train_metrics.json").write_text(json.dumps(metrics, indent=2) + "\n", encoding="utf-8")

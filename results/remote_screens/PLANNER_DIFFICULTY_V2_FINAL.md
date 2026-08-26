@@ -2,6 +2,13 @@
 
 Route-B screen useful: **False**
 
+> Post-hoc training audit: V2 used `batch_size=1`, while its loss divided by the
+> current batch's weight sum. The scalar sample weight therefore cancelled on
+> every microbatch. V2 remains a valid empirical test of adding the 1,219
+> self-improvement rows, but it is **not** a valid negative test of the intended
+> within-stratum difficulty weighting. The corrected weighted-sampling treatment
+> is tracked separately as strong20 V3.
+
 | Seed | Arm | Planner parsed | Body | Refined | Reconstructed | Direct C/S/J | N/U/N∩U | Hull K/U | Strict (attempt; known) | Meta (attempt; known) |
 |---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 17 | control | 255/256 | 255/256 | 255 | 255 | 227/255/226 | 226/255/226 | 244/11 | 13/256=5.08%; 13/244=5.33% | 113/256=44.14%; 113/244=46.31% |

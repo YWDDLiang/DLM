@@ -22,6 +22,7 @@ from h1a2_repro.difficulty import (  # noqa: E402
     element_presence_summary,
     kitagawa_decomposition,
     load_jsonl,
+    sample_weight_summary,
     summarize,
 )
 
@@ -135,7 +136,9 @@ def build_buffer(args: argparse.Namespace) -> None:
     eligible = [item for item in attempts if item.key in weights and item.formula]
     if not eligible:
         raise ValueError("no eligible self-improvement Plan rows")
-    target_total = (args.buffer_fraction / (1.0 - args.buffer_fraction)) * len(anchor_train)
+    sampling_weight_key = "difficulty_sampling_weight"
+    anchor_rows = [dict(row, **{sampling_weight_key: 1.0}) for row in anchor_train]
+    target_total = (args.buffer_fraction / (1.0 - args.buffer_fraction)) * len(anchor_rows)
     scale = target_total / sum(weights[item.key] for item in eligible)
     buffer_rows = []
     for item in eligible:
@@ -144,6 +147,7 @@ def build_buffer(args: argparse.Namespace) -> None:
             {
                 "answer": _plan_answer(item),
                 "sample_weight": weights[item.key] * scale,
+                sampling_weight_key: weights[item.key] * scale,
                 "source_kind": "difficulty_decomposed_self_improvement",
                 "source_attempt_key": item.key,
                 "difficulty_baseline": baselines[item.key],
@@ -153,13 +157,14 @@ def build_buffer(args: argparse.Namespace) -> None:
         )
         buffer_rows.append(row)
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    _write_jsonl(args.output_dir / "train.jsonl", anchor_train + buffer_rows)
+    weighted_train = anchor_rows + buffer_rows
+    _write_jsonl(args.output_dir / "train.jsonl", weighted_train)
     for split in ("val", "test"):
         source = args.anchor_dir / f"{split}.jsonl"
         if source.exists():
             shutil.copyfile(source, args.output_dir / source.name)
     manifest = {
-        "schema": "difficulty-decomposed-planner-buffer@1",
+        "schema": "difficulty-decomposed-planner-buffer@2",
         "anchor_rows": len(anchor_train),
         "buffer_rows": len(buffer_rows),
         "buffer_fraction_by_total_weight": args.buffer_fraction,
@@ -168,6 +173,12 @@ def build_buffer(args: argparse.Namespace) -> None:
         "features": list(PRIMARY_FEATURES),
         "cross_fitting": {"folds": args.folds, "prior_strength": args.prior_strength},
         "weighting": weight_report,
+        "sampling_weight_key": sampling_weight_key,
+        "sampling_weight_summary": sample_weight_summary(
+            weighted_train,
+            sampling_weight_key,
+            require_key=True,
+        ),
     }
     (args.output_dir / "difficulty_manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 

@@ -303,6 +303,44 @@ def effective_sample_size(weights: Sequence[float]) -> float:
     return 0.0 if square <= 0.0 else total * total / square
 
 
+def sample_weight_summary(
+    rows: Sequence[Mapping[str, Any]],
+    weight_key: str = "sample_weight",
+    *,
+    require_key: bool = False,
+) -> dict[str, Any]:
+    """Summarize the sampling distribution implied by per-row weights."""
+    if not rows:
+        raise ValueError("sample-weight rows are empty")
+    values: list[float] = []
+    by_source: dict[str, float] = defaultdict(float)
+    counts: dict[str, int] = defaultdict(int)
+    for row in rows:
+        if require_key and weight_key not in row:
+            raise ValueError(f"row is missing required sampling weight {weight_key!r}")
+        value = float(row.get(weight_key, 1.0) or 1.0)
+        if not math.isfinite(value) or value <= 0.0:
+            raise ValueError(f"sample_weight must be finite and positive, got {value!r}")
+        source = str(row.get("source_kind") or "anchor")
+        values.append(value)
+        by_source[source] += value
+        counts[source] += 1
+    total = sum(values)
+    return {
+        "count": len(values),
+        "weight_key": weight_key,
+        "total_weight": total,
+        "min_weight": min(values),
+        "max_weight": max(values),
+        "ess": effective_sample_size(values),
+        "by_source_count": dict(sorted(counts.items())),
+        "by_source_weight": dict(sorted(by_source.items())),
+        "by_source_probability": {
+            key: value / total for key, value in sorted(by_source.items())
+        },
+    }
+
+
 def difficulty_weights(
     attempts: Sequence[Attempt],
     baselines: Mapping[str, float],

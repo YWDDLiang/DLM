@@ -6,6 +6,7 @@ from h1a2_repro.difficulty import (
     difficulty_weights,
     kitagawa_decomposition,
     normalize_attempt,
+    sample_weight_summary,
     summarize,
 )
 
@@ -72,6 +73,39 @@ class DifficultyTest(unittest.TestCase):
         result = kitagawa_decomposition(baseline, candidate, endpoint="meta_sun")
         self.assertAlmostEqual(result["proposal_mix_effect"], 0.0)
         self.assertAlmostEqual(result["conditional_realization_effect"], 0.0)
+
+    def test_sample_weight_summary_preserves_source_mass(self):
+        rows = [
+            {"sample_weight": 1.0},
+            {"sample_weight": 1.0},
+            {
+                "sample_weight": 0.5,
+                "source_kind": "difficulty_decomposed_self_improvement",
+            },
+        ]
+        report = sample_weight_summary(rows)
+        self.assertAlmostEqual(report["total_weight"], 2.5)
+        self.assertAlmostEqual(report["by_source_probability"]["anchor"], 0.8)
+        self.assertAlmostEqual(
+            report["by_source_probability"]["difficulty_decomposed_self_improvement"],
+            0.2,
+        )
+        dedicated = [
+            {"difficulty_sampling_weight": 1.0},
+            {
+                "difficulty_sampling_weight": 0.25,
+                "source_kind": "difficulty_decomposed_self_improvement",
+            },
+        ]
+        dedicated_report = sample_weight_summary(
+            dedicated,
+            "difficulty_sampling_weight",
+            require_key=True,
+        )
+        self.assertAlmostEqual(
+            dedicated_report["by_source_probability"]["difficulty_decomposed_self_improvement"],
+            0.2,
+        )
 
 
 if __name__ == "__main__":

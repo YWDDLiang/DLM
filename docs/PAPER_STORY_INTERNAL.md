@@ -412,7 +412,14 @@ proposal mix：oxide在seed17由45增至58、seed18由42增至47；但这种变�
 seed17的Strict/Meta分别为`+2.34pp/+1.56pp`，seed18则为
 `-2.73pp/-3.52pp`。Pooled known-both exact McNemar中，Strict discordance为
 `29 vs 29`（p=1），Meta为`105 vs 108`（p=0.891）。因此normalized V2未通过
-Strict方向和novelty non-inferiority两项预设判据，不保留为正方法贡献，也不再扩展。
+Strict方向和novelty non-inferiority两项预设判据，不保留为正方法贡献。
+
+但post-hoc训练审计进一步发现：V2使用`batch_size=1`，原loss又除以当前batch的
+sample-weight总和，因此每个scalar difficulty weight在单样本microbatch中完全约掉。
+V2实际测试的是加入1219条self-improvement rows后的近似uniform buffer mixture，
+而不是预期的difficulty-decomposed weighting。故V2负结果不能否定正确加权方法。
+修正版strong20 V3采用独立sampling-weight字段与replacement weighted sampling，
+将self-improvement真实抽样概率设为20%，并将control/candidate统一为800 updates。
 
 这项负结果仍直接服务主RQ：Planner改变proposal distribution、甚至提高Direct joint，
 并不自动意味着S.U.N.提升。它是proposal-mix与downstream conversion必须分开报告的
@@ -423,7 +430,7 @@ Strict方向和novelty non-inferiority两项预设判据，不保留为正方法
 完整记录见
 [`PLANNER_DIFFICULTY_V2_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V2_FINAL.md)、
 同名JSON和CSV。论文主线继续以冻结H1-A2为fallback，并优先保留Candidate A；
-public `105/1000 Strict、488/1000 Meta`保持不变。
+public `105/1000 Strict、488/1000 Meta`保持不变。V3在独立run中评价，不覆盖V2。
 
 ## 最强剩余拒稿风险
 

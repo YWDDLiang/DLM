@@ -28,9 +28,14 @@
 - normalized Candidate B不保留为正方法：seed17的Strict/Meta为正，seed18均反转；
   pooled 512 attempts中Direct joint `+1.17pp`，但Strict `-0.20pp`、Meta
   `-0.98pp`、novel rate `-1.20pp`，未通过预设screen；
+- post-hoc训练审计发现V2在`batch_size=1`下逐batch归一化权重，导致difficulty
+  sample weight在每个microbatch内完全约掉。因此V2只能解释为“加入buffer rows”的
+  pilot，不能作为正确difficulty weighting的负证据；
+- strong20 V3使用独立`difficulty_sampling_weight`做replacement weighted sampling，
+  self-improvement目标概率20%，control/candidate均为800 matched updates；不做超参扫表；
 - 完整证据见
   [`PLANNER_DIFFICULTY_V2_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V2_FINAL.md)
-  及同名JSON/CSV。H1-A2继续作为fallback，不再扩展路线B。
+  及同名JSON/CSV。H1-A2继续作为fallback；路线B只追加这一项修正版V3。
 
 ## 已完成
 
