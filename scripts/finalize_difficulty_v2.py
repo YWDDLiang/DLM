@@ -130,6 +130,7 @@ def main() -> None:
     parser.add_argument("--candidate-nll-seed17", type=float, required=True)
     parser.add_argument("--control-nll-seed18", type=float, required=True)
     parser.add_argument("--candidate-nll-seed18", type=float, required=True)
+    parser.add_argument("--variant", choices=("v2", "strong20-v3"), default="v2")
     args = parser.parse_args()
 
     sys.path.insert(0, str(args.eval_runtime.resolve()))
@@ -153,6 +154,25 @@ def main() -> None:
         for row in protocol.read_jsonl(cache / "unresolved_chemsys.jsonl")
     }
     difficulty_manifest = read_json(plan_run / "weighted_data/difficulty_manifest.json")
+    training_metrics = {}
+    for seed in SEEDS:
+        for arm in ARMS:
+            metrics_path = plan_run / f"{arm}_seed{seed}" / "train_metrics.json"
+            if not metrics_path.is_file() and arm == "control":
+                parent_file = plan_run / "matched_control_parent.txt"
+                if parent_file.is_file():
+                    parent = Path(parent_file.read_text(encoding="utf-8").strip())
+                    metrics_path = parent / f"control_seed{seed}" / "train_metrics.json"
+            metrics = read_json(metrics_path)
+            training_metrics[f"s{seed}_{arm}"] = {
+                "global_step": int(metrics["global_step"]),
+                "final_eval_loss": float(metrics["final_eval_loss"]),
+                "sampled_rows": metrics.get("sampled_rows"),
+                "sampled_self_improvement": metrics.get("sampled_self_improvement"),
+                "sampled_self_improvement_fraction": metrics.get(
+                    "sampled_self_improvement_fraction"
+                ),
+            }
 
     rows_by_cell: dict[str, list[dict]] = {}
     reports: dict[str, dict] = {}
@@ -330,8 +350,19 @@ def main() -> None:
             "candidate_minus_control": args.candidate_nll_seed18 - args.control_nll_seed18,
         },
     }
+    is_v3 = args.variant == "strong20-v3"
+    file_stem = (
+        "PLANNER_DIFFICULTY_V3_STRONG20_FINAL"
+        if is_v3
+        else "PLANNER_DIFFICULTY_V2_FINAL"
+    )
     summary = {
-        "schema": "h1a2_difficulty_decomposed_planner_v2_final_v1",
+        "schema": (
+            "h1a2_difficulty_decomposed_planner_strong20_v3_final_v1"
+            if is_v3
+            else "h1a2_difficulty_decomposed_planner_v2_final_v1"
+        ),
+        "variant": args.variant,
         "unknown_policy": "excluded from hull-known denominators; never mapped to unstable",
         "design": {
             "planner_seeds": list(SEEDS),
@@ -341,6 +372,7 @@ def main() -> None:
             "pairing_caveat": "compositions differ across arms; this is not a fixed-composition realization effect",
         },
         "difficulty_manifest": difficulty_manifest,
+        "training_metrics": training_metrics,
         "validation_nll": nll,
         "cells": cells,
         "cell_reports": reports,
@@ -362,9 +394,9 @@ def main() -> None:
         "criteria": criteria,
     }
 
-    json_path = output / "PLANNER_DIFFICULTY_V2_FINAL.json"
-    csv_path = output / "PLANNER_DIFFICULTY_V2_FINAL.csv"
-    md_path = output / "PLANNER_DIFFICULTY_V2_FINAL.md"
+    json_path = output / f"{file_stem}.json"
+    csv_path = output / f"{file_stem}.csv"
+    md_path = output / f"{file_stem}.md"
     json_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(cells[0]))
@@ -372,7 +404,11 @@ def main() -> None:
         writer.writerows(cells)
 
     lines = [
-        "# Difficulty-Decomposed Self-Improving Planner V2 — final two-seed screen",
+        (
+            "# Difficulty-Decomposed Self-Improving Planner strong20 V3 — final two-seed screen"
+            if is_v3
+            else "# Difficulty-Decomposed Self-Improving Planner V2 — final two-seed screen"
+        ),
         "",
         f"Route-B screen useful: **{criteria['route_b_screen_useful']}**",
         "",
@@ -440,7 +476,18 @@ def main() -> None:
             "",
             "Proposal-mix changes and downstream conversion are reported separately. Because the Planner arms sample different compositions, ordinal pairing is only an end-to-end common-random-number comparison and is not evidence of a fixed-composition realization effect.",
             "",
-            "The normalized V2 screen is not retained as a positive method result: seed 17 improved Strict/Meta, seed 18 reversed both, and pooled Strict plus novelty were negative despite improved Direct joint validity.",
+        ]
+    )
+    if is_v3:
+        lines.append(
+            "This is the corrected strong20 treatment: dedicated replacement weighted sampling, 20% self-improvement probability, and 800 matched control/candidate updates."
+        )
+    else:
+        lines.append(
+            "The normalized V2 screen is not retained as a positive method result: seed 17 improved Strict/Meta, seed 18 reversed both, and pooled Strict plus novelty were negative despite improved Direct joint validity."
+        )
+    lines.extend(
+        [
             "",
             "The public 105/1000 Strict and 488/1000 Meta headline remains unchanged pending user confirmation.",
         ]
