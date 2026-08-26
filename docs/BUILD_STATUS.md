@@ -30,13 +30,35 @@
 1000/1200分母而在科学评价前失败；它们均被最小恢复，成功阶段未重跑。fixed-256
 adapter只放宽active denominator，不改变Direct、N/U、CHGNet、hull或S.U.N.阈值。
 
+2026-08-27 DLM训练时长与固定requested-1000复核：
+
+- raw-256同Plan扫描覆盖约`0.295/0.590/1.000 epoch`。相对各自matched control，
+  counterfactual-grounding在step500的Strict/Meta差为`+3/-1`，step1000为`+3/+4`，
+  step1696为`-5/-2`（分母均为256）；
+- step1000的body、Direct、novelty、Strict/Meta方向和stable→S.U.N. retention均通过
+  downstream门，但candidate validation CE比control高`0.07209`，且所有McNemar检验
+  均不显著，因此预注册筛选没有合格checkpoint；这只支持非单调的中间训练窗口信号；
+- 独立固定requested-1000复核不做survivor过滤。control/candidate分别得到
+  `994/990` body、`877/874` Direct joint、`89/86` Strict S.U.N.和`487/467`
+  Meta S.U.N.；Strict差`-3/1000`、Meta差`-20/1000`，完整贡献门失败；
+- stable→S.U.N. retention仅小幅变化（Strict `81.65%→81.13%`，Meta
+  `82.68%→82.07%`），主要退化来自stable本身（Strict `109→106`，Meta
+  `589→569`），而不是novelty或retention崩塌；
+- 完整证据见
+  [`GROUNDING_CHECKPOINT_SWEEP_FINAL.md`](../results/remote_screens/GROUNDING_CHECKPOINT_SWEEP_FINAL.md)
+  和
+  [`GROUNDING_FIXED1000_FINAL.md`](../results/remote_screens/GROUNDING_FIXED1000_FINAL.md)。
+
 当前决定：
 
-- Candidate A保留为有用的Strict/realization改进，完整披露Meta trade-off；
+- Candidate A四重复中的小幅Strict信号保留为历史诊断，但固定requested-1000没有复现，
+  不再作为完整或scoped正向训练贡献；
 - Candidate B旧Plan-only预筛仍保留为负证据，但现按用户新决定进入一次最小真实下游验证；
+- 第二个训练侧贡献目前未成立；下一条非RL候选是固定Plan的energy-contrastive DLM
+  supervision，并显式锁定中间训练窗口，直接优化stable而非只优化CE或novelty；
 - 标准H1-A2继续作为论文fallback；
 - public headline继续是`105/1000 Strict、488/1000 Meta`；
-- Candidate A可以作为限定性技术改进讨论，但不替换headline结果。
+- 所有checkpoint和新requested-1000结果只作内部机制证据，不替换headline结果。
 
 ## 已完成
 

@@ -37,6 +37,31 @@ claim。
 Public headline继续冻结为`105/1000 Strict、488/1000 Meta`，不得用本次Candidate的
 `105/1024`替换或混称。
 
+## 2026-08-27 Grounding稳健性修正
+
+后续同Plan训练时长扫描和独立固定requested-1000复核推翻了“Candidate A可作为稳定
+正向训练贡献”的较强表述：
+
+- raw-256扫描中，约`0.295/0.590/1.000 epoch`的Strict/Meta candidate-control差依次为
+  `+3/-1`、`+3/+4`、`-5/-2`（每点256 attempts）；
+- `0.590 epoch`是唯一Strict与Meta同时为正且全部downstream门通过的窗口，但其
+  candidate validation CE比control差`+0.07209`，所有paired McNemar也不显著，故不
+  通过冻结的mechanism screen，不能事后挑为成功checkpoint；
+- 在first-1000 parsed Plans、无survivor过滤的独立cohort上，full-epoch control/candidate
+  为Strict `89→86`、Meta `487→467`，因此Strict和Meta方向门均失败；
+- body `994→990`、Direct joint `877→874`、novelty和两种stable→S.U.N. retention都在
+  `-1 pp`非劣界内。主要问题不是schema、Direct或novelty塌缩，而是candidate生成的
+  stable结构减少：Strict-stable `109→106`、Meta-stable `589→569`。
+
+因此当前只能声称：DLM训练存在非单调的novelty–stability优化窗口，既有
+counterfactual-grounding目标没有形成跨规模稳健的S.U.N.增益。它不进入贡献列表。
+下一候选必须直接作用于结构稳定性，例如固定Plan、低`E_hull` novel body为正样本、
+高`E_hull` body为负样本的连续energy-contrastive supervised margin；不用policy
+gradient，也不在推理阶段rerank。完整证据见
+[`GROUNDING_CHECKPOINT_SWEEP_FINAL.md`](../results/remote_screens/GROUNDING_CHECKPOINT_SWEEP_FINAL.md)
+和
+[`GROUNDING_FIXED1000_FINAL.md`](../results/remote_screens/GROUNDING_FIXED1000_FINAL.md)。
+
 ## 最终Main Research Question
 
 > **In generative materials discovery, to what extent do gains in discovery
@@ -381,10 +406,11 @@ cohort-level functions，必须在固定size/mix下单独重算，不能进入�
 Contribution 3在distribution、standardized accounting和fixed-condition结果完成前
 只能写“we evaluate”，不能写“we demonstrate”。
 
-Candidate A终态后的限制是：Specification-compiled exact-cardinality executor仍是
-核心技术贡献；counterfactual grounding可作为第二个训练侧改进，但claim必须限定为
-diversity-preserving realization/Strict-tail improvement，并明确Meta trade-off。它不能被
-包装成所有S.U.N.阈值一致改善。
+Candidate A稳健性复核后的限制是：Specification-compiled exact-cardinality executor仍是
+核心技术贡献；counterfactual grounding不能作为第二个训练侧贡献。四重复Strict小信号和
+raw-256中间窗口只作为机制诊断，独立requested-1000的Strict/Meta均下降是当前更强的
+稳健性证据。若需要新增训练贡献，必须由新的stability-targeted目标重新取得正向、跨seed
+且跨规模的Strict/Meta结果，不能沿用Candidate A命名或挑选step1000。
 
 ## 最通俗故事
 
@@ -405,6 +431,11 @@ diversity-preserving realization/Strict-tail improvement，并明确Meta trade-o
 Candidate A四重复只作为内部方法筛选：Control/Candidate pooled Strict known为
 `10.46%/10.63%`，Meta known为`47.92%/46.56%`。由于Meta非劣失败，它不进入
 未来论文主表的“proposed method”行，也不改变105/488。
+
+固定requested-1000稳健性复核进一步得到Control/Candidate Strict S.U.N.
+`89/86`、Meta S.U.N. `487/467`。该cohort与public headline口径严格分开，但足以说明
+full-epoch grounding的小幅Strict信号不能稳健复现。raw-256的step1000虽为`+3/+4`，
+仍因冻结mechanism gate失败和统计不显著而不进入论文正向结果。
 
 若该headline不是具有1:1逐attempt记录的raw cohort，则proposal–realization分析必须使用
 单独命名的raw standard-H1-A2 cohort；不得为105/488构造伪microdata。
@@ -438,6 +469,8 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 | Q5 | continuous conversion | fixed-refiner paired consequence | refiner算法创新、最终不稳定全归refiner、causal mediation |
 | 旧Paper压缩 | 机制主次层级 | support×policy保留为Mechanism RQ | 将其继续当作论文级科学问题 |
 | 新Main RQ | proposal vs realization | explored specification与conditional realization分离 | 向非晶体领域过度外推、指控其他方法作弊、把accounting写成causal mediation |
+| Grounding epoch sweep | 非单调中间训练窗口 | 三个checkpoint全部披露 | 事后只挑step1000 |
+| Grounding fixed1000 | 无survivor过滤的规模复核 | full-epoch负结果与stable瓶颈 | 将四重复小Strict信号包装为贡献 |
 
 ## 当前大致缺口
 
@@ -449,8 +482,9 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 - DLM→refiner conversion和cohort-level uniqueness重算；
 - 最终核对CrysLLMGen约`9%/44%`和public精确记录的口径；
 - 对所有负向或证据不足类别完整披露；
-- Candidate A若进入贡献列表，必须保留Meta trade-off和小效应统计；Candidate B只按
-  新授权做一次真实下游验证，不根据结果追加大规模搜索。
+- Candidate A不进入贡献列表；后续只允许预先冻结的stability-targeted非RL目标，且必须
+  同时报告Strict/Meta、stable本身、stable→S.U.N. retention和全部checkpoint；Candidate B
+  只按新授权做一次真实下游验证，不根据结果追加大规模搜索。
 
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。
