@@ -10,8 +10,8 @@ import sys
 from pathlib import Path
 
 
-STEPS = (500, 1000)
-REFERENCE_STEP = 1696
+STEPS = (500, 1000, 1696)
+FULL_STEP = 1696
 ARMS = ("control", "candidate")
 ATTEMPTS = 256
 
@@ -120,9 +120,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--eval-run", type=Path, required=True)
     parser.add_argument("--sweep-run", type=Path, required=True)
-    parser.add_argument("--reference-train-run", type=Path, required=True)
-    parser.add_argument("--reference-repeat-run", type=Path, required=True)
-    parser.add_argument("--reference-final-run", type=Path, required=True)
+    parser.add_argument("--training-run", type=Path, required=True)
+    parser.add_argument("--full-training-run", type=Path, required=True)
     parser.add_argument("--eval-runtime", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
@@ -135,9 +134,8 @@ def main() -> None:
         raise RuntimeError("H1_ACTIVE_DENOMINATOR must be 256")
     eval_run = args.eval_run.resolve()
     sweep_run = args.sweep_run.resolve()
-    reference_train_run = args.reference_train_run.resolve()
-    reference_repeat_run = args.reference_repeat_run.resolve()
-    reference_final_run = args.reference_final_run.resolve()
+    training_run = args.training_run.resolve()
+    full_training_run = args.full_training_run.resolve()
     output = args.output_dir.resolve()
     if output.exists():
         raise FileExistsError(output)
@@ -151,15 +149,15 @@ def main() -> None:
     }
 
     training = {
-        f"step{step}_{arm}": training_evidence(sweep_run, arm, step)
-        for step in STEPS
+        f"step{step}_{arm}": training_evidence(training_run, arm, step)
+        for step in (500, 1000)
         for arm in ARMS
     }
     for arm in ARMS:
-        evidence = training_evidence(reference_train_run, arm, 1500)
-        evidence["checkpoint_step"] = REFERENCE_STEP
+        evidence = training_evidence(full_training_run, arm, 1500)
+        evidence["checkpoint_step"] = FULL_STEP
         evidence["validation_step"] = 1500
-        training[f"step{REFERENCE_STEP}_{arm}"] = evidence
+        training[f"step{FULL_STEP}_{arm}"] = evidence
     rows_by_cell: dict[str, list[dict]] = {}
     reports: dict[str, dict] = {}
     cells: list[dict] = []
@@ -227,64 +225,8 @@ def main() -> None:
                 }
             )
 
-    # The prior final checkpoint repeat-1 uses the same Plans, DLM seed 17117,
-    # refiner seed 27117, and evaluation contract. Keep it as an explicit third
-    # point rather than rerunning or selecting it post hoc.
-    for arm in ARMS:
-        cell_id = f"s{REFERENCE_STEP}_{arm}"
-        rows = read_jsonl(reference_final_run / "cells" / f"r1_{arm}" / "attempt_results_official.jsonl")
-        report = read_json(reference_final_run / "cells" / f"r1_{arm}" / "report.json")
-        rows_by_cell[cell_id] = rows
-        reports[cell_id] = report
-        energy[cell_id] = energy_summary(rows)
-        body = read_json(reference_repeat_run / "repeat01" / arm / "body/sample_metrics.json")
-        refine = read_json(reference_repeat_run / "repeat01" / arm / "refine/refinement_metrics.json")
-        counts = report["counts"]
-        direct = report["direct"]
-        cells.append(
-            {
-                "step": REFERENCE_STEP,
-                "arm": arm,
-                "requested": ATTEMPTS,
-                "parsed": int(body["parse_success"]),
-                "body": int(body["graph_success"]),
-                "refined": int(refine["num_proposals"]),
-                "reconstructed": int(counts["reconstructed"]),
-                "direct_comp": int(direct["composition_valid"]),
-                "direct_struct": int(direct["structure_valid"]),
-                "direct_joint": int(direct["joint_valid"]),
-                "novel": int(counts["novel"]),
-                "unique": int(counts["unique_representatives"]),
-                "novel_unique": int(counts["novel_unique"]),
-                "hull_known": int(counts["hull_known_reconstructed"]),
-                "hull_unknown": int(counts["hull_unknown_reconstructed"]),
-                "strict": int(counts["strict_sun"]),
-                "meta": int(counts["meta_sun"]),
-                "body_rate": rate(int(body["graph_success"]), ATTEMPTS),
-                "direct_joint_rate": rate(int(direct["joint_valid"]), ATTEMPTS),
-                "novel_rate": rate(int(counts["novel"]), int(counts["reconstructed"])),
-                "unique_rate": rate(
-                    int(counts["unique_representatives"]), int(counts["reconstructed"])
-                ),
-                "strict_attempt_rate": rate(int(counts["strict_sun"]), ATTEMPTS),
-                "meta_attempt_rate": rate(int(counts["meta_sun"]), ATTEMPTS),
-                "strict_known_rate": rate(
-                    int(counts["strict_sun"]), int(counts["hull_known_reconstructed"])
-                ),
-                "meta_known_rate": rate(
-                    int(counts["meta_sun"]), int(counts["hull_known_reconstructed"])
-                ),
-                "strict_stable_to_sun_retention": energy[cell_id][
-                    "strict_stable_to_sun_retention"
-                ],
-                "meta_stable_to_sun_retention": energy[cell_id][
-                    "meta_stable_to_sun_retention"
-                ],
-            }
-        )
-
     comparisons: list[dict] = []
-    for step in (*STEPS, REFERENCE_STEP):
+    for step in STEPS:
         control_rows = {int(row["ordinal"]): row for row in rows_by_cell[f"s{step}_control"]}
         candidate_rows = {int(row["ordinal"]): row for row in rows_by_cell[f"s{step}_candidate"]}
         known_both = [
@@ -346,10 +288,10 @@ def main() -> None:
     summary = {
         "schema": "h1a2_grounding_checkpoint_sweep_final_v1",
         "design": {
-            "steps": [*STEPS, REFERENCE_STEP],
+            "steps": list(STEPS),
             "epoch_fraction": {
-                "500": 500 / REFERENCE_STEP,
-                "1000": 1000 / REFERENCE_STEP,
+                "500": 500 / FULL_STEP,
+                "1000": 1000 / FULL_STEP,
                 "1696": 1.0,
             },
             "attempts_per_cell": ATTEMPTS,
@@ -357,9 +299,9 @@ def main() -> None:
             "randomness": "same DLM/refiner seed-by-sample-index streams across arms and steps",
             "downstream": "D1 exact-plan, temperature 0.7, fixed model494, no safe-axis",
             "selection_warning": "checkpoint sweep is diagnostic; no best checkpoint may be reported alone",
-            "reference_step": (
-                "step1696 is prior repeat-1 final-checkpoint evidence with the same Plans and "
-                "DLM/refiner seed streams; its validation loss is measured at step1500"
+            "full_step": (
+                "step1696 is freshly generated on the same raw-256 Plans and seed streams; "
+                "its validation loss is measured at step1500"
             ),
         },
         "unknown_policy": "excluded from hull-known denominators; never mapped to unstable",

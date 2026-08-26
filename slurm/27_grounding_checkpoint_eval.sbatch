@@ -21,7 +21,7 @@ readonly GT_CSV="${PROJECT}/reference/crysllmgen/data/mp_20/test.csv"
 readonly BASE_RELAX_CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl"
 readonly EVAL_RUNTIME="${ROOT}/eval_runtime"
 readonly EVAL_RUN="${ROOT}/runs/grounding_checkpoint_eval_${SLURM_JOB_ID}"
-readonly STEPS=(500 1000)
+readonly STEPS=(500 1000 1696)
 readonly DLM_SEED=17117
 readonly REFINER_SEED=27117
 
@@ -74,14 +74,24 @@ run_cell() {
   wait "${direct_pid}"
 }
 
-run_cell 500 control 0 & p0=$!
-run_cell 500 candidate 1 & p1=$!
-run_cell 1000 control 2 & p2=$!
-run_cell 1000 candidate 3 & p3=$!
-wait "${p0}"
-wait "${p1}"
-wait "${p2}"
-wait "${p3}"
+run_eval_wave() {
+  local first_step="$1" second_step="$2"
+  run_cell "${first_step}" control 0 & p0=$!
+  run_cell "${first_step}" candidate 1 & p1=$!
+  if [[ "${second_step}" != 0 ]]; then
+    run_cell "${second_step}" control 2 & p2=$!
+    run_cell "${second_step}" candidate 3 & p3=$!
+  fi
+  wait "${p0}"
+  wait "${p1}"
+  if [[ "${second_step}" != 0 ]]; then
+    wait "${p2}"
+    wait "${p3}"
+  fi
+}
+
+run_eval_wave 500 1000
+run_eval_wave 1696 0
 
 cells=()
 for step in "${STEPS[@]}"; do
