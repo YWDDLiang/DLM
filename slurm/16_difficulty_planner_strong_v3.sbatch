@@ -42,7 +42,8 @@ python "${REPO_ROOT}/scripts/difficulty_program.py" build-buffer \
 
 train_arm() {
   local device="$1" data="$2" output="$3" seed="$4" treatment="$5"
-  local extra=()
+  # Bash 4.2 + set -u treats expansion of an empty array as unbound.
+  local extra=(--logging-steps 20)
   if [[ "${treatment}" == true ]]; then
     extra+=(
       --difficulty-decomposed-weighting
