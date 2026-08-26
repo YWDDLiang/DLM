@@ -41,7 +41,8 @@ oxide share. It is not sent to the DLM/refiner and is not promoted to the
 public paper claim.
 
 This pilot used the original unnormalized factor combination. The repository
-now contains the corrected within-stratum-normalized implementation, but no
-additional training is authorized in this program. Frozen H1-A2 remains the
-Planner fallback.
-
+now contains the corrected within-stratum-normalized implementation. On
+2026-08-26 the user authorized a scientifically distinct V2 run: reuse the
+matched V1 controls, retrain only normalized candidates at seeds 17/18, and
+then run real downstream evaluation rather than treating projected family mix
+as the final outcome. V1 remains frozen negative evidence.
