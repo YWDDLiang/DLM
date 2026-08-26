@@ -5,22 +5,32 @@
 - 冻结H1-A2保持只读fallback；
 - 历史难度分析使用纯Python实现并去除evaluator replay；
 - Candidate A/B在独立branch开发，默认均关闭；
-- 远端训练和fixed-256 screen尚未产生结果。
+- public headline继续保持`105/1000 Strict、488/1000 Meta`，未被screen静默替换。
 
 2026-08-26远端执行：
 
-- Candidate A：Slurm `34700`，4×A800，control/grounding同job；
-- Candidate B：Slurm `34697`，4×A800，two-seed control/candidate同job；
-- 两项均固定每GPU 4 CPU，标准H1-A2 schedule，不使用MP网络；
+- Candidate A：`34700`完成control/grounding训练，`34714/34721`完成四次
+  fixed-256 generation与统一评价；结论是有用但有边界的realization/Strict改进，
+  Meta存在trade-off，保留在Candidate-A个人branch；
+- Candidate B V1：`34697/34704`为未归一化负结果，已冻结；
+- Candidate B normalized V2：`34734`完成两个Planner seed，`34739`完成保留
+  sparse Planner ordinal的真实下游，`34744`完成四cell Direct/N/U/CHGNet，随后
+  fresh official MP GGA/GGA+U与终态评价完成；
 - `34693/34694`为2秒启动路径失败，`34695`为模型启动前的Bash兼容失败，
   `34696`因慢donor builder主动取消，`34698`因sidecar显式plan_state缺失而
-  在训练前取消；均不产生科学结果。
+  在训练前取消；`34737`因循环替换missing Planner ordinal而主动取消，`34743`
+  为2秒环境变量错误；这些输出均不进入科学结果。
 
 当前决定：
 
-- Candidate B完成`34697`训练和`34704` Plan-256后停止；两个seed均少1个
-  parsed Plan，projected Strict/Meta mix均下降，不进入downstream；
-- Candidate A继续`34700`，step500 factual val CE为1.6240，对照为1.9153。
+- Candidate A保留为“counterfactual Plan grounding改善realization/Strict”的候选贡献，
+  但不把Meta trade-off隐藏，也暂不替换public headline；
+- normalized Candidate B不保留为正方法：seed17的Strict/Meta为正，seed18均反转；
+  pooled 512 attempts中Direct joint `+1.17pp`，但Strict `-0.20pp`、Meta
+  `-0.98pp`、novel rate `-1.20pp`，未通过预设screen；
+- 完整证据见
+  [`PLANNER_DIFFICULTY_V2_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V2_FINAL.md)
+  及同名JSON/CSV。H1-A2继续作为fallback，不再扩展路线B。
 
 ## 已完成
 

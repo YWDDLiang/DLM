@@ -382,6 +382,49 @@ Contribution 3在distribution、standardized accounting和fixed-condition结果�
 不能替代support、policy或refiner的paired mechanism evidence。public表中当前精确
 CrysLLMGen记录与该内部约数仍需最终核对。
 
+## 2026-08-26双候选实证裁决
+
+### Candidate A：Composition-Matched Counterfactual Plan Grounding
+
+Candidate A保留为有边界但有用的技术改进。Matched validation factual CE由对照的
+`1.9153`降至`1.6240`；四次fixed-256 screen汇总显示body completion约`+0.29pp`、
+Direct joint约`+0.29pp`、N∩U增加5个，Strict hull-known约`+0.17pp`。同时Meta
+hull-known约`-1.36pp`，因此不能包装成全面提升，也不能替换现有public `105/488`。
+当前最诚实的身份是：counterfactual grounding改善了部分realization与Strict行为，
+但存在Meta trade-off，值得作为最终技术贡献候选继续保留。
+
+### Candidate B：Difficulty-Decomposed Self-Improving Planner V2
+
+未归一化V1（`34697/34704`）冻结为负结果。修正版V2采用
+`proposal_shift × within-stratum-normalized advantage`，历史buffer为1219条，
+ESS为832.475（ratio 0.6829），并用两个Planner seed进行真实下游评价。V2确实改变了
+proposal mix：oxide在seed17由45增至58、seed18由42增至47；但这种变化没有稳定转化
+为discovery yield。
+
+512-attempt pooled结果为：
+
+- Direct joint：`449/512 → 455/512`，`+1.17pp`；
+- Strict：`37/512 → 36/512`，`-0.20pp`；
+- Meta：`229/512 → 224/512`，`-0.98pp`；
+- novel rate：`453/509 → 446/508`，`-1.20pp`；
+- body completion：`509/512 → 508/512`，`-0.20pp`。
+
+seed17的Strict/Meta分别为`+2.34pp/+1.56pp`，seed18则为
+`-2.73pp/-3.52pp`。Pooled known-both exact McNemar中，Strict discordance为
+`29 vs 29`（p=1），Meta为`105 vs 108`（p=0.891）。因此normalized V2未通过
+Strict方向和novelty non-inferiority两项预设判据，不保留为正方法贡献，也不再扩展。
+
+这项负结果仍直接服务主RQ：Planner改变proposal distribution、甚至提高Direct joint，
+并不自动意味着S.U.N.提升。它是proposal-mix与downstream conversion必须分开报告的
+内部证据，但两个Planner seed不足以支持面向全领域的普遍结论。不同arms的composition
+不同，ordinal pairing仅是common-random-number的端到端比较，不能解释为固定composition
+的realization effect。
+
+完整记录见
+[`PLANNER_DIFFICULTY_V2_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V2_FINAL.md)、
+同名JSON和CSV。论文主线继续以冻结H1-A2为fallback，并优先保留Candidate A；
+public `105/1000 Strict、488/1000 Meta`保持不变。
+
 ## 最强剩余拒稿风险
 
 > 即使oxide、halide、arity和各N-bin都提升，Planner仍可能在每个粗类别内部选择更
