@@ -2,12 +2,15 @@
 
 ## 结论
 
-> **Candidate A没有通过冻结的论文贡献判据，不能作为论文最后一个已成立的技术贡献。**
+> **Candidate A未通过原先“所有门同时成立”的总判据，但保留为有用的
+> Strict/realization改进方法。**
 
 它通过了机制、Strict方向稳定性、body、Direct、novelty和composition六项检查，
 但没有通过Meta S.U.N.非劣门：pooled hull-known Meta从`472/985 = 47.92%`
 降到`460/988 = 46.56%`，差值`-1.36 pp`，低于预注册的`-1.0 pp`下限。
-因此保留标准H1-A2为fallback；公开`105/1000 Strict、488/1000 Meta`不变。
+因此它可以支持“realization效率、novel supply和Strict tail小幅提升”的限定性claim，
+同时必须披露Meta trade-off。标准H1-A2仍是headline fallback；公开
+`105/1000 Strict、488/1000 Meta`不变。
 
 这里Candidate恰好也得到`105`个Strict成功，但它是`105/1024 attempts`或
 `105/988 hull-known`，绝不能与公开`105/1000`混为同一结果。
@@ -147,8 +150,9 @@ cohort上的realization随机结果，而不是改变proposal mix。
 - 当前证据只能说明grounding objective改变了训练机制，不能说明它形成了更好的
   最终structural-realization方法。
 
-最终决定：Candidate A作为内部负/混合结果归档，不进入public方法贡献；Candidate B
-此前也已判负。论文继续使用冻结H1-A2，最后一个新增技术贡献要求**尚未解决**。
+最终决定：Candidate A作为**有用的混合改进**保留，可进入方法设计与消融讨论，
+但不能写成全面S.U.N.提升，也不替换H1-A2 headline。是否把它升级为摘要级贡献，
+取决于论文是否接受“Strict/realization提升伴随Meta trade-off”的准确定位。
 
 机器可读证据：
 

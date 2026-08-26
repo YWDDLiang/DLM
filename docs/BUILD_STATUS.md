@@ -32,10 +32,11 @@ adapter只放宽active denominator，不改变Direct、N/U、CHGNet、hull或S.U
 
 当前决定：
 
-- Candidate A/B均不进入public方法贡献；
+- Candidate A保留为有用的Strict/realization改进，完整披露Meta trade-off；
+- Candidate B旧Plan-only预筛仍保留为负证据，但现按用户新决定进入一次最小真实下游验证；
 - 标准H1-A2继续作为论文fallback；
 - public headline继续是`105/1000 Strict、488/1000 Meta`；
-- 论文“最后一个新增技术贡献”目前仍未由这两个候选解决。
+- Candidate A可以作为限定性技术改进讨论，但不替换headline结果。
 
 ## 已完成
 

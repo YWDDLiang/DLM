@@ -25,12 +25,12 @@ claim。
 
 因此：
 
-> **Counterfactual grounding不能晋升为已成立的论文技术贡献；双候选计划没有解决
-> “最后一个新增技术贡献”缺口。标准H1-A2继续作为fallback。**
+> **Counterfactual grounding保留为有用的Strict/realization改进：它提高body、Direct、
+> N∩U和Strict tail，但伴随Meta trade-off。标准H1-A2继续作为headline fallback。**
 
-这不否定Main RQ：固定同一Plan cohort后，proposal mix严格相同，仍能观察到realization
-结果变化；但该变化不是可靠的正向S.U.N.提升。它支持“proposal与realization必须分开
-评价”的科学动机，不支持“我们的grounding loss提高了最终realization”的方法claim。
+固定同一Plan cohort后，proposal mix严格相同，仍能观察到realization结果变化。
+因此可以准确声称grounding带来小幅realization与Strict-oriented improvement；不能声称
+它全面提高thermodynamic yield，Meta下降必须作为trade-off并列报告。
 
 完整内部证据见
 [`GROUNDING_FINAL_REPEAT4.md`](../results/remote_screens/GROUNDING_FINAL_REPEAT4.md)。
@@ -381,11 +381,10 @@ cohort-level functions，必须在固定size/mix下单独重算，不能进入�
 Contribution 3在distribution、standardized accounting和fixed-condition结果完成前
 只能写“we evaluate”，不能写“we demonstrate”。
 
-Candidate A/B终态后还必须增加一条限制：上述三点是当前最稳妥的论文层级，
-不是“两个新技术模块均已验证”。Specification-compiled exact-cardinality executor仍是
-核心技术贡献；counterfactual grounding和difficulty-decomposed Planner均不能列入摘要、
-contribution list或主方法图。若投稿目标要求另一个独立而正向的算法贡献，当前证据尚未
-满足，不能靠包装负结果补齐。
+Candidate A终态后的限制是：Specification-compiled exact-cardinality executor仍是
+核心技术贡献；counterfactual grounding可作为第二个训练侧改进，但claim必须限定为
+diversity-preserving realization/Strict-tail improvement，并明确Meta trade-off。它不能被
+包装成所有S.U.N.阈值一致改善。
 
 ## 最通俗故事
 
@@ -450,8 +449,8 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 - DLM→refiner conversion和cohort-level uniqueness重算；
 - 最终核对CrysLLMGen约`9%/44%`和public精确记录的口径；
 - 对所有负向或证据不足类别完整披露；
-- 若仍要求第二个独立算法贡献，需要新的方法假设；不得继续把已判负的Candidate A/B
-  扩写成正贡献。
+- Candidate A若进入贡献列表，必须保留Meta trade-off和小效应统计；Candidate B只按
+  新授权做一次真实下游验证，不根据结果追加大规模搜索。
 
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。
