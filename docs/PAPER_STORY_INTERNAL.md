@@ -438,6 +438,50 @@ all-attempt与known-rate双重Meta non-inferiority gate。该结果应称promisi
 Planner improvement，不能称完整通过或替换public headline。Pooled exact McNemar的
 Strict/Meta p值分别为`1.0/0.5459`，两个Planner seed仍不足以作强显著性主张。
 
+### Meta-guard V4：Meta改善，但Strict与10/50目标失败
+
+V4针对V3的两个审计问题做了非RL修正：control回到原始P0，不再额外训练；candidate
+只训练400 updates；20% corrected replay使用`2×Meta+Strict`，并将显式
+proposal-shift系数设为0。两candidate seed实际replay率为`19.47%/19.66%`，Plan parse
+为`255/256`和`255/256`。下游DLM、model494、D1 exact-plan、temperature、ordinal
+seeds、evaluator及fresh MP GGA/GGA+U合同全部冻结。
+
+终态四cell为：
+
+| Seed | Arm | Plan | Body/refined/reconstructed | Direct C/S/J | N/U/N∩U | Hull K/U | Strict | Meta |
+|---:|---|---:|---:|---:|---:|---:|---:|---:|
+| 17 | P0 | 254 | 253/253/253 | 218/253/218 | 225/253/225 | 242/11 | 17 | 108 |
+| 17 | V4 | 255 | 254/254/254 | 225/254/224 | 224/254/224 | 248/6 | 15 | 123 |
+| 18 | P0 | 255 | 253/253/253 | 218/253/216 | 220/253/220 | 241/12 | 22 | 119 |
+| 18 | V4 | 255 | 255/255/255 | 229/255/229 | 226/255/226 | 253/2 | 16 | 114 |
+
+Pooled V4相对P0改善body `506→509`、Direct joint `434→453`（`+3.71pp`）、novel-unique
+`445→450`、hull-known `483→501`及Meta `227→237`（`+1.95pp` attempt；known-rate
+`+0.31pp`）。但是Strict在两个seed都下降：`17→15`、`22→16`，pooled `39→31`
+（`-1.56pp` attempt；known-rate `-1.89pp`）。Meta seed方向也不稳定：seed17 `+15`，
+seed18 `-5`。Known-both exact McNemar中Strict candidate-only/control-only为`28/37`
+（p=`0.3211`），Meta为`122/125`（p=`0.8988`）。
+
+更关键的是绝对目标没有达到：candidate Strict `31/512=6.05%`，距离`52/512`
+少21个；Meta `237/512=46.29%`，距离`256/512`少19个。V4因此明确判负，不能作为
+贡献点2，也不能把Meta的pooled上升单独挑出来包装成成功。
+
+V4还给出一个清楚的机制诊断：`alpha=0`只删除显式proposal-shift multiplier，并不
+保证composition-preserving，因为replay buffer自身的stratum marginal不同于P0。
+seed17/18的family TVD为`9.25%/8.24%`，arity TVD为`10.37%/6.27%`，N-bin TVD为
+`9.28%/3.92%`；all-metal各降`2.83pp/2.35pp`，volume/lattice/SG也都有非零漂移。
+具体地，oxide为`55→66`、`44→59`，halide为`25→22`、`23→16`，seed17的N13–20
+为`83→107`。历史审计恰好显示halide、all-metal和小N更容易Strict，而oxide和长N
+更困难。因此`2×Meta+Strict`提高了可实现性与Meta，却没有保护稀有的Strict子集。
+
+Reviewer式优点是：P0 control干净、missing ordinal不替换、两seed不挑最好、fresh
+official hull与完整stagewise accounting齐全。缺点是：Strict双seed负、Meta不稳定、
+composition明显漂移、统计不显著且只有两个Planner seed。最合理的V5不是继续放大
+scalar weight，而是非RL的stratum-preserving field preference：先按P0
+`family×arity×N-bin×all-metal` mass重标定buffer，只在层内学习formula、volume、
+lattice与SG偏好；Meta advantage必须非负才允许Strict bonus，并限制每层影响与报告ESS。
+Planner-alone通过后，才与Candidate-A grounded DLM组合。
+
 这项负结果仍直接服务主RQ：Planner改变proposal distribution、甚至提高Direct joint，
 并不自动意味着S.U.N.提升。它是proposal-mix与downstream conversion必须分开报告的
 内部证据，但两个Planner seed不足以支持面向全领域的普遍结论。不同arms的composition
@@ -450,6 +494,9 @@ Strict/Meta p值分别为`1.0/0.5459`，两个Planner seed仍不足以作强显�
 public `105/1000 Strict、488/1000 Meta`保持不变。V3在独立run中评价，不覆盖V2。
 完整证据见
 [`PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md)。
+V4完整证据见
+[`PLANNER_DIFFICULTY_V4_META_GUARD_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V4_META_GUARD_FINAL.md)，
+并保留同名JSON/CSV的完整family、arity、N-bin、all-metal、volume、lattice和SG分布。
 
 ## 最强剩余拒稿风险
 

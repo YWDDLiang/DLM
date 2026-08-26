@@ -16,6 +16,11 @@
 - Candidate B normalized V2：`34734`完成两个Planner seed，`34739`完成保留
   sparse Planner ordinal的真实下游，`34744`完成四cell Direct/N/U/CHGNet，随后
   fresh official MP GGA/GGA+U与终态评价完成；
+- Candidate B strong20 V3：`34766/34771/34776`完成正确replacement weighted
+  sampling、四cell真实下游与fresh official终态；
+- Candidate B Meta-guard V4：`34822`完成P0 control与两个candidate Planner seed，
+  `34826`完成四cell body/refine，`34831`完成Direct/N/U/CHGNet及fresh official
+  MP终态；四个generation/preofficial ledger均严格保留256 attempts；
 - `34693/34694`为2秒启动路径失败，`34695`为模型启动前的Bash兼容失败，
   `34696`因慢donor builder主动取消，`34698`因sidecar显式plan_state缺失而
   在训练前取消；`34737`因循环替换missing Planner ordinal而主动取消，`34743`
@@ -38,9 +43,20 @@
   `+3/512 = +0.59pp`；Meta all-attempt `-3/512 = -0.59pp`，但Meta hull-known
   `-2.50pp`，因此仅失败冻结的known-Meta gate；归类为promising scoped signal，
   不是完整通过；
+- Meta-guard V4改用原始P0 control、400 candidate updates、20% corrected replay和
+  `2×Meta+Strict`。它改善body `506→509`、Direct joint `434→453`、N∩U
+  `445→450`、hull-known `483→501`和Meta `227→237`，但Strict在两个seed均负，
+  pooled `39→31`；最终Strict `31/512=6.05%`、Meta `237/512=46.29%`，均未达到
+  `52/512`与`256/512`目标。故V4明确判负，不作为贡献点2；
+- `alpha=0`并未保持composition：V4 replay buffer的边际stratum mass本身不同于P0，
+  两seed family TVD为`9.25%/8.24%`、arity TVD `10.37%/6.27%`，并同时向更多
+  oxide、较少halide/all-metal和部分更长N漂移。下一版只考虑非RL V5：按P0
+  stratum mass校准replay，在层内学习formula/volume/lattice/SG偏好，且仅在Meta
+  advantage非负时增加Strict bonus；
 - 完整证据见
   [`PLANNER_DIFFICULTY_V2_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V2_FINAL.md)
   和[`PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V3_STRONG20_FINAL.md)
+  以及[`PLANNER_DIFFICULTY_V4_META_GUARD_FINAL.md`](../results/remote_screens/PLANNER_DIFFICULTY_V4_META_GUARD_FINAL.md)
   及同名JSON/CSV。H1-A2继续作为fallback，public headline不变。
 
 ## 已完成
