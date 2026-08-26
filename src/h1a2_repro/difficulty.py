@@ -126,11 +126,21 @@ class Attempt:
 
     @property
     def reward(self) -> float | None:
+        return self.weighted_reward()
+
+    def weighted_reward(
+        self,
+        *,
+        meta_weight: float = 1.0,
+        strict_weight: float = 1.0,
+    ) -> float | None:
         if self.hull_known is False:
             return None
         if self.strict_sun is None or self.meta_sun is None:
             return None
-        return float(int(self.meta_sun) + int(self.strict_sun))
+        if meta_weight < 0.0 or strict_weight < 0.0 or meta_weight + strict_weight <= 0.0:
+            raise ValueError("reward weights must be nonnegative with a positive sum")
+        return float(meta_weight * int(self.meta_sun) + strict_weight * int(self.strict_sun))
 
     def feature(self, name: str) -> str:
         value = getattr(self, name)
@@ -268,8 +278,14 @@ def cross_fitted_difficulty(
     features: Sequence[str] = PRIMARY_FEATURES,
     folds: int = 5,
     prior_strength: float = 20.0,
+    meta_reward_weight: float = 1.0,
+    strict_reward_weight: float = 1.0,
 ) -> dict[str, float]:
-    eligible = [item for item in attempts if item.reward is not None]
+    reward = lambda item: item.weighted_reward(
+        meta_weight=meta_reward_weight,
+        strict_weight=strict_reward_weight,
+    )
+    eligible = [item for item in attempts if reward(item) is not None]
     if len(eligible) < max(2, folds):
         raise ValueError("not enough hull-known attempts for cross-fitted difficulty")
     predictions: dict[str, float] = {}
@@ -278,12 +294,12 @@ def cross_fitted_difficulty(
         test = [item for item in eligible if _stable_fold(item.key, folds) == fold]
         if not train:
             continue
-        global_mean = sum(float(item.reward) for item in train) / len(train)
+        global_mean = sum(float(reward(item)) for item in train) / len(train)
         level_stats: dict[tuple[str, str], tuple[float, int]] = {}
         accum: dict[tuple[str, str], list[float]] = defaultdict(list)
         for item in train:
             for feature in features:
-                accum[(feature, item.feature(feature))].append(float(item.reward))
+                accum[(feature, item.feature(feature))].append(float(reward(item)))
         for key, values in accum.items():
             shrunk = (sum(values) + prior_strength * global_mean) / (len(values) + prior_strength)
             level_stats[key] = (shrunk, len(values))
@@ -293,7 +309,10 @@ def cross_fitted_difficulty(
                 for feature in features
             ]
             prediction = global_mean + (sum(residuals) / max(1, len(residuals)))
-            predictions[item.key] = min(2.0, max(0.0, prediction))
+            predictions[item.key] = min(
+                meta_reward_weight + strict_reward_weight,
+                max(0.0, prediction),
+            )
     return predictions
 
 
@@ -350,8 +369,14 @@ def difficulty_weights(
     temperature: float = 1.0,
     max_weight: float = 5.0,
     min_ess_ratio: float = 0.5,
+    meta_reward_weight: float = 1.0,
+    strict_reward_weight: float = 1.0,
 ) -> tuple[dict[str, float], dict[str, Any]]:
-    eligible = [item for item in attempts if item.reward is not None and item.key in baselines]
+    reward = lambda item: item.weighted_reward(
+        meta_weight=meta_reward_weight,
+        strict_weight=strict_reward_weight,
+    )
+    eligible = [item for item in attempts if reward(item) is not None and item.key in baselines]
     if not eligible:
         raise ValueError("no eligible attempts with cross-fitted baselines")
     if temperature <= 0:
@@ -364,7 +389,7 @@ def difficulty_weights(
         strata: list[tuple[str, ...]] = []
         for item in eligible:
             baseline = float(baselines[item.key])
-            advantage = float(item.reward) - baseline
+            advantage = float(reward(item)) - baseline
             shift_exponent = scale * alpha * (baseline - mean_baseline) / temperature
             within_exponent = scale * beta * advantage / temperature
             shift_factors.append(math.exp(max(-20.0, min(20.0, shift_exponent))))
@@ -410,6 +435,8 @@ def difficulty_weights(
         "min_weight": min(weights),
         "ess": effective_sample_size(weights),
         "ess_ratio": effective_sample_size(weights) / len(weights),
+        "meta_reward_weight": meta_reward_weight,
+        "strict_reward_weight": strict_reward_weight,
     }
     return result, report
 

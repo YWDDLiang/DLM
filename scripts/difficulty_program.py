@@ -119,7 +119,13 @@ def _plan_answer(attempt) -> str:
 
 def build_buffer(args: argparse.Namespace) -> None:
     attempts, duplicates = deduplicate(load_jsonl(args.attempts, cohort_id=args.cohort_id, method="self_improvement_source"))
-    baselines = cross_fitted_difficulty(attempts, folds=args.folds, prior_strength=args.prior_strength)
+    baselines = cross_fitted_difficulty(
+        attempts,
+        folds=args.folds,
+        prior_strength=args.prior_strength,
+        meta_reward_weight=args.meta_reward_weight,
+        strict_reward_weight=args.strict_reward_weight,
+    )
     weights, weight_report = difficulty_weights(
         attempts,
         baselines,
@@ -128,6 +134,8 @@ def build_buffer(args: argparse.Namespace) -> None:
         temperature=args.temperature,
         max_weight=args.max_weight,
         min_ess_ratio=args.min_ess_ratio,
+        meta_reward_weight=args.meta_reward_weight,
+        strict_reward_weight=args.strict_reward_weight,
     )
     anchor_train = _read_jsonl(args.anchor_dir / "train.jsonl")
     if not anchor_train:
@@ -151,7 +159,13 @@ def build_buffer(args: argparse.Namespace) -> None:
                 "source_kind": "difficulty_decomposed_self_improvement",
                 "source_attempt_key": item.key,
                 "difficulty_baseline": baselines[item.key],
-                "within_stratum_advantage": float(item.reward) - baselines[item.key],
+                "within_stratum_advantage": float(
+                    item.weighted_reward(
+                        meta_weight=args.meta_reward_weight,
+                        strict_weight=args.strict_reward_weight,
+                    )
+                )
+                - baselines[item.key],
                 "difficulty_features": {feature: item.feature(feature) for feature in PRIMARY_FEATURES},
             }
         )
@@ -169,7 +183,10 @@ def build_buffer(args: argparse.Namespace) -> None:
         "buffer_rows": len(buffer_rows),
         "buffer_fraction_by_total_weight": args.buffer_fraction,
         "duplicates_removed": duplicates,
-        "reward": "I(meta_sun)+I(strict_sun); hull_unknown excluded",
+        "reward": (
+            f"{args.meta_reward_weight:g}*I(meta_sun)+"
+            f"{args.strict_reward_weight:g}*I(strict_sun); hull_unknown excluded"
+        ),
         "features": list(PRIMARY_FEATURES),
         "cross_fitting": {"folds": args.folds, "prior_strength": args.prior_strength},
         "weighting": weight_report,
@@ -207,6 +224,8 @@ def main() -> None:
     buffer.add_argument("--temperature", type=float, default=1.0)
     buffer.add_argument("--max-weight", type=float, default=5.0)
     buffer.add_argument("--min-ess-ratio", type=float, default=0.5)
+    buffer.add_argument("--meta-reward-weight", type=float, default=1.0)
+    buffer.add_argument("--strict-reward-weight", type=float, default=1.0)
     buffer.set_defaults(func=build_buffer)
     args = parser.parse_args()
     if getattr(args, "buffer_fraction", 0.05) <= 0 or getattr(args, "buffer_fraction", 0.05) >= 0.5:

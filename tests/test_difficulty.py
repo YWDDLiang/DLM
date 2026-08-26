@@ -49,6 +49,19 @@ class DifficultyTest(unittest.TestCase):
         self.assertEqual(oxide.family, "oxide")
         self.assertEqual(alloy.family, "all_metal")
         self.assertEqual(oxide.reward, 1.0)
+        self.assertEqual(
+            oxide.weighted_reward(meta_weight=2.0, strict_weight=1.0),
+            2.0,
+        )
+        strict = normalize_attempt(
+            row(3, "AlN", ["Al", "N"], 2, True, True),
+            cohort_id="c",
+            method="m",
+        )
+        self.assertEqual(
+            strict.weighted_reward(meta_weight=2.0, strict_weight=1.0),
+            3.0,
+        )
         self.assertIsNone(unknown.reward)
 
     def test_dedup_and_summary(self):
@@ -66,6 +79,22 @@ class DifficultyTest(unittest.TestCase):
         self.assertEqual(len(weights), len(attempts))
         self.assertGreaterEqual(report["ess_ratio"], 0.7 - 1e-6)
         self.assertLessEqual(report["max_weight"], 3.0)
+        meta_baselines = cross_fitted_difficulty(
+            attempts,
+            folds=2,
+            prior_strength=2.0,
+            meta_reward_weight=2.0,
+            strict_reward_weight=1.0,
+        )
+        _, meta_report = difficulty_weights(
+            attempts,
+            meta_baselines,
+            max_weight=5.0,
+            min_ess_ratio=0.5,
+            meta_reward_weight=2.0,
+            strict_reward_weight=1.0,
+        )
+        self.assertEqual(meta_report["meta_reward_weight"], 2.0)
 
     def test_decomposition_is_finite(self):
         baseline = self.attempts("base")
