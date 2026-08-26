@@ -22,7 +22,7 @@ readonly R03E="${V3_RUN}/frozen/best/workstreams/plangraph_dlm_iclr_20260731/exe
 readonly EVAL_RUNTIME="${GROUNDING_ROOT}/eval_runtime"
 readonly GT_CSV="${PROJECT}/reference/crysllmgen/data/mp_20/test.csv"
 readonly BASE_RELAX_CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl"
-readonly EVAL_RUN="${REPO_ROOT}/runs/difficulty_v2_eval_${SLURM_JOB_ID}"
+readonly EVAL_RUN="${ROOT}/runs/difficulty_v2_eval_${SLURM_JOB_ID}"
 
 for path in "${PLAN_RUN}/_SUCCESS" "${DOWNSTREAM_RUN}/_SUCCESS" "${V3_SOURCE}/CONFIG.json" "${EVAL_RUNTIME}/run_full_reconstructed_eval.py" "${EVAL_RUNTIME}/collect_official_inputs.py" "${R03E}/runtime/scripts/a800/run_crysllmgen_metrics.py" "${GT_CSV}" "${BASE_RELAX_CACHE}"; do
   [[ -e "${path}" ]] || { echo "missing ${path}" >&2; exit 2; }
