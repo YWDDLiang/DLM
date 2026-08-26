@@ -71,6 +71,7 @@ def main() -> None:
     parser.add_argument("--dlm-seed", type=int, required=True)
     parser.add_argument("--refiner-seed", type=int, required=True)
     parser.add_argument("--denominator", type=int, default=256)
+    parser.add_argument("--variant", choices=("v2", "strong20-v3"), default="v2")
     args = parser.parse_args()
 
     planner_raw = read_jsonl(args.planner_dir / "raw_generations.jsonl")
@@ -92,7 +93,24 @@ def main() -> None:
     if not set(structures).issubset(plans_by_idx):
         raise ValueError("refined tensor contains an ordinal without a parsed Plan")
 
-    method = "H1-A2-DIFFICULTY-V2-CONTROL" if args.arm == "control" else "H1-A2-DIFFICULTY-DECOMPOSED-PLANNER-V2"
+    if args.variant == "v2":
+        method = (
+            "H1-A2-DIFFICULTY-V2-CONTROL"
+            if args.arm == "control"
+            else "H1-A2-DIFFICULTY-DECOMPOSED-PLANNER-V2"
+        )
+        planner_arm = "V1-control" if args.arm == "control" else "difficulty-normalized-v2"
+        attempt_prefix = "h1a2-diff-v2"
+        report_schema = "h1a2_difficulty_v2_generation_report_v1"
+    else:
+        method = (
+            "H1-A2-DIFFICULTY-STRONG20-V3-CONTROL"
+            if args.arm == "control"
+            else "H1-A2-DIFFICULTY-DECOMPOSED-PLANNER-STRONG20-V3"
+        )
+        planner_arm = "strong20-matched-control" if args.arm == "control" else "difficulty-strong20-v3"
+        attempt_prefix = "h1a2-diff-strong20-v3"
+        report_schema = "h1a2_difficulty_strong20_v3_generation_report_v1"
     rows: list[dict] = []
     for ordinal in range(args.denominator):
         planner_row = planner_by_idx[ordinal]
@@ -110,15 +128,15 @@ def main() -> None:
         rows.append(
             {
                 "schema": "wqcodiff_generation_attempt_v1",
-                "attempt_id": f"h1a2-diff-v2-s{args.planner_seed}-{args.arm}-{ordinal:04d}",
+                "attempt_id": f"{attempt_prefix}-s{args.planner_seed}-{args.arm}-{ordinal:04d}",
                 "method": method,
                 "ordinal": ordinal,
                 "sample_idx": ordinal,
                 "repeat": 0,
                 "experiment_seed": args.planner_seed,
-                "pair_id": f"h1a2-diff-v2-s{args.planner_seed}:{ordinal:04d}",
+                "pair_id": f"{attempt_prefix}-s{args.planner_seed}:{ordinal:04d}",
                 "arm": args.arm,
-                "planner_arm": "V1-control" if args.arm == "control" else "difficulty-normalized-v2",
+                "planner_arm": planner_arm,
                 "body_arm": "B0",
                 "schedule_arm": "D1",
                 "status": "succeeded" if succeeded else "failed",
@@ -140,7 +158,8 @@ def main() -> None:
         for row in rows:
             handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
     report = {
-        "schema": "h1a2_difficulty_v2_generation_report_v1",
+        "schema": report_schema,
+        "variant": args.variant,
         "arm": args.arm,
         "planner_seed": args.planner_seed,
         "attempts": args.denominator,
