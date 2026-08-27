@@ -71,6 +71,7 @@ def main() -> None:
     parser.add_argument("--dlm-seed", type=int, required=True)
     parser.add_argument("--refiner-seed", type=int, required=True)
     parser.add_argument("--denominator", type=int, default=256)
+    parser.add_argument("--refinement-steps", type=int, default=800)
     args = parser.parse_args()
 
     raw_rows = read_jsonl(args.body_dir / "raw_generations.jsonl")
@@ -113,7 +114,7 @@ def main() -> None:
                 "source_plan_state_sha256": None if plan_state is None else canonical_sha256(plan_state),
                 "plan_state": plan_state,
                 "diffusion_refinement_applied": succeeded,
-                "diffusion_refinement_steps": 800 if succeeded else None,
+                "diffusion_refinement_steps": int(args.refinement_steps) if succeeded else None,
                 "new_scientific_seed_per_repeat": True,
                 "retry_or_replacement_used": False,
             }
@@ -135,6 +136,7 @@ def main() -> None:
         "reconstructed": len(structures),
         "dlm_seed": args.dlm_seed,
         "refiner_seed": args.refiner_seed,
+        "refinement_steps": int(args.refinement_steps),
         "seed_rule": "base_seed + sample_idx",
     }
     (args.output_dir / "generation_report.json").write_text(

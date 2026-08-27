@@ -38,7 +38,7 @@ for seed in 17 18; do
       --output-dir "${EVAL_RUN}/seed${seed}/tau${tau}/generation" \
       --arm candidate --repeat $((seed * 1000 + tau)) \
       --dlm-seed "${dlm_seed}" --refiner-seed "${refiner_seed}" \
-      --denominator 256
+      --denominator 256 --refinement-steps "${tau}"
   done
 done
 
