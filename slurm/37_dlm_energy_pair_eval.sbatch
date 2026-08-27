@@ -21,27 +21,30 @@ readonly GT_CSV="${PROJECT}/reference/crysllmgen/data/mp_20/test.csv"
 readonly BASE_RELAX_CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl"
 readonly EVAL_RUNTIME="${ROOT}/eval_runtime"
 readonly EVAL_RUN="${ROOT}/runs/dlm_energy_pair_eval_${SLURM_JOB_ID}"
-readonly DLM_SEEDS=(31017 32017 33017 34017)
-readonly REFINER_SEEDS=(41017 42017 43017 44017)
-readonly ARMS=(control candidate control candidate)
+readonly STREAM_OFFSET="${H1A2_STREAM_OFFSET:-0}"
+[[ "${STREAM_OFFSET}" == 0 || "${STREAM_OFFSET}" == 4 ]] || exit 2
 
 for path in "${BODY_RUN}/_SUCCESS" "${V3_SOURCE}/CONFIG.json" "${EVAL_RUNTIME}/run_full_reconstructed_eval.py" "${R03E}/runtime/scripts/a800/run_crysllmgen_metrics.py" "${GT_CSV}" "${BASE_RELAX_CACHE}"; do
   [[ -e "${path}" ]] || { echo "missing ${path}" >&2; exit 2; }
 done
 mkdir -p "${EVAL_RUN}/logs"
 
-for stream in 0 1 2 3; do
+for stream in $(seq "${STREAM_OFFSET}" $((STREAM_OFFSET + 3))); do
+  if (( stream % 2 == 0 )); then arm=control; else arm=candidate; fi
+  dlm_seed=$((31017 + 1000 * stream))
+  refiner_seed=$((41017 + 1000 * stream))
   "${PYTHON}" "${ROOT}/scripts/assemble_grounding_repeat.py" \
     --body-dir "${BODY_RUN}/stream${stream}/body" \
     --refine-dir "${BODY_RUN}/stream${stream}/refine" \
     --output-dir "${EVAL_RUN}/stream${stream}/generation" \
-    --arm "${ARMS[$stream]}" --repeat "${stream}" \
-    --dlm-seed "${DLM_SEEDS[$stream]}" --refiner-seed "${REFINER_SEEDS[$stream]}" \
+    --arm "${arm}" --repeat "${stream}" \
+    --dlm-seed "${dlm_seed}" --refiner-seed "${refiner_seed}" \
     --denominator 256
 done
 
 run_stream() {
-  local stream="$1" gpu="$2" arm="${ARMS[$1]}"
+  local stream="$1" gpu="$2" arm
+  if (( stream % 2 == 0 )); then arm=control; else arm=candidate; fi
   local cell_root="${EVAL_RUN}/stream${stream}"
   mkdir -p "${cell_root}/evaluation"
   cp --reflink=auto "${BASE_RELAX_CACHE}" "${cell_root}/relax_cache.jsonl"
@@ -67,16 +70,16 @@ run_stream() {
   wait "${direct_pid}"
 }
 
-run_stream 0 0 & p0=$!
-run_stream 1 1 & p1=$!
-run_stream 2 2 & p2=$!
-run_stream 3 3 & p3=$!
+run_stream $((STREAM_OFFSET + 0)) 0 & p0=$!
+run_stream $((STREAM_OFFSET + 1)) 1 & p1=$!
+run_stream $((STREAM_OFFSET + 2)) 2 & p2=$!
+run_stream $((STREAM_OFFSET + 3)) 3 & p3=$!
 wait "${p0}"
 wait "${p1}"
 wait "${p2}"
 wait "${p3}"
 
-for stream in 0 1 2 3; do
+for stream in $(seq "${STREAM_OFFSET}" $((STREAM_OFFSET + 3))); do
   [[ -f "${EVAL_RUN}/stream${stream}/evaluation/direct/report.json" ]] || exit 3
   [[ -f "${EVAL_RUN}/stream${stream}/evaluation/full_reconstructed/_SUCCESS" ]] || exit 3
 done

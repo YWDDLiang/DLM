@@ -16,12 +16,15 @@ readonly MODEL="${H1A2_DLM_MODEL_PATH:?export H1A2_DLM_MODEL_PATH}"
 readonly CHECKPOINT="${H1A2_SUFFICIENT_CHECKPOINT:?export H1A2_SUFFICIENT_CHECKPOINT}"
 readonly REFINER="${H1A2_REFINER_PATH:?export H1A2_REFINER_PATH}"
 readonly CRYS="${H1A2_CRYSLLMGEN_DIR:?export H1A2_CRYSLLMGEN_DIR}"
+readonly STREAM_OFFSET="${H1A2_STREAM_OFFSET:-0}"
 source "${ROOT}/slurm/_common.sh"
 activate_environment
 
 readonly RUN_DIR="${ROOT}/runs/dlm_energy_pair_bodies_${SLURM_JOB_ID}"
-readonly DLM_SEEDS=(31017 32017 33017 34017)
-readonly REFINER_SEEDS=(41017 42017 43017 44017)
+[[ "${STREAM_OFFSET}" == 0 || "${STREAM_OFFSET}" == 4 ]] || {
+  echo "H1A2_STREAM_OFFSET must be 0 or 4" >&2
+  exit 2
+}
 
 for path in "${PLANS}" "${MODEL}" "${CHECKPOINT}" "${REFINER}" "${CRYS}"; do
   [[ -e "${path}" ]] || missing "${path}"
@@ -34,6 +37,7 @@ field	value
 plan_cohort	${PLANS}
 plans	256
 streams	4
+stream_offset	${STREAM_OFFSET}
 checkpoint	${CHECKPOINT}
 checkpoint_total_epoch	2
 generation_schedule	exact-plan
@@ -81,23 +85,25 @@ refine_cell() {
 
 run_stream() {
   local devices="$1" sample_port="$2" refine_port="$3" stream="$4"
+  local dlm_seed=$((31017 + 1000 * stream))
+  local refiner_seed=$((41017 + 1000 * stream))
   local output="${RUN_DIR}/stream${stream}"
-  sample_cell "${devices}" "${sample_port}" "${DLM_SEEDS[$stream]}" "${output}/body"
-  refine_cell "${devices}" "${refine_port}" "${REFINER_SEEDS[$stream]}" \
+  sample_cell "${devices}" "${sample_port}" "${dlm_seed}" "${output}/body"
+  refine_cell "${devices}" "${refine_port}" "${refiner_seed}" \
     "${output}/body/proposal_graphs.pt" "${output}/refine"
   touch "${output}/_SUCCESS"
 }
 
-run_stream 0,1 31101 31111 0 & p0=$!
-run_stream 2,3 31102 31112 1 & p1=$!
-run_stream 4,5 31103 31113 2 & p2=$!
-run_stream 6,7 31104 31114 3 & p3=$!
+run_stream 0,1 31101 31111 $((STREAM_OFFSET + 0)) & p0=$!
+run_stream 2,3 31102 31112 $((STREAM_OFFSET + 1)) & p1=$!
+run_stream 4,5 31103 31113 $((STREAM_OFFSET + 2)) & p2=$!
+run_stream 6,7 31104 31114 $((STREAM_OFFSET + 3)) & p3=$!
 wait "${p0}"
 wait "${p1}"
 wait "${p2}"
 wait "${p3}"
 
-for stream in 0 1 2 3; do
+for stream in $(seq "${STREAM_OFFSET}" $((STREAM_OFFSET + 3))); do
   [[ -f "${RUN_DIR}/stream${stream}/_SUCCESS" ]] || missing "${RUN_DIR}/stream${stream}/_SUCCESS"
 done
 touch "${RUN_DIR}/_SUCCESS"

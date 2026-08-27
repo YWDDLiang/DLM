@@ -45,11 +45,18 @@ def main() -> None:
     parser.add_argument("--plan-cohort", type=Path, required=True)
     parser.add_argument("--body-run", type=Path, required=True)
     parser.add_argument("--eval-run", type=Path, required=True)
+    parser.add_argument("--extra-body-run", type=Path)
+    parser.add_argument("--extra-eval-run", type=Path)
+    parser.add_argument("--streams", type=int, choices=(4, 8), default=4)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--min-gap", type=float, default=0.06)
     parser.add_argument("--min-train-pairs", type=int, default=96)
     parser.add_argument("--min-validation-pairs", type=int, default=24)
     args = parser.parse_args()
+    if int(args.streams) == 8 and (
+        args.extra_body_run is None or args.extra_eval_run is None
+    ):
+        raise ValueError("8-stream pairing requires extra body and eval runs")
 
     cohort_rows = read_jsonl(args.plan_cohort)
     cohort = {int(row["sample_idx"]): row for row in cohort_rows}
@@ -58,22 +65,26 @@ def main() -> None:
 
     stream_candidates: dict[int, dict[int, dict[str, Any]]] = {}
     stream_reports: list[dict[str, Any]] = []
-    for stream in range(4):
+    for stream in range(int(args.streams)):
+        body_root = args.body_run if stream < 4 else args.extra_body_run
+        eval_root = args.eval_run if stream < 4 else args.extra_eval_run
+        if body_root is None or eval_root is None:
+            raise ValueError(f"missing run root for stream{stream}")
         body = {
             int(row["sample_idx"]): row
-            for row in read_jsonl(args.body_run / f"stream{stream}/body/raw_generations.jsonl")
+            for row in read_jsonl(body_root / f"stream{stream}/body/raw_generations.jsonl")
         }
         labels = {
             int(row["ordinal"]): row
             for row in read_jsonl(
-                args.eval_run
+                eval_root
                 / f"stream{stream}/evaluation/full_reconstructed/attempt_labels_preofficial.jsonl"
             )
         }
         direct = {
             ordinal_from_attempt(row): row
             for row in read_jsonl(
-                args.eval_run / f"stream{stream}/evaluation/direct/attempt_metrics.jsonl"
+                eval_root / f"stream{stream}/evaluation/direct/attempt_metrics.jsonl"
             )
         }
         if set(body) != set(range(256)) or set(labels) != set(range(256)) or set(direct) != set(range(256)):
@@ -121,7 +132,7 @@ def main() -> None:
     for sample_idx in range(256):
         values = [
             stream_candidates[stream][sample_idx]
-            for stream in range(4)
+            for stream in range(int(args.streams))
             if sample_idx in stream_candidates[stream]
         ]
         if len(values) < 2:
@@ -207,7 +218,13 @@ def main() -> None:
         "body_run": str(args.body_run.resolve()),
         "eval_run": str(args.eval_run.resolve()),
         "plans": 256,
-        "streams": 4,
+        "streams": int(args.streams),
+        "extra_body_run": (
+            None if args.extra_body_run is None else str(args.extra_body_run.resolve())
+        ),
+        "extra_eval_run": (
+            None if args.extra_eval_run is None else str(args.extra_eval_run.resolve())
+        ),
         "min_gap_eV_per_atom": float(args.min_gap),
         "train_pairs": train_pairs,
         "validation_pairs": validation_pairs,
@@ -250,7 +267,7 @@ def main() -> None:
         "",
         f"Preference training authorized: **{gate['preference_training_authorized']}**",
         "",
-        f"- Plans/streams: `256/4`",
+        f"- Plans/streams: `256/{int(args.streams)}`",
         f"- Train/validation pairs: `{train_pairs}/{validation_pairs}`",
         f"- Minimum gap: `{float(args.min_gap):.3f} eV/atom`",
         f"- Failure reasons: `{dict(sorted(failures.items()))}`",
