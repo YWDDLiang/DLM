@@ -259,6 +259,9 @@ critic lacks data. A new critic manifest must nevertheless be frozen before
 training and must preserve the existing formula-disjoint train/validation
 split.
 
+The complete frozen architecture, loss, guidance and promotion contract is in
+[`DLM_NOISY_STATE_ENERGY_CRITIC_V1.md`](DLM_NOISY_STATE_ENERGY_CRITIC_V1.md).
+
 ### Guidance
 
 The critic is a sidecar; no stability field is added to the prompt. At each
