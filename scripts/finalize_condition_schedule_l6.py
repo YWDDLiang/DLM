@@ -173,6 +173,41 @@ def main() -> None:
         "meta_retention",
     )
     primary_delta = {key: primary[key] - control[key] for key in rate_keys}
+    variant_deltas = {
+        arm: {key: pooled_by_arm[arm][key] - control[key] for key in rate_keys}
+        for arm in ("full_joint", "hard_axis", "hard_joint")
+    }
+    factorial_effects = {
+        "conditioning_hard_minus_full": {
+            key: 0.5
+            * (
+                pooled_by_arm["hard_axis"][key]
+                + pooled_by_arm["hard_joint"][key]
+                - pooled_by_arm["full_axis"][key]
+                - pooled_by_arm["full_joint"][key]
+            )
+            for key in rate_keys
+        },
+        "schedule_joint_minus_axis": {
+            key: 0.5
+            * (
+                pooled_by_arm["full_joint"][key]
+                + pooled_by_arm["hard_joint"][key]
+                - pooled_by_arm["full_axis"][key]
+                - pooled_by_arm["hard_axis"][key]
+            )
+            for key in rate_keys
+        },
+        "interaction_hard_x_joint": {
+            key: (
+                pooled_by_arm["hard_joint"][key]
+                - pooled_by_arm["hard_axis"][key]
+                - pooled_by_arm["full_joint"][key]
+                + pooled_by_arm["full_axis"][key]
+            )
+            for key in rate_keys
+        },
+    }
     seed_deltas: dict[str, dict[str, float]] = {}
     for seed in SEEDS:
         baseline = next(row for row in cells if row["seed"] == seed and row["arm"] == "full_axis")
@@ -199,26 +234,30 @@ def main() -> None:
     gate["promote_hard_joint"] = all(gate.values())
 
     mcnemar: dict[str, Any] = {}
-    for seed in SEEDS:
-        left = {int(row["ordinal"]): row for row in rows_by_cell[(seed, "full_axis")]}
-        right = {int(row["ordinal"]): row for row in rows_by_cell[(seed, "hard_joint")]}
-        known = [
-            idx
-            for idx in range(ATTEMPTS)
-            if left[idx]["official_hull_status"] == "known"
-            and right[idx]["official_hull_status"] == "known"
-        ]
-        mcnemar[str(seed)] = {
-            "known_both": len(known),
-            "strict": _exact_mcnemar(
-                [bool(left[idx]["strict_sun"]) for idx in known],
-                [bool(right[idx]["strict_sun"]) for idx in known],
-            ),
-            "meta": _exact_mcnemar(
-                [bool(left[idx]["meta_sun"]) for idx in known],
-                [bool(right[idx]["meta_sun"]) for idx in known],
-            ),
-        }
+    for arm in ("full_joint", "hard_axis", "hard_joint"):
+        mcnemar[arm] = {}
+        for seed in SEEDS:
+            left = {
+                int(row["ordinal"]): row for row in rows_by_cell[(seed, "full_axis")]
+            }
+            right = {int(row["ordinal"]): row for row in rows_by_cell[(seed, arm)]}
+            known = [
+                idx
+                for idx in range(ATTEMPTS)
+                if left[idx]["official_hull_status"] == "known"
+                and right[idx]["official_hull_status"] == "known"
+            ]
+            mcnemar[arm][str(seed)] = {
+                "known_both": len(known),
+                "strict": _exact_mcnemar(
+                    [bool(left[idx]["strict_sun"]) for idx in known],
+                    [bool(right[idx]["strict_sun"]) for idx in known],
+                ),
+                "meta": _exact_mcnemar(
+                    [bool(left[idx]["meta_sun"]) for idx in known],
+                    [bool(right[idx]["meta_sun"]) for idx in known],
+                ),
+            }
 
     report = {
         "schema": "h1a2_condition_schedule_l6_final_v1",
@@ -235,6 +274,8 @@ def main() -> None:
         "cells": cells,
         "pooled_repeat_sum": pooled,
         "primary_delta": primary_delta,
+        "variant_deltas_vs_full_axis": variant_deltas,
+        "factorial_effects": factorial_effects,
         "seed_deltas": seed_deltas,
         "gate": gate,
         "mcnemar": mcnemar,
@@ -268,6 +309,12 @@ def main() -> None:
         )
     lines.extend(["", "## hard_joint minus full_axis", ""])
     lines.extend(f"- {key}: `{value:+.4%}`" for key, value in primary_delta.items())
+    lines.extend(["", "## Factorial effects", ""])
+    for effect, values in factorial_effects.items():
+        lines.append(f"### {effect}")
+        lines.append("")
+        lines.extend(f"- {key}: `{value:+.4%}`" for key, value in values.items())
+        lines.append("")
     lines.extend(["", "## Frozen gate", ""])
     lines.extend(f"- {key}: `{value}`" for key, value in gate.items())
     (output / f"{stem}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
