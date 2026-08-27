@@ -120,8 +120,8 @@
   round-trip、incremental prefix、prefix safety、formula-prefill boundary与UNK-free均为`100%`，因此Phase1可在
   不扩词表、不改权重的条件下实现。证据见
   [`CCFD_TOKENIZER_INTERFACE_AUDIT.md`](../results/remote_screens/CCFD_TOKENIZER_INTERFACE_AUDIT.md)；
-- CCFD只解决composition correctness，不宣称稳定性；F0/F1尚未运行，特殊tokenizer/BPE
-  仍是条件Phase2，RL仍未授权；
+- CCFD只解决composition correctness，不宣称稳定性；F0/F1已按正式分母完成并失败，
+  特殊tokenizer/BPE Phase2不再触发，RL仍未授权；
 - composition correctness与固定composition稳定转化的统一顺序、门控和终态解释已冻结于
   [`DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md`](DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md)。
 - 用户随后冻结贡献点1与主故事并排除外部方法比较；后续仅推进内部matched CCFD
@@ -136,6 +136,17 @@
   Strict/Meta retention分别下降`21.31/18.15pp`，未通过冻结Pareto门。因而已触发且仅触发
   `tau={0,200,500,800}`粗校准；0/800复用，只新算200/500。证据见
   [`DLM_REFINER_EFFECT_L6_DIAGNOSTIC.md`](../results/remote_screens/DLM_REFINER_EFFECT_L6_DIAGNOSTIC.md)。
+
+2026-08-28 CCFD Phase1终态：
+
+- 同checkpoint/tokenizer的F0 free与F1 CCFD均完成两seed×requested1000；F1把冻结内部
+  assignment从`1898/2000=94.90%`提高到`1983/2000=99.15%`，说明在线守恒机制按设计执行；
+- 但独立legacy composition validity仅`1724→1725`，seed17 `+0.5pp`、seed18
+  `-0.4pp`，paired 95% CI `[-2.05,+2.15]pp`，McNemar discordant `229/230`、`p=1.0`；
+- N分布TVD=`0.064>0.05`，且两seed正向与CI门失败；formal `phase1_pass=false`。因此
+  CCFD冻结为“内部可赋价保证但未改善独立comp_valid”的负证据，不进入贡献列表，也不触发
+  特殊tokenizer Phase2。完整证据见
+  [`CCFD_PHASE1_FINAL.md`](../results/remote_screens/CCFD_PHASE1_FINAL.md)。
 
 ## 已完成
 

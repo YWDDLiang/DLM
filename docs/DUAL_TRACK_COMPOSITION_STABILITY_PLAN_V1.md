@@ -192,8 +192,8 @@ RL is an engineering fallback, not automatically the second contribution.
 - [x] Decide whether the raw/model494 result triggers the fixed tau scan: triggered.
 - [x] Freeze and execute CCFD Phase A0 on CPU with no GPU training.
 - [x] Verify the current frozen tokenizer can host F1 without resizing or changing weights.
-- [ ] Implement F1 online FSM on the current formula checkpoint without changing weights.
-- [ ] Run F0/F1 two-seed requested1000 and evaluate correctness plus distribution drift.
+- [x] Implement F1 online FSM on the current formula checkpoint without changing weights.
+- [x] Run F0/F1 two-seed requested1000 and evaluate correctness plus distribution drift: formal gate failed.
 - [ ] Run the fixed tau scan only if B1 triggers, then confirm one tau on raw1000.
 - [ ] Audit critic evaluator independence only if the selected executor still misses stability targets.
 - [ ] Train/evaluate one critic or one relaxed-winner candidate according to the sequential gates.

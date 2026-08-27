@@ -536,5 +536,10 @@ matched因果比较只使用内部同checkpoint控制。
 Track A只主张composition correctness，Track B只主张fixed-composition stable conversion；
 二者可组成系统故事但不得共享因果措辞。
 
+CCFD formal Phase1现已终态失败：虽然内部assignment达到`1983/2000=99.15%`，独立
+legacy comp-valid仅`1724→1725`，两seed方向不一致且N TVD为`0.064`。因此不把
+conservation compiler或新tokenizer加入论文贡献；该结果只保留为“保证内部可赋价并不等于
+提升独立composition validity”的机制负证据。稳定性Track B继续独立推进。
+
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。
