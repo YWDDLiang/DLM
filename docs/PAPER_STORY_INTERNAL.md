@@ -451,6 +451,13 @@ train/val/raw1000达到`96.66%/96.32%/94.10%`，普通text LLaMA输出的电中�
 改善Planner”；真正的后续版本需要显式species/count表示、charge约束或专用head，且
 必须重新做matched attribution。
 
+same-Plan energy-contrastive路线同样在训练前的数据门停止。冻结的train-only 256 Plan
+cohort在4 streams时得到`67/22` train/validation pair，扩至预注册上限8 streams后为
+`95/27`；虽然energy-gap中位数为`0.1185 eV/atom`，train pair仍比冻结最低门`96`
+少1。我们没有把“只差一对”解释为近似通过，也没有降低`0.06 eV/atom` gap、改split
+或继续抽样。它只支持“同一Plan下存在明显结构能量差”这一数据诊断，不支持
+preference-trained DLM贡献。
+
 若该headline不是具有1:1逐attempt记录的raw cohort，则proposal–realization分析必须使用
 单独命名的raw standard-H1-A2 cohort；不得为105/488构造伪microdata。
 
@@ -487,6 +494,7 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 | Grounding fixed1000 | 无survivor过滤的规模复核 | full-epoch负结果与stable瓶颈 | 将四重复小Strict信号包装为贡献 |
 | DLM sufficient raw1000 | body与stable的非单调epoch Pareto | 总2/3 epoch全披露并冻结选择规则 | 只按CE或body挑更长checkpoint |
 | Count-valence Planner | 物理标签覆盖与生成执行分离 | 96% teacher覆盖但50% emitted-neutral的负证据 | 将标签覆盖包装成生成化学正确性 |
+| Same-Plan energy pairs | outcome-blind固定Plan与能量跨度 | 8-stream `95/27` pair-yield完整披露 | 因train只差1对而放宽96/24门 |
 
 ## 当前大致缺口
 

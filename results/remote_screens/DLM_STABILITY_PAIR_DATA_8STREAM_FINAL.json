@@ -1,0 +1,161 @@
+{
+  "body_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_bodies_35357",
+  "eval_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_eval_35360",
+  "extra_body_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_bodies_35365",
+  "extra_eval_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_eval_35370",
+  "failures": {
+    "fewer_than_two_eligible_streams": 34,
+    "gap_below_threshold": 97,
+    "identical_extreme_body_text": 3
+  },
+  "gap_bins": {
+    "train:0.06_0.10": 41,
+    "train:0.10_0.20": 38,
+    "train:ge_0.20": 16,
+    "validation:0.06_0.10": 5,
+    "validation:0.10_0.20": 16,
+    "validation:ge_0.20": 6
+  },
+  "gap_quantiles": {
+    "q10": 0.07019004821777343,
+    "q25": 0.08535027503967285,
+    "q50": 0.1184701919555664,
+    "q75": 0.16494059562683105,
+    "q90": 0.25134882926940927
+  },
+  "gate": {
+    "gap_threshold_unchanged": true,
+    "preference_training_authorized": false,
+    "train_pairs_at_least_minimum": false,
+    "validation_pairs_at_least_minimum": true
+  },
+  "min_gap_eV_per_atom": 0.06,
+  "plan_cohort": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/energy_pair_plans_256_20260827/plans_for_dlm.jsonl",
+  "plans": 256,
+  "schema": "h1a2_energy_preference_pair_manifest_v1",
+  "strata": {
+    "train|chalcogenide|arity2|N12": 1,
+    "train|chalcogenide|arity2|N6": 1,
+    "train|chalcogenide|arity3|N20": 1,
+    "train|chalcogenide|arity3|N4": 1,
+    "train|chalcogenide|arity3|N7": 2,
+    "train|chalcogenide|arity4|N12": 1,
+    "train|chalcogenide|arity4|N16": 1,
+    "train|chalcogenide|arity4|N20": 1,
+    "train|halide|arity2|N16": 1,
+    "train|halide|arity2|N20": 1,
+    "train|halide|arity3|N10": 1,
+    "train|halide|arity3|N12": 1,
+    "train|halide|arity3|N16": 1,
+    "train|halide|arity3|N18": 1,
+    "train|halide|arity3|N20": 1,
+    "train|halide|arity3|N9": 1,
+    "train|halide|arity4|N10": 2,
+    "train|halide|arity4|N14": 1,
+    "train|halide|arity5|N12": 1,
+    "train|nitride|arity3|N10": 1,
+    "train|other|arity2|N20": 1,
+    "train|other|arity2|N4": 1,
+    "train|other|arity2|N8": 2,
+    "train|other|arity3|N10": 3,
+    "train|other|arity3|N11": 1,
+    "train|other|arity3|N12": 4,
+    "train|other|arity3|N13": 3,
+    "train|other|arity3|N14": 1,
+    "train|other|arity3|N18": 2,
+    "train|other|arity3|N20": 2,
+    "train|other|arity3|N4": 1,
+    "train|other|arity3|N6": 6,
+    "train|other|arity3|N7": 1,
+    "train|other|arity3|N9": 2,
+    "train|other|arity4|N13": 1,
+    "train|oxide|arity3|N12": 3,
+    "train|oxide|arity3|N14": 3,
+    "train|oxide|arity3|N16": 3,
+    "train|oxide|arity3|N18": 1,
+    "train|oxide|arity3|N19": 1,
+    "train|oxide|arity3|N20": 3,
+    "train|oxide|arity3|N8": 1,
+    "train|oxide|arity4|N12": 2,
+    "train|oxide|arity4|N14": 2,
+    "train|oxide|arity4|N16": 3,
+    "train|oxide|arity4|N18": 1,
+    "train|oxide|arity4|N19": 1,
+    "train|oxide|arity4|N20": 2,
+    "train|oxide|arity5|N13": 1,
+    "train|oxide|arity5|N20": 1,
+    "train|phosphide_or_phosphate|arity3|N4": 1,
+    "train|phosphide_or_phosphate|arity3|N5": 1,
+    "train|sulfide|arity3|N10": 1,
+    "train|sulfide|arity3|N12": 1,
+    "train|sulfide|arity3|N14": 1,
+    "train|sulfide|arity3|N16": 1,
+    "train|sulfide|arity3|N18": 2,
+    "train|sulfide|arity3|N20": 1,
+    "train|sulfide|arity3|N5": 1,
+    "train|sulfide|arity3|N7": 1,
+    "train|sulfide|arity3|N8": 1,
+    "train|sulfide|arity4|N7": 1,
+    "train|sulfide|arity4|N8": 1,
+    "validation|chalcogenide|arity2|N10": 1,
+    "validation|chalcogenide|arity3|N15": 1,
+    "validation|chalcogenide|arity3|N6": 1,
+    "validation|chalcogenide|arity3|N7": 1,
+    "validation|halide|arity4|N15": 1,
+    "validation|nitride|arity3|N5": 1,
+    "validation|other|arity2|N14": 2,
+    "validation|other|arity2|N16": 2,
+    "validation|other|arity2|N8": 1,
+    "validation|other|arity3|N16": 1,
+    "validation|other|arity3|N18": 1,
+    "validation|other|arity3|N8": 1,
+    "validation|oxide|arity3|N12": 2,
+    "validation|oxide|arity3|N14": 1,
+    "validation|oxide|arity3|N18": 1,
+    "validation|oxide|arity3|N19": 1,
+    "validation|oxide|arity4|N11": 1,
+    "validation|oxide|arity4|N12": 1,
+    "validation|oxide|arity4|N18": 1,
+    "validation|oxide|arity4|N20": 3,
+    "validation|oxide|arity4|N7": 1,
+    "validation|oxide|arity5|N20": 1
+  },
+  "stream_reports": [
+    {
+      "eligible_direct_chgnet": 220,
+      "stream": 0
+    },
+    {
+      "eligible_direct_chgnet": 219,
+      "stream": 1
+    },
+    {
+      "eligible_direct_chgnet": 222,
+      "stream": 2
+    },
+    {
+      "eligible_direct_chgnet": 219,
+      "stream": 3
+    },
+    {
+      "eligible_direct_chgnet": 220,
+      "stream": 4
+    },
+    {
+      "eligible_direct_chgnet": 218,
+      "stream": 5
+    },
+    {
+      "eligible_direct_chgnet": 218,
+      "stream": 6
+    },
+    {
+      "eligible_direct_chgnet": 216,
+      "stream": 7
+    }
+  ],
+  "streams": 8,
+  "total_pairs": 122,
+  "train_pairs": 95,
+  "validation_pairs": 27
+}

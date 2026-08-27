@@ -70,14 +70,31 @@
   和
   [`PLANNER_COUNTVALENCE_FACTORIAL_FINAL.md`](../results/remote_screens/PLANNER_COUNTVALENCE_FACTORIAL_FINAL.md)。
 
+2026-08-27 same-Plan energy-pair可行性终态：
+
+- outcome-blind地从train-only rich Plans冻结256个unique-formula Plan，其中192 train、
+  64 validation，并与raw1000 exact formula/Plan identity隔离；
+- 4个独立DLM/model494 stream在`0.06 eV/atom`固定gap下产生`67/22`
+  train/validation pairs；按预案扩到8 streams后为`95/27`；
+- 8-stream energy-gap q10/q25/q50/q75/q90为
+  `0.0702/0.0854/0.1185/0.1649/0.2513 eV/atom`，说明same-Plan结构间确有
+  可学习的能量跨度；
+- 但冻结最低pair-yield门为`96/24`，train恰少1对，因此
+  `preference_training_authorized=false`。没有降gap、改split、追加stream或启动训练；
+- 该结果把当前energy-contrastive候选终止在数据可行性阶段，不产生新的模型权重，也不
+  进入L6/CFG/L7；完整证据见
+  [`DLM_STABILITY_PAIR_DATA_4STREAM_FINAL.md`](../results/remote_screens/DLM_STABILITY_PAIR_DATA_4STREAM_FINAL.md)
+  与
+  [`DLM_STABILITY_PAIR_DATA_8STREAM_FINAL.md`](../results/remote_screens/DLM_STABILITY_PAIR_DATA_8STREAM_FINAL.md)。
+
 当前决定：
 
 - Candidate A四重复中的小幅Strict信号保留为历史诊断，但固定requested-1000没有复现，
   不再作为完整或scoped正向训练贡献；
 - Candidate B旧Plan-only预筛仍保留为负证据，但现按用户新决定进入一次最小真实下游验证；
 - 第二个训练侧贡献目前未成立；下一条非RL候选是固定Plan的energy-contrastive DLM
-  supervision；其初始化现冻结为raw1000 Pareto选择的总2-epoch checkpoint，直接优化
-  same-Plan geometry energy preference，而不是继续CE时长或用Planner补救；
+  supervision，但其首个冻结256-Plan/8-stream pair-yield门也已失败，当前不得训练或
+  通过放宽阈值补救；如需新候选，必须重新提出并预注册独立数据/目标机制；
 - 标准H1-A2继续作为论文fallback；
 - public headline继续是`105/1000 Strict、488/1000 Meta`；
 - 所有checkpoint和新requested-1000结果只作内部机制证据，不替换headline结果。

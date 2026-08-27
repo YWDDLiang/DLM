@@ -2,7 +2,7 @@
 
 Date: 2026-08-27
 
-Status: Phase A terminal; total-2-epoch checkpoint selected, Phase B pair mining next.
+Status: Phase A complete; Phase B pair-yield gate failed at the frozen 8-stream limit.
 
 ## Approach
 
@@ -346,8 +346,8 @@ MP hull evaluation once.
 - [ ] Implement and test exact-body origin-shift augmentation.
 - [x] Continue the plain-control checkpoint through total 2 and 3 epochs.
 - [x] Select the sufficient base using the validation Pareto contract (total 2 epochs).
-- [ ] Generate train-only same-Plan multi-seed bodies and frozen-refiner labels.
-- [ ] Build conservative energy pairs and publish pair-yield diagnostics.
+- [x] Generate train-only same-Plan multi-seed bodies and frozen-refiner labels.
+- [x] Build conservative energy pairs and publish pair-yield diagnostics (gate failed: 95/27 versus 96/24).
 - [ ] Implement and train the default-off preference candidate.
 - [ ] Implement hard-anchor-preserving rich-Plan CFG and run its inference-only
       ablation.
