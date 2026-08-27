@@ -208,30 +208,49 @@ def main() -> None:
             for key in rate_keys
         },
     }
-    seed_deltas: dict[str, dict[str, float]] = {}
-    for seed in SEEDS:
-        baseline = next(row for row in cells if row["seed"] == seed and row["arm"] == "full_axis")
-        candidate = next(row for row in cells if row["seed"] == seed and row["arm"] == "hard_joint")
-        seed_deltas[str(seed)] = {key: candidate[key] - baseline[key] for key in rate_keys}
+    seed_deltas_by_variant: dict[str, dict[str, dict[str, float]]] = {}
+    gates_by_variant: dict[str, dict[str, bool]] = {}
+    for arm in ("full_joint", "hard_axis", "hard_joint"):
+        seed_deltas_by_variant[arm] = {}
+        for seed in SEEDS:
+            baseline = next(
+                row for row in cells if row["seed"] == seed and row["arm"] == "full_axis"
+            )
+            candidate = next(
+                row for row in cells if row["seed"] == seed and row["arm"] == arm
+            )
+            seed_deltas_by_variant[arm][str(seed)] = {
+                key: candidate[key] - baseline[key] for key in rate_keys
+            }
+        delta = variant_deltas[arm]
+        variant_gate = {
+            "pooled_strict_positive": delta["strict_attempt_rate"] > 0.0,
+            "pooled_meta_positive": delta["meta_attempt_rate"] > 0.0,
+            "parse_noninferior_1pp": delta["parse_rate"] >= -0.01,
+            "body_noninferior_1pp": delta["body_rate"] >= -0.01,
+            "direct_noninferior_1pp": delta["direct_joint_rate"] >= -0.01,
+            "novel_noninferior_1pp": delta["novel_rate"] >= -0.01,
+            "unique_noninferior_1pp": delta["unique_rate"] >= -0.01,
+            "strict_retention_noninferior_1pp": delta["strict_retention"] >= -0.01,
+            "meta_retention_noninferior_1pp": delta["meta_retention"] >= -0.01,
+            "both_seeds_strict_noninferior_1pp": all(
+                seed_deltas_by_variant[arm][str(seed)]["strict_attempt_rate"] >= -0.01
+                for seed in SEEDS
+            ),
+            "both_seeds_meta_noninferior_1pp": all(
+                seed_deltas_by_variant[arm][str(seed)]["meta_attempt_rate"] >= -0.01
+                for seed in SEEDS
+            ),
+        }
+        variant_gate["eligible"] = all(variant_gate.values())
+        gates_by_variant[arm] = variant_gate
 
-    gate = {
-        "pooled_strict_positive": primary_delta["strict_attempt_rate"] > 0.0,
-        "pooled_meta_positive": primary_delta["meta_attempt_rate"] > 0.0,
-        "parse_noninferior_1pp": primary_delta["parse_rate"] >= -0.01,
-        "body_noninferior_1pp": primary_delta["body_rate"] >= -0.01,
-        "direct_noninferior_1pp": primary_delta["direct_joint_rate"] >= -0.01,
-        "novel_noninferior_1pp": primary_delta["novel_rate"] >= -0.01,
-        "unique_noninferior_1pp": primary_delta["unique_rate"] >= -0.01,
-        "strict_retention_noninferior_1pp": primary_delta["strict_retention"] >= -0.01,
-        "meta_retention_noninferior_1pp": primary_delta["meta_retention"] >= -0.01,
-        "both_seeds_strict_noninferior_1pp": all(
-            seed_deltas[str(seed)]["strict_attempt_rate"] >= -0.01 for seed in SEEDS
-        ),
-        "both_seeds_meta_noninferior_1pp": all(
-            seed_deltas[str(seed)]["meta_attempt_rate"] >= -0.01 for seed in SEEDS
-        ),
-    }
-    gate["promote_hard_joint"] = all(gate.values())
+    seed_deltas = seed_deltas_by_variant["hard_joint"]
+    gate = dict(gates_by_variant["hard_joint"])
+    gate["promote_hard_joint"] = gate["eligible"]
+    selected_axis_condition_arm = (
+        "hard_axis" if gates_by_variant["hard_axis"]["eligible"] else "full_axis"
+    )
 
     mcnemar: dict[str, Any] = {}
     for arm in ("full_joint", "hard_axis", "hard_joint"):
@@ -277,7 +296,10 @@ def main() -> None:
         "variant_deltas_vs_full_axis": variant_deltas,
         "factorial_effects": factorial_effects,
         "seed_deltas": seed_deltas,
+        "seed_deltas_by_variant": seed_deltas_by_variant,
         "gate": gate,
+        "gates_by_variant": gates_by_variant,
+        "selected_axis_condition_arm": selected_axis_condition_arm,
         "mcnemar": mcnemar,
         "unknown_policy": "excluded from hull-known denominators; never mapped to unstable",
         "uniqueness_note": "pooled rows sum independently recomputed seed-level uniqueness rather than recomputing one 512-sample cohort",
@@ -296,6 +318,7 @@ def main() -> None:
         "# DLM conditioning × coordinate schedule L6",
         "",
         f"Promote hard_joint: **{gate['promote_hard_joint']}**",
+        f"Selected valid axis-condition arm: **{selected_axis_condition_arm}**",
         "",
         "| Arm | Requested | Body | Direct J | N/U/NU | Hull K/U | Strict stable/SUN | Meta stable/SUN |",
         "|---|---:|---:|---:|---:|---:|---:|---:|",
