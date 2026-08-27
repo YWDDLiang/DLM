@@ -233,3 +233,38 @@ Plans. A physics-embedding Planner candidate may be evaluated only after:
 
 It must not be used to rescue a failed DLM candidate or to replace the frozen
 raw1000 two-round test cohort.
+
+## Post-factorial decision (2026-08-28)
+
+The compact text-prefix pilot is terminally negative. Although deterministic
+teacher assignment covered about 96% of train/validation and 94.1% of raw1000,
+the generated count-valence arm produced only `247/491=50.31%` emitted-neutral
+parsed Plans and shifted strongly toward all-metal formulas. This establishes
+that tokenizing correct oxidation annotations is not sufficient for a BPE
+autoregressive decoder to execute coupled integer charge arithmetic.
+
+If Planner work resumes, only the following one-backbone design remains
+scientifically justified:
+
+1. the shared Planner transformer predicts a latent state from the request;
+2. a species/count head predicts element–oxidation-state candidates and counts;
+3. a finite-state/dynamic-programming decoder permits only sequences that can
+   still complete to exact N and net charge zero;
+4. a separate rich-property head predicts anion, lattice, space group and
+   volume with calibrated uncertainty;
+5. the public output is deterministically rendered to the same seven-line rich
+   Plan;
+6. sampling is calibrated within frozen family/arity/N strata so easier
+   all-metal/halide mass cannot replace difficult oxide/sulfide mass.
+
+This is still one learned Planner backbone; the constrained decoder is an
+inference algorithm rather than a second language model. CrysVCD's
+electronic-configuration projection may initialize the species embeddings, but
+only after the constrained species/count head itself passes exact composition,
+neutrality and drift gates. It must not again be tested as free-form text.
+
+The soft-property head and formula head must be evaluated separately. The DLM
+should consume a soft field only when its held-out calibration is adequate;
+otherwise that field becomes `unknown` while formula/N/elements/counts remain
+hard anchors. This reliability-aware interface is the Planner counterpart of
+the active DLM conditioning ablation.
