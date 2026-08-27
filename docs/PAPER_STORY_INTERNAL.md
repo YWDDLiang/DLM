@@ -530,6 +530,10 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 coverage合同冻结后进入F0/F1同checkpoint requested1000双seed试验；若仅在线FSM有效，
 论文只称conservation compiler。只有独立tokenizer主效应通过时才讨论tokenizer贡献。
 官方CrysVCD只作外部reference；matched因果比较必须是同backbone reimplementation。
+双轨执行合同见
+[`DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md`](DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md)：
+Track A只主张composition correctness，Track B只主张fixed-composition stable conversion；
+二者可组成系统故事但不得共享因果措辞。
 
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。

@@ -117,6 +117,8 @@
   correctness，不宣称稳定性；特殊tokenizer/BPE为条件Phase2，RL仍未授权；
 - 完整证据、prior-art与决策日志见
   [`SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md`](SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md)。
+- composition correctness与固定composition稳定转化的统一顺序、门控和终态解释已冻结于
+  [`DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md`](DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md)。
 
 ## 已完成
 
