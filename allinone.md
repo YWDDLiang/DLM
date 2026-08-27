@@ -315,3 +315,33 @@ The defensible contribution candidate is narrower:
 That claim requires the same-Plan design and preferably the preference
 regularizer; simply adding an `E_hull` prompt would be a useful engineering
 baseline, not a standalone contribution.
+
+## 2026-08-28 stability-mechanism update
+
+The completed total-epoch and same-Plan pair experiments changed the preferred
+route. Plain CE improved body validity but reduced both Strict and Meta S.U.N.,
+and the frozen one-primary-pair-per-Plan dataset missed its training-yield gate
+(`95/27` versus `96/24`). No stability/energy prompt token will be introduced.
+
+Code-path inspection identified an additional train/inference mismatch: the
+exact sampler irreversibly commits all X coordinates, then Y and then Z, even
+though energetic validity depends on coupled 3D periodic distances. The full
+JSON Plan also contains soft fields whose observed agreement is not positively
+associated with hull stability. A two-seed 2×2 causal ablation is therefore
+running on the public DLM checkpoint: full versus hard-anchor-only conditioning
+crossed with axis-wise versus joint-XYZ commitment.
+
+If that ablation is insufficient, the next predeclared mechanism is a
+timestep-aware noisy-state energy critic trained on all compatible-energy
+labelled bodies with within-Plan normalization. It will guide discrete
+transitions internally and will not rerank final candidates. Relaxed-winner
+distillation is the fallback supervised update. The detailed evidence, gates
+and architecture boundary are recorded in
+[`DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md`](docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md).
+
+Primary precedents: [MatterGen](https://arxiv.org/abs/2312.03687),
+[DiffCSP](https://arxiv.org/abs/2309.04475),
+[FlowMM](https://arxiv.org/abs/2406.04713),
+[Siamese energy-guided crystal generation](https://arxiv.org/abs/2503.10471),
+[discrete diffusion guidance](https://arxiv.org/abs/2412.10193), and
+[CrysVCD](https://arxiv.org/abs/2507.19799).
