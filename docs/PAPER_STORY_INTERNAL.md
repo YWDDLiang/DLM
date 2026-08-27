@@ -526,10 +526,11 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
   同时报告Strict/Meta、stable本身、stable→S.U.N. retention和全部checkpoint；Candidate B
   只按新授权做一次真实下游验证，不根据结果追加大规模搜索。
 
-新的第二贡献候选不再与上述stability训练候选混同。CCFD只在Phase0 false-rejection/
-coverage合同冻结后进入F0/F1同checkpoint requested1000双seed试验；若仅在线FSM有效，
-论文只称conservation compiler。只有独立tokenizer主效应通过时才讨论tokenizer贡献。
-官方CrysVCD只作外部reference；matched因果比较必须是同backbone reimplementation。
+新的第二贡献候选不再与上述stability训练候选混同。CCFD Phase0 false-rejection/
+coverage合同与冻结tokenizer接口审计均已通过；下一步是F0/F1同checkpoint
+requested1000双seed试验。若仅在线FSM有效，论文只称conservation compiler。只有
+独立tokenizer主效应通过时才讨论tokenizer贡献。外部方法比较已按用户决定移出本路线；
+matched因果比较只使用内部同checkpoint控制。
 双轨执行合同见
 [`DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md`](DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md)：
 Track A只主张composition correctness，Track B只主张fixed-composition stable conversion；

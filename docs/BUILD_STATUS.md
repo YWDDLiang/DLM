@@ -112,15 +112,30 @@
   dependency阶段取消，无科学计算，代码与Slurm已清理；
 - MP-20真实train/val/test在冻结legacy Direct `comp_valid`下本身仅
   `90.50/90.24/90.95%`；H1-A2 refined1000为`87.8%`，model494不改变atom multiset；
-- 多智能体评审最终只批准Conservation-Constrained Formula Decoding（CCFD）的CPU
-  Phase0与同checkpoint F0 free-vs-F1 online-FSM Phase1。该候选只解决composition
-  correctness，不宣称稳定性；特殊tokenizer/BPE为条件Phase2，RL仍未授权；
-- 完整证据、prior-art与决策日志见
-  [`SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md`](SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md)。
+- CCFD CPU Phase0已通过：train/val/test/raw1000可赋价覆盖为
+  `96.66/96.32/96.69/94.10%`，所有可表示公式round-trip为`100%`；legacy SMACT在
+  CCFD可表示集合上的false reject约为`8.25–9.67%`。冻结证据见
+  [`CCFD_PHASE0_MANIFEST.md`](../results/remote_screens/CCFD_PHASE0_MANIFEST.md)；
+- 冻结Planner tokenizer接口审计也已通过：train/val/test/raw1000的syntax、token
+  round-trip、incremental prefix、prefix safety、formula-prefill boundary与UNK-free均为`100%`，因此Phase1可在
+  不扩词表、不改权重的条件下实现。证据见
+  [`CCFD_TOKENIZER_INTERFACE_AUDIT.md`](../results/remote_screens/CCFD_TOKENIZER_INTERFACE_AUDIT.md)；
+- CCFD只解决composition correctness，不宣称稳定性；F0/F1尚未运行，特殊tokenizer/BPE
+  仍是条件Phase2，RL仍未授权；
 - composition correctness与固定composition稳定转化的统一顺序、门控和终态解释已冻结于
   [`DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md`](DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md)。
-- 用户随后冻结贡献点1与主故事并排除外部CrysVCD比较；后续仅推进内部matched CCFD
+- 用户随后冻结贡献点1与主故事并排除外部方法比较；后续仅推进内部matched CCFD
   与固定composition稳定转化，不再重开贡献点1。
+- 两seed L6 conditioning/schedule终态已完成：full-axis pooled512为body/DirectJ
+  `505/457`、Strict/Meta S.U.N. `48/230`；hard-axis为`512/463`、`47/230`，
+  Strict下降且seed/retention门失败，因此继续选full-axis。mixed-joint两臂继续因body/Direct
+  大幅下降而失败；证据见
+  [`DLM_CONDITION_SCHEDULE_L6_FINAL.md`](../results/remote_screens/DLM_CONDITION_SCHEDULE_L6_FINAL.md)；
+- raw→model494@800诊断表明refiner是当前stable提升的主要来源：full-axis DirectJ
+  `188→457`、Strict S.U.N. `10→48`、Meta `66→230`；但novelty rate下降`10.69pp`，
+  Strict/Meta retention分别下降`21.31/18.15pp`，未通过冻结Pareto门。因而已触发且仅触发
+  `tau={0,200,500,800}`粗校准；0/800复用，只新算200/500。证据见
+  [`DLM_REFINER_EFFECT_L6_DIAGNOSTIC.md`](../results/remote_screens/DLM_REFINER_EFFECT_L6_DIAGNOSTIC.md)。
 
 ## 已完成
 

@@ -1,0 +1,5 @@
+name,formulas,syntax_terminal,roundtrip_exact,incremental_prefix_exact,formula_prefix_safe,unk_free,newline_crossing_token,prefill_boundary_exact,token_mean,token_q90,token_max
+train,27136,1.0,1.0,1.0,1.0,1.0,0.0,1.0,9.68547317216981,12.0,16
+val,9047,1.0,1.0,1.0,1.0,1.0,0.0,1.0,9.672709185365315,12.0,16
+test,9046,1.0,1.0,1.0,1.0,1.0,0.0,1.0,9.681516692460756,12.0,16
+raw1000,1000,1.0,1.0,1.0,1.0,1.0,0.0,1.0,10.013,12.0,16

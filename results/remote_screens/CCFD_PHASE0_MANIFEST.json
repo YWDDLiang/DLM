@@ -1,0 +1,235 @@
+{
+  "ccfd": {
+    "branches": [
+      "ionic",
+      "alloy"
+    ],
+    "canonical_order": "increasing (atomic_number, oxidation_state)",
+    "max_species": 7,
+    "mixed_valence": "same element may repeat only with same-sign nonzero valences",
+    "request_policy": "one trajectory; dead ends remain failed",
+    "terminal_condition": "remaining_atoms=0 and remaining_charge=0",
+    "unknown_policy": "unrepresentable; never coerced to zero valence"
+  },
+  "datasets": [
+    {
+      "assignment_failures": {
+        "no_charge_neutral_assignment": 887,
+        "unsupported_elements": 19
+      },
+      "assignment_modes": {
+        "alloy_zero": 12985,
+        "ionic_mixed": 1547,
+        "ionic_uniform": 11698
+      },
+      "branches": {
+        "alloy": 12985,
+        "ionic": 13245
+      },
+      "ccfd_failures": {},
+      "counts": {
+        "assigned": 26230,
+        "ccfd_terminal": 26230,
+        "composition_roundtrip": 26230,
+        "false_rejected_by_legacy": 2242,
+        "legacy_valid": 24558,
+        "legacy_valid_but_unassigned": 570,
+        "mixed_valence": 1547
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 9302,
+        "charge_neutral_pauling_valid": 15030,
+        "charge_neutrality_fail": 1377,
+        "oxidation_state_missing": 283,
+        "pauling_fail_or_ratio_rejected": 918,
+        "single_element_shortcut": 226
+      },
+      "name": "train",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/train.jsonl",
+      "plans": 27136,
+      "rates": {
+        "assignment_coverage": 0.9666126179245284,
+        "ccfd_terminal_coverage": 0.9666126179245284,
+        "composition_roundtrip": 1.0,
+        "false_rejection_among_ccfd": 0.08547464735036218,
+        "legacy_comp_valid": 0.9049970518867925,
+        "mixed_valence": 0.0570091391509434
+      },
+      "rows": 27136,
+      "token_vocabulary_size": 2500,
+      "train_vocab_oov_types": 0,
+      "train_vocab_type_coverage": 1.0
+    },
+    {
+      "assignment_failures": {
+        "no_charge_neutral_assignment": 327,
+        "unsupported_elements": 6
+      },
+      "assignment_modes": {
+        "alloy_zero": 4381,
+        "ionic_mixed": 521,
+        "ionic_uniform": 3812
+      },
+      "branches": {
+        "alloy": 4381,
+        "ionic": 4333
+      },
+      "ccfd_failures": {},
+      "counts": {
+        "assigned": 8714,
+        "ccfd_terminal": 8714,
+        "composition_roundtrip": 8714,
+        "false_rejected_by_legacy": 748,
+        "legacy_valid": 8164,
+        "legacy_valid_but_unassigned": 198,
+        "mixed_valence": 521
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 3191,
+        "charge_neutral_pauling_valid": 4898,
+        "charge_neutrality_fail": 468,
+        "oxidation_state_missing": 88,
+        "pauling_fail_or_ratio_rejected": 327,
+        "single_element_shortcut": 75
+      },
+      "name": "val",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/val.jsonl",
+      "plans": 9047,
+      "rates": {
+        "assignment_coverage": 0.9631922184149442,
+        "ccfd_terminal_coverage": 0.9631922184149442,
+        "composition_roundtrip": 1.0,
+        "false_rejection_among_ccfd": 0.08583887996327748,
+        "legacy_comp_valid": 0.9023985851663535,
+        "mixed_valence": 0.05758815076821046
+      },
+      "rows": 9047,
+      "token_vocabulary_size": 1926,
+      "train_vocab_oov_types": 87,
+      "train_vocab_type_coverage": 0.9548286604361371
+    },
+    {
+      "assignment_failures": {
+        "no_charge_neutral_assignment": 295,
+        "unsupported_elements": 4
+      },
+      "assignment_modes": {
+        "alloy_zero": 4435,
+        "ionic_mixed": 499,
+        "ionic_uniform": 3813
+      },
+      "branches": {
+        "alloy": 4435,
+        "ionic": 4312
+      },
+      "ccfd_failures": {},
+      "counts": {
+        "assigned": 8747,
+        "ccfd_terminal": 8747,
+        "composition_roundtrip": 8747,
+        "false_rejected_by_legacy": 722,
+        "legacy_valid": 8227,
+        "legacy_valid_but_unassigned": 202,
+        "mixed_valence": 499
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 3198,
+        "charge_neutral_pauling_valid": 4958,
+        "charge_neutrality_fail": 442,
+        "oxidation_state_missing": 81,
+        "pauling_fail_or_ratio_rejected": 296,
+        "single_element_shortcut": 71
+      },
+      "name": "test",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/test.jsonl",
+      "plans": 9046,
+      "rates": {
+        "assignment_coverage": 0.9669467167808976,
+        "ccfd_terminal_coverage": 0.9669467167808976,
+        "composition_roundtrip": 1.0,
+        "false_rejection_among_ccfd": 0.08254258602949582,
+        "legacy_comp_valid": 0.9094627459650675,
+        "mixed_valence": 0.05516250276365244
+      },
+      "rows": 9046,
+      "token_vocabulary_size": 1943,
+      "train_vocab_oov_types": 108,
+      "train_vocab_type_coverage": 0.9444158517756047
+    },
+    {
+      "assignment_failures": {
+        "no_charge_neutral_assignment": 59
+      },
+      "assignment_modes": {
+        "alloy_zero": 405,
+        "ionic_mixed": 108,
+        "ionic_uniform": 428
+      },
+      "branches": {
+        "alloy": 405,
+        "ionic": 536
+      },
+      "ccfd_failures": {},
+      "counts": {
+        "assigned": 941,
+        "ccfd_terminal": 941,
+        "composition_roundtrip": 941,
+        "false_rejected_by_legacy": 91,
+        "legacy_valid": 885,
+        "legacy_valid_but_unassigned": 35,
+        "mixed_valence": 108
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 295,
+        "charge_neutral_pauling_valid": 584,
+        "charge_neutrality_fail": 79,
+        "oxidation_state_missing": 5,
+        "pauling_fail_or_ratio_rejected": 31,
+        "single_element_shortcut": 6
+      },
+      "name": "raw1000",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/raw1000_two500_20260827/raw1000.jsonl",
+      "plans": 1000,
+      "rates": {
+        "assignment_coverage": 0.941,
+        "ccfd_terminal_coverage": 0.941,
+        "composition_roundtrip": 1.0,
+        "false_rejection_among_ccfd": 0.09670563230605739,
+        "legacy_comp_valid": 0.885,
+        "mixed_valence": 0.108
+      },
+      "rows": 1000,
+      "token_vocabulary_size": 882,
+      "train_vocab_oov_types": 15,
+      "train_vocab_type_coverage": 0.9829931972789115
+    }
+  ],
+  "frozen_legacy_rates": {
+    "test": 0.9094627459650675,
+    "train": 0.9049970518867925,
+    "val": 0.9023985851663535
+  },
+  "gate": {
+    "frozen_legacy_rates_reproduced": true,
+    "legacy_false_rejection_audited": true,
+    "phase1_authorized": true,
+    "raw_within_3pp_of_train": true,
+    "train_assignment_at_least_95pct": true,
+    "train_roundtrip_100pct": true,
+    "val_assignment_at_least_95pct": true,
+    "val_roundtrip_100pct": true
+  },
+  "schema": "h1a2_ccfd_phase0_manifest_v1",
+  "valence_catalog": {
+    "crysvcd_reference": "https://github.com/vipandyc/CrysVCD/tree/main/formula_gen",
+    "crysvcd_table_sha256": "c3cbd673c482da380ebae6e2fe708fee115aa8f77dfbad9bbfef216a8e67f5f2",
+    "pymatgen_version": "2025.6.14",
+    "schema": "h1a2_countvalence_catalog_v2",
+    "search": "uniform_then_adjacent_same_sign_mixed",
+    "tiers": [
+      "crysvcd",
+      "common_extension",
+      "full_extension"
+    ]
+  }
+}

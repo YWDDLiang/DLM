@@ -21,10 +21,12 @@ H1_PLANNER_PROMPT_VERSION = "h1_llm_formula_planner_v1"
 H1_PLANNER_PROMPT_STYLE_CHAT = "chat_formula_end_v1"
 H1_PLANNER_PROMPT_STYLE_FORMULA_PREFILL = "formula_prefill_v1"
 H1_PLANNER_PROMPT_STYLE_RICH_PLAN = H1_RICH_PLAN_FORMAT
+H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL = "h1_rich_plan_formula_prefill_v1"
 H1_PLANNER_PROMPT_STYLES = (
     H1_PLANNER_PROMPT_STYLE_CHAT,
     H1_PLANNER_PROMPT_STYLE_FORMULA_PREFILL,
     H1_PLANNER_PROMPT_STYLE_RICH_PLAN,
+    H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL,
 )
 H1_PLANNER_SYSTEM_PROMPT = (
     "You are a materials composition planner for de novo MP-20 bulk crystal generation. "
@@ -108,7 +110,7 @@ def normalize_prompt_style(prompt_style: str | None = None) -> str:
 def build_planner_user_prompt(*, sample_idx: int | None = None, prompt_style: str | None = None) -> str:
     style = normalize_prompt_style(prompt_style)
     sample_line = "" if sample_idx is None else f"\nsample_id: {int(sample_idx)}"
-    if style == H1_PLANNER_PROMPT_STYLE_RICH_PLAN:
+    if style in {H1_PLANNER_PROMPT_STYLE_RICH_PLAN, H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL}:
         return (
             f"{CRYSLLMGEN_TEXT_PROMPT.rstrip()}\n\n"
             "Return exactly seven lines in this format:\n"
@@ -174,6 +176,10 @@ def format_planner_prompt(
     prompt = format_chat_prompt(tokenizer, sample_idx=sample_idx, prompt_style=style)
     if style == H1_PLANNER_PROMPT_STYLE_FORMULA_PREFILL:
         return prompt.rstrip() + " formula: "
+    if style == H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL:
+        # Keep the space on the generated side so tokenization matches the
+        # checkpoint's teacher answer boundary ``formula: <value>``.
+        return prompt.rstrip() + " formula:"
     return prompt
 
 
@@ -194,6 +200,8 @@ def clean_generated_plan_text(
     style = normalize_prompt_style(prompt_style)
     cleaned = str(text).replace("\r\n", "\n").replace("\r", "\n").strip()
     if style == H1_PLANNER_PROMPT_STYLE_FORMULA_PREFILL and "formula:" not in cleaned.lower():
+        cleaned = "formula: " + cleaned.lstrip()
+    if style == H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL and "formula:" not in cleaned.lower():
         cleaned = "formula: " + cleaned.lstrip()
     formula_idx = cleaned.lower().find("formula:")
     if formula_idx >= 0:
@@ -225,7 +233,11 @@ def canonical_plan_record_for_style(
     prompt_style: str | None = None,
 ) -> Dict[str, Any]:
     style = normalize_prompt_style(prompt_style)
-    plan_style = H1_RICH_PLAN_FORMAT if style == H1_PLANNER_PROMPT_STYLE_RICH_PLAN else R5C_FORMULA_END_PLAN_FORMAT
+    plan_style = (
+        H1_RICH_PLAN_FORMAT
+        if style in {H1_PLANNER_PROMPT_STYLE_RICH_PLAN, H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL}
+        else R5C_FORMULA_END_PLAN_FORMAT
+    )
     plan = parse_composition_plan(raw_plan_text, plan_style=plan_style, max_atoms=max_atoms)
     validation = validate_plan_state(plan)
     if not validation.valid:
@@ -244,10 +256,16 @@ def canonical_plan_record_for_style(
 
 def teacher_formula_answer(plan_state: Mapping[str, Any], *, prompt_style: str | None = None) -> str:
     style = normalize_prompt_style(prompt_style)
-    plan_style = H1_RICH_PLAN_FORMAT if style == H1_PLANNER_PROMPT_STYLE_RICH_PLAN else R5C_FORMULA_END_PLAN_FORMAT
+    plan_style = (
+        H1_RICH_PLAN_FORMAT
+        if style in {H1_PLANNER_PROMPT_STYLE_RICH_PLAN, H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL}
+        else R5C_FORMULA_END_PLAN_FORMAT
+    )
     answer = format_composition_plan(plan_state, plan_style=plan_style)
     if style == H1_PLANNER_PROMPT_STYLE_FORMULA_PREFILL:
         return answer.split(":", 1)[1].lstrip()
+    if style == H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL:
+        return answer.split(":", 1)[1]
     return answer
 
 
@@ -256,6 +274,7 @@ __all__ = [
     "H1_PLANNER_PROMPT_STYLE_CHAT",
     "H1_PLANNER_PROMPT_STYLE_FORMULA_PREFILL",
     "H1_PLANNER_PROMPT_STYLE_RICH_PLAN",
+    "H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL",
     "H1_PLANNER_PROMPT_STYLES",
     "H1_PLANNER_SYSTEM_PROMPT",
     "build_planner_messages",

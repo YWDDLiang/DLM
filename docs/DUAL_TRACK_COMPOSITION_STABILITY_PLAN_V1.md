@@ -187,10 +187,11 @@ RL is an engineering fallback, not automatically the second contribution.
 
 ## Ordered action items
 
-- [ ] Finalize job35518 and write the condition/schedule and raw/model494 reports.
-- [ ] Select full-axis or hard-axis strictly by the frozen two-seed gate.
-- [ ] Decide whether the raw/model494 result triggers the fixed tau scan.
-- [ ] Freeze and execute CCFD Phase A0 on CPU with no GPU training.
+- [x] Finalize job35518 and write the condition/schedule and raw/model494 reports.
+- [x] Select full-axis or hard-axis strictly by the frozen two-seed gate: full-axis retained.
+- [x] Decide whether the raw/model494 result triggers the fixed tau scan: triggered.
+- [x] Freeze and execute CCFD Phase A0 on CPU with no GPU training.
+- [x] Verify the current frozen tokenizer can host F1 without resizing or changing weights.
 - [ ] Implement F1 online FSM on the current formula checkpoint without changing weights.
 - [ ] Run F0/F1 two-seed requested1000 and evaluate correctness plus distribution drift.
 - [ ] Run the fixed tau scan only if B1 triggers, then confirm one tau on raw1000.

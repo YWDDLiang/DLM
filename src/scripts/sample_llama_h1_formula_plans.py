@@ -20,10 +20,14 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 import torch
 import torch.distributed as dist
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoTokenizer, StoppingCriteria, StoppingCriteriaList
+from transformers import AutoModelForCausalLM, AutoTokenizer, LogitsProcessorList, StoppingCriteria, StoppingCriteriaList
+
+from crystal_dlm.ccfd_logits import CCFDFormulaLogitsProcessor  # noqa: E402
 
 from crystal_dlm.h1_llm_planner import (  # noqa: E402
     H1_PLANNER_PROMPT_VERSION,
+    H1_PLANNER_PROMPT_STYLE_RICH_PLAN,
+    H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL,
     canonical_plan_record_for_style,
     clean_generated_plan_text,
     disable_peft_bnb_autodetect,
@@ -198,6 +202,7 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=50)
     parser.add_argument("--max-atoms", type=int, default=20)
     parser.add_argument("--prompt-style", default="chat_formula_end_v1")
+    parser.add_argument("--ccfd-mode", choices=("off", "phase0_assignment"), default="off")
     parser.add_argument("--include-sample-id", dest="include_sample_id", action="store_true", default=True)
     parser.add_argument("--no-include-sample-id", dest="include_sample_id", action="store_false")
     parser.add_argument("--seed", type=int, default=17)
@@ -209,7 +214,12 @@ def main() -> None:
     parser.add_argument("--no-truncate-after-plan-marker", dest="truncate_after_plan_marker", action="store_false")
     args = parser.parse_args()
     args.prompt_style = normalize_prompt_style(args.prompt_style)
-    rich_field_required = args.prompt_style == "h1_rich_plan_v1"
+    rich_field_required = args.prompt_style in {
+        H1_PLANNER_PROMPT_STYLE_RICH_PLAN,
+        H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL,
+    }
+    if args.ccfd_mode != "off" and args.prompt_style != H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL:
+        parser.error("--ccfd-mode requires h1_rich_plan_formula_prefill_v1")
 
     dist_info = init_distributed()
     rank = int(dist_info["rank"])
@@ -235,6 +245,9 @@ def main() -> None:
             "world_size": world_size,
             "effective_do_sample": bool(args.do_sample and float(args.temperature) > 0.0),
             "rich_field_required": bool(rich_field_required),
+            "ccfd_mode": args.ccfd_mode,
+            "weights_changed_by_ccfd": False,
+            "tokenizer_resized_by_ccfd": False,
         }
     )
     if is_main:
@@ -312,6 +325,17 @@ def main() -> None:
                     generate_kwargs["stopping_criteria"] = StoppingCriteriaList(
                         [GeneratedPlanEndStoppingCriteria(tokenizer, input_ids.shape[1])]
                     )
+                if args.ccfd_mode == "phase0_assignment":
+                    generate_kwargs["logits_processor"] = LogitsProcessorList(
+                        [
+                            CCFDFormulaLogitsProcessor(
+                                tokenizer,
+                                start_length=input_ids.shape[1],
+                                eos_token_id=int(tokenizer.eos_token_id),
+                                max_atoms=int(args.max_atoms),
+                            )
+                        ]
+                    )
                 outputs = model.generate(**generate_kwargs)
             generated_ids = outputs[:, input_ids.shape[1] :]
             decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)
@@ -343,6 +367,7 @@ def main() -> None:
                     "plan_tail_after_end_marker": tail,
                     "prompt_version": H1_PLANNER_PROMPT_VERSION,
                     "prompt_style": args.prompt_style,
+                    "ccfd_mode": args.ccfd_mode,
                     "parsed": False,
                     "formula_parse": False,
                 }

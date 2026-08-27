@@ -1,0 +1,175 @@
+{
+  "checkpoint_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final",
+  "datasets": [
+    {
+      "counts": {
+        "formula_prefix_safe": 27136,
+        "incremental_prefix_exact": 27136,
+        "newline_crossing_token": 0,
+        "prefill_boundary_exact": 27136,
+        "roundtrip_exact": 27136,
+        "syntax_terminal": 27136,
+        "unk_free": 27136
+      },
+      "failures": {},
+      "formulas": 27136,
+      "name": "train",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/train.jsonl",
+      "rates": {
+        "formula_prefix_safe": 1.0,
+        "incremental_prefix_exact": 1.0,
+        "newline_crossing_token": 0.0,
+        "prefill_boundary_exact": 1.0,
+        "roundtrip_exact": 1.0,
+        "syntax_terminal": 1.0,
+        "unk_free": 1.0
+      },
+      "rows": 27136,
+      "semantic_terms": {
+        "max": 7,
+        "mean": 3.013561320754717
+      },
+      "token_lengths": {
+        "max": 16,
+        "mean": 9.68547317216981,
+        "q50": 10.0,
+        "q90": 12.0
+      },
+      "unsafe_prefix_examples": []
+    },
+    {
+      "counts": {
+        "formula_prefix_safe": 9047,
+        "incremental_prefix_exact": 9047,
+        "newline_crossing_token": 0,
+        "prefill_boundary_exact": 9047,
+        "roundtrip_exact": 9047,
+        "syntax_terminal": 9047,
+        "unk_free": 9047
+      },
+      "failures": {},
+      "formulas": 9047,
+      "name": "val",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/val.jsonl",
+      "rates": {
+        "formula_prefix_safe": 1.0,
+        "incremental_prefix_exact": 1.0,
+        "newline_crossing_token": 0.0,
+        "prefill_boundary_exact": 1.0,
+        "roundtrip_exact": 1.0,
+        "syntax_terminal": 1.0,
+        "unk_free": 1.0
+      },
+      "rows": 9047,
+      "semantic_terms": {
+        "max": 6,
+        "mean": 3.0064109649607604
+      },
+      "token_lengths": {
+        "max": 16,
+        "mean": 9.672709185365315,
+        "q50": 10.0,
+        "q90": 12.0
+      },
+      "unsafe_prefix_examples": []
+    },
+    {
+      "counts": {
+        "formula_prefix_safe": 9046,
+        "incremental_prefix_exact": 9046,
+        "newline_crossing_token": 0,
+        "prefill_boundary_exact": 9046,
+        "roundtrip_exact": 9046,
+        "syntax_terminal": 9046,
+        "unk_free": 9046
+      },
+      "failures": {},
+      "formulas": 9046,
+      "name": "test",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/test.jsonl",
+      "rates": {
+        "formula_prefix_safe": 1.0,
+        "incremental_prefix_exact": 1.0,
+        "newline_crossing_token": 0.0,
+        "prefill_boundary_exact": 1.0,
+        "roundtrip_exact": 1.0,
+        "syntax_terminal": 1.0,
+        "unk_free": 1.0
+      },
+      "rows": 9046,
+      "semantic_terms": {
+        "max": 7,
+        "mean": 3.0153659075834622
+      },
+      "token_lengths": {
+        "max": 16,
+        "mean": 9.681516692460756,
+        "q50": 10.0,
+        "q90": 12.0
+      },
+      "unsafe_prefix_examples": []
+    },
+    {
+      "counts": {
+        "formula_prefix_safe": 1000,
+        "incremental_prefix_exact": 1000,
+        "newline_crossing_token": 0,
+        "prefill_boundary_exact": 1000,
+        "roundtrip_exact": 1000,
+        "syntax_terminal": 1000,
+        "unk_free": 1000
+      },
+      "failures": {},
+      "formulas": 1000,
+      "name": "raw1000",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/raw1000_two500_20260827/raw1000.jsonl",
+      "rates": {
+        "formula_prefix_safe": 1.0,
+        "incremental_prefix_exact": 1.0,
+        "newline_crossing_token": 0.0,
+        "prefill_boundary_exact": 1.0,
+        "roundtrip_exact": 1.0,
+        "syntax_terminal": 1.0,
+        "unk_free": 1.0
+      },
+      "rows": 1000,
+      "semantic_terms": {
+        "max": 6,
+        "mean": 3.071
+      },
+      "token_lengths": {
+        "max": 16,
+        "mean": 10.013,
+        "q50": 10.0,
+        "q90": 12.0
+      },
+      "unsafe_prefix_examples": []
+    }
+  ],
+  "gates": {
+    "all_formula_prefix_safe": true,
+    "all_incremental_prefix_exact": true,
+    "all_prefill_boundaries_exact": true,
+    "all_roundtrip_exact": true,
+    "all_syntax_terminal": true,
+    "all_unk_free": true,
+    "same_tokenizer_phase1_feasible": true
+  },
+  "interface": {
+    "constraint_scope": "formula value only; rich fields remain unconstrained",
+    "dead_end_policy": "one trajectory; fail without repair or replacement",
+    "matched_arm_prompt": "rich Planner prompt with formula-value prefill in both F0 and F1",
+    "tokenizer_resized": false,
+    "weights_changed": false
+  },
+  "model_path": "/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B",
+  "schema": "h1a2_ccfd_tokenizer_interface_audit_v1",
+  "tokenizer": {
+    "added_tokens": 0,
+    "class": "PreTrainedTokenizerFast",
+    "eos_token_id": 128001,
+    "unk_token_id": null,
+    "vocab_size": 128256
+  },
+  "tokenizer_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
+}

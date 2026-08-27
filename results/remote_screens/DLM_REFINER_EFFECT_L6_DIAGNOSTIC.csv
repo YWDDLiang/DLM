@@ -1,0 +1,5 @@
+seed,source_arm,stage,requested,reconstructed,direct_joint,novel,unique,novel_unique,hull_known,hull_unknown,strict_stable,strict_sun,meta_stable,meta_sun,reconstructed_rate,direct_joint_rate,novel_rate,unique_rate,strict_attempt_rate,meta_attempt_rate,strict_retention,meta_retention
+pooled-repeat-sum,full_axis,raw,512,505,188,505,505,505,489,16,10,10,66,66,0.986328125,0.3671875,1.0,1.0,0.01953125,0.12890625,1.0,1.0
+pooled-repeat-sum,full_axis,model494,512,505,457,451,503,449,489,16,61,48,281,230,0.986328125,0.892578125,0.8930693069306931,0.996039603960396,0.09375,0.44921875,0.7868852459016393,0.8185053380782918
+pooled-repeat-sum,hard_axis,raw,512,512,187,511,512,511,495,17,2,2,8,7,1.0,0.365234375,0.998046875,1.0,0.00390625,0.013671875,1.0,0.875
+pooled-repeat-sum,hard_axis,model494,512,512,463,458,510,456,496,16,61,47,282,230,1.0,0.904296875,0.89453125,0.99609375,0.091796875,0.44921875,0.7704918032786885,0.8156028368794326
