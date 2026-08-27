@@ -353,3 +353,47 @@ Primary precedents: [MatterGen](https://arxiv.org/abs/2312.03687),
 [Siamese energy-guided crystal generation](https://arxiv.org/abs/2503.10471),
 [discrete diffusion guidance](https://arxiv.org/abs/2412.10193), and
 [CrysVCD](https://arxiv.org/abs/2507.19799).
+
+## 2026-08-28 formula/DLM/RL prior-art review
+
+### Search errors
+
+- OpenReview: `openreview not installed. pip install openreview-py`
+- OpenAlex: `504 Server Error: Gateway Timeout`
+- Remaining aggregate APIs entered repeated rate limiting; the retry loop was
+  terminated rather than repeatedly querying. The table below uses directly
+  verified primary arXiv pages.
+
+### Verified primary sources
+
+| Paper | Date | Main mechanism | Relevance |
+|---|---|---|---|
+| [CrysVCD](https://arxiv.org/abs/2507.19799) | 2025-07 | AR element-valence/count model, electronic embeddings, valence post-filter, property guidance | mandatory composition baseline |
+| [BERTOS](https://arxiv.org/abs/2211.15895) | 2022-11 | composition-only oxidation-state prediction | oxidation assignment baseline |
+| [CrystaLLM](https://arxiv.org/abs/2307.04340) | 2023-07 | AR CIF generation and energy-assisted search | direct AR crystal prior art |
+| [Deep diffusion language model for inorganic compounds](https://arxiv.org/abs/2310.00475) | 2023-09 | diffusion-LM composition generator plus template CSP | formula-first material generation |
+| [CrystalFormer](https://arxiv.org/abs/2403.15734) | 2024-03 | space-group/Wyckoff AR generation | structured AR baseline |
+| [Mat2Seq](https://arxiv.org/abs/2503.00152) | 2025-02 | invariant crystal tokenization | tokenizer prior art |
+| [Materium](https://arxiv.org/abs/2512.07486) | 2025-12 | AR oxidation-state/coordinate/lattice tokens | oxidation-aware AR prior art |
+| [P2 path planning](https://arxiv.org/abs/2502.03540) | 2025-02 | learned where-to-update and reversible remasking | DLM schedule baseline |
+| [Where-to-Unmask](https://arxiv.org/abs/2602.09501) | 2026-02 | supervised unmask planner from ground-truth margins | non-RL planner baseline |
+| [Simple Guidance for discrete diffusion](https://arxiv.org/abs/2412.10193) | 2024-12 | discrete classifier/CFG guidance | required guidance derivation |
+| [DAO-G/DAO-P](https://arxiv.org/abs/2503.10471) | 2025-03 | timestep-aware crystal energy predictor and guidance | noisy-state energy prior art |
+| [d1/diffu-GRPO](https://arxiv.org/abs/2504.12216) | 2025-04 | critic-free policy gradient for masked dLLMs | RL baseline |
+| [AGRPO](https://arxiv.org/abs/2510.04019) | 2025-10 | unbiased Markov-step policy gradient | preferred dLLM RL baseline |
+| [DiSPO](https://arxiv.org/abs/2602.06462) | 2026-02 | intermediate-state branching and token credit | closest segment-credit prior art |
+| [Continuous-time RL for discrete diffusion](https://arxiv.org/abs/2607.14522) | 2026-07 | CTMC PPO/GRPO with intermediate rewards | formal intermediate-reward prior art |
+| [Mask-aware policy gradients](https://arxiv.org/abs/2607.15200) | 2026-07 | joint token and masking policy gradient | joint-action RL prior art |
+
+### Synthesis
+
+- Formula-only H1-B already failed as a stability route: it made execution easy
+  but collapsed geometry toward frequent templates.
+- CrysVCD already covers element-valence-count tokens, so tokenization alone is
+  not a new contribution.
+- The approved small candidate is Conservation-Constrained Formula Decoding:
+  online finite-state atom/charge conservation with all-request accounting.
+- Learned unmasking, noisy-state guidance and dLLM RL all have direct prior art;
+  they are engineering tracks or mandatory baselines, not automatic novelty.
+- The full decision and experiment contract is in
+  [`SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md`](docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md).

@@ -507,6 +507,10 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 | DLM sufficient raw1000 | body与stable的非单调epoch Pareto | 总2/3 epoch全披露并冻结选择规则 | 只按CE或body挑更长checkpoint |
 | Count-valence Planner | 物理标签覆盖与生成执行分离 | 96% teacher覆盖但50% emitted-neutral的负证据 | 将标签覆盖包装成生成化学正确性 |
 | Same-Plan energy pairs | outcome-blind固定Plan与能量跨度 | 8-stream `95/27` pair-yield完整披露 | 因train只差1对而放宽96/24门 |
+| Formula-only复审 | H1-B已完成的弱条件反例 | 执行成功与结构欠定/模板化分离 | 把formula-only重跑包装成新贡献 |
+| Coordinate schedule复审 | D1/safe-axis的X/Y→Z合法性 | mixed-axis重复坐标负证据 | 将XYZ联合提交误称safe-axis/H1-A2 |
+| CCFD候选 | 在线atom/charge守恒compiler | 只主张composition correctness | 暗示稳定性、合成性或首个价态tokenizer |
+| dLLM RL复审 | diffu-GRPO/AGRPO/DiSPO必选先例 | RL只作最后工程手段 | 旧TraceRL或segment reward直接当新贡献 |
 
 ## 当前大致缺口
 
@@ -521,6 +525,11 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 - Candidate A不进入贡献列表；后续只允许预先冻结的stability-targeted非RL目标，且必须
   同时报告Strict/Meta、stable本身、stable→S.U.N. retention和全部checkpoint；Candidate B
   只按新授权做一次真实下游验证，不根据结果追加大规模搜索。
+
+新的第二贡献候选不再与上述stability训练候选混同。CCFD只在Phase0 false-rejection/
+coverage合同冻结后进入F0/F1同checkpoint requested1000双seed试验；若仅在线FSM有效，
+论文只称conservation compiler。只有独立tokenizer主效应通过时才讨论tokenizer贡献。
+官方CrysVCD只作外部reference；matched因果比较必须是同backbone reimplementation。
 
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。

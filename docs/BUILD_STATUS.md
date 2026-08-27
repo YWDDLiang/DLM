@@ -103,6 +103,21 @@
 - public headline继续是`105/1000 Strict、488/1000 Meta`；
 - 所有checkpoint和新requested-1000结果只作内部机制证据，不替换headline结果。
 
+2026-08-28 第二贡献点复审：
+
+- formula-only H1-B历史结果已重新核对：尽管body执行为100%，Strict/Meta adjusted仅
+  `5.54%/43.13%`，并出现`81.57%`全90度晶格角模板化；不得重跑后包装成新稳定性方法；
+- safe-axis/H1-A2并非XYZ联合提交。D1为全X→全Y→全Z；safe-axis保持所有X/Y早于Z。
+  本轮joint arm重现旧mixed-axis D2 duplicate失败，未启动的atom-major job35556已在
+  dependency阶段取消，无科学计算，代码与Slurm已清理；
+- MP-20真实train/val/test在冻结legacy Direct `comp_valid`下本身仅
+  `90.50/90.24/90.95%`；H1-A2 refined1000为`87.8%`，model494不改变atom multiset；
+- 多智能体评审最终只批准Conservation-Constrained Formula Decoding（CCFD）的CPU
+  Phase0与同checkpoint F0 free-vs-F1 online-FSM Phase1。该候选只解决composition
+  correctness，不宣称稳定性；特殊tokenizer/BPE为条件Phase2，RL仍未授权；
+- 完整证据、prior-art与决策日志见
+  [`SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md`](SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md)。
+
 ## 已完成
 
 - 独立Git repo与`codex/personal-research`分支；
