@@ -16,10 +16,15 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from crystal_dlm.r5_plan_state import (  # noqa: E402
+    build_countfields_plan_prompt,
     build_countvalence_plan_prompt,
+    plan_state_to_countfields,
     plan_state_to_countvalencefields,
 )
-from crystal_dlm.valence_assignment import annotate_plan_with_valence  # noqa: E402
+from crystal_dlm.valence_assignment import (  # noqa: E402
+    annotate_plan_with_valence,
+    valence_catalog_manifest,
+)
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -32,14 +37,29 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
                 yield value
 
 
-def convert_split(source: Path, destination: Path, *, max_species: int = 7) -> dict[str, Any]:
+def convert_split(
+    source: Path,
+    destination: Path,
+    *,
+    representation: str = "countvalence",
+    max_species: int = 7,
+) -> dict[str, Any]:
     rows = 0
     written = 0
     failures: Counter[str] = Counter()
     assignment_modes: Counter[str] = Counter()
     assignment_failures: Counter[str] = Counter()
     assigned = 0
-    prompt = build_countvalence_plan_prompt()
+    if representation == "countvalence":
+        prompt = build_countvalence_plan_prompt()
+        task = "h1_llm_countvalence_rich_plan"
+        representation_name = "h1_llm_countvalence_v2"
+    elif representation == "countfields":
+        prompt = build_countfields_plan_prompt()
+        task = "h1_llm_countfields_rich_plan"
+        representation_name = "h1_llm_countfields_v1"
+    else:
+        raise ValueError(f"unsupported representation {representation!r}")
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("w", encoding="utf-8") as output:
         for row in iter_jsonl(source):
@@ -58,13 +78,17 @@ def convert_split(source: Path, destination: Path, *, max_species: int = 7) -> d
                     assignment_failures[
                         str(assignment.get("reason") or "missing_assignment")
                     ] += 1
-                answer = plan_state_to_countvalencefields(plan)
+                answer = (
+                    plan_state_to_countvalencefields(plan)
+                    if representation == "countvalence"
+                    else plan_state_to_countfields(plan)
+                )
             except Exception as exc:  # noqa: BLE001
                 failures[type(exc).__name__] += 1
                 continue
             record = {
-                "task": "h1_llm_countvalence_rich_plan",
-                "representation": "h1_llm_countvalence_v1",
+                "task": task,
+                "representation": representation_name,
                 "prompt": prompt,
                 "answer": answer,
                 "text": prompt.rstrip() + "\n" + answer,
@@ -78,6 +102,7 @@ def convert_split(source: Path, destination: Path, *, max_species: int = 7) -> d
     return {
         "source": str(source.resolve()),
         "destination": str(destination.resolve()),
+        "representation": representation,
         "rows": rows,
         "written": written,
         "coverage": 0.0 if rows == 0 else written / rows,
@@ -92,6 +117,11 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument(
+        "--representation",
+        choices=("countfields", "countvalence"),
+        default="countvalence",
+    )
     parser.add_argument("--max-species", type=int, default=7)
     parser.add_argument("--min-valence-coverage", type=float, default=0.95)
     args = parser.parse_args()
@@ -104,14 +134,17 @@ def main() -> None:
         splits[split] = convert_split(
             source,
             args.output_dir / f"{split}.jsonl",
+            representation=str(args.representation),
             max_species=int(args.max_species),
         )
     if "train" not in splits or "val" not in splits:
         raise ValueError("count-valence Planner data requires train and val splits")
     manifest = {
         "schema": "h1a2_countvalence_planner_data_v2",
+        "valence_catalog": valence_catalog_manifest(),
         "input_dir": str(args.input_dir.resolve()),
         "output_dir": str(args.output_dir.resolve()),
+        "representation": str(args.representation),
         "splits": splits,
         "gate": {
             "minimum_valence_coverage": float(args.min_valence_coverage),

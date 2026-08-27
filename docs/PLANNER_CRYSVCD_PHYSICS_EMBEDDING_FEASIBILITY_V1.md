@@ -178,6 +178,9 @@ The corrected audit:
 
 - searches exact charge balance with uniform states first and adjacent,
   same-sign mixed valences second;
+- uses the original CrysVCD species table first, then a version-recorded
+  pymatgen common-state extension and only then its full integer oxidation
+  catalog; every selected extension element and catalog tier is reported;
 - emits explicit zero-valence species for the supported alloy branch;
 - never treats an unknown assignment as unstable or silently drops it;
 - requires >=95% assignment and neutral coverage on train and validation;

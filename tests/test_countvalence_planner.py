@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC = PROJECT_ROOT / "src"
@@ -11,6 +12,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from crystal_dlm.r5_plan_state import parse_countvalence_plan_state, plan_state_to_countvalencefields
+import crystal_dlm.valence_assignment as valence_assignment
 from crystal_dlm.valence_assignment import annotate_plan_with_valence, assign_crysvcd_valences
 
 _AUDIT_SPEC = importlib.util.spec_from_file_location(
@@ -81,10 +83,32 @@ class CountValencePlannerTest(unittest.TestCase):
         self.assertEqual(len(rebuilt["valence_species"]), 3)
 
     def test_unsupported_element_is_disclosed(self) -> None:
-        assignment = assign_crysvcd_valences(["O", "La"], [3, 2])
+        assignment = assign_crysvcd_valences(["O", "Ne"], [1, 1])
         self.assertFalse(assignment["assigned"])
         self.assertEqual(assignment["reason"], "unsupported_elements")
-        self.assertEqual(assignment["unsupported_elements"], ["La"])
+        self.assertEqual(assignment["unsupported_elements"], ["Ne"])
+
+    def test_common_extension_covers_project_supported_lanthanide(self) -> None:
+        def states(symbol: str, *, common_only: bool) -> tuple[int, ...]:
+            return (3,) if symbol == "La" else ()
+
+        with patch.object(valence_assignment, "_pymatgen_states", side_effect=states):
+            assignment = assign_crysvcd_valences(["O", "La"], [3, 2])
+        self.assertTrue(assignment["assigned"])
+        self.assertEqual(assignment["state_catalog_tier"], "common_extension")
+        self.assertEqual(assignment["charge_sum"], 0)
+
+    def test_full_extension_is_used_only_after_narrow_catalogs_fail(self) -> None:
+        def states(symbol: str, *, common_only: bool) -> tuple[int, ...]:
+            if symbol != "Pd":
+                return ()
+            return (2, 4) if common_only else (1, 2, 4)
+
+        with patch.object(valence_assignment, "_pymatgen_states", side_effect=states):
+            assignment = assign_crysvcd_valences(["Cl", "Pd"], [1, 1])
+        self.assertTrue(assignment["assigned"])
+        self.assertEqual(assignment["state_catalog_tier"], "full_extension")
+        self.assertEqual(assignment["charge_sum"], 0)
 
     def test_training_gate_requires_valence_coverage_and_raw_match(self) -> None:
         def row(name: str, coverage: float) -> dict:

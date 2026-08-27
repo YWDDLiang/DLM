@@ -19,7 +19,10 @@ from crystal_dlm.r5_plan_state import (  # noqa: E402
     parse_countvalence_plan_state,
     plan_state_to_countvalencefields,
 )
-from crystal_dlm.valence_assignment import annotate_plan_with_valence  # noqa: E402
+from crystal_dlm.valence_assignment import (  # noqa: E402
+    annotate_plan_with_valence,
+    valence_catalog_manifest,
+)
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -61,7 +64,10 @@ def audit_dataset(name: str, path: Path, *, max_species: int = 7) -> dict[str, A
     mixed_valence = 0
     failures: Counter[str] = Counter()
     assignment_modes: Counter[str] = Counter()
+    state_catalog_tiers: Counter[str] = Counter()
+    extension_elements: Counter[str] = Counter()
     assignment_failures: Counter[str] = Counter()
+    unsupported_elements: Counter[str] = Counter()
     pair_vocab: Counter[str] = Counter()
     counts: Counter[int] = Counter()
     oxidation_values: Counter[str] = Counter()
@@ -87,10 +93,17 @@ def audit_dataset(name: str, path: Path, *, max_species: int = 7) -> dict[str, A
         if assignment.get("assigned") is True:
             valence_assignment_known += 1
             assignment_modes[str(assignment.get("mode") or "unknown")] += 1
+            state_catalog_tiers[
+                str(assignment.get("state_catalog_tier") or "unknown")
+            ] += 1
+            for symbol in assignment.get("selected_extension_elements") or ():
+                extension_elements[str(symbol)] += 1
             if assignment.get("mode") == "ionic_mixed":
                 mixed_valence += 1
         else:
             assignment_failures[str(assignment.get("reason") or "missing_assignment")] += 1
+            for symbol in assignment.get("unsupported_elements") or ():
+                unsupported_elements[str(symbol)] += 1
         try:
             text = plan_state_to_countvalencefields(plan)
             serialized += 1
@@ -175,7 +188,14 @@ def audit_dataset(name: str, path: Path, *, max_species: int = 7) -> dict[str, A
         },
         "charge_buckets": dict(sorted(charge_buckets.items())),
         "assignment_modes": dict(sorted(assignment_modes.items())),
+        "state_catalog_tiers": dict(sorted(state_catalog_tiers.items())),
+        "selected_extension_elements": dict(
+            sorted(extension_elements.items(), key=lambda item: (-item[1], item[0]))
+        ),
         "assignment_failures": dict(sorted(assignment_failures.items())),
+        "unsupported_elements": dict(
+            sorted(unsupported_elements.items(), key=lambda item: (-item[1], item[0]))
+        ),
         "failures": dict(sorted(failures.items())),
     }
 
@@ -220,6 +240,7 @@ def write_report(results: list[dict[str, Any]], output_dir: Path) -> dict[str, A
     gate = training_gate(results)
     payload = {
         "schema": "h1a2_planner_countvalence_coverage_audit_v2",
+        "valence_catalog": valence_catalog_manifest(),
         "datasets": results,
         "gate": gate,
     }

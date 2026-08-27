@@ -12,6 +12,10 @@ from __future__ import annotations
 
 from collections import Counter
 from copy import deepcopy
+from functools import lru_cache
+import hashlib
+from importlib.metadata import PackageNotFoundError, version
+import json
 from typing import Any, Mapping, Sequence
 
 from crystal_dlm.fixed_slot import SYMBOL_TO_Z
@@ -127,8 +131,54 @@ def _species_option(symbol: str, pieces: Sequence[tuple[int, int]]) -> dict[str,
     }
 
 
-def _element_options(symbol: str, count: int, *, allow_mixed: bool) -> list[dict[str, Any]]:
-    states = tuple(sorted(set(CRYSVCD_IONIC_STATES.get(symbol, ()))))
+@lru_cache(maxsize=256)
+def _pymatgen_states(symbol: str, *, common_only: bool) -> tuple[int, ...]:
+    try:
+        from pymatgen.core.periodic_table import Element
+
+        element = Element(str(symbol))
+        raw_states = (
+            element.common_oxidation_states
+            if common_only
+            else element.oxidation_states
+        )
+    except Exception:  # noqa: BLE001 - optional local dependency.
+        return ()
+    states: set[int] = set()
+    for value in raw_states:
+        numeric = float(value)
+        if numeric.is_integer() and int(numeric) != 0 and abs(int(numeric)) <= 9:
+            states.add(int(numeric))
+    return tuple(sorted(states))
+
+
+@lru_cache(maxsize=128)
+def _pymatgen_is_metal(symbol: str) -> bool:
+    try:
+        from pymatgen.core.periodic_table import Element
+
+        return bool(Element(str(symbol)).is_metal)
+    except Exception:  # noqa: BLE001 - optional local dependency.
+        return False
+
+
+def _states_for_tier(symbol: str, tier: str) -> tuple[int, ...]:
+    states = set(CRYSVCD_IONIC_STATES.get(symbol, ()))
+    if tier in {"common_extension", "full_extension"}:
+        states.update(_pymatgen_states(symbol, common_only=True))
+    if tier == "full_extension":
+        states.update(_pymatgen_states(symbol, common_only=False))
+    return tuple(sorted(state for state in states if state != 0))
+
+
+def _element_options(
+    symbol: str,
+    count: int,
+    *,
+    states: Sequence[int],
+    allow_mixed: bool,
+) -> list[dict[str, Any]]:
+    states = tuple(sorted(set(int(value) for value in states if int(value) != 0)))
     options = [_species_option(symbol, ((state, count),)) for state in states]
     if not allow_mixed or count <= 1:
         return options
@@ -165,6 +215,7 @@ def _solve_ionic(
     symbols: Sequence[str],
     counts: Sequence[int],
     *,
+    states_by_element: Mapping[str, Sequence[int]],
     allow_mixed: bool,
     max_species: int,
 ) -> list[dict[str, Any]] | None:
@@ -172,7 +223,12 @@ def _solve_ionic(
     # bounded by at most 20 atoms and the supported oxidation table.
     frontier: dict[int, list[dict[str, Any]]] = {0: []}
     for symbol, count in zip(symbols, counts):
-        options = _element_options(symbol, int(count), allow_mixed=allow_mixed)
+        options = _element_options(
+            symbol,
+            int(count),
+            states=states_by_element.get(symbol, ()),
+            allow_mixed=allow_mixed,
+        )
         if not options:
             return None
         next_frontier: dict[int, list[dict[str, Any]]] = {}
@@ -208,19 +264,9 @@ def assign_crysvcd_valences(
             "species": [],
             "charge_sum": None,
         }
-    unsupported = sorted(
-        symbol for symbol in canonical_symbols if symbol not in CRYSVCD_ELEMENT_STATES
-    )
-    if unsupported:
-        return {
-            "assigned": False,
-            "reason": "unsupported_elements",
-            "unsupported_elements": unsupported,
-            "species": [],
-            "charge_sum": None,
-        }
-
-    if set(canonical_symbols) <= CRYSVCD_ALLOY_ELEMENTS:
+    crysvcd_alloy = set(canonical_symbols) <= CRYSVCD_ALLOY_ELEMENTS
+    extended_all_metal = all(_pymatgen_is_metal(symbol) for symbol in canonical_symbols)
+    if crysvcd_alloy or extended_all_metal:
         species = [
             {"element": symbol, "oxidation_state": 0, "count": int(count)}
             for symbol, count in zip(canonical_symbols, canonical_counts)
@@ -239,43 +285,65 @@ def assign_crysvcd_valences(
             "reason": "ok",
             "mode": "alloy_zero",
             "formula_type": "alloy",
+            "state_catalog_tier": (
+                "crysvcd" if crysvcd_alloy else "common_extension"
+            ),
             "species": species,
             "charge_sum": 0,
             "species_count": len(species),
             "mixed_elements": [],
         }
 
-    missing_ionic = sorted(
-        symbol for symbol in canonical_symbols if not CRYSVCD_IONIC_STATES.get(symbol)
-    )
-    if missing_ionic:
-        return {
-            "assigned": False,
-            "reason": "missing_ionic_states",
-            "unsupported_elements": missing_ionic,
-            "species": [],
-            "charge_sum": None,
-        }
-
-    path = _solve_ionic(
-        canonical_symbols,
-        canonical_counts,
-        allow_mixed=False,
-        max_species=max_species,
-    )
+    path: list[dict[str, Any]] | None = None
     mode = "ionic_uniform"
-    if path is None:
+    selected_tier = "full_extension"
+    selected_catalog: dict[str, tuple[int, ...]] = {}
+    for tier in ("crysvcd", "common_extension", "full_extension"):
+        states_by_element = {
+            symbol: _states_for_tier(symbol, tier) for symbol in canonical_symbols
+        }
+        if any(not states for states in states_by_element.values()):
+            continue
         path = _solve_ionic(
             canonical_symbols,
             canonical_counts,
-            allow_mixed=True,
+            states_by_element=states_by_element,
+            allow_mixed=False,
             max_species=max_species,
         )
-        mode = "ionic_mixed"
+        mode = "ionic_uniform"
+        if path is None:
+            path = _solve_ionic(
+                canonical_symbols,
+                canonical_counts,
+                states_by_element=states_by_element,
+                allow_mixed=True,
+                max_species=max_species,
+            )
+            mode = "ionic_mixed"
+        if path is not None:
+            selected_tier = tier
+            selected_catalog = states_by_element
+            break
     if path is None:
+        full_catalog = {
+            symbol: _states_for_tier(symbol, "full_extension")
+            for symbol in canonical_symbols
+        }
+        unsupported = sorted(
+            symbol for symbol, states in full_catalog.items() if not states
+        )
         return {
             "assigned": False,
-            "reason": "no_charge_neutral_assignment",
+            "reason": (
+                "unsupported_elements"
+                if unsupported
+                else "no_charge_neutral_assignment"
+            ),
+            "unsupported_elements": unsupported,
+            "state_catalog": {
+                symbol: list(states) for symbol, states in full_catalog.items()
+            },
             "species": [],
             "charge_sum": None,
         }
@@ -294,6 +362,18 @@ def assign_crysvcd_valences(
         "reason": "ok",
         "mode": mode,
         "formula_type": "ionic",
+        "state_catalog_tier": selected_tier,
+        "selected_extension_elements": sorted(
+            {
+                str(value["element"])
+                for value in species
+                if int(value["oxidation_state"])
+                not in CRYSVCD_IONIC_STATES.get(str(value["element"]), ())
+            }
+        ),
+        "state_catalog": {
+            symbol: list(states) for symbol, states in selected_catalog.items()
+        },
         "species": species,
         "charge_sum": int(charge_sum),
         "species_count": len(species),
@@ -347,10 +427,31 @@ def annotate_plan_with_valence(
     return annotated
 
 
+def valence_catalog_manifest() -> dict[str, Any]:
+    canonical = json.dumps(
+        {key: list(value) for key, value in sorted(CRYSVCD_ELEMENT_STATES.items())},
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    try:
+        pymatgen_version = version("pymatgen")
+    except PackageNotFoundError:
+        pymatgen_version = None
+    return {
+        "schema": "h1a2_countvalence_catalog_v2",
+        "crysvcd_reference": "https://github.com/vipandyc/CrysVCD/tree/main/formula_gen",
+        "crysvcd_table_sha256": hashlib.sha256(canonical).hexdigest(),
+        "pymatgen_version": pymatgen_version,
+        "tiers": ["crysvcd", "common_extension", "full_extension"],
+        "search": "uniform_then_adjacent_same_sign_mixed",
+    }
+
+
 __all__ = [
     "CRYSVCD_ALLOY_ELEMENTS",
     "CRYSVCD_ELEMENT_STATES",
     "CRYSVCD_IONIC_STATES",
     "annotate_plan_with_valence",
     "assign_crysvcd_valences",
+    "valence_catalog_manifest",
 ]
