@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import csv
+from functools import reduce
 import json
+from math import gcd
 from pathlib import Path
 import sys
 from typing import Any, Iterable, Mapping
@@ -23,6 +25,13 @@ from crystal_dlm.valence_assignment import (  # noqa: E402
     annotate_plan_with_valence,
     valence_catalog_manifest,
 )
+
+
+FROZEN_LEGACY_RATES = {
+    "train": 0.9049970518867925,
+    "val": 0.9023985851663535,
+    "test": 0.9094627459650675,
+}
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -53,6 +62,16 @@ def token_composition(tokens: Iterable[FormulaToken]) -> tuple[tuple[int, int], 
     for token in tokens:
         merged[int(token.atomic_number)] += int(token.count)
     return tuple(sorted(merged.items()))
+
+
+def reduced_stoichiometry(
+    composition: tuple[tuple[int, int], ...]
+) -> tuple[list[int], list[int]]:
+    elems = [int(atomic_number) for atomic_number, _count in composition]
+    counts = [int(count) for _atomic_number, count in composition]
+    divisor = reduce(gcd, counts) if counts else 1
+    divisor = max(1, int(divisor))
+    return elems, [int(count) // divisor for count in counts]
 
 
 def formula_tokens(plan: Mapping[str, Any]) -> tuple[FormulaToken, ...]:
@@ -90,8 +109,7 @@ def audit_dataset(name: str, path: Path, *, max_species: int) -> dict[str, Any]:
             continue
         plans += 1
         composition = normalized_composition(source)
-        elems = [atomic_number for atomic_number, _count in composition]
-        counts = [count for _atomic_number, count in composition]
+        elems, counts = reduced_stoichiometry(composition)
         legacy = classify_smact_validity(elems, counts)
         legacy_reasons[str(legacy.get("reason") or "unknown")] += 1
         legacy_valid += int(legacy.get("valid") is True)
@@ -115,7 +133,12 @@ def audit_dataset(name: str, path: Path, *, max_species: int) -> dict[str, Any]:
         mixed_valence += int(mode == "ionic_mixed")
         try:
             tokens = formula_tokens(annotated)
-            state = replay_tokens(int(source.get("N") or sum(counts)), tokens, max_species=max_species)
+            full_atom_count = sum(count for _atomic_number, count in composition)
+            state = replay_tokens(
+                int(source.get("N") or full_atom_count),
+                tokens,
+                max_species=max_species,
+            )
         except Exception as exc:  # noqa: BLE001
             ccfd_failures[type(exc).__name__] += 1
             continue
@@ -211,6 +234,15 @@ def main() -> None:
         "legacy_false_rejection_audited": all(
             row["counts"]["false_rejected_by_legacy"] >= 0 for row in results
         ),
+        "frozen_legacy_rates_reproduced": all(
+            name in by_name
+            and abs(
+                float(by_name[name]["rates"]["legacy_comp_valid"])
+                - float(expected)
+            )
+            <= 1e-12
+            for name, expected in FROZEN_LEGACY_RATES.items()
+        ),
     }
     gate["phase1_authorized"] = all(gate.values())
     contract = {
@@ -225,6 +257,7 @@ def main() -> None:
             "terminal_condition": "remaining_atoms=0 and remaining_charge=0",
         },
         "valence_catalog": valence_catalog_manifest(),
+        "frozen_legacy_rates": FROZEN_LEGACY_RATES,
         "datasets": results,
         "gate": gate,
     }

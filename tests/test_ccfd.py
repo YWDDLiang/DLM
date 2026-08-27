@@ -1,4 +1,5 @@
 import sys
+import importlib.util
 from pathlib import Path
 import unittest
 
@@ -9,8 +10,23 @@ if str(SRC) not in sys.path:
 
 from crystal_dlm.ccfd import CCFDState, FormulaToken, legal_next_tokens, replay_tokens
 
+_AUDIT_SPEC = importlib.util.spec_from_file_location(
+    "h1a2_freeze_ccfd_phase0",
+    PROJECT_ROOT / "scripts" / "freeze_ccfd_phase0.py",
+)
+if _AUDIT_SPEC is None or _AUDIT_SPEC.loader is None:
+    raise RuntimeError("cannot load freeze_ccfd_phase0.py")
+_AUDIT_MODULE = importlib.util.module_from_spec(_AUDIT_SPEC)
+_AUDIT_SPEC.loader.exec_module(_AUDIT_MODULE)
+reduced_stoichiometry = _AUDIT_MODULE.reduced_stoichiometry
+
 
 class CCFDTest(unittest.TestCase):
+    def test_legacy_audit_reduces_unit_cell_stoichiometry(self) -> None:
+        elems, counts = reduced_stoichiometry(((3, 4), (8, 2)))
+        self.assertEqual(elems, [3, 8])
+        self.assertEqual(counts, [2, 1])
+
     def test_magnetite_mixed_valence_conserves_atoms_and_charge(self) -> None:
         tokens = sorted(
             [
