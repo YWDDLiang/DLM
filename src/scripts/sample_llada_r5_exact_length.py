@@ -26,6 +26,7 @@ from crystal_dlm.r5_dynamic_length import (  # noqa: E402
     count_prefill_for_batch,
     exact_body_token_count,
     exact_dynamic_generation_schedule,
+    exact_dynamic_generation_schedule_joint_coordinates,
     exact_dynamic_schema_constraints,
     validate_answer_matches_plan,
 )
@@ -33,7 +34,11 @@ from crystal_dlm.h1_formula_only_body import (  # noqa: E402
     H1_FORMULA_ONLY_BODY_REPRESENTATION,
     build_formula_only_body_prompt,
 )
-from crystal_dlm.r5_plan_state import build_body_prompt, parse_plan_state_json  # noqa: E402
+from crystal_dlm.r5_plan_state import (  # noqa: E402
+    build_body_prompt,
+    build_hard_anchor_body_prompt,
+    parse_plan_state_json,
+)
 from scripts.sample_llada_dynamic_crystals import (  # noqa: E402
     build_dynamic_lightweight_constraints,
     graph_from_arrays,
@@ -53,6 +58,8 @@ def model_device(model) -> torch.device:
 def build_prompt_for_style(plan: Mapping[str, Any], *, prompt_style: str, row: Mapping[str, Any] | None = None, prompt_field: str = "prompt") -> str:
     if prompt_style == "formula_only":
         return build_formula_only_body_prompt(plan).rstrip() + "\n"
+    if prompt_style == "hard_anchor_only":
+        return build_hard_anchor_body_prompt(plan).rstrip() + "\n"
     if row is not None and row.get(prompt_field):
         return str(row[prompt_field]).rstrip() + "\n"
     return build_body_prompt(plan).rstrip() + "\n"
@@ -285,7 +292,11 @@ def main() -> None:
     parser.add_argument("--no-repeat-prompt-records", dest="repeat_prompt_records", action="store_false")
     parser.add_argument("--preserve-prompt-sample-idx", action="store_true")
     parser.add_argument("--prompt", default=None)
-    parser.add_argument("--body-prompt-style", choices=["full_plan_state", "formula_only"], default="full_plan_state")
+    parser.add_argument(
+        "--body-prompt-style",
+        choices=["full_plan_state", "hard_anchor_only", "formula_only"],
+        default="full_plan_state",
+    )
     parser.add_argument("--num-atoms", type=int, default=8)
     parser.add_argument("--num-samples", type=int, default=256)
     parser.add_argument("--batch-size", type=int, default=8)
@@ -305,7 +316,11 @@ def main() -> None:
     parser.add_argument("--lattice-volume-mask", action="store_true", default=True)
     parser.add_argument("--no-lattice-volume-mask", dest="lattice_volume_mask", action="store_false")
     parser.add_argument("--min-lattice-rad", type=float, default=1e-4)
-    parser.add_argument("--generation-schedule", choices=["exact-plan", "default"], default="exact-plan")
+    parser.add_argument(
+        "--generation-schedule",
+        choices=["exact-plan", "joint-coordinates", "default"],
+        default="exact-plan",
+    )
     parser.add_argument("--skip-graph-validation", action="store_true")
     args = parser.parse_args()
 
@@ -329,11 +344,12 @@ def main() -> None:
     tasks.sort(key=lambda item: (int(item["plan_state"]["N"]), int(item["sample_idx"])))
 
     run_config = {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}
-    r5_representation = (
-        H1_FORMULA_ONLY_BODY_REPRESENTATION
-        if args.body_prompt_style == "formula_only"
-        else "r5_exact_dynamic_v1"
-    )
+    if args.body_prompt_style == "formula_only":
+        r5_representation = H1_FORMULA_ONLY_BODY_REPRESENTATION
+    elif args.body_prompt_style == "hard_anchor_only":
+        r5_representation = "r5_exact_dynamic_hard_anchor_v1"
+    else:
+        r5_representation = "r5_exact_dynamic_v1"
     run_config.update(
         {
             "representation": "dynamic_v1",
@@ -399,7 +415,12 @@ def main() -> None:
             if args.freeze_plan_composition:
                 prefill_maps.append(element_prefill_for_batch(tokenizer, [item["plan_state"] for item in batch]))
             prefill = merge_prefill_maps(*prefill_maps) if prefill_maps else None
-            schedule = exact_dynamic_generation_schedule(num_atoms) if args.generation_schedule == "exact-plan" else None
+            if args.generation_schedule == "exact-plan":
+                schedule = exact_dynamic_generation_schedule(num_atoms)
+            elif args.generation_schedule == "joint-coordinates":
+                schedule = exact_dynamic_generation_schedule_joint_coordinates(num_atoms)
+            else:
+                schedule = None
             lightweight_constraints = build_dynamic_lightweight_constraints(
                 tokenizer,
                 duplicate_coordinate_mask=args.duplicate_coordinate_mask,

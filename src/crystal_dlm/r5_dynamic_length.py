@@ -151,6 +151,19 @@ def exact_dynamic_generation_schedule(num_atoms: int) -> List[List[int]]:
     return [[0], element_positions, [1, 2, 3, 4, 5, 6], x_positions, y_positions, z_positions]
 
 
+def exact_dynamic_generation_schedule_joint_coordinates(num_atoms: int) -> List[List[int]]:
+    """Commit all XYZ fields in one confidence-ordered group after the lattice."""
+
+    num_atoms = int(num_atoms)
+    element_positions = [7 + 4 * slot_index for slot_index in range(num_atoms)]
+    coordinate_positions = [
+        8 + 4 * slot_index + axis_offset
+        for slot_index in range(num_atoms)
+        for axis_offset in range(3)
+    ]
+    return [[0], element_positions, [1, 2, 3, 4, 5, 6], coordinate_positions]
+
+
 def count_prefill_for_batch(tokenizer: Any, num_atoms: int, batch_size: int) -> Dict[int, List[int]]:
     token_ids = required_token_ids(tokenizer, [f"<N_{int(num_atoms):03d}>"])
     return {0: [int(token_ids[0])] * int(batch_size)}
@@ -162,6 +175,7 @@ __all__ = [
     "count_prefill_for_batch",
     "exact_body_token_count",
     "exact_dynamic_generation_schedule",
+    "exact_dynamic_generation_schedule_joint_coordinates",
     "exact_dynamic_schema_constraints",
     "num_atoms_from_plan",
     "validate_answer_matches_plan",

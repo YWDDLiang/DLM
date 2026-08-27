@@ -1260,12 +1260,35 @@ def build_body_prompt(plan: Mapping[str, Any]) -> str:
     )
 
 
+def hard_anchor_plan_state(plan: Mapping[str, Any]) -> Dict[str, Any]:
+    """Keep composition/cardinality anchors while removing uncertain soft fields."""
+
+    payload = canonical_plan_state(plan)
+    payload.update(
+        {
+            "charge_bucket": "unknown",
+            "oxidation_candidates": "unknown",
+            "anion_framework": "unknown",
+            "lattice_system": "unknown",
+            "spacegroup_bucket": "sg_unknown",
+            "volume_per_atom_bin": "volpa_unknown",
+            "prototype_key": "unknown",
+        }
+    )
+    return payload
+
+
+def build_hard_anchor_body_prompt(plan: Mapping[str, Any]) -> str:
+    return build_body_prompt(hard_anchor_plan_state(plan))
+
+
 __all__ = [
     "PLAN_STATE_FIELDS",
     "PLAN_STATE_PROMPT",
     "PLAN_STATE_VERSION",
     "PlanValidation",
     "build_body_prompt",
+    "build_hard_anchor_body_prompt",
     "build_atomfields_plan_prompt",
     "build_atomseq_plan_prompt",
     "build_atomslots_plan_prompt",
@@ -1275,6 +1298,7 @@ __all__ = [
     "build_countvalence_plan_prompt",
     "build_plan_prompt",
     "canonical_plan_state",
+    "hard_anchor_plan_state",
     "parse_compact_plan_state",
     "parse_atomfields_plan_state",
     "parse_atomseq_plan_state",
