@@ -26,7 +26,6 @@ from crystal_dlm.r5_dynamic_length import (  # noqa: E402
     count_prefill_for_batch,
     exact_body_token_count,
     exact_dynamic_generation_schedule,
-    exact_dynamic_generation_schedule_atom_major,
     exact_dynamic_generation_schedule_joint_coordinates,
     exact_dynamic_schema_constraints,
     validate_answer_matches_plan,
@@ -319,7 +318,7 @@ def main() -> None:
     parser.add_argument("--min-lattice-rad", type=float, default=1e-4)
     parser.add_argument(
         "--generation-schedule",
-        choices=["exact-plan", "atom-major", "joint-coordinates", "default"],
+        choices=["exact-plan", "joint-coordinates", "default"],
         default="exact-plan",
     )
     parser.add_argument("--skip-graph-validation", action="store_true")
@@ -418,8 +417,6 @@ def main() -> None:
             prefill = merge_prefill_maps(*prefill_maps) if prefill_maps else None
             if args.generation_schedule == "exact-plan":
                 schedule = exact_dynamic_generation_schedule(num_atoms)
-            elif args.generation_schedule == "atom-major":
-                schedule = exact_dynamic_generation_schedule_atom_major(num_atoms)
             elif args.generation_schedule == "joint-coordinates":
                 schedule = exact_dynamic_generation_schedule_joint_coordinates(num_atoms)
             else:

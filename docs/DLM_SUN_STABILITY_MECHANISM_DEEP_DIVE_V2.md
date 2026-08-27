@@ -213,12 +213,14 @@ create an unconstrained duplicate through X or Y. `hard_joint` therefore fails
 the frozen body noninferiority gate regardless of its later stability count.
 It remains in the final report and is not silently removed.
 
-The corrected follow-up is `atom-major`: after lattice generation, complete
-X, then Y, then Z for atom 1 before atom 2. This uses the same number of model
-forwards as axis-major, gives each tuple 3D context, and keeps Z last so the
-existing periodic duplicate mask remains valid. Full versus hard conditioning
-will again be paired; it is a new follow-up, not a relabeling of the failed
-joint arm.
+Historical source review shows this joint arm reproduces the already rejected
+mixed-axis D2 intervention. H1-A2 D1 is global X, then global Y, then global Z;
+safe-axis keeps PlanGraph site grouping but still requires every X/Y group to
+precede every Z group. A proposed atom-major follow-up was cancelled before
+execution because an early atom's Z would precede later atoms' X/Y and violate
+the same fail-closed invariant. No additional coordinate-order experiment is
+authorized. Future schedule work must learn ordering only inside the safe-axis
+legal action set.
 
 ## Experiment 2 — calibrate model494 intermediate-timestep injection
 
