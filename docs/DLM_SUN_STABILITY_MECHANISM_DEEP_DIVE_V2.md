@@ -170,6 +170,10 @@ evaluated separately from executor conversion.
 - [UniMat](https://arxiv.org/abs/2311.09235) explicitly notes that ordinary
   reconstruction metrics can be misaligned with stable-material discovery,
   matching our body-versus-S.U.N. divergence.
+- [Warm-Start Diffusion](https://arxiv.org/abs/2507.09212) formalizes that an
+  informative proposal changes the appropriate diffusion prior and the amount
+  of reverse traversal required. This reinforces re-calibrating `tau` when the
+  proposal model/distribution changes.
 
 ## Experiment 1 — causal inference-factorial (running)
 
@@ -246,6 +250,14 @@ not reopen the failed sparse-pair gate.
 This uses all eligible structures rather than one extreme pair per Plan. A
 held-out rank-correlation and low-versus-high AUC gate is required before any
 generator update or guided sampling.
+
+The existing eight-stream pilot already contains `1,752` Direct-valid bodies
+with known CHGNet energy across 256 Plans (`216–222` per stream). The sparse
+DPO dataset failed because it retained at most one extreme pair per Plan and
+required a hard 0.06 eV/atom gap; it does not imply that the continuous/rank
+critic lacks data. A new critic manifest must nevertheless be frozen before
+training and must preserve the existing formula-disjoint train/validation
+split.
 
 ### Guidance
 
