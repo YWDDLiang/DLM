@@ -1,0 +1,586 @@
+{
+  "audit_gate": {
+    "candidate_training_authorized": true,
+    "raw1000_within_3pp_of_train": true,
+    "required_train_val_present": true,
+    "train_val_roundtrip_95pct": true,
+    "train_val_valence_and_neutral_95pct": true
+  },
+  "cells": [
+    {
+      "all_metal_rate": 0.2795275590551181,
+      "arm": "p0",
+      "composition_valid": 254,
+      "composition_valid_rate": 0.9921875,
+      "distributions": {
+        "arity": {
+          "2": 54,
+          "3": 138,
+          "4": 56,
+          "5": 6
+        },
+        "charge": {
+          "all_metal": 71,
+          "charge_fail": 108,
+          "neutral_plausible": 71,
+          "oxidation_missing": 2,
+          "pauling_fail": 2
+        },
+        "family": {
+          "chalcogenide": 15,
+          "halide": 27,
+          "other": 102,
+          "oxide": 89,
+          "phosphide_or_phosphate": 5,
+          "sulfide": 16
+        },
+        "lattice": {
+          "cubic": 7,
+          "hexagonal": 29,
+          "monoclinic": 31,
+          "orthorhombic": 26,
+          "tetragonal": 19,
+          "triclinic": 83,
+          "trigonal": 59
+        },
+        "n_bin": {
+          "01_04": 38,
+          "05_08": 64,
+          "09_12": 69,
+          "13_20": 83
+        },
+        "spacegroup": {
+          "sg_001_002": 9,
+          "sg_003_015": 44,
+          "sg_016_074": 56,
+          "sg_075_142": 47,
+          "sg_143_167": 28,
+          "sg_168_194": 19,
+          "sg_195_230": 51
+        },
+        "volume": {
+          "volpa_005_009": 16,
+          "volpa_010_014": 94,
+          "volpa_015_019": 64,
+          "volpa_020_024": 44,
+          "volpa_025_029": 20,
+          "volpa_030_034": 10,
+          "volpa_035_039": 3,
+          "volpa_040_044": 2,
+          "volpa_045_049": 1
+        }
+      },
+      "emitted_charge_known": 0,
+      "emitted_charge_neutral": 0,
+      "emitted_charge_neutral_rate": null,
+      "lattice_spacegroup_match": 101,
+      "lattice_spacegroup_match_rate": 0.39763779527559057,
+      "oxide_rate": 0.35039370078740156,
+      "parse_rate": 0.9921875,
+      "parsed": 254,
+      "physics_assignable": 238,
+      "physics_assignable_rate": 0.9296875,
+      "requested": 256,
+      "seed": 17,
+      "unique_formula": 253,
+      "unique_formula_rate": 0.9960629921259843,
+      "unique_plan": 254
+    },
+    {
+      "all_metal_rate": 0.29880478087649404,
+      "arm": "countfields",
+      "composition_valid": 251,
+      "composition_valid_rate": 0.98046875,
+      "distributions": {
+        "arity": {
+          "1": 1,
+          "2": 38,
+          "3": 172,
+          "4": 34,
+          "5": 6
+        },
+        "charge": {
+          "all_metal": 75,
+          "charge_fail": 110,
+          "neutral_plausible": 58,
+          "oxidation_missing": 4,
+          "pauling_fail": 3,
+          "single_element": 1
+        },
+        "family": {
+          "chalcogenide": 17,
+          "halide": 22,
+          "nitride": 1,
+          "other": 100,
+          "oxide": 85,
+          "phosphide_or_phosphate": 7,
+          "sulfide": 19
+        },
+        "lattice": {
+          "cubic": 5,
+          "hexagonal": 34,
+          "monoclinic": 36,
+          "orthorhombic": 20,
+          "tetragonal": 19,
+          "triclinic": 76,
+          "trigonal": 61
+        },
+        "n_bin": {
+          "01_04": 48,
+          "05_08": 74,
+          "09_12": 71,
+          "13_20": 58
+        },
+        "spacegroup": {
+          "sg_001_002": 8,
+          "sg_003_015": 48,
+          "sg_016_074": 45,
+          "sg_075_142": 50,
+          "sg_143_167": 27,
+          "sg_168_194": 22,
+          "sg_195_230": 51
+        },
+        "volume": {
+          "volpa_005_009": 9,
+          "volpa_010_014": 99,
+          "volpa_015_019": 63,
+          "volpa_020_024": 40,
+          "volpa_025_029": 29,
+          "volpa_030_034": 10,
+          "volpa_035_039": 1
+        }
+      },
+      "emitted_charge_known": 0,
+      "emitted_charge_neutral": 0,
+      "emitted_charge_neutral_rate": null,
+      "final_val_nll": 0.2677652159333229,
+      "lattice_spacegroup_match": 108,
+      "lattice_spacegroup_match_rate": 0.4302788844621514,
+      "oxide_rate": 0.3386454183266932,
+      "parse_rate": 0.98046875,
+      "parsed": 251,
+      "physics_assignable": 223,
+      "physics_assignable_rate": 0.87109375,
+      "requested": 256,
+      "seed": 17,
+      "unique_formula": 251,
+      "unique_formula_rate": 1.0,
+      "unique_plan": 251
+    },
+    {
+      "all_metal_rate": 0.4796747967479675,
+      "arm": "countvalence",
+      "composition_valid": 246,
+      "composition_valid_rate": 0.9609375,
+      "distributions": {
+        "arity": {
+          "1": 2,
+          "2": 47,
+          "3": 159,
+          "4": 33,
+          "5": 5
+        },
+        "charge": {
+          "all_metal": 118,
+          "charge_fail": 116,
+          "neutral_plausible": 10,
+          "single_element": 2
+        },
+        "family": {
+          "chalcogenide": 12,
+          "halide": 29,
+          "nitride": 1,
+          "other": 105,
+          "oxide": 81,
+          "phosphide_or_phosphate": 1,
+          "sulfide": 17
+        },
+        "lattice": {
+          "cubic": 4,
+          "hexagonal": 32,
+          "monoclinic": 38,
+          "orthorhombic": 14,
+          "tetragonal": 17,
+          "triclinic": 73,
+          "trigonal": 68
+        },
+        "n_bin": {
+          "01_04": 56,
+          "05_08": 75,
+          "09_12": 57,
+          "13_20": 58
+        },
+        "spacegroup": {
+          "sg_001_002": 13,
+          "sg_003_015": 41,
+          "sg_016_074": 44,
+          "sg_075_142": 42,
+          "sg_143_167": 32,
+          "sg_168_194": 26,
+          "sg_195_230": 48
+        },
+        "volume": {
+          "volpa_005_009": 13,
+          "volpa_010_014": 82,
+          "volpa_015_019": 61,
+          "volpa_020_024": 48,
+          "volpa_025_029": 30,
+          "volpa_030_034": 9,
+          "volpa_035_039": 2,
+          "volpa_040_044": 1
+        }
+      },
+      "emitted_charge_known": 245,
+      "emitted_charge_neutral": 130,
+      "emitted_charge_neutral_rate": 0.5284552845528455,
+      "final_val_nll": 0.21355958461761473,
+      "lattice_spacegroup_match": 105,
+      "lattice_spacegroup_match_rate": 0.4268292682926829,
+      "oxide_rate": 0.32926829268292684,
+      "parse_rate": 0.9609375,
+      "parsed": 246,
+      "physics_assignable": 224,
+      "physics_assignable_rate": 0.875,
+      "requested": 256,
+      "seed": 17,
+      "unique_formula": 246,
+      "unique_formula_rate": 1.0,
+      "unique_plan": 246
+    },
+    {
+      "all_metal_rate": 0.30980392156862746,
+      "arm": "p0",
+      "composition_valid": 255,
+      "composition_valid_rate": 0.99609375,
+      "distributions": {
+        "arity": {
+          "1": 1,
+          "2": 38,
+          "3": 145,
+          "4": 65,
+          "5": 6
+        },
+        "charge": {
+          "all_metal": 79,
+          "charge_fail": 105,
+          "neutral_plausible": 67,
+          "oxidation_missing": 2,
+          "pauling_fail": 2
+        },
+        "family": {
+          "chalcogenide": 16,
+          "halide": 24,
+          "nitride": 2,
+          "other": 105,
+          "oxide": 84,
+          "phosphide_or_phosphate": 9,
+          "sulfide": 15
+        },
+        "lattice": {
+          "cubic": 7,
+          "hexagonal": 30,
+          "monoclinic": 39,
+          "orthorhombic": 25,
+          "tetragonal": 27,
+          "triclinic": 62,
+          "trigonal": 65
+        },
+        "n_bin": {
+          "01_04": 41,
+          "05_08": 59,
+          "09_12": 69,
+          "13_20": 86
+        },
+        "spacegroup": {
+          "sg_001_002": 11,
+          "sg_003_015": 45,
+          "sg_016_074": 48,
+          "sg_075_142": 45,
+          "sg_143_167": 21,
+          "sg_168_194": 26,
+          "sg_195_230": 59
+        },
+        "volume": {
+          "volpa_005_009": 14,
+          "volpa_010_014": 83,
+          "volpa_015_019": 75,
+          "volpa_020_024": 49,
+          "volpa_025_029": 17,
+          "volpa_030_034": 14,
+          "volpa_035_039": 1,
+          "volpa_040_044": 1,
+          "volpa_045_049": 1
+        }
+      },
+      "emitted_charge_known": 0,
+      "emitted_charge_neutral": 0,
+      "emitted_charge_neutral_rate": null,
+      "lattice_spacegroup_match": 119,
+      "lattice_spacegroup_match_rate": 0.4666666666666667,
+      "oxide_rate": 0.32941176470588235,
+      "parse_rate": 0.99609375,
+      "parsed": 255,
+      "physics_assignable": 234,
+      "physics_assignable_rate": 0.9140625,
+      "requested": 256,
+      "seed": 18,
+      "unique_formula": 255,
+      "unique_formula_rate": 1.0,
+      "unique_plan": 255
+    },
+    {
+      "all_metal_rate": 0.3157894736842105,
+      "arm": "countfields",
+      "composition_valid": 247,
+      "composition_valid_rate": 0.96484375,
+      "distributions": {
+        "arity": {
+          "1": 1,
+          "2": 36,
+          "3": 160,
+          "4": 46,
+          "5": 4
+        },
+        "charge": {
+          "all_metal": 78,
+          "charge_fail": 105,
+          "neutral_plausible": 53,
+          "oxidation_missing": 2,
+          "pauling_fail": 8,
+          "single_element": 1
+        },
+        "family": {
+          "chalcogenide": 14,
+          "halide": 24,
+          "nitride": 7,
+          "other": 108,
+          "oxide": 73,
+          "phosphide_or_phosphate": 7,
+          "sulfide": 14
+        },
+        "lattice": {
+          "cubic": 6,
+          "hexagonal": 16,
+          "monoclinic": 31,
+          "orthorhombic": 21,
+          "tetragonal": 16,
+          "triclinic": 76,
+          "trigonal": 81
+        },
+        "n_bin": {
+          "01_04": 48,
+          "05_08": 77,
+          "09_12": 64,
+          "13_20": 58
+        },
+        "spacegroup": {
+          "sg_001_002": 9,
+          "sg_003_015": 49,
+          "sg_016_074": 48,
+          "sg_075_142": 37,
+          "sg_143_167": 31,
+          "sg_168_194": 10,
+          "sg_195_230": 63
+        },
+        "volume": {
+          "volpa_005_009": 10,
+          "volpa_010_014": 90,
+          "volpa_015_019": 67,
+          "volpa_020_024": 49,
+          "volpa_025_029": 19,
+          "volpa_030_034": 4,
+          "volpa_035_039": 5,
+          "volpa_040_044": 1,
+          "volpa_045_049": 2
+        }
+      },
+      "emitted_charge_known": 0,
+      "emitted_charge_neutral": 0,
+      "emitted_charge_neutral_rate": null,
+      "final_val_nll": 0.2658870521187782,
+      "lattice_spacegroup_match": 93,
+      "lattice_spacegroup_match_rate": 0.3765182186234818,
+      "oxide_rate": 0.29554655870445345,
+      "parse_rate": 0.96484375,
+      "parsed": 247,
+      "physics_assignable": 228,
+      "physics_assignable_rate": 0.890625,
+      "requested": 256,
+      "seed": 18,
+      "unique_formula": 247,
+      "unique_formula_rate": 1.0,
+      "unique_plan": 247
+    },
+    {
+      "all_metal_rate": 0.43673469387755104,
+      "arm": "countvalence",
+      "composition_valid": 245,
+      "composition_valid_rate": 0.95703125,
+      "distributions": {
+        "arity": {
+          "2": 39,
+          "3": 155,
+          "4": 49,
+          "5": 2
+        },
+        "charge": {
+          "all_metal": 107,
+          "charge_fail": 128,
+          "neutral_plausible": 10
+        },
+        "family": {
+          "chalcogenide": 15,
+          "halide": 25,
+          "nitride": 2,
+          "other": 102,
+          "oxide": 80,
+          "phosphide_or_phosphate": 5,
+          "sulfide": 16
+        },
+        "lattice": {
+          "cubic": 3,
+          "hexagonal": 30,
+          "monoclinic": 32,
+          "orthorhombic": 19,
+          "tetragonal": 21,
+          "triclinic": 83,
+          "trigonal": 57
+        },
+        "n_bin": {
+          "01_04": 40,
+          "05_08": 73,
+          "09_12": 69,
+          "13_20": 63
+        },
+        "spacegroup": {
+          "sg_001_002": 8,
+          "sg_003_015": 46,
+          "sg_016_074": 41,
+          "sg_075_142": 60,
+          "sg_143_167": 21,
+          "sg_168_194": 24,
+          "sg_195_230": 45
+        },
+        "volume": {
+          "volpa_005_009": 12,
+          "volpa_010_014": 104,
+          "volpa_015_019": 60,
+          "volpa_020_024": 39,
+          "volpa_025_029": 18,
+          "volpa_030_034": 9,
+          "volpa_035_039": 2,
+          "volpa_040_044": 1
+        }
+      },
+      "emitted_charge_known": 244,
+      "emitted_charge_neutral": 117,
+      "emitted_charge_neutral_rate": 0.4775510204081633,
+      "final_val_nll": 0.2153437939286232,
+      "lattice_spacegroup_match": 97,
+      "lattice_spacegroup_match_rate": 0.39591836734693875,
+      "oxide_rate": 0.32653061224489793,
+      "parse_rate": 0.95703125,
+      "parsed": 245,
+      "physics_assignable": 222,
+      "physics_assignable_rate": 0.8671875,
+      "requested": 256,
+      "seed": 18,
+      "unique_formula": 245,
+      "unique_formula_rate": 1.0,
+      "unique_plan": 245
+    }
+  ],
+  "design": {
+    "candidate": "countvalence with CrysVCD-first tiered catalog",
+    "matched_control": "countfields without oxidation labels",
+    "p0": "original rich-Plan checkpoint and frozen seed17/18 samples",
+    "repair": false,
+    "requested_per_cell": 256,
+    "rerank": false,
+    "rl": false,
+    "seeds": [
+      17,
+      18
+    ]
+  },
+  "gates": {
+    "assignability_noninferior_to_countfields": false,
+    "both_seed_parse_at_least_250": false,
+    "coverage_audit": true,
+    "downstream_authorized": false,
+    "emitted_neutral_at_least_90pct": false,
+    "lattice_spacegroup_at_least_95pct": false,
+    "lattice_spacegroup_noninferior_1pp": true,
+    "no_all_metal_shortcut_10pp": false,
+    "no_oxide_shortcut_10pp": true,
+    "parse_noninferior_to_countfields_1pp": false,
+    "parse_noninferior_to_p0_1pp": false,
+    "unique_formula_noninferior_5pp": true
+  },
+  "pooled": [
+    {
+      "all_metal_rate": 0.29469548133595286,
+      "arm": "p0",
+      "composition_valid": 509,
+      "composition_valid_rate": 0.994140625,
+      "emitted_charge_known": 0,
+      "emitted_charge_neutral": 0,
+      "emitted_charge_neutral_rate": null,
+      "lattice_spacegroup_match": 220,
+      "lattice_spacegroup_match_rate": 0.43222003929273084,
+      "oxide_rate": 0.33988212180746563,
+      "parse_rate": 0.994140625,
+      "parsed": 509,
+      "physics_assignable": 472,
+      "physics_assignable_rate": 0.921875,
+      "requested": 512,
+      "seed": "pooled",
+      "unique_formula": 505,
+      "unique_formula_rate": 0.9921414538310412,
+      "unique_plan": 507
+    },
+    {
+      "all_metal_rate": 0.3072289156626506,
+      "arm": "countfields",
+      "composition_valid": 498,
+      "composition_valid_rate": 0.97265625,
+      "emitted_charge_known": 0,
+      "emitted_charge_neutral": 0,
+      "emitted_charge_neutral_rate": null,
+      "lattice_spacegroup_match": 201,
+      "lattice_spacegroup_match_rate": 0.4036144578313253,
+      "oxide_rate": 0.3172690763052209,
+      "parse_rate": 0.97265625,
+      "parsed": 498,
+      "physics_assignable": 451,
+      "physics_assignable_rate": 0.880859375,
+      "requested": 512,
+      "seed": "pooled",
+      "unique_formula": 497,
+      "unique_formula_rate": 0.9979919678714859,
+      "unique_plan": 498
+    },
+    {
+      "all_metal_rate": 0.45824847250509165,
+      "arm": "countvalence",
+      "composition_valid": 491,
+      "composition_valid_rate": 0.958984375,
+      "emitted_charge_known": 489,
+      "emitted_charge_neutral": 247,
+      "emitted_charge_neutral_rate": 0.5030549898167006,
+      "lattice_spacegroup_match": 202,
+      "lattice_spacegroup_match_rate": 0.41140529531568226,
+      "oxide_rate": 0.32790224032586557,
+      "parse_rate": 0.958984375,
+      "parsed": 491,
+      "physics_assignable": 446,
+      "physics_assignable_rate": 0.87109375,
+      "requested": 512,
+      "seed": "pooled",
+      "unique_formula": 491,
+      "unique_formula_rate": 1.0,
+      "unique_plan": 491
+    }
+  ],
+  "schema": "h1a2_planner_countvalence_factorial_final_v1"
+}

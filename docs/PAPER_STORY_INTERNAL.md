@@ -437,6 +437,20 @@ Candidate A四重复只作为内部方法筛选：Control/Candidate pooled Stric
 full-epoch grounding的小幅Strict信号不能稳健复现。raw-256的step1000虽为`+3/+4`，
 仍因冻结mechanism gate失败和统计不显著而不进入论文正向结果。
 
+随后在冻结raw1000 rich-Plan cohort上进行普通DLM训练时长复核。总2 epoch与总3 epoch
+分别得到Strict S.U.N. `81/1000`与`79/1000`、Meta S.U.N. `489/1000`与
+`477/1000`；对应stable本身为Strict `102/100`、Meta `587/578`。更长CE虽把body
+从`985`提高到`992`，却同时降低stable和stable∩novel，因此冻结Pareto规则选择总2
+epoch，但其绝对`8.1%/48.9%`仍未过`10%/50%`门。这一结果否定“把基础DLM继续多训
+一个epoch即可解决稳定性”的简单故事，并把后续训练贡献收缩为same-Plan
+energy-contrastive geometry preference。
+
+CrysVCD启发的count-valence Planner也只保留为负向机制证据。虽然离线价态分配覆盖
+train/val/raw1000达到`96.66%/96.32%/94.10%`，普通text LLaMA输出的电中性率只有
+`50.31%`，parse下降且all-metal shortcut升至`45.82%`。因此不能声称“物理价态标签
+改善Planner”；真正的后续版本需要显式species/count表示、charge约束或专用head，且
+必须重新做matched attribution。
+
 若该headline不是具有1:1逐attempt记录的raw cohort，则proposal–realization分析必须使用
 单独命名的raw standard-H1-A2 cohort；不得为105/488构造伪microdata。
 
@@ -471,6 +485,8 @@ fixed-condition mechanism和pre/post-refiner conversion，而不是继续加强�
 | 新Main RQ | proposal vs realization | explored specification与conditional realization分离 | 向非晶体领域过度外推、指控其他方法作弊、把accounting写成causal mediation |
 | Grounding epoch sweep | 非单调中间训练窗口 | 三个checkpoint全部披露 | 事后只挑step1000 |
 | Grounding fixed1000 | 无survivor过滤的规模复核 | full-epoch负结果与stable瓶颈 | 将四重复小Strict信号包装为贡献 |
+| DLM sufficient raw1000 | body与stable的非单调epoch Pareto | 总2/3 epoch全披露并冻结选择规则 | 只按CE或body挑更长checkpoint |
+| Count-valence Planner | 物理标签覆盖与生成执行分离 | 96% teacher覆盖但50% emitted-neutral的负证据 | 将标签覆盖包装成生成化学正确性 |
 
 ## 当前大致缺口
 

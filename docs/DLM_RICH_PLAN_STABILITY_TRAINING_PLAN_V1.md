@@ -2,7 +2,7 @@
 
 Date: 2026-08-27
 
-Status: design frozen for review; no new training job launched.
+Status: Phase A terminal; total-2-epoch checkpoint selected, Phase B pair mining next.
 
 ## Approach
 
@@ -340,12 +340,12 @@ MP hull evaluation once.
 
 ## Action items
 
-- [ ] Freeze and fingerprint the L6 validation and L7 test Plan cohorts.
+- [x] Freeze and fingerprint the L6 validation and L7 test Plan cohorts.
 - [ ] Audit teacher/inference `plan_state` key/value distributions without
       changing prompt serialization.
 - [ ] Implement and test exact-body origin-shift augmentation.
-- [ ] Continue the plain-control checkpoint to the frozen 3/5-epoch schedule.
-- [ ] Select the sufficient base using the validation Pareto contract.
+- [x] Continue the plain-control checkpoint through total 2 and 3 epochs.
+- [x] Select the sufficient base using the validation Pareto contract (total 2 epochs).
 - [ ] Generate train-only same-Plan multi-seed bodies and frozen-refiner labels.
 - [ ] Build conservative energy pairs and publish pair-yield diagnostics.
 - [ ] Implement and train the default-off preference candidate.

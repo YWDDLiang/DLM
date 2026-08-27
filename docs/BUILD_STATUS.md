@@ -28,7 +28,7 @@
 
 工程谱系：`34700`训练后导入失败、`34710`环境预检失败、`34719`因冻结V3只接受
 1000/1200分母而在科学评价前失败；它们均被最小恢复，成功阶段未重跑。fixed-256
-adapter只放宽active denominator，不改变Direct、N/U、CHGNet、hull或S.U.N.阈值。
+ adapter只放宽active denominator，不改变Direct、N/U、CHGNet、hull或S.U.N.阈值。
 
 2026-08-27 DLM训练时长与固定requested-1000复核：
 
@@ -49,13 +49,35 @@ adapter只放宽active denominator，不改变Direct、N/U、CHGNet、hull或S.U
   和
   [`GROUNDING_FIXED1000_FINAL.md`](../results/remote_screens/GROUNDING_FIXED1000_FINAL.md)。
 
+2026-08-27 sufficient-DLM与count-valence Planner复核：
+
+- 同一冻结raw1000 rich-Plan cohort上，总2 epoch得到`985` body、`871` Direct joint、
+  `102/81` Strict stable/S.U.N.与`587/489` Meta stable/S.U.N.；总3 epoch得到
+  `992` body、`878` Direct joint、`100/79` Strict与`578/477` Meta；
+- 更长CE训练继续改善body，但Strict/Meta stable及S.U.N.均下降；冻结Pareto规则选择
+  总2 epoch。其S.U.N.为`8.1%/48.9%`，没有达到`10%/50%`绝对门；
+- count-valence数据审计本身通过：train/val/raw1000可精确分配并电中性的比例为
+  `96.66%/96.32%/94.10%`，composition和soft-field roundtrip均为100%；
+- 但单一text Planner的生成端失败：P0/countfields/countvalence pooled parse为
+  `509/498/491`（各请求512），countvalence emitted-neutral仅`247/491=50.31%`，
+  all-metal从P0的`29.47%`升至`45.82%`，lattice--space-group一致率仅`41.14%`；
+- 因此该text-token count-valence arm不进入DLM/refiner downstream。其结果说明
+  “teacher有物理标签”不足以让普通BPE自回归模型可靠执行耦合电荷算术；若重访Planner，
+  必须使用显式species/count head或约束生成，而不是继续普通SFT；
+- 完整证据见
+  [`DLM_SUFFICIENT_RAW1000_FINAL.md`](../results/remote_screens/DLM_SUFFICIENT_RAW1000_FINAL.md)、
+  [`PLANNER_COUNTVALENCE_AUDIT.md`](../results/remote_screens/PLANNER_COUNTVALENCE_AUDIT.md)
+  和
+  [`PLANNER_COUNTVALENCE_FACTORIAL_FINAL.md`](../results/remote_screens/PLANNER_COUNTVALENCE_FACTORIAL_FINAL.md)。
+
 当前决定：
 
 - Candidate A四重复中的小幅Strict信号保留为历史诊断，但固定requested-1000没有复现，
   不再作为完整或scoped正向训练贡献；
 - Candidate B旧Plan-only预筛仍保留为负证据，但现按用户新决定进入一次最小真实下游验证；
 - 第二个训练侧贡献目前未成立；下一条非RL候选是固定Plan的energy-contrastive DLM
-  supervision，并显式锁定中间训练窗口，直接优化stable而非只优化CE或novelty；
+  supervision；其初始化现冻结为raw1000 Pareto选择的总2-epoch checkpoint，直接优化
+  same-Plan geometry energy preference，而不是继续CE时长或用Planner补救；
 - 标准H1-A2继续作为论文fallback；
 - public headline继续是`105/1000 Strict、488/1000 Meta`；
 - 所有checkpoint和新requested-1000结果只作内部机制证据，不替换headline结果。

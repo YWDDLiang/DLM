@@ -1,0 +1,4 @@
+arm,seed,requested,parsed,composition_valid,physics_assignable,emitted_charge_known,emitted_charge_neutral,lattice_spacegroup_match,unique_formula,unique_plan,parse_rate,composition_valid_rate,physics_assignable_rate,emitted_charge_neutral_rate,lattice_spacegroup_match_rate,unique_formula_rate,all_metal_rate,oxide_rate
+p0,pooled,512,509,509,472,0,0,220,505,507,0.994140625,0.994140625,0.921875,,0.43222003929273084,0.9921414538310412,0.29469548133595286,0.33988212180746563
+countfields,pooled,512,498,498,451,0,0,201,497,498,0.97265625,0.97265625,0.880859375,,0.4036144578313253,0.9979919678714859,0.3072289156626506,0.3172690763052209
+countvalence,pooled,512,491,491,446,489,247,202,491,491,0.958984375,0.958984375,0.87109375,0.5030549898167006,0.41140529531568226,1.0,0.45824847250509165,0.32790224032586557
