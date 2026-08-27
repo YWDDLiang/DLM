@@ -18,6 +18,83 @@ learned element-valence token embedding
 The model then generates a charge-balanced composition before the geometric
 diffusion stage.
 
+## Two-problem factorization
+
+The Planner must solve two distinct problems, with different semantics and
+failure handling.
+
+### Problem 1 — correct compound composition
+
+This is a hard-contract task. The model must generate a chemically meaningful
+element/count assignment before any soft crystal properties are proposed.
+
+Required constraints:
+
+- valid element identities and positive integer counts;
+- deterministic `N = sum(counts)`;
+- one canonical formula renderer, with no independent formula/count arithmetic;
+- charge neutrality for ionic compounds under at least one supported oxidation
+  assignment;
+- explicit zero-oxidation representation for alloys rather than treating every
+  all-metal formula as automatically desirable;
+- no invalid mixed-sign oxidation assignment for one element;
+- parser and validator failure retained in the raw denominator.
+
+Recommended factor:
+
+```text
+p(composition) = p(element-valence/count sequence)
+```
+
+This factor uses the CrysVCD-inspired electronic-configuration/count
+representation. Formula, elements, counts and N are rendered deterministically
+from the generated sequence.
+
+### Problem 2 — properties appropriate for that composition
+
+This is a conditional distribution task, not a set of independent categorical
+labels. A valid marginal lattice or space-group bucket can still be incompatible
+with the generated formula or with the other soft fields.
+
+Recommended factorization:
+
+```text
+p(rich Plan)
+  = p(composition)
+  * p(anion, charge | composition)
+  * p(lattice | composition, anion, charge)
+  * p(spacegroup | composition, lattice)
+  * p(volume | composition, lattice, spacegroup)
+```
+
+Interpretation:
+
+- `anion` and `charge` are chemistry checks and should be deterministic or
+  near-deterministic whenever the formula supports them;
+- `lattice`, `spacegroup` and `volume` are soft, potentially multimodal
+  properties and should remain sampled distributions;
+- impossible lattice–space-group combinations receive a hard compatibility
+  mask;
+- plausible but rare combinations remain available and must not be removed by
+  a mode-seeking argmax rule.
+
+Train the property factor with both marginal CE and a joint compatibility loss.
+Construct hard negatives by keeping composition fixed while replacing one or
+more soft fields with a tuple drawn from another composition/structure. The
+model must rank the matched tuple above the corrupted tuple.
+
+```text
+L_planner
+  = L_composition
+  + lambda_chem * L_anion_charge
+  + lambda_soft * (L_lattice + L_spacegroup + L_volume)
+  + lambda_joint * L_tuple_compatibility
+```
+
+Downstream DLM body/stability conversion may later provide an auxiliary
+realizability label, but it must not replace the teacher property targets or be
+used to alter the frozen raw1000 confirmation cohort.
+
 ## Why it is not a direct drop-in
 
 The current H1 Planner:
@@ -90,10 +167,15 @@ evaluation.
 
 ## Feasibility gates
 
-- at least 95% train/validation formula coverage, with every uncovered category
-  disclosed;
+- at least 95% train/validation oxidation-assignment coverage, with every
+  uncovered category disclosed;
 - raw1000 coverage no worse than train by more than 3 pp;
-- rich-Plan parse rate and formula/N distribution noninferior to P0;
+- rich-Plan parse rate, exact formula/count/N correctness and charge-neutral
+  rate noninferior to P0;
+- teacher-matched joint property tuple NLL improves without worsening any soft
+  field marginal NLL;
+- lattice–space-group hard compatibility violations are zero;
+- volume plausibility and density-support diagnostics are noninferior;
 - no increase in all-metal or unary shortcuts;
 - auxiliary valence accuracy positive on exact formula/count matching;
 - downstream DLM evaluation remains a separate factorial arm.
