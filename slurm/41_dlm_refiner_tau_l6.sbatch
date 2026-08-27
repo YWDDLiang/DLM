@@ -18,7 +18,7 @@ readonly CRYS="${H1A2_CRYSLLMGEN_DIR:?export H1A2_CRYSLLMGEN_DIR}"
 source "${ROOT}/slurm/_common.sh"
 activate_environment
 
-case "${SOURCE_ARM}" in full_axis|hard_joint) ;; *) missing "unsupported source arm ${SOURCE_ARM}" ;; esac
+case "${SOURCE_ARM}" in full_axis|hard_axis) ;; *) missing "unsupported source arm ${SOURCE_ARM}" ;; esac
 readonly RUN_DIR="${ROOT}/runs/dlm_refiner_tau_l6_${SLURM_JOB_ID}"
 for path in "${BODY_RUN}/_SUCCESS" "${REFINER}" "${CRYS}"; do
   [[ -e "${path}" ]] || missing "${path}"

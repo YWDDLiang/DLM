@@ -12,7 +12,7 @@ from typing import Any
 
 
 SEEDS = (17, 18)
-SOURCE_ARMS = ("full_axis", "hard_joint")
+SOURCE_ARMS = ("full_axis", "hard_axis")
 ATTEMPTS = 256
 
 

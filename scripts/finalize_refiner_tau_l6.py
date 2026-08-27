@@ -96,7 +96,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--condition-eval-run", type=Path, required=True)
     parser.add_argument("--tau-eval-run", type=Path, required=True)
-    parser.add_argument("--source-arm", choices=("full_axis", "hard_joint"), required=True)
+    parser.add_argument("--source-arm", choices=("full_axis", "hard_axis"), required=True)
     parser.add_argument("--official-cache-run", type=Path, required=True)
     parser.add_argument("--eval-runtime", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)

@@ -25,7 +25,7 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--dlm-seed", type=int, required=True)
-    parser.add_argument("--source-arm", choices=("full_axis", "hard_joint"), required=True)
+    parser.add_argument("--source-arm", choices=("full_axis", "hard_axis"), required=True)
     parser.add_argument("--arm-label", choices=("control", "candidate"), required=True)
     parser.add_argument("--denominator", type=int, default=256)
     args = parser.parse_args()
@@ -67,11 +67,7 @@ def main() -> None:
                 "arm": args.arm_label,
                 "planner_arm": "raw-P0-frozen",
                 "body_arm": f"public-H1-A2-DLM-raw-{args.source_arm}",
-                "schedule_arm": (
-                    "D1-joint-coordinates"
-                    if args.source_arm == "hard_joint"
-                    else "D1-exact-axis"
-                ),
+                "schedule_arm": "D1-exact-axis",
                 "status": "succeeded" if succeeded else "failed",
                 "reason": failure,
                 "structure": structure,
