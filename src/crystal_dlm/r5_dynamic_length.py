@@ -164,6 +164,24 @@ def exact_dynamic_generation_schedule_joint_coordinates(num_atoms: int) -> List[
     return [[0], element_positions, [1, 2, 3, 4, 5, 6], coordinate_positions]
 
 
+def exact_dynamic_generation_schedule_atom_major(num_atoms: int) -> List[List[int]]:
+    """Complete each atom's X/Y/Z tuple before moving to the next atom.
+
+    X and Y become context for Z, so the existing duplicate-coordinate mask is
+    active when every tuple is completed. The number of model forwards is the
+    same as the historical axis-major schedule.
+    """
+
+    num_atoms = int(num_atoms)
+    element_positions = [7 + 4 * slot_index for slot_index in range(num_atoms)]
+    groups: List[List[int]] = [[0], element_positions, [1, 2, 3, 4, 5, 6]]
+    for slot_index in range(num_atoms):
+        groups.extend(
+            ([8 + 4 * slot_index], [9 + 4 * slot_index], [10 + 4 * slot_index])
+        )
+    return groups
+
+
 def count_prefill_for_batch(tokenizer: Any, num_atoms: int, batch_size: int) -> Dict[int, List[int]]:
     token_ids = required_token_ids(tokenizer, [f"<N_{int(num_atoms):03d}>"])
     return {0: [int(token_ids[0])] * int(batch_size)}
@@ -175,6 +193,7 @@ __all__ = [
     "count_prefill_for_batch",
     "exact_body_token_count",
     "exact_dynamic_generation_schedule",
+    "exact_dynamic_generation_schedule_atom_major",
     "exact_dynamic_generation_schedule_joint_coordinates",
     "exact_dynamic_schema_constraints",
     "num_atoms_from_plan",

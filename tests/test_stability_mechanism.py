@@ -9,6 +9,7 @@ if str(SRC) not in sys.path:
 
 from crystal_dlm.r5_dynamic_length import (
     exact_body_token_count,
+    exact_dynamic_generation_schedule_atom_major,
     exact_dynamic_generation_schedule_joint_coordinates,
 )
 from crystal_dlm.r5_plan_state import (
@@ -54,6 +55,14 @@ class StabilityMechanismTest(unittest.TestCase):
         self.assertEqual(set(flattened), set(range(exact_body_token_count(7))))
         self.assertEqual(len(schedule[-1]), 21)
         self.assertEqual(schedule[-1][:3], [8, 9, 10])
+
+    def test_atom_major_schedule_completes_each_xyz_tuple(self) -> None:
+        schedule = exact_dynamic_generation_schedule_atom_major(3)
+        flattened = [position for group in schedule for position in group]
+        self.assertEqual(len(flattened), exact_body_token_count(3))
+        self.assertEqual(set(flattened), set(range(exact_body_token_count(3))))
+        self.assertEqual(schedule[3:6], [[8], [9], [10]])
+        self.assertEqual(schedule[6:9], [[12], [13], [14]])
 
 
 if __name__ == "__main__":
