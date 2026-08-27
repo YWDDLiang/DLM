@@ -39,6 +39,12 @@ def main() -> None:
 
     round1 = read_jsonl(args.round1_body_dir / "raw_generations.jsonl")
     round2 = read_jsonl(args.round2_body_dir / "raw_generations.jsonl")
+    round1_metrics = json.loads(
+        (args.round1_body_dir / "sample_metrics.json").read_text(encoding="utf-8")
+    )
+    round2_metrics = json.loads(
+        (args.round2_body_dir / "sample_metrics.json").read_text(encoding="utf-8")
+    )
     round1_by_idx = {int(row["sample_idx"]): row for row in round1}
     round2_by_idx = {int(row["sample_idx"]): row for row in round2}
     if len(round1) != ROUND_SIZE or set(round1_by_idx) != set(range(0, ROUND_SIZE)):
@@ -117,16 +123,20 @@ def main() -> None:
         "rounds": {
             "round1": {
                 "global_ordinals": [0, 499],
-                "body_success": sum(row.get("parsed") is True for row in round1),
+                "parsed": int(round1_metrics["parse_success"]),
+                "body_success": int(round1_metrics["graph_success"]),
                 "refined": len(refined1),
             },
             "round2": {
                 "global_ordinals": [500, 999],
-                "body_success": sum(row.get("parsed") is True for row in round2),
+                "parsed": int(round2_metrics["parse_success"]),
+                "body_success": int(round2_metrics["graph_success"]),
                 "refined": len(refined2),
             },
         },
-        "body_success": sum(row.get("parsed") is True for row in (*round1, *round2)),
+        "parsed": int(round1_metrics["parse_success"]) + int(round2_metrics["parse_success"]),
+        "body_success": int(round1_metrics["graph_success"])
+        + int(round2_metrics["graph_success"]),
         "refined": len(structures),
         "dlm_seed": args.dlm_seed,
         "refiner_seed": args.refiner_seed,
