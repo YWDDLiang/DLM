@@ -136,6 +136,12 @@
   Strict/Meta retention分别下降`21.31/18.15pp`，未通过冻结Pareto门。因而已触发且仅触发
   `tau={0,200,500,800}`粗校准；0/800复用，只新算200/500。证据见
   [`DLM_REFINER_EFFECT_L6_DIAGNOSTIC.md`](../results/remote_screens/DLM_REFINER_EFFECT_L6_DIAGNOSTIC.md)。
+- 固定tau L6扫描已终态：tau0/200/500/800的Strict S.U.N.为`10/29/39/48`，Meta为
+  `66/171/222/230`（均/512）；novel分别`505/488/466/451`。较短tau恢复novelty与
+  retention，但Strict/Meta均下降；200与500都未过双正向/双seed门，selected tau仍为
+  `800`。因此不做raw1000短tau确认，下一步按冻结顺序进入noisy-state critic的独立评价
+  可预测性审计。完整证据见
+  [`DLM_REFINER_TAU_L6_FINAL.md`](../results/remote_screens/DLM_REFINER_TAU_L6_FINAL.md)。
 
 2026-08-28 CCFD Phase1终态：
 

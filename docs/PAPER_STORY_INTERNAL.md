@@ -541,5 +541,11 @@ legacy comp-valid仅`1724→1725`，两seed方向不一致且N TVD为`0.064`。�
 conservation compiler或新tokenizer加入论文贡献；该结果只保留为“保证内部可赋价并不等于
 提升独立composition validity”的机制负证据。稳定性Track B继续独立推进。
 
+Track B的固定tau扫描同样给出明确负结论：tau0/200/500/800 pooled512 Strict
+S.U.N.依次`10/29/39/48`，Meta依次`66/171/222/230`；短tau虽恢复novelty和
+stable→S.U.N. retention，却单调损失稳定/S.U.N.，没有候选通过预注册gate。model494仍
+保留tau800；该结果支持“refinement strength沿novelty–stability Pareto移动”，不能包装成
+稳定性改进贡献。下一候选只允许冻结的noisy-state energy-critic独立评价审计。
+
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。
