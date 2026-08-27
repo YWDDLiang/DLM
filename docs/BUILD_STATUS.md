@@ -86,9 +86,10 @@
   [`DLM_STABILITY_PAIR_DATA_4STREAM_FINAL.md`](../results/remote_screens/DLM_STABILITY_PAIR_DATA_4STREAM_FINAL.md)
   与
   [`DLM_STABILITY_PAIR_DATA_8STREAM_FINAL.md`](../results/remote_screens/DLM_STABILITY_PAIR_DATA_8STREAM_FINAL.md)。
-- 失败权重已清理：删除total3 duplicate final、step1392/2088/2392以及四个判负
-  countfields/countvalence Planner adapters，约释放`24.7 GB`；唯一保留的本轮DLM
-  权重为Pareto选中的total2 `step-696`。日志、metrics、Plans、结构与final reports均保留。
+- 失败权重已清理：删除total3 duplicate final、step1392/2088/2392、四个判负
+  countfields/countvalence Planner adapters，并在energy路线终止后删除仅具诊断意义的
+  total2 `step-696`，合计约释放`30.7 GB`。本轮失败路线不保留任何模型权重；日志、
+  metrics、Plans、结构、final reports及从原始resume重训所需合同均保留。
 
 当前决定：
 

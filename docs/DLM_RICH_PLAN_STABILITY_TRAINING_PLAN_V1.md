@@ -2,7 +2,7 @@
 
 Date: 2026-08-27
 
-Status: Phase A complete; Phase B pair-yield gate failed at the frozen 8-stream limit.
+Status: terminal negative; Phase B pair-yield gate failed and all derived candidate/base weights were cleaned after preserving metrics and lineage.
 
 ## Approach
 
@@ -345,7 +345,7 @@ MP hull evaluation once.
       changing prompt serialization.
 - [ ] Implement and test exact-body origin-shift augmentation.
 - [x] Continue the plain-control checkpoint through total 2 and 3 epochs.
-- [x] Select the sufficient base using the validation Pareto contract (total 2 epochs).
+- [x] Select the diagnostic Pareto reference (total 2 epochs); remove its weights after the downstream line terminated.
 - [x] Generate train-only same-Plan multi-seed bodies and frozen-refiner labels.
 - [x] Build conservative energy pairs and publish pair-yield diagnostics (gate failed: 95/27 versus 96/24).
 - [ ] Implement and train the default-off preference candidate.
