@@ -119,6 +119,8 @@
   [`SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md`](SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md)。
 - composition correctness与固定composition稳定转化的统一顺序、门控和终态解释已冻结于
   [`DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md`](DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md)。
+- 用户随后冻结贡献点1与主故事并排除外部CrysVCD比较；后续仅推进内部matched CCFD
+  与固定composition稳定转化，不再重开贡献点1。
 
 ## 已完成
 

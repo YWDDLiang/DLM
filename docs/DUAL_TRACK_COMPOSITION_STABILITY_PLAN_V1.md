@@ -5,6 +5,10 @@ Date: 2026-08-28
 Status: frozen planning contract; no new GPU job is authorized until job35518
 finishes and its finalizers are complete.
 
+Contribution point 1 and the main paper story are frozen and out of scope for
+this plan. External CrysVCD comparisons are excluded by user decision; all
+composition attribution uses internal matched controls.
+
 ## Approach
 
 Run two causally separate tracks. Track A establishes a small, defensible Plan
@@ -80,9 +84,9 @@ remaining measured bottleneck. Compare current tokens versus true
 species-valence/count special tokens, each with free and CCFD decoding, under
 matched backbone/data/initialization/update budgets.
 
-Official CrysVCD is an external reference. A causal comparison requires a
-same-backbone CrysVCD-style factorized-token implementation. BPE-like macros
-are optional train-only ablations and must carry additive atom/charge metadata.
+The causal comparison uses only the same backbone/data/initialization/update
+budget. BPE-like macros are optional train-only ablations and must carry
+additive atom/charge metadata.
 
 ### A3 — Downstream non-harm audit
 
