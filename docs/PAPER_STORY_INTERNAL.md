@@ -406,6 +406,18 @@ cohort-level functions，必须在固定size/mix下单独重算，不能进入�
 Contribution 3在distribution、standardized accounting和fixed-condition结果完成前
 只能写“we evaluate”，不能写“we demonstrate”。
 
+若最终稿只保留两个主贡献，采用以下合并，不再寻找或包装失败的训练trick：
+
+1. **Plan-conditioned exact-cardinality masked executor**：rich specification接口、
+   composition/N硬锚和typed masked realization构成一个方法贡献；
+2. **Proposal--realization attribution protocol**：raw-attempt ledger、stagewise
+   conversion、proposal-mix/common-mix与fixed-condition诊断构成科学评价贡献。
+
+`105/488`是上述系统与协议的结果证据，不单列为第三个算法。counterfactual grounding、
+count-valence text Planner和energy-pair preference feasibility均为完整披露的负向开发证据，
+不能进入贡献列表。若投稿目标强制要求第二个独立性能模块，则当前证据不足，必须另立
+新方法与新预注册，而不能改门槛复活这些候选。
+
 Candidate A稳健性复核后的限制是：Specification-compiled exact-cardinality executor仍是
 核心技术贡献；counterfactual grounding不能作为第二个训练侧贡献。四重复Strict小信号和
 raw-256中间窗口只作为机制诊断，独立requested-1000的Strict/Meta均下降是当前更强的
