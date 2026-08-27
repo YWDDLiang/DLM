@@ -47,7 +47,13 @@ for seed in 17 18; do
   "${PYTHON}" "${ROOT}/scripts/assemble_raw_body_repeat.py" \
     --body-dir "${BODY_RUN}/seed${seed}/full_axis/body" \
     --output-dir "${EVAL_RUN}/seed${seed}/raw_full_axis/generation" \
-    --seed "${seed}" --dlm-seed "${dlm_seed}" --denominator 256
+    --seed "${seed}" --dlm-seed "${dlm_seed}" --denominator 256 \
+    --source-arm full_axis --arm-label control
+  "${PYTHON}" "${ROOT}/scripts/assemble_raw_body_repeat.py" \
+    --body-dir "${BODY_RUN}/seed${seed}/hard_joint/body" \
+    --output-dir "${EVAL_RUN}/seed${seed}/raw_hard_joint/generation" \
+    --seed "${seed}" --dlm-seed "${dlm_seed}" --denominator 256 \
+    --source-arm hard_joint --arm-label candidate
 done
 
 run_cell() {
@@ -91,8 +97,10 @@ wait "${p4}"; wait "${p5}"; wait "${p6}"; wait "${p7}"
 # Diagnostic only: isolate the effect of model494 by applying the same common
 # evaluator/CHGNet relaxation directly to the unrefined full-axis DLM bodies.
 run_cell 0 17 raw_full_axis control & p8=$!
-run_cell 4 18 raw_full_axis control & p9=$!
-wait "${p8}"; wait "${p9}"
+run_cell 2 17 raw_hard_joint candidate & p9=$!
+run_cell 4 18 raw_full_axis control & p10=$!
+run_cell 6 18 raw_hard_joint candidate & p11=$!
+wait "${p8}"; wait "${p9}"; wait "${p10}"; wait "${p11}"
 
 for seed in 17 18; do
   for arm in full_axis full_joint hard_axis hard_joint; do
@@ -101,8 +109,10 @@ for seed in 17 18; do
   done
 done
 for seed in 17 18; do
-  [[ -f "${EVAL_RUN}/seed${seed}/raw_full_axis/evaluation/direct/report.json" ]] || exit 3
-  [[ -f "${EVAL_RUN}/seed${seed}/raw_full_axis/evaluation/full_reconstructed/_SUCCESS" ]] || exit 3
+  for arm in raw_full_axis raw_hard_joint; do
+    [[ -f "${EVAL_RUN}/seed${seed}/${arm}/evaluation/direct/report.json" ]] || exit 3
+    [[ -f "${EVAL_RUN}/seed${seed}/${arm}/evaluation/full_reconstructed/_SUCCESS" ]] || exit 3
+  done
 done
 touch "${EVAL_RUN}/_OFFLINE_SUCCESS"
 printf '%s\n' "${EVAL_RUN}"

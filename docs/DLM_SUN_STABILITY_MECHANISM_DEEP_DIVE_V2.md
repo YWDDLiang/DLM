@@ -16,10 +16,12 @@ its frozen yield gate. The next work targets the actual conversion bottleneck:
    exact formula, atom count, elements and stoichiometric counts;
 2. stop committing X, then Y, then Z coordinates irreversibly and denoise all
    coordinate dimensions as one coupled block;
-3. if those inference mechanisms are insufficient, train a noisy-state energy
+3. re-calibrate the continuous refiner's intermediate injection timestep for
+   the new LLaDA/rich-Plan proposal distribution;
+4. if those inference mechanisms are insufficient, train a noisy-state energy
    critic on all labelled generated structures and use it inside the discrete
    denoising trajectory;
-4. distil relaxed low-energy bodies into the executor so that the initial body
+5. distil relaxed low-energy bodies into the executor so that the initial body
    lands in a better basin before model494 and CHGNet relaxation.
 
 The design remains non-RL. It does not expose `E0`, `stable`, `E_hull` or an
@@ -190,7 +192,41 @@ This factorial identifies whether the immediate bottleneck is condition noise,
 coordinate schedule, or their interaction. It must be reported in full even if
 one cell looks best.
 
-## Experiment 2 — noisy-state thermodynamic critic
+## Experiment 2 — calibrate model494 intermediate-timestep injection
+
+The local `CSPDiffusion.sample()` path does not first forward-noise a DLM body.
+It directly assigns the DLM coordinates/lattice to `x_tau/l_tau` and begins the
+reverse process at `tau=diff_steps`. This is the intended CrysLLMGen
+intermediate-injection design, but it means `tau` controls how aggressively the
+continuous model rewrites the proposal; model494 is not simply a local
+relaxation operator.
+
+The [CrysLLMGen paper](https://arxiv.org/abs/2510.23040) explicitly defines
+`tau` as a validation-selected hyperparameter. The current `tau=800` was
+inherited from the original autoregressive-LLM pipeline. It has not been
+re-calibrated after replacing that proposal distribution with masked LLaDA,
+exact rich Plans, a different decoding schedule and different training length.
+
+The running evaluator therefore includes a diagnostic comparison between the
+same full-axis bodies:
+
+- raw body -> common CHGNet relaxation (`tau=0`);
+- model494 800-step output -> the same common CHGNet relaxation.
+
+If model494 is null or negative for Strict/Meta conversion, freeze the selected
+Experiment-1 arm and evaluate the predeclared coarse set
+`tau in {0, 200, 500, 800}` over both seeds. The raw and 800 outputs are reused;
+only 200 and 500 are newly refined. Selection uses pooled downstream Pareto
+gates, reports every timestep and never chooses by one seed. A selected
+timestep must then be confirmed on the requested-1000 cohort.
+
+If 800 is already beneficial, do not launch an indiscriminate timestep grid;
+proceed to thermodynamic supervision. If an intermediate `tau` wins, a later
+sample-adaptive timestep may use only frozen pre-refinement geometry/confidence
+features and must be validated separately. It may not inspect official hull or
+select among final generated structures.
+
+## Experiment 3 — noisy-state thermodynamic critic
 
 Run this only after Experiment 1 is finalized. It is a new mechanism and does
 not reopen the failed sparse-pair gate.
@@ -239,7 +275,7 @@ or per-composition tuning is allowed.
 - only then run requested-1000 L7, where the absolute gate remains
   Strict S.U.N. `>=10%` and Meta S.U.N. `>=50%`.
 
-## Experiment 3 — relaxed-winner distillation
+## Experiment 4 — relaxed-winner distillation
 
 If the critic predicts energy but guidance is too expensive or unstable,
 distil the low-energy basin directly:
@@ -259,9 +295,9 @@ more targeted than another epoch over the generic MP-20 distribution.
 
 ## Architecture boundary
 
-If hard/joint scheduling, a validated critic and relaxed-winner distillation
-all fail, the evidence points to the representation itself. The next honest
-architecture is then:
+If hard/joint scheduling, refiner calibration, a validated critic and
+relaxed-winner distillation all fail, the evidence points to the representation
+itself. The next honest architecture is then:
 
 ```text
 rich Plan / composition model

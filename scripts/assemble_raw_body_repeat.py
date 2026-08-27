@@ -25,6 +25,8 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--dlm-seed", type=int, required=True)
+    parser.add_argument("--source-arm", choices=("full_axis", "hard_joint"), required=True)
+    parser.add_argument("--arm-label", choices=("control", "candidate"), required=True)
     parser.add_argument("--denominator", type=int, default=256)
     args = parser.parse_args()
 
@@ -55,17 +57,21 @@ def main() -> None:
         rows.append(
             {
                 "schema": "wqcodiff_generation_attempt_v1",
-                "attempt_id": f"h1a2-raw-body-s{args.seed}-{ordinal:04d}",
+                "attempt_id": f"h1a2-raw-{args.source_arm}-s{args.seed}-{ordinal:04d}",
                 "method": "H1-A2-DLM-RAW-BODY-NO-MODEL494",
                 "ordinal": ordinal,
                 "sample_idx": ordinal,
                 "repeat": 0,
                 "experiment_repeat": args.seed * 10 + 9,
-                "pair_id": f"h1a2-refiner-effect-s{args.seed}:{ordinal:04d}",
-                "arm": "control",
+                "pair_id": f"h1a2-refiner-{args.source_arm}-s{args.seed}:{ordinal:04d}",
+                "arm": args.arm_label,
                 "planner_arm": "raw-P0-frozen",
-                "body_arm": "public-H1-A2-DLM-raw",
-                "schedule_arm": "D1-exact-axis",
+                "body_arm": f"public-H1-A2-DLM-raw-{args.source_arm}",
+                "schedule_arm": (
+                    "D1-joint-coordinates"
+                    if args.source_arm == "hard_joint"
+                    else "D1-exact-axis"
+                ),
                 "status": "succeeded" if succeeded else "failed",
                 "reason": failure,
                 "structure": structure,
@@ -89,6 +95,7 @@ def main() -> None:
     report = {
         "schema": "h1a2_raw_body_generation_report_v1",
         "seed": args.seed,
+        "source_arm": args.source_arm,
         "attempts": args.denominator,
         "body_success": sum(row.get("parsed") is True for row in raw_rows),
         "reconstructed": reconstructed,

@@ -331,12 +331,20 @@ associated with hull stability. A two-seed 2×2 causal ablation is therefore
 running on the public DLM checkpoint: full versus hard-anchor-only conditioning
 crossed with axis-wise versus joint-XYZ commitment.
 
-If that ablation is insufficient, the next predeclared mechanism is a
-timestep-aware noisy-state energy critic trained on all compatible-energy
-labelled bodies with within-Plan normalization. It will guide discrete
-transitions internally and will not rerank final candidates. Relaxed-winner
-distillation is the fallback supervised update. The detailed evidence, gates
-and architecture boundary are recorded in
+A subsequent source-level audit found that model494 directly injects the DLM
+coordinates/lattice at diffusion timestep `tau=800`; it is not a conventional
+local relaxer. The CrysLLMGen methodology makes `tau` validation-dependent, but
+the inherited value has never been calibrated for the masked-LLaDA/rich-Plan
+proposal distribution. The same L6 evaluator now includes raw-body versus
+800-step model494 diagnostics. Only if 800 is null/negative will the frozen
+coarse set `tau={0,200,500,800}` be run before the energy-critic experiment.
+
+If condition/schedule and refiner calibration are insufficient, the next
+predeclared mechanism is a timestep-aware noisy-state energy critic trained on
+all compatible-energy labelled bodies with within-Plan normalization. It will
+guide discrete transitions internally and will not rerank final candidates.
+Relaxed-winner distillation is the fallback supervised update. The detailed
+evidence, gates and architecture boundary are recorded in
 [`DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md`](docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md).
 
 Primary precedents: [MatterGen](https://arxiv.org/abs/2312.03687),

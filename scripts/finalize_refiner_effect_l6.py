@@ -12,6 +12,7 @@ from typing import Any
 
 
 SEEDS = (17, 18)
+SOURCE_ARMS = ("full_axis", "hard_joint")
 ATTEMPTS = 256
 
 
@@ -74,23 +75,31 @@ def main() -> None:
     output.mkdir(parents=True, exist_ok=False)
 
     cells: list[dict[str, Any]] = []
-    rows_by_cell: dict[tuple[int, str], list[dict[str, Any]]] = {}
+    rows_by_cell: dict[tuple[int, str, str], list[dict[str, Any]]] = {}
     for seed in SEEDS:
-        for stage, arm in (("raw", "raw_full_axis"), ("model494", "full_axis")):
-            root = args.eval_run / f"seed{seed}/{arm}"
-            rows, report = _evaluate_cell(
-                cell_id=f"seed{seed}_{stage}",
-                labels_path=root / "evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
-                generation_path=root / "generation/generation.jsonl",
-                direct_path=root / "evaluation/direct/report.json",
-                phase_diagrams=phase_diagrams,
-                unresolved=unresolved,
-                output_dir=output / f"cells/seed{seed}/{stage}",
-            )
-            rows_by_cell[(seed, stage)] = rows
-            summary = summarize(rows, report["direct"])
-            summary.update({"seed": seed, "stage": stage, "requested": ATTEMPTS})
-            cells.append(summary)
+        for source_arm in SOURCE_ARMS:
+            for stage, arm in (("raw", f"raw_{source_arm}"), ("model494", source_arm)):
+                root = args.eval_run / f"seed{seed}/{arm}"
+                rows, report = _evaluate_cell(
+                    cell_id=f"seed{seed}_{source_arm}_{stage}",
+                    labels_path=root / "evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
+                    generation_path=root / "generation/generation.jsonl",
+                    direct_path=root / "evaluation/direct/report.json",
+                    phase_diagrams=phase_diagrams,
+                    unresolved=unresolved,
+                    output_dir=output / f"cells/seed{seed}/{source_arm}/{stage}",
+                )
+                rows_by_cell[(seed, source_arm, stage)] = rows
+                summary = summarize(rows, report["direct"])
+                summary.update(
+                    {
+                        "seed": seed,
+                        "source_arm": source_arm,
+                        "stage": stage,
+                        "requested": ATTEMPTS,
+                    }
+                )
+                cells.append(summary)
 
     count_keys = (
         "requested",
@@ -107,51 +116,76 @@ def main() -> None:
         "meta_sun",
     )
     pooled: list[dict[str, Any]] = []
-    for stage in ("raw", "model494"):
-        chosen = [row for row in cells if row["stage"] == stage]
-        item: dict[str, Any] = {"seed": "pooled-repeat-sum", "stage": stage}
-        for key in count_keys:
-            item[key] = sum(int(row[key]) for row in chosen)
-        item.update(
-            {
-                "reconstructed_rate": rate(item["reconstructed"], item["requested"]),
-                "direct_joint_rate": rate(item["direct_joint"], item["requested"]),
-                "novel_rate": rate(item["novel"], item["reconstructed"]),
-                "unique_rate": rate(item["unique"], item["reconstructed"]),
-                "strict_attempt_rate": rate(item["strict_sun"], item["requested"]),
-                "meta_attempt_rate": rate(item["meta_sun"], item["requested"]),
-                "strict_retention": rate(item["strict_sun"], item["strict_stable"]),
-                "meta_retention": rate(item["meta_sun"], item["meta_stable"]),
+    for source_arm in SOURCE_ARMS:
+        for stage in ("raw", "model494"):
+            chosen = [
+                row
+                for row in cells
+                if row["source_arm"] == source_arm and row["stage"] == stage
+            ]
+            item: dict[str, Any] = {
+                "seed": "pooled-repeat-sum",
+                "source_arm": source_arm,
+                "stage": stage,
             }
-        )
-        pooled.append(item)
+            for key in count_keys:
+                item[key] = sum(int(row[key]) for row in chosen)
+            item.update(
+                {
+                    "reconstructed_rate": rate(item["reconstructed"], item["requested"]),
+                    "direct_joint_rate": rate(item["direct_joint"], item["requested"]),
+                    "novel_rate": rate(item["novel"], item["reconstructed"]),
+                    "unique_rate": rate(item["unique"], item["reconstructed"]),
+                    "strict_attempt_rate": rate(item["strict_sun"], item["requested"]),
+                    "meta_attempt_rate": rate(item["meta_sun"], item["requested"]),
+                    "strict_retention": rate(item["strict_sun"], item["strict_stable"]),
+                    "meta_retention": rate(item["meta_sun"], item["meta_stable"]),
+                }
+            )
+            pooled.append(item)
 
-    raw = next(row for row in pooled if row["stage"] == "raw")
-    refined = next(row for row in pooled if row["stage"] == "model494")
-    rate_keys = [key for key in raw if key.endswith("_rate") or key.endswith("retention")]
-    delta = {key: refined[key] - raw[key] for key in rate_keys}
+    delta: dict[str, dict[str, float]] = {}
+    for source_arm in SOURCE_ARMS:
+        raw = next(
+            row for row in pooled if row["source_arm"] == source_arm and row["stage"] == "raw"
+        )
+        refined = next(
+            row
+            for row in pooled
+            if row["source_arm"] == source_arm and row["stage"] == "model494"
+        )
+        rate_keys = [key for key in raw if key.endswith("_rate") or key.endswith("retention")]
+        delta[source_arm] = {key: refined[key] - raw[key] for key in rate_keys}
 
     mcnemar: dict[str, Any] = {}
-    for seed in SEEDS:
-        left = {int(row["ordinal"]): row for row in rows_by_cell[(seed, "raw")]}
-        right = {int(row["ordinal"]): row for row in rows_by_cell[(seed, "model494")]}
-        known = [
-            idx
-            for idx in range(ATTEMPTS)
-            if left[idx]["official_hull_status"] == "known"
-            and right[idx]["official_hull_status"] == "known"
-        ]
-        mcnemar[str(seed)] = {
-            "known_both": len(known),
-            "strict": _exact_mcnemar(
-                [bool(left[idx]["strict_sun"]) for idx in known],
-                [bool(right[idx]["strict_sun"]) for idx in known],
-            ),
-            "meta": _exact_mcnemar(
-                [bool(left[idx]["meta_sun"]) for idx in known],
-                [bool(right[idx]["meta_sun"]) for idx in known],
-            ),
-        }
+    for source_arm in SOURCE_ARMS:
+        mcnemar[source_arm] = {}
+        for seed in SEEDS:
+            left = {
+                int(row["ordinal"]): row
+                for row in rows_by_cell[(seed, source_arm, "raw")]
+            }
+            right = {
+                int(row["ordinal"]): row
+                for row in rows_by_cell[(seed, source_arm, "model494")]
+            }
+            known = [
+                idx
+                for idx in range(ATTEMPTS)
+                if left[idx]["official_hull_status"] == "known"
+                and right[idx]["official_hull_status"] == "known"
+            ]
+            mcnemar[source_arm][str(seed)] = {
+                "known_both": len(known),
+                "strict": _exact_mcnemar(
+                    [bool(left[idx]["strict_sun"]) for idx in known],
+                    [bool(right[idx]["strict_sun"]) for idx in known],
+                ),
+                "meta": _exact_mcnemar(
+                    [bool(left[idx]["meta_sun"]) for idx in known],
+                    [bool(right[idx]["meta_sun"]) for idx in known],
+                ),
+            }
 
     report = {
         "schema": "h1a2_refiner_effect_l6_diagnostic_v1",
@@ -159,7 +193,7 @@ def main() -> None:
         "diagnostic_only": True,
         "cells": cells,
         "pooled_repeat_sum": pooled,
-        "model494_minus_raw": delta,
+        "model494_minus_raw_by_source_arm": delta,
         "mcnemar": mcnemar,
         "interpretation_rule": {
             "positive_stability": "distil or improve model494 low-energy outputs",
@@ -180,17 +214,20 @@ def main() -> None:
     lines = [
         "# DLM raw-body versus model494 L6 diagnostic",
         "",
-        "| Stage | Requested | Reconstructed | Direct J | N/U/NU | Strict stable/SUN | Meta stable/SUN |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        "| Source arm | Stage | Requested | Reconstructed | Direct J | N/U/NU | Strict stable/SUN | Meta stable/SUN |",
+        "|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for row in pooled:
         lines.append(
-            f"| {row['stage']} | {row['requested']} | {row['reconstructed']} | "
+            f"| {row['source_arm']} | {row['stage']} | {row['requested']} | {row['reconstructed']} | "
             f"{row['direct_joint']} | {row['novel']}/{row['unique']}/{row['novel_unique']} | "
             f"{row['strict_stable']}/{row['strict_sun']} | {row['meta_stable']}/{row['meta_sun']} |"
         )
-    lines.extend(["", "## model494 minus raw", ""])
-    lines.extend(f"- {key}: `{value:+.4%}`" for key, value in delta.items())
+    for source_arm in SOURCE_ARMS:
+        lines.extend(["", f"## {source_arm}: model494 minus raw", ""])
+        lines.extend(
+            f"- {key}: `{value:+.4%}`" for key, value in delta[source_arm].items()
+        )
     (output / f"{stem}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     (output / "_SUCCESS").touch()
 
