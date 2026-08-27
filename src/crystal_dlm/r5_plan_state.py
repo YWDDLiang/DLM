@@ -601,26 +601,63 @@ def plan_state_to_countfields(plan: Mapping[str, Any], *, max_pairs: int = 7) ->
 def plan_state_to_countvalencefields(plan: Mapping[str, Any], *, max_pairs: int = 7) -> str:
     symbols_in = [str(symbol) for symbol in (plan.get("elements") or [])]
     counts_in = [int(value) for value in (plan.get("counts") or [])]
-    oxidation = (plan.get("validator") or {}).get("oxidation_states")
-    if oxidation is None:
-        oxidation = plan.get("oxidation_candidates")
-    if isinstance(oxidation, Sequence) and not isinstance(oxidation, (str, bytes)):
-        oxidation_in = [None if value in (None, "unknown") else int(value) for value in oxidation]
-    else:
-        oxidation_in = [None for _ in symbols_in]
     if len(symbols_in) != len(counts_in):
         raise ValueError("count-valence plan requires aligned elements/counts")
-    if len(oxidation_in) != len(symbols_in):
-        oxidation_in = [None for _ in symbols_in]
 
-    rows = []
-    for symbol, count, ox in zip(symbols_in, counts_in, oxidation_in):
-        if symbol not in SYMBOL_TO_Z:
-            continue
-        count_value = int(count)
-        if count_value > 0:
-            rows.append((symbol, count_value, None if ox is None else int(ox)))
-    rows.sort(key=lambda item: SYMBOL_TO_Z.get(item[0], 10_000))
+    raw_species = plan.get("valence_species")
+    rows: list[tuple[str, int, int | None]] = []
+    if isinstance(raw_species, Sequence) and not isinstance(raw_species, (str, bytes)):
+        merged_species: Counter[tuple[str, int | None]] = Counter()
+        for value in raw_species:
+            if not isinstance(value, Mapping):
+                raise ValueError("valence_species entries must be mappings")
+            symbol = str(value.get("element") or value.get("symbol") or "")
+            count_value = int(value.get("count") or 0)
+            oxidation_value = value.get("oxidation_state")
+            if symbol not in SYMBOL_TO_Z or count_value <= 0:
+                raise ValueError(f"invalid valence species {value!r}")
+            oxidation_value = (
+                None
+                if oxidation_value in (None, "unknown")
+                else int(oxidation_value)
+            )
+            merged_species[(symbol, oxidation_value)] += count_value
+        rows = [
+            (symbol, int(count), oxidation)
+            for (symbol, oxidation), count in merged_species.items()
+        ]
+        source_symbols, source_counts = _canonical_symbol_counts(symbols_in, counts_in)
+        species_symbols, species_counts = _canonical_symbol_counts(
+            [symbol for symbol, _, _ in rows],
+            [count for _, count, _ in rows],
+        )
+        if (source_symbols, source_counts) != (species_symbols, species_counts):
+            raise ValueError("valence_species composition disagrees with Plan elements/counts")
+    else:
+        oxidation = (plan.get("validator") or {}).get("oxidation_states")
+        if oxidation is None:
+            oxidation = plan.get("oxidation_candidates")
+        if isinstance(oxidation, Sequence) and not isinstance(oxidation, (str, bytes)):
+            oxidation_in = [
+                None if value in (None, "unknown") else int(value)
+                for value in oxidation
+            ]
+        else:
+            oxidation_in = [None for _ in symbols_in]
+        if len(oxidation_in) != len(symbols_in):
+            oxidation_in = [None for _ in symbols_in]
+        for symbol, count, ox in zip(symbols_in, counts_in, oxidation_in):
+            if symbol not in SYMBOL_TO_Z:
+                continue
+            count_value = int(count)
+            if count_value > 0:
+                rows.append((symbol, count_value, None if ox is None else int(ox)))
+    rows.sort(
+        key=lambda item: (
+            SYMBOL_TO_Z.get(item[0], 10_000),
+            10_000 if item[2] is None else int(item[2]),
+        )
+    )
     if len(rows) > int(max_pairs):
         raise ValueError(f"count-valence plan has {len(rows)} element-count pairs for {max_pairs} fields")
 
@@ -955,7 +992,7 @@ def parse_countvalence_plan_state(text: str, *, max_atoms: int = 20, max_pairs: 
         raise ValueError(f"count-valence plan missing pair fields {','.join(missing[:4])}")
 
     raw_pairs: list[str] = []
-    by_symbol: OrderedDict[str, tuple[int, int | None]] = OrderedDict()
+    species_by_key: OrderedDict[tuple[str, int | None], int] = OrderedDict()
     for key in expected_keys:
         token = str(fields.get(key, "")).strip().upper()
         raw_pairs.append(token)
@@ -972,43 +1009,65 @@ def parse_countvalence_plan_state(text: str, *, max_atoms: int = 20, max_pairs: 
         if z_value not in Z_TO_SYMBOL:
             raise ValueError(f"count-valence plan contains unsupported atomic number {z_value} at {key}")
         symbol = Z_TO_SYMBOL[z_value]
-        if symbol in by_symbol:
-            previous_count, previous_oxidation = by_symbol[symbol]
-            if (
-                previous_oxidation is not None
-                and oxidation_value is not None
-                and previous_oxidation != oxidation_value
-            ):
-                raise ValueError(f"count-valence plan repeats {symbol} with inconsistent oxidation at {key}")
-            merged_oxidation = previous_oxidation if previous_oxidation is not None else oxidation_value
-            by_symbol[symbol] = (previous_count + count_value, merged_oxidation)
-        else:
-            by_symbol[symbol] = (count_value, oxidation_value)
+        species_key = (symbol, oxidation_value)
+        species_by_key[species_key] = species_by_key.get(species_key, 0) + count_value
 
-    rows = sorted(
-        ((symbol, count, oxidation) for symbol, (count, oxidation) in by_symbol.items()),
-        key=lambda item: SYMBOL_TO_Z.get(item[0], 10_000),
+    species_rows = sorted(
+        (
+            (symbol, int(count), oxidation)
+            for (symbol, oxidation), count in species_by_key.items()
+        ),
+        key=lambda item: (
+            SYMBOL_TO_Z.get(item[0], 10_000),
+            10_000 if item[2] is None else int(item[2]),
+        ),
     )
-    symbols = [symbol for symbol, _, _ in rows]
-    counts = [int(count) for _, count, _ in rows]
-    generated_oxidation = [None if oxidation is None else int(oxidation) for _, _, oxidation in rows]
+    states_by_symbol: OrderedDict[str, set[int | None]] = OrderedDict()
+    counts_by_symbol: Counter[str] = Counter()
+    for symbol, count, oxidation in species_rows:
+        states_by_symbol.setdefault(symbol, set()).add(oxidation)
+        counts_by_symbol[symbol] += int(count)
+    for symbol, states in states_by_symbol.items():
+        if None in states and len(states) > 1:
+            raise ValueError(f"count-valence plan mixes known and unknown oxidation for {symbol}")
+    symbols = sorted(counts_by_symbol, key=lambda value: SYMBOL_TO_Z.get(value, 10_000))
+    counts = [int(counts_by_symbol[symbol]) for symbol in symbols]
+    generated_oxidation: list[int | str | None] = []
+    for symbol in symbols:
+        states = states_by_symbol[symbol]
+        if len(states) == 1:
+            value = next(iter(states))
+            generated_oxidation.append(None if value is None else int(value))
+        else:
+            generated_oxidation.append("mixed")
     if not symbols:
         raise ValueError("count-valence plan contains no supported element-count pairs")
     num_atoms = sum(counts)
     if num_atoms < 1 or num_atoms > int(max_atoms):
         raise ValueError(f"count-valence plan atom count {num_atoms} outside 1..{max_atoms}")
-    charge_sum = (
-        None
-        if any(oxidation is None for oxidation in generated_oxidation)
-        else int(sum(int(count) * int(oxidation) for count, oxidation in zip(counts, generated_oxidation)))
-    )
+    charge_sum = None
+    if all(oxidation is not None for _, _, oxidation in species_rows):
+        charge_sum = int(
+            sum(
+                int(count) * int(oxidation)
+                for _, count, oxidation in species_rows
+                if oxidation is not None
+            )
+        )
 
     atom_types = [SYMBOL_TO_Z[symbol] for symbol, count in zip(symbols, counts) for _ in range(int(count))]
     reduced_elems, reduced_counts = reduced_composition(atom_types)
     reduced_symbols = list(element_symbols(reduced_elems))
     classification = _safe_smact_classification(symbols, counts)
     generated_bucket = CODE_TO_CHARGE_BUCKET.get(str(fields.get("CB", "")).strip().upper(), "validator_unavailable")
-    expected_bucket = charge_bucket_from_classification(classification)
+    if charge_sum is None:
+        expected_bucket = charge_bucket_from_classification(classification)
+    elif charge_sum != 0:
+        expected_bucket = "charge_fail"
+    elif all(int(oxidation or 0) == 0 for _, _, oxidation in species_rows):
+        expected_bucket = "single_element" if len(symbols) == 1 else "all_metal"
+    else:
+        expected_bucket = "neutral_plausible"
     lattice_code = str(fields.get("LS", "")).strip().upper()
     sg_code = str(fields.get("SG", "")).strip().upper()
     plan: Dict[str, Any] = {
@@ -1021,15 +1080,33 @@ def parse_countvalence_plan_state(text: str, *, max_atoms: int = 20, max_pairs: 
         "charge_bucket": expected_bucket,
         "generated_charge_bucket": generated_bucket,
         "charge_bucket_match": generated_bucket == expected_bucket,
-        "oxidation_candidates": list(classification.get("oxidation_states") or generated_oxidation),
+        "oxidation_candidates": generated_oxidation,
         "anion_framework": anion_framework_from_symbols(symbols),
         "lattice_system": CODE_TO_LATTICE_SYSTEM.get(lattice_code, "triclinic"),
         "spacegroup_bucket": CODE_TO_SPACEGROUP_BUCKET.get(sg_code, "sg_001_002"),
         "volume_per_atom_bin": _volume_code_to_bin(fields.get("VP")),
         "validator": classification,
         "generated_oxidation_states": generated_oxidation,
+        "generated_oxidation_states_by_species": [
+            None if oxidation is None else int(oxidation)
+            for _, _, oxidation in species_rows
+        ],
+        "valence_species": [
+            {
+                "element": symbol,
+                "count": int(count),
+                "oxidation_state": None if oxidation is None else int(oxidation),
+            }
+            for symbol, count, oxidation in species_rows
+        ],
         "generated_charge_sum": charge_sum,
         "generated_charge_sum_known": charge_sum is not None,
+        "count_valence_validator": {
+            "known": charge_sum is not None,
+            "charge_sum": charge_sum,
+            "neutral": charge_sum == 0 if charge_sum is not None else None,
+            "mixed_valence": any(value == "mixed" for value in generated_oxidation),
+        },
         "count_valence_fields": raw_pairs,
         "compact_fields": fields,
     }

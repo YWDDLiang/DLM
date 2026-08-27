@@ -110,9 +110,11 @@ modify text tokens shared with unrelated contexts and would not reliably bind a
 symbol to one oxidation state. A faithful adaptation needs explicit
 element-valence/count tokens or an auxiliary head.
 
-## Recommended adaptation
+## Selected one-model pilot
 
-Keep the public Planner output unchanged. Add a train-only auxiliary sequence:
+Keep the public Planner output unchanged. The selected pilot uses one
+autoregressive Planner to emit a train/internal species--valence--count prefix
+followed by the conditionally generated property tuple:
 
 ```text
 valence_plan:
@@ -131,7 +133,21 @@ volume: ...
 end: plan
 ```
 
-Implementation options, in order:
+The implementation reuses the existing fixed-width `P01..P07` count-valence
+representation. Repeated element identities are legal when their oxidation
+states differ, so mixed-valence formulas such as Fe3O4 are represented as
+Fe(II)x1 + Fe(III)x2 + O(-II)x4 and deterministically collapse back to one
+formula/count list. The same model then predicts charge/lattice/space-group/
+volume fields. At the API boundary, the internal line is rendered to the
+canonical six scientific fields plus `end: plan`.
+
+This uses the central CrysVCD idea now--explicit element-valence species,
+integer count embeddings/tokens, exact charge-balance search, and mixed-valence
+support--without claiming to reproduce CrysVCD's separate formula Transformer.
+An electronic-configuration projection is a second, isolated ablation after
+the representation itself passes composition and property gates.
+
+Implementation options retained for later ablation:
 
 1. **Auxiliary valence head:** share the LLaMA hidden state, predict explicit
    valence/count tokens with a small trainable head, and retain the existing
@@ -144,9 +160,31 @@ Implementation options, in order:
    feed its formula into the existing rich-field Planner. Highest fidelity but a
    different model and contribution; out of current scope.
 
-Option 1 is the recommended first implementation because it preserves the
-existing text Planner and prevents special-token embedding changes from
-contaminating general LLaMA tokens.
+The first pilot is the single text model with the explicit compact prefix. It
+is the smallest experiment that tests whether the physical representation
+improves both hard composition validity and conditional property plausibility.
+If it passes, an auxiliary electronic-configuration projection can initialize
+or regularize the same prefix token states without creating a second Planner.
+
+## Audit correction (2026-08-27)
+
+The first serializer audit reported 100% round trip but only about 25--26%
+known/neutral oxidation assignments and 0% on raw1000 because it inherited a
+single-valence SMACT annotation and did not include oxidation coverage in its
+authorization gate. That authorization was invalidated before any Planner GPU
+training.
+
+The corrected audit:
+
+- searches exact charge balance with uniform states first and adjacent,
+  same-sign mixed valences second;
+- emits explicit zero-valence species for the supported alloy branch;
+- never treats an unknown assignment as unstable or silently drops it;
+- requires >=95% assignment and neutral coverage on train and validation;
+- requires raw1000 coverage to be no more than 3 percentage points below
+  train;
+- checks exact composition and soft-field round trips before authorizing GPU
+  training.
 
 ## Required data audit
 
