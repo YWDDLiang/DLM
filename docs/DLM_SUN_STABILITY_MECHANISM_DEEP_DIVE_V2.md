@@ -14,8 +14,8 @@ its frozen yield gate. The next work targets the actual conversion bottleneck:
 
 1. remove unreliable soft Plan fields from the DLM branch while preserving
    exact formula, atom count, elements and stoichiometric counts;
-2. stop committing X, then Y, then Z coordinates irreversibly and denoise all
-   coordinate dimensions as one coupled block;
+2. replace the inherited global X-then-Y-then-Z order only with a schedule that
+   preserves complete per-atom coordinate tuples and duplicate constraints;
 3. re-calibrate the continuous refiner's intermediate injection timestep for
    the new LLaDA/rich-Plan proposal distribution;
 4. if those inference mechanisms are insufficient, train a noisy-state energy
@@ -195,6 +195,30 @@ uniqueness or retention, and no more than 1 pp Strict/Meta loss in either seed.
 This factorial identifies whether the immediate bottleneck is condition noise,
 coordinate schedule, or their interaction. It must be reported in full even if
 one cell looks best.
+
+### Preofficial body gate
+
+All eight cells parsed `256/256`, but the naive joint-coordinate confidence
+pool failed graph validity before any stability label was observed:
+
+| Seed | full-axis | full-joint | hard-axis | hard-joint |
+|---|---:|---:|---:|---:|
+| 17 | 254 | 158 | 256 | 213 |
+| 18 | 251 | 161 | 256 | 204 |
+
+The joint arms contain `97/95` and `43/52` duplicate-coordinate failures,
+respectively. The existing duplicate mask constrains a candidate Z only after X
+and Y are committed; a global XYZ confidence pool can commit Z first and later
+create an unconstrained duplicate through X or Y. `hard_joint` therefore fails
+the frozen body noninferiority gate regardless of its later stability count.
+It remains in the final report and is not silently removed.
+
+The corrected follow-up is `atom-major`: after lattice generation, complete
+X, then Y, then Z for atom 1 before atom 2. This uses the same number of model
+forwards as axis-major, gives each tuple 3D context, and keeps Z last so the
+existing periodic duplicate mask remains valid. Full versus hard conditioning
+will again be paired; it is a new follow-up, not a relabeling of the failed
+joint arm.
 
 ## Experiment 2 — calibrate model494 intermediate-timestep injection
 
