@@ -293,6 +293,7 @@ def main() -> None:
     ) as failure_handle:
         progress = tqdm(total=len(tasks), desc=f"H1 planner rank{rank}", disable=distributed and not is_main)
         offset = 0
+        ccfd_processor: CCFDFormulaLogitsProcessor | None = None
         while offset < len(tasks):
             batch_ids = tasks[offset : offset + int(args.batch_size)]
             offset += int(args.batch_size)
@@ -326,15 +327,17 @@ def main() -> None:
                         [GeneratedPlanEndStoppingCriteria(tokenizer, input_ids.shape[1])]
                     )
                 if args.ccfd_mode == "phase0_assignment":
+                    if ccfd_processor is None:
+                        ccfd_processor = CCFDFormulaLogitsProcessor(
+                            tokenizer,
+                            start_length=input_ids.shape[1],
+                            eos_token_id=int(tokenizer.eos_token_id),
+                            max_atoms=int(args.max_atoms),
+                        )
+                    elif ccfd_processor.start_length != int(input_ids.shape[1]):
+                        raise RuntimeError("CCFD prompt length changed within one sampling cell")
                     generate_kwargs["logits_processor"] = LogitsProcessorList(
-                        [
-                            CCFDFormulaLogitsProcessor(
-                                tokenizer,
-                                start_length=input_ids.shape[1],
-                                eos_token_id=int(tokenizer.eos_token_id),
-                                max_atoms=int(args.max_atoms),
-                            )
-                        ]
+                        [ccfd_processor]
                     )
                 outputs = model.generate(**generate_kwargs)
             generated_ids = outputs[:, input_ids.shape[1] :]

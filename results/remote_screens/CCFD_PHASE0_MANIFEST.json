@@ -9,31 +9,33 @@
     "mixed_valence": "same element may repeat only with same-sign nonzero valences",
     "request_policy": "one trajectory; dead ends remain failed",
     "terminal_condition": "remaining_atoms=0 and remaining_charge=0",
+    "unary_policy": "dedicated zero-charge elemental branch represented by one zero-valence ledger token",
     "unknown_policy": "unrepresentable; never coerced to zero valence"
   },
   "datasets": [
     {
       "assignment_failures": {
-        "no_charge_neutral_assignment": 887,
-        "unsupported_elements": 19
+        "no_charge_neutral_assignment": 877,
+        "unsupported_elements": 7
       },
       "assignment_modes": {
-        "alloy_zero": 12985,
+        "alloy_zero": 12781,
         "ionic_mixed": 1547,
-        "ionic_uniform": 11698
+        "ionic_uniform": 11698,
+        "unary_zero": 226
       },
       "branches": {
-        "alloy": 12985,
+        "alloy": 13007,
         "ionic": 13245
       },
       "ccfd_failures": {},
       "counts": {
-        "assigned": 26230,
-        "ccfd_terminal": 26230,
-        "composition_roundtrip": 26230,
+        "assigned": 26252,
+        "ccfd_terminal": 26252,
+        "composition_roundtrip": 26252,
         "false_rejected_by_legacy": 2242,
         "legacy_valid": 24558,
-        "legacy_valid_but_unassigned": 570,
+        "legacy_valid_but_unassigned": 548,
         "mixed_valence": 1547
       },
       "legacy_reasons": {
@@ -48,40 +50,41 @@
       "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/train.jsonl",
       "plans": 27136,
       "rates": {
-        "assignment_coverage": 0.9666126179245284,
-        "ccfd_terminal_coverage": 0.9666126179245284,
+        "assignment_coverage": 0.9674233490566038,
+        "ccfd_terminal_coverage": 0.9674233490566038,
         "composition_roundtrip": 1.0,
-        "false_rejection_among_ccfd": 0.08547464735036218,
+        "false_rejection_among_ccfd": 0.0854030169129971,
         "legacy_comp_valid": 0.9049970518867925,
         "mixed_valence": 0.0570091391509434
       },
       "rows": 27136,
-      "token_vocabulary_size": 2500,
+      "token_vocabulary_size": 2516,
       "train_vocab_oov_types": 0,
       "train_vocab_type_coverage": 1.0
     },
     {
       "assignment_failures": {
-        "no_charge_neutral_assignment": 327,
-        "unsupported_elements": 6
+        "no_charge_neutral_assignment": 319,
+        "unsupported_elements": 1
       },
       "assignment_modes": {
-        "alloy_zero": 4381,
+        "alloy_zero": 4319,
         "ionic_mixed": 521,
-        "ionic_uniform": 3812
+        "ionic_uniform": 3812,
+        "unary_zero": 75
       },
       "branches": {
-        "alloy": 4381,
+        "alloy": 4394,
         "ionic": 4333
       },
       "ccfd_failures": {},
       "counts": {
-        "assigned": 8714,
-        "ccfd_terminal": 8714,
-        "composition_roundtrip": 8714,
+        "assigned": 8727,
+        "ccfd_terminal": 8727,
+        "composition_roundtrip": 8727,
         "false_rejected_by_legacy": 748,
         "legacy_valid": 8164,
-        "legacy_valid_but_unassigned": 198,
+        "legacy_valid_but_unassigned": 185,
         "mixed_valence": 521
       },
       "legacy_reasons": {
@@ -96,40 +99,41 @@
       "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/val.jsonl",
       "plans": 9047,
       "rates": {
-        "assignment_coverage": 0.9631922184149442,
-        "ccfd_terminal_coverage": 0.9631922184149442,
+        "assignment_coverage": 0.9646291588371836,
+        "ccfd_terminal_coverage": 0.9646291588371836,
         "composition_roundtrip": 1.0,
-        "false_rejection_among_ccfd": 0.08583887996327748,
+        "false_rejection_among_ccfd": 0.08571101180245216,
         "legacy_comp_valid": 0.9023985851663535,
         "mixed_valence": 0.05758815076821046
       },
       "rows": 9047,
-      "token_vocabulary_size": 1926,
-      "train_vocab_oov_types": 87,
-      "train_vocab_type_coverage": 0.9548286604361371
+      "token_vocabulary_size": 1936,
+      "train_vocab_oov_types": 93,
+      "train_vocab_type_coverage": 0.9519628099173554
     },
     {
       "assignment_failures": {
-        "no_charge_neutral_assignment": 295,
-        "unsupported_elements": 4
+        "no_charge_neutral_assignment": 292,
+        "unsupported_elements": 1
       },
       "assignment_modes": {
-        "alloy_zero": 4435,
+        "alloy_zero": 4370,
         "ionic_mixed": 499,
-        "ionic_uniform": 3813
+        "ionic_uniform": 3813,
+        "unary_zero": 71
       },
       "branches": {
-        "alloy": 4435,
+        "alloy": 4441,
         "ionic": 4312
       },
       "ccfd_failures": {},
       "counts": {
-        "assigned": 8747,
-        "ccfd_terminal": 8747,
-        "composition_roundtrip": 8747,
+        "assigned": 8753,
+        "ccfd_terminal": 8753,
+        "composition_roundtrip": 8753,
         "false_rejected_by_legacy": 722,
         "legacy_valid": 8227,
-        "legacy_valid_but_unassigned": 202,
+        "legacy_valid_but_unassigned": 196,
         "mixed_valence": 499
       },
       "legacy_reasons": {
@@ -144,26 +148,27 @@
       "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/test.jsonl",
       "plans": 9046,
       "rates": {
-        "assignment_coverage": 0.9669467167808976,
-        "ccfd_terminal_coverage": 0.9669467167808976,
+        "assignment_coverage": 0.9676099933672342,
+        "ccfd_terminal_coverage": 0.9676099933672342,
         "composition_roundtrip": 1.0,
-        "false_rejection_among_ccfd": 0.08254258602949582,
+        "false_rejection_among_ccfd": 0.08248600479835486,
         "legacy_comp_valid": 0.9094627459650675,
         "mixed_valence": 0.05516250276365244
       },
       "rows": 9046,
-      "token_vocabulary_size": 1943,
-      "train_vocab_oov_types": 108,
-      "train_vocab_type_coverage": 0.9444158517756047
+      "token_vocabulary_size": 1949,
+      "train_vocab_oov_types": 112,
+      "train_vocab_type_coverage": 0.9425346331452027
     },
     {
       "assignment_failures": {
         "no_charge_neutral_assignment": 59
       },
       "assignment_modes": {
-        "alloy_zero": 405,
+        "alloy_zero": 399,
         "ionic_mixed": 108,
-        "ionic_uniform": 428
+        "ionic_uniform": 428,
+        "unary_zero": 6
       },
       "branches": {
         "alloy": 405,

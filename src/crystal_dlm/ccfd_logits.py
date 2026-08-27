@@ -18,6 +18,10 @@ _TOKEN_FRAGMENT_CACHE: dict[
 
 @lru_cache(maxsize=200_000)
 def _phase0_assignment_cached(elements: tuple[str, ...], counts: tuple[int, ...]) -> bool:
+    # Elemental crystals are a dedicated zero-charge unary branch, matching
+    # the benchmark's single-element validity contract.
+    if len(elements) == 1 and len(counts) == 1 and int(counts[0]) > 0:
+        return True
     assignment = assign_crysvcd_valences(elements, counts, max_species=7)
     return assignment.get("assigned") is True
 
@@ -65,6 +69,17 @@ def _token_fragment_index(
             continue
         first = fragment[0]
         if first not in " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\n":
+            continue
+        formula_part = fragment.split("\n", 1)[0]
+        if first == " ":
+            # A leading-space token is legal only as the first formula token;
+            # discard the enormous class of ordinary lowercase word tokens.
+            value = formula_part[1:]
+            if not value or not value[0].isupper() or not value.isalnum():
+                continue
+        elif first == "\n":
+            pass
+        elif not formula_part.isalnum():
             continue
         fragments[token_id] = fragment
         grouped.setdefault(first, []).append(token_id)

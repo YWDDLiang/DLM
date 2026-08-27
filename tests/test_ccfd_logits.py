@@ -1,6 +1,6 @@
 import unittest
 
-from crystal_dlm.ccfd_logits import CCFDFormulaLogitsProcessor
+from crystal_dlm.ccfd_logits import CCFDFormulaLogitsProcessor, phase0_assignment_validator
 from crystal_dlm.h1_llm_planner import (
     H1_PLANNER_PROMPT_STYLE_RICH_PLAN_PREFILL,
     clean_generated_plan_text,
@@ -47,6 +47,9 @@ class CCFDLogitsTest(unittest.TestCase):
         self.assertNotIn(6, processor.allowed_token_ids([]))
         self.assertIn(2, processor.allowed_token_ids([1]))
         self.assertIn(3, processor.allowed_token_ids([1, 2]))
+
+    def test_elemental_unary_is_a_dedicated_valid_branch(self):
+        self.assertTrue(phase0_assignment_validator(["O"], [8]))
 
     def test_newline_requires_terminal_valid_formula(self):
         processor = self.processor()

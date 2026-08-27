@@ -113,7 +113,7 @@
 - MP-20真实train/val/test在冻结legacy Direct `comp_valid`下本身仅
   `90.50/90.24/90.95%`；H1-A2 refined1000为`87.8%`，model494不改变atom multiset；
 - CCFD CPU Phase0已通过：train/val/test/raw1000可赋价覆盖为
-  `96.66/96.32/96.69/94.10%`，所有可表示公式round-trip为`100%`；legacy SMACT在
+  `96.74/96.46/96.76/94.10%`（含显式elemental-unary分支），所有可表示公式round-trip为`100%`；legacy SMACT在
   CCFD可表示集合上的false reject约为`8.25–9.67%`。冻结证据见
   [`CCFD_PHASE0_MANIFEST.md`](../results/remote_screens/CCFD_PHASE0_MANIFEST.md)；
 - 冻结Planner tokenizer接口审计也已通过：train/val/test/raw1000的syntax、token

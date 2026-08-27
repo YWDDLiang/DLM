@@ -20,7 +20,7 @@ if str(SRC) not in sys.path:
 
 from crystal_dlm.ccfd import FormulaToken, replay_tokens  # noqa: E402
 from crystal_dlm.composition_validity import classify_smact_validity  # noqa: E402
-from crystal_dlm.fixed_slot import SYMBOL_TO_Z  # noqa: E402
+from crystal_dlm.fixed_slot import SYMBOL_TO_Z, Z_TO_SYMBOL  # noqa: E402
 from crystal_dlm.valence_assignment import (  # noqa: E402
     annotate_plan_with_valence,
     valence_catalog_manifest,
@@ -114,13 +114,30 @@ def audit_dataset(name: str, path: Path, *, max_species: int) -> dict[str, Any]:
         legacy_reasons[str(legacy.get("reason") or "unknown")] += 1
         legacy_valid += int(legacy.get("valid") is True)
 
-        try:
-            annotated = annotate_plan_with_valence(source, max_species=max_species)
-        except Exception as exc:  # noqa: BLE001
-            assignment_failures[type(exc).__name__] += 1
-            if legacy.get("valid") is True:
-                legacy_valid_but_unassigned += 1
-            continue
+        if len(composition) == 1:
+            atomic_number, count = composition[0]
+            symbol = Z_TO_SYMBOL[int(atomic_number)]
+            annotated = dict(source)
+            annotated["valence_assignment"] = {
+                "assigned": True,
+                "reason": "ok",
+                "mode": "unary_zero",
+                "formula_type": "unary",
+                "species": [
+                    {"element": symbol, "oxidation_state": 0, "count": int(count)}
+                ],
+                "charge_sum": 0,
+                "species_count": 1,
+            }
+            annotated["valence_species"] = annotated["valence_assignment"]["species"]
+        else:
+            try:
+                annotated = annotate_plan_with_valence(source, max_species=max_species)
+            except Exception as exc:  # noqa: BLE001
+                assignment_failures[type(exc).__name__] += 1
+                if legacy.get("valid") is True:
+                    legacy_valid_but_unassigned += 1
+                continue
         assignment = annotated.get("valence_assignment") or {}
         if assignment.get("assigned") is not True:
             assignment_failures[str(assignment.get("reason") or "unassigned")] += 1
@@ -249,6 +266,7 @@ def main() -> None:
         "schema": "h1a2_ccfd_phase0_manifest_v1",
         "ccfd": {
             "branches": ["ionic", "alloy"],
+            "unary_policy": "dedicated zero-charge elemental branch represented by one zero-valence ledger token",
             "unknown_policy": "unrepresentable; never coerced to zero valence",
             "mixed_valence": "same element may repeat only with same-sign nonzero valences",
             "canonical_order": "increasing (atomic_number, oxidation_state)",
