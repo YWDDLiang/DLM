@@ -23,6 +23,18 @@ readonly GT_CSV="${PROJECT}/reference/crysllmgen/data/mp_20/test.csv"
 readonly BASE_RELAX_CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl"
 readonly EVAL_RUNTIME="${ROOT}/eval_runtime"
 readonly RUN_DIR="${ROOT}/runs/ctv_branch_labels_${SPLIT}_${SLURM_JOB_ID}"
+readonly GPU_WORKERS="${H1A2_CTV_GPU_WORKERS:-4}"
+if (( GPU_WORKERS < 1 || GPU_WORKERS > 4 )); then
+  printf 'H1A2_CTV_GPU_WORKERS must be in 1..4\n' >&2
+  exit 2
+fi
+if [[ -n "${CUDA_VISIBLE_DEVICES:-}" ]]; then
+  IFS=',' read -r -a visible_devices <<<"${CUDA_VISIBLE_DEVICES}"
+  if (( ${#visible_devices[@]} < GPU_WORKERS )); then
+    printf 'allocated GPU count is smaller than H1A2_CTV_GPU_WORKERS\n' >&2
+    exit 2
+  fi
+fi
 
 case "${SPLIT}" in
   train)
@@ -94,9 +106,9 @@ run_chunk() {
   wait "${direct_pid}"
 }
 
-for ((wave=0; wave<CHUNKS; wave+=4)); do
+for ((wave=0; wave<CHUNKS; wave+=GPU_WORKERS)); do
   pids=()
-  for gpu in 0 1 2 3; do
+  for ((gpu=0; gpu<GPU_WORKERS; gpu++)); do
     chunk=$((wave + gpu))
     if (( chunk < CHUNKS )); then
       run_chunk "${chunk}" "${gpu}" &
