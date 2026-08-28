@@ -49,6 +49,39 @@ class BuildC3FDPlannerDataTest(unittest.TestCase):
         self.assertEqual(encoded[0]["species_labels"], [0, 1])
         self.assertEqual(encoded[0]["N_target"], 2)
         self.assertEqual(encoded[0]["count_targets"], [1, 1])
+        self.assertEqual(
+            encoded[0]["proposal_targets"],
+            {"N": 2, "arity": 2, "family": 0},
+        )
+        self.assertEqual(
+            encoded[0]["ledger_steps"],
+            [
+                {
+                    "remaining_atoms": 2,
+                    "net_charge": 0,
+                    "remaining_species": 2,
+                    "branch": "unset",
+                },
+                {
+                    "remaining_atoms": 2,
+                    "net_charge": 0,
+                    "remaining_species": 2,
+                    "branch": "unset",
+                },
+                {
+                    "remaining_atoms": 1,
+                    "net_charge": -2,
+                    "remaining_species": 1,
+                    "branch": "ionic",
+                },
+                {
+                    "remaining_atoms": 0,
+                    "net_charge": 0,
+                    "remaining_species": 0,
+                    "branch": "ionic",
+                },
+            ],
+        )
         self.assertEqual(manifest["benchmark_in_vocab_rate"], 1.0)
 
     def test_oov_node_fails_closed_without_dropping_row(self):
@@ -59,6 +92,32 @@ class BuildC3FDPlannerDataTest(unittest.TestCase):
         self.assertFalse(encoded[0]["composition_supervision"])
         self.assertEqual(manifest["benchmark_in_vocab_rate"], 0.0)
         self.assertEqual(manifest["oov_nodes"], {"27|2": 1})
+        self.assertEqual(encoded[0]["proposal_targets"]["arity"], 2)
+
+    def test_compile_failure_preserves_proposal_only_targets(self):
+        # The redundant N mismatch deliberately prevents semantic compilation,
+        # but family/N/arity remain valid proposal supervision.
+        raw = {
+            "plan_state": {
+                "N": 3,
+                "elements": ["O"],
+                "counts": [2],
+                "anion_framework": "known",
+                "charge_bucket": "known",
+                "lattice_system": "known",
+                "spacegroup_bucket": "known",
+                "volume_per_atom_bin": "known",
+            }
+        }
+        compiled = MODULE.compile_row(raw, 0)
+        self.assertFalse(compiled["composition_supervision"])
+        self.assertEqual(compiled["N"], 3)
+        encoded, _manifest = MODULE.encode_rows([compiled], self.vocabulary())
+        self.assertTrue(encoded[0]["proposal_supervision"])
+        self.assertEqual(
+            encoded[0]["proposal_targets"],
+            {"N": 3, "arity": 1, "family": 0},
+        )
 
 
 if __name__ == "__main__":

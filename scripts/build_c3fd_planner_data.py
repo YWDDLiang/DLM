@@ -9,7 +9,7 @@ import json
 import math
 from pathlib import Path
 import sys
-from typing import Any, Iterable, Mapping
+from typing import Any, Iterable, Mapping, Sequence
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SRC = PROJECT_ROOT / "src"
@@ -54,6 +54,12 @@ def plan_from_row(row: Mapping[str, Any]) -> Mapping[str, Any] | None:
 
 def compile_row(row: Mapping[str, Any], row_index: int) -> dict[str, Any]:
     plan = plan_from_row(row)
+    proposal_n = None
+    if plan is not None and plan.get("N") not in (None, ""):
+        try:
+            proposal_n = int(plan["N"])
+        except Exception:  # noqa: BLE001 - invalid proposal is audited downstream.
+            proposal_n = None
     output: dict[str, Any] = {
         "source_row_idx": row.get("source_row_idx", row.get("row_idx", row_index)),
         "sample_weight": float(row.get("sample_weight", 1.0) or 1.0),
@@ -61,7 +67,7 @@ def compile_row(row: Mapping[str, Any], row_index: int) -> dict[str, Any]:
         "composition_supervision": False,
         "certificate_class": "missing_plan_state",
         "compile_error": None,
-        "N": None,
+        "N": proposal_n,
         "nodes": [],
         "counts": [],
         "soft_values": {
@@ -101,6 +107,58 @@ def compile_row(row: Mapping[str, Any], row_index: int) -> dict[str, Any]:
 
 def node_from_record(value: Mapping[str, Any]) -> ValenceNode:
     return ValenceNode(int(value["atomic_number"]), int(value["oxidation_state"]))
+
+
+def ledger_steps(
+    nodes: Sequence[ValenceNode],
+    counts: Sequence[int],
+    *,
+    target_n: int,
+    target_arity: int,
+) -> list[dict[str, Any]]:
+    if len(nodes) != len(counts) or len(nodes) != int(target_arity):
+        raise ValueError("benchmark semantic sequence must match exact arity")
+    remaining_atoms = int(target_n)
+    net_charge = 0
+    remaining_species = int(target_arity)
+    branch = "unset"
+    steps = [
+        {
+            "remaining_atoms": remaining_atoms,
+            "net_charge": net_charge,
+            "remaining_species": remaining_species,
+            "branch": branch,
+        },
+        {
+            "remaining_atoms": remaining_atoms,
+            "net_charge": net_charge,
+            "remaining_species": remaining_species,
+            "branch": branch,
+        },
+    ]
+    for node, raw_count in zip(nodes, counts):
+        count = int(raw_count)
+        token_branch = "alloy" if int(node.oxidation_state) == 0 else "ionic"
+        if branch == "unset":
+            branch = token_branch
+        elif branch != token_branch:
+            raise ValueError("semantic ledger mixed alloy and ionic branches")
+        remaining_atoms -= count
+        net_charge += int(node.oxidation_state) * count
+        remaining_species -= 1
+        if remaining_atoms < 0 or remaining_species < 0:
+            raise ValueError("semantic ledger underflow")
+        steps.append(
+            {
+                "remaining_atoms": remaining_atoms,
+                "net_charge": net_charge,
+                "remaining_species": remaining_species,
+                "branch": branch,
+            }
+        )
+    if remaining_atoms != 0 or net_charge != 0 or remaining_species != 0:
+        raise ValueError("semantic ledger did not terminate exactly")
+    return steps
 
 
 def build_vocabulary(train_rows: list[dict[str, Any]]) -> dict[str, Any]:
@@ -187,6 +245,24 @@ def encode_rows(
                 soft_oov[f"{field}:{value}"] += 1
                 value = UNKNOWN_SOFT
             soft_labels[field] = int(mapping[value])
+        plan = row.get("plan_state") or {}
+        target_n = None if row.get("N") is None else int(row["N"])
+        target_arity = len(plan.get("elements") or ()) or len(row.get("nodes") or ())
+        family_target = int(soft_labels["anion_framework"])
+        proposal_supervision = bool(
+            target_n is not None
+            and 1 <= target_n <= 20
+            and 1 <= int(target_arity) <= 7
+        )
+        semantic_nodes = [node_from_record(value) for value in row["nodes"]]
+        semantic_ledger: list[dict[str, Any]] = []
+        if composition_supervision:
+            semantic_ledger = ledger_steps(
+                semantic_nodes,
+                row["counts"],
+                target_n=int(target_n),
+                target_arity=int(target_arity),
+            )
         encoded.append(
             {
                 "schema": "h1a2_c3fd_semantic_row_v1",
@@ -195,10 +271,17 @@ def encode_rows(
                 "plan_state": row["plan_state"],
                 "certificate_class": row["certificate_class"],
                 "composition_supervision": composition_supervision,
+                "proposal_supervision": proposal_supervision,
                 "compile_error": row["compile_error"],
                 "N_target": None if row["N"] is None else int(row["N"]),
+                "proposal_targets": {
+                    "family": family_target,
+                    "N": target_n,
+                    "arity": int(target_arity),
+                },
                 "species_labels": species_ids,
                 "count_targets": [int(value) for value in row["counts"]],
+                "ledger_steps": semantic_ledger,
                 "soft_labels": soft_labels,
             }
         )

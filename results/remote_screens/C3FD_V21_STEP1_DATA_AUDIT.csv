@@ -1,0 +1,4 @@
+name,rows,proposal_exact,ledger_exact,reachable_weighted_mass
+train,27136,1.0,1.0,0.9975678066037735
+val,9047,1.0,1.0,0.9952470432187466
+test,9046,1.0,1.0,0.9957992482865354

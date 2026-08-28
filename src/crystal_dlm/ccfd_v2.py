@@ -745,26 +745,79 @@ class BenchmarkReachability:
                 reachable.update(int(oxidation) * count + value for value in suffix)
         return frozenset(reachable)
 
-    def can_complete(self, state: CCFDv2State, *, max_species: int = 7) -> bool:
+    @lru_cache(maxsize=None)
+    def _reachable_charges_exact(
+        self,
+        group_index: int,
+        remaining_atoms: int,
+        remaining_slots: int,
+        branch: str,
+    ) -> frozenset[int]:
+        atoms = int(remaining_atoms)
+        slots = int(remaining_slots)
+        index = int(group_index)
+        if atoms == 0:
+            return frozenset({0}) if slots == 0 else frozenset()
+        if atoms < 0 or slots <= 0 or index >= len(self.elements):
+            return frozenset()
+        reachable = set(
+            self._reachable_charges_exact(index + 1, atoms, slots, branch)
+        )
+        for oxidation in self.states[index]:
+            if branch == "ionic" and oxidation == 0:
+                continue
+            if branch == "alloy" and oxidation != 0:
+                continue
+            for count in range(1, atoms + 1):
+                suffix = self._reachable_charges_exact(
+                    index + 1, atoms - count, slots - 1, branch
+                )
+                reachable.update(int(oxidation) * count + value for value in suffix)
+        return frozenset(reachable)
+
+    def can_complete(
+        self,
+        state: CCFDv2State,
+        *,
+        max_species: int = 7,
+        target_arity: int | None = None,
+    ) -> bool:
         if state.ended or state.target_atoms is None or state.remaining_atoms is None:
             return False
+        if target_arity is not None:
+            target = int(target_arity)
+            if target <= 0 or target > int(max_species) or len(state.tokens) > target:
+                return False
+        else:
+            target = int(max_species)
         if state.remaining_atoms == 0:
-            return state.conservation_complete
+            return bool(
+                state.conservation_complete
+                and (target_arity is None or len(state.tokens) == target)
+            )
         if state.branch not in {"ionic", "alloy"}:
             return False
-        remaining_slots = int(max_species) - len(state.tokens)
+        remaining_slots = target - len(state.tokens)
         if remaining_slots <= 0:
             return False
         last_element = max(state.distinct_elements, default=0)
         start = 0
         while start < len(self.elements) and self.elements[start] <= last_element:
             start += 1
-        charges = self._reachable_charges(
-            start,
-            int(state.remaining_atoms),
-            remaining_slots,
-            str(state.branch),
-        )
+        if target_arity is None:
+            charges = self._reachable_charges(
+                start,
+                int(state.remaining_atoms),
+                remaining_slots,
+                str(state.branch),
+            )
+        else:
+            charges = self._reachable_charges_exact(
+                start,
+                int(state.remaining_atoms),
+                remaining_slots,
+                str(state.branch),
+            )
         return -int(state.net_charge) in charges
 
     def legal_species_counts(
@@ -773,10 +826,17 @@ class BenchmarkReachability:
         *,
         benchmark_validator: BenchmarkValidator = default_benchmark_validator,
         max_species: int = 7,
+        target_arity: int | None = None,
     ) -> tuple[FormulaToken, ...]:
         if state.ended or state.target_atoms is None or state.remaining_atoms is None:
             return ()
         last_element = max(state.distinct_elements, default=0)
+        if target_arity is not None:
+            target = int(target_arity)
+            if target <= 0 or target > int(max_species) or len(state.tokens) >= target:
+                return ()
+        else:
+            target = int(max_species)
         legal: list[FormulaToken] = []
         for atomic_number, states in zip(self.elements, self.states):
             if int(atomic_number) <= int(last_element):
@@ -791,12 +851,17 @@ class BenchmarkReachability:
                     if candidate.remaining_atoms == 0:
                         if (
                             candidate.conservation_complete
+                            and (target_arity is None or len(candidate.tokens) == target)
                             and candidate.end()
                             .certificate(benchmark_validator=benchmark_validator)
                             .benchmark_compatible
                         ):
                             legal.append(token)
-                    elif self.can_complete(candidate, max_species=max_species):
+                    elif self.can_complete(
+                        candidate,
+                        max_species=max_species,
+                        target_arity=target_arity,
+                    ):
                         legal.append(token)
         return tuple(legal)
 

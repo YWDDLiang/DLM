@@ -32,6 +32,8 @@ class SemanticCompositionOutput:
     """Typed logits and optional decomposed teacher-forcing losses."""
 
     n_logits: Tensor
+    family_logits: Tensor | None
+    arity_logits: Tensor | None
     species_logits: Tensor
     count_logits: Tensor
     rich_logits: dict[str, Tensor]
@@ -67,6 +69,9 @@ class SemanticCompositionHead(nn.Module):
         max_count: int = 20,
         physics_features: Tensor | None = None,
         rich_soft_head_dims: Mapping[str, int] | None = None,
+        num_families: int | None = None,
+        max_arity: int = 7,
+        ledger_feature_size: int = 0,
         decoder_layers: int = 2,
         decoder_heads: int = 4,
         decoder_dropout: float = 0.0,
@@ -86,6 +91,15 @@ class SemanticCompositionHead(nn.Module):
         self.max_atoms = int(max_atoms)
         self.max_count = int(max_count)
         self.ignore_index = int(ignore_index)
+        self.num_families = None if num_families is None else int(num_families)
+        self.max_arity = int(max_arity)
+        self.ledger_feature_size = int(ledger_feature_size)
+        if self.num_families is not None and self.num_families <= 0:
+            raise ValueError("num_families must be positive when enabled")
+        if self.max_arity <= 0:
+            raise ValueError("max_arity must be positive")
+        if self.ledger_feature_size < 0:
+            raise ValueError("ledger_feature_size cannot be negative")
         self.max_sequence_length = int(max_sequence_length)
         if self.max_sequence_length <= 0:
             raise ValueError("max_sequence_length must be positive")
@@ -136,6 +150,11 @@ class SemanticCompositionHead(nn.Module):
         self.register_buffer("physics_features", fixed_physics, persistent=True)
 
         self.context_norm = nn.LayerNorm(self.hidden_size)
+        self.ledger_projection = (
+            nn.Linear(self.ledger_feature_size, self.hidden_size, bias=False)
+            if self.ledger_feature_size > 0
+            else None
+        )
         self.position_embedding = nn.Embedding(
             self.max_sequence_length,
             self.hidden_size,
@@ -154,6 +173,12 @@ class SemanticCompositionHead(nn.Module):
             num_layers=int(decoder_layers),
         )
         self.n_head = nn.Linear(self.hidden_size, self.max_atoms)
+        self.family_head = (
+            nn.Linear(self.hidden_size, self.num_families)
+            if self.num_families is not None
+            else None
+        )
+        self.arity_head = nn.Linear(self.hidden_size, self.max_arity)
         self.species_bias = nn.Parameter(torch.zeros(self.num_species + 1))
         self.count_bias = nn.Parameter(torch.zeros(self.max_count))
 
@@ -253,6 +278,7 @@ class SemanticCompositionHead(nn.Module):
         previous_species_indices: Tensor | None,
         previous_count_values: Tensor | None,
         previous_n_values: Tensor | None,
+        ledger_features: Tensor | None,
         flags: SemanticHeadFlags,
     ) -> Tensor:
         if hidden_states.ndim != 3:
@@ -285,6 +311,24 @@ class SemanticCompositionHead(nn.Module):
                 flags=flags,
             )
             context = context + action_embedding.to(dtype=context.dtype)
+        if ledger_features is not None:
+            if self.ledger_projection is None:
+                raise ValueError(
+                    "ledger_features require ledger_feature_size > 0"
+                )
+            if tuple(ledger_features.shape) != (
+                hidden_states.shape[0],
+                hidden_states.shape[1],
+                self.ledger_feature_size,
+            ):
+                raise ValueError(
+                    "ledger_features must match [batch, sequence, ledger_feature_size]"
+                )
+            context = context + self.ledger_projection(
+                ledger_features.to(device=context.device, dtype=context.dtype)
+            )
+        elif self.ledger_projection is not None:
+            raise ValueError("enabled ledger projection requires ledger_features")
         positions = torch.arange(
             context.shape[1], device=context.device, dtype=torch.long
         )
@@ -308,7 +352,10 @@ class SemanticCompositionHead(nn.Module):
         previous_species_indices: Tensor | None = None,
         previous_count_values: Tensor | None = None,
         previous_n_values: Tensor | None = None,
+        ledger_features: Tensor | None = None,
         n_targets: Tensor | None = None,
+        family_targets: Tensor | None = None,
+        arity_targets: Tensor | None = None,
         species_targets: Tensor | None = None,
         count_targets: Tensor | None = None,
         rich_targets: Mapping[str, Tensor] | None = None,
@@ -323,6 +370,7 @@ class SemanticCompositionHead(nn.Module):
             previous_species_indices,
             previous_count_values,
             previous_n_values,
+            ledger_features,
             active_flags,
         )
         scale = sqrt(float(self.hidden_size))
@@ -332,6 +380,10 @@ class SemanticCompositionHead(nn.Module):
         count_table = self.count_embedding.weight[1 : self.max_count + 1]
 
         n_logits = self.n_head(context[:, 0, :])
+        family_logits = (
+            None if self.family_head is None else self.family_head(context[:, 0, :])
+        )
+        arity_logits = self.arity_head(context[:, 0, :])
         species_logits = (
             torch.einsum("bth,sh->bts", context, species_table) / scale
             + self.species_bias
@@ -353,6 +405,32 @@ class SemanticCompositionHead(nn.Module):
                 device=n_logits.device,
             )
             component_losses["n"] = F.cross_entropy(n_logits, n_classes)
+        if family_targets is not None:
+            if family_logits is None:
+                raise ValueError("family_targets require num_families")
+            family_classes = family_targets.to(
+                device=family_logits.device, dtype=torch.long
+            )
+            if family_classes.ndim != 1:
+                raise ValueError("family targets must have shape [batch]")
+            invalid_family = (family_classes < 0) | (
+                family_classes >= family_logits.shape[-1]
+            )
+            if bool(invalid_family.any().item()):
+                raise ValueError("family target outside configured class range")
+            component_losses["family"] = F.cross_entropy(
+                family_logits, family_classes
+            )
+        if arity_targets is not None:
+            arity_classes = self._one_based_targets(
+                arity_targets,
+                maximum=self.max_arity,
+                name="arity",
+                device=arity_logits.device,
+            )
+            component_losses["arity"] = F.cross_entropy(
+                arity_logits, arity_classes
+            )
 
         normalized_species: Tensor | None = None
         if species_targets is not None:
@@ -415,6 +493,8 @@ class SemanticCompositionHead(nn.Module):
             losses["total"] = total_loss
         return SemanticCompositionOutput(
             n_logits=n_logits,
+            family_logits=family_logits,
+            arity_logits=arity_logits,
             species_logits=species_logits,
             count_logits=count_logits,
             rich_logits=rich_logits,

@@ -549,3 +549,20 @@ stable→S.U.N. retention，却单调损失稳定/S.U.N.，没有候选通过预
 
 除matched executor外，这些主要是现有结果整理、标准化和最小机制归因，不要求重训
 Planner、DLM或model494。若不做matched executor，必须把crystal RQ降为system-level。
+
+C³FD语义重构证明composition compiler具有强信号，但尚未形成可发表的完整第二贡献。
+正式v2在requested2000上实现独立comp-valid `86.2%→98.6%`，两个seed同向，且
+ionic-only增益不是all-metal shortcut；然而proposal-mix门失败。以完整训练分布重新定义并
+预先冻结的v2.1成功修复N/arity/family与NU，但requested256 pilot出现`52/512`
+semantic dead ends，parse降至`460/512`，all-metal也比full-train高`4.66pp`。因此：
+
+- 可以作为机制/负结果称“semantic conservation显著提高composition correctness”；
+- 不能把C³FD-v2或v2.1列为正式贡献、headline或下游稳定性原因；
+- 不允许事后删除dead ends、放宽all-metal门或扩到requested1000；
+- 若未来重新开启，必须预注册family-aware joint reachability，而不是继续调
+  temperature/top-k/pair weight。
+
+阶段证据见
+[`C3FD_PLANNER_FINAL.md`](../results/remote_screens/C3FD_PLANNER_FINAL.md)、
+[`C3FD_DRIFT_DIAGNOSTIC.md`](../results/remote_screens/C3FD_DRIFT_DIAGNOSTIC.md)和
+[`C3FD_V21_PILOT_FINAL.md`](../results/remote_screens/C3FD_V21_PILOT_FINAL.md)。

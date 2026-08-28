@@ -1,0 +1,29 @@
+{
+  "gate": {
+    "global_pair_prior_weight_frozen_zero": true,
+    "interaction_uses_train_only_supported_strata": true,
+    "species_top_k_frozen_zero": true,
+    "step1_was_passed": true,
+    "step3_pass": true,
+    "temperature_fit_reduces_nll": true,
+    "temperature_uses_optimizer_not_grid": true,
+    "top_p_one_preserves_all_finite_support": true,
+    "validation_supported_mass_at_least_99pct": true
+  },
+  "sampling_contract": {
+    "global_pair_prior_weight": 0.0,
+    "species_top_k": 0,
+    "temperature_fit": "one LBFGS scalar per family/N/arity/species/count head",
+    "top_p_only": true
+  },
+  "schema": "h1a2_c3fd_v21_step3_calibration_audit_v1",
+  "supported_strata": 393,
+  "temperature_preflight": {
+    "examples": 4,
+    "nll_after": 0.698138952255249,
+    "nll_before": 2.0181498527526855,
+    "optimizer": "LBFGS",
+    "temperature": 20.0
+  },
+  "validation_supported_mass": 0.9952470432187466
+}

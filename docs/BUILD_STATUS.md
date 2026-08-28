@@ -183,3 +183,24 @@
 - 发布资产安装后再做公开repo的一键端到端smoke。
 
 所有A800绝对源路径只填写在`ASSET_TRANSFER_LEDGER.md`，不会同步到公开repo。
+
+## 2026-08-28 C³FD-v2/v2.1 阶段终态
+
+- C³FD-v2用typed `N→element-valence-count`、在线atom/charge reachability、physics
+  species features和benchmark双证书替换formula BPE约束；CPU audit对全部
+  benchmark-valid行100%召回，N/Q/composition/rich round-trip均100%；
+- 正式v2两seed×requested1000把独立comp-valid从`1724/2000`提高到`1972/2000`
+  （双seed均`+12.4pp`，CI`[+10.81,+13.99]pp`），Novel和NU提高；但原冻结gate因
+  arity/family/support等漂移NO-GO；
+- v2.1按小步门控推进：Step1 proposal/ledger与可达质量、Step2 exact-arity/ledger
+  model、Step3 per-head LBFGS/no-top-k/pair0、Step4 100k outcome-blind proposal
+  simulation全部通过，并分别保留首次失败、最小修复和MD/JSON记录；
+- requested256 pilot job36514终态NO-GO。P0/C3FD-v2.1 pooled comp-valid为`438/460`，
+  两seed分别`+5.08/+3.52pp`且CI下界为正；ionic为`80.75%→100%`，NU`388→417`，
+  N/arity/family到full-train距离均优于P0；但`52/512` semantic dead ends使parse
+  `510→460`，parsed all-metal `39.57%`距full-train `34.91%`超过3pp门。严格停止，
+  不进入requested1000；
+- 完整合同与证据见
+  [`C3FD_V21_CORRECTION_CONTRACT.md`](C3FD_V21_CORRECTION_CONTRACT.md)、
+  [`C3FD_PLANNER_FINAL.md`](../results/remote_screens/C3FD_PLANNER_FINAL.md)和
+  [`C3FD_V21_PILOT_FINAL.md`](../results/remote_screens/C3FD_V21_PILOT_FINAL.md)。

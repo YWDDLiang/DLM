@@ -1,0 +1,21 @@
+{
+  "gate": {
+    "N_charge_certificate_unchanged": true,
+    "arity_head_shape_7": true,
+    "family_head_shape_7": true,
+    "ledger_changes_species_logits": true,
+    "shorter_complete_path_legal_without_exact_arity": true,
+    "shorter_complete_path_masked_for_target_arity3": true,
+    "step2_pass": true
+  },
+  "ledger_feature_order": [
+    "remaining_atoms_over_20",
+    "net_charge_over_160",
+    "remaining_species_over_7",
+    "branch_unset",
+    "branch_ionic",
+    "branch_alloy"
+  ],
+  "ledger_max_logit_delta": 0.16998988389968872,
+  "schema": "h1a2_c3fd_v21_step2_model_audit_v1"
+}

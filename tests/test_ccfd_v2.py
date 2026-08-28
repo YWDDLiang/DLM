@@ -153,6 +153,31 @@ class CCFDv2Test(unittest.TestCase):
             (iron,),
         )
 
+    def test_exact_arity_rejects_chemically_complete_shorter_path(self):
+        oxygen = FormulaToken.from_symbol("O", -2, 2)
+        iron = FormulaToken.from_symbol("Fe", 2, 2)
+        oracle = BenchmarkReachability(
+            ((oxygen.atomic_number, oxygen.oxidation_state), (iron.atomic_number, iron.oxidation_state))
+        )
+        state = CCFDv2State.start().apply(SetAtomCount(4)).apply(oxygen)
+        self.assertIn(
+            iron,
+            oracle.legal_species_counts(
+                state,
+                benchmark_validator=benchmark_true,
+                max_species=3,
+            ),
+        )
+        self.assertNotIn(
+            iron,
+            oracle.legal_species_counts(
+                state,
+                benchmark_validator=benchmark_true,
+                max_species=3,
+                target_arity=3,
+            ),
+        )
+
     def test_plan_compiler_preserves_N_composition_and_rich_schema(self):
         plan = {
             "N": 2,

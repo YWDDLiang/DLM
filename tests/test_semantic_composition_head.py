@@ -271,6 +271,40 @@ class SemanticCompositionHeadTest(unittest.TestCase):
         )
         self.assertTrue(torch.allclose(out_a.species_logits[:, :2], out_b.species_logits[:, :2]))
 
+    def test_proposal_heads_and_ledger_features_are_explicit(self):
+        head = SemanticCompositionHead(
+            hidden_size=8,
+            num_species=3,
+            num_families=7,
+            max_arity=7,
+            ledger_feature_size=6,
+            decoder_layers=1,
+            decoder_heads=2,
+        )
+        head.eval()
+        hidden = torch.zeros(2, 3, 8)
+        previous_species = torch.tensor([[-1, -1, 0], [-1, -1, 0]])
+        previous_counts = torch.tensor([[0, 0, 1], [0, 0, 1]])
+        previous_n = torch.tensor([[0, 2, 0], [0, 2, 0]])
+        ledger = torch.zeros(2, 3, 6)
+        ledger[1, :, 0] = 1.0
+        output = head(
+            hidden,
+            previous_species_indices=previous_species,
+            previous_count_values=previous_counts,
+            previous_n_values=previous_n,
+            ledger_features=ledger,
+            family_targets=torch.tensor([0, 1]),
+            arity_targets=torch.tensor([2, 2]),
+        )
+        self.assertEqual(output.family_logits.shape, (2, 7))
+        self.assertEqual(output.arity_logits.shape, (2, 7))
+        self.assertIn("family", output.losses)
+        self.assertIn("arity", output.losses)
+        self.assertFalse(
+            torch.allclose(output.species_logits[0], output.species_logits[1])
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

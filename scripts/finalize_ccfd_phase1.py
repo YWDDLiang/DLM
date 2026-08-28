@@ -128,8 +128,13 @@ def summarize_cell(
     *,
     requested: int,
     known_train_formulas: set[str],
+    allow_requested_prefix: bool = False,
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
     raw_rows = list(iter_jsonl(path))
+    if allow_requested_prefix:
+        raw_rows = [
+            row for row in raw_rows if 0 <= int(row.get("sample_idx", -1)) < requested
+        ]
     by_idx = {int(row.get("sample_idx", -1)): row for row in raw_rows}
     if len(by_idx) != requested or sorted(by_idx) != list(range(requested)):
         raise RuntimeError(f"{arm} seed{seed} attempt coverage changed")

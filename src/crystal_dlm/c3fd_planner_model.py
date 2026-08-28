@@ -22,6 +22,9 @@ class C3FDPlannerConfig:
     num_species: int
     physics_feature_size: int
     rich_soft_head_dims: dict[str, int]
+    num_families: int | None = None
+    max_arity: int = 7
+    ledger_feature_size: int = 0
     max_atoms: int = 20
     max_count: int = 20
     decoder_layers: int = 2
@@ -62,6 +65,9 @@ class C3FDPlannerModel(nn.Module):
             max_count=int(config.max_count),
             physics_features=physics_features,
             rich_soft_head_dims=config.rich_soft_head_dims,
+            num_families=config.num_families,
+            max_arity=int(config.max_arity),
+            ledger_feature_size=int(config.ledger_feature_size),
             decoder_layers=int(config.decoder_layers),
             decoder_heads=int(config.decoder_heads),
             decoder_dropout=float(config.decoder_dropout),
@@ -84,7 +90,10 @@ class C3FDPlannerModel(nn.Module):
         previous_species_indices: Tensor,
         previous_count_values: Tensor,
         previous_n_values: Tensor,
+        ledger_features: Tensor | None = None,
         n_targets: Tensor | None = None,
+        family_targets: Tensor | None = None,
+        arity_targets: Tensor | None = None,
         species_targets: Tensor | None = None,
         count_targets: Tensor | None = None,
         rich_targets: Mapping[str, Tensor] | None = None,
@@ -99,7 +108,10 @@ class C3FDPlannerModel(nn.Module):
             previous_species_indices=previous_species_indices,
             previous_count_values=previous_count_values,
             previous_n_values=previous_n_values,
+            ledger_features=ledger_features,
             n_targets=n_targets,
+            family_targets=family_targets,
+            arity_targets=arity_targets,
             species_targets=species_targets,
             count_targets=count_targets,
             rich_targets=rich_targets,
