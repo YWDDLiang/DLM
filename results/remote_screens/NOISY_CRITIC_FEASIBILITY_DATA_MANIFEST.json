@@ -1,0 +1,61 @@
+{
+  "body_runs": [
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_bodies_35357",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_bodies_35365"
+  ],
+  "eligible_by_split": {
+    "train": 1291,
+    "validation": 461
+  },
+  "eligible_structures": 1752,
+  "eval_runs": [
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_eval_35360",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/dlm_energy_pair_eval_35370"
+  ],
+  "extxyz_sha256": "785afe40139e2db26e72e0b1c79e3ea4654816a73b8c6469a324fd9d220156e1",
+  "formula_disjoint_from_l6_l7": true,
+  "label": "compatible CHGNet energy after common CHGNet relaxation",
+  "metadata_sha256": "2a3a9afabc0ff000cd408f99aea0a0175993c71c19c9f732bb69d2e143c50c2f",
+  "novelty_used": false,
+  "plan_cohort": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/energy_pair_plans_256_20260827/plans_for_dlm.jsonl",
+  "plans_with_at_least_three": 221,
+  "plans_with_at_least_two": 222,
+  "schema": "h1a2_noisy_critic_feasibility_manifest_v1",
+  "stream_reports": [
+    {
+      "eligible": 220,
+      "stream": 0
+    },
+    {
+      "eligible": 219,
+      "stream": 1
+    },
+    {
+      "eligible": 222,
+      "stream": 2
+    },
+    {
+      "eligible": 219,
+      "stream": 3
+    },
+    {
+      "eligible": 220,
+      "stream": 4
+    },
+    {
+      "eligible": 218,
+      "stream": 5
+    },
+    {
+      "eligible": 218,
+      "stream": 6
+    },
+    {
+      "eligible": 216,
+      "stream": 7
+    }
+  ],
+  "streams": 8,
+  "structure_stage": "model494_tau800_output_before common CHGNet relaxation",
+  "unknown_policy": "missing; never high energy"
+}

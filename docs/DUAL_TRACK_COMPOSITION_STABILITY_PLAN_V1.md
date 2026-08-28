@@ -195,7 +195,7 @@ RL is an engineering fallback, not automatically the second contribution.
 - [x] Implement F1 online FSM on the current formula checkpoint without changing weights.
 - [x] Run F0/F1 two-seed requested1000 and evaluate correctness plus distribution drift: formal gate failed.
 - [x] Run the fixed tau scan only if B1 triggers: no eligible shorter tau; retain 800, so no raw1000 short-tau confirmation.
-- [ ] Audit critic evaluator independence only if the selected executor still misses stability targets.
+- [ ] Audit critic evaluator independence only if the selected executor still misses stability targets: data ready, blocked before MatterSim inference pending explicit install authorization.
 - [ ] Train/evaluate one critic or one relaxed-winner candidate according to the sequential gates.
 - [ ] Update BUILD_STATUS/PAPER_STORY, preserve public 105/488 until a complete replacement passes, test, commit and push.
 

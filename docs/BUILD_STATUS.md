@@ -142,6 +142,14 @@
   `800`。因此不做raw1000短tau确认，下一步按冻结顺序进入noisy-state critic的独立评价
   可预测性审计。完整证据见
   [`DLM_REFINER_TAU_L6_FINAL.md`](../results/remote_screens/DLM_REFINER_TAU_L6_FINAL.md)。
+- noisy-state critic可行性数据已严格组装：8 streams共`1752`条Direct-valid、CHGNet-known
+  结构，train/validation=`1291/461`，`222/221`个Plan分别有至少2/3条结构；证据见
+  [`NOISY_CRITIC_FEASIBILITY_DATA_MANIFEST.md`](../results/remote_screens/NOISY_CRITIC_FEASIBILITY_DATA_MANIFEST.md)。
+- 独立MatterSim审计当前为工程阻塞而非科学结果：隔离Python3.12环境成功，但官方
+  `mattersim==1.2.5`完整依赖在phonopy构建时要求源码NumPy 2.5.2，集群GCC4.8/Cython
+  无法生成metadata；一次二进制scikit-learn恢复后仍同样失败。未运行MatterSim、未训练
+  critic、未用CHGNet或official冒充独立评价。下一步需要用户明确授权inference-only
+  `--no-deps`安装及最小运行时依赖，否则B3按合同停止。
 
 2026-08-28 CCFD Phase1终态：
 

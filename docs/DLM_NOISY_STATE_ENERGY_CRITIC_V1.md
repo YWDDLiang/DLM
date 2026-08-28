@@ -2,8 +2,16 @@
 
 Date: 2026-08-28
 
-Status: implementation specification only. Do not train until the
-conditioning/schedule and model494-timestep diagnostics are finalized.
+Status: data/evaluator implementation complete; independent MatterSim audit is
+blocked before inference by the official package's full dependency build on
+the current GCC 4.8 cluster. No critic training is authorized.
+
+The frozen feasibility cohort contains 1,752 eligible structures
+(train/validation 1,291/461) over eight streams; 222/221 Plans have at least
+two/three structures. The exact MatterSim-v1.0.0-5M batch-size-one evaluator
+is implemented, but the official `mattersim==1.2.5` full install failed after
+the single allowed engineering recovery while building phonopy/NumPy metadata.
+An inference-only wheel install requires explicit re-authorization.
 
 ## Scientific role
 
