@@ -81,6 +81,33 @@ def filter_branch_by_certificate(
     return accepted, rejected
 
 
+def select_unique_rows(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    count: int,
+    blocked_identities: set[str] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    selected: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    seen = set(blocked_identities or ())
+    for row in rows:
+        identity = str(row["reduced_composition_identity"])
+        if identity in seen:
+            output = dict(row)
+            output["ctv_identity_rejection"] = "duplicate_or_cross_split_identity"
+            rejected.append(output)
+            continue
+        seen.add(identity)
+        selected.append(dict(row))
+        if len(selected) == int(count):
+            break
+    if len(selected) != int(count):
+        raise RuntimeError(
+            f"insufficient unique certified Branch rows: {len(selected)}/{int(count)}"
+        )
+    return selected, rejected
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--branch-cohort", type=Path, required=True)
@@ -156,9 +183,18 @@ def main() -> None:
         raise RuntimeError("insufficient disjoint Branch train Plans")
     if len(branch_by_split["validation"]) < val_count:
         raise RuntimeError("insufficient disjoint Branch validation Plans")
-    canary = branch_by_split["train"][:canary_count]
-    branch_train = branch_by_split["train"][canary_count : canary_count + train_count]
-    branch_val = branch_by_split["validation"][:val_count]
+    train_selected, train_duplicates = select_unique_rows(
+        branch_by_split["train"], count=canary_count + train_count
+    )
+    canary = train_selected[:canary_count]
+    branch_train = train_selected[canary_count:]
+    train_ids = identity_set(train_selected)
+    branch_val, validation_duplicates = select_unique_rows(
+        branch_by_split["validation"],
+        count=val_count,
+        blocked_identities=train_ids,
+    )
+    identity_rejected = [*train_duplicates, *validation_duplicates]
 
     sets = {
         "canary": identity_set(canary),
@@ -182,6 +218,7 @@ def main() -> None:
         "CTV_DLM_L7_PLANS.jsonl": seed18,
         "CTV_BRANCH_EXCLUDED_OVERLAP.jsonl": excluded_branch,
         "CTV_BRANCH_CERTIFICATE_REJECTED.jsonl": certificate_rejected,
+        "CTV_BRANCH_IDENTITY_REJECTED.jsonl": identity_rejected,
     }
     hashes = {
         name: write_jsonl(args.output_dir / name, rows)
@@ -193,6 +230,14 @@ def main() -> None:
         "branch_val_count_exact": len(branch_val) == val_count,
         "l6_count_exact": len(l6) == int(args.l6_plans),
         "l6_identities_unique": len(sets["l6"]) == len(l6),
+        "branch_frozen_identities_unique": all(
+            len(sets[name]) == len(rows)
+            for name, rows in (
+                ("canary", canary),
+                ("branch_train", branch_train),
+                ("branch_validation", branch_val),
+            )
+        ),
         "l7_requested1000_unchanged": len(seed18) == 1000,
         "all_frozen_sets_pairwise_disjoint": all(value == 0 for value in overlap.values()),
         "outcome_labels_unused": True,
@@ -226,6 +271,12 @@ def main() -> None:
             Counter(
                 str(row.get("ctv_certificate_rejection"))
                 for row in certificate_rejected
+            )
+        ),
+        "identity_rejected_reasons": dict(
+            Counter(
+                str(row.get("ctv_identity_rejection"))
+                for row in identity_rejected
             )
         ),
         "hashes": hashes,

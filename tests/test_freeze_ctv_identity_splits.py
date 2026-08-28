@@ -34,6 +34,29 @@ def write(path: Path, rows):
 
 
 class FreezeCTVIdentitySplitsTest(unittest.TestCase):
+    def test_unique_selection_rejects_within_and_cross_split_duplicates(self):
+        rows = []
+        for index, identity in enumerate(("a", "a", "b", "c")):
+            rows.append(
+                {
+                    "sample_idx": index,
+                    "reduced_composition_identity": identity,
+                    "plan_state": plan("B", index + 1, "C", 1),
+                }
+            )
+        selected, rejected = MODULE.select_unique_rows(
+            rows, count=2, blocked_identities={"c"}
+        )
+        self.assertEqual(
+            [row["reduced_composition_identity"] for row in selected],
+            ["a", "b"],
+        )
+        self.assertEqual(len(rejected), 1)
+        self.assertEqual(
+            rejected[0]["ctv_identity_rejection"],
+            "duplicate_or_cross_split_identity",
+        )
+
     def test_certificate_filter_happens_before_selection(self):
         rows = [
             {"sample_idx": index, "plan_state": plan("B", index + 1, "C", 1)}
@@ -115,6 +138,7 @@ class FreezeCTVIdentitySplitsTest(unittest.TestCase):
             self.assertEqual(report["counts"]["CTV_DLM_L6_PLANS.jsonl"], 256)
             self.assertEqual(report["source_diagnostics"]["branch_vs_seed18"], 1)
             self.assertTrue(all(value == 0 for value in report["overlap"].values()))
+            self.assertTrue(report["gate"]["branch_frozen_identities_unique"])
             self.assertFalse(
                 report["configuration"]["require_c3fd_certification"]
             )
