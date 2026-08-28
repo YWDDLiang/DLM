@@ -1308,6 +1308,7 @@ def forward_process(
     empty_token_id: int | None = None,
     prefill_slot_tokens: bool = False,
     fixed_slot_body_offset: int = 0,
+    dynamic_geometry_only: bool = False,
     mask_id: int = MASK_TOKEN_ID,
     eps: float = 1e-3,
 ) -> Dict[str, torch.Tensor]:
@@ -1357,6 +1358,14 @@ def forward_process(
                 selected = selected & ~slot_marker[i]
             if selected.any():
                 candidate_mask[i] = selected
+    if dynamic_geometry_only:
+        if body_offset != 0:
+            raise ValueError("dynamic geometry-only masking requires body offset zero")
+        dynamic_lattice = (body_rel_positions >= 1) & (body_rel_positions <= 6)
+        dynamic_sites = body_rel_positions >= 7
+        dynamic_field_offsets = (body_rel_positions - 7).remainder(4)
+        dynamic_coordinates = dynamic_sites & (dynamic_field_offsets >= 1)
+        candidate_mask = candidate_mask & (dynamic_lattice | dynamic_coordinates)
     masked_indices = random_mask & candidate_mask
 
     # Ensure every non-empty answer contributes at least one supervised token.
@@ -1432,6 +1441,7 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
         "dynamic_coord_loss_weight": float(
             getattr(args, "dynamic_coord_loss_weight", getattr(args, "coordinate_loss_weight", 1.0))
         ),
+        "dynamic_geometry_only": bool(getattr(args, "dynamic_geometry_only", False)),
     }
 
 
@@ -1672,6 +1682,7 @@ def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: 
         empty_token_id=int(loss_config.get("empty_token_id", -1)),
         prefill_slot_tokens=bool(loss_config.get("train_prefill_slot_tokens", False)),
         fixed_slot_body_offset=int(loss_config.get("fixed_slot_body_offset", 0)),
+        dynamic_geometry_only=bool(loss_config.get("dynamic_geometry_only", False)),
     )
     outputs = model(input_ids=processed["noisy"], attention_mask=attention_mask)
     masked = processed["masked_indices"]
@@ -2344,6 +2355,14 @@ def main() -> None:
     parser.add_argument("--dynamic-lattice-angle-loss-weight", type=float, default=1.0)
     parser.add_argument("--dynamic-coord-loss-weight", type=float, default=1.0)
     parser.add_argument(
+        "--dynamic-geometry-only",
+        action="store_true",
+        help=(
+            "For dynamic_v1, keep N/element tokens visible and mask/supervise only "
+            "lattice lengths/angles and XYZ tokens."
+        ),
+    )
+    parser.add_argument(
         "--train-prefill-slot-tokens",
         action="store_true",
         help=(
@@ -2368,6 +2387,8 @@ def main() -> None:
         parser.error("counterfactual-grounding-temperature must be positive")
     if args.counterfactual_grounding_weight > 0 and args.representation != "dynamic_v1":
         parser.error("counterfactual grounding is implemented only for exact dynamic_v1 bodies")
+    if args.dynamic_geometry_only and args.representation != "dynamic_v1":
+        parser.error("dynamic-geometry-only requires representation=dynamic_v1")
     if args.answer_token_count is None:
         args.answer_token_count = infer_answer_token_count(args.data_dir)
     if args.representation == "dynamic_v1" and args.answer_token_count is None:
