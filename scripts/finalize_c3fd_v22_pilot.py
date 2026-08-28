@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Finalize the two-seed requested-256 C3FD-v2.2 viability pilot."""
+"""Finalize a two-seed requested-256 C3FD witness-decoder pilot."""
 
 from __future__ import annotations
 
@@ -59,14 +59,21 @@ def main() -> None:
     parser.add_argument("--v2-diagnostic", type=Path, required=True)
     parser.add_argument("--requested", type=int, default=256)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--candidate-arm", default="c3fd_v22")
+    parser.add_argument("--output-stem", default="C3FD_V22_PILOT_FINAL")
+    parser.add_argument("--schema", default="h1a2_c3fd_v22_pilot_final_v1")
+    parser.add_argument("--title", default="C³FD-v2.2 requested-256 pilot")
     args = parser.parse_args()
     if int(args.requested) != 256:
-        raise ValueError("C3FD-v2.2 pilot is frozen at requested256")
+        raise ValueError("C3FD witness pilot is frozen at requested256")
+    candidate_arm = str(args.candidate_arm)
+    if not candidate_arm.startswith("c3fd_"):
+        raise ValueError("candidate arm must start with c3fd_")
 
     known = train_formula_set(args.train_jsonl)
     cells: list[dict] = []
     records: dict[tuple[str, int], list[dict]] = {}
-    for arm, run in (("p0", args.control_run), ("c3fd_v22", args.candidate_run)):
+    for arm, run in (("p0", args.control_run), (candidate_arm, args.candidate_run)):
         for seed in SEEDS:
             prefix = "f0" if arm == "p0" else "c3"
             summary, rows = summarize_cell(
@@ -79,13 +86,13 @@ def main() -> None:
             )
             cells.append(summary)
             records[(arm, seed)] = rows
-    pooled = [pool(cells, arm) for arm in ("p0", "c3fd_v22")]
+    pooled = [pool(cells, arm) for arm in ("p0", candidate_arm)]
     by_arm = {row["arm"]: row for row in pooled}
     control = by_arm["p0"]
-    candidate = by_arm["c3fd_v22"]
+    candidate = by_arm[candidate_arm]
     pooled_records = {
         arm: [row for seed in SEEDS for row in records[(arm, seed)]]
-        for arm in ("p0", "c3fd_v22")
+        for arm in ("p0", candidate_arm)
     }
     distributions = {
         arm: {
@@ -105,7 +112,7 @@ def main() -> None:
         for arm in distributions
     }
     parsed_candidate = [
-        row for row in pooled_records["c3fd_v22"] if row["formula_valid"]
+        row for row in pooled_records[candidate_arm] if row["formula_valid"]
     ]
     candidate_all_metal_rate = (
         0.0
@@ -123,12 +130,12 @@ def main() -> None:
     right = [
         bool(row["legacy_comp_valid"])
         for seed in SEEDS
-        for row in records[("c3fd_v22", seed)]
+        for row in records[(candidate_arm, seed)]
     ]
     ci = paired_bootstrap_ci(left, right)
     seed_deltas = {
         str(seed): next(
-            row for row in cells if row["arm"] == "c3fd_v22" and row["seed"] == seed
+            row for row in cells if row["arm"] == candidate_arm and row["seed"] == seed
         )["legacy_comp_valid_rate"]
         - next(row for row in cells if row["arm"] == "p0" and row["seed"] == seed)[
             "legacy_comp_valid_rate"
@@ -156,7 +163,7 @@ def main() -> None:
         > control["legacy_comp_valid_rate"],
         "both_seed_comp_valid_positive": all(value > 0 for value in seed_deltas.values()),
         "paired_ci_lower_positive": ci["low"] > 0.0,
-        "ionic_comp_valid_positive": float(ionic["c3fd_v22"]["rate"])
+        "ionic_comp_valid_positive": float(ionic[candidate_arm]["rate"])
         > float(ionic["p0"]["rate"]),
         "parse_noninferior_1pp": candidate["plan_parsed_rate"]
         - control["plan_parsed_rate"]
@@ -168,16 +175,17 @@ def main() -> None:
             candidate_all_metal_rate - train_all_metal_rate
         )
         <= 0.03,
-        "N_distance_not_worse_than_p0_plus_0p01": distance_to_train["c3fd_v22"]["N"]
+        "N_distance_not_worse_than_p0_plus_0p01": distance_to_train[candidate_arm]["N"]
         <= distance_to_train["p0"]["N"] + 0.01,
-        "arity_distance_not_worse_than_p0_plus_0p01": distance_to_train["c3fd_v22"]["arity"]
+        "arity_distance_not_worse_than_p0_plus_0p01": distance_to_train[candidate_arm]["arity"]
         <= distance_to_train["p0"]["arity"] + 0.01,
-        "family_distance_not_worse_than_p0_plus_0p01": distance_to_train["c3fd_v22"]["family"]
+        "family_distance_not_worse_than_p0_plus_0p01": distance_to_train[candidate_arm]["family"]
         <= distance_to_train["p0"]["family"] + 0.01,
     }
     gates["step3_pass"] = all(gates.values())
     report = {
-        "schema": "h1a2_c3fd_v22_pilot_final_v1",
+        "schema": str(args.schema),
+        "candidate_arm": candidate_arm,
         "claim_boundary": "requested256 promotion screen only; not a headline result",
         "cells": cells,
         "pooled": pooled,
@@ -198,7 +206,7 @@ def main() -> None:
     }
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=False)
-    stem = "C3FD_V22_PILOT_FINAL"
+    stem = str(args.output_stem)
     (output / f"{stem}.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
@@ -209,7 +217,7 @@ def main() -> None:
         writer.writeheader()
         writer.writerows({key: row.get(key) for key in fields} for row in pooled)
     lines = [
-        "# C³FD-v2.2 requested-256 pilot",
+        f"# {args.title}",
         "",
         f"Step 3 pass: **{gates['step3_pass']}**. This is not a headline run.",
         f"Semantic dead ends by seed: `{semantic_dead_ends}`.",

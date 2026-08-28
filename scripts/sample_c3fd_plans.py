@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import random
 import sys
+import time
 from typing import Any, Mapping, Sequence
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -218,6 +219,7 @@ def main() -> None:
     eos_id = int(vocabulary["species_eos_id"])
 
     args.output_dir.mkdir(parents=True)
+    sampling_started = time.perf_counter()
     raw_path = args.output_dir / "raw_generations.jsonl"
     plan_path = args.output_dir / "plans_for_dlm.jsonl"
     parsed = 0
@@ -492,6 +494,7 @@ def main() -> None:
         "failures": dict(failures.most_common()),
         "joint_reachability": dict(reachability.stats()),
         "reachability_mode": str(args.reachability_mode),
+        "elapsed_sec": time.perf_counter() - sampling_started,
     }
     (args.output_dir / "sample_metrics.json").write_text(
         json.dumps(metrics, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
