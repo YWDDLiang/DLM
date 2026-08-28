@@ -94,7 +94,7 @@ def exact_mcnemar(left: list[bool], right: list[bool]) -> dict[str, Any]:
 
 
 def extract_formula(row: Mapping[str, Any]) -> tuple[str, list[str], list[int]] | None:
-    text = str(row.get("raw_plan_text") or "")
+    text = str(row.get("raw_plan_text") or row.get("plan_text") or "")
     match = FORMULA_LINE.search(text)
     if match is None:
         return None

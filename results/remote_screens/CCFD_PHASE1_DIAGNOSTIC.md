@@ -1,0 +1,12 @@
+# CCFD Phase1 diagnostic
+
+| Arm | Both valid | Assignment only | Legacy only | Neither | Formula fail |
+|---|---:|---:|---:|---:|---:|
+| f0 | 1673 | 225 | 51 | 40 | 11 |
+| f1 | 1725 | 258 | 0 | 0 | 17 |
+
+F1 assignment-only legacy reasons: `{'all_metal_shortcut': 549, 'charge_neutral_pauling_valid': 1173, 'charge_neutrality_fail': 162, 'oxidation_state_missing': 26, 'pauling_fail_or_ratio_rejected': 70, 'single_element_shortcut': 3}`
+F1 assignment-only modes: `{'alloy_zero': 95, 'ionic_mixed': 100, 'ionic_uniform': 63}`
+F1 assignment-only tiers: `{'common_extension': 39, 'crysvcd': 122, 'full_extension': 97}`
+Largest N drift contributors: `[{'N': '10', 'f0': 252, 'f1': 215, 'delta': -37, 'abs_rate_delta': 0.0185}, {'N': '8', 'f0': 139, 'f1': 172, 'delta': 33, 'abs_rate_delta': 0.0165}, {'N': '12', 'f0': 246, 'f1': 223, 'delta': -23, 'abs_rate_delta': 0.0115}, {'N': '14', 'f0': 160, 'f1': 182, 'delta': 22, 'abs_rate_delta': 0.011}, {'N': '20', 'f0': 131, 'f1': 151, 'delta': 20, 'abs_rate_delta': 0.01}, {'N': '6', 'f0': 160, 'f1': 180, 'delta': 20, 'abs_rate_delta': 0.01}, {'N': '5', 'f0': 105, 'f1': 88, 'delta': -17, 'abs_rate_delta': 0.0085}, {'N': '18', 'f0': 114, 'f1': 128, 'delta': 14, 'abs_rate_delta': 0.007}, {'N': '2', 'f0': 26, 'f1': 13, 'delta': -13, 'abs_rate_delta': 0.0065}, {'N': '3', 'f0': 24, 'f1': 12, 'delta': -12, 'abs_rate_delta': 0.006}]`
+Paired transitions: `{'17': {'legacy': {'0->0': 30, '0->1': 109, '1->0': 104, '1->1': 757}, 'assignment': {'0->0': 1, '0->1': 51, '1->0': 8, '1->1': 940}, 'same_formula': 72, 'N_delta': {'-16': 5, '-15': 7, '-14': 15, '-13': 6, '-12': 16, '-11': 10, '-10': 27, '-9': 4, '-8': 45, '-7': 20, '-6': 43, '-5': 28, '-4': 58, '-3': 21, '-2': 73, '-1': 36, '0': 132, '1': 37, '2': 73, '3': 25, '4': 60, '5': 20, '6': 57, '7': 21, '8': 36, '9': 14, '10': 29, '11': 8, '12': 17, '13': 11, '14': 9, '15': 7, '16': 13, '17': 2, '18': 1}}, '18': {'legacy': {'0->0': 16, '0->1': 121, '1->0': 125, '1->1': 738}, 'assignment': {'0->0': 1, '0->1': 49, '1->0': 7, '1->1': 943}, 'same_formula': 45, 'N_delta': {'-17': 1, '-16': 8, '-15': 3, '-14': 12, '-13': 7, '-12': 18, '-11': 13, '-10': 26, '-9': 12, '-8': 35, '-7': 16, '-6': 60, '-5': 29, '-4': 53, '-3': 25, '-2': 73, '-1': 31, '0': 122, '1': 45, '2': 54, '3': 22, '4': 63, '5': 29, '6': 56, '7': 19, '8': 46, '9': 15, '10': 36, '11': 8, '12': 18, '13': 2, '14': 12, '15': 2, '16': 8, '17': 2, '18': 4, '19': 1}}}`

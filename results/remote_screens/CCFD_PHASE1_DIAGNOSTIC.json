@@ -1,0 +1,597 @@
+{
+  "N_drift_contributors": [
+    {
+      "N": "10",
+      "abs_rate_delta": 0.0185,
+      "delta": -37,
+      "f0": 252,
+      "f1": 215
+    },
+    {
+      "N": "8",
+      "abs_rate_delta": 0.0165,
+      "delta": 33,
+      "f0": 139,
+      "f1": 172
+    },
+    {
+      "N": "12",
+      "abs_rate_delta": 0.0115,
+      "delta": -23,
+      "f0": 246,
+      "f1": 223
+    },
+    {
+      "N": "14",
+      "abs_rate_delta": 0.011,
+      "delta": 22,
+      "f0": 160,
+      "f1": 182
+    },
+    {
+      "N": "20",
+      "abs_rate_delta": 0.01,
+      "delta": 20,
+      "f0": 131,
+      "f1": 151
+    },
+    {
+      "N": "6",
+      "abs_rate_delta": 0.01,
+      "delta": 20,
+      "f0": 160,
+      "f1": 180
+    },
+    {
+      "N": "5",
+      "abs_rate_delta": 0.0085,
+      "delta": -17,
+      "f0": 105,
+      "f1": 88
+    },
+    {
+      "N": "18",
+      "abs_rate_delta": 0.007,
+      "delta": 14,
+      "f0": 114,
+      "f1": 128
+    },
+    {
+      "N": "2",
+      "abs_rate_delta": 0.0065,
+      "delta": -13,
+      "f0": 26,
+      "f1": 13
+    },
+    {
+      "N": "3",
+      "abs_rate_delta": 0.006,
+      "delta": -12,
+      "f0": 24,
+      "f1": 12
+    },
+    {
+      "N": "17",
+      "abs_rate_delta": 0.005,
+      "delta": -10,
+      "f0": 19,
+      "f1": 9
+    },
+    {
+      "N": "4",
+      "abs_rate_delta": 0.0045,
+      "delta": -9,
+      "f0": 228,
+      "f1": 219
+    },
+    {
+      "N": "13",
+      "abs_rate_delta": 0.0035,
+      "delta": 7,
+      "f0": 45,
+      "f1": 52
+    },
+    {
+      "N": "failed",
+      "abs_rate_delta": 0.003,
+      "delta": 6,
+      "f0": 11,
+      "f1": 17
+    },
+    {
+      "N": "19",
+      "abs_rate_delta": 0.0025,
+      "delta": -5,
+      "f0": 19,
+      "f1": 14
+    },
+    {
+      "N": "11",
+      "abs_rate_delta": 0.0015,
+      "delta": 3,
+      "f0": 37,
+      "f1": 40
+    },
+    {
+      "N": "15",
+      "abs_rate_delta": 0.001,
+      "delta": -2,
+      "f0": 32,
+      "f1": 30
+    },
+    {
+      "N": "9",
+      "abs_rate_delta": 0.001,
+      "delta": 2,
+      "f0": 73,
+      "f1": 75
+    },
+    {
+      "N": "16",
+      "abs_rate_delta": 0.0005,
+      "delta": 1,
+      "f0": 153,
+      "f1": 154
+    },
+    {
+      "N": "1",
+      "abs_rate_delta": 0.0,
+      "delta": 0,
+      "f0": 1,
+      "f1": 1
+    },
+    {
+      "N": "7",
+      "abs_rate_delta": 0.0,
+      "delta": 0,
+      "f0": 25,
+      "f1": 25
+    }
+  ],
+  "cells": [
+    {
+      "N": {
+        "10": 118,
+        "11": 16,
+        "12": 126,
+        "13": 26,
+        "14": 77,
+        "15": 12,
+        "16": 75,
+        "17": 9,
+        "18": 58,
+        "19": 12,
+        "2": 13,
+        "20": 60,
+        "3": 13,
+        "4": 121,
+        "5": 62,
+        "6": 83,
+        "7": 15,
+        "8": 69,
+        "9": 30,
+        "failed": 5
+      },
+      "arm": "f0",
+      "assignment_only_modes": {
+        "alloy_zero": 49,
+        "ionic_mixed": 45,
+        "ionic_uniform": 22
+      },
+      "assignment_only_tiers": {
+        "common_extension": 25,
+        "crysvcd": 55,
+        "full_extension": 36
+      },
+      "cross_tab": {
+        "assignment_only": 116,
+        "both_valid": 832,
+        "formula_parse_failed": 5,
+        "legacy_only": 29,
+        "neither": 18
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 279,
+        "charge_neutral_pauling_valid": 582,
+        "charge_neutrality_fail": 85,
+        "oxidation_state_missing": 16,
+        "pauling_fail_or_ratio_rejected": 33
+      },
+      "parse_failures": {
+        "ValueError|composition plan N 21 outside 1..20": 2,
+        "ValueError|composition plan N 22 outside 1..20": 3
+      },
+      "rows": 1000,
+      "seed": 17
+    },
+    {
+      "N": {
+        "1": 1,
+        "10": 134,
+        "11": 21,
+        "12": 120,
+        "13": 19,
+        "14": 83,
+        "15": 20,
+        "16": 78,
+        "17": 10,
+        "18": 56,
+        "19": 7,
+        "2": 13,
+        "20": 71,
+        "3": 11,
+        "4": 107,
+        "5": 43,
+        "6": 77,
+        "7": 10,
+        "8": 70,
+        "9": 43,
+        "failed": 6
+      },
+      "arm": "f0",
+      "assignment_only_modes": {
+        "alloy_zero": 41,
+        "ionic_mixed": 47,
+        "ionic_uniform": 21
+      },
+      "assignment_only_tiers": {
+        "common_extension": 18,
+        "crysvcd": 56,
+        "full_extension": 35
+      },
+      "cross_tab": {
+        "assignment_only": 109,
+        "both_valid": 841,
+        "formula_parse_failed": 6,
+        "legacy_only": 22,
+        "neither": 22
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 293,
+        "charge_neutral_pauling_valid": 565,
+        "charge_neutrality_fail": 93,
+        "oxidation_state_missing": 9,
+        "pauling_fail_or_ratio_rejected": 29,
+        "single_element_shortcut": 5
+      },
+      "parse_failures": {
+        "ValueError|composition plan N 21 outside 1..20": 2,
+        "ValueError|composition plan N 22 outside 1..20": 3,
+        "ValueError|composition plan N 24 outside 1..20": 1
+      },
+      "rows": 1000,
+      "seed": 18
+    },
+    {
+      "N": {
+        "10": 108,
+        "11": 23,
+        "12": 111,
+        "13": 30,
+        "14": 84,
+        "15": 13,
+        "16": 72,
+        "17": 6,
+        "18": 62,
+        "19": 8,
+        "2": 8,
+        "20": 71,
+        "3": 5,
+        "4": 107,
+        "5": 50,
+        "6": 96,
+        "7": 8,
+        "8": 93,
+        "9": 36,
+        "failed": 9
+      },
+      "arm": "f1",
+      "assignment_only_modes": {
+        "alloy_zero": 45,
+        "ionic_mixed": 48,
+        "ionic_uniform": 32
+      },
+      "assignment_only_tiers": {
+        "common_extension": 23,
+        "crysvcd": 53,
+        "full_extension": 49
+      },
+      "cross_tab": {
+        "assignment_only": 125,
+        "both_valid": 866,
+        "formula_parse_failed": 9
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 278,
+        "charge_neutral_pauling_valid": 587,
+        "charge_neutrality_fail": 78,
+        "oxidation_state_missing": 15,
+        "pauling_fail_or_ratio_rejected": 32,
+        "single_element_shortcut": 1
+      },
+      "parse_failures": {
+        "ValueError|rich composition plan missing fields: anion,charge,lattice,spacegroup,volume": 9
+      },
+      "rows": 1000,
+      "seed": 17
+    },
+    {
+      "N": {
+        "1": 1,
+        "10": 107,
+        "11": 17,
+        "12": 112,
+        "13": 22,
+        "14": 98,
+        "15": 17,
+        "16": 82,
+        "17": 3,
+        "18": 66,
+        "19": 6,
+        "2": 5,
+        "20": 80,
+        "3": 7,
+        "4": 112,
+        "5": 38,
+        "6": 84,
+        "7": 17,
+        "8": 79,
+        "9": 39,
+        "failed": 8
+      },
+      "arm": "f1",
+      "assignment_only_modes": {
+        "alloy_zero": 50,
+        "ionic_mixed": 52,
+        "ionic_uniform": 31
+      },
+      "assignment_only_tiers": {
+        "common_extension": 16,
+        "crysvcd": 69,
+        "full_extension": 48
+      },
+      "cross_tab": {
+        "assignment_only": 133,
+        "both_valid": 859,
+        "formula_parse_failed": 8
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 271,
+        "charge_neutral_pauling_valid": 586,
+        "charge_neutrality_fail": 84,
+        "oxidation_state_missing": 11,
+        "pauling_fail_or_ratio_rejected": 38,
+        "single_element_shortcut": 2
+      },
+      "parse_failures": {
+        "ValueError|rich composition plan missing fields: anion,charge,lattice,spacegroup,volume": 8
+      },
+      "rows": 1000,
+      "seed": 18
+    }
+  ],
+  "interpretation": {
+    "constraint_target": "existence under the expanded valence catalog, including mixed valence and catalog extensions",
+    "independent_target": "legacy SMACT one-state-per-element charge neutrality plus Pauling test",
+    "main_question": "whether internal representability transfers to the independent validator without distribution shift"
+  },
+  "paired_transitions": {
+    "17": {
+      "N_delta": {
+        "-1": 36,
+        "-10": 27,
+        "-11": 10,
+        "-12": 16,
+        "-13": 6,
+        "-14": 15,
+        "-15": 7,
+        "-16": 5,
+        "-2": 73,
+        "-3": 21,
+        "-4": 58,
+        "-5": 28,
+        "-6": 43,
+        "-7": 20,
+        "-8": 45,
+        "-9": 4,
+        "0": 132,
+        "1": 37,
+        "10": 29,
+        "11": 8,
+        "12": 17,
+        "13": 11,
+        "14": 9,
+        "15": 7,
+        "16": 13,
+        "17": 2,
+        "18": 1,
+        "2": 73,
+        "3": 25,
+        "4": 60,
+        "5": 20,
+        "6": 57,
+        "7": 21,
+        "8": 36,
+        "9": 14
+      },
+      "assignment": {
+        "0->0": 1,
+        "0->1": 51,
+        "1->0": 8,
+        "1->1": 940
+      },
+      "legacy": {
+        "0->0": 30,
+        "0->1": 109,
+        "1->0": 104,
+        "1->1": 757
+      },
+      "same_formula": 72
+    },
+    "18": {
+      "N_delta": {
+        "-1": 31,
+        "-10": 26,
+        "-11": 13,
+        "-12": 18,
+        "-13": 7,
+        "-14": 12,
+        "-15": 3,
+        "-16": 8,
+        "-17": 1,
+        "-2": 73,
+        "-3": 25,
+        "-4": 53,
+        "-5": 29,
+        "-6": 60,
+        "-7": 16,
+        "-8": 35,
+        "-9": 12,
+        "0": 122,
+        "1": 45,
+        "10": 36,
+        "11": 8,
+        "12": 18,
+        "13": 2,
+        "14": 12,
+        "15": 2,
+        "16": 8,
+        "17": 2,
+        "18": 4,
+        "19": 1,
+        "2": 54,
+        "3": 22,
+        "4": 63,
+        "5": 29,
+        "6": 56,
+        "7": 19,
+        "8": 46,
+        "9": 15
+      },
+      "assignment": {
+        "0->0": 1,
+        "0->1": 49,
+        "1->0": 7,
+        "1->1": 943
+      },
+      "legacy": {
+        "0->0": 16,
+        "0->1": 121,
+        "1->0": 125,
+        "1->1": 738
+      },
+      "same_formula": 45
+    }
+  },
+  "pooled": {
+    "f0": {
+      "N": {
+        "1": 1,
+        "10": 252,
+        "11": 37,
+        "12": 246,
+        "13": 45,
+        "14": 160,
+        "15": 32,
+        "16": 153,
+        "17": 19,
+        "18": 114,
+        "19": 19,
+        "2": 26,
+        "20": 131,
+        "3": 24,
+        "4": 228,
+        "5": 105,
+        "6": 160,
+        "7": 25,
+        "8": 139,
+        "9": 73,
+        "failed": 11
+      },
+      "assignment_only_modes": {
+        "alloy_zero": 90,
+        "ionic_mixed": 92,
+        "ionic_uniform": 43
+      },
+      "assignment_only_tiers": {
+        "common_extension": 43,
+        "crysvcd": 111,
+        "full_extension": 71
+      },
+      "cross_tab": {
+        "assignment_only": 225,
+        "both_valid": 1673,
+        "formula_parse_failed": 11,
+        "legacy_only": 51,
+        "neither": 40
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 572,
+        "charge_neutral_pauling_valid": 1147,
+        "charge_neutrality_fail": 178,
+        "oxidation_state_missing": 25,
+        "pauling_fail_or_ratio_rejected": 62,
+        "single_element_shortcut": 5
+      },
+      "parse_failures": {
+        "ValueError|composition plan N 21 outside 1..20": 4,
+        "ValueError|composition plan N 22 outside 1..20": 6,
+        "ValueError|composition plan N 24 outside 1..20": 1
+      },
+      "rows": 2000
+    },
+    "f1": {
+      "N": {
+        "1": 1,
+        "10": 215,
+        "11": 40,
+        "12": 223,
+        "13": 52,
+        "14": 182,
+        "15": 30,
+        "16": 154,
+        "17": 9,
+        "18": 128,
+        "19": 14,
+        "2": 13,
+        "20": 151,
+        "3": 12,
+        "4": 219,
+        "5": 88,
+        "6": 180,
+        "7": 25,
+        "8": 172,
+        "9": 75,
+        "failed": 17
+      },
+      "assignment_only_modes": {
+        "alloy_zero": 95,
+        "ionic_mixed": 100,
+        "ionic_uniform": 63
+      },
+      "assignment_only_tiers": {
+        "common_extension": 39,
+        "crysvcd": 122,
+        "full_extension": 97
+      },
+      "cross_tab": {
+        "assignment_only": 258,
+        "both_valid": 1725,
+        "formula_parse_failed": 17
+      },
+      "legacy_reasons": {
+        "all_metal_shortcut": 549,
+        "charge_neutral_pauling_valid": 1173,
+        "charge_neutrality_fail": 162,
+        "oxidation_state_missing": 26,
+        "pauling_fail_or_ratio_rejected": 70,
+        "single_element_shortcut": 3
+      },
+      "parse_failures": {
+        "ValueError|rich composition plan missing fields: anion,charge,lattice,spacegroup,volume": 17
+      },
+      "rows": 2000
+    }
+  },
+  "schema": "h1a2_ccfd_phase1_diagnostic_v1"
+}

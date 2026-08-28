@@ -27,6 +27,12 @@ class CCFDPhase1FinalizerTest(unittest.TestCase):
         self.assertEqual(result["delta"], 1.0)
         self.assertGreater(result["low"], 0.0)
 
+    def test_extract_formula_accepts_semantic_planner_plan_text(self):
+        result = MODULE.extract_formula(
+            {"plan_text": "formula: Fe2O3\nanion: oxide\nend: plan"}
+        )
+        self.assertEqual(result, ("O3Fe2", ["O", "Fe"], [3, 2]))
+
 
 if __name__ == "__main__":
     unittest.main()
