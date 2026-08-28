@@ -653,10 +653,314 @@ class PaulingWitnessReachability:
         return tuple(legal)
 
 
+class PaulingBitsetReachability(PaulingWitnessReachability):
+    """Bitset-compiled variant of :class:`PaulingWitnessReachability`.
+
+    Each cached suffix state stores all reachable net charges in one Python
+    integer.  Adding one species/count becomes a bit shift and alternative
+    paths become bitwise OR, eliminating the explicit charge dimension that
+    made the constructive DFS too large for online decoding.
+    """
+
+    def __init__(
+        self,
+        nodes: Sequence[ValenceNode],
+        *,
+        electronegativity_by_atomic_number: Mapping[int, float | None] | None = None,
+        metal_atomic_numbers: Sequence[int] | set[int] | frozenset[int] | None = None,
+        max_atoms: int = 20,
+    ) -> None:
+        super().__init__(
+            nodes,
+            electronegativity_by_atomic_number=electronegativity_by_atomic_number,
+            metal_atomic_numbers=metal_atomic_numbers,
+        )
+        self.max_atoms = int(max_atoms)
+        if self.max_atoms <= 0:
+            raise ValueError("max_atoms must be positive")
+        max_abs_oxidation = max(
+            abs(int(node.oxidation_state)) for node in self.nodes
+        )
+        self.charge_offset = max(1, max_abs_oxidation * self.max_atoms)
+        self.charge_width = 2 * self.charge_offset + 1
+        self.charge_mask = (1 << self.charge_width) - 1
+
+    def clear_cache(self) -> None:
+        self._charge_bits.cache_clear()
+
+    def stats(self) -> Mapping[str, int]:
+        cache = self._charge_bits.cache_info()
+        return {
+            "cache_hits": int(cache.hits),
+            "cache_misses": int(cache.misses),
+            "cached_states": int(cache.currsize),
+            "charge_width": int(self.charge_width),
+        }
+
+    def _shift_charges(self, bits: int, delta: int) -> int:
+        if int(delta) >= 0:
+            return (int(bits) << int(delta)) & self.charge_mask
+        return int(bits) >> -int(delta)
+
+    @lru_cache(maxsize=None)
+    def _charge_bits(
+        self,
+        family: str,
+        boundary: int,
+        branch: str,
+        target_arity: int,
+        start_index: int,
+        remaining_atoms: int,
+        remaining_slots: int,
+        need_required: bool,
+    ) -> int:
+        atoms = int(remaining_atoms)
+        slots = int(remaining_slots)
+        start = int(start_index)
+        if atoms == 0:
+            return (
+                1 << self.charge_offset
+                if slots == 0 and not bool(need_required)
+                else 0
+            )
+        if (
+            atoms < slots
+            or slots <= 0
+            or start >= len(self.elements)
+            or len(self.elements) - start < slots
+        ):
+            return 0
+
+        result = self._charge_bits(
+            family,
+            int(boundary),
+            branch,
+            int(target_arity),
+            start + 1,
+            atoms,
+            slots,
+            bool(need_required),
+        )
+        atomic_number = int(self.elements[start])
+        symbol = Z_TO_SYMBOL[atomic_number]
+        if not element_allowed_for_family(symbol, family):
+            return result
+        required = FAMILY_REQUIRED[str(family)]
+        next_need_required = bool(need_required and symbol not in required)
+        max_count = atoms - (slots - 1)
+        for oxidation in self.states[start]:
+            oxidation = int(oxidation)
+            if branch == "alloy":
+                if oxidation != 0:
+                    continue
+                if int(target_arity) > 1 and atomic_number not in self.metals:
+                    continue
+            elif branch == "ionic":
+                if oxidation == 0:
+                    continue
+                rank = self.element_eneg_rank.get(atomic_number)
+                if rank is None:
+                    continue
+                if oxidation > 0 and int(rank) > int(boundary):
+                    continue
+                if oxidation < 0 and int(rank) <= int(boundary):
+                    continue
+            else:
+                raise ValueError(f"unsupported bitset branch {branch!r}")
+            for count in range(1, max_count + 1):
+                suffix = self._charge_bits(
+                    family,
+                    int(boundary),
+                    branch,
+                    int(target_arity),
+                    start + 1,
+                    atoms - count,
+                    slots - 1,
+                    next_need_required,
+                )
+                if suffix:
+                    result |= self._shift_charges(suffix, oxidation * count)
+        return int(result)
+
+    def _charge_reachable(
+        self,
+        *,
+        family: str,
+        boundary: int,
+        branch: str,
+        target_arity: int,
+        start_index: int,
+        remaining_atoms: int,
+        remaining_slots: int,
+        need_required: bool,
+        required_suffix_charge: int,
+    ) -> bool:
+        charge = int(required_suffix_charge)
+        position = charge + self.charge_offset
+        if position < 0 or position >= self.charge_width:
+            return False
+        bits = self._charge_bits(
+            family,
+            int(boundary),
+            branch,
+            int(target_arity),
+            int(start_index),
+            int(remaining_atoms),
+            int(remaining_slots),
+            bool(need_required),
+        )
+        return bool((int(bits) >> position) & 1)
+
+    def _boundary_order(
+        self,
+        *,
+        family: str,
+        max_cation: int,
+        min_anion: int,
+    ) -> tuple[int, ...]:
+        if self.no_anion_rank <= 1:
+            return ()
+        lower = max(0, int(max_cation))
+        upper = min(self.no_anion_rank - 2, int(min_anion) - 1)
+        if lower > upper:
+            return ()
+        required_ranks = [
+            self.element_eneg_rank.get(int(node.atomic_number))
+            for node in self.nodes
+            if Z_TO_SYMBOL[int(node.atomic_number)] in FAMILY_REQUIRED[str(family)]
+        ]
+        finite_required = [int(value) for value in required_ranks if value is not None]
+        preferred = (
+            min(finite_required) - 1
+            if finite_required
+            else (lower + upper) // 2
+        )
+        preferred = min(upper, max(lower, preferred))
+        return tuple(sorted(range(lower, upper + 1), key=lambda value: (abs(value - preferred), value)))
+
+    def can_complete(
+        self,
+        state: CCFDv2State,
+        *,
+        family: str,
+        target_arity: int,
+        max_species: int = 7,
+    ) -> bool:
+        family = str(family)
+        target = int(target_arity)
+        if family not in FAMILY_FORBIDDEN or target <= 0 or target > int(max_species):
+            return False
+        summary = self._state_summary(state, family=family, target_arity=target)
+        if summary is None:
+            return False
+        (
+            start,
+            atoms,
+            slots,
+            net_charge,
+            branch,
+            required_hit,
+            max_cation,
+            min_anion,
+            all_metal,
+        ) = summary
+        if atoms == 0:
+            return bool(
+                slots == 0
+                and net_charge == 0
+                and self._terminal_witness(
+                    target_arity=target,
+                    branch=branch,
+                    required_hit=required_hit,
+                    max_cation=max_cation,
+                    min_anion=min_anion,
+                    all_metal=all_metal,
+                )
+            )
+        need_required = not bool(required_hit)
+        required_charge = -int(net_charge)
+        alloy_prefix_valid = bool(
+            branch is None or target == 1 or all_metal
+        )
+        if branch in (None, "alloy") and alloy_prefix_valid and self._charge_reachable(
+            family=family,
+            boundary=-1,
+            branch="alloy",
+            target_arity=target,
+            start_index=start,
+            remaining_atoms=atoms,
+            remaining_slots=slots,
+            need_required=need_required,
+            required_suffix_charge=required_charge,
+        ):
+            return True
+        if branch in (None, "ionic"):
+            for boundary in self._boundary_order(
+                family=family,
+                max_cation=max_cation,
+                min_anion=min_anion,
+            ):
+                if self._charge_reachable(
+                    family=family,
+                    boundary=boundary,
+                    branch="ionic",
+                    target_arity=target,
+                    start_index=start,
+                    remaining_atoms=atoms,
+                    remaining_slots=slots,
+                    need_required=need_required,
+                    required_suffix_charge=required_charge,
+                ):
+                    return True
+        return False
+
+    def legal_species_counts(
+        self,
+        state: CCFDv2State,
+        *,
+        family: str,
+        target_arity: int,
+        max_species: int = 7,
+    ) -> tuple[FormulaToken, ...]:
+        family = str(family)
+        target = int(target_arity)
+        summary = self._state_summary(state, family=family, target_arity=target)
+        if summary is None or target <= 0 or target > int(max_species):
+            return ()
+        start, atoms, slots, _charge, branch, *_rest = summary
+        if atoms <= 0 or slots <= 0:
+            return ()
+        max_count = atoms - (slots - 1)
+        legal: list[FormulaToken] = []
+        for index in range(start, len(self.elements)):
+            if len(self.elements) - index < slots:
+                break
+            atomic_number = int(self.elements[index])
+            symbol = Z_TO_SYMBOL[atomic_number]
+            if not element_allowed_for_family(symbol, family):
+                continue
+            for oxidation in self.states[index]:
+                token_branch = "alloy" if int(oxidation) == 0 else "ionic"
+                if branch is not None and branch != token_branch:
+                    continue
+                for count in range(1, max_count + 1):
+                    token = FormulaToken(atomic_number, int(oxidation), count)
+                    candidate = state.apply(token, max_species=max_species)
+                    if self.can_complete(
+                        candidate,
+                        family=family,
+                        target_arity=target,
+                        max_species=max_species,
+                    ):
+                        legal.append(token)
+        return tuple(legal)
+
+
 __all__ = [
     "FAMILY_FORBIDDEN",
     "FAMILY_REQUIRED",
     "FamilyAwareBenchmarkReachability",
+    "PaulingBitsetReachability",
     "PaulingWitnessReachability",
     "element_allowed_for_family",
     "family_prefix_reachable",

@@ -35,6 +35,7 @@ from crystal_dlm.ccfd_v2 import (  # noqa: E402
 from crystal_dlm.composition_pair_prior import ValenceNode  # noqa: E402
 from crystal_dlm.family_reachability import (  # noqa: E402
     FamilyAwareBenchmarkReachability,
+    PaulingBitsetReachability,
     PaulingWitnessReachability,
     element_allowed_for_family,
     family_prefix_reachable,
@@ -165,7 +166,7 @@ def main() -> None:
     parser.add_argument("--max-species", type=int, default=7)
     parser.add_argument(
         "--reachability-mode",
-        choices=("family_exact", "pauling_witness"),
+        choices=("family_exact", "pauling_witness", "pauling_bitset"),
         default="family_exact",
     )
     args = parser.parse_args()
@@ -209,8 +210,10 @@ def main() -> None:
     node_to_id = {node: index for index, node in enumerate(nodes)}
     if args.reachability_mode == "family_exact":
         reachability = FamilyAwareBenchmarkReachability(nodes)
-    else:
+    elif args.reachability_mode == "pauling_witness":
         reachability = PaulingWitnessReachability(nodes)
+    else:
+        reachability = PaulingBitsetReachability(nodes)
     soft_values = vocabulary["soft_vocabulary"]
     eos_id = int(vocabulary["species_eos_id"])
 

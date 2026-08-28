@@ -12,6 +12,7 @@ from crystal_dlm.ccfd_v2 import BenchmarkReachability, CCFDv2State, SetAtomCount
 from crystal_dlm.composition_pair_prior import ValenceNode
 from crystal_dlm.family_reachability import (
     FamilyAwareBenchmarkReachability,
+    PaulingBitsetReachability,
     PaulingWitnessReachability,
     family_prefix_reachable,
 )
@@ -164,6 +165,91 @@ class FamilyReachabilityTest(unittest.TestCase):
                 target_arity=2,
                 max_species=2,
             )
+        )
+
+    def test_bitset_oracle_matches_constructive_witness_on_synthetic_case(self):
+        lithium = FormulaToken.from_symbol("Li", 1, 1)
+        oxygen = FormulaToken.from_symbol("O", -2, 1)
+        fluorine = FormulaToken.from_symbol("F", -1, 1)
+        iron = FormulaToken.from_symbol("Fe", 2, 1)
+        nodes = tuple(
+            ValenceNode(token.atomic_number, token.oxidation_state)
+            for token in (lithium, oxygen, fluorine, iron)
+        )
+        kwargs = {
+            "electronegativity_by_atomic_number": {
+                lithium.atomic_number: 0.98,
+                oxygen.atomic_number: 3.44,
+                fluorine.atomic_number: 3.98,
+                iron.atomic_number: 1.83,
+            },
+            "metal_atomic_numbers": {lithium.atomic_number, iron.atomic_number},
+        }
+        recursive = PaulingWitnessReachability(nodes, **kwargs)
+        bitset = PaulingBitsetReachability(nodes, **kwargs)
+        state = CCFDv2State.start().apply(SetAtomCount(2))
+        recursive_legal = recursive.legal_species_counts(
+            state, family="oxide", target_arity=2, max_species=2
+        )
+        bitset_legal = bitset.legal_species_counts(
+            state, family="oxide", target_arity=2, max_species=2
+        )
+        self.assertEqual(bitset_legal, recursive_legal)
+        self.assertNotIn(lithium, bitset_legal)
+        self.assertIn(oxygen, bitset_legal)
+
+    def test_bitset_charge_convolution_keeps_exact_stoichiometry(self):
+        oxygen = FormulaToken.from_symbol("O", -2, 1)
+        iron = FormulaToken.from_symbol("Fe", 2, 1)
+        nodes = tuple(
+            ValenceNode(token.atomic_number, token.oxidation_state)
+            for token in (oxygen, iron)
+        )
+        oracle = PaulingBitsetReachability(
+            nodes,
+            electronegativity_by_atomic_number={
+                oxygen.atomic_number: 3.44,
+                iron.atomic_number: 1.83,
+            },
+            metal_atomic_numbers={iron.atomic_number},
+        )
+        n4 = CCFDv2State.start().apply(SetAtomCount(4))
+        legal = oracle.legal_species_counts(
+            n4, family="oxide", target_arity=2, max_species=2
+        )
+        self.assertIn(FormulaToken.from_symbol("O", -2, 2), legal)
+        partial = n4.apply(FormulaToken.from_symbol("O", -2, 2))
+        self.assertEqual(
+            oracle.legal_species_counts(
+                partial, family="oxide", target_arity=2, max_species=2
+            ),
+            (FormulaToken.from_symbol("Fe", 2, 2),),
+        )
+
+    def test_bitset_rejects_multi_element_zero_valence_nonmetal(self):
+        carbon = FormulaToken.from_symbol("C", 0, 1)
+        iron = FormulaToken.from_symbol("Fe", 0, 1)
+        nodes = tuple(
+            ValenceNode(token.atomic_number, token.oxidation_state)
+            for token in (carbon, iron)
+        )
+        oracle = PaulingBitsetReachability(
+            nodes,
+            electronegativity_by_atomic_number={
+                carbon.atomic_number: 2.55,
+                iron.atomic_number: 1.83,
+            },
+            metal_atomic_numbers={iron.atomic_number},
+        )
+        state = CCFDv2State.start().apply(SetAtomCount(2))
+        self.assertNotIn(
+            carbon,
+            oracle.legal_species_counts(
+                state,
+                family="other",
+                target_arity=2,
+                max_species=2,
+            ),
         )
 
 
