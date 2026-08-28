@@ -17,8 +17,10 @@ activate_environment
 
 readonly FEATURES="${H1A2_CTV_FEATURES:?export H1A2_CTV_FEATURES}"
 readonly TRAIN_LABELS="${H1A2_CTV_TRAIN_LABELS:?export H1A2_CTV_TRAIN_LABELS}"
+readonly VALIDATION_LABELS="${H1A2_CTV_VALIDATION_LABELS:?export H1A2_CTV_VALIDATION_LABELS}"
+readonly DATASET_AUDIT="${H1A2_CTV_DATASET_AUDIT:?export H1A2_CTV_DATASET_AUDIT}"
 readonly RUN_DIR="${ROOT}/runs/ctv_q_heads_${SLURM_JOB_ID}"
-for path in "${FEATURES}" "${TRAIN_LABELS}"; do
+for path in "${FEATURES}" "${TRAIN_LABELS}" "${VALIDATION_LABELS}" "${DATASET_AUDIT}"; do
   [[ -f "${path}" ]] || missing "${path}"
 done
 
@@ -27,5 +29,12 @@ CUDA_VISIBLE_DEVICES=0 python "${ROOT}/src/scripts/train_ctv_q_heads.py" \
   --train-labels "${TRAIN_LABELS}" \
   --output-dir "${RUN_DIR}"
 
-[[ -f "${RUN_DIR}/_SUCCESS" ]] || missing "${RUN_DIR}/_SUCCESS"
+CUDA_VISIBLE_DEVICES=0 python "${ROOT}/src/scripts/finalize_ctv_q_gate.py" \
+  --features "${FEATURES}" \
+  --q-heads "${RUN_DIR}/CTV_Q_HEADS.pt" \
+  --validation-labels "${VALIDATION_LABELS}" \
+  --dataset-audit "${DATASET_AUDIT}" \
+  --output-dir "${RUN_DIR}/gate"
+
+[[ -f "${RUN_DIR}/gate/_SUCCESS" ]] || missing "${RUN_DIR}/gate/_SUCCESS"
 log "CTV two-head training finished: ${RUN_DIR}"

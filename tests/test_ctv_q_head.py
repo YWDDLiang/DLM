@@ -8,7 +8,10 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from crystal_dlm.ctv_q_head import (
+    advantage_is_supported,
     disjoint_plan_group,
+    pairwise_order_accuracy,
+    plan_bootstrap_spearman,
     robust_scale,
     supported_token_ids,
     token_support_counts,
@@ -36,6 +39,25 @@ class CTVQHeadBookkeepingTest(unittest.TestCase):
         center, scale = robust_scale([2.0, 2.0])
         self.assertEqual(center, 2.0)
         self.assertEqual(scale, 1e-3)
+
+    def test_advantage_support_contract(self):
+        self.assertTrue(advantage_is_supported(0.003, -0.002))
+        self.assertTrue(advantage_is_supported(0.010, 0.012))
+        self.assertFalse(advantage_is_supported(0.010, -0.012))
+        self.assertFalse(advantage_is_supported(0.0, 0.010))
+
+    def test_pairwise_accuracy_and_plan_bootstrap(self):
+        accuracy, comparisons, correct = pairwise_order_accuracy(
+            [0.0, 1.0, 2.0], [0.0, 1.0, 2.0]
+        )
+        self.assertEqual((accuracy, comparisons, correct), (1.0, 3, 3.0))
+        result = plan_bootstrap_spearman(
+            {0: [(0.0, 0.0), (1.0, 1.0)], 1: [(2.0, 2.0), (3.0, 3.0)]},
+            draws=20,
+            seed=7,
+        )
+        self.assertAlmostEqual(result["point"], 1.0)
+        self.assertGreaterEqual(result["lcb_95"], 0.0)
 
 
 try:

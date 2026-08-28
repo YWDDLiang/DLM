@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from collections import defaultdict
 import math
+import random
 from typing import Any, Mapping, Sequence
+
+from crystal_dlm.ctv_value_data import spearman
 
 
 def disjoint_plan_group(plan_ordinal: int) -> int:
@@ -57,6 +60,97 @@ def robust_scale(values: Sequence[float]) -> tuple[float, float]:
     variance = sum((value - center) ** 2 for value in numbers) / len(numbers)
     scale = max(math.sqrt(variance), 1e-3)
     return center, scale
+
+
+def advantage_is_supported(
+    first: float,
+    second: float,
+    *,
+    neutral_band: float = 0.005,
+    maximum_disagreement: float = 0.02,
+) -> bool:
+    left = float(first)
+    right = float(second)
+    if not math.isfinite(left) or not math.isfinite(right):
+        return False
+    if abs(left - right) > float(maximum_disagreement):
+        return False
+    left_neutral = abs(left) <= float(neutral_band)
+    right_neutral = abs(right) <= float(neutral_band)
+    if left_neutral or right_neutral:
+        return left_neutral and right_neutral
+    return (left > 0.0) == (right > 0.0)
+
+
+def pairwise_order_accuracy(
+    predicted: Sequence[float],
+    observed: Sequence[float],
+    *,
+    tie_epsilon: float = 1e-4,
+) -> tuple[float | None, int, float]:
+    if len(predicted) != len(observed):
+        raise ValueError("CTV predicted/observed action lengths differ")
+    correct = 0.0
+    comparisons = 0
+    for left in range(len(observed)):
+        for right in range(left + 1, len(observed)):
+            truth = float(observed[left]) - float(observed[right])
+            if abs(truth) < float(tie_epsilon):
+                continue
+            estimate = float(predicted[left]) - float(predicted[right])
+            comparisons += 1
+            if abs(estimate) < float(tie_epsilon):
+                correct += 0.5
+            elif (estimate > 0.0) == (truth > 0.0):
+                correct += 1.0
+    return (
+        correct / comparisons if comparisons else None,
+        comparisons,
+        correct,
+    )
+
+
+def plan_bootstrap_spearman(
+    rows_by_plan: Mapping[int, Sequence[tuple[float, float]]],
+    *,
+    draws: int = 2000,
+    seed: int = 76017,
+) -> dict[str, float | int | None]:
+    plans = sorted(int(plan) for plan in rows_by_plan)
+    if not plans:
+        raise ValueError("CTV Spearman bootstrap has no Plans")
+
+    def evaluate(sampled: Sequence[int]) -> float | None:
+        predicted = []
+        observed = []
+        for plan in sampled:
+            for estimate, truth in rows_by_plan[int(plan)]:
+                predicted.append(float(estimate))
+                observed.append(float(truth))
+        return spearman(predicted, observed)
+
+    point = evaluate(plans)
+    rng = random.Random(int(seed))
+    values = []
+    for _ in range(int(draws)):
+        sampled = [plans[rng.randrange(len(plans))] for _ in plans]
+        value = evaluate(sampled)
+        if value is not None and math.isfinite(value):
+            values.append(float(value))
+    values.sort()
+    if not values:
+        lower = upper = None
+    else:
+        lower = values[int(0.025 * (len(values) - 1))]
+        upper = values[int(0.975 * (len(values) - 1))]
+    return {
+        "point": point,
+        "bootstrap_draws": int(draws),
+        "finite_draws": len(values),
+        "lcb_95": lower,
+        "ucb_95": upper,
+        "seed": int(seed),
+    }
 
 
 def build_q_head(projection_dim: int = 256) -> Any:
@@ -118,7 +212,10 @@ def build_q_head(projection_dim: int = 256) -> Any:
 
 __all__ = [
     "build_q_head",
+    "advantage_is_supported",
     "disjoint_plan_group",
+    "pairwise_order_accuracy",
+    "plan_bootstrap_spearman",
     "robust_scale",
     "supported_token_ids",
     "token_support_counts",
