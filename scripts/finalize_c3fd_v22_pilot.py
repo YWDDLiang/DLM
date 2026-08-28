@@ -63,9 +63,10 @@ def main() -> None:
     parser.add_argument("--output-stem", default="C3FD_V22_PILOT_FINAL")
     parser.add_argument("--schema", default="h1a2_c3fd_v22_pilot_final_v1")
     parser.add_argument("--title", default="C³FD-v2.2 requested-256 pilot")
+    parser.add_argument("--gate-name", default="step3_pass")
     args = parser.parse_args()
-    if int(args.requested) != 256:
-        raise ValueError("C3FD witness pilot is frozen at requested256")
+    if int(args.requested) not in (256, 1000):
+        raise ValueError("C3FD witness finalizer supports requested256 or requested1000")
     candidate_arm = str(args.candidate_arm)
     if not candidate_arm.startswith("c3fd_"):
         raise ValueError("candidate arm must start with c3fd_")
@@ -155,7 +156,7 @@ def main() -> None:
         for seed, metrics in sample_metrics.items()
     }
     gates = {
-        "requested256_frozen": int(args.requested) == 256,
+        f"requested{int(args.requested)}_frozen": True,
         "semantic_dead_end_zero_both_seeds": all(
             value == 0 for value in semantic_dead_ends.values()
         ),
@@ -182,7 +183,10 @@ def main() -> None:
         "family_distance_not_worse_than_p0_plus_0p01": distance_to_train[candidate_arm]["family"]
         <= distance_to_train["p0"]["family"] + 0.01,
     }
-    gates["step3_pass"] = all(gates.values())
+    gate_name = str(args.gate_name)
+    if not gate_name or gate_name in gates:
+        raise ValueError("invalid promotion gate name")
+    gates[gate_name] = all(gates.values())
     report = {
         "schema": str(args.schema),
         "candidate_arm": candidate_arm,
@@ -219,7 +223,7 @@ def main() -> None:
     lines = [
         f"# {args.title}",
         "",
-        f"Step 3 pass: **{gates['step3_pass']}**. This is not a headline run.",
+        f"Promotion gate `{gate_name}` pass: **{gates[gate_name]}**.",
         f"Semantic dead ends by seed: `{semantic_dead_ends}`.",
         "",
         "| Arm | Requested | Parsed | Comp-valid | Novel/Unique/NU | All-metal |",
