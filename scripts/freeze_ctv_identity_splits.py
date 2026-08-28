@@ -55,6 +55,32 @@ def identity_set(rows: Iterable[Mapping[str, Any]]) -> set[str]:
     return {str(row["reduced_composition_identity"]) for row in rows}
 
 
+def filter_branch_by_certificate(
+    rows: list[dict[str, Any]], compile_fn
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Apply outcome-blind C³FD eligibility before any positional selection."""
+
+    accepted: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+    for row_index, row in enumerate(rows):
+        certificate = compile_fn(row, row_index)
+        if certificate.get("composition_supervision") is True:
+            output = dict(row)
+            output["ctv_certificate_class"] = str(
+                certificate.get("certificate_class") or "benchmark_compatible"
+            )
+            accepted.append(output)
+            continue
+        output = dict(row)
+        output["ctv_certificate_rejection"] = str(
+            certificate.get("compile_error")
+            or certificate.get("certificate_class")
+            or "unknown"
+        )
+        rejected.append(output)
+    return accepted, rejected
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--branch-cohort", type=Path, required=True)
@@ -65,6 +91,7 @@ def main() -> None:
     parser.add_argument("--branch-train-plans", type=int, default=128)
     parser.add_argument("--branch-val-plans", type=int, default=32)
     parser.add_argument("--l6-plans", type=int, default=256)
+    parser.add_argument("--require-c3fd-certification", action="store_true")
     args = parser.parse_args()
     if args.output_dir.exists():
         raise FileExistsError(args.output_dir)
@@ -73,6 +100,13 @@ def main() -> None:
         with_identity(row, source="branch")
         for row in iter_jsonl(args.branch_cohort)
     ]
+    certificate_rejected: list[dict[str, Any]] = []
+    if args.require_c3fd_certification:
+        from build_c3fd_planner_data import compile_row
+
+        branch, certificate_rejected = filter_branch_by_certificate(
+            branch, compile_row
+        )
     seed17 = [
         with_identity(row, source="c3fd_seed17")
         for row in iter_jsonl(args.c3fd_seed17)
@@ -147,6 +181,7 @@ def main() -> None:
         "CTV_DLM_L6_PLANS.jsonl": l6,
         "CTV_DLM_L7_PLANS.jsonl": seed18,
         "CTV_BRANCH_EXCLUDED_OVERLAP.jsonl": excluded_branch,
+        "CTV_BRANCH_CERTIFICATE_REJECTED.jsonl": certificate_rejected,
     }
     hashes = {
         name: write_jsonl(args.output_dir / name, rows)
@@ -161,6 +196,7 @@ def main() -> None:
         "l7_requested1000_unchanged": len(seed18) == 1000,
         "all_frozen_sets_pairwise_disjoint": all(value == 0 for value in overlap.values()),
         "outcome_labels_unused": True,
+        "certificate_filter_order_valid": True,
     }
     gate["identity_freeze_authorized"] = all(gate.values())
     report = {
@@ -169,6 +205,11 @@ def main() -> None:
             "branch": str(args.branch_cohort.resolve()),
             "c3fd_seed17": str(args.c3fd_seed17.resolve()),
             "c3fd_seed18": str(args.c3fd_seed18.resolve()),
+        },
+        "configuration": {
+            "require_c3fd_certification": bool(
+                args.require_c3fd_certification
+            )
         },
         "counts": {name: len(rows) for name, rows in outputs.items()},
         "identity_counts": {name: len(values) for name, values in sets.items()},
@@ -180,6 +221,12 @@ def main() -> None:
         },
         "excluded_branch_reasons": dict(
             Counter(str(row.get("pair_split")) for row in excluded_branch)
+        ),
+        "certificate_rejected_reasons": dict(
+            Counter(
+                str(row.get("ctv_certificate_rejection"))
+                for row in certificate_rejected
+            )
         ),
         "hashes": hashes,
         "gate": gate,

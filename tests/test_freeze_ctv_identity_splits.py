@@ -34,6 +34,27 @@ def write(path: Path, rows):
 
 
 class FreezeCTVIdentitySplitsTest(unittest.TestCase):
+    def test_certificate_filter_happens_before_selection(self):
+        rows = [
+            {"sample_idx": index, "plan_state": plan("B", index + 1, "C", 1)}
+            for index in range(4)
+        ]
+
+        def compile_fn(_row, row_index):
+            return {
+                "composition_supervision": row_index % 2 == 0,
+                "certificate_class": "benchmark_compatible"
+                if row_index % 2 == 0
+                else "extended_only",
+            }
+
+        accepted, rejected = MODULE.filter_branch_by_certificate(rows, compile_fn)
+        self.assertEqual([row["sample_idx"] for row in accepted], [0, 2])
+        self.assertEqual([row["sample_idx"] for row in rejected], [1, 3])
+        self.assertTrue(
+            all(row["ctv_certificate_rejection"] == "extended_only" for row in rejected)
+        )
+
     def test_freezes_pairwise_disjoint_sets_without_outcomes(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -94,6 +115,9 @@ class FreezeCTVIdentitySplitsTest(unittest.TestCase):
             self.assertEqual(report["counts"]["CTV_DLM_L6_PLANS.jsonl"], 256)
             self.assertEqual(report["source_diagnostics"]["branch_vs_seed18"], 1)
             self.assertTrue(all(value == 0 for value in report["overlap"].values()))
+            self.assertFalse(
+                report["configuration"]["require_c3fd_certification"]
+            )
 
 
 if __name__ == "__main__":
