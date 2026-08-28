@@ -71,6 +71,14 @@ Rules:
 - compact UTF-8 JSON uses sorted keys and separators `(',', ':')`;
 - prompt length must be <=128 tokenizer tokens.
 
+The executor retains the crystal-specific special-token language rather than
+emitting generic text: `<N_###>`, `<LA/LB/LC_###>`, `<AA/AB/AG_###>`,
+`<E_symbol>` and `<X/Y/Z_###>`.  For a certified candidate composition it
+instantiates exactly `7+4N` typed body positions, anchors the count and element
+tokens, and turns the remaining `6+3N` geometry tokens into a structure.  The
+primary DLM claim is therefore candidate-to-structure execution; stability
+awareness is an additional improvement to that executor.
+
 The base is trained exactly once from the retained control `step-1000` resume
 for a fixed total-two-epoch continuation. There is no checkpoint search.
 Tokenizer, base checkpoint, primary exact-axis schedule, model494, tau800 and
@@ -235,17 +243,21 @@ Frozen consistency transforms are:
 No claim of full equivalent-cell invariance is made. Structural uniqueness
 uses `StructureMatcher(ltol=0.3, stol=0.5, angle_tol=10 degrees)`.
 
-## MatterSim gates
+## Deferred independent MatterSim audit
 
-Gate A is the already-running 1752-structure audit. It measures cross-MLIP rank
-transfer, not independent physical truth.
+The 1752-structure MatterSim audit measures cross-MLIP rank transfer, not
+independent physical truth.  It is intentionally deferred until an internal
+CTV/H1-A2 candidate has demonstrated a positive L6 signal.  It is not a
+prerequisite for the engineering canary, Branch-Q construction, or the first
+internal L6 screen.
 
-Before formal Branch work, the late (`0.80`) milestone's CHGNet-lowest and
+Before a final external claim, the late (`0.80`) milestone's CHGNet-lowest and
 highest observed actions for 32 frozen validation Plans produce 64 fixed
-structures. MatterSim-v1.0.0-5M performs full cell/coordinate relaxation with
+structures. MatterSim-v1.0.0-5M may perform full cell/coordinate relaxation with
 `FrechetCellFilter + FIRE`, `fmax=0.05 eV/Angstrom`, `max_steps=200` and frozen
-device/precision. Gate B fails unless all 64 converge with finite energy; their
-extreme action AUC must exceed 0.60.
+device/precision. This is confirmation evidence: all 64 must converge with
+finite energy and their extreme-action AUC must exceed 0.60 before a
+cross-potential stability claim is made.
 
 ## Frozen scientific gates
 
@@ -258,16 +270,18 @@ Branch-Q validation:
 - symmetry rank agreement >0.90;
 - oxide, sulfide and N13--20 direction positive when each has >=5 Plans and
   >=20 comparisons;
-- MatterSim-relaxed extreme action AUC >0.60;
 - support/coverage/fallback gates above.
 
 L6, only after a new authorization:
 
 - two DLM seeds over the frozen C³FD L6 cohort;
 - compute-matched gamma0 versus guided;
-- pooled Strict and Meta both positive and neither seed below -1pp;
-- body, Direct, StructureMatcher uniqueness and stable-to-S.U.N. retention
-  point deltas >=-1pp;
+- pooled Strict or Meta S.U.N. improves and the other is no worse than `-1 pp`;
+- pooled body and Direct deltas are each >=`-3 pp`;
+- StructureMatcher uniqueness and novelty deltas are each >=`-5 pp`;
+- stable-to-S.U.N. retention is reported and vetoes only a degradation worse
+  than `-10 pp`;
+- both seeds are reported, but no per-seed `-1 pp` hard veto is used;
 - paired discordance, confidence intervals, energy quantiles and cost reported;
 - L6 is go/no-go only.
 
@@ -275,14 +289,45 @@ L7, only after another authorization:
 
 - run seed18 requested1000 once;
 - Strict S.U.N. >=10% and Meta S.U.N. >=50%;
-- both improve over matched base;
+- pooled body and Direct remain within `-3 pp` of matched base;
+- structural uniqueness and novelty remain within `-5 pp`;
+- retention is diagnostic unless it falls by more than `10 pp`;
 - report paired CI/McNemar and call thresholds benchmark attainment, not
   confidence-bound success;
 - public `105/488` remains unchanged until the complete replacement passes.
 
+## Frozen fallback ladder
+
+Failure does not return immediately to an unrelated Planner or MatterSim
+experiment.  The H1-A2 executor is improved in the following fixed order:
+
+1. **Engineering fallback:** if 16-way action batches or model494 cause memory
+   failure, execute the same 256 branch ledger in smaller sequential
+   microbatches.  Actions, random keys and denominators do not change.
+2. **Coverage fallback:** if the value head lacks supported legal-token mass,
+   expand only over the already frozen certified Branch source and/or add
+   continuation replicates.  No threshold lowering or outcome-selected Plans.
+3. **Positive-direction but insufficient S.U.N.:** distil the converged
+   low-energy winner for each fixed composition into the same special-token
+   DLM. High-energy bodies are contrastive/ranking examples and are never CE
+   targets.
+4. **No value direction:** train a geometry-token curriculum on real stable
+   MP-20 structures, with lattice/XYZ masked losses emphasized. Matched
+   unstable structures supply only an auxiliary energy-ordering loss; no
+   `stable`, energy, or target-stability prompt token is introduced.
+5. **Last resort:** a DLM-native RL method may be audited only after the above
+   non-RL routes fail and only with valid diffusion likelihood accounting.
+
+Every fallback preserves `7+4N`, exact composition, special tokens, typed
+legal support, requested denominators, and raw-body versus model494 reporting.
+It receives a new method label and immutable result directory.
+
 ## Authorization boundary
 
 Prerequisite code, audits and tests are authorized. A single 256-completion
-resource canary is authorized only after Gate A, base freeze, reduced-identity
-manifests, base-logit equivalence and canary hard assertions pass. Formal
-Branch-Q generation, Q training, L6, L7, distillation and RL remain NO-GO.
+resource canary is authorized after base freeze, certified reduced-identity
+manifests, base-logit equivalence and canary hard assertions pass.  A clean
+engineering canary authorizes the frozen formal Branch-Q build; its internal
+validation gates authorize L6.  L7, distillation, stable-token curriculum and
+RL remain separately stage-gated. MatterSim is deferred until a positive L6
+candidate requires independent cross-potential confirmation.

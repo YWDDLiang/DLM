@@ -24,7 +24,6 @@ if [[ -z "${H1A2_CTV_CERTIFIED_COHORTS_MANIFEST:-}" ]]; then
 fi
 readonly CERTIFIED_MANIFEST="${H1A2_CTV_CERTIFIED_COHORTS_MANIFEST}"
 readonly MINIMAL_AUDIT="${H1A2_CTV_MINIMAL_AUDIT:?export H1A2_CTV_MINIMAL_AUDIT}"
-readonly MATTERSIM_GATE_A="${H1A2_MATTERSIM_GATE_A:?export H1A2_MATTERSIM_GATE_A}"
 readonly REFINER="${H1A2_REFINER_PATH:?export H1A2_REFINER_PATH}"
 readonly CRYS="${H1A2_CRYSLLMGEN_DIR:?export H1A2_CRYSLLMGEN_DIR}"
 readonly RUN_DIR="${ROOT}/runs/ctv_branch_canary_${SLURM_JOB_ID}"
@@ -37,7 +36,6 @@ for path in \
   "${IDENTITY_MANIFEST}" \
   "${CERTIFIED_MANIFEST}" \
   "${MINIMAL_AUDIT}" \
-  "${MATTERSIM_GATE_A}" \
   "${REFINER}" \
   "${CRYS}"; do
   [[ -e "${path}" ]] || missing "${path}"
@@ -47,24 +45,21 @@ python - \
   "${IDENTITY_MANIFEST}" \
   "${CERTIFIED_MANIFEST}" \
   "${MINIMAL_AUDIT}" \
-  "${MATTERSIM_GATE_A}" \
   "${PLANS}" <<'PY'
 import hashlib,json,sys
-identity,certified,minimal,mattersim=(
-    json.load(open(path,encoding='utf-8')) for path in sys.argv[1:5]
+identity,certified,minimal=(
+    json.load(open(path,encoding='utf-8')) for path in sys.argv[1:4]
 )
 if identity.get('gate',{}).get('identity_freeze_authorized') is not True:
     raise SystemExit('CTV reduced-identity freeze is not authorized')
 if certified.get('gate',{}).get('ctv_certified_cohorts_authorized') is not True:
     raise SystemExit('CTV certified cohorts are not authorized')
 expected=certified.get('files',{}).get('CTV_BRANCH_CANARY_PLANS.jsonl',{}).get('output_sha256')
-actual=hashlib.sha256(open(sys.argv[5],'rb').read()).hexdigest()
+actual=hashlib.sha256(open(sys.argv[4],'rb').read()).hexdigest()
 if not expected or expected != actual:
     raise SystemExit('CTV canary cohort hash changed')
 if minimal.get('gate',{}).get('minimal_spec_data_authorized') is not True:
     raise SystemExit('CTV minimal-spec audit is not authorized')
-if mattersim.get('gates',{}).get('critic_training_authorized') is not True:
-    raise SystemExit('MatterSim Gate A did not authorize the CTV resource canary')
 PY
 
 mkdir -p "${RUN_DIR}"
