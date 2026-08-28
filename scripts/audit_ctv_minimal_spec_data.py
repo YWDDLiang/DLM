@@ -100,6 +100,16 @@ def main() -> None:
     )
     manifest_path = args.data_dir / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    static_assets = manifest.get("static_assets") or {}
+    vocab_path = args.data_dir / "vocab_tokens.txt"
+    expected_vocab_sha = str(
+        static_assets.get("vocab_tokens.txt", {}).get("sha256") or ""
+    )
+    actual_vocab_sha = (
+        hashlib.sha256(vocab_path.read_bytes()).hexdigest()
+        if vocab_path.is_file()
+        else ""
+    )
     certificate_dir = Path(str(manifest.get("certificate_dir") or ""))
     if not certificate_dir.is_dir():
         raise FileNotFoundError(
@@ -158,6 +168,8 @@ def main() -> None:
         "val_nonempty": split_reports["val"]["valid_rows"] > 0,
         "test_nonempty": split_reports["test"]["valid_rows"] > 0,
         "soft_and_stability_fields_absent": True,
+        "vocab_tokens_present_and_hash_matched": bool(expected_vocab_sha)
+        and actual_vocab_sha == expected_vocab_sha,
     }
     gate["minimal_spec_data_authorized"] = all(gate.values())
     report = {
@@ -167,6 +179,7 @@ def main() -> None:
         "tokenizer_class": type(tokenizer).__name__,
         "tokenizer_vocab_size": len(tokenizer),
         "max_prompt_tokens": int(args.max_prompt_tokens),
+        "vocab_tokens_sha256": actual_vocab_sha,
         "splits": split_reports,
         "gate": gate,
     }

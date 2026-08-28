@@ -21,7 +21,12 @@ readonly AUDIT="${H1A2_CTV_MINIMAL_AUDIT:?export H1A2_CTV_MINIMAL_AUDIT}"
 readonly RESUME="${H1A2_RESUME_CHECKPOINT:?export H1A2_RESUME_CHECKPOINT}"
 readonly RUN_DIR="${ROOT}/runs/ctv_minimal_base_${SLURM_JOB_ID}"
 
-for path in "${MODEL}" "${DATA}/_SUCCESS" "${AUDIT}" "${RESUME}"; do
+for path in \
+  "${MODEL}" \
+  "${DATA}/_SUCCESS" \
+  "${DATA}/vocab_tokens.txt" \
+  "${AUDIT}" \
+  "${RESUME}"; do
   [[ -e "${path}" ]] || missing "${path}"
 done
 [[ -f "${RESUME}/adapter_model.safetensors" ]] || missing "${RESUME}/adapter_model.safetensors"

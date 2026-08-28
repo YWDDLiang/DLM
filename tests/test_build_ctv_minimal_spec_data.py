@@ -1,5 +1,6 @@
 import importlib.util
 from pathlib import Path
+import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,6 +15,26 @@ SPEC.loader.exec_module(MODULE)
 
 
 class BuildCTVMinimalSpecDataTest(unittest.TestCase):
+    def test_required_vocab_asset_is_copied_with_identical_hash(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source = root / "source"
+            output = root / "output"
+            source.mkdir()
+            output.mkdir()
+            (source / "vocab_tokens.txt").write_text(
+                "<N_001>\n<X_000>\n", encoding="utf-8"
+            )
+            report = MODULE.copy_required_static_assets(source, output)
+            self.assertEqual(
+                report["vocab_tokens.txt"]["sha256"],
+                report["vocab_tokens.txt"]["source_sha256"],
+            )
+            self.assertEqual(
+                (output / "vocab_tokens.txt").read_text(encoding="utf-8"),
+                "<N_001>\n<X_000>\n",
+            )
+
     def plan(self):
         return {
             "N": 5,

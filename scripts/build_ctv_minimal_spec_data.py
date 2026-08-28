@@ -9,6 +9,7 @@ import hashlib
 from itertools import zip_longest
 import json
 from pathlib import Path
+import shutil
 import sys
 from typing import Any, Iterable, Mapping
 
@@ -26,6 +27,7 @@ from crystal_dlm.composition_identity import (  # noqa: E402
 
 
 SCHEMA = "h1a2_ctv_minimal_spec_v1"
+REQUIRED_STATIC_ASSETS = ("vocab_tokens.txt",)
 FAMILIES = {
     "oxide",
     "sulfide",
@@ -45,6 +47,24 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
                 if not isinstance(value, dict):
                     raise TypeError(f"non-object row in {path}")
                 yield value
+
+
+def copy_required_static_assets(input_dir: Path, output_dir: Path) -> dict[str, Any]:
+    report: dict[str, Any] = {}
+    for name in REQUIRED_STATIC_ASSETS:
+        source = input_dir / name
+        if not source.is_file():
+            raise FileNotFoundError(source)
+        target = output_dir / name
+        shutil.copyfile(source, target)
+        report[name] = {
+            "bytes": target.stat().st_size,
+            "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
+            "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        }
+        if report[name]["sha256"] != report[name]["source_sha256"]:
+            raise RuntimeError(f"copied static asset hash changed for {name}")
+    return report
 
 
 def charge_class(
@@ -215,6 +235,7 @@ def main() -> None:
             "tokenizer_prompt_audit_pending": prompt_tokens_pending,
         }
 
+    static_assets = copy_required_static_assets(args.input_dir, args.output_dir)
     gate = {
         "train_nonempty": split_reports["train"]["kept_rows"] > 0,
         "val_nonempty": split_reports["val"]["kept_rows"] > 0,
@@ -222,6 +243,8 @@ def main() -> None:
         "counterfactual_prompt_removed": True,
         "stability_fields_absent": True,
         "prompt_token_audit_pending": True,
+        "required_static_assets_copied": set(static_assets)
+        == set(REQUIRED_STATIC_ASSETS),
     }
     report = {
         "schema": SCHEMA,
@@ -229,6 +252,7 @@ def main() -> None:
         "certificate_dir": str(args.certificate_dir.resolve()),
         "output_dir": str(args.output_dir.resolve()),
         "splits": split_reports,
+        "static_assets": static_assets,
         "gate": gate,
     }
     (args.output_dir / "manifest.json").write_text(
