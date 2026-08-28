@@ -4,6 +4,7 @@ from crystal_dlm.ctv_branching import (
     free_geometry_positions,
     make_branch_layout,
     newly_crossed_milestones,
+    require_unique_composition_ids,
     validate_canary_layout,
     validate_branch_layout,
     visible_free_geometry_fraction,
@@ -11,6 +12,17 @@ from crystal_dlm.ctv_branching import (
 
 
 class CTVBranchingProtocolTest(unittest.TestCase):
+    def test_unique_identity_check_scales_beyond_canary_eight(self):
+        rows = [
+            {"reduced_composition_identity": f"identity-{index}"}
+            for index in range(128)
+        ]
+        identities = require_unique_composition_ids(rows, expected_rows=128)
+        self.assertEqual(len(identities), 128)
+        rows[-1]["reduced_composition_identity"] = "identity-0"
+        with self.assertRaisesRegex(ValueError, "not unique"):
+            require_unique_composition_ids(rows, expected_rows=128)
+
     def test_free_geometry_excludes_count_and_elements(self):
         positions = free_geometry_positions(2)
         self.assertEqual(positions, (1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 13, 14))

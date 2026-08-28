@@ -18,6 +18,23 @@ from crystal_dlm.ctv_protocol import counter_seed, select_eight_legal_actions
 CTV_MILESTONES = (0.60, 0.80)
 
 
+def require_unique_composition_ids(
+    rows: Sequence[Mapping[str, Any]], *, expected_rows: int
+) -> tuple[str, ...]:
+    if len(rows) != int(expected_rows):
+        raise ValueError(
+            f"CTV rollout has {len(rows)} rows, expected {int(expected_rows)}"
+        )
+    identities = tuple(
+        str(row.get("reduced_composition_identity") or "") for row in rows
+    )
+    if any(not value for value in identities):
+        raise ValueError("CTV rollout has an empty reduced composition identity")
+    if len(set(identities)) != int(expected_rows):
+        raise ValueError("CTV rollout reduced composition identities are not unique")
+    return identities
+
+
 def free_geometry_positions(num_atoms: int) -> tuple[int, ...]:
     """Return relative suffix positions for lattice and XYZ, not N/elements."""
 
@@ -300,6 +317,7 @@ __all__ = [
     "newly_crossed_milestones",
     "require_gamma_zero_identity",
     "select_intervention_from_masked_logits",
+    "require_unique_composition_ids",
     "stateless_gumbel_scores",
     "validate_branch_layout",
     "validate_canary_layout",

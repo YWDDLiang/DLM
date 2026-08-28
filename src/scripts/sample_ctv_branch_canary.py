@@ -20,7 +20,10 @@ if str(PROJECT_ROOT) not in sys.path:
 import torch
 import torch.distributed as dist
 
-from crystal_dlm.ctv_branching import validate_branch_layout  # noqa: E402
+from crystal_dlm.ctv_branching import (  # noqa: E402
+    require_unique_composition_ids,
+    validate_branch_layout,
+)
 from crystal_dlm.ctv_protocol import branch_record_id, counter_seed  # noqa: E402
 from crystal_dlm.ctv_rollout import (  # noqa: E402
     collect_ctv_branch_states,
@@ -52,9 +55,7 @@ def read_rows(path: Path, *, expected_plans: int) -> list[dict[str, Any]]:
         raise ValueError(
             f"CTV rollout requires exactly {int(expected_plans)} Plans, got {len(rows)}"
         )
-    identities = [str(row.get("reduced_composition_identity") or "") for row in rows]
-    if any(not value for value in identities) or len(set(identities)) != 8:
-        raise ValueError("CTV canary reduced composition identities changed")
+    require_unique_composition_ids(rows, expected_rows=int(expected_plans))
     for index, row in enumerate(rows):
         if row.get("minimal_spec_schema") != "h1a2_ctv_minimal_spec_v1":
             raise ValueError(f"CTV canary row {index} lacks the frozen minimal spec")
