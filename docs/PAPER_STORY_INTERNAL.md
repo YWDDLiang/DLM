@@ -599,4 +599,18 @@ constructive terminal certificate；独立legacy validator仍在EOS报告最终c
 thermodynamic stability、synthesizability或下游S.U.N.提升；不宣称“首个元素tokenizer”，也
 不需要与外部方法做组件对比。主故事、贡献点1和public `105/488`完全不变；稳定性改进仍由
 独立Track B回答。正式证据见
-[`C3FD_V25_REQUESTED1000_FINAL.md`](../results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.md)。
+  [`C3FD_V25_REQUESTED1000_FINAL.md`](../results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.md)。
+
+### CTV-v1没有成为贡献，但明确了稳定性信号的尺度
+
+CTV使用真实forced-token continuation、common DLM/refiner noise与完整legal-support
+guidance合同，工程链路完整；然而validation内single-token action排序不可复现：
+state-centered Spearman为`0.035`（LCB`-0.056`），pairwise AUC`0.505`，两continuation
+agreement`0.492`。因此不能把“模型知道不同composition的绝对能量”误写成“模型知道
+当前geometry token的稳定性优势”，也不能继续做gamma/L6或RL。
+
+这个负结果反而收紧主故事：稳定性信号必须作用于比单token更强的尺度，或者先进入模型
+参数。下一候选SGTC保持C3FD composition与`7+4N` executor不变，只在真实strict-stable
+MP-20上做lattice/XYZ geometry-token curriculum，并用全MP20 geometry-only continuation
+作为matched control。若SGTC通过，第三层贡献应表述为stable-geometry representation
+learning，而不是在线token reward；若失败，前两层贡献仍独立成立。

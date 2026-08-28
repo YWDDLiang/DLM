@@ -1,0 +1,17 @@
+{
+  "artifact_sha256": "36a5f150d146cc18bcc25894b7715285063ca972c5f74af1bef41b91a08751fd",
+  "generator_frozen": true,
+  "geometry_tokens": 202,
+  "hidden_dim": 4096,
+  "maximum_selected_probability_error": 8.881784197001252e-16,
+  "output_head_hook": "forward_pre_hook_input",
+  "probability_atol": 1e-05,
+  "projection_dim": 256,
+  "projection_seed": 73017,
+  "schema": "h1a2_ctv_state_action_features_manifest_v1",
+  "states": 320,
+  "train_states": 256,
+  "train_states_sha256": "1930ef091b2d30bf33d49fe54a49760b4ec44477d517dd372971af326ae5b34e",
+  "validation_states": 64,
+  "validation_states_sha256": "c72b686b2bc655d5546b89a9799604ea94c8abe8adbb7c8d99d062683bf5df06"
+}

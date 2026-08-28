@@ -1,0 +1,73 @@
+{
+  "composition_overlap": 0,
+  "dataset_authorized": true,
+  "schema": "h1a2_ctv_branch_dataset_audit_v1",
+  "state_csv_sha256": "00b6c788c4d5057ce9944e52147938c033f9b10f872756064cf03de937eedf9f",
+  "train": {
+    "branches": 2048,
+    "cross_continuation_spearman_mean": null,
+    "cross_continuation_states": 0,
+    "cross_pair_agreement": null,
+    "cross_pair_agreements": 0,
+    "cross_pair_comparisons": 0,
+    "direct_valid": 2040,
+    "energy_quantiles": {
+      "0.0": -12.45819091796875,
+      "0.1": -9.11280174255371,
+      "0.25": -7.34881055355072,
+      "0.5": -5.7203733921051025,
+      "0.75": -4.527413964271545,
+      "0.9": -3.3252809286117553,
+      "1.0": -0.4316152334213257
+    },
+    "known_returns": 2048,
+    "plans": 128,
+    "reconstructed": 2048,
+    "split": "train",
+    "states": 256,
+    "unknown_returns": 0,
+    "within_state_range_quantiles": {
+      "0.0": 2.384185791015625e-07,
+      "0.1": 4.363059997558594e-05,
+      "0.25": 0.0006821155548095703,
+      "0.5": 0.04852294921875,
+      "0.75": 0.10751235485076904,
+      "0.9": 0.17377924919128418,
+      "1.0": 1.2348265647888184
+    }
+  },
+  "unknown_policy": "missing; never negative or high energy",
+  "validation": {
+    "branches": 1024,
+    "cross_continuation_spearman_mean": -0.0034140444175507914,
+    "cross_continuation_states": 64,
+    "cross_pair_agreement": 0.49150943396226415,
+    "cross_pair_agreements": 521,
+    "cross_pair_comparisons": 1060,
+    "direct_valid": 1024,
+    "energy_quantiles": {
+      "0.0": -10.957754135131836,
+      "0.1": -9.686649513244628,
+      "0.25": -8.103699684143066,
+      "0.5": -6.5097975730896,
+      "0.75": -4.7764445543289185,
+      "0.9": -3.478818440437317,
+      "1.0": -2.000516414642334
+    },
+    "known_returns": 1024,
+    "plans": 32,
+    "reconstructed": 1024,
+    "split": "validation",
+    "states": 64,
+    "unknown_returns": 0,
+    "within_state_range_quantiles": {
+      "0.0": 7.152557373046875e-07,
+      "0.1": 2.5606155395507814e-05,
+      "0.25": 0.0004540085792541504,
+      "0.5": 0.025170624256134033,
+      "0.75": 0.06819736957550049,
+      "0.9": 0.09335968494415284,
+      "1.0": 0.37650299072265625
+    }
+  }
+}

@@ -236,3 +236,20 @@
   [`C3FD_V25_TEACHER_WITNESS_AUDIT.md`](../results/remote_screens/C3FD_V25_TEACHER_WITNESS_AUDIT.md)、
   [`C3FD_V25_PILOT_FINAL.md`](../results/remote_screens/C3FD_V25_PILOT_FINAL.md)和
   [`C3FD_V25_REQUESTED1000_FINAL.md`](../results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.md)。
+
+## 2026-08-28 CTV-DLM-v1终态与SGTC fallback
+
+- CTV formal Branch完成train `2048`与validation `1024`条forced-action终态，全部
+  CHGNet-known；冻结hidden/action feature复现320 states和202个legal geometry token，
+  base probability最大误差仅`8.88e-16`；
+- 正确的within-state结果为Spearman `0.0353`、95% LCB `-0.0563`，pairwise AUC
+  `0.5053`，两continuation action-sign agreement `0.4915`；mean supported mass仅
+  `0.1613`，guided coverage `0.0781`。因此gamma未设置、L6未授权；
+- 初版absolute-energy Spearman被composition baseline抬高，commit `3261893`改为
+  state-centered estimand；旧输出只作统计实现错误保留。完整边界见
+  [`CTV_DLM_V1_FINAL_NO_GO.md`](CTV_DLM_V1_FINAL_NO_GO.md)；
+- 按冻结fallback启动SGTC-DLM-v1：训练时N/element特殊token保持可见，只mask并监督
+  lattice/angle/XYZ；G0使用全部C3FD-certified MP20，G1只用source
+  `e_above_hull<=1e-8`的strict-stable结构。训练JSON递归移除能量/稳定字段，两个arm
+  从同一base固定续训348步，随后进入matched L6；合同见
+  [`SGTC_DLM_V1_CONTRACT.md`](SGTC_DLM_V1_CONTRACT.md)。

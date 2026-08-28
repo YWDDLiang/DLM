@@ -1,0 +1,94 @@
+{
+  "checkpoint_sha256": "1af3629d9eae01eed8050a1bf98a26479aebbaf8ba2fd6ff82f62ad77fd99940",
+  "features_sha256": "36a5f150d146cc18bcc25894b7715285063ca972c5f74af1bef41b91a08751fd",
+  "group_rule": "frozen_plan_ordinal_mod_2",
+  "groups_disjoint": true,
+  "head_summaries": [
+    {
+      "energy_center": -5.901846995751839,
+      "energy_scale": 2.261834606395453,
+      "group": 0,
+      "loss_trace": [
+        {
+          "absolute_loss": 0.4714275598526001,
+          "advantage_loss": 0.0010116128250956535,
+          "loss": 0.472439169883728,
+          "update": 1
+        },
+        {
+          "absolute_loss": 0.0025906364899128675,
+          "advantage_loss": 6.438238779082894e-05,
+          "loss": 0.0026550188194960356,
+          "update": 128
+        },
+        {
+          "absolute_loss": 0.00014935446961317211,
+          "advantage_loss": 8.691609764355235e-06,
+          "loss": 0.00015804608119651675,
+          "update": 256
+        },
+        {
+          "absolute_loss": 5.542501185118454e-06,
+          "advantage_loss": 1.0880519312195247e-06,
+          "loss": 6.630552888964303e-06,
+          "update": 384
+        },
+        {
+          "absolute_loss": 0.0026278896257281303,
+          "advantage_loss": 1.824621023160944e-07,
+          "loss": 0.002628072164952755,
+          "update": 512
+        }
+      ],
+      "plans": 64,
+      "seed": 74017,
+      "states": 128
+    },
+    {
+      "energy_center": -5.919075476238504,
+      "energy_scale": 1.917759937844983,
+      "group": 1,
+      "loss_trace": [
+        {
+          "absolute_loss": 0.45058804750442505,
+          "advantage_loss": 0.001674541854299605,
+          "loss": 0.4522625803947449,
+          "update": 1
+        },
+        {
+          "absolute_loss": 0.00329455453902483,
+          "advantage_loss": 0.00016915512969717383,
+          "loss": 0.0034637097269296646,
+          "update": 128
+        },
+        {
+          "absolute_loss": 0.0008223755285143852,
+          "advantage_loss": 3.157556420774199e-05,
+          "loss": 0.0008539510890841484,
+          "update": 256
+        },
+        {
+          "absolute_loss": 0.0001056742767104879,
+          "advantage_loss": 9.344037607661448e-06,
+          "loss": 0.00011501831613713875,
+          "update": 384
+        },
+        {
+          "absolute_loss": 4.6625045797554776e-05,
+          "advantage_loss": 2.8547278816404287e-06,
+          "loss": 4.947977504343726e-05,
+          "update": 512
+        }
+      ],
+      "plans": 64,
+      "seed": 75017,
+      "states": 128
+    }
+  ],
+  "heads": 2,
+  "schema": "h1a2_ctv_q_heads_manifest_v1",
+  "shared_supported_tokens": 25,
+  "train_labels_sha256": "e1419d82db0ffd476192910ebd77d9f4c94a32cefdab52694c8db6125b215ebc",
+  "updates_per_head": 512,
+  "validation_used_for_training": false
+}

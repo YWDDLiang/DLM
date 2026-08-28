@@ -1,0 +1,63 @@
+{
+  "feasibility_auroc": null,
+  "feasibility_has_both_classes": false,
+  "gates": {
+    "cross_continuation_gt_0_60": false,
+    "feasibility_auroc_gt_0_70": false,
+    "guided_state_coverage_ge_0_60": false,
+    "hard_strata_direction": false,
+    "pairwise_auc_gt_0_60": false,
+    "projected_fallback_le_0_40": false,
+    "spearman_lcb_positive": false,
+    "symmetry_rank_gt_0_90": false
+  },
+  "guided_state_coverage": 0.078125,
+  "guided_states": 5,
+  "l6_authorized": false,
+  "mean_state_spearman": 0.02858345748887036,
+  "mean_supported_mass": 0.1613397098925773,
+  "pairwise_auc": 0.5053070507960576,
+  "pairwise_comparisons": 1319,
+  "projected_fallback": 0.921875,
+  "q_gate_pass": false,
+  "raw_cross_continuation_agreement": 0.49150943396226415,
+  "raw_cross_continuation_comparisons": 1060,
+  "schema": "h1a2_ctv_q_gate_v1",
+  "selected_gamma": null,
+  "state_centered_spearman": {
+    "bootstrap_draws": 2000,
+    "finite_draws": 2000,
+    "lcb_95": -0.05630244524930208,
+    "point": 0.03526824234330561,
+    "seed": 76017,
+    "ucb_95": 0.12338615992984868
+  },
+  "strata": {
+    "n13_20": {
+      "comparisons": 582,
+      "direction_positive": false,
+      "gate_applicable": true,
+      "pairwise_auc": 0.47079037800687284,
+      "states": 22
+    },
+    "oxide": {
+      "comparisons": 641,
+      "direction_positive": false,
+      "gate_applicable": true,
+      "pairwise_auc": 0.4914196567862715,
+      "states": 26
+    },
+    "sulfide": {
+      "comparisons": 0,
+      "direction_positive": null,
+      "gate_applicable": false,
+      "pairwise_auc": null,
+      "states": 0
+    }
+  },
+  "symmetry_rank_agreement": null,
+  "symmetry_status": "not_run_due_to_prior_hard_gate",
+  "validation_observed_actions": 512,
+  "validation_plans": 32,
+  "validation_states": 64
+}

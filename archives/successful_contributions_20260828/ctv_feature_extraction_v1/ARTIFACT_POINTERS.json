@@ -1,0 +1,18 @@
+{
+  "schema": "h1a2_success_archive_artifact_pointers_v1",
+  "stage": "CTV frozen state/action feature extraction",
+  "run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/ctv_state_features_37097",
+  "artifact": "CTV_STATE_ACTION_FEATURES.pt",
+  "artifact_sha256": "36a5f150d146cc18bcc25894b7715285063ca972c5f74af1bef41b91a08751fd",
+  "states": 320,
+  "train_states": 256,
+  "validation_states": 64,
+  "geometry_tokens": 202,
+  "hidden_dim": 4096,
+  "projection_dim": 256,
+  "projection_seed": 73017,
+  "maximum_selected_probability_error": 8.881784197001252e-16,
+  "generator_frozen": true,
+  "weight_retention": "retained; successful reusable engineering artifact",
+  "code_commit": "d4f23c8"
+}
