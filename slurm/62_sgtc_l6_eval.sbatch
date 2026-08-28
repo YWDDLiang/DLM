@@ -39,7 +39,7 @@ assemble_cell() {
     --body-dir "${BODY_RUN}/seed${seed}/${arm}/body" \
     --output-dir "${EVAL_RUN}/seed${seed}/raw_${arm}/generation" \
     --seed "${seed}" --dlm-seed "${dlm_seed}" --denominator 256 \
-    --source-arm "${arm}" --arm-label "${label}"
+    --source-arm full_axis --arm-label "${label}"
 }
 
 for seed in 17 18; do
