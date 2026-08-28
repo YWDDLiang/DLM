@@ -60,7 +60,12 @@ class BuildCTVMinimalSpecDataTest(unittest.TestCase):
             "answer": "<N_005>",
             "plan_state": self.plan(),
         }
-        converted, reason = MODULE.convert_row(row)
+        certificate = {
+            "composition_supervision": True,
+            "plan_state": dict(row["plan_state"]),
+            "species_labels": [1, 2],
+        }
+        converted, reason = MODULE.convert_row(row, certificate)
         self.assertEqual(reason, "kept")
         self.assertNotIn("counterfactual_prompt", converted)
         self.assertFalse(converted["counterfactual_grounding_eligible"])
@@ -72,6 +77,21 @@ class BuildCTVMinimalSpecDataTest(unittest.TestCase):
         converted, reason = MODULE.convert_row({"plan_state": plan, "answer": "x"})
         self.assertIsNone(converted)
         self.assertIn("validator is not positive", reason)
+
+    def test_certificate_sidecar_overrides_stale_validator(self):
+        plan = self.plan()
+        plan["validator"] = {"valid": False, "reason": "stale"}
+        certificate = {
+            "composition_supervision": True,
+            "plan_state": dict(plan),
+            "species_labels": [1, 2],
+        }
+        converted, reason = MODULE.convert_row(
+            {"plan_state": plan, "answer": "x", "prompt": "old"},
+            certificate,
+        )
+        self.assertEqual(reason, "kept")
+        self.assertEqual(converted["minimal_spec"]["charge"], "certified_neutral")
 
 
 if __name__ == "__main__":

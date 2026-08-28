@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import hashlib
+from itertools import zip_longest
 import json
 from pathlib import Path
 import sys
@@ -46,7 +47,25 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
                 yield value
 
 
-def charge_class(plan: Mapping[str, Any]) -> str:
+def charge_class(
+    plan: Mapping[str, Any], certificate_row: Mapping[str, Any] | None = None
+) -> str:
+    if certificate_row is not None:
+        if certificate_row.get("composition_supervision") is not True:
+            raise ValueError("C³FD certificate does not authorize composition")
+        elements = list(plan.get("elements") or ())
+        if len(elements) == 1:
+            return "single_element"
+        nodes = list(certificate_row.get("species_labels") or ())
+        raw_plan = certificate_row.get("plan_state") or {}
+        bucket = str(raw_plan.get("charge_bucket") or plan.get("charge_bucket") or "")
+        if bucket == "all_metal":
+            return "all_metal"
+        # A benchmark-supervised multi-element row not assigned to the alloy
+        # shortcut carries an exact nonzero-valence witness in the sidecar.
+        if nodes:
+            return "certified_neutral"
+        raise ValueError("C³FD certificate lacks semantic species witness")
     classification = plan.get("validator") or {}
     valid = classification.get("valid")
     reason = str(classification.get("reason") or "")
@@ -66,7 +85,9 @@ def charge_class(plan: Mapping[str, Any]) -> str:
     raise ValueError(f"unsupported positive charge certificate {reason or bucket!r}")
 
 
-def minimal_spec_from_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
+def minimal_spec_from_plan(
+    plan: Mapping[str, Any], certificate_row: Mapping[str, Any] | None = None
+) -> dict[str, Any]:
     canonical = canonical_symbol_counts(
         [str(value) for value in (plan.get("elements") or ())],
         [int(value) for value in (plan.get("counts") or ())],
@@ -82,7 +103,7 @@ def minimal_spec_from_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
     formula = formula_from_symbol_counts(canonical)
     return {
         "N": n_value,
-        "charge": charge_class(plan),
+        "charge": charge_class(plan, certificate_row),
         "counts": counts,
         "elements": elements,
         "family": family,
@@ -97,12 +118,22 @@ def minimal_prompt(spec: Mapping[str, Any]) -> str:
     return payload + "\ndynamic_crystal_body:"
 
 
-def convert_row(row: Mapping[str, Any]) -> tuple[dict[str, Any] | None, str]:
+def convert_row(
+    row: Mapping[str, Any],
+    certificate_row: Mapping[str, Any] | None = None,
+) -> tuple[dict[str, Any] | None, str]:
     plan = row.get("plan_state")
     if not isinstance(plan, Mapping):
         return None, "missing_plan_state"
     try:
-        spec = minimal_spec_from_plan(plan)
+        if certificate_row is not None:
+            certificate_plan = certificate_row.get("plan_state")
+            if not isinstance(certificate_plan, Mapping):
+                raise ValueError("C³FD row lacks plan_state")
+            for key in ("formula", "N", "elements", "counts"):
+                if plan.get(key) != certificate_plan.get(key):
+                    raise ValueError(f"DLM/C³FD row alignment changed for {key}")
+        spec = minimal_spec_from_plan(plan, certificate_row)
         identity = identity_text(identity_from_plan_state(plan))
     except Exception as exc:  # noqa: BLE001 - exclusions are counted explicitly.
         return None, f"{type(exc).__name__}:{str(exc)}"
@@ -122,6 +153,7 @@ def convert_row(row: Mapping[str, Any]) -> tuple[dict[str, Any] | None, str]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input-dir", type=Path, required=True)
+    parser.add_argument("--certificate-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     if args.output_dir.exists():
@@ -131,16 +163,26 @@ def main() -> None:
     split_reports: dict[str, Any] = {}
     for split in ("train", "val", "test"):
         source = args.input_dir / f"{split}.jsonl"
+        certificate_source = args.certificate_dir / f"{split}.jsonl"
         if not source.is_file():
             raise FileNotFoundError(source)
+        if not certificate_source.is_file():
+            raise FileNotFoundError(certificate_source)
         reasons: Counter[str] = Counter()
         kept = 0
         prompt_tokens_pending = 0
         identities: set[str] = set()
         output_path = args.output_dir / f"{split}.jsonl"
         with output_path.open("x", encoding="utf-8") as handle:
-            for row in iter_jsonl(source):
-                converted, reason = convert_row(row)
+            for row_index, pair in enumerate(
+                zip_longest(iter_jsonl(source), iter_jsonl(certificate_source))
+            ):
+                row, certificate_row = pair
+                if row is None or certificate_row is None:
+                    raise ValueError(f"DLM/C³FD split length changed for {split}")
+                if int(certificate_row.get("source_row_idx", -1)) != row_index:
+                    raise ValueError(f"C³FD source_row_idx changed for {split}:{row_index}")
+                converted, reason = convert_row(row, certificate_row)
                 reasons[reason] += 1
                 if converted is None:
                     continue
@@ -171,6 +213,7 @@ def main() -> None:
     report = {
         "schema": SCHEMA,
         "input_dir": str(args.input_dir.resolve()),
+        "certificate_dir": str(args.certificate_dir.resolve()),
         "output_dir": str(args.output_dir.resolve()),
         "splits": split_reports,
         "gate": gate,

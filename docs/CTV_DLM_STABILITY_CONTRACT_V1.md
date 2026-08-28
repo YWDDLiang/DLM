@@ -113,9 +113,10 @@ failure. No substitute token, repeated action or adaptive quantile is allowed.
 The independent identity is the atomic-number-sorted integer composition
 reduced by the gcd of counts. Formula strings are not sufficient.
 
-- the old 256-Plan critic cohort overlaps C³FD seed17/seed18 by `1/0`
-  reduced identities; the one overlap is removed from every warm-start and
-  Branch-labelled asset;
+- the old 256-Plan critic source cohort overlaps the complete C³FD
+  seed17/seed18 sources by `1/0` reduced identities; the outcome-blind L6
+  selection below does not contain that identity, so the frozen Branch
+  canary/train/validation sets require no row deletion;
 - C³FD seeds share 24 reduced identities;
 - L6 is the outcome-blind first 256 seed17 requests whose identity is absent
   from the entire seed18 set;
