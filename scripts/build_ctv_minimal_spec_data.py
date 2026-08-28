@@ -56,7 +56,11 @@ def charge_class(
         elements = list(plan.get("elements") or ())
         if len(elements) == 1:
             return "single_element"
-        nodes = list(certificate_row.get("species_labels") or ())
+        nodes = list(
+            certificate_row.get("species_labels")
+            or certificate_row.get("nodes")
+            or ()
+        )
         raw_plan = certificate_row.get("plan_state") or {}
         bucket = str(raw_plan.get("charge_bucket") or plan.get("charge_bucket") or "")
         if bucket == "all_metal":

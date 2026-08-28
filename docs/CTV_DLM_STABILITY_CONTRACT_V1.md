@@ -22,11 +22,21 @@ The system decomposition is:
 ```text
 C³FD-v2.5 certified composition
         -> minimal composition specification
-        -> frozen base masked DLM
+        -> instantiate exact 7+4N typed crystal state
+        -> anchor N and element multiset
+        -> frozen base masked DLM over 6+3N free geometry tokens
+           with selected support and one predeclared legal schedule
         -> CTV token-cost head and normalized discrete guidance
         -> frozen model494 tau800 / common relaxation
         -> Strict / Meta S.U.N.
 ```
+
+CTV-DLM is an additive extension of the existing exact-cardinality masked
+executor. It does not replace or absorb the `7+4N` representation, dynamic
+length, typed schema, composition anchors, selected support, frozen commitment
+policy, or pre/post-refiner attribution evidence. CTV is schedule-compatible;
+the primary experiment retains the current X -> Y -> Z exact-axis policy only
+to isolate the value-guidance effect. The policy is not itself a new CTV claim.
 
 ## Closed negative evidence
 
@@ -63,8 +73,15 @@ Rules:
 
 The base is trained exactly once from the retained control `step-1000` resume
 for a fixed total-two-epoch continuation. There is no checkpoint search.
-Tokenizer, base checkpoint, safe-axis schedule, model494, tau800 and common
-refiner hashes are frozen before Branch data.
+Tokenizer, base checkpoint, primary exact-axis schedule, model494, tau800 and
+common refiner hashes are frozen before Branch data.
+
+The incomplete tau900/1000 extension is not evidence for or against either
+setting: two memory-failed attempts left asymmetric partial cells and no
+complete two-seed comparison. Tau800 is retained because it is the only
+high-tau setting with a complete matched evaluation. A future sequential
+900/1000 sensitivity run may occur only after CTV L6 and cannot select or
+redefine the primary CTV policy.
 
 ## Counterfactual terminal-cost estimand
 

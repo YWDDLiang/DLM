@@ -96,6 +96,23 @@ class BuildCTVMinimalSpecDataTest(unittest.TestCase):
         self.assertEqual(reason, "kept")
         self.assertEqual(converted["minimal_spec"]["charge"], "certified_neutral")
 
+    def test_compiler_node_witness_is_accepted_without_species_ids(self):
+        plan = self.plan()
+        certificate = {
+            "composition_supervision": True,
+            "source_row_idx": 5,
+            "plan_state": dict(plan),
+            "nodes": [
+                {"atomic_number": 26, "oxidation_state": 3},
+                {"atomic_number": 8, "oxidation_state": -2},
+            ],
+        }
+        converted, reason = MODULE.convert_row(
+            {"plan_state": plan, "answer": "x", "prompt": "old"}, certificate
+        )
+        self.assertEqual(reason, "kept")
+        self.assertEqual(converted["minimal_spec"]["charge"], "certified_neutral")
+
 
 if __name__ == "__main__":
     unittest.main()
