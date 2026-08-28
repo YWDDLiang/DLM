@@ -33,6 +33,12 @@ from crystal_dlm.ccfd_v2 import (  # noqa: E402
     state_to_plan_state,
 )
 from crystal_dlm.composition_pair_prior import ValenceNode  # noqa: E402
+from crystal_dlm.family_reachability import (  # noqa: E402
+    FamilyAwareBenchmarkReachability,
+    element_allowed_for_family,
+    family_prefix_reachable,
+    state_symbols,
+)
 from crystal_dlm.fixed_slot import Z_TO_SYMBOL  # noqa: E402
 from crystal_dlm.r5_plan_state import anion_framework_from_symbols  # noqa: E402
 from crystal_dlm.semantic_composition_head import SemanticHeadFlags  # noqa: E402
@@ -47,70 +53,6 @@ LATTICE_TO_SPACEGROUP = {
     "hexagonal": "sg_168_194",
     "cubic": "sg_195_230",
 }
-
-FAMILY_FORBIDDEN = {
-    "oxide": frozenset(),
-    "sulfide": frozenset({"O"}),
-    "chalcogenide": frozenset({"O", "S"}),
-    "halide": frozenset({"O", "S", "Se", "Te"}),
-    "nitride": frozenset({"O", "S", "Se", "Te", "F", "Cl", "Br", "I"}),
-    "phosphide_or_phosphate": frozenset(
-        {"O", "S", "Se", "Te", "F", "Cl", "Br", "I", "N"}
-    ),
-    "other": frozenset(
-        {"O", "S", "Se", "Te", "F", "Cl", "Br", "I", "N", "P"}
-    ),
-}
-
-FAMILY_REQUIRED = {
-    "oxide": frozenset({"O"}),
-    "sulfide": frozenset({"S"}),
-    "chalcogenide": frozenset({"Se", "Te"}),
-    "halide": frozenset({"F", "Cl", "Br", "I"}),
-    "nitride": frozenset({"N"}),
-    "phosphide_or_phosphate": frozenset({"P"}),
-    "other": frozenset(),
-}
-
-
-def element_allowed_for_family(symbol: str, family: str) -> bool:
-    if family not in FAMILY_FORBIDDEN:
-        raise ValueError(f"unknown proposal family {family!r}")
-    return str(symbol) not in FAMILY_FORBIDDEN[family]
-
-
-def state_symbols(state: CCFDv2State) -> tuple[str, ...]:
-    return tuple(Z_TO_SYMBOL[int(value)] for value in state.distinct_elements)
-
-
-def family_prefix_reachable(
-    state: CCFDv2State,
-    *,
-    family: str,
-    target_arity: int,
-    vocabulary_nodes: Sequence[ValenceNode],
-) -> bool:
-    symbols = set(state_symbols(state))
-    if any(not element_allowed_for_family(symbol, family) for symbol in symbols):
-        return False
-    required = FAMILY_REQUIRED[family]
-    if not required or symbols.intersection(required):
-        return True
-    slots_left = int(target_arity) - len(state.tokens)
-    if slots_left <= 0:
-        return False
-    last_element = max(state.distinct_elements, default=0)
-    return any(
-        int(node.atomic_number) > int(last_element)
-        and Z_TO_SYMBOL[int(node.atomic_number)] in required
-        and (
-            state.branch is None
-            or (state.branch == "alloy" and int(node.oxidation_state) == 0)
-            or (state.branch == "ionic" and int(node.oxidation_state) != 0)
-        )
-        for node in vocabulary_nodes
-    )
-
 
 def sample_index(
     logits: torch.Tensor,
@@ -259,9 +201,7 @@ def main() -> None:
         for row in species_rows
     ]
     node_to_id = {node: index for index, node in enumerate(nodes)}
-    reachability = BenchmarkReachability(
-        tuple((node.atomic_number, node.oxidation_state) for node in nodes)
-    )
+    reachability = FamilyAwareBenchmarkReachability(nodes)
     soft_values = vocabulary["soft_vocabulary"]
     eos_id = int(vocabulary["species_eos_id"])
 
@@ -287,6 +227,8 @@ def main() -> None:
                 "plan_text": None,
                 "plan_state": None,
                 "failure": None,
+                "semantic_trace": [],
+                "target_proposal": None,
             }
             try:
                 sentinel_species = torch.tensor([[-1]], device=device)
@@ -340,6 +282,8 @@ def main() -> None:
                         "arity": int(target_arity),
                     }
                 ]
+                record["target_proposal"] = dict(semantic_trace[0])
+                record["semantic_trace"] = semantic_trace
                 last_output = None
                 last_position = None
                 while True:
@@ -381,32 +325,12 @@ def main() -> None:
                     else:
                         legal_tokens = reachability.legal_species_counts(
                             state,
+                            family=target_family,
                             max_species=int(args.max_species),
                             target_arity=int(target_arity),
                         )
                         for token in legal_tokens:
                             node = ValenceNode(token.atomic_number, token.oxidation_state)
-                            symbol = Z_TO_SYMBOL[int(node.atomic_number)]
-                            if not element_allowed_for_family(symbol, target_family):
-                                continue
-                            candidate = state.apply(
-                                token, max_species=int(args.max_species)
-                            )
-                            if not family_prefix_reachable(
-                                candidate,
-                                family=target_family,
-                                target_arity=int(target_arity),
-                                vocabulary_nodes=nodes,
-                            ):
-                                continue
-                            if (
-                                candidate.remaining_atoms == 0
-                                and anion_framework_from_symbols(
-                                    state_symbols(candidate)
-                                )
-                                != target_family
-                            ):
-                                continue
                             species_id = node_to_id.get(node)
                             if species_id is None:
                                 continue
@@ -463,6 +387,7 @@ def main() -> None:
                             "count": int(count),
                         }
                     )
+                    record["semantic_trace"] = semantic_trace
                 certificate = state.certificate()
                 if not certificate.benchmark_compatible:
                     raise ValueError("terminal_certificate_not_benchmark")
@@ -553,6 +478,7 @@ def main() -> None:
         "family": dict(sorted(family_counts.items())),
         "certificate_classes": dict(sorted(certificate_counts.items())),
         "failures": dict(failures.most_common()),
+        "joint_reachability": dict(reachability.stats()),
     }
     (args.output_dir / "sample_metrics.json").write_text(
         json.dumps(metrics, ensure_ascii=False, indent=2, sort_keys=True) + "\n",

@@ -21,6 +21,10 @@ from crystal_dlm.ccfd_v2 import CCFDv2State, SetAtomCount
 
 
 class SampleC3FDPlansTest(unittest.TestCase):
+    @staticmethod
+    def benchmark_true(_elements, _counts):
+        return {"valid": True, "reason": "synthetic_joint_reachability"}
+
     def test_semantic_history_starts_with_locked_N(self):
         start = CCFDv2State.start().apply(SetAtomCount(5))
         after_first = start.apply(FormulaToken.from_symbol("O", -2, 2))
@@ -62,6 +66,51 @@ class SampleC3FDPlansTest(unittest.TestCase):
                 ),
                 1,
             )
+
+    def test_family_aware_oracle_rejects_split_reachability_false_positive(self):
+        lithium = FormulaToken.from_symbol("Li", 1, 1)
+        oxygen = FormulaToken.from_symbol("O", -2, 1)
+        fluorine = FormulaToken.from_symbol("F", -1, 1)
+        iron = FormulaToken.from_symbol("Fe", 2, 1)
+        nodes = tuple(
+            MODULE.ValenceNode(token.atomic_number, token.oxidation_state)
+            for token in (lithium, oxygen, fluorine, iron)
+        )
+        state = CCFDv2State.start().apply(SetAtomCount(2))
+
+        # The old split checks admit Li: F can close charge, while O exists as
+        # a separate family witness.  No single suffix can satisfy both.
+        generic = MODULE.BenchmarkReachability(
+            tuple((node.atomic_number, node.oxidation_state) for node in nodes)
+        )
+        self.assertIn(
+            lithium,
+            generic.legal_species_counts(
+                state,
+                benchmark_validator=self.benchmark_true,
+                max_species=2,
+                target_arity=2,
+            ),
+        )
+        self.assertTrue(
+            MODULE.family_prefix_reachable(
+                state.apply(lithium),
+                family="oxide",
+                target_arity=2,
+                vocabulary_nodes=nodes,
+            )
+        )
+
+        joint = MODULE.FamilyAwareBenchmarkReachability(nodes)
+        legal = joint.legal_species_counts(
+            state,
+            family="oxide",
+            benchmark_validator=self.benchmark_true,
+            max_species=2,
+            target_arity=2,
+        )
+        self.assertNotIn(lithium, legal)
+        self.assertIn(oxygen, legal)
 
 
 if __name__ == "__main__":
