@@ -54,6 +54,19 @@ class AuditCTVMinimalSpecDataTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "deterministic Plan projection"):
             MODULE.validate_row(row, FakeTokenizer())
 
+    def test_frozen_certificate_overrides_stale_legacy_validator(self):
+        row = self.row()
+        row["plan_state"]["validator"] = {"valid": False, "reason": "stale"}
+        row["c3fd_certificate_source_row_idx"] = 11
+        certificate = {
+            "source_row_idx": 11,
+            "composition_supervision": True,
+            "plan_state": dict(row["plan_state"]),
+            "species_labels": ["Fe+3", "O-2"],
+        }
+        result = MODULE.validate_row(row, FakeTokenizer(), certificate)
+        self.assertEqual(result["identity"], "8:3|26:2")
+
 
 if __name__ == "__main__":
     unittest.main()

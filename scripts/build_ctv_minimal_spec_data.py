@@ -141,6 +141,11 @@ def convert_row(
     output["prompt"] = minimal_prompt(spec)
     output["minimal_spec"] = spec
     output["minimal_spec_schema"] = SCHEMA
+    if certificate_row is not None:
+        source_row_idx = int(certificate_row.get("source_row_idx", -1))
+        if source_row_idx < 0:
+            raise ValueError("C³FD certificate lacks source_row_idx")
+        output["c3fd_certificate_source_row_idx"] = source_row_idx
     output["reduced_composition_identity"] = identity
     output["source_prompt_sha256"] = hashlib.sha256(
         str(row.get("prompt") or "").encode("utf-8")
@@ -198,6 +203,10 @@ def main() -> None:
             "excluded_rows": sum(reasons.values()) - kept,
             "reduced_composition_identities": len(identities),
             "reasons": dict(reasons.most_common()),
+            "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+            "certificate_sha256": hashlib.sha256(
+                certificate_source.read_bytes()
+            ).hexdigest(),
             "output_sha256": hashlib.sha256(output_path.read_bytes()).hexdigest(),
             "tokenizer_prompt_audit_pending": prompt_tokens_pending,
         }

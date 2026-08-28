@@ -62,6 +62,7 @@ class BuildCTVMinimalSpecDataTest(unittest.TestCase):
         }
         certificate = {
             "composition_supervision": True,
+            "source_row_idx": 7,
             "plan_state": dict(row["plan_state"]),
             "species_labels": [1, 2],
         }
@@ -70,6 +71,7 @@ class BuildCTVMinimalSpecDataTest(unittest.TestCase):
         self.assertNotIn("counterfactual_prompt", converted)
         self.assertFalse(converted["counterfactual_grounding_eligible"])
         self.assertEqual(converted["reduced_composition_identity"], "8:3|26:2")
+        self.assertEqual(converted["c3fd_certificate_source_row_idx"], 7)
 
     def test_invalid_composition_is_excluded(self):
         plan = self.plan()
@@ -83,6 +85,7 @@ class BuildCTVMinimalSpecDataTest(unittest.TestCase):
         plan["validator"] = {"valid": False, "reason": "stale"}
         certificate = {
             "composition_supervision": True,
+            "source_row_idx": 3,
             "plan_state": dict(plan),
             "species_labels": [1, 2],
         }

@@ -45,12 +45,28 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
                 yield json.loads(line)
 
 
-def validate_row(row: Mapping[str, Any], tokenizer) -> dict[str, Any]:
+def validate_row(
+    row: Mapping[str, Any],
+    tokenizer,
+    certificate_row: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     plan = row.get("plan_state")
     spec = row.get("minimal_spec")
     if not isinstance(plan, Mapping) or not isinstance(spec, Mapping):
         raise ValueError("minimal row requires plan_state and minimal_spec")
-    expected = minimal_spec_from_plan(plan)
+    if certificate_row is not None:
+        source_row_idx = int(row.get("c3fd_certificate_source_row_idx", -1))
+        if source_row_idx < 0:
+            raise ValueError("minimal row lacks C³FD certificate source index")
+        if int(certificate_row.get("source_row_idx", -2)) != source_row_idx:
+            raise ValueError("C³FD certificate source index changed")
+        certificate_plan = certificate_row.get("plan_state")
+        if not isinstance(certificate_plan, Mapping):
+            raise ValueError("C³FD certificate lacks plan_state")
+        for key in ("formula", "N", "elements", "counts"):
+            if plan.get(key) != certificate_plan.get(key):
+                raise ValueError(f"DLM/C³FD row alignment changed for {key}")
+    expected = minimal_spec_from_plan(plan, certificate_row)
     if dict(spec) != expected:
         raise ValueError("minimal_spec does not match deterministic Plan projection")
     expected_prompt = minimal_prompt(expected)
@@ -82,10 +98,28 @@ def main() -> None:
     tokenizer = AutoTokenizer.from_pretrained(
         str(args.model_path), trust_remote_code=True
     )
+    manifest_path = args.data_dir / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    certificate_dir = Path(str(manifest.get("certificate_dir") or ""))
+    if not certificate_dir.is_dir():
+        raise FileNotFoundError(
+            f"frozen C³FD certificate directory is unavailable: {certificate_dir}"
+        )
     split_reports: dict[str, Any] = {}
     all_failures: Counter[str] = Counter()
     for split in ("train", "val", "test"):
         path = args.data_dir / f"{split}.jsonl"
+        certificate_path = certificate_dir / f"{split}.jsonl"
+        expected_certificate_sha = str(
+            manifest.get("splits", {}).get(split, {}).get("certificate_sha256") or ""
+        )
+        actual_certificate_sha = hashlib.sha256(certificate_path.read_bytes()).hexdigest()
+        if not expected_certificate_sha or actual_certificate_sha != expected_certificate_sha:
+            raise ValueError(f"frozen C³FD certificate hash changed for {split}")
+        certificates = {
+            int(value.get("source_row_idx", -1)): value
+            for value in iter_jsonl(certificate_path)
+        }
         lengths: list[int] = []
         identities: set[str] = set()
         failures: Counter[str] = Counter()
@@ -93,7 +127,11 @@ def main() -> None:
         for row in iter_jsonl(path):
             rows += 1
             try:
-                result = validate_row(row, tokenizer)
+                source_row_idx = int(row.get("c3fd_certificate_source_row_idx", -1))
+                certificate_row = certificates.get(source_row_idx)
+                if certificate_row is None:
+                    raise ValueError("C³FD certificate source row is unavailable")
+                result = validate_row(row, tokenizer, certificate_row)
                 lengths.append(int(result["prompt_tokens"]))
                 identities.add(str(result["identity"]))
             except Exception as exc:  # noqa: BLE001 - every failure is audited.
@@ -108,6 +146,7 @@ def main() -> None:
             "prompt_tokens_max": max(lengths) if lengths else None,
             "failures": dict(failures.most_common()),
             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "certificate_sha256": actual_certificate_sha,
         }
     gate = {
         "all_rows_valid": not all_failures,
