@@ -49,7 +49,7 @@ def pearson(left: Sequence[float], right: Sequence[float]) -> float | None:
     y = [float(value) for value in right]
     x_mean = mean(x)
     y_mean = mean(y)
-    numerator = sum((a - x_mean) * (b - y_mean) for a, b in zip(x, y, strict=True))
+    numerator = sum((a - x_mean) * (b - y_mean) for a, b in zip(x, y))
     x_norm = math.sqrt(sum((a - x_mean) ** 2 for a in x))
     y_norm = math.sqrt(sum((b - y_mean) ** 2 for b in y))
     if x_norm == 0.0 or y_norm == 0.0:
