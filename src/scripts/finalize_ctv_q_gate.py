@@ -20,6 +20,7 @@ import torch
 from crystal_dlm.ctv_q_head import (  # noqa: E402
     advantage_is_supported,
     build_q_head,
+    centered_prediction_pairs,
     pairwise_order_accuracy,
     plan_bootstrap_spearman,
 )
@@ -211,9 +212,9 @@ def main() -> None:
                         "state_supported_mass": float(supported_mass),
                     }
                 )
-                plan_pairs.setdefault(int(record["plan_ordinal"]), []).append(
-                    (estimate, float(truth))
-                )
+            plan_pairs.setdefault(int(record["plan_ordinal"]), []).extend(
+                centered_prediction_pairs(observed_prediction, observed_truth)
+            )
             accuracy, comparisons, correct = pairwise_order_accuracy(
                 observed_prediction, observed_truth
             )
@@ -320,7 +321,7 @@ def main() -> None:
         "validation_plans": 32,
         "validation_states": 64,
         "validation_observed_actions": 512,
-        "spearman": bootstrap,
+        "state_centered_spearman": bootstrap,
         "mean_state_spearman": sum(state_spearman) / len(state_spearman),
         "pairwise_auc": pairwise_auc,
         "pairwise_comparisons": pair_comparisons,
@@ -349,7 +350,7 @@ def main() -> None:
     lines = [
         "# CTV Q-head validation gate",
         "",
-        f"- Plan-bootstrap Spearman: `{bootstrap['point']}` "
+        f"- Plan-bootstrap state-centered Spearman: `{bootstrap['point']}` "
         f"(95% LCB `{bootstrap['lcb_95']}`)",
         f"- Pairwise AUC: `{pairwise_auc}` over `{pair_comparisons}` comparisons",
         f"- Raw cross-continuation agreement: `{raw_cross_agreement}`",

@@ -110,6 +110,19 @@ def pairwise_order_accuracy(
     )
 
 
+def centered_prediction_pairs(
+    predicted: Sequence[float], observed: Sequence[float]
+) -> list[tuple[float, float]]:
+    if len(predicted) != len(observed) or not predicted:
+        raise ValueError("CTV centered prediction rows require equal non-empty values")
+    prediction_mean = sum(float(value) for value in predicted) / len(predicted)
+    observed_mean = sum(float(value) for value in observed) / len(observed)
+    return [
+        (float(estimate) - prediction_mean, float(truth) - observed_mean)
+        for estimate, truth in zip(predicted, observed)
+    ]
+
+
 def plan_bootstrap_spearman(
     rows_by_plan: Mapping[int, Sequence[tuple[float, float]]],
     *,
@@ -212,6 +225,7 @@ def build_q_head(projection_dim: int = 256) -> Any:
 
 __all__ = [
     "build_q_head",
+    "centered_prediction_pairs",
     "advantage_is_supported",
     "disjoint_plan_group",
     "pairwise_order_accuracy",

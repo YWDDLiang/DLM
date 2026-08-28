@@ -9,6 +9,7 @@ if str(SRC) not in sys.path:
 
 from crystal_dlm.ctv_q_head import (
     advantage_is_supported,
+    centered_prediction_pairs,
     disjoint_plan_group,
     pairwise_order_accuracy,
     plan_bootstrap_spearman,
@@ -58,6 +59,10 @@ class CTVQHeadBookkeepingTest(unittest.TestCase):
         )
         self.assertAlmostEqual(result["point"], 1.0)
         self.assertGreaterEqual(result["lcb_95"], 0.0)
+
+    def test_state_centering_removes_absolute_offset(self):
+        pairs = centered_prediction_pairs([100.0, 101.0], [-5.0, -3.0])
+        self.assertEqual(pairs, [(-0.5, -1.0), (0.5, 1.0)])
 
 
 try:
