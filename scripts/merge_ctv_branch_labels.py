@@ -25,6 +25,38 @@ def row_ordinal(row: dict[str, Any]) -> int:
     return int(attempt_id.rsplit("-", 1)[-1])
 
 
+def localize_chunk_rows(
+    rows: list[dict[str, Any]], *, chunk_index: int, chunk_size: int = 256
+) -> dict[int, dict[str, Any]]:
+    """Index one evaluation chunk by local ordinal.
+
+    Reconstructed labels carry explicit chunk-local ordinals, while the frozen
+    Direct evaluator preserves the global ordinal encoded in ``attempt_id``.
+    Accept either complete convention, but reject duplicates, gaps, and mixed
+    scopes so a partial chunk can never be silently relabelled.
+    """
+
+    indexed = {row_ordinal(row): row for row in rows}
+    if len(indexed) != chunk_size:
+        raise ValueError(
+            f"CTV evaluation chunk {chunk_index} has duplicate or missing rows"
+        )
+
+    observed = set(indexed)
+    local_expected = set(range(chunk_size))
+    if observed == local_expected:
+        return indexed
+
+    offset = chunk_index * chunk_size
+    global_expected = set(range(offset, offset + chunk_size))
+    if observed == global_expected:
+        return {ordinal - offset: row for ordinal, row in indexed.items()}
+
+    raise ValueError(
+        f"CTV evaluation chunk {chunk_index} has non-contiguous ordinal scope"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--generation-root", type=Path, required=True)
@@ -50,18 +82,16 @@ def main() -> None:
         chunk_index = int(meta["chunk_index"])
         local_ordinal = int(meta["local_ordinal"])
         chunk = args.evaluation_root / f"chunk{chunk_index:02d}"
-        labels = {
-            int(row["ordinal"]): row
-            for row in read_jsonl(
+        labels = localize_chunk_rows(
+            read_jsonl(
                 chunk / "full_reconstructed/attempt_labels_preofficial.jsonl"
-            )
-        }
-        direct = {
-            row_ordinal(row): row
-            for row in read_jsonl(chunk / "direct/attempt_metrics.jsonl")
-        }
-        if set(labels) != set(range(256)) or set(direct) != set(range(256)):
-            raise ValueError(f"CTV evaluation chunk {chunk_index} is incomplete")
+            ),
+            chunk_index=chunk_index,
+        )
+        direct = localize_chunk_rows(
+            read_jsonl(chunk / "direct/attempt_metrics.jsonl"),
+            chunk_index=chunk_index,
+        )
         label = labels[local_ordinal]
         metric = direct[local_ordinal]
         energy = label.get("chgnet_energy_per_atom")

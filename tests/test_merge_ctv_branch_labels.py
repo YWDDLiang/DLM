@@ -22,6 +22,34 @@ class MergeCTVBranchLabelsTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             MODULE.row_ordinal({})
 
+    def test_localize_chunk_rows_accepts_local_ordinals(self):
+        rows = [{"ordinal": ordinal} for ordinal in range(256)]
+        localized = MODULE.localize_chunk_rows(rows, chunk_index=3)
+        self.assertEqual(set(localized), set(range(256)))
+        self.assertIs(localized[17], rows[17])
+
+    def test_localize_chunk_rows_maps_global_attempt_ids(self):
+        rows = [
+            {"attempt_id": f"ctv-validation-{256 + ordinal:05d}"}
+            for ordinal in range(256)
+        ]
+        localized = MODULE.localize_chunk_rows(rows, chunk_index=1)
+        self.assertEqual(set(localized), set(range(256)))
+        self.assertIs(localized[17], rows[17])
+
+    def test_localize_chunk_rows_rejects_partial_or_mixed_scope(self):
+        with self.assertRaisesRegex(ValueError, "duplicate or missing"):
+            MODULE.localize_chunk_rows(
+                [{"ordinal": ordinal} for ordinal in range(255)], chunk_index=0
+            )
+        rows = [
+            {"attempt_id": f"ctv-validation-{256 + ordinal:05d}"}
+            for ordinal in range(256)
+        ]
+        rows[-1] = {"attempt_id": "ctv-validation-00999"}
+        with self.assertRaisesRegex(ValueError, "non-contiguous"):
+            MODULE.localize_chunk_rows(rows, chunk_index=1)
+
 
 if __name__ == "__main__":
     unittest.main()
