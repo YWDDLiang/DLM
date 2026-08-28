@@ -204,3 +204,35 @@
   [`C3FD_V21_CORRECTION_CONTRACT.md`](C3FD_V21_CORRECTION_CONTRACT.md)、
   [`C3FD_PLANNER_FINAL.md`](../results/remote_screens/C3FD_PLANNER_FINAL.md)和
   [`C3FD_V21_PILOT_FINAL.md`](../results/remote_screens/C3FD_V21_PILOT_FINAL.md)。
+
+## 2026-08-28 C³FD-v2.5 requested-1000 确认终态
+
+- v2.1的`52/512` semantic dead ends已被定位为两个必要条件的错误交集：通用
+  N/charge/arity continuation与family-prefix分别可达，并不保证存在同一个后缀同时满足
+  二者。v2.5没有调temperature、top-k或pair prior，而是把family、exact N/charge/arity、
+  alloy/ionic branch与Pauling电负性顺序编译为constructive witness bitset；每个被采样的
+  动作都保留至少一个可证终态；
+- 冻结teacher审计为train `24558/24558`、validation `8159/8159` witness-valid，且不加载
+  Planner权重或任何outcome/stability标签。双seed在线canary各`32/32` parsed和独立
+  comp-valid、零失败，采样耗时`31.6/32.0s`，才自动扩至requested256；
+- requested256 pooled对照/候选：parsed `510→512`，独立comp-valid `438→512`，
+  Novel/Unique/NU `388/508/388→463/512/463`；双seed comp-valid分别`+14.84/+14.06pp`，
+  paired 95% CI `[+11.40,+17.50]pp`，全部预注册门通过；
+- requested1000确认复用相同seed17/18 checkpoints并只补global sample indices
+  `256..999`，每个请求恰好一次。pooled 2000对照/候选为：parsed `1989→2000`，独立
+  comp-valid `1724→2000`（`86.2%→100%`），Novel/Unique/NU
+  `1538/1961/1530→1763/1985/1756`；双seed增益`+13.9/+13.7pp`，paired 95% CI
+  `[+12.29,+15.31]pp`，McNemar discordance=`0/276`、`p=1.65e-83`；
+- ionic独立comp-valid由`1147/1412=81.23%`提高到`1255/1255=100%`；semantic dead end
+  为`0/2000`。候选all-metal为`37.25%`，距full-train `34.91%`仅`2.34pp`；候选到
+  full-train的N/arity/family TVD为`0.0349/0.0185/0.0204`，均优于P0的
+  `0.1017/0.0319/0.0948`；requested1000全部冻结门通过；
+- 该结果建立一个独立的composition-correctness贡献候选：typed semantic Planner以
+  constructive certificate进行单轨迹约束解码，而不是formula BPE、后过滤、repair、
+  replacement、rerank或RL。它不宣称稳定性、可合成性或改变public S.U.N.
+  `105/488`；稳定性Track仍独立；
+- v2.2--v2.4只保留为工程演化记录，均在GPU前因穷举runtime门停止；没有将失败请求删除或
+  放宽科学门。正式证据见
+  [`C3FD_V25_TEACHER_WITNESS_AUDIT.md`](../results/remote_screens/C3FD_V25_TEACHER_WITNESS_AUDIT.md)、
+  [`C3FD_V25_PILOT_FINAL.md`](../results/remote_screens/C3FD_V25_PILOT_FINAL.md)和
+  [`C3FD_V25_REQUESTED1000_FINAL.md`](../results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.md)。

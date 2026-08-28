@@ -1,0 +1,3 @@
+arm,seed,requested,formula_valid,formula_valid_rate,plan_parsed,plan_parsed_rate,assignable,assignable_rate,legacy_comp_valid,legacy_comp_valid_rate,novel,novel_rate,unique,unique_rate,novel_unique,novel_unique_rate,all_metal,all_metal_rate
+p0,pooled,512,510,0.99609375,510,0.99609375,481,0.939453125,438,0.85546875,388,0.7578125,508,0.9921875,388,0.7578125,136,0.265625
+c3fd_v25,pooled,512,512,1.0,512,1.0,484,0.9453125,512,1.0,463,0.904296875,512,1.0,463,0.904296875,183,0.357421875

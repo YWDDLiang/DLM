@@ -566,3 +566,37 @@ semantic dead ends，parse降至`460/512`，all-metal也比full-train高`4.66pp`
 [`C3FD_PLANNER_FINAL.md`](../results/remote_screens/C3FD_PLANNER_FINAL.md)、
 [`C3FD_DRIFT_DIAGNOSTIC.md`](../results/remote_screens/C3FD_DRIFT_DIAGNOSTIC.md)和
 [`C3FD_V21_PILOT_FINAL.md`](../results/remote_screens/C3FD_V21_PILOT_FINAL.md)。
+
+### C³FD-v2.5：composition-correctness贡献候选已经成立
+
+上面的v2/v2.1限制继续作为完整开发历史，但已被一个预注册的新机制正面解决，而不是事后
+放宽。v2.1的根因是split reachability：charge/N/arity后缀和family后缀分别存在，不代表
+同一个后缀存在。v2.5将每一步的family、exact atom/charge/arity、branch和Pauling
+electronegativity witness编译成bitset viability state。被允许的token必须保留一个完整的
+constructive terminal certificate；独立legacy validator仍在EOS报告最终comp-valid。
+
+结果具有跨seed、跨规模和分布门一致性：
+
+- requested256 pooled独立comp-valid `438/512→512/512`，NU `388→463`；
+- requested1000双seed pooled独立comp-valid `1724/2000→2000/2000`，NU
+  `1530→1756`；
+- requested1000两seed增益`+13.9/+13.7pp`，paired CI
+  `[+12.29,+15.31]pp`，McNemar `p=1.65e-83`，没有control-only discordance；
+- ionic endpoint `81.23%→100%`，semantic dead end `0/2000`；
+- all-metal `37.25%`接近full-train `34.91%`，N/arity/family TVD均比P0更小，而不是靠
+  all-metal shortcut或proposal collapse换取100% validity；
+- Novel/Unique/NU达到`1763/1985/1756`，说明这是约束下的de novo generation，不是训练
+  公式表查找或后过滤。
+
+因此可以把C³FD-v2.5组织为与已冻结贡献点1正交的第二候选贡献：
+
+> A certificate-carrying semantic composition decoder that turns elemental
+> valence, exact stoichiometry, family priority, and Pauling consistency into
+> online token legality, achieving 100% independent composition validity
+> without repair, rejection, reranking, or formula BPE.
+
+措辞边界必须保持：这里只证明MP-20口径的composition correctness与分布保真，不证明
+thermodynamic stability、synthesizability或下游S.U.N.提升；不宣称“首个元素tokenizer”，也
+不需要与外部方法做组件对比。主故事、贡献点1和public `105/488`完全不变；稳定性改进仍由
+独立Track B回答。正式证据见
+[`C3FD_V25_REQUESTED1000_FINAL.md`](../results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.md)。
