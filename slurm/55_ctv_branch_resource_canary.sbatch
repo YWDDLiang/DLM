@@ -11,6 +11,7 @@
 
 set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
+export H1A2_CONDA_ENV="${H1A2_CONDA_ENV:-diff_meets_diff}"
 source "${ROOT}/slurm/_common.sh"
 activate_environment
 
