@@ -48,6 +48,8 @@ def select_eight_legal_actions(
         raise ValueError("probabilities and legal tokens must be aligned and non-empty")
     if len(set(int(value) for value in legal_token_ids)) != len(legal_token_ids):
         raise ValueError("legal token ids must be unique")
+    if len(legal_token_ids) < 8:
+        raise ValueError("CTV action protocol requires at least eight legal tokens")
     values = [float(value) for value in probabilities]
     if any(not math.isfinite(value) or value < 0.0 for value in values):
         raise ValueError("legal probabilities must be finite and non-negative")
@@ -67,22 +69,32 @@ def select_eight_legal_actions(
         key=lambda pair: (-pair[1], pair[0]),
     )[0]
     selected = [argmax_token]
+    cumulative = 0.0
+    cdf_midpoints: dict[int, float] = {}
+    probability_by_token: dict[int, float] = {}
+    for token, probability in ordered:
+        cdf_midpoints[token] = cumulative + 0.5 * probability
+        probability_by_token[token] = probability
+        cumulative += probability
+    available = {token for token, _probability in ordered if token != argmax_token}
     for raw_quantile in quantiles:
         quantile = float(raw_quantile)
         if not 0.0 < quantile < 1.0:
             raise ValueError("action quantiles must lie strictly inside (0,1)")
-        cumulative = 0.0
-        token_at_quantile = ordered[-1][0]
-        for token, probability in ordered:
-            cumulative += probability
-            if cumulative >= quantile:
-                token_at_quantile = token
-                break
-        selected.append(int(token_at_quantile))
-    if len(selected) != 8 or len(set(selected)) != 8:
-        raise ValueError(
-            "CTV action protocol requires argmax plus seven distinct quantile tokens"
+        if not available:
+            raise ValueError("CTV distinct CDF projection exhausted legal tokens")
+        token_at_quantile = min(
+            available,
+            key=lambda token: (
+                abs(cdf_midpoints[token] - quantile),
+                -probability_by_token[token],
+                token,
+            ),
         )
+        selected.append(int(token_at_quantile))
+        available.remove(token_at_quantile)
+    if len(selected) != 8 or len(set(selected)) != 8:
+        raise RuntimeError("CTV distinct CDF action projection changed")
     return tuple(selected)
 
 

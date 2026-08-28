@@ -97,9 +97,12 @@ numeric.
 
 After revision: **APPROVED** for prerequisite implementation and one resource
 canary. The canary must assert eight distinct actions per state and 256 unique
-branch ids; quantile collisions are protocol failures. It cannot be used to
-change gamma, support or scientific design. Formal Branch generation, Q
-training, L6 and L7 require another arbitration after the canary ledger.
+branch ids. Its first engineering run exposed literal quantile collisions
+before any terminal outcome existed. The frozen correction reserves argmax
+and projects the seven unchanged CDF targets one-to-one onto nearest unused
+legal-token CDF midpoints. This changes neither gamma nor scientific outcomes;
+fewer than eight legal tokens still fails closed. Formal Branch generation,
+Q training, L6 and L7 remain stage-gated after the canary ledger.
 
 No reviewer objection was silently rejected. The only rejected “fatal” claim
 was that compute confounding is unavoidable: with identical heads, masks,

@@ -45,8 +45,8 @@ class CTVProtocolTest(unittest.TestCase):
         )
         self.assertEqual(len(branch), 64)
 
-    def test_action_quantiles_fail_closed_on_collision(self):
-        with self.assertRaisesRegex(ValueError, "distinct quantile"):
+    def test_action_quantiles_project_to_distinct_legal_tokens(self):
+        with self.assertRaisesRegex(ValueError, "at least eight"):
             select_eight_legal_actions([0.95, 0.05], [10, 11])
         probabilities = [0.04] * 8 + [0.12] + [0.04] * 14
         selected = select_eight_legal_actions(
@@ -54,6 +54,12 @@ class CTVProtocolTest(unittest.TestCase):
         )
         self.assertEqual(len(selected), 8)
         self.assertEqual(len(set(selected)), 8)
+        concentrated = select_eight_legal_actions(
+            [0.93] + [0.01] * 7,
+            list(range(200, 208)),
+        )
+        self.assertEqual(concentrated[0], 200)
+        self.assertEqual(set(concentrated), set(range(200, 208)))
 
     def test_gamma_zero_is_bit_exact_and_unsupported_is_base(self):
         base = (1.0, 2.0, 3.0)

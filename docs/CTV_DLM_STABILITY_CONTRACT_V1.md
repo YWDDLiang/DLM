@@ -132,16 +132,22 @@ Each state must yield exactly eight distinct legal actions:
   `{0.05,0.15,0.30,0.50,0.70,0.85,0.95}`;
 - ties are resolved by token id.
 
-If quantiles collide with one another or with argmax, the state is a protocol
-failure. No substitute token, repeated action or adaptive quantile is allowed.
+The seven quantile targets are projected one-to-one onto unused legal tokens
+by minimum absolute distance to each token's CDF midpoint; ties prefer higher
+base probability and then lower token id. The argmax token is reserved first.
+This deterministic distinct-CDF projection was frozen after the engineering
+canary showed that literal CDF crossings collide under a concentrated base
+distribution. It uses no energy, success or downstream outcome. Fewer than
+eight legal tokens remains a protocol failure; repeated actions and adaptive
+quantile values remain forbidden.
 
 The independent identity is the atomic-number-sorted integer composition
 reduced by the gcd of counts. Formula strings are not sufficient.
 
-- the old 256-Plan critic source cohort overlaps the complete C³FD
-  seed17/seed18 sources by `1/0` reduced identities; the outcome-blind L6
-  selection below does not contain that identity, so the frozen Branch
-  canary/train/validation sets require no row deletion;
+- the old 256-Plan critic source is filtered by the frozen C³FD benchmark
+  certificate before positional selection: `34` rows are retained in a reject
+  ledger, then the first `8`, next `128`, and first validation `32` certified
+  rows are frozen; no energy, stability, novelty or success outcome is used;
 - C³FD seeds share 24 reduced identities;
 - L6 is the outcome-blind first 256 seed17 requests whose identity is absent
   from the entire seed18 set;

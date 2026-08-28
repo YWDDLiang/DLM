@@ -266,6 +266,7 @@ def main() -> None:
                         for value in snapshot["eligible_schedule_positions"]
                     ],
                     "frozen_base_confidence": float(snapshot["confidence"]),
+                    "action_selection": str(snapshot["action_selection"]),
                     "action_token_ids": [int(v) for v in snapshot["action_token_ids"]],
                     "action_probabilities": [
                         float(v) for v in snapshot["action_probabilities"]

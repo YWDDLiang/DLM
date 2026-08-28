@@ -216,6 +216,7 @@ def select_intervention_from_masked_logits(
     return {
         "position": position,
         "confidence": float(confidence),
+        "action_selection": "argmax_plus_distinct_cdf_projection_v2",
         "action_token_ids": actions,
         "action_probabilities": tuple(probability_by_token[token] for token in actions),
         "legal_token_count": len(legal_ids),
