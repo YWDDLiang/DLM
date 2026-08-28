@@ -204,15 +204,30 @@ class FamilyAwareBenchmarkReachability:
         elif len(state.tokens) >= target:
             result = False
         else:
-            result = bool(
-                self.legal_species_counts(
-                    state,
+            # Existence needs one witness, whereas the public legality method
+            # must return every viable immediate action.  Short-circuiting
+            # here leaves that action set unchanged and avoids recursively
+            # materializing the full continuation tree for each candidate.
+            result = False
+            for token in self.generic.legal_species_counts(
+                state,
+                benchmark_validator=benchmark_validator,
+                max_species=max_species,
+                target_arity=target,
+            ):
+                symbol = Z_TO_SYMBOL[int(token.atomic_number)]
+                if not element_allowed_for_family(symbol, family):
+                    continue
+                candidate = state.apply(token, max_species=max_species)
+                if self.can_complete(
+                    candidate,
                     family=family,
                     target_arity=target,
                     benchmark_validator=benchmark_validator,
                     max_species=max_species,
-                )
-            )
+                ):
+                    result = True
+                    break
         self._completion_cache[key] = bool(result)
         return bool(result)
 
