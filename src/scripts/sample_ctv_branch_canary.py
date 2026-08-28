@@ -20,7 +20,7 @@ if str(PROJECT_ROOT) not in sys.path:
 import torch
 import torch.distributed as dist
 
-from crystal_dlm.ctv_branching import validate_canary_layout  # noqa: E402
+from crystal_dlm.ctv_branching import validate_branch_layout  # noqa: E402
 from crystal_dlm.ctv_protocol import branch_record_id, counter_seed  # noqa: E402
 from crystal_dlm.ctv_rollout import (  # noqa: E402
     collect_ctv_branch_states,
@@ -45,11 +45,13 @@ from scripts.sample_llada_dynamic_crystals import (  # noqa: E402
 from scripts.sample_llada_r5_exact_length import element_prefill_for_batch  # noqa: E402
 
 
-def read_rows(path: Path) -> list[dict[str, Any]]:
+def read_rows(path: Path, *, expected_plans: int) -> list[dict[str, Any]]:
     with path.open(encoding="utf-8") as handle:
         rows = [json.loads(line) for line in handle if line.strip()]
-    if len(rows) != 8:
-        raise ValueError(f"CTV resource canary requires exactly 8 Plans, got {len(rows)}")
+    if len(rows) != int(expected_plans):
+        raise ValueError(
+            f"CTV rollout requires exactly {int(expected_plans)} Plans, got {len(rows)}"
+        )
     identities = [str(row.get("reduced_composition_identity") or "") for row in rows]
     if any(not value for value in identities) or len(set(identities)) != 8:
         raise ValueError("CTV canary reduced composition identities changed")
@@ -75,7 +77,14 @@ def state_id(*, composition_id: str, sample_idx: int, milestone: float) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def merge_outputs(output_dir: Path, world_size: int) -> None:
+def merge_outputs(
+    output_dir: Path,
+    world_size: int,
+    *,
+    expected_plans: int,
+    continuations_per_action: int,
+    run_mode: str,
+) -> None:
     branches: list[dict[str, Any]] = []
     states: list[dict[str, Any]] = []
     graphs: list[dict[str, Any]] = []
@@ -108,19 +117,32 @@ def merge_outputs(output_dir: Path, world_size: int) -> None:
     branches.sort(key=lambda row: int(row["branch_ordinal"]))
     states.sort(key=lambda row: (int(row["canary_plan_idx"]), float(row["milestone"])))
     graphs.sort(key=lambda row: int(row["sample_idx"]))
-    if [int(row["branch_ordinal"]) for row in branches] != list(range(256)):
-        raise ValueError("CTV merged branch ordinals are not exactly 0..255")
-    layout = validate_canary_layout(branches, expected_plans=8)
-    if len(states) != 16 or len({str(row["state_id"]) for row in states}) != 16:
-        raise ValueError("CTV merged state ledger must contain 16 unique states")
+    expected_branches = (
+        int(expected_plans) * 2 * 8 * int(continuations_per_action)
+    )
+    expected_states = int(expected_plans) * 2
+    if [int(row["branch_ordinal"]) for row in branches] != list(
+        range(expected_branches)
+    ):
+        raise ValueError("CTV merged branch ordinals are not contiguous")
+    layout = validate_branch_layout(
+        branches,
+        expected_plans=int(expected_plans),
+        expected_continuations=int(continuations_per_action),
+    )
+    if len(states) != expected_states or len(
+        {str(row["state_id"]) for row in states}
+    ) != expected_states:
+        raise ValueError("CTV merged state ledger count changed")
     write_jsonl(output_dir / "branches.jsonl", branches)
     write_jsonl(output_dir / "states.jsonl", states)
     torch.save(graphs, output_dir / "proposal_graphs.pt")
     total_seconds = sum(float(row["elapsed_seconds"]) for row in rank_metrics)
     maximum_seconds = max(float(row["elapsed_seconds"]) for row in rank_metrics)
     manifest = {
-        "schema": "h1a2_ctv_resource_canary_v1",
-        "engineering_only": True,
+        "schema": "h1a2_ctv_branch_rollout_manifest_v1",
+        "run_mode": str(run_mode),
+        "engineering_only": str(run_mode) == "canary",
         "method_adaptation_from_outcomes_forbidden": True,
         "layout": layout,
         "states": len(states),
@@ -130,7 +152,8 @@ def merge_outputs(output_dir: Path, world_size: int) -> None:
         "rank_metrics": rank_metrics,
         "summed_rank_seconds": total_seconds,
         "wall_seconds_max_rank": maximum_seconds,
-        "branches_per_wall_second": 256.0 / max(maximum_seconds, 1e-12),
+        "branches_per_wall_second": expected_branches
+        / max(maximum_seconds, 1e-12),
         "max_rss_kib": max(int(row["max_rss_kib"]) for row in rank_metrics),
         "max_cuda_allocated_bytes": max(
             int(row["max_cuda_allocated_bytes"]) for row in rank_metrics
@@ -145,7 +168,12 @@ def merge_outputs(output_dir: Path, world_size: int) -> None:
             (output_dir / "states.jsonl").read_bytes()
         ).hexdigest(),
     }
-    (output_dir / "CTV_RESOURCE_CANARY_MANIFEST.json").write_text(
+    stem = (
+        "CTV_RESOURCE_CANARY_MANIFEST"
+        if str(run_mode) == "canary"
+        else "CTV_BRANCH_ROLLOUT_MANIFEST"
+    )
+    (output_dir / f"{stem}.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
@@ -154,15 +182,16 @@ def merge_outputs(output_dir: Path, world_size: int) -> None:
         "",
         "This run is engineering-only; energy, rank and success outcomes cannot alter the method.",
         "",
-        f"- Branch ledger: `{len(branches)}/256`",
-        f"- State ledger: `{len(states)}/16`",
+        f"- Mode: `{run_mode}`",
+        f"- Branch ledger: `{len(branches)}/{expected_branches}`",
+        f"- State ledger: `{len(states)}/{expected_states}`",
         f"- Parse / graph: `{manifest['parse_success']}/{manifest['graph_success']}`",
         f"- Peak host RSS: `{manifest['max_rss_kib']} KiB`",
         f"- Peak CUDA allocated/reserved: `{manifest['max_cuda_allocated_bytes']}/"
         f"{manifest['max_cuda_reserved_bytes']} bytes`",
         f"- Wall time (slowest rank): `{maximum_seconds:.3f} s`",
     ]
-    (output_dir / "CTV_RESOURCE_CANARY_MANIFEST.md").write_text(
+    (output_dir / f"{stem}.md").write_text(
         "\n".join(lines) + "\n", encoding="utf-8"
     )
     (output_dir / "_DLM_SUCCESS").touch()
@@ -175,6 +204,13 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--crysllmgen-dir", type=Path, required=True)
     parser.add_argument("--canary-jsonl", type=Path, required=True)
+    parser.add_argument("--expected-plans", type=int, default=8)
+    parser.add_argument("--continuations-per-action", type=int, choices=(1, 2), default=2)
+    parser.add_argument(
+        "--run-mode",
+        choices=("canary", "branch_train", "branch_validation"),
+        default="canary",
+    )
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--seed", type=int, default=61017)
     args = parser.parse_args()
@@ -192,10 +228,10 @@ def main() -> None:
         distributed["device"],
     )
     process_one = import_process_one(args.crysllmgen_dir)
-    rows = read_rows(args.canary_jsonl)
+    rows = read_rows(args.canary_jsonl, expected_plans=int(args.expected_plans))
     assigned = [(index, row) for index, row in enumerate(rows) if index % world_size == rank]
-    if len(assigned) != 2:
-        raise RuntimeError("CTV canary must assign exactly two Plans to each rank")
+    if not assigned:
+        raise RuntimeError("CTV rollout assigned no Plans to a rank")
     torch.cuda.reset_peak_memory_stats()
     started = time.time()
     branch_rows: list[dict[str, Any]] = []
@@ -275,7 +311,7 @@ def main() -> None:
                     "state_token_ids": snapshot["tokens"][0].detach().cpu().tolist(),
                 }
             )
-            continuation_seeds = (
+            continuation_seeds_all = (
                 counter_seed(
                     "ctv-canary-cont-v1",
                     args.seed,
@@ -293,6 +329,9 @@ def main() -> None:
                     1,
                 ),
             )
+            continuation_seeds = continuation_seeds_all[
+                : int(args.continuations_per_action)
+            ]
             completed, layout = complete_ctv_forced_branches(
                 model,
                 snapshot,
@@ -319,7 +358,13 @@ def main() -> None:
                 )
             )
             for local_branch_idx, (metadata, text) in enumerate(zip(layout, decoded, strict=True)):
-                branch_ordinal = canary_plan_idx * 32 + milestone_idx * 16 + local_branch_idx
+                state_width = 8 * int(args.continuations_per_action)
+                plan_width = 2 * state_width
+                branch_ordinal = (
+                    canary_plan_idx * plan_width
+                    + milestone_idx * state_width
+                    + local_branch_idx
+                )
                 branch_id = branch_record_id(
                     composition_id=composition_id,
                     sample_idx=sample_idx,
@@ -346,6 +391,9 @@ def main() -> None:
                     graph, cif = graph_from_arrays(arrays, process_one)
                     graph["sample_idx"] = branch_ordinal
                     graph["branch_id"] = branch_id
+                    graph["ctv_refiner_seed"] = int(metadata["noise_group"]) & (
+                        (1 << 31) - 1
+                    )
                     proposal_graphs.append(graph)
                     record.update(
                         {
@@ -389,7 +437,13 @@ def main() -> None:
     )
     dist.barrier()
     if is_main:
-        merge_outputs(args.output_dir, world_size)
+        merge_outputs(
+            args.output_dir,
+            world_size,
+            expected_plans=int(args.expected_plans),
+            continuations_per_action=int(args.continuations_per_action),
+            run_mode=str(args.run_mode),
+        )
     dist.barrier()
     dist.destroy_process_group()
 

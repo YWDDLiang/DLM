@@ -70,9 +70,16 @@ def lattices_to_params_shape(lattices: torch.Tensor):
 
 
 class ProposalDataset(Dataset):
-    def __init__(self, proposal_graphs: List[Dict], Data):
+    def __init__(
+        self,
+        proposal_graphs: List[Dict],
+        Data,
+        *,
+        seed_from_graph_field: str | None = None,
+    ):
         self.proposal_graphs = proposal_graphs
         self.Data = Data
+        self.seed_from_graph_field = seed_from_graph_field
 
     def __len__(self) -> int:
         return len(self.proposal_graphs)
@@ -80,7 +87,7 @@ class ProposalDataset(Dataset):
     def __getitem__(self, index):
         s = self.proposal_graphs[index]
         n_atom = int(torch.as_tensor(s["n_atom"]).view(-1)[0].item())
-        return self.Data(
+        payload = dict(
             num_atoms=torch.LongTensor([n_atom]),
             num_nodes=n_atom,
             num_bonds=s["edge_indices"].shape[0],
@@ -92,6 +99,15 @@ class ProposalDataset(Dataset):
             to_jimages=torch.LongTensor(s["to_jimages"]),
             sample_idx=torch.LongTensor([int(s.get("sample_idx", index))]),
         )
+        if self.seed_from_graph_field:
+            if self.seed_from_graph_field not in s:
+                raise KeyError(
+                    f"proposal lacks seed field {self.seed_from_graph_field!r}"
+                )
+            payload["refiner_seed"] = torch.LongTensor(
+                [int(s[self.seed_from_graph_field])]
+            )
+        return self.Data(**payload)
 
 
 def write_json(path: Path, payload) -> None:
@@ -173,6 +189,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--seed", type=int, default=27017)
     parser.add_argument("--seed-by-sample-index", action="store_true")
+    parser.add_argument("--seed-from-graph-field", default=None)
     parser.add_argument("--timesteps", type=int, default=1000)
     parser.add_argument("--diff-steps", type=int, default=800)
     parser.add_argument("--num-evals", type=int, default=1)
@@ -212,7 +229,15 @@ def main() -> None:
         proposal_graphs = proposal_graphs[: args.max_proposals]
     total_proposals = len(proposal_graphs)
     rank_graphs = proposal_graphs[rank::world_size] if distributed else proposal_graphs
-    dataset = ProposalDataset(rank_graphs, Data)
+    if args.seed_by_sample_index and args.seed_from_graph_field:
+        raise ValueError(
+            "choose either --seed-by-sample-index or --seed-from-graph-field"
+        )
+    dataset = ProposalDataset(
+        rank_graphs,
+        Data,
+        seed_from_graph_field=args.seed_from_graph_field,
+    )
     dataloader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False)
 
     model = CSPDiffusion(args.timesteps, args.run_type).to(device)
@@ -231,12 +256,20 @@ def main() -> None:
     with torch.no_grad():
         for batch in tqdm(dataloader, desc=f"CrysLLMGen refinement rank{rank}", disable=distributed and not is_main):
             batch = batch.to(device)
-            if args.seed_by_sample_index and int(batch.num_graphs) != 1:
-                raise ValueError("--seed-by-sample-index requires --batch-size 1")
+            if (
+                args.seed_by_sample_index or args.seed_from_graph_field
+            ) and int(batch.num_graphs) != 1:
+                raise ValueError("per-branch deterministic seeding requires --batch-size 1")
             batch_frac, batch_num, batch_atom, batch_lat = [], [], [], []
             sample_idx = int(batch.sample_idx.view(-1)[0].item())
             for eval_idx in range(args.num_evals):
-                if args.seed_by_sample_index:
+                if args.seed_from_graph_field:
+                    sample_seed = int(batch.refiner_seed.view(-1)[0].item()) + eval_idx
+                    np.random.seed(sample_seed)
+                    torch.manual_seed(sample_seed)
+                    if torch.cuda.is_available():
+                        torch.cuda.manual_seed_all(sample_seed)
+                elif args.seed_by_sample_index:
                     sample_seed = int(args.seed) + sample_idx * max(1, int(args.num_evals)) + eval_idx
                     np.random.seed(sample_seed)
                     torch.manual_seed(sample_seed)

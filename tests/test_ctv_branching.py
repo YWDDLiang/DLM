@@ -5,6 +5,7 @@ from crystal_dlm.ctv_branching import (
     make_branch_layout,
     newly_crossed_milestones,
     validate_canary_layout,
+    validate_branch_layout,
     visible_free_geometry_fraction,
 )
 
@@ -53,6 +54,24 @@ class CTVBranchingProtocolTest(unittest.TestCase):
             and row["continuation_seed"] == 7001
         }
         self.assertEqual(len(groups), 1)
+        train_rows = []
+        for plan in range(3):
+            for milestone in (0.60, 0.80):
+                train_rows.extend(
+                    make_branch_layout(
+                        composition_id=f"train-{plan}",
+                        sample_idx=plan,
+                        milestone=milestone,
+                        intervention_position=9,
+                        action_token_ids=range(20, 28),
+                        continuation_seeds=(8001,),
+                    )
+                )
+        train_report = validate_branch_layout(
+            train_rows, expected_plans=3, expected_continuations=1
+        )
+        self.assertEqual(train_report["rows"], 48)
+        self.assertEqual(train_report["continuations_per_action"], 1)
 
 
 try:

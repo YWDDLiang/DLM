@@ -73,8 +73,8 @@ def make_branch_layout(
     continuations = [int(value) for value in continuation_seeds]
     if len(actions) != 8 or len(set(actions)) != 8:
         raise ValueError("CTV branch state requires exactly eight distinct actions")
-    if len(continuations) != 2 or len(set(continuations)) != 2:
-        raise ValueError("CTV resource canary requires two distinct continuations")
+    if not continuations or len(set(continuations)) != len(continuations):
+        raise ValueError("CTV branches require non-empty distinct continuations")
     if not composition_id:
         raise ValueError("CTV composition identity must be non-empty")
     rows: list[dict[str, Any]] = []
@@ -106,10 +106,15 @@ def make_branch_layout(
     return rows
 
 
-def validate_canary_layout(
-    rows: Sequence[Mapping[str, Any]], *, expected_plans: int = 8
+def validate_branch_layout(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    expected_plans: int,
+    expected_continuations: int,
 ) -> dict[str, int]:
-    expected = int(expected_plans) * 2 * 8 * 2
+    if int(expected_plans) <= 0 or int(expected_continuations) <= 0:
+        raise ValueError("CTV branch layout expectations must be positive")
+    expected = int(expected_plans) * 2 * 8 * int(expected_continuations)
     if len(rows) != expected:
         raise ValueError(f"CTV canary has {len(rows)} rows, expected {expected}")
     keys: set[tuple[Any, ...]] = set()
@@ -135,8 +140,11 @@ def validate_canary_layout(
         raise ValueError("CTV canary Plan count changed")
     if any(values != set(CTV_MILESTONES) for values in plan_milestones.values()):
         raise ValueError("every CTV canary Plan requires both frozen milestones")
-    if any(count != 16 for count in state_counts.values()):
-        raise ValueError("every CTV state requires eight actions by two continuations")
+    expected_state_rows = 8 * int(expected_continuations)
+    if any(count != expected_state_rows for count in state_counts.values()):
+        raise ValueError(
+            "every CTV state requires eight actions by the frozen continuation count"
+        )
     if any(len(values) != 1 for values in noise_actions.values()):
         raise ValueError("actions in one continuation do not share common random numbers")
     return {
@@ -145,7 +153,18 @@ def validate_canary_layout(
         "states": len(state_counts),
         "unique_branches": len(keys),
         "common_noise_groups": len(noise_actions),
+        "continuations_per_action": int(expected_continuations),
     }
+
+
+def validate_canary_layout(
+    rows: Sequence[Mapping[str, Any]], *, expected_plans: int = 8
+) -> dict[str, int]:
+    return validate_branch_layout(
+        rows,
+        expected_plans=int(expected_plans),
+        expected_continuations=2,
+    )
 
 
 def select_intervention_from_masked_logits(
@@ -282,6 +301,7 @@ __all__ = [
     "require_gamma_zero_identity",
     "select_intervention_from_masked_logits",
     "stateless_gumbel_scores",
+    "validate_branch_layout",
     "validate_canary_layout",
     "visible_free_geometry_fraction",
 ]

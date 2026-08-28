@@ -111,7 +111,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 torchrun --standalone --master-port 30856 --nproc_p
   --crysllmgen-dir "${CRYS}" \
   --batch-size 1 \
   --seed 71017 \
-  --seed-by-sample-index \
+  --seed-from-graph-field ctv_refiner_seed \
   --diff-steps 800 \
   --max-proposals 256
 
