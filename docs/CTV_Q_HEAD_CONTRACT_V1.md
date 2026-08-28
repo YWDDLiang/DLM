@@ -34,14 +34,15 @@ milestone and one-hot geometry-token family, the action input is:
 [h, e, h*e, clip(log(p), -30, 0), milestone, family_one_hot]
 ```
 
-Each head contains a 256->64->1 state-baseline MLP and a
-`(3*256+11)->128->1` action-advantage MLP. Predicted advantages are centered
-over the eight observed actions while fitting. The fixed loss is equal-weight
-Huber loss on absolute terminal energy and state-centered advantage. Training
-uses AdamW, learning rate `1e-3`, weight decay `1e-3`, 512 full-group updates,
-gradient clipping `1.0`, and seeds `74017/75017`. There is no architecture,
-epoch, checkpoint or hyperparameter search and Branch validation is never used
-for early stopping.
+Each head independently LayerNorms `h` and `e`, then contains a 256->64->1
+state-baseline MLP and a `(3*256+11)->128->1` action-advantage MLP. Predicted
+advantages are centered over the eight observed actions while fitting. The
+fixed loss is equal-weight Huber loss on standardized absolute terminal energy
+and state-centered advantage. Each head's energy center/scale is computed only
+from its own train group and saved with the head. Training uses AdamW, learning
+rate `1e-3`, weight decay `1e-3`, 512 full-group updates, gradient clipping
+`1.0`, and seeds `74017/75017`. There is no architecture, epoch, checkpoint or
+hyperparameter search and Branch validation is never used for early stopping.
 
 ## Frozen gate
 
