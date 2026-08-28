@@ -1,0 +1,349 @@
+{
+  "claim_boundary": "composition compiler only; contribution1 and stability claims unchanged",
+  "contract": {
+    "N_policy": "hard locked; no repair or replacement",
+    "action_order": "N then canonical element-valence-count actions then explicit end",
+    "certificates": {
+      "benchmark_compatible": "independent CrysLLMGen/SMACT pass; positive allowed",
+      "extended_only": "exact broader SMACT-state ledger but independent failure; unknown, never positive"
+    },
+    "rich_plan": "render unchanged seven-line h1_rich_plan_v1 after semantic completion",
+    "terminal": "remaining_atoms=0 and net_charge=0"
+  },
+  "datasets": [
+    {
+      "N": {
+        "1": 59,
+        "10": 2598,
+        "11": 348,
+        "12": 2552,
+        "13": 549,
+        "14": 1723,
+        "15": 383,
+        "16": 1792,
+        "17": 246,
+        "18": 1409,
+        "19": 285,
+        "2": 563,
+        "20": 2391,
+        "3": 518,
+        "4": 3890,
+        "5": 1231,
+        "6": 2256,
+        "7": 531,
+        "8": 2051,
+        "9": 904
+      },
+      "assignment_sources": {
+        "benchmark_oxidation_witness": 15030,
+        "benchmark_zero_branch": 9528,
+        "smact_adjacent_mixed_diagnostic": 1721
+      },
+      "benchmark_reasons": {
+        "all_metal_shortcut": 9302,
+        "charge_neutral_pauling_valid": 15030,
+        "charge_neutrality_fail": 1377,
+        "oxidation_state_missing": 283,
+        "pauling_fail_or_ratio_rejected": 918,
+        "single_element_shortcut": 226
+      },
+      "branches": {
+        "alloy": 9528,
+        "ionic": 16751
+      },
+      "certificate_classes": {
+        "benchmark_compatible": 24558,
+        "extended_only": 1721
+      },
+      "counts": {
+        "benchmark_certificates": 24558,
+        "benchmark_legacy_recall": 24558,
+        "benchmark_unknown": 0,
+        "certificate_agreement": 26279,
+        "charge_conserved": 26279,
+        "compiled": 26279,
+        "composition_roundtrip": 26279,
+        "ended": 26279,
+        "extended_not_positive": 26279,
+        "extended_only": 1721,
+        "invalid_certificates": 0,
+        "legacy_valid": 24558,
+        "n_conserved": 26279,
+        "rich_roundtrip": 26279
+      },
+      "failures": {
+        "compile:ValueError:composition has no semantic valence witness: no_charge_neutral_smact_state_assignment": 857
+      },
+      "name": "train",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/train.jsonl",
+      "plans": 27136,
+      "rates": {
+        "N_conservation": 1.0,
+        "benchmark_certificate": 0.9049970518867925,
+        "benchmark_recall_among_legacy_valid": 1.0,
+        "certificate_agreement": 1.0,
+        "charge_conservation": 1.0,
+        "composition_roundtrip": 1.0,
+        "extended_never_positive": 1.0,
+        "extended_only_unknown": 0.06342128537735849,
+        "legacy_comp_valid": 0.9049970518867925,
+        "rich_roundtrip": 1.0,
+        "semantic_compile": 0.9684183372641509
+      },
+      "rows": 27136
+    },
+    {
+      "N": {
+        "1": 21,
+        "10": 816,
+        "11": 109,
+        "12": 901,
+        "13": 188,
+        "14": 597,
+        "15": 139,
+        "16": 606,
+        "17": 68,
+        "18": 495,
+        "19": 102,
+        "2": 187,
+        "20": 707,
+        "3": 194,
+        "4": 1297,
+        "5": 443,
+        "6": 720,
+        "7": 204,
+        "8": 685,
+        "9": 282
+      },
+      "assignment_sources": {
+        "benchmark_oxidation_witness": 4898,
+        "benchmark_zero_branch": 3266,
+        "smact_adjacent_mixed_diagnostic": 597
+      },
+      "benchmark_reasons": {
+        "all_metal_shortcut": 3191,
+        "charge_neutral_pauling_valid": 4898,
+        "charge_neutrality_fail": 468,
+        "oxidation_state_missing": 88,
+        "pauling_fail_or_ratio_rejected": 327,
+        "single_element_shortcut": 75
+      },
+      "branches": {
+        "alloy": 3266,
+        "ionic": 5495
+      },
+      "certificate_classes": {
+        "benchmark_compatible": 8164,
+        "extended_only": 597
+      },
+      "counts": {
+        "benchmark_certificates": 8164,
+        "benchmark_legacy_recall": 8164,
+        "benchmark_unknown": 0,
+        "certificate_agreement": 8761,
+        "charge_conserved": 8761,
+        "compiled": 8761,
+        "composition_roundtrip": 8761,
+        "ended": 8761,
+        "extended_not_positive": 8761,
+        "extended_only": 597,
+        "invalid_certificates": 0,
+        "legacy_valid": 8164,
+        "n_conserved": 8761,
+        "rich_roundtrip": 8761
+      },
+      "failures": {
+        "compile:ValueError:composition has no semantic valence witness: no_charge_neutral_smact_state_assignment": 286
+      },
+      "name": "val",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/val.jsonl",
+      "plans": 9047,
+      "rates": {
+        "N_conservation": 1.0,
+        "benchmark_certificate": 0.9023985851663535,
+        "benchmark_recall_among_legacy_valid": 1.0,
+        "certificate_agreement": 1.0,
+        "charge_conservation": 1.0,
+        "composition_roundtrip": 1.0,
+        "extended_never_positive": 1.0,
+        "extended_only_unknown": 0.06598872554437936,
+        "legacy_comp_valid": 0.9023985851663535,
+        "rich_roundtrip": 1.0,
+        "semantic_compile": 0.9683873107107328
+      },
+      "rows": 9047
+    },
+    {
+      "N": {
+        "1": 30,
+        "10": 912,
+        "11": 111,
+        "12": 830,
+        "13": 183,
+        "14": 556,
+        "15": 132,
+        "16": 579,
+        "17": 79,
+        "18": 466,
+        "19": 77,
+        "2": 197,
+        "20": 771,
+        "3": 177,
+        "4": 1365,
+        "5": 377,
+        "6": 756,
+        "7": 178,
+        "8": 710,
+        "9": 290
+      },
+      "assignment_sources": {
+        "benchmark_oxidation_witness": 4958,
+        "benchmark_zero_branch": 3269,
+        "smact_adjacent_mixed_diagnostic": 549
+      },
+      "benchmark_reasons": {
+        "all_metal_shortcut": 3198,
+        "charge_neutral_pauling_valid": 4958,
+        "charge_neutrality_fail": 442,
+        "oxidation_state_missing": 81,
+        "pauling_fail_or_ratio_rejected": 296,
+        "single_element_shortcut": 71
+      },
+      "branches": {
+        "alloy": 3269,
+        "ionic": 5507
+      },
+      "certificate_classes": {
+        "benchmark_compatible": 8227,
+        "extended_only": 549
+      },
+      "counts": {
+        "benchmark_certificates": 8227,
+        "benchmark_legacy_recall": 8227,
+        "benchmark_unknown": 0,
+        "certificate_agreement": 8776,
+        "charge_conserved": 8776,
+        "compiled": 8776,
+        "composition_roundtrip": 8776,
+        "ended": 8776,
+        "extended_not_positive": 8776,
+        "extended_only": 549,
+        "invalid_certificates": 0,
+        "legacy_valid": 8227,
+        "n_conserved": 8776,
+        "rich_roundtrip": 8776
+      },
+      "failures": {
+        "compile:ValueError:composition has no semantic valence witness: no_charge_neutral_smact_state_assignment": 270
+      },
+      "name": "test",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/planner_countfields_v1_20260827/test.jsonl",
+      "plans": 9046,
+      "rates": {
+        "N_conservation": 1.0,
+        "benchmark_certificate": 0.9094627459650675,
+        "benchmark_recall_among_legacy_valid": 1.0,
+        "certificate_agreement": 1.0,
+        "charge_conservation": 1.0,
+        "composition_roundtrip": 1.0,
+        "extended_never_positive": 1.0,
+        "extended_only_unknown": 0.06068980764978996,
+        "legacy_comp_valid": 0.9094627459650675,
+        "rich_roundtrip": 1.0,
+        "semantic_compile": 0.9701525536148574
+      },
+      "rows": 9046
+    },
+    {
+      "N": {
+        "1": 1,
+        "10": 106,
+        "11": 19,
+        "12": 109,
+        "13": 22,
+        "14": 83,
+        "15": 17,
+        "16": 78,
+        "17": 7,
+        "18": 52,
+        "19": 12,
+        "2": 9,
+        "20": 85,
+        "3": 9,
+        "4": 114,
+        "5": 47,
+        "6": 72,
+        "7": 19,
+        "8": 73,
+        "9": 34
+      },
+      "assignment_sources": {
+        "benchmark_oxidation_witness": 584,
+        "benchmark_zero_branch": 301,
+        "smact_adjacent_mixed_diagnostic": 83
+      },
+      "benchmark_reasons": {
+        "all_metal_shortcut": 295,
+        "charge_neutral_pauling_valid": 584,
+        "charge_neutrality_fail": 79,
+        "oxidation_state_missing": 5,
+        "pauling_fail_or_ratio_rejected": 31,
+        "single_element_shortcut": 6
+      },
+      "branches": {
+        "alloy": 301,
+        "ionic": 667
+      },
+      "certificate_classes": {
+        "benchmark_compatible": 885,
+        "extended_only": 83
+      },
+      "counts": {
+        "benchmark_certificates": 885,
+        "benchmark_legacy_recall": 885,
+        "benchmark_unknown": 0,
+        "certificate_agreement": 968,
+        "charge_conserved": 968,
+        "compiled": 968,
+        "composition_roundtrip": 968,
+        "ended": 968,
+        "extended_not_positive": 968,
+        "extended_only": 83,
+        "invalid_certificates": 0,
+        "legacy_valid": 885,
+        "n_conserved": 968,
+        "rich_roundtrip": 968
+      },
+      "failures": {
+        "compile:ValueError:composition has no semantic valence witness: no_charge_neutral_smact_state_assignment": 32
+      },
+      "name": "raw1000",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/raw1000_two500_20260827/raw1000.jsonl",
+      "plans": 1000,
+      "rates": {
+        "N_conservation": 1.0,
+        "benchmark_certificate": 0.885,
+        "benchmark_recall_among_legacy_valid": 1.0,
+        "certificate_agreement": 1.0,
+        "charge_conservation": 1.0,
+        "composition_roundtrip": 1.0,
+        "extended_never_positive": 1.0,
+        "extended_only_unknown": 0.083,
+        "legacy_comp_valid": 0.885,
+        "rich_roundtrip": 1.0,
+        "semantic_compile": 0.968
+      },
+      "rows": 1000
+    }
+  ],
+  "gate": {
+    "dual_certificate_alignment": true,
+    "planner_gpu_training_authorized": false,
+    "raw1000_within_3pp_of_train": true,
+    "semantic_compiler_authorized": true,
+    "semantic_coverage_at_least_legacy": true,
+    "train_val_exact_invariants": true,
+    "train_val_present": true
+  },
+  "schema": "h1a2_ccfd_v2_semantic_audit_v1"
+}

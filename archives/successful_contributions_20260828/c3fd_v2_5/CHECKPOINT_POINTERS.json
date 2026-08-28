@@ -1,0 +1,21 @@
+{
+  "schema": "h1a2_success_checkpoint_pointers_v1",
+  "run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/c3fd_v25_online_canary_36608",
+  "selected_checkpoints": [
+    {
+      "seed": 17,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/c3fd_v25_online_canary_36608/train_seed17/checkpoint.pt",
+      "bytes": 11554530,
+      "sha256": "87c1673f709c14488848196e3f466b0f4797cc3511108a07b6d498ca96d17d53",
+      "retained": true
+    },
+    {
+      "seed": 18,
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/c3fd_v25_online_canary_36608/train_seed18/checkpoint.pt",
+      "bytes": 11554530,
+      "sha256": "d2e31996d034ba0f452ba72906539d6067bf3d7bf8969940c0f7961011b02b07",
+      "retained": true
+    }
+  ],
+  "weight_copy_policy": "Remote selected weights are retained in place; the archive stores verified paths, byte sizes, and hashes instead of duplicating large binary assets in Git."
+}

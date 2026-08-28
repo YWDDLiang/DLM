@@ -1,0 +1,24 @@
+{
+  "data_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/c3fd_semantic_v21_step1b_20260828",
+  "elapsed_sec": 2.1378093101084232,
+  "gate": {
+    "model_weights_unused": true,
+    "outcome_labels_unused": true,
+    "teacher_gate_pass": true,
+    "train_teacher_witness_100pct": true,
+    "val_teacher_witness_100pct": true
+  },
+  "schema": "h1a2_c3fd_v25_teacher_witness_audit_v1",
+  "teacher_witness": {
+    "train": {
+      "rate": 1.0,
+      "total": 24558,
+      "valid": 24558
+    },
+    "val": {
+      "rate": 1.0,
+      "total": 8159,
+      "valid": 8159
+    }
+  }
+}
