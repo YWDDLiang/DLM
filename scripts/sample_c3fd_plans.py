@@ -35,6 +35,7 @@ from crystal_dlm.ccfd_v2 import (  # noqa: E402
 from crystal_dlm.composition_pair_prior import ValenceNode  # noqa: E402
 from crystal_dlm.family_reachability import (  # noqa: E402
     FamilyAwareBenchmarkReachability,
+    PaulingWitnessReachability,
     element_allowed_for_family,
     family_prefix_reachable,
     state_symbols,
@@ -162,6 +163,11 @@ def main() -> None:
     parser.add_argument("--top-k", type=int, default=0)
     parser.add_argument("--pair-prior-weight", type=float, default=0.0)
     parser.add_argument("--max-species", type=int, default=7)
+    parser.add_argument(
+        "--reachability-mode",
+        choices=("family_exact", "pauling_witness"),
+        default="family_exact",
+    )
     args = parser.parse_args()
     if args.output_dir.exists():
         raise FileExistsError(args.output_dir)
@@ -201,7 +207,10 @@ def main() -> None:
         for row in species_rows
     ]
     node_to_id = {node: index for index, node in enumerate(nodes)}
-    reachability = FamilyAwareBenchmarkReachability(nodes)
+    if args.reachability_mode == "family_exact":
+        reachability = FamilyAwareBenchmarkReachability(nodes)
+    else:
+        reachability = PaulingWitnessReachability(nodes)
     soft_values = vocabulary["soft_vocabulary"]
     eos_id = int(vocabulary["species_eos_id"])
 
@@ -479,6 +488,7 @@ def main() -> None:
         "certificate_classes": dict(sorted(certificate_counts.items())),
         "failures": dict(failures.most_common()),
         "joint_reachability": dict(reachability.stats()),
+        "reachability_mode": str(args.reachability_mode),
     }
     (args.output_dir / "sample_metrics.json").write_text(
         json.dumps(metrics, ensure_ascii=False, indent=2, sort_keys=True) + "\n",

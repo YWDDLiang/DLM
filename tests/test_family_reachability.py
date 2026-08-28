@@ -12,6 +12,7 @@ from crystal_dlm.ccfd_v2 import BenchmarkReachability, CCFDv2State, SetAtomCount
 from crystal_dlm.composition_pair_prior import ValenceNode
 from crystal_dlm.family_reachability import (
     FamilyAwareBenchmarkReachability,
+    PaulingWitnessReachability,
     family_prefix_reachable,
 )
 
@@ -21,6 +22,22 @@ def benchmark_true(_elements, _counts):
 
 
 class FamilyReachabilityTest(unittest.TestCase):
+    @staticmethod
+    def witness_oracle(nodes):
+        return PaulingWitnessReachability(
+            nodes,
+            electronegativity_by_atomic_number={
+                FormulaToken.from_symbol("Li", 1, 1).atomic_number: 0.98,
+                FormulaToken.from_symbol("O", -2, 1).atomic_number: 3.44,
+                FormulaToken.from_symbol("F", -1, 1).atomic_number: 3.98,
+                FormulaToken.from_symbol("Fe", 2, 1).atomic_number: 1.83,
+            },
+            metal_atomic_numbers={
+                FormulaToken.from_symbol("Li", 1, 1).atomic_number,
+                FormulaToken.from_symbol("Fe", 2, 1).atomic_number,
+            },
+        )
+
     def test_joint_oracle_removes_split_family_charge_false_positive(self):
         lithium = FormulaToken.from_symbol("Li", 1, 1)
         oxygen = FormulaToken.from_symbol("O", -2, 1)
@@ -94,6 +111,60 @@ class FamilyReachabilityTest(unittest.TestCase):
                     max_species=2,
                 )
             )
+
+    def test_compiled_pauling_witness_removes_false_positive_without_tree_search(self):
+        lithium = FormulaToken.from_symbol("Li", 1, 1)
+        oxygen = FormulaToken.from_symbol("O", -2, 1)
+        fluorine = FormulaToken.from_symbol("F", -1, 1)
+        iron = FormulaToken.from_symbol("Fe", 2, 1)
+        nodes = tuple(
+            ValenceNode(token.atomic_number, token.oxidation_state)
+            for token in (lithium, oxygen, fluorine, iron)
+        )
+        oracle = self.witness_oracle(nodes)
+        state = CCFDv2State.start().apply(SetAtomCount(2))
+        legal = oracle.legal_species_counts(
+            state,
+            family="oxide",
+            target_arity=2,
+            max_species=2,
+        )
+        self.assertNotIn(lithium, legal)
+        self.assertIn(oxygen, legal)
+
+        terminal = state.apply(oxygen).apply(iron)
+        self.assertTrue(
+            oracle.terminal_witness_valid(
+                terminal,
+                family="oxide",
+                target_arity=2,
+            )
+        )
+
+    def test_compiled_witness_rejects_pauling_inversion(self):
+        lithium = FormulaToken.from_symbol("Li", 1, 1)
+        fluorine = FormulaToken.from_symbol("F", -1, 1)
+        nodes = tuple(
+            ValenceNode(token.atomic_number, token.oxidation_state)
+            for token in (lithium, fluorine)
+        )
+        oracle = PaulingWitnessReachability(
+            nodes,
+            electronegativity_by_atomic_number={
+                lithium.atomic_number: 4.0,
+                fluorine.atomic_number: 1.0,
+            },
+            metal_atomic_numbers={lithium.atomic_number},
+        )
+        state = CCFDv2State.start().apply(SetAtomCount(2))
+        self.assertFalse(
+            oracle.can_complete(
+                state,
+                family="halide",
+                target_arity=2,
+                max_species=2,
+            )
+        )
 
 
 if __name__ == "__main__":

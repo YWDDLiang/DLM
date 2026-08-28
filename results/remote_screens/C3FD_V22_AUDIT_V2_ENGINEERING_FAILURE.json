@@ -1,0 +1,13 @@
+{
+  "schema": "h1a2_c3fd_v22_audit_engineering_failure_v2",
+  "date": "2026-08-28",
+  "scientific_result": false,
+  "gpu_authorized": false,
+  "frozen_runtime_limit_sec": 300,
+  "observed_running_sec": 317,
+  "termination": "SIGTERM",
+  "recovery_used": "short-circuit internal exact suffix existence",
+  "result": "runtime gate failed; C3FD-v2.2 stopped",
+  "next_candidate": "C3FD-v2.3 constructive Pauling-witness finite-state DP",
+  "scientific_gate_relaxed": false
+}
