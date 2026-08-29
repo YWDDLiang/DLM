@@ -10,6 +10,7 @@ import math
 from pathlib import Path
 import statistics
 from typing import Any, Mapping, Sequence
+import warnings
 
 
 ARMS = ("base", "g0_all", "g1_strict")
@@ -203,7 +204,10 @@ def raw_geometry_probe(l6_final: Path, l6_generation: Path) -> dict[str, Any]:
 
     def radius(symbol: str) -> float:
         element = Element(symbol)
-        for value in (element.atomic_radius, element.atomic_radius_calculated):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            values = (element.atomic_radius, element.atomic_radius_calculated)
+        for value in values:
             if value is not None:
                 return float(value)
         return 1.5

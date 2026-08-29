@@ -1,6 +1,8 @@
 # RRC-DLM-v1 proposed implementation contract
 
-Status: **draft; no execution is authorized until explicit user confirmation**.
+Status: **superseded after zero-GPU analysis by
+[`D3PO_256_MIN_CONTRACT_V1.md`](D3PO_256_MIN_CONTRACT_V1.md).** No experiment
+was executed under this earlier scalar-rank draft.
 
 RRC means **Refiner-aware Relative-rank Conditioning**. The proposal keeps
 C³FD-v2.5 fixed at `composition + N`, makes the masked DLM the only learned
@@ -131,4 +133,3 @@ main result or to select compositions after observing generated structures.
 - matched base/RRC training: no more than four A800 GPUs total;
 - factorial generation/evaluation: four A800 GPUs, eight CPUs per GPU;
 - no MatterSim work until its separate dependency decision is reopened.
-
