@@ -17,12 +17,12 @@ test-derived composition tilt. The public `105/488` result stays immutable.
 ## Frozen cohorts
 
 - Main D3PO test: 256 reduced-composition-unique Plans; certified prompt SHA
-  `21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5`.
+  `93e223c3174539b4ac1e573bfe679f6bc42bfab1a8eb6f5fc36cbf5a3ccede40`.
 - Sealed fallback holdout: another 256 seed17 Plans, disjoint from L6, L7,
   noisy-pair training data, and the main test. Raw SHA
   `ac321dea0592222f1f0b35342163b5fb91df6d95d3d683b9f077ad55cf077094`;
   certified prompt SHA
-  `ba0611224d23e0e5e74836789e881ac4a3f6ccd60656f99036fcb3fed4ff4e08`.
+  `1b7f7111f75ed5b26cb235274f1b8da70393676898732722c3a63a2f61a35ce0`.
   It remains unopened for scientific outcomes unless a fallback below is
   triggered. Because both main and fallback cohorts come from the same C³FD
   seed17 ledger, this is a **sealed composition-disjoint confirmatory split**,

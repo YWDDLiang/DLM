@@ -156,15 +156,19 @@ increase is not accepted as clear evidence.
   read.
 - The outcome-blind C³FD certificate/minimal-prompt conversion retained all
   `256/256` rows without changing their selection. The generation-facing file
-  is `cohorts/d3po_test_seed17_256_certified_20260830_v1/`
+  execution view is `cohorts/d3po_test_seed17_256_certified_20260830_v2/`
   `D3PO_TEST_CERTIFIED_PLANS.jsonl`, SHA-256
-  `21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5`.
+  `93e223c3174539b4ac1e573bfe679f6bc42bfab1a8eb6f5fc36cbf5a3ccede40`.
+  It preserves each original ledger index in `source_sample_idx` while using
+  the required execution `sample_idx=0..255`; the selected Plans/order are
+  unchanged. The superseded v1 execution serialization and failed job38034
+  remain archived as engineering evidence.
 
 A second outcome-blind fallback holdout is sealed before the main result. It is
 reduced-composition-disjoint from L6, L7, the preference pool, and the main
 test. Raw/certified SHAs are
 `ac321dea0592222f1f0b35342163b5fb91df6d95d3d683b9f077ad55cf077094` and
-`ba0611224d23e0e5e74836789e881ac4a3f6ccd60656f99036fcb3fed4ff4e08`.
+`1b7f7111f75ed5b26cb235274f1b8da70393676898732722c3a63a2f61a35ce0`.
 It remains outcome-unread unless a preregistered fallback class in
 [`D3PO_FALLBACK_DECISION_TREE_V1.md`](D3PO_FALLBACK_DECISION_TREE_V1.md) is
 assigned.

@@ -20,7 +20,7 @@ class D3POFixed256SlurmTest(unittest.TestCase):
         self.assertIn("rerank_or_replacement\tfalse", text)
         self.assertIn("checkpoint_or_seed_selection\tfalse", text)
         self.assertIn(
-            "21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5",
+            "93e223c3174539b4ac1e573bfe679f6bc42bfab1a8eb6f5fc36cbf5a3ccede40",
             text,
         )
         self.assertIn("trap 'on_error", text)
