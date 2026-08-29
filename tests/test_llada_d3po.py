@@ -145,11 +145,11 @@ class D3POTrainerTest(unittest.TestCase):
         )
         self.winner = (
             "<N_002><LA_010><LB_011><LC_012><AA_090><AB_091><AG_092>"
-            "<E_Li><X_000><Y_001><Z_002><E_O><X_100><Y_200><Z_300>"
+            "<E_Li><X_000><Y_001><Z_002><E_O><X_050><Y_060><Z_070>"
         )
         self.loser = (
             "<N_002><LA_013><LB_014><LC_015><AA_088><AB_089><AG_090>"
-            "<E_Li><X_010><Y_011><Z_012><E_O><X_110><Y_210><Z_310>"
+            "<E_Li><X_010><Y_011><Z_012><E_O><X_055><Y_065><Z_075>"
         )
 
     def row(self, *, pair_id="pair-0", pair_weight=1.0, split="train"):
