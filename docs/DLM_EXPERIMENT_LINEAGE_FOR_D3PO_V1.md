@@ -38,6 +38,12 @@ L7 in isolation or repeating an earlier failure under a new name.
   baselines dominated. Only within-state/composition-centered statistics count.
 - Pair, mask, continuation, and repeat rows are not independent samples. Each
   composition receives total statistical/training weight one.
+- The first combined D3PO pair build also selected the lowest relaxation energy
+  when identical texts repeated. The corrected v3 build averages repeat labels
+  and then removes strict PBC-equivalent structures: `335` exact and `164`
+  physical duplicates were removed from `4205` outcomes, with no CIF parse
+  failures. This prevents refiner randomness and serialization differences from
+  becoming pseudo-preferences.
 - The old energy-pair split was formula/Plan-based rather than strict chemsys
   isolation. Rebuild a salted chemsys split before training.
 - H1-A2/R03 historical high points are seed/process fragile. Two paired DLM seeds
@@ -75,4 +81,3 @@ margin-aware, composition-normalized, full-sequence **shared-noise masked-D3PO**
 objective with a winner denoising anchor. It is a direct continuation of the
 successful exact-length/safe-axis infrastructure and the previously untested
 Same-Plan preference idea, while respecting every formal negative above.
-

@@ -84,6 +84,15 @@ No new label-generation job is allowed.
    eight-stream pool contributes about 164 train and 58 validation Plans under
    its old split; the exact new chemsys split is frozen before training.
 
+The production zero-GPU build is
+`data/d3po_pairs_v3_20260830`. It contains `5007` train pairs over `885`
+independent exact-composition groups and `850` validation pairs over `166`
+groups. Before pairing, `335/4205` exact-answer repeats were collapsed by
+averaging their relaxation energies and a strict PBC StructureMatcher removed
+another `164` physically equivalent outcomes (`scale=false`, no supercells,
+zero parse failures). This correction matters: choosing the minimum energy of
+repeated relaxations would turn refiner luck into a false DLM preference.
+
 The existing L6 two-seed cohort is excluded from training and remains the first
 retrospective matched test. A fresh outcome-blind C³FD cohort is still required
 for any paper-facing claim.
@@ -162,6 +171,18 @@ validation preference improves but raw/refined energy does not, report another
 training-objective negative. If raw improves but refinement erases it, stop and
 request separate authorization for a one-GPU bridge-only re-refinement of the
 same raw bodies.
+
+### Quantitative prior, not a guarantee
+
+The matched L7 pool moves from K1 `56/416` Strict/Meta S.U.N. to the K3
+low-energy oracle `74/502`; the older L6 pool moves from `13.2/89.5` to K6
+`23/123`. Capturing only about `15--30%` of this already-observed
+within-composition oracle headroom motivates the `+1.5--3 pp` Meta and
+`0--0.6 pp` Strict working range. This is an extrapolation, not a hard gate or
+a promised result. The main falsifiable claim is that both independently
+trained adapters shift paired raw and refined energy left. A threshold-only
+increase from one seed is explicitly insufficient because H1-A2 and R03 showed
+that such high points can disappear when the seed/process is changed.
 
 ## Engineering-only recovery
 
