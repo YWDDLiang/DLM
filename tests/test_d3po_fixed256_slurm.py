@@ -19,6 +19,10 @@ class D3POFixed256SlurmTest(unittest.TestCase):
         self.assertNotIn("--num-samples 1000", text)
         self.assertIn("rerank_or_replacement\tfalse", text)
         self.assertIn("checkpoint_or_seed_selection\tfalse", text)
+        self.assertIn(
+            "21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5",
+            text,
+        )
 
     def test_eval_runs_refined_and_raw_six_cell_passes(self):
         text = (ROOT / "slurm/67_d3po_fixed256_eval.sbatch").read_text(

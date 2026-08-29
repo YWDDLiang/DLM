@@ -25,6 +25,7 @@ readonly PLANS="${H1A2_D3PO_TEST_PLANS:?export H1A2_D3PO_TEST_PLANS}"
 readonly REFINER="${H1A2_REFINER_PATH:?export H1A2_REFINER_PATH}"
 readonly CRYS="${H1A2_CRYSLLMGEN_DIR:?export H1A2_CRYSLLMGEN_DIR}"
 readonly RUN_DIR="${ROOT}/runs/d3po_fixed256_generation_${SLURM_JOB_ID}"
+readonly TEST_PLANS_SHA="21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5"
 
 for path in \
   "${MODEL}" "${BASE}" "${SEED_A}" "${SEED_B}" \
@@ -38,6 +39,10 @@ for checkpoint in "${BASE}" "${SEED_A}" "${SEED_B}"; do
     missing "${checkpoint}/adapter_config.json"
 done
 [[ "$(wc -l <"${PLANS}")" -eq 256 ]] || missing "frozen D3PO test256 Plans"
+[[ "$(sha256sum "${PLANS}" | awk '{print $1}')" == "${TEST_PLANS_SHA}" ]] || {
+  log "Frozen D3PO certified test Plan hash mismatch"
+  exit 2
+}
 mkdir -p "${RUN_DIR}"
 
 cat >"${RUN_DIR}/scientific_contract.tsv" <<EOF

@@ -153,6 +153,11 @@ increase is not accepted as clear evidence.
   exclusion against L6, L7 and the noisy-pair cohort; 271 earlier rows were
   excluded and no stability, energy, validity or realizability outcome was
   read.
+- The outcome-blind C³FD certificate/minimal-prompt conversion retained all
+  `256/256` rows without changing their selection. The generation-facing file
+  is `cohorts/d3po_test_seed17_256_certified_20260830_v1/`
+  `D3PO_TEST_CERTIFIED_PLANS.jsonl`, SHA-256
+  `21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5`.
 - Report the test cohort's N/arity/family/element distance to full C³FD/MP20.
 - Run the frozen base and both D3PO training seeds under two fixed common DLM
   sampling/refiner streams (six cells total) and paired per-ordinal RNG.
