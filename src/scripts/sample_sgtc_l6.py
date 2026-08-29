@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sample one matched SGTC L6 cell from minimal certified compositions."""
+"""Sample one matched SGTC L6/L7 cell from minimal certified compositions."""
 
 from __future__ import annotations
 
@@ -31,6 +31,7 @@ from crystal_dlm.r5_dynamic_length import (  # noqa: E402
 from crystal_dlm.sgtc_sampling import (  # noqa: E402
     matched_base_noise_group,
     validate_sgtc_attempts,
+    validate_sgtc_denominator,
 )
 from scripts.sample_ctv_branch_canary import read_rows  # noqa: E402
 from scripts.sample_llada_dynamic_crystals import (  # noqa: E402
@@ -60,8 +61,7 @@ def main() -> None:
     parser.add_argument("--seed", type=int, required=True)
     args = parser.parse_args()
 
-    if int(args.num_samples) != 256:
-        raise ValueError("SGTC L6 denominator is frozen at 256")
+    denominator = validate_sgtc_denominator(args.num_samples)
     if not torch.cuda.is_available():
         raise RuntimeError("SGTC L6 sampling requires one CUDA device")
     device = torch.device("cuda", 0)
@@ -69,7 +69,7 @@ def main() -> None:
         args.model_path, args.checkpoint_path, device
     )
     process_one = import_process_one(args.crysllmgen_dir)
-    plans = read_rows(args.prompt_jsonl, expected_plans=256)
+    plans = read_rows(args.prompt_jsonl, expected_plans=denominator)
     lightweight = build_dynamic_lightweight_constraints(
         tokenizer,
         duplicate_coordinate_mask=True,
@@ -155,7 +155,7 @@ def main() -> None:
             record["reason"] = reason
         attempts.append(record)
 
-    accounting = validate_sgtc_attempts(attempts, expected=256)
+    accounting = validate_sgtc_attempts(attempts, expected=denominator)
     output = args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=False)
     write_jsonl(output / "raw_generations.jsonl", attempts)
@@ -163,6 +163,7 @@ def main() -> None:
     manifest = {
         "schema": "h1a2_sgtc_body_manifest_v1",
         **accounting,
+        "denominator": denominator,
         "graphs": len(graphs),
         "failures": dict(failures.most_common()),
         "seed": int(args.seed),
