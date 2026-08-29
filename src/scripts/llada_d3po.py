@@ -296,7 +296,7 @@ def validate_pair_row(
         abs_tol=1e-10,
     ):
         raise ValueError("soft_target differs from the frozen pair data")
-    if not 0.5 < values["soft_target"] < 1.0:
+    if not 0.5 < values["soft_target"] <= 1.0:
         raise ValueError("soft_target must express a strict winner preference")
     if values["pair_weight"] <= 0.0:
         raise ValueError("pair_weight must be positive")

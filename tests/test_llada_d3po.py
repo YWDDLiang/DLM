@@ -205,6 +205,15 @@ class D3POTrainerTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "canonical|whitespace"):
             MODULE.validate_pair_row(row, expected_split="train")
 
+    def test_numerically_saturated_hard_preference_is_allowed(self):
+        row = self.row()
+        row["winner_energy_per_atom"] = -3.0
+        row["loser_energy_per_atom"] = -1.0
+        row["energy_gap_eV_per_atom"] = 2.0
+        row["soft_target"] = 1.0
+        validated = MODULE.validate_pair_row(row, expected_split="train")
+        self.assertEqual(validated["soft_target"], 1.0)
+
     def test_composition_weights_must_sum_to_one(self):
         first = self.row(pair_id="pair-0", pair_weight=0.2)
         second = self.row(pair_id="pair-1", pair_weight=0.2)
