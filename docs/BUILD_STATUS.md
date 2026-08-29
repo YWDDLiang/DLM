@@ -303,3 +303,20 @@
   local `176` tests通过（`33` dependency skips）；remote完整D3PO trainer tests `12/12`
   通过，真实tokenizer逐行载入`5857` pairs成功，最大长度`152`，PEFT named-adapter
   load/switch/delete/save canary通过。base与pair数据SHA均硬冻结；当前仍无GPU job。
+
+## 2026-08-30 D3PO执行与fallback预登记
+
+- 首次训练job37966在任何optimizer update前因LLaDA不支持通用gradient-checkpointing
+  API失败，已保留`_FAILED.json`与独立root-cause；commit `6546a1b`只把该非科学内存
+  优化改为model支持时启用，未改data/seed/loss/steps。唯一恢复job37974已通过step0
+  policy/reference equality canary并进入有限loss/gradient训练；
+- 主test的6-cell generation/refine与12-cell raw/refined evaluation wrapper已冻结，使用
+  `6 A800/48 CPU`分别一次完成，不增加arm或搜索；generation-facing Plan SHA为
+  `21a20c8...d94d3f5`；
+- 为避免fallback在主test上自适应，另冻结第二个outcome-blind seed17 holdout256，与
+  L6/L7/noisy-pair/main-test reduced composition全不相交。raw/certified SHA分别为
+  `ac321dea...077094`与`ba061122...f4e08`，主结果分类前不得读取其任何科学outcome；
+- fallback按[`D3PO_FALLBACK_DECISION_TREE_V1.md`](D3PO_FALLBACK_DECISION_TREE_V1.md)
+  预登记：replicated continuous positive但阈值弱才允许late-only单点guidance；无raw
+  能量信号才考虑DLM内部self-predicted structural intent；raw有效/refiner抹平则只做
+  bridge attribution。任何情况都禁止seed选择、rich Plan、rerank与同test调参。

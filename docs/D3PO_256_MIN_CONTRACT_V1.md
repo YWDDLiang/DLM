@@ -158,6 +158,15 @@ increase is not accepted as clear evidence.
   is `cohorts/d3po_test_seed17_256_certified_20260830_v1/`
   `D3PO_TEST_CERTIFIED_PLANS.jsonl`, SHA-256
   `21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5`.
+
+A second outcome-blind fallback holdout is sealed before the main result. It is
+reduced-composition-disjoint from L6, L7, the preference pool, and the main
+test. Raw/certified SHAs are
+`ac321dea0592222f1f0b35342163b5fb91df6d95d3d683b9f077ad55cf077094` and
+`ba0611224d23e0e5e74836789e881ac4a3f6ccd60656f99036fcb3fed4ff4e08`.
+It remains outcome-unread unless a preregistered fallback class in
+[`D3PO_FALLBACK_DECISION_TREE_V1.md`](D3PO_FALLBACK_DECISION_TREE_V1.md) is
+assigned.
 - Report the test cohort's N/arity/family/element distance to full C³FD/MP20.
 - Run the frozen base and both D3PO training seeds under two fixed common DLM
   sampling/refiner streams (six cells total) and paired per-ordinal RNG.
