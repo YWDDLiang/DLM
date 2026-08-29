@@ -327,6 +327,11 @@ class D3POTrainerTest(unittest.TestCase):
         self.assertEqual(MODULE.LEARNING_RATE, 5e-6)
         self.assertEqual(MODULE.ALLOWED_TRAINING_SEEDS, (81017, 81018))
 
+    def test_gradient_checkpointing_is_not_a_scientific_requirement(self):
+        text = (ROOT / "src/scripts/llada_d3po.py").read_text(encoding="utf-8")
+        self.assertIn('getattr(model, "supports_gradient_checkpointing", False)', text)
+        self.assertIn("if_supported_non_scientific_memory_optimization", text)
+
     def test_weighted_sampler_consumes_pair_weights(self):
         with tempfile.TemporaryDirectory() as directory:
             path = self.write_rows(directory, [self.row()])

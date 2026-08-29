@@ -109,7 +109,8 @@ Use a dedicated trainer; do not modify historical SFT/SGTC behavior.
 - learning rate `5e-6`, independent training seeds `81017/81018`, exactly `348`
   optimizer updates for each;
 - one pair/two sequences per microbatch, gradient accumulation `16`, BF16 plus
-  FP32 score arithmetic, gradient checkpointing enabled from the start;
+  FP32 score arithmetic; gradient checkpointing is a non-scientific memory
+  optimization enabled only when the model class supports it (LLaDA does not);
 - run both seeds sequentially on one GPU and save only each scientific
   `step348`; no intermediate checkpoint, early stopping, or seed selection;
 - validation preference margin/accuracy is diagnostic and cannot select a
@@ -126,13 +127,19 @@ winner/loser reverses the margin.
 |---|---:|---:|---|
 | CPU pair build/audit | 0 GPU, 8 CPU | 45 min | none |
 | two D3PO-LoRA seeds, sequential | 1 A800, 8 CPU | 10 h | two mandatory step348 checkpoints |
-| matched generation+tau800 refine | 2 A800, 16 CPU | 4 h | base plus both D3PO seeds |
-| raw/refined evaluation | 2 A800, 16 CPU | 1.5 h | fixed cells only |
+| matched generation+tau800 refine | 6 A800, 48 CPU | 2 h | exactly 3 arms × 2 common streams |
+| raw/refined evaluation | up to 6 A800, 24--48 CPU | 1 h | the same six fixed cells only |
 | official query/finalize | 0 GPU, 8 CPU | 45 min | one fresh query |
 
-Run only one Slurm job at a time. Peak occupancy is two A800; the conservative
+Run only one Slurm job at a time. Peak occupancy is six A800; the conservative
 total ceiling is `18 A800-hours`. No requested1000, tau900, forward-noise factorial,
 Planner change, rich-Plan arm, or second checkpoint is authorized.
+
+Every stage writes immutable input hashes, scientific contract, stdout/stderr,
+machine-readable manifests, and a terminal success or failure marker. Successes
+are archived as positive evidence; failures retain the failed run and receive a
+separate engineering/scientific root-cause note before any recovery. Reports,
+tests and code changes are committed and pushed after each terminal stage.
 
 ## Two-seed evaluation
 

@@ -73,6 +73,7 @@ optimizer_updates_per_seed	348
 microbatch_pairs	1
 sequences_per_pair	2
 gradient_accumulation	16
+gradient_checkpointing	if supported; LLaDA fallback disabled
 learning_rate	5e-6
 beta	0.1
 lora_rank	8

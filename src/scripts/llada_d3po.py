@@ -732,16 +732,17 @@ def load_policy_and_reference_adapters(
         raise RuntimeError("policy adapter has no trainable parameters")
 
     model.config.use_cache = False
-    if not hasattr(model, "gradient_checkpointing_enable"):
-        raise RuntimeError("model does not support gradient checkpointing")
-    try:
-        model.gradient_checkpointing_enable(
-            gradient_checkpointing_kwargs={"use_reentrant": False}
-        )
-    except TypeError:
-        model.gradient_checkpointing_enable()
-    if hasattr(model, "enable_input_require_grads"):
-        model.enable_input_require_grads()
+    gradient_checkpointing = False
+    if bool(getattr(model, "supports_gradient_checkpointing", False)):
+        try:
+            model.gradient_checkpointing_enable(
+                gradient_checkpointing_kwargs={"use_reentrant": False}
+            )
+        except TypeError:
+            model.gradient_checkpointing_enable()
+        if hasattr(model, "enable_input_require_grads"):
+            model.enable_input_require_grads()
+        gradient_checkpointing = True
     model.train()
 
     report = {
@@ -770,7 +771,7 @@ def load_policy_and_reference_adapters(
         "reference_parameter_count": sum(
             int(parameter.numel()) for parameter in reference_parameters
         ),
-        "gradient_checkpointing": True,
+        "gradient_checkpointing": gradient_checkpointing,
     }
     return tokenizer, runtime, report
 
@@ -1270,7 +1271,7 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
             "winner_anchor_weight": WINNER_ANCHOR_WEIGHT,
             "energy_temperature": ENERGY_TEMPERATURE,
             "lr_scheduler": "constant",
-            "gradient_checkpointing": True,
+            "gradient_checkpointing": "if_supported_non_scientific_memory_optimization",
         },
         "adapters": {
             "single_backbone": True,
