@@ -23,7 +23,7 @@ and geometry mask `M`. N and element tokens remain visible. Define the
 reference-corrected geometry score
 
 ```text
-S(y) = (1 / p) sum[j in M and geometry]
+S(y) = (1 / (p * |geometry|)) sum[j in M and geometry]
        (log pi_policy(y_j | y_t) - log pi_reference(y_j | y_t)).
 ```
 
