@@ -51,6 +51,61 @@ class SGTCL7FinalizerTest(unittest.TestCase):
         self.assertLess(summary["wald95_lower"], 0.0)
         self.assertGreater(summary["wald95_upper"], 0.0)
 
+    def test_continuous_distribution_reports_quantiles_and_ecdf(self):
+        summary = MODULE.continuous_distribution([0.0, 0.01, 0.05, 0.20])
+        self.assertEqual(summary["known"], 4)
+        self.assertAlmostEqual(summary["quantiles"]["q50"], 0.03)
+        self.assertEqual(summary["ecdf"]["le_0p05"]["count"], 3)
+        self.assertAlmostEqual(summary["ecdf"]["le_0p05"]["rate"], 0.75)
+
+    def test_continuous_pair_summary_is_candidate_minus_control(self):
+        control = [
+            {
+                "ordinal": 0,
+                "chemsys": "A-B",
+                "official_hull_status": "known",
+                "official_e_above_hull": 0.10,
+            },
+            {
+                "ordinal": 1,
+                "chemsys": "A-C",
+                "official_hull_status": "known",
+                "official_e_above_hull": 0.20,
+            },
+        ]
+        candidate = [
+            {
+                "ordinal": 0,
+                "chemsys": "A-B",
+                "official_hull_status": "known",
+                "official_e_above_hull": 0.05,
+            },
+            {
+                "ordinal": 1,
+                "chemsys": "A-C",
+                "official_hull_status": "known",
+                "official_e_above_hull": 0.25,
+            },
+        ]
+        summary = MODULE.continuous_pair_summary(
+            control,
+            candidate,
+            field="official_e_above_hull",
+            require_official_known=True,
+        )
+        self.assertEqual(summary["known_both"], 2)
+        self.assertAlmostEqual(summary["candidate_minus_control_mean"], 0.0)
+        self.assertAlmostEqual(summary["fraction_lower"], 0.5)
+        self.assertEqual(
+            (summary["lower"], summary["higher"], summary["ties"]), (1, 1, 0)
+        )
+
+    def test_composition_identity_is_reduced_and_order_independent(self):
+        left = MODULE.composition_identity(["O", "Li"], [2, 4])
+        right = MODULE.composition_identity(["Li", "O"], [2, 1])
+        self.assertEqual(left, "Li:2|O:1")
+        self.assertEqual(left, right)
+
 
 if __name__ == "__main__":
     unittest.main()
