@@ -87,6 +87,8 @@ def convert_rows(
         reasons[reason] += 1
         if converted is None:
             continue
+        converted["source_sample_idx"] = int(row["sample_idx"])
+        converted["sample_idx"] = row_index
         converted["d3po_test_ordinal"] = row_index
         converted["c3fd_certificate_class"] = str(
             certificate.get("certificate_class")

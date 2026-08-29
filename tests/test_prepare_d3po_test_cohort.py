@@ -27,6 +27,13 @@ class PrepareD3POTestCohortTest(unittest.TestCase):
         }
         self.assertEqual(MODULE.forbidden_paths(value), [])
 
+    def test_execution_index_is_global_while_source_index_is_preserved(self):
+        text = (ROOT / "scripts/prepare_d3po_test_cohort.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('converted["source_sample_idx"] = int(row["sample_idx"])', text)
+        self.assertIn('converted["sample_idx"] = row_index', text)
+
 
 if __name__ == "__main__":
     unittest.main()
