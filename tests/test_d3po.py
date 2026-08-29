@@ -212,7 +212,12 @@ class D3POMathTest(unittest.TestCase):
                 [True, True, True, True],
             ]
         )
-        geometry = torch.ones_like(masked)
+        geometry = torch.tensor(
+            [
+                [True, True, False, False],
+                [True, True, True, True],
+            ]
+        )
         policy = torch.ones(6)
         reference = torch.zeros(6)
         score = masked_sequence_log_ratio(
