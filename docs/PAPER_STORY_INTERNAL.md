@@ -614,3 +614,37 @@ agreement`0.492`。因此不能把“模型知道不同composition的绝对能�
 MP-20上做lattice/XYZ geometry-token curriculum，并用全MP20 geometry-only continuation
 作为matched control。若SGTC通过，第三层贡献应表述为stable-geometry representation
 learning，而不是在线token reward；若失败，前两层贡献仍独立成立。
+
+### SGTC-DLM-v1 L7：positive-only geometry continuation正式阴性
+
+SGTC L7已完成requested1000、fresh official MP hull与matched三臂终态。base/G0/G1的
+Strict S.U.N.为`60/55/53`，Meta为`412/421/417`；G1既没有达到public
+`105/488`，也没有优于全MP20 continuation。G1-base paired Strict/Meta delta为
+`-0.715/+0.409pp`，McNemar `p=0.265/0.789`；G1-G0同样无方向。
+
+连续证据排除了“只是SUN阈值不走运”的解释。G1-base official e_hull matched mean为
+`+4.525meV/atom`、fraction lower `0.480`；CHGNet matched mean为
+`+4.238meV/atom`、fraction lower `0.485`。正值均为更差，95%区间虽跨0，却没有任何
+稳定左移。G1 all-known e_hull q10/q50/q90=`0.0092/0.1016/0.3476`，也没有比base
+`0.0082/0.1014/0.3417`更优。
+
+这个结果不削弱前两层贡献：三臂comp-valid为`99.8/100/100%`，Direct joint为
+`99.6/99.7/99.6%`，NU为`922/933/930`。它反而把论文边界明确分成：
+
+1. C³FD与exact-axis已经解决composition correctness和执行覆盖；
+2. model494提供强绝对stabilization，但不是新的DLM稳定学习证据；
+3. 仅从all-stable MP20中筛ground-state、继续做denoising CE，不能学习fixed-composition
+   polymorph energy boundary。
+
+机制上，CrysLLMGen的历史joint-valid只有`87.7%`，其联合`p(composition, structure)`
+任务允许composition drift到熟悉公式；新系统强制求解novel fixed-composition下的
+`p(structure | composition)`，取消了这条捷径。L7中相对G1训练support只有约
+`320/1000`处于seen chemsys、约`92/1000`处于seen exact composition；G1 seen-chemsys
+Meta S.U.N.为`167/320`，unseen为`250/680`，支持局部外的stable realization仍是主要
+缺口。
+
+因此第三贡献不能写成SGTC。唯一待确认方向是
+[`RRC_DLM_V1_PROPOSED_CONTRACT.md`](RRC_DLM_V1_PROPOSED_CONTRACT.md)：保持C³FD只给
+composition+N，用same-composition、post-refiner continuous rank训练masked DLM，并以
+matched factorial区分DLM学习与clean-body→`x_tau`接口修复。external rich Plan只作信息
+上界，且必须与C³FD-direct-CIF公平比较。该草案未授权执行。

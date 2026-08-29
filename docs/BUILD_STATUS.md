@@ -253,3 +253,33 @@
   `e_above_hull<=1e-8`的strict-stable结构。训练JSON递归移除能量/稳定字段，两个arm
   从同一base固定续训348步，随后进入matched L6；合同见
   [`SGTC_DLM_V1_CONTRACT.md`](SGTC_DLM_V1_CONTRACT.md)。
+
+## 2026-08-29 SGTC-DLM-v1 official L7终态
+
+- matched requested1000使用同一C³FD seed18 Plan、DLM seed、temperature、exact-axis、
+  model494 tau800和refiner seed。generation `37617`与eval `37807`均成功；fresh
+  official query只执行一次，union `932`个chemsys中`913` resolved、`19` unresolved，
+  unknown始终按missing处理；
+- base/G0/G1的body为`998/1000/1000`，Direct joint为`996/997/996`，N/U/NU为
+  `922/995/922`、`933/999/933`、`930/998/930`。composition/execution已经接近饱和，
+  不是本轮稳定性失败的原因；
+- official Strict stable/S.U.N.为`81/60`、`78/55`、`73/53`，Meta为
+  `486/412`、`486/421`、`485/417`。G1相对base的Strict/Meta S.U.N.为
+  `-0.7/+0.5pp`，相对G0为`-0.2/-0.4pp`；全部paired CI跨0且McNemar不显著，
+  formal `sgtc_l7_pass=false`，public `105/488`不变；
+- all-known official e_hull q10/q50/q90为base `0.0082/0.1014/0.3417`、G0
+  `0.0102/0.1012/0.3548`、G1 `0.0092/0.1016/0.3476`。G1-base matched mean
+  e_hull为`+4.525meV/atom`、fraction lower `0.4801`；matched CHGNet为
+  `+4.238meV/atom`、`0.4850`，均未左移；
+- 相对G1 continuation训练chemsys，L7每臂仅约`320/1000` reconstructed处于seen
+  chemsys。G1 seen Meta S.U.N.为`167/320`，unseen为`250/680`；优势未外推到
+  unseen support。exact composition seen仅`92/1000`，说明粗粒度MP20分布接近不等于
+  fixed-composition realization处于训练局部支持；
+- v2补充报告明确披露L7合同没有运行raw CHGNet/hull，不能事后推断raw→refined连续效应。
+  immutable结果位于A800
+  `runs/sgtc_l7_official_final_20260829_v2`；报告扩展代码commit `31ea2ee`；
+- SGTC因此作为正式阴性保留：positive-only strict-stable continuation改善teacher-forced
+  NLL，但没有提供same-composition能量边界。下一候选仅为待确认草案
+  [`RRC_DLM_V1_PROPOSED_CONTRACT.md`](RRC_DLM_V1_PROPOSED_CONTRACT.md)：保持C³FD
+  composition不变，以post-refiner相对rank监督masked DLM，并单独审计合法forward-noise
+  bridge。未获用户确认前不提交任何新训练或生成任务。
