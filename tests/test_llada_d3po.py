@@ -188,6 +188,7 @@ class D3POTrainerTest(unittest.TestCase):
                 path, self.tokenizer, expected_split="train"
             )
             self.assertEqual(len(dataset), 1)
+            self.assertEqual(set(dataset._legal_supports_by_n), {2})
             item = dataset[0]
             self.assertEqual(item["num_atoms"], 2)
             self.assertEqual(item["winner_input_ids"].shape[0], 2 + 15)

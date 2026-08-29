@@ -330,6 +330,7 @@ class D3POPairDataset(Dataset):
         self.tokenizer = tokenizer
         self.expected_split = str(expected_split)
         self.max_length = int(max_length)
+        self._legal_supports_by_n: dict[int, tuple[frozenset[int], ...]] = {}
         if self.expected_split not in {"train", "validation"}:
             raise ValueError("expected_split must be train or validation")
         if not self.path.is_file():
@@ -388,10 +389,16 @@ class D3POPairDataset(Dataset):
             raise ValueError(f"pair {row['pair_id']} has an empty tokenized prompt")
         answer_ids: dict[str, list[int]] = {}
         full_ids: dict[str, list[int]] = {}
-        legal_supports = exact_dynamic_schema_constraints(
-            self.tokenizer, int(row["N"])
-        )
-        expected_body_length = 7 + 4 * int(row["N"])
+        num_atoms = int(row["N"])
+        if num_atoms not in self._legal_supports_by_n:
+            self._legal_supports_by_n[num_atoms] = tuple(
+                frozenset(int(value) for value in support)
+                for support in exact_dynamic_schema_constraints(
+                    self.tokenizer, num_atoms
+                )
+            )
+        legal_supports = self._legal_supports_by_n[num_atoms]
+        expected_body_length = 7 + 4 * num_atoms
         for side in ("winner", "loser"):
             answer = str(row[f"{side}_answer"])
             encoded_answer = list(
@@ -422,7 +429,7 @@ class D3POPairDataset(Dataset):
             for position, (token_id, support) in enumerate(
                 zip(encoded_answer, legal_supports)
             ):
-                if int(token_id) not in set(int(value) for value in support):
+                if int(token_id) not in support:
                     raise ValueError(
                         f"pair {row['pair_id']} {side} token at body position {position} "
                         "is outside its position-specific legal support"
