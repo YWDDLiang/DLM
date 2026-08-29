@@ -45,6 +45,17 @@ done
 }
 mkdir -p "${RUN_DIR}"
 
+on_error() {
+  local rc="$1" line="$2" command="$3"
+  set +e
+  printf 'field\tvalue\nexit_code\t%s\nline\t%s\ncommand\t%s\n' \
+    "${rc}" "${line}" "${command}" \
+    >"${RUN_DIR}/ENGINEERING_FAILURE.tsv"
+  touch "${RUN_DIR}/_FAILED"
+  exit "${rc}"
+}
+trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
+
 cat >"${RUN_DIR}/scientific_contract.tsv" <<EOF
 field	value
 method	shared-noise masked-D3PO fixed256 evaluation
@@ -108,5 +119,8 @@ for stream in 17 18; do
       missing "${RUN_DIR}/stream${stream}/${arm}/_SUCCESS"
   done
 done
+find "${RUN_DIR}" -type f ! -name 'OUTPUTS.sha256' -print0 \
+  | sort -z | xargs -0 sha256sum >"${RUN_DIR}/OUTPUTS.sha256"
+trap - ERR
 touch "${RUN_DIR}/_SUCCESS"
 log "D3PO fixed256 six-cell generation/refinement finished: ${RUN_DIR}"

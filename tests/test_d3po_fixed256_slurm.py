@@ -23,6 +23,9 @@ class D3POFixed256SlurmTest(unittest.TestCase):
             "21a20c8eca10c30953f486ee00301a872e3c32b853bb0acbe187be2f9d94d3f5",
             text,
         )
+        self.assertIn("trap 'on_error", text)
+        self.assertIn("ENGINEERING_FAILURE.tsv", text)
+        self.assertIn("OUTPUTS.sha256", text)
 
     def test_eval_runs_refined_and_raw_six_cell_passes(self):
         text = (ROOT / "slurm/67_d3po_fixed256_eval.sbatch").read_text(
@@ -34,6 +37,9 @@ class D3POFixed256SlurmTest(unittest.TestCase):
         self.assertIn('run_six "raw_"', text)
         self.assertIn("H1_ACTIVE_DENOMINATOR=256", text)
         self.assertIn("_OFFLINE_SUCCESS", text)
+        self.assertIn("trap 'on_error", text)
+        self.assertIn("ENGINEERING_FAILURE.tsv", text)
+        self.assertIn("OUTPUTS.sha256", text)
 
     def test_common_rng_streams_are_frozen(self):
         text = (ROOT / "slurm/66_d3po_fixed256_generation.sbatch").read_text(

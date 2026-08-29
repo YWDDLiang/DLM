@@ -49,13 +49,21 @@ changes into that causal test.
   and Wyckoff constraints can improve crystal generation. This motivates
   symmetry auxiliaries only if they remain predicted inside the DLM.
 
-## Only authorized fallback design
+## Authorized fallback order
 
-If both D3PO training seeds fail to shift raw energy left, the next candidate
-is an internal latent structural-intent channel, not an external rich Plan:
+If both D3PO training seeds fail to shift raw energy left, the unique first
+confirmatory fallback is the train-only listwise continuous-energy objective in
+[`D3PO_FALLBACK_DECISION_TREE_V1.md`](D3PO_FALLBACK_DECISION_TREE_V1.md). It
+reuses the existing same-composition candidate groups and changes neither the
+tokenizer nor inference representation. The sealed confirmatory split may be
+used exactly once.
 
-- tokens/heads: crystal system, volume-per-atom bin, and coarse packing or
-  coordination bin;
+An internal latent structural-intent channel is a reserve only if listwise
+fails a zero-GPU data/engineering feasibility audit before any fallback outcome
+is generated. It is not allowed after listwise burns the sealed split:
+
+- two trailer heads only: eight train-quantiled volume-per-atom bins and eight
+  coarse coordination-environment medoids;
 - labels derived from training-only MP20 structures;
 - all intent states masked at inference and predicted jointly by the DLM;
 - geometry denoising conditioned on the model's own intent posterior;
@@ -63,7 +71,9 @@ is an internal latent structural-intent channel, not an external rich Plan:
 - no energy value, hull label, prototype lookup, or C³FD-generated structure
   enters inference.
 
-This keeps the DLM scientifically necessary. A C³FD rich Plan may be measured
+This keeps the DLM scientifically necessary. Bravais/space-group/Wyckoff and
+prototype labels are excluded from the two-day reserve because the current body
+and model494 do not enforce their geometry. A C³FD rich Plan may be measured
 only as an information upper bound with a matched C³FD-direct-CIF baseline.
 
 If D3PO shifts raw energy left but model494 erases it, do not retrain the DLM.

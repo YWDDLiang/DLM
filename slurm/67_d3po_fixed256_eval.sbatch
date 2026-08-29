@@ -30,6 +30,17 @@ for path in \
   [[ -e "${path}" ]] || missing "${path}"
 done
 mkdir -p "${EVAL_RUN}/logs"
+
+on_error() {
+  local rc="$1" line="$2" command="$3"
+  set +e
+  printf 'field\tvalue\nexit_code\t%s\nline\t%s\ncommand\t%s\n' \
+    "${rc}" "${line}" "${command}" \
+    >"${EVAL_RUN}/ENGINEERING_FAILURE.tsv"
+  touch "${EVAL_RUN}/_FAILED"
+  exit "${rc}"
+}
+trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 cp --reflink=auto "${BODY_RUN}/scientific_contract.tsv" \
   "${EVAL_RUN}/generation_scientific_contract.tsv"
 sha256sum "${BODY_RUN}/scientific_contract.tsv" \
@@ -110,5 +121,8 @@ for stream in 17 18; do
     [[ -f "${EVAL_RUN}/stream${stream}/${arm}/evaluation/full_reconstructed/_SUCCESS" ]] || exit 3
   done
 done
+find "${EVAL_RUN}" -type f ! -name 'OUTPUTS.sha256' -print0 \
+  | sort -z | xargs -0 sha256sum >"${EVAL_RUN}/OUTPUTS.sha256"
+trap - ERR
 touch "${EVAL_RUN}/_OFFLINE_SUCCESS"
 printf '%s\n' "${EVAL_RUN}"

@@ -131,8 +131,9 @@ winner/loser reverses the margin.
 | raw/refined evaluation | up to 6 A800, 24--48 CPU | 1 h | the same six fixed cells only |
 | official query/finalize | 0 GPU, 8 CPU | 45 min | one fresh query |
 
-Run only one Slurm job at a time. Peak occupancy is six A800; the conservative
-total ceiling is `18 A800-hours`. No requested1000, tau900, forward-noise factorial,
+Run only one Slurm job at a time. Peak occupancy is six A800; expected main-path
+usage is about `18 A800-hours`, while scheduler kill ceilings and observed
+GPU-hours are reported separately. No requested1000, tau900, forward-noise factorial,
 Planner change, rich-Plan arm, or second checkpoint is authorized.
 
 Every stage writes immutable input hashes, scientific contract, stdout/stderr,
