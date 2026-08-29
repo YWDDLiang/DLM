@@ -32,8 +32,8 @@ from crystal_dlm.sgtc_sampling import (  # noqa: E402
     matched_base_noise_group,
     validate_sgtc_attempts,
     validate_sgtc_denominator,
+    validate_sgtc_plan_rows,
 )
-from scripts.sample_ctv_branch_canary import read_rows  # noqa: E402
 from scripts.sample_llada_dynamic_crystals import (  # noqa: E402
     build_dynamic_lightweight_constraints,
     graph_from_arrays,
@@ -69,7 +69,12 @@ def main() -> None:
         args.model_path, args.checkpoint_path, device
     )
     process_one = import_process_one(args.crysllmgen_dir)
-    plans = read_rows(args.prompt_jsonl, expected_plans=denominator)
+    plans = [
+        json.loads(line)
+        for line in args.prompt_jsonl.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    plan_accounting = validate_sgtc_plan_rows(plans, expected=denominator)
     lightweight = build_dynamic_lightweight_constraints(
         tokenizer,
         duplicate_coordinate_mask=True,
@@ -163,6 +168,7 @@ def main() -> None:
     manifest = {
         "schema": "h1a2_sgtc_body_manifest_v1",
         **accounting,
+        **plan_accounting,
         "denominator": denominator,
         "graphs": len(graphs),
         "failures": dict(failures.most_common()),

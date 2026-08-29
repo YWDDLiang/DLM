@@ -11,6 +11,7 @@ from crystal_dlm.sgtc_sampling import (
     matched_base_noise_group,
     validate_sgtc_attempts,
     validate_sgtc_denominator,
+    validate_sgtc_plan_rows,
 )
 
 
@@ -39,6 +40,25 @@ class SGTCSamplingTest(unittest.TestCase):
         self.assertEqual(validate_sgtc_denominator(1000), 1000)
         with self.assertRaisesRegex(ValueError, "L6=256 or L7=1000"):
             validate_sgtc_denominator(512)
+
+    def test_l7_plans_preserve_duplicate_attempts(self):
+        rows = [
+            {
+                "sample_idx": index,
+                "reduced_composition_identity": "8:1|14:1" if index < 2 else f"{index}:1",
+                "plan_state": {"N": 2},
+                "prompt": "minimal composition prompt",
+            }
+            for index in range(4)
+        ]
+        self.assertEqual(
+            validate_sgtc_plan_rows(rows, expected=4),
+            {
+                "plan_rows": 4,
+                "unique_composition_identities": 3,
+                "duplicate_composition_attempts": 1,
+            },
+        )
 
 
 if __name__ == "__main__":

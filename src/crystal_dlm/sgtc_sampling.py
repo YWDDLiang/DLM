@@ -48,9 +48,36 @@ def validate_sgtc_attempts(
     }
 
 
+def validate_sgtc_plan_rows(
+    rows: Sequence[Mapping[str, Any]], *, expected: int
+) -> dict[str, int]:
+    denominator = int(expected)
+    if denominator <= 0 or len(rows) != denominator:
+        raise ValueError("SGTC Plans do not cover the requested denominator")
+    sample_indices = [int(row["sample_idx"]) for row in rows]
+    if sample_indices != list(range(denominator)):
+        raise ValueError("SGTC Plan sample indices are not global ordinal aligned")
+    identities = [
+        str(row.get("reduced_composition_identity", "")).strip() for row in rows
+    ]
+    if any(not identity for identity in identities):
+        raise ValueError("SGTC Plan composition identity must be non-empty")
+    if any(not isinstance(row.get("plan_state"), Mapping) for row in rows):
+        raise ValueError("SGTC Plan state must be a mapping")
+    if any(not str(row.get("prompt", "")).strip() for row in rows):
+        raise ValueError("SGTC Plan prompt must be non-empty")
+    unique = len(set(identities))
+    return {
+        "plan_rows": denominator,
+        "unique_composition_identities": unique,
+        "duplicate_composition_attempts": denominator - unique,
+    }
+
+
 __all__ = [
     "SGTC_SCREEN_DENOMINATORS",
     "matched_base_noise_group",
     "validate_sgtc_attempts",
     "validate_sgtc_denominator",
+    "validate_sgtc_plan_rows",
 ]
