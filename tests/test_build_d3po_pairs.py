@@ -85,6 +85,24 @@ class BuildD3POPairsTest(unittest.TestCase):
             MODULE.chemsys_split("Li-O"), MODULE.chemsys_split("Li-O")
         )
 
+    def test_preference_identity_preserves_exact_multiplicity_and_n(self):
+        primitive = {
+            "N": 2,
+            "elements": ["Ca", "O"],
+            "counts": [1, 1],
+        }
+        supercell = {
+            "N": 4,
+            "elements": ["Ca", "O"],
+            "counts": [2, 2],
+        }
+        self.assertEqual(MODULE.composition_identity(primitive), "Ca:1|O:1")
+        self.assertEqual(MODULE.composition_identity(supercell), "Ca:2|O:2")
+        self.assertNotEqual(
+            MODULE.composition_identity(primitive),
+            MODULE.composition_identity(supercell),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

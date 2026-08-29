@@ -107,11 +107,8 @@ def minimal_prompt_from_plan(plan: Mapping[str, Any]) -> tuple[str | None, str]:
 
 def composition_identity(plan: Mapping[str, Any]) -> str:
     elements, counts = canonical_composition(plan)
-    divisor = 0
-    for count in counts:
-        divisor = math.gcd(divisor, count)
     return "|".join(
-        f"{element}:{count // divisor}" for element, count in zip(elements, counts)
+        f"{element}:{count}" for element, count in zip(elements, counts)
     )
 
 
