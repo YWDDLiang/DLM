@@ -1,0 +1,2493 @@
+{
+  "cells": [
+    {
+      "arm": "base",
+      "body": 998,
+      "body_rate": 0.998,
+      "direct_comp": 998,
+      "direct_joint": 996,
+      "direct_joint_rate": 0.996,
+      "direct_struct": 996,
+      "hull_known": 979,
+      "hull_unknown": 19,
+      "meta_attempt_rate": 0.412,
+      "meta_retention": 0.8477366255144033,
+      "meta_stable": 486,
+      "meta_sun": 412,
+      "novel": 922,
+      "novel_rate": 0.9238476953907816,
+      "novel_unique": 922,
+      "parsed": 998,
+      "reconstructed": 998,
+      "refined": 998,
+      "requested": 1000,
+      "seed": 18,
+      "strict_attempt_rate": 0.06,
+      "strict_retention": 0.7407407407407407,
+      "strict_stable": 81,
+      "strict_sun": 60,
+      "unique": 995,
+      "unique_rate": 0.996993987975952
+    },
+    {
+      "arm": "g0_all",
+      "body": 1000,
+      "body_rate": 1.0,
+      "direct_comp": 1000,
+      "direct_joint": 997,
+      "direct_joint_rate": 0.997,
+      "direct_struct": 997,
+      "hull_known": 981,
+      "hull_unknown": 19,
+      "meta_attempt_rate": 0.421,
+      "meta_retention": 0.8662551440329218,
+      "meta_stable": 486,
+      "meta_sun": 421,
+      "novel": 933,
+      "novel_rate": 0.933,
+      "novel_unique": 933,
+      "parsed": 1000,
+      "reconstructed": 1000,
+      "refined": 1000,
+      "requested": 1000,
+      "seed": 18,
+      "strict_attempt_rate": 0.055,
+      "strict_retention": 0.7051282051282052,
+      "strict_stable": 78,
+      "strict_sun": 55,
+      "unique": 999,
+      "unique_rate": 0.999
+    },
+    {
+      "arm": "g1_strict",
+      "body": 1000,
+      "body_rate": 1.0,
+      "direct_comp": 1000,
+      "direct_joint": 996,
+      "direct_joint_rate": 0.996,
+      "direct_struct": 996,
+      "hull_known": 981,
+      "hull_unknown": 19,
+      "meta_attempt_rate": 0.417,
+      "meta_retention": 0.8597938144329897,
+      "meta_stable": 485,
+      "meta_sun": 417,
+      "novel": 930,
+      "novel_rate": 0.93,
+      "novel_unique": 930,
+      "parsed": 1000,
+      "reconstructed": 1000,
+      "refined": 1000,
+      "requested": 1000,
+      "seed": 18,
+      "strict_attempt_rate": 0.053,
+      "strict_retention": 0.726027397260274,
+      "strict_stable": 73,
+      "strict_sun": 53,
+      "unique": 998,
+      "unique_rate": 0.998
+    }
+  ],
+  "continuous": {
+    "cells": {
+      "base": {
+        "chgnet_energy_per_atom_refined": {
+          "ecdf": {
+            "le_0": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 998,
+              "rate": 1.0,
+              "threshold": 0.5
+            }
+          },
+          "known": 998,
+          "mean": -5.5431656179005255,
+          "quantiles": {
+            "q10": -8.073227787017823,
+            "q25": -7.02214241027832,
+            "q50": -5.494353294372559,
+            "q75": -4.1173036098480225,
+            "q90": -3.101072072982787
+          }
+        },
+        "official_e_above_hull_all_known": {
+          "ecdf": {
+            "le_0": {
+              "count": 81,
+              "rate": 0.08273748723186926,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 109,
+              "rate": 0.11133810010214505,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 133,
+              "rate": 0.13585291113381,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 269,
+              "rate": 0.27477017364657813,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 400,
+              "rate": 0.40858018386108275,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 486,
+              "rate": 0.4964249233912155,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 560,
+              "rate": 0.5720122574055159,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 743,
+              "rate": 0.7589376915219612,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 927,
+              "rate": 0.9468845760980592,
+              "threshold": 0.5
+            }
+          },
+          "known": 979,
+          "mean": 0.14844597054708444,
+          "quantiles": {
+            "q10": 0.00817971470788237,
+            "q25": 0.04593017981331471,
+            "q50": 0.10144694174729807,
+            "q75": 0.19445373816162181,
+            "q90": 0.34172413426850584
+          }
+        },
+        "official_e_above_hull_novel_unique_known": {
+          "ecdf": {
+            "le_0": {
+              "count": 60,
+              "rate": 0.0664451827242525,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 83,
+              "rate": 0.09191583610188261,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 100,
+              "rate": 0.11074197120708748,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 207,
+              "rate": 0.2292358803986711,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 327,
+              "rate": 0.36212624584717606,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 412,
+              "rate": 0.45625692137320045,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 484,
+              "rate": 0.5359911406423035,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 667,
+              "rate": 0.7386489479512736,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 851,
+              "rate": 0.9424141749723145,
+              "threshold": 0.5
+            }
+          },
+          "known": 903,
+          "mean": 0.15916916752175544,
+          "quantiles": {
+            "q10": 0.016161027547851696,
+            "q25": 0.05492516862836361,
+            "q50": 0.11247009825113885,
+            "q75": 0.20631076912272306,
+            "q90": 0.3568877148501202
+          }
+        }
+      },
+      "g0_all": {
+        "chgnet_energy_per_atom_refined": {
+          "ecdf": {
+            "le_0": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.5
+            }
+          },
+          "known": 1000,
+          "mean": -5.54111453267932,
+          "quantiles": {
+            "q10": -8.088849925994873,
+            "q25": -7.014952778816223,
+            "q50": -5.469616413116455,
+            "q75": -4.1107258796691895,
+            "q90": -3.1045732736587524
+          }
+        },
+        "official_e_above_hull_all_known": {
+          "ecdf": {
+            "le_0": {
+              "count": 78,
+              "rate": 0.07951070336391437,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 98,
+              "rate": 0.0998980632008155,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 127,
+              "rate": 0.12945973496432212,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 261,
+              "rate": 0.26605504587155965,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 402,
+              "rate": 0.40978593272171254,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 486,
+              "rate": 0.4954128440366973,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 561,
+              "rate": 0.5718654434250765,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 744,
+              "rate": 0.7584097859327217,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 921,
+              "rate": 0.9388379204892966,
+              "threshold": 0.5
+            }
+          },
+          "known": 981,
+          "mean": 0.1520570451717793,
+          "quantiles": {
+            "q10": 0.010236167801920715,
+            "q25": 0.046540752964152166,
+            "q50": 0.10116152882114982,
+            "q75": 0.19442683679805128,
+            "q90": 0.3548452567226157
+          }
+        },
+        "official_e_above_hull_novel_unique_known": {
+          "ecdf": {
+            "le_0": {
+              "count": 55,
+              "rate": 0.060175054704595186,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 70,
+              "rate": 0.07658643326039387,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 92,
+              "rate": 0.10065645514223195,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 205,
+              "rate": 0.22428884026258206,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 337,
+              "rate": 0.3687089715536105,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 421,
+              "rate": 0.46061269146608314,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 494,
+              "rate": 0.5404814004376368,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 677,
+              "rate": 0.7407002188183808,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 854,
+              "rate": 0.9343544857768052,
+              "threshold": 0.5
+            }
+          },
+          "known": 914,
+          "mean": 0.1620783305835356,
+          "quantiles": {
+            "q10": 0.01998628162811245,
+            "q25": 0.05540696516519461,
+            "q50": 0.10850972736602182,
+            "q75": 0.20934808726771026,
+            "q90": 0.3796780774546163
+          }
+        }
+      },
+      "g1_strict": {
+        "chgnet_energy_per_atom_refined": {
+          "ecdf": {
+            "le_0": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 1000,
+              "rate": 1.0,
+              "threshold": 0.5
+            }
+          },
+          "known": 1000,
+          "mean": -5.540729061990977,
+          "quantiles": {
+            "q10": -8.047315406799317,
+            "q25": -7.009919285774231,
+            "q50": -5.461528301239014,
+            "q75": -4.089298367500305,
+            "q90": -3.0917390823364257
+          }
+        },
+        "official_e_above_hull_all_known": {
+          "ecdf": {
+            "le_0": {
+              "count": 73,
+              "rate": 0.0744138634046891,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 102,
+              "rate": 0.10397553516819572,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 128,
+              "rate": 0.1304791029561672,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 245,
+              "rate": 0.24974515800203873,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 397,
+              "rate": 0.40468909276248727,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 485,
+              "rate": 0.4943934760448522,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 560,
+              "rate": 0.5708460754332314,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 741,
+              "rate": 0.7553516819571865,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 920,
+              "rate": 0.9378185524974516,
+              "threshold": 0.5
+            }
+          },
+          "known": 981,
+          "mean": 0.1529046364052029,
+          "quantiles": {
+            "q10": 0.009194409848972018,
+            "q25": 0.05063385857503233,
+            "q50": 0.10155891094767266,
+            "q75": 0.19699301316284146,
+            "q90": 0.34760073099714184
+          }
+        },
+        "official_e_above_hull_novel_unique_known": {
+          "ecdf": {
+            "le_0": {
+              "count": 53,
+              "rate": 0.05817782656421515,
+              "threshold": 0.0
+            },
+            "le_0p01": {
+              "count": 77,
+              "rate": 0.0845225027442371,
+              "threshold": 0.01
+            },
+            "le_0p02": {
+              "count": 95,
+              "rate": 0.10428100987925357,
+              "threshold": 0.02
+            },
+            "le_0p05": {
+              "count": 187,
+              "rate": 0.2052689352360044,
+              "threshold": 0.05
+            },
+            "le_0p08": {
+              "count": 331,
+              "rate": 0.3633369923161361,
+              "threshold": 0.08
+            },
+            "le_0p10": {
+              "count": 417,
+              "rate": 0.45773874862788144,
+              "threshold": 0.1
+            },
+            "le_0p12": {
+              "count": 490,
+              "rate": 0.5378704720087816,
+              "threshold": 0.12
+            },
+            "le_0p20": {
+              "count": 671,
+              "rate": 0.7365532381997805,
+              "threshold": 0.2
+            },
+            "le_0p50": {
+              "count": 850,
+              "rate": 0.9330406147091108,
+              "threshold": 0.5
+            }
+          },
+          "known": 911,
+          "mean": 0.1631900978200567,
+          "quantiles": {
+            "q10": 0.01782472986572259,
+            "q25": 0.05927203530023628,
+            "q50": 0.11081755440454089,
+            "q75": 0.20700456389831556,
+            "q90": 0.37995029983642503
+          }
+        }
+      }
+    },
+    "pairwise": {
+      "g0_all-base": {
+        "chgnet_energy_per_atom_refined": {
+          "candidate_minus_control_mean": 0.003883395620242866,
+          "candidate_minus_control_median": 0.0,
+          "fraction_lower": 0.4819639278557114,
+          "higher": 494,
+          "known_both": 998,
+          "lower": 481,
+          "normal95_lower": -0.0005874577083039446,
+          "normal95_upper": 0.008354248948789677,
+          "ties": 23
+        },
+        "official_e_above_hull": {
+          "candidate_minus_control_mean": 0.003708487633421667,
+          "candidate_minus_control_median": 0.0,
+          "fraction_lower": 0.48314606741573035,
+          "higher": 485,
+          "known_both": 979,
+          "lower": 473,
+          "normal95_lower": -0.0008309238101019026,
+          "normal95_upper": 0.008247899076945236,
+          "ties": 21
+        }
+      },
+      "g1_strict-base": {
+        "chgnet_energy_per_atom_refined": {
+          "candidate_minus_control_mean": 0.004237749951635907,
+          "candidate_minus_control_median": 0.0,
+          "fraction_lower": 0.4849699398797595,
+          "higher": 497,
+          "known_both": 998,
+          "lower": 484,
+          "normal95_lower": -0.0005525198901186485,
+          "normal95_upper": 0.009028019793390463,
+          "ties": 17
+        },
+        "official_e_above_hull": {
+          "candidate_minus_control_mean": 0.004525302683856563,
+          "candidate_minus_control_median": 2.384185791015625e-07,
+          "fraction_lower": 0.48008171603677224,
+          "higher": 492,
+          "known_both": 979,
+          "lower": 470,
+          "normal95_lower": -0.0003393341602136307,
+          "normal95_upper": 0.009389939527926756,
+          "ties": 17
+        }
+      },
+      "g1_strict-g0_all": {
+        "chgnet_energy_per_atom_refined": {
+          "candidate_minus_control_mean": 0.0003854706883430481,
+          "candidate_minus_control_median": 0.0,
+          "fraction_lower": 0.481,
+          "higher": 493,
+          "known_both": 1000,
+          "lower": 481,
+          "normal95_lower": -0.004571729732866493,
+          "normal95_upper": 0.0053426711095525894,
+          "ties": 26
+        },
+        "official_e_above_hull": {
+          "candidate_minus_control_mean": 0.0008475912334236044,
+          "candidate_minus_control_median": 0.0,
+          "fraction_lower": 0.47706422018348627,
+          "higher": 487,
+          "known_both": 981,
+          "lower": 468,
+          "normal95_lower": -0.004174780918982498,
+          "normal95_upper": 0.0058699633858297065,
+          "ties": 26
+        }
+      }
+    },
+    "stage_availability": {
+      "raw_chgnet": false,
+      "raw_official_hull": false,
+      "reason": "The frozen L7 contract evaluated only reconstructed/refined cells; raw Direct/CHGNet/hull was not run and is not inferred post hoc.",
+      "refined_chgnet": true,
+      "refined_official_hull": true
+    }
+  },
+  "deltas": {
+    "g0_all-base": {
+      "body_rate": 0.0020000000000000018,
+      "direct_joint_rate": 0.0010000000000000009,
+      "meta_attempt_rate": 0.009000000000000008,
+      "meta_retention": 0.01851851851851849,
+      "novel_rate": 0.009152304609218453,
+      "strict_attempt_rate": -0.0049999999999999975,
+      "strict_retention": -0.03561253561253552,
+      "unique_rate": 0.002006012024048043
+    },
+    "g1_strict-base": {
+      "body_rate": 0.0020000000000000018,
+      "direct_joint_rate": 0.0,
+      "meta_attempt_rate": 0.0050000000000000044,
+      "meta_retention": 0.012057188918586426,
+      "novel_rate": 0.006152304609218451,
+      "strict_attempt_rate": -0.006999999999999999,
+      "strict_retention": -0.014713343480466712,
+      "unique_rate": 0.001006012024048042
+    },
+    "g1_strict-g0_all": {
+      "body_rate": 0.0,
+      "direct_joint_rate": -0.0010000000000000009,
+      "meta_attempt_rate": -0.0040000000000000036,
+      "meta_retention": -0.006461329599932064,
+      "novel_rate": -0.0030000000000000027,
+      "strict_attempt_rate": -0.0020000000000000018,
+      "strict_retention": 0.02089919213206881,
+      "unique_rate": -0.0010000000000000009
+    }
+  },
+  "design": {
+    "benchmark_attainment_not_confidence_bound_success": true,
+    "dlm_seed": 92117,
+    "plans": "CTV_DLM_L7_PLANS.jsonl",
+    "plans_sha256": "62bf1017b17f696db95b026e7bfe3eed8284a7ea3743332e121c11098e8e46d5",
+    "refiner_seed": 102117,
+    "refiner_tau": 800,
+    "rerank_or_replacement": false,
+    "seed": 18,
+    "temperature": 0.7
+  },
+  "gates": {
+    "g1_strict_absolute": {
+      "eligible": false,
+      "meta_at_least_50pct": false,
+      "strict_at_least_10pct": false
+    },
+    "g1_strict_vs_base_floors": {
+      "body_ge_minus_3pp": true,
+      "direct_ge_minus_3pp": true,
+      "eligible": true,
+      "meta_retention_ge_minus_10pp": true,
+      "novel_ge_minus_5pp": true,
+      "strict_retention_ge_minus_10pp": true,
+      "unique_ge_minus_5pp": true
+    },
+    "g1_strict_vs_g0_all_direction": {
+      "strict_or_meta_positive_other_ge_minus_1pp": false
+    }
+  },
+  "pairwise": {
+    "g0_all-base": {
+      "known_both": 979,
+      "meta_sun": {
+        "candidate_minus_control": 0.008171603677221655,
+        "known_both": 979,
+        "mcnemar": {
+          "candidate_only": 72,
+          "control_only": 64,
+          "discordant": 136,
+          "two_sided_exact_p": 0.5485023614867376
+        },
+        "wald95_lower": -0.01518191730646006,
+        "wald95_upper": 0.03152512466090337
+      },
+      "strict_sun": {
+        "candidate_minus_control": -0.005107252298263534,
+        "known_both": 979,
+        "mcnemar": {
+          "candidate_only": 9,
+          "control_only": 14,
+          "discordant": 23,
+          "two_sided_exact_p": 0.4048728942871094
+        },
+        "wald95_lower": -0.014708109477381721,
+        "wald95_upper": 0.004493604880854654
+      }
+    },
+    "g1_strict-base": {
+      "known_both": 979,
+      "meta_sun": {
+        "candidate_minus_control": 0.0040858018386108275,
+        "known_both": 979,
+        "mcnemar": {
+          "candidate_only": 65,
+          "control_only": 61,
+          "discordant": 126,
+          "two_sided_exact_p": 0.7893959446881437
+        },
+        "wald95_lower": -0.018396688876203125,
+        "wald95_upper": 0.02656829255342478
+      },
+      "strict_sun": {
+        "candidate_minus_control": -0.007150153217568948,
+        "known_both": 979,
+        "mcnemar": {
+          "candidate_only": 11,
+          "control_only": 18,
+          "discordant": 29,
+          "two_sided_exact_p": 0.26493089646101
+        },
+        "wald95_lower": -0.017927484150381565,
+        "wald95_upper": 0.0036271777152436686
+      }
+    },
+    "g1_strict-g0_all": {
+      "known_both": 981,
+      "meta_sun": {
+        "candidate_minus_control": -0.004077471967380225,
+        "known_both": 981,
+        "mcnemar": {
+          "candidate_only": 67,
+          "control_only": 71,
+          "discordant": 138,
+          "two_sided_exact_p": 0.7985445343004947
+        },
+        "wald95_lower": -0.02755835510284896,
+        "wald95_upper": 0.019403411168088514
+      },
+      "strict_sun": {
+        "candidate_minus_control": -0.0020387359836901123,
+        "known_both": 981,
+        "mcnemar": {
+          "candidate_only": 8,
+          "control_only": 10,
+          "discordant": 18,
+          "two_sided_exact_p": 0.8145294189453125
+        },
+        "wald95_lower": -0.010518574987412512,
+        "wald95_upper": 0.0064411030200322884
+      }
+    }
+  },
+  "public_105_488_changed": false,
+  "schema": "h1a2_sgtc_l7_official_final_v2",
+  "seen_unseen": {
+    "cells": {
+      "base": {
+        "g0_all": {
+          "chemsys": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 45,
+                    "rate": 0.10067114093959731,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 64,
+                    "rate": 0.14317673378076062,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 78,
+                    "rate": 0.174496644295302,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 181,
+                    "rate": 0.40492170022371365,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 253,
+                    "rate": 0.5659955257270693,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 293,
+                    "rate": 0.6554809843400448,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 325,
+                    "rate": 0.727069351230425,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 384,
+                    "rate": 0.8590604026845637,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 435,
+                    "rate": 0.9731543624161074,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 447,
+                "mean": 0.10520556830953645,
+                "quantiles": {
+                  "q10": 0.00035591517358249,
+                  "q25": 0.02809058761291494,
+                  "q50": 0.06836778182250924,
+                  "q75": 0.1311815349810379,
+                  "q90": 0.226780913049317
+                }
+              },
+              "hull_known": 447,
+              "meta_stable": 293,
+              "meta_sun": 219,
+              "reconstructed": 458,
+              "strict_stable": 45,
+              "strict_sun": 24
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 36,
+                    "rate": 0.06766917293233082,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 45,
+                    "rate": 0.08458646616541353,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 55,
+                    "rate": 0.10338345864661654,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 88,
+                    "rate": 0.16541353383458646,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 147,
+                    "rate": 0.27631578947368424,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 193,
+                    "rate": 0.36278195488721804,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 235,
+                    "rate": 0.4417293233082707,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 359,
+                    "rate": 0.674812030075188,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 492,
+                    "rate": 0.924812030075188,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 532,
+                "mean": 0.18477766190081366,
+                "quantiles": {
+                  "q10": 0.018882619749785865,
+                  "q25": 0.0759612406922654,
+                  "q50": 0.13420051553812673,
+                  "q75": 0.24576196111279525,
+                  "q90": 0.41261966655142635
+                }
+              },
+              "hull_known": 532,
+              "meta_stable": 193,
+              "meta_sun": 193,
+              "reconstructed": 540,
+              "strict_stable": 36,
+              "strict_sun": 36
+            }
+          },
+          "exact_identity": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 28,
+                    "rate": 0.16568047337278108,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 37,
+                    "rate": 0.21893491124260356,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 45,
+                    "rate": 0.26627218934911245,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 99,
+                    "rate": 0.5857988165680473,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 125,
+                    "rate": 0.7396449704142012,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 139,
+                    "rate": 0.8224852071005917,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 145,
+                    "rate": 0.8579881656804734,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 161,
+                    "rate": 0.9526627218934911,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 169,
+                    "rate": 1.0,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 169,
+                "mean": 0.055946538991575236,
+                "quantiles": {
+                  "q10": -0.005415861512614838,
+                  "q25": 0.01776842328100603,
+                  "q50": 0.043697532381591575,
+                  "q75": 0.08666002016235286,
+                  "q90": 0.13406135481963774
+                }
+              },
+              "hull_known": 169,
+              "meta_stable": 139,
+              "meta_sun": 65,
+              "reconstructed": 171,
+              "strict_stable": 28,
+              "strict_sun": 7
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 53,
+                    "rate": 0.0654320987654321,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 72,
+                    "rate": 0.08888888888888889,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 88,
+                    "rate": 0.10864197530864197,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 170,
+                    "rate": 0.20987654320987653,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 275,
+                    "rate": 0.3395061728395062,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 347,
+                    "rate": 0.4283950617283951,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 415,
+                    "rate": 0.5123456790123457,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 582,
+                    "rate": 0.7185185185185186,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 758,
+                    "rate": 0.9358024691358025,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 810,
+                "mean": 0.16774523466175242,
+                "quantiles": {
+                  "q10": 0.01816770571337916,
+                  "q25": 0.05984075920905507,
+                  "q50": 0.11778114881925195,
+                  "q75": 0.2165006730165202,
+                  "q90": 0.3798180396348878
+                }
+              },
+              "hull_known": 810,
+              "meta_stable": 347,
+              "meta_sun": 347,
+              "reconstructed": 827,
+              "strict_stable": 53,
+              "strict_sun": 53
+            }
+          }
+        },
+        "g1_strict": {
+          "chemsys": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 38,
+                    "rate": 0.12337662337662338,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 51,
+                    "rate": 0.16558441558441558,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 63,
+                    "rate": 0.20454545454545456,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 137,
+                    "rate": 0.4448051948051948,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 190,
+                    "rate": 0.6168831168831169,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 218,
+                    "rate": 0.7077922077922078,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 238,
+                    "rate": 0.7727272727272727,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 273,
+                    "rate": 0.8863636363636364,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 302,
+                    "rate": 0.9805194805194806,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 308,
+                "mean": 0.09015606228284209,
+                "quantiles": {
+                  "q10": -0.0031153497970886697,
+                  "q25": 0.025102580059828572,
+                  "q50": 0.05623285260436983,
+                  "q75": 0.11218549613276019,
+                  "q90": 0.21258181490128206
+                }
+              },
+              "hull_known": 308,
+              "meta_stable": 218,
+              "meta_sun": 158,
+              "reconstructed": 319,
+              "strict_stable": 38,
+              "strict_sun": 18
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 43,
+                    "rate": 0.06408345752608048,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 58,
+                    "rate": 0.08643815201192251,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 70,
+                    "rate": 0.10432190760059612,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 132,
+                    "rate": 0.19672131147540983,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 210,
+                    "rate": 0.31296572280178836,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 268,
+                    "rate": 0.39940387481371087,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 322,
+                    "rate": 0.4798807749627422,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 470,
+                    "rate": 0.7004470938897168,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 625,
+                    "rate": 0.9314456035767511,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 671,
+                "mean": 0.1752019940126383,
+                "quantiles": {
+                  "q10": 0.018771602655334618,
+                  "q25": 0.06633058236948286,
+                  "q50": 0.12443254041748553,
+                  "q75": 0.22589782547021509,
+                  "q90": 0.3967356278558949
+                }
+              },
+              "hull_known": 671,
+              "meta_stable": 268,
+              "meta_sun": 254,
+              "reconstructed": 679,
+              "strict_stable": 43,
+              "strict_sun": 42
+            }
+          },
+          "exact_identity": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 21,
+                    "rate": 0.23595505617977527,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 24,
+                    "rate": 0.2696629213483146,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 29,
+                    "rate": 0.3258426966292135,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 55,
+                    "rate": 0.6179775280898876,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 70,
+                    "rate": 0.7865168539325843,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 75,
+                    "rate": 0.8426966292134831,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 76,
+                    "rate": 0.8539325842696629,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 85,
+                    "rate": 0.9550561797752809,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 89,
+                    "rate": 1.0,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 89,
+                "mean": 0.04881825835043325,
+                "quantiles": {
+                  "q10": -0.00809712359619148,
+                  "q25": 0.008112587362305135,
+                  "q50": 0.03847952297289936,
+                  "q75": 0.07043628513354427,
+                  "q90": 0.13945440787795288
+                }
+              },
+              "hull_known": 89,
+              "meta_stable": 75,
+              "meta_sun": 29,
+              "reconstructed": 91,
+              "strict_stable": 21,
+              "strict_sun": 5
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 60,
+                    "rate": 0.06741573033707865,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 85,
+                    "rate": 0.09550561797752809,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 104,
+                    "rate": 0.11685393258426967,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 214,
+                    "rate": 0.24044943820224718,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 330,
+                    "rate": 0.3707865168539326,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 411,
+                    "rate": 0.46179775280898877,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 484,
+                    "rate": 0.5438202247191011,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 658,
+                    "rate": 0.7393258426966293,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 838,
+                    "rate": 0.9415730337078652,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 890,
+                "mean": 0.15840874176674957,
+                "quantiles": {
+                  "q10": 0.01530445593660526,
+                  "q25": 0.052451998836131386,
+                  "q50": 0.11076149213262143,
+                  "q75": 0.20654478539930743,
+                  "q90": 0.3629656603990433
+                }
+              },
+              "hull_known": 890,
+              "meta_stable": 411,
+              "meta_sun": 383,
+              "reconstructed": 907,
+              "strict_stable": 60,
+              "strict_sun": 55
+            }
+          }
+        }
+      },
+      "g0_all": {
+        "g0_all": {
+          "chemsys": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 48,
+                    "rate": 0.10714285714285714,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 60,
+                    "rate": 0.13392857142857142,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 79,
+                    "rate": 0.17633928571428573,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 168,
+                    "rate": 0.375,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 246,
+                    "rate": 0.5491071428571429,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 286,
+                    "rate": 0.6383928571428571,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 319,
+                    "rate": 0.7120535714285714,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 386,
+                    "rate": 0.8616071428571429,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 433,
+                    "rate": 0.9665178571428571,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 448,
+                "mean": 0.10891752394223475,
+                "quantiles": {
+                  "q10": -0.0016224107666022109,
+                  "q25": 0.029313832798004258,
+                  "q50": 0.06818239546201665,
+                  "q75": 0.1350315324220781,
+                  "q90": 0.24249792717014157
+                }
+              },
+              "hull_known": 448,
+              "meta_stable": 286,
+              "meta_sun": 221,
+              "reconstructed": 459,
+              "strict_stable": 48,
+              "strict_sun": 25
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 30,
+                    "rate": 0.05628517823639775,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 38,
+                    "rate": 0.07129455909943715,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 48,
+                    "rate": 0.0900562851782364,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 93,
+                    "rate": 0.17448405253283303,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 156,
+                    "rate": 0.2926829268292683,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 200,
+                    "rate": 0.37523452157598497,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 242,
+                    "rate": 0.4540337711069418,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 358,
+                    "rate": 0.6716697936210131,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 488,
+                    "rate": 0.9155722326454033,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 533,
+                "mean": 0.18831690541725016,
+                "quantiles": {
+                  "q10": 0.025701512145469965,
+                  "q25": 0.0728934112249755,
+                  "q50": 0.13627781846167508,
+                  "q75": 0.24706306458035066,
+                  "q90": 0.4494725790931888
+                }
+              },
+              "hull_known": 533,
+              "meta_stable": 200,
+              "meta_sun": 200,
+              "reconstructed": 541,
+              "strict_stable": 30,
+              "strict_sun": 30
+            }
+          },
+          "exact_identity": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 30,
+                    "rate": 0.17647058823529413,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 38,
+                    "rate": 0.2235294117647059,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 48,
+                    "rate": 0.2823529411764706,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 93,
+                    "rate": 0.5470588235294118,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 118,
+                    "rate": 0.6941176470588235,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 128,
+                    "rate": 0.7529411764705882,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 141,
+                    "rate": 0.8294117647058824,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 161,
+                    "rate": 0.9470588235294117,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 170,
+                    "rate": 1.0,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 170,
+                "mean": 0.06075820474268235,
+                "quantiles": {
+                  "q10": -0.0065351057443447935,
+                  "q25": 0.01688570621682728,
+                  "q50": 0.044235239185526076,
+                  "q75": 0.09851599340818251,
+                  "q90": 0.16630524303895322
+                }
+              },
+              "hull_known": 170,
+              "meta_stable": 128,
+              "meta_sun": 63,
+              "reconstructed": 172,
+              "strict_stable": 30,
+              "strict_sun": 7
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 48,
+                    "rate": 0.059186189889025895,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 60,
+                    "rate": 0.07398273736128237,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 79,
+                    "rate": 0.09741060419235512,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 168,
+                    "rate": 0.20715166461159062,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 284,
+                    "rate": 0.35018495684340323,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 358,
+                    "rate": 0.44143033292231815,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 420,
+                    "rate": 0.5178791615289766,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 583,
+                    "rate": 0.718865598027127,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 751,
+                    "rate": 0.9260172626387176,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 811,
+                "mean": 0.1711949032148699,
+                "quantiles": {
+                  "q10": 0.020782989258626205,
+                  "q25": 0.05991985971294467,
+                  "q50": 0.11555985656982593,
+                  "q75": 0.22241595354770194,
+                  "q90": 0.4126793502640149
+                }
+              },
+              "hull_known": 811,
+              "meta_stable": 358,
+              "meta_sun": 358,
+              "reconstructed": 828,
+              "strict_stable": 48,
+              "strict_sun": 48
+            }
+          }
+        },
+        "g1_strict": {
+          "chemsys": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 40,
+                    "rate": 0.12944983818770225,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 47,
+                    "rate": 0.15210355987055016,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 63,
+                    "rate": 0.20388349514563106,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 131,
+                    "rate": 0.42394822006472493,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 184,
+                    "rate": 0.5954692556634305,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 211,
+                    "rate": 0.6828478964401294,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 233,
+                    "rate": 0.7540453074433657,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 278,
+                    "rate": 0.8996763754045307,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 302,
+                    "rate": 0.9773462783171522,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 309,
+                "mean": 0.0911319903299634,
+                "quantiles": {
+                  "q10": -0.004386545368652328,
+                  "q25": 0.025927743917113943,
+                  "q50": 0.060191463807983236,
+                  "q75": 0.11923030182616934,
+                  "q90": 0.19852551680112399
+                }
+              },
+              "hull_known": 309,
+              "meta_stable": 211,
+              "meta_sun": 158,
+              "reconstructed": 320,
+              "strict_stable": 40,
+              "strict_sun": 18
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 38,
+                    "rate": 0.05654761904761905,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 51,
+                    "rate": 0.07589285714285714,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 64,
+                    "rate": 0.09523809523809523,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 130,
+                    "rate": 0.19345238095238096,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 218,
+                    "rate": 0.3244047619047619,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 275,
+                    "rate": 0.40922619047619047,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 328,
+                    "rate": 0.4880952380952381,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 466,
+                    "rate": 0.6934523809523809,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 619,
+                    "rate": 0.9211309523809523,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 672,
+                "mean": 0.18007169092493575,
+                "quantiles": {
+                  "q10": 0.0225676389888307,
+                  "q25": 0.06343238404444085,
+                  "q50": 0.1264931435417549,
+                  "q75": 0.23754248330505434,
+                  "q90": 0.4336611534135969
+                }
+              },
+              "hull_known": 672,
+              "meta_stable": 275,
+              "meta_sun": 263,
+              "reconstructed": 680,
+              "strict_stable": 38,
+              "strict_sun": 37
+            }
+          },
+          "exact_identity": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 23,
+                    "rate": 0.25555555555555554,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 25,
+                    "rate": 0.2777777777777778,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 30,
+                    "rate": 0.3333333333333333,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 51,
+                    "rate": 0.5666666666666667,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 64,
+                    "rate": 0.7111111111111111,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 67,
+                    "rate": 0.7444444444444445,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 73,
+                    "rate": 0.8111111111111111,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 87,
+                    "rate": 0.9666666666666667,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 90,
+                    "rate": 1.0,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 90,
+                "mean": 0.0552536613533752,
+                "quantiles": {
+                  "q10": -0.009909069167138539,
+                  "q25": 3.785928198229982e-05,
+                  "q50": 0.04155001602294872,
+                  "q75": 0.10275650528865499,
+                  "q90": 0.1564464226793046
+                }
+              },
+              "hull_known": 90,
+              "meta_stable": 67,
+              "meta_sun": 25,
+              "reconstructed": 92,
+              "strict_stable": 23,
+              "strict_sun": 5
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 55,
+                    "rate": 0.06172839506172839,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 73,
+                    "rate": 0.0819304152637486,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 97,
+                    "rate": 0.10886644219977554,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 210,
+                    "rate": 0.2356902356902357,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 338,
+                    "rate": 0.3793490460157127,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 419,
+                    "rate": 0.4702581369248036,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 488,
+                    "rate": 0.547699214365881,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 657,
+                    "rate": 0.7373737373737373,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 831,
+                    "rate": 0.9326599326599326,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 891,
+                "mean": 0.16183516474939588,
+                "quantiles": {
+                  "q10": 0.01925712742309571,
+                  "q25": 0.053590814499534734,
+                  "q50": 0.10592045510742132,
+                  "q75": 0.2108608634981355,
+                  "q90": 0.3867559642561851
+                }
+              },
+              "hull_known": 891,
+              "meta_stable": 419,
+              "meta_sun": 396,
+              "reconstructed": 908,
+              "strict_stable": 55,
+              "strict_sun": 50
+            }
+          }
+        }
+      },
+      "g1_strict": {
+        "g0_all": {
+          "chemsys": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 43,
+                    "rate": 0.09598214285714286,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 57,
+                    "rate": 0.12723214285714285,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 78,
+                    "rate": 0.17410714285714285,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 162,
+                    "rate": 0.36160714285714285,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 247,
+                    "rate": 0.5513392857142857,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 290,
+                    "rate": 0.6473214285714286,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 325,
+                    "rate": 0.7254464285714286,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 389,
+                    "rate": 0.8683035714285714,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 434,
+                    "rate": 0.96875,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 448,
+                "mean": 0.10869853115548668,
+                "quantiles": {
+                  "q10": 0.0018083985677246808,
+                  "q25": 0.028377449547505318,
+                  "q50": 0.07157238386573761,
+                  "q75": 0.12883752843453955,
+                  "q90": 0.231510714255211
+                }
+              },
+              "hull_known": 448,
+              "meta_stable": 290,
+              "meta_sun": 222,
+              "reconstructed": 459,
+              "strict_stable": 43,
+              "strict_sun": 23
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 30,
+                    "rate": 0.05628517823639775,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 45,
+                    "rate": 0.08442776735459662,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 50,
+                    "rate": 0.09380863039399624,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 83,
+                    "rate": 0.15572232645403378,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 150,
+                    "rate": 0.28142589118198874,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 195,
+                    "rate": 0.36585365853658536,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 235,
+                    "rate": 0.44090056285178236,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 352,
+                    "rate": 0.6604127579737336,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 486,
+                    "rate": 0.9118198874296435,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 533,
+                "mean": 0.1900609875344203,
+                "quantiles": {
+                  "q10": 0.022229712118422642,
+                  "q25": 0.07259085804809562,
+                  "q50": 0.13630383370948707,
+                  "q75": 0.2495202885437653,
+                  "q90": 0.4499470030001066
+                }
+              },
+              "hull_known": 533,
+              "meta_stable": 195,
+              "meta_sun": 195,
+              "reconstructed": 541,
+              "strict_stable": 30,
+              "strict_sun": 30
+            }
+          },
+          "exact_identity": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 28,
+                    "rate": 0.16470588235294117,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 37,
+                    "rate": 0.21764705882352942,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 49,
+                    "rate": 0.28823529411764703,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 89,
+                    "rate": 0.5235294117647059,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 122,
+                    "rate": 0.7176470588235294,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 132,
+                    "rate": 0.7764705882352941,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 144,
+                    "rate": 0.8470588235294118,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 167,
+                    "rate": 0.9823529411764705,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 169,
+                    "rate": 0.9941176470588236,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 170,
+                "mean": 0.058372104590722756,
+                "quantiles": {
+                  "q10": -0.0065011957896031975,
+                  "q25": 0.016791353917234852,
+                  "q50": 0.046186175207926006,
+                  "q75": 0.08715256584991393,
+                  "q90": 0.1381173749997554
+                }
+              },
+              "hull_known": 170,
+              "meta_stable": 132,
+              "meta_sun": 64,
+              "reconstructed": 172,
+              "strict_stable": 28,
+              "strict_sun": 8
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 45,
+                    "rate": 0.055487053020961775,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 65,
+                    "rate": 0.08014796547472257,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 79,
+                    "rate": 0.09741060419235512,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 156,
+                    "rate": 0.19235511713933415,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 275,
+                    "rate": 0.33908754623921084,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 353,
+                    "rate": 0.4352651048088779,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 416,
+                    "rate": 0.5129469790382244,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 574,
+                    "rate": 0.7077681874229347,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 751,
+                    "rate": 0.9260172626387176,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 811,
+                "mean": 0.17272033357963154,
+                "quantiles": {
+                  "q10": 0.02031664251790355,
+                  "q25": 0.062302651188615776,
+                  "q50": 0.11576673350952138,
+                  "q75": 0.22077647844094406,
+                  "q90": 0.4046977677779129
+                }
+              },
+              "hull_known": 811,
+              "meta_stable": 353,
+              "meta_sun": 353,
+              "reconstructed": 828,
+              "strict_stable": 45,
+              "strict_sun": 45
+            }
+          }
+        },
+        "g1_strict": {
+          "chemsys": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 35,
+                    "rate": 0.11326860841423948,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 44,
+                    "rate": 0.1423948220064725,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 61,
+                    "rate": 0.19741100323624594,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 121,
+                    "rate": 0.39158576051779936,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 187,
+                    "rate": 0.6051779935275081,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 222,
+                    "rate": 0.7184466019417476,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 244,
+                    "rate": 0.7896440129449838,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 279,
+                    "rate": 0.9029126213592233,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 303,
+                    "rate": 0.9805825242718447,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 309,
+                "mean": 0.08965911287690319,
+                "quantiles": {
+                  "q10": -0.0018892591128748745,
+                  "q25": 0.026243876596679705,
+                  "q50": 0.06228065953857431,
+                  "q75": 0.11044339390624991,
+                  "q90": 0.19657091269249666
+                }
+              },
+              "hull_known": 309,
+              "meta_stable": 222,
+              "meta_sun": 167,
+              "reconstructed": 320,
+              "strict_stable": 35,
+              "strict_sun": 16
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 38,
+                    "rate": 0.05654761904761905,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 58,
+                    "rate": 0.08630952380952381,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 67,
+                    "rate": 0.09970238095238096,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 124,
+                    "rate": 0.18452380952380953,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 210,
+                    "rate": 0.3125,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 263,
+                    "rate": 0.3913690476190476,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 316,
+                    "rate": 0.47023809523809523,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 462,
+                    "rate": 0.6875,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 617,
+                    "rate": 0.9181547619047619,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 672,
+                "mean": 0.1819862833847336,
+                "quantiles": {
+                  "q10": 0.020160090142491427,
+                  "q25": 0.06546165019546568,
+                  "q50": 0.1291802904452779,
+                  "q75": 0.23165870932790056,
+                  "q90": 0.43453331654398636
+                }
+              },
+              "hull_known": 672,
+              "meta_stable": 263,
+              "meta_sun": 250,
+              "reconstructed": 680,
+              "strict_stable": 38,
+              "strict_sun": 37
+            }
+          },
+          "exact_identity": {
+            "seen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 22,
+                    "rate": 0.24444444444444444,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 24,
+                    "rate": 0.26666666666666666,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 31,
+                    "rate": 0.34444444444444444,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 49,
+                    "rate": 0.5444444444444444,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 69,
+                    "rate": 0.7666666666666667,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 73,
+                    "rate": 0.8111111111111111,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 78,
+                    "rate": 0.8666666666666667,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 89,
+                    "rate": 0.9888888888888889,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 90,
+                    "rate": 1.0,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 90,
+                "mean": 0.048807964734553316,
+                "quantiles": {
+                  "q10": -0.010150681713291207,
+                  "q25": 0.003075739325011817,
+                  "q50": 0.04156700328149343,
+                  "q75": 0.07754491710723899,
+                  "q90": 0.12878700423603853
+                }
+              },
+              "hull_known": 90,
+              "meta_stable": 73,
+              "meta_sun": 29,
+              "reconstructed": 92,
+              "strict_stable": 22,
+              "strict_sun": 6
+            },
+            "unseen": {
+              "e_hull": {
+                "ecdf": {
+                  "le_0": {
+                    "count": 51,
+                    "rate": 0.05723905723905724,
+                    "threshold": 0.0
+                  },
+                  "le_0p01": {
+                    "count": 78,
+                    "rate": 0.08754208754208755,
+                    "threshold": 0.01
+                  },
+                  "le_0p02": {
+                    "count": 97,
+                    "rate": 0.10886644219977554,
+                    "threshold": 0.02
+                  },
+                  "le_0p05": {
+                    "count": 196,
+                    "rate": 0.21997755331088664,
+                    "threshold": 0.05
+                  },
+                  "le_0p08": {
+                    "count": 328,
+                    "rate": 0.3681257014590348,
+                    "threshold": 0.08
+                  },
+                  "le_0p10": {
+                    "count": 412,
+                    "rate": 0.4624017957351291,
+                    "threshold": 0.1
+                  },
+                  "le_0p12": {
+                    "count": 482,
+                    "rate": 0.5409652076318743,
+                    "threshold": 0.12
+                  },
+                  "le_0p20": {
+                    "count": 652,
+                    "rate": 0.7317620650953984,
+                    "threshold": 0.2
+                  },
+                  "le_0p50": {
+                    "count": 830,
+                    "rate": 0.9315375982042648,
+                    "threshold": 0.5
+                  }
+                },
+                "known": 891,
+                "mean": 0.16341945172547054,
+                "quantiles": {
+                  "q10": 0.017423873375244092,
+                  "q25": 0.05672506871173122,
+                  "q50": 0.10861052891165635,
+                  "q75": 0.207814311492716,
+                  "q90": 0.39093942890171895
+                }
+              },
+              "hull_known": 891,
+              "meta_stable": 412,
+              "meta_sun": 388,
+              "reconstructed": 908,
+              "strict_stable": 51,
+              "strict_sun": 47
+            }
+          }
+        }
+      }
+    },
+    "training_support": {
+      "g0_all": {
+        "chemsys": 15232,
+        "exact_identities": 21146
+      },
+      "g1_strict": {
+        "chemsys": 8649,
+        "exact_identities": 10533
+      }
+    }
+  },
+  "sgtc_l7_pass": false,
+  "unknown_policy": "missing; never unstable"
+}

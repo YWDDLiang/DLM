@@ -1,0 +1,4 @@
+reconstructed,novel,unique,novel_unique,hull_known,hull_unknown,strict_stable,strict_sun,meta_stable,meta_sun,strict_attempt_rate,meta_attempt_rate,strict_retention,meta_retention,seed,arm,requested,parsed,body,refined,direct_comp,direct_struct,direct_joint,body_rate,direct_joint_rate,novel_rate,unique_rate
+998,922,995,922,979,19,81,60,486,412,0.06,0.412,0.7407407407407407,0.8477366255144033,18,base,1000,998,998,998,998,996,996,0.998,0.996,0.9238476953907816,0.996993987975952
+1000,933,999,933,981,19,78,55,486,421,0.055,0.421,0.7051282051282052,0.8662551440329218,18,g0_all,1000,1000,1000,1000,1000,997,997,1.0,0.997,0.933,0.999
+1000,930,998,930,981,19,73,53,485,417,0.053,0.417,0.726027397260274,0.8597938144329897,18,g1_strict,1000,1000,1000,1000,1000,996,996,1.0,0.996,0.93,0.998
