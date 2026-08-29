@@ -79,6 +79,8 @@ class BuildD3POPairsTest(unittest.TestCase):
         pairs = MODULE.build_pairs_for_composition(outcomes)
         self.assertEqual(len(pairs), 1)
         self.assertEqual(pairs[0]["winner"]["answer"], "same")
+        self.assertAlmostEqual(pairs[0]["winner"]["energy_per_atom"], -1.95)
+        self.assertEqual(pairs[0]["winner"]["replicate_count"], 2)
 
     def test_chemsys_split_is_deterministic(self):
         self.assertEqual(

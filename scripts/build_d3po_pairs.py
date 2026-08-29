@@ -10,6 +10,7 @@ import itertools
 import json
 import math
 from pathlib import Path
+import statistics
 from typing import Any, Mapping, Sequence
 
 
@@ -129,19 +130,122 @@ def ordinal_from_attempt(row: Mapping[str, Any]) -> int:
     return int(str(row["attempt_id"]).rsplit("-", 1)[-1])
 
 
-def deduplicate_outcomes(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    by_text: dict[str, dict[str, Any]] = {}
-    for row in rows:
-        text = str(row["answer"])
-        existing = by_text.get(text)
-        if existing is None or float(row["energy_per_atom"]) < float(
-            existing["energy_per_atom"]
-        ):
-            by_text[text] = dict(row)
-    return sorted(
-        by_text.values(),
-        key=lambda row: (float(row["energy_per_atom"]), str(row["source"])),
+def _aggregate_cluster(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Collapse repeated measurements without selecting the luckiest relaxation."""
+
+    ordered = sorted(
+        (dict(row) for row in rows),
+        key=lambda row: (
+            str(row["source"]),
+            int(row.get("source_ordinal") or -1),
+            str(row["answer"]),
+        ),
     )
+    representative = ordered[0]
+    energies = [
+        float(value)
+        for row in ordered
+        for value in row.get("_replicate_energies", [row["energy_per_atom"]])
+    ]
+    representative["energy_per_atom"] = statistics.fmean(energies)
+    representative["replicate_energy_std"] = (
+        statistics.pstdev(energies) if len(energies) > 1 else 0.0
+    )
+    representative["replicate_count"] = len(energies)
+    representative["replicate_sources"] = sorted(
+        {
+            str(source)
+            for row in ordered
+            for source in row.get("replicate_sources", [row["source"]])
+        }
+    )
+    representative["_replicate_energies"] = energies
+    return representative
+
+
+def deduplicate_outcomes(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    physical: bool = False,
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    """Deduplicate exact and, optionally, physically equivalent structures.
+
+    Exact repeats are averaged rather than reduced to their minimum energy.  The
+    latter would turn refiner noise into a systematically optimistic label.  The
+    production builder additionally clusters CIFs with a deliberately strict
+    StructureMatcher configuration (no rescaling or supercells).
+    """
+
+    by_text: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        by_text.setdefault(str(row["answer"]), []).append(dict(row))
+    exact = [_aggregate_cluster(cluster) for cluster in by_text.values()]
+    stats = {
+        "input_outcomes": len(rows),
+        "exact_representatives": len(exact),
+        "exact_duplicates_removed": len(rows) - len(exact),
+        "physical_representatives": len(exact),
+        "physical_duplicates_removed": 0,
+        "physical_parse_failures": 0,
+    }
+    if not physical or len(exact) < 2:
+        return sorted(
+            exact,
+            key=lambda row: (float(row["energy_per_atom"]), str(row["source"])),
+        ), stats
+
+    try:
+        from pymatgen.analysis.structure_matcher import StructureMatcher
+        from pymatgen.core import Structure
+    except ImportError as error:  # pragma: no cover - production dependency guard
+        raise RuntimeError(
+            "physical D3PO deduplication requires pymatgen"
+        ) from error
+
+    matcher = StructureMatcher(
+        ltol=0.05,
+        stol=0.10,
+        angle_tol=2.0,
+        primitive_cell=False,
+        scale=False,
+        attempt_supercell=False,
+        allow_subset=False,
+    )
+    clusters: list[list[dict[str, Any]]] = []
+    representatives: list[Any | None] = []
+    for row in sorted(
+        exact,
+        key=lambda item: (
+            str(item["source"]),
+            int(item.get("source_ordinal") or -1),
+            hashlib.sha256(str(item["answer"]).encode("utf-8")).hexdigest(),
+        ),
+    ):
+        try:
+            structure = Structure.from_str(str(row["cif"]), fmt="cif")
+        except Exception:
+            stats["physical_parse_failures"] += 1
+            clusters.append([row])
+            representatives.append(None)
+            continue
+        match_index = None
+        for index, existing in enumerate(representatives):
+            if existing is not None and matcher.fit(existing, structure):
+                match_index = index
+                break
+        if match_index is None:
+            clusters.append([row])
+            representatives.append(structure)
+        else:
+            clusters[match_index].append(row)
+
+    physical_rows = [_aggregate_cluster(cluster) for cluster in clusters]
+    stats["physical_representatives"] = len(physical_rows)
+    stats["physical_duplicates_removed"] = len(exact) - len(physical_rows)
+    return sorted(
+        physical_rows,
+        key=lambda row: (float(row["energy_per_atom"]), str(row["source"])),
+    ), stats
 
 
 def build_pairs_for_composition(
@@ -149,8 +253,13 @@ def build_pairs_for_composition(
     *,
     energy_temperature: float = 0.03,
     margin_cap: float = 0.06,
+    deduplicate: bool = True,
 ) -> list[dict[str, Any]]:
-    unique = deduplicate_outcomes(outcomes)
+    unique = (
+        deduplicate_outcomes(outcomes)[0]
+        if deduplicate
+        else [dict(row) for row in outcomes]
+    )
     unnormalized: list[dict[str, Any]] = []
     for left, right in itertools.combinations(unique, 2):
         left_energy = float(left["energy_per_atom"])
@@ -327,6 +436,7 @@ def main() -> None:
     group_counts: Counter[str] = Counter()
     source_winners: Counter[str] = Counter()
     source_losers: Counter[str] = Counter()
+    dedup_totals: Counter[str] = Counter()
     pair_index = 0
     for identity, outcomes in sorted(groups.items()):
         prompts = {str(row["prompt"]) for row in outcomes}
@@ -334,7 +444,11 @@ def main() -> None:
             raise ValueError(f"minimal prompt changed within {identity}")
         plan = outcomes[0]["plan"]
         split = chemsys_split(chemsys(plan))
-        pairs = build_pairs_for_composition(outcomes)
+        unique_outcomes, dedup_stats = deduplicate_outcomes(
+            outcomes, physical=True
+        )
+        dedup_totals.update(dedup_stats)
+        pairs = build_pairs_for_composition(unique_outcomes, deduplicate=False)
         if not pairs:
             continue
         group_counts[split] += 1
@@ -378,6 +492,10 @@ def main() -> None:
         "source_winner_counts": dict(sorted(source_winners.items())),
         "source_loser_counts": dict(sorted(source_losers.items())),
         "noisy_exclusions": dict(sorted(exclusions.items())),
+        "deduplication": {
+            "method": "exact-answer mean then strict StructureMatcher; scale=false",
+            **dict(sorted(dedup_totals.items())),
+        },
         "hashes": hashes,
         "l7_retired_as_test": True,
         "gpu_jobs_used": 0,
