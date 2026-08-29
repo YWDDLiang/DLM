@@ -648,3 +648,21 @@ Meta S.U.N.为`167/320`，unseen为`250/680`，支持局部外的stable realizat
 composition+N，用same-composition、post-refiner continuous rank训练masked DLM，并以
 matched factorial区分DLM学习与clean-body→`x_tau`接口修复。external rich Plan只作信息
 上界，且必须与C³FD-direct-CIF公平比较。该草案未授权执行。
+# 2026-08-30 stability-method pivot: same-composition masked-D3PO
+
+The stability story should no longer claim that positive-only stable-subset CE
+teaches stable conditional generation. SGTC L7 is the controlled negative that
+rejects that claim. The surviving DLM contribution is a sharper objective:
+within a fixed C³FD composition, couple winner/loser crystal bodies with the
+same diffusion mask and optimize their reference-corrected sequence
+probability using post-refiner relative energy. This preserves the complete
+Planner → DLM → diffusion-refiner story while assigning each module one job:
+C³FD supplies chemically valid outcome-blind compositions, the DLM learns
+which structural realization is relatively lower energy, and model494 remains
+the fixed geometric basin projector.
+
+Historical R5C is supporting evidence for conditional realizability, not a
+de-novo headline; the padded 107-token representation stays retired. H1-A2 and
+R03 seed/process instability require two training seeds and common paired
+streams. The paper-facing claim is continuous paired energy/hull movement plus
+S.U.N. retention, never validation preference accuracy alone.

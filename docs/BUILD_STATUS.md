@@ -279,7 +279,27 @@
   immutable结果位于A800
   `runs/sgtc_l7_official_final_20260829_v2`；报告扩展代码commit `31ea2ee`；
 - SGTC因此作为正式阴性保留：positive-only strict-stable continuation改善teacher-forced
-  NLL，但没有提供same-composition能量边界。下一候选仅为待确认草案
-  [`RRC_DLM_V1_PROPOSED_CONTRACT.md`](RRC_DLM_V1_PROPOSED_CONTRACT.md)：保持C³FD
-  composition不变，以post-refiner相对rank监督masked DLM，并单独审计合法forward-noise
-  bridge。未获用户确认前不提交任何新训练或生成任务。
+  NLL，但没有提供same-composition能量边界。下一候选已经收敛为用户确认的低资源
+  [`D3PO_256_MIN_CONTRACT_V1.md`](D3PO_256_MIN_CONTRACT_V1.md)：保持C³FD composition与
+  model494 tau800不变，用post-refiner相对能量训练full-sequence shared-noise masked-D3PO，
+  不引入外部rich Plan、rerank或额外tau/checkpoint搜索。
+
+## 2026-08-30 D3PO-256-Min 零GPU冻结
+
+- 完整历史复盘纳入R5C、107-token fixed-slot、H1-A2换seed崩塌、R03 D1/D2以及后续
+  CTV/CCFD/SGTC阴性；因此动态`7+4N`、full-axis、base step696、双训练seed和双共同
+  sampling/refiner stream全部写入合同，单seed阈值高点不再算成功；
+- L6/L7内same-composition CHGNet排序与official hull排序在非tie pair上完全一致；L7
+  K1 `56/416`到K3 oracle `74/502`、L6 K1 `13.2/89.5`到K6 `23/123`，证明候选集合存在
+  可学习上限；但手工scalar几何probe AUC仅`0.507`，所以不再训练独立critic，而把偏好
+  直接写进DLM序列概率；
+- production pair v3为train `5007` pairs/`885` compositions、validation `850/166`，
+  chemsys零交叉。4205 outcomes先平均并删除`335`个exact repeats，再严格PBC去掉`164`
+  个物理等价体，零parse失败，避免把refiner随机走运当DLM监督；
+- fresh seed17 test256已按sample_idx冻结，先对L6/L7/noisy pool做reduced-composition排除，
+  Plan SHA为`de27b5c066cfd3e1068bf48cbe617f5ae5e216ead51d5676d206290c2764e9fb`，
+  选择过程未读取任何稳定/能量/validity结果；
+- one-backbone/two-adapter trainer、shared-mask数学core和一张A800双seed串行wrapper已实现。
+  local `176` tests通过（`33` dependency skips）；remote完整D3PO trainer tests `12/12`
+  通过，真实tokenizer逐行载入`5857` pairs成功，最大长度`152`，PEFT named-adapter
+  load/switch/delete/save canary通过。base与pair数据SHA均硬冻结；当前仍无GPU job。
