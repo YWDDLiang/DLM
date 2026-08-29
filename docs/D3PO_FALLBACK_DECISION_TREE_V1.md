@@ -153,6 +153,15 @@ original dynamic body, <VPA_Q0..Q7>, <CN_ENV_0..7>
   coordination histogram, representing the local topological basin that
   model494 may refine within but not cross.
 
+The choice is evidence-bound rather than decorative. In the archived mechanism
+diagnostic, volume-bin-matched structures have official e-hull median `0.0733`
+versus `0.0809 eV/atom` when mismatched and Meta-stable rates `330/534=61.8%`
+versus `257/451=57.0%`; Strict barely changes, so VPA is expected to affect
+continuous/Meta outcomes first. Conversely, a lattice/space-group match is
+associated with a worse median (`0.0881` versus `0.0683 eV/atom`). These are
+non-causal diagnostics, but they reject the unsupported shortcut “add an SG
+token and stability will rise.”
+
 Appending rather than prepending preserves every historical body position.
 Use small field-specific embedding/classification heads rather than resizing
 the full LLaDA vocabulary. Both slots start masked at inference, are predicted
