@@ -139,8 +139,13 @@ Planner change, rich-Plan arm, or second checkpoint is authorized.
 Historical H1-A2 and R03 high points were seed/process fragile, so a one-seed
 increase is not accepted as clear evidence.
 
-- Freeze 256 outcome-blind test Plans from unused C³FD seed17 attempts after
-  exact-identity exclusion only; do not use stability or realizability scores.
+- Use the frozen 256 outcome-blind C³FD seed17 Plans at
+  `cohorts/d3po_test_seed17_256_20260830_v1`. Their Plan SHA-256 is
+  `de27b5c066cfd3e1068bf48cbe617f5ae5e216ead51d5676d206290c2764e9fb`.
+  Selection used sample order only after conservative reduced-composition
+  exclusion against L6, L7 and the noisy-pair cohort; 271 earlier rows were
+  excluded and no stability, energy, validity or realizability outcome was
+  read.
 - Report the test cohort's N/arity/family/element distance to full C³FD/MP20.
 - Run the frozen base and both D3PO training seeds under two fixed common DLM
   sampling/refiner streams (six cells total) and paired per-ordinal RNG.
