@@ -31,6 +31,12 @@ changes into that causal test.
   develops policy-gradient fine-tuning for discrete diffusion. Its online
   reward model/actor-critic complexity is not justified before the lower-
   variance offline D3PO test.
+- [Diffusion LAIR](https://arxiv.org/abs/2605.26491) uses all candidates for a
+  prompt, continuous centered reward advantages, a reference-model implicit
+  reward, and an explicit quadratic magnitude penalty. Because the existing
+  data naturally contains 3--8 structures per composition, this is the most
+  relevant low-variance objective fallback to audit if pairwise D3PO is
+  negative; it precedes online RL or an invasive representation change.
 - [Latent-Augmented Discrete Diffusion Models](https://openreview.net/forum?id=0sZ4DiHn76)
   and [Train for the Worst, Plan for the Best](https://openreview.net/pdf?id=DjJmre5IkP)
   support internal latent structure and deliberate reveal ordering. They
