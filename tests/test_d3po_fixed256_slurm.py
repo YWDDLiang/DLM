@@ -91,6 +91,18 @@ class D3POFixed256SlurmTest(unittest.TestCase):
         self.assertIn("ENGINEERING_FAILURE.tsv", text)
         self.assertIn("_SUCCESS", text)
 
+    def test_listwise_safety_builder_is_cpu_only_and_holdout_closed(self):
+        text = (ROOT / "slurm/71_listwise_safety_v2.sbatch").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("#SBATCH --cpus-per-task=48", text)
+        self.assertNotIn("#SBATCH --gres", text)
+        self.assertIn("--workers 48", text)
+        self.assertIn("raw_invalid_is_worst\ttrue", text)
+        self.assertIn("holdout_or_test_outcome\tunsupported", text)
+        self.assertIn("ENGINEERING_FAILURE.tsv", text)
+        self.assertIn("_SUCCESS", text)
+
 
 if __name__ == "__main__":
     unittest.main()
