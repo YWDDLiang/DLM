@@ -16,9 +16,13 @@ Deadline: 2026-08-31 23:30 Asia/Shanghai
   composition/N conservation and 100% legacy composition validity without
   outcome filtering.
 - Audit and test the Planner's **existing seven-line rich interface** before
-  inventing new DLM intent tokens. Only lattice system and volume bin are
-  currently sampled from rich logits; anion/charge are hard-derived and the SG
-  bucket is compiler-derived. The Planner may propose soft structural
+  inventing new DLM intent tokens. The old deployment sampled lattice system
+  and volume bin from rich logits, hard-derived anion/charge, and compiled SG
+  one-to-one from lattice. CPU validation now shows the separately supervised
+  SG head carries target-label information and is substantially more faithful
+  under top-1 validation. The proposed canary interface therefore predicts
+  lattice, SG and volume, subject to sampling/RNG regression tests and downstream
+  validation. The Planner may propose soft structural
   context, but it may not generate the CIF or consume test stability outcomes.
 - The DLM remains responsible for the complete discrete crystal body. A frozen
   continuous diffusion model may refine lattice/coordinates but may not change
@@ -102,7 +106,7 @@ field, a hard-derived field, and a compiler-derived rendering field.
 | `anion_framework` | hard-derived from proposal family; its rich head is not sampled | overlaps current minimal `family` | exact code/value mapping; head metric is diagnostic only | retain for seven-line compatibility; no predicted-rich credit |
 | `charge_bucket` | hard-derived from the C3FD certificate; its rich head is not sampled | overlaps current minimal `charge` | exact code/value mapping; head metric is diagnostic only | retain as chemistry context; no predicted-rich credit |
 | `lattice_system` | broad structural mode | old rich conditioning reduced template collapse, but lattice/SG matching was not lower-hull | val accuracy/NLL/ECE, majority-normalized accuracy, seed stability, matched prompt ablation | soft, with training dropout; never a hard geometry constraint |
-| `spacegroup_bucket` | compiler-derived coarse symmetry range; its rich head is not sampled | sampler maps it one-to-one from lattice system | quantify zero incremental sampled information; compare unused independent head to derived compiler output | compiler-derived compatibility line only; no independent prediction claim |
+| `spacegroup_bucket` | target symmetry range from metadata; old sampler compiled it from metric lattice | target H(SG\|metric lattice)=0.881 nats; separately supervised head top-1 accuracy 60.6% versus compiler 26.8--27.5% | sampled-distribution regression, RNG preservation and matched prompt effect | test sampling the existing SG head after volume; soft only, never hard-enforce a one-to-one metric/SG map |
 | `volume_per_atom_bin` | global scale | modest favorable continuous/Meta association in historical diagnostic | val accuracy/NLL/ECE, ordinal error, seed stability, matched prompt ablation | highest-priority soft structural field, still uncertainty-aware |
 
 CPU audit outputs:
@@ -158,16 +162,19 @@ identity. Use two common DLM/refiner streams and exactly three arms:
 
 1. `M0`: current C3FD minimal prompt + current minimal DLM;
 2. `RCF`: current C3FD exact composition + historical rich-compatible DLM with
-   a pre-frozen marginal-preserving counterfactual assignment of lattice and
-   volume from another development composition; lattice/SG compatibility and
-   all hard anchors remain valid;
+   a pre-frozen marginal-preserving counterfactual assignment of the complete
+   `(metric lattice, SG bucket, volume bin)` tuple from another development
+   composition; empirical joint support and all hard anchors remain valid;
 3. `R0`: the same rich-compatible DLM + current C3FD predicted seven-line Plan.
 
 This uses six cells and no official MP query. The counterfactual permutation is
-fixed before generation and preserves field marginals; no `<UNKNOWN>` or other
+fixed before generation and preserves the predicted rich tuple jointly, not
+three independent marginals; no `<UNKNOWN>` or other
 out-of-support neutral token is introduced. `R0-RCF` estimates the effect of
-composition-aligned predicted soft context while holding composition, DLM,
-prompt schema and streams fixed. It does not estimate oracle field correctness.
+aligning the three predicted soft structural fields to their originating
+composition while holding the hard composition, DLM, prompt schema and streams
+fixed. It does not estimate oracle field correctness, an SG-only effect, or an
+overall composition-alignment effect.
 `R0-M0` is explicitly a package-level recovery comparison, not a single-factor
 causal effect.
 

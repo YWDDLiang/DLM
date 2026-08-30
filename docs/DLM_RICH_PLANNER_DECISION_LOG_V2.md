@@ -17,7 +17,7 @@ inference.
 | Decision | Alternatives considered | Rationale | Status |
 |---|---|---|---|
 | Audit and test current C3FD's existing seven-line interface first | keep minimal composition+N; build DLM self-intent heads; restore old free-text Planner | C3FD already has the renderer and active lattice/volume heads; this is the shortest story-consistent recovery test and preserves 100% composition validity | proposed |
-| Treat SG bucket as compiler-derived, not an independent structural signal | independently sample SG head; hard-enforce SG; remove the line | current sampler maps lattice one-to-one to SG bucket, so it adds no sampled information; the line may still preserve historical prompt compatibility | proposed pending metric audit |
+| Test SG sampling from the separately supervised rich head | keep one-to-one compiler; hard-enforce SG; remove the line | target metric lattice and SG are separately derived; CPU val shows H(SG\|metric lattice)=0.881 nats and SG-head top-1 accuracy 60.6% versus compiler 26.8--27.5% | deployment hypothesis reopened after metric audit; pending sampling/downstream evidence |
 | Give volume highest field priority and lattice an uncertainty-aware soft role | use all fields equally; use VPA/CN self-intent; no structural context | historical volume association is modestly favorable; lattice/SG endpoint evidence is mixed/adverse; field-level validation and canary are still required | proposed pending audit |
 | Use a three-arm six-cell recovery canary | full rich versus minimal only; unknown-token neutralization; many field subsets; train immediately | `R0-RCF` uses in-vocabulary, marginal-preserving counterfactual fields within one rich DLM; `R0-M0` measures practical package recovery; avoids a downstream field sweep | revised |
 | Initialize stability training from a demonstrated rich-compatible DLM | continue current minimal BASE; train new architecture from scratch | historical rich lineage retained better raw/S.U.N. behavior; the sprint should recover first and then optimize stability | proposed pending checkpoint verification |
@@ -50,7 +50,7 @@ Disposition received: **REVISE**. All eight objections were accepted.
 | Unknown-token neutralization is OOD and not implemented | Replaced `RH` with a pre-frozen, in-vocabulary, marginal-preserving `RCF` permutation; no unknown token. |
 | Three arms cannot fully identify field quality | Claim narrowed: `R0-RCF` tests composition alignment, `R0-M0` is package recovery, and neither is oracle accuracy. |
 | 32--64 rows cannot establish recovery | Development cohort fixed at 256 chemsys-held-out rows; interpretation is continuous orientation, not a final population claim. |
-| Five trained heads were misdescribed as five active predictions | Corrected: only lattice and volume are rich-logit sampled; anion/charge are hard-derived; SG is compiled. |
+| Five trained heads were misdescribed as five active predictions | Historical deployment used only lattice/volume. The corrected interface uses lattice/SG/volume; anion/charge remain hard-derived. |
 | Active rich fields lack calibration evidence | Per-field NLL/accuracy/majority/ECE/ordinal/seed audit is now required before GPU. |
 | Raw execution alone could promote a thermodynamically useless route | Split interpretation: execution-only recovery may initialize training but is never called stability evidence; energy alignment remains required. |
 | Frozen-ledger and Stable-DLM code paths are unproven | Added fail-closed code preflight. No GPU starts until ledger support, parser, wrapper, hashes, and tests are demonstrated. |
@@ -83,7 +83,46 @@ objections were accepted.
 | Too many apparent hard gates | Clarified that there is one compound execution gate plus the deadline; all other checklist rows are evidence items or graded result classes. |
 | Six-A800 language was ambiguous | Corrected to six maximum concurrent A800s and added cumulative GPU-hour/peak/remaining reporting. |
 | Refined-only gain conflicted with Stable-DLM claim | Stable-DLM contribution now requires replicated raw improvement; refined-only is labelled refiner-mediated. |
-| Two-to-three contributions looked precommitted | Final report must mark each as supported/candidate/unsupported; only lattice and volume receive predicted-rich credit, and frozen diffusion is not automatically a new algorithmic contribution. |
+| Two-to-three contributions looked precommitted | Final report must mark each as supported/candidate/unsupported; only lattice, SG and volume receive predicted-rich credit, and frozen diffusion is not automatically a new algorithmic contribution. |
+
+## Evidence-triggered SG decision amendment
+
+The final review had treated SG as redundant because it inspected deployed
+sampling, where SG was compiled one-to-one from lattice. Job `38319` re-read the
+original 9,047-row validation labels and both frozen Planner checkpoints. It
+established that `lattice_system` is a metric-cell class from lengths/angles,
+whereas `spacegroup_bucket` is a symmetry label from metadata. The target
+conditional entropy is `H(SG | metric lattice)=0.8813` nats; one-to-one map
+agreement is only `42.60%` and is not automatically an inconsistency.
+
+The unused, separately supervised SG heads achieve `60.61/60.66%` top-1
+accuracy, versus
+`26.78/27.50%` for the current lattice compiler. Lattice+SG joint accuracy is
+`48.51/48.77%`, and predicted joint TVD is `0.144/0.128`. This original-label
+evidence is sufficient cause to reopen the earlier SG decision, but it does not
+prove better sampled Plans or downstream stability. The proposed
+minimal code change samples SG after the existing lattice and volume draws so
+composition, lattice and volume RNG should be preserved for the same
+seed/ordinal; a byte-level regression test must prove that condition.
+It changes no DLM, composition, refiner or outcome criterion.
+
+Skeptic amendment review: **REVISE**, all four objections accepted. “Separately
+supervised head” does not mean physical/statistical independence; downstream
+superiority remains a hypothesis; RNG preservation requires a checked
+regression; and `R0-RCF` is limited to alignment of the three soft fields, not
+overall composition alignment or an SG-only effect.
+
+Constraint Guardian amendment review: **ACCEPT with three execution
+conditions**. The SG draw must occur after volume; composition/lattice/volume
+must remain byte-identical for identical assets/seeds/ordinals; and the
+zero-GPU regression must archive code/contract/test hashes before any canary.
+
+User Advocate amendment review: **ACCEPT**. The text now separates label
+predictability, the sampler hypothesis and downstream stability, and explains
+why the old roughly 41% one-to-one metric/SG rate is not an error rate.
+
+SG amendment Arbiter disposition: **APPROVED**. Implementation may proceed only
+through the frozen zero-GPU RNG/serialization regression before any canary.
 
 ## First Arbiter review
 

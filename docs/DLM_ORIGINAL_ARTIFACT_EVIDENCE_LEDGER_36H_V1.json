@@ -1,0 +1,1350 @@
+{
+  "schema": "dlm_original_artifact_evidence_ledger_36h_v1",
+  "version": "1.0",
+  "audit_date": "2026-08-30",
+  "workspace": "D:/codex_work/ai4s/DLM_rich_planner_audit",
+  "head_commit_at_audit": "79ac47d453b58e163e2e9950ca3ccbdf03a0df07",
+  "read_only_evidence_refs": {
+    "codex/evidence-first-sun-msun": "5fca5c9cd06bdbdda7c83c2cf2b37a3b891f9ee0",
+    "main": "f78b38f1166d2037ea6bce825db9a705e6a70fac"
+  },
+  "policy": {
+    "primary_evidence_order": [
+      "attempt-level JSONL and immutable input/run manifest",
+      "machine-readable terminal JSON/CSV and success/failure marker",
+      "frozen execution source and scientific contract",
+      "curated summary or narrative locator"
+    ],
+    "summary_rule": "A summary may locate an experiment or preserve a secondary number, but it is never promoted to an original metric-bearing artifact.",
+    "missing_rule": "When the original run output, attempt ledger, manifest copy, or terminal report is absent, the field is explicitly marked missing; no numerator, seed, process independence, or causal explanation is reconstructed from prose.",
+    "denominator_rule": "All-attempt denominators are primary when serialized. Hull-known and reconstructed denominators are reported only when the artifact labels them explicitly. Unknown hull values are missing, never silently unstable.",
+    "git_object_rule": "git:<ref>@<commit>:<path> denotes an immutable blob readable from the local Git object database but not checked out in this worktree."
+  },
+  "evidence_grades": {
+    "G4": "Complete attempt-level rows plus immutable manifests/hashes, terminal report, and matching source are locally available.",
+    "G3": "Machine-readable terminal JSON/CSV plus source/contract are available, but complete attempt-level rows are not copied into this worktree.",
+    "G2": "Partial original evidence or an aggregate report plus frozen manifests/source is available; the complete metric lineage is not locally recomputable.",
+    "G1": "Only a curated summary, source constant, or remote locator is available; outcome metrics are secondary_only.",
+    "G0": "No executed metric-bearing artifact is available."
+  },
+  "global_findings": [
+    "The current runs directory contains only README.md; historical run roots are not checked out.",
+    "R03 has immutable Git-object evidence, including attempt-level first256 artifacts and machine-readable replay terminals. R5C, H1-B, H1-A2 exact/continuous, SGTC L6, D3PO fixed256 terminal outputs, and tau900/1000 do not have complete original artifacts in the audited checkout.",
+    "R03 historical D2 117/496 and clean-cache replay 120/500 are different evaluation versions and must not be merged.",
+    "C3FD-v2.5 requested1000 JSON has a stale claim_boundary string saying requested256 even though its cells and gate serialize requested1000; the stale string is not used as evidence.",
+    "The L6 condition/schedule artifact labels full_axis as full_plan_state and hard_axis as hard_anchor_only. It does not justify relabeling full_axis as a pure minimal prompt.",
+    "No SGTC L6 terminal JSON/CSV or run manifest copy is present; the L7 contract's statement that L6 authorized L7 is not a substitute.",
+    "No D3PO_TRAIN_FINAL, D3PO_GENERATION_FINAL, or D3PO_FIXED256_OFFICIAL_FINAL artifact is present in the worktree or inspected Git history."
+  ],
+  "entries": [
+    {
+      "id": "R5C_EXACT_DYNAMIC",
+      "item": "R5C fixed-slot preflight and exact-dynamic body lineage",
+      "status": "missing_original_metric_artifact",
+      "artifact_paths": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256",
+          "availability": "remote_locator_only",
+          "role": "historical training/run root from docs/ASSET_TRANSFER_LEDGER.md",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "git:main@f78b38f1166d2037ea6bce825db9a705e6a70fac:legacy_dlm_r5c/crystal_dlm/r5_dynamic_length.py",
+          "availability": "git_object",
+          "role": "exact dynamic 7+4N representation source",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "git:main@f78b38f1166d2037ea6bce825db9a705e6a70fac:legacy_dlm_r5c/launchers/pre_wyckoff/a800/run_r5c_de_novo_1000_sun.sh",
+          "availability": "git_object",
+          "role": "requested1200 to refined1000 execution source",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "results/remote_screens/DLM_CAPABILITY_REGRESSION_36H.json",
+          "availability": "worktree",
+          "role": "secondary summary only",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": {
+        "fixed_slot_preflight": "missing; secondary material says answer_token_count=107",
+        "exact_dynamic": "secondary_only: requested=1200, graphs=1167; refined view=1000"
+      },
+      "seed_process_unit": "missing: data seed is mentioned elsewhere, but the historical global training seed, inference seed, rank/process manifest, and per-attempt ledger are not present.",
+      "exact_metric": [
+        {
+          "name": "graph_yield",
+          "value": "1167/1200 = 0.9725",
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "refined1000_composition_valid_rate",
+          "value": 0.907,
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "refined1000_structure_valid_rate",
+          "value": 0.998,
+          "source_status": "secondary_only_not_original"
+        }
+      ],
+      "success_reason": "Source code verifies exact dynamic 7+4N construction and the historical launcher verifies a structured Plan-conditioned body/refiner path. The reported high graph and refined-validity numbers are plausible secondary observations, not locally recomputable outcomes.",
+      "failure_reason": "The original run manifest, logs, sample metrics, proposal graphs, refined outputs, and attempt ledger are missing. The reported view is replay/structured-conditioning compatible and does not establish de-novo S.U.N.",
+      "supported_claims": [
+        "R5C supplied the exact-dynamic 7+4N executor design and a recoverable checkpoint locator.",
+        "The available source supports retiring padded fixed-slot targets in favor of dynamic exact length."
+      ],
+      "prohibited_claims": [
+        "R5C achieved a verified de-novo stability headline.",
+        "1167/1200 or 90.7/99.8 is primary evidence in this checkout.",
+        "Padding removal, a particular seed, or R5C alone caused stability."
+      ],
+      "evidence_grade": {
+        "code": "G1",
+        "reason": "Only source, remote locator, and secondary summary are available."
+      },
+      "missing": [
+        "run scientific_contract/manifest copy",
+        "training and inference seed record",
+        "attempt-level generation/refinement/evaluation outputs",
+        "terminal metric JSON/CSV"
+      ]
+    },
+    {
+      "id": "H1B_FORMULA_ONLY",
+      "item": "H1-B formula-only body",
+      "status": "missing_original_metric_artifact",
+      "artifact_paths": [
+        {
+          "path": "src/crystal_dlm/h1_formula_only_body.py",
+          "availability": "worktree",
+          "role": "formula, elements, counts, and N-only prompt/executor source",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "git:main@f78b38f1166d2037ea6bce825db9a705e6a70fac:legacy_dlm_r5c/launchers/pre_wyckoff/a800/run_h1_formula_only_dlm_body.sh",
+          "availability": "git_object",
+          "role": "historical execution source",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "results/remote_screens/DLM_CAPABILITY_REGRESSION_36H.json",
+          "availability": "worktree",
+          "role": "secondary summary only",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "missing: the summary serializes rates but no requested count or numerator.",
+      "seed_process_unit": "missing: no H1-B run manifest, seed ledger, or attempt rows are available.",
+      "exact_metric": [
+        {
+          "name": "body_success",
+          "value": "1.0 rate; numerator/denominator missing",
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "strict_sun_rate",
+          "value": 0.0554,
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "meta_sun_rate",
+          "value": 0.4313,
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "all_angles_90_rate",
+          "value": 0.8157,
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "repeated_two_lengths_rate",
+          "value": 0.5333,
+          "source_status": "secondary_only_not_original"
+        }
+      ],
+      "success_reason": "The source confirms exact formula/N anchoring and dynamic-body generation, so syntactic/body execution is technically supported.",
+      "failure_reason": "The secondary geometry statistics indicate common-template collapse under formula-only conditioning, but the original rows needed to verify the percentages and denominator are missing.",
+      "supported_claims": [
+        "Formula-only conditioning is materially weaker than rich structural conditioning at the interface level.",
+        "Body execution success alone is not evidence of geometry or thermodynamic quality."
+      ],
+      "prohibited_claims": [
+        "The four percentages are primary audited outcomes.",
+        "H1-B establishes a causal template-collapse rate or a seed-robust effect.",
+        "Formula-only conditioning is universally insufficient."
+      ],
+      "evidence_grade": {
+        "code": "G1",
+        "reason": "Metric-bearing artifact and denominator are missing."
+      },
+      "missing": [
+        "requested count and numerators",
+        "generation/evaluation rows",
+        "seed/process manifest",
+        "geometry diagnostic CSV/JSON"
+      ]
+    },
+    {
+      "id": "H1A2_HISTORICAL_COMPATIBILITY",
+      "item": "H1-A2 historical compatibility view",
+      "status": "secondary_aggregate_only",
+      "artifact_paths": [
+        {
+          "path": "results/internal_results.json",
+          "availability": "worktree",
+          "role": "curated personal-result aggregate",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "results/reference_results.json",
+          "availability": "worktree",
+          "role": "curated public-reference aggregate",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_planner1200",
+          "availability": "remote_locator_only",
+          "role": "raw/parsed Plan locator from docs/ASSET_TRANSFER_LEDGER.md",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "src/h1a2_repro/science.py",
+          "availability": "worktree",
+          "role": "paper-facing defaults explicitly preserving missing seed fields",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "historical compatibility: 1000 attempts; survivor/freeze selection details are not present as a local manifest.",
+      "seed_process_unit": "single historical process view. Planner train seed 17 is preserved in source/config summaries; DLM global training seed and DLM/diffusion inference seeds remain unknown. It is not an independent-seed replication.",
+      "exact_metric": [
+        {
+          "name": "strict_sun",
+          "value": "94/1000 = 0.094",
+          "source_status": "secondary_aggregate_only"
+        },
+        {
+          "name": "meta_sun",
+          "value": "474/1000 = 0.474",
+          "source_status": "secondary_aggregate_only"
+        },
+        {
+          "name": "novel_unique",
+          "value": "890/1000 = 0.890",
+          "source_status": "secondary_aggregate_only"
+        }
+      ],
+      "success_reason": "Two curated JSON copies agree on 94/474, and checkpoint/Plan locators identify the rich-Plan epoch2 lineage.",
+      "failure_reason": "No local frozen1000 attempt ledger, input manifest, outcome rows, or evaluator manifest exists. The view is survivor/process compatible and cannot explain the separate public 105/488 aggregate.",
+      "supported_claims": [
+        "94/474 is the preserved historical compatibility reference.",
+        "Historical rich-Plan generation reached a useful basin in one process view."
+      ],
+      "prohibited_claims": [
+        "94/474 is a replicated architecture effect.",
+        "105/488 can be reconstructed from this frozen1000 artifact.",
+        "The historical improvement is attributable to a known DLM or refiner seed."
+      ],
+      "evidence_grade": {
+        "code": "G1",
+        "reason": "Only curated aggregates and remote locators are present."
+      },
+      "missing": [
+        "frozen1000 manifest and selection rule",
+        "attempt-level outcomes",
+        "DLM/refiner inference seeds",
+        "evaluator/cache manifest"
+      ]
+    },
+    {
+      "id": "H1A2_EXACT_ALL_ATTEMPT",
+      "item": "H1-A2 exact all-attempt replay",
+      "status": "secondary_aggregate_only",
+      "artifact_paths": [
+        {
+          "path": "results/reference_results.json",
+          "availability": "worktree",
+          "role": "curated exact-all-attempt aggregate",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "src/h1a2_repro/science.py",
+          "availability": "worktree",
+          "role": "duplicated paper-facing constants",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "requested=1200; serialized hull_known=1132 and hull_unknown=32. The attempt/reconstruction ledger is missing.",
+      "seed_process_unit": "missing: replay seed, world/rank process mapping, and attempt-level seed ledger are not locally available.",
+      "exact_metric": [
+        {
+          "name": "strict_sun",
+          "value": "103/1200 = 0.08583333333333333",
+          "source_status": "secondary_aggregate_only"
+        },
+        {
+          "name": "meta_sun",
+          "value": "553/1200 = 0.4608333333333333",
+          "source_status": "secondary_aggregate_only"
+        },
+        {
+          "name": "hull_known_unknown",
+          "value": "1132/32",
+          "source_status": "secondary_aggregate_only"
+        }
+      ],
+      "success_reason": "The aggregate uses the requested1200 denominator and therefore avoids a frozen-success survivor denominator.",
+      "failure_reason": "The original attempt labels, generation failures, manifest, and evaluator cache are absent; the aggregate cannot be independently recomputed.",
+      "supported_claims": [
+        "The exact all-attempt reference is lower than the historical compatibility reference.",
+        "Accounting/selection changes materially affect the H1-A2 headline."
+      ],
+      "prohibited_claims": [
+        "This is an independent training-seed replication.",
+        "The exact replay fully explains the historical-to-current regression.",
+        "The serialized counts are primary original evidence."
+      ],
+      "evidence_grade": {
+        "code": "G1",
+        "reason": "Curated aggregate only."
+      },
+      "missing": [
+        "attempt ledger",
+        "run manifest",
+        "seed/process mapping",
+        "original terminal report"
+      ]
+    },
+    {
+      "id": "H1A2_CONTINUOUS_REPLAY",
+      "item": "H1-A2 continuous replay",
+      "status": "missing_original_metric_artifact",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/DLM_CAPABILITY_REGRESSION_36H.json",
+          "availability": "worktree",
+          "role": "rounded secondary summary only",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "secondary_only pooled=3840; constituent repeat denominators and reconstructed/hull-known denominators are missing.",
+      "seed_process_unit": "missing: the summary says pooled continuous repeats but does not serialize constituent seeds or prove independence.",
+      "exact_metric": [
+        {
+          "name": "strict_sun_rate",
+          "value": 0.0763,
+          "source_status": "rounded_secondary_only"
+        },
+        {
+          "name": "meta_sun_rate",
+          "value": 0.4547,
+          "source_status": "rounded_secondary_only"
+        }
+      ],
+      "success_reason": "The preserved summary records a pooled sensitivity view.",
+      "failure_reason": "No original terminal JSON/CSV, per-repeat rows, numerators, cache manifest, or process ledger was found; pooled3840 cannot be treated as 3840 independent samples.",
+      "supported_claims": [
+        "A secondary continuous replay reference exists and is below the historical compatibility point."
+      ],
+      "prohibited_claims": [
+        "Exact numerators or independent-replicate confidence can be inferred from the rounded rates.",
+        "The continuous replay is primary audited evidence.",
+        "It establishes seed-robust H1-A2 performance."
+      ],
+      "evidence_grade": {
+        "code": "G1",
+        "reason": "Original artifact is missing; only rounded summary fields remain."
+      },
+      "missing": [
+        "terminal JSON/CSV",
+        "numerators",
+        "per-repeat seeds and rows",
+        "manifest/cache lineage"
+      ]
+    },
+    {
+      "id": "R03_D1_D2_HISTORICAL",
+      "item": "R03 D1 exact-axis versus D2 safe-axis historical four-process panel",
+      "status": "partially_original_verified",
+      "artifact_paths": [
+        {
+          "path": "git:main@f78b38f1166d2037ea6bce825db9a705e6a70fac:workstreams/plangraph_dlm_iclr_20260731/H1_R03_SAFE_AXIS_REPRODUCIBILITY_REPORT_V1.md",
+          "availability": "git_object",
+          "role": "aggregate result and source/run hash report",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "git:main@f78b38f1166d2037ea6bce825db9a705e6a70fac:workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/EXECUTION_MANIFEST.json",
+          "availability": "git_object",
+          "role": "frozen four-process execution manifest",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "git:codex/evidence-first-sun-msun@5fca5c9cd06bdbdda7c83c2cf2b37a3b891f9ee0:workstreams/final_method_development_20260808/evidence/h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/control/generation/generation.jsonl",
+          "availability": "git_object",
+          "role": "attempt-level archived first256 D1 replay",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "git:codex/evidence-first-sun-msun@5fca5c9cd06bdbdda7c83c2cf2b37a3b891f9ee0:workstreams/final_method_development_20260808/evidence/h1_r03_h1a2_archived_first256_downstream_repair_v4/arms/candidate/generation/generation.jsonl",
+          "availability": "git_object",
+          "role": "attempt-level archived first256 D2 replay",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "src/r03/safe_axis_schedule.py",
+          "availability": "worktree",
+          "role": "coverage, no-mixed-axis, and all-X/Y-before-Z invariant",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "4 process repeats x 256 frozen Plans = 1024 attempts per arm; all upstream failures remain in the denominator.",
+      "seed_process_unit": "Four independent CUDA process realizations reuse one frozen first256 Plan cohort and one scientific ordinal ledger. They are not four independent Planner samples or training seeds.",
+      "exact_metric": [
+        {
+          "name": "D1_strict_meta",
+          "value": "99/1024 = 0.0966796875; 523/1024 = 0.5107421875",
+          "source_status": "aggregate_report_with_partial_attempt_evidence"
+        },
+        {
+          "name": "D2_strict_meta",
+          "value": "117/1024 = 0.1142578125; 496/1024 = 0.484375",
+          "source_status": "aggregate_report_with_partial_attempt_evidence"
+        },
+        {
+          "name": "D1_direct",
+          "value": "generation=984, composition=848, structure=982, joint=846 of 1024",
+          "source_status": "aggregate_report"
+        },
+        {
+          "name": "D2_direct",
+          "value": "generation=992, composition=852, structure=989, joint=851 of 1024",
+          "source_status": "aggregate_report"
+        }
+      ],
+      "success_reason": "The safe-axis compiler preserves exact 7+4N coverage, eliminates mixed-axis coordinate groups, and requires every X/Y group before every Z group. In the registered panel D2 increased completion and Strict by 18 counts.",
+      "failure_reason": "D2 reduced Meta by 27 counts, reused one Plan cohort, and the continuous refiner is process-sensitive. Complete four-repeat attempt rows are not copied into the audited branch.",
+      "supported_claims": [
+        "Coordinate commitment order is an executable design variable.",
+        "Within this frozen cohort/process panel, D2 trades higher Strict for lower Meta.",
+        "The four rows are process repeats, not independent Planner-seed replication."
+      ],
+      "prohibited_claims": [
+        "D2 broadly improves stability.",
+        "Four repeats are four independent scientific sample sets.",
+        "The +18 Strict difference generalizes beyond the archived cohort.",
+        "Historical frozen-cache counts may be mixed with clean-cache replay counts."
+      ],
+      "evidence_grade": {
+        "code": "G2",
+        "reason": "Frozen manifests/source and first256 attempt artifacts exist, but the complete four-repeat metric rows are absent."
+      },
+      "missing": [
+        "complete four-repeat attempt-level result rows",
+        "locally copied ordinal seed ledger",
+        "one immutable all-cell terminal JSON"
+      ]
+    },
+    {
+      "id": "R03_D2_CLEAN_CACHE_REPLAY",
+      "item": "R03 D2 frozen-trajectory clean official-cache replay",
+      "status": "verified_machine_readable_terminal",
+      "artifact_paths": [
+        {
+          "path": "git:codex/evidence-first-sun-msun@5fca5c9cd06bdbdda7c83c2cf2b37a3b891f9ee0:workstreams/final_method_development_20260808/evidence/h1_r03_refined256_current_sun_cache_replay_v2/terminal_report.json",
+          "availability": "git_object",
+          "role": "machine-readable four-repeat replay terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "git:codex/evidence-first-sun-msun@5fca5c9cd06bdbdda7c83c2cf2b37a3b891f9ee0:workstreams/final_method_development_20260808/evidence/h1_r03_refined256_current_sun_cache_replay_v2/repeats",
+          "availability": "git_object",
+          "role": "four attempt_summary.json and repeat_validation.json files",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "git:codex/evidence-first-sun-msun@5fca5c9cd06bdbdda7c83c2cf2b37a3b891f9ee0:workstreams/final_method_development_20260808/evidence/h1_sun_official_gga_u_skip_unknown_reeval_v2/terminal_report.json",
+          "availability": "git_object",
+          "role": "clean GGA/GGA+U cell report and old-to-clean comparison",
+          "original_metric_bearing": true
+        }
+      ],
+      "denominator": "4 x 256 = 1024 all attempts; each repeat has 9 hull-unknown attempts and 247 all-attempts-skip-unknown.",
+      "seed_process_unit": "Same frozen first256 cohort; repeat role is serialized as independent_cuda_process_realization_on_same_frozen_first256_cohort. pooled_1024_independence_assumed=false.",
+      "exact_metric": [
+        {
+          "name": "clean_per_repeat_strict",
+          "value": "[28,32,30,30], pooled 120/1024 = 0.1171875",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "clean_per_repeat_meta",
+          "value": "[122,125,126,127], pooled 500/1024 = 0.48828125",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "historical_old_counts_in_same_terminal",
+          "value": "Strict 117/1024; Meta 496/1024",
+          "source_status": "original_terminal_old_field"
+        }
+      ],
+      "success_reason": "The replay preserves byte-frozen historical refined trajectories while completing a clean compatible-entry cache and explicitly retaining hull unknowns.",
+      "failure_reason": "It is evaluation-only: generation/refinement were not rerun, repeats share one cohort, and the clean counts differ from the old frozen-cache counts.",
+      "supported_claims": [
+        "The archived D2 trajectory remains a real high point under clean-cache re-evaluation.",
+        "Evaluator/cache version changes move the exact historical count."
+      ],
+      "prohibited_claims": [
+        "120/500 is a new generation replication.",
+        "The four process realizations are independent Planner seeds.",
+        "120/500 and 117/496 are interchangeable."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Machine-readable terminal, per-repeat summaries, validation files, and cache manifest are present as immutable Git objects; complete attempt rows are not copied."
+      },
+      "missing": [
+        "complete per-attempt clean result JSONL in the inspected evidence directory"
+      ]
+    },
+    {
+      "id": "R03_CORRECTED_REPLAYS",
+      "item": "R03 corrected exact and continuous replay references",
+      "status": "missing_original_metric_artifact",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/DLM_CAPABILITY_REGRESSION_36H.json",
+          "availability": "worktree",
+          "role": "rounded secondary summary only",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "exact secondary_only requested=1200; continuous secondary_only pooled=3840.",
+      "seed_process_unit": "missing: constituent seed/process manifests are absent; no independence assumption is allowed.",
+      "exact_metric": [
+        {
+          "name": "exact_replay_strict_meta_rates",
+          "value": "0.0842 / 0.4658",
+          "source_status": "rounded_secondary_only"
+        },
+        {
+          "name": "continuous_replay_strict_meta_rates",
+          "value": "0.0747 / 0.4526",
+          "source_status": "rounded_secondary_only"
+        }
+      ],
+      "success_reason": "The summary preserves corrected reference rates for sensitivity comparisons.",
+      "failure_reason": "No original terminal JSON/CSV, numerators, attempt rows, cache manifest, or process ledger exists in the audited checkout.",
+      "supported_claims": [
+        "Secondary corrected R03 references are lower than the historical D2 point."
+      ],
+      "prohibited_claims": [
+        "Exact numerators or uncertainty can be inferred from rounded rates.",
+        "The corrected replay is primary evidence.",
+        "R03 is seed-robust."
+      ],
+      "evidence_grade": {
+        "code": "G1",
+        "reason": "Summary only."
+      },
+      "missing": [
+        "exact/continuous terminal artifacts",
+        "numerators",
+        "per-process seeds and rows"
+      ]
+    },
+    {
+      "id": "RICH_SFT_EPOCH2_EPOCH3",
+      "item": "Rich-Plan ordinary SFT total epoch2 versus epoch3",
+      "status": "verified_machine_readable_terminal",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/DLM_SUFFICIENT_RAW1000_FINAL.json",
+          "availability": "worktree",
+          "role": "machine-readable terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/DLM_SUFFICIENT_RAW1000_FINAL.csv",
+          "availability": "worktree",
+          "role": "cell/round metric table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "slurm/33_dlm_sufficient_raw1000_two500.sbatch",
+          "availability": "worktree",
+          "role": "generation scientific contract and seeds",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "scripts/finalize_dlm_sufficient_raw1000.py",
+          "availability": "worktree",
+          "role": "terminal finalizer",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "1000 requested per checkpoint, split into frozen first500/last500 global ordinals; all-attempt S.U.N. denominator=1000.",
+      "seed_process_unit": "One shared DLM seed 17117 and refiner seed 27117, seed-by-sample-index, same frozen Plan cohort and stream. Checkpoints are step696 (epoch2) and step2392 (epoch3); this is not two independent training seeds.",
+      "exact_metric": [
+        {
+          "name": "epoch2",
+          "value": "body 985/1000; Direct joint 871/1000; Strict 81/1000; Meta 489/1000; hull known/unknown 958/27",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "epoch3",
+          "value": "body 992/1000; Direct joint 878/1000; Strict 79/1000; Meta 477/1000; hull known/unknown 965/27",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "paired_known_both",
+          "value": "956; Strict McNemar candidate/control-only 19/21, p=0.8746293124; Meta 81/96, p=0.2926371082",
+          "source_status": "original_terminal"
+        }
+      ],
+      "success_reason": "Additional CE training improved body and Direct execution by 7 counts on the same cohort/stream.",
+      "failure_reason": "Strict fell by 2 and Meta by 12; the frozen epoch3 selection gate failed meta_noninferior and strict_noninferior, so epoch2 remained selected.",
+      "supported_claims": [
+        "Ordinary CE can improve execution while failing to improve thermodynamic endpoints.",
+        "Epoch2 is the selected checkpoint under the serialized Pareto gate."
+      ],
+      "prohibited_claims": [
+        "Epoch3 improves stability.",
+        "The epoch effect is replicated across training seeds.",
+        "Minimum validation CE is a valid stability checkpoint selector."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Terminal JSON/CSV and exact execution source are present; raw attempt labels and run manifest copy are not."
+      },
+      "missing": [
+        "raw generation/evaluation JSONL",
+        "copied run scientific_contract.tsv and output hash manifest"
+      ]
+    },
+    {
+      "id": "COUNTERFACTUAL_GROUNDING",
+      "item": "Counterfactual grounding mechanism, repeat4, checkpoint sweep, and fixed1000",
+      "status": "verified_machine_readable_negative",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.json",
+          "availability": "worktree",
+          "role": "four-repeat terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.csv",
+          "availability": "worktree",
+          "role": "eight cell table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/GROUNDING_FIXED1000_FINAL.json",
+          "availability": "worktree",
+          "role": "fresh requested1000 terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/GROUNDING_CHECKPOINT_SWEEP_FINAL.json",
+          "availability": "worktree",
+          "role": "step500/1000/1696 diagnostic",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/GROUNDING_OFFICIAL_INPUT_MANIFEST.json",
+          "availability": "worktree",
+          "role": "eight-cell input hashes and denominators",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "results/remote_screens/GROUNDING_OFFICIAL_COMPLETION_MANIFEST.json",
+          "availability": "worktree",
+          "role": "fresh official GGA/GGA+U cache manifest",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "slurm/23_grounding_repeat4.sbatch",
+          "availability": "worktree",
+          "role": "paired repeat seeds",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "repeat4: 4 x 256=1024 per arm; fixed confirmation: 1000 per arm; checkpoint sweep: 256 per arm at each of steps 500, 1000, 1696.",
+      "seed_process_unit": "repeat4 DLM seeds [17117,17217,17317,17417], refiner seeds [27117,27217,27317,27417], same frozen 256 Plans and paired arm streams. fixed1000 uses DLM 18117/refiner 28117 on first1000 parsed Plans with no survivor filtering.",
+      "exact_metric": [
+        {
+          "name": "mechanism",
+          "value": "candidate true-vs-counterfactual margin=0.7591561057; candidate-control factual val CE=-0.0004459551",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "repeat4_pooled",
+          "value": "control body/direct/Strict/Meta=1017/920/103/472; candidate=1020/923/105/460; Strict +2, Meta -12 of 1024",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "fixed1000",
+          "value": "control Strict/Meta=89/487; candidate=86/467; deltas -3/-20 of 1000",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "checkpoint_sweep",
+          "value": "step500 Strict/Meta delta +3/-1; step1000 +3/+4; step1696 -5/-2, each over 256; qualifying_steps=[]",
+          "source_status": "original_terminal"
+        }
+      ],
+      "success_reason": "The candidate learned the intended factual-versus-counterfactual separation and preserved body/Direct execution in repeat4.",
+      "failure_reason": "Endpoint direction was non-monotonic across checkpoints, repeat4 lost Meta, and the fresh fixed1000 confirmation lost both Strict and Meta. The contribution gate is false and no checkpoint qualifies.",
+      "supported_claims": [
+        "Counterfactual grounding changes the intended training mechanism.",
+        "Mechanism movement did not translate into a reproducible S.U.N. improvement.",
+        "The fixed1000 result is a formal negative under the frozen cohort."
+      ],
+      "prohibited_claims": [
+        "Step500 or step1000 may be selected post hoc.",
+        "A better NLL or counterfactual margin implies stability.",
+        "The +2/1024 Strict point is a positive contribution result."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Terminal JSON/CSV, input hashes, fresh-cache completion manifest, seeds, and source are present; attempt JSONL is remote-only."
+      },
+      "missing": [
+        "locally copied attempt_labels_preofficial JSONL files referenced by the manifest"
+      ]
+    },
+    {
+      "id": "C3FD_V2",
+      "item": "C3FD-v2 initial requested1000 composition planner",
+      "status": "verified_machine_readable_no_go",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/C3FD_PLANNER_FINAL.json",
+          "availability": "worktree",
+          "role": "two-seed requested1000 terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/C3FD_PLANNER_FINAL.csv",
+          "availability": "worktree",
+          "role": "cell metric table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "scripts/finalize_c3fd_planner.py",
+          "availability": "worktree",
+          "role": "finalizer",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "seeds 17 and 18, each requested1000 per arm; pooled=2000 per arm.",
+      "seed_process_unit": "Two Planner sample seeds 17 and 18. The serialized unit is requested formula/Plan attempt; no structure/refiner stage is part of this result.",
+      "exact_metric": [
+        {
+          "name": "pooled_legacy_comp_valid",
+          "value": "P0 1724/2000=0.862; C3FD-v2 1972/2000=0.986; paired delta=0.124, CI95 [0.1080958949,0.1399041051]",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "seed_deltas",
+          "value": "seed17=+0.124; seed18=+0.124",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "drift",
+          "value": "all-metal abs=0.0745; arity TVD=0.1955; max-family abs=0.0520; N TVD=0.1620; unique 1919/2000 vs P0 1961/2000",
+          "source_status": "original_terminal"
+        }
+      ],
+      "success_reason": "Both seeds produced the same +12.4 percentage-point independent composition-validity gain.",
+      "failure_reason": "The formal gate failed distribution-drift and unique-noninferiority conditions; c3fd_v2_pass=false.",
+      "supported_claims": [
+        "C3FD-v2 improved composition correctness on both serialized seeds.",
+        "The initial model required correction for distribution drift."
+      ],
+      "prohibited_claims": [
+        "C3FD-v2 passed its full gate.",
+        "C3FD-v2 improved structure stability or S.U.N.",
+        "Composition gain alone establishes a de-novo discovery improvement."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Terminal JSON/CSV and finalizer are present; raw sampled Plans are not copied."
+      },
+      "missing": [
+        "per-attempt sampled Plan JSONL and run manifest copy"
+      ]
+    },
+    {
+      "id": "C3FD_V21_TO_V24",
+      "item": "C3FD-v2.1 scientific pilot and v2.2-v2.4 engineering correction lineage",
+      "status": "verified_pilot_no_go_and_engineering_failures",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/C3FD_V21_PILOT_FINAL.json",
+          "availability": "worktree",
+          "role": "v2.1 requested256 pilot terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/C3FD_V22_AUDIT_V1_ENGINEERING_FAILURE.json",
+          "availability": "worktree",
+          "role": "v2.2 runtime failure",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/C3FD_V22_AUDIT_V2_ENGINEERING_FAILURE.json",
+          "availability": "worktree",
+          "role": "v2.2 short-circuit recovery runtime failure",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/C3FD_V23_AUDIT_ENGINEERING_FAILURE.json",
+          "availability": "worktree",
+          "role": "v2.3 constructive witness runtime failure",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/C3FD_V24_AUDIT_ENGINEERING_FAILURE.json",
+          "availability": "worktree",
+          "role": "v2.4 bitset witness runtime failure",
+          "original_metric_bearing": true
+        }
+      ],
+      "denominator": "v2.1: seeds17/18 x requested256, pooled512 per arm. v2.2-v2.4: engineering audit runtime gates, not scientific sample denominators.",
+      "seed_process_unit": "v2.1 has two Planner seeds 17/18. v2.2-v2.4 terminate under frozen CPU runtime gates before authorized GPU/scientific sampling.",
+      "exact_metric": [
+        {
+          "name": "v2.1_pooled_comp_valid",
+          "value": "P0 438/512=0.85546875; v2.1 460/512=0.8984375; delta=0.04296875, CI95 [0.0029535650,0.0829839350]",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "v2.1_failure_metrics",
+          "value": "parse 460/512 vs P0 510/512; all-metal parsed=0.395652 vs full-train=0.349057; step5_pass=false",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "v2.2_v2.4_engineering",
+          "value": "v2.2 312s and 317s >300s; v2.3 120s runtime gate; v2.4 126s >60s, SIGTERM; v2.4 teacher witness train 24558/24558 and val 8159/8159",
+          "source_status": "original_engineering_reports"
+        }
+      ],
+      "success_reason": "v2.1 retained a positive composition delta; v2.4 established complete teacher witness coverage and progressively localized the computational bottleneck.",
+      "failure_reason": "v2.1 lost parse coverage and missed the all-metal gate. v2.2-v2.4 exceeded frozen runtime limits and explicitly serialize scientific_result=false and gpu_authorized=false.",
+      "supported_claims": [
+        "The correction lineage separated scientific pilot failure from engineering runtime failure.",
+        "Teacher witness existence was complete before the v2.5 online-canary design."
+      ],
+      "prohibited_claims": [
+        "v2.2-v2.4 produced scientific outcomes.",
+        "Timed-out audits imply poor composition quality.",
+        "Runtime gates were relaxed to obtain v2.5."
+      ],
+      "evidence_grade": {
+        "code": "G2",
+        "reason": "Machine-readable pilot/failure reports and source exist, but raw audit logs and per-attempt rows are not copied."
+      },
+      "missing": [
+        "raw pilot Plan rows",
+        "timeout process logs and immutable run manifests"
+      ]
+    },
+    {
+      "id": "C3FD_V25",
+      "item": "C3FD-v2.5 requested1000 composition correctness",
+      "status": "verified_machine_readable_success_with_claim_boundary",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.json",
+          "availability": "worktree",
+          "role": "two-seed requested1000 terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.csv",
+          "availability": "worktree",
+          "role": "pooled table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/C3FD_V25_TEACHER_WITNESS_AUDIT.json",
+          "availability": "worktree",
+          "role": "teacher witness audit",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "archives/successful_contributions_20260828/c3fd_v2_5/MANIFEST.json",
+          "availability": "worktree",
+          "role": "archive file hashes",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "archives/successful_contributions_20260828/c3fd_v2_5/CHECKPOINT_POINTERS.json",
+          "availability": "worktree",
+          "role": "seed17/18 checkpoint paths, bytes, and SHA256",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "seeds17 and18, each requested1000 per arm; pooled=2000 per arm.",
+      "seed_process_unit": "Two Planner sampling seeds 17/18 with retained, hashed seed-specific checkpoints. Statistical unit is requested formula/Plan attempt; no downstream structure/refiner outcome is included.",
+      "exact_metric": [
+        {
+          "name": "pooled_parse_formula_comp",
+          "value": "C3FD-v2.5 2000/2000 parse, formula-valid, and legacy-comp-valid; P0 legacy-comp-valid 1724/2000",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "paired_comp_delta",
+          "value": "0.138, CI95 [0.1228805891,0.1531194109], McNemar f1-only/f0-only=276/0, p=1.6472184286e-83",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "novel_unique",
+          "value": "C3FD-v2.5 1756/2000=0.878; P0 1530/2000=0.765",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "semantic_and_teacher_witness",
+          "value": "semantic_dead_ends seed17/18=0/0; teacher witness train=24558/24558, val=8159/8159",
+          "source_status": "original_terminal"
+        }
+      ],
+      "success_reason": "Exact online witness decoding removed semantic dead ends and yielded 100% parse/formula/composition validity on both requested1000 seeds while passing serialized distribution gates.",
+      "failure_reason": "This is composition-only evidence. There is no structure, energy, hull, Direct, or S.U.N. endpoint. The JSON's claim_boundary text is stale and says requested256 despite requested1000 cells/gate.",
+      "supported_claims": [
+        "C3FD-v2.5 is a two-seed composition-correctness contribution.",
+        "The archived seed checkpoints and result files have a frozen hash manifest."
+      ],
+      "prohibited_claims": [
+        "C3FD-v2.5 improves structure stability, S.U.N., or external SOTA.",
+        "The stale requested256 claim_boundary string overrides the requested1000 data.",
+        "Composition correctness proves downstream realization quality."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Terminal JSON/CSV, teacher audit, checkpoint hashes, and archive manifest are present; sampled Plan JSONL is not."
+      },
+      "missing": [
+        "per-attempt requested1000 Plan rows",
+        "downstream structure/stability evidence"
+      ]
+    },
+    {
+      "id": "MINIMAL_L6",
+      "item": "L6 conditioning x coordinate-schedule diagnostic used as the minimal-executor bridge",
+      "status": "verified_with_label_boundary",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/DLM_CONDITION_SCHEDULE_L6_FINAL.json",
+          "availability": "worktree",
+          "role": "eight-cell L6 terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/DLM_CONDITION_SCHEDULE_L6_FINAL.csv",
+          "availability": "worktree",
+          "role": "pooled arm table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "slurm/38_dlm_condition_schedule_l6.sbatch",
+          "availability": "worktree",
+          "role": "scientific contract, prompt-style labels, and seeds",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "seeds17/18 x 256 requested per arm; pooled repeat-sum=512 for each of full_axis, full_joint, hard_axis, hard_joint.",
+      "seed_process_unit": "DLM sampling seeds 17117/18117 and refiner seeds 27117/28117. Same L6 Plans, public H1-A2 checkpoint, tau800, no RL/rerank/CFG.",
+      "exact_metric": [
+        {
+          "name": "full_axis",
+          "value": "body 505/512; Direct joint 457/512; Strict 48/512; Meta 230/512",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "hard_axis",
+          "value": "body 512/512; Direct joint 463/512; Strict 47/512; Meta 230/512",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "full_joint",
+          "value": "body 319/512; Direct joint 295/512; Strict 29/512; Meta 146/512",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "hard_joint",
+          "value": "body 417/512; Direct joint 376/512; Strict 35/512; Meta 181/512; promote_hard_joint=false",
+          "source_status": "original_terminal"
+        }
+      ],
+      "success_reason": "Exact-axis arms preserve near-saturated body execution and much higher Direct/S.U.N. than joint-coordinate commitment. The artifact selected full_axis as the valid axis-condition arm.",
+      "failure_reason": "Joint-coordinate commitment loses 27.44 percentage points body rate and 24.32 points Direct on the factorial average; all candidate promotion gates are ineligible. The source labels full_axis as full_plan_state and hard_axis as hard_anchor_only, so a pure-minimal relabel is not warranted without the prompt rows.",
+      "supported_claims": [
+        "Exact-axis commitment is the supported L6 schedule.",
+        "Joint-coordinate commitment is a formal L6 no-go under this design.",
+        "Hard-anchor exact-axis and full-plan exact-axis have similar pooled S.U.N. but are not promoted as equivalent."
+      ],
+      "prohibited_claims": [
+        "full_axis is proven to be a pure composition+N minimal prompt.",
+        "hard_axis is a stability improvement.",
+        "The pooled512 rows are independent of the two seed blocks."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Terminal JSON/CSV and exact Slurm contract are present; prompt JSONL and raw attempt rows are not."
+      },
+      "missing": [
+        "L6 Plan/prompt JSONL and hash manifest copy",
+        "raw per-attempt body/refiner/evaluation rows"
+      ]
+    },
+    {
+      "id": "MINIMAL_L7_BASE",
+      "item": "Minimal-spec L7 base embedded in the SGTC requested1000 confirmation",
+      "status": "verified_machine_readable_terminal",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/sgtc_l7_official_final_20260829_v2/SGTC_L7_OFFICIAL_FINAL.json",
+          "availability": "worktree",
+          "role": "three-arm official terminal containing base",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/sgtc_l7_official_final_20260829_v2/SGTC_L7_OFFICIAL_FINAL.csv",
+          "availability": "worktree",
+          "role": "base/G0/G1 table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/sgtc_l7_official_final_20260829_v2/_SUCCESS",
+          "availability": "worktree",
+          "role": "terminal success marker",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "docs/SGTC_DLM_L7_CONTRACT_V1.md",
+          "availability": "worktree",
+          "role": "pre-outcome frozen contract",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "1000 requested seed18 Plans; all-attempt S.U.N. denominator=1000; base reconstructed=998, hull known/unknown=979/19.",
+      "seed_process_unit": "One downstream holdout seed18; DLM seed 92117, refiner seed 102117, temperature0.7, exact-axis, model494 tau800, one attempt per Plan. Not a multi-seed replication or globally fresh set.",
+      "exact_metric": [
+        {
+          "name": "execution",
+          "value": "parsed/body/refined=998/998/998; Direct composition/structure/joint=998/996/996",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "diversity",
+          "value": "novel/unique/novel_unique=922/995/922",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "sun",
+          "value": "Strict stable/S.U.N.=81/60; Meta stable/S.U.N.=486/412; all-attempt rates=0.060/0.412",
+          "source_status": "original_terminal"
+        }
+      ],
+      "success_reason": "Minimal-spec execution and post-refiner Direct validity are nearly saturated on the requested1000 cohort.",
+      "failure_reason": "Stable-to-novel-unique conversion remains low: Strict 60/1000 and Meta 412/1000, below the preregistered 100/500 benchmark.",
+      "supported_claims": [
+        "The minimal executor can reliably realize C3FD compositions after model494.",
+        "The remaining bottleneck is not basic parse/body execution."
+      ],
+      "prohibited_claims": [
+        "Minimal-spec base recovers historical H1-A2/R03 stability.",
+        "The one seed18 downstream holdout is an independent multi-seed confirmation.",
+        "Post-refiner Direct saturation implies raw DLM geometry quality."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Official terminal JSON/CSV, success marker, and frozen contract are present; raw attempt rows are not."
+      },
+      "missing": [
+        "raw body Direct/hull attempt JSONL",
+        "separate minimal-base run manifest copy"
+      ]
+    },
+    {
+      "id": "SGTC_L7",
+      "item": "SGTC-DLM-v1 G0/G1 requested1000 L7",
+      "status": "verified_machine_readable_scientific_negative",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/sgtc_l7_official_final_20260829_v2/SGTC_L7_OFFICIAL_FINAL.json",
+          "availability": "worktree",
+          "role": "official matched L7 terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/sgtc_l7_official_final_20260829_v2/SGTC_L7_OFFICIAL_FINAL.csv",
+          "availability": "worktree",
+          "role": "three-arm table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "docs/SGTC_DLM_V1_CONTRACT.md",
+          "availability": "worktree",
+          "role": "geometry-only curriculum definition",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "slurm/63_sgtc_l7_generation.sbatch",
+          "availability": "worktree",
+          "role": "seeds and generation contract",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "1000 requested attempts for each of base, G0-all, and G1-strict; paired known-both base comparisons=979.",
+      "seed_process_unit": "One seed18 cohort, shared DLM seed92117/refiner102117/tau800 across all arms. G0 and G1 training use the same seed81017 by contract. L7 is not a two-policy-seed replication.",
+      "exact_metric": [
+        {
+          "name": "base_G0_G1",
+          "value": "Strict=60/55/53; Meta=412/421/417; body=998/1000/1000; Direct joint=996/997/996",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "G1_minus_base_paired",
+          "value": "known_both=979; Strict delta=-0.0071501532, McNemar p=0.2649308965; Meta delta=+0.0040858018, p=0.7893959447",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "G1_minus_base_continuous",
+          "value": "refined CHGNet energy mean delta=+0.0042377500 eV/atom; official E_hull mean delta=+0.0045253027, 95% normal [-0.0003393342,+0.0093899395]",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "gate",
+          "value": "sgtc_l7_pass=false; G1 absolute 10%/50% gate false; G1-vs-G0 direction gate false",
+          "source_status": "original_terminal"
+        }
+      ],
+      "success_reason": "Geometry-only continuation preserved body/Direct/diversity floors and G0 modestly increased Meta count.",
+      "failure_reason": "The predeclared G1 candidate reduced Strict from 60 to53, reached only417 Meta, and moved mean energy/hull slightly upward (adverse); no gate passed.",
+      "supported_claims": [
+        "Positive-only strict-stable continuation did not demonstrate a fixed-composition energy boundary under this contract.",
+        "Base, G0, and G1 must all be reported; base remains the reference."
+      ],
+      "prohibited_claims": [
+        "SGTC improves stability.",
+        "This one-seed negative proves all stable-geometry curricula fail.",
+        "L6 outcomes are known: the L6 terminal artifact is missing.",
+        "Training NLL may select G0 or G1."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Official terminal JSON/CSV, continuous paired endpoints, source, and success marker are present."
+      },
+      "missing": [
+        "SGTC_L6_OFFLINE_FINAL and SGTC_L6_OFFICIAL_FINAL artifacts",
+        "L7 raw attempt JSONL and run hash manifest"
+      ]
+    },
+    {
+      "id": "D3PO_FIXED256",
+      "item": "D3PO two-seed training and fixed256 offline/official lineage",
+      "status": "missing_original_scientific_terminal",
+      "artifact_paths": [
+        {
+          "path": "slurm/65_d3po_train.sbatch",
+          "availability": "worktree",
+          "role": "frozen two-training-seed design",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "slurm/66_d3po_fixed256_generation.sbatch",
+          "availability": "worktree",
+          "role": "six-cell fixed256 generation/refinement design",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "slurm/67_d3po_fixed256_eval.sbatch",
+          "availability": "worktree",
+          "role": "raw/refined Direct and offline evaluation design",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "docs/D3PO_37966_ENGINEERING_FAILURE.md",
+          "availability": "worktree",
+          "role": "pre-update gradient-checkpointing failure report",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "docs/D3PO_38034_ENGINEERING_FAILURE.md",
+          "availability": "worktree",
+          "role": "pre-sampling sample_idx serialization failure report",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "docs/D3PO_38233_ENGINEERING_FAILURE.md",
+          "availability": "worktree",
+          "role": "pre-model late-guidance shell failure report",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "results/remote_screens/DLM_CAPABILITY_REGRESSION_36H.json",
+          "availability": "worktree",
+          "role": "secondary offline outcome summary only",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "design only: 256 attempts per cell, arms base/seed81017/seed81018 x streams17/18; official denominator cannot be verified because the terminal artifact is missing.",
+      "seed_process_unit": "Training seeds 81017 and81018 run sequentially to step348. Evaluation streams17/18 use DLM seeds91117/92117 and refiner seeds101117/102117 with common per-stream randomness. Outcome manifests are missing.",
+      "exact_metric": [
+        {
+          "name": "secondary_refined_energy",
+          "value": "mean delta=-0.002591 eV/atom; CI crosses zero",
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "secondary_raw_energy",
+          "value": "mean delta=+0.200266 eV/atom; fraction_lower=0.366142",
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "secondary_direct",
+          "value": "refined range 254-255/256; raw base [151,164], seed81017 [124,137], seed81018 [150,144]",
+          "source_status": "secondary_only_not_original"
+        },
+        {
+          "name": "official_status",
+          "value": "pending in the only available summary",
+          "source_status": "secondary_only_not_original"
+        }
+      ],
+      "success_reason": "The source proves a paired two-training-seed/six-cell design, and the secondary summary suggests small favorable refined means.",
+      "failure_reason": "No D3PO training, generation, offline, or official terminal JSON/CSV/manifests are present. Secondary raw energy is adverse/non-replicated, refined uncertainty crosses zero, and official status is pending. Jobs37966,38034,38233 failed before scientific outcomes for distinct engineering reasons.",
+      "supported_claims": [
+        "The intended D3PO design separates two policy seeds and two common evaluation streams.",
+        "The three documented jobs are engineering failures, not scientific negatives."
+      ],
+      "prohibited_claims": [
+        "D3PO improves stability, energy, Direct, or S.U.N.",
+        "The secondary numbers are original audited evidence.",
+        "Official fixed256 evaluation completed.",
+        "Job38233 supplies a late-guidance scientific result."
+      ],
+      "evidence_grade": {
+        "code": "G1",
+        "reason": "Design source and narrative failure reports exist, but every metric-bearing D3PO terminal is missing."
+      },
+      "missing": [
+        "D3PO_TRAIN_FINAL.json/csv and two seed manifests",
+        "D3PO_GENERATION_FINAL.json",
+        "D3PO_FIXED256_OFFICIAL_FINAL.json/csv",
+        "raw/refined attempt rows",
+        "original _FAILED.json/ENGINEERING_FAILURE.tsv copies for documented failed jobs"
+      ]
+    },
+    {
+      "id": "MODEL494_TAU",
+      "item": "model494 raw-to-refined effect and tau0/200/500/800 L6 sweep",
+      "status": "verified_complete_low_tau_sweep_tau900_missing",
+      "artifact_paths": [
+        {
+          "path": "results/remote_screens/DLM_REFINER_EFFECT_L6_DIAGNOSTIC.json",
+          "availability": "worktree",
+          "role": "raw versus model494 diagnostic",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/DLM_REFINER_EFFECT_L6_DIAGNOSTIC.csv",
+          "availability": "worktree",
+          "role": "raw/model494 cell table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/DLM_REFINER_TAU_L6_FINAL.json",
+          "availability": "worktree",
+          "role": "complete tau0/200/500/800 terminal",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "results/remote_screens/DLM_REFINER_TAU_L6_FINAL.csv",
+          "availability": "worktree",
+          "role": "tau table",
+          "original_metric_bearing": true
+        },
+        {
+          "path": "slurm/41_dlm_refiner_tau_l6.sbatch",
+          "availability": "worktree",
+          "role": "paired source-body/refiner seed contract",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "scripts/finalize_refiner_tau_high_l6.py",
+          "availability": "worktree",
+          "role": "tau900/1000 finalizer source only; no output artifact",
+          "original_metric_bearing": false
+        },
+        {
+          "path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "availability": "remote_locator_only",
+          "role": "model494 checkpoint locator",
+          "original_metric_bearing": false
+        }
+      ],
+      "denominator": "two seed blocks17/18 x 256 requested=512 per tau; full_axis reconstructed=505 and hull known/unknown=489/16 at every tau.",
+      "seed_process_unit": "Same frozen full_axis bodies, sample-index pairing, refiner seeds27117/28117. Tau0 and800 are reused endpoints; tau200/500 are new matched refinements. No checkpoint training, RL, or rerank.",
+      "exact_metric": [
+        {
+          "name": "tau0",
+          "value": "Direct joint 188/512; Strict 10/512; Meta 66/512; E_hull q50=2.1767154478",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "tau200",
+          "value": "Direct joint 456/512; Strict 29/512; Meta 171/512; E_hull q50=0.1336986780",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "tau500",
+          "value": "Direct joint 458/512; Strict 39/512; Meta 222/512; E_hull q50=0.1018858195",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "tau800",
+          "value": "Direct joint 457/512; Strict 48/512; Meta 230/512; E_hull q50=0.0913057126; selected_tau=800",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "raw_to_tau800",
+          "value": "Direct 188->457; Strict 10->48; Meta 66->230; novelty 505->451; strict/meta retention 1.0->0.786885/0.818505",
+          "source_status": "original_terminal"
+        },
+        {
+          "name": "tau900_tau1000",
+          "value": "missing original terminal; source and secondary prose only",
+          "source_status": "missing"
+        }
+      ],
+      "success_reason": "model494 produces a large absolute repair in Direct and S.U.N. and lowers median hull energy across the complete matched tau0/200/500/800 sweep. Tau800 maximizes the frozen progress rule.",
+      "failure_reason": "Refinement reduces novelty and stable-to-S.U.N. retention, can wash out DLM differences, and is therefore an attribution confound. The tau900/1000 extension is incomplete/missing and cannot alter selection.",
+      "supported_claims": [
+        "model494 tau800 is a major absolute downstream contributor on this L6 cohort.",
+        "Raw and refined outcomes must be reported separately.",
+        "Tau800 is the only selected setting supported by the complete serialized sweep."
+      ],
+      "prohibited_claims": [
+        "model494 creates a DLM-side stability improvement.",
+        "Post-refiner validity can be attributed to the DLM alone.",
+        "Tau900 or tau1000 outperforms tau800.",
+        "The model494 training seed or binary provenance is fully reproducible from this checkout."
+      ],
+      "evidence_grade": {
+        "code": "G3",
+        "reason": "Complete low-tau terminal JSON/CSV and source are present; raw attempt rows, checkpoint binary/training manifest, and high-tau terminal are missing."
+      },
+      "missing": [
+        "DLM_REFINER_TAU_HIGH_L6_FINAL.json/csv",
+        "model494 binary and training manifest",
+        "raw per-attempt tau rows"
+      ]
+    }
+  ]
+}

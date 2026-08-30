@@ -2,7 +2,14 @@
 
 Date: 2026-08-30  
 Priority: first  
-Status: audit before matched downstream canary
+Status: legacy deployed-interface audit; SG semantics superseded by
+`C3FD_RICH_FIELD_SEMANTICS_AUDIT_V2.md`
+
+The V1 `lattice_spacegroup_compatible_100pct` gate only verified the old
+sampler's deterministic one-to-one compiler. It did not validate fidelity to
+the original metric-lattice and symmetry labels and must not be reused as a
+physical compatibility claim. The corrected canary design is frozen in
+`DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md`.
 
 The current C3FD-v2.5 checkpoint already contains trained rich soft heads. This
 contract restores their existing outputs to the DLM rather than training a new

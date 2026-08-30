@@ -67,6 +67,74 @@ class SampleC3FDPlansTest(unittest.TestCase):
                 1,
             )
 
+    def test_independent_spacegroup_draw_preserves_lattice_volume_rng_prefix(self):
+        values = {
+            "lattice_system": ["triclinic", "cubic", "<UNKNOWN>"],
+            "spacegroup_bucket": ["sg_001_002", "sg_195_230", "<UNKNOWN>"],
+            "volume_per_atom_bin": ["volpa_005_009", "volpa_010_014", "<UNKNOWN>"],
+        }
+        logits = {
+            "lattice_system": torch.tensor([0.1, 0.9, -2.0]),
+            "spacegroup_bucket": torch.tensor([0.8, 0.2, -2.0]),
+            "volume_per_atom_bin": torch.tensor([0.7, 0.3, -2.0]),
+        }
+        legacy_rng = torch.Generator(device="cpu")
+        legacy_rng.manual_seed(17001)
+        legacy_lattice = MODULE.sample_soft_value(
+            logits["lattice_system"],
+            values["lattice_system"],
+            rng=legacy_rng,
+            temperature=0.7,
+            top_p=0.95,
+            top_k=0,
+        )
+        legacy_volume = MODULE.sample_soft_value(
+            logits["volume_per_atom_bin"],
+            values["volume_per_atom_bin"],
+            rng=legacy_rng,
+            temperature=0.7,
+            top_p=0.95,
+            top_k=0,
+        )
+
+        corrected_rng = torch.Generator(device="cpu")
+        corrected_rng.manual_seed(17001)
+        corrected = MODULE.sample_structural_soft_fields(
+            logits,
+            values,
+            rng=corrected_rng,
+            temperature=0.7,
+            top_p=0.95,
+            top_k=0,
+            spacegroup_mode="independent_head",
+        )
+        self.assertEqual(corrected["lattice_system"], legacy_lattice)
+        self.assertEqual(corrected["volume_per_atom_bin"], legacy_volume)
+        self.assertIn(corrected["spacegroup_bucket"], values["spacegroup_bucket"][:-1])
+
+    def test_legacy_compiler_mode_remains_exact(self):
+        rng = torch.Generator(device="cpu")
+        rng.manual_seed(9)
+        result = MODULE.sample_structural_soft_fields(
+            {
+                "lattice_system": torch.tensor([float("-inf"), 0.0]),
+                "spacegroup_bucket": torch.tensor([0.0, 0.0]),
+                "volume_per_atom_bin": torch.tensor([0.0]),
+            },
+            {
+                "lattice_system": ["triclinic", "cubic"],
+                "spacegroup_bucket": ["sg_001_002", "sg_195_230"],
+                "volume_per_atom_bin": ["volpa_005_009"],
+            },
+            rng=rng,
+            temperature=0.7,
+            top_p=0.95,
+            top_k=0,
+            spacegroup_mode="lattice_compiler",
+        )
+        self.assertEqual(result["lattice_system"], "cubic")
+        self.assertEqual(result["spacegroup_bucket"], "sg_195_230")
+
     def test_family_aware_oracle_rejects_split_reachability_false_positive(self):
         lithium = FormulaToken.from_symbol("Li", 1, 1)
         oxygen = FormulaToken.from_symbol("O", -2, 1)

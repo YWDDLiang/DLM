@@ -152,6 +152,60 @@ def sample_soft_value(
     return str(values[sample_index(masked, rng=rng, temperature=temperature, top_p=top_p, top_k=top_k)])
 
 
+def sample_structural_soft_fields(
+    rich_logits: Mapping[str, torch.Tensor],
+    soft_values: Mapping[str, Sequence[str]],
+    *,
+    rng: torch.Generator,
+    temperature: float,
+    top_p: float,
+    top_k: int,
+    spacegroup_mode: str,
+) -> dict[str, str]:
+    """Sample metric lattice/volume first, then choose the SG semantics.
+
+    Keeping the SG draw after volume preserves the legacy RNG prefix for metric
+    lattice and volume under the same logits, generator state, and sampling
+    parameters.  The independent-head mode restores the separately supervised
+    symmetry target; the compiler mode remains available only for exact legacy
+    reproduction.
+    """
+    lattice = sample_soft_value(
+        rich_logits["lattice_system"],
+        soft_values["lattice_system"],
+        rng=rng,
+        temperature=temperature,
+        top_p=top_p,
+        top_k=top_k,
+    )
+    volume = sample_soft_value(
+        rich_logits["volume_per_atom_bin"],
+        soft_values["volume_per_atom_bin"],
+        rng=rng,
+        temperature=temperature,
+        top_p=top_p,
+        top_k=top_k,
+    )
+    if spacegroup_mode == "independent_head":
+        spacegroup = sample_soft_value(
+            rich_logits["spacegroup_bucket"],
+            soft_values["spacegroup_bucket"],
+            rng=rng,
+            temperature=temperature,
+            top_p=top_p,
+            top_k=top_k,
+        )
+    elif spacegroup_mode == "lattice_compiler":
+        spacegroup = LATTICE_TO_SPACEGROUP[lattice]
+    else:
+        raise ValueError(f"unknown spacegroup_mode {spacegroup_mode!r}")
+    return {
+        "lattice_system": lattice,
+        "spacegroup_bucket": spacegroup,
+        "volume_per_atom_bin": volume,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=Path, required=True)
@@ -164,6 +218,11 @@ def main() -> None:
     parser.add_argument("--top-p", type=float, default=0.95)
     parser.add_argument("--top-k", type=int, default=0)
     parser.add_argument("--pair-prior-weight", type=float, default=0.0)
+    parser.add_argument(
+        "--spacegroup-mode",
+        choices=("independent_head", "lattice_compiler"),
+        default="independent_head",
+    )
     parser.add_argument("--max-species", type=int, default=7)
     parser.add_argument(
         "--reachability-mode",
@@ -414,28 +473,26 @@ def main() -> None:
                     raise ValueError("terminal_family_mismatch")
                 if last_output is None or last_position is None:
                     raise RuntimeError("missing terminal model output")
-                lattice = sample_soft_value(
-                    last_output.rich_logits["lattice_system"][0, last_position],
-                    soft_values["lattice_system"],
+                structural_soft = sample_structural_soft_fields(
+                    {
+                        field: last_output.rich_logits[field][0, last_position]
+                        for field in (
+                            "lattice_system",
+                            "spacegroup_bucket",
+                            "volume_per_atom_bin",
+                        )
+                    },
+                    soft_values,
                     rng=rng,
                     temperature=float(args.temperature),
                     top_p=float(args.top_p),
                     top_k=int(args.top_k),
-                )
-                volume = sample_soft_value(
-                    last_output.rich_logits["volume_per_atom_bin"][0, last_position],
-                    soft_values["volume_per_atom_bin"],
-                    rng=rng,
-                    temperature=float(args.temperature),
-                    top_p=float(args.top_p),
-                    top_k=int(args.top_k),
+                    spacegroup_mode=str(args.spacegroup_mode),
                 )
                 soft = {
                     "anion_framework": target_family,
                     "charge_bucket": charge_bucket(certificate.to_dict()),
-                    "lattice_system": lattice,
-                    "spacegroup_bucket": LATTICE_TO_SPACEGROUP[lattice],
-                    "volume_per_atom_bin": volume,
+                    **structural_soft,
                 }
                 plan_state = state_to_plan_state(state, soft_fields=soft)
                 plan_text = render_rich_plan(state, soft_fields=soft)
@@ -485,6 +542,7 @@ def main() -> None:
         "rl": False,
         "pair_prior_weight": float(args.pair_prior_weight),
         "species_top_k": int(args.top_k),
+        "spacegroup_mode": str(args.spacegroup_mode),
         "calibration": calibration,
         "seed": int(args.seed),
         "N": {str(key): value for key, value in sorted(n_counts.items())},
