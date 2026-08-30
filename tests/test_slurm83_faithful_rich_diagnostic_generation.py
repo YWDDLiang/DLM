@@ -11,6 +11,7 @@ class Slurm83FaithfulRichDiagnosticGenerationTest(unittest.TestCase):
         text = WRAPPER.read_text(encoding="utf-8")
         self.assertIn("#SBATCH --cpus-per-task=32", text)
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4", text)
+        self.assertIn("faithful_rich_diagnostic_h0_r0s_256_v2_20260830", text)
         for command in (
             "run_cell 0 17 H0",
             "run_cell 1 17 R0S",
