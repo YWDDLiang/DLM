@@ -211,8 +211,11 @@
   valence/charge certificate、family以及soft lattice/SG/volume；动态`7+4N` body不变；
 - 正式Stage-1使用MP20-train的teacher-native与冻结C3FD-predicted-native双视图做
   Planner-interface SFT；soft fields按train/validation可靠性dropout，不硬约束geometry；
-- native DLM按两个训练seed各固定`696` optimizer updates、只保留step696；step348仅
-  监控且不得选择。C3FD现有checkpoint已训练10 epochs，保持冻结，不追加epoch；
+- native DLM从预训练LLaDA-8B新建LoRA，不继续旧rich/minimal adapter。按两个训练seed
+  各跑两个source-equivalent epochs：epoch1/1696步使用LR`5e-5`，epoch2再1696步使用
+  LR`1e-5`，最终只保留step3392；step1696仅监控。五view由source-balanced sampler
+  每source每epoch取一个并跨epoch轮换，不把expanded rows误算成五倍epoch。C3FD现有
+  checkpoint已训练10 epochs，保持冻结，不追加epoch；
 - 现有3614个历史candidate因混合retired L6/L7/D3PO谱系、raw-invalid上游选择，只作
   development evidence。若native SFT恢复execution但仍未达到10/50，只允许从冻结SFT
   checkpoint构建一次fresh on-policy、MP20-train-only同composition pool再做安全排序；

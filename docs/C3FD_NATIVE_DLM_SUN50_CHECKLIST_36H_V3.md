@@ -123,16 +123,25 @@ after prospective two-training-seed replication.
 
 ## Training contract
 
-### Stage 1: Planner-native adaptation
+### Stage 1: fresh Planner-native DLM training
 
-- initialize from the old rich adapter only if faithful H0 proves current
-  runtime compatibility; otherwise initialize from minimal step696;
-- LoRA `r=8`, alpha `32`, dropout `0`, LR `5e-6`;
-- two independent training seeds;
-- exactly 696 updates and only step696; step348 is monitoring-only and cannot
-  be selected;
-- mixed loss: native-body CE, predicted-Plan robustness, minimal/reference CE;
-- no early stopping, checkpoint selection, or seed selection.
+- initialize a new LoRA adapter from the shared pretrained LLaDA-8B backbone;
+  do not load the old rich or minimal adapter into the paper method;
+- keep the recovered H1-A2 LoRA structure: `r=8`, alpha `32`, dropout `0.05`,
+  target modules `q/k/v/ff/up`;
+- two independent DLM training seeds;
+- use a source-balanced sampler: each of the 27,136 MP20 train sources
+  contributes once per source epoch, while the five views are globally balanced
+  and deterministically rotated between epochs;
+- epoch1: 1,696 optimizer updates, effective batch 16, LR `5e-5`, cosine,
+  warmup 100, minimum LR ratio `0.2`;
+- epoch2: another 1,696 updates, LR `1e-5`, cosine, warmup 100, minimum LR
+  ratio `0.1`;
+- total: 3,392 optimizer updates; only the epoch2/step3392 adapter is eligible
+  for prospective evaluation. Epoch1/step1696 is monitoring-only;
+- mixed data views provide native-body CE, predicted-Plan robustness, and
+  minimal-reference retention without any stability labels;
+- no early stopping, epoch/checkpoint selection, or seed selection.
 
 ### Stage 2: optional stability alignment
 
@@ -215,8 +224,8 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
 - [ ] `C3FD_NATIVE_PLAN_V1` serializer/round-trip/type tests complete.
 - [ ] MP20 train and chemsys-held-out native Plan datasets frozen.
 - [ ] C3FD-predicted versus teacher native-field coverage/calibration reported.
-- [ ] Two-seed Planner-native SFT terminal with only step696 adapters; step348
-  diagnostics disclosed but never selected.
+- [ ] Two-seed fresh Planner-native SFT terminal with only step3392 adapters;
+  epoch1/step1696 diagnostics disclosed but never selected.
 - [ ] Train/validation raw execution and stability canary terminal.
 - [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
 - [ ] If opened, fresh pool and safety-aware K-way trainer terminal.
