@@ -465,8 +465,19 @@ def _valence_species(
         ]
         if len(values) != len(plan_species):
             raise ValueError("semantic Plan valence_species is malformed")
-        species = _normalise_valence_species(values)
+        if all(
+            value.get("oxidation_state") not in (None, "", "unknown")
+            for value in values
+        ):
+            species = _normalise_valence_species(values)
+        else:
+            # Some historical semantic Plan rows retain unknown oxidation in
+            # their convenience field even though the frozen sidecar carries
+            # the exact species-label witness used by C3FD supervision.
+            plan_species = None
     else:
+        plan_species = None
+    if plan_species is None:
         labels = semantic_row.get("nodes") or semantic_row.get("species_labels")
         counts = semantic_row.get("counts") or semantic_row.get("count_targets")
         if not isinstance(labels, list) or not isinstance(counts, list):
@@ -895,6 +906,16 @@ def convert_aligned_row(
     semantic_plan = _plan_from_row(semantic_row, label="semantic row")
     _assert_plan_alignment(source_plan, semantic_plan, label="semantic Plan")
     species = _valence_species(semantic_row, semantic_plan, vocabulary)
+    plan_species = semantic_plan.get("valence_species")
+    semantic_plan_valence_used_label_fallback = bool(
+        isinstance(plan_species, Sequence)
+        and not isinstance(plan_species, (str, bytes))
+        and any(
+            isinstance(value, Mapping)
+            and value.get("oxidation_state") in (None, "", "unknown")
+            for value in plan_species
+        )
+    )
     predicted_soft_by_checkpoint = _resolve_predicted_soft_fields_by_checkpoint(
         source_row,
         semantic_row,
@@ -954,6 +975,9 @@ def convert_aligned_row(
             source_plan.get("charge_bucket") or ""
         )
         == str(semantic_plan.get("charge_bucket") or ""),
+        "semantic_plan_valence_used_label_fallback": (
+            semantic_plan_valence_used_label_fallback
+        ),
     }
     for key in SAFE_TRAINING_KEYS:
         if key in source_row:
@@ -1108,6 +1132,7 @@ def build_dataset(
             )
             source_count = 0
             source_semantic_charge_bucket_mismatches = 0
+            semantic_plan_valence_label_fallbacks = 0
             source_indices: set[int] = set()
             view_counts: Counter[str] = Counter()
             chemsystems: set[str] = set()
@@ -1152,6 +1177,10 @@ def build_dataset(
                     source_semantic_charge_bucket_mismatches += int(
                         converted[0]["source_charge_bucket_matches_semantic"] is False
                     )
+                    semantic_plan_valence_label_fallbacks += int(
+                        converted[0]["semantic_plan_valence_used_label_fallback"]
+                        is True
+                    )
                     for row in converted:
                         view_counts[str(row["view"])] += 1
                         chemsystems.add(str(row["chemsys"]))
@@ -1182,6 +1211,9 @@ def build_dataset(
                 "output_sha256": sha256_file(output_path),
                 "source_semantic_charge_bucket_mismatches": (
                     source_semantic_charge_bucket_mismatches
+                ),
+                "semantic_plan_valence_label_fallbacks": (
+                    semantic_plan_valence_label_fallbacks
                 ),
                 "semantic_rows": len(semantic_by_idx),
                 "predicted_rows": (
@@ -1228,6 +1260,7 @@ def build_dataset(
             "chemsys_held_out_split_preserved": not any(overlap.values()),
             "legacy_rich_fields_absent": True,
             "semantic_valence_certificate_authoritative_for_charge": True,
+            "unknown_plan_valence_replaced_only_by_frozen_species_labels": True,
         }
         manifest = {
             "schema": MANIFEST_SCHEMA,

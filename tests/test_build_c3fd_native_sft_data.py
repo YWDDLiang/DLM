@@ -656,6 +656,38 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
             teacher = next(row for row in rows if row["view"] == "teacher-native")
             self.assertIn("CB=B_NEU", teacher["native_plan_line"])
 
+    def test_unknown_plan_valence_uses_frozen_species_label_witness(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            semantic_rows = read_jsonl(semantic / "train.jsonl")
+            semantic_rows[0]["plan_state"]["valence_species"] = [
+                {"element": "Li", "count": 2, "oxidation_state": None},
+                {"element": "O", "count": 1, "oxidation_state": None},
+            ]
+            write_jsonl(semantic / "train.jsonl", semantic_rows)
+            output = root / "unknown-plan-valence"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
+            self.assertEqual(
+                manifest["splits"]["train"][
+                    "semantic_plan_valence_label_fallbacks"
+                ],
+                1,
+            )
+            teacher = next(
+                row
+                for row in read_jsonl(output / "train.jsonl")
+                if row["view"] == "teacher-native"
+            )
+            self.assertTrue(teacher["semantic_plan_valence_used_label_fallback"])
+            self.assertIn("QP01", teacher["native_plan_line"])
+            self.assertIn("QM02", teacher["native_plan_line"])
+
 
 if __name__ == "__main__":
     unittest.main()
