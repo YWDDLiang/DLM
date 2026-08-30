@@ -1,0 +1,38 @@
+{
+  "schema": "h1a2_si_lwa_intent_data_terminal_v1",
+  "job_id": 38240,
+  "state": "COMPLETED",
+  "elapsed": "00:01:16",
+  "allocated_cpus": 48,
+  "gpus": 0,
+  "output": "$ROOT/data/si_lwa_intent_v1_20260830",
+  "hashes": {
+    "manifest": "a5872e1ffa3455c41f0179732dfddec92fc1f5d6ed31433c948ea62f2551b13c",
+    "train": "819f0a9f3d4c7ee9ef44f94b247ef2f17ed016968abf9fb3f82d1d553b694975",
+    "validation": "644ab2a1405e01ac9df597ed52b0b3f2e39ba4775cf33dd25795a60028426290"
+  },
+  "splits": {
+    "train": {
+      "rows": 27136,
+      "valid": 27136,
+      "coverage": 1.0,
+      "vpa_class_counts": [3392, 3392, 3392, 3392, 3392, 3392, 3392, 3392],
+      "vpa_entropy_nats": 2.0794415416798357,
+      "cn_class_counts": [5876, 1184, 4360, 1494, 1629, 1217, 7401, 3975],
+      "cn_entropy_nats": 1.8651723563412554
+    },
+    "validation": {
+      "rows": 9047,
+      "valid": 9047,
+      "coverage": 1.0,
+      "vpa_class_counts": [1092, 1127, 1121, 1153, 1211, 1134, 1087, 1122],
+      "vpa_entropy_nats": 2.078931292097991,
+      "cn_class_counts": [1968, 381, 1452, 507, 584, 421, 2412, 1322],
+      "cn_entropy_nats": 1.873459473926842
+    }
+  },
+  "failures": 0,
+  "generated_test_outcomes_read": false,
+  "scientific_interpretation": "label coverage and diversity pass; predictability and endpoint value remain untested",
+  "gpu_training_authorized": false
+}
