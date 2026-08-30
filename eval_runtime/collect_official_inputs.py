@@ -66,12 +66,25 @@ def main() -> None:
         }
         protocol.write_json_exclusive(preparing / "input_manifest.json", manifest)
         (preparing / "inputs_SUCCESS").touch(exist_ok=False)
+        protocol.write_source_manifest(
+            preparing,
+            ("input_manifest.json", "inputs_SUCCESS", "wanted_chemsys.jsonl"),
+        )
         preparing.rename(final)
     except Exception:
         if preparing.exists():
             shutil.move(str(preparing), str(failed))
         raise
-    print(protocol.canonical_json({"cells": len(cells), "wanted_chemsys": len(wanted)}), flush=True)
+    print(
+        protocol.canonical_json(
+            {
+                "cells": len(cells),
+                "source_manifest_sha256": protocol.sha256_file(final / "SOURCE_SHA256.txt"),
+                "wanted_chemsys": len(wanted),
+            }
+        ),
+        flush=True,
+    )
 
 
 if __name__ == "__main__":

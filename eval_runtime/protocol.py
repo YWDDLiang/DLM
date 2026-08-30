@@ -191,6 +191,49 @@ def require_file(path: str | Path, expected_sha256: str, label: str) -> Path:
     return location
 
 
+def write_source_manifest(
+    source_dir: str | Path,
+    relative_files: Iterable[str | Path],
+) -> Path:
+    """Write the complete, relative-path manifest consumed by query jobs."""
+
+    source = Path(source_dir).resolve()
+    if not source.is_dir():
+        raise NotADirectoryError(source)
+    normalized: list[Path] = []
+    seen: set[str] = set()
+    for raw in relative_files:
+        relative = Path(raw)
+        text = relative.as_posix()
+        if (
+            relative.is_absolute()
+            or ".." in relative.parts
+            or "\\" in str(raw)
+            or text == "SOURCE_SHA256.txt"
+        ):
+            raise ContractError(f"unsafe source-manifest path: {raw}")
+        if text in seen:
+            raise ContractError(f"duplicate source-manifest path: {text}")
+        location = (source / relative).resolve()
+        try:
+            location.relative_to(source)
+        except ValueError as exc:
+            raise ContractError(f"source-manifest path escapes source: {raw}") from exc
+        if not location.is_file():
+            raise FileNotFoundError(location)
+        seen.add(text)
+        normalized.append(relative)
+    if not normalized:
+        raise ContractError("source manifest cannot be empty")
+    manifest = source / "SOURCE_SHA256.txt"
+    with manifest.open("x", encoding="utf-8", newline="\n") as handle:
+        for relative in sorted(normalized, key=lambda value: value.as_posix()):
+            handle.write(f"{sha256_file(source / relative)}  {relative.as_posix()}\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    return manifest
+
+
 def ordered_rows(
     rows: Iterable[Mapping[str, Any]],
     *,
