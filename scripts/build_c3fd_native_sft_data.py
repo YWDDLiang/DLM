@@ -341,7 +341,10 @@ def _assert_plan_alignment(
         raise ValueError(f"DLM/{label} N alignment changed")
     if _composition(source_plan) != _composition(aligned_plan):
         raise ValueError(f"DLM/{label} composition alignment changed")
-    for key in ("anion_framework", "charge_bucket"):
+    # Composition/family must align exactly.  The semantic sidecar's frozen
+    # valence certificate is authoritative for charge: older DLM rows can
+    # legitimately carry the pre-certificate bucket and are audited below.
+    for key in ("anion_framework",):
         left = source_plan.get(key)
         right = aligned_plan.get(key)
         if left not in (None, "") and right not in (None, "") and left != right:
@@ -925,6 +928,12 @@ def convert_aligned_row(
             identity_from_plan_state(source_plan)
         ),
         "sample_weight": source_weight / float(len(view_names)),
+        "source_charge_bucket": str(source_plan.get("charge_bucket") or ""),
+        "semantic_charge_bucket": str(semantic_plan.get("charge_bucket") or ""),
+        "source_charge_bucket_matches_semantic": str(
+            source_plan.get("charge_bucket") or ""
+        )
+        == str(semantic_plan.get("charge_bucket") or ""),
     }
     for key in SAFE_TRAINING_KEYS:
         if key in source_row:
@@ -1084,6 +1093,7 @@ def build_dataset(
                     fillvalue=_MISSING,
                 )
             source_count = 0
+            source_semantic_charge_bucket_mismatches = 0
             view_counts: Counter[str] = Counter()
             chemsystems: set[str] = set()
             with output_path.open("x", encoding="utf-8", newline="\n") as handle:
@@ -1116,6 +1126,9 @@ def build_dataset(
                         checkpoint_order=checkpoint_order,
                     )
                     source_count += 1
+                    source_semantic_charge_bucket_mismatches += int(
+                        converted[0]["source_charge_bucket_matches_semantic"] is False
+                    )
                     for row in converted:
                         view_counts[str(row["view"])] += 1
                         chemsystems.add(str(row["chemsys"]))
@@ -1144,6 +1157,9 @@ def build_dataset(
                     None if predicted_path is None else sha256_file(predicted_path)
                 ),
                 "output_sha256": sha256_file(output_path),
+                "source_semantic_charge_bucket_mismatches": (
+                    source_semantic_charge_bucket_mismatches
+                ),
             }
 
         overlap: dict[str, int] = {}
@@ -1178,6 +1194,7 @@ def build_dataset(
             "source_sample_weight_preserved_across_views": True,
             "chemsys_held_out_split_preserved": not any(overlap.values()),
             "legacy_rich_fields_absent": True,
+            "semantic_valence_certificate_authoritative_for_charge": True,
         }
         manifest = {
             "schema": MANIFEST_SCHEMA,

@@ -584,6 +584,36 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 )
             self.assertFalse((root / "leaked-split").exists())
 
+    def test_semantic_certificate_overrides_stale_source_charge_bucket(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            source_rows = read_jsonl(source / "train.jsonl")
+            source_rows[0]["plan_state"]["charge_bucket"] = "charge_fail"
+            write_jsonl(source / "train.jsonl", source_rows)
+            output = root / "charge-corrected"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
+            self.assertEqual(
+                manifest["splits"]["train"][
+                    "source_semantic_charge_bucket_mismatches"
+                ],
+                1,
+            )
+            rows = read_jsonl(output / "train.jsonl")
+            self.assertTrue(
+                all(
+                    row["source_charge_bucket_matches_semantic"] is False
+                    for row in rows
+                )
+            )
+            teacher = next(row for row in rows if row["view"] == "teacher-native")
+            self.assertIn("CB=B_NEU", teacher["native_plan_line"])
+
 
 if __name__ == "__main__":
     unittest.main()
