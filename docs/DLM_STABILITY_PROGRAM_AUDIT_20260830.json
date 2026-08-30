@@ -1,0 +1,88 @@
+{
+  "schema": "h1a2_dlm_stability_program_audit_v1",
+  "date": "2026-08-30",
+  "status": "frozen_before_next_gpu_training",
+  "stagewise_conversion": {
+    "historical_h1a2": {
+      "novel_unique": 890,
+      "strict_sun": 94,
+      "meta_sun": 474,
+      "strict_per_nu": 0.1056,
+      "meta_per_nu": 0.5326
+    },
+    "minimal_c3fd_l7_base": {
+      "novel_unique": 922,
+      "strict_sun": 60,
+      "meta_sun": 412,
+      "strict_per_nu": 0.0651,
+      "meta_per_nu": 0.4469
+    }
+  },
+  "planner": {
+    "c3fd_v25_comp_valid": [2000, 2000],
+    "p0_comp_valid": [1724, 2000],
+    "c3fd_v25_novel_unique": [1756, 2000],
+    "p0_novel_unique": [1530, 2000],
+    "c3fd_distance_to_full_train": {
+      "N": 0.03489475235849056,
+      "arity": 0.01850560141509437,
+      "family": 0.020449587264150942
+    },
+    "full_train_all_metal_rate": 0.3491,
+    "c3fd_all_metal_rate": 0.3725,
+    "conclusion": "coarse distribution and composition validity are solved; exact-formula conditional realization remains hard"
+  },
+  "rich_plan_evidence": {
+    "volume_match_hull_median": 0.0733,
+    "volume_mismatch_hull_median": 0.0809,
+    "lattice_sg_match_hull_median": 0.0881,
+    "lattice_sg_mismatch_hull_median": 0.0683,
+    "soft_consistent_hull_median": 0.0879,
+    "soft_inconsistent_hull_median": 0.0739,
+    "countvalence_lattice_sg_match_rate": 0.4114,
+    "counterfactual_fixed1000_strict_delta_pp": -0.3,
+    "counterfactual_fixed1000_meta_delta_pp": -2.0,
+    "conclusion": "global context can aid plausibility but old rich fields are not a stability objective"
+  },
+  "objective_evidence": {
+    "extra_ce": {
+      "body": [985, 992],
+      "strict_sun": [81, 79],
+      "meta_sun": [489, 477]
+    },
+    "sgtc_l7": {
+      "base_strict_meta": [60, 412],
+      "strict_subset_strict_meta": [53, 417],
+      "official_mean_delta_ev_per_atom": 0.004525
+    },
+    "ctv": {
+      "centered_spearman": 0.0353,
+      "pair_auc": 0.5053,
+      "continuation_agreement": 0.4915
+    },
+    "d3po": {
+      "official_fixed_mean_delta_ev_per_atom": -0.002492,
+      "official_fraction_lower": 0.516,
+      "meta_sun_delta_pp_by_seed": [1.758, 3.516],
+      "strict_sun_delta_pp_by_seed": [-0.195, 0.0],
+      "raw_fixed_mean_delta_ev_per_atom": 0.200266
+    }
+  },
+  "root_causes_ranked": [
+    {"cause": "positive_only_or_post_refiner_objective_mismatch", "confidence": "very_high"},
+    {"cause": "exact_composition_conditional_ood", "confidence": "high"},
+    {"cause": "loss_of_global_structural_context", "confidence": "medium_high"},
+    {"cause": "refiner_interface_and_reward_leakage", "confidence": "high"},
+    {"cause": "missing_periodic_spatial_inductive_bias", "confidence": "medium_high"},
+    {"cause": "seed_process_accounting_inflation", "confidence": "high_secondary"}
+  ],
+  "immediate_decision": {
+    "planner": "freeze_c3fd_v25_composition_plus_N",
+    "representation": "freeze_dynamic_7_plus_4N_full_axis",
+    "refiner": "freeze_model494_tau800_report_raw_and_refined",
+    "primary_training": "two_seed_same_composition_listwise_full_sequence_with_raw_and_periodic_geometry_safety",
+    "intent_role": "train_validation_audit_only_until_incremental_oracle_and_predictability_pass",
+    "six_hour_fallback": "listwise_only",
+    "forbidden": ["more_plain_CE", "strict_positive_only_CE", "single_token_Q", "joint_XYZ", "tau_grid", "external_rich_plan_main_method", "rerank_search_RL"]
+  }
+}
