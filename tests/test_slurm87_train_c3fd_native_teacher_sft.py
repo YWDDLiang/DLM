@@ -25,6 +25,7 @@ class Slurm87TeacherSFTTest(unittest.TestCase):
             "--lr-stage-boundary 1696",
             "--lr-stage2 1e-5",
             "--save-steps 3392",
+            "--skip-final-alias",
             "--eval-steps 1696",
             "--grad-accum 8",
             "--lora-dropout 0.05",
@@ -33,6 +34,7 @@ class Slurm87TeacherSFTTest(unittest.TestCase):
             self.assertIn(value, self.text)
         self.assertNotIn("--checkpoint-path", self.text)
         self.assertIn("checkpoint_path\"] is None", self.text)
+        self.assertIn("--data-seed 20260515", self.text)
 
     def test_teacher_data_and_hashes_are_pinned(self):
         self.assertIn("c3fd_native_teacher_sft_v1_20260831", self.text)
@@ -43,6 +45,7 @@ class Slurm87TeacherSFTTest(unittest.TestCase):
             "DATA_VAL_SHA",
             "TRAINER_SHA",
             "LR_HELPER_SHA",
+            "TOKEN_AUDIT_SHA",
         ):
             self.assertIn(value, self.text)
         self.assertIn("predicted_plans_in_sft\tfalse", self.text)
@@ -53,6 +56,7 @@ class Slurm87TeacherSFTTest(unittest.TestCase):
         self.assertIn("_SUCCESS", self.text)
         self.assertIn("step-3392", self.text)
         self.assertIn("checkpoint_dirs", self.text)
+        self.assertIn("adapter_config.json", self.text)
         self.assertIn("step0_lora_equality_canary.json", self.text)
         self.assertIn("grad_norm", self.text)
 

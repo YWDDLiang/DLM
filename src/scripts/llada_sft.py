@@ -2340,6 +2340,11 @@ def main() -> None:
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--eval-steps", type=int, default=200)
     parser.add_argument("--save-steps", type=int, default=1000)
+    parser.add_argument(
+        "--skip-final-alias",
+        action="store_true",
+        help="Do not duplicate the endpoint checkpoint into output_dir/final.",
+    )
     parser.add_argument("--eval-max-batches", type=int, default=50)
     parser.add_argument("--position-diagnostics-steps", type=int, default=0)
     parser.add_argument("--dataloader-num-workers", type=int, default=0)
@@ -2917,7 +2922,7 @@ def main() -> None:
         data_dir=args.data_dir,
         is_main=is_main,
     )
-    if is_main:
+    if is_main and not args.skip_final_alias:
         tokenizer.save_pretrained(args.output_dir / "final")
         target_model = model.module if hasattr(model, "module") else model
         save_model_pretrained(

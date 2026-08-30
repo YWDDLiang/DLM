@@ -17,14 +17,16 @@ readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly DATA="${ROOT}/data/c3fd_native_teacher_sft_v1_20260831"
 readonly TRAINER="${ROOT}/src/scripts/llada_sft.py"
 readonly LR_HELPER="${ROOT}/src/crystal_dlm/two_stage_lr.py"
+readonly TOKEN_AUDIT="${ROOT}/runs/c3fd_native_teacher_token_audit_38699/audit/TOKENIZATION_AUDIT.json"
 readonly RUN="${ROOT}/runs/c3fd_native_teacher_sft_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly MODEL_TREE_SHA=812a0ef72b2b2290b19b8beac32fd8ba0f4d32f308268f0c7914c4efd8755037
 readonly DATA_MANIFEST_SHA=b77a1d0126d19576b2a6e381fe177de792b230cab2eca58e2c5c8097ff23ae06
 readonly DATA_TRAIN_SHA=f61cd177f252ce44ba15669a187a5f6fed22e2d3f50218088124fd0b5b836068
 readonly DATA_VAL_SHA=bea7d8e67476bcdde545f13971cb87ea1e2931954ff8948410dc21ce38e509e1
-readonly TRAINER_SHA=858fa92b969da5aed5b00a8b4d127e36d102efc7781db625f81e61a2c186f1a2
+readonly TRAINER_SHA=9c4296110708b69eec5d855c0133b13909e5446505e3361f86ff9bdcde63421a
 readonly LR_HELPER_SHA=e7a8be58b8b0e822e9b50394e22f98f1d250fdc60d23a0f8e0153fa4847c2bd7
+readonly TOKEN_AUDIT_SHA=acb07572be689a9eaecab39fd74c934f2f1b7439595e569cf54963d1c0eccff0
 readonly SEEDS=(82017 82018)
 
 source "${ROOT}/slurm/_common.sh"
@@ -48,6 +50,7 @@ trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 [[ "$(sha256sum "${DATA}/val.jsonl" | awk '{print $1}')" == "${DATA_VAL_SHA}" ]] || exit 2
 [[ "$(sha256sum "${TRAINER}" | awk '{print $1}')" == "${TRAINER_SHA}" ]] || exit 2
 [[ "$(sha256sum "${LR_HELPER}" | awk '{print $1}')" == "${LR_HELPER_SHA}" ]] || exit 2
+[[ "$(sha256sum "${TOKEN_AUDIT}" | awk '{print $1}')" == "${TOKEN_AUDIT_SHA}" ]] || exit 2
 actual_model_tree_sha="$(find "${MODEL}" -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{print $1}')"
 [[ "${actual_model_tree_sha}" == "${MODEL_TREE_SHA}" ]] || exit 2
 
@@ -62,6 +65,7 @@ schema	c3fd_native_teacher_sft_v1
 initialization	fresh_LoRA_from_shared_LLaDA_8B
 model_tree_sha256	${MODEL_TREE_SHA}
 data_manifest_sha256	${DATA_MANIFEST_SHA}
+tokenization_audit_sha256	${TOKEN_AUDIT_SHA}
 train_rows	27136
 validation_rows	9047
 training_prompt	ground_truth_C3FD_NATIVE_PLAN_V2_teacher_rich_JSON_only
@@ -86,7 +90,7 @@ lora	r8_alpha32_dropout0.05_qkv_ff_up
 EOF
 sha256sum "${RUN}/scientific_contract.tsv" >"${RUN}/scientific_contract.sha256"
 sha256sum "${DATA}/manifest.json" "${DATA}/train.jsonl" "${DATA}/val.jsonl" \
-  "${TRAINER}" "${LR_HELPER}" >"${RUN}/INPUTS.sha256"
+  "${TRAINER}" "${LR_HELPER}" "${TOKEN_AUDIT}" >"${RUN}/INPUTS.sha256"
 
 train_seed() {
   local seed="$1" devices="$2" port="$3"
@@ -112,13 +116,14 @@ train_seed() {
     --stage2-warmup-steps 100 \
     --stage2-min-lr-ratio 0.1 \
     --save-steps 3392 \
+    --skip-final-alias \
     --eval-steps 1696 \
     --eval-max-batches 50 \
     --logging-steps 10 \
     --dataloader-num-workers 4 \
     --fail-on-truncation \
     --seed "${seed}" \
-    --data-seed "${seed}" \
+    --data-seed 20260515 \
     --lora-rank 8 \
     --lora-alpha 32 \
     --lora-dropout 0.05 \
@@ -140,7 +145,7 @@ for seed in "${SEEDS[@]}"; do
   output="${RUN}/train_seed${seed}"
   checkpoint="${output}/checkpoints/step-3392"
   [[ -f "${checkpoint}/adapter_model.safetensors" ]] || exit 3
-  [[ -f "${output}/final/adapter_model.safetensors" ]] || exit 3
+  [[ ! -e "${output}/final" ]] || exit 3
   mapfile -t checkpoint_dirs < <(find "${output}/checkpoints" -mindepth 1 -maxdepth 1 -type d -name 'step-*' -printf '%f\n' | sort)
   [[ "${#checkpoint_dirs[@]}" -eq 1 && "${checkpoint_dirs[0]}" == step-3392 ]] || exit 3
   "${PYTHON}" - "${output}" "${seed}" <<'PY'
@@ -153,6 +158,7 @@ assert config["epochs"] == 2 and config["max_train_steps"] == 3392
 assert config["lr"] == 5e-5 and config["lr_stage2"] == 1e-5
 assert config["lr_stage_boundary"] == 1696
 assert config["seed"] == seed and config["world_size"] == 2
+assert config["data_seed"] == 20260515 and config["skip_final_alias"] is True
 canary = json.load((output / "step0_lora_equality_canary.json").open())
 assert canary["fresh_lora"] is True and canary["exact_zero_delta"] is True
 events = [json.loads(line) for line in (output / "training_log.jsonl").open() if line.strip()]
@@ -162,6 +168,10 @@ assert train and {1696, 3392} <= evaluated
 for row in train:
     assert all(math.isfinite(float(row[key])) for key in ("loss", "task_loss", "grad_norm", "lr"))
     assert float(row["grad_norm"]) >= 0.0 and float(row["lr"]) > 0.0
+adapter = json.load((output / "checkpoints" / "step-3392" / "adapter_config.json").open())
+assert int(adapter["r"]) == 8 and int(adapter["lora_alpha"]) == 32
+assert float(adapter["lora_dropout"]) == 0.05
+assert set(adapter["target_modules"]) == {"q_proj", "k_proj", "v_proj", "ff_proj", "up_proj"}
 PY
   sha256sum "${checkpoint}/adapter_model.safetensors" >"${RUN}/seed${seed}_step3392_adapter.sha256"
   printf '%s\n' "${checkpoint}" >"${RUN}/seed${seed}_POLICY_PATH"
