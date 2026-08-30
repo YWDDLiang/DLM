@@ -1,0 +1,21 @@
+{
+  "schema": "c3fd_native_train_infer_interface_audit_v1",
+  "rows": {"train": 27136, "validation": 9047},
+  "planner_checkpoints": ["seed17", "seed18"],
+  "teacher_byte_mismatch": 0,
+  "missing_prediction": 0,
+  "frame_mismatch": 0,
+  "json_key_mismatch": 0,
+  "hard_field_mismatch": 0,
+  "unexpected_changed_fields": 0,
+  "allowed_changed_fields": [
+    "lattice_system",
+    "spacegroup_bucket",
+    "volume_per_atom_bin"
+  ],
+  "renderer_sha256": "566830481cbfb990b2dd63d15d4ec0cf8db815759744b16a46762c5bfc8f219f",
+  "report_sha256": "7ee6b85d04246151ee9a2920501aaa83deba54e523d072b094c0a95efacf9f95",
+  "generation_wrapper_requirement": "import_build_native_inference_prompt_no_bespoke_renderer",
+  "all_gates_passed": true,
+  "outcomes_read": false
+}

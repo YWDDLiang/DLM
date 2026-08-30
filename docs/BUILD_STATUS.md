@@ -401,3 +401,7 @@
   `4A800/32CPU`双seed并行；82017/82018的fresh-LoRA step0 `lora_B_max_abs=0`均通过；
 - 用户提供的MP凭证只以任务会话handle显式登记，不创建额外持久副本；唯一query后立即
   unset并审计无残留。简单工作由主agent直接完成，只有复杂且可并行的审计/调研才委派。
+- train/inference renderer已统一为共享`build_native_inference_prompt`。full
+  train/validation `27136/9047`对teacher byte replay及C3FD seed17/18 predicted rendering
+  全量审计：frame/key/hard/unexpected-field mismatch均0，仅LS/SG/VP可变；renderer SHA
+  `56683048...f219f`、report SHA`7ee6b85...f9f95`，generation wrapper禁止自建prompt。

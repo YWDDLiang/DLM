@@ -174,6 +174,10 @@ has low energy.
 - temperature `0.7`, exact-axis schedule, model494 tau800;
 - one six-cell generation, one raw-first/refined 12-cell evaluation, and one
   fresh official MP query;
+- generation must import the shared `build_native_inference_prompt` renderer;
+  bespoke prompt formatting is forbidden. Renderer SHA
+  `56683048...f219f` is pinned, and only LS/SG/VP values may differ from the
+  teacher prompt;
 - the already supplied MP credential is injected only into that single query's
   temporary non-ambient process environment, unset immediately after launch,
   and never written to repository files, automation prompts, commands, logs,
@@ -264,6 +268,9 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   validation `9,047`, both checkpoints and all three fields at 100% coverage.
 - [x] Teacher-only tokenization audit job38699 passed: zero truncation and zero
   prompt/answer boundary mismatch; max train/validation length `238/234 < 382`.
+- [x] Full train/inference interface audit passed on `27,136/9,047 × 2`
+  predicted rows: byte replay, frame, key, and hard-field mismatches all zero;
+  only LS/SG/VP values changed.
 - [x] Fresh two-stage trainer, endpoint-only wrapper, and local/remote tests
   complete; first pre-run environment failure job38701 is negative-archived.
 - [ ] Two-seed fresh Planner-native SFT job38703 running with only step3392
