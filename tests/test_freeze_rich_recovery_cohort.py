@@ -28,6 +28,7 @@ def fixture(index: int):
             "spacegroup_bucket": ["sg_195_230", "sg_075_142", "sg_001_002"][index % 3],
             "volume_per_atom_bin": ["volpa_010_014", "volpa_015_019", "volpa_020_024"][index % 3],
             "validator": {"valid": True, "reason": "charge_neutral_pauling_valid"},
+            "ccfd_v2_certificate": {"benchmark_valid": True},
         },
     }
 

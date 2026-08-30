@@ -24,7 +24,7 @@ if str(SRC) not in sys.path:
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
-from build_ctv_minimal_spec_data import minimal_prompt, minimal_spec_from_plan  # noqa: E402
+from build_d3po_pairs import minimal_prompt_from_plan  # noqa: E402
 from crystal_dlm.r5_plan_state import build_body_prompt, prototype_key  # noqa: E402
 
 
@@ -227,13 +227,16 @@ def freeze(
         }
         ledger.append(ledger_row)
 
-        minimal_spec = minimal_spec_from_plan(plan)
+        minimal_prompt_text, minimal_reason = minimal_prompt_from_plan(plan)
+        if minimal_prompt_text is None:
+            raise ValueError(f"minimal prompt failed: {minimal_reason}")
+        minimal_spec = json.loads(minimal_prompt_text.splitlines()[0])
         views["M0"].append(
             {
                 **ledger_row,
                 "schema": "h1a2_rich_recovery_view_v1",
                 "view": "M0",
-                "prompt": minimal_prompt(minimal_spec),
+                "prompt": minimal_prompt_text,
                 "minimal_spec": minimal_spec,
             }
         )
