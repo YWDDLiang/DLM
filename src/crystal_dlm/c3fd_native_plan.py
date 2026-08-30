@@ -72,6 +72,36 @@ def serialize_native_plan(plan: Mapping[str, Any]) -> str:
     )
 
 
+def native_plan_from_parts(
+    composition_plan: Mapping[str, Any],
+    structural_plan: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Build the one shared train/inference Plan payload."""
+
+    payload = _payload(
+        {
+            "N": composition_plan.get("N"),
+            "elements": composition_plan.get("elements"),
+            "counts": composition_plan.get("counts"),
+            "anion_framework": composition_plan.get("anion_framework"),
+            **{field: structural_plan.get(field) for field in SOFT_FIELD_KEYS},
+        }
+    )
+    payload.pop("schema")
+    return payload
+
+
+def build_native_inference_prompt(
+    composition_plan: Mapping[str, Any],
+    predicted_structural_plan: Mapping[str, Any],
+) -> str:
+    """Render inference with exactly the same prompt function used by SFT."""
+
+    return build_native_body_prompt(
+        native_plan_from_parts(composition_plan, predicted_structural_plan)
+    )
+
+
 def parse_native_plan_line(line: str) -> dict[str, Any]:
     """Parse an unmasked native Plan and validate exact composition."""
 
@@ -128,7 +158,9 @@ __all__ = [
     "C3FD_NATIVE_PLAN_VERSION",
     "SOFT_FIELD_KEYS",
     "build_native_body_prompt",
+    "build_native_inference_prompt",
     "mask_native_soft_fields",
+    "native_plan_from_parts",
     "parse_native_plan_line",
     "serialize_native_plan",
 ]

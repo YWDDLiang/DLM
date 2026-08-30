@@ -38,12 +38,12 @@ for import_path in (SRC, SCRIPTS):
 from crystal_dlm.c3fd_native_plan import (  # noqa: E402
     build_native_body_prompt,
     mask_native_soft_fields,
+    native_plan_from_parts,
     parse_native_plan_line,
     serialize_native_plan,
 )
 from crystal_dlm.composition_identity import (  # noqa: E402
     canonical_symbol_counts,
-    formula_from_symbol_counts,
     identity_from_plan_state,
     identity_text,
 )
@@ -563,14 +563,15 @@ def _native_plan(
         or source_plan.get("anion_framework")
         or ""
     )
-    plan = {
+    plan = native_plan_from_parts(
+        {
         "N": _n_value(source_plan, label="DLM Plan"),
         "elements": elements,
         "counts": counts,
-        "formula": formula_from_symbol_counts(composition),
         "anion_framework": family,
-        **{key: str(soft[key]) for key in SOFT_FIELDS},
-    }
+        },
+        soft,
+    )
     line = serialize_native_plan(plan)
     parsed = parse_native_plan_line(line)
     if _composition(parsed) != composition or int(parsed["N"]) != int(plan["N"]):

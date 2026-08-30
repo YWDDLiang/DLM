@@ -12,6 +12,7 @@ if str(SRC) not in sys.path:
 from crystal_dlm.c3fd_native_plan import (  # noqa: E402
     C3FD_NATIVE_PLAN_VERSION,
     build_native_body_prompt,
+    build_native_inference_prompt,
     mask_native_soft_fields,
     parse_native_plan_line,
     serialize_native_plan,
@@ -77,6 +78,34 @@ class C3FDNativePlanTest(unittest.TestCase):
             {"element": "Li", "count": 1, "oxidation_state": 7}
         ]
         self.assertEqual(serialize_native_plan(clean), serialize_native_plan(legacy))
+
+    def test_train_and_inference_renderers_are_byte_identical(self):
+        source = plan()
+        teacher_prompt = build_native_body_prompt(source)
+        inference_prompt = build_native_inference_prompt(source, source)
+        self.assertEqual(teacher_prompt, inference_prompt)
+
+    def test_predicted_prompt_changes_only_three_soft_values(self):
+        source = plan()
+        predicted = {
+            "lattice_system": "tetragonal",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_025_029",
+        }
+        teacher = json.loads(serialize_native_plan(source))
+        rendered = build_native_inference_prompt(source, predicted)
+        line = rendered.split("c3fd_native_plan: ", 1)[1].splitlines()[0]
+        candidate = json.loads(line)
+        changed = {key for key in teacher if teacher[key] != candidate[key]}
+        self.assertEqual(
+            changed,
+            {"lattice_system", "spacegroup_bucket", "volume_per_atom_bin"},
+        )
+        self.assertEqual(
+            rendered.split("c3fd_native_plan: ", 1)[0],
+            build_native_body_prompt(source).split("c3fd_native_plan: ", 1)[0],
+        )
+        self.assertTrue(rendered.endswith("\ndynamic_crystal_body:"))
 
 
 if __name__ == "__main__":
