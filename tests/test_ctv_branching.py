@@ -98,6 +98,7 @@ try:
     )
     from crystal_dlm.ctv_rollout import (
         collect_ctv_branch_states,
+        combine_policy_reference_logits,
         complete_ctv_forced_branches,
     )
 except Exception:  # pragma: no cover - torch is optional in lightweight CI.
@@ -106,6 +107,17 @@ except Exception:  # pragma: no cover - torch is optional in lightweight CI.
 
 @unittest.skipIf(torch is None, "torch is unavailable")
 class CTVBranchingTensorTest(unittest.TestCase):
+    def test_policy_reference_combination_preserves_masked_support(self):
+        policy = torch.tensor([[[1.0, 3.0, -float("inf")]]])
+        reference = torch.tensor([[[2.0, 1.0, -float("inf")]]])
+        combined = combine_policy_reference_logits(
+            policy, reference, guidance_scale=0.5
+        )
+        self.assertTrue(torch.equal(torch.isfinite(combined), torch.isfinite(policy)))
+        self.assertFalse(bool(torch.isnan(combined).any()))
+        self.assertAlmostEqual(float(combined[0, 0, 0]), 0.5)
+        self.assertAlmostEqual(float(combined[0, 0, 1]), 4.0)
+
     def test_intervention_position_uses_confidence_then_position_tie(self):
         mask = 99
         suffix = torch.full((15,), mask, dtype=torch.long)
@@ -204,6 +216,59 @@ class CTVBranchingTensorTest(unittest.TestCase):
             completed[:, position].tolist(),
             [int(row["action_token"]) for row in layout],
         )
+
+    def test_late_guidance_only_activates_after_remaining_quarter(self):
+        class TinyModel(torch.nn.Module):
+            def __init__(self, preferred):
+                super().__init__()
+                self.anchor = torch.nn.Parameter(torch.zeros(()))
+                self.output = torch.nn.Embedding(128, 1)
+                self.preferred = int(preferred)
+
+            def get_output_embeddings(self):
+                return self.output
+
+            def forward(self, token_ids, attention_mask=None):
+                del attention_mask
+                batch, length = token_ids.shape
+                logits = torch.zeros((batch, length, 128), dtype=torch.float32)
+                logits[..., self.preferred] = 2.0
+                return SimpleNamespace(logits=logits)
+
+        policy = TinyModel(20)
+        reference = TinyModel(21)
+        prompt = torch.tensor([[1, 2]], dtype=torch.long)
+        mask = 127
+        allowed = [[10]] + [list(range(30)) for _ in range(6)]
+        allowed += [[11], list(range(30)), list(range(30)), list(range(30))]
+        schedule = [[0], [7], [1, 2, 3, 4, 5, 6], [8], [9], [10]]
+        diagnostics = {}
+        completed, snapshots = collect_ctv_branch_states(
+            policy,
+            prompt,
+            attention_mask=torch.ones_like(prompt),
+            num_atoms=1,
+            gen_length=11,
+            temperature=0.0,
+            mask_id=mask,
+            allowed_token_ids_by_generation_pos=allowed,
+            prefill_token_ids_by_generation_pos={0: [10], 7: [11]},
+            generation_position_groups=schedule,
+            lightweight_decoding_constraints=None,
+            base_noise_group="late-guidance",
+            milestones=(),
+            reference_model=reference,
+            late_guidance_scale=0.5,
+            late_guidance_remaining_mask_threshold=0.25,
+            rollout_diagnostics=diagnostics,
+        )
+        self.assertEqual(snapshots, [])
+        self.assertFalse(bool((completed[:, 2:] == mask).any()))
+        self.assertGreater(diagnostics["guided_denoise_steps"], 0)
+        self.assertLess(
+            diagnostics["guided_denoise_steps"], diagnostics["total_denoise_steps"]
+        )
+        self.assertGreaterEqual(diagnostics["first_guided_visible_fraction"], 0.75)
 
 
 if __name__ == "__main__":

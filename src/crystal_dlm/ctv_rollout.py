@@ -139,6 +139,34 @@ def _constrained_logits(
     return logits
 
 
+def combine_policy_reference_logits(
+    policy_logits: torch.Tensor,
+    reference_logits: torch.Tensor,
+    *,
+    guidance_scale: float,
+) -> torch.Tensor:
+    """Apply late policy/reference guidance without arithmetic on masked -inf."""
+
+    if policy_logits.shape != reference_logits.shape:
+        raise ValueError("policy/reference logits shapes differ")
+    scale = float(guidance_scale)
+    if not torch.isfinite(torch.tensor(scale)) or scale <= 0.0:
+        raise ValueError("late guidance scale must be finite and positive")
+    policy_finite = torch.isfinite(policy_logits)
+    reference_finite = torch.isfinite(reference_logits)
+    if not torch.equal(policy_finite, reference_finite):
+        raise RuntimeError("policy/reference legal logit supports differ")
+    combined = policy_logits.clone()
+    combined[policy_finite] = (
+        policy_logits[policy_finite]
+        + scale
+        * (policy_logits[policy_finite] - reference_logits[policy_finite])
+    )
+    if bool(torch.isnan(combined).any()):
+        raise RuntimeError("late guidance produced NaN logits")
+    return combined
+
+
 def _transfer_step(
     *,
     x: torch.Tensor,
@@ -198,8 +226,23 @@ def collect_ctv_branch_states(
     lightweight_decoding_constraints: Mapping[str, Any] | None,
     base_noise_group: int | str,
     milestones: Sequence[float] = CTV_MILESTONES,
+    reference_model: Any | None = None,
+    late_guidance_scale: float = 0.0,
+    late_guidance_remaining_mask_threshold: float = 0.0,
+    rollout_diagnostics: dict[str, Any] | None = None,
 ) -> tuple[torch.Tensor, list[dict[str, Any]]]:
     """Run one frozen base trajectory and capture the two branch states."""
+
+    guidance_scale = float(late_guidance_scale)
+    guidance_threshold = float(late_guidance_remaining_mask_threshold)
+    if reference_model is None:
+        if guidance_scale != 0.0 or guidance_threshold != 0.0:
+            raise ValueError("late guidance parameters require a reference model")
+    else:
+        if _model_device(reference_model) != _model_device(model):
+            raise ValueError("policy/reference models must share one device")
+        if guidance_scale <= 0.0 or not 0.0 < guidance_threshold < 1.0:
+            raise ValueError("late guidance requires positive scale and threshold in (0,1)")
 
     x, expanded_attention = _initialize_sequence(
         model=model,
@@ -227,6 +270,8 @@ def collect_ctv_branch_states(
         num_atoms=int(num_atoms),
     )
     denoise_step = 0
+    guided_denoise_steps = 0
+    first_guided_visible_fraction: float | None = None
     for group_index, group in enumerate(groups):
         group_tensor = torch.tensor(group, device=x.device, dtype=torch.long)
         group_mask = x[:, prompt_length:].index_select(1, group_tensor) == int(mask_id)
@@ -251,6 +296,30 @@ def collect_ctv_branch_states(
                 allowed_mask=allowed_mask,
                 lightweight_decoding_constraints=lightweight_decoding_constraints,
             )
+            remaining_mask_fraction = 1.0 - float(fraction)
+            if (
+                reference_model is not None
+                and remaining_mask_fraction <= guidance_threshold + 1e-12
+            ):
+                reference_logits = _constrained_logits(
+                    model=reference_model,
+                    x=x,
+                    attention_mask=expanded_attention,
+                    prompt_index=prompt_index,
+                    prompt_length=prompt_length,
+                    gen_length=int(gen_length),
+                    mask_id=int(mask_id),
+                    allowed_mask=allowed_mask,
+                    lightweight_decoding_constraints=lightweight_decoding_constraints,
+                )
+                logits = combine_policy_reference_logits(
+                    logits,
+                    reference_logits,
+                    guidance_scale=guidance_scale,
+                )
+                guided_denoise_steps += 1
+                if first_guided_visible_fraction is None:
+                    first_guided_visible_fraction = float(fraction)
             before = fraction
             _transfer_step(
                 x=x,
@@ -332,6 +401,16 @@ def collect_ctv_branch_states(
         raise RuntimeError(f"CTV failed to capture frozen milestones: pending={pending}")
     if bool((x[:, prompt_length:] == int(mask_id)).any()):
         raise RuntimeError("CTV frozen base trajectory left masked suffix tokens")
+    if rollout_diagnostics is not None:
+        rollout_diagnostics.update(
+            {
+                "first_guided_visible_fraction": first_guided_visible_fraction,
+                "guided_denoise_steps": int(guided_denoise_steps),
+                "late_guidance_remaining_mask_threshold": guidance_threshold,
+                "late_guidance_scale": guidance_scale,
+                "total_denoise_steps": int(denoise_step),
+            }
+        )
     return x, captured
 
 
@@ -435,4 +514,8 @@ def complete_ctv_forced_branches(
     return x, layout
 
 
-__all__ = ["collect_ctv_branch_states", "complete_ctv_forced_branches"]
+__all__ = [
+    "collect_ctv_branch_states",
+    "combine_policy_reference_logits",
+    "complete_ctv_forced_branches",
+]

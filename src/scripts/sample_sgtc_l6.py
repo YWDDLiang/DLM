@@ -59,6 +59,11 @@ def main() -> None:
     parser.add_argument("--num-samples", type=int, default=256)
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--seed", type=int, required=True)
+    parser.add_argument("--reference-checkpoint-path")
+    parser.add_argument("--late-guidance-scale", type=float, default=0.0)
+    parser.add_argument(
+        "--late-guidance-remaining-mask-threshold", type=float, default=0.0
+    )
     args = parser.parse_args()
 
     denominator = validate_sgtc_denominator(args.num_samples)
@@ -68,6 +73,23 @@ def main() -> None:
     model, tokenizer = load_model_and_tokenizer(
         args.model_path, args.checkpoint_path, device
     )
+    reference_model = None
+    if args.reference_checkpoint_path:
+        if (
+            float(args.late_guidance_scale) != 0.5
+            or float(args.late_guidance_remaining_mask_threshold) != 0.25
+        ):
+            raise RuntimeError("SGTC fallback freezes late guidance at scale=0.5, threshold=0.25")
+        reference_model, reference_tokenizer = load_model_and_tokenizer(
+            args.model_path, args.reference_checkpoint_path, device
+        )
+        if reference_tokenizer.get_vocab() != tokenizer.get_vocab():
+            raise RuntimeError("policy/reference tokenizer vocabularies differ")
+    elif (
+        float(args.late_guidance_scale) != 0.0
+        or float(args.late_guidance_remaining_mask_threshold) != 0.0
+    ):
+        raise RuntimeError("late guidance parameters require --reference-checkpoint-path")
     process_one = import_process_one(args.crysllmgen_dir)
     plans = [
         json.loads(line)
@@ -84,6 +106,9 @@ def main() -> None:
     attempts: list[dict[str, Any]] = []
     graphs: list[dict[str, Any]] = []
     failures: Counter[str] = Counter()
+    guided_steps_total = 0
+    denoise_steps_total = 0
+    guided_attempts = 0
     torch.cuda.reset_peak_memory_stats()
     started = time.time()
     for ordinal, row in enumerate(plans):
@@ -107,6 +132,7 @@ def main() -> None:
             composition_id=composition_id,
             sample_idx=ordinal,
         )
+        rollout_diagnostics: dict[str, Any] = {}
         final_tokens, snapshots = collect_ctv_branch_states(
             model,
             prompt,
@@ -121,7 +147,16 @@ def main() -> None:
             lightweight_decoding_constraints=lightweight,
             base_noise_group=base_noise_group,
             milestones=(),
+            reference_model=reference_model,
+            late_guidance_scale=float(args.late_guidance_scale),
+            late_guidance_remaining_mask_threshold=float(
+                args.late_guidance_remaining_mask_threshold
+            ),
+            rollout_diagnostics=rollout_diagnostics,
         )
+        guided_steps_total += int(rollout_diagnostics["guided_denoise_steps"])
+        denoise_steps_total += int(rollout_diagnostics["total_denoise_steps"])
+        guided_attempts += int(rollout_diagnostics["guided_denoise_steps"] > 0)
         if snapshots:
             raise RuntimeError("SGTC base sampler unexpectedly captured CTV states")
         text = tokenizer.batch_decode(
@@ -140,6 +175,7 @@ def main() -> None:
             "parsed": False,
             "body_noise_seed": int(args.seed),
             "retry_or_replacement_used": False,
+            "late_guidance": dict(rollout_diagnostics),
         }
         try:
             arrays = validate_answer_matches_plan(plan, text)
@@ -176,6 +212,14 @@ def main() -> None:
         "temperature": float(args.temperature),
         "exact_composition": True,
         "generation_schedule": "exact_axis",
+        "guided_attempts": int(guided_attempts),
+        "guided_denoise_steps": int(guided_steps_total),
+        "late_guidance_remaining_mask_threshold": float(
+            args.late_guidance_remaining_mask_threshold
+        ),
+        "late_guidance_scale": float(args.late_guidance_scale),
+        "reference_checkpoint_path": args.reference_checkpoint_path,
+        "total_denoise_steps": int(denoise_steps_total),
         "elapsed_seconds": time.time() - started,
         "max_rss_kib": int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss),
         "max_cuda_allocated_bytes": int(torch.cuda.max_memory_allocated()),

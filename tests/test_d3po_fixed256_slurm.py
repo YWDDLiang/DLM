@@ -50,6 +50,31 @@ class D3POFixed256SlurmTest(unittest.TestCase):
         self.assertEqual(text.count('d3po_seed81017 "${SEED_A}"'), 2)
         self.assertEqual(text.count('d3po_seed81018 "${SEED_B}"'), 2)
 
+    def test_late_guidance_generation_is_one_frozen_sealed_setting(self):
+        text = (ROOT / "slurm/68_d3po_late_guidance_generation.sbatch").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("#SBATCH --cpus-per-task=48", text)
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:6", text)
+        self.assertEqual(len(re.findall(r"^run_cell [0-5] ", text, re.MULTILINE)), 6)
+        self.assertIn("--late-guidance-scale 0.5", text)
+        self.assertIn("--late-guidance-remaining-mask-threshold 0.25", text)
+        self.assertIn("--reference-checkpoint-path \"${BASE}\"", text)
+        self.assertIn("1b7f7111f75ed5b26cb235274f1b8da70393676898732722c3a63a2f61a35ce0", text)
+        self.assertIn("LATE_GUIDANCE_BURNED", text)
+        self.assertIn("rerank_or_replacement\tfalse", text)
+        self.assertIn("trap 'on_error", text)
+
+    def test_late_guidance_eval_runs_refined_and_raw(self):
+        text = (ROOT / "slurm/69_d3po_late_guidance_eval.sbatch").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('run_six ""', text)
+        self.assertIn('run_six "raw_"', text)
+        self.assertIn("H1_ACTIVE_DENOMINATOR=256", text)
+        self.assertIn("_OFFLINE_SUCCESS", text)
+        self.assertIn("ENGINEERING_FAILURE.tsv", text)
+
 
 if __name__ == "__main__":
     unittest.main()
