@@ -129,7 +129,8 @@ after prospective two-training-seed replication.
   runtime compatibility; otherwise initialize from minimal step696;
 - LoRA `r=8`, alpha `32`, dropout `0`, LR `5e-6`;
 - two independent training seeds;
-- exactly 348 updates and only step348;
+- exactly 696 updates and only step696; step348 is monitoring-only and cannot
+  be selected;
 - mixed loss: native-body CE, predicted-Plan robustness, minimal/reference CE;
 - no early stopping, checkpoint selection, or seed selection.
 
@@ -214,7 +215,8 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
 - [ ] `C3FD_NATIVE_PLAN_V1` serializer/round-trip/type tests complete.
 - [ ] MP20 train and chemsys-held-out native Plan datasets frozen.
 - [ ] C3FD-predicted versus teacher native-field coverage/calibration reported.
-- [ ] Two-seed Planner-native SFT terminal with only step348 adapters.
+- [ ] Two-seed Planner-native SFT terminal with only step696 adapters; step348
+  diagnostics disclosed but never selected.
 - [ ] Train/validation raw execution and stability canary terminal.
 - [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
 - [ ] If opened, fresh pool and safety-aware K-way trainer terminal.
@@ -228,4 +230,3 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   PAPER_STORY, tests, commit, and push complete.
 - [ ] Final RQs and 2--3 contributions classified as SUPPORTED, CANDIDATE, or
   UNSUPPORTED with forbidden claims listed.
-

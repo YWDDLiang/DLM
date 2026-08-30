@@ -65,8 +65,9 @@
   },
   "training": {
     "seeds": [82017, 82018],
-    "updates": 348,
-    "saved_checkpoints": [348],
+    "updates": 696,
+    "saved_checkpoints": [696],
+    "monitoring_only_step": 348,
     "lora_rank": 8,
     "lora_alpha": 32,
     "lora_dropout": 0.0,
@@ -110,4 +111,3 @@
     "test_outcome_training"
   ]
 }
-
