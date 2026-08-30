@@ -379,7 +379,8 @@
   teacher/pred17/pred18/masked/minimal五view、答案一致、每source总weight1、outcome-blind
   合同不变；
 - faithful offline job38603仍为development诊断，不再参与paper方法初始化选择；主方法
-  fresh初始化已冻结。预计无alignment时于2026-08-31 `14:00--18:00`完成全部SUN与论文
+  fresh初始化已冻结。该job已`COMPLETED 0:0`并写入`_OFFLINE_SUCCESS`，耗时
+  `01:58:23`；仅finalizer/archive待补。预计无alignment时于2026-08-31 `14:00--18:00`完成全部SUN与论文
   主线；若唯一fresh on-policy alignment被启用，预计`20:00--23:00`完成；
 - MP凭证只允许进入最终唯一query的临时nonambient process env，启动后立即unset；不得
   写入git、docs、automation、命令行、日志、hash或manifest，本任务结束前不再向用户索取。
@@ -407,3 +408,11 @@
   `56683048...f219f`、report SHA`7ee6b85...f9f95`。对照旧H1-A2后，该字节一致性只作
   强证据，不作renderer SHA hard gate；正式要求是runtime-normalized任务语义、Plan字段、
   hard composition与body label一致，只允许LS/SG/VP值变化。
+- fresh teacher-only双seed训练job38703已`COMPLETED 0:0`，耗时`01:14:51`，使用
+  `4A800/32CPU`、observed `4.9900 A800-hours`。82017/82018均从共享LLaDA-8B的
+  fresh LoRA零增量step0开始，各完成`3392`步且只保存唯一`step-3392`，无final alias、
+  训练日志无nonfinite。step1696→3392 validation loss分别为
+  `2.778165→2.704389`和`2.126418→1.819819`；adapter SHA分别为
+  `06cd5465...62b20`与`7f22580a...5526c`，hash复核通过。positive archive和
+  `C3FD_NATIVE_TEACHER_SFT_FINAL_20260831.md/json`已冻结；该终态只证明Planner接口SFT
+  完成，稳定性与SUN仍需固定raw-first canary和prospective评价。

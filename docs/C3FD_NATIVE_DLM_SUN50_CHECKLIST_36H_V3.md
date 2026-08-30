@@ -213,10 +213,10 @@ test-outcome training are out of scope.
 
 | Phase | Maximum resource | Expected wall time | Notes |
 |---|---:|---:|---|
-| faithful H0/R0S offline completion | 4 A800, 32 CPU | remaining 0.5--1.5 h | job38603 already running; development only |
+| faithful H0/R0S offline completion | 4 A800, 32 CPU | completed in 1:58:23 | job38603; finalizer pending; development only |
 | native Plan/data build and archive | 0 GPU, 16 CPU | 0.25--0.75 h | MP20-standard split; immutable hashes |
 | fresh trainer/wrapper implementation | 0 GPU, <=32 CPU | 1.5--3 h | teacher-rich only, two-stage LR |
-| two-seed fresh native SFT | 4 A800, 32 CPU | 1.5--2.5 h | two matched 2-A800 jobs, step3392 only |
+| two-seed fresh native SFT | 4 A800, 32 CPU | completed in 1:14:51 | job38703; step3392 only; 4.9900 A800-hours |
 | train/standard-val raw-first canary | <=6 A800, 48 CPU | 1.5--3 h | diagnostic only; no seed choice |
 | fresh on-policy pool plus alignment, if used | <=6 A800, 48 CPU | additional 5--8 h | fixed K and one frozen setting |
 | prospective generation | 6 A800, 48 CPU | 1--1.5 h | six cells once |
@@ -257,8 +257,9 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
 - [x] Rich prompt null-schema bug reproduced and regression-tested.
 - [x] Immutable faithful H0/R0S v2 cohort frozen with accounting metadata.
 - [x] Faithful H0/R0S generation terminal.
-- [ ] Faithful raw/refined offline diagnosis job38603 completed; finalizer and
-  archive remain. It cannot alter fresh paper-method initialization.
+- [ ] Faithful raw/refined offline diagnosis job38603 completed `0:0` with
+  `_OFFLINE_SUCCESS`; finalizer and archive remain. It cannot alter fresh
+  paper-method initialization.
 - [x] `C3FD_NATIVE_PLAN_V2` rich-JSON serializer/round-trip/type tests complete;
   Planner certificates are not part of the DLM interface.
 - [x] Full MP20 standard train/validation teacher-rich-only V2 data frozen by
@@ -274,8 +275,10 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   while the formal requirement is runtime-normalized schema/task equivalence.
 - [x] Fresh two-stage trainer, endpoint-only wrapper, and local/remote tests
   complete; first pre-run environment failure job38701 is negative-archived.
-- [ ] Two-seed fresh Planner-native SFT job38703 running with only step3392
-  eligible; both fresh-LoRA step0 zero-delta canaries passed.
+- [x] Two-seed fresh Planner-native SFT job38703 completed `0:0` in `01:14:51`.
+  Both fresh-LoRA step0 zero-delta canaries passed; each seed has exactly one
+  eligible `step-3392`, no final alias, finite logs, and verified adapter SHA.
+  Observed use was `4.9900 A800-hours`.
 - [ ] Train/validation raw execution and stability canary terminal.
 - [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
 - [ ] If opened, fresh pool and safety-aware K-way trainer terminal.

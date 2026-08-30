@@ -98,7 +98,10 @@
   "live_state_as_of_2026_08_31_0030_asia_shanghai": {
     "faithful_offline_job": {
       "job_id": 38603,
-      "state": "RUNNING",
+      "state": "COMPLETED_OFFLINE_FINALIZER_PENDING",
+      "exit_code": "0:0",
+      "elapsed": "01:58:23",
+      "offline_success_marker": true,
       "resources": "4_A800_32_CPU",
       "role": "development_diagnostic_no_official_query"
     },
@@ -153,12 +156,36 @@
   },
   "active_training": {
     "job_id": 38703,
-    "state": "RUNNING",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 4491,
     "resources": "4_A800_32_CPU",
     "training_seeds": [82017, 82018],
     "step0_zero_delta_passed": true,
     "eligible_checkpoint": 3392,
+    "one_checkpoint_per_seed": true,
+    "final_alias_present": false,
+    "finite_training_logs": true,
+    "observed_a800_hours": 4.99,
+    "policies": {
+      "82017": {
+        "validation_loss_step1696": 2.7781652107089756,
+        "validation_loss_step3392": 2.7043892790935935,
+        "adapter_sha256": "06cd5465d1c12dc70c695a12602a4bd99f6c5561f2dc44daa431aadeef962b20"
+      },
+      "82018": {
+        "validation_loss_step1696": 2.1264180888421835,
+        "validation_loss_step3392": 1.8198185446858406,
+        "adapter_sha256": "7f22580a78b4823b44ee841a25cce9fd39541bb0a2192171b0adb4788725526c"
+      }
+    },
+    "positive_archive": "archive/native_sft/train_success_38703",
     "duplicate_submission_forbidden": true
+  },
+  "current_jobs_after_training_terminal": {
+    "active_or_pending": 0,
+    "allocated_a800": 0,
+    "next_phase": "fixed_train_and_mp20_standard_validation_raw_first_canary"
   },
   "train_inference_interface_audit": {
     "rows": {"train": 27136, "validation": 9047},
