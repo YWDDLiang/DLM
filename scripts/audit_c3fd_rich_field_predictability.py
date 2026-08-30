@@ -61,6 +61,47 @@ def class_entropy(labels: Sequence[int]) -> float:
     )
 
 
+def conditional_entropy(left: Sequence[int], right: Sequence[int]) -> float:
+    """Return H(right | left) in nats for paired discrete observations."""
+    if len(left) != len(right):
+        raise ValueError("conditional entropy arrays differ in length")
+    if not left:
+        return 0.0
+    total = len(left)
+    grouped: dict[int, Counter[int]] = {}
+    for left_value, right_value in zip(left, right):
+        grouped.setdefault(int(left_value), Counter())[int(right_value)] += 1
+    value = 0.0
+    for counts in grouped.values():
+        group_total = sum(counts.values())
+        group_entropy = -sum(
+            (count / group_total) * math.log(count / group_total)
+            for count in counts.values()
+            if count
+        )
+        value += group_total / total * group_entropy
+    return value
+
+
+def joint_tvd(
+    left_a: Sequence[int],
+    left_b: Sequence[int],
+    right_a: Sequence[int],
+    right_b: Sequence[int],
+) -> float:
+    if not (len(left_a) == len(left_b) == len(right_a) == len(right_b)):
+        raise ValueError("joint TVD arrays differ in length")
+    if not left_a:
+        return 0.0
+    left = Counter(zip((int(value) for value in left_a), (int(value) for value in left_b)))
+    right = Counter(zip((int(value) for value in right_a), (int(value) for value in right_b)))
+    total = len(left_a)
+    return 0.5 * sum(
+        abs(left.get(key, 0) / total - right.get(key, 0) / total)
+        for key in set(left) | set(right)
+    )
+
+
 def expected_calibration_error(
     confidences: Sequence[float],
     correct: Sequence[bool],
@@ -172,9 +213,33 @@ def summarize_spacegroup_relation(
     count = len(lattice_targets)
     return {
         "n": count,
+        "independent_lattice_and_sg_joint_accuracy": sum(
+            lattice_prediction == lattice_target and sg_prediction == sg_target
+            for lattice_target, lattice_prediction, sg_target, sg_prediction in zip(
+                lattice_targets,
+                lattice_predictions,
+                sg_targets,
+                sg_predictions,
+            )
+        )
+        / count,
+        "independent_predicted_joint_tvd_from_target": joint_tvd(
+            lattice_targets,
+            sg_targets,
+            lattice_predictions,
+            sg_predictions,
+        ),
+        "target_sg_conditional_entropy_given_metric_lattice_nats": conditional_entropy(
+            lattice_targets,
+            sg_targets,
+        ),
+        "independent_predicted_sg_conditional_entropy_given_metric_lattice_nats": conditional_entropy(
+            lattice_predictions,
+            sg_predictions,
+        ),
         "lattice_derived_sg_coverage": sum(value is not None for value in predicted_derived)
         / count,
-        "target_lattice_sg_compatible": sum(
+        "target_one_to_one_lattice_sg_map_agreement": sum(
             left is not None and left == right
             for left, right in zip(target_derived, sg_targets)
         )
@@ -183,7 +248,7 @@ def summarize_spacegroup_relation(
             left == right for left, right in zip(sg_predictions, sg_targets)
         )
         / count,
-        "lattice_derived_sg_accuracy": sum(
+        "current_compiler_sg_accuracy_against_target": sum(
             left is not None and left == right
             for left, right in zip(predicted_derived, sg_targets)
         )
@@ -193,8 +258,13 @@ def summarize_spacegroup_relation(
             for left, right in zip(sg_predictions, predicted_derived)
         )
         / count,
-        "deployed_sg_incremental_entropy_given_lattice_nats": 0.0,
-        "deployed_sg_is_deterministic_compiler_output": True,
+        "current_compiler_sg_incremental_entropy_given_metric_lattice_nats": 0.0,
+        "current_compiler_sg_is_deterministic_output": True,
+        "semantic_note": (
+            "lattice_system is a metric-cell class from lengths/angles; "
+            "spacegroup_bucket is a symmetry label from metadata. "
+            "One-to-one map disagreement is not automatically invalid."
+        ),
     }
 
 
@@ -350,8 +420,9 @@ def render_markdown(report: Mapping[str, Any]) -> str:
         "",
         "- sampled rich logits: `lattice_system`, `volume_per_atom_bin`;",
         "- hard-derived lines: `anion_framework`, `charge_bucket`;",
-        "- compiler-derived line: `spacegroup_bucket` from lattice system;",
-        "- therefore deployed SG contributes zero incremental sampled entropy once lattice is known.",
+        "- currently compiler-derived line: `spacegroup_bucket` from metric lattice system;",
+        "- target `lattice_system` is derived from cell metric, while target SG comes from symmetry metadata;",
+        "- therefore one-to-one metric/SG disagreement is not automatically a physical inconsistency.",
         "",
         "## Validation metrics",
         "",
@@ -381,10 +452,12 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             [
                 f"### {checkpoint['name']}",
                 "",
-                f"- target lattice/SG compatibility: {relation['target_lattice_sg_compatible']:.4f}",
+                f"- target one-to-one metric/SG map agreement: {relation['target_one_to_one_lattice_sg_map_agreement']:.4f}",
                 f"- unused independent SG-head accuracy: {relation['independent_sg_head_accuracy']:.4f}",
-                f"- deployed lattice-derived SG accuracy: {relation['lattice_derived_sg_accuracy']:.4f}",
+                f"- current compiler-derived SG accuracy: {relation['current_compiler_sg_accuracy_against_target']:.4f}",
                 f"- independent-head vs derived agreement: {relation['independent_vs_lattice_derived_agreement']:.4f}",
+                f"- target H(SG | metric lattice): {relation['target_sg_conditional_entropy_given_metric_lattice_nats']:.4f} nats",
+                f"- independent predicted joint TVD: {relation['independent_predicted_joint_tvd_from_target']:.4f}",
                 f"- active rich heads with checkpoint temperature calibration: {checkpoint['active_rich_heads_calibrated_in_checkpoint']}",
                 "",
             ]
@@ -396,6 +469,8 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             "Teacher-forced predictability is necessary for a useful predicted field, but",
             "it does not establish causal stability value. That requires the frozen matched",
             "development canary. No field subset is selected from test outcomes.",
+            "The independent SG head and the compiler-derived SG are distinct deployed choices;",
+            "their validation accuracy must not be conflated with a hard lattice/SG consistency rule.",
             "",
         ]
     )
@@ -429,7 +504,7 @@ def main() -> None:
         for name, path in args.checkpoint
     ]
     report = {
-        "schema": "h1a2_c3fd_rich_field_predictability_audit_v1",
+        "schema": "h1a2_c3fd_rich_field_predictability_audit_v2",
         "checkpoints": checkpoints,
         "deployed_semantics": {
             "active_sampled_fields": list(ACTIVE_SAMPLED_FIELDS),

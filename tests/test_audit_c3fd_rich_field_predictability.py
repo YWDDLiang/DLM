@@ -45,10 +45,20 @@ class RichFieldPredictabilityAuditTest(unittest.TestCase):
             lattice_labels=lattice,
             sg_labels=spacegroups,
         )
-        self.assertEqual(result["target_lattice_sg_compatible"], 1.0)
-        self.assertAlmostEqual(result["lattice_derived_sg_accuracy"], 2 / 3)
-        self.assertTrue(result["deployed_sg_is_deterministic_compiler_output"])
-        self.assertEqual(result["deployed_sg_incremental_entropy_given_lattice_nats"], 0.0)
+        self.assertEqual(result["target_one_to_one_lattice_sg_map_agreement"], 1.0)
+        self.assertAlmostEqual(result["current_compiler_sg_accuracy_against_target"], 2 / 3)
+        self.assertTrue(result["current_compiler_sg_is_deterministic_output"])
+        self.assertEqual(
+            result["current_compiler_sg_incremental_entropy_given_metric_lattice_nats"],
+            0.0,
+        )
+
+    def test_conditional_entropy_detects_nonredundant_labels(self):
+        self.assertEqual(MODULE.conditional_entropy([0, 0, 1, 1], [0, 0, 1, 1]), 0.0)
+        self.assertAlmostEqual(
+            MODULE.conditional_entropy([0, 0, 1, 1], [0, 1, 0, 1]),
+            0.6931471805599453,
+        )
 
 
 if __name__ == "__main__":
