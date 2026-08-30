@@ -325,6 +325,30 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 "<SOFT_MASK>",
             )
 
+    def test_formal_sft_teacher_only_uses_one_rich_json_view(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, _predicted = self.make_formal_inputs(root)
+            output = root / "teacher-only"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                output_dir=output,
+                teacher_only=True,
+            )
+            self.assertEqual(manifest["prediction_mode"], "teacher-only")
+            self.assertEqual(manifest["prediction_checkpoint_order"], [])
+            self.assertEqual(manifest["views"], ["teacher-native"])
+            self.assertEqual(manifest["training_view_mode"], "teacher-rich-json-only")
+            for split in ("train", "val"):
+                rows = read_jsonl(output / f"{split}.jsonl")
+                self.assertEqual(len(rows), 1)
+                self.assertEqual(rows[0]["view"], "teacher-native")
+                self.assertEqual(rows[0]["prompt_schema"], "C3FD_NATIVE_PLAN_V2")
+                self.assertEqual(rows[0]["sample_weight"], 2.0)
+                self.assertNotIn("prediction_checkpoint", rows[0])
+            self.assertTrue(all(manifest["gate"].values()))
+
     def test_roundtrip_and_legacy_development_views_share_exact_answer(self):
         with tempfile.TemporaryDirectory() as temp:
             _source, _semantic, _predicted, output, manifest = self.build(Path(temp))

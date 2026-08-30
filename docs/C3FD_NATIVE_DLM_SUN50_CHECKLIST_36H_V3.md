@@ -92,18 +92,11 @@ no row is filtered by a Planner certificate. MP20 is split by material/structure
 entry rather than by chemsys and has `3,469` overlapping chemsys. This overlap
 predates native rendering and is disclosed rather than treated as an error.
 Consequently this run calls the split **MP20 standard
-validation**, never chemsys-held-out validation. Each crystal receives paired
-input views with the same crystal-body target:
-
-1. a typed native Plan derived from the train crystal for learning the intended
-   field semantics;
-2. a frozen C3FD-predicted native Plan for the same composition, generated
-   without stability labels, to match deployment-time Planner noise.
-
-The second view prevents a teacher-Plan/inference-Plan gap. Soft-field dropout
-and the paired minimal view teach robustness when a predicted lattice, SG, or
-volume bin is wrong. Energy, hull, prospective outcomes, and current
-development-canary outcomes are excluded from this SFT dataset. Legacy source
+validation**, never chemsys-held-out validation. Each MP20 crystal contributes
+exactly one ground-truth teacher rich JSON prompt and one crystal-body target.
+C3FD-predicted Plans are inference inputs only and are never mixed into SFT.
+Energy, hull, prospective outcomes, and current development-canary outcomes are
+excluded from this SFT dataset. Legacy source
 rows use immutable file ordinal for alignment; composition, N, and answer
 alignment against semantic and dual-Planner rows must remain exact.
 
@@ -141,17 +134,15 @@ after prospective two-training-seed replication.
 - keep the recovered H1-A2 LoRA structure: `r=8`, alpha `32`, dropout `0.05`,
   target modules `q/k/v/ff/up`;
 - two independent DLM training seeds;
-- use a source-balanced sampler: each of the 27,136 MP20 train rows
-  contributes once per source epoch, while the four V2 views are globally balanced
-  and deterministically rotated between epochs;
+- each of the 27,136 MP20 teacher-rich rows contributes once per source epoch;
 - epoch1: 1,696 optimizer updates, effective batch 16, LR `5e-5`, cosine,
   warmup 100, minimum LR ratio `0.2`;
 - epoch2: another 1,696 updates, LR `1e-5`, cosine, warmup 100, minimum LR
   ratio `0.1`;
 - total: 3,392 optimizer updates; only the epoch2/step3392 adapter is eligible
   for prospective evaluation. Epoch1/step1696 is monitoring-only;
-- all four same-schema views provide native-body CE, dual-Planner robustness,
-  and soft-field masking without any stability labels;
+- SFT is ordinary teacher-rich masked-body CE, matching the original H1-A2
+  training story; Planner prediction error is evaluated at inference time;
 - no early stopping, epoch/checkpoint selection, or seed selection.
 
 ### Stage 2: optional stability alignment
@@ -220,7 +211,7 @@ test-outcome training are out of scope.
 |---|---:|---:|---|
 | faithful H0/R0S offline completion | 4 A800, 32 CPU | remaining 0.5--1.5 h | job38603 already running; development only |
 | native Plan/data build and archive | 0 GPU, 16 CPU | 0.25--0.75 h | MP20-standard split; immutable hashes |
-| fresh trainer/wrapper implementation | 0 GPU, <=32 CPU | 1.5--3 h | source-balanced four-view, two-stage LR |
+| fresh trainer/wrapper implementation | 0 GPU, <=32 CPU | 1.5--3 h | teacher-rich only, two-stage LR |
 | two-seed fresh native SFT | 4 A800, 32 CPU | 1.5--2.5 h | two matched 2-A800 jobs, step3392 only |
 | train/standard-val raw-first canary | <=6 A800, 48 CPU | 1.5--3 h | diagnostic only; no seed choice |
 | fresh on-policy pool plus alignment, if used | <=6 A800, 48 CPU | additional 5--8 h | fixed K and one frozen setting |
@@ -244,13 +235,13 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
 - [x] Rich prompt null-schema bug reproduced and regression-tested.
 - [x] Immutable faithful H0/R0S v2 cohort frozen with accounting metadata.
 - [x] Faithful H0/R0S generation terminal.
-- [ ] Faithful raw/refined offline diagnosis terminal (job38603 running); no
-  initialization choice is permitted for the fresh paper method.
+- [ ] Faithful raw/refined offline diagnosis job38603 completed; finalizer and
+  archive remain. It cannot alter fresh paper-method initialization.
 - [x] `C3FD_NATIVE_PLAN_V2` rich-JSON serializer/round-trip/type tests complete;
   Planner certificates are not part of the DLM interface.
-- [ ] Full MP20 standard train/validation four-view V2 data frozen. Job38681's
-  five-view output passed its audits but is superseded because its fifth
-  minimal-reference view used a different prompt schema; it is not trainable.
+- [ ] Full MP20 standard train/validation teacher-rich-only V2 data frozen.
+  Jobs38681/38684 are valid but superseded multi-view development artifacts and
+  are not trainable.
 - [x] Dual-C3FD predicted soft-field coverage reported: train `27,136`,
   validation `9,047`, both checkpoints and all three fields at 100% coverage.
 - [ ] Two-seed fresh Planner-native SFT terminal with only step3392 adapters;

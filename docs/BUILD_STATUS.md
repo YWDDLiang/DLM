@@ -386,6 +386,6 @@
 - simplified V2 data job38681已`COMPLETED 0:0`，16CPU/0GPU/41秒；full MP20
   train/validation `27136/9047` materialize为五view `135680/45235`行，每group答案唯一且
   weight和为1；prompt/Plan中的valence/charge/prototype/oxidation/certificate计数全为0。
-  但用户进一步要求所有MP20正式训练输入必须同为rich-Plan JSON，因此其中第五个
-  minimal-reference view虽数据正确仍被supersede，绝不用于训练；正式冻结改为
-  teacher/pred17/pred18/soft-masked四个`C3FD_NATIVE_PLAN_V2` views。
+  用户最终澄清H1-A2式合同：SFT只接受MP20 ground-truth teacher rich JSON；C3FD预测
+  rich JSON仅在推理时输入。故38681五view和38684四view都冻结为未训练development
+  artifacts；正式数据只保留每source一个teacher `C3FD_NATIVE_PLAN_V2` prompt。

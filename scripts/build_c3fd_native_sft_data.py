@@ -694,6 +694,7 @@ def convert_aligned_row(
     row_index: int,
     prediction_mode: str,
     checkpoint_order: Sequence[str],
+    teacher_only: bool = False,
 ) -> list[dict[str, Any]]:
     _check_split(source_row, split, label="DLM row")
     _check_split(semantic_row, split, label="semantic row")
@@ -712,15 +713,19 @@ def convert_aligned_row(
     source_plan = _plan_from_row(source_row, label="DLM row")
     semantic_plan = _plan_from_row(semantic_row, label="semantic row")
     _assert_plan_alignment(source_plan, semantic_plan, label="semantic Plan")
-    predicted_soft_by_checkpoint = _resolve_predicted_soft_fields_by_checkpoint(
-        source_row,
-        semantic_row,
-        predicted_row,
-        split=split,
-        row_index=row_index,
-        source_plan=source_plan,
-        prediction_mode=prediction_mode,
-        checkpoint_order=checkpoint_order,
+    predicted_soft_by_checkpoint = (
+        {}
+        if teacher_only
+        else _resolve_predicted_soft_fields_by_checkpoint(
+            source_row,
+            semantic_row,
+            predicted_row,
+            split=split,
+            row_index=row_index,
+            source_plan=source_plan,
+            prediction_mode=prediction_mode,
+            checkpoint_order=checkpoint_order,
+        )
     )
     teacher_soft = _soft_fields(semantic_plan, label="semantic teacher Plan")
     teacher_plan = _native_plan(source_plan, semantic_plan, teacher_soft)
@@ -747,7 +752,7 @@ def convert_aligned_row(
     source_weight = float(source_row.get("sample_weight", 1.0) or 1.0)
     if source_weight <= 0:
         raise ValueError("DLM row sample_weight must be positive")
-    view_names = expanded_view_names(checkpoint_order)
+    view_names = ("teacher-native",) if teacher_only else expanded_view_names(checkpoint_order)
     common: dict[str, Any] = {
         "schema": SCHEMA,
         "source_split": split,
@@ -790,20 +795,21 @@ def convert_aligned_row(
                 "plan_state": predicted_plan,
             }
         )
-    masked_plan = {
-        **teacher_plan,
-        **{key: "<SOFT_MASK>" for key in SOFT_FIELDS},
-    }
-    masked_line = mask_native_soft_fields(teacher_line)
-    masked_row = {
-        **common,
-        "view": "soft-masked",
-        "prompt_schema": "C3FD_NATIVE_PLAN_V2_SOFT_MASKED",
-        "prompt": build_native_body_prompt(teacher_plan, mask_soft_fields=True),
-        "native_plan_line": masked_line,
-        "plan_state": masked_plan,
-    }
-    rows = [teacher_row, *predicted_views, masked_row]
+    rows = [teacher_row, *predicted_views]
+    if not teacher_only:
+        masked_plan = {
+            **teacher_plan,
+            **{key: "<SOFT_MASK>" for key in SOFT_FIELDS},
+        }
+        masked_row = {
+            **common,
+            "view": "soft-masked",
+            "prompt_schema": "C3FD_NATIVE_PLAN_V2_SOFT_MASKED",
+            "prompt": build_native_body_prompt(teacher_plan, mask_soft_fields=True),
+            "native_plan_line": mask_native_soft_fields(teacher_line),
+            "plan_state": masked_plan,
+        }
+        rows.append(masked_row)
     if {row["answer"] for row in rows} != {answer}:
         raise RuntimeError("multi-view conversion changed the answer/body")
     if not math.isclose(
@@ -854,6 +860,7 @@ def build_dataset(
     allow_legacy_single_prediction_development: bool = False,
     split_policy: str = "chemsys-held-out",
     allow_source_ordinal_index: bool = False,
+    teacher_only: bool = False,
 ) -> dict[str, Any]:
     input_dir = Path(input_dir)
     semantic_dir = Path(semantic_dir)
@@ -865,14 +872,24 @@ def build_dataset(
         raise ValueError(f"unsupported split policy {split_policy!r}")
     if output_dir.exists():
         raise FileExistsError(output_dir)
-    prediction_contract = _load_prediction_contract(
-        predicted_soft_dir,
-        allow_legacy_single_prediction_development=(
-            allow_legacy_single_prediction_development
-        ),
-    )
+    if teacher_only:
+        if predicted_soft_dir is not None:
+            raise ValueError("teacher-only SFT must not load predicted Planner rows")
+        prediction_contract = {
+            "mode": "teacher-only",
+            "checkpoint_order": (),
+            "manifest_sha256": None,
+            "selection": "none",
+        }
+    else:
+        prediction_contract = _load_prediction_contract(
+            predicted_soft_dir,
+            allow_legacy_single_prediction_development=(
+                allow_legacy_single_prediction_development
+            ),
+        )
     checkpoint_order = tuple(prediction_contract["checkpoint_order"])
-    view_names = expanded_view_names(checkpoint_order)
+    view_names = ("teacher-native",) if teacher_only else expanded_view_names(checkpoint_order)
     predicted_view_names = tuple(
         predicted_view_name(name) for name in checkpoint_order
     )
@@ -958,6 +975,7 @@ def build_dataset(
                         row_index=source_idx,
                         prediction_mode=str(prediction_contract["mode"]),
                         checkpoint_order=checkpoint_order,
+                        teacher_only=teacher_only,
                     )
                     source_count += 1
                     for row in converted:
@@ -1039,6 +1057,7 @@ def build_dataset(
             "chemsys_overlap_disclosed": True,
             "legacy_rich_fields_absent": True,
             "planner_certificates_not_exposed_to_dlm": True,
+            "training_view_mode_declared": True,
         }
         manifest = {
             "schema": MANIFEST_SCHEMA,
@@ -1067,6 +1086,9 @@ def build_dataset(
             ],
             "legacy_single_prediction_development": (
                 prediction_contract["mode"] == "legacy-single-development"
+            ),
+            "training_view_mode": (
+                "teacher-rich-json-only" if teacher_only else "multi-view-development"
             ),
             "unknown_prediction_policy": "per-field-soft-mask",
             "splits": split_reports,
@@ -1121,6 +1143,11 @@ def main() -> None:
             "original source row has no explicit index"
         ),
     )
+    parser.add_argument(
+        "--teacher-only",
+        action="store_true",
+        help="materialize only ground-truth teacher rich JSON for formal SFT",
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     report = build_dataset(
@@ -1133,6 +1160,7 @@ def main() -> None:
         ),
         split_policy=args.split_policy,
         allow_source_ordinal_index=args.allow_source_ordinal_index,
+        teacher_only=args.teacher_only,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True), flush=True)
 
