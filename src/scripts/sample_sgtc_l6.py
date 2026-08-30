@@ -115,7 +115,9 @@ def main() -> None:
         plan = dict(row["plan_state"])
         num_atoms = int(plan["N"])
         composition_id = str(row["reduced_composition_identity"])
-        source_sample_idx = int(row.get("sample_idx", ordinal))
+        source_sample_idx = int(
+            row.get("source_sample_idx", row.get("sample_idx", ordinal))
+        )
         prompt_text = str(row["prompt"]).rstrip() + "\n"
         encoded = tokenizer(
             [prompt_text], add_special_tokens=False, padding=True, return_tensors="pt"
