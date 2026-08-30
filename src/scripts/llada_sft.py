@@ -69,6 +69,7 @@ from crystal_dlm.transformers_compat import (
     ensure_create_bidirectional_mask,
     ensure_llada2_rope_parameters,
 )
+from crystal_dlm.two_stage_lr import two_stage_lr_multiplier
 from h1a2_repro.counterfactual import geometry_relative_positions, pairwise_logistic_from_margins
 
 
@@ -337,7 +338,14 @@ def loss_profile_id(name: str | None) -> int:
 
 
 class JsonlSftDataset(Dataset):
-    def __init__(self, path: Path, tokenizer, max_length: int):
+    def __init__(
+        self,
+        path: Path,
+        tokenizer,
+        max_length: int,
+        *,
+        fail_on_truncation: bool = False,
+    ):
         self.rows: List[Dict[str, Any]] = []
         with path.open(encoding="utf-8") as handle:
             for line in handle:
@@ -345,6 +353,7 @@ class JsonlSftDataset(Dataset):
                     self.rows.append(json.loads(line))
         self.tokenizer = tokenizer
         self.max_length = max_length
+        self.fail_on_truncation = bool(fail_on_truncation)
 
     def __len__(self) -> int:
         return len(self.rows)
@@ -353,12 +362,16 @@ class JsonlSftDataset(Dataset):
         row = self.rows[index]
         prompt_text = row["prompt"].rstrip() + "\n"
         full_text = prompt_text + row["answer"]
-        input_ids = self.tokenizer(
+        full_input_ids = self.tokenizer(
             full_text,
             add_special_tokens=False,
-            truncation=True,
-            max_length=self.max_length,
         )["input_ids"]
+        if self.fail_on_truncation and len(full_input_ids) > self.max_length:
+            raise ValueError(
+                f"SFT row {index} token length {len(full_input_ids)} exceeds "
+                f"max_length={self.max_length}"
+            )
+        input_ids = full_input_ids[: self.max_length]
         prompt_length = len(
             self.tokenizer(prompt_text, add_special_tokens=False)["input_ids"]
         )
@@ -2129,8 +2142,21 @@ def save_checkpoint(
 
 def build_lr_scheduler(optimizer, args, total_steps: int):
     warmup_steps = max(0, int(args.warmup_steps))
+    stage2_lr = float(getattr(args, "lr_stage2", 0.0) or 0.0)
+    stage_boundary = int(getattr(args, "lr_stage_boundary", 0) or 0)
 
     def lr_lambda(step: int) -> float:
+        if stage2_lr > 0.0:
+            return two_stage_lr_multiplier(
+                step,
+                total_steps=total_steps,
+                stage_boundary=stage_boundary,
+                stage1_warmup=warmup_steps,
+                stage1_min_ratio=float(args.min_lr_ratio),
+                stage2_base_ratio=stage2_lr / float(args.lr),
+                stage2_warmup=int(args.stage2_warmup_steps),
+                stage2_min_ratio=float(args.stage2_min_lr_ratio),
+            )
         if warmup_steps > 0 and step < warmup_steps:
             return max(1e-8, float(step + 1) / float(warmup_steps))
         if args.lr_scheduler == "constant":
@@ -2296,6 +2322,20 @@ def main() -> None:
     parser.add_argument("--lr-scheduler", choices=["constant", "cosine"], default="constant")
     parser.add_argument("--warmup-steps", type=int, default=0)
     parser.add_argument("--min-lr-ratio", type=float, default=0.1)
+    parser.add_argument(
+        "--lr-stage-boundary",
+        type=int,
+        default=0,
+        help="Optimizer step at which an optional second cosine stage begins.",
+    )
+    parser.add_argument(
+        "--lr-stage2",
+        type=float,
+        default=0.0,
+        help="Absolute base LR for stage 2. Zero disables the two-stage schedule.",
+    )
+    parser.add_argument("--stage2-warmup-steps", type=int, default=0)
+    parser.add_argument("--stage2-min-lr-ratio", type=float, default=0.1)
     parser.add_argument("--weight-decay", type=float, default=0.0)
     parser.add_argument("--logging-steps", type=int, default=10)
     parser.add_argument("--eval-steps", type=int, default=200)
@@ -2303,6 +2343,11 @@ def main() -> None:
     parser.add_argument("--eval-max-batches", type=int, default=50)
     parser.add_argument("--position-diagnostics-steps", type=int, default=0)
     parser.add_argument("--dataloader-num-workers", type=int, default=0)
+    parser.add_argument(
+        "--fail-on-truncation",
+        action="store_true",
+        help="Fail instead of silently truncating a prompt plus answer.",
+    )
     parser.add_argument(
         "--weighted-sampling",
         action="store_true",
@@ -2389,6 +2434,15 @@ def main() -> None:
         parser.error("counterfactual grounding is implemented only for exact dynamic_v1 bodies")
     if args.dynamic_geometry_only and args.representation != "dynamic_v1":
         parser.error("dynamic-geometry-only requires representation=dynamic_v1")
+    if args.lr_stage2 > 0:
+        if args.lr_scheduler != "cosine":
+            parser.error("two-stage LR requires --lr-scheduler cosine")
+        if args.lr_stage_boundary <= 0:
+            parser.error("two-stage LR requires positive --lr-stage-boundary")
+        if args.lr <= 0 or args.lr_stage2 > args.lr:
+            parser.error("stage2 LR must be positive and no larger than stage1 LR")
+        if args.stage2_warmup_steps < 0:
+            parser.error("stage2 warmup must be non-negative")
     if args.answer_token_count is None:
         args.answer_token_count = infer_answer_token_count(args.data_dir)
     if args.representation == "dynamic_v1" and args.answer_token_count is None:
@@ -2503,6 +2557,32 @@ def main() -> None:
             semantic_report,
         )
     model.to(device)
+    target_model = model.module if hasattr(model, "module") else model
+    lora_b_parameters = [
+        parameter
+        for name, parameter in target_model.named_parameters()
+        if "lora_B" in name
+    ]
+    lora_b_max_abs = max(
+        (float(parameter.detach().abs().max().cpu()) for parameter in lora_b_parameters),
+        default=None,
+    )
+    fresh_lora = bool(args.use_lora and args.checkpoint_path is None)
+    if fresh_lora and (not lora_b_parameters or lora_b_max_abs != 0.0):
+        raise RuntimeError("fresh LoRA step0 zero-delta canary failed")
+    if is_main:
+        write_json(
+            str(args.output_dir / "step0_lora_equality_canary.json"),
+            {
+                "fresh_lora": fresh_lora,
+                "checkpoint_path": (
+                    None if args.checkpoint_path is None else str(args.checkpoint_path)
+                ),
+                "lora_B_parameter_tensors": len(lora_b_parameters),
+                "lora_B_max_abs": lora_b_max_abs,
+                "exact_zero_delta": bool(fresh_lora and lora_b_max_abs == 0.0),
+            },
+        )
     element_alignment_targets = None
     if args.element_token_alignment_loss_weight > 0:
         element_alignment_targets = build_element_semantic_alignment_targets(
@@ -2530,7 +2610,12 @@ def main() -> None:
     model.train()
 
     if args.train_csv_dir is None:
-        train_ds = JsonlSftDataset(args.data_dir / "train.jsonl", tokenizer, args.max_length)
+        train_ds = JsonlSftDataset(
+            args.data_dir / "train.jsonl",
+            tokenizer,
+            args.max_length,
+            fail_on_truncation=args.fail_on_truncation,
+        )
         train_data_source = str(args.data_dir / "train.jsonl")
     else:
         train_ds = CsvCrystalSftDataset(
@@ -2546,7 +2631,12 @@ def main() -> None:
             answer_representation=args.representation,
         )
         train_data_source = str(args.train_csv_dir / "train.csv")
-    val_ds = JsonlSftDataset(args.data_dir / "val.jsonl", tokenizer, args.max_length)
+    val_ds = JsonlSftDataset(
+        args.data_dir / "val.jsonl",
+        tokenizer,
+        args.max_length,
+        fail_on_truncation=args.fail_on_truncation,
+    )
     if args.limit_train:
         train_ds.rows = train_ds.rows[: args.limit_train]
     if args.limit_val:
@@ -2719,7 +2809,10 @@ def main() -> None:
                     loss.backward()
                 if (micro_step + 1) % args.grad_accum != 0:
                     continue
-                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                grad_norm_value = float(torch.as_tensor(grad_norm).detach().cpu())
+                if not math.isfinite(grad_norm_value):
+                    raise FloatingPointError("non-finite gradient norm")
                 optimizer.step()
                 scheduler.step()
                 optimizer.zero_grad(set_to_none=True)
@@ -2743,6 +2836,7 @@ def main() -> None:
                                 "epoch": epoch,
                                 "loss": float(loss.detach().cpu()) * args.grad_accum,
                                 "task_loss": float(task_loss.detach().cpu()),
+                                "grad_norm": grad_norm_value,
                                 "element_alignment_loss": alignment_value,
                                 "counterfactual_grounding_loss": grounding_value,
                                 "counterfactual_grounding_margin": grounding_margin,
