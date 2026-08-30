@@ -56,10 +56,35 @@ class FreezeRichRecoveryCohortTest(unittest.TestCase):
         for m0, r0, rcf in zip(views["M0"], views["R0"], views["RCF"]):
             for field in MODULE.HARD_FIELDS:
                 self.assertEqual(r0["plan_state"].get(field), rcf["plan_state"].get(field))
+            self.assertIsNotNone(r0["plan_state"].get("prototype_key"))
+            self.assertIsNotNone(rcf["plan_state"].get("prototype_key"))
+            self.assertNotIn('"prototype_key":null', r0["prompt"])
+            self.assertNotIn('"prototype_key":null', rcf["prompt"])
             self.assertIn("dynamic_crystal_body:", m0["prompt"])
             self.assertNotIn("plan_state:", m0["prompt"])
             self.assertIn("plan_state:", r0["prompt"])
             self.assertIn("plan_state:", rcf["prompt"])
+
+    def test_missing_legacy_fields_are_canonicalized_before_rendering(self):
+        rows = [fixture(index) for index in range(4)]
+        for index, row in enumerate(rows):
+            row["plan_state"]["N"] = index + 2
+            row["plan_state"]["counts"] = [index + 1, 1]
+            row["plan_state"]["formula"] = f"Na{index + 1}{row['plan_state']['elements'][1]}"
+            row["plan_state"].pop("oxidation_candidates")
+            row["plan_state"].pop("prototype_key", None)
+        _ledger, views, _report = MODULE.freeze(
+            rows,
+            count=4,
+            blocked_exact=set(),
+            rcf_shift=1,
+        )
+        for arm in ("R0", "RCF"):
+            for row in views[arm]:
+                self.assertEqual(row["plan_state"]["oxidation_candidates"], "unknown")
+                self.assertIsInstance(row["plan_state"]["prototype_key"], str)
+                self.assertNotIn('"oxidation_candidates":null', row["prompt"])
+                self.assertNotIn('"prototype_key":null', row["prompt"])
 
     def test_blocked_and_duplicate_exact_compositions_are_removed(self):
         rows = [fixture(0), fixture(0), fixture(1)]

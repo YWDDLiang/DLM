@@ -156,6 +156,23 @@ def soft_tuple(plan: Mapping[str, Any]) -> tuple[str, str, str]:
     return tuple(str(plan[field]) for field in SOFT_TUPLE_FIELDS)  # type: ignore[return-value]
 
 
+def canonicalize_rich_plan(plan: Mapping[str, Any]) -> dict[str, Any]:
+    """Render the legacy rich schema without out-of-support JSON null fields.
+
+    ``oxidation_candidates`` and ``prototype_key`` are deterministic interface
+    fields, not independently sampled Planner outcomes.  Historical H1-A2 body
+    prompts used the string ``unknown`` and a populated prototype key, whereas
+    newer C3FD plan rows can omit both fields.  Fill them before any factual or
+    counterfactual prompt is rendered so the two arms share one schema.
+    """
+
+    payload = deepcopy(dict(plan))
+    if payload.get("oxidation_candidates") is None:
+        payload["oxidation_candidates"] = "unknown"
+    payload["prototype_key"] = prototype_key(payload)
+    return payload
+
+
 def write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> str:
     with path.open("x", encoding="utf-8", newline="\n") as handle:
         for row in rows:
@@ -173,6 +190,7 @@ def freeze(
     selected = []
     seen: set[str] = set()
     exclusions: Counter[str] = Counter()
+    schema_repairs: Counter[str] = Counter()
     for source_ordinal, row in enumerate(source_rows):
         plan = find_plan_state(row)
         if plan is None:
@@ -192,11 +210,18 @@ def freeze(
             exclusions["duplicate_exact_identity"] += 1
             continue
         seen.add(exact)
+        canonical_plan = canonicalize_rich_plan(plan)
+        schema_repairs["oxidation_candidates_unknown"] += int(
+            plan.get("oxidation_candidates") is None
+        )
+        schema_repairs["prototype_key_derived"] += int(
+            plan.get("prototype_key") != canonical_plan["prototype_key"]
+        )
         selected.append(
             {
                 "source_ordinal": source_ordinal,
                 "source_sample_idx": int(row.get("sample_idx", source_ordinal)),
-                "plan_state": deepcopy(dict(plan)),
+                "plan_state": canonical_plan,
                 "exact_composition_identity": exact,
                 "reduced_composition_identity": reduced,
                 "chemsys": system,
@@ -278,6 +303,7 @@ def freeze(
         "requested": int(count),
         "selected": len(selected),
         "exclusions": dict(sorted(exclusions.items())),
+        "canonical_schema_repairs": dict(sorted(schema_repairs.items())),
         "rcf_shift": int(rcf_shift),
         "rcf_donor_derangement": True,
         "rcf_joint_tuple_multiset_preserved": True,
