@@ -1,0 +1,113 @@
+{
+  "schema": "c3fd_native_dlm_sun50_checklist_36h_v3",
+  "date": "2026-08-30",
+  "deadline": "2026-08-31T23:30:00+08:00",
+  "status": "active_execution_contract",
+  "headline_targets": {
+    "strict_sun_rate": 0.1,
+    "meta_sun_rate": 0.5,
+    "requested_denominator": 256,
+    "strict_count_reference": 26,
+    "meta_count_reference": 128,
+    "training_seed_rule": "report_both_seeds_no_selection",
+    "stream_rule": "mean_two_predeclared_streams_with_all_streams_disclosed",
+    "result_deletion_gate": false
+  },
+  "pipeline": [
+    "c3fd_semantic_planner",
+    "c3fd_native_masked_dlm",
+    "model494_tau800_refinement"
+  ],
+  "native_plan": {
+    "version": "C3FD_NATIVE_PLAN_V1",
+    "hard_fields": [
+      "N",
+      "elements",
+      "counts",
+      "valence_species_or_charge_certificate",
+      "anion_framework_or_family"
+    ],
+    "soft_fields": [
+      "lattice_system",
+      "spacegroup_bucket",
+      "volume_per_atom_bin"
+    ],
+    "retired_fields": [
+      "prototype_key",
+      "oxidation_candidates_unknown"
+    ],
+    "body_representation": "dynamic_7_plus_4N",
+    "soft_fields_are_hard_constraints": false
+  },
+  "data": {
+    "adaptation_sft": {
+      "source": "MP20_train_only",
+      "validation": "chemsys_held_out",
+      "views": [
+        "teacher_native_plan",
+        "frozen_c3fd_predicted_native_plan",
+        "minimal_reference_view"
+      ],
+      "outcome_labels_read": false
+    },
+    "historical_3614_candidates": {
+      "role": "development_only_evidence",
+      "paper_main_training_allowed": false,
+      "confirmatory_test_allowed": false
+    },
+    "formal_alignment_pool": {
+      "source": "fresh_on_policy_from_frozen_native_sft",
+      "composition_source": "MP20_train_only",
+      "fixed_k_before_sampling": true,
+      "preserve_all_failures": true,
+      "cross_composition_energy_comparison": false
+    }
+  },
+  "training": {
+    "seeds": [82017, 82018],
+    "updates": 348,
+    "saved_checkpoints": [348],
+    "lora_rank": 8,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "learning_rate": 0.000005,
+    "early_stop": false,
+    "seed_or_checkpoint_selection": false,
+    "alignment_is_optional_after_sft": true
+  },
+  "evaluation": {
+    "prospective_compositions": 256,
+    "streams": [17, 18],
+    "temperature": 0.7,
+    "schedule": "exact_axis",
+    "refiner": "model494",
+    "tau": 800,
+    "trajectory_per_plan": 1,
+    "official_query_max": 1,
+    "unknown_hull_policy": "missing",
+    "independent_unit": "composition"
+  },
+  "decision_tree": [
+    "faithful_diagnosis_selects_initialization_only",
+    "stop_at_native_sft_if_prospective_target_is_met",
+    "open_one_fresh_alignment_contract_if_sft_recovers_execution_but_misses_target",
+    "classify_refined_only_gain_as_refiner_mediated",
+    "report_seed_disagreement_without_selection"
+  ],
+  "forbidden": [
+    "pure_AR",
+    "oracle_rich_plan",
+    "direct_planner_CIF",
+    "target_spacegroup_or_wyckoff",
+    "prototype_lookup",
+    "composition_tilt",
+    "survivor_filter",
+    "rerank",
+    "replacement",
+    "best_of_N",
+    "tau_temperature_checkpoint_sweep",
+    "RL_GRPO_SMC",
+    "test_outcome_training"
+  ]
+}
+

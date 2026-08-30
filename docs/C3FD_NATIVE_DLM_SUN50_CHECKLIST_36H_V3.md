@@ -1,0 +1,231 @@
+# C3FD-native DLM stability checklist v3
+
+Date: 2026-08-30  
+Deadline: 2026-08-31 23:30 Asia/Shanghai  
+Status: active execution contract
+
+## Outcome target
+
+The final prospective, fixed-denominator experiment targets:
+
+- **Strict S.U.N. >= 10.0%**;
+- **Meta S.U.N. >= 50.0%**.
+
+For a requested denominator of 256, these correspond to at least 26 Strict
+S.U.N. and 128 Meta S.U.N. per 256-attempt rate before stream averaging. For
+each independently trained policy seed, the primary rate is the mean of its two
+predeclared process streams on the same 256 compositions. Both policy seeds,
+all four streams, and composition-cluster confidence intervals are disclosed.
+The targets are objectives, not result-deletion rules: missing either target is
+reported as a negative or partial result and does not authorize seed,
+checkpoint, temperature, tau, cohort, or denominator selection.
+
+Historical references are reported beside, but never substituted for, the
+prospective result:
+
+- H1-A2 historical compatibility: `9.40/47.40%` Strict/Meta;
+- corrected H1-A2 exact: `8.58/46.08%`;
+- corrected H1-A2 continuous: `7.63/45.47%`;
+- R03 process high points are mechanism references, not independent Planner or
+  training-seed replications.
+
+## Paper-facing system
+
+The active story returns to one native modular pipeline:
+
+1. **C3FD semantic Planner** proposes a certificate-carrying, exactly valid
+   composition and one coarse structural Plan.
+2. **Planner-native masked DLM** consumes that same Plan schema and generates
+   every lattice and atomic coordinate token under exact `7+4N` cardinality.
+3. **Continuous diffusion refinement** performs geometry projection with
+   model494 tau800 while preserving composition.
+
+The old H1-A2 rich prompt is now only a compatibility diagnostic and possible
+weight initialization. Its `prototype_key`, `oxidation_candidates=unknown`,
+and legacy JSON semantics are not the production interface.
+
+## `C3FD_NATIVE_PLAN_V1`
+
+The production prompt is a compact, typed serialization of fields already
+emitted or certified by the current Planner.
+
+Hard conditions:
+
+- `N`;
+- ordered `elements` and exact `counts`;
+- `valence_species` or the equivalent charge certificate;
+- `anion_framework` / broad composition family.
+
+Soft structural hints:
+
+- `lattice_system`;
+- `spacegroup_bucket`;
+- `volume_per_atom_bin`.
+
+The DLM output remains the unchanged dynamic body:
+
+```text
+N, a, b, c, alpha, beta, gamma,
+element_1 ... element_N,
+x_1 ... x_N,
+y_1 ... y_N,
+z_1 ... z_N
+```
+
+Hard composition/cardinality fields are always visible and exact. Soft fields
+are hints, never hard geometry constraints. Training applies a frozen,
+train-validation-calibrated field dropout/corruption policy so 60--70%-accurate
+Planner fields cannot force the DLM into an incorrect basin. No new full-vocab
+resize, prototype lookup, target Wyckoff positions, oracle space group, or
+direct Planner CIF is introduced.
+
+## Data contract
+
+### A. Planner-interface adaptation SFT
+
+Use MP20 train only, with a chemsys-held-out validation split. Each training
+crystal receives paired input views with the same crystal-body target:
+
+1. a typed native Plan derived from the train crystal for learning the intended
+   field semantics;
+2. a frozen C3FD-predicted native Plan for the same composition, generated
+   without stability labels, to match deployment-time Planner noise.
+
+The second view prevents a teacher-Plan/inference-Plan gap. Soft-field dropout
+and the paired minimal view teach robustness when a predicted lattice, SG, or
+volume bin is wrong. Energy, hull, prospective outcomes, and current
+development-canary outcomes are excluded from this SFT dataset.
+
+### B. Stability alignment data
+
+The existing 3,614 historical candidates are **development-only evidence**.
+They combine retired L6/L7/D3PO sources, contain upstream raw-validity
+selection, and cannot support the main paper training claim or a new
+confirmatory test.
+
+If Planner-native SFT restores execution but does not reach the stability
+target, create a new on-policy, train-only pool from the frozen SFT checkpoint:
+
+- freeze a set of MP20-train compositions and a fixed `K` before sampling;
+- exactly `K` trajectories per composition with common seed ledgers;
+- preserve every raw-invalid and failed attempt;
+- evaluate raw Direct, raw CHGNet when known, and model494-refined CHGNet;
+- compare energies only within one composition;
+- keep group total weight one;
+- raw-invalid is lexicographically worse than every raw-valid candidate;
+- the denoising anchor is `best_valid_candidate_index`, never simply the
+  lowest post-refiner energy;
+- no candidate reranking or best-of-N is used at final inference.
+
+This is described, if successful, as on-policy same-composition energy
+alignment of a Planner-conditioned DLM. It is promoted to a contribution only
+after prospective two-training-seed replication.
+
+## Training contract
+
+### Stage 1: Planner-native adaptation
+
+- initialize from the old rich adapter only if faithful H0 proves current
+  runtime compatibility; otherwise initialize from minimal step696;
+- LoRA `r=8`, alpha `32`, dropout `0`, LR `5e-6`;
+- two independent training seeds;
+- exactly 348 updates and only step348;
+- mixed loss: native-body CE, predicted-Plan robustness, minimal/reference CE;
+- no early stopping, checkpoint selection, or seed selection.
+
+### Stage 2: optional stability alignment
+
+Run only from the frozen Stage-1 checkpoint and fresh pool:
+
+```text
+L = L_native_body_CE
+  + lambda_rank * L_same_composition_continuous_rank
+  + lambda_raw * L_raw_validity_gated_rank
+  + lambda_ref * L_quadratic_reference_bound
+  + lambda_anchor * L_best_valid_anchor
+```
+
+Constants are calibrated once from train-only gradient norms and frozen; there
+is no test-driven grid. If no valid candidate exists in a group, the group is
+handled by one predeclared fail-closed rule. The current energy-only wrapper is
+forbidden because it can reward a raw-invalid structure whose refiner outcome
+has low energy.
+
+## Prospective evaluation
+
+- freeze one new outcome-blind C3FD Planner-seed ledger of 256 compositions
+  before policy outcomes;
+- verify exact-composition disjointness from MP20 train, D3PO main/sealed,
+  L6/L7, rich seed19 development, and old H1 cohorts;
+- BASE and two policy seeds, each with streams17/18;
+- one Plan and one trajectory per attempt;
+- temperature `0.7`, exact-axis schedule, model494 tau800;
+- one six-cell generation, one raw-first/refined 12-cell evaluation, and one
+  fresh official MP query;
+- requested denominator 256, with missing attempts retained by sample index;
+- unknown official hull remains missing, never relabeled unstable;
+- report raw/refined CHGNet, official `e_hull` ECDF/quantiles, Direct/N/U/NU,
+  Strict/Meta stable and S.U.N., seen/unseen chemsys, McNemar, and paired
+  composition-cluster bootstrap intervals.
+
+## Decision and fallback tree
+
+1. **Faithful H0/R0S diagnosis** chooses only initialization and explains the
+   historical regression; it is not a final claim.
+2. **Planner-native SFT reaches 10/50:** freeze it as the primary method and do
+   not open stability-alignment training merely to increase the headline.
+3. **SFT restores H1-A2-level execution but misses 10/50:** run exactly one
+   fresh on-policy same-composition alignment contract.
+4. **SFT loses raw execution:** diagnose native serialization/soft-field
+   brittleness on train/validation; do not hide it with model494 or tune the
+   prospective cohort.
+5. **Alignment improves only post-refiner:** classify it as refiner-mediated;
+   do not claim the raw DLM learned stability.
+6. **Two training seeds disagree:** report unstable/negative; no seed choice.
+
+Pure AR, external oracle rich Plans, direct Planner CIF, intent heads, target
+SG/Wyckoff/prototype, composition tilting, survivor filters, reranking,
+replacement, best-of-N, tau/temperature/checkpoint sweeps, RL/GRPO/SMC, and
+test-outcome training are out of scope.
+
+## Resource schedule
+
+| Phase | Maximum resource | Expected wall time | Notes |
+|---|---:|---:|---|
+| faithful H0/R0S diagnosis | 4 A800, 32 CPU | 1--3 h | development, no official query |
+| native Plan/data builder | 0 GPU, <=48 CPU | 1--3 h | immutable train/val hashes |
+| two-seed native SFT | 2 A800, 16 CPU | 1--3 h | one job or two matched jobs |
+| fresh train-only pool, if needed | <=6 A800, 48 CPU | 2--4 h | fixed K, no survivor filtering |
+| two-seed alignment, if needed | 2 A800, 16 CPU | 1--3 h | one frozen setting |
+| prospective generation | 6 A800, 48 CPU | 1--3 h | six cells once |
+| raw/refined evaluation | 6 A800, 48 CPU | 2--4 h | 12 cells once |
+| official query/finalization | 0 GPU, <=8 CPU | 1--4 h | one immutable union |
+
+CPU and MP query latency do not consume the GPU ceiling. At most two jobs may
+be active or pending, and aggregate GPU allocation may not exceed six A800s.
+
+## Execution checklist
+
+- [x] Historical H1-A2/R03/R5C/minimal/SGTC/D3PO evidence audit complete.
+- [x] Rich prompt null-schema bug reproduced and regression-tested.
+- [x] Immutable faithful H0/R0S v2 cohort frozen with accounting metadata.
+- [ ] Faithful H0/R0S generation terminal.
+- [ ] Faithful raw/refined offline diagnosis terminal and initialization frozen.
+- [ ] `C3FD_NATIVE_PLAN_V1` serializer/round-trip/type tests complete.
+- [ ] MP20 train and chemsys-held-out native Plan datasets frozen.
+- [ ] C3FD-predicted versus teacher native-field coverage/calibration reported.
+- [ ] Two-seed Planner-native SFT terminal with only step348 adapters.
+- [ ] Train/validation raw execution and stability canary terminal.
+- [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
+- [ ] If opened, fresh pool and safety-aware K-way trainer terminal.
+- [ ] New prospective C3FD ledger frozen before policy outcomes.
+- [ ] Prospective six-cell generation terminal.
+- [ ] Prospective raw/refined 12-cell evaluation terminal.
+- [ ] One fresh official MP query and finalizer terminal.
+- [ ] `SUN >= 10%` and `Meta S.U.N. >= 50%` evaluated without denominator or
+  seed selection.
+- [ ] Positive and negative archives, resource accounting, BUILD_STATUS,
+  PAPER_STORY, tests, commit, and push complete.
+- [ ] Final RQs and 2--3 contributions classified as SUPPORTED, CANDIDATE, or
+  UNSUPPORTED with forbidden claims listed.
+

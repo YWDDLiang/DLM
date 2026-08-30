@@ -1,5 +1,10 @@
 # Rich-Planner + Stable-DLM 36-hour checklist v2
 
+> Historical execution record. The active contract is now
+> `C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md`, which replaces legacy-rich prompt
+> adaptation with a C3FD-native DLM interface and sets prospective targets of
+> Strict S.U.N. >=10% and Meta S.U.N. >=50%.
+
 Date: 2026-08-30
 Status: revised after Skeptic review; no downstream field selected from test outcomes
 Deadline: 2026-08-31 23:30 Asia/Shanghai

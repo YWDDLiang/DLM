@@ -689,3 +689,23 @@ explicitly preserving raw validity and reference behavior. Any resulting
 claim must be prospective and replicated across two training seeds; otherwise
 the paper reports stable conversion as an open limitation and keeps the first
 two supported contributions separate.
+
+## 2026-08-30 native Planner-DLM interface
+
+The paper-facing executor no longer attempts to preserve the legacy H1-A2 rich
+JSON dialect. C3FD and the DLM instead share one typed native Plan containing
+the certificate-backed exact composition plus optional lattice-system,
+space-group-bucket, and volume-per-atom hints. The DLM retains responsibility
+for every lattice and coordinate token; soft Planner fields are corrupted or
+dropped during training so their imperfect predictions cannot become hard
+geometry constraints.
+
+The primary method is Planner-interface adaptation on MP20 train using paired
+teacher-native and frozen-Planner-predicted views. Historical 3,614-candidate
+groups remain development evidence, not the headline training set. If native
+SFT restores structural realization but misses the prospective targets of 10%
+Strict S.U.N. and 50% Meta S.U.N., the only paper-eligible stability extension
+is a fresh on-policy, train-only same-composition pool generated from the frozen
+SFT checkpoint. This yields a clean causal chronology: semantic proposal,
+native conditional realization, then optional energy alignment, followed by
+one untouched prospective evaluation.

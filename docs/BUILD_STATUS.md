@@ -201,6 +201,22 @@
   dataclass注册错误在写输出前失败，commit `b11c2c7`参数不变修复后成功；没有重复
   generation/evaluation。终态见`RICH_RECOVERY_CANARY_OFFLINE_FINAL_20260830.md`。
 
+## 2026-08-30 C3FD-native DLM目标合同
+
+- active checklist升级为`C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md/json`；最终
+  prospective固定分母目标为Strict S.U.N.`>=10%`、Meta S.U.N.`>=50%`，但不作为
+  事后删结果或选择seed/checkpoint/cohort的门；
+- 旧H1-A2 rich JSON只保留为compatibility diagnostic和可能的权重初始化，不再作为
+  production接口。新`C3FD_NATIVE_PLAN_V1`直接序列化当前Planner的exact N/counts、
+  valence/charge certificate、family以及soft lattice/SG/volume；动态`7+4N` body不变；
+- 正式Stage-1使用MP20-train的teacher-native与冻结C3FD-predicted-native双视图做
+  Planner-interface SFT；soft fields按train/validation可靠性dropout，不硬约束geometry；
+- 现有3614个历史candidate因混合retired L6/L7/D3PO谱系、raw-invalid上游选择，只作
+  development evidence。若native SFT恢复execution但仍未达到10/50，只允许从冻结SFT
+  checkpoint构建一次fresh on-policy、MP20-train-only同composition pool再做安全排序；
+- 当前energy-only listwise wrapper会把raw-invalid但post-refiner低能量candidate选为anchor，
+  正式训练前必须改为raw-validity-gated rank与显式best-valid anchor。
+
 ## 2026-08-28 C³FD-v2/v2.1 阶段终态
 
 - C³FD-v2用typed `N→element-valence-count`、在线atom/charge reachability、physics
