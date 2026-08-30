@@ -11,6 +11,7 @@ import json
 import math
 from pathlib import Path
 import statistics
+import sys
 from typing import Any, Mapping, Sequence
 
 
@@ -31,6 +32,9 @@ def load_common():
     if spec is None or spec.loader is None:
         raise RuntimeError(path)
     module = importlib.util.module_from_spec(spec)
+    # dataclasses resolves postponed annotations through sys.modules while the
+    # imported module is executing, so register this dynamic module first.
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 
