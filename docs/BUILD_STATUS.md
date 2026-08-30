@@ -429,3 +429,10 @@
   无base arm、seed选择、retry、rerank、replacement或official query。此结果支持V2接口
   execution恢复，但稳定性需下一次raw-first offline；development canary不消费prospective
   cohort。
+- raw-first offline job38768已`COMPLETED 0:0`，耗时`01:58:44`、observed
+  `7.9156 A800-hours`。82017/82018 pooled raw Direct joint仅`30.08%/37.30%`，
+  model494 tau800后升至`89.06%/90.04%`；paired refined-minus-raw CHGNet分别为
+  `-2.772/-2.614 eV/atom`且CI完全小于0。结论不是SFT失败：V2接口/body execution已恢复，
+  但普通teacher CE没有学回raw空间稳定关系，稳定性仍主要由refiner提供。按预登记自动
+  开启一次fresh MP20-train on-policy same-composition safety alignment；不使用旧3614、
+  不选择seed/checkpoint，也不消费prospective cohort。

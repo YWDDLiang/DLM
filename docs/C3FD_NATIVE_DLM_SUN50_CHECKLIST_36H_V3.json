@@ -234,14 +234,24 @@
     "duplicate_submission_forbidden": true
   },
   "sft_canary_offline": {
-    "wrapper_status": "LOCAL_TESTS_PASS_NOT_YET_SUBMITTED",
+    "wrapper_status": "COMPLETED_SUCCESS",
     "wrapper": "slurm/91_c3fd_native_sft_canary_eval.sbatch",
+    "job_id": 38768,
+    "exit_code": "0:0",
+    "elapsed_seconds": 7124,
     "resources": "4_A800_32_CPU",
     "order": "raw_then_refined",
     "cells": 8,
     "denominator": 256,
     "ledger_split_reporting": true,
-    "official_query": false
+    "official_query": false,
+    "observed_a800_hours": 7.915555555555556,
+    "body_parse_rate": {"82017": 0.98046875, "82018": 0.98828125},
+    "raw_direct_joint_rate": {"82017": 0.30078125, "82018": 0.373046875},
+    "refined_direct_joint_rate": {"82017": 0.890625, "82018": 0.900390625},
+    "final_report_sha256": "9b19b458852f750970e723200cfa2eb93695411e31ae23fadb16ede990264758",
+    "archive_success": true,
+    "decision": "open_fresh_mp20_train_on_policy_same_composition_alignment"
   },
   "train_inference_interface_audit": {
     "rows": {"train": 27136, "validation": 9047},

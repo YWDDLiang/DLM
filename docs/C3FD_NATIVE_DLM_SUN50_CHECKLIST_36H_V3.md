@@ -289,9 +289,13 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   failures remain by sample index. No retry, reranking, replacement, or
   selection occurred.
 - [x] Raw-first/refined offline wrapper and regression tests are ready; the
-  single four-GPU evaluation remains to be submitted after deployment.
-- [ ] Train/validation raw execution and stability canary terminal.
-- [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
+  single four-GPU evaluation was submitted once as job38768.
+- [x] Train/validation raw execution and stability canary job38768 completed
+  `0:0` in `01:58:44` (`7.9156 A800-hours`). Body execution recovered to
+  `98.05/98.83%`, but raw Direct joint is only `30.08/37.30%`; model494 raises
+  it to `89.06/90.04%` and lowers paired CHGNet energy by `2.77/2.61 eV/atom`.
+- [x] Decision frozen: open one fresh MP20-train on-policy, same-composition
+  safety-aware alignment; retain both seeds and exclude the old 3,614 candidates.
 - [ ] If opened, fresh pool and safety-aware K-way trainer terminal.
 - [ ] New prospective C3FD ledger frozen before policy outcomes.
 - [ ] Prospective six-cell generation terminal.
