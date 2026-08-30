@@ -184,6 +184,23 @@
 
 所有A800绝对源路径只填写在`ASSET_TRANSFER_LEDGER.md`，不会同步到公开repo。
 
+## 2026-08-30 Rich-Planner recovery canary终态
+
+- seed19冻结development cohort上的M0/RCF/R0六cell generation和十二cell
+  raw/refined offline evaluation均已终态；requested分母始终为256，body缺失行按
+  sample index保留；
+- raw Direct在stream17/18由M0的`150/167`下降到aligned-rich R0的`111/110`；
+  paired raw `R0-M0`为`+0.911996 eV/atom`，95% CI
+  `[+0.552966,+1.281389]`，明确朝更差方向；
+- model494 tau800把三臂refined Direct恢复到`246--254/256`，但refined
+  `R0-M0=+1.292meV/atom`、CI`[-6.631,+9.993]`，没有复制性稳定优势；
+- 因而旧rich checkpoint+prompt package不能作为本轮Stable-DLM主初始化。corrected
+  rich Planner继续作为接口机制诊断；唯一prospective路线切换到预登记的minimal-DLM
+  same-composition continuous listwise + raw-safety训练，不用canary outcome调整test；
+- eval job38420耗时7134秒、11.8900 A800-hours。首个finalizer仅因Python3.10动态
+  dataclass注册错误在写输出前失败，commit `b11c2c7`参数不变修复后成功；没有重复
+  generation/evaluation。终态见`RICH_RECOVERY_CANARY_OFFLINE_FINAL_20260830.md`。
+
 ## 2026-08-28 C³FD-v2/v2.1 阶段终态
 
 - C³FD-v2用typed `N→element-valence-count`、在线atom/charge reachability、physics

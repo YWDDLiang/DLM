@@ -666,3 +666,26 @@ de-novo headline; the padded 107-token representation stays retired. H1-A2 and
 R03 seed/process instability require two training seeds and common paired
 streams. The paper-facing claim is continuous paired energy/hull movement plus
 S.U.N. retention, never validation preference accuracy alone.
+
+## 2026-08-30 predicted-rich recovery result
+
+The matched development canary rejects a simple return to the historical rich
+checkpoint/prompt package as the Stable-DLM solution. On a frozen seed-19
+exact-composition cohort, the composition-aligned predicted rich tuple reduced
+raw Direct from `150/167` to `111/110` across two streams and worsened paired
+raw CHGNet energy by `+0.912 eV/atom` (95% CI
+`[+0.553,+1.281]`). model494 restored refined validity, but refined
+`R0-M0` was `+1.292 meV/atom` with a CI crossing zero. The aligned-vs-permuted
+rich comparison was likewise not replicated.
+
+This narrows, rather than abandons, the original modular story. C3FD's
+certificate-carrying decoder remains the supported composition-correctness
+contribution. Predicted lattice/SG/volume fields are scientifically useful for
+diagnosing structural underdetermination, but the old rich package is not a
+supported stability contribution on the exact-composition task. The remaining
+Stable-DLM candidate therefore keeps the minimal exact interface and teaches
+full-sequence relative stability from same-composition candidates while
+explicitly preserving raw validity and reference behavior. Any resulting
+claim must be prospective and replicated across two training seeds; otherwise
+the paper reports stable conversion as an open limitation and keeps the first
+two supported contributions separate.

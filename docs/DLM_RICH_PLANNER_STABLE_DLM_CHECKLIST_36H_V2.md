@@ -292,19 +292,40 @@ reviewed; execution preflight passed; recovery canary terminal; training
 terminal; prospective cohort opened; prospective evaluation terminal. A stage
 is never called active without a job ID or artifact path and marker.
 
-- [ ] Original-artifact evidence ledger complete.
-- [ ] Live asset and implementation SHA manifest complete; stale transfer
+- [x] Original-artifact evidence ledger complete.
+- [x] Live asset and implementation SHA manifest complete; stale transfer
   ledger reconciled.
-- [ ] Rich-field validation metrics complete for both Planner checkpoints.
-- [ ] SG redundancy and sampling behavior explicitly documented.
-- [ ] Historical rich-compatible DLM checkpoint and prompt parser hashed.
-- [ ] Wrapper allowlist/resource/job-count/atomic-contract guards tested.
-- [ ] Blocked-cohort overlap recomputed from hashed inputs.
-- [ ] Three-arm recovery canary contract frozen and six cells run once.
-- [ ] Recovery interpretation written without field cherry-picking.
+- [x] Rich-field validation metrics complete for both Planner checkpoints.
+- [x] SG redundancy and sampling behavior explicitly documented.
+- [x] Historical rich-compatible DLM checkpoint and prompt parser hashed.
+- [x] Wrapper allowlist/resource/job-count/atomic-contract guards tested.
+- [x] Blocked-cohort overlap recomputed from hashed inputs.
+- [x] Three-arm recovery canary contract frozen and six cells run once.
+- [x] Recovery interpretation written without field cherry-picking; see
+  `RICH_RECOVERY_CANARY_OFFLINE_FINAL_20260830.md`.
 - [ ] Fresh train-only rich candidate pool frozen.
 - [ ] Two-seed stability alignment trained without selection.
 - [ ] Prospective cohort frozen before outcomes.
 - [ ] Raw/refined/official evaluation complete.
 - [ ] Final paper RQs, 2--3 contribution claims and forbidden claims updated.
-- [ ] Positive and negative runs archived with root cause and resource usage.
+- [ ] Positive and negative runs archived with root cause and resource usage
+  (rich-recovery canary complete; final prospective archive remains).
+
+## 2026-08-30 rich-recovery canary decision
+
+The six-cell generation and 12-cell raw/refined evaluation are terminal. The
+aligned rich package (`R0`) reduced raw Direct from `150/167` for `M0` to
+`111/110` across the two streams. Its stream-averaged paired raw energy delta
+was `+0.911996 eV/atom`, with 95% composition-bootstrap CI
+`[+0.552966,+1.281389]`; lower is better. After model494 tau800, `R0-M0` was
+`+1.292 meV/atom`, CI `[-6.631,+9.993]`, so the refiner recovered execution but
+not a replicated stability advantage. `R0-RCF` was also not a reliable raw or
+refined improvement.
+
+Accordingly, the historical rich checkpoint/prompt package is classified as a
+development negative rather than the final Stable-DLM initializer. The next
+single prospective route is the predeclared minimal-DLM same-composition
+continuous listwise objective with raw validity/rank safety, reference bound,
+and best-valid anchor. The corrected rich Planner remains a diagnostic and
+paper mechanism analysis; it is not used to rescue or tune the prospective
+cohort.
