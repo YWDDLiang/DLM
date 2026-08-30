@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import sys
@@ -14,20 +15,28 @@ from typing import Any, Mapping, Sequence
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+SRC = PROJECT_ROOT / "src"
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
 
-from scripts.freeze_c3fd_native_sft_canary import (  # noqa: E402
-    CHECKPOINTS,
-    aligned_candidates,
-    canonical_json,
-    read_jsonl,
-    sha256_file,
-    write_json,
-    write_jsonl,
-)
 from crystal_dlm.c3fd_native_plan import (  # noqa: E402
     build_native_inference_prompt,
     native_plan_from_parts,
 )
+
+
+CANARY_FREEZER = PROJECT_ROOT / "scripts" / "freeze_c3fd_native_sft_canary.py"
+SPEC = importlib.util.spec_from_file_location("freeze_c3fd_native_sft_canary", CANARY_FREEZER)
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError(CANARY_FREEZER)
+CANARY = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(CANARY)
+CHECKPOINTS = CANARY.CHECKPOINTS
+aligned_candidates = CANARY.aligned_candidates
+read_jsonl = CANARY.read_jsonl
+sha256_file = CANARY.sha256_file
+write_json = CANARY.write_json
+write_jsonl = CANARY.write_jsonl
 
 
 SCHEMA = "c3fd_native_alignment_pool_cohort_v1"

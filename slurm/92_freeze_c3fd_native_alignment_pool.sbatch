@@ -20,7 +20,7 @@ readonly RUN="${ROOT}/runs/freeze_c3fd_native_alignment_pool_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly TEACHER_MANIFEST_SHA=b77a1d0126d19576b2a6e381fe177de792b230cab2eca58e2c5c8097ff23ae06
 readonly PREDICTED_MANIFEST_SHA=55a7141e8e864390a5af3702f1fc3f68d746e02838c733ff5a842cdcb9d0b84a
-readonly BUILDER_SHA=ce99ff032c2f55aecae6e861cd8fb81f0c1a65bc483624734e986aedd97337f5
+readonly BUILDER_SHA=750ca5f726e2e1d4ae78bcec3537b9acc13dbf9106592d225e673ce8f74d5c6e
 
 mkdir "${RUN}"
 on_error() {
