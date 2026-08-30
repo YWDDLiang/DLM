@@ -64,6 +64,8 @@ class D3POFixed256SlurmTest(unittest.TestCase):
         self.assertIn("LATE_GUIDANCE_BURNED", text)
         self.assertIn("rerank_or_replacement\tfalse", text)
         self.assertIn("trap 'on_error", text)
+        self.assertNotIn("guidance_args=()", text)
+        self.assertIn("local sample_command=(", text)
 
     def test_late_guidance_eval_runs_refined_and_raw(self):
         text = (ROOT / "slurm/69_d3po_late_guidance_eval.sbatch").read_text(

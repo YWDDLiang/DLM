@@ -88,24 +88,25 @@ sha256sum \
 run_cell() {
   local gpu="$1" stream="$2" arm="$3" checkpoint="$4" dlm_seed="$5" refiner_seed="$6" guided="$7"
   local output="${RUN_DIR}/stream${stream}/${arm}"
-  local guidance_args=()
+  local sample_command=(
+    python "${ROOT}/src/scripts/sample_sgtc_l6.py"
+    --model-path "${MODEL}"
+    --checkpoint-path "${checkpoint}"
+    --prompt-jsonl "${PLANS}"
+    --output-dir "${output}/body"
+    --crysllmgen-dir "${CRYS}"
+    --num-samples 256
+    --temperature 0.7
+    --seed "${dlm_seed}"
+  )
   if [[ "${guided}" == true ]]; then
-    guidance_args=(
+    sample_command+=(
       --reference-checkpoint-path "${BASE}"
       --late-guidance-scale 0.5
       --late-guidance-remaining-mask-threshold 0.25
     )
   fi
-  CUDA_VISIBLE_DEVICES="${gpu}" python "${ROOT}/src/scripts/sample_sgtc_l6.py" \
-    --model-path "${MODEL}" \
-    --checkpoint-path "${checkpoint}" \
-    --prompt-jsonl "${PLANS}" \
-    --output-dir "${output}/body" \
-    --crysllmgen-dir "${CRYS}" \
-    --num-samples 256 \
-    --temperature 0.7 \
-    --seed "${dlm_seed}" \
-    "${guidance_args[@]}"
+  CUDA_VISIBLE_DEVICES="${gpu}" "${sample_command[@]}"
   CUDA_VISIBLE_DEVICES="${gpu}" python "${ROOT}/src/scripts/refine_dlm_with_crysllmgen.py" \
     --proposal-graphs "${output}/body/proposal_graphs.pt" \
     --checkpoint "${REFINER}" \
