@@ -302,7 +302,10 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     if teacher[key] != predicted_fields[key]
                 }
                 self.assertTrue(changed)
-                self.assertLessEqual(changed, {"LS", "SG", "VP"})
+                self.assertLessEqual(
+                    changed,
+                    {"lattice_system", "spacegroup_bucket", "volume_per_atom_bin"},
+                )
             self.assertEqual(manifest["prediction_mode"], "formal-multi-checkpoint")
             self.assertEqual(
                 manifest["prediction_checkpoint_order"], ["seed17", "seed18"]
@@ -318,7 +321,10 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 for row in read_jsonl(output / "val.jsonl")
                 if row["view"] == "predicted-native-seed18"
             )
-            self.assertIn("VP=<SOFT_MASK>", val_seed18["native_plan_line"])
+            self.assertEqual(
+                json.loads(val_seed18["native_plan_line"])["volume_per_atom_bin"],
+                "<SOFT_MASK>",
+            )
 
     def test_roundtrip_and_legacy_development_views_share_exact_answer(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -343,7 +349,6 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 self.assertEqual(parsed["N"], 3)
                 self.assertEqual(parsed["elements"], ["Li", "O"])
                 self.assertEqual(parsed["counts"], [2, 1])
-                self.assertTrue(parsed["charge_bucket_match"])
             self.assertTrue((output / "manifest.json").is_file())
             self.assertTrue((output / "SHA256SUMS").is_file())
             self.assertTrue((output / "_SUCCESS").is_file())
@@ -375,8 +380,13 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 changed = {
                     key for key in teacher if teacher[key] != predicted_fields[key]
                 }
-                self.assertEqual(changed, {"LS", "SG", "VP"})
-                for key in set(teacher) - {"LS", "SG", "VP"}:
+                soft = {
+                    "lattice_system",
+                    "spacegroup_bucket",
+                    "volume_per_atom_bin",
+                }
+                self.assertEqual(changed, soft)
+                for key in set(teacher) - soft:
                     self.assertEqual(teacher[key], predicted_fields[key])
 
     def test_prompts_and_payloads_copy_no_forbidden_fields(self):
@@ -405,9 +415,10 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 for row in read_jsonl(output / "train.jsonl")
                 if row["view"] == "soft-masked"
             )
-            self.assertIn("LS=<SOFT_MASK>", masked["native_plan_line"])
-            self.assertIn("SG=<SOFT_MASK>", masked["native_plan_line"])
-            self.assertIn("VP=<SOFT_MASK>", masked["native_plan_line"])
+            masked_payload = json.loads(masked["native_plan_line"])
+            self.assertEqual(masked_payload["lattice_system"], "<SOFT_MASK>")
+            self.assertEqual(masked_payload["spacegroup_bucket"], "<SOFT_MASK>")
+            self.assertEqual(masked_payload["volume_per_atom_bin"], "<SOFT_MASK>")
 
     def test_missing_or_misaligned_predicted_rows_fail_closed(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -589,21 +600,22 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 )
             self.assertEqual((output / "manifest.json").read_bytes(), before)
 
-    def test_valence_mismatch_and_chemsys_leakage_fail_closed(self):
+    def test_auxiliary_valence_is_ignored_and_chemsys_leakage_fails_closed(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             source, semantic, predicted = self.make_inputs(root)
             semantic_rows = read_jsonl(semantic / "val.jsonl")
             semantic_rows[0]["count_targets"] = [2, 1]
             write_jsonl(semantic / "val.jsonl", semantic_rows)
-            with self.assertRaisesRegex(ValueError, "valence species changed exact composition"):
-                MODULE.build_dataset(
-                    input_dir=source,
-                    semantic_dir=semantic,
-                    predicted_soft_dir=predicted,
-                    output_dir=root / "bad-valence",
-                    allow_legacy_single_prediction_development=True,
-                )
+            output = root / "auxiliary-valence-ignored"
+            MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+                allow_legacy_single_prediction_development=True,
+            )
+            self.assertTrue((output / "_SUCCESS").is_file())
 
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
@@ -692,98 +704,78 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     {0},
                 )
 
-    def test_semantic_certificate_overrides_stale_source_charge_bucket(self):
+    def test_unsupervised_mp20_row_is_not_filtered(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             source, semantic, predicted = self.make_formal_inputs(root)
+            rows = read_jsonl(semantic / "train.jsonl")
+            rows[0]["composition_supervision"] = False
+            write_jsonl(semantic / "train.jsonl", rows)
+
+            output = root / "unsupervised-row-retained"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
+            teacher = next(
+                row
+                for row in read_jsonl(output / "train.jsonl")
+                if row["view"] == "teacher-native"
+            )
+            parsed = MODULE.parse_native_plan_line(teacher["native_plan_line"])
+            self.assertEqual(parsed["elements"], ["Li", "O"])
+            self.assertEqual(parsed["counts"], [2, 1])
+            self.assertNotIn("CB=", teacher["native_plan_line"])
+            self.assertNotIn(":Q", teacher["native_plan_line"])
+            self.assertNotIn("composition_supervision_authorized", teacher)
+            self.assertEqual(manifest["splits"]["train"]["source_rows"], 1)
+            self.assertTrue(all(manifest["gate"].values()))
+
+    def test_charge_and_valence_auxiliary_fields_do_not_change_native_prompt(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            clean_output = root / "clean-native"
+            MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=clean_output,
+            )
+            clean_teacher = next(
+                row
+                for row in read_jsonl(clean_output / "train.jsonl")
+                if row["view"] == "teacher-native"
+            )
+
             source_rows = read_jsonl(source / "train.jsonl")
             source_rows[0]["plan_state"]["charge_bucket"] = "charge_fail"
             write_jsonl(source / "train.jsonl", source_rows)
-            output = root / "charge-corrected"
-            manifest = MODULE.build_dataset(
-                input_dir=source,
-                semantic_dir=semantic,
-                predicted_soft_dir=predicted,
-                output_dir=output,
-            )
-            self.assertEqual(
-                manifest["splits"]["train"][
-                    "source_semantic_charge_bucket_mismatches"
-                ],
-                1,
-            )
-            rows = read_jsonl(output / "train.jsonl")
-            self.assertTrue(
-                all(
-                    row["source_charge_bucket_matches_semantic"] is False
-                    for row in rows
-                )
-            )
-            teacher = next(row for row in rows if row["view"] == "teacher-native")
-            self.assertIn("CB=B_NEU", teacher["native_plan_line"])
-
-    def test_unknown_plan_valence_uses_frozen_species_label_witness(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            source, semantic, predicted = self.make_formal_inputs(root)
             semantic_rows = read_jsonl(semantic / "train.jsonl")
+            semantic_rows[0]["plan_state"]["charge_bucket"] = "pauling_fail"
             semantic_rows[0]["plan_state"]["valence_species"] = [
-                {"element": "Li", "count": 2, "oxidation_state": None},
-                {"element": "O", "count": 1, "oxidation_state": None},
+                {"element": "Li", "count": 1, "oxidation_state": 7},
             ]
             write_jsonl(semantic / "train.jsonl", semantic_rows)
-            output = root / "unknown-plan-valence"
-            manifest = MODULE.build_dataset(
+            mutated_output = root / "mutated-auxiliary"
+            MODULE.build_dataset(
                 input_dir=source,
                 semantic_dir=semantic,
                 predicted_soft_dir=predicted,
-                output_dir=output,
+                output_dir=mutated_output,
             )
-            self.assertEqual(
-                manifest["splits"]["train"][
-                    "semantic_plan_valence_label_fallbacks"
-                ],
-                1,
-            )
-            teacher = next(
+            mutated_teacher = next(
                 row
-                for row in read_jsonl(output / "train.jsonl")
+                for row in read_jsonl(mutated_output / "train.jsonl")
                 if row["view"] == "teacher-native"
             )
-            self.assertTrue(teacher["semantic_plan_valence_used_label_fallback"])
-            self.assertIn("QP01", teacher["native_plan_line"])
-            self.assertIn("QM02", teacher["native_plan_line"])
-
-    def test_valence_witness_overrides_stale_semantic_charge_bucket(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            source, semantic, predicted = self.make_formal_inputs(root)
-            semantic_rows = read_jsonl(semantic / "train.jsonl")
-            semantic_rows[0]["plan_state"]["charge_bucket"] = "charge_fail"
-            write_jsonl(semantic / "train.jsonl", semantic_rows)
-            output = root / "semantic-charge-corrected"
-            manifest = MODULE.build_dataset(
-                input_dir=source,
-                semantic_dir=semantic,
-                predicted_soft_dir=predicted,
-                output_dir=output,
-            )
             self.assertEqual(
-                manifest["splits"]["train"][
-                    "semantic_charge_bucket_certificate_mismatches"
-                ],
-                1,
+                clean_teacher["native_plan_line"], mutated_teacher["native_plan_line"]
             )
-            teacher = next(
-                row
-                for row in read_jsonl(output / "train.jsonl")
-                if row["view"] == "teacher-native"
-            )
-            self.assertFalse(
-                teacher["semantic_charge_bucket_matches_valence_certificate"]
-            )
-            self.assertEqual(teacher["certificate_charge_bucket"], "neutral_plausible")
-            self.assertIn("CB=B_NEU", teacher["native_plan_line"])
+            self.assertNotIn("CB=", mutated_teacher["native_plan_line"])
+            self.assertNotIn(":Q", mutated_teacher["native_plan_line"])
 
 
 if __name__ == "__main__":

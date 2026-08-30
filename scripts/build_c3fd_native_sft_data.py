@@ -38,7 +38,6 @@ for import_path in (SRC, SCRIPTS):
 
 from build_ctv_minimal_spec_data import (  # noqa: E402
     minimal_prompt,
-    minimal_spec_from_plan,
 )
 from crystal_dlm.c3fd_native_plan import (  # noqa: E402
     build_native_body_prompt,
@@ -52,8 +51,6 @@ from crystal_dlm.composition_identity import (  # noqa: E402
     identity_from_plan_state,
     identity_text,
 )
-from crystal_dlm.composition_pair_prior import ValenceNode  # noqa: E402
-from crystal_dlm.fixed_slot import SYMBOL_TO_Z, Z_TO_SYMBOL  # noqa: E402
 
 
 SCHEMA = "c3fd_native_sft_row_v2"
@@ -69,7 +66,7 @@ SOFT_FIELDS = (
     "spacegroup_bucket",
     "volume_per_atom_bin",
 )
-SOFT_LINE_FIELDS = {"LS", "SG", "VP"}
+SOFT_LINE_FIELDS = set(SOFT_FIELDS)
 PREDICTED_CONTAINER_KEYS = (
     "frozen_predicted_soft_fields",
     "predicted_soft_fields",
@@ -349,6 +346,19 @@ def _n_value(plan: Mapping[str, Any], *, label: str) -> int:
     return value
 
 
+def _portable_minimal_spec(plan: Mapping[str, Any]) -> dict[str, Any]:
+    composition = _composition(plan)
+    n_value = _n_value(plan, label="minimal Plan")
+    family = str(plan.get("anion_framework") or "other")
+    return {
+        "N": n_value,
+        "elements": [symbol for symbol, _count in composition],
+        "counts": [int(count) for _symbol, count in composition],
+        "family": family,
+        "formula": formula_from_symbol_counts(composition),
+    }
+
+
 def _assert_plan_alignment(
     source_plan: Mapping[str, Any],
     aligned_plan: Mapping[str, Any],
@@ -361,161 +371,12 @@ def _assert_plan_alignment(
         raise ValueError(f"DLM/{label} N alignment changed")
     if _composition(source_plan) != _composition(aligned_plan):
         raise ValueError(f"DLM/{label} composition alignment changed")
-    # Composition/family must align exactly.  The semantic sidecar's frozen
-    # valence certificate is authoritative for charge: older DLM rows can
-    # legitimately carry the pre-certificate bucket and are audited below.
+    # The public DLM interface uses composition and broad family only.
     for key in ("anion_framework",):
         left = source_plan.get(key)
         right = aligned_plan.get(key)
         if left not in (None, "") and right not in (None, "") and left != right:
             raise ValueError(f"DLM/{label} {key} alignment changed")
-
-
-def _species_vocabulary(semantic_dir: Path) -> tuple[dict[int, tuple[str, int]], str | None]:
-    path = semantic_dir / "vocabulary.json"
-    if not path.is_file():
-        return {}, None
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    rows = payload.get("species") if isinstance(payload, Mapping) else None
-    if not isinstance(rows, list):
-        raise ValueError("semantic vocabulary lacks species rows")
-    result: dict[int, tuple[str, int]] = {}
-    for row in rows:
-        if not isinstance(row, Mapping):
-            raise ValueError("semantic vocabulary species entry is not an object")
-        species_id = int(row["id"])
-        atomic_number = int(row["atomic_number"])
-        if atomic_number not in Z_TO_SYMBOL:
-            raise ValueError(f"unsupported atomic number {atomic_number}")
-        if species_id in result:
-            raise ValueError(f"duplicate semantic species id {species_id}")
-        result[species_id] = (
-            Z_TO_SYMBOL[atomic_number],
-            int(row["oxidation_state"]),
-        )
-    return result, sha256_file(path)
-
-
-def _node_from_value(
-    value: Any,
-    vocabulary: Mapping[int, tuple[str, int]],
-) -> tuple[str, int]:
-    if isinstance(value, Mapping):
-        atomic_number = int(value["atomic_number"])
-        oxidation = int(value["oxidation_state"])
-        if atomic_number not in Z_TO_SYMBOL:
-            raise ValueError(f"unsupported atomic number {atomic_number}")
-        return Z_TO_SYMBOL[atomic_number], oxidation
-    if isinstance(value, int) or (isinstance(value, str) and value.isdigit()):
-        species_id = int(value)
-        if species_id not in vocabulary:
-            raise ValueError(
-                f"semantic species id {species_id} is unavailable in vocabulary"
-            )
-        return vocabulary[species_id]
-    if isinstance(value, str):
-        node = ValenceNode.from_token(value)
-        if int(node.atomic_number) not in Z_TO_SYMBOL:
-            raise ValueError(f"unsupported semantic species {value!r}")
-        return Z_TO_SYMBOL[int(node.atomic_number)], int(node.oxidation_state)
-    raise TypeError(f"unsupported semantic species label {value!r}")
-
-
-def _normalise_valence_species(
-    values: Sequence[Mapping[str, Any]],
-) -> list[dict[str, Any]]:
-    merged: Counter[tuple[str, int]] = Counter()
-    for value in values:
-        symbol = str(value.get("element") or value.get("symbol") or "")
-        if symbol not in SYMBOL_TO_Z:
-            raise ValueError(f"unsupported valence element {symbol!r}")
-        count = int(value.get("count") or 0)
-        oxidation = value.get("oxidation_state")
-        if count <= 0 or oxidation in (None, "", "unknown"):
-            raise ValueError(f"invalid frozen valence species {value!r}")
-        merged[(symbol, int(oxidation))] += count
-    return [
-        {
-            "element": symbol,
-            "count": int(merged[(symbol, oxidation)]),
-            "oxidation_state": int(oxidation),
-        }
-        for symbol, oxidation in sorted(
-            merged,
-            key=lambda item: (SYMBOL_TO_Z[item[0]], item[1]),
-        )
-    ]
-
-
-def _valence_species(
-    semantic_row: Mapping[str, Any],
-    semantic_plan: Mapping[str, Any],
-    vocabulary: Mapping[int, tuple[str, int]],
-) -> list[dict[str, Any]]:
-    if semantic_row.get("composition_supervision") is not True:
-        raise ValueError("semantic row does not authorize composition supervision")
-    plan_species = semantic_plan.get("valence_species")
-    if isinstance(plan_species, Sequence) and not isinstance(
-        plan_species, (str, bytes)
-    ):
-        values = [
-            value
-            for value in plan_species
-            if isinstance(value, Mapping)
-        ]
-        if len(values) != len(plan_species):
-            raise ValueError("semantic Plan valence_species is malformed")
-        if all(
-            value.get("oxidation_state") not in (None, "", "unknown")
-            for value in values
-        ):
-            species = _normalise_valence_species(values)
-        else:
-            # Some historical semantic Plan rows retain unknown oxidation in
-            # their convenience field even though the frozen sidecar carries
-            # the exact species-label witness used by C3FD supervision.
-            plan_species = None
-    else:
-        plan_species = None
-    if plan_species is None:
-        labels = semantic_row.get("nodes") or semantic_row.get("species_labels")
-        counts = semantic_row.get("counts") or semantic_row.get("count_targets")
-        if not isinstance(labels, list) or not isinstance(counts, list):
-            raise ValueError("semantic row lacks frozen valence labels/counts")
-        if len(labels) != len(counts) or not labels:
-            raise ValueError("semantic valence labels/counts are not aligned")
-        species = _normalise_valence_species(
-            [
-                {
-                    "element": _node_from_value(label, vocabulary)[0],
-                    "oxidation_state": _node_from_value(label, vocabulary)[1],
-                    "count": int(count),
-                }
-                for label, count in zip(labels, counts)
-            ]
-        )
-    species_composition = canonical_symbol_counts(
-        [str(row["element"]) for row in species],
-        [int(row["count"]) for row in species],
-    )
-    if species_composition != _composition(semantic_plan):
-        raise ValueError("semantic valence species changed exact composition")
-    charge_sum = sum(
-        int(row["count"]) * int(row["oxidation_state"]) for row in species
-    )
-    if charge_sum != 0:
-        raise ValueError("semantic valence certificate is not charge neutral")
-    return species
-
-
-def _expected_charge_bucket(species: Sequence[Mapping[str, Any]]) -> str:
-    elements = {str(row["element"]) for row in species}
-    oxidations = [int(row["oxidation_state"]) for row in species]
-    if len(elements) == 1 and all(value == 0 for value in oxidations):
-        return "single_element"
-    if len(elements) > 1 and all(value == 0 for value in oxidations):
-        return "all_metal"
-    return "neutral_plausible"
 
 
 def _soft_fields(value: Mapping[str, Any], *, label: str) -> dict[str, str]:
@@ -643,7 +504,6 @@ def _resolve_predicted_soft_fields_by_checkpoint(
     split: str,
     row_index: int,
     source_plan: Mapping[str, Any],
-    semantic_species: Sequence[Mapping[str, Any]],
     prediction_mode: str,
     checkpoint_order: Sequence[str],
 ) -> dict[str, dict[str, str]]:
@@ -686,17 +546,6 @@ def _resolve_predicted_soft_fields_by_checkpoint(
                 predicted_plan,
                 label="predicted Plan",
             )
-            raw_species = predicted_plan.get("valence_species")
-            if isinstance(raw_species, Sequence) and not isinstance(
-                raw_species, (str, bytes)
-            ):
-                if not all(isinstance(value, Mapping) for value in raw_species):
-                    raise ValueError("predicted Plan valence_species is malformed")
-                predicted_species = _normalise_valence_species(
-                    list(raw_species)
-                )
-                if predicted_species != list(semantic_species):
-                    raise ValueError("predicted Plan valence certificate changed")
         return {
             LEGACY_DEVELOPMENT_CHECKPOINT: _soft_fields(
                 container, label="predicted row"
@@ -721,7 +570,6 @@ def _resolve_predicted_soft_fields_by_checkpoint(
 def _native_plan(
     source_plan: Mapping[str, Any],
     semantic_plan: Mapping[str, Any],
-    species: Sequence[Mapping[str, Any]],
     soft: Mapping[str, str],
 ) -> dict[str, Any]:
     composition = _composition(source_plan)
@@ -732,30 +580,18 @@ def _native_plan(
         or source_plan.get("anion_framework")
         or ""
     )
-    expected_charge = _expected_charge_bucket(species)
-    declared_charge = str(
-        semantic_plan.get("charge_bucket")
-        or source_plan.get("charge_bucket")
-        or expected_charge
-    )
-    if declared_charge == "certified_neutral":
-        declared_charge = "neutral_plausible"
     plan = {
         "N": _n_value(source_plan, label="DLM Plan"),
         "elements": elements,
         "counts": counts,
         "formula": formula_from_symbol_counts(composition),
         "anion_framework": family,
-        "charge_bucket": expected_charge,
-        "valence_species": [dict(row) for row in species],
         **{key: str(soft[key]) for key in SOFT_FIELDS},
     }
     line = serialize_native_plan(plan)
     parsed = parse_native_plan_line(line)
     if _composition(parsed) != composition or int(parsed["N"]) != int(plan["N"]):
         raise ValueError("native Plan roundtrip changed composition/N")
-    if parsed.get("charge_bucket_match") is not True:
-        raise ValueError("native Plan roundtrip changed charge certificate")
     for key in SOFT_FIELDS:
         if str(parsed.get(key)) != str(plan[key]):
             raise ValueError(f"native Plan roundtrip changed {key}")
@@ -763,6 +599,15 @@ def _native_plan(
 
 
 def _line_fields(line: str) -> dict[str, str]:
+    text = str(line).strip()
+    if text.startswith("{"):
+        payload = json.loads(text)
+        if not isinstance(payload, Mapping):
+            raise TypeError("native Plan JSON is not an object")
+        return {
+            str(key): json.dumps(value, ensure_ascii=False, sort_keys=True)
+            for key, value in payload.items()
+        }
     output: dict[str, str] = {}
     for chunk in str(line).split(";"):
         if "=" not in chunk:
@@ -789,34 +634,19 @@ def _mask_selected_soft_line_fields(
     line: str,
     fields: set[str],
 ) -> str:
-    line_keys = {
-        "lattice_system": "LS",
-        "spacegroup_bucket": "SG",
-        "volume_per_atom_bin": "VP",
-    }
-    selected = {line_keys[field] for field in fields}
-    output: list[str] = []
-    seen: set[str] = set()
-    for chunk in str(line).split(";"):
-        if "=" not in chunk:
-            output.append(chunk)
-            continue
-        key, _value = chunk.split("=", 1)
-        key = key.strip().upper()
-        if key in selected:
-            output.append(f"{key}=<SOFT_MASK>")
-            seen.add(key)
-        else:
-            output.append(chunk)
-    if seen != selected:
+    payload = json.loads(str(line))
+    if not isinstance(payload, dict):
+        raise TypeError("native Plan JSON is not an object")
+    if not fields <= set(SOFT_FIELDS) or not fields <= set(payload):
         raise ValueError("predicted unknown soft-field masking support changed")
-    return ";".join(output)
+    for field in fields:
+        payload[field] = "<SOFT_MASK>"
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 def _materialise_predicted_plan(
     source_plan: Mapping[str, Any],
     semantic_plan: Mapping[str, Any],
-    species: Sequence[Mapping[str, Any]],
     teacher_soft: Mapping[str, str],
     predicted_soft: Mapping[str, str],
 ) -> tuple[dict[str, Any], str, str]:
@@ -836,7 +666,6 @@ def _materialise_predicted_plan(
     plan = _native_plan(
         source_plan,
         semantic_plan,
-        species,
         serializable_soft,
     )
     line = serialize_native_plan(plan)
@@ -880,7 +709,6 @@ def convert_aligned_row(
     *,
     split: str,
     row_index: int,
-    vocabulary: Mapping[int, tuple[str, int]],
     prediction_mode: str,
     checkpoint_order: Sequence[str],
 ) -> list[dict[str, Any]]:
@@ -901,23 +729,6 @@ def convert_aligned_row(
     source_plan = _plan_from_row(source_row, label="DLM row")
     semantic_plan = _plan_from_row(semantic_row, label="semantic row")
     _assert_plan_alignment(source_plan, semantic_plan, label="semantic Plan")
-    species = _valence_species(semantic_row, semantic_plan, vocabulary)
-    certificate_charge_bucket = _expected_charge_bucket(species)
-    semantic_declared_charge_bucket = str(
-        semantic_plan.get("charge_bucket") or ""
-    )
-    if semantic_declared_charge_bucket == "certified_neutral":
-        semantic_declared_charge_bucket = "neutral_plausible"
-    plan_species = semantic_plan.get("valence_species")
-    semantic_plan_valence_used_label_fallback = bool(
-        isinstance(plan_species, Sequence)
-        and not isinstance(plan_species, (str, bytes))
-        and any(
-            isinstance(value, Mapping)
-            and value.get("oxidation_state") in (None, "", "unknown")
-            for value in plan_species
-        )
-    )
     predicted_soft_by_checkpoint = _resolve_predicted_soft_fields_by_checkpoint(
         source_row,
         semantic_row,
@@ -925,14 +736,11 @@ def convert_aligned_row(
         split=split,
         row_index=row_index,
         source_plan=source_plan,
-        semantic_species=species,
         prediction_mode=prediction_mode,
         checkpoint_order=checkpoint_order,
     )
     teacher_soft = _soft_fields(semantic_plan, label="semantic teacher Plan")
-    teacher_plan = _native_plan(
-        source_plan, semantic_plan, species, teacher_soft
-    )
+    teacher_plan = _native_plan(source_plan, semantic_plan, teacher_soft)
     teacher_line = serialize_native_plan(teacher_plan)
     predicted_materialized: dict[str, tuple[dict[str, Any], str, str]] = {}
     for checkpoint_name in checkpoint_order:
@@ -941,7 +749,6 @@ def convert_aligned_row(
         materialized = _materialise_predicted_plan(
             source_plan,
             semantic_plan,
-            species,
             teacher_soft,
             predicted_soft_by_checkpoint[checkpoint_name],
         )
@@ -971,19 +778,6 @@ def convert_aligned_row(
             identity_from_plan_state(source_plan)
         ),
         "sample_weight": source_weight / float(len(view_names)),
-        "source_charge_bucket": str(source_plan.get("charge_bucket") or ""),
-        "semantic_charge_bucket": str(semantic_plan.get("charge_bucket") or ""),
-        "source_charge_bucket_matches_semantic": str(
-            source_plan.get("charge_bucket") or ""
-        )
-        == str(semantic_plan.get("charge_bucket") or ""),
-        "semantic_plan_valence_used_label_fallback": (
-            semantic_plan_valence_used_label_fallback
-        ),
-        "semantic_charge_bucket_matches_valence_certificate": (
-            semantic_declared_charge_bucket == certificate_charge_bucket
-        ),
-        "certificate_charge_bucket": certificate_charge_bucket,
     }
     for key in SAFE_TRAINING_KEYS:
         if key in source_row:
@@ -992,7 +786,7 @@ def convert_aligned_row(
     teacher_row = {
         **common,
         "view": "teacher-native",
-        "prompt_schema": "C3FD_NATIVE_PLAN_V1",
+        "prompt_schema": "C3FD_NATIVE_PLAN_V2",
         "prompt": build_native_body_prompt(teacher_plan),
         "native_plan_line": teacher_line,
         "plan_state": teacher_plan,
@@ -1007,7 +801,7 @@ def convert_aligned_row(
                 **common,
                 "view": predicted_view_name(str(checkpoint_name)),
                 "prediction_checkpoint": str(checkpoint_name),
-                "prompt_schema": "C3FD_NATIVE_PLAN_V1",
+                "prompt_schema": "C3FD_NATIVE_PLAN_V2",
                 "prompt": predicted_prompt,
                 "native_plan_line": predicted_line,
                 "plan_state": predicted_plan,
@@ -1021,16 +815,16 @@ def convert_aligned_row(
     masked_row = {
         **common,
         "view": "soft-masked",
-        "prompt_schema": "C3FD_NATIVE_PLAN_V1_SOFT_MASKED",
+        "prompt_schema": "C3FD_NATIVE_PLAN_V2_SOFT_MASKED",
         "prompt": build_native_body_prompt(teacher_plan, mask_soft_fields=True),
         "native_plan_line": masked_line,
         "plan_state": masked_plan,
     }
-    minimal_spec = minimal_spec_from_plan(source_plan, semantic_row)
+    minimal_spec = _portable_minimal_spec(source_plan)
     minimal_row = {
         **common,
         "view": "minimal-reference",
-        "prompt_schema": "h1a2_ctv_minimal_spec_v1",
+        "prompt_schema": "c3fd_composition_minimal_v1",
         "prompt": minimal_prompt(minimal_spec),
         "minimal_spec": minimal_spec,
     }
@@ -1108,7 +902,6 @@ def build_dataset(
         predicted_view_name(name) for name in checkpoint_order
     )
     splits = _discover_splits(input_dir, semantic_dir, predicted_soft_dir)
-    vocabulary, vocabulary_sha = _species_vocabulary(semantic_dir)
     staging = output_dir.with_name(f".{output_dir.name}.preparing.{os.getpid()}")
     if staging.exists():
         raise FileExistsError(staging)
@@ -1141,9 +934,6 @@ def build_dataset(
                 )
             )
             source_count = 0
-            source_semantic_charge_bucket_mismatches = 0
-            semantic_plan_valence_label_fallbacks = 0
-            semantic_charge_bucket_certificate_mismatches = 0
             source_indices: set[int] = set()
             view_counts: Counter[str] = Counter()
             chemsystems: set[str] = set()
@@ -1191,24 +981,10 @@ def build_dataset(
                         predicted_row,
                         split=split,
                         row_index=source_idx,
-                        vocabulary=vocabulary,
                         prediction_mode=str(prediction_contract["mode"]),
                         checkpoint_order=checkpoint_order,
                     )
                     source_count += 1
-                    source_semantic_charge_bucket_mismatches += int(
-                        converted[0]["source_charge_bucket_matches_semantic"] is False
-                    )
-                    semantic_plan_valence_label_fallbacks += int(
-                        converted[0]["semantic_plan_valence_used_label_fallback"]
-                        is True
-                    )
-                    semantic_charge_bucket_certificate_mismatches += int(
-                        converted[0][
-                            "semantic_charge_bucket_matches_valence_certificate"
-                        ]
-                        is False
-                    )
                     for row in converted:
                         view_counts[str(row["view"])] += 1
                         chemsystems.add(str(row["chemsys"]))
@@ -1237,15 +1013,6 @@ def build_dataset(
                     None if predicted_path is None else sha256_file(predicted_path)
                 ),
                 "output_sha256": sha256_file(output_path),
-                "source_semantic_charge_bucket_mismatches": (
-                    source_semantic_charge_bucket_mismatches
-                ),
-                "semantic_plan_valence_label_fallbacks": (
-                    semantic_plan_valence_label_fallbacks
-                ),
-                "semantic_charge_bucket_certificate_mismatches": (
-                    semantic_charge_bucket_certificate_mismatches
-                ),
                 "source_rows_assigned_ordinal_index": (
                     source_rows_assigned_ordinal_index
                 ),
@@ -1284,7 +1051,7 @@ def build_dataset(
         gate = {
             "outcome_blind_curated_payload": True,
             "source_row_alignment_exact": True,
-            "composition_N_valence_exact": True,
+            "composition_N_exact": True,
             "predicted_rows_complete_and_aligned": True,
             "predicted_native_changes_only_soft_fields": True,
             "checkpoint_support_and_order_identical_across_splits_rows": True,
@@ -1296,9 +1063,7 @@ def build_dataset(
             ),
             "chemsys_overlap_disclosed": True,
             "legacy_rich_fields_absent": True,
-            "semantic_valence_certificate_authoritative_for_charge": True,
-            "unknown_plan_valence_replaced_only_by_frozen_species_labels": True,
-            "frozen_valence_witness_authoritative_over_semantic_charge_bucket": True,
+            "planner_certificates_not_exposed_to_dlm": True,
         }
         manifest = {
             "schema": MANIFEST_SCHEMA,
@@ -1330,7 +1095,6 @@ def build_dataset(
             ),
             "unknown_prediction_policy": "per-field-soft-mask",
             "splits": split_reports,
-            "semantic_vocabulary_sha256": vocabulary_sha,
             "static_assets": static_assets,
             "chemsys_overlap": overlap,
             "gate": gate,

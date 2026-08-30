@@ -1,18 +1,19 @@
-"""Typed, deployment-native interface between C3FD and the crystal DLM."""
+"""Small, rich-Plan-style interface between C3FD and the crystal DLM."""
 
 from __future__ import annotations
 
-import re
+import json
 from typing import Any, Mapping
 
-from crystal_dlm.r5_plan_state import (
-    parse_countvalence_plan_state,
-    plan_state_to_countvalencefields,
+from crystal_dlm.composition_identity import canonical_symbol_counts
+
+
+C3FD_NATIVE_PLAN_VERSION = "C3FD_NATIVE_PLAN_V2"
+SOFT_FIELD_KEYS = (
+    "lattice_system",
+    "spacegroup_bucket",
+    "volume_per_atom_bin",
 )
-
-
-C3FD_NATIVE_PLAN_VERSION = "C3FD_NATIVE_PLAN_V1"
-SOFT_FIELD_KEYS = ("LS", "SG", "VP")
 ALLOWED_ANION_FRAMEWORKS = {
     "oxide",
     "halide",
@@ -22,90 +23,87 @@ ALLOWED_ANION_FRAMEWORKS = {
     "phosphide_or_phosphate",
     "other",
 }
+REQUIRED_FIELDS = (
+    "schema",
+    "N",
+    "elements",
+    "counts",
+    "anion_framework",
+    *SOFT_FIELD_KEYS,
+)
 
 
-def _field_map(line: str) -> dict[str, str]:
-    fields: dict[str, str] = {}
-    for chunk in str(line).strip().split(";"):
-        if "=" not in chunk:
-            continue
-        key, value = chunk.split("=", 1)
-        key = key.strip().upper()
-        if key in fields:
-            raise ValueError(f"native Plan duplicates field {key}")
-        fields[key] = value.strip()
-    return fields
-
-
-def serialize_native_plan(plan: Mapping[str, Any]) -> str:
-    """Serialize one current C3FD Plan without legacy H1 prompt fields."""
-
+def _payload(plan: Mapping[str, Any]) -> dict[str, Any]:
     n_value = int(plan.get("N") or 0)
     if n_value < 1 or n_value > 20:
         raise ValueError("native Plan N must be in 1..20")
+    composition = canonical_symbol_counts(
+        [str(value) for value in (plan.get("elements") or ())],
+        [int(value) for value in (plan.get("counts") or ())],
+    )
+    if not composition or sum(count for _symbol, count in composition) != n_value:
+        raise ValueError("native Plan violates exact N/count conservation")
     family = str(plan.get("anion_framework") or "").strip()
     if family not in ALLOWED_ANION_FRAMEWORKS:
         raise ValueError(f"unsupported native anion framework {family!r}")
-    core = plan_state_to_countvalencefields(plan)
-    line = f"{C3FD_NATIVE_PLAN_VERSION};N=N{n_value:03d};AF={family};{core}"
-    parsed = parse_native_plan_line(line)
-    if int(parsed["N"]) != n_value:
-        raise ValueError("native Plan serialization changed N")
-    return line
+    soft: dict[str, str] = {}
+    for field in SOFT_FIELD_KEYS:
+        value = str(plan.get(field) or "").strip()
+        if not value:
+            raise ValueError(f"native Plan lacks {field}")
+        soft[field] = value
+    return {
+        "schema": C3FD_NATIVE_PLAN_VERSION,
+        "N": n_value,
+        "elements": [symbol for symbol, _count in composition],
+        "counts": [int(count) for _symbol, count in composition],
+        "anion_framework": family,
+        **soft,
+    }
+
+
+def serialize_native_plan(plan: Mapping[str, Any]) -> str:
+    """Serialize one portable C3FD Plan in the established rich-JSON style."""
+
+    return json.dumps(
+        _payload(plan),
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
 
 
 def parse_native_plan_line(line: str) -> dict[str, Any]:
-    """Parse an unmasked native Plan and validate exact typed composition."""
+    """Parse an unmasked native Plan and validate exact composition."""
 
     text = str(line).strip().splitlines()[0] if str(line).strip() else ""
-    if not text.startswith(C3FD_NATIVE_PLAN_VERSION + ";"):
-        raise ValueError("native Plan version marker is missing")
-    fields = _field_map(text)
-    n_token = fields.get("N", "")
-    match = re.fullmatch(r"N(\d{3})", n_token.upper())
-    if match is None:
-        raise ValueError("native Plan N token is malformed")
-    declared_n = int(match.group(1))
-    family = fields.get("AF", "")
-    if family not in ALLOWED_ANION_FRAMEWORKS:
-        raise ValueError("native Plan AF field is unsupported")
-    core_keys = [f"P{index:02d}" for index in range(1, 8)] + ["CB", "LS", "SG", "VP"]
-    missing = [key for key in core_keys if key not in fields]
+    if text.startswith("c3fd_native_plan:"):
+        text = text.split(":", 1)[1].strip()
+    try:
+        raw = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("native Plan is not valid JSON") from exc
+    if not isinstance(raw, Mapping):
+        raise TypeError("native Plan JSON must be an object")
+    missing = [field for field in REQUIRED_FIELDS if field not in raw]
     if missing:
         raise ValueError(f"native Plan is missing fields: {','.join(missing)}")
-    core = ";".join(f"{key}={fields[key]}" for key in core_keys)
-    parsed = parse_countvalence_plan_state(core)
-    if int(parsed["N"]) != declared_n:
-        raise ValueError("native Plan declared N disagrees with species counts")
+    if str(raw.get("schema")) != C3FD_NATIVE_PLAN_VERSION:
+        raise ValueError("native Plan schema marker changed")
+    parsed = _payload(raw)
     parsed["native_plan_version"] = C3FD_NATIVE_PLAN_VERSION
-    parsed["anion_framework"] = family
     parsed["native_line"] = text
     return parsed
 
 
 def mask_native_soft_fields(line: str) -> str:
-    """Mask only uncertain structure hints while preserving chemistry fields."""
+    """Mask only uncertain structural hints while preserving composition."""
 
-    text = str(line).strip().splitlines()[0] if str(line).strip() else ""
-    if not text.startswith(C3FD_NATIVE_PLAN_VERSION + ";"):
-        raise ValueError("native Plan version marker is missing")
-    chunks = text.split(";")
-    output = []
-    seen: set[str] = set()
-    for chunk in chunks:
-        if "=" not in chunk:
-            output.append(chunk)
-            continue
-        key, _value = chunk.split("=", 1)
-        key_upper = key.strip().upper()
-        if key_upper in SOFT_FIELD_KEYS:
-            output.append(f"{key_upper}=<SOFT_MASK>")
-            seen.add(key_upper)
-        else:
-            output.append(chunk)
-    if seen != set(SOFT_FIELD_KEYS):
-        raise ValueError("native Plan does not contain all soft fields")
-    return ";".join(output)
+    parsed = parse_native_plan_line(line)
+    for field in SOFT_FIELD_KEYS:
+        parsed[field] = "<SOFT_MASK>"
+    parsed.pop("native_plan_version", None)
+    parsed.pop("native_line", None)
+    return json.dumps(parsed, ensure_ascii=False, separators=(",", ":"))
 
 
 def build_native_body_prompt(
@@ -117,8 +115,9 @@ def build_native_body_prompt(
     if mask_soft_fields:
         line = mask_native_soft_fields(line)
     return (
-        "Generate only the exact-length dynamic crystal body for this C3FD-native Plan. "
-        "N and typed species counts are hard constraints; LS, SG, and VP are soft structural hints.\n"
+        "Generate only the exact-length dynamic crystal body for this C3FD Plan. "
+        "N and element counts are hard constraints; lattice system, space-group "
+        "bucket, and volume-per-atom bin are soft structural hints.\n"
         f"c3fd_native_plan: {line}\n"
         "dynamic_crystal_body:"
     )

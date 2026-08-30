@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 import sys
 import unittest
 
@@ -25,11 +26,6 @@ def plan():
         "formula": "Li2O",
         "reduced_formula": "Li2O",
         "anion_framework": "oxide",
-        "charge_bucket": "neutral_plausible",
-        "valence_species": [
-            {"element": "Li", "count": 2, "oxidation_state": 1},
-            {"element": "O", "count": 1, "oxidation_state": -2},
-        ],
         "lattice_system": "cubic",
         "spacegroup_bucket": "sg_195_230",
         "volume_per_atom_bin": "volpa_015_019",
@@ -42,7 +38,7 @@ class C3FDNativePlanTest(unittest.TestCase):
     def test_native_roundtrip_preserves_hard_and_soft_fields(self):
         source = plan()
         line = serialize_native_plan(source)
-        self.assertTrue(line.startswith(C3FD_NATIVE_PLAN_VERSION + ";"))
+        self.assertEqual(json.loads(line)["schema"], C3FD_NATIVE_PLAN_VERSION)
         self.assertNotIn("prototype", line)
         self.assertNotIn("oxidation_candidates", line)
         parsed = parse_native_plan_line(line)
@@ -57,11 +53,15 @@ class C3FDNativePlanTest(unittest.TestCase):
     def test_soft_masking_changes_only_deployment_hints(self):
         line = serialize_native_plan(plan())
         masked = mask_native_soft_fields(line)
-        self.assertIn("LS=<SOFT_MASK>", masked)
-        self.assertIn("SG=<SOFT_MASK>", masked)
-        self.assertIn("VP=<SOFT_MASK>", masked)
-        for key in ("N=N003", "AF=oxide", "P01=", "P02=", "CB=B_NEU"):
-            self.assertIn(key, masked)
+        payload = json.loads(masked)
+        self.assertEqual(payload["lattice_system"], "<SOFT_MASK>")
+        self.assertEqual(payload["spacegroup_bucket"], "<SOFT_MASK>")
+        self.assertEqual(payload["volume_per_atom_bin"], "<SOFT_MASK>")
+        self.assertEqual(payload["N"], 3)
+        self.assertEqual(payload["elements"], ["Li", "O"])
+        self.assertEqual(payload["counts"], [2, 1])
+        self.assertNotIn("charge_bucket", payload)
+        self.assertNotIn("valence_species", payload)
 
     def test_body_prompt_marks_soft_fields_as_hints(self):
         prompt = build_native_body_prompt(plan())
@@ -69,11 +69,14 @@ class C3FDNativePlanTest(unittest.TestCase):
         self.assertIn("c3fd_native_plan:", prompt)
         self.assertTrue(prompt.endswith("dynamic_crystal_body:"))
 
-    def test_valence_composition_mismatch_fails_closed(self):
-        invalid = plan()
-        invalid["valence_species"][0]["count"] = 1
-        with self.assertRaises(ValueError):
-            serialize_native_plan(invalid)
+    def test_legacy_certificate_fields_do_not_change_native_interface(self):
+        clean = plan()
+        legacy = dict(clean)
+        legacy["charge_bucket"] = "charge_fail"
+        legacy["valence_species"] = [
+            {"element": "Li", "count": 1, "oxidation_state": 7}
+        ]
+        self.assertEqual(serialize_native_plan(clean), serialize_native_plan(legacy))
 
 
 if __name__ == "__main__":

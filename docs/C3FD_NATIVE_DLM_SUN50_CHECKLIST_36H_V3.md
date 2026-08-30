@@ -45,17 +45,16 @@ method does not continue either the old rich or minimal adapter. Its
 `prototype_key`, `oxidation_candidates=unknown`,
 and legacy JSON semantics are not the production interface.
 
-## `C3FD_NATIVE_PLAN_V1`
+## `C3FD_NATIVE_PLAN_V2`
 
 The production prompt is a compact, typed serialization of fields already
 emitted or certified by the current Planner.
 
-Hard conditions:
+Portable hard conditions:
 
 - `N`;
 - ordered `elements` and exact `counts`;
-- `valence_species` or the equivalent charge certificate;
-- `anion_framework` / broad composition family.
+- `anion_framework` / broad family, deterministically derived from composition.
 
 Soft structural hints:
 
@@ -73,7 +72,10 @@ y_1 ... y_N,
 z_1 ... z_N
 ```
 
-Hard composition/cardinality fields are always visible and exact. Soft fields
+Planner certificates remain internal to C3FD and are not serialized into the
+DLM prompt. There is no valence, charge-bucket, prototype, or dataset-specific
+certificate field in the public interface. Hard composition/cardinality fields
+are always visible and exact. Soft fields
 are hints, never hard geometry constraints. Training applies a frozen,
 train-validation-calibrated field dropout/corruption policy so 60--70%-accurate
 Planner fields cannot force the DLM into an incorrect basin. No new full-vocab
@@ -84,13 +86,14 @@ direct Planner CIF is introduced.
 
 ### A. Planner-interface adaptation SFT
 
-Use the original MP20 standard train (`27,136`) and validation (`9,047`) splits.
-MP20 is split by material/structure entry rather than by chemsys: the original
-source contains `3,469` chemsys in both train and validation (`16,549` train
-chemsys and `7,100` validation chemsys). This overlap predates native rendering
-and is disclosed rather than treated as an error. Consequently this run calls
-the split **MP20 standard validation**, never chemsys-held-out validation. Each
-crystal receives paired input views with the same crystal-body target:
+Use all rows in the original MP20 standard train (`27,136`) and validation
+(`9,047`) splits. MP20 crystal structures themselves are the SFT supervision;
+no row is filtered by a Planner certificate. MP20 is split by material/structure
+entry rather than by chemsys and has `3,469` overlapping chemsys. This overlap
+predates native rendering and is disclosed rather than treated as an error.
+Consequently this run calls the split **MP20 standard
+validation**, never chemsys-held-out validation. Each crystal receives paired
+input views with the same crystal-body target:
 
 1. a typed native Plan derived from the train crystal for learning the intended
    field semantics;
@@ -101,9 +104,8 @@ The second view prevents a teacher-Plan/inference-Plan gap. Soft-field dropout
 and the paired minimal view teach robustness when a predicted lattice, SG, or
 volume bin is wrong. Energy, hull, prospective outcomes, and current
 development-canary outcomes are excluded from this SFT dataset. Legacy source
-rows lacking an explicit source index use their immutable file ordinal;
-composition, N, and answer alignment against semantic and dual-Planner rows
-must remain exact.
+rows use immutable file ordinal for alignment; composition, N, and answer
+alignment against semantic and dual-Planner rows must remain exact.
 
 ### B. Stability alignment data
 
@@ -139,7 +141,7 @@ after prospective two-training-seed replication.
 - keep the recovered H1-A2 LoRA structure: `r=8`, alpha `32`, dropout `0.05`,
   target modules `q/k/v/ff/up`;
 - two independent DLM training seeds;
-- use a source-balanced sampler: each of the 27,136 MP20 train sources
+- use a source-balanced sampler: each of the 27,136 MP20 train rows
   contributes once per source epoch, while the five views are globally balanced
   and deterministically rotated between epochs;
 - epoch1: 1,696 optimizer updates, effective batch 16, LR `5e-5`, cosine,
@@ -244,9 +246,10 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
 - [x] Faithful H0/R0S generation terminal.
 - [ ] Faithful raw/refined offline diagnosis terminal (job38603 running); no
   initialization choice is permitted for the fresh paper method.
-- [x] `C3FD_NATIVE_PLAN_V1` serializer/round-trip/type tests complete.
-- [ ] MP20 standard train/validation native Plan datasets frozen, with the
-  inherited `3,469` chemsys overlap disclosed.
+- [x] `C3FD_NATIVE_PLAN_V2` rich-JSON serializer/round-trip/type tests complete;
+  Planner certificates are not part of the DLM interface.
+- [ ] Full MP20 standard train/validation native Plan data (`27,136/9,047`)
+  frozen, with the inherited `3,469` chemsys overlap disclosed.
 - [x] Dual-C3FD predicted soft-field coverage reported: train `27,136`,
   validation `9,047`, both checkpoints and all three fields at 100% coverage.
 - [ ] Two-seed fresh Planner-native SFT terminal with only step3392 adapters;

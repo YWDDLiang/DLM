@@ -19,13 +19,12 @@
     "model494_tau800_refinement"
   ],
   "native_plan": {
-    "version": "C3FD_NATIVE_PLAN_V1",
+    "version": "C3FD_NATIVE_PLAN_V2",
     "hard_fields": [
       "N",
       "elements",
       "counts",
-      "valence_species_or_charge_certificate",
-      "anion_framework_or_family"
+      "anion_framework_or_family_derived_from_composition"
     ],
     "soft_fields": [
       "lattice_system",
@@ -34,20 +33,26 @@
     ],
     "retired_fields": [
       "prototype_key",
-      "oxidation_candidates_unknown"
+      "oxidation_candidates_unknown",
+      "valence_species",
+      "charge_bucket",
+      "planner_certificate_payload"
     ],
     "body_representation": "dynamic_7_plus_4N",
+    "serialization_style": "H1A2_rich_plan_like_canonical_JSON",
+    "planner_certificates_exposed_to_dlm": false,
     "soft_fields_are_hard_constraints": false
   },
   "data": {
     "adaptation_sft": {
-      "source": "MP20_standard_train_27136",
-      "validation": "MP20_standard_validation_9047",
+      "source": "full_MP20_standard_train_27136",
+      "validation": "full_MP20_standard_validation_9047",
       "split_unit": "material_or_structure_entry",
       "chemsys_held_out": false,
       "train_chemsys": 16549,
       "validation_chemsys": 7100,
-      "train_validation_chemsys_overlap": 3469,
+      "full_train_validation_chemsys_overlap": 3469,
+      "planner_certificate_filtering": false,
       "overlap_origin": "inherited_from_original_MP20_standard_split",
       "overlap_policy": "disclose_and_continue_per_user_decision",
       "views": [
@@ -57,7 +62,7 @@
         "soft_masked_native_plan",
         "minimal_reference_view"
       ],
-      "legacy_missing_source_index_policy": "immutable_file_ordinal",
+      "source_index_policy": "immutable_file_ordinal_if_explicit_index_absent",
       "outcome_labels_read": false
     },
     "historical_3614_candidates": {
@@ -105,6 +110,12 @@
       "elapsed": "00:02:33",
       "root_cause": "builder_expected_chemsys_holdout_but_MP20_standard_split_overlaps",
       "resolution": "explicit_mp20_standard_split_policy_with_overlap_disclosure"
+    },
+    "native_data_job_38673": {
+      "state": "FAILED_PRESCIENCE",
+      "elapsed": "00:00:06",
+      "root_cause": "full_MP20_contains_rows_without_authorized_C3FD_composition_supervision",
+      "resolution": "remove_planner_certificate_fields_from_DLM_interface_and_retain_all_MP20_rows"
     }
   },
   "planning_eta_hours": {

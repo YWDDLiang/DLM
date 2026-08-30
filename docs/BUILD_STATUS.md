@@ -206,14 +206,16 @@
 - active checklist升级为`C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md/json`；最终
   prospective固定分母目标为Strict S.U.N.`>=10%`、Meta S.U.N.`>=50%`，但不作为
   事后删结果或选择seed/checkpoint/cohort的门；
-- 旧H1-A2 rich JSON只保留为compatibility diagnostic和可能的权重初始化，不再作为
-  production接口。新`C3FD_NATIVE_PLAN_V1`直接序列化当前Planner的exact N/counts、
-  valence/charge certificate、family以及soft lattice/SG/volume；动态`7+4N` body不变；
+- 旧H1-A2 rich JSON只保留为compatibility diagnostic，不再作为权重初始化。
+  production接口`C3FD_NATIVE_PLAN_V2`沿用rich-Plan可读JSON风格，只包含exact N/counts、
+  composition-derived family与soft lattice/SG/volume；Planner内部certificate不暴露给DLM，
+  动态`7+4N` body不变；
 - 正式Stage-1使用MP20-train的teacher-native与冻结C3FD-predicted-native双视图做
   Planner-interface SFT；soft fields按train/validation可靠性dropout，不硬约束geometry；
 - native DLM从预训练LLaDA-8B新建LoRA，不继续旧rich/minimal adapter。按两个训练seed
-  各跑两个source-equivalent epochs：epoch1/1696步使用LR`5e-5`，epoch2再1696步使用
-  LR`1e-5`，最终只保留step3392；step1696仅监控。五view由source-balanced sampler
+  在完整MP20标准train `27136`行各跑两个source epochs：epoch1/1696步使用LR`5e-5`，
+  epoch2再1696步使用LR`1e-5`，最终只保留step3392；step1696仅监控。五view由
+  source-balanced sampler
   每source每epoch取一个并跨epoch轮换，不把expanded rows误算成五倍epoch。C3FD现有
   checkpoint已训练10 epochs，保持冻结，不追加epoch；
 - 现有3614个历史candidate因混合retired L6/L7/D3PO谱系、raw-invalid上游选择，只作
@@ -362,17 +364,20 @@
 ## 2026-08-31 C3FD-native fresh-retrain执行修正
 
 - 用户确认paper方法必须从共享预训练LLaDA-8B新建LoRA重训，不从旧rich或minimal
-  adapter继续。两训练seed各跑两个source epochs：`1696+1696=3392` updates，仅
-  step3392可进入prospective；step1696只监控；
+  adapter继续。两训练seed在full MP20 train `27136`行上各跑两个source epochs：
+  `1696+1696=3392` updates，仅step3392可进入prospective；step1696只监控；
 - 原始`mp_20_r5_exact_length`已逐行核对：train `27136`、validation `9047`，与full
   semantic及双C3FD prediction的composition/N mismatch均为0。原始MP20标准split本身有
   `3469`个train/validation chemsys重叠；过滤派生数据中的`3089`不是五view构造引入；
 - 按用户决定保留MP20标准material-level split，不另做chemsys重分。文档与manifest只称
   `MP20 standard validation`并披露重叠，禁止继续称chemsys-held-out；builder仍保留独立
   fail-closed held-out模式供未来实验；
-- job38668因此以pre-science negative保留。修复后的builder使用全部原始rows，并仅在旧
-  source缺显式index时采用immutable file ordinal；teacher/pred17/pred18/masked/minimal
-  五view、答案一致、每source总weight1、outcome-blind合同不变；
+- job38668因把MP20标准split误当chemsys-held-out而pre-science失败；full-source job38673
+  又因把Planner内部composition certificate误设为DLM数据hard gate而在6秒内失败。两者均
+  negative归档。用户随后明确简化接口：MP20真实结构无需Planner证书授权；正式V2采用
+  H1-A2-like rich JSON，仅N/elements/counts/family/LS/SG/VP，使用full `27136/9047`；
+  teacher/pred17/pred18/masked/minimal五view、答案一致、每source总weight1、outcome-blind
+  合同不变；
 - faithful offline job38603仍为development诊断，不再参与paper方法初始化选择；主方法
   fresh初始化已冻结。预计无alignment时于2026-08-31 `14:00--18:00`完成全部SUN与论文
   主线；若唯一fresh on-policy alignment被启用，预计`20:00--23:00`完成；
