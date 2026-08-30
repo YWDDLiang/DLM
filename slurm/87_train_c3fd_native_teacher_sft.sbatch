@@ -29,6 +29,7 @@ readonly LR_HELPER_SHA=e7a8be58b8b0e822e9b50394e22f98f1d250fdc60d23a0f8e0153fa48
 readonly TOKEN_AUDIT_SHA=acb07572be689a9eaecab39fd74c934f2f1b7439595e569cf54963d1c0eccff0
 readonly SEEDS=(82017 82018)
 
+export H1A2_CONDA_ENV="${H1A2_CONDA_ENV:-diff_meets_diff}"
 source "${ROOT}/slurm/_common.sh"
 activate_environment
 

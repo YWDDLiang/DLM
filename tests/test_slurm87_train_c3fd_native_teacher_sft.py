@@ -14,6 +14,7 @@ class Slurm87TeacherSFTTest(unittest.TestCase):
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4", self.text)
         self.assertIn("#SBATCH --cpus-per-task=32", self.text)
         self.assertIn("allocated_gpus", self.text)
+        self.assertIn('H1A2_CONDA_ENV="${H1A2_CONDA_ENV:-diff_meets_diff}"', self.text)
         self.assertNotIn("nvidia-smi", self.text)
 
     def test_fresh_two_seed_two_stage_contract(self):
