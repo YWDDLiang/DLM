@@ -740,10 +740,6 @@ def _native_plan(
     )
     if declared_charge == "certified_neutral":
         declared_charge = "neutral_plausible"
-    if declared_charge != expected_charge:
-        raise ValueError(
-            "semantic charge bucket disagrees with frozen valence certificate"
-        )
     plan = {
         "N": _n_value(source_plan, label="DLM Plan"),
         "elements": elements,
@@ -906,6 +902,12 @@ def convert_aligned_row(
     semantic_plan = _plan_from_row(semantic_row, label="semantic row")
     _assert_plan_alignment(source_plan, semantic_plan, label="semantic Plan")
     species = _valence_species(semantic_row, semantic_plan, vocabulary)
+    certificate_charge_bucket = _expected_charge_bucket(species)
+    semantic_declared_charge_bucket = str(
+        semantic_plan.get("charge_bucket") or ""
+    )
+    if semantic_declared_charge_bucket == "certified_neutral":
+        semantic_declared_charge_bucket = "neutral_plausible"
     plan_species = semantic_plan.get("valence_species")
     semantic_plan_valence_used_label_fallback = bool(
         isinstance(plan_species, Sequence)
@@ -978,6 +980,10 @@ def convert_aligned_row(
         "semantic_plan_valence_used_label_fallback": (
             semantic_plan_valence_used_label_fallback
         ),
+        "semantic_charge_bucket_matches_valence_certificate": (
+            semantic_declared_charge_bucket == certificate_charge_bucket
+        ),
+        "certificate_charge_bucket": certificate_charge_bucket,
     }
     for key in SAFE_TRAINING_KEYS:
         if key in source_row:
@@ -1133,6 +1139,7 @@ def build_dataset(
             source_count = 0
             source_semantic_charge_bucket_mismatches = 0
             semantic_plan_valence_label_fallbacks = 0
+            semantic_charge_bucket_certificate_mismatches = 0
             source_indices: set[int] = set()
             view_counts: Counter[str] = Counter()
             chemsystems: set[str] = set()
@@ -1181,6 +1188,12 @@ def build_dataset(
                         converted[0]["semantic_plan_valence_used_label_fallback"]
                         is True
                     )
+                    semantic_charge_bucket_certificate_mismatches += int(
+                        converted[0][
+                            "semantic_charge_bucket_matches_valence_certificate"
+                        ]
+                        is False
+                    )
                     for row in converted:
                         view_counts[str(row["view"])] += 1
                         chemsystems.add(str(row["chemsys"]))
@@ -1214,6 +1227,9 @@ def build_dataset(
                 ),
                 "semantic_plan_valence_label_fallbacks": (
                     semantic_plan_valence_label_fallbacks
+                ),
+                "semantic_charge_bucket_certificate_mismatches": (
+                    semantic_charge_bucket_certificate_mismatches
                 ),
                 "semantic_rows": len(semantic_by_idx),
                 "predicted_rows": (
@@ -1261,6 +1277,7 @@ def build_dataset(
             "legacy_rich_fields_absent": True,
             "semantic_valence_certificate_authoritative_for_charge": True,
             "unknown_plan_valence_replaced_only_by_frozen_species_labels": True,
+            "frozen_valence_witness_authoritative_over_semantic_charge_bucket": True,
         }
         manifest = {
             "schema": MANIFEST_SCHEMA,

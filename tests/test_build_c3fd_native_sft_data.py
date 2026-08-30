@@ -688,6 +688,37 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
             self.assertIn("QP01", teacher["native_plan_line"])
             self.assertIn("QM02", teacher["native_plan_line"])
 
+    def test_valence_witness_overrides_stale_semantic_charge_bucket(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            semantic_rows = read_jsonl(semantic / "train.jsonl")
+            semantic_rows[0]["plan_state"]["charge_bucket"] = "charge_fail"
+            write_jsonl(semantic / "train.jsonl", semantic_rows)
+            output = root / "semantic-charge-corrected"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
+            self.assertEqual(
+                manifest["splits"]["train"][
+                    "semantic_charge_bucket_certificate_mismatches"
+                ],
+                1,
+            )
+            teacher = next(
+                row
+                for row in read_jsonl(output / "train.jsonl")
+                if row["view"] == "teacher-native"
+            )
+            self.assertFalse(
+                teacher["semantic_charge_bucket_matches_valence_certificate"]
+            )
+            self.assertEqual(teacher["certificate_charge_bucket"], "neutral_plausible")
+            self.assertIn("CB=B_NEU", teacher["native_plan_line"])
+
 
 if __name__ == "__main__":
     unittest.main()
