@@ -1,0 +1,105 @@
+{
+  "schema": "h1a2_dlm_capability_regression_36h_v1",
+  "date": "2026-08-30",
+  "status": "frozen_zero_gpu_diagnosis",
+  "primary_finding": "The main regression is raw geometry and stable conversion after rich structural conditioning was removed; post-refiner Direct validity remains high.",
+  "historical": {
+    "r5c_exact_dynamic": {
+      "requested": 1200,
+      "graphs": 1167,
+      "refined1000_comp_valid_rate": 0.907,
+      "refined1000_structure_valid_rate": 0.998,
+      "de_novo_sun_comparable": false
+    },
+    "h1b_formula_only": {
+      "strict_sun_rate": 0.0554,
+      "meta_sun_rate": 0.4313,
+      "all_angles_90_rate": 0.8157,
+      "repeated_two_lengths_rate": 0.5333
+    },
+    "h1a2_historical": {
+      "requested": 1000,
+      "strict_sun_rate": 0.094,
+      "meta_sun_rate": 0.474,
+      "novel_rate": 0.892,
+      "unique_rate": 0.997,
+      "novel_unique_rate": 0.89
+    },
+    "h1a2_exact_replay": {
+      "requested": 1200,
+      "strict_sun_rate": 0.0858,
+      "meta_sun_rate": 0.4608
+    },
+    "h1a2_continuous": {
+      "requested": 3840,
+      "strict_sun_rate": 0.0763,
+      "meta_sun_rate": 0.4547
+    },
+    "r03_d1": {
+      "requested": 1024,
+      "strict_sun_rate": 0.0967,
+      "meta_sun_rate": 0.5107
+    },
+    "r03_d2": {
+      "requested": 1024,
+      "strict_sun_rate": 0.1143,
+      "meta_sun_rate": 0.4844,
+      "independent_planner_seeds": false
+    },
+    "r03_exact_replay": {
+      "requested": 1200,
+      "strict_sun_rate": 0.0842,
+      "meta_sun_rate": 0.4658
+    },
+    "r03_continuous": {
+      "requested": 3840,
+      "strict_sun_rate": 0.0747,
+      "meta_sun_rate": 0.4526
+    }
+  },
+  "current": {
+    "minimal_l7_base": {
+      "requested": 1000,
+      "body": 998,
+      "direct_joint": 996,
+      "strict_sun": 60,
+      "meta_sun": 412
+    },
+    "sgtc_l7_g1": {
+      "requested": 1000,
+      "body": 1000,
+      "direct_joint": 996,
+      "strict_sun": 53,
+      "meta_sun": 417
+    },
+    "d3po_fixed256_offline": {
+      "refined_mean_delta_ev_per_atom": -0.002591,
+      "refined_ci_crosses_zero": true,
+      "raw_mean_delta_ev_per_atom": 0.200266,
+      "raw_fraction_lower": 0.366142,
+      "refined_direct_range": [254, 255],
+      "raw_direct": {
+        "base": [151, 164],
+        "seed81017": [124, 137],
+        "seed81018": [150, 144]
+      },
+      "official_status": "pending"
+    }
+  },
+  "ranked_hypotheses": [
+    "rich_to_minimal_conditioning_regression",
+    "exact_composition_conditional_difficulty",
+    "post_refiner_objective_allows_raw_off_manifold",
+    "seed_and_process_instability",
+    "dynamic_representation_not_primary_cause"
+  ],
+  "prospective_method": {
+    "name": "SI-LWA-v1",
+    "planner_output": "composition_plus_N_only",
+    "intent_fields": ["VPA_Q8", "CN_ENV8"],
+    "external_rich_plan": false,
+    "body_representation": "unchanged_dynamic_7_plus_4N",
+    "refiner": "model494_tau800_fixed",
+    "test_outcomes_read": false
+  }
+}
