@@ -188,7 +188,11 @@
     "next_phase": "freeze_then_execute_fixed_train_and_mp20_standard_validation_raw_first_canary"
   },
   "sft_canary_freeze_contract": {
-    "implementation_status": "LOCAL_TESTS_PASS_NOT_YET_MATERIALIZED",
+    "implementation_status": "MATERIALIZED_SUCCESS",
+    "job_id": 38742,
+    "slurm_state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 3,
     "split_counts": {"train": 128, "validation": 128},
     "requested": 256,
     "unique_exact_compositions": true,
@@ -196,7 +200,26 @@
     "planner_checkpoint_selection": false,
     "policy_or_test_outcomes_read": false,
     "freeze_seed": 20260831,
-    "wrapper": "slurm/89_freeze_c3fd_native_sft_canary.sbatch"
+    "wrapper": "slurm/89_freeze_c3fd_native_sft_canary.sbatch",
+    "manifest_sha256": "73177562b54e30276af833ebffcf1a07082bc9a610d1099f28693b64a7a1b116",
+    "ledger_sha256": "3a6cae692af6f524e810f8597df28e5024a0cea06be3ecc48c92fb0eb6fb9816",
+    "planner_seed17_sha256": "a1b82120ea6697800c4fd4b0857d64ad6c393b101f1f278384f15310db5c37a5",
+    "planner_seed18_sha256": "586ccdda4ac84089bf731105c6ab1173daf29eae554a490d1c70564ee89128c9"
+  },
+  "active_sft_canary_generation": {
+    "job_id": 38745,
+    "state": "RUNNING",
+    "resources": "4_A800_32_CPU",
+    "requested_per_cell": 256,
+    "policies": [82017, 82018],
+    "streams": [17, 18],
+    "planner_checkpoint_by_stream": {"17": "seed17", "18": "seed18"},
+    "temperature": 0.7,
+    "schedule": "exact_axis",
+    "refiner": "model494_tau800",
+    "retry_rerank_replacement": false,
+    "official_query": false,
+    "duplicate_submission_forbidden": true
   },
   "train_inference_interface_audit": {
     "rows": {"train": 27136, "validation": 9047},

@@ -420,4 +420,9 @@
   train/validation各选`128`个、总计`256`个互不重复exact composition；同时物化C3FD
   seed17/seed18两套V2 predicted Plan，不做Planner checkpoint选择，也不复制teacher body
   或读取policy/test outcome。相关32项native接口/builder/freezer测试全部通过；immutable
-  cohort待部署后一次物化。
+  cohort由job38742在3秒内一次物化成功，manifest SHA为`73177562...1b116`。
+- canary generation/refinement job38745当前使用`4A800/32CPU`运行：82017/82018两policy
+  均在Planner seed17/18与对应streams17/18上各评价一次，固定256分母、temp0.7、
+  exact-axis、model494 tau800；无base arm、seed选择、retry、rerank、replacement或official
+  query。该development canary只决定是否需要预登记fresh alignment，不消费prospective
+  cohort。
