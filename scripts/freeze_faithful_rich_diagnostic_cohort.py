@@ -78,6 +78,14 @@ def source_indices(row: Mapping[str, Any], ordinal: int) -> tuple[int, int]:
     return source_sample_idx, source_ordinal
 
 
+def composition_metadata(plan: Mapping[str, Any]) -> dict[str, str]:
+    return {
+        "exact_composition_identity": RICH.exact_identity(plan),
+        "reduced_composition_identity": RICH.reduced_identity(plan),
+        "chemsys": RICH.chemsys(plan),
+    }
+
+
 def validate_canonical_prompt_plan(plan: Mapping[str, Any], *, label: str) -> None:
     payload = canonical_plan_state(plan)
     null_fields = [key for key, value in payload.items() if value is None]
@@ -155,6 +163,7 @@ def freeze_r0s(
             "source_ordinal": source_ordinal,
             "plan_state": repaired,
             "prompt": prompt,
+            **composition_metadata(repaired),
             "diagnostic_role": "schema_corrected_current_c3fd_rich",
         }
         output.append(row)
@@ -224,6 +233,7 @@ def freeze_h0(
             "source_ordinal": ordinal,
             "plan_state": canonical,
             "prompt": prompt,
+            **composition_metadata(canonical),
             "diagnostic_role": "historical_h1_first256_current_runtime",
         }
         output.append(row)

@@ -16,12 +16,12 @@ readonly REPO=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_dif
 readonly R0_SOURCE="${ROOT}/cohorts/rich_recovery_dev_seed19_256_v2_20260830/R0.jsonl"
 readonly H0_SOURCE="${REPO}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_planner1200/plans_for_dlm.jsonl"
 readonly TOKENIZER=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
-readonly OUTPUT="${ROOT}/cohorts/faithful_rich_diagnostic_h0_r0s_256_v1_20260830"
+readonly OUTPUT="${ROOT}/cohorts/faithful_rich_diagnostic_h0_r0s_256_v2_20260830"
 readonly RUN="${ROOT}/runs/freeze_faithful_rich_diagnostic_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly R0_SHA=e40a00fa407fff384fbb991f75aece67d49ebb6d41867090a05bc3ca8140355c
 readonly H0_SHA=444c909e73f53f47528d7a6a429320cb0dbe68f5974baf0ed54f8c3cb514e7dc
-readonly BUILDER_SHA=22bfa320ab87f9cabd7d39e4f219ad24506cbd79bdbcde87c755af6c6c3b0945
+readonly BUILDER_SHA=80bff3506568b01549569f7f6479678b444fb91d01952664111118549ae983cf
 readonly RENDERER_SHA=76cc9c04cbd966d3a839f16748326b586f871133d8c8096f1034bc73171e7b37
 
 mkdir "${RUN}"
@@ -47,7 +47,7 @@ trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 [[ "$(sha256sum "${ROOT}/scripts/freeze_rich_recovery_cohort.py" | awk '{print $1}')" == "${RENDERER_SHA}" ]] || exit 2
 
 {
-  printf 'schema=h1a2_faithful_rich_diagnostic_freeze_v1\n'
+  printf 'schema=h1a2_faithful_rich_diagnostic_freeze_v2\n'
   printf 'r0_sha256=%s\n' "${R0_SHA}"
   printf 'h0_sha256=%s\n' "${H0_SHA}"
   printf 'builder_sha256=%s\n' "${BUILDER_SHA}"
@@ -67,7 +67,7 @@ printf '%s\n' "${SLURM_JOB_ID}" >"${CONTRACT_DIR}/job_id"
 
 {
   printf 'field\tvalue\n'
-  printf 'schema\th1a2_faithful_rich_diagnostic_freeze_v1\n'
+  printf 'schema\th1a2_faithful_rich_diagnostic_freeze_v2\n'
   printf 'contract_sha256\t%s\n' "${CONTRACT_SHA}"
   printf 'job_id\t%s\n' "${SLURM_JOB_ID}"
   printf 'requested_per_view\t256\n'
@@ -100,4 +100,3 @@ find "${RUN}" -type f ! -name OUTPUTS.sha256 -print0 \
 trap - ERR
 touch "${RUN}/_SUCCESS"
 printf '%s\n' "${OUTPUT}"
-
