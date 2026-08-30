@@ -423,6 +423,9 @@
   cohort由job38742在3秒内一次物化成功，manifest SHA为`73177562...1b116`。
 - canary generation/refinement job38745当前使用`4A800/32CPU`运行：82017/82018两policy
   均在Planner seed17/18与对应streams17/18上各评价一次，固定256分母、temp0.7、
-  exact-axis、model494 tau800；无base arm、seed选择、retry、rerank、replacement或official
-  query。该development canary只决定是否需要预登记fresh alignment，不消费prospective
+  exact-axis、model494 tau800；该job已`COMPLETED 0:0`，耗时`01:00:21`、observed
+  `4.0233 A800-hours`。四cell parsed/graphs/refined为`248/248/248`、`252/252/252`、
+  `254/254/254`、`254/254/254`；82017/82018 pooled execution为`98.05%/98.83%`。
+  无base arm、seed选择、retry、rerank、replacement或official query。此结果支持V2接口
+  execution恢复，但稳定性需下一次raw-first offline；development canary不消费prospective
   cohort。

@@ -283,9 +283,13 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   MP20-train plus `128` MP20-standard-validation unique exact compositions,
   with both C3FD Planner checkpoints preserved without selection. Manifest SHA
   is `73177562...1b116`; every gate and output hash passed.
-- [ ] Four-cell native SFT canary generation/refinement job38745 is running:
-  policy82017/policy82018 × Planner/stream17/18, fixed256, exact-axis,
-  temperature0.7, model494 tau800, one Plan/trajectory, no retry or selection.
+- [x] Four-cell native SFT canary generation/refinement job38745 completed
+  `0:0` in `01:00:21` (`4.0233 A800-hours`). Parsed/graphs/refined counts are
+  `248/248/248`, `252/252/252`, `254/254/254`, and `254/254/254`; fixed256
+  failures remain by sample index. No retry, reranking, replacement, or
+  selection occurred.
+- [x] Raw-first/refined offline wrapper and regression tests are ready; the
+  single four-GPU evaluation remains to be submitted after deployment.
 - [ ] Train/validation raw execution and stability canary terminal.
 - [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
 - [ ] If opened, fresh pool and safety-aware K-way trainer terminal.

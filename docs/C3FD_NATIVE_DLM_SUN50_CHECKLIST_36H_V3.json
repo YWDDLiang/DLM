@@ -208,7 +208,9 @@
   },
   "active_sft_canary_generation": {
     "job_id": 38745,
-    "state": "RUNNING",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 3621,
     "resources": "4_A800_32_CPU",
     "requested_per_cell": 256,
     "policies": [82017, 82018],
@@ -219,7 +221,27 @@
     "refiner": "model494_tau800",
     "retry_rerank_replacement": false,
     "official_query": false,
+    "observed_a800_hours": 4.023333333333333,
+    "cell_counts": [
+      {"stream": 17, "policy": 82017, "parsed": 248, "graphs": 248, "refined": 248},
+      {"stream": 17, "policy": 82018, "parsed": 252, "graphs": 252, "refined": 252},
+      {"stream": 18, "policy": 82017, "parsed": 254, "graphs": 254, "refined": 254},
+      {"stream": 18, "policy": 82018, "parsed": 254, "graphs": 254, "refined": 254}
+    ],
+    "policy_parse_rate": {"82017": 0.98046875, "82018": 0.98828125},
+    "run_report_sha256": "d25baacbab66238a3380632674093644b71eb7195a7690605b0cd652fb92ce5f",
+    "archive_success": true,
     "duplicate_submission_forbidden": true
+  },
+  "sft_canary_offline": {
+    "wrapper_status": "LOCAL_TESTS_PASS_NOT_YET_SUBMITTED",
+    "wrapper": "slurm/91_c3fd_native_sft_canary_eval.sbatch",
+    "resources": "4_A800_32_CPU",
+    "order": "raw_then_refined",
+    "cells": 8,
+    "denominator": 256,
+    "ledger_split_reporting": true,
+    "official_query": false
   },
   "train_inference_interface_audit": {
     "rows": {"train": 27136, "validation": 9047},
