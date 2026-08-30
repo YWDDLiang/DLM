@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Build outcome-blind C3FD-native multi-view crystal-DLM SFT data.
 
-Each aligned source row is expanded into four equally weighted views that retain
-the exact same dynamic crystal body:
+Each aligned source row is expanded into equally weighted views that retain the
+exact same dynamic crystal body:
 
 * ``teacher-native`` uses train-only structural fields from the MP20 row;
-* ``predicted-native`` uses frozen C3FD soft-field predictions;
+* one ``predicted-native-<checkpoint>`` view preserves every frozen C3FD model;
 * ``soft-masked`` masks only lattice/space-group/volume hints; and
 * ``minimal-reference`` retains the established CTV minimal prompt.
 
@@ -56,14 +56,14 @@ from crystal_dlm.composition_pair_prior import ValenceNode  # noqa: E402
 from crystal_dlm.fixed_slot import SYMBOL_TO_Z, Z_TO_SYMBOL  # noqa: E402
 
 
-SCHEMA = "c3fd_native_sft_row_v1"
-MANIFEST_SCHEMA = "c3fd_native_sft_manifest_v1"
-VIEWS = (
-    "teacher-native",
-    "predicted-native",
-    "soft-masked",
-    "minimal-reference",
-)
+SCHEMA = "c3fd_native_sft_row_v2"
+MANIFEST_SCHEMA = "c3fd_native_sft_manifest_v2"
+FORMAL_PREDICTION_MANIFEST_SCHEMA = "c3fd_native_soft_prediction_manifest_v1"
+FORMAL_PREDICTION_ROW_SCHEMA = "c3fd_native_soft_prediction_row_v1"
+FORMAL_CHECKPOINT_ORDER = ("seed17", "seed18")
+FORMAL_CHECKPOINT_SEEDS = (17, 18)
+LEGACY_DEVELOPMENT_CHECKPOINT = "development-single"
+STATIC_VIEWS = ("teacher-native", "soft-masked", "minimal-reference")
 SOFT_FIELDS = (
     "lattice_system",
     "spacegroup_bucket",
@@ -98,12 +98,172 @@ FORBIDDEN_PROMPT_FRAGMENTS = (
 _MISSING = object()
 
 
+def predicted_view_name(checkpoint_name: str) -> str:
+    name = str(checkpoint_name)
+    safe_characters = (
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-"
+    )
+    if not name or any(character not in safe_characters for character in name):
+        raise ValueError(f"unsafe prediction checkpoint name {name!r}")
+    return f"predicted-native-{name}"
+
+
+def expanded_view_names(checkpoint_order: Sequence[str]) -> tuple[str, ...]:
+    return (
+        STATIC_VIEWS[0],
+        *(predicted_view_name(name) for name in checkpoint_order),
+        *STATIC_VIEWS[1:],
+    )
+
+
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _load_prediction_contract(
+    predicted_soft_dir: Path | None,
+    *,
+    allow_legacy_single_prediction_development: bool,
+) -> dict[str, Any]:
+    if predicted_soft_dir is None:
+        if not allow_legacy_single_prediction_development:
+            raise ValueError(
+                "formal predictions require --predicted-soft-dir; legacy inline "
+                "single-prediction input is development-only"
+            )
+        return {
+            "mode": "legacy-single-development",
+            "checkpoint_order": (LEGACY_DEVELOPMENT_CHECKPOINT,),
+            "manifest_sha256": None,
+            "selection": "none",
+        }
+
+    manifest_path = predicted_soft_dir / "manifest.json"
+    if not manifest_path.is_file():
+        if not allow_legacy_single_prediction_development:
+            raise ValueError(
+                "formal predicted-soft directory lacks its frozen manifest; "
+                "legacy single-prediction input is development-only"
+            )
+        return {
+            "mode": "legacy-single-development",
+            "checkpoint_order": (LEGACY_DEVELOPMENT_CHECKPOINT,),
+            "manifest_sha256": None,
+            "selection": "none",
+        }
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if not isinstance(manifest, Mapping):
+        raise TypeError("predicted-soft manifest is not an object")
+    if manifest.get("schema") != FORMAL_PREDICTION_MANIFEST_SCHEMA:
+        raise ValueError("predicted-soft manifest schema is not formal/frozen")
+    checksum_path = predicted_soft_dir / "SHA256SUMS"
+    success_path = predicted_soft_dir / "_SUCCESS"
+    if not checksum_path.is_file() or not success_path.is_file():
+        raise ValueError("formal predicted-soft export lacks frozen completion files")
+    checksums: dict[str, str] = {}
+    for line in checksum_path.read_text(encoding="utf-8").splitlines():
+        parts = line.split("  ", 1)
+        if len(parts) != 2 or not parts[0] or not parts[1]:
+            raise ValueError("formal predicted-soft SHA256SUMS is malformed")
+        digest, name = parts
+        if name in checksums:
+            raise ValueError(f"duplicate formal predicted-soft checksum {name}")
+        checksums[name] = digest
+    expected_frozen_files = {"manifest.json", "train.jsonl", "val.jsonl"}
+    if set(checksums) != expected_frozen_files:
+        raise ValueError("formal predicted-soft frozen file support changed")
+    for name, expected_sha in checksums.items():
+        path = predicted_soft_dir / name
+        if not path.is_file() or sha256_file(path) != expected_sha:
+            raise ValueError(f"formal predicted-soft frozen hash changed for {name}")
+    success = json.loads(success_path.read_text(encoding="utf-8"))
+    if not isinstance(success, Mapping) or set(success) != {
+        "manifest_sha256",
+        "sha256sums_sha256",
+    }:
+        raise ValueError("formal predicted-soft _SUCCESS contract changed")
+    if str(success["manifest_sha256"]) != sha256_file(manifest_path):
+        raise ValueError("formal predicted-soft manifest completion hash changed")
+    if str(success["sha256sums_sha256"]) != sha256_file(checksum_path):
+        raise ValueError("formal predicted-soft checksum completion hash changed")
+    checkpoint_order = manifest.get("checkpoint_order")
+    if not isinstance(checkpoint_order, list) or tuple(
+        checkpoint_order
+    ) != FORMAL_CHECKPOINT_ORDER:
+        raise ValueError(
+            "formal checkpoint support/order must be exactly seed17,seed18"
+        )
+    expected_seeds = manifest.get("expected_checkpoint_seeds")
+    if not isinstance(expected_seeds, list) or tuple(
+        expected_seeds
+    ) != FORMAL_CHECKPOINT_SEEDS:
+        raise ValueError("formal expected checkpoint seeds must be exactly 17,18")
+    checkpoints = manifest.get("checkpoints")
+    if not isinstance(checkpoints, list) or len(checkpoints) != len(
+        FORMAL_CHECKPOINT_ORDER
+    ):
+        raise ValueError("formal frozen checkpoint manifest support changed")
+    observed_names: list[str] = []
+    observed_seeds: list[int] = []
+    for checkpoint in checkpoints:
+        if not isinstance(checkpoint, Mapping):
+            raise TypeError("formal checkpoint manifest entry is not an object")
+        observed_names.append(str(checkpoint.get("name") or ""))
+        observed_seeds.append(int(checkpoint.get("seed") or -1))
+    if tuple(observed_names) != FORMAL_CHECKPOINT_ORDER or tuple(
+        observed_seeds
+    ) != FORMAL_CHECKPOINT_SEEDS:
+        raise ValueError("formal frozen checkpoint names/seeds/order disagree")
+    if manifest.get("selection") != "none":
+        raise ValueError("formal predicted-soft export performed checkpoint selection")
+    if manifest.get("all_frozen_checkpoints_preserved") is not True:
+        raise ValueError("formal predicted-soft export did not preserve all checkpoints")
+    if manifest.get("outcomes_read") is not False:
+        raise ValueError("formal predicted-soft export is not outcome-blind")
+    if manifest.get("prediction_fields") != list(SOFT_FIELDS):
+        raise ValueError("formal predicted-soft field support/order changed")
+    split_manifest = manifest.get("splits")
+    outputs = manifest.get("outputs")
+    if not isinstance(split_manifest, Mapping) or set(split_manifest) != {
+        "train",
+        "val",
+    }:
+        raise ValueError("formal predicted-soft split support changed")
+    if not isinstance(outputs, Mapping) or set(outputs) != {
+        "train.jsonl",
+        "val.jsonl",
+    }:
+        raise ValueError("formal predicted-soft output support changed")
+    for split in ("train", "val"):
+        path = predicted_soft_dir / f"{split}.jsonl"
+        if not path.is_file():
+            raise FileNotFoundError(path)
+        actual_sha = sha256_file(path)
+        split_payload = split_manifest[split]
+        if not isinstance(split_payload, Mapping):
+            raise TypeError(f"formal predicted-soft {split} manifest is malformed")
+        if str(split_payload.get("output_sha256") or "") != actual_sha:
+            raise ValueError(f"formal predicted-soft {split} hash changed")
+        if str(outputs.get(f"{split}.jsonl") or "") != actual_sha:
+            raise ValueError(f"formal predicted-soft {split} output hash changed")
+        predictions = split_payload.get("predictions")
+        if not isinstance(predictions, Mapping) or tuple(
+            predictions
+        ) != FORMAL_CHECKPOINT_ORDER:
+            raise ValueError(
+                f"formal predicted-soft {split} checkpoint support/order changed"
+            )
+    return {
+        "mode": "formal-multi-checkpoint",
+        "checkpoint_order": FORMAL_CHECKPOINT_ORDER,
+        "manifest_sha256": sha256_file(manifest_path),
+        "selection": "none",
+    }
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -374,7 +534,74 @@ def _predicted_hard_plan(
     return None
 
 
-def _resolve_predicted_soft_fields(
+def _formal_predicted_soft_fields(
+    predicted_row: Mapping[str, Any],
+    *,
+    checkpoint_order: Sequence[str],
+) -> dict[str, dict[str, str]]:
+    if predicted_row.get("schema") != FORMAL_PREDICTION_ROW_SCHEMA:
+        raise ValueError("formal predicted row schema changed")
+    expected_row_fields = {
+        "schema",
+        "split",
+        "source_row_idx",
+        "N",
+        "elements",
+        "counts",
+        "predictions_by_checkpoint",
+    }
+    if set(predicted_row) != expected_row_fields:
+        raise ValueError("formal predicted row field support changed")
+    by_checkpoint = predicted_row.get("predictions_by_checkpoint")
+    if not isinstance(by_checkpoint, Mapping):
+        raise TypeError("formal predictions_by_checkpoint is not an object")
+    if tuple(by_checkpoint) != tuple(checkpoint_order):
+        missing = sorted(set(checkpoint_order) - set(by_checkpoint))
+        extra = sorted(set(by_checkpoint) - set(checkpoint_order))
+        raise ValueError(
+            "formal row checkpoint support/order disagrees with manifest: "
+            f"missing={missing}, extra={extra}, observed={list(by_checkpoint)}"
+        )
+    output: dict[str, dict[str, str]] = {}
+    for checkpoint_name in checkpoint_order:
+        checkpoint = by_checkpoint[checkpoint_name]
+        if not isinstance(checkpoint, Mapping) or tuple(checkpoint) != SOFT_FIELDS:
+            raise ValueError(
+                f"formal checkpoint {checkpoint_name} soft-field support/order changed"
+            )
+        values: dict[str, str] = {}
+        for field in SOFT_FIELDS:
+            prediction = checkpoint[field]
+            if not isinstance(prediction, Mapping) or set(prediction) != {
+                "prediction",
+                "confidence",
+            }:
+                raise ValueError(
+                    f"formal checkpoint {checkpoint_name} {field} payload changed"
+                )
+            value = prediction.get("prediction")
+            confidence = prediction.get("confidence")
+            if not isinstance(value, str) or not value:
+                raise ValueError(
+                    f"formal checkpoint {checkpoint_name} {field} prediction is invalid"
+                )
+            if isinstance(confidence, bool) or not isinstance(
+                confidence, (int, float)
+            ):
+                raise TypeError(
+                    f"formal checkpoint {checkpoint_name} {field} confidence is invalid"
+                )
+            confidence_value = float(confidence)
+            if not math.isfinite(confidence_value) or not 0.0 <= confidence_value <= 1.0:
+                raise ValueError(
+                    f"formal checkpoint {checkpoint_name} {field} confidence is invalid"
+                )
+            values[field] = value
+        output[str(checkpoint_name)] = values
+    return output
+
+
+def _resolve_predicted_soft_fields_by_checkpoint(
     source_row: Mapping[str, Any],
     semantic_row: Mapping[str, Any],
     predicted_row: Mapping[str, Any] | None,
@@ -383,7 +610,30 @@ def _resolve_predicted_soft_fields(
     row_index: int,
     source_plan: Mapping[str, Any],
     semantic_species: Sequence[Mapping[str, Any]],
-) -> dict[str, str]:
+    prediction_mode: str,
+    checkpoint_order: Sequence[str],
+) -> dict[str, dict[str, str]]:
+    if prediction_mode == "formal-multi-checkpoint":
+        if predicted_row is None:
+            raise ValueError("formal predicted row is missing")
+        _check_split(predicted_row, split, label="formal predicted row")
+        _source_row_idx(
+            predicted_row,
+            row_index,
+            label="formal predicted row",
+            allow_certificate_alias=False,
+        )
+        _assert_plan_alignment(
+            source_plan,
+            predicted_row,
+            label="formal predicted row",
+        )
+        return _formal_predicted_soft_fields(
+            predicted_row,
+            checkpoint_order=checkpoint_order,
+        )
+    if tuple(checkpoint_order) != (LEGACY_DEVELOPMENT_CHECKPOINT,):
+        raise ValueError("legacy development checkpoint support changed")
     if predicted_row is not None:
         _check_split(predicted_row, split, label="predicted row")
         _source_row_idx(
@@ -413,7 +663,11 @@ def _resolve_predicted_soft_fields(
                 )
                 if predicted_species != list(semantic_species):
                     raise ValueError("predicted Plan valence certificate changed")
-        return _soft_fields(container, label="predicted row")
+        return {
+            LEGACY_DEVELOPMENT_CHECKPOINT: _soft_fields(
+                container, label="predicted row"
+            )
+        }
 
     candidates: list[dict[str, str]] = []
     for label, row in (("DLM row", source_row), ("semantic row", semantic_row)):
@@ -427,7 +681,7 @@ def _resolve_predicted_soft_fields(
         )
     if any(candidate != candidates[0] for candidate in candidates[1:]):
         raise ValueError("inline frozen predicted soft fields disagree")
-    return candidates[0]
+    return {LEGACY_DEVELOPMENT_CHECKPOINT: candidates[0]}
 
 
 def _native_plan(
@@ -501,6 +755,75 @@ def _assert_only_soft_line_differences(teacher: str, predicted: str) -> None:
         )
 
 
+def _mask_selected_soft_line_fields(
+    line: str,
+    fields: set[str],
+) -> str:
+    line_keys = {
+        "lattice_system": "LS",
+        "spacegroup_bucket": "SG",
+        "volume_per_atom_bin": "VP",
+    }
+    selected = {line_keys[field] for field in fields}
+    output: list[str] = []
+    seen: set[str] = set()
+    for chunk in str(line).split(";"):
+        if "=" not in chunk:
+            output.append(chunk)
+            continue
+        key, _value = chunk.split("=", 1)
+        key = key.strip().upper()
+        if key in selected:
+            output.append(f"{key}=<SOFT_MASK>")
+            seen.add(key)
+        else:
+            output.append(chunk)
+    if seen != selected:
+        raise ValueError("predicted unknown soft-field masking support changed")
+    return ";".join(output)
+
+
+def _materialise_predicted_plan(
+    source_plan: Mapping[str, Any],
+    semantic_plan: Mapping[str, Any],
+    species: Sequence[Mapping[str, Any]],
+    teacher_soft: Mapping[str, str],
+    predicted_soft: Mapping[str, str],
+) -> tuple[dict[str, Any], str, str]:
+    unknown_fields = {
+        field
+        for field in SOFT_FIELDS
+        if str(predicted_soft[field]) in {"<UNKNOWN>", "<SOFT_MASK>"}
+    }
+    serializable_soft = {
+        field: (
+            str(teacher_soft[field])
+            if field in unknown_fields
+            else str(predicted_soft[field])
+        )
+        for field in SOFT_FIELDS
+    }
+    plan = _native_plan(
+        source_plan,
+        semantic_plan,
+        species,
+        serializable_soft,
+    )
+    line = serialize_native_plan(plan)
+    prompt = build_native_body_prompt(plan)
+    if unknown_fields:
+        masked_line = _mask_selected_soft_line_fields(line, unknown_fields)
+        if line not in prompt:
+            raise RuntimeError("native prompt does not contain its serialized Plan")
+        prompt = prompt.replace(line, masked_line, 1)
+        line = masked_line
+        plan = {
+            **plan,
+            **{field: "<SOFT_MASK>" for field in unknown_fields},
+        }
+    return plan, line, prompt
+
+
 def _validate_output_payload(row: Mapping[str, Any]) -> None:
     def visit(value: Any, path: str) -> None:
         if isinstance(value, Mapping):
@@ -528,6 +851,8 @@ def convert_aligned_row(
     split: str,
     row_index: int,
     vocabulary: Mapping[int, tuple[str, int]],
+    prediction_mode: str,
+    checkpoint_order: Sequence[str],
 ) -> list[dict[str, Any]]:
     _check_split(source_row, split, label="DLM row")
     _check_split(semantic_row, split, label="semantic row")
@@ -547,7 +872,7 @@ def convert_aligned_row(
     semantic_plan = _plan_from_row(semantic_row, label="semantic row")
     _assert_plan_alignment(source_plan, semantic_plan, label="semantic Plan")
     species = _valence_species(semantic_row, semantic_plan, vocabulary)
-    predicted_soft = _resolve_predicted_soft_fields(
+    predicted_soft_by_checkpoint = _resolve_predicted_soft_fields_by_checkpoint(
         source_row,
         semantic_row,
         predicted_row,
@@ -555,17 +880,27 @@ def convert_aligned_row(
         row_index=row_index,
         source_plan=source_plan,
         semantic_species=species,
+        prediction_mode=prediction_mode,
+        checkpoint_order=checkpoint_order,
     )
     teacher_soft = _soft_fields(semantic_plan, label="semantic teacher Plan")
     teacher_plan = _native_plan(
         source_plan, semantic_plan, species, teacher_soft
     )
-    predicted_plan = _native_plan(
-        source_plan, semantic_plan, species, predicted_soft
-    )
     teacher_line = serialize_native_plan(teacher_plan)
-    predicted_line = serialize_native_plan(predicted_plan)
-    _assert_only_soft_line_differences(teacher_line, predicted_line)
+    predicted_materialized: dict[str, tuple[dict[str, Any], str, str]] = {}
+    for checkpoint_name in checkpoint_order:
+        if checkpoint_name not in predicted_soft_by_checkpoint:
+            raise ValueError(f"missing checkpoint prediction {checkpoint_name}")
+        materialized = _materialise_predicted_plan(
+            source_plan,
+            semantic_plan,
+            species,
+            teacher_soft,
+            predicted_soft_by_checkpoint[checkpoint_name],
+        )
+        _assert_only_soft_line_differences(teacher_line, materialized[1])
+        predicted_materialized[str(checkpoint_name)] = materialized
 
     answer = source_row.get("answer")
     if not isinstance(answer, str) or not answer.strip():
@@ -576,6 +911,7 @@ def convert_aligned_row(
     source_weight = float(source_row.get("sample_weight", 1.0) or 1.0)
     if source_weight <= 0:
         raise ValueError("DLM row sample_weight must be positive")
+    view_names = expanded_view_names(checkpoint_order)
     common: dict[str, Any] = {
         "schema": SCHEMA,
         "source_split": split,
@@ -588,7 +924,7 @@ def convert_aligned_row(
         "reduced_composition_identity": identity_text(
             identity_from_plan_state(source_plan)
         ),
-        "sample_weight": source_weight / float(len(VIEWS)),
+        "sample_weight": source_weight / float(len(view_names)),
     }
     for key in SAFE_TRAINING_KEYS:
         if key in source_row:
@@ -602,14 +938,22 @@ def convert_aligned_row(
         "native_plan_line": teacher_line,
         "plan_state": teacher_plan,
     }
-    predicted_view = {
-        **common,
-        "view": "predicted-native",
-        "prompt_schema": "C3FD_NATIVE_PLAN_V1",
-        "prompt": build_native_body_prompt(predicted_plan),
-        "native_plan_line": predicted_line,
-        "plan_state": predicted_plan,
-    }
+    predicted_views: list[dict[str, Any]] = []
+    for checkpoint_name in checkpoint_order:
+        predicted_plan, predicted_line, predicted_prompt = predicted_materialized[
+            str(checkpoint_name)
+        ]
+        predicted_views.append(
+            {
+                **common,
+                "view": predicted_view_name(str(checkpoint_name)),
+                "prediction_checkpoint": str(checkpoint_name),
+                "prompt_schema": "C3FD_NATIVE_PLAN_V1",
+                "prompt": predicted_prompt,
+                "native_plan_line": predicted_line,
+                "plan_state": predicted_plan,
+            }
+        )
     masked_plan = {
         **teacher_plan,
         **{key: "<SOFT_MASK>" for key in SOFT_FIELDS},
@@ -631,7 +975,7 @@ def convert_aligned_row(
         "prompt": minimal_prompt(minimal_spec),
         "minimal_spec": minimal_spec,
     }
-    rows = [teacher_row, predicted_view, masked_row, minimal_row]
+    rows = [teacher_row, *predicted_views, masked_row, minimal_row]
     if {row["answer"] for row in rows} != {answer}:
         raise RuntimeError("multi-view conversion changed the answer/body")
     if not math.isclose(
@@ -663,16 +1007,6 @@ def _discover_splits(
             predicted_soft_dir / f"{split}.jsonl"
         ).is_file():
             raise FileNotFoundError(f"predicted {split} split is missing")
-    test_presence = [
-        (input_dir / "test.jsonl").is_file(),
-        (semantic_dir / "test.jsonl").is_file(),
-    ]
-    if predicted_soft_dir is not None:
-        test_presence.append((predicted_soft_dir / "test.jsonl").is_file())
-    if any(test_presence):
-        if not all(test_presence):
-            raise ValueError("test split is not present in every aligned input")
-        splits.append("test")
     return tuple(splits)
 
 
@@ -689,6 +1023,7 @@ def build_dataset(
     semantic_dir: Path,
     output_dir: Path,
     predicted_soft_dir: Path | None = None,
+    allow_legacy_single_prediction_development: bool = False,
 ) -> dict[str, Any]:
     input_dir = Path(input_dir)
     semantic_dir = Path(semantic_dir)
@@ -698,6 +1033,17 @@ def build_dataset(
     )
     if output_dir.exists():
         raise FileExistsError(output_dir)
+    prediction_contract = _load_prediction_contract(
+        predicted_soft_dir,
+        allow_legacy_single_prediction_development=(
+            allow_legacy_single_prediction_development
+        ),
+    )
+    checkpoint_order = tuple(prediction_contract["checkpoint_order"])
+    view_names = expanded_view_names(checkpoint_order)
+    predicted_view_names = tuple(
+        predicted_view_name(name) for name in checkpoint_order
+    )
     splits = _discover_splits(input_dir, semantic_dir, predicted_soft_dir)
     vocabulary, vocabulary_sha = _species_vocabulary(semantic_dir)
     staging = output_dir.with_name(f".{output_dir.name}.preparing.{os.getpid()}")
@@ -766,6 +1112,8 @@ def build_dataset(
                         split=split,
                         row_index=row_index,
                         vocabulary=vocabulary,
+                        prediction_mode=str(prediction_contract["mode"]),
+                        checkpoint_order=checkpoint_order,
                     )
                     source_count += 1
                     for row in converted:
@@ -782,12 +1130,12 @@ def build_dataset(
                         )
             if source_count == 0:
                 raise ValueError(f"{split} split is empty")
-            if view_counts != Counter({view: source_count for view in VIEWS}):
+            if view_counts != Counter({view: source_count for view in view_names}):
                 raise RuntimeError(f"{split} view expansion is incomplete")
             chemsys_by_split[split] = chemsystems
             split_reports[split] = {
                 "source_rows": source_count,
-                "output_rows": source_count * len(VIEWS),
+                "output_rows": source_count * len(view_names),
                 "views": dict(sorted(view_counts.items())),
                 "chemsys": len(chemsystems),
                 "source_sha256": sha256_file(source_path),
@@ -824,6 +1172,8 @@ def build_dataset(
             "composition_N_valence_exact": True,
             "predicted_rows_complete_and_aligned": True,
             "predicted_native_changes_only_soft_fields": True,
+            "checkpoint_support_and_order_identical_across_splits_rows": True,
+            "all_frozen_checkpoints_preserved_without_selection": True,
             "all_views_share_answer_body": True,
             "source_sample_weight_preserved_across_views": True,
             "chemsys_held_out_split_preserved": not any(overlap.values()),
@@ -839,7 +1189,18 @@ def build_dataset(
                 else str(predicted_soft_dir.resolve())
             ),
             "output_dir": str(output_dir.resolve()),
-            "views": list(VIEWS),
+            "views": list(view_names),
+            "predicted_view_names": list(predicted_view_names),
+            "prediction_mode": str(prediction_contract["mode"]),
+            "prediction_checkpoint_order": list(checkpoint_order),
+            "prediction_selection": str(prediction_contract["selection"]),
+            "formal_prediction_manifest_sha256": prediction_contract[
+                "manifest_sha256"
+            ],
+            "legacy_single_prediction_development": (
+                prediction_contract["mode"] == "legacy-single-development"
+            ),
+            "unknown_prediction_policy": "per-field-soft-mask",
             "splits": split_reports,
             "semantic_vocabulary_sha256": vocabulary_sha,
             "static_assets": static_assets,
@@ -871,6 +1232,11 @@ def main() -> None:
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--semantic-dir", type=Path, required=True)
     parser.add_argument("--predicted-soft-dir", type=Path)
+    parser.add_argument(
+        "--allow-legacy-single-prediction-development",
+        action="store_true",
+        help="allow one legacy prediction view for tests/development only",
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     report = build_dataset(
@@ -878,6 +1244,9 @@ def main() -> None:
         semantic_dir=args.semantic_dir,
         predicted_soft_dir=args.predicted_soft_dir,
         output_dir=args.output_dir,
+        allow_legacy_single_prediction_development=(
+            args.allow_legacy_single_prediction_development
+        ),
     )
     print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True), flush=True)
 

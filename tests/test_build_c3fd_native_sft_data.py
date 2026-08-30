@@ -141,6 +141,114 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
             )
         return source, semantic, predicted
 
+    def checkpoint_prediction(self, split, checkpoint):
+        if checkpoint == "seed17":
+            return self.predicted(split)
+        if split == "train":
+            return {
+                "lattice_system": "monoclinic",
+                "spacegroup_bucket": "sg_003_015",
+                "volume_per_atom_bin": "volpa_040_049",
+            }
+        return {
+            "lattice_system": "cubic",
+            "spacegroup_bucket": "sg_195_230",
+            "volume_per_atom_bin": "<UNKNOWN>",
+        }
+
+    def refresh_formal_manifest_hashes(self, predicted):
+        manifest_path = predicted / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        for split in ("train", "val"):
+            digest = MODULE.sha256_file(predicted / f"{split}.jsonl")
+            manifest["splits"][split]["output_sha256"] = digest
+            manifest["outputs"][f"{split}.jsonl"] = digest
+        manifest_path.write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        frozen_names = ("manifest.json", "train.jsonl", "val.jsonl")
+        checksum_path = predicted / "SHA256SUMS"
+        checksum_path.write_text(
+            "".join(
+                f"{MODULE.sha256_file(predicted / name)}  {name}\n"
+                for name in sorted(frozen_names)
+            ),
+            encoding="utf-8",
+        )
+        (predicted / "_SUCCESS").write_text(
+            json.dumps(
+                {
+                    "manifest_sha256": MODULE.sha256_file(manifest_path),
+                    "sha256sums_sha256": MODULE.sha256_file(checksum_path),
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+    def make_formal_inputs(self, root):
+        source, semantic, predicted = self.make_inputs(root)
+        for split in ("train", "val"):
+            plan = self.plan(split)
+            by_checkpoint = {}
+            for checkpoint in MODULE.FORMAL_CHECKPOINT_ORDER:
+                by_checkpoint[checkpoint] = {
+                    field: {
+                        "prediction": value,
+                        "confidence": 0.9 if checkpoint == "seed17" else 0.8,
+                    }
+                    for field, value in self.checkpoint_prediction(
+                        split, checkpoint
+                    ).items()
+                }
+            write_jsonl(
+                predicted / f"{split}.jsonl",
+                [
+                    {
+                        "schema": MODULE.FORMAL_PREDICTION_ROW_SCHEMA,
+                        "split": split,
+                        "source_row_idx": 0,
+                        "N": plan["N"],
+                        "elements": plan["elements"],
+                        "counts": plan["counts"],
+                        "predictions_by_checkpoint": by_checkpoint,
+                    }
+                ],
+            )
+        manifest = {
+            "schema": MODULE.FORMAL_PREDICTION_MANIFEST_SCHEMA,
+            "outcomes_read": False,
+            "selection": "none",
+            "all_frozen_checkpoints_preserved": True,
+            "expected_checkpoint_seeds": [17, 18],
+            "checkpoint_order": ["seed17", "seed18"],
+            "prediction_fields": list(MODULE.SOFT_FIELDS),
+            "checkpoints": [
+                {"name": "seed17", "seed": 17},
+                {"name": "seed18", "seed": 18},
+            ],
+            "splits": {
+                split: {
+                    "output_sha256": "pending",
+                    "predictions": {"seed17": {}, "seed18": {}},
+                }
+                for split in ("train", "val")
+            },
+            "outputs": {
+                "train.jsonl": "pending",
+                "val.jsonl": "pending",
+            },
+        }
+        (predicted / "manifest.json").write_text(
+            json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        self.refresh_formal_manifest_hashes(predicted)
+        return source, semantic, predicted
+
     def build(self, root):
         source, semantic, predicted = self.make_inputs(root)
         output = root / "output"
@@ -149,19 +257,87 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
             semantic_dir=semantic,
             predicted_soft_dir=predicted,
             output_dir=output,
+            allow_legacy_single_prediction_development=True,
         )
         return source, semantic, predicted, output, manifest
 
-    def test_roundtrip_and_four_views_share_exact_answer(self):
+    def test_formal_export_preserves_both_checkpoint_views_without_selection(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            output = root / "formal-output"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
+            rows = read_jsonl(output / "train.jsonl")
+            expected_views = [
+                "teacher-native",
+                "predicted-native-seed17",
+                "predicted-native-seed18",
+                "soft-masked",
+                "minimal-reference",
+            ]
+            self.assertEqual([row["view"] for row in rows], expected_views)
+            self.assertEqual(len({row["answer"] for row in rows}), 1)
+            self.assertEqual(len({row["answer_sha256"] for row in rows}), 1)
+            self.assertAlmostEqual(sum(row["sample_weight"] for row in rows), 2.0)
+            self.assertTrue(all(row["sample_weight"] == 0.4 for row in rows))
+            predicted_rows = [
+                row for row in rows if row["view"].startswith("predicted-native-")
+            ]
+            self.assertEqual(
+                [row["prediction_checkpoint"] for row in predicted_rows],
+                ["seed17", "seed18"],
+            )
+            self.assertFalse(any("selected" in key for row in rows for key in row))
+            teacher = MODULE._line_fields(rows[0]["native_plan_line"])
+            for row in predicted_rows:
+                predicted_fields = MODULE._line_fields(row["native_plan_line"])
+                changed = {
+                    key
+                    for key in teacher
+                    if teacher[key] != predicted_fields[key]
+                }
+                self.assertTrue(changed)
+                self.assertLessEqual(changed, {"LS", "SG", "VP"})
+            self.assertEqual(manifest["prediction_mode"], "formal-multi-checkpoint")
+            self.assertEqual(
+                manifest["prediction_checkpoint_order"], ["seed17", "seed18"]
+            )
+            self.assertEqual(
+                manifest["predicted_view_names"],
+                ["predicted-native-seed17", "predicted-native-seed18"],
+            )
+            self.assertEqual(manifest["prediction_selection"], "none")
+            self.assertFalse(manifest["legacy_single_prediction_development"])
+            val_seed18 = next(
+                row
+                for row in read_jsonl(output / "val.jsonl")
+                if row["view"] == "predicted-native-seed18"
+            )
+            self.assertIn("VP=<SOFT_MASK>", val_seed18["native_plan_line"])
+
+    def test_roundtrip_and_legacy_development_views_share_exact_answer(self):
         with tempfile.TemporaryDirectory() as temp:
             _source, _semantic, _predicted, output, manifest = self.build(Path(temp))
             rows = read_jsonl(output / "train.jsonl")
             self.assertEqual(len(rows), 4)
-            self.assertEqual({row["view"] for row in rows}, set(MODULE.VIEWS))
+            expected_views = set(
+                MODULE.expanded_view_names(
+                    (MODULE.LEGACY_DEVELOPMENT_CHECKPOINT,)
+                )
+            )
+            self.assertEqual({row["view"] for row in rows}, expected_views)
             self.assertEqual(len({row["answer"] for row in rows}), 1)
             self.assertEqual(len({row["answer_sha256"] for row in rows}), 1)
             self.assertAlmostEqual(sum(row["sample_weight"] for row in rows), 2.0)
-            for name in ("teacher-native", "predicted-native"):
+            for name in (
+                "teacher-native",
+                "predicted-native-development-single",
+            ):
                 row = next(value for value in rows if value["view"] == name)
                 parsed = MODULE.parse_native_plan_line(row["native_plan_line"])
                 self.assertEqual(parsed["N"], 3)
@@ -175,21 +351,45 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 digest, name = line.split("  ", 1)
                 self.assertEqual(MODULE.sha256_file(output / name), digest)
             self.assertEqual(manifest["chemsys_overlap"], {"train__val": 0})
+            self.assertEqual(
+                manifest["predicted_view_names"],
+                ["predicted-native-development-single"],
+            )
+            self.assertTrue(manifest["legacy_single_prediction_development"])
 
     def test_predicted_native_changes_only_three_soft_fields(self):
         with tempfile.TemporaryDirectory() as temp:
-            _source, _semantic, _predicted, output, _manifest = self.build(Path(temp))
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            output = root / "formal-soft-output"
+            MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
             rows = {row["view"]: row for row in read_jsonl(output / "train.jsonl")}
             teacher = MODULE._line_fields(rows["teacher-native"]["native_plan_line"])
-            predicted = MODULE._line_fields(rows["predicted-native"]["native_plan_line"])
-            changed = {key for key in teacher if teacher[key] != predicted[key]}
-            self.assertEqual(changed, {"LS", "SG", "VP"})
-            for key in set(teacher) - {"LS", "SG", "VP"}:
-                self.assertEqual(teacher[key], predicted[key])
+            for view in ("predicted-native-seed17", "predicted-native-seed18"):
+                predicted_fields = MODULE._line_fields(rows[view]["native_plan_line"])
+                changed = {
+                    key for key in teacher if teacher[key] != predicted_fields[key]
+                }
+                self.assertEqual(changed, {"LS", "SG", "VP"})
+                for key in set(teacher) - {"LS", "SG", "VP"}:
+                    self.assertEqual(teacher[key], predicted_fields[key])
 
     def test_prompts_and_payloads_copy_no_forbidden_fields(self):
         with tempfile.TemporaryDirectory() as temp:
-            _source, _semantic, _predicted, output, _manifest = self.build(Path(temp))
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            output = root / "formal-no-leak-output"
+            MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
             for split in ("train", "val"):
                 for row in read_jsonl(output / f"{split}.jsonl"):
                     prompt = row["prompt"].lower()
@@ -220,6 +420,7 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     semantic_dir=semantic,
                     predicted_soft_dir=predicted,
                     output_dir=root / "missing-output",
+                    allow_legacy_single_prediction_development=True,
                 )
             self.assertFalse((root / "missing-output").exists())
 
@@ -239,18 +440,76 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     semantic_dir=semantic,
                     predicted_soft_dir=predicted,
                     output_dir=root / "misaligned-output",
+                    allow_legacy_single_prediction_development=True,
                 )
             self.assertFalse((root / "misaligned-output").exists())
+
+    def test_formal_checkpoint_support_and_order_fail_closed(self):
+        for case in ("missing", "extra", "disagreeing"):
+            with self.subTest(case=case), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                source, semantic, predicted = self.make_formal_inputs(root)
+                rows = read_jsonl(predicted / "val.jsonl")
+                checkpoints = rows[0]["predictions_by_checkpoint"]
+                if case == "missing":
+                    checkpoints.pop("seed18")
+                elif case == "extra":
+                    checkpoints["seed19"] = dict(checkpoints["seed18"])
+                else:
+                    checkpoints["seed19"] = checkpoints.pop("seed18")
+                write_jsonl(predicted / "val.jsonl", rows)
+                self.refresh_formal_manifest_hashes(predicted)
+                with self.assertRaisesRegex(
+                    ValueError,
+                    "checkpoint support/order disagrees with manifest",
+                ):
+                    MODULE.build_dataset(
+                        input_dir=source,
+                        semantic_dir=semantic,
+                        predicted_soft_dir=predicted,
+                        output_dir=root / f"formal-{case}",
+                    )
+                self.assertFalse((root / f"formal-{case}").exists())
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            manifest_path = predicted / "manifest.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["checkpoint_order"] = ["seed18", "seed17"]
+            manifest_path.write_text(
+                json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            self.refresh_formal_manifest_hashes(predicted)
+            with self.assertRaisesRegex(
+                ValueError,
+                "checkpoint support/order must be exactly seed17,seed18",
+            ):
+                MODULE.build_dataset(
+                    input_dir=source,
+                    semantic_dir=semantic,
+                    predicted_soft_dir=predicted,
+                    output_dir=root / "formal-order",
+                )
 
     def test_missing_predictions_cannot_fall_back_to_teacher_plan(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            source, semantic, _predicted = self.make_inputs(root)
+            source, semantic, predicted = self.make_inputs(root)
+            with self.assertRaisesRegex(ValueError, "development-only"):
+                MODULE.build_dataset(
+                    input_dir=source,
+                    semantic_dir=semantic,
+                    predicted_soft_dir=predicted,
+                    output_dir=root / "legacy-without-development-flag",
+                )
             with self.assertRaisesRegex(ValueError, "predicted soft fields are missing"):
                 MODULE.build_dataset(
                     input_dir=source,
                     semantic_dir=semantic,
                     output_dir=root / "no-predictions",
+                    allow_legacy_single_prediction_development=True,
                 )
             self.assertFalse((root / "no-predictions").exists())
 
@@ -262,6 +521,7 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 input_dir=source,
                 semantic_dir=semantic,
                 output_dir=root / "inline-predictions",
+                allow_legacy_single_prediction_development=True,
             )
             self.assertIsNone(manifest["predicted_soft_dir"])
             self.assertTrue((root / "inline-predictions" / "_SUCCESS").is_file())
@@ -269,7 +529,14 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
     def test_existing_output_is_never_overwritten(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            source, semantic, predicted, output, _manifest = self.build(root)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            output = root / "formal-immutable-output"
+            MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+            )
             before = (output / "manifest.json").read_bytes()
             with self.assertRaises(FileExistsError):
                 MODULE.build_dataset(
@@ -293,6 +560,7 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     semantic_dir=semantic,
                     predicted_soft_dir=predicted,
                     output_dir=root / "bad-valence",
+                    allow_legacy_single_prediction_development=True,
                 )
 
         with tempfile.TemporaryDirectory() as temp:
@@ -312,6 +580,7 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     semantic_dir=semantic,
                     predicted_soft_dir=predicted,
                     output_dir=root / "leaked-split",
+                    allow_legacy_single_prediction_development=True,
                 )
             self.assertFalse((root / "leaked-split").exists())
 
