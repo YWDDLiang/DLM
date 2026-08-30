@@ -77,6 +77,20 @@ class D3POFixed256SlurmTest(unittest.TestCase):
         self.assertIn("_OFFLINE_SUCCESS", text)
         self.assertIn("ENGINEERING_FAILURE.tsv", text)
 
+    def test_si_intent_builder_is_cpu_only_and_train_validation_locked(self):
+        text = (ROOT / "slurm/70_si_lwa_intent_data.sbatch").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("#SBATCH --cpus-per-task=48", text)
+        self.assertNotIn("#SBATCH --gres", text)
+        self.assertIn("--workers 48", text)
+        self.assertIn("/train.csv", text)
+        self.assertIn("/val.csv", text)
+        self.assertNotIn("/test.csv", text)
+        self.assertIn("test_or_holdout_input\tunsupported", text)
+        self.assertIn("ENGINEERING_FAILURE.tsv", text)
+        self.assertIn("_SUCCESS", text)
+
 
 if __name__ == "__main__":
     unittest.main()
