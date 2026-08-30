@@ -185,7 +185,18 @@
   "current_jobs_after_training_terminal": {
     "active_or_pending": 0,
     "allocated_a800": 0,
-    "next_phase": "fixed_train_and_mp20_standard_validation_raw_first_canary"
+    "next_phase": "freeze_then_execute_fixed_train_and_mp20_standard_validation_raw_first_canary"
+  },
+  "sft_canary_freeze_contract": {
+    "implementation_status": "LOCAL_TESTS_PASS_NOT_YET_MATERIALIZED",
+    "split_counts": {"train": 128, "validation": 128},
+    "requested": 256,
+    "unique_exact_compositions": true,
+    "planner_checkpoints": ["seed17", "seed18"],
+    "planner_checkpoint_selection": false,
+    "policy_or_test_outcomes_read": false,
+    "freeze_seed": 20260831,
+    "wrapper": "slurm/89_freeze_c3fd_native_sft_canary.sbatch"
   },
   "train_inference_interface_audit": {
     "rows": {"train": 27136, "validation": 9047},

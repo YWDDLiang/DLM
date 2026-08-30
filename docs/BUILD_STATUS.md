@@ -416,3 +416,8 @@
   `06cd5465...62b20`与`7f22580a...5526c`，hash复核通过。positive archive和
   `C3FD_NATIVE_TEACHER_SFT_FINAL_20260831.md/json`已冻结；该终态只证明Planner接口SFT
   完成，稳定性与SUN仍需固定raw-first canary和prospective评价。
+- canary数据冻结器与CPU wrapper已实现：在任何policy sampling前，以固定seed从MP20标准
+  train/validation各选`128`个、总计`256`个互不重复exact composition；同时物化C3FD
+  seed17/seed18两套V2 predicted Plan，不做Planner checkpoint选择，也不复制teacher body
+  或读取policy/test outcome。相关32项native接口/builder/freezer测试全部通过；immutable
+  cohort待部署后一次物化。

@@ -279,6 +279,11 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   Both fresh-LoRA step0 zero-delta canaries passed; each seed has exactly one
   eligible `step-3392`, no final alias, finite logs, and verified adapter SHA.
   Observed use was `4.9900 A800-hours`.
+- [x] Outcome-blind canary freezer and CPU Slurm wrapper implemented and
+  locally verified. It deterministically selects `128` MP20-train plus `128`
+  MP20-standard-validation unique exact compositions and preserves both C3FD
+  Planner checkpoints without selection. The immutable cohort itself remains
+  to be materialized before any canary policy sampling.
 - [ ] Train/validation raw execution and stability canary terminal.
 - [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
 - [ ] If opened, fresh pool and safety-aware K-way trainer terminal.
