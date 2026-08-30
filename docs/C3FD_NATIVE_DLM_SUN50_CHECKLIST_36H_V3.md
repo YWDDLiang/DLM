@@ -40,8 +40,9 @@ The active story returns to one native modular pipeline:
 3. **Continuous diffusion refinement** performs geometry projection with
    model494 tau800 while preserving composition.
 
-The old H1-A2 rich prompt is now only a compatibility diagnostic and possible
-weight initialization. Its `prototype_key`, `oxidation_candidates=unknown`,
+The old H1-A2 rich prompt is now only a compatibility diagnostic. The paper
+method does not continue either the old rich or minimal adapter. Its
+`prototype_key`, `oxidation_candidates=unknown`,
 and legacy JSON semantics are not the production interface.
 
 ## `C3FD_NATIVE_PLAN_V1`
@@ -83,7 +84,12 @@ direct Planner CIF is introduced.
 
 ### A. Planner-interface adaptation SFT
 
-Use MP20 train only, with a chemsys-held-out validation split. Each training
+Use the original MP20 standard train (`27,136`) and validation (`9,047`) splits.
+MP20 is split by material/structure entry rather than by chemsys: the original
+source contains `3,469` chemsys in both train and validation (`16,549` train
+chemsys and `7,100` validation chemsys). This overlap predates native rendering
+and is disclosed rather than treated as an error. Consequently this run calls
+the split **MP20 standard validation**, never chemsys-held-out validation. Each
 crystal receives paired input views with the same crystal-body target:
 
 1. a typed native Plan derived from the train crystal for learning the intended
@@ -94,7 +100,10 @@ crystal receives paired input views with the same crystal-body target:
 The second view prevents a teacher-Plan/inference-Plan gap. Soft-field dropout
 and the paired minimal view teach robustness when a predicted lattice, SG, or
 volume bin is wrong. Energy, hull, prospective outcomes, and current
-development-canary outcomes are excluded from this SFT dataset.
+development-canary outcomes are excluded from this SFT dataset. Legacy source
+rows lacking an explicit source index use their immutable file ordinal;
+composition, N, and answer alignment against semantic and dual-Planner rows
+must remain exact.
 
 ### B. Stability alignment data
 
@@ -172,6 +181,10 @@ has low energy.
 - temperature `0.7`, exact-axis schedule, model494 tau800;
 - one six-cell generation, one raw-first/refined 12-cell evaluation, and one
   fresh official MP query;
+- the already supplied MP credential is injected only into that single query's
+  temporary non-ambient process environment, unset immediately after launch,
+  and never written to repository files, automation prompts, commands, logs,
+  hashes, or manifests; it is not requested again during this task;
 - requested denominator 256, with missing attempts retained by sample index;
 - unknown official hull remains missing, never relabeled unstable;
 - report raw/refined CHGNet, official `e_hull` ECDF/quantiles, Direct/N/U/NU,
@@ -180,8 +193,9 @@ has low energy.
 
 ## Decision and fallback tree
 
-1. **Faithful H0/R0S diagnosis** chooses only initialization and explains the
-   historical regression; it is not a final claim.
+1. **Faithful H0/R0S diagnosis** explains the historical regression and runtime
+   compatibility only; it cannot change the fresh-LLaDA initialization of the
+   paper method and is not a final claim.
 2. **Planner-native SFT reaches 10/50:** freeze it as the primary method and do
    not open stability-alignment training merely to increase the headline.
 3. **SFT restores H1-A2-level execution but misses 10/50:** run exactly one
@@ -202,14 +216,22 @@ test-outcome training are out of scope.
 
 | Phase | Maximum resource | Expected wall time | Notes |
 |---|---:|---:|---|
-| faithful H0/R0S diagnosis | 4 A800, 32 CPU | 1--3 h | development, no official query |
-| native Plan/data builder | 0 GPU, <=48 CPU | 1--3 h | immutable train/val hashes |
-| two-seed native SFT | 2 A800, 16 CPU | 1--3 h | one job or two matched jobs |
-| fresh train-only pool, if needed | <=6 A800, 48 CPU | 2--4 h | fixed K, no survivor filtering |
-| two-seed alignment, if needed | 2 A800, 16 CPU | 1--3 h | one frozen setting |
-| prospective generation | 6 A800, 48 CPU | 1--3 h | six cells once |
-| raw/refined evaluation | 6 A800, 48 CPU | 2--4 h | 12 cells once |
-| official query/finalization | 0 GPU, <=8 CPU | 1--4 h | one immutable union |
+| faithful H0/R0S offline completion | 4 A800, 32 CPU | remaining 0.5--1.5 h | job38603 already running; development only |
+| native Plan/data build and archive | 0 GPU, 16 CPU | 0.25--0.75 h | MP20-standard split; immutable hashes |
+| fresh trainer/wrapper implementation | 0 GPU, <=32 CPU | 1.5--3 h | source-balanced five-view, two-stage LR |
+| two-seed fresh native SFT | 4 A800, 32 CPU | 1.5--2.5 h | two matched 2-A800 jobs, step3392 only |
+| train/standard-val raw-first canary | <=6 A800, 48 CPU | 1.5--3 h | diagnostic only; no seed choice |
+| fresh on-policy pool plus alignment, if used | <=6 A800, 48 CPU | additional 5--8 h | fixed K and one frozen setting |
+| prospective generation | 6 A800, 48 CPU | 1--1.5 h | six cells once |
+| raw/refined evaluation | 6 A800, 48 CPU | 2--3 h | 12 cells once |
+| official query and scientific finalizer | 0 GPU, <=8 CPU | 0.5--2 h | one immutable union/query |
+| final report/story freeze | 0 GPU, <=16 CPU | 1--2 h | RQs, claims, archives, paper story |
+
+From 2026-08-31 00:30 Asia/Shanghai, the no-alignment critical path is expected
+to finish all S.U.N. results and the paper storyline around `14:00--18:00`. If
+the single permitted fresh alignment route is scientifically needed, the
+expected completion moves to `20:00--23:00`, still before the 23:30 deadline but
+with little engineering slack. These are planning ranges, not result gates.
 
 CPU and MP query latency do not consume the GPU ceiling. At most two jobs may
 be active or pending, and aggregate GPU allocation may not exceed six A800s.
@@ -219,11 +241,14 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
 - [x] Historical H1-A2/R03/R5C/minimal/SGTC/D3PO evidence audit complete.
 - [x] Rich prompt null-schema bug reproduced and regression-tested.
 - [x] Immutable faithful H0/R0S v2 cohort frozen with accounting metadata.
-- [ ] Faithful H0/R0S generation terminal.
-- [ ] Faithful raw/refined offline diagnosis terminal and initialization frozen.
-- [ ] `C3FD_NATIVE_PLAN_V1` serializer/round-trip/type tests complete.
-- [ ] MP20 train and chemsys-held-out native Plan datasets frozen.
-- [ ] C3FD-predicted versus teacher native-field coverage/calibration reported.
+- [x] Faithful H0/R0S generation terminal.
+- [ ] Faithful raw/refined offline diagnosis terminal (job38603 running); no
+  initialization choice is permitted for the fresh paper method.
+- [x] `C3FD_NATIVE_PLAN_V1` serializer/round-trip/type tests complete.
+- [ ] MP20 standard train/validation native Plan datasets frozen, with the
+  inherited `3,469` chemsys overlap disclosed.
+- [x] Dual-C3FD predicted soft-field coverage reported: train `27,136`,
+  validation `9,047`, both checkpoints and all three fields at 100% coverage.
 - [ ] Two-seed fresh Planner-native SFT terminal with only step3392 adapters;
   epoch1/step1696 diagnostics disclosed but never selected.
 - [ ] Train/validation raw execution and stability canary terminal.

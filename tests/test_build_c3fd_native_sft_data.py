@@ -626,6 +626,72 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 )
             self.assertFalse((root / "leaked-split").exists())
 
+    def test_mp20_standard_split_discloses_chemsys_overlap(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            train_source = read_jsonl(source / "train.jsonl")[0]
+            train_semantic = read_jsonl(semantic / "train.jsonl")[0]
+            train_predicted = read_jsonl(predicted / "train.jsonl")[0]
+            val_source = dict(train_source)
+            val_source["source_split"] = "val"
+            val_semantic = dict(train_semantic)
+            val_semantic["split"] = "val"
+            val_predicted = dict(train_predicted)
+            val_predicted["split"] = "val"
+            write_jsonl(source / "val.jsonl", [val_source])
+            write_jsonl(semantic / "val.jsonl", [val_semantic])
+            write_jsonl(predicted / "val.jsonl", [val_predicted])
+            self.refresh_formal_manifest_hashes(predicted)
+
+            output = root / "mp20-standard"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+                split_policy="mp20-standard",
+            )
+            self.assertEqual(manifest["split_policy"], "mp20-standard")
+            self.assertEqual(manifest["chemsys_overlap"], {"train__val": 1})
+            self.assertFalse(manifest["chemsys_held_out"])
+            self.assertTrue(manifest["gate"]["split_policy_honored"])
+            self.assertTrue(manifest["gate"]["chemsys_overlap_disclosed"])
+            self.assertTrue(all(manifest["gate"].values()))
+
+    def test_original_source_file_ordinal_is_audited_when_index_absent(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_formal_inputs(root)
+            for split in ("train", "val"):
+                rows = read_jsonl(source / f"{split}.jsonl")
+                rows[0].pop("source_row_idx")
+                rows[0].pop("c3fd_certificate_source_row_idx")
+                write_jsonl(source / f"{split}.jsonl", rows)
+
+            output = root / "ordinal-source"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+                allow_source_ordinal_index=True,
+            )
+            self.assertEqual(
+                manifest["source_index_policy"], "file_ordinal_if_absent"
+            )
+            for split in ("train", "val"):
+                self.assertEqual(
+                    manifest["splits"][split][
+                        "source_rows_assigned_ordinal_index"
+                    ],
+                    1,
+                )
+                self.assertEqual(
+                    {row["source_row_idx"] for row in read_jsonl(output / f"{split}.jsonl")},
+                    {0},
+                )
+
     def test_semantic_certificate_overrides_stale_source_charge_bucket(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

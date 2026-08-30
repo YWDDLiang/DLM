@@ -1083,6 +1083,8 @@ def build_dataset(
     output_dir: Path,
     predicted_soft_dir: Path | None = None,
     allow_legacy_single_prediction_development: bool = False,
+    split_policy: str = "chemsys-held-out",
+    allow_source_ordinal_index: bool = False,
 ) -> dict[str, Any]:
     input_dir = Path(input_dir)
     semantic_dir = Path(semantic_dir)
@@ -1090,6 +1092,8 @@ def build_dataset(
     predicted_soft_dir = (
         None if predicted_soft_dir is None else Path(predicted_soft_dir)
     )
+    if split_policy not in {"chemsys-held-out", "mp20-standard"}:
+        raise ValueError(f"unsupported split policy {split_policy!r}")
     if output_dir.exists():
         raise FileExistsError(output_dir)
     prediction_contract = _load_prediction_contract(
@@ -1143,8 +1147,19 @@ def build_dataset(
             source_indices: set[int] = set()
             view_counts: Counter[str] = Counter()
             chemsystems: set[str] = set()
+            source_rows_assigned_ordinal_index = 0
             with output_path.open("x", encoding="utf-8", newline="\n") as handle:
-                for source_row in source_rows:
+                for source_ordinal, source_row in enumerate(source_rows):
+                    if (
+                        allow_source_ordinal_index
+                        and "source_row_idx" not in source_row
+                        and "c3fd_certificate_source_row_idx" not in source_row
+                    ):
+                        source_row = {
+                            **source_row,
+                            "source_row_idx": source_ordinal,
+                        }
+                        source_rows_assigned_ordinal_index += 1
                     source_idx = _source_row_idx(
                         source_row,
                         None,
@@ -1231,6 +1246,9 @@ def build_dataset(
                 "semantic_charge_bucket_certificate_mismatches": (
                     semantic_charge_bucket_certificate_mismatches
                 ),
+                "source_rows_assigned_ordinal_index": (
+                    source_rows_assigned_ordinal_index
+                ),
                 "semantic_rows": len(semantic_by_idx),
                 "predicted_rows": (
                     None if predicted_path is None else len(predicted_by_idx)
@@ -1248,7 +1266,7 @@ def build_dataset(
             for right in splits[left_index + 1 :]:
                 key = f"{left}__{right}"
                 overlap[key] = len(chemsys_by_split[left] & chemsys_by_split[right])
-        if any(overlap.values()):
+        if split_policy == "chemsys-held-out" and any(overlap.values()):
             raise ValueError(f"chemsys-held-out split leakage detected: {overlap}")
 
         static_assets: dict[str, Any] = {}
@@ -1273,7 +1291,10 @@ def build_dataset(
             "all_frozen_checkpoints_preserved_without_selection": True,
             "all_views_share_answer_body": True,
             "source_sample_weight_preserved_across_views": True,
-            "chemsys_held_out_split_preserved": not any(overlap.values()),
+            "split_policy_honored": (
+                split_policy == "mp20-standard" or not any(overlap.values())
+            ),
+            "chemsys_overlap_disclosed": True,
             "legacy_rich_fields_absent": True,
             "semantic_valence_certificate_authoritative_for_charge": True,
             "unknown_plan_valence_replaced_only_by_frozen_species_labels": True,
@@ -1289,6 +1310,13 @@ def build_dataset(
                 else str(predicted_soft_dir.resolve())
             ),
             "output_dir": str(output_dir.resolve()),
+            "split_policy": split_policy,
+            "chemsys_held_out": not any(overlap.values()),
+            "source_index_policy": (
+                "file_ordinal_if_absent"
+                if allow_source_ordinal_index
+                else "explicit_source_row_idx_required"
+            ),
             "views": list(view_names),
             "predicted_view_names": list(predicted_view_names),
             "prediction_mode": str(prediction_contract["mode"]),
@@ -1337,6 +1365,23 @@ def main() -> None:
         action="store_true",
         help="allow one legacy prediction view for tests/development only",
     )
+    parser.add_argument(
+        "--split-policy",
+        choices=("chemsys-held-out", "mp20-standard"),
+        default="chemsys-held-out",
+        help=(
+            "validation split contract; mp20-standard preserves and discloses "
+            "the official material-level split even when chemsys overlap"
+        ),
+    )
+    parser.add_argument(
+        "--allow-source-ordinal-index",
+        action="store_true",
+        help=(
+            "assign source_row_idx from immutable file ordinal only when the "
+            "original source row has no explicit index"
+        ),
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     report = build_dataset(
@@ -1347,6 +1392,8 @@ def main() -> None:
         allow_legacy_single_prediction_development=(
             args.allow_legacy_single_prediction_development
         ),
+        split_policy=args.split_policy,
+        allow_source_ordinal_index=args.allow_source_ordinal_index,
     )
     print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True), flush=True)
 

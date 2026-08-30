@@ -358,3 +358,23 @@
   预登记：replicated continuous positive但阈值弱才允许late-only单点guidance；无raw
   能量信号才考虑DLM内部self-predicted structural intent；raw有效/refiner抹平则只做
   bridge attribution。任何情况都禁止seed选择、rich Plan、rerank与同test调参。
+
+## 2026-08-31 C3FD-native fresh-retrain执行修正
+
+- 用户确认paper方法必须从共享预训练LLaDA-8B新建LoRA重训，不从旧rich或minimal
+  adapter继续。两训练seed各跑两个source epochs：`1696+1696=3392` updates，仅
+  step3392可进入prospective；step1696只监控；
+- 原始`mp_20_r5_exact_length`已逐行核对：train `27136`、validation `9047`，与full
+  semantic及双C3FD prediction的composition/N mismatch均为0。原始MP20标准split本身有
+  `3469`个train/validation chemsys重叠；过滤派生数据中的`3089`不是五view构造引入；
+- 按用户决定保留MP20标准material-level split，不另做chemsys重分。文档与manifest只称
+  `MP20 standard validation`并披露重叠，禁止继续称chemsys-held-out；builder仍保留独立
+  fail-closed held-out模式供未来实验；
+- job38668因此以pre-science negative保留。修复后的builder使用全部原始rows，并仅在旧
+  source缺显式index时采用immutable file ordinal；teacher/pred17/pred18/masked/minimal
+  五view、答案一致、每source总weight1、outcome-blind合同不变；
+- faithful offline job38603仍为development诊断，不再参与paper方法初始化选择；主方法
+  fresh初始化已冻结。预计无alignment时于2026-08-31 `14:00--18:00`完成全部SUN与论文
+  主线；若唯一fresh on-policy alignment被启用，预计`20:00--23:00`完成；
+- MP凭证只允许进入最终唯一query的临时nonambient process env，启动后立即unset；不得
+  写入git、docs、automation、命令行、日志、hash或manifest，本任务结束前不再向用户索取。

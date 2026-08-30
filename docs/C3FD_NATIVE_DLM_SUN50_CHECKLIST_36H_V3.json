@@ -41,13 +41,23 @@
   },
   "data": {
     "adaptation_sft": {
-      "source": "MP20_train_only",
-      "validation": "chemsys_held_out",
+      "source": "MP20_standard_train_27136",
+      "validation": "MP20_standard_validation_9047",
+      "split_unit": "material_or_structure_entry",
+      "chemsys_held_out": false,
+      "train_chemsys": 16549,
+      "validation_chemsys": 7100,
+      "train_validation_chemsys_overlap": 3469,
+      "overlap_origin": "inherited_from_original_MP20_standard_split",
+      "overlap_policy": "disclose_and_continue_per_user_decision",
       "views": [
         "teacher_native_plan",
-        "frozen_c3fd_predicted_native_plan",
+        "frozen_c3fd_predicted_seed17_native_plan",
+        "frozen_c3fd_predicted_seed18_native_plan",
+        "soft_masked_native_plan",
         "minimal_reference_view"
       ],
+      "legacy_missing_source_index_policy": "immutable_file_ordinal",
       "outcome_labels_read": false
     },
     "historical_3614_candidates": {
@@ -83,6 +93,34 @@
     "seed_or_checkpoint_selection": false,
     "alignment_is_optional_after_sft": true
   },
+  "live_state_as_of_2026_08_31_0030_asia_shanghai": {
+    "faithful_offline_job": {
+      "job_id": 38603,
+      "state": "RUNNING",
+      "resources": "4_A800_32_CPU",
+      "role": "development_diagnostic_no_official_query"
+    },
+    "native_data_job_38668": {
+      "state": "FAILED_PRESCIENCE",
+      "elapsed": "00:02:33",
+      "root_cause": "builder_expected_chemsys_holdout_but_MP20_standard_split_overlaps",
+      "resolution": "explicit_mp20_standard_split_policy_with_overlap_disclosure"
+    }
+  },
+  "planning_eta_hours": {
+    "faithful_offline_remaining": [0.5, 1.5],
+    "native_data_build_archive": [0.25, 0.75],
+    "fresh_trainer_wrapper": [1.5, 3.0],
+    "two_seed_fresh_sft_parallel": [1.5, 2.5],
+    "train_standard_val_canary": [1.5, 3.0],
+    "optional_pool_and_alignment_additional": [5.0, 8.0],
+    "prospective_generation": [1.0, 1.5],
+    "prospective_raw_refined_eval": [2.0, 3.0],
+    "official_query_finalizer": [0.5, 2.0],
+    "final_report_story": [1.0, 2.0],
+    "no_alignment_completion_window": "2026-08-31T14:00:00+08:00/2026-08-31T18:00:00+08:00",
+    "with_alignment_completion_window": "2026-08-31T20:00:00+08:00/2026-08-31T23:00:00+08:00"
+  },
   "evaluation": {
     "prospective_compositions": 256,
     "streams": [17, 18],
@@ -92,11 +130,12 @@
     "tau": 800,
     "trajectory_per_plan": 1,
     "official_query_max": 1,
+    "credential_policy": "temporary_nonambient_process_env_unset_after_launch_never_persist_or_reask",
     "unknown_hull_policy": "missing",
     "independent_unit": "composition"
   },
   "decision_tree": [
-    "faithful_diagnosis_selects_initialization_only",
+    "faithful_diagnosis_is_historical_runtime_diagnostic_only",
     "stop_at_native_sft_if_prospective_target_is_met",
     "open_one_fresh_alignment_contract_if_sft_recovers_execution_but_misses_target",
     "classify_refined_only_gain_as_refiner_mediated",
