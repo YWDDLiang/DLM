@@ -1,0 +1,84 @@
+{
+  "schema": "h1a2_si_lwa_v1_contract",
+  "status": "preregistered_gpu_blocked_pending_data_and_test_freeze",
+  "date": "2026-08-30",
+  "module_boundary": {
+    "planner_output": "exact_composition_plus_N_only",
+    "generator": "masked_DLM_self_intent_plus_dynamic_7_plus_4N",
+    "refiner": "frozen_model494_tau800",
+    "external_rich_plan": false,
+    "pure_ar": false,
+    "rerank_replacement_best_of_n": false
+  },
+  "sources": {
+    "mp20_train": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+      "sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde"
+    },
+    "mp20_validation": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/val.csv",
+      "sha256": "ae7b87064fb63cdd9b2e3a69b4695046edede96c96b652c5aae7fcf195aff398"
+    },
+    "listwise_manifest_sha256": "4a7b0f8b56e03e5d8dfdf0f515e7b37a7035efea5a6072c03635d8d1cad51fb9",
+    "listwise_train_sha256": "5d8d4db03725a8439b1498539d6efcfdc5b41b9eac2f186172ca1b48e1f56b8b",
+    "listwise_validation_sha256": "e20c0ed78b4c8a61bf09de42e4bd5561cdca1f607e992bab5ab91e99160318fc",
+    "base_adapter_config_sha256": "8101ee2a917dd1b08d5ef5d90472207a01161a6bcd2b03c78f9e037e756e6300",
+    "base_adapter_model_sha256": "6ea3c2a633706968e4b3e3cf77e98e46399c23e1568333522283472634553ecb"
+  },
+  "intent": {
+    "VPA_Q8": "train-only quantiles of log(volume/N)",
+    "CN_ENV8": "train-only centroid-nearest observed representatives of 8-bin CrystalNN effective-CN histograms",
+    "cn_bins": [0, 2, 4, 6, 8, 10, 12, 14, "inf"],
+    "fit_seed": 82000,
+    "dropout": 0.2,
+    "field_classes": 8,
+    "full_vocab_resize": false
+  },
+  "listwise": {
+    "train_groups": 886,
+    "validation_groups": 166,
+    "candidate_total": 3614,
+    "candidate_range": [2, 8],
+    "group_weight": 1.0,
+    "cross_composition_energy_comparison": false,
+    "raw_invalid_is_worst": true
+  },
+  "training": {
+    "initialization": "ctv_minimal_base_36898_step696",
+    "seeds": [82017, 82018],
+    "lora_rank": 8,
+    "lora_alpha": 32,
+    "lora_dropout": 0.0,
+    "learning_rate": 0.000005,
+    "updates_per_seed": 348,
+    "retained_steps": [348],
+    "maximum_concurrent_a800": 2,
+    "cpus_per_gpu": 8,
+    "checkpoint_or_seed_selection": false
+  },
+  "feasibility": {
+    "composition_count": 32,
+    "conditions": ["minimal", "oracle_intent", "self_predicted_intent"],
+    "streams": 2,
+    "hard_time_fallback_hours": 6,
+    "fallback": "two_seed_listwise_only"
+  },
+  "prospective_test": {
+    "required_before_gpu_training": true,
+    "requested": 256,
+    "status": "not_yet_frozen",
+    "jsonl_sha256": null,
+    "planner_sampling_ledger_sha256": null
+  },
+  "forbidden": [
+    "AR",
+    "external_rich_plan",
+    "tau_temperature_checkpoint_grid",
+    "composition_tilt",
+    "survivor_filter",
+    "rerank",
+    "replacement",
+    "best_of_n",
+    "RL_GRPO_SMC_search"
+  ]
+}
