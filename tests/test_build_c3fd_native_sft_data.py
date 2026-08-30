@@ -414,7 +414,7 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
             root = Path(temp)
             source, semantic, predicted = self.make_inputs(root)
             write_jsonl(predicted / "val.jsonl", [])
-            with self.assertRaisesRegex(ValueError, "predicted split length changed"):
+            with self.assertRaisesRegex(ValueError, "missing source_row_idx"):
                 MODULE.build_dataset(
                     input_dir=source,
                     semantic_dir=semantic,
@@ -434,7 +434,7 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     }
                 ],
             )
-            with self.assertRaisesRegex(ValueError, "source_row_idx changed"):
+            with self.assertRaisesRegex(ValueError, "missing source_row_idx"):
                 MODULE.build_dataset(
                     input_dir=source,
                     semantic_dir=semantic,
@@ -443,6 +443,48 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                     allow_legacy_single_prediction_development=True,
                 )
             self.assertFalse((root / "misaligned-output").exists())
+
+    def test_filtered_source_rows_join_full_semantic_rows_by_source_idx(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            source, semantic, predicted = self.make_inputs(root)
+            for split in ("train", "val"):
+                source_rows = read_jsonl(source / f"{split}.jsonl")
+                source_rows[0]["source_row_idx"] = 16
+                source_rows[0]["c3fd_certificate_source_row_idx"] = 16
+                write_jsonl(source / f"{split}.jsonl", source_rows)
+
+                semantic_rows = read_jsonl(semantic / f"{split}.jsonl")
+                semantic_rows[0]["source_row_idx"] = 16
+                extra_semantic = dict(semantic_rows[0])
+                extra_semantic["source_row_idx"] = 15
+                write_jsonl(
+                    semantic / f"{split}.jsonl",
+                    [extra_semantic, semantic_rows[0]],
+                )
+
+                predicted_rows = read_jsonl(predicted / f"{split}.jsonl")
+                predicted_rows[0]["source_row_idx"] = 16
+                extra_predicted = dict(predicted_rows[0])
+                extra_predicted["source_row_idx"] = 15
+                write_jsonl(
+                    predicted / f"{split}.jsonl",
+                    [extra_predicted, predicted_rows[0]],
+                )
+            output = root / "keyed-join"
+            manifest = MODULE.build_dataset(
+                input_dir=source,
+                semantic_dir=semantic,
+                predicted_soft_dir=predicted,
+                output_dir=output,
+                allow_legacy_single_prediction_development=True,
+            )
+            self.assertEqual(
+                {row["source_row_idx"] for row in read_jsonl(output / "train.jsonl")},
+                {16},
+            )
+            self.assertEqual(manifest["splits"]["train"]["unused_semantic_rows"], 1)
+            self.assertEqual(manifest["splits"]["train"]["unused_predicted_rows"], 1)
 
     def test_formal_checkpoint_support_and_order_fail_closed(self):
         for case in ("missing", "extra", "disagreeing"):

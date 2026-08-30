@@ -292,7 +292,7 @@ def _check_split(row: Mapping[str, Any], split: str, *, label: str) -> None:
 
 def _source_row_idx(
     row: Mapping[str, Any],
-    expected: int,
+    expected: int | None,
     *,
     label: str,
     allow_certificate_alias: bool,
@@ -308,11 +308,31 @@ def _source_row_idx(
     if len(values) != 1:
         raise ValueError(f"{label} carries conflicting source_row_idx values")
     actual = next(iter(values))
-    if actual != int(expected):
+    if expected is not None and actual != int(expected):
         raise ValueError(
             f"{label} source_row_idx changed: {actual} != {int(expected)}"
         )
     return actual
+
+
+def _index_rows_by_source_idx(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    label: str,
+    allow_certificate_alias: bool,
+) -> dict[int, Mapping[str, Any]]:
+    indexed: dict[int, Mapping[str, Any]] = {}
+    for row in rows:
+        source_idx = _source_row_idx(
+            row,
+            None,
+            label=label,
+            allow_certificate_alias=allow_certificate_alias,
+        )
+        if source_idx in indexed:
+            raise ValueError(f"{label} duplicates source_row_idx {source_idx}")
+        indexed[source_idx] = row
+    return indexed
 
 
 def _composition(plan: Mapping[str, Any]) -> tuple[tuple[str, int], ...]:
@@ -1071,56 +1091,59 @@ def build_dataset(
                 else predicted_soft_dir / f"{split}.jsonl"
             )
             output_path = staging / f"{split}.jsonl"
-            source_rows = iter_jsonl(source_path)
-            semantic_rows = iter_jsonl(semantic_path)
-            predicted_rows: Iterable[dict[str, Any] | object]
-            if predicted_path is None:
-                predicted_rows = ()
-                iterator = (
-                    (source, semantic, None)
-                    for source, semantic in zip_longest(
-                        source_rows,
-                        semantic_rows,
-                        fillvalue=_MISSING,
-                    )
+            source_rows = list(iter_jsonl(source_path))
+            semantic_by_idx = _index_rows_by_source_idx(
+                iter_jsonl(semantic_path),
+                label=f"semantic {split} row",
+                allow_certificate_alias=False,
+            )
+            predicted_by_idx = (
+                {}
+                if predicted_path is None
+                else _index_rows_by_source_idx(
+                    iter_jsonl(predicted_path),
+                    label=f"predicted {split} row",
+                    allow_certificate_alias=False,
                 )
-            else:
-                predicted_rows = iter_jsonl(predicted_path)
-                iterator = zip_longest(
-                    source_rows,
-                    semantic_rows,
-                    predicted_rows,
-                    fillvalue=_MISSING,
-                )
+            )
             source_count = 0
             source_semantic_charge_bucket_mismatches = 0
+            source_indices: set[int] = set()
             view_counts: Counter[str] = Counter()
             chemsystems: set[str] = set()
             with output_path.open("x", encoding="utf-8", newline="\n") as handle:
-                for row_index, values in enumerate(iterator):
-                    source_row, semantic_row, predicted_row = values
-                    if source_row is _MISSING or semantic_row is _MISSING:
+                for source_row in source_rows:
+                    source_idx = _source_row_idx(
+                        source_row,
+                        None,
+                        label=f"DLM {split} row",
+                        allow_certificate_alias=True,
+                    )
+                    if source_idx in source_indices:
                         raise ValueError(
-                            f"DLM/semantic split length changed for {split}"
+                            f"DLM {split} rows duplicate source_row_idx {source_idx}"
                         )
-                    if predicted_path is not None and predicted_row is _MISSING:
+                    source_indices.add(source_idx)
+                    semantic_row = semantic_by_idx.get(source_idx)
+                    if semantic_row is None:
                         raise ValueError(
-                            f"predicted split length changed for {split}"
+                            f"semantic {split} is missing source_row_idx {source_idx}"
                         )
-                    if not isinstance(source_row, Mapping) or not isinstance(
-                        semantic_row, Mapping
-                    ):
-                        raise TypeError("aligned DLM/semantic row is not an object")
-                    if predicted_row is not None and not isinstance(
-                        predicted_row, Mapping
-                    ):
-                        raise TypeError("aligned predicted row is not an object")
+                    predicted_row = (
+                        None
+                        if predicted_path is None
+                        else predicted_by_idx.get(source_idx)
+                    )
+                    if predicted_path is not None and predicted_row is None:
+                        raise ValueError(
+                            f"predicted {split} is missing source_row_idx {source_idx}"
+                        )
                     converted = convert_aligned_row(
                         source_row,
                         semantic_row,
                         predicted_row,
                         split=split,
-                        row_index=row_index,
+                        row_index=source_idx,
                         vocabulary=vocabulary,
                         prediction_mode=str(prediction_contract["mode"]),
                         checkpoint_order=checkpoint_order,
@@ -1159,6 +1182,16 @@ def build_dataset(
                 "output_sha256": sha256_file(output_path),
                 "source_semantic_charge_bucket_mismatches": (
                     source_semantic_charge_bucket_mismatches
+                ),
+                "semantic_rows": len(semantic_by_idx),
+                "predicted_rows": (
+                    None if predicted_path is None else len(predicted_by_idx)
+                ),
+                "unused_semantic_rows": len(set(semantic_by_idx) - source_indices),
+                "unused_predicted_rows": (
+                    None
+                    if predicted_path is None
+                    else len(set(predicted_by_idx) - source_indices)
                 ),
             }
 
