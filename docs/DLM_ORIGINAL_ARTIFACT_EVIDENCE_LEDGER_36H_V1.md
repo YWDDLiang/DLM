@@ -1,8 +1,8 @@
 # DLM 原始实验 artifact 证据台账（36H V1）
 
-审计日期：2026-08-30  
-工作树：D:/codex_work/ai4s/DLM_rich_planner_audit  
-审计时 HEAD：79ac47d453b58e163e2e9950ca3ccbdf03a0df07  
+审计日期：2026-08-30
+工作树：D:/codex_work/ai4s/DLM_rich_planner_audit
+审计时 HEAD：79ac47d453b58e163e2e9950ca3ccbdf03a0df07
 只读证据分支：codex/evidence-first-sun-msun@5fca5c9cd06bdbdda7c83c2cf2b37a3b891f9ee0；main@f78b38f1166d2037ea6bce825db9a705e6a70fac
 
 本文件只把逐 attempt JSONL、冻结 manifest、机器可读终态 JSON/CSV、成功/失败标记和对应源码视为原始证据。总结文档只能作为定位器或 secondary_only 数字来源，不能补造 numerator、seed、process independence 或因果解释。机器可读同源台账见 DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.json。

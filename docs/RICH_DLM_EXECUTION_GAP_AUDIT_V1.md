@@ -1,7 +1,7 @@
 # Rich-compatible DLM execution gap audit V1
 
-Date: 2026-08-30  
-Audited baseline: `79ac47d` (`codex/h1a2-rich-planner-audit`)  
+Date: 2026-08-30
+Audited baseline: `79ac47d` (`codex/h1a2-rich-planner-audit`)
 Mode: zero-GPU, source/test audit only; no training, sampling, refinement, evaluation, Slurm submission, asset download, or Git commit was run.
 
 ## Verdict
