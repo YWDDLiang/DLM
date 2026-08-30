@@ -170,7 +170,9 @@
     "unexpected_changed_fields": 0,
     "renderer_sha256": "566830481cbfb990b2dd63d15d4ec0cf8db815759744b16a46762c5bfc8f219f",
     "report_sha256": "7ee6b85d04246151ee9a2920501aaa83deba54e523d072b094c0a95efacf9f95",
-    "generation_wrapper_must_use_shared_renderer": true
+    "generation_wrapper_default": "shared_build_native_inference_prompt",
+    "formal_requirement": "runtime_normalized_schema_task_and_hard_field_equivalence",
+    "renderer_sha_is_hard_gate": false
   },
   "evaluation": {
     "prospective_compositions": 256,

@@ -15,7 +15,8 @@
   ],
   "renderer_sha256": "566830481cbfb990b2dd63d15d4ec0cf8db815759744b16a46762c5bfc8f219f",
   "report_sha256": "7ee6b85d04246151ee9a2920501aaa83deba54e523d072b094c0a95efacf9f95",
-  "generation_wrapper_requirement": "import_build_native_inference_prompt_no_bespoke_renderer",
+  "generation_wrapper_requirement": "same_runtime_normalized_task_semantics_plan_schema_hard_fields_and_body_label",
+  "renderer_sha_is_a_hard_gate": false,
   "all_gates_passed": true,
   "outcomes_read": false
 }

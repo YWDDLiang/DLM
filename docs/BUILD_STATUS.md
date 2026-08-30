@@ -404,4 +404,6 @@
 - train/inference renderer已统一为共享`build_native_inference_prompt`。full
   train/validation `27136/9047`对teacher byte replay及C3FD seed17/18 predicted rendering
   全量审计：frame/key/hard/unexpected-field mismatch均0，仅LS/SG/VP可变；renderer SHA
-  `56683048...f219f`、report SHA`7ee6b85...f9f95`，generation wrapper禁止自建prompt。
+  `56683048...f219f`、report SHA`7ee6b85...f9f95`。对照旧H1-A2后，该字节一致性只作
+  强证据，不作renderer SHA hard gate；正式要求是runtime-normalized任务语义、Plan字段、
+  hard composition与body label一致，只允许LS/SG/VP值变化。
