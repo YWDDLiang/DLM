@@ -393,3 +393,11 @@
   `27136/9047`各一行teacher rich JSON，prediction checkpoint字段0、所有certificate/
   valence/charge/prototype/oxidation字段0。manifest/train/val SHA为
   `b77a1d0...3ae06`、`f61cd17...36068`、`bea7d8e...509e1`，positive archive完成。
+- token audit job38699 `COMPLETED 0:0/33s`：train/val over-limit与prompt-answer
+  suffix mismatch均为0，total-token max `238/234<382`，report SHA
+  `acb07572...ccff0`，archive完成；
+- fresh trainer commits `72cc90c/91b6711/b9f9005/abe80ea/49012f5`已部署；job38701
+  在run/model前因环境名失败，0 science并negative归档。唯一恢复job38703当前用
+  `4A800/32CPU`双seed并行；82017/82018的fresh-LoRA step0 `lora_B_max_abs=0`均通过；
+- 用户提供的MP凭证只以任务会话handle显式登记，不创建额外持久副本；唯一query后立即
+  unset并审计无残留。简单工作由主agent直接完成，只有复杂且可并行的审计/调研才委派。

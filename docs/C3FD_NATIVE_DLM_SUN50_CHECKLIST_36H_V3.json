@@ -136,6 +136,30 @@
     "no_alignment_completion_window": "2026-08-31T14:00:00+08:00/2026-08-31T18:00:00+08:00",
     "with_alignment_completion_window": "2026-08-31T20:00:00+08:00/2026-08-31T23:00:00+08:00"
   },
+  "credential_lifecycle": {
+    "handle": "MP_API_KEY_FROM_USER_THREAD_CONTEXT",
+    "available_until_task_completion": true,
+    "reask_user_before_completion": false,
+    "persistent_copy_created": false,
+    "allowed_use": "single_official_MP_query_temporary_nonambient_child_env",
+    "destroy_after_use": "unset_child_env_and_verify_no_query_process_or_runtime_copy",
+    "original_chat_message_erasable_by_agent": false
+  },
+  "work_delegation": {
+    "routine_work": "main_agent_direct",
+    "subagent_use": "complex_bounded_audit_or_research_only",
+    "critical_path_blocking_delegation": false,
+    "unnecessary_delegation": false
+  },
+  "active_training": {
+    "job_id": 38703,
+    "state": "RUNNING",
+    "resources": "4_A800_32_CPU",
+    "training_seeds": [82017, 82018],
+    "step0_zero_delta_passed": true,
+    "eligible_checkpoint": 3392,
+    "duplicate_submission_forbidden": true
+  },
   "evaluation": {
     "prospective_compositions": 256,
     "streams": [17, 18],

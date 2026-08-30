@@ -229,6 +229,24 @@ with little engineering slack. These are planning ranges, not result gates.
 CPU and MP query latency do not consume the GPU ceiling. At most two jobs may
 be active or pending, and aggregate GPU allocation may not exceed six A800s.
 
+## Credential lifecycle and work delegation
+
+- credential handle: `MP_API_KEY_FROM_USER_THREAD_CONTEXT`; the value has been
+  supplied and remains available for this task, so it must not be requested
+  again before completion;
+- never copy the value into Git, checklist/automation text, shell command lines,
+  logs, hashes, manifests, archives, or ambient process environments;
+- inject it only into the single authorized MP query through a temporary
+  non-ambient child-process environment, then unset it immediately;
+- after the query and final report, verify no query process or temporary runtime
+  environment remains and record credential destruction. The agent cannot erase
+  the user's original chat message, but creates no additional persistent copy;
+- the main agent handles routine implementation, monitoring, tests, archiving,
+  and status work directly;
+- delegate only bounded, genuinely complex audits or research that can run in
+  parallel without blocking the critical path. Subagents remain read-only unless
+  a disjoint write scope is explicitly required; avoid unnecessary delegation.
+
 ## Execution checklist
 
 - [x] Historical H1-A2/R03/R5C/minimal/SGTC/D3PO evidence audit complete.
@@ -244,8 +262,12 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   fields. Jobs38681/38684 remain untrained superseded development artifacts.
 - [x] Dual-C3FD predicted soft-field coverage reported: train `27,136`,
   validation `9,047`, both checkpoints and all three fields at 100% coverage.
-- [ ] Two-seed fresh Planner-native SFT terminal with only step3392 adapters;
-  epoch1/step1696 diagnostics disclosed but never selected.
+- [x] Teacher-only tokenization audit job38699 passed: zero truncation and zero
+  prompt/answer boundary mismatch; max train/validation length `238/234 < 382`.
+- [x] Fresh two-stage trainer, endpoint-only wrapper, and local/remote tests
+  complete; first pre-run environment failure job38701 is negative-archived.
+- [ ] Two-seed fresh Planner-native SFT job38703 running with only step3392
+  eligible; both fresh-LoRA step0 zero-delta canaries passed.
 - [ ] Train/validation raw execution and stability canary terminal.
 - [ ] Decision to stop at SFT or open one fresh on-policy pool frozen.
 - [ ] If opened, fresh pool and safety-aware K-way trainer terminal.
