@@ -113,6 +113,13 @@
       "elapsed": "00:00:06",
       "root_cause": "full_MP20_contains_rows_without_authorized_C3FD_composition_supervision",
       "resolution": "remove_planner_certificate_fields_from_DLM_interface_and_retain_all_MP20_rows"
+    },
+    "native_teacher_data_job_38686": {
+      "state": "COMPLETED",
+      "elapsed": "00:00:15",
+      "rows": {"train": 27136, "validation": 9047},
+      "training_view_mode": "teacher-rich-json-only",
+      "archive_success": true
     }
   },
   "planning_eta_hours": {

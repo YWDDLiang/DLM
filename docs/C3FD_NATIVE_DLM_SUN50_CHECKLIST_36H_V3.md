@@ -239,9 +239,9 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   archive remain. It cannot alter fresh paper-method initialization.
 - [x] `C3FD_NATIVE_PLAN_V2` rich-JSON serializer/round-trip/type tests complete;
   Planner certificates are not part of the DLM interface.
-- [ ] Full MP20 standard train/validation teacher-rich-only V2 data frozen.
-  Jobs38681/38684 are valid but superseded multi-view development artifacts and
-  are not trainable.
+- [x] Full MP20 standard train/validation teacher-rich-only V2 data frozen by
+  job38686: `27,136/9,047` rows, one teacher prompt per body, no predicted Plan
+  fields. Jobs38681/38684 remain untrained superseded development artifacts.
 - [x] Dual-C3FD predicted soft-field coverage reported: train `27,136`,
   validation `9,047`, both checkpoints and all three fields at 100% coverage.
 - [ ] Two-seed fresh Planner-native SFT terminal with only step3392 adapters;

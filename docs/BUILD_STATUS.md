@@ -389,3 +389,7 @@
   用户最终澄清H1-A2式合同：SFT只接受MP20 ground-truth teacher rich JSON；C3FD预测
   rich JSON仅在推理时输入。故38681五view和38684四view都冻结为未训练development
   artifacts；正式数据只保留每source一个teacher `C3FD_NATIVE_PLAN_V2` prompt。
+- 正式teacher-only job38686已`COMPLETED 0:0`，16CPU/0GPU/15秒：train/validation
+  `27136/9047`各一行teacher rich JSON，prediction checkpoint字段0、所有certificate/
+  valence/charge/prototype/oxidation字段0。manifest/train/val SHA为
+  `b77a1d0...3ae06`、`f61cd17...36068`、`bea7d8e...509e1`，positive archive完成。

@@ -1,0 +1,32 @@
+{
+  "schema": "c3fd_native_teacher_sft_data_final_v1",
+  "job_id": 38686,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed": "00:00:15",
+  "resources": {"cpus": 16, "gpus": 0},
+  "output": "data/c3fd_native_teacher_sft_v1_20260831",
+  "prompt_schema": "C3FD_NATIVE_PLAN_V2",
+  "training_view_mode": "teacher-rich-json-only",
+  "predicted_c3fd_plans_loaded": false,
+  "splits": {
+    "train": {"rows": 27136, "sample_weight": 1.0},
+    "validation": {"rows": 9047, "sample_weight": 1.0}
+  },
+  "train_validation_chemsys_overlap": 3469,
+  "forbidden_field_counts": {
+    "valence_species": 0,
+    "charge_bucket": 0,
+    "prototype_key": 0,
+    "oxidation_candidates": 0,
+    "certificate": 0,
+    "prediction_checkpoint": 0
+  },
+  "hashes": {
+    "manifest": "b77a1d0126d19576b2a6e381fe177de792b230cab2eca58e2c5c8097ff23ae06",
+    "train_jsonl": "f61cd177f252ce44ba15669a187a5f6fed22e2d3f50218088124fd0b5b836068",
+    "validation_jsonl": "bea7d8e67476bcdde545f13971cb87ea1e2931954ff8948410dc21ce38e509e1"
+  },
+  "outcome_labels_read": false,
+  "archive_success": "archive/native_sft/teacher_data_success_38686/_ARCHIVE_SUCCESS"
+}
