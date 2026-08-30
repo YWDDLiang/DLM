@@ -278,13 +278,12 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
                 "predicted-native-seed17",
                 "predicted-native-seed18",
                 "soft-masked",
-                "minimal-reference",
             ]
             self.assertEqual([row["view"] for row in rows], expected_views)
             self.assertEqual(len({row["answer"] for row in rows}), 1)
             self.assertEqual(len({row["answer_sha256"] for row in rows}), 1)
             self.assertAlmostEqual(sum(row["sample_weight"] for row in rows), 2.0)
-            self.assertTrue(all(row["sample_weight"] == 0.4 for row in rows))
+            self.assertTrue(all(row["sample_weight"] == 0.5 for row in rows))
             predicted_rows = [
                 row for row in rows if row["view"].startswith("predicted-native-")
             ]
@@ -330,7 +329,7 @@ class BuildC3FDNativeSFTDataTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             _source, _semantic, _predicted, output, manifest = self.build(Path(temp))
             rows = read_jsonl(output / "train.jsonl")
-            self.assertEqual(len(rows), 4)
+            self.assertEqual(len(rows), 3)
             expected_views = set(
                 MODULE.expanded_view_names(
                     (MODULE.LEGACY_DEVELOPMENT_CHECKPOINT,)

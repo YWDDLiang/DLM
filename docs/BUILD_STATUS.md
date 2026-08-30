@@ -383,3 +383,9 @@
   主线；若唯一fresh on-policy alignment被启用，预计`20:00--23:00`完成；
 - MP凭证只允许进入最终唯一query的临时nonambient process env，启动后立即unset；不得
   写入git、docs、automation、命令行、日志、hash或manifest，本任务结束前不再向用户索取。
+- simplified V2 data job38681已`COMPLETED 0:0`，16CPU/0GPU/41秒；full MP20
+  train/validation `27136/9047` materialize为五view `135680/45235`行，每group答案唯一且
+  weight和为1；prompt/Plan中的valence/charge/prototype/oxidation/certificate计数全为0。
+  但用户进一步要求所有MP20正式训练输入必须同为rich-Plan JSON，因此其中第五个
+  minimal-reference view虽数据正确仍被supersede，绝不用于训练；正式冻结改为
+  teacher/pred17/pred18/soft-masked四个`C3FD_NATIVE_PLAN_V2` views。

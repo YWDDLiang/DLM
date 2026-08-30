@@ -6,8 +6,7 @@ exact same dynamic crystal body:
 
 * ``teacher-native`` uses train-only structural fields from the MP20 row;
 * one ``predicted-native-<checkpoint>`` view preserves every frozen C3FD model;
-* ``soft-masked`` masks only lattice/space-group/volume hints; and
-* ``minimal-reference`` retains the established CTV minimal prompt.
+* ``soft-masked`` masks only lattice/space-group/volume hints.
 
 The builder deliberately emits a curated payload instead of copying source rows,
 so source-side outcome annotations cannot leak into prompts or training records.
@@ -36,9 +35,6 @@ for import_path in (SRC, SCRIPTS):
     if str(import_path) not in sys.path:
         sys.path.insert(0, str(import_path))
 
-from build_ctv_minimal_spec_data import (  # noqa: E402
-    minimal_prompt,
-)
 from crystal_dlm.c3fd_native_plan import (  # noqa: E402
     build_native_body_prompt,
     mask_native_soft_fields,
@@ -60,7 +56,7 @@ FORMAL_PREDICTION_ROW_SCHEMA = "c3fd_native_soft_prediction_row_v1"
 FORMAL_CHECKPOINT_ORDER = ("seed17", "seed18")
 FORMAL_CHECKPOINT_SEEDS = (17, 18)
 LEGACY_DEVELOPMENT_CHECKPOINT = "development-single"
-STATIC_VIEWS = ("teacher-native", "soft-masked", "minimal-reference")
+STATIC_VIEWS = ("teacher-native", "soft-masked")
 SOFT_FIELDS = (
     "lattice_system",
     "spacegroup_bucket",
@@ -344,19 +340,6 @@ def _n_value(plan: Mapping[str, Any], *, label: str) -> int:
     if value < 1 or sum(count for _symbol, count in _composition(plan)) != value:
         raise ValueError(f"{label} violates exact N/count conservation")
     return value
-
-
-def _portable_minimal_spec(plan: Mapping[str, Any]) -> dict[str, Any]:
-    composition = _composition(plan)
-    n_value = _n_value(plan, label="minimal Plan")
-    family = str(plan.get("anion_framework") or "other")
-    return {
-        "N": n_value,
-        "elements": [symbol for symbol, _count in composition],
-        "counts": [int(count) for _symbol, count in composition],
-        "family": family,
-        "formula": formula_from_symbol_counts(composition),
-    }
 
 
 def _assert_plan_alignment(
@@ -820,15 +803,7 @@ def convert_aligned_row(
         "native_plan_line": masked_line,
         "plan_state": masked_plan,
     }
-    minimal_spec = _portable_minimal_spec(source_plan)
-    minimal_row = {
-        **common,
-        "view": "minimal-reference",
-        "prompt_schema": "c3fd_composition_minimal_v1",
-        "prompt": minimal_prompt(minimal_spec),
-        "minimal_spec": minimal_spec,
-    }
-    rows = [teacher_row, *predicted_views, masked_row, minimal_row]
+    rows = [teacher_row, *predicted_views, masked_row]
     if {row["answer"] for row in rows} != {answer}:
         raise RuntimeError("multi-view conversion changed the answer/body")
     if not math.isclose(

@@ -7,7 +7,7 @@ WRAPPER = ROOT / "slurm" / "86_build_c3fd_native_sft_data.sbatch"
 
 
 class Slurm86BuildC3FDNativeSFTDataTest(unittest.TestCase):
-    def test_cpu_only_formal_five_view_contract(self):
+    def test_cpu_only_formal_four_view_contract(self):
         text = WRAPPER.read_text(encoding="utf-8")
         self.assertNotIn("#SBATCH --gres", text)
         self.assertIn("#SBATCH --cpus-per-task=16", text)

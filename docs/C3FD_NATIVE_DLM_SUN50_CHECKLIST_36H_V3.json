@@ -59,8 +59,7 @@
         "teacher_native_plan",
         "frozen_c3fd_predicted_seed17_native_plan",
         "frozen_c3fd_predicted_seed18_native_plan",
-        "soft_masked_native_plan",
-        "minimal_reference_view"
+        "soft_masked_native_plan"
       ],
       "source_index_policy": "immutable_file_ordinal_if_explicit_index_absent",
       "outcome_labels_read": false
@@ -93,7 +92,7 @@
     "epoch2_learning_rate": 0.00001,
     "effective_batch": 16,
     "warmup_steps_per_stage": 100,
-    "view_sampling": "one_balanced_rotating_view_per_source_per_epoch",
+    "view_sampling": "one_of_four_same_schema_balanced_rotating_views_per_source_per_epoch",
     "early_stop": false,
     "seed_or_checkpoint_selection": false,
     "alignment_is_optional_after_sft": true

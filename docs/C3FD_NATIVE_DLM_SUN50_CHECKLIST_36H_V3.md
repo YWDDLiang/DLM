@@ -142,7 +142,7 @@ after prospective two-training-seed replication.
   target modules `q/k/v/ff/up`;
 - two independent DLM training seeds;
 - use a source-balanced sampler: each of the 27,136 MP20 train rows
-  contributes once per source epoch, while the five views are globally balanced
+  contributes once per source epoch, while the four V2 views are globally balanced
   and deterministically rotated between epochs;
 - epoch1: 1,696 optimizer updates, effective batch 16, LR `5e-5`, cosine,
   warmup 100, minimum LR ratio `0.2`;
@@ -150,8 +150,8 @@ after prospective two-training-seed replication.
   ratio `0.1`;
 - total: 3,392 optimizer updates; only the epoch2/step3392 adapter is eligible
   for prospective evaluation. Epoch1/step1696 is monitoring-only;
-- mixed data views provide native-body CE, predicted-Plan robustness, and
-  minimal-reference retention without any stability labels;
+- all four same-schema views provide native-body CE, dual-Planner robustness,
+  and soft-field masking without any stability labels;
 - no early stopping, epoch/checkpoint selection, or seed selection.
 
 ### Stage 2: optional stability alignment
@@ -220,7 +220,7 @@ test-outcome training are out of scope.
 |---|---:|---:|---|
 | faithful H0/R0S offline completion | 4 A800, 32 CPU | remaining 0.5--1.5 h | job38603 already running; development only |
 | native Plan/data build and archive | 0 GPU, 16 CPU | 0.25--0.75 h | MP20-standard split; immutable hashes |
-| fresh trainer/wrapper implementation | 0 GPU, <=32 CPU | 1.5--3 h | source-balanced five-view, two-stage LR |
+| fresh trainer/wrapper implementation | 0 GPU, <=32 CPU | 1.5--3 h | source-balanced four-view, two-stage LR |
 | two-seed fresh native SFT | 4 A800, 32 CPU | 1.5--2.5 h | two matched 2-A800 jobs, step3392 only |
 | train/standard-val raw-first canary | <=6 A800, 48 CPU | 1.5--3 h | diagnostic only; no seed choice |
 | fresh on-policy pool plus alignment, if used | <=6 A800, 48 CPU | additional 5--8 h | fixed K and one frozen setting |
@@ -248,8 +248,9 @@ be active or pending, and aggregate GPU allocation may not exceed six A800s.
   initialization choice is permitted for the fresh paper method.
 - [x] `C3FD_NATIVE_PLAN_V2` rich-JSON serializer/round-trip/type tests complete;
   Planner certificates are not part of the DLM interface.
-- [ ] Full MP20 standard train/validation native Plan data (`27,136/9,047`)
-  frozen, with the inherited `3,469` chemsys overlap disclosed.
+- [ ] Full MP20 standard train/validation four-view V2 data frozen. Job38681's
+  five-view output passed its audits but is superseded because its fifth
+  minimal-reference view used a different prompt schema; it is not trainable.
 - [x] Dual-C3FD predicted soft-field coverage reported: train `27,136`,
   validation `9,047`, both checkpoints and all three fields at 100% coverage.
 - [ ] Two-seed fresh Planner-native SFT terminal with only step3392 adapters;
