@@ -72,6 +72,25 @@
       "CrystalNN_or_graph",
       "valid_but_high_energy"
     ],
+    "G0_terminal": {
+      "run": "runs/g0_raw_geometry_audit_fused39096_v1_20260831",
+      "status": "success",
+      "taxonomy_counts": {
+        "body_parse_or_schema": 8,
+        "exact_composition": 0,
+        "lattice_metric": 0,
+        "PBC_minimum_distance_below_0p5A": 142,
+        "CrystalNN_or_graph": 0,
+        "direct_other": 0,
+        "pass": 106
+      },
+      "strict_7_plus_4N": "248/248",
+      "token_reencode_exact": "248/248",
+      "direct_validity_flips": 0,
+      "energy_class_status": "unavailable_no_CHGNet_run",
+      "vocabulary_extension": false,
+      "implementation_commit": "eccfa93"
+    },
     "losses": [
       "masked_CE",
       "metric_tensor_and_log_VPA",

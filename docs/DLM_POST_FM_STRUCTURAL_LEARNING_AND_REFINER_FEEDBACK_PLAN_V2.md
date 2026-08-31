@@ -242,6 +242,17 @@ If tokenization itself changes structural validity by more than `1%`, stop and
 redesign the representation. Otherwise freeze `7+4N`; no vocabulary extension
 is needed for this cycle.
 
+Current fused-screen G0 is terminal at
+`runs/g0_raw_geometry_audit_fused39096_v1_20260831/_SUCCESS`. On the fixed 256
+attempts, the mutually exclusive taxonomy is parse `8`, composition `0`,
+lattice `0`, PBC distance `<0.5 A` `142`, CrystalNN/graph `0`, Direct-other `0`,
+and pass `106`. All 142 parsed Direct failures are therefore periodic atomic
+collisions. The `248/248` CIF-bearing rows have strict and token-idempotent
+`7+4N` round trips, exact species order, zero clipping/wrapping, and zero
+Direct-validity flips. No vocabulary extension is indicated. High-energy
+classification remains unavailable until an arm with registered CHGNet
+endpoints is run; it is not imputed here.
+
 ### G1. Periodic geometry objective
 
 Add losses computed from the legal-token softmax at randomly masked geometry
@@ -479,7 +490,9 @@ for the DLM method after observing the same prospective outcomes.
   use an official query for this development screen.
 - [ ] Apply the compute gate only before final method freeze; every arm admitted
   to final prospective evaluation must complete raw/refined/official endpoints.
-- [ ] Run the CPU-only `7+4N` quantization-sufficiency audit.
+- [x] Run the CPU-only `7+4N` quantization-sufficiency audit and frozen raw
+  failure taxonomy; G0 found 142 collision failures, 8 parse failures, and zero
+  round-trip validity flips.
 - [ ] Decompose existing raw failures into parse, composition, lattice,
   collision, graph, and energy-only classes before training.
 - [ ] Implement and unit-test differentiable metric/RDF/overlap/coordination

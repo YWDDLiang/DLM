@@ -205,7 +205,27 @@
     "geometry_hypothesis": {
       "raw_struct_valid_confidence": "high",
       "stability_sufficiency_confidence": "medium",
-      "first_test": "frozen_raw_failure_taxonomy_and_token_roundtrip"
+      "first_test": "frozen_raw_failure_taxonomy_and_token_roundtrip",
+      "G0_terminal": {
+        "status": "success",
+        "run": "runs/g0_raw_geometry_audit_fused39096_v1_20260831",
+        "requested": 256,
+        "taxonomy": {
+          "parse": 8,
+          "composition": 0,
+          "lattice": 0,
+          "PBC_minimum_distance_below_0p5A": 142,
+          "CrystalNN_or_graph": 0,
+          "direct_other": 0,
+          "pass": 106
+        },
+        "strict_7_plus_4N": "248/248",
+        "token_reencode_exact": "248/248",
+        "validity_flips": 0,
+        "vocabulary_change_authorized": false,
+        "energy_taxonomy": "unavailable_no_CHGNet_run",
+        "implementation_commit": "eccfa93"
+      }
     },
     "conditional_periodic_relation_adapter": {
       "trigger": "later_parallel_candidate_after_G0_and_implementation_tests",

@@ -187,12 +187,25 @@ causal matched effect. No model494, CHGNet, or official query was run.
   the one-seed/one-stream matched contract and do not issue an official query.
   This full G2 endpoint is required to detect residual-adapter effects that may
   appear only after refinement or in continuous energy.
-- [ ] Decompose frozen raw failures into parse, composition, lattice,
+- [x] Decompose frozen raw failures into parse, composition, lattice,
   PBC-distance `<0.5 A`, CrystalNN/graph, and valid-but-high-energy classes;
-  report how much invalidity is actually geometric.
-- [ ] Run a CPU-only quantization audit for the current 0.1-A/1-degree/0.01-frac
+  report how much invalidity is actually geometric. The energy-only class is
+  explicitly unavailable because this frozen screen did not run CHGNet.
+- [x] Run a CPU-only quantization audit for the current 0.1-A/1-degree/0.01-frac
   `7+4N` tokens. Extend the vocabulary only if tokenization itself changes
   structural validity by more than 1%.
+
+G0 terminal: `runs/g0_raw_geometry_audit_fused39096_v1_20260831/_SUCCESS`.
+The fixed-256 taxonomy closes exactly as parse `8`, composition `0`, lattice
+`0`, PBC distance `<0.5 A` `142`, CrystalNN/graph `0`, Direct-other `0`, and
+pass `106`. Thus every parsed Direct structural failure is a periodic atomic
+collision. All `248/248` CIF rows pass strict `7+4N` decode/re-encode with exact
+species order, zero clipping/wrapping, and zero Direct-validity flips. The
+maximum observed numeric errors are floating-point noise (`1.78e-15 A`,
+`2.84e-14 deg`, and `0` periodic fractional units), so representation
+quantization is not the current failure source and no vocabulary change is
+authorized. Audit implementation commit `eccfa93`; positive archive
+`archive/dlm_geometry/g0_fused39096_success_20260831/_ARCHIVE_SUCCESS`.
 - [ ] Add differentiable periodic metric/RDF/short-distance/coordination losses
   to DLM training. Do not add a new inference-time geometry mask.
 - [ ] Train one frozen-seed G1 and one frozen-seed G2 candidate. Reuse one base
