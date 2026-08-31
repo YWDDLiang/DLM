@@ -14,7 +14,7 @@ set -Eeuo pipefail
 
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/Meta-Llama-3-8B
-readonly DATA="${ROOT}/data/c3fd_llama_fused_typed_v3_20260831"
+readonly DATA="${ROOT}/data/c3fd_llama_fused_typed_v4_20260831"
 readonly C3FD="${ROOT}/runs/c3fd_v25_online_canary_36608/train_seed17/checkpoint.pt"
 readonly VOCAB="${ROOT}/data/c3fd_semantic_v21_step1b_20260828/vocabulary.json"
 readonly TRAINER="${ROOT}/src/scripts/train_c3fd_llama_typed_planner.py"

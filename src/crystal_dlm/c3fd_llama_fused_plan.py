@@ -291,6 +291,7 @@ def typed_targets_from_semantic_row(
     vocabulary: Mapping[str, Any],
     *,
     context: TypedTargetContext | None = None,
+    compile_legal_masks: bool = False,
 ) -> dict[str, Any]:
     """Validate and extract one teacher-forced typed C3FD target sequence."""
 
@@ -350,9 +351,7 @@ def typed_targets_from_semantic_row(
     if len(species_ids) != arity or len(counts) != arity:
         raise ValueError("species/count sequence does not match proposal arity")
 
-    compiled = context or build_typed_target_context(vocabulary)
-    species_vocabulary = compiled.species_vocabulary
-    max_count = int(compiled.max_count)
+    species_vocabulary = _species_vocabulary(vocabulary)
     tokens: list[FormulaToken] = []
     species_actions: list[dict[str, int]] = []
     for species_id, count in zip(species_ids, counts):
@@ -395,18 +394,20 @@ def typed_targets_from_semantic_row(
         "count_targets": counts,
         "species_actions": species_actions,
         "ledger_steps": ledger,
-        "legal_action_indices": _legal_action_indices(
+        "soft_targets": soft_targets,
+    }
+    if compile_legal_masks:
+        compiled = context or build_typed_target_context(vocabulary)
+        targets["legal_action_indices"] = _legal_action_indices(
             tokens=tokens,
-            species_vocabulary=species_vocabulary,
+            species_vocabulary=compiled.species_vocabulary,
             target_n=target_n,
             arity=arity,
             family=family_value,
-            max_count=max_count,
+            max_count=int(compiled.max_count),
             reachability=compiled.reachability,
-        ),
-        "max_count": max_count,
-        "soft_targets": soft_targets,
-    }
+        )
+        targets["max_count"] = int(compiled.max_count)
     targets["audit_transcript"] = audit_transcript_from_targets(targets)
     return targets
 

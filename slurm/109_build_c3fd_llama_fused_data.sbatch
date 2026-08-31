@@ -14,7 +14,7 @@ set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly SEMANTIC="${ROOT}/data/c3fd_semantic_v21_step1b_20260828"
 readonly CTV="${ROOT}/data/ctv_minimal_spec_v4_20260828"
-readonly OUTPUT="${ROOT}/data/c3fd_llama_fused_typed_v3_20260831"
+readonly OUTPUT="${ROOT}/data/c3fd_llama_fused_typed_v4_20260831"
 readonly RUN="${ROOT}/runs/build_c3fd_llama_fused_data_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly BUILDER="${ROOT}/scripts/build_c3fd_llama_fused_data.py"

@@ -362,6 +362,8 @@ def collate_typed_rows(
         if len(species) != len(counts) or len(species) != int(proposal["arity"]):
             raise ValueError("teacher action sequence does not match arity")
         legal_steps = row.get("legal_action_indices")
+        if legal_steps is None:
+            legal_steps = [list(range(num_actions)) for _ in range(len(species) + 1)]
         if not isinstance(legal_steps, Sequence) or len(legal_steps) != len(species) + 1:
             raise ValueError("legal action sequence does not include explicit EOS")
         raw_ledger = row.get("ledger_steps")

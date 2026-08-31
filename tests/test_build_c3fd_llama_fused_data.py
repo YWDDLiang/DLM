@@ -228,8 +228,6 @@ class BuildFusedDataTest(unittest.TestCase):
                     "species_ids",
                     "count_targets",
                     "ledger_steps",
-                    "legal_action_indices",
-                    "max_count",
                     "soft_targets",
                     "audit_transcript",
                 },

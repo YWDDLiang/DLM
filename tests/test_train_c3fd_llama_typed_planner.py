@@ -210,6 +210,12 @@ class PositionAndMaskTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             collate_typed_rows([bad], bundle=bundle())
 
+    def test_formal_rows_use_full_training_support_without_inference_search(self):
+        formal = row(stratum=0)
+        formal.pop("legal_action_indices")
+        batch = collate_typed_rows([formal], bundle=bundle())
+        self.assertTrue(batch["action_legal_mask"].all().item())
+
 
 class ExecutionTest(unittest.TestCase):
     def test_step0_distribution_is_exactly_frozen_c3fd(self):

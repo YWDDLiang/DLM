@@ -21,7 +21,6 @@ if str(SOURCE_ROOT) not in sys.path:
 
 from crystal_dlm.c3fd_llama_fused_plan import (  # noqa: E402
     FUSED_TYPED_PLAN_SCHEMA,
-    build_typed_target_context,
     stability_condition_from_e_above_hull,
     typed_targets_from_semantic_row,
 )
@@ -152,7 +151,6 @@ def build_split_rows(
     skipped: Counter[str] = Counter()
     skipped_indices: dict[str, list[int]] = defaultdict(list)
     tier_counts: Counter[str] = Counter()
-    target_context = build_typed_target_context(vocabulary)
 
     for source_idx in sorted(set(semantic) | set(source)):
         if source_idx not in semantic:
@@ -194,9 +192,7 @@ def build_split_rows(
             )
             continue
         try:
-            targets = typed_targets_from_semantic_row(
-                semantic_row, vocabulary, context=target_context
-            )
+            targets = typed_targets_from_semantic_row(semantic_row, vocabulary)
             sample_weight = _sample_weight(semantic_row)
         except (TypeError, ValueError):
             _record_skip(
@@ -218,8 +214,6 @@ def build_split_rows(
                 "species_ids": targets["species_ids"],
                 "count_targets": targets["count_targets"],
                 "ledger_steps": targets["ledger_steps"],
-                "legal_action_indices": targets["legal_action_indices"],
-                "max_count": targets["max_count"],
                 "soft_targets": targets["soft_targets"],
                 "audit_transcript": targets["audit_transcript"],
             }
@@ -323,6 +317,10 @@ def build_dataset(
             "ordinal_zip_used": False,
             "raw_e_above_hull_copied_to_output": False,
             "structure_or_body_fields_copied_to_output": False,
+            "training_action_support": (
+                "full_typed_vocabulary; C3FD hard reachability mask is applied "
+                "during single-trajectory inference"
+            ),
             "stability_boundary_eV_per_atom": 0.1,
             "splits": split_reports,
             "input_sha256": {

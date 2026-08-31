@@ -140,7 +140,9 @@ class StabilityConditionTest(unittest.TestCase):
 
 class TypedTargetsTest(unittest.TestCase):
     def test_extracts_typed_residual_head_targets(self):
-        targets = typed_targets_from_semantic_row(semantic_row(), vocabulary())
+        targets = typed_targets_from_semantic_row(
+            semantic_row(), vocabulary(), compile_legal_masks=True
+        )
         self.assertEqual(
             targets["proposal_target"],
             {"family_id": 1, "family_value": "halide", "N": 2, "arity": 2},
