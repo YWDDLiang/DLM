@@ -244,6 +244,12 @@ def collect_ctv_branch_states(
         if guidance_scale <= 0.0 or not 0.0 < guidance_threshold < 1.0:
             raise ValueError("late guidance requires positive scale and threshold in (0,1)")
 
+    if hasattr(model, "set_geometry_context"):
+        model.set_geometry_context(
+            torch.tensor([int(prompt.shape[1])], device=_model_device(model)),
+            torch.tensor([int(num_atoms)], device=_model_device(model)),
+        )
+
     x, expanded_attention = _initialize_sequence(
         model=model,
         prompt=prompt,

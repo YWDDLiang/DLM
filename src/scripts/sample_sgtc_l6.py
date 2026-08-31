@@ -35,6 +35,7 @@ from crystal_dlm.sgtc_sampling import (  # noqa: E402
     validate_sgtc_plan_rows,
     validate_sgtc_plan_rows_with_missing,
 )
+from crystal_dlm.periodic_relation_runtime import wrap_with_periodic_relation  # noqa: E402
 from scripts.sample_llada_dynamic_crystals import (  # noqa: E402
     build_dynamic_lightweight_constraints,
     graph_from_arrays,
@@ -54,6 +55,8 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-path", required=True)
     parser.add_argument("--checkpoint-path", required=True)
+    parser.add_argument("--periodic-relation-checkpoint")
+    parser.add_argument("--periodic-relation-rank", type=int, default=0)
     parser.add_argument("--prompt-jsonl", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--crysllmgen-dir", type=Path, required=True)
@@ -75,6 +78,18 @@ def main() -> None:
     model, tokenizer = load_model_and_tokenizer(
         args.model_path, args.checkpoint_path, device
     )
+    if args.periodic_relation_checkpoint:
+        if args.periodic_relation_rank <= 0:
+            raise ValueError("periodic relation checkpoint requires positive rank")
+        model = wrap_with_periodic_relation(
+            model,
+            tokenizer,
+            rank=int(args.periodic_relation_rank),
+            checkpoint=args.periodic_relation_checkpoint,
+        ).to(device)
+        model.eval()
+    elif args.periodic_relation_rank != 0:
+        raise ValueError("periodic relation rank without checkpoint is invalid for sampling")
     reference_model = None
     if args.reference_checkpoint_path:
         if (

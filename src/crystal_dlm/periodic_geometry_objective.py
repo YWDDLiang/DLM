@@ -86,6 +86,14 @@ def _lattice_matrix(lengths: torch.Tensor, angles_deg: torch.Tensor) -> torch.Te
     )
 
 
+def lattice_matrix_from_parameters(
+    lengths: torch.Tensor, angles_deg: torch.Tensor
+) -> torch.Tensor:
+    """Public differentiable row-vector lattice constructor."""
+
+    return _lattice_matrix(lengths, angles_deg)
+
+
 def _pair_distances(frac_coords: torch.Tensor, lattice: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
     count = int(frac_coords.shape[0])
     if count < 2:
@@ -238,4 +246,8 @@ def periodic_geometry_objective(
     return {**reduced, "samples": int(input_ids.shape[0])}
 
 
-__all__ = ["build_geometry_token_support", "periodic_geometry_objective"]
+__all__ = [
+    "build_geometry_token_support",
+    "lattice_matrix_from_parameters",
+    "periodic_geometry_objective",
+]

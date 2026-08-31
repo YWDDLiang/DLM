@@ -68,6 +68,7 @@ from crystal_dlm.periodic_geometry_objective import (
     build_geometry_token_support,
     periodic_geometry_objective,
 )
+from crystal_dlm.periodic_relation_runtime import wrap_with_periodic_relation
 from crystal_dlm.llada_resize import ensure_llada_vocab_size
 from crystal_dlm.transformers_compat import (
     ensure_create_bidirectional_mask,
@@ -1713,6 +1714,9 @@ def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: 
         fixed_slot_body_offset=int(loss_config.get("fixed_slot_body_offset", 0)),
         dynamic_geometry_only=bool(loss_config.get("dynamic_geometry_only", False)),
     )
+    context_model = model.module if hasattr(model, "module") else model
+    if hasattr(context_model, "set_geometry_context"):
+        context_model.set_geometry_context(prompt_lengths, batch["num_atoms"])
     outputs = model(input_ids=processed["noisy"], attention_mask=attention_mask)
     masked = processed["masked_indices"]
     if not masked.any():
@@ -2433,6 +2437,18 @@ def main() -> None:
     parser.add_argument("--periodic-overlap-weight", type=float, default=0.0)
     parser.add_argument("--periodic-coordination-weight", type=float, default=0.0)
     parser.add_argument(
+        "--periodic-relation-rank",
+        type=int,
+        default=0,
+        help="Enable the zero-initialized periodic residual adapter at this low rank.",
+    )
+    parser.add_argument(
+        "--periodic-relation-checkpoint",
+        type=Path,
+        default=None,
+        help="Optional checkpoint containing periodic_relation_adapter.pt/config.",
+    )
+    parser.add_argument(
         "--train-prefill-slot-tokens",
         action="store_true",
         help=(
@@ -2472,6 +2488,15 @@ def main() -> None:
             parser.error("periodic geometry objective requires representation=dynamic_v1")
         if not args.dynamic_geometry_only:
             parser.error("periodic geometry objective requires --dynamic-geometry-only")
+    if args.periodic_relation_rank < 0:
+        parser.error("periodic-relation-rank must be non-negative")
+    if args.periodic_relation_checkpoint is not None and args.periodic_relation_rank <= 0:
+        parser.error("periodic relation checkpoint requires a positive rank")
+    if args.periodic_relation_rank > 0:
+        if args.representation != "dynamic_v1" or not args.dynamic_geometry_only:
+            parser.error("periodic relation adapter requires dynamic_v1 geometry-only training")
+        if not any(weight > 0 for weight in periodic_weights):
+            parser.error("periodic relation adapter requires the registered G1 geometry losses")
     if args.lr_stage2 > 0:
         if args.lr_scheduler != "cosine":
             parser.error("two-stage LR requires --lr-scheduler cosine")
@@ -2501,6 +2526,11 @@ def main() -> None:
     log_path = args.output_dir / "training_log.jsonl"
     run_config = vars(args).copy()
     run_config["checkpoint_path"] = None if args.checkpoint_path is None else str(args.checkpoint_path)
+    run_config["periodic_relation_checkpoint"] = (
+        None
+        if args.periodic_relation_checkpoint is None
+        else str(args.periodic_relation_checkpoint)
+    )
     run_config["data_dir"] = str(args.data_dir)
     run_config["train_csv_dir"] = None if args.train_csv_dir is None else str(args.train_csv_dir)
     run_config["output_dir"] = str(args.output_dir)
@@ -2513,6 +2543,13 @@ def main() -> None:
         args,
         is_main=is_main,
     )
+    if args.periodic_relation_rank > 0:
+        model = wrap_with_periodic_relation(
+            model,
+            tokenizer,
+            rank=int(args.periodic_relation_rank),
+            checkpoint=args.periodic_relation_checkpoint,
+        )
     loss_config = build_loss_config(tokenizer, args)
     if is_main:
         if args.representation == "cif_lite_modular":
@@ -2869,6 +2906,27 @@ def main() -> None:
                     loss.backward()
                 if (micro_step + 1) % args.grad_accum != 0:
                     continue
+                relation_target = model.module if hasattr(model, "module") else model
+                relation_adapter = getattr(relation_target, "periodic_relation_adapter", None)
+                relation_grad_norm_value = None
+                relation_output_grad_norm_value = None
+                if relation_adapter is not None:
+                    relation_grads = [
+                        parameter.grad.detach().float().norm()
+                        for parameter in relation_adapter.parameters()
+                        if parameter.grad is not None
+                    ]
+                    relation_grad_norm_value = float(
+                        torch.stack(relation_grads).norm().cpu()
+                    ) if relation_grads else 0.0
+                    output_grad = relation_adapter.output_projection.weight.grad
+                    relation_output_grad_norm_value = (
+                        0.0
+                        if output_grad is None
+                        else float(output_grad.detach().float().norm().cpu())
+                    )
+                    if not math.isfinite(relation_grad_norm_value):
+                        raise FloatingPointError("non-finite periodic relation gradient norm")
                 grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
                 grad_norm_value = float(torch.as_tensor(grad_norm).detach().cpu())
                 if not math.isfinite(grad_norm_value):
@@ -2879,7 +2937,8 @@ def main() -> None:
                 global_step += 1
                 progress.update(1)
 
-                if is_main and global_step % args.logging_steps == 0:
+                relation_early_log = relation_adapter is not None and global_step <= 10
+                if is_main and (global_step % args.logging_steps == 0 or relation_early_log):
                     alignment_value = (
                         None
                         if alignment_component is None
@@ -2909,6 +2968,8 @@ def main() -> None:
                                 "periodic_geometry_pair_rdf_loss": periodic_values["pair_rdf"],
                                 "periodic_geometry_overlap_loss": periodic_values["overlap"],
                                 "periodic_geometry_coordination_loss": periodic_values["coordination"],
+                                "periodic_relation_grad_norm": relation_grad_norm_value,
+                                "periodic_relation_output_grad_norm": relation_output_grad_norm_value,
                                 "lr": optimizer.param_groups[0]["lr"],
                             },
                             ensure_ascii=False,
