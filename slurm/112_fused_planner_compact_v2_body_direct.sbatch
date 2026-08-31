@@ -30,7 +30,7 @@ readonly RUN="${ROOT}/runs/fused_planner_compact_v2_body_direct_${SLURM_JOB_ID}"
 readonly PLANS_SHA=f7002caa9f5dcfb3bdb962028673e51da108d58854519a145ceedfa3109728ec
 readonly POLICY_SHA=06cd5465d1c12dc70c695a12602a4bd99f6c5561f2dc44daa431aadeef962b20
 readonly POLICY_CONFIG_SHA=61ff08995286cf7679fb2e494064892a778a925becd2d55300a70e354f8ff240
-readonly BODY_SAMPLER_SHA=51e5bc0303778df9382052b2cae65d9922c74efd4136482788bd2d2ea0c44ee8
+readonly BODY_SAMPLER_SHA=e2f5a84f02983828d5551bef15269f20e2dcea8dbcca87ae45ed7a9254a9395b
 readonly ASSEMBLER_SHA=8e9e9380eb2b2ca9e833faacb242e04ad0b34f897db69f5c3fca3cce3557d6ec
 readonly DIRECT_SHA=556d4e14c96a7a89c96eaf7c07fda04c0f399526f733de0e8cbbd08d1f24e7a4
 readonly GT_SHA=b4a2ae467ccab230a1b726778bf1539e3e89ecccaa6925a7c0eeeced46966c7c
@@ -129,4 +129,3 @@ find "${RUN}" -type f ! -name OUTPUTS.sha256 -print0 | sort -z \
   | xargs -0 sha256sum >"${RUN}/OUTPUTS.sha256"
 trap - ERR
 touch "${RUN}/_SUCCESS"
-
