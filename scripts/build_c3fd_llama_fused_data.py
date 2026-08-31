@@ -21,6 +21,7 @@ if str(SOURCE_ROOT) not in sys.path:
 
 from crystal_dlm.c3fd_llama_fused_plan import (  # noqa: E402
     FUSED_TYPED_PLAN_SCHEMA,
+    build_typed_target_context,
     stability_condition_from_e_above_hull,
     typed_targets_from_semantic_row,
 )
@@ -151,6 +152,7 @@ def build_split_rows(
     skipped: Counter[str] = Counter()
     skipped_indices: dict[str, list[int]] = defaultdict(list)
     tier_counts: Counter[str] = Counter()
+    target_context = build_typed_target_context(vocabulary)
 
     for source_idx in sorted(set(semantic) | set(source)):
         if source_idx not in semantic:
@@ -192,7 +194,9 @@ def build_split_rows(
             )
             continue
         try:
-            targets = typed_targets_from_semantic_row(semantic_row, vocabulary)
+            targets = typed_targets_from_semantic_row(
+                semantic_row, vocabulary, context=target_context
+            )
             sample_weight = _sample_weight(semantic_row)
         except (TypeError, ValueError):
             _record_skip(

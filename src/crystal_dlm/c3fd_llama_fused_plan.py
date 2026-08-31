@@ -8,6 +8,7 @@ the training or inference interface.
 from __future__ import annotations
 
 import math
+from dataclasses import dataclass
 from typing import Any, Mapping, Sequence
 
 from crystal_dlm.ccfd import FormulaToken
@@ -30,6 +31,28 @@ SOFT_FIELDS = (
     "spacegroup_bucket",
     "volume_per_atom_bin",
 )
+
+
+@dataclass
+class TypedTargetContext:
+    species_vocabulary: dict[int, tuple[int, int]]
+    max_count: int
+    reachability: PaulingBitsetReachability
+
+
+def build_typed_target_context(
+    vocabulary: Mapping[str, Any],
+) -> TypedTargetContext:
+    species = _species_vocabulary(vocabulary)
+    nodes = tuple(
+        ValenceNode(int(value[0]), int(value[1]))
+        for _species_id, value in sorted(species.items())
+    )
+    return TypedTargetContext(
+        species_vocabulary=species,
+        max_count=_max_count(vocabulary),
+        reachability=PaulingBitsetReachability(nodes),
+    )
 
 
 def stability_condition_from_e_above_hull(value: Any) -> str:
@@ -110,6 +133,7 @@ def _legal_action_indices(
     arity: int,
     family: str,
     max_count: int,
+    reachability: PaulingBitsetReachability,
 ) -> list[list[int]]:
     """Compile the exact inference-time legal support for every teacher step."""
 
@@ -118,7 +142,6 @@ def _legal_action_indices(
         for species_id, value in species_vocabulary.items()
     }
     node_to_id = {node: species_id for species_id, node in nodes_by_id.items()}
-    reachability = PaulingBitsetReachability(tuple(nodes_by_id.values()))
     state = CCFDv2State.start().apply(SetAtomCount(int(target_n)))
     legal_steps: list[list[int]] = []
     for teacher in tokens:
@@ -264,7 +287,10 @@ def audit_transcript_from_targets(targets: Mapping[str, Any]) -> str:
 
 
 def typed_targets_from_semantic_row(
-    row: Mapping[str, Any], vocabulary: Mapping[str, Any]
+    row: Mapping[str, Any],
+    vocabulary: Mapping[str, Any],
+    *,
+    context: TypedTargetContext | None = None,
 ) -> dict[str, Any]:
     """Validate and extract one teacher-forced typed C3FD target sequence."""
 
@@ -324,8 +350,9 @@ def typed_targets_from_semantic_row(
     if len(species_ids) != arity or len(counts) != arity:
         raise ValueError("species/count sequence does not match proposal arity")
 
-    species_vocabulary = _species_vocabulary(vocabulary)
-    max_count = _max_count(vocabulary)
+    compiled = context or build_typed_target_context(vocabulary)
+    species_vocabulary = compiled.species_vocabulary
+    max_count = int(compiled.max_count)
     tokens: list[FormulaToken] = []
     species_actions: list[dict[str, int]] = []
     for species_id, count in zip(species_ids, counts):
@@ -375,6 +402,7 @@ def typed_targets_from_semantic_row(
             arity=arity,
             family=family_value,
             max_count=max_count,
+            reachability=compiled.reachability,
         ),
         "max_count": max_count,
         "soft_targets": soft_targets,
@@ -389,7 +417,9 @@ __all__ = [
     "STABILITY_CONDITIONS",
     "STABILITY_HIGHER",
     "STABILITY_META_OR_BETTER",
+    "TypedTargetContext",
     "audit_transcript_from_targets",
+    "build_typed_target_context",
     "stability_condition_from_e_above_hull",
     "typed_targets_from_semantic_row",
 ]
