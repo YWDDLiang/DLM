@@ -82,10 +82,99 @@ def bootstrap(values: Mapping[int, float], label: str) -> dict[str, Any]:
     }
 
 
-def indexed(rows: Sequence[Mapping[str, Any]]) -> dict[int, Mapping[str, Any]]:
-    result = {int(row["ordinal"]): row for row in rows}
+def indexed(
+    rows: Sequence[Mapping[str, Any]], *, label: str
+) -> dict[int, Mapping[str, Any]]:
+    if len(rows) != ATTEMPTS:
+        raise ValueError(f"{label} rows do not cover fixed256")
+    result: dict[int, Mapping[str, Any]] = {}
+    for row in rows:
+        index = int(row["ordinal"])
+        if index in result:
+            raise ValueError(f"duplicate {label} ordinal {index}")
+        result[index] = row
     if set(result) != set(range(ATTEMPTS)):
-        raise ValueError("official rows do not cover fixed256")
+        raise ValueError(f"{label} rows do not cover fixed256")
+    return result
+
+
+def requested_composition_identity(
+    row: Mapping[str, Any],
+) -> tuple[str | None, str | None]:
+    """Read immutable requested composition identity from a generation row."""
+
+    explicit_exact = row.get("exact_composition_identity")
+    exact = None if explicit_exact is None else str(explicit_exact).strip() or None
+    explicit_chemsys = row.get("requested_chemsys", row.get("chemsys"))
+    chemsys = (
+        None if explicit_chemsys is None else str(explicit_chemsys).strip() or None
+    )
+    plan = row.get("plan_state")
+    if plan is None:
+        return exact, chemsys
+    if not isinstance(plan, Mapping):
+        raise ValueError("generation plan_state is not a mapping")
+    elements = plan.get("elements")
+    counts = plan.get("counts")
+    if (
+        not isinstance(elements, Sequence)
+        or isinstance(elements, (str, bytes))
+        or not isinstance(counts, Sequence)
+        or isinstance(counts, (str, bytes))
+        or not elements
+        or len(elements) != len(counts)
+    ):
+        raise ValueError("generation plan lacks aligned elements/counts")
+    combined: dict[str, int] = {}
+    for raw_element, raw_count in zip(elements, counts, strict=True):
+        element = str(raw_element).strip()
+        count = int(raw_count)
+        if not element or count <= 0:
+            raise ValueError("generation plan has invalid composition")
+        combined[element] = combined.get(element, 0) + count
+    if int(plan.get("N") or 0) != sum(combined.values()):
+        raise ValueError("generation plan N/count conservation failed")
+    pairs = sorted(combined.items())
+    plan_exact = "|".join(f"{element}:{count}" for element, count in pairs)
+    plan_chemsys = "-".join(element for element, _count in pairs)
+    if exact is not None and exact != plan_exact:
+        raise ValueError("generation exact composition ledger disagrees with plan_state")
+    if chemsys is not None and chemsys != plan_chemsys:
+        raise ValueError("generation chemsys ledger disagrees with plan_state")
+    return plan_exact, plan_chemsys
+
+
+def attach_requested_identity(
+    evaluated_rows: Sequence[Mapping[str, Any]],
+    generation_rows: Sequence[Mapping[str, Any]],
+    *,
+    label: str,
+) -> list[dict[str, Any]]:
+    """Attach request-ledger identity without filtering any fixed256 row."""
+
+    evaluated = indexed(evaluated_rows, label=f"{label} official")
+    generation = indexed(generation_rows, label=f"{label} generation")
+    result: list[dict[str, Any]] = []
+    for index in range(ATTEMPTS):
+        official = evaluated[index]
+        requested = generation[index]
+        if requested.get("sample_idx") is None or int(requested["sample_idx"]) != index:
+            raise ValueError(f"{label} sample identity changed at {index}")
+        if (
+            official.get("attempt_id") is not None
+            and requested.get("attempt_id") is not None
+            and str(official["attempt_id"]) != str(requested["attempt_id"])
+        ):
+            raise ValueError(f"{label} attempt identity changed at {index}")
+        exact, chemsys = requested_composition_identity(requested)
+        result.append(
+            {
+                **official,
+                "requested_sample_idx": index,
+                "requested_exact_composition_identity": exact,
+                "requested_chemsys": chemsys,
+            }
+        )
     return result
 
 
@@ -96,14 +185,36 @@ def paired_stream_delta(
     field: str,
     require_hull_known: bool,
 ) -> dict[int, float]:
-    left = indexed(f_rows)
-    right = indexed(m_rows)
+    left = indexed(f_rows, label="F official")
+    right = indexed(m_rows, label="M official")
     result: dict[int, float] = {}
     for index in range(ATTEMPTS):
         f = left[index]
         m = right[index]
-        if f.get("chemsys") != m.get("chemsys"):
-            raise ValueError(f"paired chemsys changed at {index}")
+        if (
+            f.get("requested_sample_idx") is None
+            or m.get("requested_sample_idx") is None
+            or int(f["requested_sample_idx"]) != index
+            or int(m["requested_sample_idx"]) != index
+        ):
+            raise ValueError(f"paired sample identity changed at {index}")
+        f_exact = f.get("requested_exact_composition_identity")
+        m_exact = m.get("requested_exact_composition_identity")
+        if f_exact is not None and m_exact is not None and f_exact != m_exact:
+            raise ValueError(f"paired exact composition changed at {index}")
+        f_chemsys = f.get("requested_chemsys")
+        m_chemsys = m.get("requested_chemsys")
+        if (
+            f_chemsys is not None
+            and m_chemsys is not None
+            and f_chemsys != m_chemsys
+        ):
+            raise ValueError(f"paired requested chemsys changed at {index}")
+        if field == "chgnet_energy_per_atom" and (
+            f.get("chgnet_relaxation_known") is not True
+            or m.get("chgnet_relaxation_known") is not True
+        ):
+            continue
         if require_hull_known and (
             f.get("official_hull_status") != "known"
             or m.get("official_hull_status") != "known"
@@ -131,18 +242,25 @@ def average_streams(values: Sequence[Mapping[int, float]]) -> dict[int, float]:
 def summarize_cell(group: str, stage: str, stream: int, route: str, report):
     count = report["counts"]
     direct = report["direct"]
+    if int(count["raw_attempts"]) != ATTEMPTS:
+        raise ValueError(f"{stage} s{stream} {route} denominator changed")
+    reconstructed = int(count["reconstructed"])
+    hull_known = int(count["hull_known_reconstructed"])
+    hull_unknown = int(count["hull_unknown_reconstructed"])
+    if hull_known + hull_unknown != reconstructed:
+        raise ValueError(f"{stage} s{stream} {route} hull accounting changed")
     return {
         "stage": stage,
         "stream": stream,
         "route": route,
         "requested": ATTEMPTS,
-        "reconstructed": int(count["reconstructed"]),
+        "reconstructed": reconstructed,
         "direct_joint": int(direct["joint_valid"]),
         "novel": int(count["novel"]),
         "unique": int(count["unique_representatives"]),
         "novel_unique": int(count["novel_unique"]),
-        "hull_known": int(count["hull_known_reconstructed"]),
-        "hull_unknown": int(count["hull_unknown_reconstructed"]),
+        "hull_known": hull_known,
+        "hull_unknown": hull_unknown,
         "strict_stable": int(count["strict_stable_all_hull_known"]),
         "strict_sun": int(count["strict_sun"]),
         "meta_stable": int(count["meta_stable_all_hull_known"]),
@@ -263,6 +381,11 @@ def main() -> None:
                     phase_diagrams=phase_diagrams,
                     unresolved=unresolved,
                     output_dir=output / f"cells/{stage}/s{stream}/{route}",
+                )
+                rows = attach_requested_identity(
+                    rows,
+                    protocol.read_jsonl(paths["generation"]),
+                    label=f"{stage} s{stream} {route}",
                 )
                 rows_by_key[(stage, stream, route)] = rows
                 cells.append(
