@@ -24,6 +24,12 @@ def write_jsonl(path, rows):
 
 
 class BuildC3FDLlamaExpanderDataTest(unittest.TestCase):
+    def test_top_level_builder_adds_source_root(self):
+        source = (ROOT / "scripts/build_c3fd_llama_expander_data.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('SOURCE_ROOT = PROJECT_ROOT / "src"', source)
+
     def test_builds_matched_F_and_M_without_outcomes(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

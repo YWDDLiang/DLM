@@ -17,8 +17,9 @@ import sys
 from typing import Any, Iterable, Mapping
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+SOURCE_ROOT = PROJECT_ROOT / "src"
+if str(SOURCE_ROOT) not in sys.path:
+    sys.path.insert(0, str(SOURCE_ROOT))
 
 from crystal_dlm.c3fd_rich_expander import (  # noqa: E402
     C3FD_RICH_EXPANDER_VERSION,
