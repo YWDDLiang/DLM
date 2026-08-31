@@ -1,6 +1,7 @@
 {
   "schema": "c3fd_llama_dlm_sun_execution_checklist_v6",
   "date": "2026-08-31",
+  "deadline_asia_shanghai": "2026-09-02T23:30:00+08:00",
   "status": "ACTIVE",
   "supersedes": [
     "C3FD_H1A2_FUSION_SUN_CHECKLIST_36H_V4",
@@ -83,8 +84,13 @@
     "conditional_periodic_relation_adapter": {
       "trigger": "only_if_auxiliary_geometry_improves_but_two_seed_raw_struct_valid_does_not",
       "integration": "zero_initialized_residual_h_prime_equals_h_plus_delta_h",
+      "forward": "acyclic_q0_soft_geometry_h_prime_q1",
+      "torus_and_PBC_tests": true,
+      "zero_only_Wout_and_log_gradient_steps_0_to_10": true,
+      "maximum_directed_pairs": 400,
       "step0_G1_logit_equality": true,
       "matched_control": "same_update_no_adapter_continuation",
+      "implementation_path": "reuse_CTV_hidden4096_output_head_pre_hook",
       "R03_role": "schedule_relationship_evidence_not_residual_validation"
     },
     "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",
@@ -94,9 +100,10 @@
   "forbidden": [
     "deterministic_scientific_field_completion",
     "compact_V2_rerun",
-    "alignment_or_listwise_training",
+    "unregistered_alignment_or_energy_only_listwise_training",
     "retry_replacement_rerank_best_of_n",
     "outcome_based_selection",
-    "AR_RL_GRPO_SMC"
+    "vanilla_dllm_GRPO_or_multiround_online_RL_before_offline_pass",
+    "AR_fallback_before_DLM_terminal"
   ]
 }

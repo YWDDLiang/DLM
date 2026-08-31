@@ -2,6 +2,8 @@
 
 Date: 2026-08-31
 
+Execution window: through 2026-09-02 23:30 Asia/Shanghai
+
 Status: authorized to begin only after the fixed F/M prospective run is
 terminal and fully disclosed
 
@@ -84,6 +86,9 @@ grouping sites inside each axis according to PlanGraph. On the frozen
 four-process panel it changed body completion `246 -> 248/256`, pooled joint
 validity by `+5/1024`, Strict S.U.N. `99 -> 117`, and Meta S.U.N. `523 -> 496`.
 The four repeats shared one Plan cohort and are not independent Planner seeds.
+The body-completion McNemar value was `p=0.7266`, so that change is safety/
+noninferiority evidence rather than an established body improvement. Conditional
+post-refiner structural validity was already approximately `99.7--99.8%`.
 
 R03 therefore supports only two inferences for the new design:
 
@@ -94,6 +99,36 @@ R03 therefore supports only two inferences for the new design:
 
 R03 did not train or test a residual network and cannot be cited as evidence
 that a residual adapter improves stability.
+
+### Related-work support and claim boundary
+
+The components of G2 have established precedents, although their exact
+combination in a masked crystal DLM remains unvalidated:
+
+- residual bottleneck adapters preserve a pretrained Transformer path while
+  adding task-specific corrections: Houlsby et al., *Parameter-Efficient
+  Transfer Learning for NLP*, https://arxiv.org/abs/1902.00751;
+- zero-initialized residual branches provide an exact identity start and stable
+  optimization: Bachlechner et al., *ReZero is All You Need*,
+  https://arxiv.org/abs/2003.04887;
+- zero-initialized attention injection into Llama provides a closer language-
+  model precedent: *LLaMA-Adapter*, https://arxiv.org/abs/2303.16199;
+- continuous distance-filtered atomistic messages are established in SchNet,
+  https://arxiv.org/abs/1706.08566;
+- periodic crystal multigraph messages are established in CGCNN,
+  https://arxiv.org/abs/1710.10324;
+- E(n)/E(3)-aware message passing is established by EGNN and NequIP,
+  https://arxiv.org/abs/2102.09844 and
+  https://arxiv.org/abs/2101.03164;
+- coupling invariant geometric processing to a sequence Transformer has a
+  related precedent in GVP-Transformer,
+  https://proceedings.mlr.press/v162/hsu22a.html.
+
+These papers support feasibility of identity-preserving adaptation and
+geometry-aware atomistic relations separately. They do not establish that the
+proposed soft-token-to-periodic-geometry residual improves DLM raw validity.
+That combination, its mask-time behavior, and its causal value relative to G1
+are the G2 experiment.
 
 Consequently, Phase G must first measure whether collisions/metric failures
 actually explain raw invalidity, then add an invariant joint-geometry loss. It
@@ -180,12 +215,45 @@ delta_h = W_out RelationMP(LN(h), G, fractional_coordinates, species)
 h_prime = h + delta_h
 ```
 
+Use one acyclic correction per DLM forward:
+
+```text
+q0 = LMHead(h)
+soft_geometry = TypedGeometry(q0, committed_tokens)
+h_prime = h + ResidualRelation(h, soft_geometry)
+q1 = LMHead(h_prime)
+```
+
+Never feed `q1` back into `TypedGeometry` during the same forward. For
+fractional-coordinate logits use circular means and concentration on the unit
+torus, not a linear expected coordinate. Weight uncertain/masked-site messages
+by concentration/entropy, project the soft metric to the SPD cone, and enumerate
+neighboring periodic images for triclinic minimum distances.
+
 `W_out` is initialized exactly to zero. The candidate must therefore reproduce
 the G1 logits to numerical tolerance before its first optimizer step. The
 residual touches lattice/XYZ states only; prompt, N, and element anchors retain
 the original path. Scalar distance/metric features make the adapter periodic
 and rotation-invariant. Its output is trained with the G1 losses and the
 original CE/reference anchor.
+
+The required insertion point is already technically accessible. The completed
+CTV feature audit hooked the 4096-dimensional input to the DLM output head and
+reproduced the rollout selected-token base probability with maximum error
+`8.88e-16`. G2 can therefore wrap the final hidden state before the unchanged
+LM head instead of rewriting the Transformer stack. Reuse that hook/equality
+infrastructure for the step-0 residual canary.
+
+Zero initialization has one optimization consequence: at step 0, gradients
+reach `W_out` but not the RelationMP layers behind it. Random-initialize the
+internal RelationMP, zero only `W_out`, verify finite/nonzero adapter activations,
+and log per-module gradient norms for steps `0--10` as the output projection
+opens the residual path.
+
+The pair graph has at most `20^2=400` directed pairs, which is small relative to
+the 8B backbone. Implement it over gathered typed legal logits/site states;
+never materialize dense pair-by-full-vocabulary tensors. Profile one sampler
+step and full exact-axis decoding before authorizing G2 training.
 
 If G2 fires, compare two matched continuations from the same G1 checkpoint:
 
@@ -201,6 +269,10 @@ This G2 trigger distinguishes two failures: if relation losses themselves do
 not learn, the targets/objective are wrong; if they learn but generation does
 not change, the factorized token backbone needs an explicit relational path.
 No extra CE epoch or schedule search is allowed between G1 and this decision.
+
+The verdict is **feasible with prerequisites**, not ready-by-default: G0
+round-trip, the G1 trigger, q0/q1 acyclicity, step-0 equality, torus/PBC tests,
+and the matched continuation must all pass before a scientific G2 launch.
 
 ## Phase R — model494-in-the-loop self-improvement
 

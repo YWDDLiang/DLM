@@ -2,6 +2,8 @@
 
 Date: 2026-08-31
 
+Execution window: through 2026-09-02 23:30 Asia/Shanghai
+
 Status: **active after explicit user approval**
 
 This checklist supersedes v4 and draft v5. It authorizes the two routes in
@@ -100,7 +102,15 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
   relation adapter only if token round-trip passes and auxiliary geometry errors
   improve, but raw struct-valid fails to improve consistently across both seeds.
   Require step-0 equality to G1 and compare against a same-update no-adapter
-  continuation; do not add epochs or search schedules to force the trigger.
+  continuation. Reuse the CTV 4096-d output-head pre-hook/equality path; do not
+  add epochs or search schedules to force the trigger.
+- [ ] Before G2, unit-test the acyclic `q0 -> soft geometry -> h' -> q1` forward,
+  circular fractional-coordinate means, entropy-gated messages, SPD metric
+  projection, triclinic neighboring-image distances, and translation/
+  same-species-permutation invariance.
+- [ ] Zero only the residual output projection, log adapter gradient norms for
+  steps 0--10, and profile gathered typed-logit O(N^2) memory/runtime; forbid
+  dense pair-by-vocabulary tensors.
 - [ ] Build MP20-train-only one-trajectory model494 basin-SFT targets, requiring
   exact composition, Direct structural validity, and finite refined energy.
 - [ ] Build one fixed K=4 same-composition pool and run shared-mask,

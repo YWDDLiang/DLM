@@ -1,6 +1,7 @@
 {
   "schema": "dlm_post_fm_structural_learning_and_refiner_feedback_plan_v2",
   "date": "2026-08-31",
+  "deadline_asia_shanghai": "2026-09-02T23:30:00+08:00",
   "status": "AUTHORIZED_AFTER_FM_TERMINAL",
   "supersedes": "DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1",
   "planner_retention": {
@@ -54,10 +55,20 @@
       ],
       "name": "periodic_residual_relation_adapter",
       "architecture": "h_prime_equals_h_plus_zero_initialized_Wout_of_two_low_rank_periodic_species_pair_RBF_message_passing_layers",
+      "forward_contract": "acyclic_q0_to_typed_soft_geometry_to_h_prime_to_q1_no_q1_recursion",
+      "fractional_coordinate_estimator": "circular_mean_and_concentration_on_unit_torus",
+      "uncertainty_policy": "entropy_or_concentration_gated_messages",
+      "metric_policy": "soft_metric_projected_to_SPD",
+      "triclinic_PBC": "enumerate_neighboring_images",
       "step0_base_logit_equality": true,
       "touches_positions": ["lattice", "XYZ"],
       "does_not_touch_positions": ["prompt", "N", "elements"],
       "matched_control": "same_G1_checkpoint_same_extra_updates_without_adapter",
+      "implementation_evidence": "CTV_output_head_pre_hook_exposed_hidden4096_with_base_probability_max_error_8p88e-16",
+      "zero_init_gradient_policy": "random_init_RelationMP_zero_only_Wout_log_module_grad_norm_steps_0_to_10",
+      "maximum_directed_site_pairs": 400,
+      "dense_pair_by_vocab_tensor_forbidden": true,
+      "feasibility_verdict": "feasible_with_prerequisites",
       "new_tokens": false,
       "sampler_change": false
     },
@@ -66,9 +77,24 @@
       "D2_safe_axis_strict_meta": [117, 496],
       "requested": 1024,
       "body_completion_D1_D2_of_256": [246, 248],
+      "body_completion_mcnemar_p": 0.7266,
+      "conditional_post_refiner_structural_validity": "approximately_99p7_to_99p8_percent",
       "supports": "commitment_structure_is_a_real_design_variable_and_interventions_can_polarize_hull",
       "does_not_support": "residual_adapter_already_validated",
       "independent_Planner_seeds": false
+    },
+    "related_work_support": {
+      "transformer_residual_adapter": "https://arxiv.org/abs/1902.00751",
+      "zero_initialized_residual": "https://arxiv.org/abs/2003.04887",
+      "zero_initialized_Llama_injection": "https://arxiv.org/abs/2303.16199",
+      "continuous_distance_atomistic_messages": "https://arxiv.org/abs/1706.08566",
+      "periodic_crystal_graph_messages": "https://arxiv.org/abs/1710.10324",
+      "equivariant_message_passing": [
+        "https://arxiv.org/abs/2102.09844",
+        "https://arxiv.org/abs/2101.03164"
+      ],
+      "geometry_sequence_transformer": "https://proceedings.mlr.press/v162/hsu22a.html",
+      "claim_boundary": "components_supported_separately_exact_masked_crystal_DLM_combination_unvalidated"
     }
   },
   "refiner_feedback": {
