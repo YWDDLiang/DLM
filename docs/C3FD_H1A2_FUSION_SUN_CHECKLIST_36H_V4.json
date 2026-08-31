@@ -1,0 +1,76 @@
+{
+  "schema": "c3fd_h1a2_fusion_sun_checklist_36h_v4",
+  "date": "2026-08-31",
+  "deadline": "2026-08-31T23:30:00+08:00",
+  "status": "active_execution_contract",
+  "supersedes": "C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3",
+  "user_decision": {
+    "alignment_training": "stopped_before_weights",
+    "calculate_available_sun_now": true,
+    "future_complete_h1a2_planner_requires_separate_training": true
+  },
+  "method": {
+    "name": "C3FD-H1A2 fusion",
+    "proposal": "C3FD exact composition and predicted LS/SG/VP",
+    "interface": "deterministic canonical H1A2 full-rich JSON completion",
+    "realizer": "old H1A2 rich masked DLM",
+    "refiner": "model494_tau800",
+    "new_complete_planner_trained": false
+  },
+  "prospective_cohort": {
+    "planner_sampling_seed": 20,
+    "source_rows": 1000,
+    "source_sha256": "1cbdb46128ea2ee62d924f4cec0c94fcd450e82b309535c317056ecbd63371df",
+    "selected": 256,
+    "unique_exact_compositions": 256,
+    "unique_chemsys": 252,
+    "manifest_sha256": "4e612fcdcf76e3b5ac1f0750e4ec773877d58dd6f75e2a217cb73798cf71811e",
+    "h1a2_full_sha256": "bbadae4ca2ae164a9aa12ccb29a9ce52dbf6acad98037fb2e757098d2ec01cf8",
+    "c3fd_v2_sha256": "9700462198c3bc5ab5252cd200e55b9fc7dc13e41ac9bd6f740e330c6a3af2a9",
+    "ledger_sha256": "5189fb8e19958425c3c33871b95fb5046ba147fc5b9bd3a30dad9ef2982f35df",
+    "outcomes_read": false
+  },
+  "prospective_generation": {
+    "job_id": 38914,
+    "state": "RUNNING",
+    "resources": "6_A800_48_CPU",
+    "arms": ["h1a2_fusion", "v2_seed82017", "v2_seed82018"],
+    "streams": [17, 18],
+    "temperature": 0.7,
+    "schedule": "exact_axis",
+    "tau": 800,
+    "fixed_denominator": 256,
+    "retry_rerank_replacement": false,
+    "duplicate_submission_forbidden": true
+  },
+  "official_union": {
+    "query_count": 1,
+    "include": [
+      "fusion_prospective_raw_refined",
+      "faithful_h0_r0s_eval38603_development",
+      "fresh_v2_sft_eval38768_development"
+    ],
+    "exclude": [
+      "alignment_pool_train_only_eval38881",
+      "malformed_schema_canary38420",
+      "d3po_already_official"
+    ],
+    "development_separate_from_headline": true,
+    "unknown_hull_policy": "missing"
+  },
+  "credential": {
+    "handle": "MP_API_KEY_FROM_USER_THREAD_CONTEXT",
+    "reask": false,
+    "persistent_copy": false,
+    "destroy_after_query": true
+  },
+  "forbidden": [
+    "alignment_training",
+    "claim_new_complete_planner",
+    "historical_3614_formal_training",
+    "survivor_rerank_replacement_best_of_n",
+    "parameter_or_cohort_sweep",
+    "ar_rl_grpo_smc",
+    "test_outcome_training"
+  ]
+}

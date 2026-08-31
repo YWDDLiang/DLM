@@ -2,7 +2,7 @@
 
 Date: 2026-08-30  
 Deadline: 2026-08-31 23:30 Asia/Shanghai  
-Status: active execution contract
+Status: **superseded by `C3FD_H1A2_FUSION_SUN_CHECKLIST_36H_V4`**
 
 ## Outcome target
 

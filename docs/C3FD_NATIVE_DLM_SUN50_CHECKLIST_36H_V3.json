@@ -2,7 +2,7 @@
   "schema": "c3fd_native_dlm_sun50_checklist_36h_v3",
   "date": "2026-08-30",
   "deadline": "2026-08-31T23:30:00+08:00",
-  "status": "active_execution_contract",
+  "status": "superseded_by_c3fd_h1a2_fusion_sun_checklist_36h_v4",
   "headline_targets": {
     "strict_sun_rate": 0.1,
     "meta_sun_rate": 0.5,

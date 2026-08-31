@@ -416,6 +416,21 @@
   `06cd5465...62b20`与`7f22580a...5526c`，hash复核通过。positive archive和
   `C3FD_NATIVE_TEACHER_SFT_FINAL_20260831.md/json`已冻结；该终态只证明Planner接口SFT
   完成，稳定性与SUN仍需固定raw-first canary和prospective评价。
+
+## 2026-08-31 C3FD–H1-A2 fusion与直接SUN决策
+
+- 用户停止alignment；没有产生任何alignment训练权重。已有pool/eval/group数据只保留为
+  development evidence；
+- 完整输出H1-A2 rich Plan需要未来单独重训Planner。当前fusion仅把C3FD预测的
+  composition/LS/SG/VP确定性补成canonical H1-A2 full-rich JSON，再复用旧rich DLM；
+- C3FD seed20已生成1000 Plans，SHA`1cbdb461...371df`。job38908冻结256 unique exact
+  compositions、252 chemsys，与MP20 train及所有已有cohort exact identity隔离；full/V2
+  两视图composition/order完全一致；
+- job38914当前用6A800/48CPU运行`h1a2_fusion + v2_seed82017 + v2_seed82018`
+  ×streams17/18，同组成、同噪声、temp0.7、exact-axis、model494 tau800；
+- generation/offline后只执行一次合并official query，覆盖fusion prospective、faithful
+  H0/R0S和fresh V2 SFT canary。train-only alignment池和malformed schema canary不查询；
+  主headline只使用fusion prospective，development SUN单独披露。
 - canary数据冻结器与CPU wrapper已实现：在任何policy sampling前，以固定seed从MP20标准
   train/validation各选`128`个、总计`256`个互不重复exact composition；同时物化C3FD
   seed17/seed18两套V2 predicted Plan，不做Planner checkpoint选择，也不复制teacher body
