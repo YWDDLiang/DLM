@@ -1,0 +1,78 @@
+{
+  "schema": "dlm_post_fm_structural_learning_and_refiner_feedback_plan_v2",
+  "date": "2026-08-31",
+  "status": "AUTHORIZED_AFTER_FM_TERMINAL",
+  "supersedes": "DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1",
+  "planner_retention": {
+    "metric": "final_generated_body_composition_validity_on_requested_denominator",
+    "minimum": 0.95,
+    "sun_required_for_retention": false,
+    "full_FM_disclosure": true,
+    "preferred_integrated_route_if_retained": "M",
+    "F_role": "formula_only_ablation_and_engineering_fallback"
+  },
+  "token_representation": {
+    "schema": "dynamic_7_plus_4N",
+    "length_resolution_angstrom": 0.1,
+    "angle_resolution_degree": 1,
+    "fractional_coordinate_resolution": 0.01,
+    "maximum_atoms": 20,
+    "new_vocab_before_quantization_audit": false
+  },
+  "geometry_training": {
+    "decode_mask_added": false,
+    "losses": [
+      "masked_CE",
+      "metric_tensor_and_log_VPA",
+      "species_pair_periodic_RDF",
+      "short_distance_barrier",
+      "coordination_histogram"
+    ],
+    "invariances": [
+      "global_fractional_translation",
+      "same_species_site_permutation"
+    ],
+    "loss_calibration": "one_train_only_gradient_norm_calibration"
+  },
+  "refiner_feedback": {
+    "stage1": "single_trajectory_model494_basin_SFT",
+    "stage1_positive_requirements": [
+      "exact_atom_multiset",
+      "Direct_structural_validity",
+      "finite_refined_energy"
+    ],
+    "stage2": "offline_K4_group_relative_diffusion_preference",
+    "reward_order": [
+      "parse_and_exact_composition",
+      "raw_Direct_and_minimum_distance",
+      "refined_Direct",
+      "same_composition_refined_CHGNet_energy",
+      "raw_CHGNet_and_correction_magnitude"
+    ],
+    "vanilla_dllm_GRPO": false,
+    "maximum_on_policy_refreshes_after_offline_success": 1,
+    "official_hull_role": "batched_login_side_validation_and_final_evaluation"
+  },
+  "ar_fallback": {
+    "name": "C3FD_conditioned_CrysLLMGen",
+    "trigger": "geometry_aware_refiner_feedback_DLM_is_terminal_raw_negative",
+    "components": [
+      "frozen_C3FD",
+      "M_soft_prefix_projector",
+      "Llama_LoRA_AR_7_plus_4N_generator",
+      "model494_tau800"
+    ],
+    "reuse_refiner_feedback": true,
+    "run_in_parallel_with_DLM": false
+  },
+  "forbidden": [
+    "new_decode_geometry_mask_as_primary_method",
+    "all_refined_outputs_are_positive",
+    "energy_only_reward",
+    "vanilla_dllm_GRPO",
+    "network_access_from_GPU_jobs",
+    "best_of_N_survivor_replacement",
+    "result_selected_seed_checkpoint",
+    "AR_fallback_before_DLM_terminal"
+  ]
+}

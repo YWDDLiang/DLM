@@ -2,7 +2,8 @@
 
 Date: 2026-08-31
 
-Status: planning-only until the fixed F/M prospective run is terminal
+Status: **superseded** by
+`DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md`
 
 ## Decision in one sentence
 

@@ -74,27 +74,37 @@ after success.
 
 ## Phase 6 — conditional post-F/M DLM stabilization
 
-The planning contract is
-`DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1.md`. This phase is not
-authorized to start until the fixed F/M prospective result is complete and
-disclosed.
+The active planning contract is
+`DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md`. The user has
+authorized it to begin after the fixed F/M prospective result is complete and
+disclosed. The earlier decode-mask-first v1 plan is superseded.
 
 - [x] Audit whether model494-relaxed geometry was previously distilled into the
   DLM: it was proposed but never executed. SGTC and D3PO are different methods.
 - [x] Audit current decoder constraints: schema/exact chemistry, nondegenerate
   lattice, and exact/PBC duplicate rejection already exist.
-- [ ] Apply the frozen M-mainline noninferiority rule. Keep F as the disclosed
-  ablation; never delete either route's result.
-- [ ] If M passes, add one species-aware PBC gross-overlap token mask and run a
-  train/validation-only decoder A/B with fixed noise.
-- [ ] Build one immutable MP20-train-only, one-trajectory-per-row model494
-  relaxed-target dataset under M; no energy filtering or winner selection.
-- [ ] Train two fresh DLM LoRA seeds from the shared pretrained crystal base,
-  mixing original MP20 and single-refiner-target geometry CE.
-- [ ] Run the frozen 2x2 weight × decoder screen, raw first. Only after that
-  screen may a new prospective cohort and official query be frozen.
+- [ ] Retain each F/M route whose final requested-denominator composition
+  validity is at least 95%. S.U.N. is not a Planner-retention gate; all outcomes
+  remain disclosed.
+- [ ] Run a CPU-only quantization audit for the current 0.1-A/1-degree/0.01-frac
+  `7+4N` tokens. Extend the vocabulary only if tokenization itself changes
+  structural validity by more than 1%.
+- [ ] Add differentiable periodic metric/RDF/short-distance/coordination losses
+  to DLM training. Do not add a new inference-time geometry mask.
+- [ ] Train two fresh geometry-aware DLM seeds and run a fixed raw-first
+  train/chemsys-validation screen.
+- [ ] Build MP20-train-only one-trajectory model494 basin-SFT targets, requiring
+  exact composition, Direct structural validity, and finite refined energy.
+- [ ] Build one fixed K=4 same-composition pool and run shared-mask,
+  reference-corrected group-relative diffusion preference with raw validity
+  lexicographically before refined energy.
+- [ ] Query MP references only after a complete immutable batch exists, from a
+  login-side process; never query from GPU training jobs or per update.
+- [ ] If the complete DLM structural-learning route remains raw-negative,
+  implement the matched C3FD-conditioned AR CrysLLMGen fallback. Do not launch
+  it in parallel with the DLM route.
 - [ ] Treat refined-only gains as system effects; require raw Direct/energy
-  evidence for a DLM stability contribution.
+  evidence for a DLM contribution.
 
 ## Credential and execution boundary
 
@@ -103,6 +113,7 @@ environment for each explicitly authorized query. Never write or echo it to
 Git, docs, checklist, automation, commands, logs, hashes, manifests, or
 archives. Unset it immediately and verify no process/runtime copy remains.
 
-No retry/replacement/rerank/best-of-N, outcome-based setting selection, AR body
-executor, RL/GRPO/SMC, C3FD retraining, compact-V2 rerun, or alignment is
-authorized.
+No retry/replacement/rerank/best-of-N, outcome-based setting selection,
+energy-only reward, vanilla dLLM GRPO, C3FD retraining, or compact-V2 rerun is
+authorized. The AR body executor is authorized only as the final fallback after
+the DLM route is terminal.

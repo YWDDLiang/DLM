@@ -1,7 +1,7 @@
 {
   "schema": "dlm_post_fm_refiner_distillation_geometry_plan_v1",
   "date": "2026-08-31",
-  "status": "PLANNING_ONLY_UNTIL_FM_TERMINAL",
+  "status": "SUPERSEDED_BY_DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2",
   "historical_audit": {
     "model494_geometry_to_dlm_distillation_executed": false,
     "evidence": {

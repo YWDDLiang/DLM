@@ -65,15 +65,19 @@
     "dlm_generation_status": "running_recovery_38948"
   },
   "post_fm": {
-    "status": "planning_only_until_fm_terminal",
-    "method_doc": "DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1.md",
+    "status": "authorized_after_fm_terminal",
+    "method_doc": "DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
     "historical_model494_geometry_distillation_executed": false,
-    "M_mainline_if_noninferior": true,
+    "planner_retention_metric": "final_generated_body_composition_validity",
+    "planner_retention_minimum": 0.95,
+    "SUN_required_for_planner_retention": false,
+    "M_preferred_if_retained": true,
     "F_role_after_M_selection": "disclosed_formula_only_ablation",
-    "first_decoder_change": "species_aware_PBC_gross_overlap_mask",
-    "first_training_change": "fresh_DLM_model494_relaxed_geometry_distillation",
-    "matched_screen": "2x2_weights_by_decoder_raw_first",
-    "execution_authorized": false
+    "new_decode_geometry_mask": false,
+    "first_training_change": "periodic_geometry_aware_DLM_objective",
+    "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",
+    "AR_fallback": "C3FD_conditioned_CrysLLMGen_only_after_DLM_terminal",
+    "execution_authorized": true
   },
   "forbidden": [
     "deterministic_scientific_field_completion",
