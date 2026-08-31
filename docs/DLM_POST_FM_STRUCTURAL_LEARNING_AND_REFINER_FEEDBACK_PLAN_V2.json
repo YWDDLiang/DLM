@@ -29,6 +29,19 @@
     "model494_refined_cross_cell_reuse": false,
     "forbidden": ["StructureMatcher_clustering", "near_duplicate_merge", "survivor_filter", "denominator_change"]
   },
+  "development_compute_gate": {
+    "order": ["body_and_Direct", "model494_and_CHGNet", "official_hull"],
+    "G1_G2_primary_target": "raw_structural_validity",
+    "continue_requirements": {
+      "all_request_comp_valid_minimum": 0.95,
+      "body_noninferiority_floor_pp": -1.0,
+      "raw_struct_valid_delta_each_training_seed": "strictly_positive"
+    },
+    "on_failure": "archive_all_raw_and_Direct_rows_as_raw_stage_negative_skip_model494_CHGNet_official",
+    "G1_auxiliary_only_improvement": "may_trigger_G2_but_does_not_authorize_G1_downstream_energy_eval",
+    "feedback_policy": "raw_validity_is_safety_gate_but_registered_label_pool_still_requires_model494_CHGNet",
+    "final_prospective": "all_admitted_arms_complete_full_endpoints_no_result_based_removal"
+  },
   "token_representation": {
     "schema": "dynamic_7_plus_4N",
     "length_resolution_angstrom": 0.1,

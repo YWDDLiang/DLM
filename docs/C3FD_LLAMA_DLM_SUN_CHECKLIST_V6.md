@@ -95,6 +95,12 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
   comparison and share it across BASE/G1/G2/feedback and all streams.
 - [ ] Reuse CHGNet results only for exact-identical raw structures with full
   per-attempt remapping; never merge near-equivalent or model494-refined rows.
+- [ ] For G1/G2 development, run body+Direct first. Continue to model494/CHGNet
+  only if comp-valid is at least95%, body is within-1 pp of control, and both
+  training-seed aggregates improve raw struct-valid.
+- [ ] If that gate fails, archive every raw/Direct row and stop downstream
+  compute. Do not delete the arm; do not apply this shortcut after final
+  prospective arms are frozen.
 - [ ] Decompose frozen raw failures into parse, composition, lattice,
   PBC-distance `<0.5 A`, CrystalNN/graph, and valid-but-high-energy classes;
   report how much invalidity is actually geometric.

@@ -60,6 +60,39 @@ stream17 and `113/248` stream18 paired ordinals, so this cache can remove about
 cells: only `1/245` and `1/248` are byte-identical, and continuous CUDA
 nondeterminism is part of the registered process.
 
+## Development compute gate
+
+Future method-development screens use a preregistered cheap-to-expensive ladder:
+
+```text
+body generation -> parse/composition/Direct -> model494/CHGNet -> official
+```
+
+For G1 and G2 the primary development target is raw structural validity. Run
+only body generation and Direct first. Continue to model494/CHGNet only when:
+
+- all-request composition validity remains at least `95%`;
+- body execution is noninferior to its matched control by at most `1 pp`;
+- each fixed training-seed aggregate has positive raw struct-valid delta versus
+  the matched control.
+
+If the gate fails, preserve every raw attempt and Direct row, classify the arm
+as a raw-stage negative, and do not spend GPU time on model494, CHGNet, or
+official hull. If G1 auxiliary geometry errors improve while its raw target
+fails, that evidence may trigger G2 under the separately frozen G2 rule; it
+does not authorize downstream G1 energy evaluation.
+
+For refiner-feedback policies, raw validity is a safety gate rather than the
+primary energy endpoint. A trained policy that violates the frozen raw-validity
+floor also stops before downstream CHGNet evaluation. Label construction itself
+still requires the one registered model494/CHGNet feedback pool and cannot use
+this gate to manufacture missing rewards.
+
+This compute gate applies only to development method selection. Once a final
+prospective comparison is frozen, every included arm completes the full
+raw/refined/official endpoint contract regardless of direction. No arm is
+removed from the report.
+
 ## Why decoding constraints are no longer the primary route
 
 The current `7+4N` representation already has enough numerical granularity for
@@ -426,6 +459,11 @@ for the DLM method after observing the same prospective outcomes.
   ledger once and reuse it across all final DLM arms/streams.
 - [ ] Add exact-identity raw-structure CHGNet caching with per-attempt result
   remapping; never cache/refold model494-refined outcomes across cells.
+- [ ] Run Direct-only development gates before model494/CHGNet. Stop and archive
+  any G1/G2 arm with nonpositive raw struct-valid delta in either training-seed
+  aggregate or body regression beyond 1 pp.
+- [ ] Apply the compute gate only before final method freeze; every arm admitted
+  to final prospective evaluation must complete raw/refined/official endpoints.
 - [ ] Run the CPU-only `7+4N` quantization-sufficiency audit.
 - [ ] Decompose existing raw failures into parse, composition, lattice,
   collision, graph, and energy-only classes before training.

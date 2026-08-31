@@ -85,6 +85,12 @@
       "preserve_attempt_rows": true,
       "refined_cross_cell_reuse": false
     },
+    "development_compute_gate": {
+      "first_stage": "body_and_Direct_only",
+      "continue_if": "comp_valid_ge_95pct_and_body_delta_ge_minus_1pp_and_each_seed_raw_struct_valid_delta_positive",
+      "failure_action": "archive_raw_negative_skip_model494_CHGNet_official",
+      "final_prospective_shortcut_forbidden": true
+    },
     "new_decode_geometry_mask": false,
     "first_training_change": "periodic_geometry_aware_DLM_objective",
     "geometry_hypothesis": {
