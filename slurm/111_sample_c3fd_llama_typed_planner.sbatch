@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
 #SBATCH --mem=120G
 #SBATCH --time=03:00:00
@@ -87,8 +87,8 @@ sha256sum \
   "${FUSED_FINAL}/llama_adapter/adapter_model.safetensors" "${SAMPLER}" \
   >"${RUN}/INPUTS.sha256"
 
-env OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=16 MKL_NUM_THREADS=16 \
-  NUMEXPR_NUM_THREADS=16 \
+env OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
+  NUMEXPR_NUM_THREADS=8 \
   "${PYTHON}" "${SAMPLER}" \
   --c3fd-checkpoint "${C3FD_CHECKPOINT}" --data-dir "${DATA}" \
   --llama-model "${LLAMA_MODEL}" --fused-planner-final "${FUSED_FINAL}" \

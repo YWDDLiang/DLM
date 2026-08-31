@@ -12,7 +12,7 @@ SOURCE = (ROOT / "slurm/111_sample_c3fd_llama_typed_planner.sbatch").read_text(
 
 class Slurm111StaticTest(unittest.TestCase):
     def test_resources_and_fixed_sampling_contract(self):
-        self.assertIn("#SBATCH --cpus-per-task=16", SOURCE)
+        self.assertIn("#SBATCH --cpus-per-task=8", SOURCE)
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", SOURCE)
         self.assertIn("sampling_seed\t21", SOURCE)
         self.assertIn("requested\t256", SOURCE)

@@ -7,7 +7,7 @@ SOURCE = (ROOT / "slurm/110_train_c3fd_llama_typed_planner.sbatch").read_text(en
 
 class Slurm110Test(unittest.TestCase):
     def test_one_gpu_one_seed_one_epoch_final_only(self):
-        self.assertIn("#SBATCH --cpus-per-task=16", SOURCE)
+        self.assertIn("#SBATCH --cpus-per-task=8", SOURCE)
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", SOURCE)
         self.assertIn("--seed 85017 --epochs 1", SOURCE)
         self.assertIn("--batch-size 2 --grad-accum 8", SOURCE)
