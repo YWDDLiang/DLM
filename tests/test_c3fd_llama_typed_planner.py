@@ -128,6 +128,18 @@ class TypedInputAndHeadTest(unittest.TestCase):
                 soft_position_indices=torch.tensor([0, 0]),
             )
 
+    @unittest.skipUnless(torch.cuda.is_available(), "CUDA device regression")
+    def test_cpu_typed_ids_are_moved_with_their_boolean_mask(self):
+        module = C3FDLlamaTypedResidualPlanner(config()).cuda()
+        embedded = module.typed_inputs_embeds(
+            stability_goal_ids=torch.tensor([1]),
+            proposal_state_ids=torch.tensor([[0, 1]]),
+            previous_species_indices=torch.tensor([[-1, 0]]),
+            previous_count_values=torch.tensor([[0, 1]]),
+            ledger_features=torch.zeros(1, 2, 3),
+        )
+        self.assertEqual(embedded.device.type, "cuda")
+
     def test_all_residual_output_heads_are_zero_initialized(self):
         module = C3FDLlamaTypedResidualPlanner(config())
         heads = [module.proposal_head, module.action_head, *module.soft_field_heads.values()]

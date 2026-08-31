@@ -438,6 +438,7 @@ class C3FDLlamaTypedResidualPlanner(nn.Module):
         proposal_state_ids = proposal_state_ids.to(device=device, dtype=torch.long)
         species = species.to(device=device)
         counts = counts.to(device=device)
+        sentinel = sentinel.to(device=device)
         ledger_features = ledger_features.to(
             device=device, dtype=self.ledger_projection.weight.dtype
         )
