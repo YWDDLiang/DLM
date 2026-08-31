@@ -33,7 +33,13 @@
       "D3PO_already_official"
     ],
     "query_count": 1,
-    "claim": "development_only"
+    "claim": "development_only",
+    "status": "complete",
+    "source_manifest_sha256": "f738f7b225f7d9813a02390d334841c2bbbc2cd4ad227e2ade3ec78a019d25d7",
+    "query_count": 739,
+    "query_resolved": 723,
+    "query_unresolved": 16,
+    "result_sha256": "84ea1984d2ccd56a76b271b06f6dc7eb212d2c0670869fa49950982ab2bc1219"
   },
   "training": {
     "source": "MP20_train_validation_teacher_rich_suffix_only",

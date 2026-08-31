@@ -451,3 +451,27 @@
   但普通teacher CE没有学回raw空间稳定关系，稳定性仍主要由refiner提供。按预登记自动
   开启一次fresh MP20-train on-policy same-composition safety alignment；不使用旧3614、
   不选择seed/checkpoint，也不消费prospective cohort。
+
+## 2026-08-31 C3FD–Llama conditioner与DLM执行主线
+
+- 用户否决deterministic rich-field completion并取消job38914；该job状态
+  `CANCELLED`、elapsed `00:16:13`，partial永不恢复或评价。alignment也在产生任何
+  权重前停止；
+- active method commit链`693a7e3..160ff93`已push。F固定C3FD formula并由Llama
+  生成rich suffix；M保持新建两层soft-prefix projector，将冻结C3FD semantic state映射
+  为K=4个Llama embeddings。二者可见prompt/answer、Llama base、old rich DLM和
+  model494完全匹配；DLM仍是论文方法主体；
+- development official input冻结16cells/739 chemsys，SOURCE SHA
+  `f738f7b...25d7`。凭证隔离query v3成功：723 resolved、16 explicit unknown、0 retry、
+  database `2026.04.13`。final JSON SHA`84ea1984...c1219`；
+- refined development S.U.N.：faithful H0 `8.789/41.992%`，R0S
+  `7.031/42.188%`；compact V2 seed82017/82018均Strict `8.203%`，Meta
+  `54.883/55.273%`。后者含MP20 train/val overlap，只作development evidence；所有raw
+  SUN明显较低，强化“raw DLM realization为主机制endpoint”的结论；
+- matched F/M data job38930 `COMPLETED 0:0/13s/0GPU`：train/val各
+  `27136/9047`，visible formula/answer逐行一致，M feature width54；MP20本身无完整
+  semantic trace的`2578/888`行保留并显式编码availability=0，不过滤；
+- train jobs38931/38932分别因空Bash数组nounset和manifest缺seed在早期取消并保留
+  negative；均未产生checkpoint、未读outcome。参数不变恢复job38933当前用
+  `4A800/32CPU`运行F84017/F84018/M84117/M84118，各固定一epoch/1696 updates、final
+  only、无selection。

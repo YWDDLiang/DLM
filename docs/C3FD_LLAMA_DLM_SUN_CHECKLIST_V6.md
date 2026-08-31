@@ -17,12 +17,12 @@ ceiling and immutable-run rules.
 
 ## Phase 1 — calculate already available development S.U.N.
 
-- [ ] Collect faithful H0/R0S eval38603 raw/refined official inputs.
-- [ ] Collect compact-V2 fresh-SFT canary eval38768 raw/refined official inputs.
-- [ ] Exclude train-only alignment pool38881, malformed canary38420,
+- [x] Collect faithful H0/R0S eval38603 raw/refined official inputs.
+- [x] Collect compact-V2 fresh-SFT canary eval38768 raw/refined official inputs.
+- [x] Exclude train-only alignment pool38881, malformed canary38420,
   cancelled38914, and already-official D3PO.
-- [ ] Freeze one development official-input manifest and SOURCE_SHA.
-- [ ] Execute one credential-isolated MP query, unset the key immediately, and
+- [x] Freeze one development official-input manifest and SOURCE_SHA.
+- [x] Execute one credential-isolated MP query, unset the key immediately, and
   finalize separate faithful and compact-V2 development S.U.N. reports.
 
 This development query is explicitly requested before new training. A later
@@ -31,22 +31,22 @@ after success.
 
 ## Phase 2 — minimal shared F/M implementation
 
-- [ ] Add one composition-prefill Rich-suffix prompt/target helper.
-- [ ] Add one fixed-size frozen C3FD semantic-state feature packer for M.
-- [ ] Add one two-layer projector that maps the feature vector to `K` Llama
+- [x] Add one composition-prefill Rich-suffix prompt/target helper.
+- [x] Add one fixed-size frozen C3FD semantic-state feature packer for M.
+- [x] Add one two-layer projector that maps the feature vector to `K` Llama
   soft-prefix embeddings and prepends them through `inputs_embeds`.
-- [ ] Extend the existing MP20 H1 Planner data builder with `formula_only` and
+- [x] Extend the existing MP20 H1 Planner data builder with `formula_only` and
   `c3fd_soft_prefix` conditioning modes.
-- [ ] Reuse the existing Llama+LoRA trainer and loss; add no new backbone or
+- [x] Reuse the existing Llama+LoRA trainer and loss; add no new backbone or
   custom attention path. Only M's prefix projector is new.
-- [ ] Extend sampling to lock the C3FD formula and generate only the rich
+- [x] Extend sampling to lock the C3FD formula and generate only the rich
   suffix, then validate the canonical seven-line H1-A2 Plan.
-- [ ] Add train/serve round-trip, prefix-shape/mask, formula immutability,
+- [x] Add train/serve round-trip, prefix-shape/mask, formula immutability,
   no-fill, and F/M visible-answer-identity tests.
 
 ## Phase 3 — train and interface canary
 
-- [ ] Build immutable MP20 train/validation F/M data with identical source rows
+- [x] Build immutable MP20 train/validation F/M data with identical source rows
   and rich targets.
 - [ ] Train two fixed seeds per route for one adaptation epoch from the same
   historical H1-A2 rich Planner initialization; final checkpoint only.

@@ -1,0 +1,26 @@
+{
+  "schema": "c3fd_llama_development_sun_summary_v1",
+  "date": "2026-08-31",
+  "claim_scope": "development_only",
+  "official_query": {
+    "wanted_chemsys": 739,
+    "resolved": 723,
+    "unresolved": 16,
+    "transport_retries": 0,
+    "database_version": "2026.04.13",
+    "source_manifest_sha256": "f738f7b225f7d9813a02390d334841c2bbbc2cd4ad227e2ade3ec78a019d25d7",
+    "completion_manifest_sha256": "e934889e8349722beada5aa43ecf94b283fb91ec921654f7ba81710d37f7c1a7"
+  },
+  "stream_aggregated": {
+    "faithful_raw_H0": {"strict": 0.02930, "meta": 0.12500},
+    "faithful_raw_R0S": {"strict": 0.02930, "meta": 0.13672},
+    "faithful_refined_H0": {"strict": 0.08789, "meta": 0.41992},
+    "faithful_refined_R0S": {"strict": 0.07031, "meta": 0.42188},
+    "compact_v2_raw_82017": {"strict": 0.01562, "meta": 0.11719},
+    "compact_v2_raw_82018": {"strict": 0.01367, "meta": 0.12305},
+    "compact_v2_refined_82017": {"strict": 0.08203, "meta": 0.54883},
+    "compact_v2_refined_82018": {"strict": 0.08203, "meta": 0.55273}
+  },
+  "result_sha256": "84ea1984d2ccd56a76b271b06f6dc7eb212d2c0670869fa49950982ab2bc1219",
+  "selection": false
+}
