@@ -28,6 +28,12 @@ from crystal_dlm.h1_llm_planner import (  # noqa: E402
     ensure_peft_cache_compat,
     load_llama3_compatible_config,
 )
+from crystal_dlm.c3fd_rich_expander import (  # noqa: E402
+    FEATURE_DIM,
+    SoftPrefixProjector,
+    SoftPrefixProjectorConfig,
+    build_expander_prompt,
+)
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -38,6 +44,9 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
 
 
 def format_prompt(tokenizer, record: dict[str, Any]) -> str:
+    expander_plan = record.get("expander_plan_state")
+    if isinstance(expander_plan, dict):
+        return build_expander_prompt(tokenizer, expander_plan)
     prompt = record.get("prompt")
     if prompt:
         return str(prompt)
@@ -78,11 +87,19 @@ class FormulaPlanDataset(Dataset):
             prompt_ids = prompt_ids[-max_prompt_tokens:]
         input_ids = prompt_ids + answer_ids
         labels = [-100] * len(prompt_ids) + answer_ids
-        return {
+        item = {
             "input_ids": torch.tensor(input_ids, dtype=torch.long),
             "labels": torch.tensor(labels, dtype=torch.long),
             "sample_weight": float(row.get("sample_weight", 1.0) or 1.0),
         }
+        features = row.get("soft_prefix_features")
+        if features is not None:
+            if not isinstance(features, list) or len(features) != FEATURE_DIM:
+                raise ValueError("soft-prefix feature vector has the wrong width")
+            item["soft_prefix_features"] = torch.tensor(
+                [float(value) for value in features], dtype=torch.float32
+            )
+        return item
 
 
 def collate(batch: list[dict[str, Any]], pad_token_id: int) -> dict[str, torch.Tensor]:
@@ -97,7 +114,18 @@ def collate(batch: list[dict[str, Any]], pad_token_id: int) -> dict[str, torch.T
         attention_mask[idx, :length] = 1
         labels[idx, :length] = item["labels"]
         weights[idx] = float(item["sample_weight"])
-    return {"input_ids": input_ids, "attention_mask": attention_mask, "labels": labels, "sample_weight": weights}
+    output = {
+        "input_ids": input_ids,
+        "attention_mask": attention_mask,
+        "labels": labels,
+        "sample_weight": weights,
+    }
+    prefix_rows = [item.get("soft_prefix_features") for item in batch]
+    if any(value is not None for value in prefix_rows):
+        if not all(value is not None for value in prefix_rows):
+            raise ValueError("one batch cannot mix F and M conditioning rows")
+        output["soft_prefix_features"] = torch.stack(prefix_rows)
+    return output
 
 
 def weighted_token_loss(logits: torch.Tensor, labels: torch.Tensor, sample_weight: torch.Tensor) -> torch.Tensor:
@@ -115,20 +143,58 @@ def weighted_token_loss(logits: torch.Tensor, labels: torch.Tensor, sample_weigh
     return (per_sample * weights).sum() / weights.sum().clamp_min(1.0)
 
 
+def forward_batch(model, batch, projector=None):
+    input_ids = batch["input_ids"]
+    attention_mask = batch["attention_mask"]
+    labels = batch["labels"]
+    features = batch.get("soft_prefix_features")
+    if projector is None:
+        if features is not None:
+            raise ValueError("M rows require a soft-prefix projector")
+        outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+        return outputs, labels
+    if features is None:
+        raise ValueError("soft-prefix projector requires M feature rows")
+    token_embeddings = model.get_input_embeddings()(input_ids)
+    prefix = projector(features.to(dtype=torch.float32)).to(
+        dtype=token_embeddings.dtype
+    )
+    inputs_embeds = torch.cat([prefix, token_embeddings], dim=1)
+    prefix_mask = torch.ones(
+        (attention_mask.shape[0], prefix.shape[1]),
+        dtype=attention_mask.dtype,
+        device=attention_mask.device,
+    )
+    extended_attention = torch.cat([prefix_mask, attention_mask], dim=1)
+    prefix_labels = torch.full(
+        (labels.shape[0], prefix.shape[1]),
+        -100,
+        dtype=labels.dtype,
+        device=labels.device,
+    )
+    extended_labels = torch.cat([prefix_labels, labels], dim=1)
+    outputs = model(inputs_embeds=inputs_embeds, attention_mask=extended_attention)
+    return outputs, extended_labels
+
+
 @torch.no_grad()
-def evaluate(model, loader: DataLoader, device: torch.device, max_batches: int) -> float:
+def evaluate(model, loader: DataLoader, device: torch.device, max_batches: int, projector=None) -> float:
     model.eval()
+    if projector is not None:
+        projector.eval()
     total = 0.0
     count = 0
     for batch_idx, batch in enumerate(loader):
         if max_batches > 0 and batch_idx >= max_batches:
             break
         batch = {key: value.to(device) for key, value in batch.items()}
-        outputs = model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"])
-        loss = weighted_token_loss(outputs.logits, batch["labels"], batch["sample_weight"])
+        outputs, labels = forward_batch(model, batch, projector=projector)
+        loss = weighted_token_loss(outputs.logits, labels, batch["sample_weight"])
         total += float(loss.item())
         count += 1
     model.train()
+    if projector is not None:
+        projector.train()
     return total / max(1, count)
 
 
@@ -156,6 +222,8 @@ def main() -> None:
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=32)
     parser.add_argument("--lora-dropout", type=float, default=0.05)
+    parser.add_argument("--soft-prefix-length", type=int, default=0)
+    parser.add_argument("--soft-prefix-projector-hidden", type=int, default=1024)
     parser.add_argument("--gradient-checkpointing", action="store_true", default=True)
     parser.add_argument("--no-gradient-checkpointing", dest="gradient_checkpointing", action="store_false")
     args = parser.parse_args()
@@ -205,6 +273,19 @@ def main() -> None:
     model.to(device)
     model.train()
 
+    projector = None
+    if int(args.soft_prefix_length) > 0:
+        if SoftPrefixProjector is None:
+            raise RuntimeError("PyTorch soft-prefix projector is unavailable")
+        projector_config = SoftPrefixProjectorConfig(
+            input_dim=FEATURE_DIM,
+            prefix_length=int(args.soft_prefix_length),
+            model_hidden_dim=int(config.hidden_size),
+            projector_hidden_dim=int(args.soft_prefix_projector_hidden),
+        )
+        projector = SoftPrefixProjector(projector_config).to(device)
+        projector.train()
+
     train_ds = FormulaPlanDataset(args.data_dir / "train.jsonl", tokenizer, args.max_length)
     val_ds = FormulaPlanDataset(args.data_dir / "val.jsonl", tokenizer, args.max_length)
     train_loader = DataLoader(
@@ -222,7 +303,12 @@ def main() -> None:
 
     updates_per_epoch = math.ceil(len(train_loader) / max(1, int(args.grad_accum)))
     total_updates = max(1, int(math.ceil(float(args.epochs) * updates_per_epoch)))
-    optimizer = torch.optim.AdamW(model.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay))
+    trainable_parameters = [
+        parameter for parameter in model.parameters() if parameter.requires_grad
+    ]
+    if projector is not None:
+        trainable_parameters.extend(projector.parameters())
+    optimizer = torch.optim.AdamW(trainable_parameters, lr=float(args.lr), weight_decay=float(args.weight_decay))
     scheduler = get_cosine_schedule_with_warmup(optimizer, num_warmup_steps=int(args.warmup_steps), num_training_steps=total_updates)
 
     write_payload = {
@@ -243,6 +329,11 @@ def main() -> None:
             "dropout": float(args.lora_dropout),
             "continued_from_checkpoint": bool(args.checkpoint_path),
         },
+        "soft_prefix": (
+            None
+            if projector is None
+            else projector.config.to_dict()
+        ),
     }
     (args.output_dir / "train_config.json").write_text(json.dumps(write_payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -256,13 +347,13 @@ def main() -> None:
     while global_step < total_updates:
         for batch in train_loader:
             batch = {key: value.to(device) for key, value in batch.items()}
-            outputs = model(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"])
-            loss = weighted_token_loss(outputs.logits, batch["labels"], batch["sample_weight"])
+            outputs, labels = forward_batch(model, batch, projector=projector)
+            loss = weighted_token_loss(outputs.logits, labels, batch["sample_weight"])
             (loss / max(1, int(args.grad_accum))).backward()
             running += float(loss.item())
             micro_step += 1
             if micro_step % max(1, int(args.grad_accum)) == 0:
-                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                torch.nn.utils.clip_grad_norm_(trainable_parameters, 1.0)
                 optimizer.step()
                 scheduler.step()
                 optimizer.zero_grad(set_to_none=True)
@@ -279,7 +370,13 @@ def main() -> None:
                     print(json.dumps(event, ensure_ascii=False), flush=True)
                     history.append(event)
                 if int(args.eval_steps) > 0 and global_step % int(args.eval_steps) == 0:
-                    eval_loss = evaluate(model, val_loader, device, int(args.eval_max_batches))
+                    eval_loss = evaluate(
+                        model,
+                        val_loader,
+                        device,
+                        int(args.eval_max_batches),
+                        projector=projector,
+                    )
                     event = {"step": global_step, "eval_loss": eval_loss, "elapsed_sec": time.time() - start}
                     print(json.dumps(event, ensure_ascii=False), flush=True)
                     history.append(event)
@@ -288,11 +385,23 @@ def main() -> None:
         if global_step >= total_updates:
             break
 
-    final_eval = evaluate(model, val_loader, device, int(args.eval_max_batches))
+    final_eval = evaluate(
+        model,
+        val_loader,
+        device,
+        int(args.eval_max_batches),
+        projector=projector,
+    )
     final_dir = args.output_dir / "final"
     final_dir.mkdir(parents=True, exist_ok=True)
     model.save_pretrained(final_dir)
     tokenizer.save_pretrained(final_dir)
+    if projector is not None:
+        torch.save(projector.state_dict(), final_dir / "soft_prefix_projector.pt")
+        (final_dir / "soft_prefix_projector_config.json").write_text(
+            json.dumps(projector.config.to_dict(), indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     metrics = {
         "global_step": global_step,
         "final_eval_loss": final_eval,
