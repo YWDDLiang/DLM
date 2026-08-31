@@ -101,27 +101,30 @@
     "SUN_required_for_planner_retention": false,
     "M_preferred_if_retained": true,
     "fm_selected_planner": "M",
-    "active_planner_mainline_candidate": "C3FD_soft_prefix_Llama_to_Compact_V2",
+    "active_planner_mainline_candidate": "stability_conditioned_C3FD_Llama_fused_typed_Planner",
     "active_dlm_base": "job38703_Compact_V2_seed82017",
     "compact_v2_pivot": {
-      "adr": "ADR_C3FD_LLAMA_COMPACT_V2_MAINLINE_20260831.md",
-      "llama_generates": [
+      "adr": "ADR_C3FD_LLAMA_FUSED_TYPED_PLANNER_20260831.md",
+      "llama_scores": [
+        "N",
+        "anion_framework",
+        "arity",
+        "species",
+        "count",
         "lattice_system",
         "spacegroup_bucket",
         "volume_per_atom_bin"
       ],
-      "c3fd_locked_fields": [
-        "N",
-        "elements",
-        "counts",
-        "anion_framework"
-      ],
+      "c3fd_role": "calibrated_base_logits_plus_internal_hard_legal_action_mask",
+      "fusion": "unit_weight_product_of_experts_log_probabilities",
+      "stability_condition": "MP20_train_e_above_hull_tier_meta_or_better_at_inference",
       "planner_training_seeds": [85017],
+      "planner_epochs": 1,
       "development_dlm_seed": 82017,
       "development_streams": [17],
       "retrain_compact_v2_dlm_for_planner_insertion": false,
-      "matched_control": "direct_C3FD_predicted_Compact_V2",
-      "promotion": "comp_valid_ge_95pct_body_delta_ge_minus_1pp_raw_Direct_noninferior",
+      "small_experiment_matrix": false,
+      "promotion": "requested_denominator_comp_valid_ge_95pct",
       "new_official_query": false
     },
     "F_role_after_M_selection": "disclosed_formula_only_ablation",

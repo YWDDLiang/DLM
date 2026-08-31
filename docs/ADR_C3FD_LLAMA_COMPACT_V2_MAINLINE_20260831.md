@@ -2,7 +2,7 @@
 
 Date: 2026-08-31
 
-Status: **accepted for one matched development screen**
+Status: **superseded by `ADR_C3FD_LLAMA_FUSED_TYPED_PLANNER_20260831.md`**
 
 ## Context
 
@@ -89,4 +89,3 @@ validity is at least 95%, body execution is within one percentage point of the
 direct Compact-V2 control, and raw Direct is not lower. Otherwise retain direct
 C3FD Compact-V2 as the Planner interface. This is a development decision, not
 a seed-robust claim.
-

@@ -101,22 +101,26 @@ The active planning contract is
 authorized it to begin after the fixed F/M prospective result is complete and
 disclosed. The earlier decode-mask-first v1 plan is superseded.
 
-The user subsequently selected the Compact-V2 return described in
-`ADR_C3FD_LLAMA_COMPACT_V2_MAINLINE_20260831.md`. The completed F/M experiment
-remains immutable evidence; M is the winner within that comparison, but the
-active candidate mainline is now C3FD-soft-prefix Llama producing the canonical
-Compact-V2 Plan for the already-trained Compact-V2 DLM.
+The user subsequently selected the speed-first fused Planner described in
+`ADR_C3FD_LLAMA_FUSED_TYPED_PLANNER_20260831.md`. The completed F/M experiment
+remains immutable evidence. Llama now influences the typed composition actions
+inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
 
-- [ ] Add the minimal three-soft-field Compact-V2 Llama target/sampler by
-  reusing Route M's feature packer, projector, and LoRA trainer.
-- [ ] Train one fixed Planner seed from MP20-train teacher Compact-V2 targets;
-  Llama may not change C3FD `N/elements/counts/anion_framework`.
+- [ ] Implement one product-of-experts typed sampler: frozen calibrated C3FD
+  log-probability plus Llama action log-probability, followed by the existing
+  C3FD hard legal mask and exactly one sample.
+- [ ] Build one MP20-train dataset joining C3FD semantic actions to train-only
+  `e_above_hull` tiers by immutable `source_row_idx`; exclude every development,
+  prospective, CHGNet, model494, and official outcome.
+- [ ] Train one fixed fresh Llama Planner seed85017 for one epoch, final only.
+  Llama scores N/family/arity/species/count and Compact-V2 fields; C3FD remains
+  frozen. No coefficient, checkpoint, seed, or data sweep.
 - [ ] Reuse job38703 Compact-V2 DLM seed82017 and one fixed stream17. Do not
   retrain the same two-epoch DLM merely because Llama was inserted upstream.
-- [ ] Run a matched direct-C3FD-V2 versus Llama-V2 body+Direct screen on one
-  frozen ledger/noise stream. Promote Llama only if comp-valid is at least 95%,
-  body is within -1 pp, and raw Direct is noninferior; otherwise retain direct
-  Compact V2. No new MP query.
+- [ ] Run one fused-Planner body+Direct screen on one frozen ledger/noise
+  stream. Retain it when requested-denominator comp-valid is at least 95%; raw
+  Direct is reported but does not trigger extra Planner variants. No new MP
+  query and no model494/CHGNet before this screen.
 - [ ] Apply G1 and optional later G2 to the resulting Compact-V2 DLM mainline,
   not to the old-rich DLM.
 
