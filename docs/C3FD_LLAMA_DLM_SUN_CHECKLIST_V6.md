@@ -96,10 +96,11 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
   to DLM training. Do not add a new inference-time geometry mask.
 - [ ] Train two fresh geometry-aware DLM seeds and run a fixed raw-first
   train/chemsys-validation screen.
-- [ ] Add a two-layer periodic species-pair/RBF relation adapter only if token
-  round-trip passes and auxiliary geometry errors improve, but raw struct-valid
-  fails to improve consistently across both seeds. Do not add epochs or search
-  schedules to force this trigger.
+- [ ] Add a zero-initialized two-layer periodic residual species-pair/RBF
+  relation adapter only if token round-trip passes and auxiliary geometry errors
+  improve, but raw struct-valid fails to improve consistently across both seeds.
+  Require step-0 equality to G1 and compare against a same-update no-adapter
+  continuation; do not add epochs or search schedules to force the trigger.
 - [ ] Build MP20-train-only one-trajectory model494 basin-SFT targets, requiring
   exact composition, Direct structural validity, and finite refined energy.
 - [ ] Build one fixed K=4 same-composition pool and run shared-mask,

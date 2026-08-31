@@ -80,7 +80,13 @@
       "stability_sufficiency_confidence": "medium",
       "first_test": "frozen_raw_failure_taxonomy_and_token_roundtrip"
     },
-    "conditional_periodic_relation_adapter": "only_if_auxiliary_geometry_improves_but_two_seed_raw_struct_valid_does_not",
+    "conditional_periodic_relation_adapter": {
+      "trigger": "only_if_auxiliary_geometry_improves_but_two_seed_raw_struct_valid_does_not",
+      "integration": "zero_initialized_residual_h_prime_equals_h_plus_delta_h",
+      "step0_G1_logit_equality": true,
+      "matched_control": "same_update_no_adapter_continuation",
+      "R03_role": "schedule_relationship_evidence_not_residual_validation"
+    },
     "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",
     "AR_fallback": "C3FD_conditioned_CrysLLMGen_only_after_DLM_terminal",
     "execution_authorized": true

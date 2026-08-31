@@ -78,6 +78,23 @@ The historical evidence has the same direction:
 - model494 changes raw Direct `188 -> 457` on the matched L6 evidence, showing
   that continuous relational geometry repairs a large fraction of failures.
 
+R03 supplies a narrower but directly relevant schedule result. D1 committed
+the global X axis, then Y, then Z. D2_SAFE_AXIS preserved that invariant while
+grouping sites inside each axis according to PlanGraph. On the frozen
+four-process panel it changed body completion `246 -> 248/256`, pooled joint
+validity by `+5/1024`, Strict S.U.N. `99 -> 117`, and Meta S.U.N. `523 -> 496`.
+The four repeats shared one Plan cohort and are not independent Planner seeds.
+
+R03 therefore supports only two inferences for the new design:
+
+- relational/commitment structure is a real DLM design variable;
+- even a small intervention can polarize the hull distribution, so a new
+  geometry module should begin as an identity-preserving correction rather
+  than replacing the pretrained hidden state.
+
+R03 did not train or test a residual network and cannot be cited as evidence
+that a residual adapter improves stability.
+
 Consequently, Phase G must first measure whether collisions/metric failures
 actually explain raw invalidity, then add an invariant joint-geometry loss. It
 must not assume that improved structural validity automatically implies lower
@@ -140,7 +157,7 @@ MP20 positive structures teach the geometric manifold. They do not by
 themselves teach which generated polymorph is better, so Phase G is followed by
 refiner feedback rather than more plain CE epochs.
 
-### G2. Conditional periodic relation adapter
+### G2. Conditional periodic residual relation adapter
 
 Do not start with a graph-network rewrite. First run G1 with the unchanged DLM
 backbone. Promote a small relation adapter only when all of the following are
@@ -155,10 +172,30 @@ true on held-out chemical systems:
 The adapter keeps the same vocabulary and sampler. For each structure it pools
 the element/XYZ hidden states into at most 20 site states, forms all periodic
 site pairs, encodes species pair plus minimum-image distance with radial basis
-features, applies two low-rank message-passing layers, and scatters residuals
-back to the site and lattice token states. Scalar distance/metric features make
-the adapter periodic and rotation-invariant. Its output is trained with the G1
-losses and the original CE/reference anchor.
+features, applies two low-rank message-passing layers, and scatters a correction
+back to the site and lattice token states:
+
+```text
+delta_h = W_out RelationMP(LN(h), G, fractional_coordinates, species)
+h_prime = h + delta_h
+```
+
+`W_out` is initialized exactly to zero. The candidate must therefore reproduce
+the G1 logits to numerical tolerance before its first optimizer step. The
+residual touches lattice/XYZ states only; prompt, N, and element anchors retain
+the original path. Scalar distance/metric features make the adapter periodic
+and rotation-invariant. Its output is trained with the G1 losses and the
+original CE/reference anchor.
+
+If G2 fires, compare two matched continuations from the same G1 checkpoint:
+
+- control: the same additional updates with no relation adapter;
+- candidate: the zero-initialized periodic residual adapter with the same data,
+  masks, optimizer steps, and seeds.
+
+This prevents ordinary extra training from being attributed to the residual
+path. The scientific contribution is the periodic relational correction; the
+skip connection is the conservative integration mechanism.
 
 This G2 trigger distinguishes two failures: if relation losses themselves do
 not learn, the targets/objective are wrong; if they learn but generation does
@@ -281,8 +318,9 @@ for the DLM method after observing the same prospective outcomes.
   losses without changing inference decoding.
 - [ ] Train two geometry-aware DLM seeds on MP20 train only and run a fixed
   train/chemsys-validation raw-first screen.
-- [ ] Add the two-layer periodic relation adapter only if the frozen G2 trigger
-  fires; otherwise retain the loss-only DLM.
+- [ ] Add the zero-initialized two-layer periodic residual relation adapter only
+  if the frozen G2 trigger fires; verify step-0 G1-logit equality and compare
+  against a same-update no-adapter continuation.
 - [ ] Build the one-trajectory model494 basin-SFT dataset and train two fresh
   anchored adapters.
 - [ ] Build one immutable K=4 group pool and run the offline shared-mask

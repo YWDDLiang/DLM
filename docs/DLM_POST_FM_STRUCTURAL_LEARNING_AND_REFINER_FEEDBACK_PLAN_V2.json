@@ -52,9 +52,23 @@
         "auxiliary_relation_errors_improve",
         "raw_structural_validity_not_consistent_across_two_seeds"
       ],
-      "architecture": "two_low_rank_periodic_species_pair_RBF_message_passing_layers",
+      "name": "periodic_residual_relation_adapter",
+      "architecture": "h_prime_equals_h_plus_zero_initialized_Wout_of_two_low_rank_periodic_species_pair_RBF_message_passing_layers",
+      "step0_base_logit_equality": true,
+      "touches_positions": ["lattice", "XYZ"],
+      "does_not_touch_positions": ["prompt", "N", "elements"],
+      "matched_control": "same_G1_checkpoint_same_extra_updates_without_adapter",
       "new_tokens": false,
       "sampler_change": false
+    },
+    "R03_evidence_boundary": {
+      "D1_strict_meta": [99, 523],
+      "D2_safe_axis_strict_meta": [117, 496],
+      "requested": 1024,
+      "body_completion_D1_D2_of_256": [246, 248],
+      "supports": "commitment_structure_is_a_real_design_variable_and_interventions_can_polarize_hull",
+      "does_not_support": "residual_adapter_already_validated",
+      "independent_Planner_seeds": false
     }
   },
   "refiner_feedback": {
