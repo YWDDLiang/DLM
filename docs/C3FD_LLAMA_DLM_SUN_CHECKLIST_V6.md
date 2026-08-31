@@ -126,10 +126,18 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
   query and no model494/CHGNet before this screen.
 - [ ] Apply G1 and optional later G2 to the resulting Compact-V2 DLM mainline,
   not to the old-rich DLM.
+- [ ] After the active speed-first result is terminal, rebuild Planner
+  supervision from the complete MP20 `27136/9047` rows. Missing typed witnesses
+  need a non-filtering path and must not be deleted by a certificate gate.
 
 Data terminal: job39046 `COMPLETED 0:0/00:00:33`; train/val rows
 `24558/8158`. Every retained MP20 row is already `meta_or_better`, so this is a
 positive near-stable support prior rather than a learned hull classifier.
+
+Scope amendment: only the fused Planner used this `24558/8158` subset. The
+Compact-V2 DLM job38703 used full MP20 `27136/9047`. Per user decision, retain
+this run as development and do not interrupt it; full-data Planner retraining
+is a later paper-final requirement.
 
 Training terminal: validation loss `2.807408`; step-0 PoE maximum log-probability
 delta `3.8147e-6`; final typed config/state and Llama adapter SHA-256 are

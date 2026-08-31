@@ -129,7 +129,12 @@
         "train_sha256": "adc471650685a2649ab31d726bb1d99d4aba11bb5de91ce95292b95753954113",
         "validation_sha256": "a762e152ce8dc8469893a234029088c329f3ae61a7af6235ce891c1308b61dd4",
         "higher_hull_rows": 0,
-        "claim": "MP20_near_stable_positive_support_prior_not_hull_classifier"
+        "claim": "development_MP20_near_stable_positive_support_prior_not_hull_classifier",
+        "full_mp20_train_rows": 27136,
+        "full_mp20_validation_rows": 9047,
+        "current_subset_due_to_legacy_ctv_filter": true,
+        "paper_final_requirement": "full_27136_9047_no_certificate_row_deletion",
+        "rerun_current_sprint": false
       },
       "training_job_id": 39051,
       "training_status": "complete",

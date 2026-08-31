@@ -107,6 +107,15 @@ validation teacher sequence remain explicit in the manifest. Jobs39028,
 39030, and39035 are preserved engineering negatives (join-key correction and
 removal of unnecessary per-row training-mask compilation).
 
+This is not the complete MP20 split. The Compact-V2 DLM used the full MP20
+standard `27,136/9,047` train/validation rows, while this fused Planner
+inherited the older certificate-authorized `ctv_minimal_spec_v4` subset. Keep
+the current run as development evidence. Any paper-final Planner retraining
+must use all `27,136/9,047` rows and may not delete rows merely because a typed
+C3FD witness/certificate is unavailable; those rows require an explicit
+non-filtering supervision path. Per user decision, do not rerun the active
+sprint solely to repair this scope.
+
 If comp-valid passes, the fused Planner is retained so the paper can preserve
 the C3FD-constrained Llama story. Raw Direct is reported but is not used to
 launch alternative Planner variants. The next optimization target is G1 on the
