@@ -106,7 +106,7 @@ The user subsequently selected the speed-first fused Planner described in
 remains immutable evidence. Llama now influences the typed composition actions
 inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
 
-- [ ] Implement one product-of-experts typed sampler: frozen calibrated C3FD
+- [x] Implement one product-of-experts typed sampler: frozen calibrated C3FD
   log-probability plus Llama action log-probability, followed by the existing
   C3FD hard legal mask and exactly one sample.
 - [x] Build one MP20-train dataset joining C3FD semantic actions to train-only
@@ -118,9 +118,9 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
   checksums passed.
   Llama scores N/family/arity/species/count and Compact-V2 fields; C3FD remains
   frozen. No coefficient, checkpoint, seed, or data sweep.
-- [ ] Reuse job38703 Compact-V2 DLM seed82017 and one fixed stream17. Do not
+- [x] Reuse job38703 Compact-V2 DLM seed82017 and one fixed stream17. Do not
   retrain the same two-epoch DLM merely because Llama was inserted upstream.
-- [ ] Run one fused-Planner body+Direct screen on one frozen ledger/noise
+- [x] Run one fused-Planner body+Direct screen on one frozen ledger/noise
   stream. Retain it when requested-denominator comp-valid is at least 95%; raw
   Direct is reported but does not trigger extra Planner variants. No new MP
   query and no model494/CHGNet before this screen.
@@ -153,6 +153,15 @@ Llama materially reweighted the constrained composition decisions.
 The one Compact-V2 DLM seed82017/stream17 raw body+Direct screen is job39093.
 Job39092 is a seven-second pre-science engineering negative caused by a stale
 sampler hash pin; no method or sampling parameter changed.
+
+Body/Direct terminal is frozen across body job39096, assembly job39097, Direct
+job39098, and immutable final
+`runs/fused_planner_body_direct_final_20260831_v1`: body/comp-valid
+`248/256 = 96.88%`, structural-valid/Direct `106/256 = 41.41%`. The earlier
+Compact-V2 seed82017/stream17 canary was body `248/256`, composition-valid
+`226/256`, structural-valid `86/256`, and Direct `78/256 = 30.47%`. The current
+absolute Direct is `+10.94 pp`; cohorts differ, so this is not reported as a
+causal matched effect. No model494, CHGNet, or official query was run.
 
 - [x] Audit whether model494-relaxed geometry was previously distilled into the
   DLM: it was proposed but never executed. SGTC and D3PO are different methods.
