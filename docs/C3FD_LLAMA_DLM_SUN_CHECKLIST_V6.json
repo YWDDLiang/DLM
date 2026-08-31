@@ -32,11 +32,11 @@
       "cancelled38914",
       "D3PO_already_official"
     ],
-    "query_count": 1,
+    "query_budget": 1,
     "claim": "development_only",
     "status": "complete",
     "source_manifest_sha256": "f738f7b225f7d9813a02390d334841c2bbbc2cd4ad227e2ade3ec78a019d25d7",
-    "query_count": 739,
+    "query_chemsys_count": 739,
     "query_resolved": 723,
     "query_unresolved": 16,
     "result_sha256": "84ea1984d2ccd56a76b271b06f6dc7eb212d2c0670869fa49950982ab2bc1219"
@@ -46,7 +46,10 @@
     "initialization": "historical_H1A2_rich_Planner",
     "seeds_per_route": 2,
     "adaptation_epochs": 1,
-    "checkpoint_selection": false
+    "checkpoint_selection": false,
+    "status": "complete",
+    "job_id": 38933,
+    "terminal_checkpoints": 4
   },
   "prospective": {
     "requested": 256,
@@ -56,7 +59,21 @@
     "model494_tau": 800,
     "raw_first": true,
     "official_query_count": 1,
-    "fixed_denominator": true
+    "fixed_denominator": true,
+    "cohort_status": "complete",
+    "plan_expansion_status": "complete",
+    "dlm_generation_status": "running_recovery_38948"
+  },
+  "post_fm": {
+    "status": "planning_only_until_fm_terminal",
+    "method_doc": "DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1.md",
+    "historical_model494_geometry_distillation_executed": false,
+    "M_mainline_if_noninferior": true,
+    "F_role_after_M_selection": "disclosed_formula_only_ablation",
+    "first_decoder_change": "species_aware_PBC_gross_overlap_mask",
+    "first_training_change": "fresh_DLM_model494_relaxed_geometry_distillation",
+    "matched_screen": "2x2_weights_by_decoder_raw_first",
+    "execution_authorized": false
   },
   "forbidden": [
     "deterministic_scientific_field_completion",

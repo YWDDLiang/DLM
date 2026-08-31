@@ -48,16 +48,16 @@ after success.
 
 - [x] Build immutable MP20 train/validation F/M data with identical source rows
   and rich targets.
-- [ ] Train two fixed seeds per route for one adaptation epoch from the same
+- [x] Train two fixed seeds per route for one adaptation epoch from the same
   historical H1-A2 rich Planner initialization; final checkpoint only.
-- [ ] Report all four terminal checkpoints without seed selection.
-- [ ] Run one fixed small syntax/interface canary; it cannot change settings.
+- [x] Report all four terminal checkpoints without seed selection.
+- [x] Run one fixed small syntax/interface canary; it cannot change settings.
 
 ## Phase 4 — prospective DLM realization
 
-- [ ] Freeze one new C3FD all-attempt fixed256 composition ledger before DLM
+- [x] Freeze one new C3FD all-attempt fixed256 composition ledger before DLM
   outcomes; retain failed requests and do not top up.
-- [ ] Generate F/M Plans on identical compositions/order.
+- [x] Generate F/M Plans on identical compositions/order.
 - [ ] Run F/M × streams17/18 through the same old H1-A2 rich DLM and model494
   tau800, one Plan and one trajectory per request.
 - [ ] Run one fixed-denominator raw-first/refined offline evaluation.
@@ -72,6 +72,30 @@ after success.
 - [ ] Update BUILD_STATUS, PAPER_STORY, negative archive, tests, commits, and
   final resource ledger.
 
+## Phase 6 — conditional post-F/M DLM stabilization
+
+The planning contract is
+`DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1.md`. This phase is not
+authorized to start until the fixed F/M prospective result is complete and
+disclosed.
+
+- [x] Audit whether model494-relaxed geometry was previously distilled into the
+  DLM: it was proposed but never executed. SGTC and D3PO are different methods.
+- [x] Audit current decoder constraints: schema/exact chemistry, nondegenerate
+  lattice, and exact/PBC duplicate rejection already exist.
+- [ ] Apply the frozen M-mainline noninferiority rule. Keep F as the disclosed
+  ablation; never delete either route's result.
+- [ ] If M passes, add one species-aware PBC gross-overlap token mask and run a
+  train/validation-only decoder A/B with fixed noise.
+- [ ] Build one immutable MP20-train-only, one-trajectory-per-row model494
+  relaxed-target dataset under M; no energy filtering or winner selection.
+- [ ] Train two fresh DLM LoRA seeds from the shared pretrained crystal base,
+  mixing original MP20 and single-refiner-target geometry CE.
+- [ ] Run the frozen 2x2 weight × decoder screen, raw first. Only after that
+  screen may a new prospective cohort and official query be frozen.
+- [ ] Treat refined-only gains as system effects; require raw Direct/energy
+  evidence for a DLM stability contribution.
+
 ## Credential and execution boundary
 
 Use the user-provided MP credential only in a temporary nonambient child
@@ -79,5 +103,6 @@ environment for each explicitly authorized query. Never write or echo it to
 Git, docs, checklist, automation, commands, logs, hashes, manifests, or
 archives. Unset it immediately and verify no process/runtime copy remains.
 
-No retry/replacement/rerank/best-of-N, outcome-based setting selection, AR,
-RL/GRPO/SMC, C3FD retraining, compact-V2 rerun, or alignment is authorized.
+No retry/replacement/rerank/best-of-N, outcome-based setting selection, AR body
+executor, RL/GRPO/SMC, C3FD retraining, compact-V2 rerun, or alignment is
+authorized.
