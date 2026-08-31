@@ -75,9 +75,9 @@ sha256sum "${DATA}/manifest.json" "${DATA}/F/train.jsonl" "${DATA}/F/val.jsonl" 
 train_one() {
   local route="$1" seed="$2" gpu="$3"
   local output="${RUN}/train_${route}_seed${seed}"
-  local prefix_args=()
+  local prefix_length=0
   if [[ "${route}" == M ]]; then
-    prefix_args=(--soft-prefix-length 4 --soft-prefix-projector-hidden 1024)
+    prefix_length=4
   fi
   CUDA_VISIBLE_DEVICES="${gpu}" OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
     "${PYTHON}" "${TRAINER}" \
@@ -86,7 +86,8 @@ train_one() {
     --max-length 768 --epochs 1 --batch-size 2 --grad-accum 8 \
     --lr 2e-5 --weight-decay 0 --warmup-steps 100 \
     --logging-steps 20 --eval-steps 1696 --eval-max-batches 50 \
-    --seed "${seed}" "${prefix_args[@]}" \
+    --seed "${seed}" --soft-prefix-length "${prefix_length}" \
+    --soft-prefix-projector-hidden 1024 \
     >"${RUN}/logs/train_${route}_seed${seed}.out" \
     2>"${RUN}/logs/train_${route}_seed${seed}.err"
 }

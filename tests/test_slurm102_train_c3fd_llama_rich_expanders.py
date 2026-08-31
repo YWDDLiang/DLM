@@ -15,7 +15,9 @@ class Slurm102StaticTest(unittest.TestCase):
             self.assertIn(f"train_one {spec}", SOURCE)
 
     def test_M_only_uses_projector(self):
-        self.assertIn("prefix_args=(--soft-prefix-length 4", SOURCE)
+        self.assertIn("local prefix_length=0", SOURCE)
+        self.assertIn("prefix_length=4", SOURCE)
+        self.assertIn('--soft-prefix-length "${prefix_length}"', SOURCE)
         self.assertIn("if route=='F'", SOURCE)
         self.assertIn("soft_prefix_projector.pt", SOURCE)
 
