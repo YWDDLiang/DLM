@@ -31,6 +31,14 @@ PREDICTED_FIELDS = (
     "spacegroup_bucket",
     "volume_per_atom_bin",
 )
+RICH_SUFFIX_LABELS = (
+    "anion",
+    "charge",
+    "lattice",
+    "spacegroup",
+    "volume",
+    "end",
+)
 HEADER_FEATURES = 8
 SLOT_FEATURES = 4
 PREDICTION_FEATURES = 3
@@ -97,7 +105,8 @@ def assemble_expanded_plan(
     """Strictly parse a generated suffix without repairing or filling fields."""
 
     plan = composition_plan_from_state(plan_state)
-    full_text = f"formula: {plan['formula']}\n{str(generated_suffix).strip()}"
+    suffix = validate_generated_suffix_shape(generated_suffix)
+    full_text = f"formula: {plan['formula']}\n{suffix}"
     parsed = parse_composition_plan(
         full_text, plan_style=H1_RICH_PLAN_FORMAT, max_atoms=20
     )
@@ -110,6 +119,21 @@ def assemble_expanded_plan(
         ),
         "plan_state": parsed,
     }
+
+
+def validate_generated_suffix_shape(generated_suffix: str) -> str:
+    """Require exactly the six historical rich suffix lines in fixed order."""
+
+    lines = str(generated_suffix).strip().splitlines()
+    if len(lines) != len(RICH_SUFFIX_LABELS):
+        raise ValueError("rich Expander suffix must contain exactly six lines")
+    for expected, line in zip(RICH_SUFFIX_LABELS, lines):
+        label, separator, value = line.partition(":")
+        if not separator or label.strip().lower() != expected or not value.strip():
+            raise ValueError(f"rich Expander suffix line is not {expected}: <value>")
+    if lines[-1].strip().lower() != "end: plan":
+        raise ValueError("rich Expander suffix must terminate with end: plan")
+    return "\n".join(line.strip() for line in lines)
 
 
 def _species_lookup(vocabulary: Mapping[str, Any]) -> dict[int, tuple[int, int]]:
@@ -283,4 +307,5 @@ __all__ = [
     "expander_messages",
     "pack_soft_prefix_features",
     "rich_suffix_from_plan_state",
+    "validate_generated_suffix_shape",
 ]

@@ -21,7 +21,7 @@ readonly EXPANDER="${ROOT}/src/crystal_dlm/c3fd_rich_expander.py"
 readonly RUN="${ROOT}/runs/c3fd_llama_rich_expanders_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly TRAINER_SHA=86fa8f344559f83b20c2a93d30527fd1711e6cdcda7cbdba496ae7821cfd0dd9
-readonly EXPANDER_SHA=d4a5c0ed18cf8728054da5e5f0cbcdea45906c62a4c3635e31450ce26f375d2a
+readonly EXPANDER_SHA=a6a824118728c07ea6179613a0d295181ebb783471f80b0eb603f9a77da83007
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"

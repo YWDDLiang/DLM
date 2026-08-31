@@ -86,6 +86,11 @@ class C3FDRichExpanderTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             assemble_expanded_plan(self.plan(), suffix)
 
+    def test_extra_prose_is_not_silently_ignored(self):
+        suffix = "note: guess\n" + rich_suffix_from_plan_state(self.plan())
+        with self.assertRaises(ValueError):
+            assemble_expanded_plan(self.plan(), suffix)
+
     def test_feature_vector_is_fixed_and_ignores_teacher_rich_values(self):
         first = pack_soft_prefix_features(
             self.semantic(), self.vocabulary(), self.predicted()
