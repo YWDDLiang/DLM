@@ -55,7 +55,7 @@ composition-generation state to Llama as learned prefix embeddings:
 - exact `N` and species/count multiset;
 - valence-resolved C3FD action trace and charge ledger;
 - anion-family/proposal state and terminal certificate;
-- calibrated Planner uncertainty summaries, but no structure, energy, hull,
+- frozen Planner class/confidence summaries, but no structure, energy, hull,
   DLM, refiner, or test outcome.
 
 A small projector maps this frozen C3FD state to `K` soft prefix tokens. The

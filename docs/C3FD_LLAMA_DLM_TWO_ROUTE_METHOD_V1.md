@@ -62,7 +62,7 @@ replaced by the frozen C3FD formula using the identical prompt template.
 M integrates C3FD into the Llama conditioner through a new, small trainable
 soft-prefix projector. A fixed-size representation of the frozen C3FD semantic
 state—species/valence/count actions, charge ledger, family, certificate and
-calibrated uncertainty—is mapped by a two-layer MLP to `K` embeddings in the
+the two frozen heads' class/confidence summaries—is mapped by a two-layer MLP to `K` embeddings in the
 Llama hidden dimension. These embeddings are prepended through `inputs_embeds`;
 they are never rendered as text or exposed to the old H1-A2 DLM.
 

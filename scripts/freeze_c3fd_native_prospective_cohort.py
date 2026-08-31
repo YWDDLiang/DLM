@@ -192,6 +192,7 @@ def main() -> None:
     parser.add_argument("--exclude-cohort-root", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--count", type=int, default=256)
+    parser.add_argument("--planner-sampling-seed", type=int, default=20)
     args = parser.parse_args()
     if args.output_dir.exists():
         raise FileExistsError(args.output_dir)
@@ -232,7 +233,7 @@ def main() -> None:
     }
     manifest = {
         "schema": SCHEMA,
-        "planner_sampling_seed": 20,
+        "planner_sampling_seed": int(args.planner_sampling_seed),
         "source": {
             "path": str(args.source_plans.resolve()),
             "sha256": source_sha,

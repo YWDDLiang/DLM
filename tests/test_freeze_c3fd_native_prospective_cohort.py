@@ -27,6 +27,11 @@ def plan(element, index):
 
 
 class FreezeC3FDNativeProspectiveCohortTest(unittest.TestCase):
+    def test_sampling_seed_is_configurable(self):
+        source = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn("--planner-sampling-seed", source)
+        self.assertIn("int(args.planner_sampling_seed)", source)
+
     def test_exact_blocking_and_contiguous_execution_indices(self):
         rows = [plan("Li", 0), plan("Na", 1), plan("K", 2)]
         blocked = {MODULE.exact_identity(rows[0]["plan_state"])}

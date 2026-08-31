@@ -53,7 +53,7 @@
       "charge_ledger",
       "anion_family_state",
       "terminal_certificate",
-      "calibrated_uncertainty_summary"
+      "frozen_rich_head_prediction_confidence"
     ],
     "trainable": ["semantic_prefix_projector", "Llama_LoRA"],
     "test_or_outcome_inputs": false
