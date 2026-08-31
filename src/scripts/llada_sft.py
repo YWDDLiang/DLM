@@ -64,6 +64,10 @@ from crystal_dlm.physical_header import (
     PHYSICAL_HEADER_BODY_OFFSET,
     PHYSICAL_HEADER_PROMPT_POOL,
 )
+from crystal_dlm.periodic_geometry_objective import (
+    build_geometry_token_support,
+    periodic_geometry_objective,
+)
 from crystal_dlm.llada_resize import ensure_llada_vocab_size
 from crystal_dlm.transformers_compat import (
     ensure_create_bidirectional_mask,
@@ -1413,6 +1417,12 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
             optional_token_id(token)
             for token in ("<X_PAD>", "<Y_PAD>", "<Z_PAD>")
         ]
+    periodic_weights = {
+        "metric": float(getattr(args, "periodic_metric_weight", 0.0)),
+        "pair_rdf": float(getattr(args, "periodic_pair_rdf_weight", 0.0)),
+        "overlap": float(getattr(args, "periodic_overlap_weight", 0.0)),
+        "coordination": float(getattr(args, "periodic_coordination_weight", 0.0)),
+    }
     return {
         "representation": getattr(args, "representation", "fixed_slot"),
         "answer_token_count": int(getattr(args, "answer_token_count", ANSWER_TOKEN_COUNT)),
@@ -1455,6 +1465,12 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
             getattr(args, "dynamic_coord_loss_weight", getattr(args, "coordinate_loss_weight", 1.0))
         ),
         "dynamic_geometry_only": bool(getattr(args, "dynamic_geometry_only", False)),
+        "periodic_geometry_weights": periodic_weights,
+        "periodic_geometry_support": (
+            build_geometry_token_support(tokenizer)
+            if any(weight > 0 for weight in periodic_weights.values())
+            else None
+        ),
     }
 
 
@@ -2412,6 +2428,10 @@ def main() -> None:
             "lattice lengths/angles and XYZ tokens."
         ),
     )
+    parser.add_argument("--periodic-metric-weight", type=float, default=0.0)
+    parser.add_argument("--periodic-pair-rdf-weight", type=float, default=0.0)
+    parser.add_argument("--periodic-overlap-weight", type=float, default=0.0)
+    parser.add_argument("--periodic-coordination-weight", type=float, default=0.0)
     parser.add_argument(
         "--train-prefill-slot-tokens",
         action="store_true",
@@ -2439,6 +2459,19 @@ def main() -> None:
         parser.error("counterfactual grounding is implemented only for exact dynamic_v1 bodies")
     if args.dynamic_geometry_only and args.representation != "dynamic_v1":
         parser.error("dynamic-geometry-only requires representation=dynamic_v1")
+    periodic_weights = (
+        args.periodic_metric_weight,
+        args.periodic_pair_rdf_weight,
+        args.periodic_overlap_weight,
+        args.periodic_coordination_weight,
+    )
+    if any(weight < 0 for weight in periodic_weights):
+        parser.error("periodic geometry weights must be non-negative")
+    if any(weight > 0 for weight in periodic_weights):
+        if args.representation != "dynamic_v1":
+            parser.error("periodic geometry objective requires representation=dynamic_v1")
+        if not args.dynamic_geometry_only:
+            parser.error("periodic geometry objective requires --dynamic-geometry-only")
     if args.lr_stage2 > 0:
         if args.lr_scheduler != "cosine":
             parser.error("two-stage LR requires --lr-scheduler cosine")
@@ -2743,7 +2776,11 @@ def main() -> None:
                         "loss_config": {
                             key: value
                             for key, value in loss_config.items()
-                            if key not in {"empty_token_id", "pad_coord_token_ids"}
+                            if key not in {
+                                "empty_token_id",
+                                "pad_coord_token_ids",
+                                "periodic_geometry_support",
+                            }
                         },
                         "element_token_alignment": {
                             "loss_weight": args.element_token_alignment_loss_weight,
@@ -2789,15 +2826,30 @@ def main() -> None:
                 )
                 with sync_context:
                     grounding = None
-                    if args.counterfactual_grounding_weight > 0:
+                    periodic = None
+                    periodic_enabled = any(
+                        weight > 0
+                        for weight in loss_config["periodic_geometry_weights"].values()
+                    )
+                    if args.counterfactual_grounding_weight > 0 or periodic_enabled:
                         components = compute_loss_components(model, batch, loss_config)
                         task_loss = components["loss"]
-                        grounding = counterfactual_grounding_loss(
-                            model,
-                            batch,
-                            components,
-                            temperature=args.counterfactual_grounding_temperature,
-                        )
+                        if args.counterfactual_grounding_weight > 0:
+                            grounding = counterfactual_grounding_loss(
+                                model,
+                                batch,
+                                components,
+                                temperature=args.counterfactual_grounding_temperature,
+                            )
+                        if periodic_enabled:
+                            periodic = periodic_geometry_objective(
+                                logits=components["outputs"].logits,
+                                input_ids=batch["input_ids"],
+                                masked_indices=components["processed"]["masked_indices"],
+                                prompt_lengths=batch["prompt_lengths"],
+                                num_atoms=batch["num_atoms"],
+                                support=loss_config["periodic_geometry_support"],
+                            )
                     else:
                         task_loss = compute_loss(model, batch, loss_config)
                     alignment_component = element_semantic_alignment_loss(
@@ -2808,6 +2860,9 @@ def main() -> None:
                     combined_loss = task_loss
                     if grounding is not None:
                         combined_loss = combined_loss + float(args.counterfactual_grounding_weight) * grounding["loss"]
+                    if periodic is not None:
+                        for name, weight in loss_config["periodic_geometry_weights"].items():
+                            combined_loss = combined_loss + float(weight) * periodic[name]
                     if alignment_component is not None:
                         combined_loss = combined_loss + float(args.element_token_alignment_loss_weight) * alignment_component
                     loss = combined_loss / args.grad_accum
@@ -2833,6 +2888,10 @@ def main() -> None:
                     grounding_value = None if grounding is None else float(grounding["loss"].detach().cpu())
                     grounding_margin = None if grounding is None else float(grounding["mean_margin"].cpu())
                     grounding_samples = 0 if grounding is None else int(grounding["eligible_samples"])
+                    periodic_values = {
+                        name: None if periodic is None else float(periodic[name].detach().cpu())
+                        for name in ("metric", "pair_rdf", "overlap", "coordination")
+                    }
                     log_handle.write(
                         json.dumps(
                             {
@@ -2846,6 +2905,10 @@ def main() -> None:
                                 "counterfactual_grounding_loss": grounding_value,
                                 "counterfactual_grounding_margin": grounding_margin,
                                 "counterfactual_grounding_samples": grounding_samples,
+                                "periodic_geometry_metric_loss": periodic_values["metric"],
+                                "periodic_geometry_pair_rdf_loss": periodic_values["pair_rdf"],
+                                "periodic_geometry_overlap_loss": periodic_values["overlap"],
+                                "periodic_geometry_coordination_loss": periodic_values["coordination"],
                                 "lr": optimizer.param_groups[0]["lr"],
                             },
                             ensure_ascii=False,
