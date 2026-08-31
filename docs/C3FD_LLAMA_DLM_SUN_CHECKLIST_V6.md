@@ -112,8 +112,10 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
 - [x] Build one MP20-train dataset joining C3FD semantic actions to train-only
   `e_above_hull` tiers by immutable `source_row_idx`; exclude every development,
   prospective, CHGNet, model494, and official outcome.
-- [ ] Train one fixed fresh Llama Planner seed85017 for one epoch, final only
-  (job39051 running on 1 A800 / 8 CPU).
+- [x] Train one fixed fresh Llama Planner seed85017 for one epoch, final only.
+  Job39051 completed `0:0` in `01:12:49` on 1 A800 / 8 CPU; all 1535
+  updates, final-only outputs, frozen-C3FD checks, finite diagnostics, and
+  checksums passed.
   Llama scores N/family/arity/species/count and Compact-V2 fields; C3FD remains
   frozen. No coefficient, checkpoint, seed, or data sweep.
 - [ ] Reuse job38703 Compact-V2 DLM seed82017 and one fixed stream17. Do not
@@ -128,6 +130,13 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
 Data terminal: job39046 `COMPLETED 0:0/00:00:33`; train/val rows
 `24558/8158`. Every retained MP20 row is already `meta_or_better`, so this is a
 positive near-stable support prior rather than a learned hull classifier.
+
+Training terminal: validation loss `2.807408`; step-0 PoE maximum log-probability
+delta `3.8147e-6`; final typed config/state and Llama adapter SHA-256 are
+`ca786e3d...ff89a`, `9912e259...871bc`, and `7638b05d...84c75` respectively.
+Sampling job39086 is an engineering negative (all rows hit one CPU/GPU mask
+device mismatch before science). Commit `b6e7b30` fixes only that device move;
+the parameter-identical recovery job39088 is running.
 
 - [x] Audit whether model494-relaxed geometry was previously distilled into the
   DLM: it was proposed but never executed. SGTC and D3PO are different methods.
