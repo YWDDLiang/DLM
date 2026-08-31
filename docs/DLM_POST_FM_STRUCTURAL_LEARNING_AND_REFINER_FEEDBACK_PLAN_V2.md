@@ -43,9 +43,63 @@ teach the model structural validity during training. Existing schema, exact
 composition, nondegenerate-lattice, and exact-duplicate guards remain unchanged
 as parser/interface invariants rather than a new scientific method.
 
+## Geometry-correlation diagnosis
+
+The hypothesis that weak lattice/site coupling causes low raw structural
+validity is **high confidence**; the claim that it explains thermodynamic
+stability by itself is only **medium confidence**.
+
+The current implementation provides implicit context but no explicit relational
+objective:
+
+1. `forward_process()` masks geometry positions independently. The
+   bidirectional Transformer can attend to visible lattice/site tokens, but
+   `compute_loss_components()` applies cross entropy independently to each
+   selected token.
+2. The typed logits for `LA/LB/LC`, angles, and every `X/Y/Z` position are not
+   converted into a joint periodic structure during the loss. A low token NLL
+   therefore does not imply legal volume, safe PBC distances, or a coherent
+   coordination environment.
+3. The production exact-axis sampler commits lattice, all X, all Y, and all Z
+   as separate confidence-ordered groups. Later axes can condition on earlier
+   axes, but no joint score compares two complete coordinate assignments.
+4. The prebuilt exact-length JSONL stores one site order and one coordinate
+   origin. Unlike the CSV training path, the JSONL loader does not perform
+   origin-shift augmentation. Equivalent periodic structures can therefore
+   create avoidable token-level disagreement.
+
+The historical evidence has the same direction:
+
+- joint-XYZ scheduling caused duplicate coordinates and large body/Direct
+  losses, so merely committing more coordinates together is not sufficient;
+- single-token CTV prediction was near chance, indicating that stability is a
+  sequence/global property;
+- positive-only SGTC geometry CE improved teacher-forced NLL but not S.U.N.;
+- model494 changes raw Direct `188 -> 457` on the matched L6 evidence, showing
+  that continuous relational geometry repairs a large fraction of failures.
+
+Consequently, Phase G must first measure whether collisions/metric failures
+actually explain raw invalidity, then add an invariant joint-geometry loss. It
+must not assume that improved structural validity automatically implies lower
+hull energy.
+
 ## Phase G — geometry-aware masked-DLM training
 
-### G0. Quantization sufficiency audit
+### G0. Failure taxonomy and quantization sufficiency audit
+
+First decompose existing raw failures on frozen attempts into mutually
+exclusive primary causes:
+
+- body parse/schema failure;
+- exact-composition mismatch;
+- nonpositive/near-singular lattice metric;
+- PBC minimum distance below `0.5 Angstrom`;
+- CrystalNN/graph construction failure after the above pass;
+- structurally valid but high raw/refined energy.
+
+Report the fraction of raw invalidity explained by lattice/periodic-distance
+failures, overall and by N/arity/family. This is the direct test of the geometry-
+correlation hypothesis.
 
 Before GPU training, round-trip MP20 train/validation CIFs through the current
 special tokens and compare original versus tokenized structures:
@@ -85,6 +139,31 @@ L_G = L_masked_CE
 MP20 positive structures teach the geometric manifold. They do not by
 themselves teach which generated polymorph is better, so Phase G is followed by
 refiner feedback rather than more plain CE epochs.
+
+### G2. Conditional periodic relation adapter
+
+Do not start with a graph-network rewrite. First run G1 with the unchanged DLM
+backbone. Promote a small relation adapter only when all of the following are
+true on held-out chemical systems:
+
+- token round-trip validity passes, so representation resolution is not the
+  bottleneck;
+- G1 improves metric/RDF/overlap auxiliary errors;
+- raw structural validity does not improve consistently across the two fixed
+  training seeds.
+
+The adapter keeps the same vocabulary and sampler. For each structure it pools
+the element/XYZ hidden states into at most 20 site states, forms all periodic
+site pairs, encodes species pair plus minimum-image distance with radial basis
+features, applies two low-rank message-passing layers, and scatters residuals
+back to the site and lattice token states. Scalar distance/metric features make
+the adapter periodic and rotation-invariant. Its output is trained with the G1
+losses and the original CE/reference anchor.
+
+This G2 trigger distinguishes two failures: if relation losses themselves do
+not learn, the targets/objective are wrong; if they learn but generation does
+not change, the factorized token backbone needs an explicit relational path.
+No extra CE epoch or schedule search is allowed between G1 and this decision.
 
 ## Phase R — model494-in-the-loop self-improvement
 
@@ -196,10 +275,14 @@ for the DLM method after observing the same prospective outcomes.
 - [ ] Retain every F/M route with requested-denominator final composition
   validity `>=95%`; classify DLM quality separately.
 - [ ] Run the CPU-only `7+4N` quantization-sufficiency audit.
+- [ ] Decompose existing raw failures into parse, composition, lattice,
+  collision, graph, and energy-only classes before training.
 - [ ] Implement and unit-test differentiable metric/RDF/overlap/coordination
   losses without changing inference decoding.
 - [ ] Train two geometry-aware DLM seeds on MP20 train only and run a fixed
   train/chemsys-validation raw-first screen.
+- [ ] Add the two-layer periodic relation adapter only if the frozen G2 trigger
+  fires; otherwise retain the loss-only DLM.
 - [ ] Build the one-trajectory model494 basin-SFT dataset and train two fresh
   anchored adapters.
 - [ ] Build one immutable K=4 group pool and run the offline shared-mask

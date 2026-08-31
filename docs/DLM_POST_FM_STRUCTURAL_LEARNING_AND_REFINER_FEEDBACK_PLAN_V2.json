@@ -20,7 +20,19 @@
     "new_vocab_before_quantization_audit": false
   },
   "geometry_training": {
+    "hypothesis_confidence": {
+      "raw_structural_validity": "high",
+      "thermodynamic_stability_sufficiency": "medium"
+    },
     "decode_mask_added": false,
+    "failure_taxonomy": [
+      "body_parse_or_schema",
+      "exact_composition",
+      "lattice_metric",
+      "PBC_minimum_distance_below_0p5A",
+      "CrystalNN_or_graph",
+      "valid_but_high_energy"
+    ],
     "losses": [
       "masked_CE",
       "metric_tensor_and_log_VPA",
@@ -32,7 +44,18 @@
       "global_fractional_translation",
       "same_species_site_permutation"
     ],
-    "loss_calibration": "one_train_only_gradient_norm_calibration"
+    "loss_calibration": "one_train_only_gradient_norm_calibration",
+    "conditional_relation_adapter": {
+      "default": false,
+      "trigger": [
+        "token_roundtrip_validity_passes",
+        "auxiliary_relation_errors_improve",
+        "raw_structural_validity_not_consistent_across_two_seeds"
+      ],
+      "architecture": "two_low_rank_periodic_species_pair_RBF_message_passing_layers",
+      "new_tokens": false,
+      "sampler_change": false
+    }
   },
   "refiner_feedback": {
     "stage1": "single_trajectory_model494_basin_SFT",

@@ -75,6 +75,12 @@
     "F_role_after_M_selection": "disclosed_formula_only_ablation",
     "new_decode_geometry_mask": false,
     "first_training_change": "periodic_geometry_aware_DLM_objective",
+    "geometry_hypothesis": {
+      "raw_struct_valid_confidence": "high",
+      "stability_sufficiency_confidence": "medium",
+      "first_test": "frozen_raw_failure_taxonomy_and_token_roundtrip"
+    },
+    "conditional_periodic_relation_adapter": "only_if_auxiliary_geometry_improves_but_two_seed_raw_struct_valid_does_not",
     "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",
     "AR_fallback": "C3FD_conditioned_CrysLLMGen_only_after_DLM_terminal",
     "execution_authorized": true

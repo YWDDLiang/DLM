@@ -86,6 +86,9 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
 - [ ] Retain each F/M route whose final requested-denominator composition
   validity is at least 95%. S.U.N. is not a Planner-retention gate; all outcomes
   remain disclosed.
+- [ ] Decompose frozen raw failures into parse, composition, lattice,
+  PBC-distance `<0.5 A`, CrystalNN/graph, and valid-but-high-energy classes;
+  report how much invalidity is actually geometric.
 - [ ] Run a CPU-only quantization audit for the current 0.1-A/1-degree/0.01-frac
   `7+4N` tokens. Extend the vocabulary only if tokenization itself changes
   structural validity by more than 1%.
@@ -93,6 +96,10 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
   to DLM training. Do not add a new inference-time geometry mask.
 - [ ] Train two fresh geometry-aware DLM seeds and run a fixed raw-first
   train/chemsys-validation screen.
+- [ ] Add a two-layer periodic species-pair/RBF relation adapter only if token
+  round-trip passes and auxiliary geometry errors improve, but raw struct-valid
+  fails to improve consistently across both seeds. Do not add epochs or search
+  schedules to force this trigger.
 - [ ] Build MP20-train-only one-trajectory model494 basin-SFT targets, requiring
   exact composition, Direct structural validity, and finite refined energy.
 - [ ] Build one fixed K=4 same-composition pool and run shared-mask,
