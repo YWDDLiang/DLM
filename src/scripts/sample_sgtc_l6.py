@@ -33,6 +33,7 @@ from crystal_dlm.sgtc_sampling import (  # noqa: E402
     validate_sgtc_attempts,
     validate_sgtc_denominator,
     validate_sgtc_plan_rows,
+    validate_sgtc_plan_rows_with_missing,
 )
 from scripts.sample_llada_dynamic_crystals import (  # noqa: E402
     build_dynamic_lightweight_constraints,
@@ -59,6 +60,7 @@ def main() -> None:
     parser.add_argument("--num-samples", type=int, default=256)
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--seed", type=int, required=True)
+    parser.add_argument("--allow-missing-plans", action="store_true")
     parser.add_argument("--reference-checkpoint-path")
     parser.add_argument("--late-guidance-scale", type=float, default=0.0)
     parser.add_argument(
@@ -96,7 +98,11 @@ def main() -> None:
         for line in args.prompt_jsonl.read_text(encoding="utf-8").splitlines()
         if line.strip()
     ]
-    plan_accounting = validate_sgtc_plan_rows(plans, expected=denominator)
+    plan_accounting = (
+        validate_sgtc_plan_rows_with_missing(plans, expected=denominator)
+        if args.allow_missing_plans
+        else validate_sgtc_plan_rows(plans, expected=denominator)
+    )
     lightweight = build_dynamic_lightweight_constraints(
         tokenizer,
         duplicate_coordinate_mask=True,
@@ -112,12 +118,34 @@ def main() -> None:
     torch.cuda.reset_peak_memory_stats()
     started = time.time()
     for ordinal, row in enumerate(plans):
-        plan = dict(row["plan_state"])
-        num_atoms = int(plan["N"])
         composition_id = str(row["reduced_composition_identity"])
         source_sample_idx = int(
             row.get("source_sample_idx", row.get("sample_idx", ordinal))
         )
+        if not isinstance(row.get("plan_state"), Mapping):
+            failures["planner_failed"] += 1
+            attempts.append(
+                {
+                    "schema": "h1a2_sgtc_body_attempt_v1",
+                    "ordinal": ordinal,
+                    "sample_idx": ordinal,
+                    "source_sample_idx": source_sample_idx,
+                    "composition_id": composition_id,
+                    "plan_state": None,
+                    "text": "",
+                    "parsed": False,
+                    "body_noise_seed": int(args.seed),
+                    "retry_or_replacement_used": False,
+                    "reason": "planner_failed",
+                    "late_guidance": {
+                        "guided_denoise_steps": 0,
+                        "total_denoise_steps": 0,
+                    },
+                }
+            )
+            continue
+        plan = dict(row["plan_state"])
+        num_atoms = int(plan["N"])
         prompt_text = str(row["prompt"]).rstrip() + "\n"
         encoded = tokenizer(
             [prompt_text], add_special_tokens=False, padding=True, return_tensors="pt"
@@ -221,6 +249,7 @@ def main() -> None:
         ),
         "late_guidance_scale": float(args.late_guidance_scale),
         "reference_checkpoint_path": args.reference_checkpoint_path,
+        "allow_missing_plans": bool(args.allow_missing_plans),
         "total_denoise_steps": int(denoise_steps_total),
         "elapsed_seconds": time.time() - started,
         "max_rss_kib": int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss),

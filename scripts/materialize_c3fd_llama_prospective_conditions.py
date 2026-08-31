@@ -242,6 +242,9 @@ def materialize(
             "source_sample_idx": source_idx,
             "expander_plan_state": minimal,
             "outcomes_read": False,
+            "exact_composition_identity": str(ledger["exact_composition_identity"]),
+            "reduced_composition_identity": str(ledger["reduced_composition_identity"]),
+            "chemsys": str(ledger["chemsys"]),
         }
         f_rows.append({**common, "route": "F"})
         m_rows.append(

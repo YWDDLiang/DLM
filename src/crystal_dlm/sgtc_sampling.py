@@ -74,10 +74,48 @@ def validate_sgtc_plan_rows(
     }
 
 
+def validate_sgtc_plan_rows_with_missing(
+    rows: Sequence[Mapping[str, Any]], *, expected: int
+) -> dict[str, int]:
+    """Validate a fixed ledger while retaining upstream Planner failures."""
+
+    denominator = int(expected)
+    if denominator <= 0 or len(rows) != denominator:
+        raise ValueError("SGTC Plan ledger does not cover the requested denominator")
+    if [int(row["sample_idx"]) for row in rows] != list(range(denominator)):
+        raise ValueError("SGTC Plan ledger sample indices are not globally aligned")
+    identities = [
+        str(row.get("reduced_composition_identity", "")).strip() for row in rows
+    ]
+    if any(not identity for identity in identities):
+        raise ValueError("SGTC Plan ledger composition identity must be non-empty")
+    valid = 0
+    failed = 0
+    for row in rows:
+        plan = row.get("plan_state")
+        prompt = str(row.get("prompt") or "").strip()
+        if isinstance(plan, Mapping):
+            if not prompt:
+                raise ValueError("valid SGTC Plan ledger row lacks prompt")
+            valid += 1
+        else:
+            if row.get("planner_failed") is not True or prompt:
+                raise ValueError("missing SGTC Plan row lacks explicit failure state")
+            failed += 1
+    return {
+        "plan_rows": denominator,
+        "plan_valid": valid,
+        "plan_failed": failed,
+        "unique_composition_identities": len(set(identities)),
+        "duplicate_composition_attempts": denominator - len(set(identities)),
+    }
+
+
 __all__ = [
     "SGTC_SCREEN_DENOMINATORS",
     "matched_base_noise_group",
     "validate_sgtc_attempts",
     "validate_sgtc_denominator",
     "validate_sgtc_plan_rows",
+    "validate_sgtc_plan_rows_with_missing",
 ]

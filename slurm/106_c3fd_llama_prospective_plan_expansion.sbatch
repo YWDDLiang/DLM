@@ -92,9 +92,9 @@ rc=0
 for pid in "${p0}" "${p1}" "${p2}" "${p3}"; do wait "${pid}" || rc=$?; done
 [[ "${rc}" -eq 0 ]]
 
-"${PYTHON}" - "${RUN}" <<'PY'
+"${PYTHON}" - "${RUN}" "${CONDITIONS}" <<'PY'
 import json,pathlib,sys
-root=pathlib.Path(sys.argv[1]); report={"schema":"c3fd_llama_prospective_plan_expansion_final_v1","routes":{},"selection":False}
+root=pathlib.Path(sys.argv[1]); conditions_root=pathlib.Path(sys.argv[2]); report={"schema":"c3fd_llama_prospective_plan_expansion_final_v1","routes":{},"selection":False}
 for route,seeds in (("F",(84017,84018)),("M",(84117,84118))):
     raw=[]; plans=[]; cells=[]
     for seed in seeds:
@@ -107,8 +107,19 @@ for route,seeds in (("F",(84017,84018)),("M",(84117,84118))):
     raw.sort(key=lambda row:int(row['sample_idx'])); plans.sort(key=lambda row:int(row['sample_idx']))
     assert len(raw)==256 and [int(row['sample_idx']) for row in raw]==list(range(256))
     assert len({int(row['sample_idx']) for row in plans})==len(plans)
+    condition_rows=[json.loads(line) for line in (conditions_root/f'{route}.jsonl').open() if line.strip()]
+    assert len(condition_rows)==256
+    conditions={int(row['sample_idx']):row for row in condition_rows}; valid={int(row['sample_idx']):row for row in plans}
+    body_plans=[]
+    for sample_idx in range(256):
+        condition=conditions[sample_idx]
+        if sample_idx in valid:
+            plan=valid[sample_idx]
+            body_plans.append({"sample_idx":sample_idx,"source_sample_idx":int(condition['source_sample_idx']),"reduced_composition_identity":condition['reduced_composition_identity'],"plan_state":plan['plan_state'],"prompt":plan['prompt'],"planner_failed":False})
+        else:
+            body_plans.append({"sample_idx":sample_idx,"source_sample_idx":int(condition['source_sample_idx']),"reduced_composition_identity":condition['reduced_composition_identity'],"plan_state":None,"prompt":None,"planner_failed":True})
     out=root/f'route_{route}'; out.mkdir()
-    for name,rows in (("raw_generations.jsonl",raw),("plans_for_dlm.jsonl",plans)):
+    for name,rows in (("raw_generations.jsonl",raw),("plans_for_dlm.jsonl",plans),("body_plans_fixed256.jsonl",body_plans)):
         with (out/name).open('x') as handle:
             for row in rows: handle.write(json.dumps(row,sort_keys=True)+'\n')
     report['routes'][route]={"requested":256,"parsed":len(plans),"failed":256-len(plans),"training_seed_cells":cells}
