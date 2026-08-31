@@ -1,0 +1,61 @@
+{
+  "schema": "c3fd_llama_dlm_sun_execution_checklist_v6",
+  "date": "2026-08-31",
+  "status": "ACTIVE",
+  "supersedes": [
+    "C3FD_H1A2_FUSION_SUN_CHECKLIST_36H_V4",
+    "C3FD_FULL_RICH_PLANNER_SUN_CHECKLIST_DRAFT_V5"
+  ],
+  "method_doc": "C3FD_LLAMA_DLM_TWO_ROUTE_METHOD_V1.md",
+  "paper_center": "masked_crystal_DLM_plan_to_structure_realization",
+  "routes": {
+    "F": "C3FD_formula_to_Llama_Rich_Expander",
+    "M": "C3FD_typed_semantic_prefix_to_Llama_Rich_Expander"
+  },
+  "minimal_engineering": {
+    "shared_existing_Llama_LoRA_trainer": true,
+    "new_backbone": false,
+    "new_attention_or_projector": false,
+    "shared_rich_suffix_target": true,
+    "conditioning_difference_only": true
+  },
+  "development_official": {
+    "include": [
+      "faithful_H0_R0S_eval38603_raw_refined",
+      "compact_V2_fresh_SFT_eval38768_raw_refined"
+    ],
+    "exclude": [
+      "alignment_pool38881",
+      "malformed_canary38420",
+      "cancelled38914",
+      "D3PO_already_official"
+    ],
+    "query_count": 1,
+    "claim": "development_only"
+  },
+  "training": {
+    "source": "MP20_train_validation_teacher_rich_suffix_only",
+    "initialization": "historical_H1A2_rich_Planner",
+    "seeds_per_route": 2,
+    "adaptation_epochs": 1,
+    "checkpoint_selection": false
+  },
+  "prospective": {
+    "requested": 256,
+    "routes": ["F", "M"],
+    "streams": [17, 18],
+    "old_H1A2_rich_DLM": true,
+    "model494_tau": 800,
+    "raw_first": true,
+    "official_query_count": 1,
+    "fixed_denominator": true
+  },
+  "forbidden": [
+    "deterministic_scientific_field_completion",
+    "compact_V2_rerun",
+    "alignment_or_listwise_training",
+    "retry_replacement_rerank_best_of_n",
+    "outcome_based_selection",
+    "AR_RL_GRPO_SMC"
+  ]
+}

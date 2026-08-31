@@ -1,0 +1,90 @@
+{
+  "schema": "c3fd_llama_rich_planner_sun_checklist_draft_v5",
+  "date": "2026-08-31",
+  "status": "awaiting_explicit_user_approval",
+  "execution_authorized": false,
+  "stopped_job": {
+    "job_id": 38914,
+    "state": "CANCELLED",
+    "resume": false,
+    "evaluate_partial_outputs": false
+  },
+  "retired": [
+    "deterministic_scientific_field_completion",
+    "compact_v2_rerun",
+    "alignment_or_listwise_training"
+  ],
+  "external_interface": {
+    "format": "h1_rich_plan_v1",
+    "fields": [
+      "formula",
+      "anion",
+      "charge",
+      "lattice",
+      "spacegroup",
+      "volume",
+      "end"
+    ],
+    "body_prompt": "historical_full_plan_state_JSON",
+    "scientific_field_completion": false
+  },
+  "candidate_F": {
+    "name": "C3FD composition to Llama Rich Expander",
+    "status": "feasible_fallback",
+    "hard_anchor": "C3FD_formula_N_elements_counts",
+    "llama_conditioning": "canonical_formula_only",
+    "generated_suffix": [
+      "anion",
+      "charge",
+      "lattice",
+      "spacegroup",
+      "volume",
+      "end"
+    ]
+  },
+  "candidate_M": {
+    "name": "C3FD-Conditioned Rich Planner",
+    "short_name": "C3FD-CRP",
+    "status": "supporting_conditioning_hypothesis_not_headline",
+    "c3fd_frozen": true,
+    "hard_anchor": "C3FD_formula_N_elements_counts",
+    "learned_prefix_inputs": [
+      "valence_resolved_action_trace",
+      "charge_ledger",
+      "anion_family_state",
+      "terminal_certificate",
+      "calibrated_uncertainty_summary"
+    ],
+    "trainable": ["semantic_prefix_projector", "Llama_LoRA"],
+    "test_or_outcome_inputs": false
+  },
+  "paper_center": {
+    "method": "C3FD_grounded_hard_soft_plan_conditioned_masked_DLM",
+    "planner_role": "conditioning_interface",
+    "dlm_role": "full_structure_realizer",
+    "primary_mechanism_evidence": "raw_DLM_body_Direct_CHGNet_and_plan_to_structure_conversion",
+    "refined_only_supports_new_dlm_claim": false,
+    "model494": "fixed_downstream_refiner"
+  },
+  "shared_training": {
+    "source": "MP20_train_validation_teacher_full_rich_Plans_only",
+    "same_base_schema_lora_epochs": true,
+    "training_seeds": 2,
+    "checkpoint_selection": false,
+    "dlm_retraining": false
+  },
+  "prospective": {
+    "requested": 256,
+    "same_compositions_for_F_and_M": true,
+    "body_streams": [17, 18],
+    "old_H1A2_rich_DLM": true,
+    "refiner": "model494_tau800",
+    "raw_first": true,
+    "official_queries": 1,
+    "retry_replacement_rerank": false
+  },
+  "approval_options": {
+    "F_only": "feasible_cascade_fallback",
+    "F_plus_M": "recommended_ablation_plus_paper_method"
+  }
+}

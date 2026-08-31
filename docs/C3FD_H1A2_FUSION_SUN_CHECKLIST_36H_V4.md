@@ -4,7 +4,12 @@ Date: 2026-08-31
 
 Deadline: 2026-08-31 23:30 Asia/Shanghai
 
-Status: **active execution contract**
+Status: **stopped and superseded by the approval-draft v5**
+
+User stop record: Slurm job `38914` was cancelled on 2026-08-31 after
+`00:16:13`. Its partial outputs are retained as a stopped engineering attempt;
+they must not be resumed, completed, evaluated, or used for a S.U.N. claim.
+The deterministic-completion method below is retired.
 
 This checklist supersedes `C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3` after the
 user stopped alignment training and prioritized immediate official S.U.N.

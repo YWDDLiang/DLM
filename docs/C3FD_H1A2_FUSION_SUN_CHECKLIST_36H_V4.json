@@ -2,7 +2,7 @@
   "schema": "c3fd_h1a2_fusion_sun_checklist_36h_v4",
   "date": "2026-08-31",
   "deadline": "2026-08-31T23:30:00+08:00",
-  "status": "active_execution_contract",
+  "status": "stopped_superseded_by_v5_draft",
   "supersedes": "C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3",
   "user_decision": {
     "alignment_training": "stopped_before_weights",
@@ -32,7 +32,9 @@
   },
   "prospective_generation": {
     "job_id": 38914,
-    "state": "RUNNING",
+    "state": "CANCELLED",
+    "elapsed": "00:16:13",
+    "resume_forbidden": true,
     "resources": "6_A800_48_CPU",
     "arms": ["h1a2_fusion", "v2_seed82017", "v2_seed82018"],
     "streams": [17, 18],
