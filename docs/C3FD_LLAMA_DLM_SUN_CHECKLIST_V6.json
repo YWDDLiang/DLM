@@ -10,12 +10,14 @@
   "paper_center": "masked_crystal_DLM_plan_to_structure_realization",
   "routes": {
     "F": "C3FD_formula_to_Llama_Rich_Expander",
-    "M": "C3FD_typed_semantic_prefix_to_Llama_Rich_Expander"
+    "M": "C3FD_learned_soft_prefix_to_Llama_Rich_Expander"
   },
   "minimal_engineering": {
     "shared_existing_Llama_LoRA_trainer": true,
     "new_backbone": false,
-    "new_attention_or_projector": false,
+    "new_attention": false,
+    "new_soft_prefix_projector": true,
+    "projector_architecture": "two_layer_MLP_to_K_Llama_hidden_embeddings",
     "shared_rich_suffix_target": true,
     "conditioning_difference_only": true
   },

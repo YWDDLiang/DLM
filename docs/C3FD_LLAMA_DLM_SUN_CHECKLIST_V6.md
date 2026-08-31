@@ -32,15 +32,17 @@ after success.
 ## Phase 2 — minimal shared F/M implementation
 
 - [ ] Add one composition-prefill Rich-suffix prompt/target helper.
-- [ ] Add one canonical C3FD semantic-prefix serializer for M.
+- [ ] Add one fixed-size frozen C3FD semantic-state feature packer for M.
+- [ ] Add one two-layer projector that maps the feature vector to `K` Llama
+  soft-prefix embeddings and prepends them through `inputs_embeds`.
 - [ ] Extend the existing MP20 H1 Planner data builder with `formula_only` and
-  `c3fd_semantic_prefix` conditioning modes.
-- [ ] Reuse the existing Llama+LoRA trainer; do not add a new backbone,
-  projector, attention path, or loss.
+  `c3fd_soft_prefix` conditioning modes.
+- [ ] Reuse the existing Llama+LoRA trainer and loss; add no new backbone or
+  custom attention path. Only M's prefix projector is new.
 - [ ] Extend sampling to lock the C3FD formula and generate only the rich
   suffix, then validate the canonical seven-line H1-A2 Plan.
-- [ ] Add train/serve round-trip, formula immutability, no-fill, and F/M
-  answer-identity tests.
+- [ ] Add train/serve round-trip, prefix-shape/mask, formula immutability,
+  no-fill, and F/M visible-answer-identity tests.
 
 ## Phase 3 — train and interface canary
 
