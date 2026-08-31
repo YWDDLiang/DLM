@@ -19,6 +19,8 @@ SPEC = importlib.util.spec_from_file_location(
 if SPEC is None or SPEC.loader is None:
     raise RuntimeError("cannot import fused typed sampler")
 MODULE = importlib.util.module_from_spec(SPEC)
+import sys
+sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
 
 from crystal_dlm.ccfd import FormulaToken

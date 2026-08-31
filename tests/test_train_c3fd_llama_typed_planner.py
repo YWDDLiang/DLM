@@ -158,7 +158,10 @@ def row(*, stratum=0, weight=1.0):
             {"remaining_atoms": n_value, "net_charge": 0, "remaining_species": 1, "branch": "unset"},
             {"remaining_atoms": 0, "net_charge": 0, "remaining_species": 0, "branch": "ionic"},
         ],
-        "legal_action_indices": [[action], [4]],
+        "legal_action_indices": [
+            sorted({action, 0 if action != 0 else 1}),
+            [4],
+        ],
         "soft_targets": {
             "lattice_system": {"label": 0},
             "spacegroup_bucket": {"label": 1},
