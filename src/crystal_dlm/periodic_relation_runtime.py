@@ -138,6 +138,11 @@ class PeriodicRelationLogitsModel(nn.Module):
         self.periodic_relation_adapter = PeriodicRelationAdapter(config)
         if adapter_state is not None:
             self.periodic_relation_adapter.load_state_dict(dict(adapter_state), strict=True)
+        reference_weight = base_model.get_output_embeddings().weight
+        self.periodic_relation_adapter.to(
+            device=reference_weight.device,
+            dtype=reference_weight.dtype,
+        )
         self.periodic_relation_support = build_periodic_relation_support(tokenizer)
         self._prompt_lengths: torch.Tensor | None = None
         self._num_sites: torch.Tensor | None = None

@@ -25,7 +25,7 @@ class GeometryG2SlurmTest(unittest.TestCase):
             "TRAINER_SHA=cc9ba741",
             "OBJECTIVE_SHA=b4d1df1b",
             "ADAPTER_SHA=a72c47e5",
-            "RUNTIME_SHA=dae44721",
+            "RUNTIME_SHA=ec6f4444",
             'relation["step0_max_logit_delta"] == 0.0',
             'range(1, 11)',
             'output_projection.weight',
