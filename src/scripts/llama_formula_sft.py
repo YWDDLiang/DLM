@@ -320,6 +320,7 @@ def main() -> None:
         "batch_size": int(args.batch_size),
         "grad_accum": int(args.grad_accum),
         "lr": float(args.lr),
+        "seed": int(args.seed),
         "total_updates": total_updates,
         "train_rows": len(train_ds),
         "val_rows": len(val_ds),

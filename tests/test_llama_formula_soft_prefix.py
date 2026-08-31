@@ -20,6 +20,9 @@ class LlamaFormulaSoftPrefixStaticTest(unittest.TestCase):
     def test_expander_prompt_is_built_from_plan_state(self):
         self.assertIn("build_expander_prompt(tokenizer, expander_plan)", SOURCE)
 
+    def test_training_manifest_records_seed(self):
+        self.assertIn('"seed": int(args.seed)', SOURCE)
+
 
 if __name__ == "__main__":
     unittest.main()
