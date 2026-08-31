@@ -101,6 +101,25 @@ The active planning contract is
 authorized it to begin after the fixed F/M prospective result is complete and
 disclosed. The earlier decode-mask-first v1 plan is superseded.
 
+The user subsequently selected the Compact-V2 return described in
+`ADR_C3FD_LLAMA_COMPACT_V2_MAINLINE_20260831.md`. The completed F/M experiment
+remains immutable evidence; M is the winner within that comparison, but the
+active candidate mainline is now C3FD-soft-prefix Llama producing the canonical
+Compact-V2 Plan for the already-trained Compact-V2 DLM.
+
+- [ ] Add the minimal three-soft-field Compact-V2 Llama target/sampler by
+  reusing Route M's feature packer, projector, and LoRA trainer.
+- [ ] Train one fixed Planner seed from MP20-train teacher Compact-V2 targets;
+  Llama may not change C3FD `N/elements/counts/anion_framework`.
+- [ ] Reuse job38703 Compact-V2 DLM seed82017 and one fixed stream17. Do not
+  retrain the same two-epoch DLM merely because Llama was inserted upstream.
+- [ ] Run a matched direct-C3FD-V2 versus Llama-V2 body+Direct screen on one
+  frozen ledger/noise stream. Promote Llama only if comp-valid is at least 95%,
+  body is within -1 pp, and raw Direct is noninferior; otherwise retain direct
+  Compact V2. No new MP query.
+- [ ] Apply G1 and optional later G2 to the resulting Compact-V2 DLM mainline,
+  not to the old-rich DLM.
+
 - [x] Audit whether model494-relaxed geometry was previously distilled into the
   DLM: it was proposed but never executed. SGTC and D3PO are different methods.
 - [x] Audit current decoder constraints: schema/exact chemistry, nondegenerate
@@ -108,9 +127,9 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
 - [x] Retain each F/M route whose final requested-denominator composition
   validity is at least 95%. S.U.N. is not a Planner-retention gate; all outcomes
   remain disclosed.
-- [x] Freeze M as the Planner mainline and F as the formula-only ablation after
-  F/M official. Reuse current Plans for development only; never rerun Planner per
-  DLM checkpoint.
+- [x] Freeze M as the winner within the completed F/M comparison and F as its
+  formula-only ablation. The later Compact-V2 pivot supersedes M as the active
+  mainline candidate without deleting the F/M result.
 - [ ] Freeze one new outcome-blind Plan ledger once for final post-training
   comparison and share it across BASE/G1/G2/feedback and all streams.
 - [ ] Reuse CHGNet results only for exact-identical raw structures with full
