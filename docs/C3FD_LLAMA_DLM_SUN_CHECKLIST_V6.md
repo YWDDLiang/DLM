@@ -124,7 +124,7 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
   stream. Retain it when requested-denominator comp-valid is at least 95%; raw
   Direct is reported but does not trigger extra Planner variants. No new MP
   query and no model494/CHGNet before this screen.
-- [ ] Apply G1 and optional later G2 to the resulting Compact-V2 DLM mainline,
+- [ ] Apply G1 and then G2 to the resulting Compact-V2 DLM mainline,
   not to the old-rich DLM.
 - [ ] After the active speed-first result is terminal, rebuild Planner
   supervision from the complete MP20 `27136/9047` rows. Missing typed witnesses
@@ -177,12 +177,16 @@ causal matched effect. No model494, CHGNet, or official query was run.
   comparison and share it across BASE/G1/G2/feedback and all streams.
 - [ ] Reuse CHGNet results only for exact-identical raw structures with full
   per-attempt remapping; never merge near-equivalent or model494-refined rows.
-- [ ] For G1/G2 development, run body+Direct first. Continue to model494/CHGNet
-  only if comp-valid is at least95%, body is within-1 pp of control, and both
-  methods improve raw struct-valid under the one frozen training seed/stream.
-- [ ] If that gate fails, archive every raw/Direct row and stop downstream
-  compute. Do not delete the arm; do not apply this shortcut after final
-  prospective arms are frozen.
+- [ ] For G1 development, run body+Direct first. Continue G1 to model494/CHGNet
+  only if comp-valid is at least 95%, body is within -1 pp of control, and raw
+  struct-valid improves under the one frozen training seed/stream.
+- [ ] If the G1 gate fails, archive every raw/Direct row and stop G1 downstream
+  compute. Do not delete the arm or reinterpret the negative result.
+- [ ] Run G2 through the complete registered development chain regardless of
+  its raw delta: body+Direct, model494 tau800, and raw/refined CHGNet. Preserve
+  the one-seed/one-stream matched contract and do not issue an official query.
+  This full G2 endpoint is required to detect residual-adapter effects that may
+  appear only after refinement or in continuous energy.
 - [ ] Decompose frozen raw failures into parse, composition, lattice,
   PBC-distance `<0.5 A`, CrystalNN/graph, and valid-but-high-energy classes;
   report how much invalidity is actually geometric.

@@ -68,19 +68,25 @@ Future method-development screens use a preregistered cheap-to-expensive ladder:
 body generation -> parse/composition/Direct -> model494/CHGNet -> official
 ```
 
-For G1 and G2 the primary development target is raw structural validity. Run
-only body generation and Direct first. Continue to model494/CHGNet only when:
+For G1 the primary development target is raw structural validity. Run only body
+generation and Direct first. Continue G1 to model494/CHGNet only when:
 
 - all-request composition validity remains at least `95%`;
 - body execution is noninferior to its matched control by at most `1 pp`;
 - the single frozen development training seed has positive raw struct-valid
   delta versus the matched control on the one fixed development stream.
 
-If the gate fails, preserve every raw attempt and Direct row, classify the arm
-as a raw-stage negative, and do not spend GPU time on model494, CHGNet, or
-official hull. G2 is an independently preregistered later candidate, not a
-mandatory continuation of a negative G1; a negative G1 does not authorize
-downstream G1 energy evaluation.
+If the G1 gate fails, preserve every raw attempt and Direct row, classify the
+arm as a raw-stage negative, and do not spend GPU time on G1 model494, CHGNet,
+or official hull.
+
+G2 is intentionally different: run its complete registered development chain
+regardless of the raw delta. Complete means raw body/Direct, model494 tau800,
+and both raw and refined CHGNet under the same one-seed/one-stream matched
+contract. Do not issue an official query at this development stage. The full G2
+endpoint is required because the periodic residual adapter may alter basin
+entry or continuous energy even when the thresholded raw Direct count is flat.
+A negative G1 neither blocks nor changes G2.
 
 For refiner-feedback policies, raw validity is a safety gate rather than the
 primary energy endpoint. A trained policy that violates the frozen raw-validity
@@ -273,7 +279,8 @@ single-seed development screen only when all of the following are true:
 - the acyclic forward, torus/PBC invariance, step-0 equality, and memory/runtime
   tests pass;
 - G1 and G2 use the same frozen training seed, Plan ledger, body-noise stream,
-  update count, and Direct-only evaluation contract.
+  and update count; G1 uses the raw compute gate while G2 has the preregistered
+  full raw/refined evaluation contract.
 
 The adapter keeps the same vocabulary and sampler. For each structure it pools
 the element/XYZ hidden states into at most 20 site states, forms all periodic
@@ -464,9 +471,12 @@ for the DLM method after observing the same prospective outcomes.
   ledger once and reuse it across all final DLM arms/streams.
 - [ ] Add exact-identity raw-structure CHGNet caching with per-attempt result
   remapping; never cache/refold model494-refined outcomes across cells.
-- [ ] Run Direct-only development gates before model494/CHGNet. Stop and archive
-  any G1/G2 arm with nonpositive raw struct-valid delta under the one frozen
-  training seed/stream or body regression beyond 1 pp.
+- [ ] Run the Direct-only G1 development gate before G1 model494/CHGNet. Stop
+  and archive G1 when raw struct-valid delta is nonpositive under the one frozen
+  training seed/stream or body regresses beyond 1 pp.
+- [ ] Run G2 through raw body/Direct, model494 tau800, and raw/refined CHGNet
+  regardless of raw delta; retain the one-seed/one-stream contract and do not
+  use an official query for this development screen.
 - [ ] Apply the compute gate only before final method freeze; every arm admitted
   to final prospective evaluation must complete raw/refined/official endpoints.
 - [ ] Run the CPU-only `7+4N` quantization-sufficiency audit.

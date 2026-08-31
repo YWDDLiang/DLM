@@ -31,14 +31,22 @@
   },
   "development_compute_gate": {
     "order": ["body_and_Direct", "model494_and_CHGNet", "official_hull"],
-    "G1_G2_primary_target": "raw_structural_validity",
-    "continue_requirements": {
-      "all_request_comp_valid_minimum": 0.95,
-      "body_noninferiority_floor_pp": -1.0,
-      "raw_struct_valid_delta_single_frozen_seed_stream": "strictly_positive"
+    "G1": {
+      "primary_target": "raw_structural_validity",
+      "continue_requirements": {
+        "all_request_comp_valid_minimum": 0.95,
+        "body_noninferiority_floor_pp": -1.0,
+        "raw_struct_valid_delta_single_frozen_seed_stream": "strictly_positive"
+      },
+      "on_failure": "archive_all_raw_and_Direct_rows_as_raw_stage_negative_skip_model494_CHGNet_official"
     },
-    "on_failure": "archive_all_raw_and_Direct_rows_as_raw_stage_negative_skip_model494_CHGNet_official",
-    "G2_role": "independently_preregistered_later_parallel_candidate_not_mandatory_G1_continuation",
+    "G2": {
+      "role": "independently_preregistered_periodic_residual_candidate_not_blocked_by_G1",
+      "required_stages": ["raw_body_and_Direct", "model494_tau800", "raw_and_refined_CHGNet"],
+      "run_regardless_of_raw_delta": true,
+      "official_query": false,
+      "reason": "detect_refinement_basin_or_continuous_energy_effects_even_when_raw_Direct_is_flat"
+    },
     "feedback_policy": "raw_validity_is_safety_gate_but_registered_label_pool_still_requires_model494_CHGNet",
     "final_prospective": "all_admitted_arms_complete_full_endpoints_no_result_based_removal"
   },

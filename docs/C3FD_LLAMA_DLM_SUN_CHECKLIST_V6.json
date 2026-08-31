@@ -184,9 +184,20 @@
       "refined_cross_cell_reuse": false
     },
     "development_compute_gate": {
-      "first_stage": "body_and_Direct_only",
-      "continue_if": "comp_valid_ge_95pct_and_body_delta_ge_minus_1pp_and_single_frozen_seed_stream_raw_struct_valid_delta_positive",
-      "failure_action": "archive_raw_negative_skip_model494_CHGNet_official",
+      "G1": {
+        "first_stage": "body_and_Direct_only",
+        "continue_if": "comp_valid_ge_95pct_and_body_delta_ge_minus_1pp_and_single_frozen_seed_stream_raw_struct_valid_delta_positive",
+        "failure_action": "archive_raw_negative_skip_model494_CHGNet_official"
+      },
+      "G2": {
+        "required_stages": [
+          "raw_body_and_Direct",
+          "model494_tau800_refinement",
+          "raw_and_refined_CHGNet"
+        ],
+        "run_regardless_of_raw_delta": true,
+        "official_query": false
+      },
       "final_prospective_shortcut_forbidden": true
     },
     "new_decode_geometry_mask": false,
@@ -213,6 +224,8 @@
       "generation_stream_count_per_method": 1,
       "parallel_candidate_jobs": 2,
       "reuse_base_cell": true,
+      "G1_raw_gate_enabled": true,
+      "G2_full_endpoint_required": true,
       "promote_at_most_one": true,
       "single_seed_claim_boundary": "development_method_selection_not_seed_robust_claim"
     },
