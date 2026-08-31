@@ -11,7 +11,14 @@ import math
 from typing import Any, Mapping, Sequence
 
 from crystal_dlm.ccfd import FormulaToken
-from crystal_dlm.ccfd_v2 import END_COMPOSITION, SetAtomCount, replay_actions
+from crystal_dlm.ccfd_v2 import (
+    CCFDv2State,
+    END_COMPOSITION,
+    SetAtomCount,
+    replay_actions,
+)
+from crystal_dlm.composition_pair_prior import ValenceNode
+from crystal_dlm.family_reachability import PaulingBitsetReachability
 
 
 FUSED_TYPED_PLAN_SCHEMA = "c3fd_llama_fused_typed_targets_v1"
@@ -76,7 +83,78 @@ def _species_vocabulary(vocabulary: Mapping[str, Any]) -> dict[int, tuple[int, i
         )
     if not result:
         raise ValueError("species vocabulary is empty")
+    if sorted(result) != list(range(len(result))):
+        raise ValueError("species vocabulary ids must be contiguous from zero")
     return result
+
+
+def _max_count(vocabulary: Mapping[str, Any]) -> int:
+    values = vocabulary.get("count_values")
+    if values is None:
+        return 20
+    if not isinstance(values, Sequence) or isinstance(values, (str, bytes)):
+        raise ValueError("count vocabulary is malformed")
+    counts = [_strict_int(value, label="count vocabulary value") for value in values]
+    if not counts or min(counts) != 1 or sorted(set(counts)) != list(
+        range(1, max(counts) + 1)
+    ):
+        raise ValueError("count vocabulary must be contiguous from one")
+    return max(counts)
+
+
+def _legal_action_indices(
+    *,
+    tokens: Sequence[FormulaToken],
+    species_vocabulary: Mapping[int, tuple[int, int]],
+    target_n: int,
+    arity: int,
+    family: str,
+    max_count: int,
+) -> list[list[int]]:
+    """Compile the exact inference-time legal support for every teacher step."""
+
+    nodes_by_id = {
+        int(species_id): ValenceNode(int(value[0]), int(value[1]))
+        for species_id, value in species_vocabulary.items()
+    }
+    node_to_id = {node: species_id for species_id, node in nodes_by_id.items()}
+    reachability = PaulingBitsetReachability(tuple(nodes_by_id.values()))
+    state = CCFDv2State.start().apply(SetAtomCount(int(target_n)))
+    legal_steps: list[list[int]] = []
+    for teacher in tokens:
+        legal_tokens = reachability.legal_species_counts(
+            state,
+            family=str(family),
+            target_arity=int(arity),
+            max_species=7,
+        )
+        legal: list[int] = []
+        for token in legal_tokens:
+            node = ValenceNode(int(token.atomic_number), int(token.oxidation_state))
+            if node not in node_to_id:
+                raise ValueError("reachability returned a species outside vocabulary")
+            count = int(token.count)
+            if count < 1 or count > int(max_count):
+                raise ValueError("reachability returned a count outside vocabulary")
+            legal.append(int(node_to_id[node]) * int(max_count) + count - 1)
+        legal = sorted(set(legal))
+        teacher_node = ValenceNode(
+            int(teacher.atomic_number), int(teacher.oxidation_state)
+        )
+        teacher_action = (
+            int(node_to_id[teacher_node]) * int(max_count)
+            + int(teacher.count)
+            - 1
+        )
+        if teacher_action not in legal:
+            raise ValueError("teacher action is illegal under Pauling-bitset mask")
+        legal_steps.append(legal)
+        state = state.apply(teacher, max_species=7)
+    if not state.conservation_complete or len(state.tokens) != int(arity):
+        raise ValueError("teacher terminal state is not conservation complete")
+    eos_action = len(species_vocabulary) * int(max_count)
+    legal_steps.append([eos_action])
+    return legal_steps
 
 
 def _soft_target(
@@ -247,6 +325,7 @@ def typed_targets_from_semantic_row(
         raise ValueError("species/count sequence does not match proposal arity")
 
     species_vocabulary = _species_vocabulary(vocabulary)
+    max_count = _max_count(vocabulary)
     tokens: list[FormulaToken] = []
     species_actions: list[dict[str, int]] = []
     for species_id, count in zip(species_ids, counts):
@@ -289,6 +368,15 @@ def typed_targets_from_semantic_row(
         "count_targets": counts,
         "species_actions": species_actions,
         "ledger_steps": ledger,
+        "legal_action_indices": _legal_action_indices(
+            tokens=tokens,
+            species_vocabulary=species_vocabulary,
+            target_n=target_n,
+            arity=arity,
+            family=family_value,
+            max_count=max_count,
+        ),
+        "max_count": max_count,
         "soft_targets": soft_targets,
     }
     targets["audit_transcript"] = audit_transcript_from_targets(targets)

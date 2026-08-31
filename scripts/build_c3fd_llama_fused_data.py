@@ -204,6 +204,8 @@ def build_split_rows(
                 "species_ids": targets["species_ids"],
                 "count_targets": targets["count_targets"],
                 "ledger_steps": targets["ledger_steps"],
+                "legal_action_indices": targets["legal_action_indices"],
+                "max_count": targets["max_count"],
                 "soft_targets": targets["soft_targets"],
                 "audit_transcript": targets["audit_transcript"],
             }

@@ -20,6 +20,24 @@ if SPEC is None or SPEC.loader is None:
 MODULE = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(MODULE)
 
+from crystal_dlm.ccfd import FormulaToken
+import crystal_dlm.c3fd_llama_fused_plan as FUSED_MODULE
+
+
+class FixtureReachability:
+    def __init__(self, _nodes):
+        pass
+
+    def legal_species_counts(self, state, **_kwargs):
+        if len(state.tokens) == 0:
+            return (FormulaToken(11, 1, 1),)
+        if len(state.tokens) == 1:
+            return (FormulaToken(17, -1, 1),)
+        return ()
+
+
+FUSED_MODULE.PaulingBitsetReachability = FixtureReachability
+
 
 def write_jsonl(path: Path, rows) -> None:
     path.write_text(
@@ -34,9 +52,10 @@ def read_jsonl(path: Path):
 
 def vocabulary():
     return {
+        "count_values": list(range(1, 21)),
         "species": [
-            {"id": 4, "atomic_number": 11, "oxidation_state": 1},
-            {"id": 9, "atomic_number": 17, "oxidation_state": -1},
+            {"id": 0, "atomic_number": 11, "oxidation_state": 1},
+            {"id": 1, "atomic_number": 17, "oxidation_state": -1},
         ],
         "soft_vocabulary": {
             "anion_framework": ["oxide", "halide"],
@@ -57,7 +76,7 @@ def semantic_row(index: int, *, split: str | None = None):
         "compile_error": None,
         "N_target": 2,
         "proposal_targets": {"family": 1, "N": 2, "arity": 2},
-        "species_labels": [4, 9],
+        "species_labels": [0, 1],
         "count_targets": [1, 1],
         "ledger_steps": [
             {
@@ -206,6 +225,8 @@ class BuildFusedDataTest(unittest.TestCase):
                     "species_ids",
                     "count_targets",
                     "ledger_steps",
+                    "legal_action_indices",
+                    "max_count",
                     "soft_targets",
                     "audit_transcript",
                 },
@@ -222,7 +243,7 @@ class BuildFusedDataTest(unittest.TestCase):
                 '"metadata"',
             ):
                 self.assertNotIn(forbidden, serialized)
-            self.assertEqual(row["species_ids"], [4, 9])
+            self.assertEqual(row["species_ids"], [0, 1])
             self.assertEqual(row["count_targets"], [1, 1])
             self.assertEqual(row["soft_targets"]["volume_per_atom_bin"]["label"], 0)
 

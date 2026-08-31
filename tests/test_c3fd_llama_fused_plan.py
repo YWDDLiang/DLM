@@ -18,13 +18,31 @@ from crystal_dlm.c3fd_llama_fused_plan import (
     stability_condition_from_e_above_hull,
     typed_targets_from_semantic_row,
 )
+import crystal_dlm.c3fd_llama_fused_plan as FUSED_MODULE
+from crystal_dlm.ccfd import FormulaToken
+
+
+class FixtureReachability:
+    def __init__(self, _nodes):
+        pass
+
+    def legal_species_counts(self, state, **_kwargs):
+        if len(state.tokens) == 0:
+            return (FormulaToken(11, 1, 1),)
+        if len(state.tokens) == 1:
+            return (FormulaToken(17, -1, 1),)
+        return ()
+
+
+FUSED_MODULE.PaulingBitsetReachability = FixtureReachability
 
 
 def vocabulary():
     return {
+        "count_values": list(range(1, 21)),
         "species": [
-            {"id": 4, "atomic_number": 11, "oxidation_state": 1},
-            {"id": 9, "atomic_number": 17, "oxidation_state": -1},
+            {"id": 0, "atomic_number": 11, "oxidation_state": 1},
+            {"id": 1, "atomic_number": 17, "oxidation_state": -1},
         ],
         "soft_vocabulary": {
             "anion_framework": ["oxide", "halide"],
@@ -45,7 +63,7 @@ def semantic_row():
         "compile_error": None,
         "N_target": 2,
         "proposal_targets": {"family": 1, "N": 2, "arity": 2},
-        "species_labels": [4, 9],
+        "species_labels": [0, 1],
         "count_targets": [1, 1],
         "ledger_steps": [
             {
@@ -127,8 +145,13 @@ class TypedTargetsTest(unittest.TestCase):
             targets["proposal_target"],
             {"family_id": 1, "family_value": "halide", "N": 2, "arity": 2},
         )
-        self.assertEqual(targets["species_ids"], [4, 9])
+        self.assertEqual(targets["species_ids"], [0, 1])
         self.assertEqual(targets["count_targets"], [1, 1])
+        self.assertEqual(len(targets["legal_action_indices"]), 3)
+        self.assertIn(0, targets["legal_action_indices"][0])
+        self.assertIn(20, targets["legal_action_indices"][1])
+        self.assertEqual(targets["legal_action_indices"][-1], [2 * 20])
+        self.assertEqual(targets["max_count"], 20)
         self.assertEqual(
             targets["species_actions"],
             [
@@ -148,8 +171,8 @@ class TypedTargetsTest(unittest.TestCase):
         second = typed_targets_from_semantic_row(semantic_row(), vocabulary())
         expected = (
             "PROPOSAL family=halide family_id=1 N=2 arity=2\n"
-            "SPECIES id=4 Z=11 oxidation=+1 count=1\n"
-            "SPECIES id=9 Z=17 oxidation=-1 count=1\n"
+            "SPECIES id=0 Z=11 oxidation=+1 count=1\n"
+            "SPECIES id=1 Z=17 oxidation=-1 count=1\n"
             "EOS_COMPOSITION\n"
             "SOFT field=lattice_system label=0 value=cubic\n"
             "SOFT field=spacegroup_bucket label=0 value=sg_195_230\n"
@@ -169,7 +192,7 @@ class TypedTargetsTest(unittest.TestCase):
         bad_count["count_targets"] = [2, 1]
         mutations.append(bad_count)
         bad_order = semantic_row()
-        bad_order["species_labels"] = [9, 4]
+        bad_order["species_labels"] = [1, 0]
         mutations.append(bad_order)
         bad_ledger = semantic_row()
         bad_ledger["ledger_steps"][-1]["net_charge"] = 2
