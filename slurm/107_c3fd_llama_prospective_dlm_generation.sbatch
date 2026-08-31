@@ -20,6 +20,7 @@ readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly RICH_DLM="${REPO}/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final"
 readonly REFINER=/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt
 readonly CRYS=/public/home/jiaosz/hengzhang/Code/crysllmgen-main
+readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly RUN="${ROOT}/runs/c3fd_llama_prospective_dlm_generation_${SLURM_JOB_ID}"
 readonly RICH_ADAPTER_SHA=5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d
 readonly REFINER_SHA=573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e
@@ -81,7 +82,7 @@ run_cell() {
   mkdir -p "${output}"
   env CUDA_VISIBLE_DEVICES="${device}" OPENBLAS_NUM_THREADS=8 OMP_NUM_THREADS=8 \
     MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
-    python "${ROOT}/src/scripts/sample_sgtc_l6.py" \
+    "${PYTHON}" "${ROOT}/src/scripts/sample_sgtc_l6.py" \
     --model-path "${MODEL}" --checkpoint-path "${RICH_DLM}" \
     --prompt-jsonl "${PLAN_RUN}/route_${route}/body_plans_fixed256.jsonl" \
     --output-dir "${output}/body" --crysllmgen-dir "${CRYS}" \
@@ -90,7 +91,7 @@ run_cell() {
   [[ -f "${output}/body/_SUCCESS" ]]
   env CUDA_VISIBLE_DEVICES="${device}" OPENBLAS_NUM_THREADS=8 OMP_NUM_THREADS=8 \
     MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
-    python "${ROOT}/src/scripts/refine_dlm_with_crysllmgen.py" \
+    "${PYTHON}" "${ROOT}/src/scripts/refine_dlm_with_crysllmgen.py" \
     --proposal-graphs "${output}/body/proposal_graphs.pt" \
     --checkpoint "${REFINER}" --output-dir "${output}/refine" \
     --crysllmgen-dir "${CRYS}" --batch-size 1 --seed "${refiner_seed}" \
@@ -98,7 +99,7 @@ run_cell() {
     >"${output}/refine.out" 2>"${output}/refine.err"
   metrics="${output}/refine/refinement_metrics.json"
   [[ -f "${metrics}" ]]
-  output_file="$(python -c 'import json,sys; print(json.load(open(sys.argv[1],encoding="utf-8"))["output_file"])' "${metrics}")"
+  output_file="$(${PYTHON} -c 'import json,sys; print(json.load(open(sys.argv[1],encoding="utf-8"))["output_file"])' "${metrics}")"
   [[ -f "${output_file}" ]]
   touch "${output}/refine/_SUCCESS" "${output}/_SUCCESS"
 }

@@ -20,6 +20,10 @@ class Slurm107StaticTest(unittest.TestCase):
         self.assertIn("planner_failures\tpreserved_without_DLM_call", SOURCE)
         self.assertIn("retry_replacement_rerank\tfalse", SOURCE)
 
+    def test_uses_explicit_torch_environment(self):
+        self.assertIn("miniconda3/envs/diff_meets_diff/bin/python", SOURCE)
+        self.assertNotIn('\n    python "${ROOT}/src/scripts/', SOURCE)
+
 
 if __name__ == "__main__":
     unittest.main()
