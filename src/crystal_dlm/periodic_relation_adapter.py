@@ -260,7 +260,10 @@ class PeriodicRelationAdapter(nn.Module):
         squared = cartesian.square().sum(dim=-1)
         selected = squared.argmin(dim=-1, keepdim=True)
         minimum_squared = torch.gather(squared, dim=-1, index=selected).squeeze(-1)
-        distances = torch.sqrt(minimum_squared.clamp_min(0.0))
+        # Self pairs and exact duplicate coordinates can have squared distance
+        # zero. A positive floor avoids the infinite derivative of sqrt(0)
+        # before those pair slots are masked.
+        distances = torch.sqrt(minimum_squared.clamp_min(1.0e-12))
 
         max_sites = int(coordinates.shape[1])
         active = site_mask.unsqueeze(1) & site_mask.unsqueeze(2)
@@ -278,13 +281,15 @@ class PeriodicRelationAdapter(nn.Module):
         hidden_states: Tensor,
         geometry: SoftCrystalGeometry,
     ) -> PeriodicRelationOutput:
+        input_hidden_states = hidden_states
+        work_hidden_states = hidden_states.to(dtype=self.output_projection.weight.dtype)
         lattice, coordinates, species, prompt_lengths, _, site_mask = self._validate_and_prepare(
-            hidden_states, geometry
+            work_hidden_states, geometry
         )
         lattice_positions, site_positions = self._dynamic_positions(prompt_lengths, site_mask)
 
-        lattice_hidden = self._gather(hidden_states, lattice_positions)
-        site_hidden = self._gather(hidden_states, site_positions)
+        lattice_hidden = self._gather(work_hidden_states, lattice_positions)
+        site_hidden = self._gather(work_hidden_states, site_positions)
         lattice_context = self.lattice_projection(self.hidden_norm(lattice_hidden.mean(dim=1)))
         site_context = self.site_projection(self.hidden_norm(site_hidden.mean(dim=2)))
         species_states = self.species_embedding(species)
@@ -312,16 +317,17 @@ class PeriodicRelationAdapter(nn.Module):
         xyz_updates = self.output_projection(xyz_activation)
         xyz_updates = xyz_updates * site_mask.reshape(*site_mask.shape, 1, 1).to(xyz_updates.dtype)
 
-        batch, sequence_length, hidden_size = hidden_states.shape
-        residual = hidden_states.new_zeros((batch, sequence_length, hidden_size))
+        batch, sequence_length, hidden_size = work_hidden_states.shape
+        residual = work_hidden_states.new_zeros((batch, sequence_length, hidden_size))
         lattice_index = lattice_positions.unsqueeze(-1).expand(-1, -1, hidden_size)
         residual = residual.scatter_add(1, lattice_index, lattice_updates)
         xyz_positions = site_positions[..., 1:].reshape(batch, -1)
         xyz_index = xyz_positions.unsqueeze(-1).expand(-1, -1, hidden_size)
         residual = residual.scatter_add(1, xyz_index, xyz_updates.reshape(batch, -1, hidden_size))
 
+        residual = residual.to(dtype=input_hidden_states.dtype)
         return PeriodicRelationOutput(
-            hidden_states=hidden_states + residual,
+            hidden_states=input_hidden_states + residual,
             residual=residual,
             internal_activation=states,
             pair_distances=pair_distances,

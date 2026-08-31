@@ -24,8 +24,8 @@ class GeometryG2SlurmTest(unittest.TestCase):
         for needle in (
             "TRAINER_SHA=cc9ba741",
             "OBJECTIVE_SHA=b4d1df1b",
-            "ADAPTER_SHA=a72c47e5",
-            "RUNTIME_SHA=ec6f4444",
+            "ADAPTER_SHA=d5bd2706",
+            "RUNTIME_SHA=6d071dc8",
             'relation["step0_max_logit_delta"] == 0.0',
             'range(1, 11)',
             'output_projection.weight',

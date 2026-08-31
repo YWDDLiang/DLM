@@ -59,14 +59,25 @@ def _tokens(tokenizer: _Tokenizer) -> torch.Tensor:
 
 
 class PeriodicRelationRuntimeTest(unittest.TestCase):
-    def test_adapter_inherits_base_output_dtype(self) -> None:
+    def test_adapter_keeps_float32_with_bfloat16_base(self) -> None:
         tokenizer = _Tokenizer()
         base = _Base(len(tokenizer.vocab)).to(dtype=torch.bfloat16)
         wrapped = wrap_with_periodic_relation(base, tokenizer, rank=6)
         self.assertEqual(
             wrapped.periodic_relation_adapter.output_projection.weight.dtype,
-            torch.bfloat16,
+            torch.float32,
         )
+        ids = _tokens(tokenizer)
+        wrapped.set_geometry_context(torch.tensor([0]), torch.tensor([2]))
+        loss = wrapped(ids).logits.float().square().mean()
+        loss.backward()
+        gradients = [
+            parameter.grad
+            for parameter in wrapped.parameters()
+            if parameter.grad is not None
+        ]
+        self.assertTrue(gradients)
+        self.assertTrue(all(torch.isfinite(gradient).all() for gradient in gradients))
 
     def test_committed_geometry_decodes_without_target_leakage(self) -> None:
         tokenizer = _Tokenizer()
