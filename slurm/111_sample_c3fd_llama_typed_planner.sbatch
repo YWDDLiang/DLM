@@ -29,7 +29,7 @@ readonly OUTPUT="${RUN}/plans"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly C3FD_SHA=87c1673f709c14488848196e3f466b0f4797cc3511108a07b6d498ca96d17d53
 readonly VOCAB_SHA=3268dccfb8562a2936f9a81d928f547b4f75c2471d4b383c2e36bebc7b41a6e3
-readonly SAMPLER_SHA=__SAMPLER_SHA256_TO_PIN_AFTER_DEPLOY__
+readonly SAMPLER_SHA=35bd60c7de186cd4cd2fa5c86a9f9c5da32732bfe3216a435a186ee0c901b55f
 
 mkdir "${RUN}"
 on_error() {

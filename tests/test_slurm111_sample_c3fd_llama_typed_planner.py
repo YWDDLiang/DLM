@@ -1,4 +1,6 @@
 from pathlib import Path
+import hashlib
+import re
 import unittest
 
 
@@ -24,6 +26,13 @@ class Slurm111StaticTest(unittest.TestCase):
         self.assertIn("C3FD_LLAMA_TYPED_ADAPTER_MODEL_SHA256", SOURCE)
         self.assertIn("INPUTS.sha256", SOURCE)
         self.assertIn('$(dirname "${SOURCE_LEDGER}")/_SUCCESS', SOURCE)
+        match = re.search(r"^readonly SAMPLER_SHA=([0-9a-f]{64})$", SOURCE, re.M)
+        self.assertIsNotNone(match)
+        observed = hashlib.sha256(
+            (ROOT / "src/scripts/sample_c3fd_llama_typed_planner.py").read_bytes()
+        ).hexdigest()
+        self.assertEqual(match.group(1), observed)
+        self.assertNotIn("TO_PIN", SOURCE)
 
     def test_one_trajectory_no_selection_and_comp_valid_gate(self):
         self.assertIn("trajectory_per_ordinal\t1", SOURCE)
