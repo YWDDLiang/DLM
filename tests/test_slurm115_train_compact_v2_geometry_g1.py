@@ -28,7 +28,7 @@ class GeometryG1SlurmTest(unittest.TestCase):
             "BASE_ADAPTER_SHA=06cd5465",
             "DATA_MANIFEST_SHA=b77a1d0",
             "TRAINER_SHA=e2744ab9",
-            "OBJECTIVE_SHA=ccde406c",
+            "OBJECTIVE_SHA=7463ca95",
             "H1A2_CODE_COMMIT",
         ):
             self.assertIn(needle, text)

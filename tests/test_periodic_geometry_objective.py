@@ -52,6 +52,33 @@ class PeriodicGeometryObjectiveTest(unittest.TestCase):
         loss.backward()
         self.assertTrue(torch.isfinite(logits.grad).all())
 
+    def test_bfloat16_logits_use_float32_geometry_kernels(self) -> None:
+        tokenizer = _Tokenizer()
+        support = build_geometry_token_support(tokenizer)
+        tokens = [
+            "<N_002>", "<LA_040>", "<LB_040>", "<LC_040>",
+            "<AA_090>", "<AB_090>", "<AG_090>",
+            "<E_Li>", "<X_000>", "<Y_000>", "<Z_000>",
+            "<E_O>", "<X_050>", "<Y_050>", "<Z_050>",
+        ]
+        ids = torch.tensor([[tokenizer.vocab[token] for token in tokens]])
+        logits = torch.full(
+            (1, len(tokens), len(tokenizer.vocab)), -8.0, dtype=torch.bfloat16
+        )
+        for position, token_id in enumerate(ids[0]):
+            logits[0, position, token_id] = 8.0
+        result = periodic_geometry_objective(
+            logits=logits,
+            input_ids=ids,
+            masked_indices=torch.ones_like(ids, dtype=torch.bool),
+            prompt_lengths=torch.tensor([0]),
+            num_atoms=torch.tensor([2]),
+            support=support,
+        )
+        for name in ("metric", "pair_rdf", "overlap", "coordination"):
+            self.assertEqual(result[name].dtype, torch.float32)
+            self.assertTrue(torch.isfinite(result[name]))
+
     def test_periodic_translation_preserves_pair_losses(self) -> None:
         # The objective's minimum-image path is indirectly exercised by two
         # token-equivalent global translations on the 0.25 grid.

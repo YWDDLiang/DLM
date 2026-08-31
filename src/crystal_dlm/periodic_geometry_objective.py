@@ -113,8 +113,12 @@ def _sample_objective(
     num_atoms: int,
     support: Mapping[str, Mapping[str, Mapping[str, list[Any]]]],
 ) -> dict[str, torch.Tensor]:
-    device = logits.device
-    dtype = logits.dtype
+    # CUDA determinant/linear-algebra kernels do not support bfloat16.  Keep
+    # the language model in its native dtype but evaluate the small geometry
+    # graph in float32; the cast remains differentiable back to the logits.
+    geometry_logits = logits.to(torch.float32)
+    device = geometry_logits.device
+    dtype = geometry_logits.dtype
     lattice_positions = [prompt_length + offset for offset in range(1, 7)]
     if max(lattice_positions) >= input_ids.shape[0]:
         raise ValueError("dynamic lattice positions exceed sequence length")
@@ -122,13 +126,13 @@ def _sample_objective(
     angle_values, target_angles = [], []
     for position, axis in zip(lattice_positions[:3], "ABC"):
         value, target = _family_expectation(
-            logits[position].unsqueeze(0), input_ids[position].unsqueeze(0),
+            geometry_logits[position].unsqueeze(0), input_ids[position].unsqueeze(0),
             masked[position].unsqueeze(0), support["length"][axis],
         )
         length_values.append(value[0]); target_lengths.append(target[0])
     for position, axis in zip(lattice_positions[3:], "ABG"):
         value, target = _family_expectation(
-            logits[position].unsqueeze(0), input_ids[position].unsqueeze(0),
+            geometry_logits[position].unsqueeze(0), input_ids[position].unsqueeze(0),
             masked[position].unsqueeze(0), support["angle"][axis],
         )
         angle_values.append(value[0]); target_angles.append(target[0])
@@ -142,7 +146,7 @@ def _sample_objective(
         values, targets = [], []
         for offset, axis in enumerate("XYZ", start=1):
             value, target = _family_expectation(
-                logits[base + offset].unsqueeze(0), input_ids[base + offset].unsqueeze(0),
+                geometry_logits[base + offset].unsqueeze(0), input_ids[base + offset].unsqueeze(0),
                 masked[base + offset].unsqueeze(0), support["coord"][axis],
             )
             values.append(value[0]); targets.append(target[0])
@@ -169,7 +173,7 @@ def _sample_objective(
 
     distances, pairs = _pair_distances(frac, lattice)
     target_distances, _ = _pair_distances(target_frac, target_lattice)
-    zero = logits.sum() * 0.0
+    zero = geometry_logits.sum() * 0.0
     if distances.numel() == 0:
         return {"metric": metric_loss, "pair_rdf": zero, "overlap": zero, "coordination": zero}
 
