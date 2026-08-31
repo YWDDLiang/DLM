@@ -79,7 +79,7 @@ sha256sum "${RUN}/scientific_contract.tsv" "${SOURCE}/body/raw_generations.jsonl
   --denominator 256 --source-arm full_axis --arm-label candidate
 
 env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=8 OMP_NUM_THREADS=8 \
-  MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 CRYSLLMGEN_METRICS_NUM_CPUS=8 \
+  MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
   "${PYTHON}" "${DIRECT}" \
   --generation-jsonl "${RUN}/evaluation/generation/generation.jsonl" \
   --gt-csv "${GT_CSV}" \

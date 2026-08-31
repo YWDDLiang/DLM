@@ -16,6 +16,7 @@ class G1RawRecoverySlurmTest(unittest.TestCase):
         self.assertIn("body_reused_from_job", text)
         self.assertNotIn('mkdir -p "${RUN}/evaluation/generation"', text)
         self.assertIn("OPENBLAS_NUM_THREADS=8 OMP_NUM_THREADS=8", text)
+        self.assertIn("CRYSLLMGEN_METRICS_NUM_CPUS=1", text)
 
     def test_gate_and_no_downstream_energy(self) -> None:
         text = SCRIPT.read_text()
