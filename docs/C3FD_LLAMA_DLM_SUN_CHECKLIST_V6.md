@@ -109,10 +109,11 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
 - [ ] Implement one product-of-experts typed sampler: frozen calibrated C3FD
   log-probability plus Llama action log-probability, followed by the existing
   C3FD hard legal mask and exactly one sample.
-- [ ] Build one MP20-train dataset joining C3FD semantic actions to train-only
+- [x] Build one MP20-train dataset joining C3FD semantic actions to train-only
   `e_above_hull` tiers by immutable `source_row_idx`; exclude every development,
   prospective, CHGNet, model494, and official outcome.
-- [ ] Train one fixed fresh Llama Planner seed85017 for one epoch, final only.
+- [ ] Train one fixed fresh Llama Planner seed85017 for one epoch, final only
+  (job39051 running on 1 A800 / 8 CPU).
   Llama scores N/family/arity/species/count and Compact-V2 fields; C3FD remains
   frozen. No coefficient, checkpoint, seed, or data sweep.
 - [ ] Reuse job38703 Compact-V2 DLM seed82017 and one fixed stream17. Do not
@@ -123,6 +124,10 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
   query and no model494/CHGNet before this screen.
 - [ ] Apply G1 and optional later G2 to the resulting Compact-V2 DLM mainline,
   not to the old-rich DLM.
+
+Data terminal: job39046 `COMPLETED 0:0/00:00:33`; train/val rows
+`24558/8158`. Every retained MP20 row is already `meta_or_better`, so this is a
+positive near-stable support prior rather than a learned hull classifier.
 
 - [x] Audit whether model494-relaxed geometry was previously distilled into the
   DLM: it was proposed but never executed. SGTC and D3PO are different methods.

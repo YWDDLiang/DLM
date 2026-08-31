@@ -77,6 +77,13 @@ training: no development, prospective, CHGNet, model494, or official-query row
 enters the Planner data. Do not add a second preference/RL stage or tune tier
 weights.
 
+The frozen V4 build subsequently established that every eligible MP20
+train/validation row is already `meta_or_better` under the dataset's native
+filter. The actual run therefore learns a positive **MP20 near-stable support
+prior**, not a contrastive high-versus-low hull classifier. The unused `higher`
+ID remains in the schema for explicit accounting but has zero training rows.
+The paper must not claim that the Planner predicts hull energy from composition.
+
 ## One-run contract
 
 - fresh Llama LoRA plus the minimal action scorer; frozen C3FD checkpoints and
@@ -93,6 +100,12 @@ weights.
 - requested-denominator composition validity must be at least 95%; all failed
   rows remain failures;
 - no model494, CHGNet, or new official query before the body+Direct result.
+
+Formal typed data job39046 completed in 33 seconds with train `24,558` and
+validation `8,158` rows. Missing typed witnesses (`2,578/888`) and one invalid
+validation teacher sequence remain explicit in the manifest. Jobs39028,
+39030, and39035 are preserved engineering negatives (join-key correction and
+removal of unnecessary per-row training-mask compilation).
 
 If comp-valid passes, the fused Planner is retained so the paper can preserve
 the C3FD-constrained Llama story. Raw Direct is reported but is not used to
