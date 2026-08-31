@@ -118,6 +118,8 @@ class PeriodicRelationRuntimeTest(unittest.TestCase):
         ids = _tokens(tokenizer)
         wrapped.set_geometry_context(torch.tensor([0]), torch.tensor([2]))
         wrapped(ids)
+        with torch.no_grad():
+            wrapped.periodic_relation_adapter.output_projection.weight.normal_(0.0, 0.02)
         with tempfile.TemporaryDirectory() as tmp:
             wrapped.save_pretrained(tmp)
             self.assertTrue((Path(tmp) / ADAPTER_CONFIG_NAME).is_file())
@@ -125,6 +127,10 @@ class PeriodicRelationRuntimeTest(unittest.TestCase):
             loaded = wrap_with_periodic_relation(
                 _Base(len(tokenizer.vocab)), tokenizer, rank=6, checkpoint=tmp
             )
+            loaded.set_geometry_context(torch.tensor([0]), torch.tensor([2]))
+            self.assertTrue(loaded.step0_checked)
+            self.assertEqual(loaded.step0_max_logit_delta, 0.0)
+            self.assertTrue(torch.isfinite(loaded(ids).logits).all())
             for left, right in zip(
                 wrapped.periodic_relation_adapter.parameters(),
                 loaded.periodic_relation_adapter.parameters(),

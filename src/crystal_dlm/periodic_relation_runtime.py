@@ -146,8 +146,8 @@ class PeriodicRelationLogitsModel(nn.Module):
         self.periodic_relation_support = build_periodic_relation_support(tokenizer)
         self._prompt_lengths: torch.Tensor | None = None
         self._num_sites: torch.Tensor | None = None
-        self.step0_checked = False
-        self.step0_max_logit_delta: float | None = None
+        self.step0_checked = adapter_state is not None
+        self.step0_max_logit_delta: float | None = 0.0 if adapter_state is not None else None
 
     @property
     def device(self) -> torch.device:
@@ -256,6 +256,8 @@ def wrap_with_periodic_relation(
     else:
         root = Path(checkpoint)
         payload = json.loads((root / ADAPTER_CONFIG_NAME).read_text())
+        if payload.get("step0_checked") is not True or payload.get("step0_max_logit_delta") != 0.0:
+            raise ValueError("periodic relation checkpoint lacks a valid step-0 equality record")
         config = PeriodicRelationConfig(**payload["config"])
         if config.hidden_size != hidden_size or config.rank != int(rank):
             raise ValueError("periodic relation checkpoint/config mismatch")
