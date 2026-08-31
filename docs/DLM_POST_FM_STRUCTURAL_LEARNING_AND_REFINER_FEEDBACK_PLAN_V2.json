@@ -12,6 +12,23 @@
     "preferred_integrated_route_if_retained": "M",
     "F_role": "formula_only_ablation_and_engineering_fallback"
   },
+  "planner_freeze_and_reuse": {
+    "freeze_after_FM_official": true,
+    "reuse_existing_FM_plans_for": "retrospective_development_only",
+    "final_evaluation_plan_ledger": "one_new_outcome_blind_ledger_frozen_once",
+    "shared_by": ["BASE", "G1", "G2", "feedback_policies", "streams", "matched_controls"],
+    "regenerate_per_DLM_checkpoint": false,
+    "replace_or_top_up_failures": false
+  },
+  "evaluation_reuse": {
+    "raw_structure_identity": "exact_canonical_identity_only",
+    "reuse_CHGNet_relaxation": true,
+    "map_back_to_all_original_attempts": true,
+    "stream17_exact_same_FM": [111, 245],
+    "stream18_exact_same_FM": [113, 248],
+    "model494_refined_cross_cell_reuse": false,
+    "forbidden": ["StructureMatcher_clustering", "near_duplicate_merge", "survivor_filter", "denominator_change"]
+  },
   "token_representation": {
     "schema": "dynamic_7_plus_4N",
     "length_resolution_angstrom": 0.1,

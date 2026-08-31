@@ -74,6 +74,17 @@
     "SUN_required_for_planner_retention": false,
     "M_preferred_if_retained": true,
     "F_role_after_M_selection": "disclosed_formula_only_ablation",
+    "planner_freeze": {
+      "regenerate_per_DLM_checkpoint": false,
+      "existing_FM_plans": "development_only",
+      "final_new_outcome_blind_plan_ledger": "freeze_once_reuse_all_arms"
+    },
+    "exact_raw_CHGNet_cache": {
+      "enabled_for_future_runs": true,
+      "identity": "exact_canonical_structure_only",
+      "preserve_attempt_rows": true,
+      "refined_cross_cell_reuse": false
+    },
     "new_decode_geometry_mask": false,
     "first_training_change": "periodic_geometry_aware_DLM_objective",
     "geometry_hypothesis": {

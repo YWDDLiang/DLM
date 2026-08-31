@@ -88,6 +88,13 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
 - [ ] Retain each F/M route whose final requested-denominator composition
   validity is at least 95%. S.U.N. is not a Planner-retention gate; all outcomes
   remain disclosed.
+- [ ] Freeze the chosen Planner checkpoint/renderer and exact Plan ledger after
+  F/M official. Reuse current Plans for development only; never rerun Planner per
+  DLM checkpoint.
+- [ ] Freeze one new outcome-blind Plan ledger once for final post-training
+  comparison and share it across BASE/G1/G2/feedback and all streams.
+- [ ] Reuse CHGNet results only for exact-identical raw structures with full
+  per-attempt remapping; never merge near-equivalent or model494-refined rows.
 - [ ] Decompose frozen raw failures into parse, composition, lattice,
   PBC-distance `<0.5 A`, CrystalNN/graph, and valid-but-high-energy classes;
   report how much invalidity is actually geometric.

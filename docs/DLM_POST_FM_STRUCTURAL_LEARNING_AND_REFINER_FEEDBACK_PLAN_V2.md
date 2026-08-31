@@ -23,6 +23,43 @@ in the report. M remains the preferred integrated route when it passes because
 it carries frozen C3FD state into the Llama Rich Expander; F remains the
 formula-only ablation and engineering fallback.
 
+## Planner freeze and Plan-ledger reuse
+
+After the F/M official result fixes the Planner mainline, freeze its exact Plan
+JSONL, source-ordinal ledger, renderer/checkpoint identities, and SHA-256. Do not
+rerun C3FD or Llama for each later DLM checkpoint.
+
+- Reuse the completed F/M prospective Plans only for retrospective development
+  screens, because their downstream outcomes are already visible.
+- For the eventual paper-facing post-training comparison, create one new
+  outcome-blind C3FD/Planner ledger before any new DLM outcome is read.
+- Reuse that one new Plan ledger, order, and formula/N anchors for BASE, G1, G2,
+  feedback policies, both DLM streams, and matched controls.
+- A Plan failure remains a failure for every arm; never top up or replace it.
+
+This both reduces runtime and strengthens attribution: all downstream
+differences are conditional realization differences under byte-identical Plans,
+not a second Planner sample.
+
+Plan generation itself is not the dominant GPU cost, so the main savings come
+from eliminating repeated data-freeze/debug cycles and enabling exact paired
+RNG/accounting. The larger compute optimization is to reuse exact-identical raw
+structures in downstream CHGNet evaluation.
+
+## Evaluation reuse boundary
+
+For future runs, content-address successful raw structures by an exact canonical
+structure identity across matched F/M or policy cells. Relax each exact unique
+raw structure once with CHGNet and map the result back to every original attempt.
+Preserve every requested row and denominator; do not use StructureMatcher,
+near-duplicate clustering, survivor filtering, or result selection.
+
+The current F/M run contains exact-identical raw structures for `111/245`
+stream17 and `113/248` stream18 paired ordinals, so this cache can remove about
+224 repeated raw relaxations. Do not reuse model494-refined structures across
+cells: only `1/245` and `1/248` are byte-identical, and continuous CUDA
+nondeterminism is part of the registered process.
+
 ## Why decoding constraints are no longer the primary route
 
 The current `7+4N` representation already has enough numerical granularity for
@@ -383,6 +420,12 @@ for the DLM method after observing the same prospective outcomes.
   and official S.U.N. result.
 - [ ] Retain every F/M route with requested-denominator final composition
   validity `>=95%`; classify DLM quality separately.
+- [ ] Freeze the selected Planner checkpoint/renderer and exact Plan ledger;
+  reuse it unchanged across every development DLM arm.
+- [ ] Before final post-training evaluation, freeze one new outcome-blind Plan
+  ledger once and reuse it across all final DLM arms/streams.
+- [ ] Add exact-identity raw-structure CHGNet caching with per-attempt result
+  remapping; never cache/refold model494-refined outcomes across cells.
 - [ ] Run the CPU-only `7+4N` quantization-sufficiency audit.
 - [ ] Decompose existing raw failures into parse, composition, lattice,
   collision, graph, and energy-only classes before training.
