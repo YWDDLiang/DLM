@@ -32,7 +32,6 @@ readonly GT_SHA=b4a2ae467ccab230a1b726778bf1539e3e89ecccaa6925a7c0eeeced46966c7c
 readonly BASE_REPORT_SHA=b5881e2999c936fd255972a4d5418cce4d4dcc8325da2666c60b5ef6add0b190
 
 mkdir "${RUN}"
-mkdir -p "${RUN}/evaluation/generation" "${RUN}/evaluation/direct"
 on_error() {
   local rc="$1" line="$2" command="$3"
   set +e

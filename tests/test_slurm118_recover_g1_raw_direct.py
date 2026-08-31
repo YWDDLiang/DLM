@@ -14,6 +14,7 @@ class G1RawRecoverySlurmTest(unittest.TestCase):
         self.assertIn("--arm-label candidate", text)
         self.assertNotIn("sample_sgtc", text)
         self.assertIn("body_reused_from_job", text)
+        self.assertNotIn('mkdir -p "${RUN}/evaluation/generation"', text)
 
     def test_gate_and_no_downstream_energy(self) -> None:
         text = SCRIPT.read_text()
