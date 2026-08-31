@@ -223,6 +223,9 @@ def main() -> None:
     if args.output_dir.exists():
         raise FileExistsError(f"output directory already exists: {args.output_dir}")
 
+    import crystal_dlm.dynamic_crystal as dynamic_codec
+    import crystal_dlm.fixed_slot as fixed_slot_codec
+
     raw_rows = _read_jsonl(args.raw_generation)
     direct_rows = _read_jsonl(args.direct_attempts)
     raw_by_idx = {_attempt_index(row, pos): row for pos, row in enumerate(raw_rows)}
@@ -251,6 +254,20 @@ def main() -> None:
                 "path": str(args.direct_attempts),
                 "sha256": _sha256(args.direct_attempts),
                 "rows": len(direct_rows),
+            },
+        },
+        "implementation": {
+            "audit_script": {
+                "path": str(Path(__file__).resolve()),
+                "sha256": _sha256(Path(__file__).resolve()),
+            },
+            "dynamic_codec": {
+                "path": str(Path(dynamic_codec.__file__).resolve()),
+                "sha256": _sha256(Path(dynamic_codec.__file__).resolve()),
+            },
+            "fixed_slot_codec": {
+                "path": str(Path(fixed_slot_codec.__file__).resolve()),
+                "sha256": _sha256(Path(fixed_slot_codec.__file__).resolve()),
             },
         },
         "identity": {
