@@ -73,14 +73,14 @@ only body generation and Direct first. Continue to model494/CHGNet only when:
 
 - all-request composition validity remains at least `95%`;
 - body execution is noninferior to its matched control by at most `1 pp`;
-- each fixed training-seed aggregate has positive raw struct-valid delta versus
-  the matched control.
+- the single frozen development training seed has positive raw struct-valid
+  delta versus the matched control on the one fixed development stream.
 
 If the gate fails, preserve every raw attempt and Direct row, classify the arm
 as a raw-stage negative, and do not spend GPU time on model494, CHGNet, or
-official hull. If G1 auxiliary geometry errors improve while its raw target
-fails, that evidence may trigger G2 under the separately frozen G2 rule; it
-does not authorize downstream G1 energy evaluation.
+official hull. G2 is an independently preregistered later candidate, not a
+mandatory continuation of a negative G1; a negative G1 does not authorize
+downstream G1 energy evaluation.
 
 For refiner-feedback policies, raw validity is a safety gate rather than the
 primary energy endpoint. A trained policy that violates the frozen raw-validity
@@ -262,17 +262,18 @@ MP20 positive structures teach the geometric manifold. They do not by
 themselves teach which generated polymorph is better, so Phase G is followed by
 refiner feedback rather than more plain CE epochs.
 
-### G2. Conditional periodic residual relation adapter
+### G2. Later parallel periodic residual relation adapter
 
-Do not start with a graph-network rewrite. First run G1 with the unchanged DLM
-backbone. Promote a small relation adapter only when all of the following are
-true on held-out chemical systems:
+Do not block G1 on the relation-adapter implementation. Run G1 as soon as its
+loss-only path is ready, while preparing G2 in parallel. Admit G2 to the same
+single-seed development screen only when all of the following are true:
 
 - token round-trip validity passes, so representation resolution is not the
   bottleneck;
-- G1 improves metric/RDF/overlap auxiliary errors;
-- raw structural validity does not improve consistently across the two fixed
-  training seeds.
+- the acyclic forward, torus/PBC invariance, step-0 equality, and memory/runtime
+  tests pass;
+- G1 and G2 use the same frozen training seed, Plan ledger, body-noise stream,
+  update count, and Direct-only evaluation contract.
 
 The adapter keeps the same vocabulary and sampler. For each structure it pools
 the element/XYZ hidden states into at most 20 site states, forms all periodic
@@ -325,7 +326,7 @@ the 8B backbone. Implement it over gathered typed legal logits/site states;
 never materialize dense pair-by-full-vocabulary tensors. Profile one sampler
 step and full exact-axis decoding before authorizing G2 training.
 
-If G2 fires, compare two matched continuations from the same G1 checkpoint:
+For the G2 screen, compare two matched continuations from the same initialization:
 
 - control: the same additional updates with no relation adapter;
 - candidate: the zero-initialized periodic residual adapter with the same data,
@@ -335,14 +336,18 @@ This prevents ordinary extra training from being attributed to the residual
 path. The scientific contribution is the periodic relational correction; the
 skip connection is the conservative integration mechanism.
 
-This G2 trigger distinguishes two failures: if relation losses themselves do
-not learn, the targets/objective are wrong; if they learn but generation does
-not change, the factorized token backbone needs an explicit relational path.
-No extra CE epoch or schedule search is allowed between G1 and this decision.
+Run only one training seed and one development generation stream for G1 and G2.
+The two candidate jobs may run concurrently within the two-job resource limit.
+Use one reusable matched base cell rather than a new base per candidate. Select
+at most one geometry method for later full evaluation using the preregistered
+raw struct-valid target and body/composition floors. If both improve similarly,
+prefer the simpler loss-only G1. No extra CE epoch or schedule search is allowed
+between this screen and the decision.
 
 The verdict is **feasible with prerequisites**, not ready-by-default: G0
-round-trip, the G1 trigger, q0/q1 acyclicity, step-0 equality, torus/PBC tests,
-and the matched continuation must all pass before a scientific G2 launch.
+round-trip, q0/q1 acyclicity, step-0 equality, torus/PBC tests, and the matched
+single-seed screen must all pass before a scientific G2 launch. A positive
+single-seed screen is development evidence, not a seed-robust standalone claim.
 
 ## Phase R — model494-in-the-loop self-improvement
 
@@ -460,8 +465,8 @@ for the DLM method after observing the same prospective outcomes.
 - [ ] Add exact-identity raw-structure CHGNet caching with per-attempt result
   remapping; never cache/refold model494-refined outcomes across cells.
 - [ ] Run Direct-only development gates before model494/CHGNet. Stop and archive
-  any G1/G2 arm with nonpositive raw struct-valid delta in either training-seed
-  aggregate or body regression beyond 1 pp.
+  any G1/G2 arm with nonpositive raw struct-valid delta under the one frozen
+  training seed/stream or body regression beyond 1 pp.
 - [ ] Apply the compute gate only before final method freeze; every arm admitted
   to final prospective evaluation must complete raw/refined/official endpoints.
 - [ ] Run the CPU-only `7+4N` quantization-sufficiency audit.
@@ -469,11 +474,12 @@ for the DLM method after observing the same prospective outcomes.
   collision, graph, and energy-only classes before training.
 - [ ] Implement and unit-test differentiable metric/RDF/overlap/coordination
   losses without changing inference decoding.
-- [ ] Train two geometry-aware DLM seeds on MP20 train only and run a fixed
-  train/chemsys-validation raw-first screen.
-- [ ] Add the zero-initialized two-layer periodic residual relation adapter only
-  if the frozen G2 trigger fires; verify step-0 G1-logit equality and compare
-  against a same-update no-adapter continuation.
+- [ ] Train one frozen-seed G1 and one frozen-seed G2 candidate; use one matched
+  development stream and run the two candidate jobs in parallel when G2 is
+  ready. Reuse one base cell.
+- [ ] Verify G2 step-0 equality and compare against a same-update no-adapter
+  continuation. Promote at most one method; prefer G1 when raw gains are
+  comparable.
 - [ ] Build the one-trajectory model494 basin-SFT dataset and train two fresh
   anchored adapters.
 - [ ] Build one immutable K=4 group pool and run the offline shared-mask

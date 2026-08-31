@@ -97,7 +97,7 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
   per-attempt remapping; never merge near-equivalent or model494-refined rows.
 - [ ] For G1/G2 development, run body+Direct first. Continue to model494/CHGNet
   only if comp-valid is at least95%, body is within-1 pp of control, and both
-  training-seed aggregates improve raw struct-valid.
+  methods improve raw struct-valid under the one frozen training seed/stream.
 - [ ] If that gate fails, archive every raw/Direct row and stop downstream
   compute. Do not delete the arm; do not apply this shortcut after final
   prospective arms are frozen.
@@ -109,12 +109,13 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
   structural validity by more than 1%.
 - [ ] Add differentiable periodic metric/RDF/short-distance/coordination losses
   to DLM training. Do not add a new inference-time geometry mask.
-- [ ] Train two fresh geometry-aware DLM seeds and run a fixed raw-first
-  train/chemsys-validation screen.
+- [ ] Train one frozen-seed G1 and one frozen-seed G2 candidate. Reuse one base
+  cell and one fixed development stream; run the candidate jobs in parallel
+  when G2 is ready.
 - [ ] Add a zero-initialized two-layer periodic residual species-pair/RBF
   relation adapter only if token round-trip passes and auxiliary geometry errors
-  improve, but raw struct-valid fails to improve consistently across both seeds.
-  Require step-0 equality to G1 and compare against a same-update no-adapter
+  and its independent implementation gates pass. Require step-0 equality to G1
+  and compare against a same-update no-adapter
   continuation. Reuse the CTV 4096-d output-head pre-hook/equality path; do not
   add epochs or search schedules to force the trigger.
 - [ ] Before G2, unit-test the acyclic `q0 -> soft geometry -> h' -> q1` forward,

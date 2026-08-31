@@ -87,7 +87,7 @@
     },
     "development_compute_gate": {
       "first_stage": "body_and_Direct_only",
-      "continue_if": "comp_valid_ge_95pct_and_body_delta_ge_minus_1pp_and_each_seed_raw_struct_valid_delta_positive",
+      "continue_if": "comp_valid_ge_95pct_and_body_delta_ge_minus_1pp_and_single_frozen_seed_stream_raw_struct_valid_delta_positive",
       "failure_action": "archive_raw_negative_skip_model494_CHGNet_official",
       "final_prospective_shortcut_forbidden": true
     },
@@ -99,7 +99,7 @@
       "first_test": "frozen_raw_failure_taxonomy_and_token_roundtrip"
     },
     "conditional_periodic_relation_adapter": {
-      "trigger": "only_if_auxiliary_geometry_improves_but_two_seed_raw_struct_valid_does_not",
+      "trigger": "later_parallel_candidate_after_G0_and_implementation_tests",
       "integration": "zero_initialized_residual_h_prime_equals_h_plus_delta_h",
       "forward": "acyclic_q0_soft_geometry_h_prime_q1",
       "torus_and_PBC_tests": true,
@@ -109,6 +109,14 @@
       "matched_control": "same_update_no_adapter_continuation",
       "implementation_path": "reuse_CTV_hidden4096_output_head_pre_hook",
       "R03_role": "schedule_relationship_evidence_not_residual_validation"
+    },
+    "G1_G2_development_screen": {
+      "training_seed_count_per_method": 1,
+      "generation_stream_count_per_method": 1,
+      "parallel_candidate_jobs": 2,
+      "reuse_base_cell": true,
+      "promote_at_most_one": true,
+      "single_seed_claim_boundary": "development_method_selection_not_seed_robust_claim"
     },
     "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",
     "AR_fallback": "C3FD_conditioned_CrysLLMGen_only_after_DLM_terminal",

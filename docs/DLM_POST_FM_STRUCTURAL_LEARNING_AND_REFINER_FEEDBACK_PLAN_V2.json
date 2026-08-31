@@ -35,10 +35,10 @@
     "continue_requirements": {
       "all_request_comp_valid_minimum": 0.95,
       "body_noninferiority_floor_pp": -1.0,
-      "raw_struct_valid_delta_each_training_seed": "strictly_positive"
+      "raw_struct_valid_delta_single_frozen_seed_stream": "strictly_positive"
     },
     "on_failure": "archive_all_raw_and_Direct_rows_as_raw_stage_negative_skip_model494_CHGNet_official",
-    "G1_auxiliary_only_improvement": "may_trigger_G2_but_does_not_authorize_G1_downstream_energy_eval",
+    "G2_role": "independently_preregistered_later_parallel_candidate_not_mandatory_G1_continuation",
     "feedback_policy": "raw_validity_is_safety_gate_but_registered_label_pool_still_requires_model494_CHGNet",
     "final_prospective": "all_admitted_arms_complete_full_endpoints_no_result_based_removal"
   },
@@ -77,11 +77,11 @@
     ],
     "loss_calibration": "one_train_only_gradient_norm_calibration",
     "conditional_relation_adapter": {
-      "default": false,
+      "default": "later_parallel_single_seed_candidate",
       "trigger": [
         "token_roundtrip_validity_passes",
-        "auxiliary_relation_errors_improve",
-        "raw_structural_validity_not_consistent_across_two_seeds"
+        "acyclic_torus_PBC_step0_and_runtime_tests_pass",
+        "same_seed_plan_noise_updates_and_Direct_contract_as_G1"
       ],
       "name": "periodic_residual_relation_adapter",
       "architecture": "h_prime_equals_h_plus_zero_initialized_Wout_of_two_low_rank_periodic_species_pair_RBF_message_passing_layers",
@@ -99,6 +99,11 @@
       "maximum_directed_site_pairs": 400,
       "dense_pair_by_vocab_tensor_forbidden": true,
       "feasibility_verdict": "feasible_with_prerequisites",
+      "development_training_seed_count": 1,
+      "development_generation_stream_count": 1,
+      "parallel_with_G1_when_ready": true,
+      "reuse_one_base_cell": true,
+      "promotion": "at_most_one_geometry_method_prefer_G1_if_raw_gains_comparable",
       "new_tokens": false,
       "sampler_change": false
     },
