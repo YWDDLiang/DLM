@@ -21,7 +21,6 @@ readonly RUN="${ROOT}/runs/c3fd_llama_rich_interface_canary_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly SAMPLER_SHA=7246c27d3ef28a11c8e1c259d8950e752cd4fdec4ddf1dbe207409eb0bfa8d07
 readonly EXPANDER_SHA=a6a824118728c07ea6179613a0d295181ebb783471f80b0eb603f9a77da83007
-readonly EXPANDER_SHA=a6a824118728c07ea6179613a0d295181ebb783471f80b0eb603f9a77da83007
 readonly SAMPLE_SEED=86017
 readonly REQUESTED=64
 

@@ -20,6 +20,7 @@ class Slurm103StaticTest(unittest.TestCase):
         self.assertIn("retry_replacement_rerank\tfalse", SOURCE)
         self.assertIn("formula_changed", SOURCE)
         self.assertIn("EXPANDER_SHA", SOURCE)
+        self.assertEqual(SOURCE.count("readonly EXPANDER_SHA="), 1)
 
 
 if __name__ == "__main__":
