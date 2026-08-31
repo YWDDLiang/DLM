@@ -130,7 +130,7 @@ def semantic_row(index: int, *, split: str | None = None):
 
 def source_row(index: int, hull, *, split: str | None = None):
     row = {
-        "source_row_idx": index,
+        "c3fd_certificate_source_row_idx": index,
         "metadata": {
             "e_above_hull": hull,
             "official_e_above_hull": -123,
@@ -199,7 +199,10 @@ class BuildFusedDataTest(unittest.TestCase):
                 [row["stability_condition"] for row in val],
                 ["higher", "meta_or_better"],
             )
-            self.assertEqual(manifest["join_key"], "immutable source_row_idx")
+            self.assertEqual(
+                manifest["join_key"],
+                "semantic.source_row_idx == ctv_minimal.c3fd_certificate_source_row_idx",
+            )
             self.assertFalse(manifest["ordinal_zip_used"])
 
     def test_primary_typed_fields_and_no_source_leakage(self):

@@ -52,10 +52,12 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _source_row_idx(row: Mapping[str, Any], *, label: str) -> int:
-    if "source_row_idx" not in row:
-        raise ValueError(f"{label} lacks immutable source_row_idx")
-    value = row["source_row_idx"]
+def _source_row_idx(
+    row: Mapping[str, Any], *, label: str, key: str
+) -> int:
+    if key not in row:
+        raise ValueError(f"{label} lacks immutable {key}")
+    value = row[key]
     if isinstance(value, bool):
         raise ValueError(f"{label} has invalid source_row_idx")
     try:
@@ -67,10 +69,12 @@ def _source_row_idx(row: Mapping[str, Any], *, label: str) -> int:
     return result
 
 
-def index_rows(path: Path, *, label: str) -> dict[int, dict[str, Any]]:
+def index_rows(
+    path: Path, *, label: str, key: str = "source_row_idx"
+) -> dict[int, dict[str, Any]]:
     indexed: dict[int, dict[str, Any]] = {}
     for row in iter_jsonl(path):
-        source_idx = _source_row_idx(row, label=label)
+        source_idx = _source_row_idx(row, label=label, key=key)
         if source_idx in indexed:
             raise ValueError(f"{label} duplicates source_row_idx {source_idx}")
         indexed[source_idx] = row
@@ -135,8 +139,14 @@ def build_split_rows(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Perform an explicit key join and retain a complete skip ledger."""
 
-    semantic = index_rows(semantic_path, label=f"semantic:{split}")
-    source = index_rows(source_path, label=f"ctv_minimal:{split}")
+    semantic = index_rows(
+        semantic_path, label=f"semantic:{split}", key="source_row_idx"
+    )
+    source = index_rows(
+        source_path,
+        label=f"ctv_minimal:{split}",
+        key="c3fd_certificate_source_row_idx",
+    )
     output: list[dict[str, Any]] = []
     skipped: Counter[str] = Counter()
     skipped_indices: dict[str, list[int]] = defaultdict(list)
@@ -302,7 +312,10 @@ def build_dataset(
             "data_scope": "MP20 corresponding train/val splits only",
             "included_splits": list(SPLITS),
             "dev_test_prospective_rows": 0,
-            "join_key": "immutable source_row_idx",
+            "join_key": (
+                "semantic.source_row_idx == "
+                "ctv_minimal.c3fd_certificate_source_row_idx"
+            ),
             "ordinal_zip_used": False,
             "raw_e_above_hull_copied_to_output": False,
             "structure_or_body_fields_copied_to_output": False,
