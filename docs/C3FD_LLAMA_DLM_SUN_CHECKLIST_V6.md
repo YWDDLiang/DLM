@@ -136,7 +136,15 @@ delta `3.8147e-6`; final typed config/state and Llama adapter SHA-256 are
 `ca786e3d...ff89a`, `9912e259...871bc`, and `7638b05d...84c75` respectively.
 Sampling job39086 is an engineering negative (all rows hit one CPU/GPU mask
 device mismatch before science). Commit `b6e7b30` fixes only that device move;
-the parameter-identical recovery job39088 is running.
+the parameter-identical recovery job39088 completed `0:0/00:04:54` with
+`256/256` requested-denominator composition validity. Across 2,038 typed
+decision events, mean fused-vs-C3FD KL was `0.06819`, mean selected-action base
+rank was `8.915`, and `87.05%` of events had nonzero KL. This establishes that
+Llama materially reweighted the constrained composition decisions.
+
+The one Compact-V2 DLM seed82017/stream17 raw body+Direct screen is job39093.
+Job39092 is a seven-second pre-science engineering negative caused by a stale
+sampler hash pin; no method or sampling parameter changed.
 
 - [x] Audit whether model494-relaxed geometry was previously distilled into the
   DLM: it was proposed but never executed. SGTC and D3PO are different methods.
