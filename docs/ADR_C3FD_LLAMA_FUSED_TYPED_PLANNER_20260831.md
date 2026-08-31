@@ -48,10 +48,13 @@ frozen C3FD calibrated logits + legal-action mask
 
 At each step C3FD enumerates only actions that remain reachable under atom
 count, charge, valence-family, arity, and benchmark-compatibility constraints.
-Llama scores those same actions from the serialized partial state. The two
-calibrated log-probabilities are added with fixed unit coefficients and sampled
-once. There is no candidate pool, post-hoc filter, retry, replacement, rerank,
-or best-of-N.
+Llama scores those same actions from typed embeddings of the partial action and
+ledger state. Its residual output heads are zero-initialized. Consequently the
+initial Llama `log_softmax` is uniform on each legal set and the normalized
+fused distribution is exactly the original C3FD distribution at step zero. The
+two log-probabilities are added with fixed unit coefficients and sampled once.
+There is no candidate pool, post-hoc filter, retry, replacement, rerank, or
+best-of-N.
 
 This makes Llama causally relevant to `N`, family, arity, every element/count
 choice, and the three Compact-V2 structural fields. C3FD is an internal
@@ -81,6 +84,10 @@ weights.
 - MP20 train only for optimization; standard validation is monitoring only;
 - one fixed seed `85017`, one epoch, final checkpoint only;
 - product-of-experts coefficient exactly `1 + 1`; no grid;
+- row-balanced loss exactly `(proposal CE + mean action CE + mean soft-field
+  CE) / 3`, so high-arity compositions do not receive larger total weight;
+- record fused-versus-C3FD action KL and selected-action C3FD rank during the
+  same sampling run; these are diagnostics, not extra experiment cells;
 - one CPU round-trip/mask/teacher-action check;
 - one fixed stream17 body+Direct run using existing Compact-V2 DLM seed82017;
 - requested-denominator composition validity must be at least 95%; all failed
@@ -106,4 +113,3 @@ The Planner contribution is: a pretrained Llama composition prior fused inside
 a conservation-constrained C3FD decoder preserves high chemical validity while
 conditioning a masked crystal DLM. It is not a claim that Llama alone predicts
 true hull energy, nor that hard constraints improve thermodynamic stability.
-
