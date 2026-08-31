@@ -60,15 +60,35 @@ after success.
 - [x] Freeze one new C3FD all-attempt fixed256 composition ledger before DLM
   outcomes; retain failed requests and do not top up.
 - [x] Generate F/M Plans on identical compositions/order.
-- [ ] Run F/M × streams17/18 through the same old H1-A2 rich DLM and model494
+- [x] Run F/M × streams17/18 through the same old H1-A2 rich DLM and model494
   tau800, one Plan and one trajectory per request.
-- [ ] Run one fixed-denominator raw-first/refined offline evaluation.
-- [ ] Execute one prospective official MP query and report Strict/Meta stable,
+- [x] Run one fixed-denominator raw-first/refined offline evaluation.
+- [x] Execute one prospective official MP query and report Strict/Meta stable,
   S.U.N., Direct/N/U/NU, CHGNet, hull ECDF/quantiles, and uncertainty.
+
+Terminal fixed-256 result (two streams, no attempt replacement):
+
+- requested-denominator composition validity: F `500/512 = 97.66%`, M
+  `503/512 = 98.24%`; conditional on a parsed body, both are `100%`;
+- raw Direct structural validity: F `217/512 = 42.38%`, M
+  `229/512 = 44.73%`;
+- refined Direct structural validity: F `499/512 = 97.46%`, M
+  `502/512 = 98.05%`;
+- raw Strict/Meta S.U.N.: F `2.734% / 10.547%`, M
+  `3.125% / 10.156%`;
+- refined Strict/Meta S.U.N.: F `6.641% / 38.281%`, M
+  `7.617% / 37.695%`.
+
+The paired M-minus-F raw and refined CHGNet confidence intervals cross zero;
+M is therefore retained for its integrated C3FD conditioning, slightly higher
+composition/body validity, and higher raw Direct validity, not for a claimed
+energy advantage. F remains the disclosed formula-only ablation. The official
+query was executed once for 254 chemsystems (`246` resolved, `8` unresolved),
+and must not be repeated.
 
 ## Phase 5 — paper closure
 
-- [ ] Classify C3FD proposal correctness, F/M conditioning, and DLM realization
+- [x] Classify C3FD proposal correctness, F/M conditioning, and DLM realization
   as SUPPORTED/CANDIDATE/UNSUPPORTED.
 - [ ] Keep raw DLM evidence primary and refined-only evidence secondary.
 - [ ] Update BUILD_STATUS, PAPER_STORY, negative archive, tests, commits, and
@@ -85,10 +105,10 @@ disclosed. The earlier decode-mask-first v1 plan is superseded.
   DLM: it was proposed but never executed. SGTC and D3PO are different methods.
 - [x] Audit current decoder constraints: schema/exact chemistry, nondegenerate
   lattice, and exact/PBC duplicate rejection already exist.
-- [ ] Retain each F/M route whose final requested-denominator composition
+- [x] Retain each F/M route whose final requested-denominator composition
   validity is at least 95%. S.U.N. is not a Planner-retention gate; all outcomes
   remain disclosed.
-- [ ] Freeze the chosen Planner checkpoint/renderer and exact Plan ledger after
+- [x] Freeze M as the Planner mainline and F as the formula-only ablation after
   F/M official. Reuse current Plans for development only; never rerun Planner per
   DLM checkpoint.
 - [ ] Freeze one new outcome-blind Plan ledger once for final post-training
