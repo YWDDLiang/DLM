@@ -26,6 +26,7 @@ readonly BODY_SAMPLER="${ROOT}/src/scripts/sample_sgtc_l6.py"
 readonly ASSEMBLER="${ROOT}/scripts/assemble_raw_body_repeat.py"
 readonly DIRECT="${R03E}/runtime/scripts/a800/run_crysllmgen_metrics.py"
 readonly RUN="${ROOT}/runs/fused_planner_compact_v2_body_direct_${SLURM_JOB_ID}"
+readonly BODY_PLANS="${RUN}/plans_for_body.jsonl"
 
 readonly PLANS_SHA=f7002caa9f5dcfb3bdb962028673e51da108d58854519a145ceedfa3109728ec
 readonly POLICY_SHA=06cd5465d1c12dc70c695a12602a4bd99f6c5561f2dc44daa431aadeef962b20
@@ -84,10 +85,26 @@ sha256sum "${PLANS}" "${POLICY}/adapter_model.safetensors" \
   "${POLICY}/adapter_config.json" "${BODY_SAMPLER}" "${ASSEMBLER}" \
   "${DIRECT}" "${GT_CSV}" >"${RUN}/INPUTS.sha256"
 
+"${PYTHON}" - "${PLANS}" "${BODY_PLANS}" <<'PY'
+import json,pathlib,sys
+root=pathlib.Path.cwd()/'src'
+sys.path.insert(0,str(root))
+from crystal_dlm.composition_identity import identity_from_plan_state,identity_text
+source=pathlib.Path(sys.argv[1]); output=pathlib.Path(sys.argv[2])
+rows=[json.loads(line) for line in source.open() if line.strip()]
+assert len(rows)==256 and [int(row['sample_idx']) for row in rows]==list(range(256))
+with output.open('x',encoding='utf-8',newline='\n') as handle:
+    for row in rows:
+        row=dict(row)
+        row['reduced_composition_identity']=identity_text(identity_from_plan_state(row['plan_state']))
+        handle.write(json.dumps(row,ensure_ascii=False,sort_keys=True)+'\n')
+PY
+[[ "$(wc -l <"${BODY_PLANS}")" -eq 256 ]]
+
 env CUDA_VISIBLE_DEVICES="${allocated[0]}" OPENBLAS_NUM_THREADS=4 \
   OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
   "${PYTHON}" "${BODY_SAMPLER}" --model-path "${MODEL}" \
-  --checkpoint-path "${POLICY}" --prompt-jsonl "${PLANS}" \
+  --checkpoint-path "${POLICY}" --prompt-jsonl "${BODY_PLANS}" \
   --output-dir "${RUN}/body" --crysllmgen-dir "${CRYS}" \
   --num-samples 256 --temperature 0.7 --seed 91117 \
   >"${RUN}/body.out" 2>"${RUN}/body.err"

@@ -26,6 +26,9 @@ class Slurm112Test(unittest.TestCase):
         self.assertNotIn("refine_dlm", SOURCE)
         self.assertNotIn("run_full_reconstructed_eval", SOURCE)
         self.assertNotIn("MP_API", SOURCE)
+        self.assertIn("identity_from_plan_state", SOURCE)
+        self.assertIn("reduced_composition_identity", SOURCE)
+        self.assertIn('--prompt-jsonl "${BODY_PLANS}"', SOURCE)
 
     def test_no_selection_or_recovery_loop(self):
         self.assertIn("trajectory_per_plan\t1", SOURCE)
