@@ -249,6 +249,19 @@
       "promote_at_most_one": true,
       "single_seed_claim_boundary": "development_method_selection_not_seed_robust_claim"
     },
+    "G1_G2_execution_status": {
+      "G1_implementation_commit": "a2da16d",
+      "G1_preupdate_engineering_negative": 39102,
+      "G1_training_success": 39103,
+      "G1_updates": 348,
+      "G1_raw_job": 39105,
+      "G2_core_commit": "9edf12d",
+      "G2_runtime_commit": "8c6a4ce",
+      "G2_tests": "core6_runtime4_objective3_all_pass",
+      "G2_preupdate_engineering_negative": 39104,
+      "G2_training_recovery_job": 39106,
+      "engineering_negatives_had_optimizer_updates": false
+    },
     "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",
     "AR_fallback": "C3FD_conditioned_CrysLLMGen_only_after_DLM_terminal",
     "execution_authorized": true

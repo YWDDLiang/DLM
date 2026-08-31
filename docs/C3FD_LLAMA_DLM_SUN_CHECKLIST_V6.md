@@ -206,24 +206,34 @@ maximum observed numeric errors are floating-point noise (`1.78e-15 A`,
 quantization is not the current failure source and no vocabulary change is
 authorized. Audit implementation commit `eccfa93`; positive archive
 `archive/dlm_geometry/g0_fused39096_success_20260831/_ARCHIVE_SUCCESS`.
-- [ ] Add differentiable periodic metric/RDF/short-distance/coordination losses
+- [x] Add differentiable periodic metric/RDF/short-distance/coordination losses
   to DLM training. Do not add a new inference-time geometry mask.
 - [ ] Train one frozen-seed G1 and one frozen-seed G2 candidate. Reuse one base
   cell and one fixed development stream; run the candidate jobs in parallel
   when G2 is ready.
-- [ ] Add a zero-initialized two-layer periodic residual species-pair/RBF
+- [x] Add a zero-initialized two-layer periodic residual species-pair/RBF
   relation adapter only if token round-trip passes and auxiliary geometry errors
   and its independent implementation gates pass. Require step-0 equality to G1
   and compare against a same-update no-adapter
   continuation. Reuse the CTV 4096-d output-head pre-hook/equality path; do not
   add epochs or search schedules to force the trigger.
-- [ ] Before G2, unit-test the acyclic `q0 -> soft geometry -> h' -> q1` forward,
+- [x] Before G2, unit-test the acyclic `q0 -> soft geometry -> h' -> q1` forward,
   circular fractional-coordinate means, entropy-gated messages, SPD metric
   projection, triclinic neighboring-image distances, and translation/
   same-species-permutation invariance.
 - [ ] Zero only the residual output projection, log adapter gradient norms for
   steps 0--10, and profile gathered typed-logit O(N^2) memory/runtime; forbid
   dense pair-by-vocabulary tensors.
+
+Current execution: G1 recovery job39103 completed all 348 updates in `00:11:46`
+after pre-update engineering negative39102 exposed unsupported bfloat16 CUDA
+determinants; geometry math now runs in differentiable float32 with unchanged
+weights. G1 raw screen39105 is running on the frozen Planner/noise cell. G2 core
+commit `9edf12d` plus runtime integration passed core `6/6`, runtime `4/4`, and
+objective `3/3` tests. Pre-update job39104 exposed adapter/base dtype mismatch;
+the adapter now inherits the frozen output-head dtype, and parameter-identical
+recovery39106 is running. Both engineering negatives are archived and contain
+no optimizer update.
 - [ ] Build MP20-train-only one-trajectory model494 basin-SFT targets, requiring
   exact composition, Direct structural validity, and finite refined energy.
 - [ ] Build one fixed K=4 same-composition pool and run shared-mask,
