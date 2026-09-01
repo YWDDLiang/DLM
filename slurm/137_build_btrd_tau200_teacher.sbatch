@@ -78,7 +78,8 @@ sha256sum "${RUN}/scientific_contract.tsv" "${SUBSET}/manifest.json" "${SUBSET}/
 "${PYTHON}" "${SHARDER}" --input-jsonl "${RUN}/teacher_plans/plans_for_dlm.jsonl" --output-dir "${RUN}/plan_shards" --shard-size 1024
 
 run_body(){
- local slot="$1" name="shard${1}" plans="${RUN}/plan_shards/shard-$(printf '%03d' "$1").jsonl" out="${RUN}/${name}"
+ local slot="$1" name="shard${1}"
+ local plans="${RUN}/plan_shards/shard-$(printf '%03d' "${slot}").jsonl" out="${RUN}/${name}"
  mkdir "${out}"
  env CUDA_VISIBLE_DEVICES="${gpu[$1]}" PYTHONPATH="${CODE_ROOT}/src" OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
   "${PYTHON}" "${SAMPLER}" --model-path "${MODEL}" --checkpoint-path "${POLICY}" \

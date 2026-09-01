@@ -72,7 +72,8 @@ sha256sum "${RUN}/scientific_contract.tsv" "${SPLITS}/manifest.json" \
 "${PYTHON}" "${SHARDER}" --input-jsonl "${SPLITS}/remainder/plans_for_dlm.jsonl" --output-dir "${RUN}/remainder_shards" --shard-size 200
 
 run_shard(){
- local slot="$1" name="$2" plans="$3" count="$4" device="${gpu[$1]}" out="${RUN}/${name}"
+ local slot="$1" name="$2" plans="$3" count="$4"
+ local device="${gpu[$slot]}" out="${RUN}/${name}"
  mkdir "${out}"
  env CUDA_VISIBLE_DEVICES="${device}" PYTHONPATH="${CODE_ROOT}/src" OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
   "${PYTHON}" "${SAMPLER}" --model-path "${MODEL}" --checkpoint-path "${POLICY}" \
