@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from math import gcd
 from pathlib import Path
 
 
@@ -28,6 +29,22 @@ def write_jsonl(path: Path, rows: list[dict]) -> None:
     )
 
 
+def reduced_identity(row: dict) -> str:
+    if row.get("reduced_composition_identity"):
+        return str(row["reduced_composition_identity"])
+    plan = row["plan_state"]
+    pairs = sorted(
+        (str(symbol), int(count))
+        for symbol, count in zip(plan["elements"], plan["counts"], strict=True)
+    )
+    divisor = 0
+    for _symbol, count in pairs:
+        if count <= 0:
+            raise ValueError("composition counts must be positive")
+        divisor = gcd(divisor, count)
+    return "|".join(f"{symbol}:{count // divisor}" for symbol, count in pairs)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--known-splits", type=Path, required=True)
@@ -47,7 +64,7 @@ def main() -> None:
     rows = main_rows + remainder_rows
     if args.development_count != 256 or len(rows) != 1159:
         raise ValueError("BTRD evaluation denominator changed")
-    identities = [str(row["reduced_composition_identity"]) for row in rows]
+    identities = [reduced_identity(row) for row in rows]
 
     development = rows[: args.development_count]
     confirmation = rows[args.development_count :]
@@ -65,7 +82,7 @@ def main() -> None:
             {
                 "global_index": index,
                 "role": "development" if index < args.development_count else "confirmation",
-                "reduced_composition_identity": row["reduced_composition_identity"],
+                "reduced_composition_identity": identities[index],
                 "source_sample_idx": row.get("source_sample_idx"),
             }
             for index, row in enumerate(rows)

@@ -1,13 +1,13 @@
-# Basin-Transport Residual Distillation (BTRD)
+# Basin-Target Residual Distillation (BTRD)
 
-Status: frozen stability-primary candidate. PSTR is inactive.
+Status: frozen stability-primary candidate.
 
 ## Scientific target
 
 G2 already improves periodic validity, while model494 provides the dominant
-continuous stability transition. BTRD moves a low-cost version of that
-transition upstream: the DLM learns the direction from its current geometric
-state toward a model494 basin before inference-time refinement.
+continuous stability transition. BTRD moves a low-cost version of that target
+upstream: the DLM residual learns to reconstruct geometries sampled from a
+frozen model494 endpoint proxy before inference-time refinement.
 
 BTRD does not train the Planner, alter Compact-V2, change `7+4N`, or use CHGNet
 as a training label. Planner composition validity is therefore exactly
@@ -17,15 +17,16 @@ preserved.
 
 - Select 8,192 MP20-train rows by a fixed content hash; exclude every exact
   composition in the 1200 evaluation ledger.
-- Apply one deterministic `p_mask=0.5` geometry corruption per row.
-- Use frozen A/G2-PBC-R to obtain the q1 soft lattice and coordinates.
-- For 6,144 rows, apply frozen model494 tau200 once to obtain a local basin
-  teacher; retain 2,048 original MP20 geometries as a 25% anchor.
+- For the 6,144 teacher rows, use frozen A/G2-PBC-R to generate one raw body at
+  the registered Plan, noise seed and temperature, then apply frozen model494
+  tau200 once. Retain 2,048 original MP20 geometries as a 25% anchor.
 - Preserve every teacher failure. A failed tau200 row falls back to its original
   MP20 anchor and remains explicitly labeled; no row is selected by energy,
   displacement, validity or success.
 - N, elements and site order never change. Only lattice and fractional
-  coordinate positions receive transport supervision.
+  coordinate positions receive basin-target supervision.
+- The SFT trainer uses its standard random dynamic geometry mask schedule. No
+  fixed `p_mask=0.5` claim is made.
 
 Tau200 is pre-registered because the matched historical endpoint moves median
 hull from `2.1767` to `0.1337 eV/atom` and Meta S.U.N. from `66/512` to
@@ -33,11 +34,12 @@ hull from `2.1767` to `0.1337 eV/atom` and Meta S.U.N. from `66/512` to
 
 ## Objective
 
-Let current q1 soft geometry be `(L_hat,f_hat)` and the tau200 teacher be
-`(L_plus,f_plus)`, with metric `G=LL^T`. The transport loss is
+Let current q1 soft geometry be `(L_hat,f_hat)` and the active training target
+be `(L_plus,f_plus)`, where the target is either the tau200 endpoint or the
+registered MP20 anchor, with metric `G=LL^T`. The target-geometry loss is
 
 \[
-\mathcal L_{\mathrm{transport}}
+\mathcal L_{\mathrm{target}}
 =\frac{\|\hat G-G^+\|_F^2}{\|G^+\|_F^2+\epsilon}
 +\frac1N\sum_i
 \frac{\|\operatorname{MI}(\hat f_i-f_i^+)L^+\|_2^2}
@@ -52,11 +54,11 @@ The sole loss is
 +0.10\mathcal L_{\mathrm{RDF}}
 +0.20\mathcal L_{\mathrm{overlap}}
 +0.05\mathcal L_{\mathrm{coord}}
-+0.25\mathcal L_{\mathrm{transport}}.
++0.25\mathcal L_{\mathrm{target}}.
 \]
 
-Existing species-aware mean-overlap remains unchanged. No PSTR or alternate
-safety term is added, preserving clean stability attribution.
+Existing species-aware mean-overlap remains unchanged. No alternate tail-risk
+term is added, preserving clean endpoint-target attribution.
 
 ## Training
 
@@ -80,7 +82,7 @@ All conditions are required:
 - both paired bootstrap 95% CI upper bounds are below zero;
 - raw Meta S.U.N. increases by at least5/256;
 - raw Strict S.U.N. does not decrease;
-- raw fast Direct decreases by at most3/256;
+- raw fast Direct increases by at least1/256;
 - body/composition-valid decreases by at most5/256 and remains at least95%;
 - Planner composition validity changes by exactly zero.
 
@@ -90,7 +92,8 @@ the confirmation block. Failure stops BTRD before any downstream refiner run.
 
 ## Contribution claim on success
 
-BTRD would show that the local transport of a frozen physical basin projector
-can be absorbed by a masked crystal DLM through its existing periodic residual,
-improving raw thermodynamic stability without increasing inference
-multiplicity or exposing energy labels to the language model.
+BTRD would show that endpoint geometries from a frozen model494 refiner can be
+distilled into a masked crystal DLM through its existing periodic
+residual, improving raw thermodynamic stability without increasing inference
+multiplicity or exposing energy labels to the language model. It does not claim
+to identify the model494 stochastic trajectory or a physical vector field.

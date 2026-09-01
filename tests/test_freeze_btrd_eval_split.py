@@ -18,7 +18,10 @@ class FreezeBtrdEvalSplitTest(unittest.TestCase):
             (source / "remainder").mkdir()
             rows = [
                 {
-                    "reduced_composition_identity": f"id-{index}",
+                    "plan_state": {
+                        "elements": ["O", "Li"],
+                        "counts": [2, index % 3 + 1],
+                    },
                     "source_sample_idx": index,
                 }
                 for index in range(1159)
