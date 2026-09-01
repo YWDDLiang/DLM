@@ -20,7 +20,11 @@ readonly TEACHER_AUDIT="${BTRD_TEACHER_AUDIT_DIR:?export passed teacher identity
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly POLICY="${ROOT}/runs/g2_full_epoch_A_39164/train/checkpoints/step-1696"
 readonly TRAINER="${CODE_ROOT}/src/scripts/llada_sft.py"
-readonly RUN="${ROOT}/runs/btrd_residual_${SLURM_JOB_ID}"
+readonly METHOD_LABEL="${BTRD_METHOD_LABEL:-BTRD-tau200}"
+readonly RUN_PREFIX="${BTRD_TRAIN_RUN_PREFIX:-btrd_residual}"
+readonly TAIL_TEMPERATURE="${BTRD_TAIL_TEMPERATURE:-0.10}"
+readonly TAIL_MIX="${BTRD_TAIL_MIX:-0.0}"
+readonly RUN="${ROOT}/runs/${RUN_PREFIX}_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly POLICY_SHA=712c941922611ea3640b171319c8ae9a4cbdbf31f83cdba6f61046b9de61bfce
 readonly RELATION_SHA=675d68b9e9c0aeb7f3383050b8c85716aa2f7c9303d5a8e1e75b0761db54b9f8
@@ -58,7 +62,8 @@ IFS=',' read -r -a allocated_gpus <<<"${CUDA_VISIBLE_DEVICES:?Slurm did not expo
 code_commit="$(git --git-dir="${CODE_ROOT}/.git" --work-tree="${CODE_ROOT}" rev-parse HEAD 2>/dev/null || printf unrecorded)"
 cat >"${RUN}/scientific_contract.tsv" <<EOF
 field	value
-schema	btrd_residual_training_v1
+schema	btrd_residual_training_v2
+method	${METHOD_LABEL}
 initialization	G2-PBC-R_step1696
 trainable	periodic_relation_adapter_only
 base_policy_frozen	true
@@ -67,6 +72,8 @@ optimizer_steps	512
 effective_batch	16
 learning_rate	1e-6_cosine_warmup10
 loss	CE+metric0.1+pairRDF0.1+overlap0.2+coordination0.05+transport0.25
+overlap_tail_temperature	${TAIL_TEMPERATURE}
+overlap_tail_mix	${TAIL_MIX}
 training_seed	81017
 checkpoint_selection	none_step512_only
 planner_resampled	false
@@ -111,6 +118,8 @@ torchrun --standalone --master-port 29638 --nproc_per_node=2 "${TRAINER}" \
   --periodic-metric-weight 0.1 \
   --periodic-pair-rdf-weight 0.1 \
   --periodic-overlap-weight 0.2 \
+  --periodic-overlap-tail-temperature "${TAIL_TEMPERATURE}" \
+  --periodic-overlap-tail-mix "${TAIL_MIX}" \
   --periodic-coordination-weight 0.05 \
   --basin-transport-weight 0.25 \
   --periodic-exact-triclinic-pbc \
@@ -160,7 +169,7 @@ payload={
     'optimizer_updates':512,
     'trainable':'periodic_relation_adapter_only',
     'train_rows':manifest['train_rows'],
-    'effective_tau200_rows':manifest['effective_tau200_rows'],
+    'effective_endpoint_rows':manifest.get('effective_endpoint_rows',manifest.get('effective_tau200_rows')),
     'anchor_or_fallback_rows':manifest['anchor_or_fallback_rows'],
     'checkpoint':str(checkpoint),
     'checkpoint_sha256':hashlib.sha256((checkpoint/'periodic_relation_adapter.pt').read_bytes()).hexdigest(),

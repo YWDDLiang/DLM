@@ -76,7 +76,10 @@ def expected_counts(plan_state):
     )
 
 
-def build_rows(selected, refined):
+def build_rows(selected, refined, *, teacher_steps: int = 200):
+    if teacher_steps not in (200, 800):
+        raise ValueError("BTRD endpoint teacher steps must be 200 or 800")
+    teacher_mode = f"model494_tau{teacher_steps}"
     output = []
     audit = Counter()
     for source in selected:
@@ -101,12 +104,12 @@ def build_rows(selected, refined):
                 row["answer"] = answer
                 row["answer_sha256"] = sha256_text(answer)
                 row["btrd_encode_diagnostics"] = diagnostics.to_dict()
-                effective = "model494_tau200"
-                reason = "tau200_teacher"
+                effective = teacher_mode
+                reason = f"tau{teacher_steps}_teacher"
         row["btrd_requested_target_mode"] = requested_mode
         row["btrd_effective_target_mode"] = effective
         row["btrd_target_reason"] = reason
-        row["btrd_teacher_steps"] = 200 if effective == "model494_tau200" else 0
+        row["btrd_teacher_steps"] = teacher_steps if effective == teacher_mode else 0
         row["btrd_energy_label_used"] = False
         row["sample_weight"] = 1.0
         audit[reason] += 1
@@ -120,6 +123,7 @@ def main() -> None:
     parser.add_argument("--refined-pt", type=Path, required=True)
     parser.add_argument("--source-data-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--teacher-steps", type=int, choices=(200, 800), default=200)
     args = parser.parse_args()
     output = args.output_dir.resolve()
     if output.exists():
@@ -131,7 +135,7 @@ def main() -> None:
     if len(selected) != 8192:
         raise ValueError("BTRD selected denominator changed")
     refined = refined_geometry_by_index(torch.load(refined_path, map_location="cpu"))
-    rows, audit = build_rows(selected, refined)
+    rows, audit = build_rows(selected, refined, teacher_steps=args.teacher_steps)
     output.mkdir(parents=True)
     train_path = output / "train.jsonl"
     train_path.write_text(
@@ -154,11 +158,24 @@ def main() -> None:
         "status": "complete",
         "train_rows": len(rows),
         "validation_rows": len(read_jsonl(output / "val.jsonl")),
+        "teacher_steps": args.teacher_steps,
         "requested_tau200_rows": sum(
+            row["btrd_requested_target_mode"] == "model494_tau200" for row in rows
+        ) if args.teacher_steps == 200 else 0,
+        "requested_tau800_rows": sum(
+            row["btrd_requested_target_mode"] == "model494_tau200" for row in rows
+        ) if args.teacher_steps == 800 else 0,
+        "requested_endpoint_rows": sum(
             row["btrd_requested_target_mode"] == "model494_tau200" for row in rows
         ),
         "effective_tau200_rows": sum(
             row["btrd_effective_target_mode"] == "model494_tau200" for row in rows
+        ),
+        "effective_tau800_rows": sum(
+            row["btrd_effective_target_mode"] == "model494_tau800" for row in rows
+        ),
+        "effective_endpoint_rows": sum(
+            str(row["btrd_effective_target_mode"]).startswith("model494_tau") for row in rows
         ),
         "anchor_or_fallback_rows": sum(
             row["btrd_effective_target_mode"] == "mp20_anchor" for row in rows

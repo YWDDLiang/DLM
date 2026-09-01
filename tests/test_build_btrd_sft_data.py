@@ -55,6 +55,29 @@ class BTRDDataTest(unittest.TestCase):
         self.assertEqual(rows[0]["btrd_effective_target_mode"], "mp20_anchor")
         self.assertEqual(audit["tau200_missing_fallback_anchor"], 1)
 
+    def test_tau800_endpoint_mode_is_explicit(self) -> None:
+        selected = [
+            {
+                "btrd_index": 0,
+                "btrd_target_mode": "model494_tau200",
+                "answer": "original",
+                "answer_sha256": "old",
+                "plan_state": {"N": 1, "elements": ["Li"], "counts": [1]},
+            }
+        ]
+        refined = {
+            0: {
+                "lengths": [4.0, 4.0, 4.0],
+                "angles": [90.0, 90.0, 90.0],
+                "species": ["Li"],
+                "frac_coords": [[0.0, 0.0, 0.0]],
+            }
+        }
+        rows, audit = MODULE.build_rows(selected, refined, teacher_steps=800)
+        self.assertEqual(rows[0]["btrd_effective_target_mode"], "model494_tau800")
+        self.assertEqual(rows[0]["btrd_teacher_steps"], 800)
+        self.assertEqual(audit["tau800_teacher"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
