@@ -1,0 +1,20 @@
+{
+  "schema": "paper_fixed256_physical_evaluation_v1",
+  "requested_denominator": 256,
+  "direct_evaluator_sha256": "556d4e14c96a7a89c96eaf7c07fda04c0f399526f733de0e8cbbd08d1f24e7a4",
+  "metrics": [
+    "composition_valid",
+    "structure_valid",
+    "Direct_joint",
+    "novel",
+    "unique",
+    "novel_unique",
+    "CHGNet_energy_per_atom",
+    "official_e_above_hull",
+    "Strict_SUN",
+    "Meta_SUN"
+  ],
+  "official_source_sha256": "138e547f9f2d19c52e55586b96d7c9394d38a6330da0d49a9cf017dca641b6a6",
+  "unknown_policy": "retain in fixed denominator; never map stable",
+  "survivor_filter_result_selection": false
+}

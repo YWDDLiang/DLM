@@ -1,0 +1,46 @@
+{
+  "schema": "paper_science_constrained_llm_planner_v1",
+  "method": "Science-Constrained LLM Planner",
+  "scientific_support": {
+    "model": "C3FD-v2.5",
+    "checkpoint_sha256": "87c1673f709c14488848196e3f466b0f4797cc3511108a07b6d498ca96d17d53",
+    "constraints": [
+      "atom_count",
+      "arity",
+      "charge_valence_reachability",
+      "family",
+      "benchmark_compatibility"
+    ]
+  },
+  "llama": {
+    "base": "Meta-Llama-3-8B",
+    "training_seed": 85017,
+    "epochs": 1,
+    "learning_rate": 0.00002,
+    "effective_batch": 16,
+    "checkpoint_selection": "final_only",
+    "typed_config_sha256": "ca786e3d78f737e840ae29aed9e7a61f316ada193fb4a6c385e2941cefbff89a",
+    "typed_state_sha256": "9912e2594834df9412ab7d7cf6e3d5fc88258c5b0c707b5677503668958871bc",
+    "adapter_sha256": "7638b05d56e7ed19c20229849aa26c75d55cf618264ab8fe2e205c2195884c75"
+  },
+  "fusion": {
+    "form": "log_product_of_experts",
+    "c3fd_coefficient": 1.0,
+    "llama_coefficient": 1.0,
+    "legal_mask_applied_inside_decoding": true,
+    "retry_filter_replacement_rerank_best_of_n": false
+  },
+  "data": {
+    "train_rows": 24558,
+    "validation_rows": 8158,
+    "scope": "typed-witness MP20 subset",
+    "development_or_prospective_outcomes": 0
+  },
+  "plan_schema": "C3FD_NATIVE_PLAN_V2",
+  "evidence": {
+    "c3fd_comp_valid": "2000/2000",
+    "prospective_plan_comp_valid": "256/256",
+    "mean_fused_vs_c3fd_kl": 0.06819,
+    "nonzero_kl_decision_rate": 0.8705
+  }
+}

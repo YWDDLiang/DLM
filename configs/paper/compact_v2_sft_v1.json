@@ -1,0 +1,35 @@
+{
+  "schema": "paper_plan_conditioned_crystal_dlm_v1",
+  "method": "Plan-Conditioned Crystal Diffusion Language",
+  "base": "LLaDA-8B-Instruct",
+  "plan_schema": "C3FD_NATIVE_PLAN_V2",
+  "representation": {
+    "name": "dynamic_v1",
+    "formula": "7+4N",
+    "global_tokens": 7,
+    "per_atom_tokens": ["element", "frac_x", "frac_y", "frac_z"],
+    "max_atoms": 20,
+    "max_length": 382,
+    "exact_N_and_composition": true
+  },
+  "data": {
+    "train_rows": 27136,
+    "validation_rows": 9047,
+    "teacher_plan_only": true,
+    "manifest_sha256": "b77a1d0126d19576b2a6e381fe177de792b230cab2eca58e2c5c8097ff23ae06",
+    "train_sha256": "f61cd177f252ce44ba15669a187a5f6fed22e2d3f50218088124fd0b5b836068",
+    "validation_sha256": "bea7d8e67476bcdde545f13971cb87ea1e2931954ff8948410dc21ce38e509e1"
+  },
+  "training": {
+    "seeds": [82017, 82018],
+    "paper_seed": 82017,
+    "updates": 3392,
+    "source_epochs": 2,
+    "effective_batch": 16,
+    "lora_rank": 8,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "checkpoint_selection": "step3392_only"
+  },
+  "paper_adapter_sha256": "06cd5465d1c12dc70c695a12602a4bd99f6c5561f2dc44daa431aadeef962b20"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "paper_fixed_terminal_diffusion_v1",
+  "method": "model494",
+  "checkpoint_sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+  "diffusion_steps": 800,
+  "seed": 101117,
+  "seed_by_sample_index": true,
+  "preserve_atom_multiset": true,
+  "retry_replacement_rerank": false,
+  "role": "fixed terminal transition in the coupled coarse-to-fine generator"
+}

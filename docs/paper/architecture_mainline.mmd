@@ -1,0 +1,33 @@
+flowchart LR
+  T[Target: meta-or-better crystal] --> P
+
+  subgraph P[Science-Constrained LLM Planner]
+    C[C3FD typed scientific support\nN / family / arity / species / counts]
+    L[Llama learned materials prior\ntyped action and soft-field scores]
+    C -->|legal reachable actions| F[Product-of-experts decoding]
+    L -->|learned log-probabilities| F
+    F --> Z[Compact-V2 Plan z]
+  end
+
+  Z -->|exact C3FD_NATIVE_PLAN_V2 contract| D
+
+  subgraph D[Plan-Conditioned Crystal Diffusion Language]
+    Q0[q0 masked-DLM soft state\nlattice + species + fractional coordinates]
+    R[Periodic relation operator\n125-image PBC + species pairs\nmetric / RDF / coordination]
+    H[Zero-initialized G2 residual]
+    Q1[q1 denoising logits\ndynamic 7+4N]
+    Q0 --> R --> H --> Q1
+    Z --> Q0
+  end
+
+  Q1 --> X[Raw exact-composition crystal]
+  X --> K[Fixed model494 diffusion transition\ntau800]
+  Z -. shared global intent .-> K
+  K --> Y[Final crystal]
+  X --> E[Raw Direct / CHGNet]
+  Y --> O[Refined Direct / CHGNet / official S.U.N.]
+
+  MP[MP20 teacher crystals] -->|typed composition supervision| L
+  MP -->|Plan-to-7+4N SFT| Q0
+  MP -->|periodic geometry supervision| R
+

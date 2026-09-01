@@ -1,0 +1,22 @@
+{
+  "schema": "paper_fixed_one_trajectory_inference_v1",
+  "requested": 256,
+  "planner": {
+    "source_seed": 22,
+    "sampling_seed": 22,
+    "temperature": 0.9,
+    "top_p": 0.95,
+    "top_k": 0,
+    "plan_sha256": "5f1ae510fb35d7bbe0b5da4b32b0302f49d78dae653c5c31493db8a2219a54cb"
+  },
+  "dlm": {
+    "stream": 17,
+    "seed": 91117,
+    "temperature": 0.7,
+    "schedule": "exact_axis",
+    "trajectories_per_plan": 1
+  },
+  "retry_filter_replacement_rerank_best_of_n": false,
+  "failed_rows_preserved": true,
+  "fixed_requested_denominator": true
+}

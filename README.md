@@ -1,5 +1,9 @@
 # H1-A2个人研究仓库
 
+> The final C3FD–Llama / Compact-V2 / G2 paper pipeline is documented in
+> [`PAPER_PIPELINE.md`](PAPER_PIPELINE.md). Its portable contracts can be
+> validated with `PYTHONPATH=src python -m crystal_dlm.paper_pipeline validate`.
+
 这是H1-A2的可配置研究版本。它与论文repo物理独立，不import论文repo，
 也不依赖当前历史项目的绝对路径。
 

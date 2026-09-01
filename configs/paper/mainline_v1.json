@@ -1,0 +1,49 @@
+{
+  "schema": "c3fd_g2_paper_pipeline_v1",
+  "method_name": "Science-Constrained Hierarchical Crystal Language Model",
+  "factorization": {
+    "plan": "z ~ p_phi(z | C_C3FD)",
+    "raw_structure": "x_raw ~ p_theta(x | z; R_G2)",
+    "final_structure": "x_final ~ K_494(. | x_raw, z)"
+  },
+  "component_configs": [
+    "configs/paper/planner_fused_v1.json",
+    "configs/paper/compact_v2_sft_v1.json",
+    "configs/paper/g2_pbc_r_v1.json",
+    "configs/paper/inference_stream17_v1.json",
+    "configs/paper/model494_tau800_v1.json",
+    "configs/paper/evaluation_fixed256_v1.json"
+  ],
+  "stages": [
+    {"id": "build-scientific-support", "contract": "slurm/53_c3fd_v25_requested1000.sbatch", "implementation": ["scripts/build_c3fd_planner_data.py", "scripts/train_c3fd_planner.py"]},
+    {"id": "build-planner-data", "contract": "slurm/109_build_c3fd_llama_fused_data.sbatch", "implementation": ["scripts/build_c3fd_llama_fused_data.py"]},
+    {"id": "train-planner", "contract": "slurm/110_train_c3fd_llama_typed_planner.sbatch", "implementation": ["src/scripts/train_c3fd_llama_typed_planner.py"]},
+    {"id": "sample-plan", "contract": "slurm/125_sample_final_fused_planner.sbatch", "implementation": ["src/scripts/sample_c3fd_llama_typed_planner.py"]},
+    {"id": "build-dlm-data", "contract": "slurm/86_build_c3fd_native_sft_data.sbatch", "implementation": ["scripts/build_c3fd_native_sft_data.py"]},
+    {"id": "train-dlm", "contract": "slurm/87_train_c3fd_native_teacher_sft.sbatch", "implementation": ["src/scripts/llada_sft.py"]},
+    {"id": "train-periodic-dlm", "contract": "slurm/129_train_g2_full_epoch_ab.sbatch", "contract_environment": {"G2_FULL_METHOD": "A"}, "implementation": ["src/scripts/llada_sft.py", "src/crystal_dlm/periodic_relation_runtime.py"]},
+    {"id": "generate-refine-headline", "contract": "slurm/126_g2_final_generation.sbatch", "implementation": ["src/scripts/sample_sgtc_l6.py", "src/scripts/refine_dlm_with_crysllmgen.py"]},
+    {"id": "evaluate-headline", "contract": "slurm/127_g2_final_offline_eval.sbatch", "implementation": ["eval_runtime/run_full_reconstructed_eval.py"]},
+    {"id": "finalize-headline", "contract": "scripts/finalize_c3fd_g2_final_sun.py", "implementation": ["eval_runtime/finalize_official.py"]}
+  ],
+  "profiles": {
+    "prospective_headline": {
+      "periodic_checkpoint": "registered G2 step348",
+      "generation_contract": "slurm/126_g2_final_generation.sbatch",
+      "evaluation_contract": "slurm/127_g2_final_offline_eval.sbatch"
+    },
+    "full_epoch_mechanism": {
+      "periodic_checkpoint": "G2-PBC-R step1696",
+      "generation_contract": "slurm/130_g2_full_ab_raw_screen.sbatch",
+      "evaluation_contract": "slurm/131_g2_full_ab_refine_eval.sbatch"
+    }
+  },
+  "invariants": {
+    "one_plan_one_trajectory": true,
+    "exact_N_and_composition": true,
+    "train_serve_plan_schema_equal": true,
+    "fixed_requested_denominator": true,
+    "retry_replacement_rerank_best_of_n": false,
+    "test_outcome_training": false
+  }
+}

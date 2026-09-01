@@ -13,6 +13,7 @@ dependencies = []
 h1a2-assets = "h1a2_repro.assets:main"
 h1a2-results = "h1a2_repro.report:main"
 h1a2-personal-config = "h1a2_personal.config:main"
+crystal-paper-pipeline = "crystal_dlm.paper_pipeline.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

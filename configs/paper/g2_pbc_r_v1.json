@@ -1,0 +1,44 @@
+{
+  "schema": "paper_periodic_relational_denoising_v1",
+  "method": "G2-PBC-R",
+  "role": "internal residual path in masked DLM denoising",
+  "initialization_adapter_sha256": "06cd5465d1c12dc70c695a12602a4bd99f6c5561f2dc44daa431aadeef962b20",
+  "training": {
+    "seed": 81017,
+    "updates": 1696,
+    "source_epochs": 1,
+    "effective_batch": 16,
+    "learning_rate": 0.000005,
+    "checkpoint_selection": "step1696_only"
+  },
+  "periodic_geometry": {
+    "strict_triclinic_pbc": true,
+    "image_radius": 2,
+    "image_count": 125,
+    "species_margin_scale": 0.55,
+    "species_margin_floor_angstrom": 0.60,
+    "species_margin_ceiling_angstrom": 1.40,
+    "loss_weights": {
+      "metric": 0.1,
+      "pair_rdf": 0.1,
+      "overlap": 0.2,
+      "coordination": 0.05
+    }
+  },
+  "relation_residual": {
+    "rank": 64,
+    "layers": 2,
+    "output_zero_initialized": true,
+    "step0_logit_delta": 0.0,
+    "uncertainty_gate": false
+  },
+  "checkpoint": {
+    "adapter_sha256": "712c941922611ea3640b171319c8ae9a4cbdbf31f83cdba6f61046b9de61bfce",
+    "relation_sha256": "675d68b9e9c0aeb7f3383050b8c85716aa2f7c9303d5a8e1e75b0761db54b9f8",
+    "relation_config_sha256": "7e3431e75831f11fd48f564068617f3d3f6fa1a6dc89754aa72cd9c463bee353"
+  },
+  "evidence_profiles": {
+    "prospective_headline": "registered step348 precursor; refined Strict/Meta 24/117",
+    "full_epoch_mechanism": "this config; raw Direct 128/256; refined Strict/Meta 23/117"
+  }
+}
