@@ -22,6 +22,7 @@ def main() -> None:
     parser.add_argument("--snapshot-root", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--expected-report", type=Path)
+    parser.add_argument("--expected-denominator", type=int, default=256)
     args = parser.parse_args()
     if not os.environ.get("SLURM_JOB_ID"):
         raise RuntimeError("registered fast Direct must run through Slurm")
@@ -36,7 +37,9 @@ def main() -> None:
     from pymatgen.core import Structure
 
     rows = read_jsonl(args.generation_jsonl.resolve())
-    if len(rows) != 256 or [int(row["ordinal"]) for row in rows] != list(range(256)):
+    if args.expected_denominator <= 0:
+        raise ValueError("expected-denominator must be positive")
+    if len(rows) != args.expected_denominator or [int(row["ordinal"]) for row in rows] != list(range(args.expected_denominator)):
         raise ValueError("generation denominator or ordinal order changed")
     attempts = []
     for row in rows:
@@ -71,7 +74,7 @@ def main() -> None:
         )
     report = {
         "schema": "crysllmgen_direct_validity_fast_v1",
-        "attempts": 256,
+        "attempts": int(args.expected_denominator),
         "generation_succeeded": sum(row.get("status") == "succeeded" for row in rows),
         "comp_valid_count": sum(row["comp_valid"] for row in attempts),
         "struct_valid_count": sum(row["struct_valid"] for row in attempts),
@@ -110,4 +113,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
