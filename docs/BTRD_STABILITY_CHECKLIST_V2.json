@@ -31,10 +31,20 @@
     "structured_review_disposition": "APPROVED"
   },
   "active": {
-    "btrd800t_training_job": 39196,
-    "btrd800t_training_run": "runs/btrd800t_residual_39196",
-    "gpus": 2,
-    "stage": "residual_only_512_tail_aware"
+    "btrd800t_generation_job": 39197,
+    "btrd800t_generation_run": "runs/btrd800t_known1200_fast_39197",
+    "gpus": 6,
+    "stage": "all1159_raw_and_fast_direct"
+  },
+  "btrd800t_training_terminal": {
+    "job": 39196,
+    "elapsed": "00:10:44",
+    "a800_hours": 0.3578,
+    "optimizer_updates": 512,
+    "endpoint_eval_step": 512,
+    "all_logged_values_finite": true,
+    "residual_sha256": "3c348783ca9a5e13b00ef615cb26be0671c2a9f11518e1c4c51d474cf989bfe2",
+    "frozen_lora_unchanged": true
   },
   "btrd800t_teacher_terminal": {
     "job": 39191,

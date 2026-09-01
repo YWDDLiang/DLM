@@ -110,8 +110,11 @@ Frozen evaluation cohort:
   endpoint SHA `7bd7c09f...a2c72`, data manifest SHA `40210ae5...3e16b`.
 - [x] Tau800 teacher identity audit PASS: ordered species/index mismatch0,
   refiner-missing0, body-failure106 retained as anchors.
-- [ ] BTRD-800T residual-only training job39196 active: two A800 / 16 CPU,
-  512 updates from G2 A, `kappa=0.10,beta=0.50`.
+- [x] BTRD-800T residual-only training job39196 COMPLETED
+  `0:0/00:10:44` (`0.3578 A800-hours`): 512 updates, eval512, all finite,
+  residual SHA `3c348783...9bfe2`, frozen LoRA unchanged.
+- [ ] BTRD-800T all1159 raw/fast-Direct job39197 active: six A800 / 48 CPU,
+  same Plans/noise, no retry or candidate model494.
 
 ## Immediate next steps
 
@@ -127,6 +130,7 @@ Frozen evaluation cohort:
 - [x] Finalize first256 official S.U.N.; BTRD-tau200 promotion false.
 - [x] Implement and submit the approved BTRD-800T endpoint teacher (job39191).
 - [x] Submit BTRD-800T residual-only training (job39196).
+- [x] Submit BTRD-800T all1159 raw screen (job39197).
   first compute body and fast Direct.
 - [ ] Compute raw CHGNet and cached official hull/S.U.N. on first256; do not run
   candidate model494 refinement before the raw promotion decision.
