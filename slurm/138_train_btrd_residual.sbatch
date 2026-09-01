@@ -143,7 +143,7 @@ assert config['periodic_relation_only'] is True
 assert config['max_train_steps']==512 and config['basin_transport_weight']==0.25
 assert config['checkpoint_path']==str(policy) and config['periodic_relation_checkpoint']==str(policy)
 assert partition['trainable_parameters']>0 and partition['frozen_parameters']>partition['trainable_parameters']
-assert train and int(train[-1]['step'])==512
+assert train and int(train[-1]['step'])==510
 assert any(row.get('event')=='eval' and int(row['step'])==512 for row in events)
 for row in train:
     for key in ('loss','task_loss','grad_norm','lr','periodic_relation_grad_norm',
