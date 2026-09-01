@@ -46,7 +46,7 @@
   "next_stage": {
     "document": "G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md",
     "status": "frozen_waiting_for_AB_terminal",
-    "method": "residual_only_warmup_then_residual_plus_small_LR_LoRA",
+    "method": "full27136_residual_only1696_then_joint3392",
     "planner_or_c3fd_training": false
   }
 }

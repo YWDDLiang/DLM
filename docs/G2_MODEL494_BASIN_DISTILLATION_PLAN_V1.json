@@ -6,26 +6,28 @@
   "planner_frozen": true,
   "c3fd_frozen": true,
   "model494_frozen": true,
-  "source_compositions": 4096,
+  "source_rows": 27136,
+  "retain_repeated_compositions_and_polymorphs": true,
+  "unique_composition_filter": false,
   "trajectories_per_plan": 1,
   "model494_tau": 800,
   "retry_replacement_rerank_best_of_n": false,
   "stages": {
     "D3_R": {
       "trainable": ["periodic_residual"],
-      "updates": 256,
+      "updates": 1696,
       "residual_lr": 0.000005,
-      "eligible_checkpoint": "step256_only",
+      "eligible_checkpoint": "step1696_only",
       "role": "mechanistic_ablation"
     },
     "D3_J": {
       "trainable": ["periodic_residual", "compact_v2_lora"],
-      "updates": 512,
+      "updates": 3392,
       "residual_lr": 0.000005,
       "lora_lr": 0.000001,
       "views": ["original_MP20", "model494_refined"],
       "per_source_total_weight": 1.0,
-      "eligible_checkpoint": "step512_only"
+      "eligible_checkpoint": "step3392_only"
     }
   },
   "targets": [
@@ -43,5 +45,8 @@
     "paired_raw_energy_direction": "favorable",
     "checkpoint_or_sample_selection": false
   },
-  "official_query": false
+  "official_query": false,
+  "estimated_distillation_data_A800_hours": 106,
+  "estimated_six_GPU_wall_hours": "18_to_24",
+  "subset_4096_eligible_for_scientific_output": false
 }

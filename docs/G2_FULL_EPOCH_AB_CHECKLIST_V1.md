@@ -85,6 +85,8 @@ Engineering priors: A directional raw-Direct improvement 60–75%; A ≥5 pp
 - [ ] After A/B is terminal, freeze one promoted G2 initialization according
   to the registered A/B rule; do not choose a training seed or intermediate
   checkpoint.
-- [ ] Build the MP20-train-only 4,096-pair raw→model494 corpus.
-- [ ] Run D3-R residual-only warm-up, then D3-J residual+small-LR-LoRA joint
+- [ ] Build the full MP20-train-only 27,136-row raw→model494 corpus; retain
+  repeated compositions, polymorphs, and every failed row in the manifest.
+- [ ] Run D3-R residual-only 1696-update full-source pass, then D3-J
+  residual+small-LR-LoRA 3392-update joint
   distillation. Do not modify C3FD or the Llama Planner.

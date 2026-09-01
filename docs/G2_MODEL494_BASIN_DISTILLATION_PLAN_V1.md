@@ -25,9 +25,9 @@ frozen. No prospective/dev/S.U.N. outcome may enter training.
 
 ## Immutable train-only data
 
-1. Select 4,096 MP20-train unique exact compositions with an outcome-blind
-   seed and disclose their train distribution.
-2. Materialize the frozen Planner Plan once per composition.
+1. Use all 27,136 MP20-train source rows. Retain repeated compositions and
+   known polymorphs; do not apply a unique-composition or certificate filter.
+2. Materialize the frozen Planner Plan once per source row.
 3. Generate exactly one raw trajectory per Plan from the promoted A/B method;
    no retry, replacement, reranking, best-of-N, or survivor filtering.
 4. Apply model494 tau800 once to every parsed raw structure. Preserve every
@@ -45,22 +45,25 @@ distillation data. The teacher signal is the frozen model494 geometry only.
 
 ## Two-stage training
 
-### D3-R: residual-only warm-up
+### D3-R: residual-only full-source pass
 
 - Freeze Compact-V2 LoRA and all backbone parameters.
-- Train only the periodic residual for one 4,096-pair source pass:
-  `4096/16 = 256 updates`.
-- LR `5e-6`; sole step256 checkpoint is a mechanistic ablation, not a result-
+- Train only the periodic residual for one complete source-balanced MP20-train
+  pass: `27136/16 = 1696 updates`. Rows without a successful raw→refined pair
+  remain in the manifest and contribute no fabricated correction target.
+- LR `5e-6`; sole step1696 checkpoint is a mechanistic ablation, not a result-
   selected checkpoint.
 
 ### D3-J: joint residual + LoRA distillation
 
-- Initialize from D3-R step256.
+- Initialize from D3-R step1696.
 - Train residual at LR `5e-6` and existing Compact-V2 LoRA at LR `1e-6`.
-- Use two equal-weight views per source—original MP20 teacher target and
-  model494-refined target—so one epoch is `8192/16 = 512 updates`.
-- Keep per-source total weight one and retain a frozen-reference preservation
-  term. Save only step512; no early stopping or checkpoint selection.
+- Use two deterministic source epochs. The first exposes the original MP20
+  teacher target; the second exposes the model494-refined target when present
+  and the original target when refinement is unavailable. Per-source weight is
+  one in each epoch, so the joint stage is `2×27136/16 = 3392 updates`.
+- Retain a frozen-reference preservation term. Save only step3392; no early
+  stopping or checkpoint selection.
 
 The registered loss family is:
 
@@ -73,6 +76,11 @@ original MP20 token CE
 
 Loss scales may receive one MP20-train-only gradient-norm calibration; no grid,
 development outcome, or prospective tuning is allowed.
+
+The full raw→model494 corpus is expected to require roughly `106 A800-hours`
+at the observed 256-structure-per-GPU-hour scale. One six-GPU immutable job is
+estimated at 18–24 wall-clock hours. This is expensive but is the appropriate
+paper-scale dataset; a 4,096-row subset is not an eligible scientific output.
 
 ## Evaluation and promotion
 
@@ -96,4 +104,3 @@ registered stage expected to improve raw energy and Meta S.U.N. directly by
 teaching the DLM the same local correction currently supplied downstream by
 model494. If D3-J remains raw-energy neutral, the next escalation is
 same-composition validity-first energy preference—not additional CE epochs.
-
