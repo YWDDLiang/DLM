@@ -35,6 +35,8 @@ readonly POLICY_SHA="${KNOWN1200_POLICY_SHA256:-712c941922611ea3640b171319c8ae9a
 readonly RELATION_SHA="${KNOWN1200_RELATION_SHA256:-675d68b9e9c0aeb7f3383050b8c85716aa2f7c9303d5a8e1e75b0761db54b9f8}"
 readonly RELATION_CONFIG_SHA="${KNOWN1200_RELATION_CONFIG_SHA256:-7e3431e75831f11fd48f564068617f3d3f6fa1a6dc89754aa72cd9c463bee353}"
 
+export PYTHONPATH="${CODE_ROOT}/src${PYTHONPATH:+:${PYTHONPATH}}"
+
 mkdir "${RUN}"; mkdir "${RUN}/logs"
 on_error(){ rc=$1; line=$2; command=$3; set +e; printf 'field\tvalue\nexit_code\t%s\nline\t%s\ncommand\t%s\n' "$rc" "$line" "$command" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"; }
 trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
