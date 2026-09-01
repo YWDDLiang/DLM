@@ -85,8 +85,15 @@ Engineering priors: A directional raw-Direct improvement 60–75%; A ≥5 pp
 - [ ] After A/B is terminal, freeze one promoted G2 initialization according
   to the registered A/B rule; do not choose a training seed or intermediate
   checkpoint.
-- [ ] Build the full MP20-train-only 27,136-row raw→model494 corpus; retain
-  repeated compositions, polymorphs, and every failed row in the manifest.
-- [ ] Run D3-R residual-only 1696-update full-source pass, then D3-J
-  residual+small-LR-LoRA 3392-update joint
-  distillation. Do not modify C3FD or the Llama Planner.
+- [x] Cancel the full MP20-train 27,136-row model494-tau800 corpus before any
+  job was submitted; its estimated `~106 A800-hours` is outside the revised
+  compute budget. Preserve the cancelled plan as a negative design record.
+- [ ] Freeze a lower-cost residual-learning replacement after A/B is terminal:
+  strict triclinic-PBC species-aware top-k/CVaR collision risk plus local
+  model494 short-step/score displacement supervision on a fixed
+  MP20-train-only subset. Retain teacher CE, metric, RDF, and coordination so
+  lattice expansion cannot satisfy collision risk trivially.
+- [ ] Only if raw energy remains neutral, reuse one fresh K=4 train-only pool
+  for safety-aware same-composition ranking: raw-invalid is lexicographically
+  worst, valid candidates are ranked only within the same composition, and
+  the historical mixed-policy 3,614 rows remain ineligible.

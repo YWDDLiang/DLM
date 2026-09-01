@@ -397,3 +397,124 @@ Primary precedents: [MatterGen](https://arxiv.org/abs/2312.03687),
   they are engineering tracks or mandatory baselines, not automatic novelty.
 - The full decision and experiment contract is in
   [`SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md`](docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md).
+
+---
+
+# Low-cost geometry-and-stability supervision for crystal DLMs
+
+Date: 2026-09-01
+
+Query: `crystal structure generation force energy guided diffusion distillation periodic geometry`
+
+Window: 2022--2026.
+
+Search execution note: the required multi-source CLI was run first over all
+six sources and then once over the restricted `arxiv semantic_scholar
+open_alex` set. Both invocations produced no stdout or stderr and did not
+terminate (the first was stopped after more than three minutes; the restricted
+run after 30 seconds). They were terminated instead of repeatedly querying the
+same endpoints. Primary-source pages were then verified directly.
+
+## Semantic Scholar (0 papers)
+
+No CLI result was returned before timeout.
+
+## OpenAlex (0 papers)
+
+No CLI result was returned before timeout.
+
+## arXiv (6 verified papers)
+
+| # | Title | Date | Venue | Citations |
+|---:|---|---:|---|---:|
+| [1](https://arxiv.org/abs/2312.03687) | MatterGen: a generative model for inorganic materials design | 2023-12 | arXiv / Nature | unavailable |
+| [2](https://arxiv.org/abs/2309.04475) | Crystal Structure Prediction by Joint Equivariant Diffusion | 2023-09 | arXiv / NeurIPS | unavailable |
+| [3](https://arxiv.org/abs/2403.15734) | Space Group Informed Transformer for Crystalline Materials Generation | 2024-03 | arXiv | unavailable |
+| [4](https://arxiv.org/abs/2302.14231) | CHGNet: Pretrained universal neural network potential for charge-informed atomistic modeling | 2023-02 | arXiv / Nature Machine Intelligence | unavailable |
+| [5](https://arxiv.org/abs/2202.02450) | A Universal Graph Deep Learning Interatomic Potential for the Periodic Table | 2022-02 | arXiv / Nature Computational Science | unavailable |
+| [6](https://arxiv.org/abs/2401.13192) | Generative Design of Crystal Structures by Point Cloud Representations and Diffusion Model | 2024-01 | arXiv | unavailable |
+
+## OpenReview (3 verified papers)
+
+| # | Title | Date | Venue | Citations |
+|---:|---|---:|---|---:|
+| [7](https://openreview.net/pdf?id=ya5alTUbAW) | Improving Antibody Design with Force-Guided Sampling in Diffusion Models | 2024 | OpenReview | unavailable |
+| [8](https://openreview.net/pdf?id=V7x2KZQn2v) | SymmCD: Symmetry-Preserving Crystal Generation with Diffusion Models | 2024 | AI4Mat @ NeurIPS | unavailable |
+| [9](https://openreview.net/pdf?id=PsPR4NOiRC) | GenMS: LLM planning with diffusion-based crystal realization | 2024 | OpenReview | unavailable |
+
+## Crossref (0 papers)
+
+No CLI result was returned before timeout.
+
+## DBLP (0 papers)
+
+No CLI result was returned before timeout.
+
+## Model Knowledge (0 additional papers)
+
+No unverified entries were added; the actionable references above were all
+checked against primary paper pages and duplicates were omitted.
+
+## Overview
+
+Nine directly verified papers cover periodic/equivariant crystal generation,
+property or force guidance, and universal energy/force models. The corpus
+supports learning local physical correction fields or using guidance without
+requiring a full relaxation endpoint for every training structure.
+
+## Trends
+
+Work since 2023 increasingly separates a learned generative prior from compact
+physics- or property-aware adapters/guidance. Periodic equivariance and symmetry
+are modeled explicitly, while universal interatomic potentials expose dense
+energy, force, and stress supervision much more cheaply than DFT.
+
+## Key themes
+
+1. Periodic/equivariant geometry: [2], [6], [8].
+2. Property adapters and guided generation: [1], [7].
+3. Energy/force fields as dense supervision: [4], [5], [7].
+4. Hierarchical planning plus low-level realization: [3], [9].
+
+## Keywords frequency
+
+| Keyword | Count |
+|---|---:|
+| crystal / crystalline | 8 |
+| generation / generative | 7 |
+| diffusion | 6 |
+| energy / force | 4 |
+| periodic / symmetry / equivariant | 4 |
+
+## Most cited by accepted paper
+
+Citation counts were unavailable because the citation-index APIs timed out;
+no ranking is fabricated.
+
+## Most cited by first author
+
+Citation counts were unavailable because the citation-index APIs timed out;
+no author ranking is fabricated.
+
+## Recommendations for reading
+
+1. [CHGNet](https://arxiv.org/abs/2302.14231): establishes cheap dense
+   energy/force/stress labels for inorganic structures.
+2. [DiffCSP](https://arxiv.org/abs/2309.04475): motivates explicitly periodic,
+   equivariant coordinate learning.
+3. [MatterGen](https://arxiv.org/abs/2312.03687): demonstrates compact adapters
+   for steering a strong crystal diffusion prior.
+4. [Force-guided diffusion](https://openreview.net/pdf?id=ya5alTUbAW): shows
+   that local force gradients can improve energy without endpoint distillation.
+5. [GenMS](https://openreview.net/pdf?id=PsPR4NOiRC): closest hierarchical
+   planning/realization framing for the present pipeline.
+
+## Method implication for this repository
+
+Do not run model494 tau800 over all 27,136 MP20 rows. The lower-compute path is
+to teach the existing periodic G2 residual with dense local correction targets:
+strict triclinic-PBC worst-pair/CVaR collision risk plus frozen-potential
+force/short-step displacement supervision on a fixed MP20-train subset. If an
+energy-ranking stage is needed, reuse one fresh same-composition K=4 pool with
+raw validity lexicographically ahead of within-group energy; do not reuse the
+historical mixed-policy 3,614 candidates.

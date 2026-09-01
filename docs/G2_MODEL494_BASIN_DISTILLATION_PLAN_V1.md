@@ -1,7 +1,17 @@
 # G2 model494 basin-distillation plan V1
 
-Status: FROZEN NEXT STAGE; do not start before the active G2 full-epoch A/B
-experiment is terminal. This stage does not alter or resume jobs39164/39165.
+Status: CANCELLED BEFORE EXECUTION on 2026-09-01. The estimated full-corpus
+cost (`~106 A800-hours`) is not authorized. Keep this document as the negative
+design record; do not submit D3-R or D3-J from this contract.
+
+Replacement direction: preserve the same frozen Planner and G2 initialization,
+but teach the residual with strict-PBC worst-pair/CVaR structure risk and dense
+local correction directions from a fixed MP20-train-only subset. Prefer frozen
+model494 short-step/score displacement targets; a frozen force-potential target
+is admissible only with explicit leakage and circular-evaluation disclosure.
+Full tau800 endpoints are not required. A fresh same-composition K=4
+validity-first energy-ranking stage is optional and must not reuse the retired
+mixed-policy 3,614 candidates.
 
 ## Objective
 
