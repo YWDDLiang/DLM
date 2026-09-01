@@ -1,0 +1,42 @@
+{
+  "schema": "g2_full_epoch_ab_checklist_v1",
+  "status": "HOLD_PENDING_AUDIT_AND_FINAL_REVIEW",
+  "claim_scope": "post_outcome_matched_development",
+  "methods": {
+    "A": "G2_full_epoch_shared_125_image_PBC_species_margin",
+    "B": "A_plus_deterministic_detached_q0_uncertainty_gate"
+  },
+  "shared": {
+    "base": "Compact_V2_seed82017_step3392",
+    "train_rows": 27136,
+    "training_seed": 81017,
+    "optimizer_updates": 1696,
+    "effective_batch": 16,
+    "gpus_per_method": 2,
+    "concurrent_gpu_total": 4,
+    "gpu_ceiling": 6,
+    "image_shell": 125,
+    "margin": {"scale": 0.55, "floor_A": 0.60, "ceiling_A": 1.40},
+    "circular_mean_min_resultant": 0.25,
+    "plan_sha256": "5f1ae510fb35d7bbe0b5da4b32b0302f49d78dae653c5c31493db8a2219a54cb"
+  },
+  "audit": {
+    "job_39149": "pre_science_import_failure",
+    "job_39150": "running",
+    "train_validation_structures": 36183,
+    "pairs": 2292019,
+    "shell27_mismatch_pairs": 15,
+    "shell27_max_error_A": 1.1493187339727933,
+    "shell125_mismatch_pairs": 0,
+    "shell125_max_error_A": 1.7763568394002505e-14,
+    "teacher_margin_violations": 0
+  },
+  "gates": {
+    "technical_body_comp_min": 244,
+    "directional_raw_direct_min": 122,
+    "meaningful_raw_direct_min": 134,
+    "B_direct_advantage_for_promotion": 8,
+    "checkpoint_selection": false,
+    "planner_resampling": false
+  }
+}

@@ -37,6 +37,7 @@ class PeriodicRelationConfig:
     image_radius: int = 1
     uncertainty_gate: bool = False
     uncertainty_gate_floor: float = 0.25
+    circular_mean_min_resultant: float = 0.25
 
     def __post_init__(self) -> None:
         if self.hidden_size <= 0:
@@ -55,6 +56,8 @@ class PeriodicRelationConfig:
             raise ValueError("image_radius must be one (27) or two (125)")
         if not 0.0 < self.uncertainty_gate_floor <= 1.0:
             raise ValueError("uncertainty_gate_floor must be in (0, 1]")
+        if not 0.0 <= self.circular_mean_min_resultant <= 1.0:
+            raise ValueError("circular_mean_min_resultant must be in [0, 1]")
 
 
 @dataclass(frozen=True)

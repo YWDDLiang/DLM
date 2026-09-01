@@ -2507,6 +2507,12 @@ def main() -> None:
         help="Minimum deterministic q0 confidence applied to a G2 residual.",
     )
     parser.add_argument(
+        "--periodic-relation-circular-min-resultant",
+        type=float,
+        default=0.25,
+        help="Use circular coordinate means above this resultant; otherwise use linear fallback.",
+    )
+    parser.add_argument(
         "--train-prefill-slot-tokens",
         action="store_true",
         help=(
@@ -2567,6 +2573,8 @@ def main() -> None:
         parser.error("periodic relation uncertainty gate requires a positive rank")
     if not 0.0 < args.periodic_relation_uncertainty_floor <= 1.0:
         parser.error("periodic-relation-uncertainty-floor must be in (0, 1]")
+    if not 0.0 <= args.periodic_relation_circular_min_resultant <= 1.0:
+        parser.error("periodic-relation-circular-min-resultant must be in [0, 1]")
     if args.lr_stage2 > 0:
         if args.lr_scheduler != "cosine":
             parser.error("two-stage LR requires --lr-scheduler cosine")
@@ -2622,6 +2630,9 @@ def main() -> None:
             uncertainty_gate=bool(args.periodic_relation_uncertainty_gate),
             uncertainty_gate_floor=float(args.periodic_relation_uncertainty_floor),
             image_radius=int(args.periodic_image_radius),
+            circular_mean_min_resultant=float(
+                args.periodic_relation_circular_min_resultant
+            ),
         )
     loss_config = build_loss_config(tokenizer, args)
     if is_main:

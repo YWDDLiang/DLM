@@ -45,6 +45,9 @@ def _soft_or_committed(
     logits: torch.Tensor,
     current_id: int,
     table: Mapping[str, list[Any]],
+    *,
+    periodic: bool = False,
+    circular_mean_min_resultant: float = 0.25,
 ) -> torch.Tensor:
     ids = torch.tensor(table["ids"], dtype=torch.long, device=logits.device)
     values = torch.tensor(table["values"], dtype=torch.float32, device=logits.device)
@@ -52,7 +55,19 @@ def _soft_or_committed(
     if bool(matches.any().item()):
         return values[matches][0]
     probabilities = F.softmax(logits.float().index_select(-1, ids), dim=-1)
-    return (probabilities * values).sum(dim=-1)
+    linear_mean = (probabilities * values).sum(dim=-1)
+    if not periodic:
+        return linear_mean
+    phase = 2.0 * math.pi * values
+    cosine = (probabilities * torch.cos(phase)).sum()
+    sine = (probabilities * torch.sin(phase)).sum()
+    resultant = torch.sqrt(cosine.square() + sine.square())
+    circular_mean = torch.remainder(torch.atan2(sine, cosine) / (2.0 * math.pi), 1.0)
+    return torch.where(
+        resultant >= float(circular_mean_min_resultant),
+        circular_mean,
+        linear_mean,
+    )
 
 
 def _soft_or_committed_with_confidence(
@@ -62,6 +77,7 @@ def _soft_or_committed_with_confidence(
     *,
     periodic: bool,
     floor: float,
+    circular_mean_min_resultant: float = 0.25,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     ids = torch.tensor(table["ids"], dtype=torch.long, device=logits.device)
     values = torch.tensor(table["values"], dtype=torch.float32, device=logits.device)
@@ -69,7 +85,8 @@ def _soft_or_committed_with_confidence(
     if bool(matches.any().item()):
         return values[matches][0], values.new_tensor(1.0)
     probabilities = F.softmax(logits.float().index_select(-1, ids), dim=-1)
-    mean = (probabilities * values).sum(dim=-1)
+    linear_mean = (probabilities * values).sum(dim=-1)
+    mean = linear_mean
     if int(values.numel()) <= 1:
         entropy = mean.new_zeros(())
     else:
@@ -81,6 +98,19 @@ def _soft_or_committed_with_confidence(
         resultant = torch.sqrt(
             (probabilities * torch.cos(phase)).sum().square()
             + (probabilities * torch.sin(phase)).sum().square()
+        )
+        circular_mean = torch.remainder(
+            torch.atan2(
+                (probabilities * torch.sin(phase)).sum(),
+                (probabilities * torch.cos(phase)).sum(),
+            )
+            / (2.0 * math.pi),
+            1.0,
+        )
+        mean = torch.where(
+            resultant >= float(circular_mean_min_resultant),
+            circular_mean,
+            linear_mean,
         )
         spread = 1.0 - resultant.clamp(0.0, 1.0)
     else:
@@ -102,6 +132,7 @@ def soft_geometry_from_q0(
     max_sites: int = 20,
     uncertainty_gate: bool = False,
     uncertainty_gate_floor: float = 0.25,
+    circular_mean_min_resultant: float = 0.25,
 ) -> SoftCrystalGeometry:
     """Decode committed tokens and q0 expectations without target leakage."""
 
@@ -138,6 +169,7 @@ def soft_geometry_from_q0(
                         geometry_support[family][axis],
                         periodic=False,
                         floor=float(uncertainty_gate_floor),
+                        circular_mean_min_resultant=float(circular_mean_min_resultant),
                     )
                     lattice_confidences.append(confidence)
                 else:
@@ -145,6 +177,8 @@ def soft_geometry_from_q0(
                         q0[sample, prompt + position],
                         int(input_ids[sample, prompt + position].detach().item()),
                         geometry_support[family][axis],
+                        periodic=False,
+                        circular_mean_min_resultant=float(circular_mean_min_resultant),
                     )
                 lattice_values.append(value)
         lengths = lattice_values[:3]
@@ -171,6 +205,7 @@ def soft_geometry_from_q0(
                         geometry_support["coord"][axis],
                         periodic=True,
                         floor=float(uncertainty_gate_floor),
+                        circular_mean_min_resultant=float(circular_mean_min_resultant),
                     )
                     coordinate_confidences.append(confidence)
                 else:
@@ -178,6 +213,8 @@ def soft_geometry_from_q0(
                         q0[sample, base + offset],
                         int(input_ids[sample, base + offset].detach().item()),
                         geometry_support["coord"][axis],
+                        periodic=True,
+                        circular_mean_min_resultant=float(circular_mean_min_resultant),
                     )
                 coordinates[sample, site, offset - 1] = value
             if uncertainty_gate:
@@ -289,6 +326,9 @@ class PeriodicRelationLogitsModel(nn.Module):
             uncertainty_gate_floor=float(
                 self.periodic_relation_adapter.config.uncertainty_gate_floor
             ),
+            circular_mean_min_resultant=float(
+                self.periodic_relation_adapter.config.circular_mean_min_resultant
+            ),
         )
         relation = self.periodic_relation_adapter(captured[0], geometry)
         q1 = output_head(relation.hidden_states)
@@ -331,6 +371,7 @@ def wrap_with_periodic_relation(
     uncertainty_gate: bool = False,
     uncertainty_gate_floor: float = 0.25,
     image_radius: int = 1,
+    circular_mean_min_resultant: float = 0.25,
 ) -> PeriodicRelationLogitsModel:
     hidden_size = int(base_model.get_output_embeddings().weight.shape[1])
     if checkpoint is None:
@@ -340,6 +381,7 @@ def wrap_with_periodic_relation(
             uncertainty_gate=bool(uncertainty_gate),
             uncertainty_gate_floor=float(uncertainty_gate_floor),
             image_radius=int(image_radius),
+            circular_mean_min_resultant=float(circular_mean_min_resultant),
         )
         state = None
     else:

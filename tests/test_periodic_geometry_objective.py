@@ -63,7 +63,7 @@ class PeriodicGeometryObjectiveTest(unittest.TestCase):
         margins = _species_aware_margins(
             torch.tensor([2, 3]),
             torch.tensor([[0], [1]]),
-            {2: 1.0, 3: 2.0},
+            {"ids": [2, 3], "values": [1.0, 2.0]},
             scale=0.5,
             floor=0.5,
             ceiling=2.0,

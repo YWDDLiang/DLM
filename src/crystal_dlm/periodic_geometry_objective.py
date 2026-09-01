@@ -56,10 +56,10 @@ def build_geometry_token_support(tokenizer: Any) -> dict[str, dict[str, dict[str
     return support
 
 
-def build_species_radius_support(tokenizer: Any) -> dict[int, float]:
+def build_species_radius_support(tokenizer: Any) -> dict[str, list[float] | list[int]]:
     """Map committed element-token ids to the frozen in-repo radius table."""
 
-    support: dict[int, float] = {}
+    pairs: list[tuple[int, float]] = []
     for token, token_id in tokenizer.get_vocab().items():
         match = _ELEMENT_PATTERN.fullmatch(str(token))
         if match is None:
@@ -70,10 +70,14 @@ def build_species_radius_support(tokenizer: Any) -> dict[int, float]:
         radius = element_radius(SYMBOL_TO_Z[symbol])
         if not math.isfinite(radius) or radius <= 0.0:
             raise ValueError(f"invalid radius for element token {token}")
-        support[int(token_id)] = radius
-    if not support:
+        pairs.append((int(token_id), radius))
+    pairs.sort()
+    if not pairs:
         raise ValueError("tokenizer has no element tokens for species-aware margins")
-    return support
+    return {
+        "ids": [token_id for token_id, _radius in pairs],
+        "values": [radius for _token_id, radius in pairs],
+    }
 
 
 def _family_expectation(
@@ -150,24 +154,26 @@ def _pair_distances(
 def _species_aware_margins(
     species_token_ids: torch.Tensor,
     pairs: torch.Tensor,
-    radius_support: Mapping[int, float],
+    radius_support: Mapping[str, list[float] | list[int]],
     *,
     scale: float,
     floor: float,
     ceiling: float,
 ) -> torch.Tensor:
-    radii = []
-    for token_id in species_token_ids.detach().cpu().tolist():
-        if int(token_id) not in radius_support:
-            raise ValueError(f"missing radius for element token id {token_id}")
-        radii.append(float(radius_support[int(token_id)]))
+    ids = torch.tensor(
+        radius_support["ids"],
+        dtype=torch.long,
+        device=species_token_ids.device,
+    )
     values = torch.tensor(
-        radii,
+        radius_support["values"],
         dtype=torch.float32,
         device=species_token_ids.device,
     )
+    matches = species_token_ids.reshape(-1, 1) == ids.reshape(1, -1)
+    radii = (matches.to(values.dtype) * values.reshape(1, -1)).sum(dim=1)
     margins = float(scale) * (
-        values.index_select(0, pairs[0]) + values.index_select(0, pairs[1])
+        radii.index_select(0, pairs[0]) + radii.index_select(0, pairs[1])
     )
     return margins.clamp(min=float(floor), max=float(ceiling))
 

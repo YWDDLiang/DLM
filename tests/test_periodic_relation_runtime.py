@@ -8,6 +8,7 @@ import torch
 from crystal_dlm.periodic_relation_runtime import (
     ADAPTER_CONFIG_NAME,
     ADAPTER_STATE_NAME,
+    _soft_or_committed,
     _soft_or_committed_with_confidence,
     build_periodic_relation_support,
     soft_geometry_from_q0,
@@ -78,6 +79,29 @@ class PeriodicRelationRuntimeTest(unittest.TestCase):
         self.assertGreater(high.item(), low.item())
         self.assertEqual(value.item(), 0.5)
         self.assertEqual(committed.item(), 1.0)
+
+    def test_wrap_boundary_uses_shared_guarded_circular_mean(self) -> None:
+        table = {"ids": [0, 1, 2, 3], "values": [0.0, 0.01, 0.5, 0.99]}
+        logits = torch.tensor([8.0, -8.0, -8.0, 8.0])
+        plain = _soft_or_committed(
+            logits,
+            99,
+            table,
+            periodic=True,
+            circular_mean_min_resultant=0.25,
+        )
+        gated, confidence = _soft_or_committed_with_confidence(
+            logits,
+            99,
+            table,
+            periodic=True,
+            floor=0.25,
+            circular_mean_min_resultant=0.25,
+        )
+        periodic_error = min(abs(plain.item()), abs(1.0 - plain.item()))
+        self.assertLess(periodic_error, 0.01)
+        self.assertTrue(torch.allclose(plain, gated))
+        self.assertGreater(confidence.item(), 0.8)
 
     def test_adapter_keeps_float32_with_bfloat16_base(self) -> None:
         tokenizer = _Tokenizer()

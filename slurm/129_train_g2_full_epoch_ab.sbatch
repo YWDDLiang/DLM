@@ -102,6 +102,7 @@ species_margin	clamp_0.55_radius_sum_0.60A_1.40A_normalized
 relation_adapter	rank64_two_layer_zero_Wout
 uncertainty_gate	${GATE}
 uncertainty_gate_formula	detached_entropy_variance_floor0.25
+circular_coordinate_mean	resultant_ge_0.25_else_linear_fallback_shared_A_B
 checkpoint_selection	none_step1696_only
 planner_resampled	false
 official_query	false
@@ -157,6 +158,7 @@ torchrun --standalone --master-port "${MASTER_PORT}" --nproc_per_node=2 "${TRAIN
   --periodic-species-margin-floor 0.60 \
   --periodic-species-margin-ceiling 1.40 \
   --periodic-relation-rank 64 \
+  --periodic-relation-circular-min-resultant 0.25 \
   "${gate_args[@]}" \
   >"${RUN}/logs/train.out" 2>"${RUN}/logs/train.err"
 
@@ -183,10 +185,12 @@ assert config['periodic_species_margin_scale']==0.55
 assert config['periodic_species_margin_floor']==0.60
 assert config['periodic_species_margin_ceiling']==1.40
 assert config['periodic_relation_uncertainty_gate'] is (method=='B')
+assert config['periodic_relation_circular_min_resultant']==0.25
 relation=json.load((output/'checkpoints/step-1696/periodic_relation_config.json').open())
 assert relation['step0_checked'] is True and relation['step0_max_logit_delta']==0.0
 assert relation['config']['image_radius']==2
 assert relation['config']['uncertainty_gate'] is (method=='B')
+assert relation['config']['circular_mean_min_resultant']==0.25
 events=[json.loads(line) for line in (output/'training_log.jsonl').open() if line.strip()]
 train=[row for row in events if row.get('event')=='train']
 assert train and int(train[-1]['step'])==1696
