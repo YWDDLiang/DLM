@@ -916,6 +916,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--expected-adapter-model-sha256", required=True)
     parser.add_argument("--requested", type=int, default=256)
     parser.add_argument("--seed", type=int, default=21)
+    parser.add_argument(
+        "--expected-seed",
+        type=int,
+        default=21,
+        help="Fail closed unless --seed matches this preregistered contract seed.",
+    )
     parser.add_argument("--temperature", type=float, default=0.9)
     parser.add_argument("--top-p", type=float, default=0.95)
     parser.add_argument("--top-k", type=int, default=0)
@@ -928,8 +934,8 @@ def main() -> int:
     args = build_parser().parse_args()
     if args.output_dir.exists():
         raise FileExistsError(args.output_dir)
-    if int(args.requested) != 256 or int(args.seed) != 21:
-        raise ValueError("Slurm111 contract fixes requested=256 and seed=21")
+    if int(args.requested) != 256 or int(args.seed) != int(args.expected_seed):
+        raise ValueError("requested must be 256 and seed must match expected-seed")
     if int(args.top_k) != 0 or float(args.temperature) != 0.9 or float(args.top_p) != 0.95:
         raise ValueError("sampling contract changed")
     if float(args.minimum_comp_valid) != 0.95:
