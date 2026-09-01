@@ -1,6 +1,6 @@
 {
   "schema": "g2_full_epoch_ab_checklist_v1",
-  "status": "HOLD_PENDING_AUDIT_AND_FINAL_REVIEW",
+  "status": "READY_FOR_PARALLEL_AB_TRAINING",
   "claim_scope": "post_outcome_matched_development",
   "methods": {
     "A": "G2_full_epoch_shared_125_image_PBC_species_margin",
@@ -22,14 +22,18 @@
   },
   "audit": {
     "job_39149": "pre_science_import_failure",
-    "job_39150": "running",
+    "job_39150": "complete_all_gates_pass",
+    "job_39150_elapsed_seconds": 2176,
+    "job_39150_report_sha256": "9470ff3c5eb05f2cbb670a48e9f4a1be3c0cfa859d9f29b2e61053b594904a81",
     "train_validation_structures": 36183,
     "pairs": 2292019,
     "shell27_mismatch_pairs": 15,
     "shell27_max_error_A": 1.1493187339727933,
     "shell125_mismatch_pairs": 0,
     "shell125_max_error_A": 1.7763568394002505e-14,
-    "teacher_margin_violations": 0
+    "teacher_margin_violations": 0,
+    "all_structure_margin_violation_rate": 0.001629413191525845,
+    "audit_overall_pass": true
   },
   "gates": {
     "technical_body_comp_min": 244,

@@ -1,8 +1,8 @@
 # G2 full-epoch A/B checklist
 
-Status: HOLD until the immutable geometry audit and final independent review
-both pass. This is a post-outcome matched development experiment, not a fresh
-prospective claim.
+Status: READY FOR PARALLEL A/B TRAINING. The immutable geometry audit and final
+independent review passed. This is a post-outcome matched development
+experiment, not a fresh prospective claim.
 
 ## Frozen methods
 
@@ -30,7 +30,11 @@ weights `0.1/0.1/0.2/0.05`, one eligible step1696 checkpoint, no selection.
   calculated-radius fallback; all 88 used elements covered, no 1.5 Å fallback
   used.
 - [x] Verify the frozen margin conflicts with zero of 2,292,019 teacher pairs.
-- [ ] Immutable audit job39150 `_SUCCESS` and output hash.
+- [x] Immutable audit job39150 completed `0:0/00:36:16`; all gates passed.
+  Report SHA-256 is `9470ff3c...04a81`. Across train+val+final raw it audited
+  36,686 structures and 2,321,081 pairs; 125-image maximum disagreement with
+  pymatgen is `1.78e-14 Å`. The overall margin-violation rate is `0.163%`,
+  arising only in generated structures; teacher violations are zero.
 - [x] Preserve pre-science import failure job39149 as a 0-GPU engineering
   negative.
 
@@ -54,6 +58,8 @@ weights `0.1/0.1/0.2/0.05`, one eligible step1696 checkpoint, no selection.
   do not call the Planner again.
 - [x] Freeze A/B raw wrapper on stream17, DLM seed91117, temperature0.7,
   exact-axis, fixed256, one trajectory, same Plan/noise, no retry/rerank.
+- [x] Freeze A/B model494 tau800 plus four-cell raw/refined Direct/CHGNet
+  wrapper and reuse the existing official cache; no new MP query.
 - [ ] Run A/B raw body+Direct after both training jobs complete.
 - [ ] Run full model494/CHGNet and cached-official development S.U.N. for every
   technically valid G2 arm; do not issue a new official query.
@@ -71,4 +77,3 @@ weights `0.1/0.1/0.2/0.05`, one eligible step1696 checkpoint, no selection.
 Engineering priors: A directional raw-Direct improvement 60–75%; A ≥5 pp
 45–60%; B>A 40–55%; at least one ≥5 pp 55–70%; final 10/50 probability
 20–35%. These are planning priors, not result gates.
-
