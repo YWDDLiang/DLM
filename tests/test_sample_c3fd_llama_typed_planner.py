@@ -216,6 +216,31 @@ class TypedSamplerTest(unittest.TestCase):
         self.assertIn('"retry": False', source)
         self.assertIn('"best_of_n": False', source)
 
+    def test_parser_can_freeze_a_nondefault_requested_count(self):
+        args = MODULE.build_parser().parse_args(
+            [
+                "--c3fd-checkpoint", "c3fd.pt",
+                "--data-dir", "data",
+                "--llama-model", "llama",
+                "--fused-planner-final", "fused",
+                "--source-ledger", "ledger.jsonl",
+                "--output-dir", "out",
+                "--expected-c3fd-sha256", "a",
+                "--expected-vocabulary-sha256", "b",
+                "--expected-source-ledger-sha256", "c",
+                "--expected-typed-config-sha256", "d",
+                "--expected-typed-state-sha256", "e",
+                "--expected-adapter-config-sha256", "f",
+                "--expected-adapter-model-sha256", "g",
+                "--requested", "1200",
+                "--expected-requested", "1200",
+                "--seed", "23",
+                "--expected-seed", "23",
+            ]
+        )
+        self.assertEqual(args.requested, 1200)
+        self.assertEqual(args.expected_requested, 1200)
+
 
 if __name__ == "__main__":
     unittest.main()
