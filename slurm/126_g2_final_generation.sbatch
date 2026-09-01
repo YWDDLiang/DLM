@@ -80,12 +80,18 @@ PY
 run_arm(){
  local arm="$1" checkpoint="$2" device="$3" relation="$4" output="${RUN}/arm_${1}"
  mkdir "${output}"
- relation_args=()
- if [[ "${relation}" == true ]]; then relation_args=(--periodic-relation-checkpoint "${checkpoint}" --periodic-relation-rank 64); fi
- env CUDA_VISIBLE_DEVICES="${device}" PYTHONPATH="${CODE_ROOT}/src" OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
-  "${PYTHON}" "${SAMPLER}" --model-path "${MODEL}" --checkpoint-path "${checkpoint}" "${relation_args[@]}" \
-  --prompt-jsonl "${BODY_PLANS}" --output-dir "${output}/body" --crysllmgen-dir "${CRYS}" \
-  --num-samples 256 --temperature 0.7 --seed 91117 >"${output}/body.out" 2>"${output}/body.err"
+ if [[ "${relation}" == true ]]; then
+  env CUDA_VISIBLE_DEVICES="${device}" PYTHONPATH="${CODE_ROOT}/src" OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
+   "${PYTHON}" "${SAMPLER}" --model-path "${MODEL}" --checkpoint-path "${checkpoint}" \
+   --periodic-relation-checkpoint "${checkpoint}" --periodic-relation-rank 64 \
+   --prompt-jsonl "${BODY_PLANS}" --output-dir "${output}/body" --crysllmgen-dir "${CRYS}" \
+   --num-samples 256 --temperature 0.7 --seed 91117 >"${output}/body.out" 2>"${output}/body.err"
+ else
+  env CUDA_VISIBLE_DEVICES="${device}" PYTHONPATH="${CODE_ROOT}/src" OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
+   "${PYTHON}" "${SAMPLER}" --model-path "${MODEL}" --checkpoint-path "${checkpoint}" \
+   --prompt-jsonl "${BODY_PLANS}" --output-dir "${output}/body" --crysllmgen-dir "${CRYS}" \
+   --num-samples 256 --temperature 0.7 --seed 91117 >"${output}/body.out" 2>"${output}/body.err"
+ fi
  [[ -f "${output}/body/_SUCCESS" ]]
  env CUDA_VISIBLE_DEVICES="${device}" OPENBLAS_NUM_THREADS=8 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
   "${PYTHON}" "${REFINER_SCRIPT}" --proposal-graphs "${output}/body/proposal_graphs.pt" --checkpoint "${REFINER}" \
