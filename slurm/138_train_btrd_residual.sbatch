@@ -16,6 +16,7 @@ readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly CODE_ROOT="${H1A2_CODE_ROOT:?export deployed code root}"
 readonly DATA="${BTRD_DATA_DIR:?export completed BTRD data root}"
 readonly DATA_MANIFEST_SHA="${BTRD_DATA_MANIFEST_SHA256:?pin BTRD manifest}"
+readonly TEACHER_AUDIT="${BTRD_TEACHER_AUDIT_DIR:?export passed teacher identity audit}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly POLICY="${ROOT}/runs/g2_full_epoch_A_39164/train/checkpoints/step-1696"
 readonly TRAINER="${CODE_ROOT}/src/scripts/llada_sft.py"
@@ -40,6 +41,14 @@ on_error(){
 trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 
 [[ -f "${DATA}/_SUCCESS" && ! -e "${DATA}/_FAILED" ]]
+[[ -f "${TEACHER_AUDIT}/_SUCCESS" && ! -e "${TEACHER_AUDIT}/_FAILED" ]]
+"${PYTHON}" - "${TEACHER_AUDIT}/BTRD_TEACHER_ORDER_AUDIT.json" <<'PY'
+import json,sys
+report=json.load(open(sys.argv[1]))
+assert report['status']=='pass' and report['ordered_species_mismatches']==0
+assert report['proposal_indices_unique_in_range'] is True
+assert report['refined_indices_unique_in_range'] is True
+PY
 [[ "$(sha256sum "${DATA}/manifest.json" | awk '{print $1}')" == "${DATA_MANIFEST_SHA}" ]]
 [[ "$(sha256sum "${POLICY}/adapter_model.safetensors" | awk '{print $1}')" == "${POLICY_SHA}" ]]
 [[ "$(sha256sum "${POLICY}/periodic_relation_adapter.pt" | awk '{print $1}')" == "${RELATION_SHA}" ]]
@@ -66,7 +75,8 @@ code_commit	${code_commit}
 EOF
 sha256sum "${DATA}/manifest.json" "${DATA}/train.jsonl" "${DATA}/val.jsonl" \
   "${POLICY}/adapter_model.safetensors" "${POLICY}/periodic_relation_adapter.pt" \
-  "${TRAINER}" "${RUN}/scientific_contract.tsv" >"${RUN}/INPUTS.sha256"
+  "${TEACHER_AUDIT}/BTRD_TEACHER_ORDER_AUDIT.json" "${TRAINER}" \
+  "${RUN}/scientific_contract.tsv" >"${RUN}/INPUTS.sha256"
 
 torchrun --standalone --master-port 29638 --nproc_per_node=2 "${TRAINER}" \
   --model-path "${MODEL}" \
