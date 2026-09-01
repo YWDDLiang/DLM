@@ -1,8 +1,8 @@
 # G2 full-epoch A/B checklist
 
-Status: READY FOR PARALLEL A/B TRAINING. The immutable geometry audit and final
-independent review passed. This is a post-outcome matched development
-experiment, not a fresh prospective claim.
+Status: COMPLETE. The matched full-epoch A/B experiment, fixed model494
+refinement, cached-official evaluation, registered method decision, and
+positive archive are terminal.
 
 ## Frozen methods
 
@@ -60,9 +60,17 @@ weights `0.1/0.1/0.2/0.05`, one eligible step1696 checkpoint, no selection.
   exact-axis, fixed256, one trajectory, same Plan/noise, no retry/rerank.
 - [x] Freeze A/B model494 tau800 plus four-cell raw/refined Direct/CHGNet
   wrapper and reuse the existing official cache; no new MP query.
-- [ ] Run A/B raw body+Direct after both training jobs complete.
-- [ ] Run full model494/CHGNet and cached-official development S.U.N. for every
+- [x] Run A/B raw body+Direct after both training jobs complete.
+- [x] Run full model494/CHGNet and cached-official development S.U.N. for every
   technically valid G2 arm; do not issue a new official query.
+
+Terminal job39172 completed `0:0/01:45:21` on four A800s (`7.0233 A800-h`).
+A/B raw body/Direct is `255/128` and `254/130`; refined Direct is `254/254`.
+Cached-official raw Strict/Meta S.U.N. is A `7/41`, B `6/41`; refined is A
+`23/117`, B `23/115`. Paired B−A raw CHGNet is `+129.19 meV/atom`, bootstrap
+95% CI `[-107.06,+362.41]`; no energy advantage is established. Two cache-
+omitted chemsystems are explicit unknowns in the fixed denominator. Hash audit
+passed for every final output.
 
 ## Pre-registered interpretation
 
@@ -82,18 +90,18 @@ Engineering priors: A directional raw-Direct improvement 60–75%; A ≥5 pp
 
 - [x] Register
   [`G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md`](G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md).
-- [ ] After A/B is terminal, freeze one promoted G2 initialization according
+- [x] After A/B is terminal, freeze one promoted G2 initialization according
   to the registered A/B rule; do not choose a training seed or intermediate
   checkpoint.
 - [x] Cancel the full MP20-train 27,136-row model494-tau800 corpus before any
   job was submitted; its estimated `~106 A800-hours` is outside the revised
   compute budget. Preserve the cancelled plan as a negative design record.
-- [ ] Freeze a lower-cost residual-learning replacement after A/B is terminal:
-  strict triclinic-PBC species-aware top-k/CVaR collision risk plus local
-  model494 short-step/score displacement supervision on a fixed
-  MP20-train-only subset. Retain teacher CE, metric, RDF, and coordination so
-  lattice expansion cannot satisfy collision risk trivially.
-- [ ] Only if raw energy remains neutral, reuse one fresh K=4 train-only pool
-  for safety-aware same-composition ranking: raw-invalid is lexicographically
-  worst, valid candidates are ranked only within the same composition, and
-  the historical mixed-policy 3,614 rows remain ineligible.
+- [x] Close further method development by user decision. CVaR, local-field
+  distillation, K=4 preference training, and every other next-method GPU run
+  remain unlaunched. The next stage is repository consolidation and paper
+  mainline construction on `codex/c3fd-g2-paper-mainline`.
+
+Registered promotion is **A / G2-PBC-R**: B fails the body+Direct rule and its
+raw-energy CI crosses zero. This development decision does not replace the
+earlier fresh prospective G2 headline; the paper reports the prospective G2
+endpoint and uses A/B as the full-epoch mechanism ablation.

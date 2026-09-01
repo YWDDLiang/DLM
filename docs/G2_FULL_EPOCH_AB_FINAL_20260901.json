@@ -1,0 +1,30 @@
+{
+  "schema": "g2_full_epoch_ab_terminal_summary_v1",
+  "status": "complete",
+  "job": 39172,
+  "elapsed": "01:45:21",
+  "observed_a800_hours": 7.0233,
+  "requested": 256,
+  "cells": [
+    {"stage": "raw", "arm": "A", "body": 255, "direct": 128, "novel": 254, "unique": 255, "novel_unique": 254, "hull_known": 247, "strict_sun": 7, "meta_sun": 41},
+    {"stage": "raw", "arm": "B", "body": 254, "direct": 130, "novel": 253, "unique": 254, "novel_unique": 253, "hull_known": 245, "strict_sun": 6, "meta_sun": 41},
+    {"stage": "refined", "arm": "A", "body": 255, "direct": 254, "novel": 223, "unique": 255, "novel_unique": 223, "hull_known": 248, "strict_sun": 23, "meta_sun": 117},
+    {"stage": "refined", "arm": "B", "body": 254, "direct": 254, "novel": 221, "unique": 254, "novel_unique": 221, "hull_known": 248, "strict_sun": 23, "meta_sun": 115}
+  ],
+  "paired_b_minus_a_ev_per_atom": {
+    "raw_chgnet": {"known": 251, "mean": 0.12919042737360495, "ci95": [-0.10705652988526924, 0.3624100360262441]},
+    "raw_official_hull": {"known": 245, "mean": 0.1280516089225302, "ci95": [-0.11237040440646967, 0.37025623754579184]},
+    "refined_chgnet": {"known": 254, "mean": 0.008098986205153577, "ci95": [-0.004587194464338107, 0.02470967943274129]},
+    "refined_official_hull": {"known": 248, "mean": 0.008319215428444647, "ci95": [-0.00464548151339254, 0.025131618351705614]}
+  },
+  "official_cache_omissions": ["Ag-Ca-Pb", "Co-O-V"],
+  "promoted_arm": "A",
+  "promoted_method": "G2-PBC-R",
+  "new_science_after_terminal": false,
+  "hashes": {
+    "eval_outputs": "6ca71897b28d425780e4f4bbe9a5693502c5be4bb7c74a970624bf9a4efcaa00",
+    "final_json": "b50dd8d291daf46d29ff916e0b34395e7f252a11cbaaa8e99e6378f4a8819881",
+    "final_outputs": "b5b03ae357f07543b49e1d01eeedfa3a597e97a70993340353cae83e00a81a37",
+    "archive_manifest": "513864501df488f409e95aca351af026dbafc2dc4f6c5d44f0c07842dddb85d7"
+  }
+}

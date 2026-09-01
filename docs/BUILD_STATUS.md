@@ -501,3 +501,29 @@
   `runs/c3fd_g2_final_sun_20260901_v1/_SUCCESS` and
   `archive/c3fd_g2/final_sun_positive_20260901/_ARCHIVE_SUCCESS`; output hash
   verification passed. Final JSON SHA-256 is `1b99aa33...b3070`.
+
+## 2026-09-01 G2 full-epoch periodic-relation A/B endpoint
+
+- A (`G2-PBC-R`) and B (`G2-PBC-RU`) each completed the sole 1696-update
+  endpoint from the same Compact-V2 initialization, training seed, Plan and
+  noise. A uses audited 125-image triclinic PBC plus species-aware residual
+  relations; B adds detached q0 uncertainty gating.
+- Fixed-256 raw body/Direct is A `255/128` and B `254/130`, versus BASE
+  `251/118`. Both full-epoch candidates strengthen raw structural realization;
+  B's `+2` over A is below its registered replacement margin and loses one
+  body.
+- Job39172 completed `0:0/01:45:21` on four A800s (`7.0233 A800-h`). Refined
+  Direct is `254/256` for both. Cached-official raw Strict/Meta S.U.N. is A
+  `7/41`, B `6/41`; refined is A `23/117`, B `23/115`.
+- Paired B−A raw CHGNet is `+129.19 meV/atom`, bootstrap 95% CI
+  `[-107.06,+362.41]`; refined is `+8.10 meV/atom`, CI
+  `[-4.59,+24.71]`. B has no reliable energy advantage. The registered method
+  decision therefore promotes the simpler **A / G2-PBC-R**.
+- Two chemsystems absent from the existing official cache (`Ag-Ca-Pb`,
+  `Co-O-V`) remain explicit unknowns in the fixed denominator; no new query
+  was issued. Final JSON SHA is `b50dd8d...19881`; archive SHA manifest is
+  `51386450...85d7`.
+- Method development is closed. No basin distillation, CVaR, local-field or
+  preference job was submitted. The next branch consolidates the coupled
+  C3FD-constrained LLM Planner, 7+4N crystal DLM, periodic-relation residual,
+  model494 transition and S.U.N. evaluation into the paper mainline.
