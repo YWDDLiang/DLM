@@ -62,6 +62,34 @@ def summarize_cell(stage: str, route: str, report: Mapping[str, Any], rows):
     return summary
 
 
+def collect_cache_omissions(
+    protocol,
+    eval_run: Path,
+    phase_diagrams: Mapping[str, Any],
+    unresolved: set[str],
+) -> set[str]:
+    """Treat cache omissions as explicit unknowns, never as stable outcomes."""
+
+    omitted: set[str] = set()
+    for stage in STAGES:
+        for route in ROUTES:
+            path = (
+                eval_run
+                / route
+                / stage
+                / "evaluation/full_reconstructed/attempt_labels_preofficial.jsonl"
+            )
+            for row in protocol.read_jsonl(path):
+                if row.get("reconstructed") is not True:
+                    continue
+                if row.get("chgnet_energy_per_atom") is None:
+                    continue
+                chemsys = None if row.get("chemsys") is None else str(row["chemsys"])
+                if chemsys not in phase_diagrams and chemsys not in unresolved:
+                    omitted.add(str(chemsys))
+    return omitted
+
+
 def promotion_decision(cells, paired_continuous) -> dict[str, Any]:
     by_key = {(row["stage"], row["route"]): row for row in cells}
     a_raw = by_key[("raw", "A")]
@@ -132,6 +160,9 @@ def render(report: Mapping[str, Any]) -> str:
             f"Direct rule met: `{decision['direct_rule_met']}`; raw-energy rule met: "
             f"`{decision['raw_energy_rule_met']}`.",
             "",
+            f"Existing official cache omissions: `{report['official_cache_omissions']['count']}` "
+            "chemsystems. They remain unknown in the fixed denominator and are never mapped stable.",
+            "",
             "No Plan, sample, failed row, seed, checkpoint, or evaluation result was replaced.",
             "",
         ]
@@ -156,11 +187,16 @@ def main() -> None:
 
     runtime = common.load_runtime(args.eval_runtime.resolve())
     protocol = __import__("protocol")
+    eval_run = args.eval_run.resolve()
     phase_diagrams = runtime._phase_diagrams(cache / "official_slim_cache.jsonl")
     unresolved = {
         str(row["chemsys"])
         for row in protocol.read_jsonl(cache / "unresolved_chemsys.jsonl")
     }
+    cache_omissions = collect_cache_omissions(
+        protocol, eval_run, phase_diagrams, unresolved
+    )
+    unresolved.update(cache_omissions)
     output.mkdir(parents=True)
 
     cells = []
@@ -170,7 +206,7 @@ def main() -> None:
     }
     for stage in STAGES:
         for route in ROUTES:
-            root = args.eval_run.resolve() / route / stage
+            root = eval_run / route / stage
             paths = {
                 "labels": root
                 / "evaluation/full_reconstructed/attempt_labels_preofficial.jsonl",
@@ -235,6 +271,11 @@ def main() -> None:
         "promotion_decision": promotion_decision(cells, paired_continuous),
         "inputs": input_hashes,
         "official_cache": common.read_json(cache / "completion_manifest.json"),
+        "official_cache_omissions": {
+            "count": len(cache_omissions),
+            "chemsystems": sorted(cache_omissions),
+            "policy": "explicit unknown; retained in fixed256; never mapped stable",
+        },
         "selection_retry_replacement_rerank": False,
     }
     (output / f"{STEM}.json").write_text(
