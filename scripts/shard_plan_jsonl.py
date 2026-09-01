@@ -8,6 +8,8 @@ import hashlib
 import json
 from pathlib import Path
 
+from crystal_dlm.composition_identity import identity_from_plan_state, identity_text
+
 
 def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -30,6 +32,13 @@ def shard_rows(rows, *, shard_size: int):
             row["parent_execution_sample_idx"] = int(source["sample_idx"])
             row["sample_idx"] = local_idx
             row["shard_local_sample_idx"] = local_idx
+            if not str(row.get("reduced_composition_identity") or ""):
+                state = row.get("plan_state")
+                if not isinstance(state, dict):
+                    raise ValueError("Plan lacks canonical composition state")
+                row["reduced_composition_identity"] = identity_text(
+                    identity_from_plan_state(state)
+                )
             values.append(row)
         shards.append(values)
     return shards

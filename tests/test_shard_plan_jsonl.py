@@ -16,7 +16,11 @@ SPEC.loader.exec_module(MODULE)
 class PlanShardTest(unittest.TestCase):
     def test_parent_and_source_identity_survive_local_reindex(self) -> None:
         rows = [
-            {"sample_idx": index, "source_sample_idx": index + 100, "plan_state": {}}
+            {
+                "sample_idx": index,
+                "source_sample_idx": index + 100,
+                "plan_state": {"N": 2, "elements": ["Na", "Cl"], "counts": [1, 1]},
+            }
             for index in range(5)
         ]
         shards = MODULE.shard_rows(rows, shard_size=2)
@@ -26,10 +30,21 @@ class PlanShardTest(unittest.TestCase):
             [row["parent_execution_sample_idx"] for row in shards[1]], [2, 3]
         )
         self.assertEqual([row["source_sample_idx"] for row in shards[1]], [102, 103])
+        self.assertTrue(
+            all(row["reduced_composition_identity"] for shard in shards for row in shard)
+        )
 
     def test_noncontiguous_input_fails_closed(self) -> None:
         with self.assertRaises(ValueError):
-            MODULE.shard_rows([{"sample_idx": 1}], shard_size=2)
+            MODULE.shard_rows(
+                [
+                    {
+                        "sample_idx": 1,
+                        "plan_state": {"N": 1, "elements": ["Li"], "counts": [1]},
+                    }
+                ],
+                shard_size=2,
+            )
 
 
 if __name__ == "__main__":
