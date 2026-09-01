@@ -740,13 +740,6 @@ def summarize_sample_weight_multipliers(
             except (TypeError, ValueError):
                 base_weight = 1.0
             matched_weight_mass[matched_key] += max(base_weight, 0.0) * float(multipliers[matched_key])
-    periodic_support = None
-    if any(weight > 0 for weight in periodic_weights.values()):
-        periodic_support = build_geometry_token_support(tokenizer)
-        if float(getattr(args, "periodic_species_margin_scale", 0.0)) > 0.0:
-            periodic_support["species_radius_by_token_id"] = (
-                build_species_radius_support(tokenizer)
-            )
     return {
         "configured": dict(multipliers),
         "composition_bucket_counts": dict(bucket_counts.most_common()),
@@ -1432,6 +1425,13 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
         "overlap": float(getattr(args, "periodic_overlap_weight", 0.0)),
         "coordination": float(getattr(args, "periodic_coordination_weight", 0.0)),
     }
+    periodic_support = None
+    if any(weight > 0 for weight in periodic_weights.values()):
+        periodic_support = build_geometry_token_support(tokenizer)
+        if float(getattr(args, "periodic_species_margin_scale", 0.0)) > 0.0:
+            periodic_support["species_radius_by_token_id"] = (
+                build_species_radius_support(tokenizer)
+            )
     return {
         "representation": getattr(args, "representation", "fixed_slot"),
         "answer_token_count": int(getattr(args, "answer_token_count", ANSWER_TOKEN_COUNT)),

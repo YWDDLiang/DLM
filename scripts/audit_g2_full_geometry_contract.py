@@ -119,6 +119,7 @@ def audit_arrays(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--train-jsonl", type=Path, required=True)
+    parser.add_argument("--validation-jsonl", type=Path, required=True)
     parser.add_argument("--generation-jsonl", type=Path, action="append", default=[])
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--max-train-rows", type=int, default=0)
@@ -166,6 +167,10 @@ def main() -> None:
             break
         consume(parse_dynamic_answer(str(row["answer"]), strict=True))
         train_rows += 1
+    validation_rows = 0
+    for row in iter_jsonl(args.validation_jsonl):
+        consume(parse_dynamic_answer(str(row["answer"]), strict=True))
+        validation_rows += 1
     generation_rows = 0
     generation_failures = 0
     for path in args.generation_jsonl:
@@ -190,6 +195,7 @@ def main() -> None:
     report = {
         "schema": "g2_full_geometry_contract_audit_v2",
         "train_rows": train_rows,
+        "validation_rows": validation_rows,
         "generation_rows": generation_rows,
         "generation_failures_preserved": generation_failures,
         "totals": totals,
@@ -202,6 +208,10 @@ def main() -> None:
         "element_radii_sha256": ELEMENT_RADII_SHA256,
         "inputs": {
             "train": {"path": str(args.train_jsonl), "sha256": sha256_file(args.train_jsonl)},
+            "validation": {
+                "path": str(args.validation_jsonl),
+                "sha256": sha256_file(args.validation_jsonl),
+            },
             "generation": [
                 {"path": str(path), "sha256": sha256_file(path)}
                 for path in args.generation_jsonl

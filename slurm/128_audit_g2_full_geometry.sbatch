@@ -19,6 +19,7 @@ readonly AUDITOR_SHA="${G2_FULL_AUDITOR_SHA256:?pin auditor SHA256}"
 readonly OPS="${CODE_ROOT}/src/crystal_dlm/periodic_geometry_ops.py"
 readonly OPS_SHA="${G2_FULL_OPS_SHA256:?pin shared PBC/radius SHA256}"
 readonly TRAIN="${ROOT}/data/c3fd_native_teacher_sft_v1_20260831/train.jsonl"
+readonly VALIDATION="${ROOT}/data/c3fd_native_teacher_sft_v1_20260831/val.jsonl"
 readonly BASE_RAW="${ROOT}/runs/compact_v2_periodic_relation_g2_final_generation_39137/arm_BASE/body/raw_generations.jsonl"
 readonly G2_RAW="${ROOT}/runs/compact_v2_periodic_relation_g2_final_generation_39137/arm_G2/body/raw_generations.jsonl"
 readonly RUN="${ROOT}/runs/g2_full_geometry_contract_audit_${SLURM_JOB_ID}"
@@ -30,6 +31,7 @@ readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 
 "${PYTHON}" "${AUDITOR}" \
   --train-jsonl "${TRAIN}" \
+  --validation-jsonl "${VALIDATION}" \
   --generation-jsonl "${BASE_RAW}" \
   --generation-jsonl "${G2_RAW}" \
   --output-dir "${RUN}" \
