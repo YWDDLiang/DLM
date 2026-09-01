@@ -14,6 +14,7 @@ class Slurm137Test(unittest.TestCase):
         self.assertIn("tau200_rows\t6144", text)
         self.assertIn("anchor_rows\t2048", text)
         self.assertIn("--shard-size 1024", text)
+        self.assertIn("--num-samples 1024 --expected-denominator 1024", text)
         self.assertIn('local plans="${RUN}/plan_shards/', text)
         self.assertIn("--nproc_per_node=6", text)
         self.assertIn("--diff-steps 200", text)

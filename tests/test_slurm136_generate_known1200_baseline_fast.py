@@ -16,6 +16,7 @@ class Slurm136Test(unittest.TestCase):
         self.assertIn("run_shard 5 remainder", text)
         self.assertIn('local device="${gpu[$slot]}" out="${RUN}/${name}"', text)
         self.assertIn("--expected-denominator \"${count}\"", text)
+        self.assertIn("--num-samples \"${count}\" --expected-denominator \"${count}\"", text)
         self.assertIn("model494_or_CHGNet_or_NU\tfalse", text)
         self.assertIn("expensive_direct_metrics_run':False", text)
         self.assertNotIn("nvidia-smi", text)

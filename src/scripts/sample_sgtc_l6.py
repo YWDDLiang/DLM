@@ -61,6 +61,12 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--crysllmgen-dir", type=Path, required=True)
     parser.add_argument("--num-samples", type=int, default=256)
+    parser.add_argument(
+        "--expected-denominator",
+        type=int,
+        default=None,
+        help="Explicit nonlegacy shard denominator; omission preserves 256/1000.",
+    )
     parser.add_argument("--temperature", type=float, default=0.7)
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--allow-missing-plans", action="store_true")
@@ -71,7 +77,9 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    denominator = validate_sgtc_denominator(args.num_samples)
+    denominator = validate_sgtc_denominator(
+        args.num_samples, expected=args.expected_denominator
+    )
     if not torch.cuda.is_available():
         raise RuntimeError("SGTC L6 sampling requires one CUDA device")
     device = torch.device("cuda", 0)

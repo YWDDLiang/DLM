@@ -40,6 +40,11 @@ class SGTCSamplingTest(unittest.TestCase):
         self.assertEqual(validate_sgtc_denominator(1000), 1000)
         with self.assertRaisesRegex(ValueError, "L6=256 or L7=1000"):
             validate_sgtc_denominator(512)
+        self.assertEqual(validate_sgtc_denominator(200, expected=200), 200)
+        self.assertEqual(validate_sgtc_denominator(159, expected=159), 159)
+        self.assertEqual(validate_sgtc_denominator(1024, expected=1024), 1024)
+        with self.assertRaisesRegex(ValueError, "expected-denominator"):
+            validate_sgtc_denominator(200, expected=199)
 
     def test_l7_plans_preserve_duplicate_attempts(self):
         rows = [

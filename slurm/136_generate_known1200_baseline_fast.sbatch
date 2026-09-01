@@ -78,7 +78,7 @@ run_shard(){
  env CUDA_VISIBLE_DEVICES="${device}" PYTHONPATH="${CODE_ROOT}/src" OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
   "${PYTHON}" "${SAMPLER}" --model-path "${MODEL}" --checkpoint-path "${POLICY}" \
   --periodic-relation-checkpoint "${POLICY}" --periodic-relation-rank 64 --prompt-jsonl "${plans}" \
-  --output-dir "${out}/body" --crysllmgen-dir "${CRYS}" --num-samples "${count}" --temperature 0.7 --seed 91117 \
+  --output-dir "${out}/body" --crysllmgen-dir "${CRYS}" --num-samples "${count}" --expected-denominator "${count}" --temperature 0.7 --seed 91117 \
   >"${RUN}/logs/${name}-body.out" 2>"${RUN}/logs/${name}-body.err"
  [[ -f "${out}/body/_SUCCESS" ]]
  "${PYTHON}" "${ASSEMBLER}" --body-dir "${out}/body" --output-dir "${out}/generation" --seed 17 --dlm-seed 91117 \

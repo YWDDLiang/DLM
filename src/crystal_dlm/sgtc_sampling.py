@@ -10,8 +10,15 @@ from crystal_dlm.ctv_protocol import counter_seed
 SGTC_SCREEN_DENOMINATORS = frozenset({256, 1000})
 
 
-def validate_sgtc_denominator(value: int) -> int:
+def validate_sgtc_denominator(value: int, expected: int | None = None) -> int:
     denominator = int(value)
+    if expected is not None:
+        expected = int(expected)
+        if expected <= 0 or denominator != expected:
+            raise ValueError(
+                "SGTC sampling denominator must match expected-denominator"
+            )
+        return denominator
     if denominator not in SGTC_SCREEN_DENOMINATORS:
         raise ValueError(
             "SGTC sampling denominator must be the frozen L6=256 or L7=1000"
