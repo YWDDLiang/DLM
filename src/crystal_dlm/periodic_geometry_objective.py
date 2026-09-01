@@ -9,6 +9,7 @@ from typing import Any, Mapping
 import torch
 import torch.nn.functional as F
 
+from crystal_dlm.basin_transport import basin_transport_loss
 from crystal_dlm.fixed_slot import SYMBOL_TO_Z
 from crystal_dlm.periodic_geometry_ops import (
     element_radius,
@@ -238,6 +239,7 @@ def _sample_objective(
     species_margin_ceiling: float,
     overlap_tail_temperature: float,
     overlap_tail_mix: float,
+    basin_transport_enabled: bool,
 ) -> dict[str, torch.Tensor]:
     # CUDA determinant/linear-algebra kernels do not support bfloat16.  Keep
     # the language model in its native dtype but evaluate the small geometry
@@ -296,6 +298,17 @@ def _sample_objective(
     metric_loss = metric_loss + (
         torch.log(volume / max(num_atoms, 1)) - torch.log(target_volume / max(num_atoms, 1))
     ).square()
+    transport_loss = (
+        basin_transport_loss(
+            lattice,
+            frac,
+            target_lattice,
+            target_frac,
+            image_radius=int(periodic_image_radius),
+        )["loss"]
+        if bool(basin_transport_enabled)
+        else metric_loss * 0.0
+    )
 
     distances, pairs = _pair_distances(
         frac,
@@ -311,7 +324,13 @@ def _sample_objective(
     )
     zero = geometry_logits.sum() * 0.0
     if distances.numel() == 0:
-        return {"metric": metric_loss, "pair_rdf": zero, "overlap": zero, "coordination": zero}
+        return {
+            "metric": metric_loss,
+            "pair_rdf": zero,
+            "overlap": zero,
+            "coordination": zero,
+            "transport": transport_loss,
+        }
 
     species = torch.stack(species_ids)
     same_species = species.index_select(0, pairs[0]) == species.index_select(0, pairs[1])
@@ -373,6 +392,7 @@ def _sample_objective(
         "pair_rdf": pair_rdf_loss,
         "overlap": overlap_loss,
         "coordination": coordination_loss,
+        "transport": transport_loss,
     }
 
 
@@ -391,10 +411,14 @@ def periodic_geometry_objective(
     species_margin_ceiling: float = 1.4,
     overlap_tail_temperature: float = 0.1,
     overlap_tail_mix: float = 0.0,
+    basin_transport_enabled: bool = False,
 ) -> dict[str, torch.Tensor | int]:
     """Compute normalized coupled geometry losses for a dynamic-v1 batch."""
 
-    totals: dict[str, list[torch.Tensor]] = {name: [] for name in ("metric", "pair_rdf", "overlap", "coordination")}
+    totals: dict[str, list[torch.Tensor]] = {
+        name: []
+        for name in ("metric", "pair_rdf", "overlap", "coordination", "transport")
+    }
     for sample in range(input_ids.shape[0]):
         count = int(num_atoms[sample].detach().cpu())
         if not 1 <= count <= 20:
@@ -409,6 +433,7 @@ def periodic_geometry_objective(
             float(species_margin_ceiling),
             float(overlap_tail_temperature),
             float(overlap_tail_mix),
+            bool(basin_transport_enabled),
         )
         for name, value in components.items():
             totals[name].append(value)

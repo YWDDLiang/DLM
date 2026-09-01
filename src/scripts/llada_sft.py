@@ -1424,6 +1424,7 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
         "pair_rdf": float(getattr(args, "periodic_pair_rdf_weight", 0.0)),
         "overlap": float(getattr(args, "periodic_overlap_weight", 0.0)),
         "coordination": float(getattr(args, "periodic_coordination_weight", 0.0)),
+        "transport": float(getattr(args, "basin_transport_weight", 0.0)),
     }
     periodic_support = None
     if any(weight > 0 for weight in periodic_weights.values()):
@@ -2460,6 +2461,12 @@ def main() -> None:
     parser.add_argument("--periodic-overlap-weight", type=float, default=0.0)
     parser.add_argument("--periodic-coordination-weight", type=float, default=0.0)
     parser.add_argument(
+        "--basin-transport-weight",
+        type=float,
+        default=0.0,
+        help="Normalized metric plus periodic site transport to the current target geometry.",
+    )
+    parser.add_argument(
         "--periodic-exact-triclinic-pbc",
         action="store_true",
         help="Use a bounded 27-image minimum for periodic geometry losses.",
@@ -2562,6 +2569,7 @@ def main() -> None:
         args.periodic_pair_rdf_weight,
         args.periodic_overlap_weight,
         args.periodic_coordination_weight,
+        args.basin_transport_weight,
     )
     if any(weight < 0 for weight in periodic_weights):
         parser.error("periodic geometry weights must be non-negative")
@@ -3015,6 +3023,14 @@ def main() -> None:
                                 overlap_tail_mix=float(
                                     loss_config["periodic_overlap_tail_mix"]
                                 ),
+                                basin_transport_enabled=(
+                                    float(
+                                        loss_config["periodic_geometry_weights"][
+                                            "transport"
+                                        ]
+                                    )
+                                    > 0.0
+                                ),
                             )
                     else:
                         task_loss = compute_loss(model, batch, loss_config)
@@ -3078,7 +3094,13 @@ def main() -> None:
                     grounding_samples = 0 if grounding is None else int(grounding["eligible_samples"])
                     periodic_values = {
                         name: None if periodic is None else float(periodic[name].detach().cpu())
-                        for name in ("metric", "pair_rdf", "overlap", "coordination")
+                        for name in (
+                            "metric",
+                            "pair_rdf",
+                            "overlap",
+                            "coordination",
+                            "transport",
+                        )
                     }
                     log_handle.write(
                         json.dumps(
@@ -3097,6 +3119,7 @@ def main() -> None:
                                 "periodic_geometry_pair_rdf_loss": periodic_values["pair_rdf"],
                                 "periodic_geometry_overlap_loss": periodic_values["overlap"],
                                 "periodic_geometry_coordination_loss": periodic_values["coordination"],
+                                "basin_transport_loss": periodic_values["transport"],
                                 "periodic_relation_grad_norm": relation_grad_norm_value,
                                 "periodic_relation_output_grad_norm": relation_output_grad_norm_value,
                                 "lr": optimizer.param_groups[0]["lr"],
