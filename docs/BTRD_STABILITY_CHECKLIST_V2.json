@@ -31,12 +31,23 @@
     "structured_review_disposition": "APPROVED"
   },
   "active": {
-    "teacher_job": 39184,
-    "teacher_run": "runs/btrd_tau200_teacher_39184",
-    "gpus": 6,
-    "teacher_rows": 6144,
-    "anchor_rows": 2048,
-    "stage": "six_body_shards_running"
+    "training_job": 39185,
+    "training_run": "runs/btrd_residual_39185",
+    "gpus": 2,
+    "stage": "residual_only_512_updates"
+  },
+  "teacher_terminal": {
+    "job": 39184,
+    "elapsed": "02:30:16",
+    "a800_hours": 15.0267,
+    "requested_teacher_rows": 6144,
+    "parsed_proposals": 6038,
+    "body_failures": 106,
+    "refiner_missing": 0,
+    "effective_tau200_rows": 6038,
+    "anchor_or_fallback_rows": 2154,
+    "data_manifest_sha256": "80f8ece9c3e6e41db5a0d20dfff31bc4762d74e0cc5c2e252b838f7f96c80f24",
+    "teacher_identity_audit": "PASS"
   },
   "next": [
     "teacher ordered-species and global-index audit",

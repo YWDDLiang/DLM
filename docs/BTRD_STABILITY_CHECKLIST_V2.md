@@ -62,23 +62,32 @@ Frozen evaluation cohort:
   **APPROVED**. Decision log:
   `docs/paper/GEOMETRY_STABILITY_FALLBACK_REVIEW.md`.
 
-## Active execution
+## Teacher terminal and active training
 
-- [ ] Job39184, six A800 / 48 CPU:
+- [x] Job39184 COMPLETED `0:0/02:30:16`, six A800 / 48 CPU,
+  `15.0267 A800-hours`:
   `runs/btrd_tau200_teacher_39184`.
 - [x] 6,144 teacher Plans materialized into six fixed 1,024-row shards.
-- [ ] Six G2 body shards complete with requested accounting.
-- [ ] Combined proposal graph/accounting manifest complete.
-- [ ] Frozen model494 tau200 endpoint proxy complete.
-- [ ] Immutable 8,192-row BTRD SFT dataset complete.
-- [ ] Record elapsed time, A800-hours, output SHA and failure counts.
+- [x] Six G2 body shards complete: 6,038 parsed proposals and 106 body
+  failures retained as anchors.
+- [x] Combined proposal graph/accounting manifest complete; proposal SHA
+  `f7d17636...44c13`.
+- [x] Frozen model494 tau200 endpoint proxy complete: 6,038/6,038 assigned,
+  zero refiner-missing, refined SHA `bcabc0f6...24c70`.
+- [x] Immutable 8,192-row BTRD SFT dataset complete: 6,038 effective tau200
+  targets plus 2,154 registered/fallback anchors; manifest SHA
+  `80f8ece9...80f24`.
+- [x] Teacher ordered-species/global-index audit PASS: mismatch0,
+  refiner-missing0, body-failure106.
+- [ ] Job39185 active: two A800 / 16 CPU residual-only training,
+  `runs/btrd_residual_39185`; sole step512.
 
 ## Immediate next steps
 
-- [ ] Run `audit_btrd_teacher_order.py`; N, global index and ordered species
+- [x] Run `audit_btrd_teacher_order.py`; N, global index and ordered species
   mismatch must be zero. Missing row-level endpoints may use the registered
   MP20 anchor substitution; ledger corruption fails closed.
-- [ ] Submit one BTRD residual-only job: two A800 / 16 CPU, seed81017, 512
+- [x] Submit one BTRD residual-only job: two A800 / 16 CPU, seed81017, 512
   updates, effective batch16, LR1e-6 cosine/warmup10, sole step512.
 - [ ] Generate BTRD once on all 1,159 frozen Plans using baseline shard/noise;
   first compute body and fast Direct.
