@@ -12,7 +12,7 @@ import torch.nn.functional as F
 from crystal_dlm.fixed_slot import SYMBOL_TO_Z
 from crystal_dlm.periodic_geometry_ops import (
     element_radius,
-    minimum_image_distances_27,
+    minimum_image_distances,
 )
 
 
@@ -126,6 +126,7 @@ def _pair_distances(
     lattice: torch.Tensor,
     *,
     exact_triclinic: bool = False,
+    image_radius: int = 1,
 ) -> tuple[torch.Tensor, torch.Tensor]:
     count = int(frac_coords.shape[0])
     if count < 2:
@@ -135,7 +136,11 @@ def _pair_distances(
     delta = frac_coords.index_select(0, pairs[0]) - frac_coords.index_select(0, pairs[1])
     centered = delta - torch.round(delta)
     if exact_triclinic:
-        distances = minimum_image_distances_27(centered, lattice)
+        distances = minimum_image_distances(
+            centered,
+            lattice,
+            image_radius=int(image_radius),
+        )
     else:
         cartesian = centered @ lattice
         distances = torch.linalg.vector_norm(cartesian, dim=-1)
@@ -182,6 +187,7 @@ def _sample_objective(
     num_atoms: int,
     support: Mapping[str, Mapping[str, Mapping[str, list[Any]]]],
     exact_triclinic_pbc: bool,
+    periodic_image_radius: int,
     species_margin_scale: float,
     species_margin_floor: float,
     species_margin_ceiling: float,
@@ -245,12 +251,16 @@ def _sample_objective(
     ).square()
 
     distances, pairs = _pair_distances(
-        frac, lattice, exact_triclinic=bool(exact_triclinic_pbc)
+        frac,
+        lattice,
+        exact_triclinic=bool(exact_triclinic_pbc),
+        image_radius=int(periodic_image_radius),
     )
     target_distances, _ = _pair_distances(
         target_frac,
         target_lattice,
         exact_triclinic=bool(exact_triclinic_pbc),
+        image_radius=int(periodic_image_radius),
     )
     zero = geometry_logits.sum() * 0.0
     if distances.numel() == 0:
@@ -322,6 +332,7 @@ def periodic_geometry_objective(
     num_atoms: torch.Tensor,
     support: Mapping[str, Mapping[str, Mapping[str, list[Any]]]],
     exact_triclinic_pbc: bool = False,
+    periodic_image_radius: int = 1,
     species_margin_scale: float = 0.0,
     species_margin_floor: float = 0.6,
     species_margin_ceiling: float = 1.4,
@@ -337,6 +348,7 @@ def periodic_geometry_objective(
             logits[sample], input_ids[sample], masked_indices[sample],
             int(prompt_lengths[sample].detach().cpu()), count, support,
             bool(exact_triclinic_pbc),
+            int(periodic_image_radius),
             float(species_margin_scale),
             float(species_margin_floor),
             float(species_margin_ceiling),

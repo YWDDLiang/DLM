@@ -226,6 +226,37 @@ class PeriodicRelationAdapterTest(unittest.TestCase):
         self.assertTrue(torch.allclose(measured, brute_force, atol=1e-12))
         self.assertLess(measured.item(), torch.linalg.vector_norm(naive).item() / 10.0)
 
+    def test_radius_two_matches_larger_shell_for_pathological_skew(self) -> None:
+        _adapter, hidden, geometry = self._case(num_sites=2)
+        adapter = PeriodicRelationAdapter(
+            PeriodicRelationConfig(
+                hidden_size=hidden.shape[-1], rank=6, num_rbf=8, image_radius=2
+            )
+        ).to(dtype=hidden.dtype)
+        lattice = torch.tensor(
+            [[[1.0, 0.0, 0.0], [2.344034729614033, 0.31420764349108027, 0.0], [0.0, 0.0, 1.0]]],
+            dtype=hidden.dtype,
+        )
+        delta = torch.tensor(
+            [-0.3227580642396569, 0.32245827732342236, 0.0],
+            dtype=hidden.dtype,
+        )
+        skew = SoftCrystalGeometry(
+            lattice=lattice,
+            fractional_coordinates=torch.stack((torch.zeros_like(delta), delta)).unsqueeze(0),
+            species=geometry.species,
+            prompt_lengths=geometry.prompt_lengths,
+            num_sites=geometry.num_sites,
+        )
+        measured = adapter(hidden, skew).pair_distances[0, 0, 1]
+        shifts = torch.cartesian_prod(
+            torch.arange(-3, 4, dtype=hidden.dtype),
+            torch.arange(-3, 4, dtype=hidden.dtype),
+            torch.arange(-3, 4, dtype=hidden.dtype),
+        )
+        brute = torch.linalg.vector_norm((delta + shifts) @ lattice[0], dim=-1).min()
+        self.assertTrue(torch.allclose(measured, brute, atol=1.0e-12))
+
     def test_twenty_site_memory_bound_finite_output_and_scatter_scope(self) -> None:
         adapter, hidden, geometry = self._case(num_sites=20, prompt_length=2)
         self._randomize_output(adapter)

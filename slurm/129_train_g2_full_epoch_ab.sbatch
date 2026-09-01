@@ -97,7 +97,7 @@ effective_batch	16
 learning_rate	5e-6_cosine_warmup25_min0.1
 mask_policy	dynamic_geometry_only
 loss_weights	metric0.1_pairRDF0.1_overlap0.2_coordination0.05
-minimum_image	bounded_triclinic_27_image_shared_op
+minimum_image	bounded_triclinic_125_image_shared_op_audited_against_343_and_pymatgen
 species_margin	clamp_0.55_radius_sum_0.60A_1.40A_normalized
 relation_adapter	rank64_two_layer_zero_Wout
 uncertainty_gate	${GATE}
@@ -152,6 +152,7 @@ torchrun --standalone --master-port "${MASTER_PORT}" --nproc_per_node=2 "${TRAIN
   --periodic-overlap-weight 0.2 \
   --periodic-coordination-weight 0.05 \
   --periodic-exact-triclinic-pbc \
+  --periodic-image-radius 2 \
   --periodic-species-margin-scale 0.55 \
   --periodic-species-margin-floor 0.60 \
   --periodic-species-margin-ceiling 1.40 \
@@ -177,12 +178,14 @@ assert config['seed']==81017 and config['data_seed']==20260901
 assert config['distributed'] is True and config['world_size']==2
 assert config['batch_size']==1 and config['grad_accum']==8
 assert config['periodic_exact_triclinic_pbc'] is True
+assert config['periodic_image_radius']==2
 assert config['periodic_species_margin_scale']==0.55
 assert config['periodic_species_margin_floor']==0.60
 assert config['periodic_species_margin_ceiling']==1.40
 assert config['periodic_relation_uncertainty_gate'] is (method=='B')
 relation=json.load((output/'checkpoints/step-1696/periodic_relation_config.json').open())
 assert relation['step0_checked'] is True and relation['step0_max_logit_delta']==0.0
+assert relation['config']['image_radius']==2
 assert relation['config']['uncertainty_gate'] is (method=='B')
 events=[json.loads(line) for line in (output/'training_log.jsonl').open() if line.strip()]
 train=[row for row in events if row.get('event')=='train']
@@ -206,4 +209,3 @@ find "${RUN}" -type f ! -name OUTPUTS.sha256 ! -name adapter_model.safetensors \
 trap - ERR
 touch "${RUN}/_SUCCESS"
 printf '%s\n' "${RUN}"
-

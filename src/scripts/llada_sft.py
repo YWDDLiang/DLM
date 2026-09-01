@@ -1479,6 +1479,7 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
         "periodic_exact_triclinic_pbc": bool(
             getattr(args, "periodic_exact_triclinic_pbc", False)
         ),
+        "periodic_image_radius": int(getattr(args, "periodic_image_radius", 1)),
         "periodic_species_margin_scale": float(
             getattr(args, "periodic_species_margin_scale", 0.0)
         ),
@@ -2458,6 +2459,13 @@ def main() -> None:
         help="Use a bounded 27-image minimum for periodic geometry losses.",
     )
     parser.add_argument(
+        "--periodic-image-radius",
+        type=int,
+        choices=(1, 2),
+        default=1,
+        help="Bounded triclinic image shell: one=27 images, two=125 images.",
+    )
+    parser.add_argument(
         "--periodic-species-margin-scale",
         type=float,
         default=0.0,
@@ -2539,6 +2547,8 @@ def main() -> None:
         parser.error("periodic-species-margin-floor must be positive")
     if args.periodic_species_margin_ceiling < args.periodic_species_margin_floor:
         parser.error("periodic-species-margin-ceiling must be at least the floor")
+    if args.periodic_image_radius != 1 and not args.periodic_exact_triclinic_pbc:
+        parser.error("periodic-image-radius >1 requires exact triclinic PBC")
     if any(weight > 0 for weight in periodic_weights):
         if args.representation != "dynamic_v1":
             parser.error("periodic geometry objective requires representation=dynamic_v1")
@@ -2611,6 +2621,7 @@ def main() -> None:
             checkpoint=args.periodic_relation_checkpoint,
             uncertainty_gate=bool(args.periodic_relation_uncertainty_gate),
             uncertainty_gate_floor=float(args.periodic_relation_uncertainty_floor),
+            image_radius=int(args.periodic_image_radius),
         )
     loss_config = build_loss_config(tokenizer, args)
     if is_main:
@@ -2950,6 +2961,9 @@ def main() -> None:
                                 support=loss_config["periodic_geometry_support"],
                                 exact_triclinic_pbc=bool(
                                     loss_config["periodic_exact_triclinic_pbc"]
+                                ),
+                                periodic_image_radius=int(
+                                    loss_config["periodic_image_radius"]
                                 ),
                                 species_margin_scale=float(
                                     loss_config["periodic_species_margin_scale"]

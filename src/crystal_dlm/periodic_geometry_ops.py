@@ -41,11 +41,13 @@ def element_radius(atomic_number: int) -> float:
     return float(ELEMENT_RADII_ANGSTROM_BY_Z[atomic_number])
 
 
-def minimum_image_distances_27(
+def minimum_image_distances(
     fractional_deltas: torch.Tensor,
     lattice: torch.Tensor,
+    *,
+    image_radius: int,
 ) -> torch.Tensor:
-    """Return the minimum norm over the centered bounded 27-image shell.
+    """Return the minimum norm over a centered bounded image shell.
 
     ``fractional_deltas`` may be ``[..., 3]`` with one lattice ``[3, 3]``, or
     ``[B, ..., 3]`` with batched lattices ``[B, 3, 3]``.
@@ -53,8 +55,15 @@ def minimum_image_distances_27(
 
     if fractional_deltas.shape[-1] != 3:
         raise ValueError("fractional_deltas must end in three coordinates")
+    if int(image_radius) not in (1, 2):
+        raise ValueError("image_radius must be one (27) or two (125)")
     centered = fractional_deltas - torch.round(fractional_deltas)
-    values = torch.arange(-1, 2, dtype=centered.dtype, device=centered.device)
+    values = torch.arange(
+        -int(image_radius),
+        int(image_radius) + 1,
+        dtype=centered.dtype,
+        device=centered.device,
+    )
     shifts = torch.cartesian_prod(values, values, values).reshape(-1, 3)
     candidates = centered.unsqueeze(-2) + shifts
     if lattice.ndim == 2:
@@ -71,9 +80,29 @@ def minimum_image_distances_27(
     return torch.sqrt(squared.min(dim=-1).values.clamp_min(1.0e-12))
 
 
+def minimum_image_distances_27(
+    fractional_deltas: torch.Tensor,
+    lattice: torch.Tensor,
+) -> torch.Tensor:
+    return minimum_image_distances(
+        fractional_deltas, lattice, image_radius=1
+    )
+
+
+def minimum_image_distances_125(
+    fractional_deltas: torch.Tensor,
+    lattice: torch.Tensor,
+) -> torch.Tensor:
+    return minimum_image_distances(
+        fractional_deltas, lattice, image_radius=2
+    )
+
+
 __all__ = [
     "ELEMENT_RADII_ANGSTROM_BY_Z",
     "ELEMENT_RADII_SHA256",
     "element_radius",
+    "minimum_image_distances",
+    "minimum_image_distances_125",
     "minimum_image_distances_27",
 ]

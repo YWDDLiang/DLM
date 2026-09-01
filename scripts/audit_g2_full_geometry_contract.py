@@ -16,6 +16,7 @@ from crystal_dlm.fixed_slot import SYMBOL_TO_Z
 from crystal_dlm.periodic_geometry_ops import (
     ELEMENT_RADII_SHA256,
     element_radius,
+    minimum_image_distances_125,
     minimum_image_distances_27,
 )
 from crystal_dlm.periodic_geometry_objective import lattice_matrix_from_parameters
@@ -77,13 +78,16 @@ def audit_arrays(
         return {
             "pairs": 0,
             "max_27_vs_125": 0.0,
-            "max_27_vs_pymatgen": 0.0,
+            "max_125_vs_343": 0.0,
+            "max_125_vs_pymatgen": 0.0,
+            "mismatch_27_pairs": 0,
             "margin_violations": 0,
         }
     pairs = torch.triu_indices(coordinates.shape[0], coordinates.shape[0], offset=1)
     deltas = coordinates.index_select(0, pairs[0]) - coordinates.index_select(0, pairs[1])
     distance27 = minimum_image_distances_27(deltas, lattice)
-    distance125 = shell_distances(deltas, lattice, radius=2)
+    distance125 = minimum_image_distances_125(deltas, lattice)
+    distance343 = shell_distances(deltas, lattice, radius=3)
 
     from pymatgen.core import Lattice
 
@@ -105,8 +109,10 @@ def audit_arrays(
     return {
         "pairs": int(pairs.shape[1]),
         "max_27_vs_125": float((distance27 - distance125).abs().max()),
-        "max_27_vs_pymatgen": float((distance27 - pmg).abs().max()),
-        "margin_violations": int((distance27 < margins).sum()),
+        "max_125_vs_343": float((distance125 - distance343).abs().max()),
+        "max_125_vs_pymatgen": float((distance125 - pmg).abs().max()),
+        "mismatch_27_pairs": int(((distance27 - distance125).abs() > 1.0e-7).sum()),
+        "margin_violations": int((distance125 < margins).sum()),
     }
 
 
@@ -127,8 +133,10 @@ def main() -> None:
         "structures": 0,
         "pairs": 0,
         "margin_violations": 0,
+        "mismatch_27_pairs": 0,
         "max_27_vs_125": 0.0,
-        "max_27_vs_pymatgen": 0.0,
+        "max_125_vs_343": 0.0,
+        "max_125_vs_pymatgen": 0.0,
     }
 
     def consume(arrays: dict[str, Any]) -> None:
@@ -141,11 +149,15 @@ def main() -> None:
         totals["structures"] += 1
         totals["pairs"] += int(result["pairs"])
         totals["margin_violations"] += int(result["margin_violations"])
+        totals["mismatch_27_pairs"] += int(result["mismatch_27_pairs"])
         totals["max_27_vs_125"] = max(
             totals["max_27_vs_125"], float(result["max_27_vs_125"])
         )
-        totals["max_27_vs_pymatgen"] = max(
-            totals["max_27_vs_pymatgen"], float(result["max_27_vs_pymatgen"])
+        totals["max_125_vs_343"] = max(
+            totals["max_125_vs_343"], float(result["max_125_vs_343"])
+        )
+        totals["max_125_vs_pymatgen"] = max(
+            totals["max_125_vs_pymatgen"], float(result["max_125_vs_pymatgen"])
         )
 
     train_rows = 0
@@ -171,12 +183,12 @@ def main() -> None:
     )
     gates = {
         "all_train_rows_audited": args.max_train_rows <= 0,
-        "27_matches_125": totals["max_27_vs_125"] <= tolerance,
-        "27_matches_pymatgen": totals["max_27_vs_pymatgen"] <= tolerance,
+        "125_matches_343": totals["max_125_vs_343"] <= tolerance,
+        "125_matches_pymatgen": totals["max_125_vs_pymatgen"] <= tolerance,
         "target_margin_violation_rate_le_0p5pct": margin_rate <= 0.005,
     }
     report = {
-        "schema": "g2_full_geometry_contract_audit_v1",
+        "schema": "g2_full_geometry_contract_audit_v2",
         "train_rows": train_rows,
         "generation_rows": generation_rows,
         "generation_failures_preserved": generation_failures,

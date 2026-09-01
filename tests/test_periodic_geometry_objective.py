@@ -5,6 +5,7 @@ import torch
 from crystal_dlm.periodic_geometry_ops import (
     ELEMENT_RADII_ANGSTROM_BY_Z,
     ELEMENT_RADII_SHA256,
+    minimum_image_distances_125,
     minimum_image_distances_27,
 )
 from crystal_dlm.periodic_geometry_objective import (
@@ -68,6 +69,30 @@ class PeriodicGeometryObjectiveTest(unittest.TestCase):
             ceiling=2.0,
         )
         self.assertTrue(torch.allclose(margins, torch.tensor([1.5])))
+
+    def test_125_image_shell_handles_pathological_skew_cell(self) -> None:
+        lattice = torch.tensor(
+            [
+                [1.0, 0.0, 0.0],
+                [2.344034729614033, 0.31420764349108027, 0.0],
+                [0.0, 0.0, 1.0],
+            ],
+            dtype=torch.float64,
+        )
+        delta = torch.tensor(
+            [-0.3227580642396569, 0.32245827732342236, 0.0],
+            dtype=torch.float64,
+        )
+        bounded27 = minimum_image_distances_27(delta, lattice)
+        bounded125 = minimum_image_distances_125(delta, lattice)
+        shifts = torch.cartesian_prod(
+            torch.arange(-3, 4, dtype=delta.dtype),
+            torch.arange(-3, 4, dtype=delta.dtype),
+            torch.arange(-3, 4, dtype=delta.dtype),
+        )
+        brute = torch.linalg.vector_norm((delta + shifts) @ lattice, dim=-1).min()
+        self.assertGreater(bounded27.item() - bounded125.item(), 0.2)
+        self.assertTrue(torch.allclose(bounded125, brute, atol=1.0e-12))
 
     def test_target_peaked_logits_have_finite_small_loss_and_gradients(self) -> None:
         tokenizer = _Tokenizer()

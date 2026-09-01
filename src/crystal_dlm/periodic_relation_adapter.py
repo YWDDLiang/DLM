@@ -21,7 +21,7 @@ import torch
 from torch import Tensor, nn
 import torch.nn.functional as F
 
-from crystal_dlm.periodic_geometry_ops import minimum_image_distances_27
+from crystal_dlm.periodic_geometry_ops import minimum_image_distances
 
 
 @dataclass(frozen=True)
@@ -51,8 +51,8 @@ class PeriodicRelationConfig:
             raise ValueError("rbf_max_distance must be positive")
         if self.max_sites <= 0 or self.max_sites > 20:
             raise ValueError("max_sites must be in 1..20")
-        if self.image_radius != 1:
-            raise ValueError("image_radius is fixed at one bounded 27-image shell")
+        if self.image_radius not in (1, 2):
+            raise ValueError("image_radius must be one (27) or two (125)")
         if not 0.0 < self.uncertainty_gate_floor <= 1.0:
             raise ValueError("uncertainty_gate_floor must be in (0, 1]")
 
@@ -265,7 +265,11 @@ class PeriodicRelationAdapter(nn.Module):
         # Axis convention: lattice vectors are rows and Cartesian vectors are
         # fractional row vectors multiplied by the lattice matrix.
         delta = coordinates.unsqueeze(1) - coordinates.unsqueeze(2)
-        distances = minimum_image_distances_27(delta, lattice)
+        distances = minimum_image_distances(
+            delta,
+            lattice,
+            image_radius=int(self.config.image_radius),
+        )
 
         max_sites = int(coordinates.shape[1])
         active = site_mask.unsqueeze(1) & site_mask.unsqueeze(2)

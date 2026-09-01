@@ -330,6 +330,7 @@ def wrap_with_periodic_relation(
     checkpoint: str | Path | None = None,
     uncertainty_gate: bool = False,
     uncertainty_gate_floor: float = 0.25,
+    image_radius: int = 1,
 ) -> PeriodicRelationLogitsModel:
     hidden_size = int(base_model.get_output_embeddings().weight.shape[1])
     if checkpoint is None:
@@ -338,6 +339,7 @@ def wrap_with_periodic_relation(
             rank=int(rank),
             uncertainty_gate=bool(uncertainty_gate),
             uncertainty_gate_floor=float(uncertainty_gate_floor),
+            image_radius=int(image_radius),
         )
         state = None
     else:
