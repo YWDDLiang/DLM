@@ -31,10 +31,20 @@
     "structured_review_disposition": "APPROVED"
   },
   "active": {
-    "generation_job": 39188,
-    "generation_run": "runs/btrd_known1200_fast_39188",
-    "gpus": 6,
-    "stage": "all1159_body_and_fast_direct"
+    "first256_eval_job": 39190,
+    "first256_eval_run": "runs/btrd_first256_raw_eval_39190",
+    "gpus": 2,
+    "stage": "raw_chgnet_and_cached_official_inputs"
+  },
+  "generation_terminal": {
+    "job": 39188,
+    "elapsed": "00:22:30",
+    "a800_hours": 2.25,
+    "requested": 1159,
+    "body_comp": 1138,
+    "fast_direct": 568,
+    "baseline_body_delta": -1,
+    "baseline_direct_delta": 14
   },
   "training_terminal": {
     "job": 39185,

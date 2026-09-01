@@ -89,8 +89,13 @@ Frozen evaluation cohort:
 - [x] Preserve pre-science generation jobs39186/39187 as 0s/15s engineering
   negatives (non-executable delegated script; missing PYTHONPATH), with no body
   generated and no scientific parameter change.
-- [ ] Parameter-identical generation job39188 active: six A800 / 48 CPU,
-  `runs/btrd_known1200_fast_39188`.
+- [x] Generation job39188 COMPLETED `0:0/00:22:30` (`2.2500 A800-hours`):
+  body/composition 1,138/1,159 and fast Direct 568/1,159. Relative to matched
+  G2 baseline, body is -1 and Direct is +14.
+- [x] Preserve first256 eval job39189 as a 1s pre-science Bash-local binding
+  negative; no CHGNet or Direct cell started.
+- [ ] Parameter-identical first256 raw eval job39190 active: two A800 / 16 CPU,
+  no candidate model494.
 
 ## Immediate next steps
 
@@ -101,6 +106,8 @@ Frozen evaluation cohort:
   updates, effective batch16, LR1e-6 cosine/warmup10, sole step512.
 - [x] Submit BTRD generation once on all 1,159 frozen Plans using baseline
   shard/noise (job39188);
+- [x] Submit matched first256 raw CHGNet/cached-official input evaluation
+  (job39190); body outputs are reused, not regenerated.
   first compute body and fast Direct.
 - [ ] Compute raw CHGNet and cached official hull/S.U.N. on first256; do not run
   candidate model494 refinement before the raw promotion decision.
