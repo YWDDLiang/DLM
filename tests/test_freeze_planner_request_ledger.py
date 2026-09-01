@@ -1,8 +1,19 @@
+import importlib.util
 import tempfile
 from pathlib import Path
 import unittest
 
-from scripts.freeze_planner_request_ledger import build_rows
+
+ROOT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location(
+    "freeze_planner_request_ledger",
+    ROOT / "scripts" / "freeze_planner_request_ledger.py",
+)
+if SPEC is None or SPEC.loader is None:
+    raise RuntimeError("cannot import request-ledger freezer")
+MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(MODULE)
+build_rows = MODULE.build_rows
 
 
 class PlannerRequestLedgerTest(unittest.TestCase):
