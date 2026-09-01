@@ -13,6 +13,7 @@ from crystal_dlm.periodic_geometry_objective import (
     _species_aware_margins,
     build_geometry_token_support,
     periodic_geometry_objective,
+    sitewise_tail_overlap_loss,
 )
 
 
@@ -29,6 +30,52 @@ class _Tokenizer:
 
 
 class PeriodicGeometryObjectiveTest(unittest.TestCase):
+    def test_sitewise_tail_is_zero_without_collisions_and_has_finite_grad(self) -> None:
+        pairs = torch.triu_indices(4, 4, offset=1)
+        violations = torch.zeros(6, requires_grad=True)
+        loss = sitewise_tail_overlap_loss(
+            violations, pairs, num_atoms=4, temperature=0.1, tail_mix=0.5
+        )
+        self.assertEqual(loss.item(), 0.0)
+        loss.backward()
+        self.assertTrue(torch.isfinite(violations.grad).all())
+
+    def test_single_dangerous_pair_is_not_quadratically_diluted(self) -> None:
+        count = 20
+        pairs = torch.triu_indices(count, count, offset=1)
+        violations = torch.tensor(
+            [1.0] + [0.0] * (pairs.shape[1] - 1), requires_grad=True
+        )
+        pair_mean = violations.mean()
+        loss = sitewise_tail_overlap_loss(
+            violations,
+            pairs,
+            num_atoms=count,
+            temperature=0.1,
+            tail_mix=0.5,
+        )
+        self.assertGreater(loss.item(), 5.0 * pair_mean.item())
+        loss.backward()
+        self.assertTrue(torch.isfinite(violations.grad).all())
+
+    def test_sitewise_tail_is_site_permutation_invariant(self) -> None:
+        count = 5
+        coords = torch.tensor([0.0, 0.2, 0.0, 0.5, 0.0])
+        pairs = torch.triu_indices(count, count, offset=1)
+        violations = (coords.index_select(0, pairs[0]) - coords.index_select(0, pairs[1])).abs()
+        first = sitewise_tail_overlap_loss(
+            violations, pairs, num_atoms=count, temperature=0.1, tail_mix=0.5
+        )
+        permutation = torch.tensor([3, 0, 4, 1, 2])
+        permuted = coords.index_select(0, permutation)
+        permuted_violations = (
+            permuted.index_select(0, pairs[0]) - permuted.index_select(0, pairs[1])
+        ).abs()
+        second = sitewise_tail_overlap_loss(
+            permuted_violations, pairs, num_atoms=count, temperature=0.1, tail_mix=0.5
+        )
+        self.assertTrue(torch.allclose(first, second, atol=1.0e-7))
+
     def test_frozen_radius_table_is_complete_and_hashed(self) -> None:
         self.assertEqual(len(ELEMENT_RADII_ANGSTROM_BY_Z), 119)
         self.assertEqual(len(ELEMENT_RADII_SHA256), 64)

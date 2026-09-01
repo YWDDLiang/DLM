@@ -1489,6 +1489,12 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
         "periodic_species_margin_ceiling": float(
             getattr(args, "periodic_species_margin_ceiling", 1.4)
         ),
+        "periodic_overlap_tail_temperature": float(
+            getattr(args, "periodic_overlap_tail_temperature", 0.1)
+        ),
+        "periodic_overlap_tail_mix": float(
+            getattr(args, "periodic_overlap_tail_mix", 0.0)
+        ),
     }
 
 
@@ -2484,6 +2490,18 @@ def main() -> None:
         help="Maximum species-aware overlap margin in angstrom.",
     )
     parser.add_argument(
+        "--periodic-overlap-tail-temperature",
+        type=float,
+        default=0.1,
+        help="Smooth per-site worst-neighbor temperature for periodic overlap risk.",
+    )
+    parser.add_argument(
+        "--periodic-overlap-tail-mix",
+        type=float,
+        default=0.0,
+        help="Mix pair-mean overlap with sitewise tail risk; zero preserves legacy loss.",
+    )
+    parser.add_argument(
         "--periodic-relation-rank",
         type=int,
         default=0,
@@ -2553,6 +2571,12 @@ def main() -> None:
         parser.error("periodic-species-margin-floor must be positive")
     if args.periodic_species_margin_ceiling < args.periodic_species_margin_floor:
         parser.error("periodic-species-margin-ceiling must be at least the floor")
+    if args.periodic_overlap_tail_temperature <= 0:
+        parser.error("periodic-overlap-tail-temperature must be positive")
+    if not 0.0 <= args.periodic_overlap_tail_mix <= 1.0:
+        parser.error("periodic-overlap-tail-mix must be in [0, 1]")
+    if args.periodic_overlap_tail_mix > 0 and args.periodic_overlap_weight <= 0:
+        parser.error("periodic overlap tail risk requires positive overlap weight")
     if args.periodic_image_radius != 1 and not args.periodic_exact_triclinic_pbc:
         parser.error("periodic-image-radius >1 requires exact triclinic PBC")
     if any(weight > 0 for weight in periodic_weights):
@@ -2984,6 +3008,12 @@ def main() -> None:
                                 ),
                                 species_margin_ceiling=float(
                                     loss_config["periodic_species_margin_ceiling"]
+                                ),
+                                overlap_tail_temperature=float(
+                                    loss_config["periodic_overlap_tail_temperature"]
+                                ),
+                                overlap_tail_mix=float(
+                                    loss_config["periodic_overlap_tail_mix"]
                                 ),
                             )
                     else:

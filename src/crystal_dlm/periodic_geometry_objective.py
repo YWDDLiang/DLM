@@ -185,6 +185,45 @@ def _smooth_rdf(distances: torch.Tensor, centers: torch.Tensor, sigma: float = 0
     return values.mean(dim=0)
 
 
+def sitewise_tail_overlap_loss(
+    violations: torch.Tensor,
+    pairs: torch.Tensor,
+    *,
+    num_atoms: int,
+    temperature: float,
+    tail_mix: float,
+) -> torch.Tensor:
+    """Mix pair mean with a smooth per-site worst-neighbor collision risk."""
+
+    if not 0.0 <= float(tail_mix) <= 1.0:
+        raise ValueError("tail_mix must be in [0, 1]")
+    if float(temperature) <= 0.0:
+        raise ValueError("temperature must be positive")
+    if int(num_atoms) < 2 or violations.numel() == 0:
+        return violations.sum() * 0.0
+    expected_pairs = int(num_atoms) * (int(num_atoms) - 1) // 2
+    if violations.ndim != 1 or int(violations.numel()) != expected_pairs:
+        raise ValueError("violations do not cover every unordered site pair")
+    if tuple(pairs.shape) != (2, expected_pairs):
+        raise ValueError("pair index shape changed")
+
+    pair_mean = violations.mean()
+    if float(tail_mix) == 0.0:
+        return pair_mean
+    dense = violations.new_zeros((int(num_atoms), int(num_atoms)))
+    dense = dense.index_put((pairs[0], pairs[1]), violations)
+    dense = dense.index_put((pairs[1], pairs[0]), violations)
+    diagonal = torch.eye(int(num_atoms), dtype=torch.bool, device=violations.device)
+    scores = (dense / float(temperature)).masked_fill(diagonal, -torch.inf)
+    site_tail = float(temperature) * (
+        torch.logsumexp(scores, dim=1) - math.log(int(num_atoms) - 1)
+    )
+    # All-zero violations have an analytical tail of zero; clamp only removes
+    # negative floating-point roundoff without altering positive gradients.
+    tail_mean = site_tail.clamp_min(0.0).mean()
+    return (1.0 - float(tail_mix)) * pair_mean + float(tail_mix) * tail_mean
+
+
 def _sample_objective(
     logits: torch.Tensor,
     input_ids: torch.Tensor,
@@ -197,6 +236,8 @@ def _sample_objective(
     species_margin_scale: float,
     species_margin_floor: float,
     species_margin_ceiling: float,
+    overlap_tail_temperature: float,
+    overlap_tail_mix: float,
 ) -> dict[str, torch.Tensor]:
     # CUDA determinant/linear-algebra kernels do not support bfloat16.  Keep
     # the language model in its native dtype but evaluate the small geometry
@@ -297,17 +338,23 @@ def _sample_objective(
             floor=float(species_margin_floor),
             ceiling=float(species_margin_ceiling),
         )
-        overlap_loss = (
+        overlap_violations = (
             F.relu(
                 (overlap_margins - distances)
                 / overlap_margins.clamp_min(1.0e-6)
             )
             .square()
-            .mean()
         )
     else:
         overlap_margins = torch.full_like(distances, 0.75)
-        overlap_loss = F.relu(overlap_margins - distances).square().mean()
+        overlap_violations = F.relu(overlap_margins - distances).square()
+    overlap_loss = sitewise_tail_overlap_loss(
+        overlap_violations,
+        pairs,
+        num_atoms=num_atoms,
+        temperature=float(overlap_tail_temperature),
+        tail_mix=float(overlap_tail_mix),
+    )
 
     predicted_neighbors = torch.sigmoid((3.0 - distances) / 0.25)
     target_neighbors = torch.sigmoid((3.0 - target_distances) / 0.25)
@@ -342,6 +389,8 @@ def periodic_geometry_objective(
     species_margin_scale: float = 0.0,
     species_margin_floor: float = 0.6,
     species_margin_ceiling: float = 1.4,
+    overlap_tail_temperature: float = 0.1,
+    overlap_tail_mix: float = 0.0,
 ) -> dict[str, torch.Tensor | int]:
     """Compute normalized coupled geometry losses for a dynamic-v1 batch."""
 
@@ -358,6 +407,8 @@ def periodic_geometry_objective(
             float(species_margin_scale),
             float(species_margin_floor),
             float(species_margin_ceiling),
+            float(overlap_tail_temperature),
+            float(overlap_tail_mix),
         )
         for name, value in components.items():
             totals[name].append(value)
@@ -370,4 +421,5 @@ __all__ = [
     "build_species_radius_support",
     "lattice_matrix_from_parameters",
     "periodic_geometry_objective",
+    "sitewise_tail_overlap_loss",
 ]
