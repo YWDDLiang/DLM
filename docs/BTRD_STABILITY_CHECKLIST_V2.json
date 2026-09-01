@@ -31,10 +31,20 @@
     "structured_review_disposition": "APPROVED"
   },
   "active": {
-    "btrd800t_teacher_job": 39191,
-    "btrd800t_teacher_run": "runs/btrd_tau800t_teacher_39191",
-    "gpus": 6,
-    "stage": "tau800_endpoint_proxy_no_body_rerun"
+    "btrd800t_training_job": 39196,
+    "btrd800t_training_run": "runs/btrd800t_residual_39196",
+    "gpus": 2,
+    "stage": "residual_only_512_tail_aware"
+  },
+  "btrd800t_teacher_terminal": {
+    "job": 39191,
+    "elapsed": "02:20:06",
+    "a800_hours": 14.01,
+    "assigned_endpoints": 6038,
+    "refiner_missing": 0,
+    "endpoint_sha256": "7bd7c09fac772de31311fe89ff2b136f2a50fcabdf5d8d048e7e8e23ee2a2c72",
+    "data_manifest_sha256": "40210ae5c05fb65345c4171a8fb0e30809b56ec0c44ae5188265720d21a3e16b",
+    "identity_audit": "PASS"
   },
   "first256_tau200_terminal": {
     "eval_job": 39190,

@@ -105,9 +105,13 @@ Frozen evaluation cohort:
 - [x] Activate the pre-registered bundled fallback BTRD-800T before reading
   confirmation903. It reuses job39184 proposals, runs model494 tau800 once,
   and adds sitewise overlap tail `kappa=0.10,beta=0.50` to residual training.
-- [ ] BTRD-800T teacher job39191 active: six A800 / 48 CPU, same 6,038 raw
-  proposals, no body rerun. Expected refiner walltime about 2.3h and about
-  13.7 A800-hours; actual cost will be recorded.
+- [x] BTRD-800T teacher job39191 COMPLETED `0:0/02:20:06`
+  (`14.0100 A800-hours`): same 6,038 raw proposals, no body rerun, tau800
+  endpoint SHA `7bd7c09f...a2c72`, data manifest SHA `40210ae5...3e16b`.
+- [x] Tau800 teacher identity audit PASS: ordered species/index mismatch0,
+  refiner-missing0, body-failure106 retained as anchors.
+- [ ] BTRD-800T residual-only training job39196 active: two A800 / 16 CPU,
+  512 updates from G2 A, `kappa=0.10,beta=0.50`.
 
 ## Immediate next steps
 
@@ -122,6 +126,7 @@ Frozen evaluation cohort:
   (job39190); body outputs are reused, not regenerated.
 - [x] Finalize first256 official S.U.N.; BTRD-tau200 promotion false.
 - [x] Implement and submit the approved BTRD-800T endpoint teacher (job39191).
+- [x] Submit BTRD-800T residual-only training (job39196).
   first compute body and fast Direct.
 - [ ] Compute raw CHGNet and cached official hull/S.U.N. on first256; do not run
   candidate model494 refinement before the raw promotion decision.
