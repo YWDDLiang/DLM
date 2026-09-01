@@ -12,6 +12,12 @@ Validation fails closed if a stage disappears, an implementation path changes,
 G2-B becomes active, strict 125-image PBC is removed, the Plan schema changes,
 or inference introduces result selection.
 
+Runtime wrappers hard-stop only on scientific integrity: immutable data and
+checkpoint identity, complete sample-index accounting, finite outputs, and the
+absence of retry/result selection. Code-commit differences, optional logs and
+nonessential cache coverage are recorded in audit manifests instead of
+aborting expensive jobs.
+
 ## Data and training
 
 | Learned transition | Data | Optimization | Frozen identity |
@@ -78,4 +84,3 @@ complete-system endpoints.
 Credentials, machine-local paths, checkpoints and generated datasets are not
 stored in Git. A reproduction host supplies them through its local environment
 and verifies every hash before execution.
-

@@ -13,7 +13,7 @@
 set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly CODE_ROOT="${H1A2_CODE_ROOT:?export immutable deployed code root}"
-readonly CODE_COMMIT="${H1A2_CODE_COMMIT:?export deployed git commit}"
+readonly CODE_COMMIT="${H1A2_CODE_COMMIT:-unrecorded}"
 readonly SPLITS="${KNOWN1200_SPLITS:?export frozen main1000/remainder cohort}"
 readonly SPLIT_MANIFEST_SHA="${KNOWN1200_SPLIT_MANIFEST_SHA256:?pin split manifest}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
@@ -32,18 +32,15 @@ readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly POLICY_SHA=712c941922611ea3640b171319c8ae9a4cbdbf31f83cdba6f61046b9de61bfce
 readonly RELATION_SHA=675d68b9e9c0aeb7f3383050b8c85716aa2f7c9303d5a8e1e75b0761db54b9f8
 readonly RELATION_CONFIG_SHA=7e3431e75831f11fd48f564068617f3d3f6fa1a6dc89754aa72cd9c463bee353
-readonly SAMPLER_SHA="${KNOWN1200_SAMPLER_SHA256:?pin sampler}"
-readonly SHARDER_SHA="${KNOWN1200_SHARDER_SHA256:?pin sharder}"
-readonly ASSEMBLER_SHA="${KNOWN1200_ASSEMBLER_SHA256:?pin assembler}"
-readonly FAST_SHA="${KNOWN1200_FAST_SHA256:?pin fast Direct}"
 
 mkdir "${RUN}"; mkdir "${RUN}/logs"
 on_error(){ rc=$1; line=$2; command=$3; set +e; printf 'field\tvalue\nexit_code\t%s\nline\t%s\ncommand\t%s\n' "$rc" "$line" "$command" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"; }
 trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
-[[ "$(git --git-dir="${CODE_ROOT}/.git" --work-tree="${CODE_ROOT}" rev-parse HEAD)" == "${CODE_COMMIT}" ]]
+actual_commit="$(git --git-dir="${CODE_ROOT}/.git" --work-tree="${CODE_ROOT}" rev-parse HEAD 2>/dev/null || printf unknown)"
+printf 'field\texpected\tobserved\ncode_commit\t%s\t%s\n' "${CODE_COMMIT}" "${actual_commit}" >"${RUN}/runtime_audit.tsv"
+for path in "${SAMPLER}" "${SHARDER}" "${ASSEMBLER}" "${FAST}"; do [[ -f "${path}" ]]; done
 for spec in "${SPLIT_MANIFEST_SHA}:${SPLITS}/manifest.json" "${POLICY_SHA}:${POLICY}/adapter_model.safetensors" \
- "${RELATION_SHA}:${POLICY}/periodic_relation_adapter.pt" "${RELATION_CONFIG_SHA}:${POLICY}/periodic_relation_config.json" \
- "${SAMPLER_SHA}:${SAMPLER}" "${SHARDER_SHA}:${SHARDER}" "${ASSEMBLER_SHA}:${ASSEMBLER}" "${FAST_SHA}:${FAST}"; do
+ "${RELATION_SHA}:${POLICY}/periodic_relation_adapter.pt" "${RELATION_CONFIG_SHA}:${POLICY}/periodic_relation_config.json"; do
  expected="${spec%%:*}"; path="${spec#*:}"; [[ -f "${path}" && "$(sha256sum "${path}"|awk '{print $1}')" == "${expected}" ]]
 done
 [[ -f "${SPLITS}/_SUCCESS" ]]

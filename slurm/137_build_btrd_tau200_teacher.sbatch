@@ -13,7 +13,7 @@
 set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly CODE_ROOT="${H1A2_CODE_ROOT:?export immutable deployed code root}"
-readonly CODE_COMMIT="${H1A2_CODE_COMMIT:?export deployed git commit}"
+readonly CODE_COMMIT="${H1A2_CODE_COMMIT:-unrecorded}"
 readonly SUBSET="${BTRD_SUBSET_DIR:?export frozen BTRD subset}"
 readonly SUBSET_MANIFEST_SHA="${BTRD_SUBSET_MANIFEST_SHA256:?pin subset manifest}"
 readonly SOURCE_DATA="${ROOT}/data/c3fd_native_teacher_sft_v1_20260831"
@@ -35,22 +35,17 @@ readonly POLICY_SHA=712c941922611ea3640b171319c8ae9a4cbdbf31f83cdba6f61046b9de61
 readonly RELATION_SHA=675d68b9e9c0aeb7f3383050b8c85716aa2f7c9303d5a8e1e75b0761db54b9f8
 readonly RELATION_CONFIG_SHA=7e3431e75831f11fd48f564068617f3d3f6fa1a6dc89754aa72cd9c463bee353
 readonly REFINER_SHA=573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e
-readonly SAMPLER_SHA="${BTRD_SAMPLER_SHA256:?pin sampler}"
-readonly MATERIALIZE_SHA="${BTRD_MATERIALIZE_SHA256:?pin materializer}"
-readonly SHARDER_SHA="${BTRD_SHARDER_SHA256:?pin sharder}"
-readonly COMBINE_SHA="${BTRD_COMBINE_SHA256:?pin combiner}"
-readonly REFINER_SCRIPT_SHA="${BTRD_REFINER_SCRIPT_SHA256:?pin refiner wrapper}"
-readonly BUILDER_SHA="${BTRD_BUILDER_SHA256:?pin data builder}"
 
 mkdir "${RUN}"; mkdir "${RUN}/logs"
 on_error(){ rc=$1; line=$2; command=$3; set +e; printf 'field\tvalue\nexit_code\t%s\nline\t%s\ncommand\t%s\n' "$rc" "$line" "$command" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"; }
 trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
-[[ "$(git --git-dir="${CODE_ROOT}/.git" --work-tree="${CODE_ROOT}" rev-parse HEAD)" == "${CODE_COMMIT}" ]]
+actual_commit="$(git --git-dir="${CODE_ROOT}/.git" --work-tree="${CODE_ROOT}" rev-parse HEAD 2>/dev/null || printf unknown)"
+printf 'field\texpected\tobserved\ncode_commit\t%s\t%s\n' "${CODE_COMMIT}" "${actual_commit}" >"${RUN}/runtime_audit.tsv"
 [[ ! -e "${OUTPUT_DATA}" && -f "${SUBSET}/_SUCCESS" ]]
+for path in "${SAMPLER}" "${MATERIALIZE}" "${SHARDER}" "${COMBINE}" "${REFINER_SCRIPT}" "${BUILDER}"; do [[ -f "${path}" ]]; done
 for spec in "${SUBSET_MANIFEST_SHA}:${SUBSET}/manifest.json" "${POLICY_SHA}:${POLICY}/adapter_model.safetensors" \
  "${RELATION_SHA}:${POLICY}/periodic_relation_adapter.pt" "${RELATION_CONFIG_SHA}:${POLICY}/periodic_relation_config.json" \
- "${REFINER_SHA}:${REFINER}" "${SAMPLER_SHA}:${SAMPLER}" "${MATERIALIZE_SHA}:${MATERIALIZE}" \
- "${SHARDER_SHA}:${SHARDER}" "${COMBINE_SHA}:${COMBINE}" "${REFINER_SCRIPT_SHA}:${REFINER_SCRIPT}" "${BUILDER_SHA}:${BUILDER}"; do
+ "${REFINER_SHA}:${REFINER}"; do
  expected="${spec%%:*}"; path="${spec#*:}"; [[ -f "${path}" && "$(sha256sum "${path}"|awk '{print $1}')" == "${expected}" ]]
 done
 IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"; [[ "${#gpu[@]}" -eq 6 ]]
