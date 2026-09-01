@@ -79,8 +79,18 @@ Frozen evaluation cohort:
   `80f8ece9...80f24`.
 - [x] Teacher ordered-species/global-index audit PASS: mismatch0,
   refiner-missing0, body-failure106.
-- [ ] Job39185 active: two A800 / 16 CPU residual-only training,
-  `runs/btrd_residual_39185`; sole step512.
+- [x] Job39185 completed all 512 updates and eval512 in 00:10:37
+  (`0.3539 A800-hours`); all logged losses/gradients finite, residual SHA
+  `666e914f...ef392`, frozen LoRA exact SHA unchanged.
+- [x] Preserve job39185 `_FAILED`: post-science wrapper expected a step512
+  periodic train log although `logging_steps=10` ends at510. CPU-only recovery
+  `runs/btrd_residual_recovery_39185_v1/_SUCCESS` finalized the existing
+  checkpoint; GPU training was not rerun.
+- [x] Preserve pre-science generation jobs39186/39187 as 0s/15s engineering
+  negatives (non-executable delegated script; missing PYTHONPATH), with no body
+  generated and no scientific parameter change.
+- [ ] Parameter-identical generation job39188 active: six A800 / 48 CPU,
+  `runs/btrd_known1200_fast_39188`.
 
 ## Immediate next steps
 
@@ -89,7 +99,8 @@ Frozen evaluation cohort:
   MP20 anchor substitution; ledger corruption fails closed.
 - [x] Submit one BTRD residual-only job: two A800 / 16 CPU, seed81017, 512
   updates, effective batch16, LR1e-6 cosine/warmup10, sole step512.
-- [ ] Generate BTRD once on all 1,159 frozen Plans using baseline shard/noise;
+- [x] Submit BTRD generation once on all 1,159 frozen Plans using baseline
+  shard/noise (job39188);
   first compute body and fast Direct.
 - [ ] Compute raw CHGNet and cached official hull/S.U.N. on first256; do not run
   candidate model494 refinement before the raw promotion decision.

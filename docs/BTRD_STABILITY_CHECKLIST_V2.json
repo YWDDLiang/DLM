@@ -31,10 +31,23 @@
     "structured_review_disposition": "APPROVED"
   },
   "active": {
-    "training_job": 39185,
-    "training_run": "runs/btrd_residual_39185",
-    "gpus": 2,
-    "stage": "residual_only_512_updates"
+    "generation_job": 39188,
+    "generation_run": "runs/btrd_known1200_fast_39188",
+    "gpus": 6,
+    "stage": "all1159_body_and_fast_direct"
+  },
+  "training_terminal": {
+    "job": 39185,
+    "elapsed": "00:10:37",
+    "a800_hours": 0.3539,
+    "optimizer_updates": 512,
+    "endpoint_eval_step": 512,
+    "all_logged_values_finite": true,
+    "residual_sha256": "666e914f96c0d785d766af88ea5fc8f9e9dfd87a10916a53c0a6d5e8e7bef392",
+    "frozen_lora_unchanged": true,
+    "source_failed_marker_preserved": true,
+    "post_science_recovery": "runs/btrd_residual_recovery_39185_v1",
+    "gpu_rerun": false
   },
   "teacher_terminal": {
     "job": 39184,
