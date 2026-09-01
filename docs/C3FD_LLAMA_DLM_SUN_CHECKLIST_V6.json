@@ -255,11 +255,42 @@
       "G1_training_success": 39103,
       "G1_updates": 348,
       "G1_raw_job": 39105,
+      "G1_raw_final": {
+        "body": 245,
+        "composition_valid": 245,
+        "direct": 115,
+        "base_direct": 106,
+        "gate_pass": false,
+        "failure_reason": "body_245_below_registered_floor_246",
+        "model494_or_CHGNet_run": false
+      },
       "G2_core_commit": "9edf12d",
       "G2_runtime_commit": "8c6a4ce",
       "G2_tests": "core6_runtime4_objective3_all_pass",
       "G2_preupdate_engineering_negative": 39104,
-      "G2_training_recovery_job": 39106,
+      "G2_training_success_job": 39107,
+      "G2_raw_final": {
+        "body": 248,
+        "composition_valid": 248,
+        "direct": 119,
+        "base_direct": 106
+      },
+      "G2_model494": {
+        "assigned": 248,
+        "refined": 248,
+        "tau": 800,
+        "refiner_seed": 101117
+      },
+      "G2_full_offline": {
+        "refined_direct": 247,
+        "raw_CHGNet_known": 247,
+        "refined_CHGNet_known": 248,
+        "paired_rows": 247,
+        "paired_refined_minus_raw_mean_eV_per_atom": -2.256282456490675,
+        "paired_mean_95pct_bootstrap_CI": [-2.6087461726385572, -1.9170762063399984],
+        "official_query": false,
+        "claim_boundary": "SUPPORTED_single_seed_development_not_seed_robust_or_official_SUN"
+      },
       "engineering_negatives_had_optimizer_updates": false
     },
     "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",

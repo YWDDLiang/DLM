@@ -208,7 +208,7 @@ authorized. Audit implementation commit `eccfa93`; positive archive
 `archive/dlm_geometry/g0_fused39096_success_20260831/_ARCHIVE_SUCCESS`.
 - [x] Add differentiable periodic metric/RDF/short-distance/coordination losses
   to DLM training. Do not add a new inference-time geometry mask.
-- [ ] Train one frozen-seed G1 and one frozen-seed G2 candidate. Reuse one base
+- [x] Train one frozen-seed G1 and one frozen-seed G2 candidate. Reuse one base
   cell and one fixed development stream; run the candidate jobs in parallel
   when G2 is ready.
 - [x] Add a zero-initialized two-layer periodic residual species-pair/RBF
@@ -221,7 +221,7 @@ authorized. Audit implementation commit `eccfa93`; positive archive
   circular fractional-coordinate means, entropy-gated messages, SPD metric
   projection, triclinic neighboring-image distances, and translation/
   same-species-permutation invariance.
-- [ ] Zero only the residual output projection, log adapter gradient norms for
+- [x] Zero only the residual output projection, log adapter gradient norms for
   steps 0--10, and profile gathered typed-logit O(N^2) memory/runtime; forbid
   dense pair-by-vocabulary tensors.
 
@@ -234,6 +234,19 @@ objective `3/3` tests. Pre-update job39104 exposed adapter/base dtype mismatch;
 the adapter now inherits the frozen output-head dtype, and parameter-identical
 recovery39106 is running. Both engineering negatives are archived and contain
 no optimizer update.
+
+Geometry-screen terminal: G1 body/comp/Direct is `245/245/115` of 256 versus
+base `248/248/106`; despite `+9` Direct, it fails the registered body floor
+`246/256`, so no G1 model494/CHGNet was run. G2 training job39107 completed all
+348 updates with exact step-0 equality and finite gradients. G2 preserves
+body/comp at `248/248` and raises raw Direct to `119/256` (`+13`). Model494
+tau800 refined all 248 bodies; refined Direct is `247/256`. Raw/refined CHGNet
+coverage is `247/248` and `248/248`; on 247 paired rows, refined-minus-raw mean
+energy is `-2.2563 eV/atom`, bootstrap 95% CI `[-2.6087,-1.9171]`. This is a
+SUPPORTED single-seed development result for periodic relation learning, not a
+seed-robust or official-S.U.N. claim. Immutable final:
+`runs/compact_v2_periodic_relation_g2_full_final_20260901_v1/_SUCCESS`; archive:
+`archive/dlm_geometry/g2_full_positive_final_20260901/_ARCHIVE_SUCCESS`.
 - [ ] Build MP20-train-only one-trajectory model494 basin-SFT targets, requiring
   exact composition, Direct structural validity, and finite refined energy.
 - [ ] Build one fixed K=4 same-composition pool and run shared-mask,

@@ -497,12 +497,20 @@ for the DLM method after observing the same prospective outcomes.
   collision, graph, and energy-only classes before training.
 - [ ] Implement and unit-test differentiable metric/RDF/overlap/coordination
   losses without changing inference decoding.
-- [ ] Train one frozen-seed G1 and one frozen-seed G2 candidate; use one matched
+- [x] Train one frozen-seed G1 and one frozen-seed G2 candidate; use one matched
   development stream and run the two candidate jobs in parallel when G2 is
   ready. Reuse one base cell.
-- [ ] Verify G2 step-0 equality and compare against a same-update no-adapter
+- [x] Verify G2 step-0 equality and compare against a same-update no-adapter
   continuation. Promote at most one method; prefer G1 when raw gains are
   comparable.
+
+Development result: G1 fails its registered body floor (`245 < 246`) despite
+raw Direct `115/256` versus base `106/256`. G2 preserves body `248/256`, reaches
+raw Direct `119/256`, refined Direct `247/256`, and has paired
+refined-minus-raw CHGNet mean `-2.2563 eV/atom` with 95% bootstrap CI
+`[-2.6087,-1.9171]` across 247 known pairs. G2 is the promoted development
+candidate; this single-seed evidence does not yet constitute official S.U.N. or
+seed-robust confirmation.
 - [ ] Build the one-trajectory model494 basin-SFT dataset and train two fresh
   anchored adapters.
 - [ ] Build one immutable K=4 group pool and run the offline shared-mask
