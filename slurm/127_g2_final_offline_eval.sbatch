@@ -81,7 +81,8 @@ assemble BASE control
 assemble G2 candidate
 
 run_cell(){
- local slot="$1" arm="$2" endpoint="$3" label="$4" cell="${RUN}/${arm}/${endpoint}"
+ local slot arm endpoint label cell
+ slot="$1"; arm="$2"; endpoint="$3"; label="$4"; cell="${RUN}/${arm}/${endpoint}"
  mkdir "${cell}/evaluation"; cp --reflink=auto "${CACHE}" "${cell}/relax_cache.jsonl"
  env OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
   "${PYTHON}" "${DIRECT}" --generation-jsonl "${cell}/generation/generation.jsonl" --gt-csv "${GT_CSV}" \
