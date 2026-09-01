@@ -16,7 +16,7 @@ export KNOWN1200_POLICY="${BTRD_POLICY:?export completed BTRD step512 checkpoint
 export KNOWN1200_POLICY_SHA256="${BTRD_POLICY_SHA256:?pin frozen Compact-V2 LoRA}"
 export KNOWN1200_RELATION_SHA256="${BTRD_RELATION_SHA256:?pin BTRD residual}"
 export KNOWN1200_RELATION_CONFIG_SHA256="${BTRD_RELATION_CONFIG_SHA256:?pin BTRD residual config}"
-export KNOWN1200_METHOD_LABEL=BTRD-tau200-step512
-export KNOWN1200_RUN_PREFIX=btrd_known1200_fast
+export KNOWN1200_METHOD_LABEL="${BTRD_SCREEN_METHOD_LABEL:-BTRD-tau200-step512}"
+export KNOWN1200_RUN_PREFIX="${BTRD_SCREEN_RUN_PREFIX:-btrd_known1200_fast}"
 
 exec bash "${H1A2_CODE_ROOT:?export deployed code root}/slurm/136_generate_known1200_baseline_fast.sbatch"

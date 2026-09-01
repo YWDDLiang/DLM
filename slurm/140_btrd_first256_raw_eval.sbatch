@@ -14,9 +14,10 @@ set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export root}"
 readonly CODE_ROOT="${H1A2_CODE_ROOT:?export code root}"
 readonly BASE="${ROOT}/runs/g2_known1200_baseline_fast_39183"
-readonly BTRD="${ROOT}/runs/btrd_known1200_fast_39188"
+readonly BTRD="${BTRD_EVAL_CANDIDATE_RUN:-${ROOT}/runs/btrd_known1200_fast_39188}"
 readonly SPLIT="${ROOT}/cohorts/btrd_eval_official_known_dev256_confirm903_v1_20260902"
-readonly RUN="${ROOT}/runs/btrd_first256_raw_eval_${SLURM_JOB_ID}"
+readonly RUN_PREFIX="${BTRD_EVAL_RUN_PREFIX:-btrd_first256_raw_eval}"
+readonly RUN="${ROOT}/runs/${RUN_PREFIX}_${SLURM_JOB_ID}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly V3_RUN="${PROJECT}/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
