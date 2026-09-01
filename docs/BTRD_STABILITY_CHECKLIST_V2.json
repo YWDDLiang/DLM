@@ -1,0 +1,64 @@
+{
+  "schema": "btrd_geometry_stability_checklist_v2",
+  "status": "active",
+  "active_method": "BTRD-tau200 endpoint-target residual distillation",
+  "sole_registered_fallback": "BTRD-800T tau800 endpoint proxy plus sitewise collision tail",
+  "denominators": {
+    "planner_requests": 1200,
+    "official_known_dlm_requests": 1159,
+    "official_unavailable": 41,
+    "development": 256,
+    "confirmation": 903,
+    "conditional_valid_cif_is_secondary": true
+  },
+  "evaluation_split": {
+    "path": "cohorts/btrd_eval_official_known_dev256_confirm903_v1_20260902",
+    "manifest_sha256": "2a92913a019a0b7ab375bb76337bcddd142acb728a028f6c1a15d06c90e358b4",
+    "development_sha256": "336dc76b6769a8bfbb8190a4891c623d027c27ec202f4da7ac13f15d337126de",
+    "confirmation_sha256": "7debf9fa516d6ecdef73bdaea165937bd2d9fcaa6f5a2e48b4b9f93e098b3deb",
+    "unique_exact_identities": 1122,
+    "outcomes_read": false
+  },
+  "terminal": {
+    "planner_job": 39175,
+    "planner_parsed_comp_valid": "1200/1200",
+    "baseline_job": 39183,
+    "baseline_requested": 1159,
+    "baseline_body_comp": 1139,
+    "baseline_fast_direct": 554,
+    "baseline_a800_hours": 2.2817,
+    "nonconstructible_invalid_metric_triples": 20,
+    "structured_review_disposition": "APPROVED"
+  },
+  "active": {
+    "teacher_job": 39184,
+    "teacher_run": "runs/btrd_tau200_teacher_39184",
+    "gpus": 6,
+    "teacher_rows": 6144,
+    "anchor_rows": 2048,
+    "stage": "six_body_shards_running"
+  },
+  "next": [
+    "teacher ordered-species and global-index audit",
+    "residual-only two-A800 512-update BTRD training",
+    "single all-1159 matched raw generation and fast Direct",
+    "first256 raw CHGNet cached official hull and SUN",
+    "confirmation903 or pre-registered BTRD-800T"
+  ],
+  "promotion": {
+    "paired_raw_chgnet_mean_max_ev": -0.01,
+    "paired_official_hull_mean_max_ev": -0.01,
+    "continuous_ci95_upper_below_zero": true,
+    "meta_sun_min_delta_count": 5,
+    "strict_sun_non_decrease": true,
+    "raw_direct_min_delta_count": 1,
+    "body_comp_min_rate": 0.95,
+    "planner_comp_valid_delta": 0
+  },
+  "resource_ceiling": {
+    "a800": 6,
+    "jobs": 2,
+    "cpu_per_gpu_min": 4,
+    "cpu_per_gpu_max": 8
+  }
+}

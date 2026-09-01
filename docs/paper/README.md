@@ -1,5 +1,8 @@
 # Paper-method index
 
+Active experiment checklist:
+[`BTRD_STABILITY_CHECKLIST_V2.md`](../BTRD_STABILITY_CHECKLIST_V2.md).
+
 Start here. The paper-facing surface is intentionally small; historical code
 and experiments remain available but are not required to understand the final
 method.
@@ -37,4 +40,3 @@ periodic-relational residual denoising → frozen terminal diffusion.**
 
 The facades re-export audited functions; they do not duplicate model
 mathematics. `PAPER_PIPELINE.md` at repository root is the execution runbook.
-
