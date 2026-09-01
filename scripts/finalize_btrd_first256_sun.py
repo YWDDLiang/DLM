@@ -55,11 +55,23 @@ def main() -> None:
         generation = root / "generation.jsonl"
         labels = root / "evaluation/full_reconstructed/attempt_labels_preofficial.jsonl"
         direct = root / "evaluation/direct/report.json"
+        direct_payload = common.read_json(direct)
+        if "metrics_unchanged_upstream" not in direct_payload:
+            direct_payload["metrics_unchanged_upstream"] = {
+                "mode": "fast_validity_only",
+                "omitted_metrics": direct_payload.get("omitted_metrics", []),
+                "validity_functions": direct_payload.get("validity_functions"),
+            }
+        compatible_direct = output / f"direct_compat/{arm}/report.json"
+        compatible_direct.parent.mkdir(parents=True, exist_ok=True)
+        compatible_direct.write_text(
+            json.dumps(direct_payload, indent=2, sort_keys=True) + "\n"
+        )
         rows, cell_report = runtime._evaluate_cell(
             cell_id=f"raw_{arm}",
             labels_path=labels,
             generation_path=generation,
-            direct_path=direct,
+            direct_path=compatible_direct,
             phase_diagrams=phase_diagrams,
             unresolved=unresolved,
             output_dir=output / f"cells/{arm}",
