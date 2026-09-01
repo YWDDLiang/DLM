@@ -709,3 +709,35 @@ is a fresh on-policy, train-only same-composition pool generated from the frozen
 SFT checkpoint. This yields a clean causal chronology: semantic proposal,
 native conditional realization, then optional energy alignment, followed by
 one untouched prospective evaluation.
+
+## 2026-09-01 final paper story after prospective G2
+
+The cleanest paper story now has two supported modules and one bounded
+candidate extension:
+
+1. **SUPPORTED — scientific composition planning.** Frozen C3FD supplies legal
+   composition support while Llama reweights the typed decisions; the fused
+   Planner produced `256/256` composition-valid prospective Plans without
+   rejection, repair, or reranking. This is stronger than presenting C3FD as a
+   post-hoc enumerator because its legal support acts inside the learned
+   Planner distribution.
+2. **SUPPORTED — DLM-to-basin system realization.** Compact-V2 plus fixed
+   model494 tau800 reaches `251/256` refined Direct and, with G2, prospective
+   Strict/Meta S.U.N. `9.375/45.703%`. This essentially restores the historical
+   H1-A2 operating range on a genuinely fresh cohort while using the new
+   C3FD+Llama Planner interface.
+3. **CANDIDATE — periodic relation learning inside the DLM.** G2 improves final
+   refined official hull by `-16.43 meV/atom` (95% CI
+   `[-25.26,-8.62]`) and adds five Strict/six Meta S.U.N. samples over BASE, but
+   raw Direct changes only `118→121`, raw energy/hull CIs cross zero, the
+   binary endpoints are not significant, and only one stream was run. The
+   paper may present G2 as promising geometry-aware conditioning or an
+   ablation, not as a seed-robust solution to raw stability.
+
+The prospective `10/50%` stretch target was not met; it is not a result gate.
+The honest headline is therefore *C3FD-constrained learned planning preserves
+composition correctness and recovers H1-A2-like end-to-end S.U.N., while a
+periodic relation adapter gives a measurable refined-hull shift but leaves raw
+DLM stability as the remaining limitation.* model494 is disclosed as the
+fixed basin projector rather than evidence that the DLM itself learned stable
+geometry.

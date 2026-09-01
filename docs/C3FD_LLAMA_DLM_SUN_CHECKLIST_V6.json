@@ -2,7 +2,7 @@
   "schema": "c3fd_llama_dlm_sun_execution_checklist_v6",
   "date": "2026-08-31",
   "deadline_asia_shanghai": "2026-09-02T23:30:00+08:00",
-  "status": "ACTIVE",
+  "status": "COMPLETE_FINAL_PROSPECTIVE",
   "supersedes": [
     "C3FD_H1A2_FUSION_SUN_CHECKLIST_36H_V4",
     "C3FD_FULL_RICH_PLANNER_SUN_CHECKLIST_DRAFT_V5"
@@ -296,6 +296,112 @@
     "second_training_change": "model494_basin_SFT_then_offline_K4_group_preference",
     "AR_fallback": "C3FD_conditioned_CrysLLMGen_only_after_DLM_terminal",
     "execution_authorized": true
+  },
+  "final_prospective_g2": {
+    "status": "complete",
+    "claim_scope": "single_pre_registered_stream_not_seed_robust",
+    "cohort": {
+      "job_id": 39119,
+      "planner_source_job_id": 39118,
+      "requested": 256,
+      "unique_exact_compositions": 256,
+      "unique_chemsystems": 256,
+      "registered_overlap": 0,
+      "outcomes_read": false,
+      "ledger_sha256": "90109e1b5398bba679ad11b92bfadc85f050af44f758f6cbc024bfe88234e842"
+    },
+    "fused_planner": {
+      "job_id": 39128,
+      "requested": 256,
+      "parsed": 256,
+      "composition_valid": 256,
+      "plan_sha256": "5f1ae510fb35d7bbe0b5da4b32b0302f49d78dae653c5c31493db8a2219a54cb",
+      "retry_replacement_rerank": false
+    },
+    "generation": {
+      "job_id": 39137,
+      "stream": 17,
+      "BASE_body": 251,
+      "BASE_refined": 251,
+      "G2_body": 252,
+      "G2_refined": 252,
+      "model494_tau": 800
+    },
+    "offline": {
+      "job_id": 39139,
+      "BASE_raw_direct": 118,
+      "BASE_refined_direct": 251,
+      "G2_raw_direct": 121,
+      "G2_refined_direct": 251
+    },
+    "official": {
+      "run": "runs/c3fd_g2_final_official_20260901_v1",
+      "source_manifest_sha256": "138e547f9f2d19c52e55586b96d7c9394d38a6330da0d49a9cf017dca641b6a6",
+      "query_chemsystems": 246,
+      "query_resolved": 241,
+      "query_unresolved": 5,
+      "unresolved_reason": "Yb_unary_reference_missing_in_official_GGA_GGA+U_response",
+      "unknown_mapped_to_stable": false,
+      "credential_processes_after_query": 0,
+      "ambient_credential_variables_after_query": 0
+    },
+    "fixed256_results": {
+      "raw_BASE": {
+        "direct": 118,
+        "novel_unique": 250,
+        "hull_known": 241,
+        "strict_sun": 5,
+        "strict_rate": 0.01953125,
+        "meta_sun": 41,
+        "meta_rate": 0.16015625
+      },
+      "raw_G2": {
+        "direct": 121,
+        "novel_unique": 251,
+        "hull_known": 245,
+        "strict_sun": 9,
+        "strict_rate": 0.03515625,
+        "meta_sun": 47,
+        "meta_rate": 0.18359375
+      },
+      "refined_BASE": {
+        "direct": 251,
+        "novel_unique": 219,
+        "hull_known": 246,
+        "strict_sun": 19,
+        "strict_rate": 0.07421875,
+        "meta_sun": 111,
+        "meta_rate": 0.43359375
+      },
+      "refined_G2": {
+        "direct": 251,
+        "novel_unique": 216,
+        "hull_known": 247,
+        "strict_sun": 24,
+        "strict_rate": 0.09375,
+        "meta_sun": 117,
+        "meta_rate": 0.45703125
+      }
+    },
+    "paired_refined_G2_minus_BASE": {
+      "official_hull_mean_eV_per_atom": -0.01643053283456896,
+      "official_hull_bootstrap_95pct_CI": [-0.02526461909540364, -0.008617409843890396],
+      "strict_candidate_only": 6,
+      "strict_control_only": 1,
+      "strict_mcnemar_p": 0.125,
+      "meta_candidate_only": 22,
+      "meta_control_only": 16,
+      "meta_mcnemar_p": 0.417692190836533
+    },
+    "target_10_50": {
+      "strict_met": false,
+      "meta_met": false,
+      "strict_shortfall_samples": 2,
+      "meta_shortfall_samples": 11
+    },
+    "final_output": "runs/c3fd_g2_final_sun_20260901_v1",
+    "final_json_sha256": "1b99aa33d3d6072006e17309874866af862067f4becd37caeec5f154f99b3070",
+    "archive": "archive/c3fd_g2/final_sun_positive_20260901"
   },
   "forbidden": [
     "deterministic_scientific_field_completion",

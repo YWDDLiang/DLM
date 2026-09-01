@@ -1,0 +1,50 @@
+{
+  "schema": "c3fd_g2_36h_final_report_v1",
+  "date": "2026-09-01",
+  "status": "complete",
+  "claim_scope": "single_pre_registered_stream_not_seed_robust",
+  "planner": {
+    "requested": 256,
+    "parsed": 256,
+    "composition_valid": 256
+  },
+  "results": {
+    "raw_BASE": {"direct": 118, "strict_sun": 5, "meta_sun": 41},
+    "raw_G2": {"direct": 121, "strict_sun": 9, "meta_sun": 47},
+    "refined_BASE": {"direct": 251, "strict_sun": 19, "meta_sun": 111},
+    "refined_G2": {"direct": 251, "strict_sun": 24, "meta_sun": 117}
+  },
+  "fixed_denominator": 256,
+  "refined_G2_rates": {"strict": 0.09375, "meta": 0.45703125},
+  "targets": {
+    "strict": 0.10,
+    "meta": 0.50,
+    "strict_met": false,
+    "meta_met": false,
+    "strict_shortfall_samples": 2,
+    "meta_shortfall_samples": 11
+  },
+  "paired_refined_official_hull_G2_minus_BASE": {
+    "known": 244,
+    "mean_eV_per_atom": -0.01643053283456896,
+    "bootstrap_95pct_CI": [-0.02526461909540364, -0.008617409843890396]
+  },
+  "claims": {
+    "C3FD_constrained_Llama_planning": "SUPPORTED",
+    "end_to_end_H1A2_like_SUN_recovery": "SUPPORTED",
+    "G2_raw_DLM_stability_learning": "CANDIDATE",
+    "target_10_50_achieved": "UNSUPPORTED"
+  },
+  "artifacts": {
+    "official_run": "runs/c3fd_g2_final_official_20260901_v1",
+    "final_run": "runs/c3fd_g2_final_sun_20260901_v1",
+    "archive": "archive/c3fd_g2/final_sun_positive_20260901",
+    "official_source_sha256": "138e547f9f2d19c52e55586b96d7c9394d38a6330da0d49a9cf017dca641b6a6",
+    "final_json_sha256": "1b99aa33d3d6072006e17309874866af862067f4becd37caeec5f154f99b3070"
+  },
+  "credential_audit": {
+    "query_processes": 0,
+    "ambient_variables": 0,
+    "persistent_copy_created": false
+  }
+}

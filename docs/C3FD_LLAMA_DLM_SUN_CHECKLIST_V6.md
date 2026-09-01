@@ -124,7 +124,7 @@ inside the C3FD legal-action mask and then predicts the Compact-V2 fields.
   stream. Retain it when requested-denominator comp-valid is at least 95%; raw
   Direct is reported but does not trigger extra Planner variants. No new MP
   query and no model494/CHGNet before this screen.
-- [ ] Apply G1 and then G2 to the resulting Compact-V2 DLM mainline,
+- [x] Apply G1 and then G2 to the resulting Compact-V2 DLM mainline,
   not to the old-rich DLM.
 - [ ] After the active speed-first result is terminal, rebuild Planner
   supervision from the complete MP20 `27136/9047` rows. Missing typed witnesses
@@ -173,16 +173,16 @@ causal matched effect. No model494, CHGNet, or official query was run.
 - [x] Freeze M as the winner within the completed F/M comparison and F as its
   formula-only ablation. The later Compact-V2 pivot supersedes M as the active
   mainline candidate without deleting the F/M result.
-- [ ] Freeze one new outcome-blind Plan ledger once for final post-training
+- [x] Freeze one new outcome-blind Plan ledger once for final post-training
   comparison and share it across BASE/G1/G2/feedback and all streams.
-- [ ] Reuse CHGNet results only for exact-identical raw structures with full
+- [x] Reuse CHGNet results only for exact-identical raw structures with full
   per-attempt remapping; never merge near-equivalent or model494-refined rows.
-- [ ] For G1 development, run body+Direct first. Continue G1 to model494/CHGNet
+- [x] For G1 development, run body+Direct first. Continue G1 to model494/CHGNet
   only if comp-valid is at least 95%, body is within -1 pp of control, and raw
   struct-valid improves under the one frozen training seed/stream.
-- [ ] If the G1 gate fails, archive every raw/Direct row and stop G1 downstream
+- [x] If the G1 gate fails, archive every raw/Direct row and stop G1 downstream
   compute. Do not delete the arm or reinterpret the negative result.
-- [ ] Run G2 through the complete registered development chain regardless of
+- [x] Run G2 through the complete registered development chain regardless of
   its raw delta: body+Direct, model494 tau800, and raw/refined CHGNet. Preserve
   the one-seed/one-stream matched contract and do not issue an official query.
   This full G2 endpoint is required to detect residual-adapter effects that may
@@ -252,7 +252,7 @@ seed-robust or official-S.U.N. claim. Immutable final:
 - [ ] Build one fixed K=4 same-composition pool and run shared-mask,
   reference-corrected group-relative diffusion preference with raw validity
   lexicographically before refined energy.
-- [ ] Query MP references only after a complete immutable batch exists, from a
+- [x] Query MP references only after a complete immutable batch exists, from a
   login-side process; never query from GPU training jobs or per update.
 - [ ] If the complete DLM structural-learning route remains raw-negative,
   implement the matched C3FD-conditioned AR CrysLLMGen fallback. Do not launch
@@ -271,3 +271,44 @@ No retry/replacement/rerank/best-of-N, outcome-based setting selection,
 energy-only reward, vanilla dLLM GRPO, C3FD retraining, or compact-V2 rerun is
 authorized. The AR body executor is authorized only as the final fallback after
 the DLM route is terminal.
+
+## 2026-09-01 final prospective BASE/G2 endpoint
+
+- [x] Freeze an outcome-blind seed-22 prospective cohort before policy
+  outcomes: 256 unique exact compositions and 256 chemsystems, with zero exact
+  overlap against MP20 and every registered development cohort. Ledger SHA-256
+  is `90109e1b...e842`.
+- [x] Generate one common fused C3FD+Llama Plan ledger: requested/parsed/
+  composition-valid `256/256`, no retry, replacement, reranking, or result
+  selection. Plan SHA-256 is `5f1ae510...a54cb`.
+- [x] Run the matched BASE/G2 stream-17 endpoint. BASE body/refined is
+  `251/251`; G2 is `252/252`. Raw Direct is `118/256` versus `121/256`; refined
+  Direct is `251/256` for both.
+- [x] Run one fresh official MP query after all four cells were immutable.
+  The source manifest SHA-256 is `138e547f...b6a6`; `241/246` chemsystems were
+  resolved and five Yb-containing systems are explicit unknowns because the
+  official GGA/GGA+U response lacks the required Yb unary reference. Unknowns
+  are never mapped to stable. Query process count and ambient credential count
+  are both zero after completion.
+- [x] Freeze official fixed-256 S.U.N. results:
+
+  | Stage | Arm | Strict | Meta | Direct | N/U/NU | Hull known |
+  |---|---|---:|---:|---:|---:|---:|
+  | raw | BASE | `5/256 = 1.953%` | `41/256 = 16.016%` | `118/256` | `250/251/250` | `241/256` |
+  | raw | G2 | `9/256 = 3.516%` | `47/256 = 18.359%` | `121/256` | `251/252/251` | `245/256` |
+  | refined | BASE | `19/256 = 7.422%` | `111/256 = 43.359%` | `251/256` | `219/251/219` | `246/256` |
+  | refined | G2 | `24/256 = 9.375%` | `117/256 = 45.703%` | `251/256` | `216/252/216` | `247/256` |
+
+  G2 adds five Strict and six Meta S.U.N. outcomes over BASE. McNemar is not
+  significant (`p=0.125` Strict, `p=0.418` Meta), but paired refined official
+  hull moves by `-16.43 meV/atom`, bootstrap 95% CI
+  `[-25.26,-8.62] meV/atom` on 244 common known rows. Raw energy and raw hull
+  CIs cross zero, so G2 is a supported one-stream system improvement and only a
+  candidate—not yet a seed-robust claim—for learned raw DLM stability.
+- [x] Evaluate the registered `10%/50%` target without result deletion. G2
+  refined reaches `9.375%/45.703%`: two Strict and eleven Meta samples short.
+  It essentially recovers the historical H1-A2 operating range, but does not
+  meet the stronger prospective target.
+- [x] Verify every official output hash and create positive archive
+  `archive/c3fd_g2/final_sun_positive_20260901/_ARCHIVE_SUCCESS`. Final JSON
+  SHA-256 is `1b99aa33...b3070`.

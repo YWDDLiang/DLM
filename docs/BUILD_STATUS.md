@@ -475,3 +475,29 @@
   negative；均未产生checkpoint、未读outcome。参数不变恢复job38933当前用
   `4A800/32CPU`运行F84017/F84018/M84117/M84118，各固定一epoch/1696 updates、final
   only、无selection。
+
+## 2026-09-01 C3FD+Llama / Compact-V2 G2 final prospective endpoint
+
+- The final outcome-blind seed-22 cohort contains 256 unique exact compositions
+  and 256 chemsystems with zero exact overlap against MP20 or registered
+  development cohorts. Fused Planner sampling is `256/256` composition-valid.
+- Matched stream-17 generation/evaluation is terminal: BASE/G2 raw Direct is
+  `118/121` of 256; model494-refined Direct is `251/251`. G2 therefore preserves
+  system execution but offers only a small prospective raw-validity gain.
+- The one fresh official MP query is terminal. It resolved `241/246`
+  chemsystems; five Yb-containing systems remain explicit unknowns because the
+  official GGA/GGA+U entries lack a Yb unary reference. Unknowns remain in the
+  fixed-256 denominator and are never counted stable. No query process or
+  ambient credential variable remains.
+- Official refined S.U.N. is BASE `19/111` and G2 `24/117` for Strict/Meta,
+  corresponding to `7.422/43.359%` and `9.375/45.703%`. The registered
+  `10/50%` target is missed by two Strict and eleven Meta outcomes.
+- Paired refined official hull favors G2 by `-16.43 meV/atom` on 244 common
+  known rows, bootstrap 95% CI `[-25.26,-8.62] meV/atom`. Strict/Meta McNemar
+  tests are not significant (`p=0.125/0.418`), and both raw continuous CIs cross
+  zero. Thus G2 is SUPPORTED as a one-stream refined system improvement and
+  CANDIDATE as a learned raw-DLM stability contribution.
+- Final output and positive archive are
+  `runs/c3fd_g2_final_sun_20260901_v1/_SUCCESS` and
+  `archive/c3fd_g2/final_sun_positive_20260901/_ARCHIVE_SUCCESS`; output hash
+  verification passed. Final JSON SHA-256 is `1b99aa33...b3070`.
