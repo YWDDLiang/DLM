@@ -102,6 +102,43 @@ class PeriodicRelationAdapterTest(unittest.TestCase):
                 msg=f"{name} received a nonzero step-zero gradient",
             )
 
+    def test_deterministic_uncertainty_gate_scales_detached_residual(self) -> None:
+        _adapter, hidden, geometry = self._case()
+        adapter = PeriodicRelationAdapter(
+            PeriodicRelationConfig(
+                hidden_size=hidden.shape[-1],
+                rank=6,
+                num_rbf=8,
+                uncertainty_gate=True,
+                uncertainty_gate_floor=0.25,
+            )
+        ).to(dtype=hidden.dtype)
+        self._randomize_output(adapter)
+        ones = SoftCrystalGeometry(
+            lattice=geometry.lattice,
+            fractional_coordinates=geometry.fractional_coordinates,
+            species=geometry.species,
+            prompt_lengths=geometry.prompt_lengths,
+            num_sites=geometry.num_sites,
+            lattice_confidence=torch.ones(1, dtype=hidden.dtype),
+            site_confidence=torch.ones(1, 3, dtype=hidden.dtype),
+        )
+        low = SoftCrystalGeometry(
+            lattice=geometry.lattice,
+            fractional_coordinates=geometry.fractional_coordinates,
+            species=geometry.species,
+            prompt_lengths=geometry.prompt_lengths,
+            num_sites=geometry.num_sites,
+            lattice_confidence=torch.full((1,), 0.25, dtype=hidden.dtype),
+            site_confidence=torch.full((1, 3), 0.25, dtype=hidden.dtype),
+        )
+        full_output = adapter(hidden, ones)
+        gated_output = adapter(hidden, low)
+        self.assertTrue(
+            torch.allclose(gated_output.residual, 0.25 * full_output.residual, atol=1e-12)
+        )
+        self.assertFalse(low.lattice_confidence.requires_grad)
+
     def test_global_fractional_translation_invariance(self) -> None:
         adapter, hidden, geometry = self._case()
         self._randomize_output(adapter)

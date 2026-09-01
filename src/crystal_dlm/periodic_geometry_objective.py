@@ -9,12 +9,19 @@ from typing import Any, Mapping
 import torch
 import torch.nn.functional as F
 
+from crystal_dlm.fixed_slot import SYMBOL_TO_Z
+from crystal_dlm.periodic_geometry_ops import (
+    element_radius,
+    minimum_image_distances_27,
+)
+
 
 _FAMILY_PATTERNS = {
     "length": re.compile(r"^<L([ABC])_(\d{3})>$"),
     "angle": re.compile(r"^<A([ABG])_(\d{3})>$"),
     "coord": re.compile(r"^<([XYZ])_(\d{3})>$"),
 }
+_ELEMENT_PATTERN = re.compile(r"^<E_([A-Z][a-z]?)>$")
 
 
 def build_geometry_token_support(tokenizer: Any) -> dict[str, dict[str, dict[str, list[float] | list[int]]]]:
@@ -46,6 +53,26 @@ def build_geometry_token_support(tokenizer: Any) -> dict[str, dict[str, dict[str
                 raise ValueError(f"tokenizer has no geometry support for axis {axis}")
             table["ids"] = [pair[0] for pair in pairs]
             table["values"] = [pair[1] for pair in pairs]
+    return support
+
+
+def build_species_radius_support(tokenizer: Any) -> dict[int, float]:
+    """Map committed element-token ids to the frozen in-repo radius table."""
+
+    support: dict[int, float] = {}
+    for token, token_id in tokenizer.get_vocab().items():
+        match = _ELEMENT_PATTERN.fullmatch(str(token))
+        if match is None:
+            continue
+        symbol = match.group(1)
+        if symbol not in SYMBOL_TO_Z:
+            continue
+        radius = element_radius(SYMBOL_TO_Z[symbol])
+        if not math.isfinite(radius) or radius <= 0.0:
+            raise ValueError(f"invalid radius for element token {token}")
+        support[int(token_id)] = radius
+    if not support:
+        raise ValueError("tokenizer has no element tokens for species-aware margins")
     return support
 
 
@@ -94,16 +121,50 @@ def lattice_matrix_from_parameters(
     return _lattice_matrix(lengths, angles_deg)
 
 
-def _pair_distances(frac_coords: torch.Tensor, lattice: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+def _pair_distances(
+    frac_coords: torch.Tensor,
+    lattice: torch.Tensor,
+    *,
+    exact_triclinic: bool = False,
+) -> tuple[torch.Tensor, torch.Tensor]:
     count = int(frac_coords.shape[0])
     if count < 2:
         empty = frac_coords.new_zeros((0,))
         return empty, torch.empty((2, 0), dtype=torch.long, device=frac_coords.device)
     pairs = torch.triu_indices(count, count, offset=1, device=frac_coords.device)
     delta = frac_coords.index_select(0, pairs[0]) - frac_coords.index_select(0, pairs[1])
-    delta = delta - torch.round(delta)
-    cartesian = delta @ lattice
-    return torch.linalg.vector_norm(cartesian, dim=-1), pairs
+    centered = delta - torch.round(delta)
+    if exact_triclinic:
+        distances = minimum_image_distances_27(centered, lattice)
+    else:
+        cartesian = centered @ lattice
+        distances = torch.linalg.vector_norm(cartesian, dim=-1)
+    return distances, pairs
+
+
+def _species_aware_margins(
+    species_token_ids: torch.Tensor,
+    pairs: torch.Tensor,
+    radius_support: Mapping[int, float],
+    *,
+    scale: float,
+    floor: float,
+    ceiling: float,
+) -> torch.Tensor:
+    radii = []
+    for token_id in species_token_ids.detach().cpu().tolist():
+        if int(token_id) not in radius_support:
+            raise ValueError(f"missing radius for element token id {token_id}")
+        radii.append(float(radius_support[int(token_id)]))
+    values = torch.tensor(
+        radii,
+        dtype=torch.float32,
+        device=species_token_ids.device,
+    )
+    margins = float(scale) * (
+        values.index_select(0, pairs[0]) + values.index_select(0, pairs[1])
+    )
+    return margins.clamp(min=float(floor), max=float(ceiling))
 
 
 def _smooth_rdf(distances: torch.Tensor, centers: torch.Tensor, sigma: float = 0.35) -> torch.Tensor:
@@ -120,6 +181,10 @@ def _sample_objective(
     prompt_length: int,
     num_atoms: int,
     support: Mapping[str, Mapping[str, Mapping[str, list[Any]]]],
+    exact_triclinic_pbc: bool,
+    species_margin_scale: float,
+    species_margin_floor: float,
+    species_margin_ceiling: float,
 ) -> dict[str, torch.Tensor]:
     # CUDA determinant/linear-algebra kernels do not support bfloat16.  Keep
     # the language model in its native dtype but evaluate the small geometry
@@ -179,8 +244,14 @@ def _sample_objective(
         torch.log(volume / max(num_atoms, 1)) - torch.log(target_volume / max(num_atoms, 1))
     ).square()
 
-    distances, pairs = _pair_distances(frac, lattice)
-    target_distances, _ = _pair_distances(target_frac, target_lattice)
+    distances, pairs = _pair_distances(
+        frac, lattice, exact_triclinic=bool(exact_triclinic_pbc)
+    )
+    target_distances, _ = _pair_distances(
+        target_frac,
+        target_lattice,
+        exact_triclinic=bool(exact_triclinic_pbc),
+    )
     zero = geometry_logits.sum() * 0.0
     if distances.numel() == 0:
         return {"metric": metric_loss, "pair_rdf": zero, "overlap": zero, "coordination": zero}
@@ -198,7 +269,29 @@ def _sample_objective(
                 )
             )
     pair_rdf_loss = torch.stack(rdf_losses).mean() if rdf_losses else zero
-    overlap_loss = F.relu(0.75 - distances).square().mean()
+    if float(species_margin_scale) > 0.0:
+        radius_support = support.get("species_radius_by_token_id")
+        if not isinstance(radius_support, Mapping):
+            raise ValueError("species-aware margin requested without radius support")
+        overlap_margins = _species_aware_margins(
+            species,
+            pairs,
+            radius_support,
+            scale=float(species_margin_scale),
+            floor=float(species_margin_floor),
+            ceiling=float(species_margin_ceiling),
+        )
+        overlap_loss = (
+            F.relu(
+                (overlap_margins - distances)
+                / overlap_margins.clamp_min(1.0e-6)
+            )
+            .square()
+            .mean()
+        )
+    else:
+        overlap_margins = torch.full_like(distances, 0.75)
+        overlap_loss = F.relu(overlap_margins - distances).square().mean()
 
     predicted_neighbors = torch.sigmoid((3.0 - distances) / 0.25)
     target_neighbors = torch.sigmoid((3.0 - target_distances) / 0.25)
@@ -228,6 +321,10 @@ def periodic_geometry_objective(
     prompt_lengths: torch.Tensor,
     num_atoms: torch.Tensor,
     support: Mapping[str, Mapping[str, Mapping[str, list[Any]]]],
+    exact_triclinic_pbc: bool = False,
+    species_margin_scale: float = 0.0,
+    species_margin_floor: float = 0.6,
+    species_margin_ceiling: float = 1.4,
 ) -> dict[str, torch.Tensor | int]:
     """Compute normalized coupled geometry losses for a dynamic-v1 batch."""
 
@@ -239,6 +336,10 @@ def periodic_geometry_objective(
         components = _sample_objective(
             logits[sample], input_ids[sample], masked_indices[sample],
             int(prompt_lengths[sample].detach().cpu()), count, support,
+            bool(exact_triclinic_pbc),
+            float(species_margin_scale),
+            float(species_margin_floor),
+            float(species_margin_ceiling),
         )
         for name, value in components.items():
             totals[name].append(value)
@@ -248,6 +349,7 @@ def periodic_geometry_objective(
 
 __all__ = [
     "build_geometry_token_support",
+    "build_species_radius_support",
     "lattice_matrix_from_parameters",
     "periodic_geometry_objective",
 ]

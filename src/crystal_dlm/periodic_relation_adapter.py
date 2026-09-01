@@ -21,6 +21,8 @@ import torch
 from torch import Tensor, nn
 import torch.nn.functional as F
 
+from crystal_dlm.periodic_geometry_ops import minimum_image_distances_27
+
 
 @dataclass(frozen=True)
 class PeriodicRelationConfig:
@@ -33,6 +35,8 @@ class PeriodicRelationConfig:
     rbf_max_distance: float = 10.0
     max_sites: int = 20
     image_radius: int = 1
+    uncertainty_gate: bool = False
+    uncertainty_gate_floor: float = 0.25
 
     def __post_init__(self) -> None:
         if self.hidden_size <= 0:
@@ -49,6 +53,8 @@ class PeriodicRelationConfig:
             raise ValueError("max_sites must be in 1..20")
         if self.image_radius != 1:
             raise ValueError("image_radius is fixed at one bounded 27-image shell")
+        if not 0.0 < self.uncertainty_gate_floor <= 1.0:
+            raise ValueError("uncertainty_gate_floor must be in (0, 1]")
 
 
 @dataclass(frozen=True)
@@ -66,6 +72,8 @@ class SoftCrystalGeometry:
     species: Tensor
     prompt_lengths: Tensor
     num_sites: Tensor
+    lattice_confidence: Tensor | None = None
+    site_confidence: Tensor | None = None
 
 
 @dataclass(frozen=True)
@@ -167,9 +175,13 @@ class PeriodicRelationAdapter(nn.Module):
         self.register_buffer("rbf_centers", centers, persistent=True)
         self.register_buffer("rbf_gamma", torch.tensor(1.0 / max(width * width, 1.0e-12)))
 
+        # Retained in the state dict for backward compatibility with the
+        # original G2 checkpoint; distance evaluation now calls the shared op.
         values = torch.arange(-int(config.image_radius), int(config.image_radius) + 1)
         shifts = torch.cartesian_prod(values, values, values).reshape(-1, 3)
-        self.register_buffer("image_shifts", shifts.to(torch.get_default_dtype()), persistent=True)
+        self.register_buffer(
+            "image_shifts", shifts.to(torch.get_default_dtype()), persistent=True
+        )
 
     def _validate_and_prepare(
         self,
@@ -253,17 +265,7 @@ class PeriodicRelationAdapter(nn.Module):
         # Axis convention: lattice vectors are rows and Cartesian vectors are
         # fractional row vectors multiplied by the lattice matrix.
         delta = coordinates.unsqueeze(1) - coordinates.unsqueeze(2)
-        centered = delta - torch.round(delta)
-        shifts = self.image_shifts.to(device=centered.device, dtype=centered.dtype)
-        candidates = centered.unsqueeze(-2) + shifts.reshape(1, 1, 1, -1, 3)
-        cartesian = torch.einsum("bijnc,bcd->bijnd", candidates, lattice)
-        squared = cartesian.square().sum(dim=-1)
-        selected = squared.argmin(dim=-1, keepdim=True)
-        minimum_squared = torch.gather(squared, dim=-1, index=selected).squeeze(-1)
-        # Self pairs and exact duplicate coordinates can have squared distance
-        # zero. A positive floor avoids the infinite derivative of sqrt(0)
-        # before those pair slots are masked.
-        distances = torch.sqrt(minimum_squared.clamp_min(1.0e-12))
+        distances = minimum_image_distances_27(delta, lattice)
 
         max_sites = int(coordinates.shape[1])
         active = site_mask.unsqueeze(1) & site_mask.unsqueeze(2)
@@ -315,6 +317,26 @@ class PeriodicRelationAdapter(nn.Module):
         )
         lattice_updates = self.output_projection(lattice_activation)
         xyz_updates = self.output_projection(xyz_activation)
+        if bool(self.config.uncertainty_gate):
+            if geometry.lattice_confidence is None or geometry.site_confidence is None:
+                raise ValueError("uncertainty gate requires lattice/site confidence")
+            lattice_confidence = geometry.lattice_confidence.to(
+                device=lattice_updates.device, dtype=lattice_updates.dtype
+            ).detach()
+            site_confidence = geometry.site_confidence.to(
+                device=xyz_updates.device, dtype=xyz_updates.dtype
+            ).detach()
+            if lattice_confidence.shape != (lattice_updates.shape[0],):
+                raise ValueError("lattice_confidence must have shape [batch]")
+            if site_confidence.shape != site_mask.shape:
+                raise ValueError("site_confidence must have shape [batch, sites]")
+            floor = float(self.config.uncertainty_gate_floor)
+            if bool(
+                ((lattice_confidence < floor) | (lattice_confidence > 1.0)).any().item()
+            ) or bool(((site_confidence < floor) | (site_confidence > 1.0)).any().item()):
+                raise ValueError("uncertainty confidence outside configured range")
+            lattice_updates = lattice_updates * lattice_confidence.reshape(-1, 1, 1)
+            xyz_updates = xyz_updates * site_confidence.reshape(*site_mask.shape, 1, 1)
         xyz_updates = xyz_updates * site_mask.reshape(*site_mask.shape, 1, 1).to(xyz_updates.dtype)
 
         batch, sequence_length, hidden_size = work_hidden_states.shape

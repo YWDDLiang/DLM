@@ -8,6 +8,7 @@ import torch
 from crystal_dlm.periodic_relation_runtime import (
     ADAPTER_CONFIG_NAME,
     ADAPTER_STATE_NAME,
+    _soft_or_committed_with_confidence,
     build_periodic_relation_support,
     soft_geometry_from_q0,
     wrap_with_periodic_relation,
@@ -59,6 +60,25 @@ def _tokens(tokenizer: _Tokenizer) -> torch.Tensor:
 
 
 class PeriodicRelationRuntimeTest(unittest.TestCase):
+    def test_uncertainty_confidence_is_bounded_and_committed_is_one(self) -> None:
+        table = {"ids": [0, 1, 2, 3], "values": [0.0, 0.25, 0.5, 0.75]}
+        uniform = torch.zeros(4)
+        _mean, low = _soft_or_committed_with_confidence(
+            uniform, 99, table, periodic=True, floor=0.25
+        )
+        peaked_logits = torch.tensor([8.0, -8.0, -8.0, -8.0])
+        _mean, high = _soft_or_committed_with_confidence(
+            peaked_logits, 99, table, periodic=True, floor=0.25
+        )
+        value, committed = _soft_or_committed_with_confidence(
+            uniform, 2, table, periodic=True, floor=0.25
+        )
+        self.assertGreaterEqual(low.item(), 0.25)
+        self.assertLessEqual(high.item(), 1.0)
+        self.assertGreater(high.item(), low.item())
+        self.assertEqual(value.item(), 0.5)
+        self.assertEqual(committed.item(), 1.0)
+
     def test_adapter_keeps_float32_with_bfloat16_base(self) -> None:
         tokenizer = _Tokenizer()
         base = _Base(len(tokenizer.vocab)).to(dtype=torch.bfloat16)
@@ -111,6 +131,37 @@ class PeriodicRelationRuntimeTest(unittest.TestCase):
             wrapped.periodic_relation_adapter.output_projection.weight.normal_(0.0, 0.02)
         changed = wrapped(ids).logits
         self.assertGreater((changed - observed).abs().max().item(), 0.0)
+
+    def test_uncertainty_gate_keeps_step_zero_and_emits_confidence(self) -> None:
+        tokenizer = _Tokenizer()
+        base = _Base(len(tokenizer.vocab))
+        ids = _tokens(tokenizer)
+        ids[0, 8] = tokenizer.vocab["<MASK>"]
+        wrapped = wrap_with_periodic_relation(
+            base,
+            tokenizer,
+            rank=6,
+            uncertainty_gate=True,
+            uncertainty_gate_floor=0.25,
+        )
+        wrapped.set_geometry_context(torch.tensor([0]), torch.tensor([2]))
+        with torch.no_grad():
+            expected = base(ids).logits
+            observed = wrapped(ids).logits
+            geometry = soft_geometry_from_q0(
+                q0=expected,
+                input_ids=ids,
+                prompt_lengths=torch.tensor([0]),
+                num_sites=torch.tensor([2]),
+                support=build_periodic_relation_support(tokenizer),
+                uncertainty_gate=True,
+                uncertainty_gate_floor=0.25,
+            )
+        self.assertTrue(torch.equal(expected, observed))
+        self.assertIsNotNone(geometry.lattice_confidence)
+        self.assertIsNotNone(geometry.site_confidence)
+        self.assertGreaterEqual(geometry.site_confidence.min().item(), 0.25)
+        self.assertLessEqual(geometry.site_confidence.max().item(), 1.0)
 
     def test_checkpoint_roundtrip(self) -> None:
         tokenizer = _Tokenizer()

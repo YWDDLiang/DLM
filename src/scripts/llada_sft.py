@@ -66,6 +66,7 @@ from crystal_dlm.physical_header import (
 )
 from crystal_dlm.periodic_geometry_objective import (
     build_geometry_token_support,
+    build_species_radius_support,
     periodic_geometry_objective,
 )
 from crystal_dlm.periodic_relation_runtime import wrap_with_periodic_relation
@@ -739,6 +740,13 @@ def summarize_sample_weight_multipliers(
             except (TypeError, ValueError):
                 base_weight = 1.0
             matched_weight_mass[matched_key] += max(base_weight, 0.0) * float(multipliers[matched_key])
+    periodic_support = None
+    if any(weight > 0 for weight in periodic_weights.values()):
+        periodic_support = build_geometry_token_support(tokenizer)
+        if float(getattr(args, "periodic_species_margin_scale", 0.0)) > 0.0:
+            periodic_support["species_radius_by_token_id"] = (
+                build_species_radius_support(tokenizer)
+            )
     return {
         "configured": dict(multipliers),
         "composition_bucket_counts": dict(bucket_counts.most_common()),
@@ -1467,10 +1475,18 @@ def build_loss_config(tokenizer, args) -> Dict[str, Any]:
         ),
         "dynamic_geometry_only": bool(getattr(args, "dynamic_geometry_only", False)),
         "periodic_geometry_weights": periodic_weights,
-        "periodic_geometry_support": (
-            build_geometry_token_support(tokenizer)
-            if any(weight > 0 for weight in periodic_weights.values())
-            else None
+        "periodic_geometry_support": periodic_support,
+        "periodic_exact_triclinic_pbc": bool(
+            getattr(args, "periodic_exact_triclinic_pbc", False)
+        ),
+        "periodic_species_margin_scale": float(
+            getattr(args, "periodic_species_margin_scale", 0.0)
+        ),
+        "periodic_species_margin_floor": float(
+            getattr(args, "periodic_species_margin_floor", 0.6)
+        ),
+        "periodic_species_margin_ceiling": float(
+            getattr(args, "periodic_species_margin_ceiling", 1.4)
         ),
     }
 
@@ -2437,6 +2453,29 @@ def main() -> None:
     parser.add_argument("--periodic-overlap-weight", type=float, default=0.0)
     parser.add_argument("--periodic-coordination-weight", type=float, default=0.0)
     parser.add_argument(
+        "--periodic-exact-triclinic-pbc",
+        action="store_true",
+        help="Use a bounded 27-image minimum for periodic geometry losses.",
+    )
+    parser.add_argument(
+        "--periodic-species-margin-scale",
+        type=float,
+        default=0.0,
+        help="Scale the sum of element radii for the overlap margin; zero keeps 0.75 A.",
+    )
+    parser.add_argument(
+        "--periodic-species-margin-floor",
+        type=float,
+        default=0.6,
+        help="Minimum species-aware overlap margin in angstrom.",
+    )
+    parser.add_argument(
+        "--periodic-species-margin-ceiling",
+        type=float,
+        default=1.4,
+        help="Maximum species-aware overlap margin in angstrom.",
+    )
+    parser.add_argument(
         "--periodic-relation-rank",
         type=int,
         default=0,
@@ -2447,6 +2486,17 @@ def main() -> None:
         type=Path,
         default=None,
         help="Optional checkpoint containing periodic_relation_adapter.pt/config.",
+    )
+    parser.add_argument(
+        "--periodic-relation-uncertainty-gate",
+        action="store_true",
+        help="Apply the deterministic detached q0 confidence gate to G2 residuals.",
+    )
+    parser.add_argument(
+        "--periodic-relation-uncertainty-floor",
+        type=float,
+        default=0.25,
+        help="Minimum deterministic q0 confidence applied to a G2 residual.",
     )
     parser.add_argument(
         "--train-prefill-slot-tokens",
@@ -2483,6 +2533,12 @@ def main() -> None:
     )
     if any(weight < 0 for weight in periodic_weights):
         parser.error("periodic geometry weights must be non-negative")
+    if args.periodic_species_margin_scale < 0:
+        parser.error("periodic-species-margin-scale must be non-negative")
+    if args.periodic_species_margin_floor <= 0:
+        parser.error("periodic-species-margin-floor must be positive")
+    if args.periodic_species_margin_ceiling < args.periodic_species_margin_floor:
+        parser.error("periodic-species-margin-ceiling must be at least the floor")
     if any(weight > 0 for weight in periodic_weights):
         if args.representation != "dynamic_v1":
             parser.error("periodic geometry objective requires representation=dynamic_v1")
@@ -2497,6 +2553,10 @@ def main() -> None:
             parser.error("periodic relation adapter requires dynamic_v1 geometry-only training")
         if not any(weight > 0 for weight in periodic_weights):
             parser.error("periodic relation adapter requires the registered G1 geometry losses")
+    if args.periodic_relation_uncertainty_gate and args.periodic_relation_rank <= 0:
+        parser.error("periodic relation uncertainty gate requires a positive rank")
+    if not 0.0 < args.periodic_relation_uncertainty_floor <= 1.0:
+        parser.error("periodic-relation-uncertainty-floor must be in (0, 1]")
     if args.lr_stage2 > 0:
         if args.lr_scheduler != "cosine":
             parser.error("two-stage LR requires --lr-scheduler cosine")
@@ -2549,6 +2609,8 @@ def main() -> None:
             tokenizer,
             rank=int(args.periodic_relation_rank),
             checkpoint=args.periodic_relation_checkpoint,
+            uncertainty_gate=bool(args.periodic_relation_uncertainty_gate),
+            uncertainty_gate_floor=float(args.periodic_relation_uncertainty_floor),
         )
     loss_config = build_loss_config(tokenizer, args)
     if is_main:
@@ -2886,6 +2948,18 @@ def main() -> None:
                                 prompt_lengths=batch["prompt_lengths"],
                                 num_atoms=batch["num_atoms"],
                                 support=loss_config["periodic_geometry_support"],
+                                exact_triclinic_pbc=bool(
+                                    loss_config["periodic_exact_triclinic_pbc"]
+                                ),
+                                species_margin_scale=float(
+                                    loss_config["periodic_species_margin_scale"]
+                                ),
+                                species_margin_floor=float(
+                                    loss_config["periodic_species_margin_floor"]
+                                ),
+                                species_margin_ceiling=float(
+                                    loss_config["periodic_species_margin_ceiling"]
+                                ),
                             )
                     else:
                         task_loss = compute_loss(model, batch, loss_config)

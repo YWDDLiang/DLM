@@ -2,7 +2,14 @@ import unittest
 
 import torch
 
+from crystal_dlm.periodic_geometry_ops import (
+    ELEMENT_RADII_ANGSTROM_BY_Z,
+    ELEMENT_RADII_SHA256,
+    minimum_image_distances_27,
+)
 from crystal_dlm.periodic_geometry_objective import (
+    _pair_distances,
+    _species_aware_margins,
     build_geometry_token_support,
     periodic_geometry_objective,
 )
@@ -21,6 +28,47 @@ class _Tokenizer:
 
 
 class PeriodicGeometryObjectiveTest(unittest.TestCase):
+    def test_frozen_radius_table_is_complete_and_hashed(self) -> None:
+        self.assertEqual(len(ELEMENT_RADII_ANGSTROM_BY_Z), 119)
+        self.assertEqual(len(ELEMENT_RADII_SHA256), 64)
+        self.assertTrue(all(value > 0 for value in ELEMENT_RADII_ANGSTROM_BY_Z[1:]))
+
+    def test_exact_triclinic_minimum_beats_component_rounding(self) -> None:
+        lattice = torch.tensor(
+            [[1.0, 0.0, 0.0], [0.9, 0.2, 0.0], [0.0, 0.0, 1.0]]
+        )
+        coordinates = torch.tensor([[0.49, 0.49, 0.0], [0.0, 0.0, 0.0]])
+        approximate, pairs = _pair_distances(
+            coordinates, lattice, exact_triclinic=False
+        )
+        exact, exact_pairs = _pair_distances(
+            coordinates, lattice, exact_triclinic=True
+        )
+        self.assertTrue(torch.equal(pairs, exact_pairs))
+        self.assertLess(exact.item(), 0.13)
+        self.assertGreater(approximate.item(), 0.9)
+
+        delta = coordinates[0] - coordinates[1]
+        shifts = torch.cartesian_prod(
+            torch.arange(-2, 3, dtype=delta.dtype),
+            torch.arange(-2, 3, dtype=delta.dtype),
+            torch.arange(-2, 3, dtype=delta.dtype),
+        )
+        brute = torch.linalg.vector_norm((delta + shifts) @ lattice, dim=-1).min()
+        shared = minimum_image_distances_27(delta, lattice)
+        self.assertTrue(torch.allclose(shared, brute, atol=1e-7))
+
+    def test_species_margin_uses_both_element_radii(self) -> None:
+        margins = _species_aware_margins(
+            torch.tensor([2, 3]),
+            torch.tensor([[0], [1]]),
+            {2: 1.0, 3: 2.0},
+            scale=0.5,
+            floor=0.5,
+            ceiling=2.0,
+        )
+        self.assertTrue(torch.allclose(margins, torch.tensor([1.5])))
+
     def test_target_peaked_logits_have_finite_small_loss_and_gradients(self) -> None:
         tokenizer = _Tokenizer()
         support = build_geometry_token_support(tokenizer)
@@ -107,6 +155,17 @@ class PeriodicGeometryObjectiveTest(unittest.TestCase):
         )
         self.assertTrue(torch.isfinite(result["pair_rdf"]))
         self.assertTrue(torch.isfinite(result["coordination"]))
+        base_distances, _ = _pair_distances(
+            torch.tensor([[0.0, 0.0, 0.0], [0.5, 0.5, 0.5]]),
+            torch.eye(3) * 4.0,
+            exact_triclinic=True,
+        )
+        shifted_distances, _ = _pair_distances(
+            torch.tensor([[0.25, 0.25, 0.25], [0.75, 0.75, 0.75]]),
+            torch.eye(3) * 4.0,
+            exact_triclinic=True,
+        )
+        self.assertTrue(torch.equal(base_distances, shifted_distances))
 
 
 if __name__ == "__main__":

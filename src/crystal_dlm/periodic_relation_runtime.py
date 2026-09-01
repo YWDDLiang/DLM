@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict
 import json
+import math
 from pathlib import Path
 import re
 from typing import Any, Mapping
@@ -54,6 +55,43 @@ def _soft_or_committed(
     return (probabilities * values).sum(dim=-1)
 
 
+def _soft_or_committed_with_confidence(
+    logits: torch.Tensor,
+    current_id: int,
+    table: Mapping[str, list[Any]],
+    *,
+    periodic: bool,
+    floor: float,
+) -> tuple[torch.Tensor, torch.Tensor]:
+    ids = torch.tensor(table["ids"], dtype=torch.long, device=logits.device)
+    values = torch.tensor(table["values"], dtype=torch.float32, device=logits.device)
+    matches = ids == int(current_id)
+    if bool(matches.any().item()):
+        return values[matches][0], values.new_tensor(1.0)
+    probabilities = F.softmax(logits.float().index_select(-1, ids), dim=-1)
+    mean = (probabilities * values).sum(dim=-1)
+    if int(values.numel()) <= 1:
+        entropy = mean.new_zeros(())
+    else:
+        entropy = -(
+            probabilities * probabilities.clamp_min(1.0e-12).log()
+        ).sum() / math.log(int(values.numel()))
+    if periodic:
+        phase = 2.0 * math.pi * values
+        resultant = torch.sqrt(
+            (probabilities * torch.cos(phase)).sum().square()
+            + (probabilities * torch.sin(phase)).sum().square()
+        )
+        spread = 1.0 - resultant.clamp(0.0, 1.0)
+    else:
+        value_range = (values.max() - values.min()).clamp_min(1.0e-6)
+        variance = (probabilities * (values - mean).square()).sum()
+        spread = (4.0 * variance / value_range.square()).clamp(0.0, 1.0)
+    uncertainty = (0.5 * entropy + 0.5 * spread).clamp(0.0, 1.0)
+    confidence = float(floor) + (1.0 - float(floor)) * (1.0 - uncertainty)
+    return mean, confidence.clamp(float(floor), 1.0)
+
+
 def soft_geometry_from_q0(
     *,
     q0: torch.Tensor,
@@ -62,6 +100,8 @@ def soft_geometry_from_q0(
     num_sites: torch.Tensor,
     support: Mapping[str, Any],
     max_sites: int = 20,
+    uncertainty_gate: bool = False,
+    uncertainty_gate_floor: float = 0.25,
 ) -> SoftCrystalGeometry:
     """Decode committed tokens and q0 expectations without target leakage."""
 
@@ -77,27 +117,42 @@ def soft_geometry_from_q0(
     lattices = []
     coordinates = q0.new_zeros((batch, max_sites, 3), dtype=torch.float32)
     species = torch.zeros((batch, max_sites), dtype=torch.long, device=q0.device)
+    lattice_confidence = q0.new_ones((batch,), dtype=torch.float32)
+    site_confidence = q0.new_ones((batch, max_sites), dtype=torch.float32)
     for sample in range(batch):
         prompt = int(prompt_lengths[sample].detach().cpu())
         count = int(num_sites[sample].detach().cpu())
         if not 1 <= count <= max_sites:
             raise ValueError(f"num_sites {count} outside 1..{max_sites}")
-        lengths = [
-            _soft_or_committed(
-                q0[sample, prompt + position],
-                int(input_ids[sample, prompt + position].detach().item()),
-                geometry_support["length"][axis],
-            )
-            for position, axis in zip(range(1, 4), "ABC")
-        ]
-        angles = [
-            _soft_or_committed(
-                q0[sample, prompt + position],
-                int(input_ids[sample, prompt + position].detach().item()),
-                geometry_support["angle"][axis],
-            )
-            for position, axis in zip(range(4, 7), "ABG")
-        ]
+        lattice_values: list[torch.Tensor] = []
+        lattice_confidences: list[torch.Tensor] = []
+        for family, positions, axes in (
+            ("length", range(1, 4), "ABC"),
+            ("angle", range(4, 7), "ABG"),
+        ):
+            for position, axis in zip(positions, axes):
+                if uncertainty_gate:
+                    value, confidence = _soft_or_committed_with_confidence(
+                        q0[sample, prompt + position],
+                        int(input_ids[sample, prompt + position].detach().item()),
+                        geometry_support[family][axis],
+                        periodic=False,
+                        floor=float(uncertainty_gate_floor),
+                    )
+                    lattice_confidences.append(confidence)
+                else:
+                    value = _soft_or_committed(
+                        q0[sample, prompt + position],
+                        int(input_ids[sample, prompt + position].detach().item()),
+                        geometry_support[family][axis],
+                    )
+                lattice_values.append(value)
+        lengths = lattice_values[:3]
+        angles = lattice_values[3:]
+        if uncertainty_gate:
+            lattice_confidence[sample] = torch.stack(lattice_confidences).clamp_min(
+                float(uncertainty_gate_floor)
+            ).log().mean().exp()
         lattices.append(
             lattice_matrix_from_parameters(torch.stack(lengths), torch.stack(angles))
         )
@@ -107,11 +162,30 @@ def soft_geometry_from_q0(
             if element_id not in element_support:
                 raise ValueError("element token must be committed before periodic relation")
             species[sample, site] = element_support[element_id]
+            coordinate_confidences: list[torch.Tensor] = []
             for offset, axis in enumerate("XYZ", start=1):
-                coordinates[sample, site, offset - 1] = _soft_or_committed(
-                    q0[sample, base + offset],
-                    int(input_ids[sample, base + offset].detach().item()),
-                    geometry_support["coord"][axis],
+                if uncertainty_gate:
+                    value, confidence = _soft_or_committed_with_confidence(
+                        q0[sample, base + offset],
+                        int(input_ids[sample, base + offset].detach().item()),
+                        geometry_support["coord"][axis],
+                        periodic=True,
+                        floor=float(uncertainty_gate_floor),
+                    )
+                    coordinate_confidences.append(confidence)
+                else:
+                    value = _soft_or_committed(
+                        q0[sample, base + offset],
+                        int(input_ids[sample, base + offset].detach().item()),
+                        geometry_support["coord"][axis],
+                    )
+                coordinates[sample, site, offset - 1] = value
+            if uncertainty_gate:
+                coordinate_confidence = torch.stack(coordinate_confidences).clamp_min(
+                    float(uncertainty_gate_floor)
+                ).log().mean().exp()
+                site_confidence[sample, site] = torch.sqrt(
+                    lattice_confidence[sample] * coordinate_confidence
                 )
     return SoftCrystalGeometry(
         lattice=torch.stack(lattices),
@@ -119,6 +193,8 @@ def soft_geometry_from_q0(
         species=species,
         prompt_lengths=prompt_lengths,
         num_sites=num_sites,
+        lattice_confidence=lattice_confidence if uncertainty_gate else None,
+        site_confidence=site_confidence if uncertainty_gate else None,
     )
 
 
@@ -209,6 +285,10 @@ class PeriodicRelationLogitsModel(nn.Module):
             num_sites=num_sites,
             support=self.periodic_relation_support,
             max_sites=self.periodic_relation_adapter.config.max_sites,
+            uncertainty_gate=bool(self.periodic_relation_adapter.config.uncertainty_gate),
+            uncertainty_gate_floor=float(
+                self.periodic_relation_adapter.config.uncertainty_gate_floor
+            ),
         )
         relation = self.periodic_relation_adapter(captured[0], geometry)
         q1 = output_head(relation.hidden_states)
@@ -248,10 +328,17 @@ def wrap_with_periodic_relation(
     *,
     rank: int,
     checkpoint: str | Path | None = None,
+    uncertainty_gate: bool = False,
+    uncertainty_gate_floor: float = 0.25,
 ) -> PeriodicRelationLogitsModel:
     hidden_size = int(base_model.get_output_embeddings().weight.shape[1])
     if checkpoint is None:
-        config = PeriodicRelationConfig(hidden_size=hidden_size, rank=int(rank))
+        config = PeriodicRelationConfig(
+            hidden_size=hidden_size,
+            rank=int(rank),
+            uncertainty_gate=bool(uncertainty_gate),
+            uncertainty_gate_floor=float(uncertainty_gate_floor),
+        )
         state = None
     else:
         root = Path(checkpoint)
