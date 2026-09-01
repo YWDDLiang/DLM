@@ -42,5 +42,11 @@
     "B_direct_advantage_for_promotion": 8,
     "checkpoint_selection": false,
     "planner_resampling": false
+  },
+  "next_stage": {
+    "document": "G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md",
+    "status": "frozen_waiting_for_AB_terminal",
+    "method": "residual_only_warmup_then_residual_plus_small_LR_LoRA",
+    "planner_or_c3fd_training": false
   }
 }

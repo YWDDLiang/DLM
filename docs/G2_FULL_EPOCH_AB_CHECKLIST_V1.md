@@ -77,3 +77,14 @@ weights `0.1/0.1/0.2/0.05`, one eligible step1696 checkpoint, no selection.
 Engineering priors: A directional raw-Direct improvement 60–75%; A ≥5 pp
 45–60%; B>A 40–55%; at least one ≥5 pp 55–70%; final 10/50 probability
 20–35%. These are planning priors, not result gates.
+
+## Frozen next stage
+
+- [x] Register
+  [`G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md`](G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md).
+- [ ] After A/B is terminal, freeze one promoted G2 initialization according
+  to the registered A/B rule; do not choose a training seed or intermediate
+  checkpoint.
+- [ ] Build the MP20-train-only 4,096-pair raw→model494 corpus.
+- [ ] Run D3-R residual-only warm-up, then D3-J residual+small-LR-LoRA joint
+  distillation. Do not modify C3FD or the Llama Planner.
