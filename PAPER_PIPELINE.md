@@ -66,6 +66,8 @@ result. Their exact mapping lives in `configs/paper/mainline_v1.json`.
 
 ## Configuration and evidence
 
+- Paper-method index: `docs/paper/README.md`.
+- One-page method intuition: `docs/paper/METHOD_AT_A_GLANCE.md`.
 - Portable configs: `configs/paper/*.json`.
 - Pipeline inventory: `docs/paper/PIPELINE_INVENTORY.md`.
 - Legacy compatibility: `docs/paper/LEGACY_TO_MAINLINE_MAP.md`.
@@ -76,4 +78,3 @@ result. Their exact mapping lives in `configs/paper/mainline_v1.json`.
 
 No retry, replacement, survivor filtering, reranking, best-of-N, checkpoint
 selection, or test-outcome training is part of the paper pipeline.
-

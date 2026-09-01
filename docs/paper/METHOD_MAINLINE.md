@@ -84,6 +84,30 @@ allowing all unknown geometric tokens to be denoised in parallel.
 
 ## 5. Periodic-relational denoising
 
+### 5.0 Global visibility is not relational priority
+
+The masked Transformer has global self-attention, so lattice and coordinate
+tokens are nominally visible to every position. That does not make G2
+redundant. Visibility only makes a computation possible; it neither encodes
+the correct periodic computation nor assigns it sufficient optimization
+priority.
+
+In particular, triclinic minimum-image distance is a nonlinear function of six
+lattice parameters and two fractional sites. Its physical meaning also depends
+on the species pair. Ordinary token CE offers no guarantee that the network
+will reconstruct this coordinate-aware relation at an uncertain q0 state. A
+single colliding pair can invalidate an entire crystal but contributes only one
+of `N(N-1)/2` pair relations and competes with every masked token. The global
+network can therefore represent the information while systematically
+underweighting the event that decides validity and basin quality.
+
+G2 is a scientific-salience path: it computes a small set of high-consequence
+relations in the correct periodic frame and gives them a direct, zero-
+initialized route back to logits. It does not reduce the receptive field or
+replace the Transformer. It preserves global language reasoning while making
+the most important crystal relations easy to compute, explicitly normalized
+and difficult for average token gradients to ignore.
+
 ### 5.1 Soft geometry from q0
 
 At a denoising state q0, legal geometry-token probabilities define expected
@@ -118,6 +142,15 @@ m_{ij}=f_m(h_i,h_j,e_{ij},g),\qquad
 training. The updated logits `q1=q0+Delta q` participate in the next denoising
 decision. No relation projection is applied after a structure has been sampled.
 
+### 5.4 Stability transport through the same residual
+
+BTRD, when promoted by its fixed stability gate, adds no new inference module.
+It uses model494 tau200 train-only teacher geometries to supervise normalized
+metric and minimum-image coordinate transport through the existing G2
+residual. Backbone and Compact-V2 LoRA remain frozen. Thus the same
+scientific-salience path first represents periodic relations and then learns
+which local direction enters a better structural basin.
+
 ## 6. Terminal diffusion realization
 
 The raw exact-composition structure enters frozen model494:
@@ -142,4 +175,3 @@ refined `x*` to measure the complete generator.
 
 These invariants make the hierarchy a single probabilistic generator with
 auditable information flow.
-
