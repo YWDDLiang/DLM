@@ -1,7 +1,8 @@
 # Periodic Sitewise Tail Risk (PSTR)
 
-Status: frozen single-setting candidate; fixed256 raw gate before any downstream
-refinement.
+Status: superseded before model loading or training. PSTR remains a documented
+geometry-risk idea, but the user clarified that the new method must primarily
+improve thermodynamic stability and S.U.N. It is not part of the active run.
 
 ## Motivation
 
