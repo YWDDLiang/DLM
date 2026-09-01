@@ -362,6 +362,32 @@ class PeriodicRelationLogitsModel(nn.Module):
         )
 
 
+def set_periodic_relation_only_trainable(
+    model: PeriodicRelationLogitsModel,
+) -> dict[str, int]:
+    """Freeze the base policy and leave only the periodic residual trainable."""
+
+    if not isinstance(model, PeriodicRelationLogitsModel):
+        raise TypeError("periodic-relation-only training requires the wrapped model")
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
+    for parameter in model.periodic_relation_adapter.parameters():
+        parameter.requires_grad_(True)
+    trainable = sum(
+        int(parameter.numel())
+        for parameter in model.parameters()
+        if parameter.requires_grad
+    )
+    frozen = sum(
+        int(parameter.numel())
+        for parameter in model.parameters()
+        if not parameter.requires_grad
+    )
+    if trainable <= 0 or frozen <= 0:
+        raise RuntimeError("periodic-relation-only parameter partition is empty")
+    return {"trainable_parameters": trainable, "frozen_parameters": frozen}
+
+
 def wrap_with_periodic_relation(
     base_model: nn.Module,
     tokenizer: Any,
@@ -402,5 +428,6 @@ __all__ = [
     "PeriodicRelationLogitsModel",
     "build_periodic_relation_support",
     "soft_geometry_from_q0",
+    "set_periodic_relation_only_trainable",
     "wrap_with_periodic_relation",
 ]

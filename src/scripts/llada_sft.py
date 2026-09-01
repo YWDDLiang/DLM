@@ -69,7 +69,10 @@ from crystal_dlm.periodic_geometry_objective import (
     build_species_radius_support,
     periodic_geometry_objective,
 )
-from crystal_dlm.periodic_relation_runtime import wrap_with_periodic_relation
+from crystal_dlm.periodic_relation_runtime import (
+    set_periodic_relation_only_trainable,
+    wrap_with_periodic_relation,
+)
 from crystal_dlm.llada_resize import ensure_llada_vocab_size
 from crystal_dlm.transformers_compat import (
     ensure_create_bidirectional_mask,
@@ -2538,6 +2541,11 @@ def main() -> None:
         help="Use circular coordinate means above this resultant; otherwise use linear fallback.",
     )
     parser.add_argument(
+        "--periodic-relation-only",
+        action="store_true",
+        help="Freeze the loaded base policy and optimize only the periodic residual adapter.",
+    )
+    parser.add_argument(
         "--train-prefill-slot-tokens",
         action="store_true",
         help=(
@@ -2603,6 +2611,11 @@ def main() -> None:
             parser.error("periodic relation adapter requires the registered G1 geometry losses")
     if args.periodic_relation_uncertainty_gate and args.periodic_relation_rank <= 0:
         parser.error("periodic relation uncertainty gate requires a positive rank")
+    if args.periodic_relation_only:
+        if args.periodic_relation_rank <= 0:
+            parser.error("periodic-relation-only requires a positive relation rank")
+        if args.periodic_relation_checkpoint is None:
+            parser.error("periodic-relation-only requires a relation checkpoint")
     if not 0.0 < args.periodic_relation_uncertainty_floor <= 1.0:
         parser.error("periodic-relation-uncertainty-floor must be in (0, 1]")
     if not 0.0 <= args.periodic_relation_circular_min_resultant <= 1.0:
@@ -2666,6 +2679,15 @@ def main() -> None:
                 args.periodic_relation_circular_min_resultant
             ),
         )
+    parameter_partition = None
+    if args.periodic_relation_only:
+        parameter_partition = set_periodic_relation_only_trainable(model)
+        run_config["parameter_partition"] = dict(parameter_partition)
+        if is_main:
+            write_json(
+                str(args.output_dir / "parameter_partition.json"),
+                parameter_partition,
+            )
     loss_config = build_loss_config(tokenizer, args)
     if is_main:
         if args.representation == "cif_lite_modular":
@@ -2898,7 +2920,14 @@ def main() -> None:
         num_workers=args.dataloader_num_workers,
     )
 
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    optimizer_parameters = [
+        parameter for parameter in model.parameters() if parameter.requires_grad
+    ]
+    if not optimizer_parameters:
+        raise RuntimeError("no trainable parameters remain after parameter freezing")
+    optimizer = torch.optim.AdamW(
+        optimizer_parameters, lr=args.lr, weight_decay=args.weight_decay
+    )
     global_step = 0
     optimizer.zero_grad(set_to_none=True)
     total_steps = math.ceil(len(train_loader) * args.epochs / args.grad_accum)

@@ -11,6 +11,7 @@ from crystal_dlm.periodic_relation_runtime import (
     _soft_or_committed,
     _soft_or_committed_with_confidence,
     build_periodic_relation_support,
+    set_periodic_relation_only_trainable,
     soft_geometry_from_q0,
     wrap_with_periodic_relation,
 )
@@ -211,6 +212,27 @@ class PeriodicRelationRuntimeTest(unittest.TestCase):
                 loaded.periodic_relation_adapter.parameters(),
             ):
                 self.assertTrue(torch.equal(left, right))
+
+    def test_periodic_relation_only_freezes_base_policy(self) -> None:
+        tokenizer = _Tokenizer()
+        wrapped = wrap_with_periodic_relation(
+            _Base(len(tokenizer.vocab)), tokenizer, rank=6
+        )
+        report = set_periodic_relation_only_trainable(wrapped)
+        self.assertGreater(report["trainable_parameters"], 0)
+        self.assertGreater(report["frozen_parameters"], 0)
+        self.assertTrue(
+            all(
+                parameter.requires_grad
+                for parameter in wrapped.periodic_relation_adapter.parameters()
+            )
+        )
+        self.assertTrue(
+            all(
+                not parameter.requires_grad
+                for parameter in wrapped.base_model.parameters()
+            )
+        )
 
 
 if __name__ == "__main__":
