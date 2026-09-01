@@ -17,7 +17,9 @@ readonly CODE_COMMIT="${H1A2_CODE_COMMIT:-unrecorded}"
 readonly SPLITS="${KNOWN1200_SPLITS:?export frozen main1000/remainder cohort}"
 readonly SPLIT_MANIFEST_SHA="${KNOWN1200_SPLIT_MANIFEST_SHA256:?pin split manifest}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
-readonly POLICY="${ROOT}/runs/g2_full_epoch_A_39164/train/checkpoints/step-1696"
+readonly POLICY="${KNOWN1200_POLICY:-${ROOT}/runs/g2_full_epoch_A_39164/train/checkpoints/step-1696}"
+readonly METHOD_LABEL="${KNOWN1200_METHOD_LABEL:-G2-PBC-R_step1696}"
+readonly RUN_PREFIX="${KNOWN1200_RUN_PREFIX:-g2_known1200_baseline_fast}"
 readonly SAMPLER="${CODE_ROOT}/src/scripts/sample_sgtc_l6.py"
 readonly SHARDER="${CODE_ROOT}/scripts/shard_plan_jsonl.py"
 readonly ASSEMBLER="${CODE_ROOT}/scripts/assemble_raw_body_repeat.py"
@@ -27,11 +29,11 @@ readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_
 readonly V3_RUN="${PROJECT}/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly R03E="${V3_RUN}/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1"
 readonly SNAPSHOT="${R03E}/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream"
-readonly RUN="${ROOT}/runs/g2_known1200_baseline_fast_${SLURM_JOB_ID}"
+readonly RUN="${ROOT}/runs/${RUN_PREFIX}_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
-readonly POLICY_SHA=712c941922611ea3640b171319c8ae9a4cbdbf31f83cdba6f61046b9de61bfce
-readonly RELATION_SHA=675d68b9e9c0aeb7f3383050b8c85716aa2f7c9303d5a8e1e75b0761db54b9f8
-readonly RELATION_CONFIG_SHA=7e3431e75831f11fd48f564068617f3d3f6fa1a6dc89754aa72cd9c463bee353
+readonly POLICY_SHA="${KNOWN1200_POLICY_SHA256:-712c941922611ea3640b171319c8ae9a4cbdbf31f83cdba6f61046b9de61bfce}"
+readonly RELATION_SHA="${KNOWN1200_RELATION_SHA256:-675d68b9e9c0aeb7f3383050b8c85716aa2f7c9303d5a8e1e75b0761db54b9f8}"
+readonly RELATION_CONFIG_SHA="${KNOWN1200_RELATION_CONFIG_SHA256:-7e3431e75831f11fd48f564068617f3d3f6fa1a6dc89754aa72cd9c463bee353}"
 
 mkdir "${RUN}"; mkdir "${RUN}/logs"
 on_error(){ rc=$1; line=$2; command=$3; set +e; printf 'field\tvalue\nexit_code\t%s\nline\t%s\ncommand\t%s\n' "$rc" "$line" "$command" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"; }
@@ -48,9 +50,9 @@ IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"; [[ "${#g
 
 cat >"${RUN}/scientific_contract.tsv" <<EOF
 field	value
-schema	g2_known1200_baseline_fast_v1
+schema	known1200_body_fast_direct_v2
 plans	main1000_plus_remainder159
-policy	G2-PBC-R_step1696
+policy	${METHOD_LABEL}
 stream	17
 dlm_seed	91117
 temperature	0.7
@@ -99,7 +101,7 @@ root=pathlib.Path(sys.argv[1]); cells=[]
 for name in [f'main{i}' for i in range(5)]+['remainder']:
  report=json.load(open(root/name/'fast_direct/report.json')); cells.append({'name':name,**report})
 result={
- 'schema':'g2_known1200_baseline_fast_final_v1','requested':sum(x['attempts'] for x in cells),
+ 'schema':'known1200_body_fast_direct_final_v2','requested':sum(x['attempts'] for x in cells),
  'generation_succeeded':sum(x['generation_succeeded'] for x in cells),
  'composition_valid':sum(x['comp_valid_count'] for x in cells),
  'structure_valid':sum(x['struct_valid_count'] for x in cells),
