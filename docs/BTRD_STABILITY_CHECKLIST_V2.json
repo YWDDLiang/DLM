@@ -31,10 +31,22 @@
     "structured_review_disposition": "APPROVED"
   },
   "active": {
-    "first256_eval_job": 39190,
-    "first256_eval_run": "runs/btrd_first256_raw_eval_39190",
-    "gpus": 2,
-    "stage": "raw_chgnet_and_cached_official_inputs"
+    "btrd800t_teacher_job": 39191,
+    "btrd800t_teacher_run": "runs/btrd_tau800t_teacher_39191",
+    "gpus": 6,
+    "stage": "tau800_endpoint_proxy_no_body_rerun"
+  },
+  "first256_tau200_terminal": {
+    "eval_job": 39190,
+    "elapsed": "01:06:04",
+    "a800_hours": 2.2022,
+    "base": {"body": 254, "direct": 111, "strict_sun": 11, "meta_sun": 44},
+    "btrd": {"body": 251, "direct": 115, "strict_sun": 5, "meta_sun": 45},
+    "paired_chgnet_mean_ev": 1.1874420154959924,
+    "paired_chgnet_ci95": [-0.3184927473625829, 3.976634300608308],
+    "paired_hull_ci95": [-0.3294407821170265, 3.9300225357615175],
+    "strict_mcnemar_p": 0.03125,
+    "promoted": false
   },
   "generation_terminal": {
     "job": 39188,

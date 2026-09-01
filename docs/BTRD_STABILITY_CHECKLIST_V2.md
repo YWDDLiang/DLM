@@ -94,8 +94,20 @@ Frozen evaluation cohort:
   G2 baseline, body is -1 and Direct is +14.
 - [x] Preserve first256 eval job39189 as a 1s pre-science Bash-local binding
   negative; no CHGNet or Direct cell started.
-- [ ] Parameter-identical first256 raw eval job39190 active: two A800 / 16 CPU,
-  no candidate model494.
+- [x] first256 raw eval job39190 COMPLETED `0:0/01:06:04`
+  (`2.2022 A800-hours`), no candidate model494.
+- [x] first256 BASE -> BTRD: body `254 -> 251`, Direct `111 -> 115`,
+  Strict S.U.N. `11 -> 5`, Meta S.U.N. `44 -> 45`.
+- [x] Paired BTRD-BASE CHGNet delta mean `+1.1874 eV/atom`, CI95
+  `[-0.3185,+3.9766]`; official-hull delta is the same composition-paired
+  shift with CI95 `[-0.3294,+3.9300]`. Strict loss is significant by exact
+  McNemar (`p=0.03125`). BTRD-tau200 is not promoted.
+- [x] Activate the pre-registered bundled fallback BTRD-800T before reading
+  confirmation903. It reuses job39184 proposals, runs model494 tau800 once,
+  and adds sitewise overlap tail `kappa=0.10,beta=0.50` to residual training.
+- [ ] BTRD-800T teacher job39191 active: six A800 / 48 CPU, same 6,038 raw
+  proposals, no body rerun. Expected refiner walltime about 2.3h and about
+  13.7 A800-hours; actual cost will be recorded.
 
 ## Immediate next steps
 
@@ -108,6 +120,8 @@ Frozen evaluation cohort:
   shard/noise (job39188);
 - [x] Submit matched first256 raw CHGNet/cached-official input evaluation
   (job39190); body outputs are reused, not regenerated.
+- [x] Finalize first256 official S.U.N.; BTRD-tau200 promotion false.
+- [x] Implement and submit the approved BTRD-800T endpoint teacher (job39191).
   first compute body and fast Direct.
 - [ ] Compute raw CHGNet and cached official hull/S.U.N. on first256; do not run
   candidate model494 refinement before the raw promotion decision.
