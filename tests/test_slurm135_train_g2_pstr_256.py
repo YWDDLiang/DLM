@@ -19,6 +19,8 @@ class Slurm135Test(unittest.TestCase):
         self.assertIn("--periodic-overlap-tail-temperature 0.10", text)
         self.assertIn("--periodic-overlap-tail-mix 0.50", text)
         self.assertIn("--periodic-image-radius 2", text)
+        self.assertIn("readonly TORCHRUN=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/torchrun", text)
+        self.assertIn('"${TORCHRUN}" --standalone', text)
         self.assertNotIn("--periodic-relation-uncertainty-gate", text)
         self.assertNotIn("nvidia-smi", text)
 

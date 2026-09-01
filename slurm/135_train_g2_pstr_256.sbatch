@@ -25,6 +25,7 @@ readonly ADAPTER="${CODE_ROOT}/src/crystal_dlm/periodic_relation_adapter.py"
 readonly RUNTIME="${CODE_ROOT}/src/crystal_dlm/periodic_relation_runtime.py"
 readonly RUN="${ROOT}/runs/g2_pstr256_${SLURM_JOB_ID}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
+readonly TORCHRUN=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/torchrun
 readonly DATA_MANIFEST_SHA=b77a1d0126d19576b2a6e381fe177de792b230cab2eca58e2c5c8097ff23ae06
 readonly DATA_TRAIN_SHA=f61cd177f252ce44ba15669a187a5f6fed22e2d3f50218088124fd0b5b836068
 readonly DATA_VAL_SHA=bea7d8e67476bcdde545f13971cb87ea1e2931954ff8948410dc21ce38e509e1
@@ -73,7 +74,7 @@ sha256sum "${RUN}/scientific_contract.tsv" "${DATA}/manifest.json" "${DATA}/trai
  "${BASE}/adapter_model.safetensors" "${BASE}/periodic_relation_adapter.pt" "${BASE}/periodic_relation_config.json" \
  "${TRAINER}" "${OBJECTIVE}" "${OPS}" "${ADAPTER}" "${RUNTIME}" >"${RUN}/INPUTS.sha256"
 
-torchrun --standalone --master-port "${MASTER_PORT}" --nproc_per_node=2 "${TRAINER}" \
+"${TORCHRUN}" --standalone --master-port "${MASTER_PORT}" --nproc_per_node=2 "${TRAINER}" \
  --model-path "${MODEL}" --checkpoint-path "${BASE}" --periodic-relation-checkpoint "${BASE}" \
  --data-dir "${DATA}" --output-dir "${RUN}/train" --representation dynamic_v1 --dynamic-geometry-only \
  --max-length 382 --answer-token-count 87 --epochs 1 --max-train-steps 256 --batch-size 1 --grad-accum 8 \
