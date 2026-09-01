@@ -19,4 +19,4 @@ export KNOWN1200_RELATION_CONFIG_SHA256="${BTRD_RELATION_CONFIG_SHA256:?pin BTRD
 export KNOWN1200_METHOD_LABEL=BTRD-tau200-step512
 export KNOWN1200_RUN_PREFIX=btrd_known1200_fast
 
-exec "${H1A2_CODE_ROOT:?export deployed code root}/slurm/136_generate_known1200_baseline_fast.sbatch"
+exec bash "${H1A2_CODE_ROOT:?export deployed code root}/slurm/136_generate_known1200_baseline_fast.sbatch"
