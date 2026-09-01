@@ -51,7 +51,8 @@ PYTHONPATH="${CODE_ROOT}/src" "${PYTHON}" "${EXTRACT}" \
  --output-dir "${RUN}/matched"
 
 run_cell(){
- local slot="$1" arm="$2" label="$3" cell="${RUN}/${arm}"
+ local slot="$1" arm="$2" label="$3"
+ local cell="${RUN}/${arm}"
  mkdir "${cell}"; mkdir "${cell}/evaluation"
  cp --reflink=auto "${RUN}/matched/${arm}/generation.jsonl" "${cell}/generation.jsonl"
  cp --reflink=auto "${CACHE}" "${cell}/relax_cache.jsonl"
