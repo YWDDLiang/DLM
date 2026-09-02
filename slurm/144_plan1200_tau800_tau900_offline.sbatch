@@ -61,7 +61,7 @@ run_cell() {
   local slot="$1" steps="$2" split="$3" denominator="$4"
   local source_dir="${ROOT}/runs/plan1200_tau${steps}_corrected_assembly_20260902_v2"
   local cell="${RUN}/tau${steps}/${split}"
-  mkdir -p "${cell}/full_reconstructed"
+  mkdir -p "${cell}"
   cp --reflink=auto "${CACHE}" "${cell}/relax_cache.jsonl"
   env CUDA_VISIBLE_DEVICES="${gpu[${slot}]}" \
     OPENBLAS_NUM_THREADS=8 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
