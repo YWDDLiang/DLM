@@ -22,6 +22,12 @@ from tqdm import tqdm
 from crystal_dlm.dynamic_crystal import arrays_to_torch_payload, write_json  # noqa: E402
 from crystal_dlm.fixed_slot import MASK_TOKEN_ID  # noqa: E402
 from crystal_dlm.llada_generation import generate  # noqa: E402
+from crystal_dlm.spad_generation import revise_spad_anchors  # noqa: E402
+from crystal_dlm.spad_program import (  # noqa: E402
+    anchor_revision_slots,
+    program_from_element_order,
+    spad_predictor_position_groups,
+)
 from crystal_dlm.r5_dynamic_length import (  # noqa: E402
     count_prefill_for_batch,
     exact_body_token_count,
@@ -319,14 +325,20 @@ def main() -> None:
     parser.add_argument("--min-lattice-rad", type=float, default=1e-4)
     parser.add_argument(
         "--generation-schedule",
-        choices=["exact-plan", "joint-coordinates", "default"],
+        choices=["exact-plan", "joint-coordinates", "spad", "default"],
         default="exact-plan",
     )
+    parser.add_argument("--spad-backfill", action="store_true")
+    parser.add_argument("--spad-hide-suffix", action="store_true")
     parser.add_argument("--skip-graph-validation", action="store_true")
     args = parser.parse_args()
 
     if not 1 <= int(args.num_atoms) <= 20:
         raise ValueError("--num-atoms must be in 1..20")
+    if args.spad_backfill and args.generation_schedule != "spad":
+        raise ValueError("--spad-backfill requires --generation-schedule spad")
+    if args.spad_hide_suffix and not args.spad_backfill:
+        raise ValueError("--spad-hide-suffix requires --spad-backfill")
 
     dist_info = init_distributed()
     rank = dist_info["rank"]
@@ -417,15 +429,48 @@ def main() -> None:
             prefill = merge_prefill_maps(*prefill_maps) if prefill_maps else None
             if args.generation_schedule == "exact-plan":
                 schedule = exact_dynamic_generation_schedule(num_atoms)
+                row_schedules = None
+                programs = None
             elif args.generation_schedule == "joint-coordinates":
                 schedule = exact_dynamic_generation_schedule_joint_coordinates(num_atoms)
+                row_schedules = None
+                programs = None
+            elif args.generation_schedule == "spad":
+                schedule = None
+                programs = []
+                row_schedules = []
+                for item in batch:
+                    source = item.get("prompt_record") or {}
+                    order = source.get("species_program")
+                    if not isinstance(order, list) or not order:
+                        raise ValueError(
+                            "SPAD sampling requires species_program in every prompt row"
+                        )
+                    program = program_from_element_order(
+                        item["plan_state"],
+                        [str(value) for value in order],
+                        order_source=str(
+                            source.get("species_program_source")
+                            or "prompt_species_program"
+                        ),
+                    )
+                    programs.append(program)
+                    row_schedules.append(
+                        [list(group) for group in spad_predictor_position_groups(program)]
+                    )
             else:
                 schedule = None
+                row_schedules = None
+                programs = None
             lightweight_constraints = build_dynamic_lightweight_constraints(
                 tokenizer,
                 duplicate_coordinate_mask=args.duplicate_coordinate_mask,
                 lattice_volume_mask=args.lattice_volume_mask,
                 min_lattice_rad=args.min_lattice_rad,
+                canonicalize_periodic_alias=args.generation_schedule == "spad",
+                pbc_min_distance_mask=args.generation_schedule == "spad",
+                pbc_min_distance_A=0.5,
+                pbc_image_radius=2,
             )
             encoded = tokenizer(prompts, add_special_tokens=False, padding=True, return_tensors="pt")
             input_ids = encoded["input_ids"].to(model_device(model))
@@ -444,11 +489,38 @@ def main() -> None:
                 allowed_token_ids_by_generation_pos=allowed,
                 prefill_token_ids_by_generation_pos=prefill,
                 generation_position_groups=schedule,
+                generation_position_groups_by_batch=row_schedules,
                 lightweight_decoding_constraints=lightweight_constraints,
             )
+            revision_logs: List[List[Dict[str, Any]]] = [
+                [] for _ in range(len(batch))
+            ]
+            if args.spad_backfill:
+                if programs is None:
+                    raise RuntimeError("SPAD programs were not built")
+                outputs, revision_logs = revise_spad_anchors(
+                    model,
+                    outputs,
+                    prompt_length=input_ids.shape[1],
+                    gen_length=gen_length,
+                    revision_slots_by_batch=[
+                        list(anchor_revision_slots(program)) for program in programs
+                    ],
+                    attention_mask=attention_mask,
+                    temperature=args.temperature,
+                    cfg_scale=args.cfg_scale,
+                    remasking=args.remasking,
+                    mask_id=MASK_TOKEN_ID,
+                    allowed_token_ids_by_generation_pos=allowed,
+                    atom_count_grammar=None,
+                    lightweight_decoding_constraints=lightweight_constraints,
+                    suffix_visible=not args.spad_hide_suffix,
+                )
             generated_ids = outputs[:, input_ids.shape[1] :]
             decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
-            for item, text in zip(batch, decoded):
+            for item, text, revision_log in zip(
+                batch, decoded, revision_logs, strict=True
+            ):
                 sample_idx = int(item["sample_idx"])
                 raw_record: Dict[str, Any] = {
                     "sample_idx": sample_idx,
@@ -458,6 +530,12 @@ def main() -> None:
                     "plan_state": item["plan_state"],
                     "conditioning_prompt": item["prompt"].rstrip(),
                     "prompt_record_idx": item["prompt_record_idx"],
+                    "generation_schedule": args.generation_schedule,
+                    "spad_backfill": bool(args.spad_backfill),
+                    "spad_suffix_visible": bool(
+                        args.spad_backfill and not args.spad_hide_suffix
+                    ),
+                    "spad_revision_log": revision_log,
                 }
                 if item.get("prompt_record") is not None:
                     source = dict(item["prompt_record"])

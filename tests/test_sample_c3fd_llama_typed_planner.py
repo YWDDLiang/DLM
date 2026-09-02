@@ -140,6 +140,10 @@ class TypedSamplerTest(unittest.TestCase):
         self.assertEqual(record["plan_state"]["elements"], ["Na", "Cl"])
         self.assertEqual(record["plan_state"]["counts"], [1, 1])
         self.assertEqual(record["plan_text"], serialize_native_plan(record["plan_state"]))
+        self.assertEqual(
+            set(record["species_program"]), set(record["plan_state"]["elements"])
+        )
+        self.assertEqual(record["species_program_source"], "canonical_compatibility")
         action_events = [row for row in record["audit"] if row["step"] == "action"]
         self.assertEqual(action_events[-1]["action"], "EOS")
         self.assertEqual(len(action_events), 3)

@@ -52,9 +52,13 @@ from crystal_dlm.ccfd import FormulaToken
 from crystal_dlm.ccfd_v2 import CCFDv2State, SetAtomCount
 from crystal_dlm.composition_pair_prior import ValenceNode
 from crystal_dlm.family_reachability import PaulingBitsetReachability, state_symbols
-from crystal_dlm.fixed_slot import Z_TO_SYMBOL
+from crystal_dlm.fixed_slot import SYMBOL_TO_Z, Z_TO_SYMBOL
 from crystal_dlm.r5_plan_state import anion_framework_from_symbols
 from crystal_dlm.semantic_composition_head import SemanticHeadFlags
+from crystal_dlm.species_program_pointer import (
+    PlanConditionedSpeciesPointer,
+    SpeciesPointerConfig,
+)
 from sample_c3fd_plans import semantic_inputs
 
 
@@ -558,6 +562,23 @@ def sample_single_trajectory(
     plan_text = serialize_native_plan(native)
     plan_state = json.loads(plan_text)
     prompt = build_native_body_prompt(native)
+    program_method = getattr(runtime, "species_program", None)
+    if callable(program_method):
+        program = program_method(
+            terminal_sequence,
+            plan_state=plan_state,
+            selected_soft=selected_soft,
+        )
+    else:
+        program = {
+            "elements": list(plan_state["elements"]),
+            "indices": list(range(len(plan_state["elements"]))),
+            "source": "canonical_compatibility",
+        }
+    if sorted(program["elements"], key=lambda value: SYMBOL_TO_Z[value]) != list(
+        plan_state["elements"]
+    ):
+        raise ValueError("species program changed the certified Plan element set")
     return {
         "schema": SCHEMA,
         "sample_idx": int(sample_idx),
@@ -569,6 +590,9 @@ def sample_single_trajectory(
         "plan_state": plan_state,
         "prompt": prompt,
         "prompt_schema": C3FD_NATIVE_PLAN_VERSION,
+        "species_program": list(program["elements"]),
+        "species_program_indices": [int(value) for value in program["indices"]],
+        "species_program_source": str(program["source"]),
         "semantic_trace": trace,
         "audit": audit,
         "certificate": dict(certificate),
@@ -609,6 +633,9 @@ def sample_requests(
                         "plan_state",
                         "prompt",
                         "prompt_schema",
+                        "species_program",
+                        "species_program_indices",
+                        "species_program_source",
                     )
                 }
             )
@@ -652,6 +679,13 @@ def sample_requests(
         "rerank": False,
         "best_of_n": False,
         "failures": dict(failures.most_common()),
+        "species_program_sources": dict(
+            Counter(
+                str(row.get("species_program_source"))
+                for row in records
+                if row.get("parsed")
+            )
+        ),
         "elapsed_sec": time.perf_counter() - started,
     }
     return records, plans, metrics
@@ -672,6 +706,7 @@ class ProductionRuntime:
         stability_goal_id: int,
         device: torch.device,
         max_species: int,
+        species_pointer: PlanConditionedSpeciesPointer | None = None,
     ) -> None:
         self.c3fd = c3fd
         self.c3fd_context = c3fd_context
@@ -687,6 +722,7 @@ class ProductionRuntime:
         self.node_to_id = {node: index for index, node in enumerate(self.nodes)}
         self.max_count = int(c3fd.head.max_count)
         self.max_species = int(max_species)
+        self.species_pointer = species_pointer
         self.eos_action_index = int(c3fd.head.eos_action_index)
         self.reachability = reachability
         self.llama = llama
@@ -763,7 +799,7 @@ class ProductionRuntime:
         )[0]
         return joint, SimpleNamespace(output=output, position=position)
 
-    def residual_logits(self, sequence: TypedSequence) -> TypedResidualLogits:
+    def _sequence_hidden(self, sequence: TypedSequence) -> Tensor:
         embeds = self.typed.typed_inputs_embeds(
             stability_goal_ids=sequence.stability_goal_ids,
             proposal_state_ids=sequence.proposal_state_ids,
@@ -775,6 +811,10 @@ class ProductionRuntime:
         hidden = recompute_llama_hidden(
             self.llama, embeds.to(device=self.device, dtype=llama_dtype)
         )
+        return hidden
+
+    def residual_logits(self, sequence: TypedSequence) -> TypedResidualLogits:
+        hidden = self._sequence_hidden(sequence)
         typed_dtype = next(self.typed.parameters()).dtype
         return self.typed(
             hidden.to(dtype=typed_dtype),
@@ -782,6 +822,63 @@ class ProductionRuntime:
                 [sequence.length - 1], dtype=torch.long, device=self.device
             ),
         )
+
+    def species_program(
+        self,
+        sequence: TypedSequence,
+        *,
+        plan_state: Mapping[str, Any],
+        selected_soft: Mapping[str, str],
+    ) -> dict[str, Any]:
+        elements = [str(value) for value in plan_state["elements"]]
+        counts = [int(value) for value in plan_state["counts"]]
+        if self.species_pointer is None:
+            return {
+                "elements": elements,
+                "indices": list(range(len(elements))),
+                "source": "canonical_control",
+            }
+        hidden = self._sequence_hidden(sequence)
+        terminal = hidden[:, sequence.length - 1, :].float()
+        atomic = torch.tensor(
+            [[int(SYMBOL_TO_Z[value]) for value in elements]],
+            dtype=torch.long,
+            device=self.device,
+        )
+        element_counts = torch.tensor(
+            [counts], dtype=torch.long, device=self.device
+        )
+        valid = torch.ones_like(atomic, dtype=torch.bool)
+        soft_ids = torch.tensor(
+            [
+                [
+                    list(self.soft_values[field]).index(str(selected_soft[field]))
+                    for field in (
+                        "lattice_system",
+                        "spacegroup_bucket",
+                        "volume_per_atom_bin",
+                    )
+                ]
+            ],
+            dtype=torch.long,
+            device=self.device,
+        )
+        with torch.inference_mode():
+            order = self.species_pointer.decode(
+                terminal,
+                atomic,
+                element_counts,
+                valid,
+                soft_ids,
+            )[0, : len(elements)].tolist()
+        indices = [int(value) for value in order]
+        if sorted(indices) != list(range(len(elements))):
+            raise RuntimeError("species pointer did not return an exact permutation")
+        return {
+            "elements": [elements[index] for index in indices],
+            "indices": indices,
+            "source": "planner_llama_pointer",
+        }
 
     def soft_logits(self, c3fd_context: Any) -> Mapping[str, Tensor]:
         if c3fd_context is None:
@@ -846,6 +943,20 @@ def load_production_runtime(args: argparse.Namespace) -> ProductionRuntime:
     typed.load_state_dict(state_payload["state_dict"], strict=True)
     typed.to(device).eval()
 
+    species_pointer = None
+    if args.species_pointer_state is not None:
+        pointer_payload = torch.load(args.species_pointer_state, map_location="cpu")
+        if pointer_payload.get("schema") != "spad_species_pointer_state_v1":
+            raise RuntimeError("SPAD species-pointer state schema changed")
+        pointer_config = SpeciesPointerConfig(**pointer_payload["config"])
+        if int(pointer_config.llama_hidden_size) != int(typed_config.llama_hidden_size):
+            raise RuntimeError("species pointer and Planner Llama hidden sizes differ")
+        species_pointer = PlanConditionedSpeciesPointer(pointer_config)
+        species_pointer.load_state_dict(pointer_payload["state_dict"], strict=True)
+        species_pointer.to(device).eval()
+        for parameter in species_pointer.parameters():
+            parameter.requires_grad_(False)
+
     from transformers import AutoModelForCausalLM
     from peft import PeftModel
 
@@ -890,6 +1001,7 @@ def load_production_runtime(args: argparse.Namespace) -> ProductionRuntime:
         stability_goal_id=int(goal_ids[STABILITY_GOAL]),
         device=device,
         max_species=int(args.max_species),
+        species_pointer=species_pointer,
     )
 
 
@@ -905,6 +1017,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--data-dir", type=Path, required=True)
     parser.add_argument("--llama-model", type=Path, required=True)
     parser.add_argument("--fused-planner-final", type=Path, required=True)
+    parser.add_argument("--species-pointer-state", type=Path)
     parser.add_argument("--source-ledger", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--expected-c3fd-sha256", required=True)
