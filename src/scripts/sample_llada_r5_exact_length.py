@@ -615,6 +615,8 @@ def main() -> None:
                         "note": "Merged outputs were already written by rank 0.",
                     },
                 )
+    if is_main:
+        (args.output_dir / "_SUCCESS").touch()
 
 
 if __name__ == "__main__":
