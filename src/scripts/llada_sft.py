@@ -445,6 +445,9 @@ class JsonlSftDataset(Dataset):
             item["source_input_ids"] = torch.tensor(source_ids, dtype=torch.long)
         forced_positions = row.get("forced_mask_positions")
         loss_positions = row.get("loss_positions")
+        rollout_schema = str(row.get("schema") or "") == "rollout_matched_transition_v1"
+        if rollout_schema and (forced_positions is None or loss_positions is None):
+            raise ValueError("rollout transition is missing mandatory mask metadata")
         if forced_positions is not None or loss_positions is not None:
             if source_answer is None:
                 raise ValueError("forced rollout masks require source_answer")
@@ -1879,38 +1882,81 @@ def apply_forced_rollout_masks(
     return processed
 
 
+def forced_rollout_process(
+    source_input_ids: torch.Tensor,
+    attention_mask: torch.Tensor,
+    prompt_lengths: torch.Tensor,
+    forced_mask_indices: torch.Tensor,
+    forced_loss_indices: torch.Tensor,
+    *,
+    mask_id: int = MASK_TOKEN_ID,
+) -> Dict[str, torch.Tensor]:
+    if not (
+        source_input_ids.shape
+        == attention_mask.shape
+        == forced_mask_indices.shape
+        == forced_loss_indices.shape
+    ):
+        raise ValueError("forced rollout batch tensor shapes differ")
+    positions = torch.arange(
+        source_input_ids.shape[1], device=source_input_ids.device
+    ).unsqueeze(0)
+    answer_mask = (positions >= prompt_lengths.unsqueeze(1)) & attention_mask.bool()
+    if bool((forced_mask_indices & ~answer_mask).any().item()):
+        raise ValueError("forced rollout mask escaped the answer geometry")
+    processed = {
+        "noisy": source_input_ids,
+        "masked_indices": forced_mask_indices,
+        "loss_indices": forced_loss_indices,
+        "p_mask": torch.ones_like(source_input_ids, dtype=torch.float32),
+        "answer_mask": answer_mask,
+        "candidate_mask": forced_loss_indices,
+    }
+    return apply_forced_rollout_masks(
+        processed,
+        source_input_ids,
+        forced_mask_indices,
+        forced_loss_indices,
+        mask_id=mask_id,
+    )
+
+
 def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, Any]) -> Dict[str, Any]:
     input_ids = batch["input_ids"]
     attention_mask = batch["attention_mask"]
     prompt_lengths = batch["prompt_lengths"]
-    processed = forward_process(
-        input_ids,
-        attention_mask,
-        prompt_lengths,
-        mask_policy_ids=batch.get("mask_policy_ids"),
-        empty_token_id=int(loss_config.get("empty_token_id", -1)),
-        prefill_slot_tokens=bool(loss_config.get("train_prefill_slot_tokens", False)),
-        fixed_slot_body_offset=int(loss_config.get("fixed_slot_body_offset", 0)),
-        dynamic_geometry_only=bool(loss_config.get("dynamic_geometry_only", False)),
-    )
     source_input_ids = batch.get("source_input_ids")
-    if source_input_ids is not None:
-        processed = apply_paired_source_tokens(
-            processed,
-            source_input_ids,
-            input_ids,
-            prompt_lengths,
-        )
     forced_mask_indices = batch.get("forced_mask_indices")
     if forced_mask_indices is not None:
         if source_input_ids is None:
             raise ValueError("forced rollout masks require paired source inputs")
-        processed = apply_forced_rollout_masks(
-            processed,
+        processed = forced_rollout_process(
             source_input_ids,
+            attention_mask,
+            prompt_lengths,
             forced_mask_indices,
             batch["forced_loss_indices"],
         )
+    else:
+        processed = forward_process(
+            input_ids,
+            attention_mask,
+            prompt_lengths,
+            mask_policy_ids=batch.get("mask_policy_ids"),
+            empty_token_id=int(loss_config.get("empty_token_id", -1)),
+            prefill_slot_tokens=bool(
+                loss_config.get("train_prefill_slot_tokens", False)
+            ),
+            fixed_slot_body_offset=int(loss_config.get("fixed_slot_body_offset", 0)),
+            dynamic_geometry_only=bool(loss_config.get("dynamic_geometry_only", False)),
+        )
+        if source_input_ids is not None:
+            processed = apply_paired_source_tokens(
+                processed,
+                source_input_ids,
+                input_ids,
+                prompt_lengths,
+            )
     context_model = model.module if hasattr(model, "module") else model
     if hasattr(context_model, "set_geometry_context"):
         context_model.set_geometry_context(prompt_lengths, batch["num_atoms"])
@@ -2634,6 +2680,11 @@ def main() -> None:
         action="store_true",
         help="Require every train/validation JSONL row to contain source_answer.",
     )
+    parser.add_argument(
+        "--require-rollout-masks",
+        action="store_true",
+        help="Require forced_mask_positions and loss_positions on every JSONL row.",
+    )
     parser.add_argument("--periodic-metric-weight", type=float, default=0.0)
     parser.add_argument("--periodic-pair-rdf-weight", type=float, default=0.0)
     parser.add_argument("--periodic-overlap-weight", type=float, default=0.0)
@@ -2775,7 +2826,7 @@ def main() -> None:
     if args.periodic_relation_rank > 0:
         if args.representation != "dynamic_v1" or not args.dynamic_geometry_only:
             parser.error("periodic relation adapter requires dynamic_v1 geometry-only training")
-        if not any(weight > 0 for weight in periodic_weights):
+        if not any(weight > 0 for weight in periodic_weights) and not args.require_rollout_masks:
             parser.error("periodic relation adapter requires the registered G1 geometry losses")
     if args.periodic_relation_uncertainty_gate and args.periodic_relation_rank <= 0:
         parser.error("periodic relation uncertainty gate requires a positive rank")
@@ -3039,11 +3090,36 @@ def main() -> None:
         for row in getattr(val_ds, "rows", [])
         if isinstance(row, dict)
     )
+    rollout_train_rows = sum(
+        int(
+            str(row.get("schema") or "") == "rollout_matched_transition_v1"
+            and "forced_mask_positions" in row
+            and "loss_positions" in row
+        )
+        for row in getattr(train_ds, "rows", [])
+        if isinstance(row, dict)
+    )
+    rollout_val_rows = sum(
+        int(
+            str(row.get("schema") or "") == "rollout_matched_transition_v1"
+            and "forced_mask_positions" in row
+            and "loss_positions" in row
+        )
+        for row in getattr(val_ds, "rows", [])
+        if isinstance(row, dict)
+    )
     if args.require_paired_source:
         if paired_train_rows != len(train_ds) or paired_val_rows != len(val_ds):
             raise ValueError(
                 "require-paired-source is set but source_answer coverage is incomplete"
             )
+    if args.require_rollout_masks:
+        if rollout_train_rows != len(train_ds) or rollout_val_rows != len(val_ds):
+            raise ValueError(
+                "require-rollout-masks is set but rollout mask coverage is incomplete"
+            )
+        if not args.require_paired_source:
+            raise ValueError("rollout masks require require-paired-source")
     if paired_train_rows > 0 and args.counterfactual_grounding_weight > 0:
         raise ValueError("paired source training is incompatible with counterfactual grounding")
     if paired_train_rows > 0 and args.position_diagnostics_steps > 0:
@@ -3137,6 +3213,11 @@ def main() -> None:
                             "required": bool(args.require_paired_source),
                             "train_rows": paired_train_rows,
                             "validation_rows": paired_val_rows,
+                        },
+                        "rollout_masks": {
+                            "required": bool(args.require_rollout_masks),
+                            "train_rows": rollout_train_rows,
+                            "validation_rows": rollout_val_rows,
                         },
                         "weighted_sampling": {
                             "enabled": bool(args.weighted_sampling),

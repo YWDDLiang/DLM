@@ -140,6 +140,11 @@ def main() -> None:
         )
         if len(snapshots) != 4:
             raise RuntimeError("rollout capture did not return four states")
+        observed_groups = [int(snapshot["group_index"]) for snapshot in snapshots]
+        if observed_groups != [2, 3, 4, 5]:
+            raise RuntimeError(
+                f"rollout stages changed: expected [2,3,4,5], got {observed_groups}"
+            )
         prompt_length = int(prompt.shape[1])
         for stage_index, snapshot in enumerate(snapshots):
             suffix = snapshot["tokens"][0, prompt_length:].detach().cpu().tolist()
@@ -153,6 +158,20 @@ def main() -> None:
             loss_positions = sorted(set(forced_mask) & set(active_group))
             if not forced_mask or not loss_positions:
                 raise RuntimeError("captured rollout state lacks active masked positions")
+            prior_positions = {
+                int(position)
+                for group in schedule[:group_index]
+                for position in group
+            }
+            future_positions = {
+                int(position)
+                for group in schedule[group_index + 1 :]
+                for position in group
+            }
+            if set(forced_mask) & prior_positions:
+                raise RuntimeError("rollout capture remasked a previously committed group")
+            if not future_positions <= set(forced_mask):
+                raise RuntimeError("rollout capture exposed a future schedule group")
             source_ids = [
                 int(target_ids[position])
                 if int(token_id) == int(MASK_TOKEN_ID)
@@ -161,6 +180,14 @@ def main() -> None:
             ]
             source_answer = ids_to_answer(tokenizer, source_ids)
             validate_answer_matches_plan(plan, source_answer)
+            committed_error_positions = [
+                position
+                for position, (source_id, target_id) in enumerate(
+                    zip(source_ids, target_ids, strict=True)
+                )
+                if position not in set(forced_mask) and int(source_id) != int(target_id)
+            ]
+            group_name = {2: "lattice", 3: "x", 4: "y", 5: "z"}[group_index]
             transitions.append(
                 {
                     "schema": "rollout_matched_transition_v1",
@@ -173,9 +200,13 @@ def main() -> None:
                     "sample_idx": ordinal,
                     "source_row_idx": int(row["source_row_idx"]),
                     "stage_index": stage_index,
+                    "active_group": group_name,
                     "schedule_group_index": group_index,
+                    "step_in_group": int(snapshot["step_in_group"]),
                     "forced_mask_positions": forced_mask,
                     "loss_positions": loss_positions,
+                    "committed_error_count": len(committed_error_positions),
+                    "committed_error_positions": committed_error_positions,
                     "visible_free_geometry_fraction": float(
                         snapshot["visible_free_geometry_fraction"]
                     ),

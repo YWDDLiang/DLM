@@ -175,6 +175,22 @@ class SGTCLLaDAMaskTest(unittest.TestCase):
         self.assertTrue(torch.equal(observed["candidate_mask"], supervised))
         self.assertTrue(torch.equal(observed["p_mask"], torch.ones_like(observed["p_mask"])))
 
+    def test_forced_rollout_process_bypasses_random_corruption(self):
+        module = self.load_trainer()
+        source = torch.tensor([[10, 11, 30, 31, 32]], dtype=torch.long)
+        forced = torch.tensor([[False, False, True, True, True]])
+        supervised = torch.tensor([[False, False, True, False, False]])
+        observed = module.forced_rollout_process(
+            source,
+            torch.ones_like(source),
+            torch.tensor([2]),
+            forced,
+            supervised,
+            mask_id=999,
+        )
+        self.assertEqual(observed["noisy"].tolist(), [[10, 11, 999, 999, 999]])
+        self.assertEqual(observed["answer_mask"].tolist(), [[False, False, True, True, True]])
+
 
 if __name__ == "__main__":
     unittest.main()
