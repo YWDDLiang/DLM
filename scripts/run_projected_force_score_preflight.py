@@ -19,11 +19,6 @@ from crystal_dlm.feasible_force_teacher import (
     periodic_pair_summary,
     project_periodic_feasible,
 )
-from crystal_dlm.dynamic_crystal import (
-    arrays_to_structure,
-    parse_dynamic_answer,
-)
-
 from run_force_score_preflight import (
     describe,
     minimum_distance,
@@ -38,9 +33,9 @@ from run_force_score_preflight import (
 FORCE_TRUST_MIN_DISTANCE_A = 0.35
 MAX_QUANTIZATION_PROJECTIONS = 4
 IMAGE_RADIUS = 2
-MARGIN_SCALE = 0.55
-MARGIN_FLOOR_A = 0.60
-MARGIN_CEILING_A = 1.40
+MARGIN_SCALE = 0.0
+MARGIN_FLOOR_A = 0.50
+MARGIN_CEILING_A = 0.50
 
 
 def atomic_numbers(structure: Structure) -> list[int]:
@@ -204,7 +199,7 @@ def main() -> None:
     ):
         initial_minimum, initial_violations = pair_summary(structure)
         result: dict[str, Any] = {
-            "schema": "projected_force_score_teacher_row_v1",
+            "schema": "projected_force_score_teacher_row_v2",
             "row_index": index,
             "base_index": int(source["base_index"]),
             "perturbation": str(source["perturbation"]),
@@ -301,9 +296,10 @@ def main() -> None:
             selected = barrier
         elif result["initial_valid"]:
             mode = "identity"
-            selected = arrays_to_structure(
-                parse_dynamic_answer(str(rows[index]["dynamic_answer"]), strict=True)
-            )
+            # The continuous source can cross the 0.5 A Direct boundary after
+            # exact token quantization.  Reuse the feasibility-checked no-force
+            # candidate rather than blindly re-emitting the source tokens.
+            selected = barrier
         else:
             mode = "unresolved"
             selected = barrier
@@ -359,7 +355,7 @@ def main() -> None:
         < row.get("initial_margin_violations", 0)
     ]
     report = {
-        "schema": "projected_force_score_teacher_preflight_v1",
+        "schema": "projected_force_score_teacher_preflight_v2",
         "status": "complete",
         "rows_requested": len(rows),
         "rows_complete": overall["complete"],
@@ -367,9 +363,8 @@ def main() -> None:
         "constants": {
             "force_trust_minimum_distance_A": FORCE_TRUST_MIN_DISTANCE_A,
             "image_radius": IMAGE_RADIUS,
-            "species_margin_scale": MARGIN_SCALE,
-            "species_margin_floor_A": MARGIN_FLOOR_A,
-            "species_margin_ceiling_A": MARGIN_CEILING_A,
+            "hard_margin_scale": MARGIN_SCALE,
+            "hard_minimum_distance_A": MARGIN_FLOOR_A,
             "maximum_quantization_projection_rounds": MAX_QUANTIZATION_PROJECTIONS,
         },
         "overall": overall,

@@ -45,7 +45,7 @@ from valid to invalid despite their energy decrease. Pure Force-Score therefore
 does not support direct student or full-data training: it can exchange validity
 for a lower local energy.
 
-## Phase A2 — feasibility-projected teacher preflight
+## Phase A2 — species-margin-projected teacher preflight (complete)
 
 Reuse the exact same 512 rows, CHGNet teacher and tokenization. Do not enlarge
 or resample the preflight set.
@@ -60,14 +60,38 @@ or resample the preflight set.
 - report energy and validity jointly, never counting invalid lower-energy states
   as teacher successes.
 
-Proceed to a student only if teacher coverage remains complete, near-threshold
-valid→invalid is at most 1/64, overall valid→invalid is at most 1%, collision
-barrier decreases on at least 90%, and force-active quantized candidates lower
-energy on at least 70% of their rows.
+Job 39224 restored Direct validity for all 256 initially invalid collision rows
+and caused only one valid→invalid transition. It nevertheless failed as an
+energy-aware teacher: the force remained active on only 28.2% of non-severe
+rows, only 20.3% of projected force candidates lowered energy, and 120 rows
+were Direct-valid but unresolved against the stricter species margin. Treating
+the 0.60–1.40 Å species prior as a hard feasible set over-constrained the
+teacher and raised collision energies by roughly 1.2–2.3 eV/atom.
+
+## Phase A3 — hard-validity / soft-species separation
+
+Reuse the same 512 rows again. The deterministic hard projection now represents
+only parser/Direct feasibility: exact triclinic PBC minimum distance at least
+0.50 Å, with the existing 0.001 Å numerical projection tolerance and an exact
+post-quantization validity check.
+The existing species-aware 0.60–1.40 Å relation remains a differentiable G2
+training prior and is not used to reject or overwrite a force target.
+
+- severe collisions receive hard-barrier-only targets;
+- locally credible states receive force followed by the 0.55 Å projection;
+- valid states fall back to identity when the quantized projected force does
+  not lower energy;
+- no inference-time projection, repair, reranking or energy calculation is
+  introduced.
+
+Proceed to a student only if teacher coverage is complete, near-threshold
+valid→invalid is at most 1/64, all four collision severities recover Direct
+validity on at least 90%, force remains active on at least 50% of non-severe
+rows, and at least 70% of force-active quantized targets lower energy.
 
 ## Phase B — micro-student preflight
 
-Only after Phase A2 succeeds:
+Only after Phase A3 succeeds:
 
 - split by base structure: 48 structures / 384 rows train and 16 structures /
   128 rows holdout;
