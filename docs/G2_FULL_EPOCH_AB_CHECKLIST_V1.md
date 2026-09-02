@@ -88,14 +88,13 @@ Engineering priors: A directional raw-Direct improvement 60–75%; A ≥5 pp
 
 ## Frozen next stage
 
-- [x] Register
-  [`G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md`](G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md).
 - [x] After A/B is terminal, freeze one promoted G2 initialization according
   to the registered A/B rule; do not choose a training seed or intermediate
   checkpoint.
 - [x] Cancel the full MP20-train 27,136-row model494-tau800 corpus before any
   job was submitted; its estimated `~106 A800-hours` is outside the revised
-  compute budget. Preserve the cancelled plan as a negative design record.
+  compute budget. Its disposition is summarized in
+  [`FAILED_METHODS.md`](FAILED_METHODS.md).
 - [x] Close further method development by user decision. CVaR, local-field
   distillation, K=4 preference training, and every other next-method GPU run
   remain unlaunched. The next stage is repository consolidation and paper

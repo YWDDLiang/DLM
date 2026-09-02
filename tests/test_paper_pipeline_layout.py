@@ -11,7 +11,6 @@ class PaperPipelineLayoutTest(unittest.TestCase):
             "src/crystal_dlm/paper_pipeline/planner.py",
             "src/crystal_dlm/paper_pipeline/representation.py",
             "src/crystal_dlm/paper_pipeline/periodic_residual.py",
-            "src/crystal_dlm/paper_pipeline/basin_transport.py",
             "src/crystal_dlm/paper_pipeline/refinement.py",
             "src/crystal_dlm/paper_pipeline/evaluation.py",
             "docs/paper/README.md",
@@ -21,7 +20,7 @@ class PaperPipelineLayoutTest(unittest.TestCase):
             path = ROOT / relative
             self.assertTrue(path.is_file(), relative)
             self.assertGreater(path.stat().st_size, 0)
-        for relative in expected[:6]:
+        for relative in expected[:5]:
             self.assertLess(
                 len((ROOT / relative).read_text(encoding="utf-8").splitlines()),
                 100,

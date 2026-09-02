@@ -142,15 +142,6 @@ m_{ij}=f_m(h_i,h_j,e_{ij},g),\qquad
 training. The updated logits `q1=q0+Delta q` participate in the next denoising
 decision. No relation projection is applied after a structure has been sampled.
 
-### 5.4 Stability transport through the same residual
-
-BTRD, when promoted by its fixed stability gate, adds no new inference module.
-It uses model494 tau200 train-only teacher geometries to supervise normalized
-metric and minimum-image coordinate transport through the existing G2
-residual. Backbone and Compact-V2 LoRA remain frozen. Thus the same
-scientific-salience path first represents periodic relations and then learns
-which local direction enters a better structural basin.
-
 ## 6. Terminal diffusion realization
 
 The raw exact-composition structure enters frozen model494:

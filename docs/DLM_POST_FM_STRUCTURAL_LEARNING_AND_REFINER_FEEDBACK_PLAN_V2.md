@@ -7,8 +7,6 @@ Execution window: through 2026-09-02 23:30 Asia/Shanghai
 Status: authorized to begin only after the fixed F/M prospective run is
 terminal and fully disclosed
 
-Supersedes `DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1.md`.
-
 ## Method decision
 
 The current paper remains DLM-centered. C3FD is the composition-correctness

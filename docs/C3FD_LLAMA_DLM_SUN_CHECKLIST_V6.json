@@ -95,7 +95,7 @@
   "post_fm": {
     "status": "active_after_fm_terminal",
     "method_doc": "DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
-    "historical_model494_geometry_distillation_executed": false,
+    "model494_endpoint_imitation_status": "executed_later_and_retired; see FAILED_METHODS.md",
     "planner_retention_metric": "final_generated_body_composition_validity",
     "planner_retention_minimum": 0.95,
     "SUN_required_for_planner_retention": false,

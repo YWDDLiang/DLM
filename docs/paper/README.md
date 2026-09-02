@@ -1,11 +1,8 @@
 # Paper-method index
 
-Active experiment checklist:
-[`BTRD_STABILITY_CHECKLIST_V2.md`](../BTRD_STABILITY_CHECKLIST_V2.md).
-
 Start here. The paper-facing surface is intentionally small; historical code
-and experiments remain available but are not required to understand the final
-method.
+and experiments are not required to understand the final method. Retired
+negative methods are summarized once in [`FAILED_METHODS.md`](../FAILED_METHODS.md).
 
 ## Method in one line
 
@@ -34,7 +31,6 @@ periodic-relational residual denoising → frozen terminal diffusion.**
 | Science-Constrained LLM Planner | `crystal_dlm.paper_pipeline.planner` | `c3fd_llama_*`, `c3fd_native_plan.py` |
 | Exact crystal language | `crystal_dlm.paper_pipeline.representation` | `dynamic_crystal.py` |
 | Periodic-relational denoising | `crystal_dlm.paper_pipeline.periodic_residual` | `periodic_relation_*`, `periodic_geometry_*` |
-| Basin transport | `crystal_dlm.paper_pipeline.basin_transport` | `basin_transport.py`, `llada_sft.py` |
 | Terminal diffusion | `crystal_dlm.paper_pipeline.refinement` | `refine_dlm_with_crysllmgen.py` |
 | Metrics | `crystal_dlm.paper_pipeline.evaluation` | `eval_runtime/*`, finalizers |
 

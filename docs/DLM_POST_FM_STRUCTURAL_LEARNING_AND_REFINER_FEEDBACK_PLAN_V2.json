@@ -3,7 +3,6 @@
   "date": "2026-08-31",
   "deadline_asia_shanghai": "2026-09-02T23:30:00+08:00",
   "status": "AUTHORIZED_AFTER_FM_TERMINAL",
-  "supersedes": "DLM_POST_FM_REFINER_DISTILLATION_GEOMETRY_PLAN_V1",
   "planner_retention": {
     "metric": "final_generated_body_composition_validity_on_requested_denominator",
     "minimum": 0.95,

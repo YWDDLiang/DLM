@@ -163,8 +163,8 @@ Compact-V2 seed82017/stream17 canary was body `248/256`, composition-valid
 absolute Direct is `+10.94 pp`; cohorts differ, so this is not reported as a
 causal matched effect. No model494, CHGNet, or official query was run.
 
-- [x] Audit whether model494-relaxed geometry was previously distilled into the
-  DLM: it was proposed but never executed. SGTC and D3PO are different methods.
+- [x] The later endpoint-imitation attempts were executed and retired after
+  failing to improve stability; see [`FAILED_METHODS.md`](FAILED_METHODS.md).
 - [x] Audit current decoder constraints: schema/exact chemistry, nondegenerate
   lattice, and exact/PBC duplicate rejection already exist.
 - [x] Retain each F/M route whose final requested-denominator composition

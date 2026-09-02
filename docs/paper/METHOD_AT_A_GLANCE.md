@@ -62,8 +62,6 @@ C3FD reachable support × Llama learned prior
 - The Plan fixes exact chemistry and conditions every geometric prediction.
 - `7+4N` makes variable atom count an exact language contract.
 - G2 prioritizes periodic relations inside denoising.
-- BTRD teaches that same residual a low-cost model494 basin-transport direction
-  when and only when its stability gate passes.
 
 ## What each result measures
 

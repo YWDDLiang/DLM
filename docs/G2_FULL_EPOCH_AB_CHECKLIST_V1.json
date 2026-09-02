@@ -1,6 +1,6 @@
 {
   "schema": "g2_full_epoch_ab_checklist_v1",
-  "status": "READY_FOR_PARALLEL_AB_TRAINING",
+  "status": "TERMINAL",
   "claim_scope": "post_outcome_matched_development",
   "methods": {
     "A": "G2_full_epoch_shared_125_image_PBC_species_margin",
@@ -44,9 +44,7 @@
     "planner_resampling": false
   },
   "next_stage": {
-    "document": "G2_MODEL494_BASIN_DISTILLATION_PLAN_V1.md",
-    "status": "frozen_waiting_for_AB_terminal",
-    "method": "full27136_residual_only1696_then_joint3392",
-    "planner_or_c3fd_training": false
+    "status": "repository_consolidation",
+    "retired_methods_record": "FAILED_METHODS.md"
   }
 }
