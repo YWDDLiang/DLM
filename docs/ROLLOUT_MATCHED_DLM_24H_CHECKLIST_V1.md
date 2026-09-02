@@ -147,8 +147,14 @@ CHGNet-selected or hull-selected structures never become labels.
 - [x] Monitor step1696 without selecting it; validation loss is `2.226879` and
   the frozen stage2 learning-rate restart is active.
 - [x] Verify all subsequent records through the sole step3392 endpoint.
-- [ ] Job39321 trains the single canonical G2-PBC-R full epoch from canonical
-  step3392 on two A800; no second method or uncertainty-gate arm is allowed.
+- [x] Job39321 trained the single canonical G2-PBC-R full epoch in `00:54:14`
+  on two A800 and produced the sole step1696 checkpoint. Relation step0 delta
+  is exactly zero; rank64/image-radius2/uncertainty-off config and all finite
+  geometry/relation diagnostics passed. Validation loss is `2.475367`.
+- [ ] Job39335 reuses the frozen prospective 256 Plans and old G2-PBC-R raw
+  control, generating only canonical DLM and canonical DLM+G2 with identical
+  stream17 noise before fast Direct. It does not resample the Planner or run
+  model494/CHGNet.
 - [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
   `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
   exactly-zero output initialization, strict triclinic 125-image minimum image,
