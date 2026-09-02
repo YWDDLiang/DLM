@@ -68,6 +68,8 @@ Read in this order:
 5. [Execution checklist](04_EXECUTION_CHECKLIST.md)
 6. [Decision log](05_DECISION_LOG.md)
 
-The ten-minute heartbeat may inspect status and maintain this package, but it
-must remain quiet and must not submit training, generation, evaluation or
-external-query work until the user explicitly approves execution.
+The active ten-minute heartbeat is
+`sscd-a-b-approval-and-execution`. It may inspect status and maintain this
+package, but it must remain quiet and must not submit training, generation,
+evaluation or external-query work until the user explicitly approves
+execution.

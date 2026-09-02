@@ -12,6 +12,8 @@ Status: **HOLD — no training or remote execution before explicit user approval
 - [x] Draft unified, Track-A, Track-B and cross-representation documents.
 - [x] Complete sequential skeptic, constraint, reader and arbiter reviews.
 - [x] Incorporate every accepted objection into the decision log.
+- [x] Create active ten-minute heartbeat
+  `sscd-a-b-approval-and-execution` with this approval HOLD.
 - [ ] Obtain explicit user approval to execute.
 
 ## Phase 1 — shared interface implementation
