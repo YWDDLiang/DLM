@@ -121,11 +121,12 @@ and is a compatibility alias, not a missing token.
 Track B is the priority route.
 
 - [x] Reuse frozen C3FD–Llama Planner and current Compact-V2 DLM.
-- [ ] Use full MP20 teacher Compact-Plan prompts for DLM SFT; predicted Plans
+- [x] Use full MP20 teacher Compact-Plan prompts for DLM SFT; predicted Plans
   remain inference inputs under the identical schema.
-- [ ] Add `species_program` and two mask classes:
+- [x] Add `species_program` and two mask classes:
   program-matched predictor state and complete-state anchor-remask state.
-- [ ] Retain ordinary random-mask examples so general denoising is not erased.
+- [x] Retain deterministic random-geometry mask examples so general denoising
+  is not erased.
 - [x] Start with decoder-only cells before training.
 - [ ] Train one BS LoRA from the retained Compact-V2 endpoint:
   r8/alpha32/dropout0.05, LR 5e-6, effective source batch16, exactly 1,696
@@ -226,3 +227,9 @@ Only after the SPAD result is frozen:
   0.125/0.09375/0.15625.
 - job 39514: active 4-A800 raw run, BC/BP/BR × streams 17/18 with common
   periodic support and Direct; no model494 or CHGNet yet.
+- job 39515: full schedule-matched SFT data complete in four seconds. It keeps
+  all MP20 27,136/9,047 train/val rows, balanced predictor/correction/random
+  mask classes, 24,558 learned-contact programs plus 2,578 disclosed canonical
+  fallbacks in train, and reads no energy/refiner outcome.
+- training wrapper 164 is tested and frozen but will not be submitted until
+  decoder-only job 39514 establishes the raw direction.
