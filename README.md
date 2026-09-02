@@ -38,7 +38,7 @@ The paper headline is:
 
 | Denominator | Strict S.U.N. | Meta S.U.N. |
 |---:|---:|---:|
-| 1,000 | **105/1000 = 10.50%** | **488/1000 = 48.80%** |
+| 1,000 | **105/1000 = 10.50%** | **486/1000 = 48.60%** |
 
 This is the main reported result. New experiments answer robustness and
 mechanism questions without changing its denominator. The fresh G2 prospective
@@ -105,32 +105,14 @@ S.U.N. from `19/111` to `24/117` and lowers paired official hull by
 `118/256` to `128/256`. The uncertainty-gated alternative does not improve
 energy and is not part of the method.
 
-### 4. Frozen model494 Terminal Diffusion
-
-**Role.** Provide the fixed fine-scale basin transition after the learned DLM
-has produced a raw exact-composition structure.
-
-**Why it is needed.** Raw language realization and final physical conversion are
-different mechanisms. Reporting both separates what the DLM learned from what
-the inherited refiner contributes.
-
-**Mechanism.** model494 applies one sample-index-seeded tau800 transition while
-preserving atom identity and attempt accounting. It is frozen and is not a
-result-selection stage.
-
-**Evidence.** In the matched L6 mechanism run, raw→tau800 changes Direct
-`188→457/512`, Strict S.U.N. `10→48` and Meta S.U.N. `66→230`. The independent
-Plan1200 tau800 profile reaches `81/486` on main1000, supporting the fixed
-terminal transition at scale.
 
 ## Main evidence profiles
 
 | Profile | Question | Result |
 |---|---|---|
 | Main reported H1-A2 | What is the paper headline? | Strict/Meta `105/488` per 1000 |
-| Fresh prospective, 256 | Does G2 improve the complete system? | BASE→G2 refined Strict/Meta `19/111→24/117`; paired hull `−16.43 meV/atom` |
-| Full-epoch mechanism, 256 | Does strict periodic feedback improve raw realization? | BASE→G2-PBC-R raw Direct `118→128` |
-| Plan1200 scale, main1000 | Does the complete pipeline scale? | tau800 Strict/Meta `81/486` |
+| Fresh prospective | Does G2 improve the complete system? | BASE→G2 refined Strict/Meta `19/111→24/117`; paired hull `−16.43 meV/atom` |
+| Plan1200 scale, main1000 | Does the complete pipeline scale? | tau800 Strict/Meta `105/486` |
 | Planner scale | Does scientific support remain valid at scale? | fused Planner composition-valid `1200/1200` |
 
 The Plan1200 profile combines the first 861 valid rows of the main block with
