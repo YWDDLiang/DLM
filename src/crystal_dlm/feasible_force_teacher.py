@@ -34,6 +34,19 @@ class FeasibilityProjectionReport:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class AdjacentTokenProjectionReport:
+    attempted: bool
+    resolved: bool
+    pair: tuple[int, int] | None
+    candidates_checked: int
+    changed_coordinate_tokens: int
+    final_minimum_distance_A: float
+
+    def to_dict(self) -> dict[str, object]:
+        return asdict(self)
+
+
 def species_pair_margin(
     left_atomic_number: int,
     right_atomic_number: int,
@@ -127,6 +140,126 @@ def periodic_pair_summary(
             )
             violations += int(distance + 1.0e-6 < margin)
     return minimum, violations
+
+
+def adjacent_token_feasible_projection(
+    quantized_fractional_coordinates: np.ndarray,
+    continuous_target_fractional_coordinates: np.ndarray,
+    lattice: np.ndarray,
+    atomic_numbers: Sequence[int],
+    *,
+    coordinate_token_step: float = 0.01,
+    accept_minimum_distance_A: float = 0.50,
+    image_radius: int = 2,
+) -> tuple[np.ndarray, AdjacentTokenProjectionReport]:
+    """Resolve a quantization trap in the one-token neighborhood of one pair.
+
+    Only the two atoms forming the shortest PBC pair are changed.  The search
+    examines the fixed ``{-1, 0, +1}`` neighborhood for their six coordinate
+    tokens, rejects geometrically invalid candidates, and chooses the candidate
+    closest to the continuous projected target.  No energy is queried.
+    """
+
+    quantized = np.asarray(quantized_fractional_coordinates, dtype=float).copy()
+    target = np.asarray(continuous_target_fractional_coordinates, dtype=float)
+    lattice = np.asarray(lattice, dtype=float)
+    if quantized.shape != target.shape or quantized.ndim != 2 or quantized.shape[1] != 3:
+        raise ValueError("quantized and target coordinates must share shape [N, 3]")
+    if len(atomic_numbers) != len(quantized):
+        raise ValueError("atomic-number count does not match coordinates")
+    if float(coordinate_token_step) <= 0.0:
+        raise ValueError("coordinate_token_step must be positive")
+    initial_minimum, _violations = periodic_pair_summary(
+        quantized,
+        lattice,
+        atomic_numbers,
+        image_radius=int(image_radius),
+        margin_scale=0.0,
+        margin_floor_A=float(accept_minimum_distance_A),
+        margin_ceiling_A=float(accept_minimum_distance_A),
+    )
+    if initial_minimum >= float(accept_minimum_distance_A):
+        return quantized, AdjacentTokenProjectionReport(
+            attempted=False,
+            resolved=True,
+            pair=None,
+            candidates_checked=0,
+            changed_coordinate_tokens=0,
+            final_minimum_distance_A=float(initial_minimum),
+        )
+
+    shortest_pair: tuple[int, int] | None = None
+    shortest_distance = math.inf
+    for left in range(len(quantized)):
+        for right in range(left + 1, len(quantized)):
+            _vector, distance = minimum_image_vector(
+                quantized[left],
+                quantized[right],
+                lattice,
+                image_radius=int(image_radius),
+            )
+            if distance < shortest_distance:
+                shortest_pair = (left, right)
+                shortest_distance = distance
+    if shortest_pair is None:
+        raise ValueError("adjacent token projection requires at least two atoms")
+
+    best: tuple[tuple[float, int, tuple[int, ...]], np.ndarray, float] | None = None
+    checked = 0
+    for offsets in itertools.product((-1, 0, 1), repeat=6):
+        checked += 1
+        candidate = quantized.copy()
+        candidate[shortest_pair[0]] = (
+            candidate[shortest_pair[0]]
+            + float(coordinate_token_step) * np.asarray(offsets[:3], dtype=float)
+        ) % 1.0
+        candidate[shortest_pair[1]] = (
+            candidate[shortest_pair[1]]
+            + float(coordinate_token_step) * np.asarray(offsets[3:], dtype=float)
+        ) % 1.0
+        minimum, violations = periodic_pair_summary(
+            candidate,
+            lattice,
+            atomic_numbers,
+            image_radius=int(image_radius),
+            margin_scale=0.0,
+            margin_floor_A=float(accept_minimum_distance_A),
+            margin_ceiling_A=float(accept_minimum_distance_A),
+        )
+        if violations != 0:
+            continue
+        delta = candidate - target
+        delta -= np.round(delta)
+        score = (
+            float(np.square(delta).sum()),
+            int(sum(abs(value) for value in offsets)),
+            tuple(int(value) for value in offsets),
+        )
+        if best is None or score < best[0]:
+            best = (score, candidate, float(minimum))
+    if best is None:
+        return quantized, AdjacentTokenProjectionReport(
+            attempted=True,
+            resolved=False,
+            pair=shortest_pair,
+            candidates_checked=checked,
+            changed_coordinate_tokens=0,
+            final_minimum_distance_A=float(initial_minimum),
+        )
+    selected = best[1]
+    changed = int(
+        np.count_nonzero(
+            np.abs((selected - quantized) - np.round(selected - quantized)) > 1.0e-9
+        )
+    )
+    return selected, AdjacentTokenProjectionReport(
+        attempted=True,
+        resolved=True,
+        pair=shortest_pair,
+        candidates_checked=checked,
+        changed_coordinate_tokens=changed,
+        final_minimum_distance_A=best[2],
+    )
 
 
 def project_periodic_feasible(
@@ -260,7 +393,9 @@ def bounded_force_displacement(
 
 
 __all__ = [
+    "AdjacentTokenProjectionReport",
     "FeasibilityProjectionReport",
+    "adjacent_token_feasible_projection",
     "bounded_force_displacement",
     "minimum_image_vector",
     "periodic_pair_summary",

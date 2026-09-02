@@ -15,6 +15,7 @@ from pymatgen.core import Structure
 
 from chgnet.model.model import CHGNet
 from crystal_dlm.feasible_force_teacher import (
+    adjacent_token_feasible_projection,
     bounded_force_displacement,
     periodic_pair_summary,
     project_periodic_feasible,
@@ -122,6 +123,28 @@ def quantize_feasible(source: Structure) -> tuple[Structure, dict[str, Any]]:
                 "tokens": tokens,
                 "encoding": encoding,
             }
+        adjacent_coordinates, adjacent_report = adjacent_token_feasible_projection(
+            np.asarray(quantized.frac_coords, dtype=float),
+            np.asarray(source.frac_coords, dtype=float),
+            np.asarray(quantized.lattice.matrix, dtype=float),
+            atomic_numbers(quantized),
+            coordinate_token_step=0.01,
+            accept_minimum_distance_A=0.50,
+            image_radius=IMAGE_RADIUS,
+        )
+        rounds[-1]["adjacent_token_projection"] = adjacent_report.to_dict()
+        if adjacent_report.resolved:
+            repaired = structure_from_fractional(quantized, adjacent_coordinates)
+            repaired, tokens, encoding = quantize(repaired)
+            if structure_validity(repaired):
+                rounds[-1]["adjacent_token_projection"]["roundtrip_valid"] = True
+                return repaired, {
+                    "converged": True,
+                    "rounds": rounds,
+                    "tokens": tokens,
+                    "encoding": encoding,
+                }
+            rounds[-1]["adjacent_token_projection"]["roundtrip_valid"] = False
         candidate, projection = project_structure(quantized)
         rounds[-1]["projection"] = projection
     return quantized, {

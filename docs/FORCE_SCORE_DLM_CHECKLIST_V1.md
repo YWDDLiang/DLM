@@ -86,6 +86,10 @@ only; it is never compared directly against a quantized teacher candidate.
 - locally credible states receive force followed by the 0.55 Å projection;
 - valid states fall back to identity when the quantized projected force does
   not lower energy;
+- if nearest token rounding crosses below 0.50 Å, inspect only the fixed
+  one-token neighborhood of the offending pair and choose the label closest to
+  the continuous target that restores Direct validity; no energy enters this
+  adjacent-token projection;
 - no inference-time projection, repair, reranking or energy calculation is
   introduced.
 

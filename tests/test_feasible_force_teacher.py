@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 
 from crystal_dlm.feasible_force_teacher import (
+    adjacent_token_feasible_projection,
     bounded_force_displacement,
     minimum_image_vector,
     periodic_pair_summary,
@@ -63,6 +64,28 @@ class FeasibleForceTeacherTest(unittest.TestCase):
             float(np.linalg.norm(displacement, axis=1).max()),
             0.15 + 1e-12,
         )
+
+    def test_adjacent_token_projection_resolves_rounding_trap(self):
+        lattice = np.eye(3) * 7.0
+        quantized = np.array([[0.0, 0.0, 0.0], [0.07, 0.0, 0.0]])
+        selected, report = adjacent_token_feasible_projection(
+            quantized,
+            quantized,
+            lattice,
+            [8, 8],
+        )
+        minimum, _violations = periodic_pair_summary(
+            selected,
+            lattice,
+            [8, 8],
+            margin_scale=0.0,
+            margin_floor_A=0.50,
+            margin_ceiling_A=0.50,
+        )
+        self.assertTrue(report.attempted)
+        self.assertTrue(report.resolved)
+        self.assertGreaterEqual(minimum, 0.50)
+        self.assertGreater(report.changed_coordinate_tokens, 0)
 
 
 if __name__ == "__main__":
