@@ -71,24 +71,26 @@ EOF
 run_body() {
   local arm="$1" policy="$2" device="$3" relation="$4" output="${RUN}/${1}"
   mkdir "${output}"
-  local relation_args=()
+  local -a sampler_args=(
+    --model-path "${MODEL}"
+    --checkpoint-path "${policy}"
+  )
   if [[ "${relation}" == true ]]; then
-    relation_args+=(--periodic-relation-checkpoint "${policy}" --periodic-relation-rank 64)
+    sampler_args+=(--periodic-relation-checkpoint "${policy}" --periodic-relation-rank 64)
   fi
+  sampler_args+=(
+    --prompt-jsonl "${PLANS}"
+    --output-dir "${output}/body"
+    --crysllmgen-dir "${CRYS}"
+    --num-samples 256
+    --expected-denominator 256
+    --temperature 0.7
+    --seed 91117
+  )
   env CUDA_VISIBLE_DEVICES="${device}" PYTHONPATH="${CODE}/src" \
     OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
     NUMEXPR_NUM_THREADS=8 \
-    "${PYTHON}" "${SAMPLER}" \
-    --model-path "${MODEL}" \
-    --checkpoint-path "${policy}" \
-    "${relation_args[@]}" \
-    --prompt-jsonl "${PLANS}" \
-    --output-dir "${output}/body" \
-    --crysllmgen-dir "${CRYS}" \
-    --num-samples 256 \
-    --expected-denominator 256 \
-    --temperature 0.7 \
-    --seed 91117 \
+    "${PYTHON}" "${SAMPLER}" "${sampler_args[@]}" \
     >"${output}/body.out" 2>"${output}/body.err"
   [[ -f "${output}/body/_SUCCESS" ]]
 }
