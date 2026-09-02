@@ -5,10 +5,12 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import importlib.util
 import json
 import math
 from pathlib import Path
+import random
 import statistics
 import sys
 from typing import Any, Mapping, Sequence
@@ -106,7 +108,6 @@ def composition_average(rows_by_stream: Mapping[int, Sequence[Mapping[str, Any]]
 
 
 def paired_effect(
-    common: Any,
     control: Mapping[int, float],
     candidate: Mapping[int, float],
     *,
@@ -116,7 +117,28 @@ def paired_effect(
         index: candidate[index] - control[index]
         for index in sorted(set(control) & set(candidate))
     }
-    return common.cluster_bootstrap_summary(deltas, label=label, replicates=10_000)
+    values = list(deltas.values())
+    seed = int.from_bytes(hashlib.sha256(label.encode("utf-8")).digest()[:8], "big")
+    rng = random.Random(seed)
+    replicates = 10_000
+    means = sorted(
+        statistics.fmean(values[rng.randrange(len(values))] for _ in values)
+        for _ in range(replicates)
+    )
+    return {
+        "compositions_requested": 256,
+        "compositions_observed": len(values),
+        "mean_delta": statistics.fmean(values),
+        "median_delta": statistics.median(values),
+        "fraction_higher": sum(value > 0.0 for value in values) / len(values),
+        "bootstrap": {
+            "unit": "composition",
+            "replicates": replicates,
+            "seed": seed,
+            "ci95_lower": means[249],
+            "ci95_upper": means[9749],
+        },
+    }
 
 
 def render_markdown(report: Mapping[str, Any]) -> str:
@@ -294,7 +316,6 @@ def main() -> None:
             for metric in ("strict_sun", "meta_sun"):
                 name = f"{endpoint}:{metric}:BS-minus-{comparator}"
                 paired_effects[name] = paired_effect(
-                    common,
                     composition_metrics[(comparator, endpoint, metric)],
                     composition_metrics[("BS", endpoint, metric)],
                     label=f"spad:{name}",
