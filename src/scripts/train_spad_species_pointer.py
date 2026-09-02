@@ -174,7 +174,7 @@ def load_frozen_planner(
     return llama, typed, typed_config
 
 
-@torch.inference_mode()
+@torch.no_grad()
 def terminal_hidden(
     llama: Any,
     typed: C3FDLlamaTypedResidualPlanner,
