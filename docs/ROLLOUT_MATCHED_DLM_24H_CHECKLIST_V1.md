@@ -10,8 +10,9 @@ Deadline: 2026-09-03 23:30 Asia/Shanghai.
   composition overlap and deployment-mode `C3FD-predicted-native-V2` prompts.
 - The earlier V1 cohort and capture job 39253 used teacher prompts. Job 39253
   was cancelled before training; both are retained only as engineering traces.
-- Corrected exact-axis capture job 39259 is running on one A800. No pilot
-  training or holdout result exists yet.
+- Corrected exact-axis capture job 39259 completed in 13:43 on one A800 and
+  produced 512 transitions (384 train / 128 validation). No pilot training was
+  submitted.
 - The geometry execution interface is specified in
   `TOKEN_NATIVE_PBC_GEOMETRY_EXECUTOR_V1.md`; implementation waits for the
   rollout-matched pilot result.
@@ -61,30 +62,38 @@ CHGNet-selected or hull-selected structures never become labels.
 - [x] Pair every generated input state only with its original MP20 target body.
 - [x] Fill masked suffix positions only for storage; record the original model
   mask and the active-group supervision mask separately.
-- [ ] Job 39259 produces exactly `128 × 4 = 512` transition rows; no retries or
+- [x] Job 39259 produced exactly `128 × 4 = 512` transition rows; no retries or
   replacement.
+
+## P1.5 — teacher-continuation realizability audit
+
+- [x] Treat each captured `source_answer` as an oracle continuation: preserve
+  every committed rollout token and fill only still-masked positions with the
+  paired original MP20 body.
+- [x] Compare each stage with the final BASE trajectory using the frozen Direct
+  evaluator before training any weights.
+- [x] Freeze necessary conditions before reading the result: all stage nets
+  nonnegative, Z-stage net at least +12/128, at most four valid→invalid flips
+  per stage, and mean stage net at least +12.
+- [x] Terminal result: BASE `59/128`; lattice oracle `122/128` (net +63), X
+  `102/128` (+43), Y `54/128` (-5), Z `43/128` (-16). Z causes 19
+  valid→invalid and only 3 invalid→valid flips.
+- [x] **No-go:** later MP20 coordinates are incompatible with already committed
+  rollout errors. Do not submit the active-group CE training wrapper.
 
 ## P2 — paired active-group training
 
-- [ ] Reuse the promoted G2-A LoRA and relation adapter.
-- [ ] Model input: committed rollout tokens plus masks at current/future groups.
-- [ ] CE supervision: current active group only.
-- [ ] First pilot uses active-group CE only. Periodic auxiliary losses are zero
-  so the test isolates rollout-state matching; future groups are input masks and
-  never auxiliary targets.
-- [ ] Jointly update LoRA + G2 for one seed, 128 updates, only step128 eligible.
-- [ ] Assert prompt/N/element order equality, exact body length, finite losses,
-  nonzero LoRA and relation gradients, and two-GPU synchronization.
+- [x] Closed without training after P1.5 failed the causal necessary condition.
+- [x] Slurm151 remains an unexecuted engineering artifact; no checkpoint or
+  scientific result was produced.
+- [x] Do not reinterpret the negative realizability result as a hyperparameter,
+  seed or update-count problem.
 
 ## P3 — untouched matched raw test
 
-- [ ] Generate BASE and candidate on the 128 holdout Plans with identical noise.
-- [ ] Compute body, composition validity and fast Direct only.
-- [ ] Promotion requires body and composition within 1 percentage point,
-  Direct at least `+4/128`, and net invalid→valid at least `+4`.
-- [ ] If the gate fails, stop before CHGNet/model494 and archive the negative.
-- [ ] If it passes, run paired raw CHGNet; require non-adverse median energy
-  before model494/S.U.N.
+- [x] Not run because there is no causally admissible candidate checkpoint.
+- [x] Preserve the untouched 128 Plans for a future method with an explicit
+  geometry and stability mechanism.
 
 ## P4 — continuous periodic geometry interface design
 
