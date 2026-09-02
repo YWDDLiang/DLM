@@ -2,6 +2,20 @@
 
 Deadline: 2026-09-03 23:30 Asia/Shanghai.
 
+## Current state (2026-09-02)
+
+- Corrected immutable cohort:
+  `rollout_matched_pilot_128x128_v2_20260902`.
+- It contains 128 rollout-train and 128 untouched holdout rows, with zero exact
+  composition overlap and deployment-mode `C3FD-predicted-native-V2` prompts.
+- The earlier V1 cohort and capture job 39253 used teacher prompts. Job 39253
+  was cancelled before training; both are retained only as engineering traces.
+- Corrected exact-axis capture job 39259 is running on one A800. No pilot
+  training or holdout result exists yet.
+- The geometry execution interface is specified in
+  `TOKEN_NATIVE_PBC_GEOMETRY_EXECUTOR_V1.md`; implementation waits for the
+  rollout-matched pilot result.
+
 ## Objective
 
 Improve raw periodic geometry and stability after C3FD has already solved
@@ -27,29 +41,32 @@ Strict S.U.N.
 
 ## P0 — outcome-blind Plan freeze
 
-- [ ] Select 256 unique MP20-train rows with deterministic N/arity stratification.
-- [ ] Split by source row into 128 rollout-train and 128 untouched holdout Plans.
-- [ ] Preserve C3FD-native prompt, exact `N`, element counts, target dynamic body,
+- [x] Select 256 unique MP20-train rows with deterministic N/arity stratification.
+- [x] Split by source row into 128 rollout-train and 128 untouched holdout Plans.
+- [x] Preserve deployment C3FD-predicted V2 prompt, exact `N`, element counts,
+  target dynamic body,
   source-row provenance and fixed sample order.
-- [ ] Read no CHGNet, hull, Direct, prospective or historical result during selection.
+- [x] Read no CHGNet, hull, Direct, prospective or historical result during selection.
 
 ## P1 — real exact-axis rollout capture
 
-- [ ] Use promoted G2-A and one frozen sampling seed.
-- [ ] Keep exact-axis order: lattice, all X, all Y, all Z.
-- [ ] Capture one state inside each of the four active groups per train Plan.
-- [ ] Preserve every previously committed model token, including errors.
-- [ ] Fill masked suffix positions only for storage; record the original model
+- [x] Freeze promoted G2-A, sampling seed 95117 and capture contract.
+- [x] Keep exact-axis order: lattice, all X, all Y, all Z.
+- [x] Capture one state inside each of the four active groups per train Plan.
+- [x] Preserve every previously committed model token, including errors.
+- [x] Fill masked suffix positions only for storage; record the original model
   mask and the active-group supervision mask separately.
-- [ ] Produce exactly `128 × 4 = 512` transition rows; no retries or replacement.
+- [ ] Job 39259 produces exactly `128 × 4 = 512` transition rows; no retries or
+  replacement.
 
 ## P2 — paired active-group training
 
 - [ ] Reuse the promoted G2-A LoRA and relation adapter.
 - [ ] Model input: committed rollout tokens plus masks at current/future groups.
 - [ ] CE supervision: current active group only.
-- [ ] Periodic objective: committed geometry from rollout state; target geometry
-  from the MP20 body; future masked fields use q1 logits.
+- [ ] First pilot uses active-group CE only. Periodic auxiliary losses are zero
+  so the test isolates rollout-state matching; future groups are input masks and
+  never auxiliary targets.
 - [ ] Jointly update LoRA + G2 for one seed, 128 updates, only step128 eligible.
 - [ ] Assert prompt/N/element order equality, exact body length, finite losses,
   nonzero LoRA and relation gradients, and two-GPU synchronization.
@@ -66,18 +83,20 @@ Strict S.U.N.
 
 ## P4 — continuous periodic geometry interface design
 
-- [ ] Freeze an identity-preserving interface after the pilot result; do not
+- [x] Specify an identity-preserving interface; do not
   implement it in parallel with pilot science.
-- [ ] Inputs: DLM hidden states, q0 soft lattice/coordinates, species and site mask.
-- [ ] Lattice output: zero-initialized residual in SPD metric/Cholesky space.
-- [ ] Coordinate output: zero-initialized tangent residual on the fractional
+- [x] Inputs: DLM hidden states, q0 soft lattice/coordinates, species and site mask.
+- [x] Lattice output: zero-initialized residual in SPD metric/Cholesky space.
+- [x] Coordinate output: zero-initialized tangent residual on the fractional
   three-torus with exact triclinic PBC messages.
-- [ ] Convert continuous means and uncertainty to adjacent legal token logits;
+- [x] Convert continuous means and uncertainty to adjacent legal token logits;
   keep hard N/elements unchanged.
-- [ ] Loss: token CE + torus coordinate + metric + species-aware PBC distance;
+- [x] Loss: token CE + torus coordinate + metric + species-aware PBC distance;
   no inference CHGNet, best-of-N, reranking or completed-sample repair.
-- [ ] Specify O(N²) time, bounded-image memory, invariance tests, step0 equality,
+- [x] Specify O(N²) time, bounded-image memory, invariance tests, step0 equality,
   and a fixed-256 matched promotion contract.
+- [ ] Implement only after the pilot result selects whether rollout matching is
+  sufficient or the continuous executor is needed.
 
 ## Resources and operations
 
