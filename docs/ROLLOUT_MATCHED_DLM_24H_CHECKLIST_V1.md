@@ -22,7 +22,8 @@ Deadline: 2026-09-03 23:30 Asia/Shanghai.
   next route is therefore canonical MP20 site ordering, not another CE loss.
 - Canonical data V2 is terminal at `27136/9047` rows with zero drops and zero
   prompt changes; token audit has zero truncation and zero prompt/answer boundary
-  mismatches. Fresh two-epoch DLM training job 39280 is running on two A800.
+  mismatches. Job 39280 failed before step0 because it referenced the stale
+  trainer root; parameter-identical recovery job 39282 is running on two A800.
 
 ## Objective
 
@@ -130,7 +131,7 @@ CHGNet-selected or hull-selected structures never become labels.
   species-coordinate site records to Plan order; drop zero rows.
 - [x] Verify physical structure, lattice, body length, composition, source row
   and split are unchanged for every row.
-- [ ] Job 39280 trains one fresh Compact-V2 LoRA with the frozen two-epoch
+- [ ] Job 39282 trains one fresh Compact-V2 LoRA with the frozen two-epoch
   schedule; after it is terminal, train one canonical G2-PBC-R epoch.
 - [ ] Matched raw evaluation treats Direct and CHGNet as co-primary, with
   stability prioritized; no checkpoint/seed/epoch selection.
