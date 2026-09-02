@@ -12,10 +12,11 @@
 
 set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
+readonly CODE="${H1A2_CODE_ROOT:?}"
 readonly DATA="${CANONICAL_SFT_DATA:?}"
 readonly TOKEN_AUDIT="${CANONICAL_TOKEN_AUDIT:?}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
-readonly TRAINER="${ROOT}/src/scripts/llada_sft.py"
+readonly TRAINER="${CODE}/src/scripts/llada_sft.py"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly SEED=82017
 readonly RUN="${ROOT}/runs/canonical_compact_v2_dlm_${SLURM_JOB_ID}"
@@ -85,7 +86,8 @@ checkpoint_selection	none
 lora	r8_alpha32_dropout0.05_qkv_ff_up
 EOF
 
-CUDA_VISIBLE_DEVICES="${DEVICES}" torchrun --standalone --master-port 32817 \
+CUDA_VISIBLE_DEVICES="${DEVICES}" PYTHONPATH="${CODE}/src" \
+  torchrun --standalone --master-port 32817 \
   --nproc_per_node=2 "${TRAINER}" \
   --model-path "${MODEL}" \
   --data-dir "${DATA}" \
