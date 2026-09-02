@@ -133,6 +133,18 @@ CHGNet-selected or hull-selected structures never become labels.
   and split are unchanged for every row.
 - [ ] Job 39282 trains one fresh Compact-V2 LoRA with the frozen two-epoch
   schedule; after it is terminal, train one canonical G2-PBC-R epoch.
+- [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
+  `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
+  exactly-zero output initialization, strict triclinic 125-image minimum image,
+  and normalized species-aware overlap margin
+  `clamp(0.55(r_i+r_j), 0.60 A, 1.40 A)`.
+- [x] Freeze the proven geometry objective weights: metric `0.1`, pair/RDF
+  `0.1`, overlap `0.2`, coordination `0.05`; geometry-only masking keeps N and
+  element tokens visible.
+- [x] Retain exact `7+4N`, hard N/elements, legal-family masks,
+  duplicate-coordinate mask and lattice-volume mask at decoding.
+- [x] Keep the detached uncertainty gate off: prior B/RU did not beat A/R and
+  had adverse raw-energy direction. Do not revive Force/BTRD or SGTC.
 - [ ] Matched raw evaluation treats Direct and CHGNet as co-primary, with
   stability prioritized; no checkpoint/seed/epoch selection.
 - [ ] If Direct improves without raw-energy improvement, do not add CE epochs;

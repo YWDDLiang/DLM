@@ -152,6 +152,15 @@ Promotion requires both:
 A `+8/256` Direct gain and median energy `<=-0.02 eV/atom` are the meaningful
 improvement targets, not mandatory deletion gates.
 
+The promoted G2-PBC-R recipe is reused literally: rank-64 two-layer acyclic
+`q0 -> soft geometry -> zero-initialized residual -> q1`, strict triclinic
+125-image minimum-image geometry, normalized species-aware overlap margin
+`clamp(0.55(r_i+r_j), 0.60 A, 1.40 A)`, and metric/pair-RDF/overlap/coordination
+weights `0.1/0.1/0.2/0.05`. The failed detached uncertainty gate remains off.
+Existing exact `7+4N`, hard chemistry, legal-family, duplicate-coordinate and
+lattice-volume decoding constraints remain active. Canonical ordering is thus
+the only new variable before G2; the effective geometric tricks are not lost.
+
 ## 6. Stability fallback fixed in advance
 
 If canonical ordering improves Direct but not energy, do not add more CE epochs.
