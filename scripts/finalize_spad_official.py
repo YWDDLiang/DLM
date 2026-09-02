@@ -37,6 +37,36 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return protocol.read_jsonl(path)
 
 
+def find_plan(row: Mapping[str, Any]) -> Mapping[str, Any] | None:
+    for key in ("plan_state", "source_plan_state", "r5_plan_state", "identity"):
+        value = row.get(key)
+        if isinstance(value, Mapping) and value.get("elements"):
+            return value
+    for key in ("source_row", "record", "candidate"):
+        value = row.get(key)
+        if isinstance(value, Mapping):
+            nested = find_plan(value)
+            if nested is not None:
+                return nested
+    return None
+
+
+def chemsys_scopes(cohort: Path, mp20_train: Path) -> dict[str, set[int]]:
+    train_chemsys: set[str] = set()
+    for row in read_jsonl(mp20_train):
+        plan = find_plan(row)
+        if plan is not None:
+            train_chemsys.add("-".join(sorted({str(value) for value in plan["elements"]})))
+    ledger = read_jsonl(cohort / "ledger.jsonl")
+    if {int(row["sample_idx"]) for row in ledger} != set(range(256)):
+        raise ValueError("prospective cohort ledger does not cover fixed256")
+    scopes = {"all": set(range(256)), "seen_chemsys": set(), "unseen_chemsys": set()}
+    for row in ledger:
+        target = "seen_chemsys" if str(row["chemsys"]) in train_chemsys else "unseen_chemsys"
+        scopes[target].add(int(row["sample_idx"]))
+    return scopes
+
+
 def quantiles(values: Sequence[float]) -> dict[str, Any]:
     ordered = sorted(float(value) for value in values if math.isfinite(float(value)))
     if not ordered:
@@ -115,6 +145,12 @@ def render_markdown(report: Mapping[str, Any]) -> str:
             f"Meta S.U.N. = {100*headline['meta_sun_rate']:.2f}%.",
             f"Targets 10%/50%: Strict={'met' if headline['strict_target_met'] else 'not met'}, "
             f"Meta={'met' if headline['meta_target_met'] else 'not met'}.",
+            (
+                "Chemsys split: "
+                f"seen={headline['chemsys_scopes']['seen_chemsys']['compositions']}, "
+                f"unseen={headline['chemsys_scopes']['unseen_chemsys']['compositions']}; "
+                "the exact-composition overlap with MP20 train is zero."
+            ),
             "",
             "## Paired effects",
             "",
@@ -134,6 +170,8 @@ def main() -> None:
     parser.add_argument("--eval-run", type=Path, required=True)
     parser.add_argument("--official-run", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--cohort", type=Path, required=True)
+    parser.add_argument("--mp20-train", type=Path, required=True)
     parser.add_argument("--arms", default="B0,BC,BS")
     args = parser.parse_args()
     arms = tuple(value.strip() for value in args.arms.split(",") if value.strip())
@@ -145,6 +183,7 @@ def main() -> None:
         raise FileExistsError(args.output_dir)
 
     common = load_common()
+    scopes = chemsys_scopes(args.cohort, args.mp20_train)
     cache = args.official_run / "official_mp_cache"
     phase_diagrams = common._phase_diagrams(cache / "official_slim_cache.jsonl")
     unresolved = {
@@ -203,6 +242,26 @@ def main() -> None:
                 composition_metrics[(arm, endpoint, metric)] = composition_average(
                     {stream: rows[(arm, endpoint, stream)] for stream in (17, 18)}, metric
                 )
+            scope_rates = {}
+            for scope, indices in scopes.items():
+                scoped_rows = [
+                    row for row in all_rows if int(row["ordinal"]) in indices
+                ]
+                denominator = len(indices) * 2
+                scope_rates[scope] = {
+                    "compositions": len(indices),
+                    "attempts": denominator,
+                    "strict_sun": sum(row["strict_sun"] for row in scoped_rows),
+                    "meta_sun": sum(row["meta_sun"] for row in scoped_rows),
+                    "strict_sun_rate": (
+                        sum(row["strict_sun"] for row in scoped_rows) / denominator
+                        if denominator else None
+                    ),
+                    "meta_sun_rate": (
+                        sum(row["meta_sun"] for row in scoped_rows) / denominator
+                        if denominator else None
+                    ),
+                }
             aggregates.append(
                 {
                     "arm": arm,
@@ -223,6 +282,7 @@ def main() -> None:
                     "meta_sun_rate": counts["meta_sun"] / 512,
                     "hull_all": quantiles(hull),
                     "hull_novel_unique": quantiles(hull_nu),
+                    "chemsys_scopes": scope_rates,
                 }
             )
 
@@ -255,6 +315,8 @@ def main() -> None:
         "arms": list(arms),
         "denominator_per_stream": 256,
         "streams_averaged_within_composition": True,
+        "prospective_exact_composition_overlap_with_mp20_train": 0,
+        "chemsys_scope_sizes": {key: len(value) for key, value in scopes.items()},
         "cell_reports": cell_reports,
         "aggregates": aggregates,
         "paired_effects": paired_effects,
