@@ -27,6 +27,13 @@ bundled fallback, adds no inference module, and is not yet executable.
 - Continuous CHGNet/hull: explicit known subsets plus missing counts.
 - Valid-CIF metrics: secondary CrysLLMGen-compatible conditional denominator.
 
+For the mandatory Plan1200 tau800/tau900 baseline, the user-requested reporting
+partition is survivor-ordered: scan the 1,159 official-known Plans in their
+original order, skip 20 non-constructible CIFs, assign the first 1,000 valid
+CIFs to `main1000`, and assign the remaining 139 valid CIFs to `remainder139`.
+Thus main1000 is topped up by 17 later valid CIFs rather than using denominator
+983. Requested and excluded-row accounting remains explicit.
+
 Frozen evaluation cohort:
 
 - path: `cohorts/btrd_eval_official_known_dev256_confirm903_v1_20260902`;

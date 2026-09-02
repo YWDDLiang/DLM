@@ -11,6 +11,15 @@
     "confirmation": 903,
     "conditional_valid_cif_is_secondary": true
   },
+  "plan1200_refined_partition": {
+    "rule": "first 1000 valid CIFs in original Plan order; remaining valid CIFs",
+    "main1000_denominator": 1000,
+    "main_topup_from_later_valid": 17,
+    "remainder_denominator": 139,
+    "overall_valid_cif_denominator": 1139,
+    "invalid_cif_excluded": 20,
+    "requested_accounting_preserved": 1159
+  },
   "evaluation_split": {
     "path": "cohorts/btrd_eval_official_known_dev256_confirm903_v1_20260902",
     "manifest_sha256": "2a92913a019a0b7ab375bb76337bcddd142acb728a028f6c1a15d06c90e358b4",
