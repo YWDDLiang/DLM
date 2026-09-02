@@ -147,10 +147,10 @@ streams.
 | BR | BP + one suffix-visible anchor-remask sweep |
 | BS | BR after one schedule-matched MP20 LoRA epoch |
 
-- [ ] One Plan and one trajectory per request; no replacement, reranking or
+- [x] One Plan and one trajectory per request; no replacement, reranking or
   best-of-N.
-- [ ] Run all body generation cells with exact N/elements prefilled.
-- [ ] First report body, proposal composition validity, body composition
+- [x] Run B0/BC/BP/BR body generation cells with exact N/elements prefilled.
+- [x] First report body, proposal composition validity, body composition
   retention, raw Direct, graphability, minimum-distance ECDF, collision type,
   lattice volume/condition and backfill changes.
 - [ ] Run BR-no-suffix only on a shared mechanism subset to prove the value of
@@ -158,7 +158,7 @@ streams.
 - [ ] Deduplicate the structure union before energy evaluation.
 - [ ] Benchmark CHGNet 4/8/10 one-thread workers within 8 allocated CPU cores
   per GPU; run Direct concurrently only on explicitly allocated CPUs.
-- [ ] Report two streams separately and pooled; do not choose a stream.
+- [x] Report two streams separately and pooled; do not choose a stream.
 
 ## Phase 6 — Track A system comparison
 
@@ -231,5 +231,9 @@ Only after the SPAD result is frozen:
   all MP20 27,136/9,047 train/val rows, balanced predictor/correction/random
   mask classes, 24,558 learned-contact programs plus 2,578 disclosed canonical
   fallbacks in train, and reads no energy/refiner outcome.
-- training wrapper 164 is tested and frozen but will not be submitted until
-  decoder-only job 39514 establishes the raw direction.
+- training wrapper 164 was frozen before raw outcomes and submitted only after
+  all decoder-only bodies completed.
+- job 39518: full eight-cell raw Direct complete. Pooled stream means are
+  B0 80.27%, BC 99.22%, BP 98.05%, BR 98.83%; composition validity is
+  100% for BC/BP/BR. B0→BC exact McNemar is strongly positive in both streams.
+- job 39520: active four-A800 schedule-matched BS training, one fixed epoch.

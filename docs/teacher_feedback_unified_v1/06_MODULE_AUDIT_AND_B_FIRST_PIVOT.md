@@ -194,7 +194,26 @@ Llama pointer reaches 73.50% exact permutation, 80.41% root and 82.63%
 pairwise-order accuracy. This separates learned structural programming from a
 renamed canonical traversal.
 
-## 10. Later stability contribution
+## 10. Frozen decoder-only raw result
+
+On the same 256 Plans and two streams, requested-denominator Direct is:
+
+| Cell | Composition valid | Structure valid / Direct joint |
+|---|---:|---:|
+| B0 | 98.05% | 80.27% |
+| BC | 100.00% | 99.22% |
+| BP | 100.00% | 98.05% |
+| BR | 100.00% | 98.83% |
+
+B0→BC gains 18.95 percentage points and has 48/0 and 51/2
+candidate-only/control-only pairs in streams 17/18. BC and BP have identical
+lattice prefixes for 256/256 rows in both streams; when the pointer emits the
+canonical program, their complete bodies are identical for 27/27 rows. The
+remaining BC/BP difference is therefore isolated to Llama-programmed species
+order. Suffix backfill recovers most of its small raw-validity gap before the
+schedule-matched BS training endpoint.
+
+## 11. Later stability contribution
 
 After SPAD is established, a complete raw BS crystal may receive Candidate E1:
 

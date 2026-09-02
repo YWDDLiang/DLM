@@ -71,6 +71,19 @@ Read in this order:
 6. [Decision log](05_DECISION_LOG.md)
 7. [Implementation audit and B-first pivot](06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
 
+Current raw result on the fixed 256-Plan, two-stream ledger:
+
+| Cell | Composition valid | Structure valid / Direct joint |
+|---|---:|---:|
+| B0 retained schedule | 98.05% | 80.27% |
+| BC canonical SPAD | 100.00% | 99.22% |
+| BP Llama-programmed SPAD | 100.00% | 98.05% |
+| BR BP + suffix backfill | 100.00% | 98.83% |
+
+Thus the crystal-native transaction order contributes +18.95 percentage
+points raw Direct over B0. The learned program is isolated with 256/256 equal
+lattices in both streams; schedule-matched BS training is active.
+
 The active ten-minute heartbeat is `sscd-a-b-approval-and-execution`. Execution
 is approved; it stays quiet except for terminal audit, training, generation,
 evaluation, S.U.N. or blocking events.
