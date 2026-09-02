@@ -185,6 +185,8 @@ def revise_spad_anchors(
                 prompt_length,
                 gen_length,
                 lightweight_decoding_constraints,
+                group_allowed[:, prompt_length : prompt_length + gen_length],
+                int(mask_id),
             )
             x0, _confidence = _candidate_tokens_and_confidence(
                 logits, float(temperature), remasking
