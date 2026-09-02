@@ -100,6 +100,13 @@ force target. The active force targets must have median energy change at most
 -0.005 eV/atom; energy worsening among all initially valid rows is capped at 1%.
 Species-margin violations are diagnostic only and never gate the hard teacher.
 
+Finalized job 39227 passes this contract: geometry labels cover 512/512 rows,
+energy covers 511/512, all 253 invalid token states recover, valid→invalid is
+zero, and no hard row remains unresolved. Force targets remain active for
+84/259 initially valid states (32.4%) with median energy change
+-0.0154 eV/atom. The one energy-unknown row retains its graph-free validity
+target.
+
 ## Phase B — micro-student preflight
 
 Only after Phase A3 succeeds:
@@ -113,6 +120,17 @@ Only after Phase A3 succeeds:
 
 This phase tests whether a valid teacher can actually be learned through the G2
 residual. It is not the final model.
+
+The paired dataset is frozen at 384 train / 128 holdout rows with 48/16 base
+structures and zero base overlap. `source_answer` supplies unmasked q0 geometry;
+`answer` supplies q1 labels and periodic targets. Job 39230 completed 128
+residual-only updates in 4m40s, saved only step128, and produced finite relation
+gradients with holdout transition loss 0.4497. Jobs 39228 and 39229 are preserved
+zero-step engineering failures (missing/referenced vocabulary option).
+
+The fixed raw holdout compares promoted G2-A and step128 on the same 128 Plans
+and noise. Stop before CHGNet/model494 unless body count is within one and Direct
+improves by at least 7/128 (5.47 percentage points).
 
 ## Phase C — full MP20 training
 
