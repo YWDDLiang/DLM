@@ -14,8 +14,12 @@ Deadline: 2026-09-03 23:30 Asia/Shanghai.
   produced 512 transitions (384 train / 128 validation). No pilot training was
   submitted.
 - The geometry execution interface is specified in
-  `TOKEN_NATIVE_PBC_GEOMETRY_EXECUTOR_V1.md`; implementation waits for the
-  rollout-matched pilot result.
+  `TOKEN_NATIVE_PBC_GEOMETRY_EXECUTOR_V1.md`; implementation is deferred until
+  the canonical-site DLM establishes whether an explicit stability score is
+  still needed.
+- A full-data audit found that only 14.995%/14.325% of train/validation teacher
+  bodies use the same element-slot order as inference hard prefill. The primary
+  next route is therefore canonical MP20 site ordering, not another CE loss.
 
 ## Objective
 
@@ -80,6 +84,8 @@ CHGNet-selected or hull-selected structures never become labels.
   valid→invalid and only 3 invalid→valid flips.
 - [x] **No-go:** later MP20 coordinates are incompatible with already committed
   rollout errors. Do not submit the active-group CE training wrapper.
+- [x] Canonical target re-audit remains no-go: lattice/X/Y/Z Direct is
+  `122/95/57/43` versus BASE `59`; Y and Z are still non-adverse failures.
 
 ## P2 — paired active-group training
 
@@ -111,6 +117,23 @@ CHGNet-selected or hull-selected structures never become labels.
   and a fixed-256 matched promotion contract.
 - [ ] Implement only after the pilot result selects whether rollout matching is
   sufficient or the continuous executor is needed.
+
+## P5 — canonical MP20 execution contract
+
+- [x] Audit all teacher bodies against inference element prefill order.
+- [x] Record train `4069/27136` and validation `1296/9047` exact-order matches;
+  all rows preserve the correct species multiset.
+- [ ] Build full `27136/9047` canonical data by permuting complete
+  species-coordinate site records to Plan order; drop zero rows.
+- [ ] Verify physical structure, lattice, body length, composition, source row
+  and split are unchanged for every row.
+- [ ] Only after those invariants pass, train one fresh Compact-V2 LoRA with the
+  frozen two-epoch schedule, followed by one canonical G2-PBC-R epoch.
+- [ ] Matched raw evaluation treats Direct and CHGNet as co-primary, with
+  stability prioritized; no checkpoint/seed/epoch selection.
+- [ ] If Direct improves without raw-energy improvement, do not add CE epochs;
+  move only to the preregistered MP20-only stability-conditioned periodic score
+  executor described in `DLM_DIRECT_STABILITY_DECISION_20260902.md`.
 
 ## Resources and operations
 

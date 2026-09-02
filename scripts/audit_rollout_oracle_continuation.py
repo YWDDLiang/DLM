@@ -10,7 +10,7 @@ CE objective, not a generated teacher.
 from __future__ import annotations
 
 import argparse
-from collections import Counter, defaultdict, deque
+from collections import Counter, defaultdict
 import json
 import math
 from pathlib import Path
@@ -18,11 +18,8 @@ import statistics
 import sys
 from typing import Any, Callable, Iterable
 
-from crystal_dlm.dynamic_crystal import (
-    arrays_to_dynamic_answer,
-    arrays_to_structure,
-    parse_dynamic_answer,
-)
+from crystal_dlm.canonical_site_order import canonicalize_dynamic_answer_to_plan
+from crystal_dlm.dynamic_crystal import arrays_to_structure, parse_dynamic_answer
 from crystal_dlm.fixed_slot import tokenize_answer_text
 
 
@@ -31,42 +28,6 @@ STAGES = ("lattice", "x", "y", "z")
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
-
-
-def expanded_plan_species(plan: dict[str, Any]) -> list[str]:
-    elements = [str(value) for value in plan.get("elements") or []]
-    counts_value = [int(value) for value in plan.get("counts") or []]
-    if not elements or len(elements) != len(counts_value):
-        raise ValueError("plan lacks aligned elements/counts")
-    expanded: list[str] = []
-    for element, count in zip(elements, counts_value, strict=True):
-        expanded.extend([element] * count)
-    if len(expanded) != int(plan["N"]):
-        raise ValueError("expanded Plan species does not match N")
-    return expanded
-
-
-def canonicalize_answer_to_plan(answer: str, plan: dict[str, Any]) -> str:
-    """Permute complete MP20 site records to the inference element-slot order."""
-
-    arrays = parse_dynamic_answer(answer, strict=True)
-    expected = expanded_plan_species(plan)
-    actual = [str(value) for value in arrays["species"]]
-    if Counter(expected) != Counter(actual):
-        raise ValueError("answer and Plan species multisets differ")
-    available = defaultdict(deque)
-    for index, symbol in enumerate(actual):
-        available[symbol].append(index)
-    order = [available[symbol].popleft() for symbol in expected]
-    canonical, _diagnostics = arrays_to_dynamic_answer(
-        arrays["lengths"],
-        arrays["angles"],
-        expected,
-        [arrays["frac_coords"][index] for index in order],
-    )
-    if len(tokenize_answer_text(canonical)) != len(tokenize_answer_text(answer)):
-        raise RuntimeError("site permutation changed dynamic body length")
-    return canonical
 
 
 def replace_masked_with_target(
@@ -211,7 +172,9 @@ def main() -> None:
         sample_idx = int(row["sample_idx"])
         original_target = str(row["answer"])
         target = (
-            canonicalize_answer_to_plan(original_target, plans[sample_idx])
+            canonicalize_dynamic_answer_to_plan(
+                original_target, plans[sample_idx]
+            )[0]
             if args.canonicalize_target_to_plan_order and plans is not None
             else original_target
         )
