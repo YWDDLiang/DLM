@@ -24,6 +24,9 @@ Deadline: 2026-09-03 23:30 Asia/Shanghai.
   prompt changes; token audit has zero truncation and zero prompt/answer boundary
   mismatches. Job 39280 failed before step0 because it referenced the stale
   trainer root; parameter-identical recovery job 39282 is running on two A800.
+  Its run config pins fresh initialization, canonical V2 data, seed82017 and
+  3392 updates; `fresh_lora=true`, `exact_zero_delta=true` and
+  `lora_B_max_abs=0.0` have passed before the first optimizer update.
 
 ## Objective
 
@@ -133,6 +136,10 @@ CHGNet-selected or hull-selected structures never become labels.
   and split are unchanged for every row.
 - [ ] Job 39282 trains one fresh Compact-V2 LoRA with the frozen two-epoch
   schedule; after it is terminal, train one canonical G2-PBC-R epoch.
+- [x] Verify job39282 pre-science state: checkpoint path null, world size2,
+  canonical data path, fresh LoRA and exact step0 equality.
+- [ ] Verify the first and subsequent training-log records have finite
+  loss/task loss/gradient norm/LR; monitor step1696 without selecting it.
 - [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
   `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
   exactly-zero output initialization, strict triclinic 125-image minimum image,
