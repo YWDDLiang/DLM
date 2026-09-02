@@ -20,7 +20,7 @@ Plan:
   N, elements, counts
   sampled + probabilistic LS/SG/VPA
 Program:
-  ordered unique elements from Planner semantic_trace
+  ordered unique elements from Planner-Llama species pointer
 Canvas:
   six lattice values
   request-local site handles, species, XYZ
@@ -33,15 +33,16 @@ The runtime owns this state. Models read views of it.
 
 ## 3. Planner view
 
-The Planner action trace is authoritative for program order. Canonical Plan
-serialization may sort `elements/counts` for identity, but the separate
-`species_program` field preserves sampled order.
+The C3FD action trace is canonical composition provenance. The attached
+Planner-Llama pointer is authoritative for program order. Canonical Plan
+serialization may sort `elements/counts` for identity, while the separate
+`species_program` preserves the predicted permutation.
 
 Validation requires:
 
 - program elements are unique;
 - program set equals Plan element set;
-- trace counts collapse to exact Plan counts;
+- pointer candidates and outputs are restricted to exact Plan elements;
 - N equals the sum of counts.
 
 ## 4. DLM view

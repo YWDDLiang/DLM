@@ -8,7 +8,7 @@ Track A tests the same scientific Planner with an autoregressive structure
 executor:
 
 ```text
-C3FD–Llama Plan + species program
+C3FD–Llama Plan + Llama-pointer species program
         -> Plan-conditioned AR body Llama
         -> ordinary CrysLLMGen text
         -> parsed raw crystal
@@ -31,7 +31,7 @@ The body uses native Llama text tokens. It never consumes DLM special tokens.
 
 Use the full MP20 train split with:
 
-- teacher and frozen-predicted same-schema Plan views;
+- MP20 teacher Compact-Plan prompts; predicted Plans are inference inputs;
 - canonical CrysLLMGen body text;
 - sites grouped in Planner program order;
 - prompt tokens excluded from body CE;
@@ -45,7 +45,7 @@ A800 and runs in parallel only when B does not need those resources.
 
 ## 4. Inference
 
-The Planner samples one valid Plan and program. The AR model generates one
+The Planner samples one valid Plan and predicts one program. The AR model generates one
 crystal text trajectory in program order. The result is parsed into the
 canonical state and evaluated without repair or replacement.
 

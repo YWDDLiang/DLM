@@ -41,9 +41,13 @@ class DynamicGuardTests(unittest.TestCase):
 
 
 try:
-    from crystal_dlm.llada_generation import _validate_generation_position_groups
+    from crystal_dlm.llada_generation import (
+        _validate_generation_position_groups,
+        _validate_generation_position_groups_by_batch,
+    )
 except ModuleNotFoundError:
     _validate_generation_position_groups = None
+    _validate_generation_position_groups_by_batch = None
 
 
 @unittest.skipIf(_validate_generation_position_groups is None, "torch unavailable")
@@ -58,6 +62,24 @@ class ScheduleGuardTests(unittest.TestCase):
     def test_incomplete_schedule_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "does not cover every position"):
             _validate_generation_position_groups([[4, 1], [3]], 5)
+
+    def test_row_local_schedules_may_use_different_noncontiguous_orders(self) -> None:
+        schedules = _validate_generation_position_groups_by_batch(
+            [
+                [[0], [4, 2], [1, 3]],
+                [[4], [3], [2], [1], [0]],
+            ],
+            batch_size=2,
+            gen_length=5,
+        )
+        self.assertEqual(schedules[0][1], [4, 2])
+        self.assertEqual(schedules[1][-1], [0])
+
+    def test_row_local_schedule_batch_size_is_exact(self) -> None:
+        with self.assertRaisesRegex(ValueError, "one schedule per batch row"):
+            _validate_generation_position_groups_by_batch(
+                [[[0], [1]]], batch_size=2, gen_length=2
+            )
 
 
 if __name__ == "__main__":

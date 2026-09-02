@@ -8,7 +8,7 @@ Track B uses the Planner Llama to control DLM execution without sharing token
 IDs or inventing a cross-model logit bridge:
 
 - predicted Compact Plan is the condition;
-- sampled Planner species-action order is the construction program;
+- a Plan-conditioned pointer on the Planner Llama predicts the construction program;
 - the DLM owns lattice/coordinate values;
 - suffix-visible anchor backfill is the DLM-specific operation.
 
@@ -16,7 +16,8 @@ This is **Scientific Programmed Anchor–Backfill Denoising (SPAD)**.
 
 ## 2. Planner-to-DLM signal
 
-The existing typed Planner returns:
+The existing typed Planner returns a certified Plan and a canonical provenance
+trace. A lightweight species pointer additionally returns:
 
 ```text
 plan_state:
@@ -26,15 +27,23 @@ semantic_trace:
   species(Z, oxidation, count),
   ...,
   EOS
+species_program:
+  an exact permutation of unique plan_state elements
 ```
 
-The program compiler:
+The pointer/compiler path:
 
-1. reads species actions in sampled order;
-2. maps atomic number to element symbol;
-3. folds repeated oxidation states of one element at first occurrence;
+1. reads the terminal Planner-Llama hidden state, final elements/counts and
+   selected LS/SG/VPA fields;
+2. masks every element not in the certified Plan and every already selected
+   element;
+3. predicts an immutable unique-element permutation;
 4. verifies exact agreement with Plan elements/counts;
-5. emits an immutable unique-element permutation.
+5. maps that permutation to canonical DLM site positions.
+
+The C3FD action state enforces increasing species keys, so its semantic trace
+is deliberately not claimed as learned order. The pointer is trained on a
+periodic maximum-contact-tree target derived only from MP20-train structures.
 
 The Plan text is encoded by the DLM tokenizer. The program remains structured
 metadata and maps elements to DLM site positions. This is the complete
@@ -62,7 +71,7 @@ N,LA,LB,LC,AA,AB,AG,(E_i,X_i,Y_i,Z_i)_{i=1}^{N}.
 - N and all E positions are prefilled from the exact Plan;
 - lattice and XYZ positions begin masked;
 - storage order remains canonical;
-- the species program chooses non-contiguous active positions;
+- the Llama-pointer species program chooses non-contiguous active positions;
 - every forward sees the whole canvas with bidirectional attention.
 
 Only exact `7+4N` canvases are production inputs. The historical fixed
@@ -143,8 +152,8 @@ One source row contributes a weighted mixture:
 - program predictor mask with committed anchors/current/future state;
 - full-body correction mask with one earlier anchor hidden and suffix visible.
 
-Teacher and frozen-predicted Plan views share the same target and total source
-weight one. Exact N/elements stay visible.
+MP20 teacher Compact-Plan prompts provide SFT input. Predicted Plans are used
+at inference through the identical schema. Exact N/elements stay visible.
 
 The schedule-matched endpoint is one LoRA:
 
@@ -161,7 +170,8 @@ The schedule-matched endpoint is one LoRA:
 | Cell | Weights | Decoder |
 |---|---|---|
 | BC | retained | canonical monotone |
-| BP | retained | Planner-program anchor-first |
+| BH | retained | deterministic chemistry heuristic anchor-first |
+| BP | retained | learned Llama-pointer anchor-first |
 | BR | retained | BP + suffix-visible remask sweep |
 | BS | matched LoRA | BR decoder |
 
@@ -191,9 +201,10 @@ is the non-replaceable role of the DLM.
 
 ## 12. Expected result and iteration
 
-BP tests whether Llama's chemically learned order provides better anchors. BR
-targets early-site geometric mistakes using the completed future. BS removes
-the random-mask versus structured-decoder mismatch.
+BC/BH/BP tests whether the Llama pointer learns more than a fixed chemistry
+heuristic and provides better anchors. BR targets early-site geometric mistakes
+using the completed future. BS removes the random-mask versus structured-decoder
+mismatch.
 
 Small failures are localized to token coverage, program compilation, remask
 state, geometry support or learned mask adaptation. Each receives one adjacent

@@ -59,6 +59,30 @@ def _validate_generation_position_groups(
     return normalized
 
 
+def _validate_generation_position_groups_by_batch(
+    generation_position_groups_by_batch: list[list[list[int]]],
+    *,
+    batch_size: int,
+    gen_length: int,
+) -> list[list[list[int]]]:
+    """Validate one exact position schedule per batch row.
+
+    SPAD programs can activate different native sites for equal-length samples.
+    Keeping the schedules row-local preserves batching without physically
+    permuting the canonical ``7 + 4N`` canvas.
+    """
+
+    if len(generation_position_groups_by_batch) != int(batch_size):
+        raise ValueError(
+            "generation_position_groups_by_batch must contain one schedule "
+            "per batch row"
+        )
+    return [
+        _validate_generation_position_groups(groups, int(gen_length))
+        for groups in generation_position_groups_by_batch
+    ]
+
+
 def _build_token_mask(token_ids: list[int], vocab_size: int, device: torch.device) -> torch.Tensor:
     mask = torch.zeros((vocab_size,), dtype=torch.bool, device=device)
     if token_ids:
@@ -384,6 +408,7 @@ def generate(
     prefill_token_ids_by_generation_pos: dict[int, int | list[int] | torch.Tensor] | None = None,
     atom_count_grammar: dict | None = None,
     generation_position_groups: list[list[int]] | None = None,
+    generation_position_groups_by_batch: list[list[list[int]]] | None = None,
     lightweight_decoding_constraints: dict | None = None,
     return_step_map: bool = False,
 ) -> torch.Tensor:
@@ -457,17 +482,40 @@ def generate(
             model.device,
         )
 
-    if generation_position_groups is not None:
+    if (
+        generation_position_groups is not None
+        and generation_position_groups_by_batch is not None
+    ):
+        raise ValueError(
+            "Pass either a shared generation schedule or row-local schedules, not both"
+        )
+    position_schedules = None
+    if generation_position_groups_by_batch is not None:
+        position_schedules = _validate_generation_position_groups_by_batch(
+            generation_position_groups_by_batch,
+            batch_size=prompt.shape[0],
+            gen_length=gen_length,
+        )
+    elif generation_position_groups is not None:
+        shared = _validate_generation_position_groups(
+            generation_position_groups, gen_length
+        )
+        position_schedules = [shared for _ in range(prompt.shape[0])]
+
+    if position_schedules is not None:
         denoise_step = 0
-        position_groups = _validate_generation_position_groups(generation_position_groups, gen_length)
-        for group in position_groups:
-            absolute_positions = torch.tensor(
-                [prompt.shape[1] + position for position in group],
-                dtype=torch.long,
-                device=x.device,
-            )
+        max_groups = max(len(groups) for groups in position_schedules)
+        for group_index in range(max_groups):
             group_allowed = torch.zeros_like(x, dtype=torch.bool, device=x.device)
-            group_allowed[:, absolute_positions] = True
+            for row_index, groups in enumerate(position_schedules):
+                if group_index >= len(groups):
+                    continue
+                absolute_positions = torch.tensor(
+                    [prompt.shape[1] + position for position in groups[group_index]],
+                    dtype=torch.long,
+                    device=x.device,
+                )
+                group_allowed[row_index, absolute_positions] = True
             group_mask_index = (x == mask_id) & group_allowed
             group_steps = int(group_mask_index.sum(dim=1).max().detach().item())
             if group_steps <= 0:

@@ -18,7 +18,7 @@ Track B is therefore simplified to:
 C3FD reachable chemical state
         -> Llama residual action decisions
         -> exact composition + predicted Compact Plan
-        -> Planner species-action trajectory
+        -> terminal Llama species-pointer permutation
         -> species construction program
         -> exact 7+4N DLM canvas with N/E prefilled
         -> non-contiguous anchor-first generation
@@ -34,13 +34,14 @@ This is named **Scientific Programmed Anchor–Backfill Denoising (SPAD)**.
 | Teacher requirement | SPAD implementation |
 |---|---|
 | scientific knowledge modifies Llama decoding | C3FD support/base scores and Llama residuals jointly choose typed chemical actions |
-| Llama should decide DLM order | the resulting species-action trajectory is compiled directly into the DLM species-block program |
+| Llama should decide DLM order | a masked pointer on terminal Llama state predicts the exact Plan-element permutation compiled into DLM positions |
 | use DLM rather than a second AR model | DLM commits non-contiguous future positions and later infills an earlier remasked anchor with the suffix still visible |
 | lattice/coordinates should receive prior knowledge | predicted LS/SG/VPA condition the prompt; lattice and PBC state constrain transactions |
 | connect to continuous diffusion | complete raw SPAD state can later receive a force-calibrated continuous-response correction |
 
-The same Planner decision process now connects chemistry and DLM execution;
-there is no detached ProgramHead.
+The pointer is attached to the same Planner Llama and cannot alter the
+C3FD-certified candidate set. It connects chemistry and DLM execution without
+sharing token IDs.
 
 ## 3. Special-token audit
 
@@ -60,8 +61,12 @@ Boundary probes for N, lattice, angle, Pu and coordinate 000/100 each encode as
 one token. Its pad/eos ID is 126081 and differs from the current DLM mask ID
 126336.
 
-Full empirical coverage remains to be audited over all 27,136 MP20 train and
-9,047 validation rows.
+CPU job 39507 completed the full empirical audit: all 27,136 MP20 train and
+9,047 validation rows parse, tokenize to exact `7+4N`, and fit the supported
+range. All 2,481 special tokens are atomic and unique; checkpoint input/output
+rows cover the 128,830-token vocabulary. Teacher contexts peak at 238/234
+tokens, leaving 144/148 tokens under the 382-token limit. Coordinate 100 occurs
+7,829/2,518 times and is handled as a periodic alias of 000.
 
 ### Required fixes before B training
 
@@ -93,14 +98,15 @@ mask-to-token only. It cannot turn a committed token back into a mask.
 
 ## 5. SPAD execution program
 
-The Planner `semantic_trace` already records species/count actions in sampled
-order. `plan_state.elements` may remain canonicalized; a separate
-`species_program` preserves the action order after oxidation-state variants
-of one element are folded together.
+The Planner `semantic_trace` records species/count provenance but C3FD enforces
+strictly increasing species keys. It is therefore canonical, not a learned
+permutation. A small masked pointer reads terminal Planner-Llama state,
+elements/counts and soft Plan fields and emits `species_program`.
 
-For MP20 teacher compositions, the same frozen Planner scores only the
-remaining target species/count actions at each step. This produces an
-outcome-blind teacher-composition program with the same semantics as inference.
+The MP20-train target is a periodic maximum-contact-tree order: choose the
+largest average-contact-degree element as root, then repeatedly choose the
+element most connected to the current scaffold. C3FD, Llama and composition
+heads remain frozen while this pointer trains.
 
 The program must be an exact permutation of unique Plan elements.
 
@@ -140,14 +146,14 @@ There are only two Llama-to-DLM signals:
 
 1. **condition:** predicted Compact Plan text is tokenized by the DLM's own
    tokenizer;
-2. **program:** Planner species-action order is compiled into DLM position
+2. **program:** the Llama pointer permutation is compiled into DLM position
    groups and remask transactions.
 
 No AR BPE token, AR hidden state or AR logit enters the DLM.
 
 DLM training uses:
 
-- teacher and frozen-predicted same-schema Plan views with source weight one;
+- MP20 teacher same-schema Plan prompts; predicted Plans are inference inputs;
 - ordinary random masks to retain general denoising;
 - program-matched predictor masks;
 - complete-state anchor-remask masks with teacher suffix visible.
@@ -160,12 +166,13 @@ outcomes do not enter training.
 | Cell | Difference |
 |---|---|
 | BC | retained DLM, canonical monotone schedule |
-| BP | same weights, Planner-program anchor-first schedule |
+| BH | same weights, deterministic chemistry heuristic schedule |
+| BP | same weights, learned Llama-pointer anchor-first schedule |
 | BR | BP + one suffix-visible anchor-remask sweep |
 | BS | BR after one schedule-matched MP20 LoRA epoch |
 | BR-no-suffix | same remask position but mask the later sites too; mechanism diagnostic |
 
-BC→BP tests the Llama program. BP→BR tests DLM-only suffix-visible revision.
+BC/BH/BP isolates learned Llama order from fixed order. BP→BR tests DLM-only suffix-visible revision.
 BR→BS tests matched training. BR-no-suffix is a small mechanism comparison, not
 a full headline cell.
 

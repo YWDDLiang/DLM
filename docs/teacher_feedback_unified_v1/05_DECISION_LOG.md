@@ -11,7 +11,7 @@ Status: **post-audit B-first design; implementation active**
 | Track B is the priority route | make A's body adapter a prerequisite for B | B only needs the frozen Planner Plan and action order |
 | Spaces meet through Plan/program/state | add AR BPE logits to DLM special-token logits | token spaces and probability factorizations differ |
 | DLM owns all geometry values | add an unimplemented SLA/gate first | Plan/program are sufficient to establish Llama guidance |
-| Planner action order is the species program | train a detached ProgramHead | the existing Llama trajectory already contains a learned order |
+| A Plan-conditioned Llama pointer predicts species order | call the canonical C3FD trace a learned order | C3FD enforces increasing species keys; the pointer is the smallest honest learned permutation |
 | DLM storage remains canonical | physically reorder token positions | a program can activate arbitrary non-contiguous positions |
 | Anchor–backfill is the core DLM operation | use only monotone schedule changes | suffix-visible re-masking demonstrates non-causal DLM necessity |
 | Exact N/elements are prefilled | ask DLM to regenerate solved composition | protects C3FD's demonstrated contribution |
@@ -44,10 +44,10 @@ of DLM future-first/backward revision.
 
 ### Must be fixed
 
-- full checkpoint/tokenizer and MP20 coverage are not yet proven;
-- mask ID is hard-coded;
-- strict parser ignores surrounding garbage;
-- schedule validation does not require complete coverage;
+- full checkpoint/tokenizer and MP20 coverage passed in CPU job 39507;
+- configured mask ID 126336 is valid but must remain explicitly checked;
+- strict parser now rejects surrounding garbage;
+- schedule validation now requires complete coverage;
 - old universal sampler appends visible EOS tails;
 - committed dynamic tokens cannot yet be re-masked in production;
 - current collision mask detects duplicate bins, not general 0.5 Å triclinic
@@ -56,16 +56,18 @@ of DLM future-first/backward revision.
 
 ## B-first pivot
 
-The three module audits independently recommended:
+The first three module audits recommended:
 
-> C3FD–Llama Plan + sampled species action trajectory → non-contiguous
+> C3FD–Llama Plan + species construction program → non-contiguous
 > anchor-first DLM → complete future context → suffix-visible anchor backfill.
 
-This became SPAD and supersedes SLA/gate as the first Track-B path.
+This became SPAD and supersedes SLA/gate as the first Track-B path. A subsequent
+code audit proved the action trace canonical; SPAD therefore uses a
+geometry-supervised pointer on the terminal Planner-Llama state.
 
 ## Evidence policy
 
-- BC→BP isolates Planner-program order.
+- BC/BH/BP isolates canonical, heuristic and learned Llama-pointer order.
 - BP→BR isolates one suffix-visible remask sweep.
 - BR→BS isolates schedule-matched LoRA training.
 - BR-no-suffix tests whether visible future context carries the gain.

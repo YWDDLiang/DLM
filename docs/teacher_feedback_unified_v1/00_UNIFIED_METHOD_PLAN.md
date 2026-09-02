@@ -15,7 +15,7 @@ C3FD chemical state/reachable support
              +
 Llama residual action preferences
              ↓
-exact composition + Compact Plan + sampled species-action trajectory
+exact composition + Compact Plan + Llama species-pointer permutation
              ↓
 species construction program
              ↓
@@ -28,9 +28,10 @@ re-mask early anchors while the completed suffix remains visible
 periodic-feasible backfill → raw crystal → common continuous refinement
 ```
 
-The single core contribution is not a loose Planner/DLM cascade. The same
-scientific action trajectory that selects the composition becomes the program
-that controls where the DLM denoises and where it later revisits.
+The single core contribution is not a loose Planner/DLM cascade. C3FD first
+certifies the composition support; the terminal Planner-Llama state then
+predicts a permutation of exactly those elements, controlling where the DLM
+denoises and where it later revisits.
 
 ## 2. Model boundaries
 
@@ -44,9 +45,11 @@ It has no fine lattice-length, angle or coordinate logits.
 ### Llama
 
 The retained Planner Llama reads typed C3FD state embeddings and supplies
-residual action preferences. Its sampled species/count order is preserved as
-`species_program`. Llama therefore affects both **what composition is
-selected** and **which species anchors the DLM resolves first**.
+residual action preferences. After the final Plan is certified, a small masked
+pointer head reads its terminal hidden state, Plan element/count embeddings and
+soft structural fields and emits `species_program`. Llama therefore affects
+both **what composition is selected** and **which species anchors the DLM
+resolves first**.
 
 ### DLM
 
@@ -121,17 +124,15 @@ coverage and checkpoint embedding rows are audited before training.
 
 ## 6. Species program
 
-At inference, the program is the first-occurrence element order in the
-Planner's sampled `semantic_trace`, after folding oxidation-state variants of
-the same element. It must be an exact permutation of Plan elements.
+The current C3FD action trace is canonical by construction and is retained for
+composition provenance, not mislabelled as a learned order. A lightweight
+masked pointer attached to the same Planner Llama emits an exact permutation
+of the final Plan elements; it cannot add, remove or change their counts.
 
-For each MP20 training composition, the frozen Planner performs constrained
-replay: only remaining target species/count actions are eligible. Their sampled
-order supplies the train-time program without reading structure energy or test
-outcomes.
-
-This avoids a detached order head. The program is produced by the same
-C3FD–Llama policy used for composition.
+Its MP20-train teacher is a deterministic maximum-contact-tree order from the
+periodic element contact graph: start from the element with largest average
+contact degree, then add the element most strongly connected to the selected
+scaffold. This uses geometry but no energy, hull or evaluation outcome.
 
 ## 7. Anchor–backfill DLM
 
@@ -179,11 +180,13 @@ averages that place an atom at a nonexistent mode.
 
 ## 9. Training
 
-The retained Compact-V2 DLM is first tested without new weights. One later
+The species pointer first trains with the Planner/C3FD composition model frozen.
+The retained Compact-V2 DLM is then tested without new weights. One later
 schedule-matched LoRA uses:
 
 - full MP20 train;
-- teacher and frozen-predicted same-schema Plan views with source weight one;
+- MP20 teacher Compact-Plan prompts; predicted same-schema Plans are used only
+  at inference;
 - ordinary random-mask states;
 - program-matched anchor/future predictor states;
 - complete-state anchor-remask states with teacher suffix visible;
@@ -197,12 +200,14 @@ SPAD training.
 | ID | Method |
 |---|---|
 | BC | retained DLM, canonical monotone schedule |
-| BP | same weights, Planner-program anchor-first schedule |
+| BH | same weights, deterministic chemistry heuristic order |
+| BP | same weights, learned Llama-pointer anchor-first schedule |
 | BR | BP + one suffix-visible anchor-remask sweep |
 | BS | BR + one schedule-matched MP20 LoRA epoch |
 
-BC→BP tests Llama program control. BP→BR tests the DLM-specific ability to use
-generated future context. BR→BS tests train/serve mask alignment.
+BC/BH/BP separates canonical, heuristic and learned Llama order. BP→BR tests
+the DLM-specific ability to use generated future context. BR→BS tests
+train/serve mask alignment.
 
 A small `BR-no-suffix` mechanism cell masks later sites during the same
 anchor remask. BR must outperform it on anchor recovery/geometry for the

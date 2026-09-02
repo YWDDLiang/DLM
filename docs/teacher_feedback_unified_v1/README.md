@@ -1,6 +1,6 @@
 # Teacher-Feedback Unified Method Package
 
-Status: **design and review only; no scientific run starts before explicit user approval**
+Status: **execution approved; implementation and preflight active**
 
 Branch: `codex/unified-scientific-decoding`
 Worktree: `D:\codex_work\ai4s\DLM_unified_scientific_decoding`
@@ -13,17 +13,18 @@ is authoritative where it supersedes the initial SLA/gate design:
 1. **Track A — LLM-only executor** (the requested pure-LLM route): a
    C3FD-conditioned Llama generates a complete crystal through typed semantic
    actions and emits ordinary CrysLLMGen text.
-2. **Track B — LLM-programmed DLM:** the C3FD–Llama species-action trajectory
-   controls a masked DLM's non-contiguous anchor order; the DLM later re-masks
-   early anchors with the generated suffix visible.
+2. **Track B — LLM-programmed DLM:** a small Plan-conditioned pointer on the
+   Planner Llama predicts a species permutation, which controls a masked DLM's
+   non-contiguous anchor order; the DLM later re-masks early anchors with the
+   generated suffix visible.
 
 The models do not share token IDs. They communicate through a canonical crystal
 state and typed semantic action space. The frozen continuous refiner (internal
 checkpoint name: model494) receives arrays, not language tokens.
 
-In one sentence: **C3FD constrains reachable chemistry, Llama's own action
-trajectory becomes a crystal construction program, and the DLM uses that
-program to build future context before backfilling earlier atoms.**
+In one sentence: **C3FD constrains reachable chemistry, Llama predicts a
+geometry-supervised construction program over the certified Plan, and the DLM
+uses that program to build future context before backfilling earlier atoms.**
 
 “Same Llama” refers to one base backbone with frozen stage-specific weights:
 
@@ -31,7 +32,7 @@ program to build future context before backfilling earlier atoms.**
 |---|---|
 | chemical planning | retained PlannerAdapter-P + typed C3FD residual heads |
 | Track-A body | independent Plan-conditioned AR body adapter |
-| Track-B guidance | PlannerAdapter-P Plan text + sampled species-action order |
+| Track-B guidance | PlannerAdapter-P Plan text + Llama pointer permutation |
 
 Track B does not depend on Track-A body weights and receives execution priority.
 Its first path trains only a DLM LoRA after decoder-only program/remask cells.
@@ -57,7 +58,7 @@ Short glossary:
 | checkpoint 494 | current frozen continuous crystal refiner, internally called model494 |
 | A0/A1 | LLM-only executor without/with periodic commit control |
 | SPAD | Scientific Programmed Anchor–Backfill Denoising, the B-route core |
-| BC/BP/BR/BS | canonical DLM / Planner-program order / suffix-visible remask / matched-SFT endpoint |
+| BC/BP/BR/BS | canonical DLM / Llama-pointer order / suffix-visible remask / matched-SFT endpoint |
 | E1 | later continuous-response or force-to-DLM stability contribution |
 
 Read in this order:
@@ -70,8 +71,6 @@ Read in this order:
 6. [Decision log](05_DECISION_LOG.md)
 7. [Implementation audit and B-first pivot](06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
 
-The active ten-minute heartbeat is
-`sscd-a-b-approval-and-execution`. It may inspect status and maintain this
-package, but it must remain quiet and must not submit training, generation,
-evaluation or external-query work until the user explicitly approves
-execution.
+The active ten-minute heartbeat is `sscd-a-b-approval-and-execution`. Execution
+is approved; it stays quiet except for terminal audit, training, generation,
+evaluation, S.U.N. or blocking events.

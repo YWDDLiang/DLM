@@ -26,42 +26,52 @@ Authoritative method update:
 - [x] Real step-3392 boundary probes: N/lattice/angle/Pu/XYZ 000/100 each
   encode as one token; tokenizer size 128,830; pad/eos 126081 differs from mask
   126336.
-- [ ] Add one reusable audit command and tests.
-- [ ] On the real tokenizer, verify all 2,481 tokens exist, encode atomically,
+- [x] Add one reusable audit command and tests.
+- [x] On the real tokenizer, verify all 2,481 tokens exist, encode atomically,
   decode consistently and use unique IDs.
-- [ ] Inspect adapter safetensors without loading the 6 GiB tensor; verify input
+- [x] Inspect adapter safetensors without loading the 6 GiB tensor; verify input
   embedding/output-head saved shapes cover all 128,830 IDs.
-- [ ] Parse all MP20 train 27,136 and validation 9,047 rows and report:
+- [x] Parse all MP20 train 27,136 and validation 9,047 rows and report:
   N range, element coverage, length/angle/coordinate ranges, clipping, zero
   lengths, coordinate-100 frequency, quantized duplicates and invalid lattices.
-- [ ] Verify every body has semantic and tokenizer length exactly `7+4N`.
-- [ ] Audit teacher and frozen-predicted Plan prompt + body against max length
+- [x] Verify every body has semantic and tokenizer length exactly `7+4N`.
+- [x] Audit teacher Plan prompt + body against max length
   382.
-- [ ] Verify production uses the exact-length sampler; mark the universal
+- [x] Verify production uses the exact-length sampler; mark the universal
   87-position EOS-tail sampler historical-only.
-- [ ] Save one concise JSON/CSV/Markdown audit and update this checklist.
+- [x] Save one concise JSON/CSV/Markdown audit and update this checklist.
+
+Job 39507 passed all audit checks in 31 seconds. MP20 train/validation parsing
+and exact-token coverage are 27,136/27,136 and 9,047/9,047; no length clipping
+or quantized duplicate row was found. Coordinate 100 appears 7,829/2,518 times
+and is a compatibility alias, not a missing token.
 
 ## Phase 2 — core SPAD interfaces
 
 ### 2.1 Planner program
 
-- [ ] Implement `program_from_planner_trace(plan, semantic_trace)`.
-- [ ] Fold oxidation-state variants of one element while preserving first
-  selected element order.
-- [ ] Require `species_program` to be an exact permutation of unique Plan
+- [x] Implement audited Plan/trace and explicit-element-order compilers.
+- [x] Fold oxidation-state variants and verify trace/Plan composition exactly.
+- [x] Require `species_program` to be an exact permutation of unique Plan
   elements and preserve counts/N.
-- [ ] For MP20 teacher compositions, derive a program by constrained replay of
-  the frozen Planner over only the remaining target species/count actions.
+- [x] Audit the C3FD trace: it is canonical because increasing species keys are
+  enforced; do not call it a learned order.
+- [ ] Build MP20-train maximum-contact-tree teacher permutations from periodic
+  geometry only.
+- [ ] Train a small masked species-pointer on terminal Planner-Llama state with
+  C3FD/Llama/composition heads frozen.
+- [ ] Emit the pointer permutation as `species_program`; never change the
+  certified element set or counts.
 - [ ] Store the program as metadata; do not let canonical element sorting erase
   it and do not add fake DLM tokens for it.
 
 ### 2.2 Exact DLM canvas
 
-- [ ] Make strict dynamic parsing reject non-whitespace text outside schema
+- [x] Make strict dynamic parsing reject non-whitespace text outside schema
   tokens.
-- [ ] Validate N in every dynamic length helper.
-- [ ] Require generation schedules to cover each `7+4N` position exactly once.
-- [ ] Resolve the actual tokenizer mask ID and verify it differs from
+- [x] Validate N in every dynamic length helper.
+- [x] Require generation schedules to cover each `7+4N` position exactly once.
+- [x] Resolve the actual tokenizer mask ID and verify it differs from
   pad/eos/bos/unk/crystal IDs and fits input/output vocab rows.
 - [ ] Exclude zero-length tokens from production support.
 - [ ] Aggregate coordinate 000/100 logits as one torus action and emit canonical
@@ -71,7 +81,8 @@ Authoritative method update:
 
 - [ ] Refactor the current sampler into
   `initialize_canvas / constrained_forward / commit / remask / resume`.
-- [ ] Compile Planner species order into non-contiguous native DLM positions.
+- [x] Compile arbitrary species permutations into exact, non-contiguous native
+  DLM positions and support a different complete schedule for every batch row.
 - [ ] Implement anchor-first prediction: lattice, one anchor site per species,
   remaining sites.
 - [ ] Implement one suffix-visible remask/backfill sweep over early anchors in
@@ -110,8 +121,8 @@ Authoritative method update:
 Track B is the priority route.
 
 - [ ] Reuse frozen C3FD–Llama Planner and current Compact-V2 DLM.
-- [ ] Build full MP20 teacher and frozen-predicted same-schema Plan views;
-  answers are identical and combined source weight is one.
+- [ ] Use full MP20 teacher Compact-Plan prompts for DLM SFT; predicted Plans
+  remain inference inputs under the identical schema.
 - [ ] Add `species_program` and two mask classes:
   program-matched predictor state and complete-state anchor-remask state.
 - [ ] Retain ordinary random-mask examples so general denoising is not erased.
@@ -130,7 +141,8 @@ streams.
 | Cell | Intervention |
 |---|---|
 | BC | retained DLM, canonical monotone schedule |
-| BP | same weights, Planner-program anchor-first schedule |
+| BH | retained DLM, deterministic chemistry heuristic anchor-first schedule |
+| BP | same weights, learned Llama-pointer anchor-first schedule |
 | BR | BP + one suffix-visible anchor-remask sweep |
 | BS | BR after one schedule-matched MP20 LoRA epoch |
 
