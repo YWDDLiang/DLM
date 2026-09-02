@@ -48,6 +48,11 @@ class PaperPipelineLayoutTest(unittest.TestCase):
         ):
             self.assertIn(phrase, text)
         self.assertNotIn("tau900", text)
+        refinement = (
+            ROOT / "src/crystal_dlm/paper_pipeline/refinement.py"
+        ).read_text(encoding="utf-8")
+        self.assertNotIn("tau900", refinement)
+        self.assertIn("fixed to tau800", refinement)
 
 
 if __name__ == "__main__":

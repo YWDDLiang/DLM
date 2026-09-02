@@ -13,8 +13,8 @@ class TerminalDiffusionContract:
     seed_by_sample_index: bool = True
 
     def validate(self) -> None:
-        if self.steps not in (800, 900):
-            raise ValueError("paper refinement exposes only registered tau800/tau900")
+        if self.steps != 800:
+            raise ValueError("paper refinement is fixed to tau800")
         if not self.seed_by_sample_index:
             raise ValueError("refiner identity must follow sample_idx")
 
