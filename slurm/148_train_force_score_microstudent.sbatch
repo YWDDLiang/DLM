@@ -74,6 +74,7 @@ EOF
   --representation dynamic_v1 \
   --dynamic-geometry-only \
   --require-paired-source \
+  --skip-vocab-tokens \
   --max-length 382 \
   --answer-token-count 87 \
   --epochs 20 \
