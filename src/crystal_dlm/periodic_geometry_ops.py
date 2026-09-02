@@ -5,9 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 
-import torch
-
-
 # Frozen from pymatgen 2025.6.14 ``atomic_radius`` with
 # ``atomic_radius_calculated`` and then 1.5 A as deterministic fallbacks.
 # Index zero is padding; indices 1..118 are atomic numbers.
@@ -42,16 +39,18 @@ def element_radius(atomic_number: int) -> float:
 
 
 def minimum_image_distances(
-    fractional_deltas: torch.Tensor,
-    lattice: torch.Tensor,
+    fractional_deltas: "torch.Tensor",
+    lattice: "torch.Tensor",
     *,
     image_radius: int,
-) -> torch.Tensor:
+) -> "torch.Tensor":
     """Return the minimum norm over a centered bounded image shell.
 
     ``fractional_deltas`` may be ``[..., 3]`` with one lattice ``[3, 3]``, or
     ``[B, ..., 3]`` with batched lattices ``[B, 3, 3]``.
     """
+
+    import torch
 
     if fractional_deltas.shape[-1] != 3:
         raise ValueError("fractional_deltas must end in three coordinates")
@@ -81,18 +80,18 @@ def minimum_image_distances(
 
 
 def minimum_image_distances_27(
-    fractional_deltas: torch.Tensor,
-    lattice: torch.Tensor,
-) -> torch.Tensor:
+    fractional_deltas: "torch.Tensor",
+    lattice: "torch.Tensor",
+) -> "torch.Tensor":
     return minimum_image_distances(
         fractional_deltas, lattice, image_radius=1
     )
 
 
 def minimum_image_distances_125(
-    fractional_deltas: torch.Tensor,
-    lattice: torch.Tensor,
-) -> torch.Tensor:
+    fractional_deltas: "torch.Tensor",
+    lattice: "torch.Tensor",
+) -> "torch.Tensor":
     return minimum_image_distances(
         fractional_deltas, lattice, image_radius=2
     )
