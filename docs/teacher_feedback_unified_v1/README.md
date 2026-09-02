@@ -58,7 +58,7 @@ Short glossary:
 | checkpoint 494 | current frozen continuous crystal refiner, internally called model494 |
 | A0/A1 | LLM-only executor without/with periodic commit control |
 | SPAD | Scientific Programmed Anchor–Backfill Denoising, the B-route core |
-| BC/BP/BR/BS | canonical DLM / Llama-pointer order / suffix-visible remask / matched-SFT endpoint |
+| B0/BC/BP/BR/BS | retained schedule / canonical SPAD / Llama-pointer SPAD / suffix-visible remask / matched-SFT endpoint |
 | E1 | later continuous-response or force-to-DLM stability contribution |
 
 Read in this order:

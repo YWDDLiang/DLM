@@ -141,8 +141,8 @@ streams.
 
 | Cell | Intervention |
 |---|---|
-| BC | retained DLM, canonical monotone schedule |
-| BH | retained DLM, deterministic chemistry heuristic anchor-first schedule |
+| B0 | retained DLM, historical confidence-ordered exact-plan schedule |
+| BC | retained DLM, canonical species under SPAD transactions |
 | BP | same weights, learned Llama-pointer anchor-first schedule |
 | BR | BP + one suffix-visible anchor-remask sweep |
 | BS | BR after one schedule-matched MP20 LoRA epoch |

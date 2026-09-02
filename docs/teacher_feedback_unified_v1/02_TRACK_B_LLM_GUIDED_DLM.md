@@ -169,8 +169,8 @@ The schedule-matched endpoint is one LoRA:
 
 | Cell | Weights | Decoder |
 |---|---|---|
-| BC | retained | canonical monotone |
-| BH | retained | deterministic chemistry heuristic anchor-first |
+| B0 | retained | historical confidence-ordered exact-plan |
+| BC | retained | canonical species under SPAD transactions |
 | BP | retained | learned Llama-pointer anchor-first |
 | BR | retained | BP + suffix-visible remask sweep |
 | BS | matched LoRA | BR decoder |
@@ -201,8 +201,8 @@ is the non-replaceable role of the DLM.
 
 ## 12. Expected result and iteration
 
-BC/BH/BP tests whether the Llama pointer learns more than a fixed chemistry
-heuristic and provides better anchors. BR targets early-site geometric mistakes
+B0/BC tests transaction ordering and BC/BP isolates the Llama species program.
+BR targets early-site geometric mistakes
 using the completed future. BS removes the random-mask versus structured-decoder
 mismatch.
 

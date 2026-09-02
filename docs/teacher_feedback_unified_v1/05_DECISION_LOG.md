@@ -67,7 +67,7 @@ geometry-supervised pointer on the terminal Planner-Llama state.
 
 ## Evidence policy
 
-- BC/BH/BP isolates canonical, heuristic and learned Llama-pointer order.
+- B0→BC isolates transaction order; BC→BP isolates the learned Llama-pointer program.
 - BP→BR isolates one suffix-visible remask sweep.
 - BR→BS isolates schedule-matched LoRA training.
 - BR-no-suffix tests whether visible future context carries the gain.

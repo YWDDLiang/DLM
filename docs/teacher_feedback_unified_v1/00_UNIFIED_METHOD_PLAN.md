@@ -199,13 +199,13 @@ SPAD training.
 
 | ID | Method |
 |---|---|
-| BC | retained DLM, canonical monotone schedule |
-| BH | same weights, deterministic chemistry heuristic order |
+| B0 | retained DLM, historical confidence-ordered exact-plan schedule |
+| BC | same weights, canonical species under SPAD transactions |
 | BP | same weights, learned Llama-pointer anchor-first schedule |
 | BR | BP + one suffix-visible anchor-remask sweep |
 | BS | BR + one schedule-matched MP20 LoRA epoch |
 
-BC/BH/BP separates canonical, heuristic and learned Llama order. BP→BR tests
+B0→BC tests the crystal transaction order. BC→BP isolates learned Llama order. BP→BR tests
 the DLM-specific ability to use generated future context. BR→BS tests
 train/serve mask alignment.
 

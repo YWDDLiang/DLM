@@ -170,14 +170,14 @@ outcomes do not enter training.
 
 | Cell | Difference |
 |---|---|
-| BC | retained DLM, canonical monotone schedule |
-| BH | same weights, deterministic chemistry heuristic schedule |
+| B0 | retained DLM, historical confidence-ordered exact-plan schedule |
+| BC | same weights, canonical species under SPAD transactions |
 | BP | same weights, learned Llama-pointer anchor-first schedule |
 | BR | BP + one suffix-visible anchor-remask sweep |
 | BS | BR after one schedule-matched MP20 LoRA epoch |
 | BR-no-suffix | same remask position but mask the later sites too; mechanism diagnostic |
 
-BC/BH/BP isolates learned Llama order from fixed order. BP→BR tests DLM-only suffix-visible revision.
+B0→BC isolates transaction order; BC→BP isolates learned Llama order. BP→BR tests DLM-only suffix-visible revision.
 BR→BS tests matched training. BR-no-suffix is a small mechanism comparison, not
 a full headline cell.
 
