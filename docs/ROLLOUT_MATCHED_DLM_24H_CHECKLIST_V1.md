@@ -154,10 +154,19 @@ CHGNet-selected or hull-selected structures never become labels.
 - [x] Job39335 failed in 28 seconds before sampling because Bash `set -u`
   rejected an empty optional relation-argument array for the no-G2 arm. It is
   an engineering negative with no body output.
-- [ ] Parameter-identical recovery job39338 reuses the frozen prospective 256
+- [x] Parameter-identical recovery job39338 reuses the frozen prospective 256
   Plans and old G2-PBC-R raw control, generating only canonical DLM and
   canonical DLM+G2 with identical stream17 noise before fast Direct. It does
   not resample the Planner or run model494/CHGNet.
+- [x] Job39338 completed both fixed256 bodies and fast Direct, then its report
+  reducer failed only because the cached old evaluator rows use `attempt_id`
+  rather than `ordinal`. CPU-only recovery preserved every result.
+- [x] Raw body/composition/Direct: OLD-G2 `255/255/128`, canonical DLM
+  `253/253/143`, canonical G2 `251/251/133`. Canonical DLM vs OLD flips are
+  25 invalid→valid and 10 valid→invalid (net +15); canonical G2 vs OLD is
+  19/14 (net +5); adding G2 to canonical DLM is net -10 Direct.
+- [ ] Job39348 runs paired raw CHGNet for both canonical arms and reuses the
+  old G2-PBC-R A labels. No model494 or official query is included.
 - [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
   `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
   exactly-zero output initialization, strict triclinic 125-image minimum image,
