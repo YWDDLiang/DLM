@@ -225,8 +225,8 @@ Only after the SPAD result is frozen:
 - job 39513: real-checkpoint suffix-dependency audit complete. Perturbing one
   later Z token changes earlier masked-anchor X/Y/Z logits by maxima
   0.125/0.09375/0.15625.
-- job 39514: active 4-A800 raw run, BC/BP/BR × streams 17/18 with common
-  periodic support and Direct; no model494 or CHGNet yet.
+- job 39514: raw BC/BP/BR bodies completed; its parent failure was confined to
+  the Direct environment and the immutable bodies were reused by job 39518.
 - job 39515: full schedule-matched SFT data complete in four seconds. It keeps
   all MP20 27,136/9,047 train/val rows, balanced predictor/correction/random
   mask classes, 24,558 learned-contact programs plus 2,578 disclosed canonical
@@ -243,3 +243,16 @@ Only after the SPAD result is frozen:
   against full Direct, then measured BS at 255/256 and 256/256 joint validity.
 - job 39525 is the active common model494 tau800 refinement for BC/BR/BS ×
   streams 17/18.
+- job 39527 is dependency-queued after job 39525. It evaluates the same six
+  cells at both raw and refined endpoints (12 cells total) on six A800s, reuses
+  completed BC/BR raw Direct outputs, and gives every CHGNet worker a private
+  cache copy. The wrapper is frozen at commit `ab4880d`.
+
+Immediate sequence:
+
+- [ ] finish and audit all six job-39525 refinement cells;
+- [ ] let dependency job 39527 run the parallel raw/refined Direct + CHGNet
+  evaluation without changing Plan, stream, denominator or sample ordering;
+- [ ] freeze one new outcome-blind 256-composition prospective cohort;
+- [ ] run the final common prospective comparison and exactly one official MP
+  query, then report Strict/Meta S.U.N. against the 10%/50% targets.
