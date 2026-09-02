@@ -24,7 +24,9 @@ def canonical_sha256(value: object) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def refined_structures(payload: dict) -> dict[int, dict]:
+def _refined_structures(
+    payload: dict, *, invalid_as_failure: bool
+) -> tuple[dict[int, dict], dict[int, str]]:
     required = ("frac_coords", "num_atoms", "atom_types", "lengths", "angles", "sample_indices")
     missing = [key for key in required if key not in payload]
     if missing:
@@ -41,6 +43,7 @@ def refined_structures(payload: dict) -> dict[int, dict]:
         raise ValueError("sample_indices do not uniquely cover refined proposals")
 
     structures: dict[int, dict] = {}
+    failures: dict[int, str] = {}
     atom_offset = 0
     for proposal_idx, sample_idx in enumerate(sample_indices):
         n_atom = int(num_atoms[0, proposal_idx].item())
@@ -49,15 +52,44 @@ def refined_structures(payload: dict) -> dict[int, dict]:
         lens = lengths[0, proposal_idx].detach().cpu().numpy()
         angs = angles[0, proposal_idx].detach().cpu().numpy()
         atom_offset += n_atom
-        if not np.isfinite(np.concatenate((coords.reshape(-1), lens, angs))).all():
-            raise ValueError(f"nonfinite refined geometry for sample {sample_idx}")
-        lattice = Lattice.from_parameters(*[float(value) for value in lens], *[float(value) for value in angs])
-        structure = Structure(lattice, atoms.tolist(), coords, coords_are_cartesian=False, to_unit_cell=True)
-        if structure.num_sites != n_atom or not math.isfinite(float(structure.volume)) or structure.volume < 0.1:
-            raise ValueError(f"invalid refined structure for sample {sample_idx}")
-        structures[int(sample_idx)] = structure.as_dict()
+        try:
+            if n_atom <= 0:
+                raise ValueError("nonpositive atom count")
+            if not np.isfinite(np.concatenate((coords.reshape(-1), lens, angs))).all():
+                raise ValueError("nonfinite refined geometry")
+            lattice = Lattice.from_parameters(
+                *[float(value) for value in lens],
+                *[float(value) for value in angs],
+            )
+            structure = Structure(
+                lattice,
+                atoms.tolist(),
+                coords,
+                coords_are_cartesian=False,
+                to_unit_cell=True,
+            )
+            if (
+                structure.num_sites != n_atom
+                or not math.isfinite(float(structure.volume))
+                or structure.volume < 0.1
+            ):
+                raise ValueError("invalid refined structure")
+            structures[int(sample_idx)] = structure.as_dict()
+        except Exception as exc:  # one malformed geometry is one failed attempt
+            if not invalid_as_failure:
+                raise ValueError(
+                    f"invalid refined geometry for sample {sample_idx}: {exc}"
+                ) from exc
+            failures[int(sample_idx)] = f"{type(exc).__name__}:{exc}"
     if atom_offset != int(atom_types.shape[1]):
         raise ValueError("refined atom tensor contains trailing sites")
+    return structures, failures
+
+
+def refined_structures(payload: dict) -> dict[int, dict]:
+    """Retain the historical fail-fast API used by older assemblers."""
+
+    structures, _failures = _refined_structures(payload, invalid_as_failure=False)
     return structures
 
 
@@ -72,6 +104,7 @@ def main() -> None:
     parser.add_argument("--refiner-seed", type=int, required=True)
     parser.add_argument("--denominator", type=int, default=256)
     parser.add_argument("--refinement-steps", type=int, default=800)
+    parser.add_argument("--invalid-refined-as-failure", action="store_true")
     args = parser.parse_args()
 
     raw_rows = read_jsonl(args.body_dir / "raw_generations.jsonl")
@@ -82,7 +115,10 @@ def main() -> None:
     refined_files = [path for path in refined_files if ".rank" not in path.name]
     if len(refined_files) != 1:
         raise ValueError(f"expected one merged refined tensor, found {refined_files}")
-    structures = refined_structures(torch.load(refined_files[0], map_location="cpu"))
+    structures, refinement_failures = _refined_structures(
+        torch.load(refined_files[0], map_location="cpu"),
+        invalid_as_failure=bool(args.invalid_refined_as_failure),
+    )
 
     method = "H1-A2-DLM-CE-CONTROL" if args.arm == "control" else "H1-A2-DLM-COUNTERFACTUAL-GROUNDING"
     rows: list[dict] = []
@@ -91,7 +127,12 @@ def main() -> None:
         structure = structures.get(ordinal)
         succeeded = structure is not None
         plan_state = source.get("plan_state")
-        failure = None if succeeded else f"body:{source.get('reason') or source.get('message') or 'graph_failure'}"
+        if succeeded:
+            failure = None
+        elif ordinal in refinement_failures:
+            failure = f"refiner:{refinement_failures[ordinal]}"
+        else:
+            failure = f"body:{source.get('reason') or source.get('message') or 'graph_failure'}"
         rows.append(
             {
                 "schema": "wqcodiff_generation_attempt_v1",
@@ -134,6 +175,8 @@ def main() -> None:
         "body_success": sum(row.get("parsed") is True for row in raw_rows),
         "refined": len(structures),
         "reconstructed": len(structures),
+        "invalid_refined_as_failure": bool(args.invalid_refined_as_failure),
+        "invalid_refined": len(refinement_failures),
         "dlm_seed": args.dlm_seed,
         "refiner_seed": args.refiner_seed,
         "refinement_steps": int(args.refinement_steps),

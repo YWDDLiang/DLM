@@ -13,6 +13,7 @@
 set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
 readonly GENERATION_RUN="${SPAD_PROSPECTIVE_GENERATION_RUN:?}"
+readonly COHORT="${SPAD_PROSPECTIVE_COHORT:?}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:-/public/home/jiaosz/ywliang/ai4s/.sscd_unified_d0e616b_https}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
@@ -30,8 +31,21 @@ mkdir "${RUN}"
 mkdir "${RUN}/logs"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$BASH_COMMAND" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 [[ -f "${GENERATION_RUN}/_SUCCESS" ]]
+[[ -f "${COHORT}/_SUCCESS" ]]
 IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?}"
 [[ "${#gpu[@]}" -eq 6 ]]
+
+"${PYTHON}" - "${GENERATION_RUN}/GENERATION_FINAL.json" "${COHORT}" <<'PY'
+import json
+import pathlib
+import sys
+report = json.load(open(sys.argv[1], encoding="utf-8"))
+assert report["schema"] == "spad_prospective_generation_v1"
+assert report["one_plan_one_trajectory"] is True
+assert report["selection_retry_replacement"] is False
+assert pathlib.Path(report["frozen_plan_dir"]).resolve() == pathlib.Path(sys.argv[2]).resolve()
+assert len(report["cells"]) == 6
+PY
 
 for arm in B0 BC BS; do
   for stream in 17 18; do
@@ -157,6 +171,10 @@ report = {"schema": "spad_prospective_offline_v1", "cells": cells, "official": F
 (root / "OFFLINE_FINAL.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 print(json.dumps(report, sort_keys=True))
 PY
+
+"${PYTHON}" "${SOURCE}/scripts/finalize_spad_offline.py" \
+  --eval-run "${RUN}" --output-dir "${RUN}/final" --arms B0,BC,BS \
+  --ledger "${COHORT}/ledger.jsonl"
 
 trap - ERR
 touch "${RUN}/_OFFLINE_SUCCESS"

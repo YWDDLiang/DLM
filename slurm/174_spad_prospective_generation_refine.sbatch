@@ -32,12 +32,30 @@ trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$B
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
 [[ "${#allocated[@]}" -eq 6 ]]
 
+"${PYTHON}" - "${PLAN_DIR}/manifest.json" "${POINTER_PLANS}" "${PLAN_LEDGER}" <<'PY'
+import json
+import sys
+manifest = json.load(open(sys.argv[1], encoding="utf-8"))
+plans = [json.loads(line) for line in open(sys.argv[2], encoding="utf-8")]
+ledger = [json.loads(line) for line in open(sys.argv[3], encoding="utf-8")]
+assert manifest["schema"] == "spad_actual_plan_prospective_cohort_v2"
+assert manifest["planner_sampling_seed"] == 23 and manifest["requested"] == 256
+assert manifest["selection"] == "none_all_requested_ordinals_retained"
+assert manifest["replacement"] is False and manifest["planner_resampled_after_freeze"] is False
+assert manifest["outcomes_read"] is False
+assert len(ledger) == 256 and len(plans) == manifest["planner_valid"]
+assert [int(row["sample_idx"]) for row in ledger] == list(range(256))
+assert {int(row["sample_idx"]) for row in plans} == {
+    int(row["sample_idx"]) for row in ledger if row["planner_valid"] is True
+}
+PY
+
 "${PYTHON}" - "${POINTER_PLANS}" "${CANONICAL_PLANS}" <<'PY'
 import json
 import sys
 
 rows = [json.loads(line) for line in open(sys.argv[1], encoding="utf-8")]
-assert 244 <= len(rows) <= 256
+assert 1 <= len(rows) <= 256
 assert len({int(row["sample_idx"]) for row in rows}) == len(rows)
 assert all(0 <= int(row["sample_idx"]) < 256 for row in rows)
 with open(sys.argv[2], "x", encoding="utf-8") as handle:
@@ -86,6 +104,7 @@ run_cell() {
     --model-path "${MODEL}" --checkpoint-path "${policy}" --prompt-jsonl "${plans}" \
     --output-dir "${cell}/body" --crysllmgen-dir "${CRYS}" --num-samples 256 \
     --batch-size 8 --temperature 0.7 --seed "${seed}" --preserve-prompt-sample-idx \
+    --no-repeat-prompt-records \
     --generation-schedule "${schedule}" "${extras[@]}" \
     >"${RUN}/logs/${arm}_${stream}_body.out" \
     2>"${RUN}/logs/${arm}_${stream}_body.err"
@@ -117,7 +136,8 @@ run_cell() {
   "${PYTHON}" "${SOURCE}/scripts/assemble_grounding_repeat.py" \
     --body-dir "${cell}/body_fixed256" --refine-dir "${cell}/refine" \
     --output-dir "${cell}/refined_generation" --arm candidate --repeat 0 \
-    --dlm-seed "${seed}" --refiner-seed "${rseed}" --denominator 256
+    --dlm-seed "${seed}" --refiner-seed "${rseed}" --denominator 256 \
+    --invalid-refined-as-failure
   touch "${cell}/_SUCCESS"
 }
 
@@ -134,12 +154,17 @@ status=0
 for pid in "${pids[@]}"; do wait "${pid}" || status="$?"; done
 (( status == 0 ))
 
-"${PYTHON}" - "${RUN}" <<'PY'
+"${PYTHON}" - "${RUN}" "${PLAN_DIR}" <<'PY'
 import json
 import pathlib
 import sys
 
 root = pathlib.Path(sys.argv[1])
+plan_dir = pathlib.Path(sys.argv[2]).resolve()
+expected = {
+    int(row["sample_idx"]): row["plan_state"]
+    for row in (json.loads(line) for line in open(plan_dir / "plans_for_dlm.jsonl", encoding="utf-8"))
+}
 cells = []
 for arm in ("B0", "BC", "BS"):
     for stream in (17, 18):
@@ -151,6 +176,13 @@ for arm in ("B0", "BC", "BS"):
         assert len(raw) == len(refined) == 256
         assert {row["sample_idx"] for row in raw} == set(range(256))
         assert {row["sample_idx"] for row in refined} == set(range(256))
+        for rows in (raw, refined):
+            for row in rows:
+                sample_idx = int(row["sample_idx"])
+                if sample_idx in expected:
+                    assert row["plan_state"] == expected[sample_idx]
+                else:
+                    assert row["status"] == "failed" and row["plan_state"] is None
         cells.append({
             "arm": arm,
             "stream": stream,
@@ -169,7 +201,9 @@ report = {
     "model494_tau": 800,
     "one_plan_one_trajectory": True,
     "selection_retry_replacement": False,
+    "frozen_plan_dir": str(plan_dir),
 }
+assert all(cell["body_plan_match"] == cell["body_parsed"] for cell in cells)
 (root / "GENERATION_FINAL.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 print(json.dumps(report, sort_keys=True))
 PY

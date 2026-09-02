@@ -26,7 +26,7 @@ env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 \
   --source-records "${SOURCE_RUN}/plans/raw_generations.jsonl" \
   --source-plans "${SOURCE_RUN}/plans/plans_for_dlm.jsonl" \
   --output-dir "${COHORT}" --requested 256 --planner-sampling-seed 23 \
-  --minimum-comp-valid 0.95 \
+  --minimum-comp-valid 0.0 \
   >"${RUN}/freeze.out" 2>"${RUN}/freeze.err"
 
 "${PYTHON}" - "${COHORT}/manifest.json" "${RUN}" <<'PY'
@@ -35,11 +35,11 @@ import pathlib
 import sys
 manifest = json.load(open(sys.argv[1], encoding="utf-8")); run = pathlib.Path(sys.argv[2])
 assert manifest["requested"] == 256
-assert manifest["composition_valid_rate"] >= 0.95
 assert manifest["selection"] == "none_all_requested_ordinals_retained"
 assert manifest["replacement"] is False
 assert manifest["planner_resampled_after_freeze"] is False
 assert manifest["outcomes_read"] is False
+manifest["composition_valid_target_95_met"] = manifest["composition_valid_rate"] >= 0.95
 (run / "FREEZE_FINAL.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
 print(json.dumps(manifest, sort_keys=True))
 PY

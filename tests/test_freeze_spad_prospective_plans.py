@@ -24,6 +24,7 @@ def successful(sample_idx: int, element: str) -> tuple[dict, dict]:
         "species_program": [element],
         "species_program_indices": [0],
         "species_program_source": "planner_llama_pointer",
+        "prompt_schema": "C3FD_NATIVE_PLAN_V2",
     }
     return record, plan
 

@@ -55,7 +55,7 @@ def find_plan(row: Mapping[str, Any]) -> Mapping[str, Any] | None:
 
 def chemsys_scopes(
     cohort: Path, mp20_train: Path
-) -> tuple[dict[str, set[int]], int]:
+) -> tuple[dict[str, set[int]], int, dict[int, str]]:
     train_chemsys: set[str] = set()
     train_exact: set[str] = set()
     for row in read_jsonl(mp20_train):
@@ -77,14 +77,26 @@ def chemsys_scopes(
         "planner_failed": set(),
     }
     overlap = 0
+    clusters: dict[int, str] = {}
     for row in ledger:
         if row.get("planner_valid") is not True:
-            scopes["planner_failed"].add(int(row["sample_idx"]))
+            sample_idx = int(row["sample_idx"])
+            scopes["planner_failed"].add(sample_idx)
+            clusters[sample_idx] = f"planner_failed:{sample_idx}"
             continue
+        sample_idx = int(row["sample_idx"])
         target = "seen_chemsys" if str(row["chemsys"]) in train_chemsys else "unseen_chemsys"
-        scopes[target].add(int(row["sample_idx"]))
+        scopes[target].add(sample_idx)
+        clusters[sample_idx] = str(row["exact_composition_identity"])
         overlap += row.get("exact_composition_identity") in train_exact
-    return scopes, overlap
+    return scopes, overlap, clusters
+
+
+def cluster_values(values: Mapping[int, float], clusters: Mapping[int, str]) -> dict[str, float]:
+    grouped: dict[str, list[float]] = {}
+    for sample_idx, value in values.items():
+        grouped.setdefault(clusters[sample_idx], []).append(float(value))
+    return {key: statistics.fmean(group) for key, group in grouped.items()}
 
 
 def quantiles(values: Sequence[float]) -> dict[str, Any]:
@@ -126,8 +138,8 @@ def composition_average(rows_by_stream: Mapping[int, Sequence[Mapping[str, Any]]
 
 
 def paired_effect(
-    control: Mapping[int, float],
-    candidate: Mapping[int, float],
+    control: Mapping[str, float],
+    candidate: Mapping[str, float],
     *,
     label: str,
 ) -> dict[str, Any]:
@@ -144,7 +156,7 @@ def paired_effect(
         for _ in range(replicates)
     )
     return {
-        "compositions_requested": 256,
+        "compositions_requested": len(set(control) | set(candidate)),
         "compositions_observed": len(values),
         "mean_delta": statistics.fmean(values),
         "median_delta": statistics.median(values),
@@ -224,8 +236,44 @@ def main() -> None:
         raise FileExistsError(args.output_dir)
 
     common = load_common()
-    scopes, exact_train_overlap = chemsys_scopes(args.cohort, args.mp20_train)
+    scopes, exact_train_overlap, composition_clusters = chemsys_scopes(
+        args.cohort, args.mp20_train
+    )
     cache = args.official_run / "official_mp_cache"
+    input_manifest_path = args.official_run / "inputs/input_manifest.json"
+    input_manifest = protocol.read_json(input_manifest_path)
+    expected_cells = {
+        f"{arm}_{endpoint}_s{stream}"
+        for arm in arms
+        for endpoint in ("raw", "refined")
+        for stream in (17, 18)
+    }
+    observed_cells = {str(row["cell_id"]) for row in input_manifest["cells"]}
+    if input_manifest.get("fresh_official_query") is not True or observed_cells != expected_cells:
+        raise ValueError("official input manifest is not the exact 12-cell SPAD union")
+    for row in input_manifest["cells"]:
+        arm, endpoint, raw_stream = str(row["cell_id"]).rsplit("_", 2)
+        stream = int(raw_stream.removeprefix("s"))
+        expected_path = (
+            args.eval_run
+            / arm
+            / f"stream{stream}"
+            / endpoint
+            / "evaluation/full_reconstructed/attempt_labels_preofficial.jsonl"
+        ).resolve()
+        observed = row["labels"]
+        if Path(observed["path"]).resolve() != expected_path:
+            raise ValueError("official input cell path differs from SPAD evaluation")
+        if protocol.sha256_file(expected_path) != observed["sha256"]:
+            raise ValueError("official input cell changed after collection")
+    completion = protocol.read_json(cache / "completion_manifest.json")
+    if (
+        completion.get("fresh_empty_cache") is not True
+        or completion.get("historical_cache_rows_reused") != 0
+        or completion.get("inputs", {}).get("input_manifest", {}).get("sha256")
+        != protocol.sha256_file(input_manifest_path)
+    ):
+        raise ValueError("official cache is not the fresh query for this 12-cell union")
     phase_diagrams = common._phase_diagrams(cache / "official_slim_cache.jsonl")
     unresolved = {
         str(row["chemsys"])
@@ -335,8 +383,14 @@ def main() -> None:
             for metric in ("strict_sun", "meta_sun"):
                 name = f"{endpoint}:{metric}:BS-minus-{comparator}"
                 paired_effects[name] = paired_effect(
-                    composition_metrics[(comparator, endpoint, metric)],
-                    composition_metrics[("BS", endpoint, metric)],
+                    cluster_values(
+                        composition_metrics[(comparator, endpoint, metric)],
+                        composition_clusters,
+                    ),
+                    cluster_values(
+                        composition_metrics[("BS", endpoint, metric)],
+                        composition_clusters,
+                    ),
                     label=f"spad:{name}",
                 )
 

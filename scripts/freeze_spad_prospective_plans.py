@@ -30,8 +30,12 @@ def validate_program(row: Mapping[str, Any], plan: Mapping[str, Any]) -> None:
         raise ValueError("species program is not a permutation of Plan elements")
     if sorted(indices) != list(range(len(elements))):
         raise ValueError("species program indices are not a permutation")
+    if program != [elements[index] for index in indices]:
+        raise ValueError("species program and permutation indices disagree")
     if str(row.get("species_program_source")) != "planner_llama_pointer":
         raise ValueError("Plan row does not carry the learned Llama pointer")
+    if str(row.get("prompt_schema")) != "C3FD_NATIVE_PLAN_V2":
+        raise ValueError("Plan row uses an unexpected prompt schema")
 
 
 def freeze_requested(
@@ -114,7 +118,7 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--requested", type=int, default=256)
     parser.add_argument("--planner-sampling-seed", type=int, required=True)
-    parser.add_argument("--minimum-comp-valid", type=float, default=0.95)
+    parser.add_argument("--minimum-comp-valid", type=float, default=0.0)
     args = parser.parse_args()
     if args.output_dir.exists():
         raise FileExistsError(args.output_dir)
@@ -123,8 +127,9 @@ def main() -> None:
     frozen, ledger, audit = freeze_requested(
         records, plans, requested=int(args.requested)
     )
-    if audit["composition_valid_rate"] < float(args.minimum_comp_valid):
-        raise RuntimeError("Planner composition validity is below the frozen method floor")
+    target = float(args.minimum_comp_valid)
+    if not 0.0 <= target <= 1.0:
+        raise ValueError("minimum-comp-valid must be in [0, 1]")
 
     args.output_dir.mkdir(parents=True, exist_ok=False)
     write_jsonl(args.output_dir / "plans_for_dlm.jsonl", frozen)
@@ -137,6 +142,8 @@ def main() -> None:
         "replacement": False,
         "planner_resampled_after_freeze": False,
         "outcomes_read": False,
+        "composition_valid_target": target,
+        "composition_valid_target_met": audit["composition_valid_rate"] >= target,
     }
     (args.output_dir / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"

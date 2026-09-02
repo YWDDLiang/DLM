@@ -76,6 +76,17 @@ def average_maps(maps: Sequence[Mapping[int, float]]) -> dict[int, float]:
     }
 
 
+def cluster_map(
+    values: Mapping[int, float], clusters: Mapping[int, str] | None
+) -> dict[int | str, float]:
+    if clusters is None:
+        return dict(values)
+    grouped: dict[str, list[float]] = {}
+    for sample_idx, value in values.items():
+        grouped.setdefault(clusters[sample_idx], []).append(float(value))
+    return {key: statistics.fmean(group) for key, group in grouped.items()}
+
+
 def paired_delta(
     first: Mapping[int, float], second: Mapping[int, float]
 ) -> dict[int, float]:
@@ -85,8 +96,13 @@ def paired_delta(
     }
 
 
-def summarize_delta(per_stream: Sequence[Mapping[int, float]], *, label: str) -> dict[str, Any]:
-    averaged = average_maps(per_stream)
+def summarize_delta(
+    per_stream: Sequence[Mapping[int, float]],
+    *,
+    label: str,
+    clusters: Mapping[int, str] | None,
+) -> dict[str, Any]:
+    averaged = cluster_map(average_maps(per_stream), clusters)
     values = list(averaged.values())
     return {
         "direction": "negative is favorable",
@@ -186,9 +202,26 @@ def main() -> None:
     parser.add_argument("--eval-run", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--arms", default="BC,BR,BS")
+    parser.add_argument("--ledger", type=Path)
     args = parser.parse_args()
     arms = tuple(value.strip() for value in args.arms.split(",") if value.strip())
-    if not (args.eval_run / "_OFFLINE_SUCCESS").is_file():
+    clusters = None
+    if args.ledger is not None:
+        ledger = read_jsonl(args.ledger)
+        if {int(row["sample_idx"]) for row in ledger} != set(range(256)):
+            raise ValueError("cluster ledger does not cover fixed256")
+        clusters = {
+            int(row["sample_idx"]): (
+                str(row["exact_composition_identity"])
+                if row.get("exact_composition_identity") is not None
+                else f"failed:{int(row['sample_idx'])}"
+            )
+            for row in ledger
+        }
+    if not (
+        (args.eval_run / "_OFFLINE_SUCCESS").is_file()
+        or (args.eval_run / "OFFLINE_FINAL.json").is_file()
+    ):
         raise FileNotFoundError("offline run is incomplete")
     if args.output_dir.exists():
         raise FileExistsError(args.output_dir)
@@ -234,7 +267,9 @@ def main() -> None:
             for stream in STREAMS
         ]
         energy_effects[f"{arm}:refined-minus-raw"] = summarize_delta(
-            deltas, label=f"{args.eval_run}:{arm}:refined-minus-raw"
+            deltas,
+            label=f"{args.eval_run}:{arm}:refined-minus-raw",
+            clusters=clusters,
         )
         direct_effects[f"{arm}:refined-vs-raw"] = [
             {"stream": stream, **mcnemar(valid[(arm, "raw", stream)], valid[(arm, "refined", stream)])}
@@ -252,7 +287,9 @@ def main() -> None:
                 for stream in STREAMS
             ]
             energy_effects[f"{endpoint}:BS-minus-{comparator}"] = summarize_delta(
-                deltas, label=f"{args.eval_run}:{endpoint}:BS-minus-{comparator}"
+                deltas,
+                label=f"{args.eval_run}:{endpoint}:BS-minus-{comparator}",
+                clusters=clusters,
             )
             direct_effects[f"{endpoint}:BS-vs-{comparator}"] = [
                 {
