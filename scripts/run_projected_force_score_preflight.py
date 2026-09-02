@@ -19,6 +19,7 @@ from crystal_dlm.feasible_force_teacher import (
     periodic_pair_summary,
     project_periodic_feasible,
 )
+from crystal_dlm.dynamic_crystal import arrays_to_structure, parse_dynamic_answer
 from run_force_score_preflight import (
     describe,
     minimum_distance,
@@ -30,12 +31,14 @@ from run_force_score_preflight import (
 )
 
 
-FORCE_TRUST_MIN_DISTANCE_A = 0.35
-MAX_QUANTIZATION_PROJECTIONS = 4
+MAX_QUANTIZATION_PROJECTIONS = 1
 IMAGE_RADIUS = 2
 MARGIN_SCALE = 0.0
-MARGIN_FLOOR_A = 0.50
-MARGIN_CEILING_A = 0.50
+MARGIN_FLOOR_A = 0.55
+MARGIN_CEILING_A = 0.55
+SPECIES_MARGIN_SCALE = 0.55
+SPECIES_MARGIN_FLOOR_A = 0.60
+SPECIES_MARGIN_CEILING_A = 1.40
 
 
 def atomic_numbers(structure: Structure) -> list[int]:
@@ -68,6 +71,19 @@ def pair_summary(structure: Structure) -> tuple[float, int]:
     )
 
 
+def species_prior_violations(structure: Structure) -> int:
+    _minimum, violations = periodic_pair_summary(
+        np.asarray(structure.frac_coords, dtype=float),
+        np.asarray(structure.lattice.matrix, dtype=float),
+        atomic_numbers(structure),
+        image_radius=IMAGE_RADIUS,
+        margin_scale=SPECIES_MARGIN_SCALE,
+        margin_floor_A=SPECIES_MARGIN_FLOOR_A,
+        margin_ceiling_A=SPECIES_MARGIN_CEILING_A,
+    )
+    return int(violations)
+
+
 def project_structure(source: Structure) -> tuple[Structure, dict[str, Any]]:
     coordinates, report = project_periodic_feasible(
         np.asarray(source.frac_coords, dtype=float),
@@ -95,11 +111,11 @@ def quantize_feasible(source: Structure) -> tuple[Structure, dict[str, Any]]:
             {
                 "round": quantization_round,
                 "direct_valid": structure_validity(quantized),
-                "margin_violations": int(violations),
+                "projection_buffer_violations": int(violations),
                 "minimum_distance_A": minimum_distance(quantized),
             }
         )
-        if structure_validity(quantized) and violations == 0:
+        if structure_validity(quantized):
             return quantized, {
                 "converged": True,
                 "rounds": rounds,
@@ -131,9 +147,12 @@ def force_proposal(structure: Structure, forces: np.ndarray) -> Structure:
 def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     complete = [row for row in rows if row.get("teacher_complete")]
     force_candidates = [
-        row for row in complete if row.get("force_candidate_known") is True
+        row
+        for row in complete
+        if row["initial_valid"] and row.get("force_candidate_known") is True
     ]
     force_active = [row for row in complete if row.get("teacher_mode") == "force_projected"]
+    initially_valid = [row for row in complete if row["initial_valid"]]
     return {
         "rows": len(rows),
         "complete": len(complete),
@@ -145,8 +164,11 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "valid_to_invalid": sum(
             row["initial_valid"] and not row["selected_valid"] for row in complete
         ),
-        "selected_margin_violations": sum(
-            int(row["selected_margin_violations"]) for row in complete
+        "selected_projection_buffer_violations": sum(
+            int(row["selected_projection_buffer_violations"]) for row in complete
+        ),
+        "selected_species_prior_violations": sum(
+            int(row["selected_species_prior_violations"]) for row in complete
         ),
         "force_candidate_rows": len(force_candidates),
         "force_candidate_energy_lower_fraction": (
@@ -168,6 +190,9 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "force_active_delta_eV_per_atom": describe(
             row["selected_delta_eV_per_atom"] for row in force_active
         ),
+        "initially_valid_energy_worsen": sum(
+            row["selected_delta_eV_per_atom"] > 1.0e-8 for row in initially_valid
+        ),
         "teacher_modes": {
             name: sum(row.get("teacher_mode") == name for row in complete)
             for name in ("force_projected", "barrier_only", "identity", "unresolved")
@@ -187,7 +212,15 @@ def main() -> None:
     rows = read_jsonl(args.data_jsonl.resolve())
     if len(rows) != 512:
         raise ValueError("projected Force-Score preflight requires 512 rows")
-    structures = [Structure.from_dict(row["perturbed_structure"]) for row in rows]
+    # q0 is the exact token state seen by the DLM.  Comparing a continuous
+    # perturbation against a quantized candidate would incorrectly attribute
+    # ordinary round-trip error to the force teacher.
+    structures = [
+        arrays_to_structure(
+            parse_dynamic_answer(str(row["dynamic_answer"]), strict=True)
+        )
+        for row in rows
+    ]
     model = CHGNet.load(use_device=args.device, check_cuda_mem=True, verbose=False)
     initial_predictions = prediction(model, structures)
 
@@ -206,7 +239,8 @@ def main() -> None:
             "stratum": str(source["stratum"]),
             "initial_valid": structure_validity(structure),
             "initial_minimum_distance_A": float(initial_minimum),
-            "initial_margin_violations": int(initial_violations),
+            "initial_projection_buffer_violations": int(initial_violations),
+            "initial_species_prior_violations": species_prior_violations(structure),
             "initial_teacher_known": predicted is not None,
         }
         barrier, barrier_projection = project_structure(structure)
@@ -215,7 +249,7 @@ def main() -> None:
         result["barrier_quantization"] = barrier_quantization
         barrier_candidates.append(barrier)
 
-        force_trusted = bool(initial_minimum >= FORCE_TRUST_MIN_DISTANCE_A)
+        force_trusted = bool(result["initial_valid"])
         result["force_trusted_region"] = force_trusted
         if predicted is not None:
             energy = float(to_numpy(predicted["e"]).reshape(()))
@@ -255,20 +289,24 @@ def main() -> None:
         force_minimum, force_violations = pair_summary(force_candidate)
         barrier_valid = structure_validity(barrier)
         force_valid = structure_validity(force_candidate)
-        barrier_feasible = barrier_valid and barrier_violations == 0
-        force_feasible = force_valid and force_violations == 0
+        barrier_feasible = barrier_valid
+        force_feasible = force_valid
         result.update(
             {
                 "barrier_candidate_known": barrier_known,
                 "barrier_candidate_valid": barrier_valid,
                 "barrier_candidate_feasible": barrier_feasible,
                 "barrier_candidate_minimum_distance_A": float(barrier_minimum),
-                "barrier_candidate_margin_violations": int(barrier_violations),
+                "barrier_candidate_projection_buffer_violations": int(barrier_violations),
+                "barrier_candidate_species_prior_violations": species_prior_violations(barrier),
                 "force_candidate_known": force_known,
                 "force_candidate_valid": force_valid,
                 "force_candidate_feasible": force_feasible,
                 "force_candidate_minimum_distance_A": float(force_minimum),
-                "force_candidate_margin_violations": int(force_violations),
+                "force_candidate_projection_buffer_violations": int(force_violations),
+                "force_candidate_species_prior_violations": species_prior_violations(
+                    force_candidate
+                ),
             }
         )
         if barrier_known and initial_known:
@@ -312,7 +350,8 @@ def main() -> None:
     ):
         minimum, violations = pair_summary(selected)
         result["selected_minimum_distance_A"] = float(minimum)
-        result["selected_margin_violations"] = int(violations)
+        result["selected_projection_buffer_violations"] = int(violations)
+        result["selected_species_prior_violations"] = species_prior_violations(selected)
         result["selected_valid"] = bool(structure_validity(selected))
         result["teacher_complete"] = bool(
             result.get("initial_teacher_known") and predicted is not None
@@ -336,23 +375,26 @@ def main() -> None:
         for name, values in sorted(by_perturbation.items())
         if name.startswith("collision_")
     }
-    nonsevere_complete = [
+    initially_valid_complete = [
         row
         for row in result_rows
-        if row.get("teacher_complete") and row.get("force_trusted_region")
+        if row.get("teacher_complete") and row["initial_valid"]
     ]
     force_active_coverage = (
-        sum(row.get("teacher_mode") == "force_projected" for row in nonsevere_complete)
-        / len(nonsevere_complete)
-        if nonsevere_complete
+        sum(
+            row.get("teacher_mode") == "force_projected"
+            for row in initially_valid_complete
+        )
+        / len(initially_valid_complete)
+        if initially_valid_complete
         else 0.0
     )
     collision_barrier_decrease = [
         row
         for row in result_rows
         if row["perturbation"].startswith("collision_")
-        and row.get("barrier_candidate_margin_violations", 1)
-        < row.get("initial_margin_violations", 0)
+        and row.get("barrier_candidate_projection_buffer_violations", 1)
+        < row.get("initial_projection_buffer_violations", 0)
     ]
     report = {
         "schema": "projected_force_score_teacher_preflight_v2",
@@ -360,31 +402,33 @@ def main() -> None:
         "rows_requested": len(rows),
         "rows_complete": overall["complete"],
         "teacher_coverage": overall["complete"] / len(rows),
+        "initial_invalid_rows": len(rows) - overall["initial_valid"],
         "constants": {
-            "force_trust_minimum_distance_A": FORCE_TRUST_MIN_DISTANCE_A,
             "image_radius": IMAGE_RADIUS,
-            "hard_margin_scale": MARGIN_SCALE,
-            "hard_minimum_distance_A": MARGIN_FLOOR_A,
+            "hard_accept_minimum_distance_A": 0.50,
+            "hard_project_minimum_distance_A": MARGIN_FLOOR_A,
+            "species_prior_scale": SPECIES_MARGIN_SCALE,
+            "species_prior_floor_A": SPECIES_MARGIN_FLOOR_A,
+            "species_prior_ceiling_A": SPECIES_MARGIN_CEILING_A,
             "maximum_quantization_projection_rounds": MAX_QUANTIZATION_PROJECTIONS,
         },
         "overall": overall,
         "near_threshold": near_threshold,
         "collisions": collision_summaries,
-        "force_active_coverage_nonsevere": force_active_coverage,
+        "force_active_coverage_initially_valid": force_active_coverage,
         "collision_barrier_decrease_fraction": len(collision_barrier_decrease) / 256.0,
     }
     report["supports_microstudent"] = bool(
         report["teacher_coverage"] == 1.0
-        and overall["valid_to_invalid"] <= 2
-        and near_threshold["valid_to_invalid"] <= 1
-        and report["collision_barrier_decrease_fraction"] >= 0.90
-        and force_active_coverage >= 0.50
-        and overall["force_active_energy_lower_fraction"] is not None
-        and overall["force_active_energy_lower_fraction"] >= 0.70
-        and collision_summaries["collision_0p15A"]["invalid_to_valid"] >= 13
-        and collision_summaries["collision_0p25A"]["invalid_to_valid"] >= 13
-        and collision_summaries["collision_0p35A"]["invalid_to_valid"] >= 32
-        and collision_summaries["collision_0p45A"]["invalid_to_valid"] >= 32
+        and overall["selected_valid"] == 512
+        and overall["invalid_to_valid"] == report["initial_invalid_rows"]
+        and overall["valid_to_invalid"] == 0
+        and overall["teacher_modes"]["unresolved"] == 0
+        and force_active_coverage >= 0.25
+        and overall["force_active_rows"] >= 64
+        and overall["force_active_delta_eV_per_atom"]["median"] <= -0.005
+        and overall["initially_valid_energy_worsen"] <= 2
+        and all(summary["selected_valid"] == 64 for summary in collision_summaries.values())
     )
     output.mkdir(parents=True)
     (output / "projected_force_score_teacher_rows.jsonl").write_text(

@@ -72,10 +72,15 @@ teacher and raised collision energies by roughly 1.2–2.3 eV/atom.
 
 Reuse the same 512 rows again. The deterministic hard projection now represents
 only parser/Direct feasibility: exact triclinic PBC minimum distance at least
-0.50 Å, with the existing 0.001 Å numerical projection tolerance and an exact
-post-quantization validity check.
+0.55 Å before tokenization, followed by an exact post-quantization acceptance
+check against the 0.50 Å Direct boundary. At most one identical repair is
+allowed when quantization crosses the boundary.
 The existing species-aware 0.60–1.40 Å relation remains a differentiable G2
 training prior and is not used to reject or overwrite a force target.
+
+All initial energies and validities are computed from the exact decoded
+`dynamic_answer` token state. The continuous perturbation metadata is provenance
+only; it is never compared directly against a quantized teacher candidate.
 
 - severe collisions receive hard-barrier-only targets;
 - locally credible states receive force followed by the 0.55 Å projection;
@@ -84,10 +89,12 @@ training prior and is not used to reject or overwrite a force target.
 - no inference-time projection, repair, reranking or energy calculation is
   introduced.
 
-Proceed to a student only if teacher coverage is complete, near-threshold
-valid→invalid is at most 1/64, all four collision severities recover Direct
-validity on at least 90%, force remains active on at least 50% of non-severe
-rows, and at least 70% of force-active quantized targets lower energy.
+Proceed to a student only if all 512 rows complete and end Direct-valid, every
+initially invalid token state recovers, no initially valid structure becomes invalid, no hard row
+is unresolved, and at least 64/256 initially valid rows retain a quantized
+force target. The active force targets must have median energy change at most
+-0.005 eV/atom; energy worsening among all initially valid rows is capped at 1%.
+Species-margin violations are diagnostic only and never gate the hard teacher.
 
 ## Phase B — micro-student preflight
 
