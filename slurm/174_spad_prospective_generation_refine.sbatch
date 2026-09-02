@@ -22,11 +22,12 @@ readonly CRYS=/public/home/jiaosz/hengzhang/Code/crysllmgen-main
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly RUN="${ROOT}/runs/spad_prospective_generation_${SLURM_JOB_ID}"
 readonly POINTER_PLANS="${PLAN_DIR}/plans_for_dlm.jsonl"
+readonly PLAN_LEDGER="${PLAN_DIR}/ledger.jsonl"
 readonly CANONICAL_PLANS="${RUN}/canonical_program_plans.jsonl"
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$BASH_COMMAND" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
-[[ -f "${PLAN_DIR}/_SUCCESS" && -f "${POINTER_PLANS}" ]]
+[[ -f "${PLAN_DIR}/_SUCCESS" && -f "${POINTER_PLANS}" && -f "${PLAN_LEDGER}" ]]
 [[ -f "${BASE_POLICY}/adapter_model.safetensors" && -f "${BS_POLICY}/adapter_model.safetensors" ]]
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
 [[ "${#allocated[@]}" -eq 6 ]]
@@ -90,8 +91,13 @@ run_cell() {
     2>"${RUN}/logs/${arm}_${stream}_body.err"
   [[ -f "${cell}/body/_SUCCESS" ]]
 
+  "${PYTHON}" "${SOURCE}/scripts/pad_spad_body_to_planner_denominator.py" \
+    --body-rows "${cell}/body/raw_generations.jsonl" \
+    --planner-ledger "${PLAN_LEDGER}" --output-dir "${cell}/body_fixed256" \
+    --denominator 256
+
   "${PYTHON}" "${SOURCE}/scripts/assemble_raw_body_repeat.py" \
-    --body-dir "${cell}/body" --output-dir "${cell}/raw_generation" \
+    --body-dir "${cell}/body_fixed256" --output-dir "${cell}/raw_generation" \
     --seed "${stream}" --dlm-seed "${seed}" --denominator 256 \
     --source-arm full_axis --arm-label candidate
 
@@ -109,7 +115,7 @@ run_cell() {
   [[ -f "${result}" ]]
 
   "${PYTHON}" "${SOURCE}/scripts/assemble_grounding_repeat.py" \
-    --body-dir "${cell}/body" --refine-dir "${cell}/refine" \
+    --body-dir "${cell}/body_fixed256" --refine-dir "${cell}/refine" \
     --output-dir "${cell}/refined_generation" --arm candidate --repeat 0 \
     --dlm-seed "${seed}" --refiner-seed "${rseed}" --denominator 256
   touch "${cell}/_SUCCESS"
