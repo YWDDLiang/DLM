@@ -1,5 +1,20 @@
 # 个人repo构建状态
 
+## 2026-09-02 paper mainline
+
+- 主表结果固定为 Strict/Meta S.U.N. `105/488` per 1,000；
+- C3FD-v2.5达到`2000/2000` composition-valid，融合Llama的scale Planner达到
+  `1200/1200`，且`87.05%` typed decisions具有非零Llama KL；
+- Compact-V2使用完整MP20 `27136/9047`，`7+4N` round-trip为`248/248`；
+- fresh prospective G2使refined Strict/Meta从`19/111`升至`24/117`，paired
+  official hull改善`16.43 meV/atom`；full-epoch G2-PBC-R使raw Direct
+  `118→128/256`；
+- Plan1200只保留model494 tau800：1200 Plans均composition-valid，1159条具有
+  official reference，DLM得到1139个valid CIF；scale main1000按`861+139`
+  组成，整体重算得到`N/U/NU=872/987/866`、Strict/Meta `81/486`；
+- 根README和`docs/paper/`已按Planner、Plan/DLM、G2 residual、model494四模块
+  统一组织，每个模块均给出作用、接口、必要性与支持证据。
+
 ## Proposal/Realization双候选
 
 - 冻结H1-A2保持只读fallback；

@@ -18,6 +18,13 @@ the exact interface into a crystal diffusion language model, and periodic
 relations are injected inside denoising before a fixed terminal diffusion
 transition.
 
+## Main result and supporting profiles
+
+The main reported H1-A2 result is Strict/Meta S.U.N. `105/488` per 1,000.
+Three newer profiles support specific parts of the method without being merged
+into that row: a fresh 256-sample G2 comparison, a full-epoch geometry mechanism
+ablation, and a Plan1200 scale validation.
+
 ## Contribution 1 — Science-Constrained LLM Planning
 
 **Problem.** Unconstrained LLM composition generation can violate basic
@@ -80,8 +87,9 @@ non-autoregressive advantages of a masked DLM.
 **Evidence.** Compact-V2 uses the full MP20 `27136/9047` train/validation split.
 Train and inference renderers are byte-identical. The G0 audit obtains `248/248`
 strict `7+4N` decode/re-encode matches, exact species order and zero validity
-flips, eliminating representation corruption as the source of structural
-failure.
+flips. The independent scale profile obtains `1139/1159 = 98.27%` valid CIFs,
+showing that the exact interface remains operational beyond the 256-sample
+mechanism studies.
 
 ## Contribution 3 — Periodic-Relational Denoising
 
@@ -115,7 +123,18 @@ pretrained DLM function at initialization.
 Strict/Meta S.U.N. from `19/111` to `24/117` and shifts paired official hull by
 `-16.43 meV/atom`, with the entire bootstrap CI below zero. The full-epoch
 mechanism study raises raw Direct from BASE `118/256` to G2-PBC-R `128/256`;
-the uncertainty-gated alternative does not improve energy and is rejected.
+the uncertainty-gated alternative does not improve energy and is rejected. On
+the independent main1000 scale profile, the complete tau800 pipeline reaches
+Strict/Meta `81/486`, supporting the same learned realization path at scale.
+
+## Inherited terminal module — model494
+
+model494 is necessary to define the complete coarse-to-fine generator, but it
+is frozen and is not claimed as a newly learned contribution. Its role is to
+separate raw DLM realization from a fixed fine-scale basin transition. In a
+matched 512-row study, raw→tau800 changes Direct `188→457`, Strict S.U.N.
+`10→48` and Meta S.U.N. `66→230`. The Plan1200 profile uses the same tau800
+transition and reaches `81/486` on main1000.
 
 ## Why the complete method is necessary
 
@@ -127,8 +146,8 @@ the uncertainty-gated alternative does not improve energy and is rejected.
 - Remove periodic relational denoising: exact composition survives, but lattice
   and coordinates can remain jointly inconsistent.
 - Remove the terminal diffusion transition: the system loses its final
-  coarse-to-fine basin realization.
+  coarse-to-fine basin realization; raw and refined evidence show that this
+  transition is substantial but distinct from learned DLM gains.
 
 The contribution is therefore the coordinated flow of scientific information
 across scales, not a bag of independent modules.
-

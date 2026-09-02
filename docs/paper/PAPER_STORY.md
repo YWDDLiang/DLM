@@ -31,10 +31,12 @@ token states and feeds them back into crystal logits. A fixed terminal
 diffusion transition completes coarse-to-fine realization. The constrained
 Planner achieves perfect composition validity in 2000-sample and independent
 1200-sample evaluations while exhibiting substantial Llama-induced action
-reweighting. On a fresh prospective cohort, periodic-relational denoising
+reweighting. The main reported Strict/Meta S.U.N. is `105/488` per 1,000. On a
+fresh prospective cohort, periodic-relational denoising
 improves refined Strict/Meta S.U.N. from `19/111` to `24/117` and lowers paired
 official hull by `16.43 meV/atom`; a full-epoch implementation raises raw
-Direct validity from `118` to `128` of 256. These results show that scientific
+Direct validity from `118` to `128` of 256. An independent Plan1200 tau800
+profile reaches `81/486` on main1000. These results show that scientific
 constraints and language generation need not be competing paradigms: when
 connected through exact interfaces and relational denoising, they form a
 single auditable generator for chemically valid and physically realizable
@@ -89,6 +91,9 @@ the other shapes how that request is geometrically realized.
 - **Periodic geometry must be relational during denoising.** G2 improves raw
   realization and the complete system's official stability without changing
   inference multiplicity.
+- **Scale does not change the method contract.** The 1200-Plan profile retains
+  one Plan/trajectory, exact composition and fixed tau800 under an independent
+  sampling realization.
 
 ## Figure plan
 
@@ -105,11 +110,12 @@ the other shapes how that request is geometrically realized.
 
 ## Table plan
 
-- **Table 1:** main comparison with composition-valid, raw/refined Direct,
-  N/U/NU, Strict and Meta S.U.N.
+- **Table 1:** main reported result plus composition-valid, raw/refined Direct,
+  N/U/NU, Strict and Meta S.U.N. supporting profiles.
 - **Table 2:** Planner ablations—C3FD predecessor, v2.5, fused Llama.
 - **Table 3:** geometry ablations—BASE, G1, G2, A, B.
-- **Table 4:** reproducibility—data, seeds, checkpoints, hashes and compute.
+- **Table 4:** Plan1200 tau800 scale validation.
+- **Table 5:** reproducibility—data, seeds, checkpoints and compute.
 
 ## Reviewer-facing answers
 
@@ -128,6 +134,10 @@ fixed terminal transition.
 **Are gains caused only by the refiner?** Raw Direct isolates learned DLM
 realization, while paired refined hull and S.U.N. measure the complete system.
 The paper reports both because they answer different scientific questions.
+
+**Why is model494 a module if it is frozen?** It defines a controlled terminal
+transition shared by every arm. The raw/refined separation quantifies its
+contribution without presenting it as learned novelty.
 
 ## Positioning
 

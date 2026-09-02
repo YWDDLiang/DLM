@@ -20,12 +20,12 @@ aborting expensive jobs.
 
 ## Data and training
 
-| Learned transition | Data | Optimization | Frozen identity |
+| Learned transition | Data | Optimization | Paper identity |
 |---|---|---|---|
-| C3FD scientific support | MP20-derived typed composition actions | C3FD-v2.5 seed17 | checkpoint `87c1673f...d17d53` |
-| Llama typed Planner | typed-witness train/val `24558/8158` | seed85017, one epoch, LR2e-5, effective batch16, final only | adapter `7638b05d...84c75` |
-| Compact-V2 DLM | full MP20 train/val `27136/9047`, teacher Plan only | seeds82017/82018, 3392 updates, paper seed82017 | adapter `06cd5465...62b20` |
-| G2-PBC-R | same full MP20 teacher data | seed81017, 1696 updates, LR5e-6, final only | adapter/relation `712c9419...bfce` / `675d68b9...b9f8` |
+| C3FD scientific support | MP20-derived typed composition actions | C3FD-v2.5 seed17 | v2.5 final |
+| Llama typed Planner | typed-witness train/val `24558/8158` | seed85017, one epoch, LR2e-5, effective batch16, final only | typed Planner final |
+| Compact-V2 DLM | full MP20 train/val `27136/9047`, teacher Plan only | seeds82017/82018, 3392 updates, paper seed82017 | seed82017 step3392 |
+| G2-PBC-R | same full MP20 teacher data | seed81017, 1696 updates, LR5e-6, final only | method A step1696 |
 
 The current Planner data is a typed-witness subset; only the DLM uses the full
 MP20 standard split. This distinction is encoded in separate versioned configs
@@ -55,13 +55,19 @@ The promoted implementation uses:
 The immutable geometry audit checked 2,321,081 pairs and found zero 125-image
 disagreements against pymatgen.
 
-## Inference
+## Inference profiles
 
-- Planner source/sampling seed22, temperature0.9, top-p0.95.
-- DLM stream17, seed91117, temperature0.7, exact-axis.
-- One Plan and one DLM trajectory per requested ordinal.
-- model494 tau800, refiner seed101117 by sample index.
-- Fixed requested denominator256; every parse/refinement failure retained.
+| Profile | Plans | DLM/refiner | Denominator and role |
+|---|---:|---|---|
+| main reported | 1,000 | reported H1-A2 protocol | paper headline `105/488` |
+| prospective headline | 256 | stream17, DLM seed91117, model494 tau800 | matched BASE/G2 effect |
+| full-epoch mechanism | 256 | matched A/B, model494 tau800 | geometry implementation evidence |
+| Plan1200 scale | 1,200 sampled; 1,159 official-known; 1,139 valid CIFs | G2-PBC-R and model494 tau800 | main1000 = first861 prior-main valid rows + all139 remainder rows |
+
+Every new profile uses one Plan and one DLM trajectory per requested ordinal.
+The prospective profile uses Planner seed22, temperature0.9/top-p0.95, DLM
+temperature0.7 exact-axis and refiner seed101117 by sample index. Plan1200 keeps
+the same one-trajectory contract and fixes tau800 after the matched depth test.
 
 ## Evaluation
 
@@ -71,16 +77,13 @@ remain unknown and never count stable. Direct and model494 are frozen inherited
 components with pinned hashes; the paper reports both raw learned-DLM and
 complete-system endpoints.
 
-## Result identities
+## Result records
 
-| Artifact | SHA-256 |
-|---|---|
-| Final prospective Plan | `5f1ae510fb35d7bbe0b5da4b32b0302f49d78dae653c5c31493db8a2219a54cb` |
-| Prospective official source | `138e547f9f2d19c52e55586b96d7c9394d38a6330da0d49a9cf017dca641b6a6` |
-| Prospective final JSON | `1b99aa33d3d6072006e17309874866af862067f4becd37caeec5f154f99b3070` |
-| Full-epoch evaluation outputs | `6ca71897b28d425780e4f4bbe9a5693502c5be4bb7c74a970624bf9a4efcaa00` |
-| Full-epoch final JSON | `b50dd8d291daf46d29ff916e0b34395e7f252a11cbaaa8e99e6378f4a8819881` |
+- Main reported result: `105/488` per 1,000.
+- Fresh prospective: `docs/36H_FINAL_REPORT_C3FD_G2_20260901.*`.
+- Full-epoch mechanism: `docs/G2_FULL_EPOCH_AB_FINAL_20260901.*`.
+- Plan1200 scale: `docs/PLAN1200_TAU800_FINAL_20260902.md`.
 
 Credentials, machine-local paths, checkpoints and generated datasets are not
-stored in Git. A reproduction host supplies them through its local environment
-and verifies every hash before execution.
+stored in Git. Detailed content identities remain in machine-owned execution
+manifests rather than the reader-facing method documentation.

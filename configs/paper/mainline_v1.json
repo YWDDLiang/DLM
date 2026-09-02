@@ -27,6 +27,13 @@
     {"id": "finalize-headline", "contract": "scripts/finalize_c3fd_g2_final_sun.py", "implementation": ["eval_runtime/finalize_official.py"]}
   ],
   "profiles": {
+    "main_reported_result": {
+      "method_family": "H1-A2",
+      "denominator": 1000,
+      "strict_sun": 105,
+      "meta_sun": 488,
+      "role": "paper headline"
+    },
     "prospective_headline": {
       "periodic_checkpoint": "registered G2 step348",
       "generation_contract": "slurm/126_g2_final_generation.sbatch",
@@ -36,6 +43,15 @@
       "periodic_checkpoint": "G2-PBC-R step1696",
       "generation_contract": "slurm/130_g2_full_ab_raw_screen.sbatch",
       "evaluation_contract": "slurm/131_g2_full_ab_refine_eval.sbatch"
+    },
+    "plan1200_scale_validation": {
+      "periodic_checkpoint": "G2-PBC-R step1696",
+      "generation_contract": "slurm/136_generate_known1200_baseline_fast.sbatch",
+      "refinement_evidence": "job39199 tau800 endpoint",
+      "evaluation_contract": "slurm/145_plan1200_tau800_main1000_eval.sbatch",
+      "primary_denominator": 1000,
+      "partition": "first861 prior-main valid CIFs plus all139 remainder valid CIFs",
+      "terminal_diffusion": "tau800"
     }
   },
   "invariants": {

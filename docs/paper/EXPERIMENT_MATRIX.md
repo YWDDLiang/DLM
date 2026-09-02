@@ -2,6 +2,15 @@
 
 ## Main results
 
+### Main reported result
+
+| Denominator | Strict S.U.N. | Meta S.U.N. |
+|---:|---:|---:|
+| 1,000 | **105/1000 = 10.50%** | **488/1000 = 48.80%** |
+
+The experiments below provide component, mechanism and scale evidence around
+this headline; they remain separate profiles rather than replacement rows.
+
 ### Composition planning
 
 | Planner evidence | Requested | Composition-valid | Learned-Llama evidence |
@@ -25,6 +34,17 @@ Llama materially changes the action distribution.
 
 Paired refined official hull G2−BASE is `-16.43 meV/atom`, bootstrap 95% CI
 `[-25.26,-8.62]` on 244 common known rows.
+
+### Independent Plan1200 tau800 scale validation
+
+| Diffusion | Denominator | N/U/NU | Strict S.U.N. | Meta S.U.N. |
+|---|---:|---:|---:|---:|
+| tau800 | 1000 | 872/987/866 | **81/1000 = 8.10%** | **486/1000 = 48.60%** |
+
+The fused Planner is composition-valid on `1200/1200`. Among the 1,159 Plans
+with official references, the DLM produces 1,139 valid CIFs. The scale main1000
+contains the first 861 valid rows from the original main block plus all 139
+valid remainder rows. The 20 CIF construction failures remain disclosed.
 
 ## Mechanism ablations
 
@@ -52,6 +72,17 @@ No difference across those cohorts is labeled causal.
 A is selected by the registered implementation rule. The fresh step348 G2
 remains the prospective headline; A/B is mechanism and implementation evidence.
 
+### Terminal diffusion mechanism
+
+| Comparison | Direct | Strict S.U.N. | Meta S.U.N. | Interpretation |
+|---|---:|---:|---:|---|
+| L6 raw | 188/512 | 10/512 | 66/512 | learned DLM endpoint |
+| L6 model494 tau800 | 457/512 | 48/512 | 230/512 | fixed fine-scale conversion |
+| Plan1200 tau800 main1000 | — | 81/1000 | 486/1000 | independent scale profile |
+
+This separation prevents model494 gains from being attributed to the DLM and
+prevents raw G2 gains from being hidden by the refiner.
+
 ## Required paper ablations
 
 | Question | Comparison | Primary metric |
@@ -72,14 +103,15 @@ official hull and cached N/U are evaluated only after a frozen structure batch
 exists; reference fingerprints are reused. This prevents expensive evaluation
 from dominating method iteration.
 
-## Immutable sources
+## Evidence sources
 
 - Planner: `results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.json` and
   `docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.json`.
 - Plan-conditioned DLM: `docs/C3FD_NATIVE_TEACHER_SFT_DATA_FINAL_20260831.json`
   and `docs/C3FD_NATIVE_TEACHER_SFT_FINAL_20260831.json`.
 - Prospective system: `docs/36H_FINAL_REPORT_C3FD_G2_20260901.json`, remote
-  final SHA `1b99aa33...b3070`.
-- Full epoch: `docs/G2_FULL_EPOCH_AB_FINAL_20260901.json`, remote final SHA
-  `b50dd8d2...19881`.
-
+  run profile `prospective_headline`.
+- Full epoch: `docs/G2_FULL_EPOCH_AB_FINAL_20260901.json`, profile
+  `full_epoch_mechanism`.
+- Plan1200 scale: `docs/PLAN1200_TAU800_FINAL_20260902.md`, profile
+  `plan1200_scale_validation`.

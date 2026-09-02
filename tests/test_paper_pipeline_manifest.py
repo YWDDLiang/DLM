@@ -24,12 +24,19 @@ class PaperPipelineManifestTest(unittest.TestCase):
         self.assertEqual(report["component_count"], 6)
         self.assertTrue(report["checked_repository_paths"])
         self.assertEqual(
+            manifest["profiles"]["main_reported_result"]["strict_sun"], 105
+        )
+        self.assertEqual(
             manifest["profiles"]["prospective_headline"]["periodic_checkpoint"],
             "registered G2 step348",
         )
         self.assertEqual(
             manifest["profiles"]["full_epoch_mechanism"]["periodic_checkpoint"],
             "G2-PBC-R step1696",
+        )
+        self.assertEqual(
+            manifest["profiles"]["plan1200_scale_validation"]["terminal_diffusion"],
+            "tau800",
         )
 
     def test_selected_periodic_stage_uses_a_without_uncertainty_gate(self) -> None:

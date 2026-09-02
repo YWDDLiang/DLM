@@ -1,7 +1,8 @@
 # Paper-method index
 
-Start here. The paper-facing surface is intentionally small; historical code
-and experiments are not required to understand the final method. Retired
+Start here. The paper-facing surface is intentionally small. Every module is
+documented by its scientific role, exact interface and supporting experiment;
+archived experiment scripts are not required to understand the method. Retired
 negative methods are summarized once in [`FAILED_METHODS.md`](../FAILED_METHODS.md).
 
 ## Method in one line
@@ -21,8 +22,22 @@ periodic-relational residual denoising → frozen terminal diffusion.**
    ablations.
 5. [`PAPER_STORY.md`](PAPER_STORY.md) — title, abstract, introduction and
    figure/table plan.
-6. [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) — data, seeds, hashes and run
+6. [`REPRODUCIBILITY.md`](REPRODUCIBILITY.md) — data, seeds, evidence profiles and run
    contracts.
+
+## Evidence at a glance
+
+| Scale | Evidence | What it establishes |
+|---|---|---|
+| Main reported result | H1-A2 Strict/Meta `105/488` per 1000 | Paper headline |
+| Planner | C3FD `1724/2000→2000/2000`; fused `1200/1200` composition-valid | Scientific support survives learned Llama reweighting |
+| Plan/DLM interface | `248/248` strict round trips; `1139/1159` valid CIFs at scale | Exact chemistry and variable-length body contract work |
+| G2 residual | refined S.U.N. `19/111→24/117`; paired hull `−16.43 meV/atom` | Periodic feedback improves the learned realization path |
+| Terminal diffusion | L6 raw→tau800 Strict/Meta `10/66→48/230` | model494 supplies a distinct fine-scale basin transition |
+| Scale profile | tau800 main1000 Strict/Meta `81/486` | The complete pipeline remains effective at scale |
+
+The complete scale report is
+[`PLAN1200_TAU800_FINAL_20260902.md`](../PLAN1200_TAU800_FINAL_20260902.md).
 
 ## Code in one screen
 

@@ -56,12 +56,46 @@ C3FD reachable support × Llama learned prior
               final crystal x*
 ```
 
-- C3FD prevents the LLM from spending mass outside chemically reachable
-  action space.
-- Llama chooses among reachable paths using a learned materials prior.
-- The Plan fixes exact chemistry and conditions every geometric prediction.
-- `7+4N` makes variable atom count an exact language contract.
-- G2 prioritizes periodic relations inside denoising.
+## Four coupled modules
+
+### Science-Constrained LLM Planner
+
+- **Input:** a partial typed composition state.
+- **Output:** one composition-valid Compact-V2 Plan.
+- **Function:** C3FD supplies reachable actions; Llama learns which reachable
+  path resembles the materials distribution and predicts soft structural hints.
+- **Evidence:** C3FD reaches `2000/2000` composition-valid proposals and the
+  fused Planner reaches `1200/1200`; nonzero action KL on `87.05%` of decisions
+  confirms that Llama remains active.
+
+### Plan-Conditioned Crystal DLM
+
+- **Input:** exact N/elements/counts and global Plan hints.
+- **Output:** one raw lattice plus N ordered species/fractional sites.
+- **Function:** the dynamic `7+4N` language makes atom cardinality an exact
+  condition and lets parallel masked denoising focus on geometry.
+- **Evidence:** `248/248` strict round trips preserve species order and validity;
+  the Plan1200 profile yields `1139/1159` valid CIFs.
+
+### G2 Periodic-Relation Residual
+
+- **Input:** uncertain q0 lattice/site token distributions and the shared Plan.
+- **Output:** a zero-initialized correction to geometry-token logits.
+- **Function:** strict triclinic PBC, species-pair distance, RDF, overlap and
+  coordination relations receive a short, explicit path inside denoising.
+- **Evidence:** fresh BASE→G2 refined S.U.N. changes `19/111→24/117`, paired
+  official hull improves by `16.43 meV/atom`, and full-epoch raw Direct changes
+  `118→128/256`.
+
+### Frozen model494 Terminal Diffusion
+
+- **Input:** the raw exact-composition DLM structure.
+- **Output:** one fine-scale refined structure with the same attempt identity.
+- **Function:** isolate a fixed basin transition from learned language
+  realization; it is not a candidate selector.
+- **Evidence:** a matched 512-row mechanism run changes raw→tau800 Strict/Meta
+  `10/66→48/230`. The independent Plan1200 tau800 profile reaches `81/486` on
+  main1000, supporting the same terminal transition at scale.
 
 ## What each result measures
 
@@ -72,3 +106,7 @@ C3FD reachable support × Llama learned prior
 
 The decomposition is diagnostic; the method remains one conditional
 probability flow connected by the Plan state.
+
+On the independent scale profile, the complete tau800 pipeline reaches
+`81/1000` Strict and `486/1000` Meta S.U.N. This supports
+scale transfer while identifying Strict stability as the remaining bottleneck.

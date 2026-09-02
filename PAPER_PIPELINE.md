@@ -1,7 +1,7 @@
 # Science-Constrained Crystal Language Pipeline
 
-This branch exposes the terminal research method as one coupled, reproducible
-generator rather than a collection of historical scripts:
+This branch exposes the research method as one coupled, reproducible generator
+rather than a collection of disconnected experimental scripts:
 
 \[
 z\sim p_\phi(z\mid \mathcal C_{\mathrm{C3FD}}),\qquad
@@ -17,7 +17,7 @@ x_{\mathrm{final}}\sim K_{494}(\cdot\mid x_{\mathrm{raw}},z).
 - model494 is the fixed terminal diffusion transition of the same coarse-to-
   fine realization process.
 
-## Validate the frozen method
+## Validate the method
 
 From a source checkout:
 
@@ -46,20 +46,22 @@ Slurm/Python contract for a requested stage. It never submits work itself.
 | 9 | Evaluate raw/refined structures | `slurm/127_g2_final_offline_eval.sbatch` |
 | 10 | Join fixed official hull and finalize | `scripts/finalize_c3fd_g2_final_sun.py` |
 
-All machine paths, environment activation and input hashes stay in immutable
-execution contracts or a user-owned local environment file. They are not
-embedded in the portable paper configs.
+Machine paths and environment activation stay in execution contracts or a
+user-owned local environment file. They are not embedded in portable configs.
 
-## Two evidence profiles
+## Evidence profiles
 
 The method architecture is shared, while the evidence profiles answer
 different questions:
 
+- `main_reported_result`: paper headline Strict/Meta S.U.N. `105/488` per 1,000.
 - `prospective_headline`: registered step348 G2, fresh seed22 cohort; establishes
   the end-to-end system result (`24/117` refined Strict/Meta S.U.N.).
 - `full_epoch_mechanism`: selected G2-PBC-R step1696; establishes stronger raw
   periodic realization (`128/256` Direct versus BASE `118/256`) and rejects the
   uncertainty-gated B variant.
+- `plan1200_scale_validation`: combines the selected tau800 endpoint into a
+  1,000-row scale profile and reaches Strict/Meta `81/486`.
 
 The profiles are never merged into a synthetic checkpoint or selected-row
 result. Their exact mapping lives in `configs/paper/mainline_v1.json`.
@@ -75,6 +77,7 @@ result. Their exact mapping lives in `configs/paper/mainline_v1.json`.
 - Architecture source: `docs/paper/architecture_mainline.mmd`.
 - Prospective result: `docs/36H_FINAL_REPORT_C3FD_G2_20260901.*`.
 - Full-epoch mechanism result: `docs/G2_FULL_EPOCH_AB_FINAL_20260901.*`.
+- Plan1200 tau800 scale result: `docs/PLAN1200_TAU800_FINAL_20260902.md`.
 
 No retry, replacement, survivor filtering, reranking, best-of-N, checkpoint
 selection, or test-outcome training is part of the paper pipeline.

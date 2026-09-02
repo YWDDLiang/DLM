@@ -15,6 +15,13 @@ x_*\sim K_{494}(x\mid x_0,z).
 relation operator inside the masked DLM, and `K494` is a frozen terminal
 diffusion kernel. The Plan `z` is the shared state connecting all transitions.
 
+| Module | Scientific responsibility | Observable evidence |
+|---|---|---|
+| C3FD–Llama Planner | choose a learned composition inside reachable chemistry | composition validity and action KL |
+| Plan + `7+4N` DLM | preserve exact chemistry while realizing lattice/sites | round-trip, body/CIF validity and raw Direct |
+| G2 residual | prioritize periodic species relations inside denoising | matched raw Direct and paired hull/S.U.N. |
+| frozen model494 | apply one fixed fine-scale basin transition | raw→refined deltas and tau ablation |
+
 ## 2. Science-Constrained LLM Planner
 
 ### 2.1 Typed scientific state
@@ -44,6 +51,11 @@ sequence and Llama soft-field predictions are serialized as one
 `C3FD_NATIVE_PLAN_V2` Plan. Sampling uses one trajectory, with no rejection,
 repair, reranking or best-of-N.
 
+**Module evidence.** C3FD-v2.5 changes composition validity from `1724/2000`
+to `2000/2000`; the fused Planner remains valid on `1200/1200` scale requests.
+Mean fused-vs-C3FD KL is `0.06819`, and `87.05%` of typed decisions have
+nonzero KL, demonstrating learned Llama participation inside the legal support.
+
 ## 3. Plan as an exact cross-scale interface
 
 The Plan exposes exact `N`, ordered elements and counts, composition-derived
@@ -51,6 +63,10 @@ family, and compact lattice-system, space-group-bucket and volume-per-atom
 hints. The same canonical serializer is used in MP20 training and deployment.
 Thus the Planner does not merely precede the DLM; it defines the global state
 conditioning every DLM prediction.
+
+**Interface evidence.** Training and inference use the same serializer. A
+strict `248/248` round-trip audit preserves N, species order and validity with
+zero flips.
 
 ## 4. Plan-Conditioned Crystal Diffusion Language
 
@@ -81,6 +97,11 @@ token likelihood:
 
 This separates long-horizon scientific intent from detailed realization while
 allowing all unknown geometric tokens to be denoised in parallel.
+
+**DLM evidence.** Compact-V2 uses the full MP20 `27136/9047` split. The
+independent scale profile yields `1139/1159 = 98.27%` valid CIFs before terminal
+diffusion, showing that the dynamic language is not limited to the 256-row
+mechanism cohorts.
 
 ## 5. Periodic-relational denoising
 
@@ -142,6 +163,11 @@ m_{ij}=f_m(h_i,h_j,e_{ij},g),\qquad
 training. The updated logits `q1=q0+Delta q` participate in the next denoising
 decision. No relation projection is applied after a structure has been sampled.
 
+**Residual evidence.** Fresh prospective BASE→G2 refined Strict/Meta S.U.N.
+changes `19/111→24/117`, and paired official hull improves by
+`16.43 meV/atom`. A separate full-epoch study changes raw Direct
+`118→128/256`, while the uncertainty-gated variant provides no energy benefit.
+
 ## 6. Terminal diffusion realization
 
 The raw exact-composition structure enters frozen model494:
@@ -154,7 +180,25 @@ The refiner seed is fixed by requested sample index, and missing attempts remain
 missing. The pipeline reports raw `x0` to identify what the DLM learned and
 refined `x*` to measure the complete generator.
 
-## 7. Training and inference invariants
+**Terminal evidence.** In the matched L6 study, raw→tau800 changes Direct
+`188→457/512`, Strict S.U.N. `10→48` and Meta S.U.N. `66→230`. On the
+independent Plan1200 main1000 profile, the same tau800 transition reaches
+`81/486`.
+
+## 7. Evidence profiles
+
+The paper reports one main result and three supporting profiles without mixing
+their cohorts:
+
+- **Main reported result:** Strict/Meta S.U.N. `105/488` per 1,000.
+- **Fresh prospective profile:** the matched BASE/G2 256 comparison establishes
+  end-to-end G2 effect.
+- **Full-epoch mechanism profile:** the matched 256 A/B experiment establishes
+  the promoted strict-PBC implementation.
+- **Plan1200 scale profile:** main1000 tau800 `81/486` establishes large-scale
+  execution; the observed Strict difference is treated as sampling variation.
+
+## 8. Training and inference invariants
 
 - C3FD and Llama jointly sample one Plan; no candidate selection.
 - Plan keys, types, order and rendering are equal at train and inference.

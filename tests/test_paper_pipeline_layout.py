@@ -36,6 +36,19 @@ class PaperPipelineLayoutTest(unittest.TestCase):
         self.assertIn("triclinic minimum-image", text)
         self.assertIn("zero-initialized", text)
 
+    def test_reader_entrypoint_explains_every_module_and_evidence_profile(self) -> None:
+        text = (ROOT / "README.md").read_text(encoding="utf-8")
+        for phrase in (
+            "Science-Constrained LLM Planner",
+            "Plan-Conditioned Crystal Diffusion Language",
+            "G2 Periodic-Relational Denoising",
+            "Frozen model494 Terminal Diffusion",
+            "105/1000 = 10.50%",
+            "81/486",
+        ):
+            self.assertIn(phrase, text)
+        self.assertNotIn("tau900", text)
+
 
 if __name__ == "__main__":
     unittest.main()
