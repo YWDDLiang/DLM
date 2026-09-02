@@ -150,7 +150,10 @@ for arm in ("B0", "BC", "BS"):
             "body_parsed": body["parse_success"],
             "body_plan_match": body["plan_match_success"],
             "graphs": body["graph_success"],
-            "refined": refine.get("num_output_structures", refine.get("output_count")),
+            "refined": refine.get(
+                "num_proposals",
+                refine.get("num_output_structures", refine.get("output_count")),
+            ),
         })
 report = {
     "schema": "spad_prospective_generation_v1",
