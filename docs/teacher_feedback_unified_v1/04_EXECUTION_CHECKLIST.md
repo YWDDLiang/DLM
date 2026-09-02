@@ -241,16 +241,20 @@ Only after the SPAD result is frozen:
   in each stream.
 - job 39524 certified the predicted-only validity screen sample-for-sample
   against full Direct, then measured BS at 255/256 and 256/256 joint validity.
-- job 39525 is the active common model494 tau800 refinement for BC/BR/BS ×
-  streams 17/18.
-- job 39527 is dependency-queued after job 39525. It evaluates the same six
+- job 39525 completed the common model494 tau800 refinement for BC/BR/BS ×
+  streams 17/18 in 01:10:39 (4.71 A800-hours): all six cells preserve 256
+  sample indices and all 1,536 refined attempts succeeded.
+- job 39527 is released and waiting for six A800s. It evaluates the same six
   cells at both raw and refined endpoints (12 cells total) on six A800s, reuses
   completed BC/BR raw Direct outputs, and gives every CHGNet worker a private
   cache copy. The wrapper is frozen at commit `ab4880d`.
+- job 39528 is dependency-queued after job 39527 and will sample exactly 256
+  actual seed-23 C3FD–Llama+pointer Plan requests without filtering or
+  replacement.
 
 Immediate sequence:
 
-- [ ] finish and audit all six job-39525 refinement cells;
+- [x] finish and audit all six job-39525 refinement cells;
 - [ ] let dependency job 39527 run the parallel raw/refined Direct + CHGNet
   evaluation without changing Plan, stream, denominator or sample ordering;
 - [ ] sample and freeze exactly the first 256 requested C3FD–Llama+pointer
