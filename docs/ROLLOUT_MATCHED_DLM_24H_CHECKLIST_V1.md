@@ -23,12 +23,14 @@ Deadline: 2026-09-03 23:30 Asia/Shanghai.
 - Canonical data V2 is terminal at `27136/9047` rows with zero drops and zero
   prompt changes; token audit has zero truncation and zero prompt/answer boundary
   mismatches. Job 39280 failed before step0 because it referenced the stale
-  trainer root; parameter-identical recovery job 39282 is running on two A800.
+  trainer root; parameter-identical recovery job 39282 completed successfully
+  in `01:18:39` on two A800.
   Its run config pins fresh initialization, canonical V2 data, seed82017 and
   3392 updates; `fresh_lora=true`, `exact_zero_delta=true` and
   `lora_B_max_abs=0.0` have passed before the first optimizer update. Formal
-  training has passed the monitoring-only step1696 evaluation with validation
-  loss `2.226879`; stage2 is running and remains finite through step1900.
+  training remained finite through the fixed endpoint. Validation loss was
+  `2.226879` at monitoring-only step1696 and `2.383175` at eligible step3392;
+  the latter is retained without checkpoint selection.
 
 ## Objective
 
@@ -136,15 +138,17 @@ CHGNet-selected or hull-selected structures never become labels.
   species-coordinate site records to Plan order; drop zero rows.
 - [x] Verify physical structure, lattice, body length, composition, source row
   and split are unchanged for every row.
-- [ ] Job 39282 trains one fresh Compact-V2 LoRA with the frozen two-epoch
-  schedule; after it is terminal, train one canonical G2-PBC-R epoch.
+- [x] Job 39282 trained one fresh Compact-V2 LoRA with the frozen two-epoch
+  schedule and produced the sole step3392 checkpoint.
 - [x] Verify job39282 pre-science state: checkpoint path null, world size2,
   canonical data path, fresh LoRA and exact step0 equality.
 - [x] Verify training-log records through step1900 have finite
   loss/task loss/gradient norm/LR.
 - [x] Monitor step1696 without selecting it; validation loss is `2.226879` and
   the frozen stage2 learning-rate restart is active.
-- [ ] Continue verifying subsequent records through the sole step3392 endpoint.
+- [x] Verify all subsequent records through the sole step3392 endpoint.
+- [ ] Job39321 trains the single canonical G2-PBC-R full epoch from canonical
+  step3392 on two A800; no second method or uncertainty-gate arm is allowed.
 - [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
   `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
   exactly-zero output initialization, strict triclinic 125-image minimum image,
