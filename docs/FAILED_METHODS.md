@@ -30,3 +30,20 @@ Jobs 39186 (delegated-script execute permission), 39187 (`PYTHONPATH`) and
 training updates but its wrapper failed a post-training log assertion; the
 valid endpoint was finalized CPU-only. These incidents did not alter the
 scientific verdict above.
+
+## Projected-force microstudent
+
+The residual-only microstudent checkpoint from job39230 changed 86/128 holdout
+texts but produced six invalid→valid and six valid→invalid Direct flips, for net
+zero. It was not promoted and its 6 GiB step128 checkpoint was removed on
+2026-09-02. Logs, the frozen data audit and the failure reason remain.
+
+## Canonical-site G2 interaction
+
+Canonical MP20 site ordering improved fixed256 raw Direct from old G2 `128` to
+canonical DLM `143`. Adding a new G2-PBC-R epoch reduced it to `133`, and neither
+canonical arm established a paired raw CHGNet advantage. The canonical-G2
+step1696 checkpoint was therefore classified as failed and its 6 GiB checkpoint
+was removed on 2026-09-02. The canonical DLM step3392 checkpoint is retained as
+the supported Direct-improving artifact; the historical promoted G2-A remains
+untouched.

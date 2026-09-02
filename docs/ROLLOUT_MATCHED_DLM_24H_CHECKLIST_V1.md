@@ -1,6 +1,8 @@
 # Rollout-Matched DLM 24-hour checklist V1
 
 Deadline: 2026-09-03 23:30 Asia/Shanghai.
+Status: **STOPPED by user on 2026-09-02.** The heartbeat automation was deleted,
+there are no active Slurm jobs, and no further method development is authorized.
 
 ## Current state (2026-09-02)
 
@@ -31,6 +33,12 @@ Deadline: 2026-09-03 23:30 Asia/Shanghai.
   training remained finite through the fixed endpoint. Validation loss was
   `2.226879` at monitoring-only step1696 and `2.383175` at eligible step3392;
   the latter is retained without checkpoint selection.
+- Final fixed256 raw Direct is OLD-G2/canonical-DLM/canonical-G2
+  `128/143/133`. Neither canonical arm improved paired raw CHGNet stability.
+- Failed checkpoint cleanup removed canonical-G2 step1696 and projected-force
+  microstudent step128 (about 12 GiB total). Canonical-DLM step3392 is retained
+  because it established the supported Direct gain; the promoted historical
+  G2-A checkpoint is also retained.
 
 ## Objective
 
@@ -126,8 +134,8 @@ CHGNet-selected or hull-selected structures never become labels.
   no inference CHGNet, best-of-N, reranking or completed-sample repair.
 - [x] Specify O(N²) time, bounded-image memory, invariance tests, step0 equality,
   and a fixed-256 matched promotion contract.
-- [ ] Implement only after the pilot result selects whether rollout matching is
-  sufficient or the continuous executor is needed.
+- [x] Cancel implementation by user stop decision; retain the design document
+  only.
 
 ## P5 — canonical MP20 execution contract
 
@@ -177,9 +185,7 @@ CHGNet-selected or hull-selected structures never become labels.
   improvement (`128 -> 143`) but not a raw-stability improvement. Adding G2 to
   the canonical base reduces Direct (`143 -> 133`) and has no energy advantage;
   retain this interaction as a negative rather than forcing the residual.
-- [ ] Freeze all further CE/G2 continuation. Before any new GPU job, audit the
-  MP20 `e_above_hull` condition coverage, within-chemistry signal, rollout error
-  scale and the PBC log-metric/torus score-executor invariants.
+- [x] Freeze all further CE/G2/score-executor work by user stop decision.
 - [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
   `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
   exactly-zero output initialization, strict triclinic 125-image minimum image,
@@ -192,11 +198,10 @@ CHGNet-selected or hull-selected structures never become labels.
   duplicate-coordinate mask and lattice-volume mask at decoding.
 - [x] Keep the detached uncertainty gate off: prior B/RU did not beat A/R and
   had adverse raw-energy direction. Do not revive Force/BTRD or SGTC.
-- [ ] Matched raw evaluation treats Direct and CHGNet as co-primary, with
+- [x] Matched raw evaluation treated Direct and CHGNet as co-primary, with
   stability prioritized; no checkpoint/seed/epoch selection.
-- [ ] If Direct improves without raw-energy improvement, do not add CE epochs;
-  move only to the preregistered MP20-only stability-conditioned periodic score
-  executor described in `DLM_DIRECT_STABILITY_DECISION_20260902.md`.
+- [x] Direct improved without raw-energy improvement; no CE epochs or score
+  executor were launched before the user stopped the program.
 
 ## Resources and operations
 
