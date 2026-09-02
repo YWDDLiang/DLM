@@ -10,6 +10,7 @@ is not trustworthy.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from functools import lru_cache
 import itertools
 import math
 from typing import Sequence
@@ -54,13 +55,16 @@ def species_pair_margin(
     return float(np.clip(raw, float(floor_A), float(ceiling_A)))
 
 
+@lru_cache(maxsize=2)
 def _image_shifts(image_radius: int) -> np.ndarray:
     if int(image_radius) not in (1, 2):
         raise ValueError("image_radius must be one (27) or two (125)")
-    return np.asarray(
+    shifts = np.asarray(
         list(itertools.product(range(-image_radius, image_radius + 1), repeat=3)),
         dtype=float,
     )
+    shifts.setflags(write=False)
+    return shifts
 
 
 def minimum_image_vector(
