@@ -151,10 +151,13 @@ CHGNet-selected or hull-selected structures never become labels.
   on two A800 and produced the sole step1696 checkpoint. Relation step0 delta
   is exactly zero; rank64/image-radius2/uncertainty-off config and all finite
   geometry/relation diagnostics passed. Validation loss is `2.475367`.
-- [ ] Job39335 reuses the frozen prospective 256 Plans and old G2-PBC-R raw
-  control, generating only canonical DLM and canonical DLM+G2 with identical
-  stream17 noise before fast Direct. It does not resample the Planner or run
-  model494/CHGNet.
+- [x] Job39335 failed in 28 seconds before sampling because Bash `set -u`
+  rejected an empty optional relation-argument array for the no-G2 arm. It is
+  an engineering negative with no body output.
+- [ ] Parameter-identical recovery job39338 reuses the frozen prospective 256
+  Plans and old G2-PBC-R raw control, generating only canonical DLM and
+  canonical DLM+G2 with identical stream17 noise before fast Direct. It does
+  not resample the Planner or run model494/CHGNet.
 - [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
   `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
   exactly-zero output initialization, strict triclinic 125-image minimum image,
