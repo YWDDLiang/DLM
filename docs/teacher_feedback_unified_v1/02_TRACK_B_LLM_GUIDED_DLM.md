@@ -1,291 +1,201 @@
-# Track B: Llama-Guided Masked Crystal DLM
+# Track B: Llama-Programmed Anchor–Backfill Crystal DLM
 
-Status: **design awaiting approval**
+Status: **approved priority route**
 
-## 1. Purpose
+## 1. Core claim
 
-Track B tests the paper's main hypothesis: a Llama scientific controller can
-tell a masked DLM **what to resolve next** and **which semantic values are
-plausible**, while the DLM contributes bidirectional evidence before those
-semantic actions are committed.
+Track B uses the Planner Llama to control DLM execution without sharing token
+IDs or inventing a cross-model logit bridge:
 
-Track B reuses one exact frozen Track-A controller endpoint:
+- predicted Compact Plan is the condition;
+- sampled Planner species-action order is the construction program;
+- the DLM owns lattice/coordinate values;
+- suffix-visible anchor backfill is the DLM-specific operation.
 
-- C3FD–Llama Plan;
-- species program;
-- `BodyAdapter-A`, `ProgramHead-A` and `SLA-A`.
+This is **Scientific Programmed Anchor–Backfill Denoising (SPAD)**.
 
-It adds the masked DLM as a bidirectional pre-commit executor. It does not assume that Llama
-and DLM share token IDs. No Track-B optimization updates any Track-A weight.
+## 2. Planner-to-DLM signal
 
-## 2. Native DLM representation
-
-For `N` sites, the DLM body remains exactly:
-
-\[
-\langle N\rangle,
-\langle LA,LB,LC\rangle,
-\langle AA,AB,AG\rangle,
-\{\langle E_i,X_i,Y_i,Z_i\rangle\}_{i=1}^{N}.
-\]
-
-Every field is one dedicated token. The canonical state supplies:
-
-- one exact `N` token;
-- all element tokens with the exact Plan multiplicities;
-- request-local, transaction-stable slot handles connecting DLM positions to
-  Llama program blocks;
-- masks only for lattice and coordinates.
-
-The DLM tokenizer and embeddings remain unchanged. Llama native text IDs are
-never inserted into the DLM sequence.
-
-## 3. Llama control has three channels
-
-### Global condition
-
-The exact composition and coarse LS/SG/VPA Plan condition every DLM pass.
-
-### Commitment order
-
-The Llama program selects the next species block. DLM storage positions remain
-stable; the program chooses which subset of those positions becomes active.
-Thus Llama changes denoising order without requiring the two models to share a
-serialization.
-
-The fixed dependencies are:
+The existing typed Planner returns:
 
 ```text
-N and exact element inventory
-      -> complete six-field lattice
-      -> species blocks in Llama order
-      -> stable serialization slots within species
-      -> propose and atomically commit one XYZ site triplet
+plan_state:
+  N, elements, counts, anion framework, LS, SG bucket, VPA bin
+semantic_trace:
+  proposal,
+  species(Z, oxidation, count),
+  ...,
+  EOS
 ```
 
-The Llama chooses only the species-block permutation inside this physical DAG;
-the method does not claim a general learned unmasking policy. Crystal semantics
-retain lattice first and atomic site closure because PBC validity is not
-decidable before those dependencies are complete.
+The program compiler:
 
-### Local value prior
+1. reads species actions in sampled order;
+2. maps atomic number to element symbol;
+3. folds repeated oxidation states of one element at first occurrence;
+4. verifies exact agreement with Plan elements/counts;
+5. emits an immutable unique-element permutation.
 
-At the current field boundary, the body Llama produces one SLA distribution
-over semantic values. The DLM produces logits over its allowed special tokens.
-A deterministic codec maps the latter to the same semantic value domain.
+The Plan text is encoded by the DLM tokenizer. The program remains structured
+metadata and maps elements to DLM site positions. This is the complete
+Llama→DLM interface.
 
-## 4. Semantic fusion instead of token-ID fusion
+## 3. Why no SLA/gate in the first path
 
-For active field `f` and semantic candidate `a`:
+AR text values and DLM special tokens have different probability spaces.
+Although a separate semantic head could be trained, current code has no such
+head, rollout calibration or agreement gate. Adding all three before the first
+B result would introduce avoidable train/serve shift.
+
+SPAD needs none of them. Llama controls global condition and schedule; DLM
+controls values. A later semantic-value prior remains possible but is not part
+of the initial method or claim.
+
+## 4. Exact DLM state
+
+For N sites the body is:
 
 \[
-\ell_f^{B}(a)=
-\frac{\ell_{\mathrm{DLM}}^{\mathrm{sem}}(a)}{T_{D,f}}
-+\alpha_f(s)
-\operatorname{center}\left(
-\frac{\ell_{\mathrm{AR}}^{\mathrm{sem}}(a)}{T_{A,f}}
-\right).
+N,LA,LB,LC,AA,AB,AG,(E_i,X_i,Y_i,Z_i)_{i=1}^{N}.
 \]
 
-`T_D` and `T_A` are calibrated by field family. A small agreement gate
-`alpha` reads:
+- N and all E positions are prefilled from the exact Plan;
+- lattice and XYZ positions begin masked;
+- storage order remains canonical;
+- the species program chooses non-contiguous active positions;
+- every forward sees the whole canvas with bidirectional attention.
 
-- field family and commitment stage;
-- Plan embedding;
-- AR and DLM entropy/margin;
-- top-value agreement and Jensen–Shannon divergence.
+Only exact `7+4N` canvases are production inputs. The historical fixed
+87-position EOS-tail path is excluded.
 
-The shared scientific commit controller then applies hard support and soft
-risk **after** the language-only agreement gate. The sampled semantic value is encoded as exactly one DLM special token
-and rendered into the Llama control transcript.
+## 5. Stateful sampler API
 
-BG/BP make a joint **pre-commit** decision; they do not first commit a Llama
-sample and then edit it. After every joint commit, any unconsumed future Llama
-distribution is discarded and the next block is scored from the updated
-canonical state.
+The existing monotone `generate()` is split into:
 
-## 5. One blockwise decoding step
-
-```text
-1. Commit one six-value lattice block.
-2. Read the next species block from the frozen Llama program.
-3. For each serialization slot belonging to that species:
-   a. render the committed canonical state as the Llama control prefix;
-   b. obtain one Llama/SLA and one DLM factorized XYZ distribution;
-   c. map both to semantic values and form the joint triplet beam;
-   d. apply exact PBC support and soft risk;
-   e. atomically commit one complete site triplet.
-4. Advance to the next species only after all of its site slots are complete.
+```python
+canvas = initialize_canvas(prompt, n, element_prefill)
+logits = constrained_forward(model, canvas, active_positions)
+canvas = commit_transaction(canvas, transaction, value)
+canvas = remask_transaction(canvas, transaction)
+canvas = resume(model, canvas, remaining_transactions)
 ```
 
-For the lattice block, one Llama/SLA call and one DLM forward provide six
-field distributions; a progressive width-32 beam forms valid tuples. For a
-site block, one call from each model provides three factorized X/Y/Z
-distributions. The default top four per axis gives 64 jointly scored triplets;
-a train-only coverage/throughput audit may freeze top eight (512) before any
-evaluation. Triplets are committed together only after exact PBC evaluation.
-For BG/BP diagnostics, the **Llama proposal** is the support-normalized SLA
-argmax, the **DLM proposal** is the support-normalized DLM argmax, and a
-**fusion change** occurs when the fused argmax differs from the Llama proposal.
-Sampling differences alone are not called revisions. The explicit
-post-predictor revision is reserved for B3, which re-masks a completed block.
-The paper reports proposal agreement, fusion-change frequency and whether
-fusion changes improve permutation-aware teacher accuracy and raw geometry.
-DLM is called a bidirectional pre-commit executor, not a
-certificate-producing verifier.
+Required semantics:
 
-## 6. Training
+- `constrained_forward` refreshes the full model after every transaction;
+- `commit_transaction` changes an entire lattice or XYZ transaction;
+- `remask_transaction` may mask already committed XYZ;
+- every non-active token remains bitwise unchanged;
+- completion fails if any registered mask remains.
 
-### Frozen-weight adjacent decoder cells
+## 6. Predictor schedule
 
-All four cells use the retained two-epoch Compact-V2 DLM weights and one common
-block-mask schedule. DLM temperatures are calibrated by field family,
-remaining-mask ratio and block stage on MP20-train rollout states.
+1. **Inventory prefill:** N and all species tokens.
+2. **Lattice transaction:** six fields, final positive Gram determinant.
+3. **Species anchors:** one site for each unique species in Planner order.
+4. **Future completion:** remaining sites in the same program, with existing
+   anchors visible.
 
-- `BC`: canonical species-block order, no Llama semantic prior, syntax/exact
-  composition only;
-- `BO`: BC + Llama species-block order only;
-- `BG`: BO + frozen SLA semantic policy through the agreement gate;
-- `BP`: BG + shared lattice/joint-site PBC commit controller.
+An anchor can live later in the stored sequence than an unresolved site. The
+program therefore exercises non-contiguous future-first generation.
 
-These adjacent cells isolate order, Llama semantic guidance and periodic
-support without changing DLM weights or mask-time semantics.
+## 7. Backfill schedule
 
-The agreement gate is trained with Llama and DLM frozen. For each
-rollout-matched MP20-train field state with teacher semantic value `y`:
+After a complete predictor:
 
-\[
-\mathcal L_{\mathrm{gate}}
-=-\log p_{\mathrm{fused}}(y)
-+\lambda_\alpha\alpha(s)^2,
-\]
+1. enumerate first anchor of each species in reverse Planner order;
+2. preserve its old XYZ as a no-op/provisional candidate;
+3. re-mask exactly that XYZ block;
+4. keep the lattice and every other site visible;
+5. run the DLM with the full suffix;
+6. commit one periodic-feasible XYZ transaction;
+7. continue through the fixed one-sweep anchor list.
 
-subject to a field/stage KL cap of 0.05 nats from the DLM distribution.
-Generated/committed
-prefixes are visible; teacher values are used only as labels. This defines
-exactly what the gate learns.
+No AR logits are used in backfill because a causal AR distribution for an early
+position cannot condition on the fixed future suffix. Llama has already
+supplied the program; DLM alone performs posterior infilling.
 
-### B2: schedule-matched adaptation
+## 8. Geometry support
 
-Starting once from the same retained Compact-V2 checkpoint, train one LoRA
-with rank 8, alpha 32 and dropout 0.05 for exactly 1,696 optimizer updates.
-Effective source batch is 16 over 27,136 rows; paired Plan-view losses are
-averaged inside each source group. LR is `5e-6`, cosine decay with 100 warmup
-updates and minimum LR ratio 0.2. Two A800 GPUs use per-device source batch one
-and gradient accumulation eight. The actual BP mask pattern is used:
+### Lattice
 
-- exact `N` and element slots visible;
-- lattice resolved first;
-- one Llama-selected species block active;
-- later blocks masked;
-- CE on eligible teacher DLM special tokens;
-- teacher and frozen predicted same-schema Plan views, sharing source weight;
-- schema/exact-composition support active in the loss;
-- geometric support audited against quantized teacher values but not used to
-  delete a teacher label from CE; incompatible teacher rows are disclosed and
-  excluded only from the geometry-controller auxiliary term;
-- no CHGNet, hull, model494 endpoint or generated-test outcome in the loss.
+- zero-length tokens are excluded;
+- six fields form one transaction;
+- final Gram determinant must be positive;
+- LS/VPA remain soft Plan conditions; SG is not treated as a Wyckoff guarantee.
 
-Only this DLM LoRA trains in B2; base DLM weights remain frozen. The frozen SLA
-is evaluated on jointly committed MP20-train prefixes; the separately trained
-gate may abstain when Llama
-uncertainty or distribution shift is high. C3FD, Planner and the complete
-Track-A controller remain frozen. B2 is the final learned LLM-guided DLM.
+### Coordinates
 
-The existing G2 residual implementation is retained as a mechanism ablation,
-not automatically stacked into B2. Previous results show that periodic
-residuals can help but interact with serialization/order. If used, it receives
-the exact B2 mask schedule and is compared on the shared mechanism subset
-before becoming part of the main executor.
+- coordinate 000/100 aliases are combined as one torus value;
+- XYZ forms one atomic transaction;
+- old XYZ remains provisional during remask;
+- complete candidates use validated triclinic minimum-image distance;
+- below 0.5 Å is illegal; species-aware near-collision is soft.
 
-## 7. Optional complete-state continuous-response corrector
+The first implementation may use current tokenwise commits internally, but the
+transaction is not externally visible until all XYZ coordinates are valid.
 
-After B2 resolves a complete graphable predictor crystal:
+## 9. Training masks
 
-1. on frozen B2-generated MP20-train states from the same runtime, measure
-   model494's actual deterministic first deployed transition;
-2. compute PBC torus displacement for coordinates and log-metric displacement
-   for lattice;
-3. use the Candidate-E1-owned `Confidence-E1` module trained after B2 from
-   MP20-train force/stress labels; a component is active only
-   when its calibrated probability of energy descent without risk increase is
-   at least 0.60;
-4. select one block by a frozen analytic-risk/predictor-uncertainty rule that
-   never reads the model494 response;
-5. re-mask it while leaving all other final fields visible to the DLM;
-6. obtain fresh Llama SLA logits for that block;
-7. project the continuous drift onto adjacent legal semantic values;
-8. run one full-context DLM correction with the current value retained as a
-   no-op candidate.
+One source row contributes a weighted mixture:
 
-This produces B3. It is the only proposed place where the continuous refiner
-changes a discrete DLM decision. It is described as an empirical
-deployed-refiner response, not an exact score at an in-distribution `t=800`
-state.
+- ordinary random mask;
+- program predictor mask with committed anchors/current/future state;
+- full-body correction mask with one earlier anchor hidden and suffix visible.
 
-Implementation is two-stage rather than triple-resident: checkpoint 494 first writes
-the canonical one-step response for frozen complete B2 states, then a
-co-resident BF16 Llama+DLM worker performs the correction. No scientific state
-changes between those stages.
+Teacher and frozen-predicted Plan views share the same target and total source
+weight one. Exact N/elements stay visible.
 
-This one-step **response-corrector role** is distinct from the common
-**terminal-refiner role**, which runs the full registered continuous trajectory
-after raw A/B structures are frozen. The former changes one discrete block; the
-latter outputs the final continuous crystal.
+The schedule-matched endpoint is one LoRA:
 
-For attribution, `B2C0` performs the same response-independent block
-selection, model494 call,
-fresh Llama/SLA call and DLM corrector pass as B3, but fixes the continuous
-response residual to zero. B2→B2C0 measures the effect of reopening one block;
-B2C0→B3 isolates response-residual steering at equal model calls and correction
-compute. It does not claim to isolate the existence of a response call, which
-is deliberately present in both. All cells report NFE and latency.
+- initialization: retained Compact-V2 DLM;
+- rank 8, alpha 32, dropout 0.05;
+- LR 5e-6;
+- effective source batch 16;
+- 1,696 optimizer updates;
+- one model seed and one endpoint;
+- up to 4 A800.
 
-## 8. Minimal experiment design
+## 10. Required cells
 
-Full fixed256 cells:
+| Cell | Weights | Decoder |
+|---|---|---|
+| BC | retained | canonical monotone |
+| BP | retained | Planner-program anchor-first |
+| BR | retained | BP + suffix-visible remask sweep |
+| BS | matched LoRA | BR decoder |
 
-| Cell | Purpose |
-|---|---|
-| BC | frozen DLM + common block schedule, canonical order |
-| BO | BC + Llama species order |
-| BG | BO + frozen SLA/gate |
-| BP | BG + shared PBC commit controller |
-| B2 | one-epoch schedule-matched LLM-guided DLM |
-| B2C0 | B2 + compute-matched zero-response corrector |
-| B3 | B2 + one complete-state drift corrector |
+`BR-no-suffix` is a mechanism subset: it remasks the same anchor but also
+masks later sites. BR−BR-no-suffix measures the information supplied by future
+context.
 
-BC/BO/BG/BP are the required adjacent decoder comparisons and use the same
-fixed256 ledger. A fixed-weight gate and optional G2 residual are mechanism
-diagnostics on one shared subset; they are not mixed into the primary
-attribution.
+## 11. DLM necessity evidence
 
-Each fixed256 cell uses one model seed and two common sampling streams. Matched
-A1, BC, BO, BG, BP and B2 raw generation runs before terminal diffusion. B3
-starts only if its generated-state validation gives directional AUC above 0.55
-and more than half of usable one-step responses lower the calibration energy
-without increasing feasibility risk.
+Mechanism:
 
-## 9. Metrics
+- future-position step map precedes an earlier stored position;
+- changing a visible later site changes earlier-anchor logits;
+- remask changes only the selected anchor;
+- BR recovers teacher anchor tokens/geometry better than BR-no-suffix.
 
-- requested-denominator body and exact-composition validity;
-- raw Direct, graphability, minimum-distance ECDF and collision count;
-- raw lattice volume/condition and VPA agreement;
-- raw CHGNet and a held-out second-MLIP robustness endpoint;
-- Llama/DLM argmax agreement, fusion-change frequency and
-  permutation-aware teacher accuracy;
-- DLM NFE, Llama calls and wall time;
-- common terminal model494, surrogate MP-reference Strict/Meta S.U.N.;
-- a registered DFT subset only if an ab initio stability claim is needed.
+System:
 
-## 10. Expected effect and main risk
+- requested-denominator body/composition retention;
+- raw Direct, graphability, collision distribution and lattice condition;
+- raw stability surrogate;
+- terminal Strict/Meta S.U.N.;
+- calls, NFE and wall time.
 
-The strongest expected effect is raw structural validity: Llama supplies a
-causal local prior, DLM sees unresolved global context, and PBC support prevents
-completed-site collisions. Stability improvement is less certain until the
-drift corrector is measured.
+An AR generator cannot preserve the suffix while revising an early atom. This
+is the non-replaceable role of the DLM.
 
-The main engineering risk is not model size but state synchronization. Every
-commit must update four linked objects atomically: canonical state, DLM canvas,
-Llama control transcript and periodic graph cache. The cross-representation
-contract defines that transaction.
+## 12. Expected result and iteration
+
+BP tests whether Llama's chemically learned order provides better anchors. BR
+targets early-site geometric mistakes using the completed future. BS removes
+the random-mask versus structured-decoder mismatch.
+
+Small failures are localized to token coverage, program compilation, remask
+state, geometry support or learned mask adaptation. Each receives one adjacent
+repair. The final target is Strict/Meta S.U.N. above 10%/50% without selecting
+rows, streams or checkpoints.

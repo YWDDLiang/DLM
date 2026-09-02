@@ -1,320 +1,143 @@
-# Cross-Representation and Diffusion Contract
+# Cross-Representation Contract
 
-Status: **design awaiting approval**
+Status: **approved implementation contract**
 
-## 1. Non-negotiable boundary
+## 1. Spaces remain separate
 
-There is no valid operation called “add the AR token logits to the DLM token
-logits.” The models use different vocabularies and probability factorizations:
+| Module | Native space |
+|---|---|
+| C3FD–Llama Planner | typed chemical states, action logits and ordinary Plan text |
+| Track-A AR body | native text tokens |
+| Track-B DLM | dedicated `7+4N` crystal tokens |
+| continuous refiner | atom types, fractional coordinates and lattice tensors |
 
-- the AR model assigns probabilities to native subword sequences;
-- the DLM assigns one probability to each crystal special token at a fixed
-  semantic position;
-- model494 has no language vocabulary and operates on continuous tensors.
+No raw token ID or logit is compared across these spaces.
 
-All communication therefore passes through typed semantic values and a
-canonical crystal state.
-
-## 2. Canonical crystal state
-
-Each request owns one mutable state:
+## 2. Canonical state
 
 ```text
-request_id
 Plan:
   N, elements, counts
-  sampled LS/SG/VPA labels
-  full LS/SG/VPA probabilities, confidence, model/version
+  sampled + probabilistic LS/SG/VPA
 Program:
-  species order, ephemeral serialization-slot IDs
-Lattice:
-  a, b, c, alpha, beta, gamma
-Sites:
-  site_id, species, x, y, z, completion mask
+  ordered unique elements from Planner semantic_trace
+Canvas:
+  six lattice values
+  request-local site handles, species, XYZ
+  committed/masked flags
 Provenance:
-  committed_by, AR confidence, DLM confidence, risk summary
+  predictor/backfill stage, transaction index, old value
 ```
 
-Scientific values are stored numerically, never as tokenizer IDs. A commit is
-valid only when all affected views can be regenerated from this state.
+The runtime owns this state. Models read views of it.
 
-There are exactly three transaction units:
+## 3. Planner view
 
-1. one typed composition action in the Planner;
-2. one complete six-value lattice block;
-3. one complete XYZ site triplet.
+The Planner action trace is authoritative for program order. Canonical Plan
+serialization may sort `elements/counts` for identity, but the separate
+`species_program` field preserves sampled order.
 
-A species block is only a scheduling container holding one or more site
-transactions. Individual scalar field logits are internal scores, not commits.
+Validation requires:
 
-## 3. Codec A: canonical state and AR text
+- program elements are unique;
+- program set equals Plan element set;
+- trace counts collapse to exact Plan counts;
+- N equals the sum of counts.
 
-The AR representation follows the existing CrysLLMGen grammar:
+## 4. DLM view
 
-- first line: three lengths at one decimal;
-- second line: three integral angles;
-- alternating element line and three two-decimal fractional coordinates.
+The DLM canvas is exact length `7+4N`. Unresolved fields use the real
+checkpoint mask ID. N and E tokens are prefilled.
 
-`render_ar(state)` emits only canonical spellings. `parse_ar(text)` returns
-the canonical state or a parse failure; it does not infer missing atoms or
-repair malformed numbers.
+The special-token physical mapping is:
 
-During decoding, `render_ar_partial(state, mask)` emits the Plan, complete
-lattice if available and only fully committed sites in program order. It is a
-control prefix, not a parseable final crystal. Full `parse_ar` is called only
-after every transaction is complete.
+| Family | Physical mapping |
+|---|---|
+| N | integer 1–20 |
+| LA/LB/LC | bin × 0.1 Å; bin 000 illegal in production |
+| AA/AB/AG | integer degrees 1–179 |
+| E | H–Pu |
+| X/Y/Z | bin / 100 on the periodic torus |
 
-Native tokenizer segmentation is deliberately opaque to the scientific
-controller. For example, the text value `0.37` may contain one or several
-subword tokens. The SLA reads the Llama hidden state at the field boundary and
-scores a separately supervised semantic coordinate action directly. It is not
-asserted to equal native-string probability.
+Coordinate tokens 000 and 100 are physical aliases. Compatibility with old
+checkpoints combines both logits by log-sum-exp; new commits use 000.
 
-For diagnostics, a candidate-trie scorer computes the native AR likelihood of
-each canonical value string, including its delimiter. It measures agreement
-between two Llama output heads; it does not turn SLA into the pushforward of
-the native AR distribution. Its frozen scope is 512 MP20-train rows and at most
-one available position from each field family per row.
+Partial validation compares resolved fields and masks. Full parsing occurs only
+when no registered mask remains and rejects any non-whitespace text outside the
+schema tokens.
 
-## 4. Codec B: canonical state and DLM tokens
+## 5. Track-A text view
 
-The DLM representation is one token per semantic field:
+Track A renders the same Plan/program and canonical arrays as CrysLLMGen text.
+Its BPE segmentation is irrelevant to Track B. The shared objects are the Plan,
+program and final physical arrays, not token probabilities.
 
-```text
-<N_004>
-<LA_041><LB_041><LC_042>
-<AA_090><AB_090><AG_120>
-<E_Li><X_000><Y_000><Z_000> ...
-```
+## 6. Continuous view
 
-`encode_dlm(state)` quantizes canonical numeric values to the existing bins.
-`decode_dlm(tokens)` requires exact `7+4N` length and field families.
-`encode_dlm_partial(state, mask)` instead emits the fixed `7+4N` canvas with
-unresolved positions represented by the DLM mask ID. Partial consistency checks
-compare resolved semantic fields, slot handles and the mask—not a full decode.
+A complete raw state maps to:
 
-The lookup table is explicit:
-
-| Semantic value | AR rendering | DLM rendering |
-|---|---|---|
-| length 4.1 Å | `4.1` | `<LA_041>` / axis-specific family |
-| angle 90° | `90` | `<AA_090>` / axis-specific family |
-| coordinate 0.37 | `0.37` | `<X_037>` / axis-specific family |
-| lithium | `Li` | `<E_Li>` |
-
-Mapping uses semantic field plus value, never string equality between tokens.
-Lengths use the shared positive domain `0.1–50.0 Å`, even though the AR parser
-accepts a wider range and the DLM vocabulary contains a zero-length token.
-Angles share `1–179°`.
-
-Coordinates require alias handling. DLM bins `000` and `100` represent
-fractional coordinates 0 and 1, which are the same point under PBC, while AR
-parsing wraps `1.00` to `0.00`. The semantic bridge:
-
-1. maps both DLM aliases to the torus value `0.00`;
-2. combines their probability mass by log-sum-exp;
-3. emits canonical DLM bin `000` after commitment;
-4. uses physical values in `[0,1)` for geometry.
-
-All other round trips use half the registered quantization step as tolerance.
-
-## 5. Site identity and order
-
-Atom order is not assumed equal across models. The canonical state assigns
-ephemeral serialization-slot IDs before geometry generation:
-
-1. species blocks follow the Llama program;
-2. slots are stable within each species;
-3. DLM positions retain their original fixed indices;
-4. the Llama control transcript visits sites in program order;
-5. codecs carry `site_id` so a corrected DLM slot updates the right AR record.
-
-These IDs are software handles, not physical atom identities. Training applies
-within-species permutations and global translations. Teacher/fusion metrics
-match same-species sites as sets using minimum-cost matching rather than
-requiring arbitrary row-wise identity. Canonicalization may be applied at
-input/output boundaries, but a live transaction keeps its assigned handles
-stable.
-
-## 6. Semantic Logit Adapter contract
-
-For each field family, the SLA output dimension exactly equals the **unique
-physical semantic** candidate set, not necessarily the number of DLM token
-aliases. Separate heads are used for:
-
-- lattice lengths;
-- lattice angles;
-- fractional coordinates;
-- optional element/program decisions.
-
-Axis identity, site species, Plan state and commitment stage enter the head
-features. At one site boundary, a shared hidden state produces three
-axis-specific coordinate distributions; at the lattice boundary it produces
-six field distributions. Coordinate heads share weights with an axis
-embedding; lattice heads share within length and angle families.
-
-Training targets come from teacher-Plan and frozen-predicted-Plan views of the
-same canonical MP20 body; the two views share source weight one. The SLA is
-evaluated by:
-
-- semantic top-1 and NLL;
-- calibration error;
-- agreement with native-text candidate likelihoods;
-- invariance to tokenizer segmentation of the same canonical value;
-- train/serve equality at field boundaries.
-
-## 7. Scientific support in semantic space
-
-Hard support is evaluated on candidate values:
-
-- exact Plan inventory and field type;
-- legal numeric range;
-- positive-volume completed lattice;
-- no exact PBC-equivalent duplicate;
-- atomically proposed complete-site minimum distance at least 0.5 Å.
-
-For a triclinic cell,
-
-\[
-d_{ij}^{\mathrm{PBC}}
-=\min_{n\in\mathbb Z^3}
-\left\|(f_i-f_j+n)L\right\|_2.
-\]
-
-Simple fractional `delta-round` and an uncertified finite image radius are not
-guaranteed to solve this problem for a highly skewed cell. Every site-triplet
-candidate uses a validated nearest-lattice-vector/MIC routine. The GPU path
-batches candidate/site displacements and enumerates a per-lattice image radius
-certified from a singular-value lower bound; a reduced basis may tighten that
-bound. Near-singular or excessive-radius cells use the exact CPU backend or are
-already outside the lattice hard support. No approximate screen decides
-whether exact evaluation is needed.
-
-Soft risk includes:
-
-- species-aware distance margin above 0.5 Å;
-- low volume per atom;
-- extreme metric condition number;
-- disagreement with soft LS/VPA Plan distributions;
-- high AR/DLM uncertainty.
-
-Hard support never uses unknown future coordinates. One forward produces X/Y/Z
-factor distributions. Default top four per axis yields 64 triplets; a single
-MP20-train coverage/throughput audit may freeze top eight before evaluation.
-The joint log score is the sum of axis scores. The site is committed only after
-all three coordinates pass vectorized exact PBC checks. This avoids both an
-early X/Y trap and per-branch DLM/LLM forwards.
-
-## 8. Codec C: canonical state and model494
-
-`to_diffusion(state)` produces:
-
-- integer atom types in canonical site-ID order;
-- fractional-coordinate tensor;
+- integer atom types in request-local site-handle order;
+- fractional-coordinate tensor wrapped to `[0,1)`;
 - lattice matrix;
 - atom counts and batch indices.
 
-`from_diffusion(output)` preserves atom/site identity and wraps coordinates
-onto the torus. It never converts a continuous result directly into text
-without passing through the same canonical quantizer.
+Continuous output returns through the same state before text or special-token
+serialization. Site order is preserved or matched within species.
 
-The model494 network outputs differently parameterized coordinate and lattice
-quantities. The bridge therefore uses the actual zero-noise deterministic
-`tau800→799` transition:
+The current refiner's raw `pred_x/pred_l` are differently parameterized and
+are not called force. Candidate E1 uses either the actual deployed transition
+response or a separately defined MLIP force teacher on complete structures.
 
-\[
-v_{494}(\mathcal C)
-=\operatorname{Log}_{\mathcal C}
-T^{\mathrm{det}}_{494,800\rightarrow799}(\mathcal C).
-\]
+## 7. Transaction semantics
 
-- coordinate displacement uses strict PBC minimum images and removes global
-  translation;
-- lattice displacement uses a log-metric tangent;
-- the result is called the deployed-refiner transition response, not a physical
-  force or a guaranteed in-distribution score.
+Exactly three transactions exist:
 
-## 9. Force-calibrated complete-state corrector
+1. Planner species/count action;
+2. complete six-value lattice;
+3. complete XYZ site.
 
-Only a complete, parsed and graphable B2 predictor state may be queried.
-Calibration uses 1,024 frozen-B2 MP20-train generated states and 256 disjoint
-MP20-validation development states with the same predicted-Plan and sampling
-contract used at serve time; clean teacher structures are not substituted for
-them. CHGNet
-force/stress and finite-difference energy provide labels for one confidence
-module with site and lattice output heads. The module predicts whether the
-observed model494 response is energy-descending and does not increase geometry
-risk. CHGNet is absent from production decoding and cannot serve as independent
-promotion evidence.
+A transaction updates canonical state, DLM canvas and geometry cache together.
+During backfill the old XYZ remains available as a no-op/provisional candidate.
+Non-active suffix tokens are immutable.
 
-For adjacent semantic candidate `a`:
+## 8. Periodic geometry
+
+For a lattice L and fractional displacement d:
 
 \[
-S(a,s)=c_\phi^{f(a)}(s)
-\langle\Delta y_a,v_{494}(y_s)\rangle_M,
+d_{ij}^{\mathrm{PBC}}=
+\min_{n\in\mathbb Z^3}\|(d+n)L\|_2.
 \]
 
-\[
-R(a,s)=\max\{0,
-U_{\mathrm{feas}}(y_s^a)-U_{\mathrm{feas}}(y_s)\}.
-\]
+Fractional rounding or an uncertified fixed image radius is not generally exact
+for a skewed triclinic cell. Production uses a validated nearest-lattice-vector
+implementation or a reduced-cell enumeration with a certified bound.
 
-The DLM corrector distribution is:
+Hard support:
 
-\[
-q(a\mid s)\propto p_{\mathrm{AR+DLM}}(a\mid s)
-\exp\{\eta_sS(a,s)-\lambda_sR(a,s)\}
-\mathbf 1[a\in\mathcal A_{\mathrm{hard}}(s)].
-\]
+- positive-length, positive-volume lattice;
+- exact N/elements;
+- no PBC-equivalent duplicate;
+- complete-site minimum distance at least 0.5 Å.
 
-Risk and KL multipliers use an established primal-dual constrained-decoding
-solver; that optimizer is not claimed as novel. The current semantic value is
-always a no-op candidate. If drift, graph or confidence is unavailable, the
-corrector abstains and returns B2 unchanged.
+Soft risk:
 
-## 10. Atomic commit transaction
+- species-aware near-collision;
+- extreme volume per atom or lattice condition;
+- disagreement with probabilistic LS/VPA hints.
 
-One successful lattice-block or site-triplet commit performs:
+Unknown future coordinates never cause hard rejection.
 
-1. choose one complete semantic action: six lattice values or one XYZ triplet;
-2. update all corresponding canonical numeric fields together;
-3. write the corresponding six or three DLM special tokens together;
-4. append the complete canonical lattice/site text block to the AR control
-   transcript;
-5. invalidate future AR distributions;
-6. update only affected periodic graph/cache entries;
-7. verify that the AR partial rendering, DLM partial canvas and canonical
-   resolved fields agree.
+## 9. Required audits
 
-Any failure rolls back the in-memory transaction before the block is considered
-committed. It does not generate a substitute scientific sample.
-
-## 11. Runtime placement
-
-Llama and DLM inference weights are BF16 and explicitly placed on one assigned
-A800 with `device_map=None`, no CPU offload and initial batch one. A memory
-canary records peak allocation and requires 8 GiB headroom before batch size is
-changed.
-
-The B3 complete-state corrector does not require triple model residency. It is
-executed as two deterministic stages on the same frozen states:
-
-1. a model494 worker writes the one-step continuous response in canonical
-   site-ID order;
-2. a Llama+DLM worker reads that response and performs the single re-mask
-   correction.
-
-This preserves the algorithm while keeping at most two 8B language models on
-one GPU.
-
-## 12. Required interface tests
-
-- all MP20-train/validation teacher states round-trip through AR and DLM codecs;
-- AR and DLM values agree despite different token lengths/IDs;
-- exact composition and site IDs survive every partial commit;
-- tokenizer segmentation changes do not change semantic support;
-- coordinate wrapping, global translation and same-species output
-  canonicalization preserve the physical structure;
-- skewed-cell MIC agrees with an exact backend near the 0.5 Å boundary;
-- deterministic model494 transition preserves site identity;
-- no CHGNet, hull or test outcome is read by the production decoder.
+- all 2,481 special-token strings atomic on the real tokenizer;
+- all dynamic IDs present in input/output checkpoint rows;
+- full MP20 train/validation range, clipping and alias counts;
+- exact `7+4N` tokenizer length;
+- teacher/predicted prompt context margin;
+- strict parser rejects surrounding garbage;
+- exact-length sampler has no EOS tail;
+- program schedule covers every predictor position once;
+- remask changes exactly one registered anchor;
+- changing visible suffix changes earlier-anchor logits;
+- continuous round-trip preserves composition and site mapping.

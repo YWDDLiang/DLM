@@ -1,335 +1,233 @@
-# Unified Method Plan: Scientific-State Commit Decoding
+# Unified Method Plan: Scientific Programmed Anchor–Backfill Denoising
 
-Status: **proposal awaiting user approval**
+Status: **approved for implementation; B route has priority**
 
-## 1. Understanding lock
+## 1. Scientific question
 
-The teacher feedback is interpreted as one connected problem, not three
-independent modules:
+> How can a scientific LLM program the generation order of a diffusion
+> language model so that exact chemistry, future crystal context and periodic
+> geometry jointly determine each committed structure?
 
-1. The current C3FD–Llama Planner is a form of decoding-time knowledge
-   injection. C3FD maintains a chemical state, reachable action set and learned
-   action scores; Llama supplies the learned residual that chooses among
-   scientifically reachable actions.
-2. Crystal DLM decoding should not commit all fields in an arbitrary fixed
-   order. Llama should provide a composition-dependent execution program and
-   local value policy, while the DLM contributes bidirectional evidence to the
-   same pre-commit semantic distribution.
-3. Periodic geometry and continuous diffusion should act on the same crystal
-   state. Periodic geometry constrains a lattice/site transaction before
-   commitment; the optional continuous response acts only after a complete
-   predictor and reopens one block before final output acceptance.
-
-The two required methods remain distinct:
-
-- **Track A:** LLM-only crystal execution (the requested “pure LLM” route); no
-  masked DLM participates in the discrete generator.
-- **Track B:** LLM-guided masked DLM; the Llama controls order and a semantic
-  value policy, while the DLM maps its native special-token evidence into the
-  same pre-commit semantic distribution.
-
-## 2. Central scientific question
-
-> How can an explicit scientific state be exposed to a language model across
-> chemical composition, discrete crystal syntax and periodic geometry, so the
-> model can decide both which variables to commit and which values remain
-> geometrically feasible?
-
-The answer is **Scientific-State Commit Decoding (SSCD)**:
+The answer is **Scientific Programmed Anchor–Backfill Denoising (SPAD)**.
 
 ```text
-C3FD chemical state and reachable support
+C3FD chemical state/reachable support
+             +
+Llama residual action preferences
              ↓
-Llama scientific action residuals
+exact composition + Compact Plan + sampled species-action trajectory
              ↓
-exact composition + coarse Plan + species program
+species construction program
              ↓
-canonical semantic crystal state
-        ↙                         ↘
-Track A: AR Llama             Track B: masked DLM
-semantic block commits        guided by Llama program/prior
-        ↘                         ↙
-periodic-feasibility commit controller
+exact 7+4N masked-DLM canvas, N/elements prefilled
              ↓
-complete raw crystal
+lattice → non-contiguous species anchors → remaining future sites
              ↓
-optional one-step response corrector + common terminal continuous refiner
+re-mask early anchors while the completed suffix remains visible
+             ↓
+periodic-feasible backfill → raw crystal → common continuous refinement
 ```
 
-The canonical runtime maintains the state; Llama reads that state and chooses
-actions. The tight connection is the state and commit protocol. C3FD, Llama,
-DLM and the frozen continuous refiner (checkpoint 494) never exchange raw
-token IDs.
+The single core contribution is not a loose Planner/DLM cascade. The same
+scientific action trajectory that selects the composition becomes the program
+that controls where the DLM denoises and where it later revisits.
 
-## 3. Three representations, one scientific state
+## 2. Model boundaries
 
-The current implementation uses three genuinely different spaces:
+### C3FD
 
-| Component | Native representation | What it can score |
-|---|---|---|
-| AR Llama | native BPE/SentencePiece text tokens; CrysLLMGen numeric text | causal textual continuations |
-| masked DLM | dedicated one-token-per-field `7+4N` vocabulary | all unresolved special-token positions |
-| model494 | atom types, fractional coordinates and lattice matrices | continuous denoising transition |
+C3FD maintains typed chemical state, conservation and reachable actions. It
+provides learned base scores over proposal and species/count actions plus
+coarse lattice-system, space-group-bucket and volume-per-atom distributions.
+It has no fine lattice-length, angle or coordinate logits.
 
-They meet in a canonical crystal state:
+### Llama
 
-\[
-\mathcal C=(N,\mathbf z,\mathbf n,\pi,
-a,b,c,\alpha,\beta,\gamma,
-\{(i,Z_i,x_i,y_i,z_i)\}_{i=1}^{N}).
-\]
+The retained Planner Llama reads typed C3FD state embeddings and supplies
+residual action preferences. Its sampled species/count order is preserved as
+`species_program`. Llama therefore affects both **what composition is
+selected** and **which species anchors the DLM resolves first**.
 
-`pi` is the Llama species-block program and `i` is a request-local,
-transaction-stable serialization-slot handle rather than a physical atom
-identity. The AR text codec, DLM-token codec and model494-array codec are
-separate deterministic functions around this state.
+### DLM
 
-The existing representations align in precision but not in raw support:
+The DLM owns all `7+4N` special-token lattice and coordinate distributions.
+It sees the full masked canvas with bidirectional attention, may generate
+non-contiguous future positions first and can re-mask an earlier anchor while
+keeping later sites visible.
 
-- AR length text permits a wider range, while DLM length tokens use 0.1 Å bins
-  through 50.0 Å; the shared generation domain is the positive intersection
-  `0.1–50.0 Å`;
-- AR angles are integral degrees and DLM angle tokens use one-degree bins;
-- AR coordinates use two decimals and DLM coordinate tokens use 0.01 bins, but
-  DLM bins `000` and `100` are the same point on the periodic torus.
+### Continuous refiner
 
-The bridge therefore canonicalizes values, not raw bins: probability assigned
-to coordinate aliases `000/100` is combined by log-sum-exp and a committed
-zero coordinate is encoded canonically as `000`. This permits exact physical
-value-level mapping without pretending that tokenizer IDs, supports or
-sequence likelihoods are identical.
+The frozen continuous refiner receives atom types, fractional coordinates and
+lattice arrays only after a complete raw crystal exists. Its terminal
+trajectory is a common system component. A one-step response/force-to-DLM
+feedback mechanism is a later candidate contribution, not part of the SPAD
+core.
 
-## 4. Shared C3FD–Llama controller
+## 3. Two routes
 
-### 4.1 Chemical actions
+### Route A — LLM-only executor
 
-At chemical state `s_t`, C3FD defines reachable support and calibrated base
-scores. Llama receives typed state embeddings and emits residual action logits:
+C3FD–Llama emits the same Plan and species program. A separate AR body Llama
+generates ordinary CrysLLMGen text. It never shares raw token IDs with the DLM.
+Route A is the pure-LLM system comparison requested by the teacher; it does not
+block B implementation.
 
-\[
-\ell_t^{\mathrm{chem}}(a)
-=\ell_t^{\mathrm{C3FD}}(a)
-+\Delta\ell_t^{\mathrm{Llama}}(a)
-+\log\mathbf 1[a\in\mathcal A_{\mathrm{reachable}}(s_t)].
-\]
+### Route B — LLM-programmed DLM
 
-This deliberately changes the sampling distribution and is described as
-scientific-state logit fusion, not exact speculative decoding. C3FD supplies
-scientific reachability; Llama remains responsible for ranking the legal
-choices. Existing evidence—C3FD-v2.5 `2000/2000` composition-valid and fused
-Planner `1200/1200` at scale—supports this component.
+The DLM prompt receives the predicted Compact Plan through its own tokenizer.
+The species program is runtime metadata compiled into native DLM position
+groups. No AR hidden state, BPE token or AR logit enters the DLM.
 
-### 4.2 Coarse Plan
+Route B is the paper-priority method and receives up to four A800 GPUs.
 
-The controller emits:
+## 4. Shared state and token boundary
 
-- exact `N/elements/counts`;
-- lattice-system, space-group bucket and volume-per-atom bin;
-- a permutation of unique species blocks.
+Three spaces remain separate:
 
-The three structural fields are soft conditions. No target prototype, Wyckoff
-position or fine coordinate is invented by C3FD.
+| Space | Representation |
+|---|---|
+| Planner/AR | typed Planner states and ordinary text tokens |
+| DLM | one special token per `7+4N` field |
+| continuous refiner | integer atom types, fractional-coordinate tensors and lattice matrix |
 
-### 4.3 Species program
+They meet in a canonical crystal state containing:
 
-A small ranking head on the terminal C3FD–Llama chemical-state representation
-assigns one priority per species. It is trained on MP20-train only. One
-teacher-forced forward of the frozen starting AR-body checkpoint supplies mean
-native-text margin for every species block; high-confidence anchor blocks
-precede lower-confidence blocks. Labels are frozen before BodyAdapter-A
-training. No DLM counterfactual, dynamic relabeling or energy label is used.
-Same-composition polymorphs produce soft pairwise preferences rather than a
-false unique order.
+- exact N/elements/counts;
+- sampled and full-distribution LS/SG/VPA Plan fields;
+- species program;
+- six lattice values;
+- request-local site handles, species and XYZ;
+- committed/masked state.
 
-The program changes commitment/serialization order but not the final
-`7+4N` schema. Track A and Track B consume exactly the same program.
+The program is metadata rather than a new DLM token. Canonical element sorting
+may format a formula but cannot erase program order.
 
-### 4.4 Exact checkpoint ownership
+## 5. Special-token scope
 
-The shared controller is a staged Llama system with explicit named weights:
+The source defines 2,481 crystal tokens; dynamic bodies use 2,457:
 
-- `PlannerAdapter-P` plus the current typed C3FD residual heads generate
-  chemistry and coarse Plan; they remain frozen;
-- `BodyAdapter-A`, `ProgramHead-A` and `SLA-A` are trained together on the
-  body task, then frozen as one Track-A endpoint;
-- every Track-B cell loads that exact frozen Track-A endpoint;
-- core Track B through B2 may train only DLM weights and a separate agreement
-  gate. Candidate E1 later owns a separate frozen `Confidence-E1` module.
-  Neither updates `BodyAdapter-A`, `ProgramHead-A` or `SLA-A`.
+- N: 1–20;
+- LA/LB/LC: 0.0–50.0 Å at 0.1 Å;
+- AA/AB/AG: 1–179 degrees;
+- elements: H–Pu;
+- X/Y/Z: 0.00–1.00 at 0.01.
 
-“Same Llama controller” therefore means the same base backbone and these
-frozen stage-specific adapters, not an unspecified monolithic checkpoint.
+This vocabulary targets ordered MP20 structures with at most 20 sites. It is
+not claimed to represent arbitrary disordered/magnetic CIF information.
 
-## 5. Cross-token Semantic Logit Adapter
+Production excludes zero-length actions, canonicalizes coordinate 000/100
+periodic aliases and uses exact `7+4N` canvases. Full train/validation
+coverage and checkpoint embedding rows are audited before training.
 
-Raw AR vocabulary logits cannot be added to DLM logits. A numeric value such as
-`0.37` may be several AR tokens but exactly one DLM token. SSCD therefore
-introduces a **Semantic Logit Adapter (SLA)** attached to the body Llama hidden
-state at each field boundary.
+## 6. Species program
 
-For field family `f`:
+At inference, the program is the first-occurrence element order in the
+Planner's sampled `semantic_trace`, after folding oxidation-state variants of
+the same element. It must be an exact permutation of Plan elements.
 
-\[
-\ell_{\mathrm{AR}}^{\mathrm{sem},f}
-=W_f h_{\mathrm{Llama}}+b_f,
-\]
+For each MP20 training composition, the frozen Planner performs constrained
+replay: only remaining target species/count actions are eligible. Their sampled
+order supplies the train-time program without reading structure energy or test
+outcomes.
 
-where the output domain is the canonical semantic set:
+This avoids a detached order head. The program is produced by the same
+C3FD–Llama policy used for composition.
 
-- element symbols for an element field;
-- length bins for `LA/LB/LC`;
-- angle bins for `AA/AB/AG`;
-- coordinate bins for `X/Y/Z`.
+## 7. Anchor–backfill DLM
 
-The SLA is trained jointly with the native AR text loss on the same MP20 target
-state. It is a separately supervised **typed semantic action policy**, not the
-mathematical pushforward of native BPE sequence probabilities and not a
-tokenizer translation table. Llama hidden state determines the distribution. A
-deterministic lookup maps each semantic value to its DLM special token and to
-its canonical AR text rendering.
+### Predictor
 
-Track A samples the SLA value and appends its canonical text rendering to the
-AR context. Track B fuses the same SLA distribution with DLM special-token
-logits in semantic space. This makes Llama's role identical across both
-methods while respecting the tokenizer mismatch.
+1. Prefill N and every element slot from the Plan.
+2. Resolve a valid six-value lattice transaction.
+3. Visit species in Planner order and generate one anchor site for each.
+4. Complete remaining sites while keeping those anchors visible.
 
-An exact cross-tokenizer string-likelihood scorer over a canonical candidate
-trie is retained as a diagnostic of agreement between two Llama output heads.
-Agreement does not make the distributions identical; disagreement is reported.
+The visited positions can occur anywhere in storage order. Future-first
+generation is therefore genuine, not left-to-right text generation disguised
+as diffusion.
 
-## 6. Shared scientific commit controller
+### Backfill
 
-Before either executor samples a semantic value:
+1. After the full predictor is complete, choose registered early anchors in
+   reverse program order.
+2. Re-mask one XYZ anchor transaction.
+3. Keep lattice and every other site—including positions to its right—visible.
+4. Run the DLM again and fill the anchor from full bidirectional context.
+5. Preserve the previous triplet as a no-op candidate and apply the same
+   periodic geometry support.
 
-1. schema and exact-composition support remove impossible actions;
-2. a complete lattice must have positive volume and valid angles;
-3. `X/Y/Z` form one atomic site-commit transaction; a fixed small semantic
-   beam is constructed from one-forward factorized axis logits, and exact triclinic
-   minimum-image calculation removes complete triplets with a PBC distance
-   below 0.5 Å before any axis is committed;
-4. species-aware near-collision, volume-per-atom and lattice-conditioning risks
-   add bounded soft penalties;
-5. the distribution remains within a per-action KL trust region of at most
-   0.05 nats from the executor's support-normalized distribution.
+An AR model would have to regenerate its suffix after changing an early atom.
+SPAD preserves that suffix. This suffix-preserving revision is the key evidence
+for DLM necessity.
 
-Unknown future coordinates never cause hard rejection. The same controller is
-used by A and B, so structural validity is part of the language-generation
-process rather than post-hoc filtering.
+## 8. Geometry transactions
 
-## 7. Two core contributions and one candidate extension
+The generation state uses exactly three transaction types:
 
-### C1 — Scientific-state Llama decoding
+1. one Planner composition action;
+2. one six-value lattice block;
+3. one complete XYZ site triplet.
 
-C3FD exposes reachable chemical actions and a learned scientific state; Llama
-supplies context-dependent residual preferences. This explains high
-composition validity as knowledge injected into an active LLM policy, not as
-an external composition enumerator.
+No X or Y is irreversibly committed before a legal triplet exists. A complete
+lattice must have positive volume. A complete site is tested with a validated
+triclinic minimum-image calculation; PBC distances below 0.5 Å are illegal,
+and species-aware near-collision risk is soft.
 
-Two metrics remain separate: **proposal composition validity** measures the
-learned C3FD–Llama chemical policy; **body composition retention** measures
-whether the executor preserves the already selected Plan inventory.
-Deterministic element-slot compilation may make the latter high, but it is not
-counted as a new learned chemistry result.
+During backfill, the old committed coordinate remains the provisional geometry
+until a replacement transaction is accepted. This avoids soft-probability
+averages that place an atom at a nonexistent mode.
 
-### C2 — Llama-programmed cross-token DLM commitment
+## 9. Training
 
-The Llama chooses species-block order and emits field-level semantic priors.
-The DLM retains its special vocabulary and bidirectional masked context, maps
-its logits into the same semantic action space, and participates in one joint
-pre-commit distribution. A fusion change means its argmax differs from the
-Llama-only argmax; this is not described as editing an already committed
-sample. Jointly committed states are rendered back to the AR context before the
-next block.
+The retained Compact-V2 DLM is first tested without new weights. One later
+schedule-matched LoRA uses:
 
-The contribution is the live shared-state commit protocol—not generic additive
-logits, learned unmasking alone or the claim that two tokenizers are identical.
+- full MP20 train;
+- teacher and frozen-predicted same-schema Plan views with source weight one;
+- ordinary random-mask states;
+- program-matched anchor/future predictor states;
+- complete-state anchor-remask states with teacher suffix visible;
+- exact N and element slots always visible.
 
-### Candidate E1 — PBC-feasible continuous-response corrector
+No CHGNet, hull, continuous-refiner endpoint or generated test outcome enters
+SPAD training.
 
-After Track B produces a complete graphable predictor crystal, the frozen
-continuous refiner's
-actual deployed first transition is treated as an empirical refiner response,
-not automatically as an in-distribution score. Confidence is trained only on
-frozen B2-generated MP20-train states produced by the same runtime. A
-train-only force/stress module determines whether that response is locally
-energy-descending and feasibility-safe. The block with the highest frozen
-standardized sum of analytic risk and predictor uncertainty is re-masked; block
-selection never reads the continuous response. The
-response is projected onto adjacent legal semantic values and the DLM performs
-a full-context correction.
+## 10. Adjacent experiments
 
-E1 is promoted as a third contribution only if it improves held-out raw
-geometry/stability over B without relying on terminal full refinement to erase
-the difference. Otherwise it
-remains a mechanism study; the A/B paper still stands on C1+C2.
+| ID | Method |
+|---|---|
+| BC | retained DLM, canonical monotone schedule |
+| BP | same weights, Planner-program anchor-first schedule |
+| BR | BP + one suffix-visible anchor-remask sweep |
+| BS | BR + one schedule-matched MP20 LoRA epoch |
 
-## 8. Existing evidence that motivates the redesign
+BC→BP tests Llama program control. BP→BR tests the DLM-specific ability to use
+generated future context. BR→BS tests train/serve mask alignment.
 
-- Composition is largely solved: C3FD-v2.5 reached `2000/2000`, and the fused
-  Planner produced `1200/1200` composition-valid scale Plans.
-- Compact-V2 plus exact `7+4N` restored high body execution, but raw Direct
-  remained around `118/256` in the prospective base.
-- Site/commit order is consequential: canonical ordering previously moved raw
-  Direct from `128` to `143` in a matched development audit.
-- G2-PBC-R showed that periodic relations can improve raw Direct
-  (`118→128/256` in its full-epoch comparison), while its interaction with a
-  different canonical DLM could reverse part of that gain. Geometry must
-  therefore enter through one shared state and matched schedule.
-- Terminal model494 strongly repairs geometry and stability, but endpoint
-  distillation and a projected-force microstudent failed. The next bridge uses
-  local continuous drift with abstention, not endpoint imitation.
+A small `BR-no-suffix` mechanism cell masks later sites during the same
+anchor remask. BR must outperform it on anchor recovery/geometry for the
+suffix-context claim.
 
-## 9. Minimal evidence matrix
+## 11. Existing evidence and expectation
 
-Planner:
+- C3FD-v2.5 reached `2000/2000` composition-valid and the fused Planner
+  reached `1200/1200` at scale.
+- Exact dynamic DLM bodies already achieve high execution, but raw Direct has
+  remained the main weakness.
+- Prior order changes materially changed raw Direct, confirming that DLM
+  commitment order is scientifically consequential.
+- Full terminal continuous refinement strongly restores validity/stability,
+  while endpoint distillation and a force microstudent failed.
 
-- P0: Llama typed actions with syntax support;
-- P1: P0 + C3FD reachable support;
-- P2: P1 + C3FD learned action scores.
+SPAD directly targets the unresolved issue: early geometry decisions made
+without future context. The intended final target is Strict S.U.N. above 10%
+and Meta S.U.N. above 50% on a fixed requested denominator and two common
+streams.
 
-Executors on one frozen Plan/program ledger:
+## 12. Candidate later contribution
 
-| ID | Method | Added mechanism |
-|---|---|---|
-| A0 | frozen LLM-only executor | Program + SLA; syntax/exact composition only |
-| A1 | same A0 weights/program | + lattice and joint-site PBC commit controller |
-| BC | frozen Compact-V2 DLM | common block schedule, canonical species order, no Llama prior |
-| BO | same BC weights/schedule | + Llama species-block order only |
-| BG | same BO weights/order | + frozen Llama SLA and learned agreement gate |
-| BP | same BG weights | + shared lattice/joint-site PBC controller |
-| B2 | BP runtime | + one program/schedule-matched MP20-train DLM epoch |
-| B2C0 | complete B2 predictor | compute-matched zero-response corrector control |
-| B3 | complete B2 predictor | + one empirical model494-response DLM corrector block |
-| A1→494 | A1 raw output | common terminal model494 baseline |
-| B2→494 / B2C0→494 / B3→494 | B raw output | same terminal model494 protocol |
-
-The first result-bearing pass uses one frozen model seed and two common
-sampling streams on fixed256. A0/A1 and BC/BO/BG/BP are adjacent decoder
-comparisons; B2 isolates schedule-matched DLM adaptation. They are not expanded
-into temperature or checkpoint sweeps. If exact-composition body execution
-fails, the interface is diagnosed before expensive CHGNet/model494 work.
-Otherwise all registered cells receive concurrent raw evaluation.
-
-## 10. Paper story
-
-The paper is not “Planner + DLM + refiner.” It is one hierarchical decoder in
-which the scientific state changes resolution:
-
-1. C3FD–Llama decides a reachable composition;
-2. Llama converts that state into a structure-generation program and semantic
-   value priors;
-3. either Llama alone or a masked DLM commits crystal fields through the same
-   periodic controller;
-4. the DLM's masked infilling ability permits an optional complete-state block
-   reopening driven by a continuous-refiner response before final acceptance.
-
-The LLM-only route establishes that scientific-state decoding improves an AR
-crystal generator. The LLM+DLM route tests whether bidirectional pre-commit evidence adds
-value beyond that same Llama controller. The common canonical state makes the
-comparison interpretable despite different tokenizers.
-
-## 11. Approval boundary
-
-This document authorizes design, local documentation and read-only validation
-only. Training, sampling, CHGNet, model494, external queries and remote job
-submission begin only after explicit user approval.
+After BS is frozen, Candidate E1 may regress a continuous-refiner response or
+CHGNet force into a DLM geometry residual/confidence module on BS-generated
+MP20-train states. It must improve raw structure/stability against an
+equal-compute zero-response remask before terminal refinement. Failure does not
+weaken the SPAD core.
