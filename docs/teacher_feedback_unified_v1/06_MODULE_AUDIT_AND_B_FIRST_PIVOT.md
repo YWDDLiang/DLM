@@ -188,6 +188,12 @@ The learned program is also nontrivial in deployment: on the fixed 256-Plan
 ledger, 229 programs differ from canonical atomic-number order while all 256
 Plan texts remain bit-identical to the control.
 
+On MP20 validation, canonical order matches the contact-tree permutation only
+14.48% of the time and chooses its root only 19.22% of the time. The frozen
+Llama pointer reaches 73.50% exact permutation, 80.41% root and 82.63%
+pairwise-order accuracy. This separates learned structural programming from a
+renamed canonical traversal.
+
 ## 10. Later stability contribution
 
 After SPAD is established, a complete raw BS crystal may receive Candidate E1:
