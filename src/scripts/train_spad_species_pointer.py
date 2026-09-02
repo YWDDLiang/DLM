@@ -65,8 +65,36 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
 
 
 class PointerDataset(Dataset):
-    def __init__(self, path: Path) -> None:
-        self.rows = list(iter_jsonl(path))
+    def __init__(
+        self,
+        path: Path,
+        *,
+        allowed_strata: set[tuple[int, int, int]] | None = None,
+        skip_unsupported: bool = False,
+    ) -> None:
+        source_rows = list(iter_jsonl(path))
+        self.skipped_unsupported: list[dict[str, Any]] = []
+        self.rows: list[dict[str, Any]] = []
+        for row in source_rows:
+            proposal = row.get("proposal_target") or {}
+            stratum = (
+                int(proposal.get("family_id", -1)),
+                int(proposal.get("N", -1)),
+                int(proposal.get("arity", -1)),
+            )
+            if allowed_strata is not None and stratum not in allowed_strata:
+                if not skip_unsupported:
+                    raise ValueError(
+                        f"training row {row.get('source_row_idx')} is outside frozen strata"
+                    )
+                self.skipped_unsupported.append(
+                    {
+                        "source_row_idx": int(row["source_row_idx"]),
+                        "stratum": list(stratum),
+                    }
+                )
+                continue
+            self.rows.append(row)
         if not self.rows:
             raise ValueError(f"empty pointer dataset {path}")
         if any(row.get("schema") != DATASET_SCHEMA for row in self.rows):
@@ -338,8 +366,17 @@ def main() -> None:
         num_volume_per_atom_bins=int(typed_config.num_volume_per_atom_bins),
     )
     pointer = PlanConditionedSpeciesPointer(pointer_config).to(device)
-    train_data = PointerDataset(args.pointer_data_dir / "train.jsonl")
-    val_data = PointerDataset(args.pointer_data_dir / "val.jsonl")
+    allowed_strata = {tuple(value) for value in bundle.interaction.strata}
+    train_data = PointerDataset(
+        args.pointer_data_dir / "train.jsonl",
+        allowed_strata=allowed_strata,
+        skip_unsupported=False,
+    )
+    val_data = PointerDataset(
+        args.pointer_data_dir / "val.jsonl",
+        allowed_strata=allowed_strata,
+        skip_unsupported=True,
+    )
     collate = lambda rows: collate_pointer_rows(rows, bundle=bundle)
     generator = torch.Generator().manual_seed(SEED)
     train_loader = DataLoader(
@@ -374,6 +411,8 @@ def main() -> None:
         "seed": SEED,
         "epochs": 1,
         "rows": len(train_data),
+        "validation_rows": len(val_data),
+        "validation_unsupported_rows": val_data.skipped_unsupported,
         "batch_size": int(args.batch_size),
         "total_steps": total_steps,
         "lr": float(args.lr),
@@ -460,6 +499,8 @@ def main() -> None:
         "epochs_completed": 1,
         "elapsed_sec": time.time() - started,
         "validation": validation,
+        "validation_rows_scored": len(val_data),
+        "validation_rows_unscorable": len(val_data.skipped_unsupported),
         "composition_candidate_set_preserved": True,
         "planner_llama_frozen_verified": True,
     }

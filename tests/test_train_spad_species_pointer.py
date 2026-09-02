@@ -2,8 +2,15 @@ import unittest
 
 
 try:
+    import json
+    from pathlib import Path
+    import tempfile
     import torch
-    from scripts.train_spad_species_pointer import order_metrics
+    from scripts.train_spad_species_pointer import (
+        DATASET_SCHEMA,
+        PointerDataset,
+        order_metrics,
+    )
 except ModuleNotFoundError:
     torch = None
     order_metrics = None
@@ -11,6 +18,33 @@ except ModuleNotFoundError:
 
 @unittest.skipIf(torch is None, "torch unavailable")
 class SPADPointerTrainerTest(unittest.TestCase):
+    def test_validation_can_disclose_and_skip_unscorable_frozen_strata(self):
+        rows = [
+            {
+                "schema": DATASET_SCHEMA,
+                "source_row_idx": 1,
+                "proposal_target": {"family_id": 2, "N": 4, "arity": 2},
+            },
+            {
+                "schema": DATASET_SCHEMA,
+                "source_row_idx": 2,
+                "proposal_target": {"family_id": 9, "N": 20, "arity": 7},
+            },
+        ]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "val.jsonl"
+            path.write_text(
+                "".join(json.dumps(row) + "\n" for row in rows),
+                encoding="utf-8",
+            )
+            dataset = PointerDataset(
+                path,
+                allowed_strata={(2, 4, 2)},
+                skip_unsupported=True,
+            )
+        self.assertEqual(len(dataset), 1)
+        self.assertEqual(dataset.skipped_unsupported[0]["source_row_idx"], 2)
+
     def test_order_metrics_handle_variable_arity_without_changing_set(self):
         predicted = torch.tensor([[1, 0, 2], [0, 1, 0]])
         teacher = torch.tensor([[1, 2, 0], [0, 1, 0]])

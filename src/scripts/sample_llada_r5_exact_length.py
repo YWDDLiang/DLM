@@ -323,6 +323,8 @@ def main() -> None:
     parser.add_argument("--lattice-volume-mask", action="store_true", default=True)
     parser.add_argument("--no-lattice-volume-mask", dest="lattice_volume_mask", action="store_false")
     parser.add_argument("--min-lattice-rad", type=float, default=1e-4)
+    parser.add_argument("--canonicalize-periodic-alias", action="store_true")
+    parser.add_argument("--pbc-min-distance-mask", action="store_true")
     parser.add_argument(
         "--generation-schedule",
         choices=["exact-plan", "joint-coordinates", "spad", "default"],
@@ -467,8 +469,8 @@ def main() -> None:
                 duplicate_coordinate_mask=args.duplicate_coordinate_mask,
                 lattice_volume_mask=args.lattice_volume_mask,
                 min_lattice_rad=args.min_lattice_rad,
-                canonicalize_periodic_alias=args.generation_schedule == "spad",
-                pbc_min_distance_mask=args.generation_schedule == "spad",
+                canonicalize_periodic_alias=args.canonicalize_periodic_alias,
+                pbc_min_distance_mask=args.pbc_min_distance_mask,
                 pbc_min_distance_A=0.5,
                 pbc_image_radius=2,
             )
