@@ -7,6 +7,7 @@ import torch.nn.functional as F
 
 from crystal_dlm.generation_schedule import n_elements_coords_lattice_schedule
 from crystal_dlm.lattice_geometry import lattice_angle_rad
+from crystal_dlm.periodic_geometry_ops import minimum_image_distances
 
 
 def add_gumbel_noise(logits: torch.Tensor, temperature: float) -> torch.Tensor:
@@ -354,22 +355,210 @@ def _apply_duplicate_coordinate_mask(
                     generation_logits[batch_idx, z_position, int(token_id)] = min_value
 
 
+def _lattice_matrix_from_token_ids(
+    x: torch.Tensor,
+    *,
+    prompt_length: int,
+    constraints: dict,
+) -> torch.Tensor | None:
+    body_offset = int(constraints.get("body_offset", 0))
+    length_maps = constraints.get("length_token_to_bin", {})
+    angle_maps = constraints.get("angle_token_to_bin", {})
+    length_step = float(constraints.get("length_step", 0.1))
+    length_values: list[float] = []
+    for offset, prefix in zip((1, 2, 3), ("LA", "LB", "LC"), strict=True):
+        token = int(x[prompt_length + body_offset + offset].detach().item())
+        value = length_maps.get(prefix, {}).get(token)
+        if value is None:
+            return None
+        length_values.append(float(value) * length_step)
+    angle_values: list[float] = []
+    for offset, prefix in zip((4, 5, 6), ("AA", "AB", "AG"), strict=True):
+        token = int(x[prompt_length + body_offset + offset].detach().item())
+        value = angle_maps.get(prefix, {}).get(token)
+        if value is None:
+            return None
+        angle_values.append(float(value))
+    a, b, c = length_values
+    if min(a, b, c) <= 0.0:
+        return None
+    alpha, beta, gamma = [
+        torch.deg2rad(torch.tensor(value, dtype=torch.float64, device=x.device))
+        for value in angle_values
+    ]
+    sin_gamma = torch.sin(gamma)
+    if float(torch.abs(sin_gamma).detach().item()) < 1.0e-8:
+        return None
+    c_x = c * torch.cos(beta)
+    c_y = c * (torch.cos(alpha) - torch.cos(beta) * torch.cos(gamma)) / sin_gamma
+    c_z_squared = c * c - c_x * c_x - c_y * c_y
+    if float(c_z_squared.detach().item()) <= 1.0e-10:
+        return None
+    zero = torch.zeros((), dtype=torch.float64, device=x.device)
+    return torch.stack(
+        [
+            torch.stack((torch.as_tensor(a, dtype=torch.float64, device=x.device), zero, zero)),
+            torch.stack((torch.as_tensor(b, dtype=torch.float64, device=x.device) * torch.cos(gamma), torch.as_tensor(b, dtype=torch.float64, device=x.device) * sin_gamma, zero)),
+            torch.stack((c_x, c_y, torch.sqrt(c_z_squared))),
+        ]
+    )
+
+
+def _aggregate_periodic_coordinate_alias_logits(
+    generation_logits: torch.Tensor,
+    constraints: dict,
+    min_value: float,
+    active_generation_mask: torch.Tensor | None,
+) -> None:
+    aliases = constraints.get("coordinate_alias_token_ids", {})
+    body_offset = int(constraints.get("body_offset", 0))
+    max_atoms = int(constraints.get("max_atoms", 20))
+    for slot in range(max_atoms):
+        base = body_offset + 7 + 4 * slot
+        for component, axis in enumerate(("X", "Y", "Z"), start=1):
+            position = base + component
+            if position >= generation_logits.shape[1] or axis not in aliases:
+                continue
+            canonical_id, alias_id = (int(value) for value in aliases[axis])
+            for row in range(generation_logits.shape[0]):
+                if active_generation_mask is not None and not bool(
+                    active_generation_mask[row, position].detach().item()
+                ):
+                    continue
+                canonical = generation_logits[row, position, canonical_id].clone()
+                alias = generation_logits[row, position, alias_id].clone()
+                generation_logits[row, position, canonical_id] = torch.logaddexp(
+                    canonical, alias
+                )
+                generation_logits[row, position, alias_id] = min_value
+
+
+def _apply_pbc_min_distance_mask(
+    generation_logits: torch.Tensor,
+    x: torch.Tensor,
+    prompt_length: int,
+    constraints: dict,
+    min_value: float,
+    active_generation_mask: torch.Tensor | None,
+    mask_id: int,
+) -> None:
+    coord_maps = constraints.get("coord_token_to_bin", {})
+    coord_ids = constraints.get("coord_bin_to_token_id", {})
+    count_token_to_n = constraints.get("count_token_to_n", {})
+    threshold = float(constraints.get("pbc_min_distance_A", 0.5))
+    image_radius = int(constraints.get("pbc_image_radius", 2))
+    body_offset = int(constraints.get("body_offset", 0))
+    period = int(constraints.get("coord_period", 100))
+    if period <= 0:
+        raise ValueError("coordinate period must be positive")
+    for row in range(generation_logits.shape[0]):
+        count_token = int(x[row, prompt_length + body_offset].detach().item())
+        num_atoms = int(count_token_to_n.get(count_token, 0))
+        if num_atoms <= 1:
+            continue
+        lattice = _lattice_matrix_from_token_ids(
+            x[row], prompt_length=prompt_length, constraints=constraints
+        )
+        if lattice is None:
+            continue
+        for slot in range(num_atoms):
+            z_position = body_offset + 10 + 4 * slot
+            if z_position >= generation_logits.shape[1]:
+                break
+            if active_generation_mask is not None and not bool(
+                active_generation_mask[row, z_position].detach().item()
+            ):
+                continue
+            if int(x[row, prompt_length + z_position].detach().item()) != int(mask_id):
+                continue
+            x_position = body_offset + 8 + 4 * slot
+            y_position = body_offset + 9 + 4 * slot
+            x_bin = coord_maps.get("X", {}).get(
+                int(x[row, prompt_length + x_position].detach().item())
+            )
+            y_bin = coord_maps.get("Y", {}).get(
+                int(x[row, prompt_length + y_position].detach().item())
+            )
+            if x_bin is None or y_bin is None:
+                continue
+            other: list[list[float]] = []
+            for prior in range(num_atoms):
+                if prior == slot:
+                    continue
+                base = body_offset + 8 + 4 * prior
+                bins = [
+                    coord_maps[axis].get(
+                        int(x[row, prompt_length + base + axis_index].detach().item())
+                    )
+                    for axis_index, axis in enumerate(("X", "Y", "Z"))
+                ]
+                if any(value is None for value in bins):
+                    continue
+                other.append([float(value) / period for value in bins])
+            if not other:
+                continue
+            candidate_bins = sorted(int(value) for value in coord_ids.get("Z", {}))
+            candidates = torch.tensor(
+                [
+                    [float(x_bin) / period, float(y_bin) / period, float(value) / period]
+                    for value in candidate_bins
+                ],
+                dtype=torch.float64,
+                device=x.device,
+            )
+            existing = torch.tensor(other, dtype=torch.float64, device=x.device)
+            deltas = candidates.unsqueeze(1) - existing.unsqueeze(0)
+            distances = minimum_image_distances(
+                deltas, lattice, image_radius=image_radius
+            )
+            legal = distances.min(dim=1).values >= threshold
+            if not bool(legal.any().item()):
+                # Do not create an empty action set; the caller can record the
+                # unresolved risk and retain the model distribution.
+                continue
+            for candidate_bin, allowed in zip(candidate_bins, legal, strict=True):
+                if not bool(allowed.detach().item()):
+                    token_id = int(coord_ids["Z"][candidate_bin])
+                    generation_logits[row, z_position, token_id] = min_value
+
+
 def _apply_lightweight_decoding_masks(
     logits: torch.Tensor,
     x: torch.Tensor,
     prompt_length: int,
     gen_length: int,
     constraints: dict | None,
+    active_generation_mask: torch.Tensor | None = None,
+    mask_id: int = 126336,
 ) -> None:
     if not constraints:
         return
     generation_logits = logits[:, prompt_length : prompt_length + gen_length, :]
     min_value = torch.finfo(generation_logits.dtype).min
+    if active_generation_mask is not None and active_generation_mask.shape != generation_logits.shape[:2]:
+        raise ValueError("active_generation_mask must match [batch, generation length]")
+    if constraints.get("canonicalize_periodic_alias"):
+        _aggregate_periodic_coordinate_alias_logits(
+            generation_logits,
+            constraints,
+            min_value,
+            active_generation_mask,
+        )
     if constraints.get("lattice_volume_mask"):
         _mask_zero_lengths(generation_logits, constraints, min_value)
         _apply_lattice_volume_mask(generation_logits, x, prompt_length, constraints, min_value)
     if constraints.get("duplicate_coordinate_mask"):
         _apply_duplicate_coordinate_mask(generation_logits, x, prompt_length, constraints, min_value)
+    if constraints.get("pbc_min_distance_mask"):
+        _apply_pbc_min_distance_mask(
+            generation_logits,
+            x,
+            prompt_length,
+            constraints,
+            min_value,
+            active_generation_mask,
+            int(mask_id),
+        )
 
 
 def _candidate_tokens_and_confidence(
@@ -539,6 +728,10 @@ def generate(
                     prompt.shape[1],
                     gen_length,
                     lightweight_decoding_constraints,
+                    group_allowed[
+                        :, prompt.shape[1] : prompt.shape[1] + gen_length
+                    ],
+                    mask_id,
                 )
                 x0, x0_p = _candidate_tokens_and_confidence(logits, temperature, remasking)
                 x0 = torch.where(mask_index, x0, x)
@@ -590,6 +783,10 @@ def generate(
                 prompt.shape[1],
                 gen_length,
                 lightweight_decoding_constraints,
+                mask_index[
+                    :, prompt.shape[1] : prompt.shape[1] + gen_length
+                ],
+                mask_id,
             )
             x0, x0_p = _candidate_tokens_and_confidence(logits, temperature, remasking)
 

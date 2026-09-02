@@ -199,10 +199,23 @@ def build_dynamic_lightweight_constraints(
     duplicate_coordinate_mask: bool,
     lattice_volume_mask: bool,
     min_lattice_rad: float,
+    canonicalize_periodic_alias: bool = False,
+    pbc_min_distance_mask: bool = False,
+    pbc_min_distance_A: float = 0.5,
+    pbc_image_radius: int = 2,
     config: FixedSlotConfig = FixedSlotConfig(),
 ) -> Dict[str, Any] | None:
-    if not duplicate_coordinate_mask and not lattice_volume_mask:
+    if not (
+        duplicate_coordinate_mask
+        or lattice_volume_mask
+        or canonicalize_periodic_alias
+        or pbc_min_distance_mask
+    ):
         return None
+    if float(pbc_min_distance_A) <= 0.0:
+        raise ValueError("pbc_min_distance_A must be positive")
+    if int(pbc_image_radius) not in (1, 2):
+        raise ValueError("pbc_image_radius must be one (27) or two (125)")
     vocab = tokenizer.get_vocab()
     coord_token_to_bin = {
         axis: {
@@ -218,10 +231,21 @@ def build_dynamic_lightweight_constraints(
         }
         for prefix in ("AA", "AB", "AG")
     }
+    length_token_to_bin = {
+        prefix: {
+            int(vocab[f"<{prefix}_{i:03d}>"]): i
+            for i in range(config.length_min_bin, config.length_max_bin + 1)
+        }
+        for prefix in ("LA", "LB", "LC")
+    }
     return {
         "representation": "dynamic_v1",
         "duplicate_coordinate_mask": bool(duplicate_coordinate_mask),
         "lattice_volume_mask": bool(lattice_volume_mask),
+        "canonicalize_periodic_alias": bool(canonicalize_periodic_alias),
+        "pbc_min_distance_mask": bool(pbc_min_distance_mask),
+        "pbc_min_distance_A": float(pbc_min_distance_A),
+        "pbc_image_radius": int(pbc_image_radius),
         "min_lattice_rad": float(min_lattice_rad),
         "max_atoms": config.max_atoms,
         "coord_period": config.coord_max_bin - config.coord_min_bin,
@@ -230,6 +254,22 @@ def build_dynamic_lightweight_constraints(
             for atom_count in range(1, config.max_atoms + 1)
         },
         "coord_token_to_bin": coord_token_to_bin,
+        "coord_bin_to_token_id": {
+            axis: {
+                i: int(vocab[f"<{axis}_{i:03d}>"])
+                for i in range(config.coord_min_bin, config.coord_max_bin + 1)
+            }
+            for axis in ("X", "Y", "Z")
+        },
+        "coordinate_alias_token_ids": {
+            axis: (
+                int(vocab[f"<{axis}_{config.coord_min_bin:03d}>"]),
+                int(vocab[f"<{axis}_{config.coord_max_bin:03d}>"]),
+            )
+            for axis in ("X", "Y", "Z")
+        },
+        "length_token_to_bin": length_token_to_bin,
+        "length_step": float(config.length_step),
         "z_bin_to_token_id": {
             i: int(vocab[f"<Z_{i:03d}>"])
             for i in range(config.coord_min_bin, config.coord_max_bin + 1)
