@@ -151,6 +151,30 @@ class SGTCLLaDAMaskTest(unittest.TestCase):
         )
         self.assertEqual(batch["source_input_ids"].tolist(), [[1, 2, 8, 9]])
 
+    def test_forced_rollout_masks_separate_model_and_loss_masks(self):
+        module = self.load_trainer()
+        source = torch.tensor([[10, 11, 30, 31, 32]], dtype=torch.long)
+        forced = torch.tensor([[False, False, True, True, True]])
+        supervised = torch.tensor([[False, False, True, False, False]])
+        processed = {
+            "noisy": source.clone(),
+            "masked_indices": torch.zeros_like(source, dtype=torch.bool),
+            "candidate_mask": torch.zeros_like(source, dtype=torch.bool),
+            "p_mask": torch.full(source.shape, 0.5),
+        }
+        observed = module.apply_forced_rollout_masks(
+            processed,
+            source,
+            forced,
+            supervised,
+            mask_id=999,
+        )
+        self.assertEqual(observed["noisy"].tolist(), [[10, 11, 999, 999, 999]])
+        self.assertTrue(torch.equal(observed["masked_indices"], forced))
+        self.assertTrue(torch.equal(observed["loss_indices"], supervised))
+        self.assertTrue(torch.equal(observed["candidate_mask"], supervised))
+        self.assertTrue(torch.equal(observed["p_mask"], torch.ones_like(observed["p_mask"])))
+
 
 if __name__ == "__main__":
     unittest.main()

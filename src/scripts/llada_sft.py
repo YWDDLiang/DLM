@@ -443,6 +443,28 @@ class JsonlSftDataset(Dataset):
                 num_atoms=int(item["num_atoms"]),
             )
             item["source_input_ids"] = torch.tensor(source_ids, dtype=torch.long)
+        forced_positions = row.get("forced_mask_positions")
+        loss_positions = row.get("loss_positions")
+        if forced_positions is not None or loss_positions is not None:
+            if source_answer is None:
+                raise ValueError("forced rollout masks require source_answer")
+            if not isinstance(forced_positions, list) or not isinstance(
+                loss_positions, list
+            ):
+                raise ValueError("forced rollout mask/loss positions must be lists")
+            forced = sorted({int(value) for value in forced_positions})
+            supervised = sorted({int(value) for value in loss_positions})
+            body_length = 7 + 4 * int(item["num_atoms"])
+            if not forced or not supervised or not set(supervised) <= set(forced):
+                raise ValueError("rollout loss positions must be a nonempty forced subset")
+            for position in forced:
+                geometry = 1 <= position <= 6 or (
+                    position >= 7 and (position - 7) % 4 in (1, 2, 3)
+                )
+                if not 0 <= position < body_length or not geometry:
+                    raise ValueError("forced rollout mask escaped dynamic geometry")
+            item["forced_mask_positions"] = torch.tensor(forced, dtype=torch.long)
+            item["loss_positions"] = torch.tensor(supervised, dtype=torch.long)
         counterfactual_prompt = row.get("counterfactual_prompt")
         if counterfactual_prompt:
             cf_prompt_text = str(counterfactual_prompt).rstrip() + "\n"
@@ -606,6 +628,9 @@ class DataCollator:
             self.tokenizer.pad_token_id,
             dtype=torch.long,
         )
+        has_forced_masks = any("forced_mask_positions" in item for item in batch)
+        forced_mask_indices = torch.zeros((len(batch), max_len), dtype=torch.bool)
+        forced_loss_indices = torch.zeros((len(batch), max_len), dtype=torch.bool)
         for i, item in enumerate(batch):
             ids = item["input_ids"]
             input_ids[i, : ids.shape[0]] = ids
@@ -623,6 +648,11 @@ class DataCollator:
             num_atoms[i] = int(item.get("num_atoms", 0))
             source_ids = item.get("source_input_ids", ids)
             source_input_ids[i, : source_ids.shape[0]] = source_ids
+            if "forced_mask_positions" in item:
+                forced = item["forced_mask_positions"] + int(item["prompt_length"])
+                supervised = item["loss_positions"] + int(item["prompt_length"])
+                forced_mask_indices[i, forced] = True
+                forced_loss_indices[i, supervised] = True
         result = {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
@@ -639,6 +669,9 @@ class DataCollator:
         }
         if has_paired_source:
             result["source_input_ids"] = source_input_ids
+        if has_forced_masks:
+            result["forced_mask_indices"] = forced_mask_indices
+            result["forced_loss_indices"] = forced_loss_indices
         return result
 
 
@@ -1814,6 +1847,38 @@ def apply_paired_source_tokens(
     return processed
 
 
+def apply_forced_rollout_masks(
+    processed: Dict[str, torch.Tensor],
+    source_input_ids: torch.Tensor,
+    forced_mask_indices: torch.Tensor,
+    forced_loss_indices: torch.Tensor,
+    *,
+    mask_id: int = MASK_TOKEN_ID,
+) -> Dict[str, torch.Tensor]:
+    if not (
+        source_input_ids.shape
+        == forced_mask_indices.shape
+        == forced_loss_indices.shape
+    ):
+        raise ValueError("forced rollout tensor shapes differ")
+    if not bool(forced_mask_indices.any().item()):
+        raise ValueError("forced rollout mask is empty")
+    if bool((forced_loss_indices & ~forced_mask_indices).any().item()):
+        raise ValueError("forced rollout loss escaped the model mask")
+    processed["masked_indices"] = forced_mask_indices
+    processed["loss_indices"] = forced_loss_indices
+    processed["candidate_mask"] = forced_loss_indices
+    processed["p_mask"] = torch.ones_like(
+        processed["p_mask"], dtype=torch.float32
+    )
+    processed["noisy"] = torch.where(
+        forced_mask_indices,
+        torch.full_like(source_input_ids, int(mask_id)),
+        source_input_ids,
+    )
+    return processed
+
+
 def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, Any]) -> Dict[str, Any]:
     input_ids = batch["input_ids"]
     attention_mask = batch["attention_mask"]
@@ -1836,11 +1901,21 @@ def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: 
             input_ids,
             prompt_lengths,
         )
+    forced_mask_indices = batch.get("forced_mask_indices")
+    if forced_mask_indices is not None:
+        if source_input_ids is None:
+            raise ValueError("forced rollout masks require paired source inputs")
+        processed = apply_forced_rollout_masks(
+            processed,
+            source_input_ids,
+            forced_mask_indices,
+            batch["forced_loss_indices"],
+        )
     context_model = model.module if hasattr(model, "module") else model
     if hasattr(context_model, "set_geometry_context"):
         context_model.set_geometry_context(prompt_lengths, batch["num_atoms"])
     outputs = model(input_ids=processed["noisy"], attention_mask=attention_mask)
-    masked = processed["masked_indices"]
+    masked = processed.get("loss_indices", processed["masked_indices"])
     if not masked.any():
         zero = outputs.logits.sum() * 0.0
         return {"loss": zero, "processed": processed, "outputs": outputs}
