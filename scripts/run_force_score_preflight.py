@@ -334,6 +334,7 @@ def main() -> None:
         and "force_delta_eV_per_atom" in row
         and "quantized_force_delta_eV_per_atom" in row
     ]
+    teacher_coverage = len(complete) / len(rows) if rows else 0.0
     by_class = defaultdict(list)
     for row in complete:
         by_class[row["perturbation"]].append(row)
@@ -364,6 +365,7 @@ def main() -> None:
         },
         "rows_requested": len(rows),
         "rows_complete": len(complete),
+        "teacher_coverage": teacher_coverage,
         "overall": overall,
         "collision": collision,
         "by_perturbation": {
@@ -372,8 +374,7 @@ def main() -> None:
         "negative_force_control_delta_eV_per_atom": describe(control_deltas),
         "stress_sign_audit": stress,
         "supports_force_score_student_preflight": bool(
-            overall["teacher_coverage"] is not None
-            and overall["teacher_coverage"] >= 0.9
+            teacher_coverage >= 0.9
             and overall["continuous_energy_lower_fraction"] >= 0.7
             and overall["quantized_energy_lower_fraction"] >= 0.55
             and overall["force_delta_eV_per_atom"]["median"] < 0.0
