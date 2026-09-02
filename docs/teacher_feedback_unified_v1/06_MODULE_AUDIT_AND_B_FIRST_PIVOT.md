@@ -204,6 +204,7 @@ On the same 256 Plans and two streams, requested-denominator Direct is:
 | BC | 100.00% | 99.22% |
 | BP | 100.00% | 98.05% |
 | BR | 100.00% | 98.83% |
+| BS | 100.00% | 99.80% |
 
 B0→BC gains 18.95 percentage points and has 48/0 and 51/2
 candidate-only/control-only pairs in streams 17/18. BC and BP have identical
@@ -211,7 +212,10 @@ lattice prefixes for 256/256 rows in both streams; when the pointer emits the
 canonical program, their complete bodies are identical for 27/27 rows. The
 remaining BC/BP difference is therefore isolated to Llama-programmed species
 order. Suffix backfill recovers most of its small raw-validity gap before the
-schedule-matched BS training endpoint.
+schedule-matched BS training endpoint. BS then reaches 255/256 and 256/256 raw
+Direct in the two streams, demonstrating that the learned program and
+non-causal correction states can be absorbed without sacrificing the large
+transaction-order gain.
 
 ## 11. Later stability contribution
 

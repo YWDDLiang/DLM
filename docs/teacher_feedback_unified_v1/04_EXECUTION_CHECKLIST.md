@@ -128,10 +128,10 @@ Track B is the priority route.
 - [x] Retain deterministic random-geometry mask examples so general denoising
   is not erased.
 - [x] Start with decoder-only cells before training.
-- [ ] Train one BS LoRA from the retained Compact-V2 endpoint:
+- [x] Train one BS LoRA from the retained Compact-V2 endpoint:
   r8/alpha32/dropout0.05, LR 5e-6, effective source batch16, exactly 1,696
   updates, one model seed, only the endpoint eligible.
-- [ ] Use up to 4 A800 and 32 CPU for B; no CHGNet/model494/test outcome enters
+- [x] Use up to 4 A800 and 32 CPU for B; no CHGNet/model494/test outcome enters
   training.
 
 ## Phase 5 — adjacent B experiments
@@ -236,4 +236,10 @@ Only after the SPAD result is frozen:
 - job 39518: full eight-cell raw Direct complete. Pooled stream means are
   B0 80.27%, BC 99.22%, BP 98.05%, BR 98.83%; composition validity is
   100% for BC/BP/BR. B0→BC exact McNemar is strongly positive in both streams.
-- job 39520: active four-A800 schedule-matched BS training, one fixed epoch.
+- job 39520 completed 1,696 updates; validation loss 2.37035 and one endpoint.
+- job 39521 completed BS body with 256/256 parsed, Plan-matched and graphable
+  in each stream.
+- job 39524 certified the predicted-only validity screen sample-for-sample
+  against full Direct, then measured BS at 255/256 and 256/256 joint validity.
+- job 39525 is the active common model494 tau800 refinement for BC/BR/BS ×
+  streams 17/18.

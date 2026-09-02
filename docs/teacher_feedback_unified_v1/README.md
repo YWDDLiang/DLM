@@ -79,10 +79,12 @@ Current raw result on the fixed 256-Plan, two-stream ledger:
 | BC canonical SPAD | 100.00% | 99.22% |
 | BP Llama-programmed SPAD | 100.00% | 98.05% |
 | BR BP + suffix backfill | 100.00% | 98.83% |
+| BS schedule-matched DLM | 100.00% | 99.80% |
 
 Thus the crystal-native transaction order contributes +18.95 percentage
 points raw Direct over B0. The learned program is isolated with 256/256 equal
-lattices in both streams; schedule-matched BS training is active.
+lattices in both streams, and schedule-matched training raises the final raw
+joint validity to 511/512.
 
 The active ten-minute heartbeat is `sscd-a-b-approval-and-execution`. Execution
 is approved; it stays quiet except for terminal audit, training, generation,
