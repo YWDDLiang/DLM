@@ -20,6 +20,9 @@ Deadline: 2026-09-03 23:30 Asia/Shanghai.
 - A full-data audit found that only 14.995%/14.325% of train/validation teacher
   bodies use the same element-slot order as inference hard prefill. The primary
   next route is therefore canonical MP20 site ordering, not another CE loss.
+- Canonical data V2 is terminal at `27136/9047` rows with zero drops and zero
+  prompt changes; token audit has zero truncation and zero prompt/answer boundary
+  mismatches. Fresh two-epoch DLM training job 39280 is running on two A800.
 
 ## Objective
 
@@ -123,12 +126,12 @@ CHGNet-selected or hull-selected structures never become labels.
 - [x] Audit all teacher bodies against inference element prefill order.
 - [x] Record train `4069/27136` and validation `1296/9047` exact-order matches;
   all rows preserve the correct species multiset.
-- [ ] Build full `27136/9047` canonical data by permuting complete
+- [x] Build full `27136/9047` canonical data by permuting complete
   species-coordinate site records to Plan order; drop zero rows.
-- [ ] Verify physical structure, lattice, body length, composition, source row
+- [x] Verify physical structure, lattice, body length, composition, source row
   and split are unchanged for every row.
-- [ ] Only after those invariants pass, train one fresh Compact-V2 LoRA with the
-  frozen two-epoch schedule, followed by one canonical G2-PBC-R epoch.
+- [ ] Job 39280 trains one fresh Compact-V2 LoRA with the frozen two-epoch
+  schedule; after it is terminal, train one canonical G2-PBC-R epoch.
 - [ ] Matched raw evaluation treats Direct and CHGNet as co-primary, with
   stability prioritized; no checkpoint/seed/epoch selection.
 - [ ] If Direct improves without raw-energy improvement, do not add CE epochs;
