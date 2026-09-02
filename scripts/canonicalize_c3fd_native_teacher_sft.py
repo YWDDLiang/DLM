@@ -8,6 +8,7 @@ from collections import Counter
 import hashlib
 import json
 from pathlib import Path
+import shutil
 from typing import Any
 
 from crystal_dlm.canonical_site_order import canonicalize_dynamic_answer_to_plan
@@ -88,6 +89,10 @@ def main() -> None:
     args.output_dir.mkdir(parents=True)
     write_jsonl(args.output_dir / "train.jsonl", train)
     write_jsonl(args.output_dir / "val.jsonl", val)
+    source_vocab = args.train_jsonl.parent / "vocab_tokens.txt"
+    if args.train_jsonl.parent != args.val_jsonl.parent or not source_vocab.is_file():
+        raise ValueError("train/val must share a source directory with vocab_tokens.txt")
+    shutil.copyfile(source_vocab, args.output_dir / "vocab_tokens.txt")
     manifest = {
         "schema": "c3fd_native_teacher_sft_canonical_site_v1",
         "status": "complete",
