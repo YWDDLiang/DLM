@@ -46,7 +46,8 @@ checkpoint_selection\tnone
 EOF
 
 CUDA_VISIBLE_DEVICES="${DEVICES}" PYTHONPATH="${SOURCE}/src" \
-  torchrun --standalone --master-port 35817 --nproc_per_node=4 "${TRAINER}" \
+  "${PYTHON}" -m torch.distributed.run --standalone --master-port 35817 \
+  --nproc_per_node=4 "${TRAINER}" \
   --model-path "${MODEL}" --checkpoint-path "${BASE}" \
   --data-dir "${DATA}" --output-dir "${RUN}/train" \
   --representation dynamic_v1 --dynamic-geometry-only \
