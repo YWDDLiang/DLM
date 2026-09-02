@@ -38,7 +38,8 @@ assert [{k:r[k] for k in keys} for r in left] == [{k:r[k] for k in keys} for r i
 PY
 
 run_stream() {
-  local stream="$1" source="${BODY_RUN}/BS/stream${stream}/generation/generation.jsonl"
+  local stream="$1"
+  local source="${BODY_RUN}/BS/stream${stream}/generation/generation.jsonl"
   [[ -f "${BODY_RUN}/BS/stream${stream}/generation/_SUCCESS" ]]
   env OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 \
     PYTHONPATH="${SOURCE}/src" "${PYTHON}" "${SOURCE}/scripts/run_crysllmgen_validity_fast.py" \
