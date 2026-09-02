@@ -25,7 +25,7 @@ transition carried by the existing G2 residual.
 - Additional interface failures: 10 upstream parse/body failures in the four G2
   cells and 20 Plan1200 CIF construction failures.
 
-## Phase A — 512-row teacher preflight
+## Phase A — 512-row teacher preflight (complete)
 
 This is a mechanism test, not a training dataset or paper result.
 
@@ -38,16 +38,40 @@ This is a mechanism test, not a training dataset or paper result.
 - Compare continuous force targets with the same targets quantized back through
   the exact dynamic `7+4N` representation.
 
-Phase A supports proceeding only if the force direction usually lowers CHGNet
-energy, does not damage valid structures, improves collision geometry, and its
-effect survives token quantization often enough to supervise q1.
+Job 39212 completed all 512 rows. The continuous force step lowered CHGNet
+energy on 76.8% of states, but only 54.3% remained lower after exact `7+4N`
+quantization. More importantly, 59/64 near-threshold 0.60 Å structures crossed
+from valid to invalid despite their energy decrease. Pure Force-Score therefore
+does not support direct student or full-data training: it can exchange validity
+for a lower local energy.
+
+## Phase A2 — feasibility-projected teacher preflight
+
+Reuse the exact same 512 rows, CHGNet teacher and tokenization. Do not enlarge
+or resample the preflight set.
+
+- use the existing species-aware PBC barrier and lattice-validity terms;
+- gate force supervision off for severe/nonlocal collisions;
+- project a locally credible force direction onto the first-order geometric
+  feasible half-space;
+- form wrapped XYZ soft labels only over adjacent token bins that remain
+  geometrically valid after exact quantization;
+- use barrier-only targets when no force-active valid token is available;
+- report energy and validity jointly, never counting invalid lower-energy states
+  as teacher successes.
+
+Proceed to a student only if teacher coverage remains complete, near-threshold
+valid→invalid is at most 1/64, overall valid→invalid is at most 1%, collision
+barrier decreases on at least 90%, and force-active quantized candidates lower
+energy on at least 70% of their rows.
 
 ## Phase B — micro-student preflight
 
-Only after Phase A succeeds:
+Only after Phase A2 succeeds:
 
-- split by base structure: 48 train / 16 holdout;
-- train G2 residual only for 64–128 updates;
+- split by base structure: 48 structures / 384 rows train and 16 structures /
+  128 rows holdout;
+- train G2 residual only for 128–256 updates;
 - freeze Planner, base DLM, Compact-V2 LoRA and q0;
 - use wrapped soft XYZ targets plus a secondary direction loss;
 - verify holdout collision, raw Direct, paired CHGNet and gradient compatibility.
