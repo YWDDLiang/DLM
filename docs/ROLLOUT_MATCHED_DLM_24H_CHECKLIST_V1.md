@@ -165,8 +165,21 @@ CHGNet-selected or hull-selected structures never become labels.
   `253/253/143`, canonical G2 `251/251/133`. Canonical DLM vs OLD flips are
   25 invalid→valid and 10 valid→invalid (net +15); canonical G2 vs OLD is
   19/14 (net +5); adding G2 to canonical DLM is net -10 Direct.
-- [ ] Job39348 runs paired raw CHGNet for both canonical arms and reuses the
+- [x] Job39348 runs paired raw CHGNet for both canonical arms and reuses the
   old G2-PBC-R A labels. No model494 or official query is included.
+- [x] Job39348 completed in `01:04:04`. OLD/CANON-DLM/CANON-G2 known energies
+  are `254/251/251`. Relative to OLD, canonical DLM has paired mean
+  `+22.95 meV/atom`, median `-0.30 meV/atom`, lower fraction `0.510` on 249;
+  canonical G2 has mean `+65.12 meV/atom`, median `-3.19 meV/atom`, lower
+  fraction `0.520` on 250. Both mean CIs span zero and both promotion flags are
+  false.
+- [x] Terminal interpretation: canonical ordering is a clear raw-Direct
+  improvement (`128 -> 143`) but not a raw-stability improvement. Adding G2 to
+  the canonical base reduces Direct (`143 -> 133`) and has no energy advantage;
+  retain this interaction as a negative rather than forcing the residual.
+- [ ] Freeze all further CE/G2 continuation. Before any new GPU job, audit the
+  MP20 `e_above_hull` condition coverage, within-chemistry signal, rollout error
+  scale and the PBC log-metric/torus score-executor invariants.
 - [x] Freeze the previously effective G2-A recipe for that epoch: acyclic
   `q0 -> soft geometry -> residual -> q1`, rank-64 two-layer relation adapter,
   exactly-zero output initialization, strict triclinic 125-image minimum image,

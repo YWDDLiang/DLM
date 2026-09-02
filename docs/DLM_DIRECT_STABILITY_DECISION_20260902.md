@@ -195,6 +195,33 @@ generators. The transferable principle is that stability needs a periodic
 geometry denoising field and an explicit property condition; positive-only CE
 on stable rows is insufficient, as our SGTC result already demonstrated.
 
+## 8. Canonical experiment terminal update
+
+The canonical hypothesis was partially supported on the fixed prospective 256
+Plan/noise cell:
+
+| Arm | Body / composition | Raw Direct | Raw CHGNet known |
+|---|---:|---:|---:|
+| old G2-PBC-R | 255 / 255 | 128 | 254 |
+| canonical DLM | 253 / 253 | **143** | 251 |
+| canonical DLM + G2 | 251 / 251 | 133 | 251 |
+
+Canonical DLM versus old G2 has 25 invalid→valid and 10 valid→invalid flips,
+for net `+15`. G2 on top of canonical DLM has net `-10`, so the previous
+residual is not automatically compositional with the corrected site gauge.
+
+Stability did not follow Direct. Relative to old G2, canonical DLM has paired
+mean CHGNet delta `+22.95 meV/atom`, median `-0.30 meV/atom`, lower fraction
+`0.510` on 249 common rows; canonical G2 has mean `+65.12 meV/atom`, median
+`-3.19 meV/atom`, lower fraction `0.520` on 250. Both confidence intervals span
+zero and neither meets the frozen stability rule.
+
+Therefore canonical site ordering is retained as an execution-validity method,
+not a stability method. More CE epochs and another G2 continuation are closed.
+The stability-conditioned periodic manifold-score executor remains only a
+candidate pending label-signal, corruption-scale and invariance audits; no GPU
+training is authorized by these results alone.
+
 ## 7. Closed alternatives
 
 - rollout active-group CE on noncanonical or canonical MP20 suffixes;
