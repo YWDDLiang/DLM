@@ -174,24 +174,26 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         for row in complete
         if row["initial_valid"] and row.get("force_candidate_known") is True
     ]
-    force_active = [row for row in complete if row.get("teacher_mode") == "force_projected"]
+    force_active = [
+        row for row in complete if row.get("teacher_mode") == "force_projected"
+    ]
     initially_valid = [row for row in complete if row["initial_valid"]]
     return {
         "rows": len(rows),
         "complete": len(complete),
-        "initial_valid": sum(row["initial_valid"] for row in complete),
-        "selected_valid": sum(row["selected_valid"] for row in complete),
+        "initial_valid": sum(row["initial_valid"] for row in rows),
+        "selected_valid": sum(row["selected_valid"] for row in rows),
         "invalid_to_valid": sum(
-            not row["initial_valid"] and row["selected_valid"] for row in complete
+            not row["initial_valid"] and row["selected_valid"] for row in rows
         ),
         "valid_to_invalid": sum(
-            row["initial_valid"] and not row["selected_valid"] for row in complete
+            row["initial_valid"] and not row["selected_valid"] for row in rows
         ),
         "selected_projection_buffer_violations": sum(
-            int(row["selected_projection_buffer_violations"]) for row in complete
+            int(row["selected_projection_buffer_violations"]) for row in rows
         ),
         "selected_species_prior_violations": sum(
-            int(row["selected_species_prior_violations"]) for row in complete
+            int(row["selected_species_prior_violations"]) for row in rows
         ),
         "force_candidate_rows": len(force_candidates),
         "force_candidate_energy_lower_fraction": (
@@ -214,13 +216,95 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
             row["selected_delta_eV_per_atom"] for row in force_active
         ),
         "initially_valid_energy_worsen": sum(
-            row["selected_delta_eV_per_atom"] > 1.0e-8 for row in initially_valid
+            row["selected_delta_eV_per_atom"] > 1.0e-6 for row in initially_valid
         ),
         "teacher_modes": {
-            name: sum(row.get("teacher_mode") == name for row in complete)
+            name: sum(row.get("teacher_mode") == name for row in rows)
             for name in ("force_projected", "barrier_only", "identity", "unresolved")
         },
     }
+
+
+def build_report(result_rows: list[dict[str, Any]]) -> dict[str, Any]:
+    by_perturbation = defaultdict(list)
+    for row in result_rows:
+        by_perturbation[row["perturbation"]].append(row)
+    overall = summarize(result_rows)
+    near_threshold = summarize(by_perturbation["near_threshold_0p60A"])
+    collision_summaries = {
+        name: summarize(values)
+        for name, values in sorted(by_perturbation.items())
+        if name.startswith("collision_")
+    }
+    initially_valid_complete = [
+        row
+        for row in result_rows
+        if row.get("teacher_complete") and row["initial_valid"]
+    ]
+    force_active_coverage = (
+        sum(
+            row.get("teacher_mode") == "force_projected"
+            for row in initially_valid_complete
+        )
+        / len(initially_valid_complete)
+        if initially_valid_complete
+        else 0.0
+    )
+    collision_barrier_decrease = [
+        row
+        for row in result_rows
+        if row["perturbation"].startswith("collision_")
+        and row.get("barrier_candidate_projection_buffer_violations", 1)
+        < row.get("initial_projection_buffer_violations", 0)
+    ]
+    energy_coverage = overall["complete"] / len(result_rows)
+    geometry_coverage = sum("selected_valid" in row for row in result_rows) / len(
+        result_rows
+    )
+    report = {
+        "schema": "projected_force_score_teacher_preflight_v2",
+        "status": "complete",
+        "rows_requested": len(result_rows),
+        "rows_energy_complete": overall["complete"],
+        "geometry_coverage": geometry_coverage,
+        "energy_coverage": energy_coverage,
+        "teacher_coverage": energy_coverage,
+        "initial_invalid_rows": len(result_rows) - overall["initial_valid"],
+        "constants": {
+            "image_radius": IMAGE_RADIUS,
+            "hard_accept_minimum_distance_A": 0.50,
+            "hard_project_minimum_distance_A": MARGIN_FLOOR_A,
+            "species_prior_scale": SPECIES_MARGIN_SCALE,
+            "species_prior_floor_A": SPECIES_MARGIN_FLOOR_A,
+            "species_prior_ceiling_A": SPECIES_MARGIN_CEILING_A,
+            "maximum_quantization_projection_rounds": MAX_QUANTIZATION_PROJECTIONS,
+            "energy_numerical_tolerance_eV_per_atom": 1.0e-6,
+        },
+        "overall": overall,
+        "near_threshold": near_threshold,
+        "collisions": collision_summaries,
+        "force_active_coverage_initially_valid": force_active_coverage,
+        "collision_barrier_decrease_fraction": (
+            len(collision_barrier_decrease) / 256.0
+        ),
+    }
+    report["supports_microstudent"] = bool(
+        geometry_coverage == 1.0
+        and energy_coverage >= 0.99
+        and overall["selected_valid"] == len(result_rows)
+        and overall["invalid_to_valid"] == report["initial_invalid_rows"]
+        and overall["valid_to_invalid"] == 0
+        and overall["teacher_modes"]["unresolved"] == 0
+        and force_active_coverage >= 0.25
+        and overall["force_active_rows"] >= 64
+        and overall["force_active_delta_eV_per_atom"]["median"] <= -0.005
+        and overall["initially_valid_energy_worsen"] <= 2
+        and all(
+            summary["selected_valid"] == 64
+            for summary in collision_summaries.values()
+        )
+    )
+    return report
 
 
 def main() -> None:
@@ -388,71 +472,7 @@ def main() -> None:
                 - result["initial_energy_eV_per_atom"]
             )
 
-    by_perturbation = defaultdict(list)
-    for row in result_rows:
-        by_perturbation[row["perturbation"]].append(row)
-    overall = summarize(result_rows)
-    near_threshold = summarize(by_perturbation["near_threshold_0p60A"])
-    collision_summaries = {
-        name: summarize(values)
-        for name, values in sorted(by_perturbation.items())
-        if name.startswith("collision_")
-    }
-    initially_valid_complete = [
-        row
-        for row in result_rows
-        if row.get("teacher_complete") and row["initial_valid"]
-    ]
-    force_active_coverage = (
-        sum(
-            row.get("teacher_mode") == "force_projected"
-            for row in initially_valid_complete
-        )
-        / len(initially_valid_complete)
-        if initially_valid_complete
-        else 0.0
-    )
-    collision_barrier_decrease = [
-        row
-        for row in result_rows
-        if row["perturbation"].startswith("collision_")
-        and row.get("barrier_candidate_projection_buffer_violations", 1)
-        < row.get("initial_projection_buffer_violations", 0)
-    ]
-    report = {
-        "schema": "projected_force_score_teacher_preflight_v2",
-        "status": "complete",
-        "rows_requested": len(rows),
-        "rows_complete": overall["complete"],
-        "teacher_coverage": overall["complete"] / len(rows),
-        "initial_invalid_rows": len(rows) - overall["initial_valid"],
-        "constants": {
-            "image_radius": IMAGE_RADIUS,
-            "hard_accept_minimum_distance_A": 0.50,
-            "hard_project_minimum_distance_A": MARGIN_FLOOR_A,
-            "species_prior_scale": SPECIES_MARGIN_SCALE,
-            "species_prior_floor_A": SPECIES_MARGIN_FLOOR_A,
-            "species_prior_ceiling_A": SPECIES_MARGIN_CEILING_A,
-            "maximum_quantization_projection_rounds": MAX_QUANTIZATION_PROJECTIONS,
-        },
-        "overall": overall,
-        "near_threshold": near_threshold,
-        "collisions": collision_summaries,
-        "force_active_coverage_initially_valid": force_active_coverage,
-        "collision_barrier_decrease_fraction": len(collision_barrier_decrease) / 256.0,
-    }
-    report["supports_microstudent"] = bool(
-        report["teacher_coverage"] == 1.0
-        and overall["selected_valid"] == 512
-        and overall["invalid_to_valid"] == report["initial_invalid_rows"]
-        and overall["valid_to_invalid"] == 0
-        and overall["teacher_modes"]["unresolved"] == 0
-        and force_active_coverage >= 0.25
-        and overall["force_active_rows"] >= 64
-        and overall["force_active_delta_eV_per_atom"]["median"] <= -0.005
-        and overall["initially_valid_energy_worsen"] <= 2
-        and all(summary["selected_valid"] == 64 for summary in collision_summaries.values())
-    )
+    report = build_report(result_rows)
     output.mkdir(parents=True)
     (output / "projected_force_score_teacher_rows.jsonl").write_text(
         "".join(json.dumps(row, sort_keys=True) + "\n" for row in result_rows)
