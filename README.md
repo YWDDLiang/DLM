@@ -1,155 +1,132 @@
-# Science-Constrained Hierarchical Crystal Language Model
+# Scientific Programmed Crystal Diffusion Language Model
 
-This repository contains the paper mainline for a crystal generator that moves
-scientific information across three resolutions:
-
-1. a **C3FD-supported Llama Planner** chooses chemically reachable global Plans;
-2. a **Plan-conditioned masked DLM** realizes each Plan in an exact `7+4N`
-   crystal language;
-3. a **periodic-relation residual and frozen model494 transition** turn that
-   language state into a physically evaluated crystal.
+This branch contains the paper mainline for **Scientific Programmed
+Anchor–Backfill Denoising (SPAD)**: a C³FD-supported Llama first chooses a
+chemically reachable crystal Plan and then programs the denoising order of a
+masked crystal language model. The same Plan state controls composition,
+special-token placement, periodic feasibility and the final continuous
+refinement.
 
 The central question is:
 
-> How can a language generator preserve chemical feasibility while moving from
-> discrete composition decisions to coupled periodic geometry—without relying
-> on post-hoc sample selection?
+> How can a scientific LLM preserve exact chemistry while programming a
+> diffusion language model to realize coupled periodic geometry from both
+> earlier and later crystal context?
 
-## Method overview
+## One connected generation process
 
 ```mermaid
 flowchart LR
-    C[C3FD reachable support] --> L[Llama typed Planner]
-    L --> P[Compact-V2 Plan z]
-    P --> D[Masked crystal DLM<br/>dynamic 7+4N]
-    D <--> G[G2 periodic-relation residual]
-    D --> R[Raw crystal x0]
-    R --> M[Frozen model494 tau800]
-    M --> X[Final crystal x*]
+    C[C³FD reachable chemical actions] --> L[Llama residual Planner]
+    L --> P[Exact composition + Compact Plan]
+    L --> O[Llama species program]
+    P --> D[7+4N masked crystal DLM]
+    O --> D
+    D --> A[Anchor-first predictor]
+    A --> B[Suffix-visible backfill]
+    B --> G[PBC-feasible raw crystal]
+    G --> M[Frozen model494, tau800]
+    M --> X[Final crystal]
 ```
 
-The modules are trained separately but connected by one exact Plan state. At
-inference each request produces one Plan, one DLM trajectory and one terminal
-diffusion trajectory. There is no retry, replacement, reranking or best-of-N.
+This is not a Planner followed by an unrelated generator. C³FD defines the
+reachable action support; Llama selects within that support and emits an exact
+permutation of the certified species; that permutation is compiled into
+non-contiguous DLM position groups. The DLM can then re-mask an early anchor
+while retaining its completed suffix—an operation an autoregressive model
+cannot perform without regenerating the suffix.
 
-## Main reported result
+Every request uses one Plan, one DLM trajectory and one fixed model494
+trajectory. There is no retry, replacement, reranking or best-of-N.
 
-The paper headline is:
+## Modules and why each is necessary
 
-| Denominator | Strict S.U.N. | Meta S.U.N. |
-|---:|---:|---:|
-| 1,000 | **105/1000 = 10.50%** | **486/1000 = 48.60%** |
+### 1. C³FD–Llama scientific Planner
 
-This is the main reported result. New experiments answer robustness and
-mechanism questions without changing its denominator. The fresh G2 prospective
-profile gives `24/117` on 256, and the independent Plan1200 scale profile gives
-`81/486` on main1000. The scale profile is treated as an independent sampling
-realization rather than a replacement headline.
+C³FD carries atom-count conservation, typed species/count state and
+prefix-dependent chemical reachability. Llama supplies learned residual
+preferences over those legal actions and predicts the Compact structural
+regime. A Plan-conditioned pointer on the same Llama state emits the species
+construction program but cannot change Plan composition.
 
-## Modules, roles and evidence
+Evidence:
 
-### 1. Science-Constrained LLM Planner
+- C³FD-v2.5 composition validity: `2000/2000`;
+- fused C³FD–Llama composition validity: `256/256` prospective and
+  `1200/1200` scale;
+- Llama pointer validation: `73.50%` exact permutation, `80.41%` root and
+  `82.63%` pairwise accuracy, versus `14.48%` canonical exact accuracy;
+- on the current fixed ledger, `229/256` programs are noncanonical while Plan
+  text and composition remain unchanged.
 
-**Role.** Select the atom count, elements/counts and compact structural regime
-before coordinate generation.
+### 2. Programmed crystal DLM
 
-**Why it is needed.** An unconstrained LLM can spend probability mass on
-unreachable charge/count prefixes. A rules-only Planner is valid but cannot use
-a learned materials prior to choose among legal paths.
+The DLM realizes one exact `7+4N` body: atom count, six lattice tokens and `N`
+element/X/Y/Z site tuples. Its 2,457 dynamic crystal tokens cover MP20 cells
+with up to 20 sites. N and element multiplicities are prefilled from the Plan;
+the remaining tokens are generated through three crystal-native transactions:
 
-**Mechanism.** C3FD defines prefix-dependent reachable actions. Llama scores
-those actions and predicts Compact-V2 soft fields inside the same decoding
-process. The legal support is never weakened and only one trajectory is sampled.
+1. resolve the lattice;
+2. construct one anchor for each species in Llama-programmed order;
+3. complete future sites, then re-mask early anchors with the completed suffix
+   still visible.
 
-**Evidence.** C3FD-v2.5 improves composition validity from `1724/2000` to
-`2000/2000`. The fused Planner remains composition-valid on `256/256` fresh
-requests and `1200/1200` scale requests. Mean fused-vs-C3FD action KL is
-`0.06819`, with `87.05%` of typed decisions changed, showing that Llama is an
-active generator rather than a formatter.
+The checkpoint audit covers every MP20 `27136/9047` train/validation row with
+no `7+4N` length clipping. A real-checkpoint intervention changes earlier
+anchor X/Y/Z logits when a later Z token changes, directly demonstrating the
+future-context channel used by backfill.
 
-### 2. Plan-Conditioned Crystal Diffusion Language
+### 3. Periodic feasible support and continuous transition
 
-**Role.** Convert the global Plan into one lattice and exactly `N` ordered
-element/fractional-coordinate tuples by parallel masked denoising.
+Each candidate site is evaluated as a complete XYZ transaction under the
+resolved lattice. Coordinate `0.00/1.00` aliases are aggregated, and a strict
+triclinic 125-image minimum-distance calculation excludes sub-0.5 Å periodic
+collisions. The frozen model494 transition then moves the complete raw crystal
+within the continuous crystal basin at tau800.
 
-**Why it is needed.** Direct crystal text entangles chemistry, sequence length
-and geometry. The Plan makes exact chemistry visible so the DLM can spend its
-capacity on structural realization.
+The support and transition operate on the same crystal state that Llama
+programs and the DLM realizes; they are not post-hoc sample selection.
 
-**Mechanism.** A body contains seven global tokens followed by `N` element/X/Y/Z
-tuples. N and element multiplicities remain visible; lattice and coordinates are
-denoised under the exact-axis schedule. MP20 training and inference use the same
-`C3FD_NATIVE_PLAN_V2` serializer.
+## Current mechanism result
 
-**Evidence.** The DLM uses the full MP20 `27136/9047` train/validation split. A
-strict round-trip audit gives `248/248` exact body/schema matches with zero
-species-order or validity flips. On the scale profile it produces `1139/1159 =
-98.27%` valid CIFs before terminal diffusion.
+Raw Direct validity on one fixed 256-Plan, two-stream ledger:
 
-### 3. G2 Periodic-Relational Denoising
+| Arm | Meaning | Composition valid | Joint structure valid |
+|---|---|---:|---:|
+| B0 | retained exact-plan schedule | 98.05% | 80.27% |
+| BC | canonical crystal transaction order | 100.00% | 99.22% |
+| BP | Llama-programmed anchor order | 100.00% | 98.05% |
+| BR | BP + suffix-visible backfill | 100.00% | 98.83% |
+| BS | BR + schedule-matched DLM training | **100.00%** | **99.80% (511/512)** |
 
-**Role.** Make lattice-conditioned, species-aware periodic relations salient
-inside the DLM rather than repairing a finished CIF.
+B0→BC adds `18.95` percentage points of raw joint validity. BC and BP retain
+identical lattices for all 512 stream rows, isolating species order. The final
+BS endpoint restores essentially complete raw execution while retaining the
+learned Llama program and DLM-specific suffix revision.
 
-**Why it is needed.** Global attention makes coordinate tokens visible, but it
-does not explicitly compute triclinic minimum-image distance or guarantee that a
-single catastrophic pair receives enough gradient priority.
+The matched raw/refined CHGNet evaluation and the fresh prospective official
+S.U.N. endpoint are the active final measurements. The preregistered targets
+are Strict S.U.N. `>10%` and Meta S.U.N. `>50%`.
 
-**Mechanism.** G2 reconstructs a strict-PBC relation graph from soft DLM states,
-aggregates metric, pair-distance, RDF, overlap and coordination information, and
-returns a zero-initialized residual to geometry-token logits.
+## Reproduce and inspect
 
-**Evidence.** On the fresh prospective cohort, G2 moves refined Strict/Meta
-S.U.N. from `19/111` to `24/117` and lowers paired official hull by
-`16.43 meV/atom`. The full-epoch mechanism study raises raw Direct from
-`118/256` to `128/256`. The uncertainty-gated alternative does not improve
-energy and is not part of the method.
+The current method, ablations and run ledger are documented here:
 
+1. [Unified SPAD method](docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md)
+2. [Pure-Llama Route A](docs/teacher_feedback_unified_v1/01_TRACK_A_PURE_LLM.md)
+3. [Llama-programmed DLM Route B](docs/teacher_feedback_unified_v1/02_TRACK_B_LLM_GUIDED_DLM.md)
+4. [Cross-representation contract](docs/teacher_feedback_unified_v1/03_CROSS_REPRESENTATION_AND_DIFFUSION.md)
+5. [Execution checklist](docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md)
+6. [Decision log](docs/teacher_feedback_unified_v1/05_DECISION_LOG.md)
+7. [Implementation audit](docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
 
-## Main evidence profiles
-
-| Profile | Question | Result |
-|---|---|---|
-| Main reported H1-A2 | What is the paper headline? | Strict/Meta `105/488` per 1000 |
-| Fresh prospective | Does G2 improve the complete system? | BASE→G2 refined Strict/Meta `19/111→24/117`; paired hull `−16.43 meV/atom` |
-| Plan1200 scale, main1000 | Does the complete pipeline scale? | tau800 Strict/Meta `105/486` |
-| Planner scale | Does scientific support remain valid at scale? | fused Planner composition-valid `1200/1200` |
-
-The Plan1200 profile combines the first 861 valid rows of the main block with
-all 139 valid remainder rows. The 20 CIF construction failures remain disclosed.
-See [`PLAN1200_TAU800_FINAL_20260902.md`](docs/PLAN1200_TAU800_FINAL_20260902.md).
-
-## Validate the portable paper pipeline
+Portable read-only checks remain available:
 
 ```bash
 PYTHONPATH=src python -m crystal_dlm.paper_pipeline validate
 PYTHONPATH=src python -m crystal_dlm.paper_pipeline show
-PYTHONPATH=src python -m crystal_dlm.paper_pipeline stage sample-plan
 ```
 
-These commands are read-only. They validate the stage order, component configs,
-repository paths and scientific invariants without submitting a job.
-
-## Reading path
-
-1. [Paper-method index](docs/paper/README.md)
-2. [Method at a glance](docs/paper/METHOD_AT_A_GLANCE.md)
-3. [Scientific question and contributions](docs/paper/SCIENTIFIC_QUESTION_AND_CONTRIBUTIONS.md)
-4. [Full method](docs/paper/METHOD_MAINLINE.md)
-5. [Experiment and evidence matrix](docs/paper/EXPERIMENT_MATRIX.md)
-6. [Paper story](docs/paper/PAPER_STORY.md)
-7. [Reproducibility contract](docs/paper/REPRODUCIBILITY.md)
-
-The executable stage map is in [PAPER_PIPELINE.md](PAPER_PIPELINE.md). Retired
-negative methods are summarized once in [FAILED_METHODS.md](docs/FAILED_METHODS.md);
-their retired checkpoints and duplicate implementation artifacts are not part of
-this branch.
-
-## Claim boundary
-
-The main reported result is `10.50%/48.80%`. The supporting evidence establishes
-composition correctness, exact Plan-to-body conditioning, improved periodic
-realization and a measurable end-to-end G2 stability gain. The independent
-scale profile reaches `8.10%/48.60%` and demonstrates that the complete pipeline
-remains operational at scale; its Strict difference is treated as sampling
-variation in the paper narrative.
+Route A remains the pure-LLM comparison. Route B is the paper-priority method
+because arbitrary-position prediction and suffix-preserving revision expose a
+capability specific to diffusion language modeling.
