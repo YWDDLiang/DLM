@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Freeze actual C3FD–Llama SPAD Plan rows before any DLM outcome exists."""
+"""Freeze every requested actual SPAD Plan without filtering or replacement."""
 
 from __future__ import annotations
 
 import argparse
-from collections import Counter
 import json
 from pathlib import Path
 import sys
@@ -35,56 +34,71 @@ def validate_program(row: Mapping[str, Any], plan: Mapping[str, Any]) -> None:
         raise ValueError("Plan row does not carry the learned Llama pointer")
 
 
-def freeze_rows(
-    source_rows: Sequence[Mapping[str, Any]],
+def freeze_requested(
+    records: Sequence[Mapping[str, Any]],
+    plans: Sequence[Mapping[str, Any]],
     *,
-    blocked: set[str],
-    count: int,
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], Counter[str]]:
-    selected: list[dict[str, Any]] = []
+    requested: int,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    if len(records) != requested:
+        raise ValueError("Planner records do not cover the requested denominator")
+    record_by_index = {int(row["sample_idx"]): row for row in records}
+    plan_by_index = {int(row["sample_idx"]): dict(row) for row in plans}
+    if set(record_by_index) != set(range(requested)):
+        raise ValueError("Planner request indices are not contiguous")
+    if len(plan_by_index) != len(plans) or not set(plan_by_index) <= set(record_by_index):
+        raise ValueError("successful Plan indices are malformed")
+
+    frozen_plans: list[dict[str, Any]] = []
     ledger: list[dict[str, Any]] = []
-    seen: set[str] = set()
-    exclusions: Counter[str] = Counter()
-    for source_position, source in enumerate(source_rows):
-        plan = identity.find_plan(source)
+    exact_seen: set[str] = set()
+    for sample_idx in range(requested):
+        record = record_by_index[sample_idx]
+        parsed = record.get("parsed") is True
+        comp_valid = record.get("comp_valid") is True
+        plan_row = plan_by_index.get(sample_idx)
+        if parsed != (plan_row is not None) or comp_valid != (plan_row is not None):
+            raise ValueError("record/Plan success accounting differs")
+        if plan_row is None:
+            ledger.append(
+                {
+                    "sample_idx": sample_idx,
+                    "planner_valid": False,
+                    "failure": record.get("failure"),
+                    "exact_composition_identity": None,
+                    "reduced_composition_identity": None,
+                    "chemsys": None,
+                }
+            )
+            continue
+        plan = identity.find_plan(plan_row)
         if plan is None:
-            exclusions["missing_plan"] += 1
-            continue
-        try:
-            exact = identity.exact_identity(plan)
-            reduced = identity.reduced_identity(plan)
-            validate_program(source, plan)
-        except Exception as exc:
-            exclusions[f"invalid:{type(exc).__name__}"] += 1
-            continue
-        if exact in blocked:
-            exclusions["blocked_exact"] += 1
-            continue
-        if exact in seen:
-            exclusions["duplicate_exact"] += 1
-            continue
-        row = dict(source)
-        source_sample_idx = int(source.get("sample_idx", source_position))
-        sample_idx = len(selected)
-        row["source_sample_idx"] = source_sample_idx
-        row["sample_idx"] = sample_idx
-        selected.append(row)
-        seen.add(exact)
+            raise ValueError("successful Plan row lacks plan_state")
+        validate_program(plan_row, plan)
+        exact = identity.exact_identity(plan)
+        reduced = identity.reduced_identity(plan)
+        frozen_plans.append(plan_row)
+        exact_seen.add(exact)
         ledger.append(
             {
                 "sample_idx": sample_idx,
-                "source_sample_idx": source_sample_idx,
-                "source_position": source_position,
+                "planner_valid": True,
+                "failure": None,
                 "exact_composition_identity": exact,
                 "reduced_composition_identity": reduced,
                 "chemsys": "-".join(element for element, _ in identity.canonical_counts(plan)),
             }
         )
-        if len(selected) == count:
-            break
-    if len(selected) != count:
-        raise RuntimeError(f"only {len(selected)} eligible actual Planner rows")
-    return selected, ledger, exclusions
+    valid = len(frozen_plans)
+    audit = {
+        "requested": requested,
+        "planner_valid": valid,
+        "planner_invalid": requested - valid,
+        "composition_valid_rate": valid / requested,
+        "unique_exact_among_valid": len(exact_seen),
+        "duplicate_exact_among_valid": valid - len(exact_seen),
+    }
+    return frozen_plans, ledger, audit
 
 
 def write_jsonl(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
@@ -95,61 +109,35 @@ def write_jsonl(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--source-records", type=Path, required=True)
     parser.add_argument("--source-plans", type=Path, required=True)
-    parser.add_argument("--mp20-train", type=Path, required=True)
-    parser.add_argument("--exclude-cohort-root", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--count", type=int, default=256)
+    parser.add_argument("--requested", type=int, default=256)
     parser.add_argument("--planner-sampling-seed", type=int, required=True)
+    parser.add_argument("--minimum-comp-valid", type=float, default=0.95)
     args = parser.parse_args()
     if args.output_dir.exists():
         raise FileExistsError(args.output_dir)
-
-    source_rows = read_jsonl(args.source_plans)
-    mp20_blocked = identity.blocked_from_file(args.mp20_train)
-    cohort_blocked, cohort_files = identity.blocked_from_root(args.exclude_cohort_root)
-    blocked = mp20_blocked | cohort_blocked
-    selected, ledger, exclusions = freeze_rows(
-        source_rows, blocked=blocked, count=int(args.count)
+    records = read_jsonl(args.source_records)
+    plans = read_jsonl(args.source_plans)
+    frozen, ledger, audit = freeze_requested(
+        records, plans, requested=int(args.requested)
     )
+    if audit["composition_valid_rate"] < float(args.minimum_comp_valid):
+        raise RuntimeError("Planner composition validity is below the frozen method floor")
 
     args.output_dir.mkdir(parents=True, exist_ok=False)
-    write_jsonl(args.output_dir / "plans_for_dlm.jsonl", selected)
+    write_jsonl(args.output_dir / "plans_for_dlm.jsonl", frozen)
     write_jsonl(args.output_dir / "ledger.jsonl", ledger)
     manifest = {
-        "schema": "spad_actual_plan_prospective_cohort_v1",
+        "schema": "spad_actual_plan_prospective_cohort_v2",
         "planner_sampling_seed": int(args.planner_sampling_seed),
-        "source_plans": str(args.source_plans.resolve()),
-        "source_rows": len(source_rows),
-        "selected": len(selected),
-        "selection": "first_eligible_actual_planner_row",
-        "unique_exact": len({row["exact_composition_identity"] for row in ledger}),
-        "unique_chemsys": len({row["chemsys"] for row in ledger}),
-        "blocked_exact_identities": len(blocked),
-        "blocked_cohort_files": len(cohort_files),
-        "exclusions": dict(sorted(exclusions.items())),
-        "outcomes_read": False,
+        **audit,
+        "selection": "none_all_requested_ordinals_retained",
+        "replacement": False,
         "planner_resampled_after_freeze": False,
-        "gates": {
-            "fixed_count": len(selected) == int(args.count),
-            "sample_idx_contiguous": [row["sample_idx"] for row in selected]
-            == list(range(int(args.count))),
-            "exact_identity_unique": len(
-                {row["exact_composition_identity"] for row in ledger}
-            )
-            == int(args.count),
-            "blocked_overlap_zero": not bool(
-                {row["exact_composition_identity"] for row in ledger} & blocked
-            ),
-            "pointer_program_complete": all(
-                row.get("species_program_source") == "planner_llama_pointer"
-                for row in selected
-            ),
-            "outcome_blind": True,
-        },
+        "outcomes_read": False,
     }
-    if not all(manifest["gates"].values()):
-        raise RuntimeError("SPAD prospective Plan gates failed")
     (args.output_dir / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )

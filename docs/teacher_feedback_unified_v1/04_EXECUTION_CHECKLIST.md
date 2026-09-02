@@ -253,8 +253,9 @@ Immediate sequence:
 - [ ] finish and audit all six job-39525 refinement cells;
 - [ ] let dependency job 39527 run the parallel raw/refined Direct + CHGNet
   evaluation without changing Plan, stream, denominator or sample ordering;
-- [ ] sample one actual 1,000-row C3FD–Llama+pointer Plan source, then freeze
-  the first 256 eligible actual Plan rows before any DLM rollout; the Planner
-  is not sampled again after this freeze;
+- [ ] sample and freeze exactly the first 256 requested C3FD–Llama+pointer
+  Plan outcomes before any DLM rollout; retain Planner failures in the fixed
+  denominator, do not filter training-set overlaps, and never resample the
+  Planner after this freeze;
 - [ ] run the final common prospective comparison and exactly one official MP
   query, then report Strict/Meta S.U.N. against the 10%/50% targets.

@@ -53,20 +53,38 @@ def find_plan(row: Mapping[str, Any]) -> Mapping[str, Any] | None:
     return None
 
 
-def chemsys_scopes(cohort: Path, mp20_train: Path) -> dict[str, set[int]]:
+def chemsys_scopes(
+    cohort: Path, mp20_train: Path
+) -> tuple[dict[str, set[int]], int]:
     train_chemsys: set[str] = set()
+    train_exact: set[str] = set()
     for row in read_jsonl(mp20_train):
         plan = find_plan(row)
         if plan is not None:
-            train_chemsys.add("-".join(sorted({str(value) for value in plan["elements"]})))
+            elements = sorted({str(value) for value in plan["elements"]})
+            train_chemsys.add("-".join(elements))
+            counts: dict[str, int] = {}
+            for element, count in zip(plan["elements"], plan["counts"], strict=True):
+                counts[str(element)] = counts.get(str(element), 0) + int(count)
+            train_exact.add("|".join(f"{element}:{counts[element]}" for element in sorted(counts)))
     ledger = read_jsonl(cohort / "ledger.jsonl")
     if {int(row["sample_idx"]) for row in ledger} != set(range(256)):
         raise ValueError("prospective cohort ledger does not cover fixed256")
-    scopes = {"all": set(range(256)), "seen_chemsys": set(), "unseen_chemsys": set()}
+    scopes = {
+        "all": set(range(256)),
+        "seen_chemsys": set(),
+        "unseen_chemsys": set(),
+        "planner_failed": set(),
+    }
+    overlap = 0
     for row in ledger:
+        if row.get("planner_valid") is not True:
+            scopes["planner_failed"].add(int(row["sample_idx"]))
+            continue
         target = "seen_chemsys" if str(row["chemsys"]) in train_chemsys else "unseen_chemsys"
         scopes[target].add(int(row["sample_idx"]))
-    return scopes
+        overlap += row.get("exact_composition_identity") in train_exact
+    return scopes, overlap
 
 
 def quantiles(values: Sequence[float]) -> dict[str, Any]:
@@ -171,7 +189,8 @@ def render_markdown(report: Mapping[str, Any]) -> str:
                 "Chemsys split: "
                 f"seen={headline['chemsys_scopes']['seen_chemsys']['compositions']}, "
                 f"unseen={headline['chemsys_scopes']['unseen_chemsys']['compositions']}; "
-                "the exact-composition overlap with MP20 train is zero."
+                f"exact-composition overlap with MP20 train="
+                f"{report['prospective_exact_composition_overlap_with_mp20_train']}."
             ),
             "",
             "## Paired effects",
@@ -205,7 +224,7 @@ def main() -> None:
         raise FileExistsError(args.output_dir)
 
     common = load_common()
-    scopes = chemsys_scopes(args.cohort, args.mp20_train)
+    scopes, exact_train_overlap = chemsys_scopes(args.cohort, args.mp20_train)
     cache = args.official_run / "official_mp_cache"
     phase_diagrams = common._phase_diagrams(cache / "official_slim_cache.jsonl")
     unresolved = {
@@ -336,7 +355,7 @@ def main() -> None:
         "arms": list(arms),
         "denominator_per_stream": 256,
         "streams_averaged_within_composition": True,
-        "prospective_exact_composition_overlap_with_mp20_train": 0,
+        "prospective_exact_composition_overlap_with_mp20_train": exact_train_overlap,
         "chemsys_scope_sizes": {key: len(value) for key, value in scopes.items()},
         "cell_reports": cell_reports,
         "aggregates": aggregates,

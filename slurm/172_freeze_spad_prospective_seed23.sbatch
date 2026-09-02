@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
 #SBATCH --mem=140G
-#SBATCH --time=03:00:00
+#SBATCH --time=02:00:00
 #SBATCH --output=spad-prosp-plan-%j.out
 #SBATCH --error=spad-prosp-plan-%j.err
 
@@ -30,7 +30,7 @@ IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
 import json
 import sys
 with open(sys.argv[1], "x", encoding="utf-8") as handle:
-    for sample_idx in range(1000):
+    for sample_idx in range(256):
         handle.write(json.dumps({"sample_idx": sample_idx}) + "\n")
 PY
 
@@ -55,30 +55,26 @@ env CUDA_VISIBLE_DEVICES="${allocated[0]}" OPENBLAS_NUM_THREADS=2 \
   --expected-typed-state-sha256 "${typed_state_sha}" \
   --expected-adapter-config-sha256 "${adapter_config_sha}" \
   --expected-adapter-model-sha256 "${adapter_model_sha}" \
-  --requested 1000 --expected-requested 1000 --seed 23 --expected-seed 23 \
+  --requested 256 --expected-requested 256 --seed 23 --expected-seed 23 \
   --temperature 0.9 --top-p 0.95 --top-k 0 --max-species 7 \
   --minimum-comp-valid 0.95 \
   >"${RUN}/sampling.out" 2>"${RUN}/sampling.err"
 
-"${PYTHON}" - "${OUTPUT}" "${RUN}" <<'PY'
+"${PYTHON}" - "${OUTPUT}/sample_metrics.json" "${RUN}" <<'PY'
 import json
 import pathlib
 import sys
-out = pathlib.Path(sys.argv[1]); run = pathlib.Path(sys.argv[2])
-metrics = json.load(open(out / "sample_metrics.json", encoding="utf-8"))
-rows = [json.loads(line) for line in open(out / "plans_for_dlm.jsonl", encoding="utf-8")]
-assert metrics["requested_samples"] == 1000
+metrics = json.load(open(sys.argv[1], encoding="utf-8")); run = pathlib.Path(sys.argv[2])
+assert metrics["requested_samples"] == 256
 assert metrics["one_trajectory_per_ordinal"] is True
 assert metrics["comp_valid_rate_requested_denominator"] >= 0.95
-assert len(rows) == metrics["parsed_samples"]
-assert all(row["species_program_source"] == "planner_llama_pointer" for row in rows)
 summary = {
-    "schema": "spad_prospective_actual_plan_source_v1",
+    "schema": "spad_prospective_actual_plan_source_v2",
     "seed": 23,
-    "requested": 1000,
-    "parsed": len(rows),
+    "requested": 256,
+    "parsed": metrics["parsed_samples"],
     "composition_valid_rate": metrics["comp_valid_rate_requested_denominator"],
-    "one_trajectory_per_ordinal": True,
+    "selection_or_replacement": False,
     "outcomes_read": False,
 }
 (run / "PLAN_SOURCE_FINAL.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")

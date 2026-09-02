@@ -36,7 +36,9 @@ import json
 import sys
 
 rows = [json.loads(line) for line in open(sys.argv[1], encoding="utf-8")]
-assert len(rows) == 256
+assert 244 <= len(rows) <= 256
+assert len({int(row["sample_idx"]) for row in rows}) == len(rows)
+assert all(0 <= int(row["sample_idx"]) < 256 for row in rows)
 with open(sys.argv[2], "x", encoding="utf-8") as handle:
     for source in rows:
         row = dict(source)

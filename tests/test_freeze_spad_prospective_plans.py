@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import importlib.util
-import unittest
 from pathlib import Path
 import sys
+import unittest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE_PATH = ROOT / "scripts" / "freeze_spad_prospective_plans.py"
@@ -12,41 +13,39 @@ assert SPEC is not None and SPEC.loader is not None
 MODULE = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = MODULE
 SPEC.loader.exec_module(MODULE)
-freeze_rows = MODULE.freeze_rows
+freeze_requested = MODULE.freeze_requested
 
 
-def plan(sample_idx: int, element: str, count: int = 2) -> dict:
-    return {
+def successful(sample_idx: int, element: str) -> tuple[dict, dict]:
+    record = {"sample_idx": sample_idx, "parsed": True, "comp_valid": True, "failure": None}
+    plan = {
         "sample_idx": sample_idx,
-        "plan_text": "same rendered schema",
-        "plan_state": {"N": count, "elements": [element], "counts": [count]},
+        "plan_state": {"N": 2, "elements": [element], "counts": [2]},
         "species_program": [element],
         "species_program_indices": [0],
         "species_program_source": "planner_llama_pointer",
     }
+    return record, plan
 
 
-class FreezeActualPlanTests(unittest.TestCase):
-    def test_freezes_actual_rows_without_resampling_and_reindexes(self) -> None:
-        rows = [plan(10, "Li"), plan(11, "Na"), plan(12, "K")]
-        selected, ledger, exclusions = freeze_rows(
-            rows, blocked={"Na:2"}, count=2
+class FreezeRequestedPlanTests(unittest.TestCase):
+    def test_retains_failed_request_and_does_not_replace_it(self) -> None:
+        record0, plan0 = successful(0, "Li")
+        record2, plan2 = successful(2, "Na")
+        failed = {"sample_idx": 1, "parsed": False, "comp_valid": False, "failure": "dead_end"}
+        plans, ledger, audit = freeze_requested(
+            [record0, failed, record2], [plan0, plan2], requested=3
         )
-        self.assertEqual([row["sample_idx"] for row in selected], [0, 1])
-        self.assertEqual([row["source_sample_idx"] for row in selected], [10, 12])
-        self.assertEqual(
-            [row["plan_state"]["elements"] for row in selected], [["Li"], ["K"]]
-        )
-        self.assertEqual(
-            [row["exact_composition_identity"] for row in ledger], ["Li:2", "K:2"]
-        )
-        self.assertEqual(exclusions, {"blocked_exact": 1})
+        self.assertEqual([row["sample_idx"] for row in plans], [0, 2])
+        self.assertEqual([row["sample_idx"] for row in ledger], [0, 1, 2])
+        self.assertFalse(ledger[1]["planner_valid"])
+        self.assertEqual(audit["planner_valid"], 2)
+        self.assertEqual(audit["planner_invalid"], 1)
 
-    def test_rejects_non_pointer_program(self) -> None:
-        bad = plan(0, "Li")
-        bad["species_program_source"] = "canonical"
-        with self.assertRaisesRegex(RuntimeError, "only 0 eligible"):
-            freeze_rows([bad], blocked=set(), count=1)
+    def test_rejects_accounting_disagreement(self) -> None:
+        record, _plan = successful(0, "Li")
+        with self.assertRaisesRegex(ValueError, "accounting differs"):
+            freeze_requested([record], [], requested=1)
 
 
 if __name__ == "__main__":
