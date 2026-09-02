@@ -26,6 +26,25 @@ It is not a second generator, completed-sample repair, energy filter, reranker
 or replacement for model494. It does not modify N/element logits and requires
 no CHGNet call at inference.
 
+## MP20-only supervision boundary
+
+Every positive geometry target is an original MP20-train crystal serialized in
+the same dynamic `7+4N` language. A generated structure, model494 output,
+CHGNet-relaxed structure or selected low-energy sample is never used as a
+teacher.
+
+Real DLM rollouts are used only to construct the input distribution. For an
+MP20 row, run the frozen base policy with its deployment C3FD Plan, retain the
+tokens already committed at a lattice/X/Y/Z stage (including wrong tokens),
+and keep the remaining fields masked. The paired MP20 body is the sole target.
+Thus the interface learns to recover from its own deployment errors without
+declaring those generated errors to be correct labels. This is supervised
+rollout-state correction, not self-training or preference learning.
+
+Train/validation/holdout splits are by MP20 source composition. No generated
+outcome, Direct result, CHGNet value, hull value or model494 trajectory may
+influence row selection, targets or loss weights.
+
 ## Inputs and q0 geometry
 
 The interface consumes the state already constructed by
@@ -42,6 +61,12 @@ use a MAP-anchored local expectation rather than an unrestricted mean across
 multiple modes. For a masked fractional coordinate, use a circular/torus mean;
 if the resultant is low, anchor the local expectation at the MAP bin. This
 avoids averaging two periodic modes into a nonexistent midpoint.
+
+Each soft field also carries a confidence: circular resultant for coordinates
+and local posterior mass for lattice values. A stage-aware gate attenuates pair
+messages when one of the still-masked axes is multimodal. The executor can
+therefore use predicted future axes as context without treating an uncertain
+mean as a real atom position.
 
 The canonical row-vector lattice is `L0`; its metric is
 
@@ -107,6 +132,12 @@ u_{1,i}=(u_{0,i}+\Delta u_i)\bmod1.
 Only currently masked coordinate axes receive a logit residual. Previously
 committed X/Y/Z values remain immutable under exact-axis decoding.
 
+Training follows the same rule. Previous committed fields and future masked
+fields are stop-gradient context; geometric gradients enter only the current
+active lattice or coordinate group. Consequently, the executor cannot repair a
+completed CIF secretly and cannot learn from target values that were not yet
+available at that denoising stage.
+
 ## Continuous-to-token renderer
 
 The executor does not hard-round geometry. For every legal family bin `v_k`,
@@ -135,8 +166,9 @@ renderer.
 
 ## Training losses
 
-The primary target remains dynamic token CE. Continuous losses act on the
-executor outputs, not on a post-hoc reconstructed CIF:
+The primary target remains dynamic token CE against the paired MP20 body.
+Continuous losses act on the active executor output, not on a post-hoc
+generated or reconstructed teacher CIF:
 
 \[
 L=L_{CE}+0.1L_{SPD}+0.1L_{torus}+0.1L_{pair}
@@ -150,6 +182,12 @@ L=L_{CE}+0.1L_{SPD}+0.1L_{torus}+0.1L_{pair}
   buffer around the 0.50 A Direct threshold;
 - `L_coord`: smooth coordination target;
 - `L_step`: bounded metric/coordinate residual norm to protect valid states.
+
+`L_SPD` is active only during the lattice stage. `L_torus` is active only on
+the current X/Y/Z group. Pair, collision and coordination terms assemble a
+full soft geometry from committed values plus stop-gradient q0 context, but
+backpropagate only through the active group. This matches exact-axis execution
+while retaining a physically meaningful local signal.
 
 The executor first targets geometry validity. Lower energy is not claimed from
 these losses alone. If Direct improves and raw CHGNet does not, stability must
@@ -194,9 +232,10 @@ sampling latency below +15%. No second Transformer forward is introduced.
 ## Future pilot contract
 
 Use 512 independent MP20-train structures, not `64×8` synthetic states. Save
-four current-G2 rollout stages per structure, split 384/128 by composition,
-freeze Planner/DLM LoRA/existing G2, and train only the executor for 256 updates
-on 2 A800.
+four current-G2 rollout input states per structure, paired with the original
+MP20 target, split 384/128 by composition, freeze Planner/DLM LoRA/existing G2,
+and train only the executor for 256 updates on 2 A800. Generated states are
+inputs only; the teacher remains MP20 throughout.
 
 Promotion requires:
 

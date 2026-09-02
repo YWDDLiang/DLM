@@ -27,6 +27,10 @@ improves continuation geometry. It is not another synthetic planned-corruption
 run: historical B3 improved synthetic NLL but worsened actual-rollout NLL and
 Strict S.U.N.
 
+Supervision is MP20-only. A real rollout supplies the erroneous input state,
+while the paired original MP20 body is the sole teacher; generated, refined,
+CHGNet-selected or hull-selected structures never become labels.
+
 ## Frozen prior evidence
 
 - G0: every parsed structural failure was a PBC collision; token round-trip
@@ -54,6 +58,7 @@ Strict S.U.N.
 - [x] Keep exact-axis order: lattice, all X, all Y, all Z.
 - [x] Capture one state inside each of the four active groups per train Plan.
 - [x] Preserve every previously committed model token, including errors.
+- [x] Pair every generated input state only with its original MP20 target body.
 - [x] Fill masked suffix positions only for storage; record the original model
   mask and the active-group supervision mask separately.
 - [ ] Job 39259 produces exactly `128 × 4 = 512` transition rows; no retries or
