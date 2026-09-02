@@ -129,7 +129,10 @@ import json,pathlib,sys
 root=pathlib.Path(sys.argv[1])
 reports={"OLD_G2":json.load(open(sys.argv[2]))}
 attempts={
-  "OLD_G2":{int(r["ordinal"]):r for r in (json.loads(x) for x in open(sys.argv[3]) if x.strip())}
+  "OLD_G2":{
+    int(r.get("ordinal",str(r["attempt_id"]).rsplit("-",1)[-1])):r
+    for r in (json.loads(x) for x in open(sys.argv[3]) if x.strip())
+  }
 }
 for arm in ("CANON_DLM","CANON_G2"):
  reports[arm]=json.load((root/arm/"direct/report.json").open())
