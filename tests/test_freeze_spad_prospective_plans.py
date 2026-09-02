@@ -1,13 +1,18 @@
 from __future__ import annotations
 
+import importlib.util
 import unittest
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-from scripts.freeze_spad_prospective_plans import freeze_rows
+MODULE_PATH = ROOT / "scripts" / "freeze_spad_prospective_plans.py"
+SPEC = importlib.util.spec_from_file_location("freeze_spad_prospective_plans_tested", MODULE_PATH)
+assert SPEC is not None and SPEC.loader is not None
+MODULE = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = MODULE
+SPEC.loader.exec_module(MODULE)
+freeze_rows = MODULE.freeze_rows
 
 
 def plan(sample_idx: int, element: str, count: int = 2) -> dict:
