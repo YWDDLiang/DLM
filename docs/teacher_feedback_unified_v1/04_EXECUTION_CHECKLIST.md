@@ -1,6 +1,6 @@
 # Execution Checklist: Scientific-State Commit Decoding
 
-Status: **HOLD — no training or remote execution before explicit user approval**
+Status: **EXECUTION APPROVED — implementation-level module audit is first**
 
 ## Phase 0 — design and clean workspace
 
@@ -14,7 +14,34 @@ Status: **HOLD — no training or remote execution before explicit user approval
 - [x] Incorporate every accepted objection into the decision log.
 - [x] Create active ten-minute heartbeat
   `sscd-a-b-approval-and-execution` with this approval HOLD.
-- [ ] Obtain explicit user approval to execute.
+- [x] Obtain explicit user approval to execute.
+
+## Phase 0.5 — implementation-level module audits
+
+- [ ] Audit C3FD–Llama action support, learned residual participation and
+  proposal composition validity separately from body composition retention.
+- [ ] Audit the deployed DLM tokenizer from the actual base and retained
+  checkpoints: every special token is one ID; N=1–20, supported elements,
+  500 positive length values, 179 angle values and periodic coordinate values
+  cover MP20 train/validation and the intended deployment domain.
+- [ ] Count all teacher values that clip, alias, split into multiple tokens or
+  fall outside support. Verify mask/pad/eos IDs and embedding/output rows in
+  every checkpoint.
+- [ ] Verify exact `7+4N` token count and prompt+body context length for every
+  MP20 train/validation row.
+- [ ] Audit AR text→semantic action→DLM special token→continuous array
+  round-trips, including length-domain intersection and coordinate 000/100
+  aliases.
+- [ ] Audit whether current DLM APIs support non-contiguous future-first block
+  commits, anchor-first generation, suffix-visible backfilling and true
+  re-masking without converting the sampler into left-to-right decoding.
+- [ ] Audit the Llama→DLM training/serve signal: ProgramHead-A ownership,
+  SLA-A field targets, rollout-matched agreement-gate states, mask-time
+  calibration and state refresh after each joint commit.
+- [ ] Map each teacher requirement to one implementation component and one
+  adjacent experiment; remove any component that lacks a measurable role.
+- [ ] Update the unified method/decision log from the audit before the first
+  scientific training submission.
 
 ## Phase 1 — shared interface implementation
 
@@ -83,9 +110,11 @@ labels; no generated or model494-refined structure becomes a teacher.
 - [ ] Verify exact Plan inventory, canonical text parse and per-field
   SLA/native-head calibration.
 
-## Phase 3B — Track B LLM-guided DLM, up to 3 A800
+## Phase 3B — Track B LLM-guided DLM, up to 4 A800
 
-Runs in parallel with Phase 3A when dependencies permit.
+Track B is the paper-priority route. Controller-dependent B training/generation
+may use 4 A800 after Track A freezes; the remaining 2 A800 serve Track-A
+baselines, data preparation or evaluation.
 
 - [ ] While Track A trains, implement the common block schedule and run only
   Track-B code/tests plus controller-independent BC baseline preparation.
@@ -191,8 +220,22 @@ contribution until its promotion criterion is met.
   ab initio/thermodynamic claim.
 - [ ] Report Strict/Meta S.U.N., N/U/NU, composition validity, CIF validity,
   minimum-distance ECDF and compute.
+- [ ] Evaluate the target `Strict S.U.N. >10%` and
+  `Meta S.U.N. >50%` on the frozen requested denominator and two common
+  streams. The target guides iteration but never licenses row deletion.
 - [ ] Write the final method diagram, adjacent comparisons and contribution
   table.
+
+## Evidence-driven iteration
+
+- A small engineering failure is fixed in place without changing the scientific
+  comparison and is recorded once with its cause.
+- A scientific negative is retained, diagnosed by module and followed only by
+  a causally motivated adjacent revision—not a parameter sweep.
+- A small positive is reproduced on the second common stream and explained
+  through token coverage, commit behavior, geometry and energy diagnostics.
+- A large positive is frozen immediately, archived as the candidate main
+  endpoint and celebrated only after the paired evidence is verified.
 
 ## Resource schedule
 
@@ -204,6 +247,8 @@ Hard resource ceiling after approval:
 - Track A training uses 2 A800. The second job may use 2 A800 for BC
   generation/throughput work while Track A trains; BO/BG/BP and gate work wait
   for the frozen Track-A controller;
+- after Track A freezes, Track B receives up to 4 A800 and the remaining 2 are
+  reserved for the A baseline/evaluator, while the global two-job limit remains;
 - dual-model inference uses BF16, explicit one-GPU placement, no CPU offload
   and batch1 unless the measured memory canary safely raises it;
 - evaluation uses persistent CHGNet workers and concurrent Direct CPU workers.
