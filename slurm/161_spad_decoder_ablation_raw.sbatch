@@ -71,7 +71,7 @@ stream_seed() {
 run_direct() {
   local arm="$1" stream="$2" cell="${RUN}/${arm}/stream${stream}"
   env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 \
-    MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 CRYSLLMGEN_METRICS_NUM_CPUS=4 \
+    MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
     "${PYTHON}" "${DIRECT}" \
     --generation-jsonl "${cell}/generation/generation.jsonl" \
     --gt-csv "${GT}" \

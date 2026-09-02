@@ -29,7 +29,7 @@ run_cell() {
   [[ -f "${source}/body/_SUCCESS" && -f "${source}/generation/_SUCCESS" ]]
   mkdir -p "$(dirname "${output}")"
   env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 \
-    MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 CRYSLLMGEN_METRICS_NUM_CPUS=4 \
+    MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
     "${PYTHON}" "${DIRECT}" \
     --generation-jsonl "${source}/generation/generation.jsonl" \
     --gt-csv "${GT}" \
