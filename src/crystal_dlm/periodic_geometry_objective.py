@@ -83,6 +83,7 @@ def build_species_radius_support(tokenizer: Any) -> dict[str, list[float] | list
 def _family_expectation(
     logits: torch.Tensor,
     target_id: torch.Tensor,
+    committed_id: torch.Tensor,
     is_masked: torch.Tensor,
     table: Mapping[str, list[float] | list[int]],
 ) -> tuple[torch.Tensor, torch.Tensor]:
@@ -90,11 +91,17 @@ def _family_expectation(
     values = torch.tensor(table["values"], dtype=logits.dtype, device=logits.device)
     probabilities = F.softmax(logits.index_select(-1, ids), dim=-1)
     predicted = (probabilities * values).sum(dim=-1)
-    matches = ids.unsqueeze(0) == target_id.reshape(-1, 1)
-    if not bool(matches.any(dim=1).all().item()):
+    target_matches = ids.unsqueeze(0) == target_id.reshape(-1, 1)
+    committed_matches = ids.unsqueeze(0) == committed_id.reshape(-1, 1)
+    if not bool(target_matches.any(dim=1).all().item()):
         raise ValueError("target token is outside its registered geometry family")
-    target = (matches.to(values.dtype) * values.unsqueeze(0)).sum(dim=-1)
-    value = torch.where(is_masked.reshape(-1), predicted, target)
+    if not bool(committed_matches.any(dim=1).all().item()):
+        raise ValueError("committed token is outside its registered geometry family")
+    target = (target_matches.to(values.dtype) * values.unsqueeze(0)).sum(dim=-1)
+    committed = (
+        committed_matches.to(values.dtype) * values.unsqueeze(0)
+    ).sum(dim=-1)
+    value = torch.where(is_masked.reshape(-1), predicted, committed)
     return value, target
 
 
@@ -227,6 +234,7 @@ def sitewise_tail_overlap_loss(
 def _sample_objective(
     logits: torch.Tensor,
     input_ids: torch.Tensor,
+    committed_input_ids: torch.Tensor,
     masked: torch.Tensor,
     prompt_length: int,
     num_atoms: int,
@@ -253,12 +261,14 @@ def _sample_objective(
     for position, axis in zip(lattice_positions[:3], "ABC"):
         value, target = _family_expectation(
             geometry_logits[position].unsqueeze(0), input_ids[position].unsqueeze(0),
+            committed_input_ids[position].unsqueeze(0),
             masked[position].unsqueeze(0), support["length"][axis],
         )
         length_values.append(value[0]); target_lengths.append(target[0])
     for position, axis in zip(lattice_positions[3:], "ABG"):
         value, target = _family_expectation(
             geometry_logits[position].unsqueeze(0), input_ids[position].unsqueeze(0),
+            committed_input_ids[position].unsqueeze(0),
             masked[position].unsqueeze(0), support["angle"][axis],
         )
         angle_values.append(value[0]); target_angles.append(target[0])
@@ -273,6 +283,7 @@ def _sample_objective(
         for offset, axis in enumerate("XYZ", start=1):
             value, target = _family_expectation(
                 geometry_logits[base + offset].unsqueeze(0), input_ids[base + offset].unsqueeze(0),
+                committed_input_ids[base + offset].unsqueeze(0),
                 masked[base + offset].unsqueeze(0), support["coord"][axis],
             )
             values.append(value[0]); targets.append(target[0])
@@ -384,6 +395,7 @@ def periodic_geometry_objective(
     *,
     logits: torch.Tensor,
     input_ids: torch.Tensor,
+    committed_input_ids: torch.Tensor | None = None,
     masked_indices: torch.Tensor,
     prompt_lengths: torch.Tensor,
     num_atoms: torch.Tensor,
@@ -398,6 +410,11 @@ def periodic_geometry_objective(
 ) -> dict[str, torch.Tensor | int]:
     """Compute normalized coupled geometry losses for a dynamic-v1 batch."""
 
+    if committed_input_ids is None:
+        committed_input_ids = input_ids
+    if committed_input_ids.shape != input_ids.shape:
+        raise ValueError("committed_input_ids shape differs from target input_ids")
+
     totals: dict[str, list[torch.Tensor]] = {
         name: []
         for name in ("metric", "pair_rdf", "overlap", "coordination")
@@ -407,7 +424,8 @@ def periodic_geometry_objective(
         if not 1 <= count <= 20:
             raise ValueError(f"num_atoms {count} outside dynamic schema")
         components = _sample_objective(
-            logits[sample], input_ids[sample], masked_indices[sample],
+            logits[sample], input_ids[sample], committed_input_ids[sample],
+            masked_indices[sample],
             int(prompt_lengths[sample].detach().cpu()), count, support,
             bool(exact_triclinic_pbc),
             int(periodic_image_radius),

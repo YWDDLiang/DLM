@@ -346,6 +346,32 @@ def loss_profile_id(name: str | None) -> int:
     return LOSS_PROFILE_TO_ID[normalized]
 
 
+def validate_paired_dynamic_ids(
+    target_ids: List[int],
+    source_ids: List[int],
+    *,
+    prompt_length: int,
+    num_atoms: int,
+) -> None:
+    if int(num_atoms) <= 0:
+        raise ValueError("paired dynamic row requires positive num_atoms")
+    if len(source_ids) != len(target_ids):
+        raise ValueError("paired source and target token lengths differ")
+    if source_ids[:prompt_length] != target_ids[:prompt_length]:
+        raise ValueError("paired source and target prompts differ")
+    target_body = target_ids[prompt_length:]
+    source_body = source_ids[prompt_length:]
+    expected = 7 + 4 * int(num_atoms)
+    if len(target_body) != expected or len(source_body) != expected:
+        raise ValueError("paired dynamic body is not exact 7+4N length")
+    if source_body[0] != target_body[0]:
+        raise ValueError("paired source and target N tokens differ")
+    for site in range(int(num_atoms)):
+        position = 7 + 4 * site
+        if source_body[position] != target_body[position]:
+            raise ValueError("paired source and target element order differs")
+
+
 class JsonlSftDataset(Dataset):
     def __init__(
         self,
@@ -394,6 +420,29 @@ class JsonlSftDataset(Dataset):
             "num_atoms": int(row.get("num_atoms") or (row.get("plan_state") or {}).get("N") or 0),
             "grounding_eligible": bool(row.get("counterfactual_grounding_eligible", False)),
         }
+        source_answer = row.get("source_answer")
+        if source_answer is not None:
+            if row.get("counterfactual_prompt"):
+                raise ValueError(
+                    "paired source_answer is incompatible with counterfactual_prompt"
+                )
+            full_source_ids = self.tokenizer(
+                prompt_text + str(source_answer),
+                add_special_tokens=False,
+            )["input_ids"]
+            if len(full_input_ids) > self.max_length or len(full_source_ids) > self.max_length:
+                raise ValueError(
+                    f"paired row {index} exceeds max_length={self.max_length}: "
+                    f"target={len(full_input_ids)} source={len(full_source_ids)}"
+                )
+            source_ids = full_source_ids[: self.max_length]
+            validate_paired_dynamic_ids(
+                input_ids,
+                source_ids,
+                prompt_length=prompt_length,
+                num_atoms=int(item["num_atoms"]),
+            )
+            item["source_input_ids"] = torch.tensor(source_ids, dtype=torch.long)
         counterfactual_prompt = row.get("counterfactual_prompt")
         if counterfactual_prompt:
             cf_prompt_text = str(counterfactual_prompt).rstrip() + "\n"
@@ -551,6 +600,12 @@ class DataCollator:
         counterfactual_prompt_lengths = torch.zeros((len(batch),), dtype=torch.long)
         grounding_eligible = torch.zeros((len(batch),), dtype=torch.bool)
         num_atoms = torch.zeros((len(batch),), dtype=torch.long)
+        has_paired_source = any("source_input_ids" in item for item in batch)
+        source_input_ids = torch.full(
+            (len(batch), max_len),
+            self.tokenizer.pad_token_id,
+            dtype=torch.long,
+        )
         for i, item in enumerate(batch):
             ids = item["input_ids"]
             input_ids[i, : ids.shape[0]] = ids
@@ -566,7 +621,9 @@ class DataCollator:
             counterfactual_prompt_lengths[i] = int(item.get("counterfactual_prompt_length", item["prompt_length"]))
             grounding_eligible[i] = bool(item.get("grounding_eligible", False))
             num_atoms[i] = int(item.get("num_atoms", 0))
-        return {
+            source_ids = item.get("source_input_ids", ids)
+            source_input_ids[i, : source_ids.shape[0]] = source_ids
+        result = {
             "input_ids": input_ids,
             "attention_mask": attention_mask,
             "prompt_lengths": prompt_lengths,
@@ -580,6 +637,9 @@ class DataCollator:
             "grounding_eligible": grounding_eligible,
             "num_atoms": num_atoms,
         }
+        if has_paired_source:
+            result["source_input_ids"] = source_input_ids
+        return result
 
 
 class DistributedWeightedSampler(Sampler[int]):
@@ -1726,6 +1786,34 @@ def build_answer_position_weights(
     return weights
 
 
+def apply_paired_source_tokens(
+    processed: Dict[str, torch.Tensor],
+    source_input_ids: torch.Tensor,
+    target_input_ids: torch.Tensor,
+    prompt_lengths: torch.Tensor,
+    *,
+    mask_id: int = MASK_TOKEN_ID,
+) -> Dict[str, torch.Tensor]:
+    if source_input_ids.shape != target_input_ids.shape:
+        raise ValueError("paired source_input_ids shape differs from targets")
+    prompt_positions = (
+        torch.arange(target_input_ids.shape[1], device=target_input_ids.device)
+        .unsqueeze(0)
+        < prompt_lengths.unsqueeze(1)
+    )
+    if not torch.equal(
+        source_input_ids.masked_select(prompt_positions),
+        target_input_ids.masked_select(prompt_positions),
+    ):
+        raise ValueError("paired source and target prompt tokens differ")
+    processed["noisy"] = torch.where(
+        processed["masked_indices"],
+        torch.full_like(source_input_ids, int(mask_id)),
+        source_input_ids,
+    )
+    return processed
+
+
 def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: Dict[str, Any]) -> Dict[str, Any]:
     input_ids = batch["input_ids"]
     attention_mask = batch["attention_mask"]
@@ -1740,6 +1828,14 @@ def compute_loss_components(model, batch: Dict[str, torch.Tensor], loss_config: 
         fixed_slot_body_offset=int(loss_config.get("fixed_slot_body_offset", 0)),
         dynamic_geometry_only=bool(loss_config.get("dynamic_geometry_only", False)),
     )
+    source_input_ids = batch.get("source_input_ids")
+    if source_input_ids is not None:
+        processed = apply_paired_source_tokens(
+            processed,
+            source_input_ids,
+            input_ids,
+            prompt_lengths,
+        )
     context_model = model.module if hasattr(model, "module") else model
     if hasattr(context_model, "set_geometry_context"):
         context_model.set_geometry_context(prompt_lengths, batch["num_atoms"])
@@ -2458,6 +2554,11 @@ def main() -> None:
             "lattice lengths/angles and XYZ tokens."
         ),
     )
+    parser.add_argument(
+        "--require-paired-source",
+        action="store_true",
+        help="Require every train/validation JSONL row to contain source_answer.",
+    )
     parser.add_argument("--periodic-metric-weight", type=float, default=0.0)
     parser.add_argument("--periodic-pair-rdf-weight", type=float, default=0.0)
     parser.add_argument("--periodic-overlap-weight", type=float, default=0.0)
@@ -2853,6 +2954,25 @@ def main() -> None:
     )
     if args.counterfactual_grounding_weight > 0 and grounding_rows == 0:
         raise ValueError("counterfactual grounding is enabled but the train dataset has no eligible rows")
+    paired_train_rows = sum(
+        int("source_answer" in row)
+        for row in getattr(train_ds, "rows", [])
+        if isinstance(row, dict)
+    )
+    paired_val_rows = sum(
+        int("source_answer" in row)
+        for row in getattr(val_ds, "rows", [])
+        if isinstance(row, dict)
+    )
+    if args.require_paired_source:
+        if paired_train_rows != len(train_ds) or paired_val_rows != len(val_ds):
+            raise ValueError(
+                "require-paired-source is set but source_answer coverage is incomplete"
+            )
+    if paired_train_rows > 0 and args.counterfactual_grounding_weight > 0:
+        raise ValueError("paired source training is incompatible with counterfactual grounding")
+    if paired_train_rows > 0 and args.position_diagnostics_steps > 0:
+        raise ValueError("paired source training requires position diagnostics to be disabled")
     collator = DataCollator(tokenizer)
     sample_weight_multipliers = parse_sample_weight_multipliers(args.sample_weight_multipliers)
     raw_train_weights = (
@@ -2938,6 +3058,11 @@ def main() -> None:
                         "distributed": dist_info["distributed"],
                         "world_size": dist_info["world_size"],
                         "train_data_source": train_data_source,
+                        "paired_source": {
+                            "required": bool(args.require_paired_source),
+                            "train_rows": paired_train_rows,
+                            "validation_rows": paired_val_rows,
+                        },
                         "weighted_sampling": {
                             "enabled": bool(args.weighted_sampling),
                             "active": weighted_sampling_active,
@@ -3019,6 +3144,9 @@ def main() -> None:
                             periodic = periodic_geometry_objective(
                                 logits=components["outputs"].logits,
                                 input_ids=batch["input_ids"],
+                                committed_input_ids=batch.get(
+                                    "source_input_ids", batch["input_ids"]
+                                ),
                                 masked_indices=components["processed"]["masked_indices"],
                                 prompt_lengths=batch["prompt_lengths"],
                                 num_atoms=batch["num_atoms"],

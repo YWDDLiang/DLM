@@ -172,6 +172,45 @@ class PeriodicGeometryObjectiveTest(unittest.TestCase):
         loss.backward()
         self.assertTrue(torch.isfinite(logits.grad).all())
 
+    def test_paired_committed_geometry_is_distinct_from_target(self) -> None:
+        tokenizer = _Tokenizer()
+        support = build_geometry_token_support(tokenizer)
+        target_tokens = [
+            "<N_002>", "<LA_040>", "<LB_040>", "<LC_040>",
+            "<AA_090>", "<AB_090>", "<AG_090>",
+            "<E_Li>", "<X_000>", "<Y_000>", "<Z_000>",
+            "<E_O>", "<X_050>", "<Y_050>", "<Z_050>",
+        ]
+        source_tokens = list(target_tokens)
+        source_tokens[13] = "<Y_025>"
+        source_tokens[14] = "<Z_025>"
+        target = torch.tensor([[tokenizer.vocab[token] for token in target_tokens]])
+        source = torch.tensor([[tokenizer.vocab[token] for token in source_tokens]])
+        logits = torch.full((1, len(target_tokens), len(tokenizer.vocab)), -8.0)
+        for position, token_id in enumerate(target[0]):
+            logits[0, position, token_id] = 8.0
+        masked = torch.zeros_like(target, dtype=torch.bool)
+        masked[0, 12] = True
+        baseline = periodic_geometry_objective(
+            logits=logits,
+            input_ids=target,
+            committed_input_ids=target,
+            masked_indices=masked,
+            prompt_lengths=torch.tensor([0]),
+            num_atoms=torch.tensor([2]),
+            support=support,
+        )
+        paired = periodic_geometry_objective(
+            logits=logits,
+            input_ids=target,
+            committed_input_ids=source,
+            masked_indices=masked,
+            prompt_lengths=torch.tensor([0]),
+            num_atoms=torch.tensor([2]),
+            support=support,
+        )
+        self.assertGreater(paired["pair_rdf"].item(), baseline["pair_rdf"].item())
+
     def test_bfloat16_logits_use_float32_geometry_kernels(self) -> None:
         tokenizer = _Tokenizer()
         support = build_geometry_token_support(tokenizer)

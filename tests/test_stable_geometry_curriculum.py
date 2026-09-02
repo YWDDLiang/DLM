@@ -47,7 +47,7 @@ except ImportError:  # pragma: no cover
 
 @unittest.skipIf(torch is None, "torch is unavailable")
 class SGTCLLaDAMaskTest(unittest.TestCase):
-    def test_forward_process_candidate_mask_is_geometry_only(self):
+    def load_trainer(self):
         import importlib.util
 
         spec = importlib.util.spec_from_file_location(
@@ -57,6 +57,10 @@ class SGTCLLaDAMaskTest(unittest.TestCase):
             raise RuntimeError("cannot import llada_sft")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
+        return module
+
+    def test_forward_process_candidate_mask_is_geometry_only(self):
+        module = self.load_trainer()
         input_ids = torch.arange(15, dtype=torch.long).reshape(1, -1)
         result = module.forward_process(
             input_ids,
@@ -73,6 +77,79 @@ class SGTCLLaDAMaskTest(unittest.TestCase):
             ).reshape(-1)
         )
         self.assertEqual(observed, dynamic_geometry_relative_positions(2))
+
+    def test_paired_source_supplies_unmasked_tokens_only(self):
+        module = self.load_trainer()
+        target = torch.tensor([[10, 11, 20, 21]], dtype=torch.long)
+        source = torch.tensor([[10, 11, 30, 31]], dtype=torch.long)
+        processed = {
+            "noisy": target.clone(),
+            "masked_indices": torch.tensor([[False, False, True, False]]),
+        }
+        observed = module.apply_paired_source_tokens(
+            processed,
+            source,
+            target,
+            torch.tensor([2]),
+            mask_id=999,
+        )
+        self.assertEqual(observed["noisy"].tolist(), [[10, 11, 999, 31]])
+
+    def test_paired_source_rejects_prompt_mismatch(self):
+        module = self.load_trainer()
+        target = torch.tensor([[10, 11, 20]], dtype=torch.long)
+        source = torch.tensor([[10, 12, 30]], dtype=torch.long)
+        processed = {
+            "noisy": target.clone(),
+            "masked_indices": torch.tensor([[False, False, True]]),
+        }
+        with self.assertRaisesRegex(ValueError, "prompt tokens differ"):
+            module.apply_paired_source_tokens(
+                processed,
+                source,
+                target,
+                torch.tensor([2]),
+            )
+
+    def test_paired_dynamic_contract_locks_n_and_element_order(self):
+        module = self.load_trainer()
+        target = list(range(17))
+        source = list(target)
+        source[2 + 1] = 999  # lattice token may differ
+        source[2 + 8] = 998  # coordinate token may differ
+        module.validate_paired_dynamic_ids(
+            target,
+            source,
+            prompt_length=2,
+            num_atoms=2,
+        )
+        source[2 + 7] = 997  # first element token may not differ
+        with self.assertRaisesRegex(ValueError, "element order"):
+            module.validate_paired_dynamic_ids(
+                target,
+                source,
+                prompt_length=2,
+                num_atoms=2,
+            )
+
+    def test_collator_preserves_optional_source_tensor(self):
+        module = self.load_trainer()
+
+        class Tokenizer:
+            pad_token_id = 0
+
+        target = torch.tensor([1, 2, 3, 4])
+        source = torch.tensor([1, 2, 8, 9])
+        batch = module.DataCollator(Tokenizer())(
+            [
+                {
+                    "input_ids": target,
+                    "source_input_ids": source,
+                    "prompt_length": 2,
+                }
+            ]
+        )
+        self.assertEqual(batch["source_input_ids"].tolist(), [[1, 2, 8, 9]])
 
 
 if __name__ == "__main__":
