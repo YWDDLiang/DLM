@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=48
-#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:6
-#SBATCH --mem=500G
+#SBATCH --cpus-per-task=32
+#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4
+#SBATCH --mem=400G
 #SBATCH --time=08:00:00
 #SBATCH --output=spad-offline-%j.out
 #SBATCH --error=spad-offline-%j.err
@@ -34,7 +34,7 @@ readonly TERM_GRACE=30
 mkdir "${RUN}"; mkdir "${RUN}/logs"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$BASH_COMMAND" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"
-[[ "${#gpu[@]}" -eq 6 ]]
+[[ "${#gpu[@]}" -eq 4 ]]
 [[ -f "${REFINE_RUN}/_SUCCESS" ]]
 
 body_dir() {
@@ -155,15 +155,22 @@ run_cell() {
   [[ -z "${direct_pid}" ]] || wait "${direct_pid}"
 }
 
-run_wave() {
-  local endpoint="$1" index=0 status=0 pid
-  local -a pids=()
-  for arm in BC BR BS; do
-    for stream in 17 18; do
-      run_cell "${index}" "${arm}" "${stream}" "${endpoint}" & pids+=("$!")
-      index=$((index + 1))
-    done
+run_queue() {
+  local endpoint="$1" slot="$2"
+  shift 2
+  while [[ "$#" -gt 0 ]]; do
+    run_cell "${slot}" "$1" "$2" "${endpoint}"
+    shift 2
   done
+}
+
+run_wave() {
+  local endpoint="$1" status=0 pid
+  local -a pids=()
+  run_queue "${endpoint}" 0 BC 17 BS 17 & pids+=("$!")
+  run_queue "${endpoint}" 1 BC 18 BS 18 & pids+=("$!")
+  run_queue "${endpoint}" 2 BR 17 & pids+=("$!")
+  run_queue "${endpoint}" 3 BR 18 & pids+=("$!")
   for pid in "${pids[@]}"; do wait "${pid}" || status="$?"; done
   return "${status}"
 }
