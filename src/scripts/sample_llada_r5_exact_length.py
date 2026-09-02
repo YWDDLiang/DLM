@@ -29,6 +29,7 @@ from crystal_dlm.r5_dynamic_length import (  # noqa: E402
     exact_dynamic_generation_schedule_joint_coordinates,
     exact_dynamic_schema_constraints,
     validate_answer_matches_plan,
+    validate_dynamic_tokenizer_contract,
 )
 from crystal_dlm.h1_formula_only_body import (  # noqa: E402
     H1_FORMULA_ONLY_BODY_REPRESENTATION,
@@ -335,6 +336,10 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     process_one = None if args.skip_graph_validation else import_process_one(args.crysllmgen_dir)
     model, tokenizer = load_model_and_tokenizer(args.model_path, args.checkpoint_path, dist_info["device"])
+    tokenizer_contract = validate_dynamic_tokenizer_contract(
+        tokenizer,
+        mask_token_id=MASK_TOKEN_ID,
+    )
     rank_seed = int(args.seed) + int(rank)
     torch.manual_seed(rank_seed)
     if torch.cuda.is_available():
@@ -363,12 +368,7 @@ def main() -> None:
         write_json(str(args.output_dir / "run_config.json"), run_config)
         write_json(
             str(args.output_dir / "tokenizer_report.json"),
-            {
-                "vocab_size": len(tokenizer),
-                "pad_token_id": tokenizer.pad_token_id,
-                "eos_token_id": tokenizer.eos_token_id,
-                "mask_token_id": MASK_TOKEN_ID,
-            },
+            tokenizer_contract,
         )
 
     raw_path = rank_path(args.output_dir, "raw_generations.jsonl", rank, distributed)

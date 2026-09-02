@@ -14,7 +14,13 @@ from crystal_dlm.dynamic_crystal import (
     dynamic_answer_token_count,
     parse_dynamic_answer,
 )
-from crystal_dlm.fixed_slot import FixedSlotConfig, FixedSlotError, Z_TO_SYMBOL
+from crystal_dlm.fixed_slot import (
+    MASK_TOKEN_ID,
+    FixedSlotConfig,
+    FixedSlotError,
+    Z_TO_SYMBOL,
+    build_special_tokens,
+)
 from crystal_dlm.r5_plan_state import build_body_prompt, validate_plan_state
 
 
@@ -102,6 +108,68 @@ def required_token_ids(tokenizer: Any, tokens: Sequence[str]) -> List[int]:
     return [int(vocab[token]) for token in tokens]
 
 
+def validate_dynamic_tokenizer_contract(
+    tokenizer: Any,
+    *,
+    mask_token_id: int = MASK_TOKEN_ID,
+) -> Dict[str, Any]:
+    """Fail closed when a deployed tokenizer violates the crystal-token ABI."""
+
+    expected = build_special_tokens()
+    vocab = tokenizer.get_vocab()
+    missing = [token for token in expected if token not in vocab]
+    non_atomic: List[str] = []
+    token_ids: List[int] = []
+    for token in expected:
+        if token not in vocab:
+            continue
+        token_id = int(vocab[token])
+        token_ids.append(token_id)
+        encoded = list(
+            tokenizer(token, add_special_tokens=False).get("input_ids", [])
+        )
+        if encoded != [token_id]:
+            non_atomic.append(token)
+    if missing or non_atomic:
+        raise RuntimeError(
+            "Deployed tokenizer violates crystal-token ABI: "
+            f"missing={len(missing)} non_atomic={len(non_atomic)}"
+        )
+    if len(token_ids) != len(set(token_ids)):
+        raise RuntimeError("Deployed crystal tokens do not have unique IDs")
+
+    mask_id = int(mask_token_id)
+    if not 0 <= mask_id < len(tokenizer):
+        raise RuntimeError("DLM mask ID is outside the tokenizer vocabulary")
+    special_ids = {
+        int(value)
+        for value in (
+            getattr(tokenizer, "pad_token_id", None),
+            getattr(tokenizer, "eos_token_id", None),
+            getattr(tokenizer, "bos_token_id", None),
+            getattr(tokenizer, "unk_token_id", None),
+        )
+        if value is not None
+    }
+    if mask_id in special_ids or mask_id in set(token_ids):
+        raise RuntimeError("DLM mask ID collides with a special/crystal token")
+    mask_token = tokenizer.convert_ids_to_tokens(mask_id)
+    encoded_mask = list(
+        tokenizer(str(mask_token), add_special_tokens=False).get("input_ids", [])
+    )
+    if encoded_mask != [mask_id]:
+        raise RuntimeError("DLM mask ID does not round-trip through tokenizer")
+    return {
+        "vocab_size": len(tokenizer),
+        "expected_crystal_tokens": len(expected),
+        "atomic_crystal_tokens": len(token_ids),
+        "mask_token_id": mask_id,
+        "mask_token": str(mask_token),
+        "pad_token_id": getattr(tokenizer, "pad_token_id", None),
+        "eos_token_id": getattr(tokenizer, "eos_token_id", None),
+    }
+
+
 def exact_dynamic_schema_constraints(
     tokenizer: Any,
     num_atoms: int,
@@ -179,4 +247,5 @@ __all__ = [
     "exact_dynamic_schema_constraints",
     "num_atoms_from_plan",
     "validate_answer_matches_plan",
+    "validate_dynamic_tokenizer_contract",
 ]

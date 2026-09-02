@@ -49,6 +49,13 @@ def _validate_generation_position_groups(
             seen.add(position)
             normalized_group.append(position)
         normalized.append(normalized_group)
+    missing = sorted(set(range(int(gen_length))) - seen)
+    if missing:
+        preview = ",".join(str(value) for value in missing[:12])
+        raise ValueError(
+            "Generation schedule does not cover every position; "
+            f"missing {len(missing)} positions ({preview})"
+        )
     return normalized
 
 

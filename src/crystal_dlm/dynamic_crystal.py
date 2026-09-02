@@ -20,6 +20,7 @@ from crystal_dlm.fixed_slot import (
     COUNT_RE,
     ELEMENT_RE,
     LENGTH_RE,
+    SCHEMA_TOKEN_RE,
     SYMBOL_TO_Z,
     FixedSlotConfig,
     FixedSlotError,
@@ -63,7 +64,12 @@ DYNAMIC_PROMPT_POOL = [
 
 
 def dynamic_answer_token_count(num_atoms: int) -> int:
-    return 7 + 4 * int(num_atoms)
+    value = int(num_atoms)
+    if not 1 <= value <= FixedSlotConfig().max_atoms:
+        raise FixedSlotError(
+            f"Atom count {value} outside 1..{FixedSlotConfig().max_atoms}"
+        )
+    return 7 + 4 * value
 
 
 def dynamic_max_answer_token_count(config: FixedSlotConfig = FixedSlotConfig()) -> int:
@@ -210,7 +216,15 @@ def parse_dynamic_answer(
     config: FixedSlotConfig = FixedSlotConfig(),
     strict: bool = False,
 ) -> Dict[str, Any]:
-    return dynamic_tokens_to_arrays(tokenize_answer_text(text), config=config, strict=strict)
+    source = str(text)
+    tokens = tokenize_answer_text(source)
+    if strict:
+        residual = SCHEMA_TOKEN_RE.sub("", source)
+        if residual.strip():
+            raise FixedSlotError(
+                f"Strict dynamic answer contains non-schema text {residual.strip()[:40]!r}"
+            )
+    return dynamic_tokens_to_arrays(tokens, config=config, strict=strict)
 
 
 def arrays_to_dynamic_answer(
