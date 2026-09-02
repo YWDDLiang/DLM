@@ -140,6 +140,11 @@ The required mechanism test changes a visible later site and verifies that an
 earlier masked anchor's logits change. A context-independent toy model is not
 sufficient.
 
+The real retained checkpoint now passes this test (job 39513): a one-bin
+change to a later site's Z token changes the earlier masked anchor logits on
+all three coordinate axes. The maximum absolute changes are 0.125, 0.09375
+and 0.15625 for X/Y/Z.
+
 ## 8. Train/serve signal
 
 There are only two Llama-to-DLM signals:
@@ -178,6 +183,10 @@ a full headline cell.
 
 Track A is the LLM-only system comparison and no longer supplies a prerequisite
 body adapter to B.
+
+The learned program is also nontrivial in deployment: on the fixed 256-Plan
+ledger, 229 programs differ from canonical atomic-number order while all 256
+Plan texts remain bit-identical to the control.
 
 ## 10. Later stability contribution
 

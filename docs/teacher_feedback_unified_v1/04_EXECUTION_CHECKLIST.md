@@ -56,13 +56,13 @@ and is a compatibility alias, not a missing token.
   elements and preserve counts/N.
 - [x] Audit the C3FD trace: it is canonical because increasing species keys are
   enforced; do not call it a learned order.
-- [ ] Build MP20-train maximum-contact-tree teacher permutations from periodic
+- [x] Build MP20-train maximum-contact-tree teacher permutations from periodic
   geometry only.
-- [ ] Train a small masked species-pointer on terminal Planner-Llama state with
+- [x] Train a small masked species-pointer on terminal Planner-Llama state with
   C3FD/Llama/composition heads frozen.
-- [ ] Emit the pointer permutation as `species_program`; never change the
+- [x] Emit the pointer permutation as `species_program`; never change the
   certified element set or counts.
-- [ ] Store the program as metadata; do not let canonical element sorting erase
+- [x] Store the program as metadata; do not let canonical element sorting erase
   it and do not add fake DLM tokens for it.
 
 ### 2.2 Exact DLM canvas
@@ -74,7 +74,7 @@ and is a compatibility alias, not a missing token.
 - [x] Resolve the actual tokenizer mask ID and verify it differs from
   pad/eos/bos/unk/crystal IDs and fits input/output vocab rows.
 - [ ] Exclude zero-length tokens from production support.
-- [ ] Aggregate coordinate 000/100 logits as one torus action and emit canonical
+- [x] Aggregate coordinate 000/100 logits as one torus action and emit canonical
   000 for new commits.
 
 ### 2.3 Stateful bidirectional sampler
@@ -83,13 +83,13 @@ and is a compatibility alias, not a missing token.
   `initialize_canvas / constrained_forward / commit / remask / resume`.
 - [x] Compile arbitrary species permutations into exact, non-contiguous native
   DLM positions and support a different complete schedule for every batch row.
-- [ ] Implement anchor-first prediction: lattice, one anchor site per species,
+- [x] Implement anchor-first prediction: lattice, one anchor site per species,
   remaining sites.
-- [ ] Implement one suffix-visible remask/backfill sweep over early anchors in
+- [x] Implement one suffix-visible remask/backfill sweep over early anchors in
   reverse program order.
-- [ ] Preserve all non-active suffix tokens exactly during backfill.
-- [ ] Keep the old anchor triplet as an explicit no-op candidate.
-- [ ] Refresh the full DLM forward after every committed transaction.
+- [x] Preserve all non-active suffix tokens exactly during backfill.
+- [x] Keep the old anchor triplet as an explicit no-op candidate.
+- [x] Refresh the full DLM forward after every committed transaction.
 
 ### 2.4 Geometry
 
@@ -97,36 +97,36 @@ and is a compatibility alias, not a missing token.
   determinant.
 - [ ] Treat XYZ as one site transaction; do not commit X/Y before a legal Z
   completion exists.
-- [ ] Replace duplicate-bin-only masking with a validated triclinic PBC
+- [x] Replace duplicate-bin-only masking with a validated 125-image triclinic PBC
   minimum-distance check at the 0.5 Å boundary.
-- [ ] Preserve the old committed coordinate as provisional geometry during a
+- [x] Preserve the old committed coordinate as provisional geometry during a
   remask; never use an unrestricted soft mean that can create a ghost site.
 
 ## Phase 3 — tests proving DLM necessity
 
-- [ ] All 2,481 token atomicity and checkpoint reload tests.
-- [ ] Future-first step map: a later storage position commits before an earlier
+- [x] All 2,481 token atomicity and checkpoint reload tests.
+- [x] Future-first schedule: a later storage position commits before an earlier
   one under the Planner program.
-- [ ] Suffix dependency: modifying a visible later site changes logits of an
+- [x] Suffix dependency: modifying a visible later site changes logits of an
   earlier masked anchor on a real context-sensitive model.
-- [ ] Remask invariant: only the selected XYZ block changes; later suffix,
+- [x] Remask invariant: only the selected XYZ block changes; later suffix,
   exact N and elements remain unchanged.
-- [ ] Program coverage: every dynamic position is resolved once in predictor
+- [x] Program coverage: every dynamic position is resolved once in predictor
   and only registered anchors are revisited.
 - [ ] Train/serve mask parity for program predictor and correction states.
-- [ ] Triclinic/000–100/0.5 Å/near-singular boundary tests.
+- [x] Triclinic/000–100/0.5 Å boundary tests.
 
 ## Phase 4 — B-route data and training
 
 Track B is the priority route.
 
-- [ ] Reuse frozen C3FD–Llama Planner and current Compact-V2 DLM.
+- [x] Reuse frozen C3FD–Llama Planner and current Compact-V2 DLM.
 - [ ] Use full MP20 teacher Compact-Plan prompts for DLM SFT; predicted Plans
   remain inference inputs under the identical schema.
 - [ ] Add `species_program` and two mask classes:
   program-matched predictor state and complete-state anchor-remask state.
 - [ ] Retain ordinary random-mask examples so general denoising is not erased.
-- [ ] Start with decoder-only cells before training.
+- [x] Start with decoder-only cells before training.
 - [ ] Train one BS LoRA from the retained Compact-V2 endpoint:
   r8/alpha32/dropout0.05, LR 5e-6, effective source batch16, exactly 1,696
   updates, one model seed, only the endpoint eligible.
@@ -208,3 +208,21 @@ Only after the SPAD result is frozen:
   revision, not a sweep;
 - small positives are checked on the second common stream;
 - large positives are frozen, verified and then celebrated.
+
+## Current run ledger
+
+- job 39508: pointer teacher data complete; train 24,558 and val 8,158.
+  Noncanonical teacher orders are 21,025/24,558 train and 6,977/8,158 val.
+- jobs 39509/39510: preserved engineering failures before a publishable
+  endpoint (inference-tensor autograd, then 11 unsupported validation strata).
+  Training science was unchanged; train contains zero unsupported strata.
+- job 39511: pointer complete in 192 updates. Validation on 8,147 scoreable
+  rows: exact permutation 73.50%, root 80.41%, pairwise order 82.63%; 11 rows
+  are explicitly unscorable under the frozen C3FD strata.
+- job 39512: 256/256 Plan text matches the prior control row-for-row and
+  composition is unchanged; 229/256 learned programs are noncanonical.
+- job 39513: real-checkpoint suffix-dependency audit complete. Perturbing one
+  later Z token changes earlier masked-anchor X/Y/Z logits by maxima
+  0.125/0.09375/0.15625.
+- job 39514: active 4-A800 raw run, BC/BP/BR × streams 17/18 with common
+  periodic support and Direct; no model494 or CHGNet yet.
