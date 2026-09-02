@@ -31,8 +31,8 @@ env OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREA
 "${PYTHON}" - "${RUN}/equivalence/attempt_metrics.jsonl" \
   "${FULL_DIRECT_RUN}/BC/stream17/direct/attempt_metrics.jsonl" <<'PY'
 import json,sys
-left=[json.loads(x) for x in open(sys.argv[1]) if x.strip()]
-right=[json.loads(x) for x in open(sys.argv[2]) if x.strip()]
+left=sorted((json.loads(x) for x in open(sys.argv[1]) if x.strip()),key=lambda r:r['attempt_id'])
+right=sorted((json.loads(x) for x in open(sys.argv[2]) if x.strip()),key=lambda r:r['attempt_id'])
 keys=('attempt_id','comp_valid','struct_valid','valid')
 assert [{k:r[k] for k in keys} for r in left] == [{k:r[k] for k in keys} for r in right]
 PY
