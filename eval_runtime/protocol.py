@@ -20,6 +20,7 @@ HEX_SHA = re.compile(r"^[0-9a-f]{64}$")
 PLANNER_ATTEMPTS = 1200
 HISTORICAL_ATTEMPTS = 1000
 SCREEN_ATTEMPTS = 256
+REMAINDER_ATTEMPTS = 139
 REPEATS = (0,)
 ARMS = ("historical", "control", "candidate")
 TRAINING_SEED = 17
@@ -35,8 +36,13 @@ def _active_denominator() -> int:
     if raw is None:
         raise RuntimeError("H1_ACTIVE_DENOMINATOR is required before protocol import")
     value = int(raw)
-    if value not in (SCREEN_ATTEMPTS, HISTORICAL_ATTEMPTS, PLANNER_ATTEMPTS):
-        raise ValueError("active denominator must be exactly 256, 1000, or 1200")
+    if value not in (
+        REMAINDER_ATTEMPTS,
+        SCREEN_ATTEMPTS,
+        HISTORICAL_ATTEMPTS,
+        PLANNER_ATTEMPTS,
+    ):
+        raise ValueError("active denominator must be 139, 256, 1000, or 1200")
     return value
 
 

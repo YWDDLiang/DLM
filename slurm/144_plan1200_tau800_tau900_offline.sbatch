@@ -20,9 +20,10 @@ readonly SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execut
 readonly V3_RUN="${PROJECT}/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly R03E="${V3_RUN}/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1"
 readonly CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl"
-readonly FULL="${ROOT}/eval_runtime/run_full_reconstructed_eval.py"
-readonly TAU800="${ROOT}/runs/plan1200_tau800_corrected_assembly_20260902_v1"
-readonly TAU900="${ROOT}/runs/plan1200_tau900_corrected_assembly_20260902_v1"
+readonly EVAL_RUNTIME="${ROOT}/eval_runtime_plan1200_20260902_v1"
+readonly FULL="${EVAL_RUNTIME}/run_full_reconstructed_eval.py"
+readonly TAU800="${ROOT}/runs/plan1200_tau800_corrected_assembly_20260902_v2"
+readonly TAU900="${ROOT}/runs/plan1200_tau900_corrected_assembly_20260902_v2"
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
@@ -58,14 +59,14 @@ EOF
 
 run_cell() {
   local slot="$1" steps="$2" split="$3" denominator="$4"
-  local source_dir="${ROOT}/runs/plan1200_tau${steps}_corrected_assembly_20260902_v1"
+  local source_dir="${ROOT}/runs/plan1200_tau${steps}_corrected_assembly_20260902_v2"
   local cell="${RUN}/tau${steps}/${split}"
   mkdir -p "${cell}/full_reconstructed"
   cp --reflink=auto "${CACHE}" "${cell}/relax_cache.jsonl"
   env CUDA_VISIBLE_DEVICES="${gpu[${slot}]}" \
     OPENBLAS_NUM_THREADS=8 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
     NUMEXPR_NUM_THREADS=8 H1_ACTIVE_DENOMINATOR="${denominator}" \
-    PYTHONPATH="${ROOT}/eval_runtime:${R03E}/runtime" \
+    PYTHONPATH="${EVAL_RUNTIME}:${R03E}/runtime" \
     "${PYTHON}" "${FULL}" --arm candidate --repeat 0 \
     --generation-jsonl "${source_dir}/${split}/generation.jsonl" \
     --config "${SOURCE}/CONFIG.json" --r03e-root "${R03E}" \
