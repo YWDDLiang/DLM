@@ -244,18 +244,21 @@ Only after the SPAD result is frozen:
 - job 39525 completed the common model494 tau800 refinement for BC/BR/BS ×
   streams 17/18 in 01:10:39 (4.71 A800-hours): all six cells preserve 256
   sample indices and all 1,536 refined attempts succeeded.
-- job 39527 is released and waiting for six A800s. It evaluates the same six
-  cells at both raw and refined endpoints (12 cells total) on six A800s, reuses
-  completed BC/BR raw Direct outputs, and gives every CHGNet worker a private
-  cache copy. The wrapper is frozen at commit `ab4880d`.
-- job 39528 is dependency-queued after job 39527 and will sample exactly 256
+- jobs 39527/39528 were cancelled before allocation after the scheduler
+  projected a multi-day wait for six colocated A800s; no science ran.
+- job 39529 is the parameter-identical four-A800 layout now running. It
+  evaluates the same six cells at both raw and refined endpoints (12 cells
+  total), reuses completed BC/BR raw Direct outputs, gives every CHGNet worker
+  a private cache copy, and queues two cells sequentially on the first two
+  GPUs. The scheduling-only wrapper change is commit `d909450`.
+- job 39530 is dependency-queued after job 39529 and will sample exactly 256
   actual seed-23 C3FD–Llama+pointer Plan requests without filtering or
   replacement.
 
 Immediate sequence:
 
 - [x] finish and audit all six job-39525 refinement cells;
-- [ ] let dependency job 39527 run the parallel raw/refined Direct + CHGNet
+- [ ] let job 39529 run the parallel raw/refined Direct + CHGNet
   evaluation without changing Plan, stream, denominator or sample ordering;
 - [ ] sample and freeze exactly the first 256 requested C3FD–Llama+pointer
   Plan outcomes before any DLM rollout; retain Planner failures in the fixed
