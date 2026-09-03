@@ -106,3 +106,39 @@ cohort.
 - A/evaluation gets up to 2;
 - current source sync uses local Git push and A800 HTTPS clone/pull;
 - non-Git scp transfers are batched and separated by at least five minutes.
+
+## Transaction-level online-controller decision
+
+Decision: **do not add a DLM-to-Llama transaction feedback loop during the
+current one-day SPAD-E closure**.  The paper claims LLM-programmed or
+hierarchical control, not real-time/closed-loop control, a world model or
+end-to-end joint training.
+
+Alternative considered: after every DLM lattice/XYZ commit, serialize the
+partial crystal back to Llama and ask it to choose the next transaction or
+revision.  This would require a new state interface, sequential controller
+teacher data/training, integration tests and new SPAD-E teacher states.  The
+estimated 18--30 hour implementation and evaluation path would invalidate the
+currently running fixed-state teacher and leave no replication window.
+
+Structured-review objections and resolutions:
+
+- objection: a static `species_program` may look like an ordinary cascade;
+  resolution: make no real-time claim and require one fixed-Plan/noise causal
+  chain—canonical versus Llama program, suffix-hidden versus suffix-visible,
+  and SPAD-E versus equal-compute SPAD-CE;
+- objection: the Llama program, DLM revision and energy teacher may look like
+  three independent tricks; resolution: describe one action hierarchy only:
+  chemical support, construction program, non-causal execution and energy
+  shaping of that same programmed backfill action;
+- objection: SPAD-E may be too sparse or weak to improve S.U.N.; resolution:
+  finish the fixed experiment, condition the paper claim on effect size and do
+  not add an unreplicated architecture or revert to G2;
+- objection: a single development seed is insufficient for a strong headline;
+  resolution: a strong positive requires seed two and a newly frozen cohort;
+  small/negative results reduce or remove the SPAD-E claim.
+
+Final arbiter disposition: **APPROVED**.  Continue the frozen SPAD-E teacher,
+equal-compute training and evaluation.  Do not add the online controller before
+those results.  If SPAD-E is negative, retain the demonstrated SPAD
+composition/structural-execution result and leave stability open.
