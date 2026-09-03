@@ -280,6 +280,13 @@ Only after the SPAD result is frozen:
 - for BS-refined NU structures, 37 lie within 20 meV/atom above the strict
   threshold and 37 lie within 20 meV/atom above the meta threshold. This
   motivates the one authorized local response-aligned follow-up.
+- commit `3dbb121` freezes the response-aligned implementation and two-stream
+  wrapper after remote SPAD/geometry/driver tests passed. A full read-only
+  pairing audit maps all 256/256 source bodies in each stream through the
+  Niggli-reordered model494 tensors back to their original DLM site order.
+- job 39547 is the only active follow-up job (2 A800/16 CPU). It reuses the
+  frozen stream17/18 BS bodies, performs one deterministic all-site response
+  pass, then applies the same model494 tau800 setting to the corrected bodies.
 
 Immediate sequence:
 
