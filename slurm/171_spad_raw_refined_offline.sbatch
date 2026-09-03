@@ -17,6 +17,7 @@ readonly BR_BODY_RUN="${SPAD_BR_BODY_RUN:?}"
 readonly BS_BODY_RUN="${SPAD_BS_BODY_RUN:?}"
 readonly REFINE_RUN="${SPAD_REFINE_RUN:?}"
 readonly RAW_DIRECT_RUN="${SPAD_RAW_DIRECT_RUN:?}"
+readonly RAW_FULL_REUSE_RUN="${SPAD_RAW_FULL_REUSE_RUN:-}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:-/public/home/jiaosz/ywliang/ai4s/.sscd_unified_d0e616b_https}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
@@ -115,8 +116,8 @@ run_direct() {
   local arm="$1" stream="$2" endpoint="$3"
   local root="${RUN}/${arm}/stream${stream}/${endpoint}"
   mkdir -p "${root}/evaluation"
-  setsid env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 \
-    MKL_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
+  setsid env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 \
+    MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
     "${PYTHON}" "${DIRECT}" --generation-jsonl "${root}/generation/generation.jsonl" \
     --gt-csv "${GT}" --snapshot-root "${R03E}/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream" \
     --output-dir "${root}/evaluation/direct" --eval-model-name mp20 \
@@ -145,31 +146,55 @@ run_full() {
   wait_completed "${pid}" "${root}/evaluation/full_reconstructed/_SUCCESS"
 }
 
-run_cell() {
-  local slot="$1" arm="$2" stream="$3" endpoint="$4"
-  local direct_pid=""
-  if [[ "${endpoint}" == refined || "${arm}" == BS ]]; then
-    run_direct "${arm}" "${stream}" "${endpoint}" & direct_pid="$!"
-  fi
-  run_full "${slot}" "${arm}" "${stream}" "${endpoint}"
-  [[ -z "${direct_pid}" ]] || wait "${direct_pid}"
-}
-
-run_wave() {
+run_full_wave() {
   local endpoint="$1" status=0 pid
   local -a pids=()
-  run_cell 0 BC 17 "${endpoint}" & pids+=("$!")
-  run_cell 1 BC 18 "${endpoint}" & pids+=("$!")
-  run_cell 2 BR 17 "${endpoint}" & pids+=("$!")
-  run_cell 3 BR 18 "${endpoint}" & pids+=("$!")
-  run_cell 0 BS 17 "${endpoint}" & pids+=("$!")
-  run_cell 1 BS 18 "${endpoint}" & pids+=("$!")
+  run_full 0 BC 17 "${endpoint}" & pids+=("$!")
+  run_full 1 BC 18 "${endpoint}" & pids+=("$!")
+  run_full 2 BR 17 "${endpoint}" & pids+=("$!")
+  run_full 3 BR 18 "${endpoint}" & pids+=("$!")
+  run_full 0 BS 17 "${endpoint}" & pids+=("$!")
+  run_full 1 BS 18 "${endpoint}" & pids+=("$!")
   for pid in "${pids[@]}"; do wait "${pid}" || status="$?"; done
   return "${status}"
 }
 
-run_wave raw
-run_wave refined
+run_direct_wave() {
+  local endpoint="$1" status=0 pid
+  local -a pids=()
+  if [[ "${endpoint}" == raw ]]; then
+    run_direct BS 17 raw & pids+=("$!")
+    run_direct BS 18 raw & pids+=("$!")
+  else
+    for arm in BC BR BS; do
+      for stream in 17 18; do
+        run_direct "${arm}" "${stream}" refined & pids+=("$!")
+      done
+    done
+  fi
+  for pid in "${pids[@]}"; do wait "${pid}" || status="$?"; done
+  return "${status}"
+}
+
+if [[ -n "${RAW_FULL_REUSE_RUN}" ]]; then
+  for arm in BC BR BS; do
+    for stream in 17 18; do
+      source_full="${RAW_FULL_REUSE_RUN}/${arm}/stream${stream}/raw/evaluation/full_reconstructed"
+      destination="${RUN}/${arm}/stream${stream}/raw/evaluation"
+      [[ -f "${source_full}/_SUCCESS" ]]
+      cmp -s \
+        "${RAW_FULL_REUSE_RUN}/${arm}/stream${stream}/raw/generation/generation.jsonl" \
+        "${RUN}/${arm}/stream${stream}/raw/generation/generation.jsonl"
+      mkdir -p "${destination}"
+      cp -a "${source_full}" "${destination}/full_reconstructed"
+    done
+  done
+else
+  run_full_wave raw
+fi
+run_direct_wave raw
+run_full_wave refined
+run_direct_wave refined
 
 for arm in BC BR BS; do
   for stream in 17 18; do
