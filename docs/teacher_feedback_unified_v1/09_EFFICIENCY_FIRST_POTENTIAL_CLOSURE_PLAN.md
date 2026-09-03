@@ -50,7 +50,9 @@ ineligible. Parameter-identical potential-only recovery job `39604` completed
 all 2,048 updates on one A800/four CPUs with the expected `1024/512/512`
 objective counts, clean/on-policy transaction exposures and sole step-2048
 checkpoint; no scientific setting or data changed. Native stream17 generation
-job `39605` is running both eligible arms concurrently on two A800/eight CPUs.
+job `39605` completed in 11 minutes 30 seconds on two A800/eight CPUs; both
+arms are `256/256` parsed and Plan-matched. Batched raw energy and two-validity
+evaluation job `39606` is running on one A800/four CPUs without Direct.
 
 ## Approach
 
@@ -257,7 +259,7 @@ pilot outcomes remain reported.
 | Raw CHGNet labels | completed: 1 A800 + 8 CPU | 95 s | complete |
 | Five-batch gradient probe | completed: 1 A800 + 8 CPU | 143 s | complete |
 | Control + potential recovery to 2,048 | completed | 2 h 19 min recovery wall time | complete |
-| Stream17 native generation/eval (no Direct) | generation active: 2 A800 + 8 CPU | 1--1.5 h | running |
+| Stream17 native generation/eval (no Direct) | generation complete; eval active on 1 A800 + 4 CPU | about 15--30 min | running |
 | Conditional stream18 + tau800 (no Direct) | up to 4 A800 + 4 CPU/GPU | 1.5--2.5 h | **4.5--6.5 h** |
 
 All future work is capped at four A800 and exactly four requested CPUs per GPU,
