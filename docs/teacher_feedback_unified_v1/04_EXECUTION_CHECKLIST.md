@@ -294,5 +294,9 @@ Post-endpoint rule (no further approval needed):
   suffix-visible remask, inside the existing PBC feasible support. Keep the
   same frozen Plans and streams, use no reranking or best-of-N, and compare it
   directly with BS;
+- for that follow-up, schedule CHGNet and Direct concurrently with bounded
+  queues: 8–16 structure items per A800 scheduling window, GPU relaxation and
+  CPU Direct in separate process groups, while keeping total CPU at no more
+  than eight cores per allocated GPU;
 - do not start a disconnected third method, broad hyperparameter search or a
   new Planner sample merely because a target is missed.
