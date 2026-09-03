@@ -115,8 +115,8 @@ run_direct() {
   local arm="$1" stream="$2" endpoint="$3"
   local root="${RUN}/${arm}/stream${stream}/${endpoint}"
   mkdir -p "${root}/evaluation"
-  setsid env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=4 OMP_NUM_THREADS=4 \
-    MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
+  setsid env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 \
+    MKL_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2 CRYSLLMGEN_METRICS_NUM_CPUS=1 \
     "${PYTHON}" "${DIRECT}" --generation-jsonl "${root}/generation/generation.jsonl" \
     --gt-csv "${GT}" --snapshot-root "${R03E}/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream" \
     --output-dir "${root}/evaluation/direct" --eval-model-name mp20 \
@@ -131,8 +131,8 @@ run_full() {
   local root="${RUN}/${arm}/stream${stream}/${endpoint}"
   mkdir -p "${root}/evaluation"
   cp --reflink=auto "${CACHE}" "${root}/relax_cache.jsonl"
-  setsid env CUDA_VISIBLE_DEVICES="${gpu[${slot}]}" OPENBLAS_NUM_THREADS=4 \
-    OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 \
+  setsid env CUDA_VISIBLE_DEVICES="${gpu[${slot}]}" OPENBLAS_NUM_THREADS=2 \
+    OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2 \
     H1_ACTIVE_DENOMINATOR=256 PYTHONPATH="${SOURCE}/eval_runtime:${R03E}/runtime" \
     "${PYTHON}" "${FULL}" --arm candidate --repeat 0 \
     --generation-jsonl "${root}/generation/generation.jsonl" \
@@ -155,22 +155,15 @@ run_cell() {
   [[ -z "${direct_pid}" ]] || wait "${direct_pid}"
 }
 
-run_queue() {
-  local endpoint="$1" slot="$2"
-  shift 2
-  while [[ "$#" -gt 0 ]]; do
-    run_cell "${slot}" "$1" "$2" "${endpoint}"
-    shift 2
-  done
-}
-
 run_wave() {
   local endpoint="$1" status=0 pid
   local -a pids=()
-  run_queue "${endpoint}" 0 BC 17 BS 17 & pids+=("$!")
-  run_queue "${endpoint}" 1 BC 18 BS 18 & pids+=("$!")
-  run_queue "${endpoint}" 2 BR 17 & pids+=("$!")
-  run_queue "${endpoint}" 3 BR 18 & pids+=("$!")
+  run_cell 0 BC 17 "${endpoint}" & pids+=("$!")
+  run_cell 1 BC 18 "${endpoint}" & pids+=("$!")
+  run_cell 2 BR 17 "${endpoint}" & pids+=("$!")
+  run_cell 3 BR 18 "${endpoint}" & pids+=("$!")
+  run_cell 0 BS 17 "${endpoint}" & pids+=("$!")
+  run_cell 1 BS 18 "${endpoint}" & pids+=("$!")
   for pid in "${pids[@]}"; do wait "${pid}" || status="$?"; done
   return "${status}"
 }
