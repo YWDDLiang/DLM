@@ -246,20 +246,23 @@ Only after the SPAD result is frozen:
   sample indices and all 1,536 refined attempts succeeded.
 - jobs 39527/39528 were cancelled before allocation after the scheduler
   projected a multi-day wait for six colocated A800s; no science ran.
-- job 39529 is the parameter-identical four-A800 layout now running. It
-  evaluates the same six cells at both raw and refined endpoints (12 cells
-  total), reuses completed BC/BR raw Direct outputs, gives every CHGNet worker
-  a private cache copy, and queues two cells sequentially on the first two
-  GPUs. The scheduling-only wrapper change is commit `d909450`.
-- job 39530 is dependency-queued after job 39529 and will sample exactly 256
-  actual seed-23 C3FD–Llama+pointer Plan requests without filtering or
-  replacement.
+- jobs 39529/39530 were cancelled at 00:08:45/zero after profiling showed that
+  the four-GPU queue layout still serialized two cells; their partial output is
+  retained as an engineering trace.
+- job 39531 runs all six raw CHGNet cells concurrently on four A800s. Its two
+  BS Direct workers exposed a pre-science environment error because the frozen
+  Direct runtime rejects two-thread BLAS values. The CHGNet workers are valid
+  and continue to completion; the root `_FAILED` marker is expected.
+- job 39533 is queued after-any on job 39531. It first verifies and reuses the
+  six byte-identical raw CHGNet outputs, runs Direct in a separate four-thread
+  wave, and then evaluates all six refined cells concurrently. This recovery
+  changes scheduling only; the Plan/model/seed/denominator remain fixed.
 
 Immediate sequence:
 
 - [x] finish and audit all six job-39525 refinement cells;
-- [ ] let job 39529 run the parallel raw/refined Direct + CHGNet
-  evaluation without changing Plan, stream, denominator or sample ordering;
+- [ ] finish the six reusable raw CHGNet cells in job 39531, then complete the
+  parameter-identical Direct/refined recovery in job 39533;
 - [ ] sample and freeze exactly the first 256 requested C3FD–Llama+pointer
   Plan outcomes before any DLM rollout; retain Planner failures in the fixed
   denominator, do not filter training-set overlaps, and never resample the
