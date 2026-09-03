@@ -419,6 +419,7 @@ def revise_spad_anchors(
     ]
     | None = None,
     model494_response_config: Model494ResponseConfig | None = None,
+    strict_pbc_no_legal_fallback: bool = False,
 ) -> tuple[torch.Tensor, list[list[dict[str, Any]]]]:
     """Re-mask registered sites once and fill them with full model context.
 
@@ -446,6 +447,11 @@ def revise_spad_anchors(
     response_enabled = model494_target_frac_coords_by_batch is not None
     response_config = model494_response_config or Model494ResponseConfig()
     response_contexts: list[dict[str, torch.Tensor] | None] | None = None
+    if strict_pbc_no_legal_fallback and (
+        not lightweight_decoding_constraints
+        or not lightweight_decoding_constraints.get("pbc_min_distance_mask")
+    ):
+        raise ValueError("strict PBC fallback requires PBC hard support")
     if response_enabled:
         response_config.validate()
         if not suffix_visible:
@@ -563,7 +569,9 @@ def revise_spad_anchors(
                 group_allowed[:, prompt_length : prompt_length + gen_length],
                 int(mask_id),
             )
-            if response_contexts is not None and int(component) == 2:
+            if (
+                response_contexts is not None or strict_pbc_no_legal_fallback
+            ) and int(component) == 2:
                 no_legal = mask_report.get("pbc_no_legal_completion", set())
                 for row_index, positions in active.items():
                     if (int(row_index), int(positions[2])) not in no_legal:
@@ -623,8 +631,8 @@ def revise_spad_anchors(
                         "guidance_skipped_no_legal_completion"
                         if row_index in skipped_no_legal
                         else (
-                            "model494_response_applied"
-                            if response_contexts is not None
+                        "model494_response_applied"
+                        if response_contexts is not None
                             else "unguided_spad_revision"
                         )
                     ),

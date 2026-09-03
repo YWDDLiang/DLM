@@ -233,6 +233,28 @@ class SPADGenerationTest(unittest.TestCase):
             logs[0][0]["guidance_status"],
             "guidance_skipped_no_legal_completion",
         )
+        strict_output, strict_logs = revise_spad_anchors(
+            model,
+            complete,
+            prompt_length=prompt_length,
+            gen_length=gen_length,
+            revision_slots_by_batch=[[1]],
+            attention_mask=torch.ones((1, prompt_length), dtype=torch.long),
+            temperature=0.7,
+            cfg_scale=0.0,
+            remasking="low_confidence",
+            mask_id=127,
+            allowed_token_ids_by_generation_pos=allowed,
+            atom_count_grammar=None,
+            lightweight_decoding_constraints=constraints,
+            suffix_visible=True,
+            strict_pbc_no_legal_fallback=True,
+        )
+        self.assertTrue(torch.equal(strict_output, complete))
+        self.assertEqual(
+            strict_logs[0][0]["guidance_status"],
+            "guidance_skipped_no_legal_completion",
+        )
 
 
 if __name__ == "__main__":
