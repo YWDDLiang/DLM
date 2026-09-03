@@ -9,7 +9,7 @@ SOURCE = (
 
 class SPADEnergyTeacherSlurmTest(unittest.TestCase):
     def test_bounded_k4_terminal_teacher(self):
-        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:5", SOURCE)
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4", SOURCE)
         self.assertIn("--num-samples 2048", SOURCE)
         self.assertIn("sample_spad_energy_backfill_actions.py", SOURCE)
         self.assertIn("--diff-steps 800", SOURCE)

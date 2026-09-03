@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=40
-#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:5
-#SBATCH --mem=600G
+#SBATCH --cpus-per-task=32
+#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4
+#SBATCH --mem=500G
 #SBATCH --time=10:00:00
 #SBATCH --output=spad-e-teacher-%j.out
 #SBATCH --error=spad-e-teacher-%j.err
@@ -35,7 +35,7 @@ mkdir "${RUN}"
 mkdir "${RUN}/logs"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$BASH_COMMAND" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
-[[ "${#allocated[@]}" -eq 5 ]]
+[[ "${#allocated[@]}" -eq 4 ]]
 [[ -f "${COHORT}/_SUCCESS" ]]
 
 env CUDA_VISIBLE_DEVICES="${allocated[0]}" OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=8 \
@@ -50,7 +50,7 @@ env CUDA_VISIBLE_DEVICES="${allocated[0]}" OPENBLAS_NUM_THREADS=2 OMP_NUM_THREAD
 env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
   NUMEXPR_NUM_THREADS=8 PYTHONPATH="${SOURCE}/src" \
   "${PYTHON}" -m torch.distributed.run --standalone --master_port=29678 \
-  --nproc_per_node=5 "${SOURCE}/src/scripts/sample_llada_r5_exact_length.py" \
+  --nproc_per_node=4 "${SOURCE}/src/scripts/sample_llada_r5_exact_length.py" \
   --model-path "${LLADA}" --checkpoint-path "${BS_POLICY}" \
   --prompt-jsonl "${PROGRAMS}/plans_for_dlm.jsonl" --output-dir "${PREDICTOR}" \
   --crysllmgen-dir "${CRYS}" --num-samples 2048 --batch-size 8 \
@@ -63,7 +63,7 @@ env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
 env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
   NUMEXPR_NUM_THREADS=8 PYTHONPATH="${SOURCE}/src" \
   "${PYTHON}" -m torch.distributed.run --standalone --master_port=29679 \
-  --nproc_per_node=5 "${SOURCE}/src/scripts/sample_spad_energy_backfill_actions.py" \
+  --nproc_per_node=4 "${SOURCE}/src/scripts/sample_spad_energy_backfill_actions.py" \
   --model-path "${LLADA}" --checkpoint-path "${BS_POLICY}" \
   --predictor-body "${PREDICTOR}/raw_generations.jsonl" \
   --output-dir "${ACTIONS}" --crysllmgen-dir "${CRYS}" \
@@ -74,7 +74,7 @@ env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
 env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
   NUMEXPR_NUM_THREADS=8 PYTHONPATH="${SOURCE}/src" \
   "${PYTHON}" -m torch.distributed.run --standalone --master_port=29680 \
-  --nproc_per_node=5 "${SOURCE}/src/scripts/refine_dlm_with_crysllmgen.py" \
+  --nproc_per_node=4 "${SOURCE}/src/scripts/refine_dlm_with_crysllmgen.py" \
   --proposal-graphs "${ACTIONS}/proposal_graphs.pt" --checkpoint "${REFINER}" \
   --output-dir "${REFINE}" --crysllmgen-dir "${CRYS}" --batch-size 1 \
   --seed 97017 --seed-by-sample-index --diff-steps 800 --max-proposals 8192 \
