@@ -78,7 +78,7 @@ for mode in ("closure_control", "potential_closed"):
     for endpoint in ("raw", "tau800"):
         path = root / "cells" / f"{mode}_{endpoint}_s17" / "evaluation" / "full_reconstructed"
         assert (path / "_SUCCESS").is_file()
-        report = json.load(open(path / "report.json"))
+        report = json.load(open(path / "summary.json"))
         assert report["raw_attempts"] == 256
         cells.append({
             "mode": mode,
