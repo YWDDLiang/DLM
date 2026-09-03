@@ -105,6 +105,10 @@ def main() -> None:
     parser.add_argument("--denominator", type=int, default=256)
     parser.add_argument("--refinement-steps", type=int, default=800)
     parser.add_argument("--invalid-refined-as-failure", action="store_true")
+    parser.add_argument("--method-label", default=None)
+    parser.add_argument("--planner-arm-label", default="P0-frozen")
+    parser.add_argument("--body-arm-label", default=None)
+    parser.add_argument("--schedule-arm-label", default="D1")
     args = parser.parse_args()
 
     raw_rows = read_jsonl(args.body_dir / "raw_generations.jsonl")
@@ -120,7 +124,11 @@ def main() -> None:
         invalid_as_failure=bool(args.invalid_refined_as_failure),
     )
 
-    method = "H1-A2-DLM-CE-CONTROL" if args.arm == "control" else "H1-A2-DLM-COUNTERFACTUAL-GROUNDING"
+    method = args.method_label or (
+        "H1-A2-DLM-CE-CONTROL"
+        if args.arm == "control"
+        else "H1-A2-DLM-COUNTERFACTUAL-GROUNDING"
+    )
     rows: list[dict] = []
     for ordinal in range(args.denominator):
         source = by_idx[ordinal]
@@ -144,9 +152,12 @@ def main() -> None:
                 "experiment_repeat": args.repeat,
                 "pair_id": f"h1a2-ground-r{args.repeat}:{ordinal:04d}",
                 "arm": args.arm,
-                "planner_arm": "P0-frozen",
-                "body_arm": "B0" if args.arm == "control" else "B0-counterfactual-grounding",
-                "schedule_arm": "D1",
+                "planner_arm": str(args.planner_arm_label),
+                "body_arm": str(
+                    args.body_arm_label
+                    or ("B0" if args.arm == "control" else "B0-counterfactual-grounding")
+                ),
+                "schedule_arm": str(args.schedule_arm_label),
                 "status": "succeeded" if succeeded else "failed",
                 "reason": failure,
                 "structure": structure,

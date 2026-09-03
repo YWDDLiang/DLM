@@ -28,6 +28,10 @@ def main() -> None:
     parser.add_argument("--source-arm", choices=("full_axis", "hard_axis"), required=True)
     parser.add_argument("--arm-label", choices=("control", "candidate"), required=True)
     parser.add_argument("--denominator", type=int, default=256)
+    parser.add_argument("--method-label", default="H1-A2-DLM-RAW-BODY-NO-MODEL494")
+    parser.add_argument("--planner-arm-label", default="raw-P0-frozen")
+    parser.add_argument("--body-arm-label", default=None)
+    parser.add_argument("--schedule-arm-label", default="D1-exact-axis")
     args = parser.parse_args()
 
     from pymatgen.core import Structure  # noqa: PLC0415
@@ -58,16 +62,19 @@ def main() -> None:
             {
                 "schema": "wqcodiff_generation_attempt_v1",
                 "attempt_id": f"h1a2-raw-{args.source_arm}-s{args.seed}-{ordinal:04d}",
-                "method": "H1-A2-DLM-RAW-BODY-NO-MODEL494",
+                "method": str(args.method_label),
                 "ordinal": ordinal,
                 "sample_idx": ordinal,
                 "repeat": 0,
                 "experiment_repeat": args.seed * 10 + 9,
                 "pair_id": f"h1a2-refiner-{args.source_arm}-s{args.seed}:{ordinal:04d}",
                 "arm": args.arm_label,
-                "planner_arm": "raw-P0-frozen",
-                "body_arm": f"public-H1-A2-DLM-raw-{args.source_arm}",
-                "schedule_arm": "D1-exact-axis",
+                "planner_arm": str(args.planner_arm_label),
+                "body_arm": str(
+                    args.body_arm_label
+                    or f"public-H1-A2-DLM-raw-{args.source_arm}"
+                ),
+                "schedule_arm": str(args.schedule_arm_label),
                 "status": "succeeded" if succeeded else "failed",
                 "reason": failure,
                 "structure": structure,

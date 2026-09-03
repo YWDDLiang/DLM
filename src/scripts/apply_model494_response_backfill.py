@@ -433,6 +433,13 @@ def main() -> None:
         )
         for item, text, logs in zip(batch, decoded, revision_logs, strict=True):
             sample_idx = int(item["sample_idx"])
+            expected_n = int(item["source_arrays"]["num_atoms"])
+            if len(logs) != expected_n or {
+                int(entry["slot_index"]) for entry in logs
+            } != set(range(expected_n)):
+                raise RuntimeError(
+                    f"sample {sample_idx} did not visit every body site exactly once"
+                )
             row = dict(item["source_row"])
             row["text"] = text
             row["spad_response_revision_log"] = logs
@@ -451,6 +458,13 @@ def main() -> None:
             }
             try:
                 arrays = validate_answer_matches_plan(item["plan_state"], text)
+                source_arrays = item["source_arrays"]
+                if arrays["species"] != source_arrays["species"]:
+                    raise RuntimeError("response backfill changed atom-type sequence")
+                if arrays["lengths"] != source_arrays["lengths"]:
+                    raise RuntimeError("response backfill changed lattice lengths")
+                if arrays["angles"] != source_arrays["angles"]:
+                    raise RuntimeError("response backfill changed lattice angles")
                 graph, cif = graph_from_arrays(arrays, process_one)
                 graph["sample_idx"] = sample_idx
                 row["cif"] = cif
@@ -459,6 +473,8 @@ def main() -> None:
                 results[sample_idx] = row
                 result_arrays[sample_idx] = arrays
                 result_graphs[sample_idx] = graph
+            except RuntimeError:
+                raise
             except Exception as exc:
                 row["parsed"] = False
                 row.pop("cif", None)
