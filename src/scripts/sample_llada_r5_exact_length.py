@@ -22,9 +22,13 @@ from tqdm import tqdm
 from crystal_dlm.dynamic_crystal import arrays_to_torch_payload, write_json  # noqa: E402
 from crystal_dlm.fixed_slot import MASK_TOKEN_ID  # noqa: E402
 from crystal_dlm.llada_generation import generate  # noqa: E402
-from crystal_dlm.spad_generation import revise_spad_anchors  # noqa: E402
+from crystal_dlm.spad_generation import (  # noqa: E402
+    revise_spad_anchors,
+    revise_spad_cell,
+)
 from crystal_dlm.spad_program import (  # noqa: E402
     anchor_revision_slots,
+    limited_anchor_revision_slots,
     program_from_element_order,
     spad_predictor_position_groups,
 )
@@ -331,6 +335,8 @@ def main() -> None:
         default="exact-plan",
     )
     parser.add_argument("--spad-backfill", action="store_true")
+    parser.add_argument("--spad-cell-closure", action="store_true")
+    parser.add_argument("--spad-max-anchor-revisions", type=int, default=0)
     parser.add_argument("--spad-hide-suffix", action="store_true")
     parser.add_argument("--skip-graph-validation", action="store_true")
     args = parser.parse_args()
@@ -339,8 +345,14 @@ def main() -> None:
         raise ValueError("--num-atoms must be in 1..20")
     if args.spad_backfill and args.generation_schedule != "spad":
         raise ValueError("--spad-backfill requires --generation-schedule spad")
+    if args.spad_cell_closure and args.generation_schedule != "spad":
+        raise ValueError("--spad-cell-closure requires --generation-schedule spad")
     if args.spad_hide_suffix and not args.spad_backfill:
         raise ValueError("--spad-hide-suffix requires --spad-backfill")
+    if int(args.spad_max_anchor_revisions) < 0:
+        raise ValueError("--spad-max-anchor-revisions must be nonnegative")
+    if int(args.spad_max_anchor_revisions) > 0 and not args.spad_backfill:
+        raise ValueError("limited anchor revisions require --spad-backfill")
 
     dist_info = init_distributed()
     rank = dist_info["rank"]
@@ -497,17 +509,62 @@ def main() -> None:
             revision_logs: List[List[Dict[str, Any]]] = [
                 [] for _ in range(len(batch))
             ]
+            cell_revision_logs: List[Dict[str, Any] | None] = [
+                None for _ in range(len(batch))
+            ]
+            if args.spad_cell_closure:
+                cell_sampling_seeds = [
+                    int(args.seed)
+                    + int(item["sample_idx"]) * 1_000_003
+                    + 70_000_019
+                    for item in batch
+                ]
+                outputs, cell_logs = revise_spad_cell(
+                    model,
+                    outputs,
+                    prompt_length=input_ids.shape[1],
+                    gen_length=gen_length,
+                    attention_mask=attention_mask,
+                    temperature=args.temperature,
+                    cfg_scale=args.cfg_scale,
+                    remasking=args.remasking,
+                    mask_id=MASK_TOKEN_ID,
+                    allowed_token_ids_by_generation_pos=allowed,
+                    atom_count_grammar=None,
+                    lightweight_decoding_constraints=lightweight_constraints,
+                    strict_geometry_fallback=True,
+                    sampling_seeds_by_batch=cell_sampling_seeds,
+                )
+                cell_revision_logs = list(cell_logs)
             if args.spad_backfill:
                 if programs is None:
                     raise RuntimeError("SPAD programs were not built")
+                if int(args.spad_max_anchor_revisions) > 0:
+                    revision_slots = [
+                        list(
+                            limited_anchor_revision_slots(
+                                program,
+                                max_anchors=int(args.spad_max_anchor_revisions),
+                            )
+                        )
+                        for program in programs
+                    ]
+                else:
+                    revision_slots = [
+                        list(anchor_revision_slots(program)) for program in programs
+                    ]
+                anchor_sampling_seeds = [
+                    int(args.seed)
+                    + int(item["sample_idx"]) * 1_000_003
+                    + 90_000_019
+                    for item in batch
+                ]
                 outputs, revision_logs = revise_spad_anchors(
                     model,
                     outputs,
                     prompt_length=input_ids.shape[1],
                     gen_length=gen_length,
-                    revision_slots_by_batch=[
-                        list(anchor_revision_slots(program)) for program in programs
-                    ],
+                    revision_slots_by_batch=revision_slots,
                     attention_mask=attention_mask,
                     temperature=args.temperature,
                     cfg_scale=args.cfg_scale,
@@ -517,11 +574,16 @@ def main() -> None:
                     atom_count_grammar=None,
                     lightweight_decoding_constraints=lightweight_constraints,
                     suffix_visible=not args.spad_hide_suffix,
+                    sampling_seeds_by_batch=anchor_sampling_seeds,
                 )
             generated_ids = outputs[:, input_ids.shape[1] :]
             decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
-            for item, text, revision_log in zip(
-                batch, decoded, revision_logs, strict=True
+            for item, text, revision_log, cell_revision_log in zip(
+                batch,
+                decoded,
+                revision_logs,
+                cell_revision_logs,
+                strict=True,
             ):
                 sample_idx = int(item["sample_idx"])
                 raw_record: Dict[str, Any] = {
@@ -534,10 +596,15 @@ def main() -> None:
                     "prompt_record_idx": item["prompt_record_idx"],
                     "generation_schedule": args.generation_schedule,
                     "spad_backfill": bool(args.spad_backfill),
+                    "spad_cell_closure": bool(args.spad_cell_closure),
+                    "spad_max_anchor_revisions": int(
+                        args.spad_max_anchor_revisions
+                    ),
                     "spad_suffix_visible": bool(
                         args.spad_backfill and not args.spad_hide_suffix
                     ),
                     "spad_revision_log": revision_log,
+                    "spad_cell_revision_log": cell_revision_log,
                 }
                 if item.get("prompt_record") is not None:
                     source = dict(item["prompt_record"])
