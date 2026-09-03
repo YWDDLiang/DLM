@@ -258,6 +258,14 @@ All future work is capped at four A800 and exactly four requested CPUs per GPU,
 with at most two jobs. CHGNet uses batch 8--16 and does not serialize
 structures one at a time unless a batch fails.
 
+GPU occupancy is treated as an execution target rather than a new scientific
+variable. DLM generation keeps batch size 8. CHGNet keeps batch size 16. The
+conditional tau800 run uses four A800s and two independent, disjoint
+sample-index-seeded refinement workers per GPU (four workers per arm across two
+GPUs); this preserves each sample exactly while targeting at least 70% device
+utilization. No sampling temperature, seed, Plan, checkpoint or denominator is
+changed to improve utilization.
+
 ## Decision evidence
 
 The first result answers one question:
