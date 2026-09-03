@@ -4,8 +4,15 @@ Status: **approved for preflight execution on 2026-09-04**. Phase 0, interface
 implementation and train-only data construction may start immediately. Formal
 DLM training starts only after the frozen launch conditions below are met.
 
-Execution status: Phase 0 is running as Slurm job `39596` (one A800, eight
-CPUs). Formal potential-closure training has not started.
+Execution status: Phase 0 job `39596` completed in 37 seconds and authorized
+the action-pool preflight. Formal potential-closure training has not started.
+
+Phase 0 results: `9,047/9,047` exact codec round trips; fixed-512 CHGNet pair
+coverage `100%`; quantized-minus-continuous median energy `+2.846 meV/atom`
+(`q05=-0.430`, `q95=+19.031 meV/atom`); frozen fast Direct `458 -> 458/512`;
+Meta proxy retention `505/512 = 98.63%`. Strict exact-zero proxy retention is
+`25/207` and remains diagnostic only because a few-meV proxy error flips an
+exact-zero threshold.
 
 ## Approach
 
@@ -149,7 +156,7 @@ pilot outcomes remain reported.
 
 ## Action items
 
-- [ ] **Run one compact Phase 0 package.** In parallel, measure MP20-val
+- [x] **Run one compact Phase 0 package.** In parallel, measure MP20-val
   continuous-to-token quantization effects, decompose existing BS raw
   stress/coordination errors, and audit train-only program/VPA/pair coverage.
 
