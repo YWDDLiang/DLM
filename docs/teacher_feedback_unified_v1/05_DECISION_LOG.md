@@ -201,3 +201,19 @@ job 39556's K4 XYZ endpoints as program labels because those candidates share
 one fixed program.  Estimated incremental cost is 4,096 complete trajectories,
 approximately 20--27 A800-hours, with a credible result window around
 2026-09-04 05:00--07:00 Asia/Shanghai after SPAD-E freezes.
+
+### Paper evidence budget
+
+The teacher's latest direction supersedes the earlier sufficiency-style main
+table.  The paper does not need to display every control needed during method
+development.  The main narrative is limited to three outcomes:
+
+1. scientific knowledge injection preserves/grows composition validity;
+2. programmed non-causal DLM decoding fixes structural execution;
+3. hierarchical value distillation improves stability/S.U.N.
+
+The headline Program-Value comparison is base-Llama versus one preregistered
+value-trained Llama policy under the same frozen SPAD-E DLM and two streams.
+Canonical order, SPAD-CE, suffix-hidden scoring, a second pointer seed and full
+Direct remain optional internal/appendix checks.  They cannot delay the final
+method result, enlarge the main contribution list or become selection gates.

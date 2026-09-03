@@ -290,6 +290,13 @@ Current status: **APPROVED NEXT, only after the SPAD-E executor is frozen**.
 This is the sole revision that can close the teacher-feedback gap; it is not a
 third method branch.
 
+Paper evidence budget: the main text contains only three large result blocks:
+(1) C3FD-supported Llama composition validity, (2) programmed non-causal DLM
+structural execution, and (3) the final value-distilled hierarchy's stability
+and S.U.N.  Equal-compute CE, canonical-order repetition, suffix-hidden scoring,
+extra seeds and expensive Direct are internal/appendix evidence and must not
+block the headline result.
+
 - [ ] Finish SPAD-E teacher/training/evaluation before generating program-level
   value labels.
 - [ ] Freeze one final SPAD-E DLM executor; never label program values with the
@@ -304,16 +311,28 @@ third method branch.
 - [ ] Apply validity before value.  Among valid programs, construct one
   within-composition terminal-energy target from the same frozen CHGNet value
   functional used by SPAD-E; no cross-composition energy comparison.
-- [ ] Train two fixed-seed Llama pointer policies with one preregistered KL
-  budget, no grid, early stopping, checkpoint or seed selection.
-- [ ] Evaluate canonical, base-Llama and both value-trained programs with the
-  same frozen SPAD-E DLM and two common streams.  Inference is one program and
-  one trajectory, never program reranking or best-of-N.
+- [ ] Train one preregistered Llama pointer policy with one fixed KL budget and
+  endpoint.  A second seed is optional appendix evidence only and cannot delay
+  the main result or be used for selection.
+- [ ] Evaluate only base-Llama versus value-trained Llama in the headline run,
+  using the same frozen SPAD-E DLM, frozen compositions and two common streams.
+  Reuse the already measured canonical program result as appendix context; do
+  not rerun it merely to fill a table.  Inference is one program and one
+  trajectory, never program reranking or best-of-N.
 - [ ] First report exact composition, body/graph validity and raw CHGNet.  Run
   model494/refined S.U.N. for the frozen full cells; keep expensive Direct
   deferred unless the final table requires it.
 - [ ] Judge the fixed requested-denominator targets: Strict at least 52/512 and
   Meta at least 256/512, while disclosing N/U and every policy/stream.
+
+Minimum paper-facing figures/tables:
+
+- [ ] one architecture figure showing one hierarchical policy, not a module
+  inventory;
+- [ ] one main result table with composition validity, structural validity and
+  final Strict/Meta S.U.N.;
+- [ ] one compact mechanism plot showing program-value improvement or energy
+  shift.  Keep all other diagnostics in the appendix or repository.
 
 Rejected for this sprint: online DLM-to-Llama controller, speculative dynamic
 transaction verifier, G2 revival, program search at inference and any
