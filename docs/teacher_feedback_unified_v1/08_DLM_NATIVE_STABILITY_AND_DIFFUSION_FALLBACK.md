@@ -4,6 +4,14 @@ Status: method rationale accepted; preflight execution approved on 2026-09-04.
 The active efficiency checklist and formal-training launch conditions are in
 [`09_EFFICIENCY_FIRST_POTENTIAL_CLOSURE_PLAN.md`](09_EFFICIENCY_FIRST_POTENTIAL_CLOSURE_PLAN.md).
 
+Optimization amendment (2026-09-04): the scalar `0.5/0.5`, 348-update and
+full-site reverse-sweep protocol in the original design has been superseded by
+the audited protocol in the active checklist: objective-separated interleaved
+updates for 2,048 optimizer steps, fixed first-unique action proposals,
+independent gradient probes and one cell plus at most two Llama-anchor
+closures. Where this rationale document and the active checklist differ, the
+checklist governs execution.
+
 ## 0. Decision
 
 The project will evolve toward a DLM-native stable crystal generator without
@@ -441,7 +449,9 @@ Two state types are used:
 1. **Cell closure:** all sites visible; the complete six-token lattice block is
    masked and predicted.
 2. **Site closure:** lattice and all other sites visible; one complete XYZ block
-   is masked and predicted in reverse Llama-program order.
+   is masked and predicted. Deployment revisits only the first two
+   distinct-species anchors selected by the Llama program, in reverse program
+   order; unary structures revisit one anchor.
 
 “Deployment matched” means identical visible tokens, mask block, program order
 and action definition. It does not claim that MP20 contexts and generated DLM
@@ -481,7 +491,11 @@ relaxed MP20 block. If teacher and no-op are identical after tokenization, they
 are recorded as a duplicate and cannot create an artificial preference. An
 on-policy state has no clean teacher action.
 
-The four candidates are therefore:
+Each group retains at most four candidates. Fixed no-op/teacher actions are
+inserted first, followed by the first distinct legal DLM proposals in request
+order. The proposal temperature is frozen, at most eight request-keyed
+proposals are drawn, and neither temperature nor proposal count responds to
+energy. Thus the candidate sets are:
 
 \[
 \mathcal K_{\rm restore}(s)=
@@ -511,9 +525,11 @@ Energy is measured in eV/atom. For action `a`, define
 
 Within each group, finite legal energies are median-centered and divided by a
 MAD scale with the existing robust fallback and clipping. `q_ref` is the
-current BS DLM probability over the four sampled complete actions; each action
-score is the mean conditional log probability per active token, so three-token
-and six-token actions are comparable. The target posterior is
+current BS DLM probability over the retained complete actions. An action score
+is the sum of the three or six conditional token log probabilities, matching
+the probability of the complete transaction. Cell and site groups never
+compete in the same softmax; their group losses are divided by transaction
+length to normalize optimizer scale. The target posterior is
 
 \[
 q_E^*(a\mid s,c)
@@ -531,9 +547,11 @@ D_{\rm KL}(q_E^*\Vert q_{\rm ref})\le0.05\ \text{nat}.
 \]
 
 There is no free beta sweep. Illegal actions have zero support. Energy-unknown
-actions retain no preference advantage. Duplicate action draws retain their
-reference mass but receive exactly the same reconstructed energy, so they
-cannot manufacture an energy difference.
+actions retain no preference advantage. Duplicate action draws are merged
+before normalization, so they cannot manufacture either reference mass or an
+energy difference. Groups with fewer than two distinct legal energy-known
+actions, or with less than 1 meV/atom energy spread, remain in accounting but
+receive zero training weight.
 
 Force and stress are not separate first-run losses. Previous force projection
 was quantization-sensitive and failed to improve the realized student. They are
@@ -548,26 +566,37 @@ This differs from retired methods:
 - it does not train on positive rows without same-state alternatives;
 - it assigns value to complete deployed lattice/XYZ transactions.
 
-### 7.4 Mixed preservation and potential training
+### 7.4 Objective-separated preservation and potential training
 
 Continue from the existing schedule-matched SPAD DLM rather than rebuilding a
-new generator. Use a fixed 1:1 source schedule between clean SPAD CE and
-transaction-posterior microbatches. After normalizing each component by its
-own active-token/group denominator, use
+new generator. Do not add clean CE and posterior losses in one scalar mixture.
+Use a fixed four-update cycle:
 
-\[
-\mathcal L
-=0.5\,\overline{\mathcal L}_{\rm clean\ SPAD\ CE}
-+0.5\,\overline{\mathcal L}_{\rm transaction\ posterior}.
-\]
+1. clean MP20 SPAD CE;
+2. cell-transaction posterior;
+3. clean MP20 SPAD CE;
+4. site-transaction posterior.
 
-There is no mixture-weight sweep. Clean SPAD CE protects syntax, exact
-composition and the existing structural validity. The posterior term changes
-which legal closure actions are preferred.
-The first run uses one training seed and 348 optimizer updates with six
-posterior groups per update, consuming approximately one 2,048-group pass. It
-releases only the final endpoint; it is a mechanism study, not the final
-paper-scale replication.
+Repeat 512 cycles for 2,048 optimizer updates. On-policy states receive only
+posterior supervision; clean CE is computed only on MP20 teacher structures.
+This gives the cell and site posterior pools three group exposures each while
+clean CE occupies half of all optimizer updates. The first 100 total updates
+warm up linearly to LR `5e-6`, after which the LR remains fixed. Release only
+update 2048.
+
+The equal-compute closure-only control uses the same initialization, optimizer,
+update count and cell/site schedule, but its transaction slots use clean MP20
+transaction-restoration CE and never consume energy labels or on-policy
+generated structures. This preserves a direct attribution: the two models
+differ in whether complete transactions receive same-composition potential
+supervision.
+
+Before either formal run, independently backpropagate clean CE, cell posterior
+and site posterior on five fixed batches without updating weights. Require
+finite, nonzero gradients, posterior/CE median norm ratios in `[1e-2,1e2]`,
+median cosine similarity above `-0.5`, and target KL no greater than `0.05`
+nat. The probe diagnoses implementation or data failures; it never tunes loss
+weights, LR, KL or epoch count.
 
 If the 2,048-group study produces a genuine native stability shift, extend the
 same frozen construction to full MP20 and train **two independent full-data
@@ -582,7 +611,8 @@ Inference remains one program and one trajectory:
    program.
 2. Existing SPAD produces one complete native body.
 3. The trained DLM executes one cell closure.
-4. It executes one reverse-program site-closure sweep.
+4. It revisits the first two distinct-species Llama anchors once, in reverse
+   program order; a unary structure revisits one anchor.
 5. The resulting native crystal is emitted without CHGNet, reranking,
    replacement or best-of-N.
 
@@ -672,7 +702,8 @@ Implement and test:
 
 - six-token cell closure;
 - shared three/six-token K4 schema and length-normalized scorer;
-- fixed 0.5/0.5 clean-CE/posterior trainer;
+- objective-separated 2,048-update interleaved trainer and five-batch gradient
+  probe;
 - one thin native evaluator.
 
 Do not implement Pointer DPO, new geometry layers, residual heads, vocabulary
@@ -683,10 +714,11 @@ changes or low-tau wrappers during this stage.
 - Reuse job39556 MP20-train programs and BS predictor bodies for the 1,024
   on-policy groups.
 - Build 1,024 MP20-restoration groups from the same train-only source domain.
-- Generate only the missing K4 closure actions on four A800.
+- Generate at most eight fixed-temperature proposals per group on four A800,
+  retaining the first distinct legal actions in request order.
 - Label 8,192 raw candidates through the verified explicit-device CHGNet path.
 - Train closure+clean-CE and potential-closed cells concurrently, one A800
-  each, for 348 updates.
+  each, for 2,048 updates after the gradient probe passes.
 
 This consumes the labelled pool approximately once and avoids producing a
 27,136-row pool that the pilot would barely read.
@@ -773,7 +805,7 @@ nearly correct, yet fail when several parts of a generated structure are wrong.
 Other risks are:
 
 - K4 candidates may contain little useful energy variation;
-- one cell plus one site sweep may be insufficient for collective modes;
+- one cell plus two anchor closures may be insufficient for collective modes;
 - CHGNet improvement may not cross official hull thresholds;
 - energy preference may reduce novelty;
 - tau800 may erase native gains;
@@ -889,7 +921,7 @@ alternative is inferior or incapable.
 | Preserve C3FD, Pointer, SPAD and tau800 | rebuild the pipeline | rejected; established assets remain fixed |
 | Train complete lattice/XYZ actions | single-token Q or force target | accepted; prior local-credit routes were negative |
 | Use raw same-composition CHGNet | post-model494 energy | accepted; removes refiner random-credit confounding |
-| First build 2,048 groups | immediate 27,136 x K4 | accepted; exactly matches the existing 348 x 6 training budget and reuses job39556 native bodies |
+| First build 2,048 groups | immediate 27,136 x K4 | accepted; supplies three posterior exposures per cell/site pool under the 2,048-update interleaved budget and reuses job39556 native bodies |
 | Explicitly train cell closure | zero-shot `L given X` | accepted; avoids an OOD inference trick |
 | Keep VPA/pair geometry soft | hard 0.75 radius cutoff | accepted; pair priors are not universal energy laws |
 | Conditional Pointer DPO | mandatory hierarchical value training | accepted; no training without identifiable program value |
