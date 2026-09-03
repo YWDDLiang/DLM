@@ -1,6 +1,6 @@
 # Decision Log
 
-Status: **post-audit B-first design; implementation active**
+Status: **SPAD executed; SPAD-E design approved and awaiting implementation approval**
 
 ## Design-review decisions
 
@@ -18,7 +18,7 @@ Status: **post-audit B-first design; implementation active**
 | Only exact `7+4N` is production | use universal 87-token EOS tail | the latter mismatches SFT for N<20 |
 | 000/100 are one torus action | treat them as independent physical values | they are periodic aliases |
 | Lattice/XYZ are transactions | commit arbitrary individual fields | full geometry is needed for validity decisions |
-| Continuous response/force is later E1 | block SPAD on a third contribution | first establish the unified Planner-programmed DLM |
+| SPAD-E learns terminal preference on suffix-visible backfill | detached response residual or inference-time critic | the downstream transition supervises the same DLM-specific operation offline |
 
 ## Initial review disposition
 
@@ -76,6 +76,28 @@ geometry-supervised pointer on the terminal Planner-Llama state.
 - Strict/Meta S.U.N. >10%/50% is the target, not a row-selection rule.
 - small failures receive a root-cause repair; scientific negatives remain
   visible and motivate only adjacent revisions.
+
+## Post-SPAD stability decision
+
+The prospective BS endpoint reached refined Direct `512/512` but Strict/Meta
+S.U.N. `6.84%/45.70%`.  Structured skeptic, constraint, paper-reader and
+arbiter review therefore accepted one tightly coupled extension:
+
+- SPAD-E acts only on a Llama-programmed suffix-visible XYZ backfill state;
+- `K=4` always includes the existing XYZ no-op plus three PBC-legal reference
+  DLM actions;
+- model494 tau800 and CHGNet endpoint energy label those actions offline on
+  MP20-train only;
+- a 0.05-nat trust region and explicit reference KL define the target;
+- SPAD-CE is the equal-compute control;
+- force is diagnostic only; no force/stress loss or inference-time critic;
+- at inference the DLM first completes the future canvas, then rewrites the
+  earlier site from learned weights, and model494 runs once only after discrete
+  generation ends.
+
+The existing official cohort is development evidence for this design.  A
+positive result requires a second training seed and newly frozen confirmatory
+cohort.
 
 ## Resource decision
 

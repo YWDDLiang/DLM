@@ -171,18 +171,27 @@ Track A no longer blocks B.
   BR/BS.
 - [ ] Keep AR native text separate from DLM special tokens.
 
-## Phase 7 — Candidate E1 stability feedback
+## Phase 7 — SPAD-E terminal-energy backfill learning
 
-Only after the SPAD result is frozen:
+The design passed sequential skeptic, constraint, paper-reader and arbiter
+review.  Implementation still requires explicit user approval.
 
-- [ ] Use 1,024 BS-generated MP20-train states and 256 validation states.
-- [ ] Test whether the deployed continuous refiner's one-step response or
-  CHGNet force can supervise a DLM geometry residual/confidence module.
-- [ ] Keep force/energy undefined on incomplete or ungraphable structures.
-- [ ] Compare an equal-compute zero-response remask with active feedback.
-- [ ] Require raw geometry and held-out stability improvement before terminal
-  full refinement.
-- [ ] If this path is weak, retain it as a negative and keep SPAD as the core.
+- [ ] Freeze 2,048 outcome-blind MP20-train Plans and one predicted
+  Llama-programmed suffix-visible backfill state per Plan.
+- [ ] Build exactly `K=4` legal XYZ actions: mandatory old-XYZ no-op plus three
+  frozen-reference DLM samples; preserve one common state and fixed accounting.
+- [ ] Run model494 tau800 and CHGNet endpoint energy once per complete action;
+  no MP query or prospective outcome enters labels.
+- [ ] Build the finite-action `q*` under a 0.05-nat reference trust region.
+- [ ] Implement the common-state collator, dynamic triclinic PBC support and
+  two-GPU trainer preflight.
+- [ ] Train equal-compute SPAD-CE and SPAD-E cells for 1,696 updates each.
+- [ ] At inference use no critic/look-ahead: complete the future canvas,
+  re-mask/rewrite the earlier XYZ with the trained DLM, then run model494 once.
+- [ ] Keep raw force as a same-site mechanism diagnostic only; no force/stress
+  loss in version 1.
+- [ ] First screen one seed; a positive SPAD-E receives seed two and a newly
+  frozen confirmatory cohort.
 
 ## Phase 8 — final evidence
 

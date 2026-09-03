@@ -86,8 +86,11 @@ Continuous output returns through the same state before text or special-token
 serialization. Site order is preserved or matched within species.
 
 The current refiner's raw `pred_x/pred_l` are differently parameterized and
-are not called force. Candidate E1 uses either the actual deployed transition
-response or a separately defined MLIP force teacher on complete structures.
+are not called force.  In SPAD-E, model494 is used only as the frozen tau800
+transition `R_494`; CHGNet supplies endpoint energy `E_phi`.  Four legal XYZ
+actions at one shared suffix-visible state are compared through
+`E_phi(R_494(x[a]))`.  Raw CHGNet force is recorded only as a diagnostic and is
+not mixed into the version-1 training target.
 
 ## 7. Transaction semantics
 

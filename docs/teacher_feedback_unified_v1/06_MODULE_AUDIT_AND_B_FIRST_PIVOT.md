@@ -37,7 +37,7 @@ This is named **Scientific Programmed Anchor–Backfill Denoising (SPAD)**.
 | Llama should decide DLM order | a masked pointer on terminal Llama state predicts the exact Plan-element permutation compiled into DLM positions |
 | use DLM rather than a second AR model | DLM commits non-contiguous future positions and later infills an earlier remasked anchor with the suffix still visible |
 | lattice/coordinates should receive prior knowledge | predicted LS/SG/VPA condition the prompt; lattice and PBC state constrain transactions |
-| connect to continuous diffusion | complete raw SPAD state can later receive a force-calibrated continuous-response correction |
+| connect to continuous diffusion | model494/CHGNet train a bounded terminal-energy posterior over the same programmed suffix-visible backfill transaction |
 
 The pointer is attached to the same Planner Llama and cannot alter the
 C3FD-certified candidate set. It connects chemistry and DLM execution without
@@ -217,16 +217,21 @@ Direct in the two streams, demonstrating that the learned program and
 non-causal correction states can be absorbed without sacrificing the large
 transaction-order gain.
 
-## 11. Later stability contribution
+## 11. Energy-shaped suffix-visible backfill
 
-After SPAD is established, a complete raw BS crystal may receive Candidate E1:
+The completed SPAD result isolates stability—not composition or execution—as
+the remaining gap.  The accepted SPAD-E design moves continuous feedback into
+the same non-causal operation:
 
-- use the deployed continuous refiner's one-step response on BS-generated
-  MP20-train states;
-- regress confidence/direction into a DLM geometry residual or use one
-  response-guided remask;
-- compare against an equal-compute zero-response correction;
-- require improvement before terminal full refinement.
+- freeze one Llama-programmed suffix-visible backfill state;
+- include the old XYZ as a mandatory no-op and sample three additional legal
+  reference-DLM triplets;
+- run the same model494 tau800 transition for each complete action;
+- use CHGNet endpoint energy to reweight the four-action posterior within a
+  fixed 0.05-nat trust region;
+- train that DLM posterior against an equal-compute SPAD-CE control.
 
-This stage is downstream of the core contribution and cannot delay the first
-SPAD result.
+There is no endpoint imitation, force loss, stress loss, reranking or
+inference-time critic. Force remains a same-site diagnostic. This makes the
+continuous model a teacher for SPAD's own backfill distribution rather than a
+later disconnected module.

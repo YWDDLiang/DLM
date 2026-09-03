@@ -1,6 +1,6 @@
 # Teacher-Feedback Unified Method Package
 
-Status: **execution approved; implementation and preflight active**
+Status: **SPAD executed; energy-shaped backfill design approved for implementation review**
 
 Branch: `codex/unified-scientific-decoding`
 Worktree: `D:\codex_work\ai4s\DLM_unified_scientific_decoding`
@@ -16,7 +16,8 @@ is authoritative where it supersedes the initial SLA/gate design:
 2. **Track B — LLM-programmed DLM:** a small Plan-conditioned pointer on the
    Planner Llama predicts a species permutation, which controls a masked DLM's
    non-contiguous anchor order; the DLM later re-masks early anchors with the
-   generated suffix visible.
+   generated suffix visible.  The accepted SPAD-E extension learns a bounded
+   terminal-energy posterior over that exact backfill transaction.
 
 The models do not share token IDs. They communicate through a canonical crystal
 state and typed semantic action space. The frozen continuous refiner (internal
@@ -35,8 +36,8 @@ uses that program to build future context before backfilling earlier atoms.**
 | Track-B guidance | PlannerAdapter-P Plan text + Llama pointer permutation |
 
 Track B does not depend on Track-A body weights and receives execution priority.
-Its first path trains only a DLM LoRA after decoder-only program/remask cells.
-Candidate E1 later owns a separate stability module.
+Stability is no longer assigned to a disconnected E1 module: model494 and
+CHGNet supervise the same Llama-programmed suffix-visible DLM backfill action.
 
 Short glossary:
 
@@ -59,7 +60,7 @@ Short glossary:
 | A0/A1 | LLM-only executor without/with periodic commit control |
 | SPAD | Scientific Programmed Anchor–Backfill Denoising, the B-route core |
 | B0/BC/BP/BR/BS | retained schedule / canonical SPAD / Llama-pointer SPAD / suffix-visible remask / matched-SFT endpoint |
-| E1 | later continuous-response or force-to-DLM stability contribution |
+| SPAD-E | terminal model494/CHGNet energy shaping of one suffix-visible SPAD backfill posterior |
 
 Read in this order:
 
@@ -70,6 +71,7 @@ Read in this order:
 5. [Execution checklist](04_EXECUTION_CHECKLIST.md)
 6. [Decision log](05_DECISION_LOG.md)
 7. [Implementation audit and B-first pivot](06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
+8. [Energy-shaped SPAD design and review log](07_BASIN_POSTERIOR_ALIGNMENT.md)
 
 Current raw result on the fixed 256-Plan, two-stream ledger:
 
@@ -85,6 +87,13 @@ Thus the crystal-native transaction order contributes +18.95 percentage
 points raw Direct over B0. The learned program is isolated with 256/256 equal
 lattices in both streams, and schedule-matched training raises the final raw
 joint validity to 511/512.
+
+The completed fresh official endpoint gives BS-refined Direct `512/512`,
+Strict S.U.N. `35/512 = 6.84%` and Meta S.U.N. `234/512 = 45.70%`.
+This isolates the remaining problem: SPAD solves execution, while its
+backfill posterior has not yet learned terminal basin preference.  SPAD-E is
+the reviewed, tightly coupled response to that gap; the old official cohort is
+development evidence rather than its confirmatory test.
 
 The active ten-minute heartbeat is `sscd-a-b-approval-and-execution`. Execution
 is approved; it stays quiet except for terminal audit, training, generation,

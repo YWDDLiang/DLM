@@ -62,9 +62,11 @@ keeping later sites visible.
 
 The frozen continuous refiner receives atom types, fractional coordinates and
 lattice arrays only after a complete raw crystal exists. Its terminal
-trajectory is a common system component. A one-step response/force-to-DLM
-feedback mechanism is a later candidate contribution, not part of the SPAD
-core.
+trajectory is both a common system component and, in SPAD-E training, a frozen
+transition teacher.  For one Llama-programmed suffix-visible backfill state,
+model494 tau800 maps four legal XYZ actions to terminal structures and CHGNet
+scores their endpoint energy.  The resulting bounded action posterior trains
+the DLM; no critic is required at final sampling time.
 
 ## 3. Two routes
 
@@ -229,10 +231,13 @@ without future context. The intended final target is Strict S.U.N. above 10%
 and Meta S.U.N. above 50% on a fixed requested denominator and two common
 streams.
 
-## 12. Candidate later contribution
+## 12. Energy-shaped programmed backfill
 
-After BS is frozen, Candidate E1 may regress a continuous-refiner response or
-CHGNet force into a DLM geometry residual/confidence module on BS-generated
-MP20-train states. It must improve raw structure/stability against an
-equal-compute zero-response remask before terminal refinement. Failure does not
-weaken the SPAD core.
+SPAD-E is the accepted stability extension.  It does not regress a model494
+endpoint or add force to logits.  On 2,048 MP20-train Plans it constructs one
+programmed suffix-visible backfill state and four PBC-legal XYZ triplets,
+including the no-op.  Fixed model494 tau800 plus CHGNet endpoint energy defines
+a target distribution within 0.05 nat of the frozen SPAD posterior.  An
+equal-compute SPAD-CE endpoint isolates continued training.  Raw force is only
+a mechanism diagnostic; the current official cohort is development-only and a
+positive method requires a second seed and newly frozen confirmation cohort.

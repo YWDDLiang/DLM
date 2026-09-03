@@ -39,6 +39,13 @@ cannot perform without regenerating the suffix.
 Every request uses one Plan, one DLM trajectory and one fixed model494
 trajectory. There is no retry, replacement, reranking or best-of-N.
 
+The accepted SPAD-E training extension does not introduce an inference-time
+energy oracle.  On MP20-train only, model494/CHGNet label four legal actions at
+one Llama-programmed suffix-visible backfill state.  At deployment, the DLM
+first completes the future canvas, then re-masks and rewrites the earlier XYZ
+from its learned parameters; model494 runs once only after discrete generation
+is complete.
+
 ## Modules and why each is necessary
 
 ### 1. C³FD–Llama scientific Planner
