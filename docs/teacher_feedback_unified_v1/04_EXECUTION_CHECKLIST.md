@@ -249,21 +249,32 @@ Only after the SPAD result is frozen:
 - jobs 39529/39530 were cancelled at 00:08:45/zero after profiling showed that
   the four-GPU queue layout still serialized two cells; their partial output is
   retained as an engineering trace.
-- job 39531 runs all six raw CHGNet cells concurrently on four A800s. Its two
+- job 39531 completed all six reusable raw CHGNet cells in 01:09:21, then
+  terminated as expected because its two
   BS Direct workers exposed a pre-science environment error because the frozen
-  Direct runtime rejects two-thread BLAS values. The CHGNet workers are valid
-  and continue to completion; the root `_FAILED` marker is expected.
-- job 39533 is queued after-any on job 39531. It first verifies and reuses the
-  six byte-identical raw CHGNet outputs, runs Direct in a separate four-thread
-  wave, and then evaluates all six refined cells concurrently. This recovery
+  Direct runtime rejects two-thread BLAS values. No valid CHGNet result was lost.
+- job 39533 completed in 01:21:08. It verified and reused the
+  six byte-identical raw CHGNet outputs, ran Direct in a separate four-thread
+  wave, and evaluated all six refined cells concurrently. This recovery
   changes scheduling only; the Plan/model/seed/denominator remain fixed.
+- development pooled Direct and N/U/NU are: BC raw 508 and 512/512/512, BC
+  refined 511 and 430/506/430; BR raw 506 and 511/512/511, BR refined 510 and
+  437/506/437; BS raw 511 and 510/512/510, BS refined 511 and 438/506/438, all
+  over 512 attempts. Model494 lowers paired CHGNet energy for BS by
+  1.464 eV/atom, 95% composition-bootstrap [-1.707,-1.232].
+- job 39534 generated all 256/256 actual seed-23 C3FD–Llama+pointer Plans with
+  100% composition validity and no selection/replacement. Job 39536 froze all
+  requested ordinals; 254 exact compositions are unique and both duplicates
+  remain in the denominator.
+- jobs 39537/39538 are the active stream17/stream18 three-A800 B0/BC/BS
+  generation+tau800 runs.
 
 Immediate sequence:
 
 - [x] finish and audit all six job-39525 refinement cells;
-- [ ] finish the six reusable raw CHGNet cells in job 39531, then complete the
+- [x] finish the six reusable raw CHGNet cells in job 39531, then complete the
   parameter-identical Direct/refined recovery in job 39533;
-- [ ] sample and freeze exactly the first 256 requested C3FD–Llama+pointer
+- [x] sample and freeze exactly the first 256 requested C3FD–Llama+pointer
   Plan outcomes before any DLM rollout; retain Planner failures in the fixed
   denominator, do not filter training-set overlaps, and never resample the
   Planner after this freeze;
