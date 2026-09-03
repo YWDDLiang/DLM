@@ -14,6 +14,11 @@ Meta proxy retention `505/512 = 98.63%`. Strict exact-zero proxy retention is
 `25/207` and remains diagnostic only because a few-meV proxy error flips an
 exact-zero threshold.
 
+Matched state freeze job `39597` completed: 512 outcome-blind MP20-train
+sources yield exactly 512 groups in each of MP20-clean cell/site and on-policy
+cell/site strata. Anchor ranks are balanced `259/253`; actual body species
+order is used when mapping the Llama program to a site.
+
 ## Approach
 
 Test the only new mechanism that directly targets stability: train the existing
@@ -164,7 +169,7 @@ pilot outcomes remain reported.
   generalize the at-most-K4 scorer to three/six tokens with group loss divided
   by transaction length, and add objective-separated interleaved updates.
 
-- [ ] **Freeze 2,048 train-only closure groups.** Use 512 groups in each of
+- [x] **Freeze 2,048 train-only closure groups.** Use 512 groups in each of
   MP20-restoration-cell, MP20-restoration-site, on-policy-cell and
   on-policy-site. Reuse job39556 programs and BS predictor bodies for the
   on-policy half; never reuse its model494 terminal ranks.
