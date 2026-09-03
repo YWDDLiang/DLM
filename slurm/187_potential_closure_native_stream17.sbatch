@@ -14,7 +14,8 @@ set -Eeuo pipefail
 
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:?}"
-readonly TRAIN_RUN="${POTENTIAL_CLOSURE_TRAIN_RUN:?}"
+readonly CONTROL_TRAIN_RUN="${POTENTIAL_CLOSURE_CONTROL_TRAIN_RUN:?}"
+readonly POTENTIAL_TRAIN_RUN="${POTENTIAL_CLOSURE_POTENTIAL_TRAIN_RUN:?}"
 readonly PLAN_DIR="${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly CRYS=/public/home/jiaosz/hengzhang/Code/crysllmgen-main
@@ -27,16 +28,22 @@ mkdir "${RUN}"
 mkdir "${RUN}/logs"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\n" "$rc" "$LINENO" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 
-[[ -f "${TRAIN_RUN}/_SUCCESS" ]]
+[[ -f "${CONTROL_TRAIN_RUN}/closure_control/_SUCCESS" ]]
+[[ -f "${POTENTIAL_TRAIN_RUN}/potential_closed/_SUCCESS" ]]
 [[ -f "${PLAN_DIR}/_SUCCESS" ]]
 [[ "$(wc -l <"${PLAN_DIR}/ledger.jsonl")" -eq 256 ]]
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
 [[ "${#allocated[@]}" -eq 2 ]]
 
 policy_path() {
-  local mode="$1"
+  local mode="$1" train_run
+  if [[ "${mode}" == closure_control ]]; then
+    train_run="${CONTROL_TRAIN_RUN}"
+  else
+    train_run="${POTENTIAL_TRAIN_RUN}"
+  fi
   "${PYTHON}" -c 'import json,pathlib,sys; x=json.load(open(pathlib.Path(sys.argv[1])/sys.argv[2]/"TRAIN_FINAL.json")); print(x["checkpoint"]["policy_adapter_path"])' \
-    "${TRAIN_RUN}" "${mode}"
+    "${train_run}" "${mode}"
 }
 
 run_cell() {
@@ -77,13 +84,16 @@ wait "${control_pid}" || status="$?"
 wait "${potential_pid}" || status="$?"
 (( status == 0 ))
 
-"${PYTHON}" - "${RUN}" "${TRAIN_RUN}" <<'PY'
+"${PYTHON}" - "${RUN}" "${CONTROL_TRAIN_RUN}" "${POTENTIAL_TRAIN_RUN}" <<'PY'
 import json
 import pathlib
 import sys
 
 root = pathlib.Path(sys.argv[1])
-train = str(pathlib.Path(sys.argv[2]).resolve())
+train = {
+    "closure_control": str(pathlib.Path(sys.argv[2]).resolve()),
+    "potential_closed": str(pathlib.Path(sys.argv[3]).resolve()),
+}
 cells = []
 for mode in ("closure_control", "potential_closed"):
     cell = root / mode / "stream17"
@@ -109,7 +119,7 @@ for mode in ("closure_control", "potential_closed"):
     })
 report = {
     "schema": "potential_closure_native_stream17_generation_v1",
-    "training_run": train,
+    "training_runs": train,
     "stream": 17,
     "dlm_seed": 91117,
     "cells": cells,
