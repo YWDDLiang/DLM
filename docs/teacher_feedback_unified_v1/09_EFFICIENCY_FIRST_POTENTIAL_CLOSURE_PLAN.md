@@ -19,10 +19,11 @@ sources yield exactly 512 groups in each of MP20-clean cell/site and on-policy
 cell/site strata. Anchor ranks are balanced `259/253`; actual body species
 order is used when mapping the Llama program to a site.
 
-Candidate transaction job `39598` has been submitted for four A800 and 32
-CPUs. It is currently pending cluster resources; no duplicate submission is
-allowed. The raw CHGNet label job starts only after its immutable action output
-completes.
+Candidate transaction job `39598` was reduced from 32 CPU/500G to 16 CPU/300G,
+then failed before model/data/science because an intervening SSH reconnect had
+cleared its submitted ROOT variables. Parameter-identical recovery job `39599`
+uses explicit absolute exports and is running on four A800/16 CPU. The raw
+CHGNet label job starts only after its immutable action output completes.
 
 ## Approach
 
