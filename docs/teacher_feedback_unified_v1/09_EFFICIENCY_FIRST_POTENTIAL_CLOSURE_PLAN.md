@@ -32,7 +32,12 @@ job `39601` completed in 95 seconds on one A800/8 CPU. All `6,883/6,883`
 retained candidates have raw CHGNet E/F/stress; `2,003/2,048` groups are
 informative, with strata `512/499/504/488`, and the median within-group energy
 spread is `2.624 eV/atom`. Every action-pool condition passes. Five-batch
-gradient probe job `39602` is running; formal DLM training has not started.
+gradient probe job `39602` completed in 143 seconds and passed every condition:
+cell/CE and site/CE gradient-norm median ratios are `0.109/0.160`, median
+cosines are `0.0058/0.0572`, and every gradient is finite/nonzero with KL at
+most `0.05 nat`. Formal dual-cell training job `39603` is running on two
+A800/eight CPUs: closure-only control and potential-closed, same initialization,
+seed, optimizer and 2,048-update budget.
 
 ## Approach
 
@@ -201,7 +206,7 @@ pilot outcomes remain reported.
   definitively invalid actions from support, and compute CHGNet energy/force/
   stress through the verified explicit `cuda:0` device path.
 
-- [ ] **Probe gradients without updating weights.** On five fixed batches,
+- [x] **Probe gradients without updating weights.** On five fixed batches,
   separately backpropagate clean CE, cell posterior and site posterior through
   the BS trainable LoRA, record norms/cosines, clear gradients, and apply the
   frozen launch conditions without automatic reweighting.
