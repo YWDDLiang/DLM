@@ -141,7 +141,7 @@ class PotentialClosureNativeRawTest(unittest.TestCase):
 
     def test_slurm_contract_is_single_gpu_and_fast_raw_only(self):
         text = (ROOT / "slurm" / "188_potential_closure_native_stream17_raw_eval.sbatch").read_text()
-        self.assertIn("--cpus-per-task=8", text)
+        self.assertIn("--cpus-per-task=4", text)
         self.assertIn("gpu:NVIDIAA800-SXM4-80GB:1", text)
         self.assertIn("--mem=160G", text)
         self.assertIn("--device cuda:0 --batch-size 16", text)

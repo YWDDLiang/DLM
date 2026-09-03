@@ -236,17 +236,18 @@ pilot outcomes remain reported.
 
 | Stage | Resources | Wall time | Cumulative |
 |---|---:|---:|---:|
-| Phase 0 package | 1 A800 + 8 CPU; CPU analyses parallel | 0.5--1.5 h | runs alongside code |
+| Phase 0 package | completed: 1 A800 + 8 CPU | 37 s | complete |
 | Code and tests | CPU/local + remote smoke tests | 2--3 h | **2--3 h combined** |
-| Fixed-8 proposal generation | 4 A800 + 32 CPU | 0.6--1.2 h | 2.6--4.2 h |
-| Raw CHGNet labels | 1 A800 + 8 CPU | 0.1--0.3 h | 2.7--4.5 h |
-| Five-batch gradient probe | 1 A800 + 8 CPU | 0.2--0.4 h | 2.9--4.9 h |
-| Two 2,048-update training cells | 2 A800 + 16 CPU | 1.5--2.5 h | 4.4--7.4 h |
-| Stream17 native generation/eval | 2--4 A800 + 16--32 CPU | 1.5--2.5 h | **6--11 h** |
-| Conditional stream18 + tau800 | up to 6 A800 + 48 CPU | 2--3 h | **8--14 h** |
+| Fixed-8 proposal generation | completed: 4 A800 + 16 CPU | 16 min | complete |
+| Raw CHGNet labels | completed: 1 A800 + 8 CPU | 95 s | complete |
+| Five-batch gradient probe | completed: 1 A800 + 8 CPU | 143 s | complete |
+| Two 2,048-update training cells | active: 2 A800 + 8 CPU | 2--2.5 h | running |
+| Stream17 native generation/eval | up to 4 A800 + 4 CPU/GPU | 1--2 h | **3--4.5 h** |
+| Conditional stream18 + tau800 | up to 4 A800 + 16 CPU | 2--3 h | **5--8 h** |
 
-Maximum active use remains six A800 and two jobs. CHGNet uses batch 8--16 and
-does not serialize structures one at a time unless a batch fails.
+All future work is capped at four A800 and exactly four requested CPUs per GPU,
+with at most two jobs. CHGNet uses batch 8--16 and does not serialize
+structures one at a time unless a batch fails.
 
 ## Decision evidence
 

@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
 #SBATCH --mem=160G
 #SBATCH --time=04:00:00
@@ -39,7 +39,7 @@ IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
 
 run_direct() {
   local arm="$1" generation="$2"
-  env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2 \
+  env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 \
     PYTHONPATH="${SOURCE}/src" "${PYTHON}" \
     "${SOURCE}/scripts/run_crysllmgen_validity_fast.py" \
     --generation-jsonl "${generation}" --snapshot-root "${SNAPSHOT}" \
@@ -51,7 +51,7 @@ run_direct BS "${BS_GENERATION}" & bs_direct_pid="$!"
 run_direct closure_control "${CONTROL_GENERATION}" & control_direct_pid="$!"
 run_direct potential_closed "${POTENTIAL_GENERATION}" & potential_direct_pid="$!"
 
-env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 NUMEXPR_NUM_THREADS=2 \
+env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 \
   PYTHONPATH="${SOURCE}/src" "${PYTHON}" \
   "${SOURCE}/scripts/evaluate_potential_closure_native_raw.py" evaluate-chgnet \
   --bs-generation "${BS_GENERATION}" \
