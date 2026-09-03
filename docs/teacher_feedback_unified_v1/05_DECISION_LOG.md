@@ -142,3 +142,62 @@ Final arbiter disposition: **APPROVED**.  Continue the frozen SPAD-E teacher,
 equal-compute training and evaluation.  Do not add the online controller before
 those results.  If SPAD-E is negative, retain the demonstrated SPAD
 composition/structural-execution result and leave stability open.
+
+## Hierarchical program-value revision
+
+Final disposition after the paper-first review: **REVISE**.  The current SPAD
+result proves that crystal-native transaction order matters, but it does not
+yet prove that the learned Llama program is better than the canonical program:
+BP reaches 98.05% raw Direct versus 99.22% for canonical SPAD.  SPAD-E assigns
+terminal value to one DLM backfill action under a fixed program, so it also does
+not train the Llama program logits.
+
+The paper's actual ML question is therefore:
+
+> How can a discrete diffusion language model learn both **what scientific
+> transaction to denoise next** and **how to denoise it**, when physical value
+> is observed only after the complete structure is continuously relaxed?
+
+Let the C3FD-supported Llama program policy and DLM execution policy be
+
+\[
+P\sim\pi_\phi(P\mid c,s_{\rm C3FD}),\qquad
+x\sim q_\theta(x\mid c,P),
+\]
+
+and use one frozen value functional
+
+\[
+V_{800}(c,P,x)=-E_{\rm CHGNet}(R_{494}^{800}(x)).
+\]
+
+The complete method performs KL-bounded value distillation at both levels:
+the existing SPAD-E experiment improves the suffix-visible DLM action policy;
+the sole approved follow-up improves the Llama program policy using terminal
+values from distinct programs executed by the frozen SPAD-E DLM.  This is
+hierarchical policy improvement, not real-time control, a world model,
+self-improvement, reranking or joint end-to-end backpropagation.
+
+Approved sequence:
+
+1. finish and freeze the current SPAD-E teacher, training and fixed evaluation;
+2. freeze the resulting SPAD-E executor before creating any program values;
+3. select 1,024 outcome-blind MP20-train compositions with at least three
+   unique species and four distinct legal programs;
+4. use canonical, current-Llama MAP and two distinct Llama-sampled programs;
+   share composition, Plan and request/site-indexed DLM noise so program is the
+   only intended intervention;
+5. execute one DLM trajectory and one model494 tau800 transition per program,
+   then label valid programs by within-composition endpoint CHGNet energy;
+6. train two fixed-seed Llama pointer policies with one KL-bounded listwise
+   target and no checkpoint/seed selection;
+7. evaluate canonical, base-Llama and both value-trained program policies with
+   the same frozen SPAD-E DLM, frozen compositions and two common streams;
+8. inference remains one program and one trajectory, with no critic,
+   best-of-N, replacement or reranking.
+
+This program-value experiment is the only approved next method.  It cannot use
+job 39556's K4 XYZ endpoints as program labels because those candidates share
+one fixed program.  Estimated incremental cost is 4,096 complete trajectories,
+approximately 20--27 A800-hours, with a credible result window around
+2026-09-04 05:00--07:00 Asia/Shanghai after SPAD-E freezes.

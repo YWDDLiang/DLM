@@ -284,6 +284,41 @@ Current exception and corrective action:
   and require the next CHGNet/Direct implementation to shard across every
   allocated GPU as specified above.
 
+### Paper-critical program-value revision
+
+Current status: **APPROVED NEXT, only after the SPAD-E executor is frozen**.
+This is the sole revision that can close the teacher-feedback gap; it is not a
+third method branch.
+
+- [ ] Finish SPAD-E teacher/training/evaluation before generating program-level
+  value labels.
+- [ ] Freeze one final SPAD-E DLM executor; never label program values with the
+  old BS executor and deploy a different executor.
+- [ ] Freeze 1,024 MP20-train compositions with at least three unique species;
+  no test/S.U.N./official outcome may influence selection.
+- [ ] Materialize four distinct legal programs per composition: canonical,
+  base-Llama MAP and two distinct Llama samples.  Preserve C3FD composition
+  support and exact element/count identity.
+- [ ] Use request/site-indexed common DLM noise across the four programs, then
+  run one raw trajectory and one model494 tau800 transition per program.
+- [ ] Apply validity before value.  Among valid programs, construct one
+  within-composition terminal-energy target from the same frozen CHGNet value
+  functional used by SPAD-E; no cross-composition energy comparison.
+- [ ] Train two fixed-seed Llama pointer policies with one preregistered KL
+  budget, no grid, early stopping, checkpoint or seed selection.
+- [ ] Evaluate canonical, base-Llama and both value-trained programs with the
+  same frozen SPAD-E DLM and two common streams.  Inference is one program and
+  one trajectory, never program reranking or best-of-N.
+- [ ] First report exact composition, body/graph validity and raw CHGNet.  Run
+  model494/refined S.U.N. for the frozen full cells; keep expensive Direct
+  deferred unless the final table requires it.
+- [ ] Judge the fixed requested-denominator targets: Strict at least 52/512 and
+  Meta at least 256/512, while disclosing N/U and every policy/stream.
+
+Rejected for this sprint: online DLM-to-Llama controller, speculative dynamic
+transaction verifier, G2 revival, program search at inference and any
+additional unrelated stability method.
+
 ## Current run ledger
 
 - job 39508: pointer teacher data complete; train 24,558 and val 8,158.
