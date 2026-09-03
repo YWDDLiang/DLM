@@ -1,4 +1,5 @@
 from pathlib import Path
+from dataclasses import replace
 import math
 import sys
 import unittest
@@ -214,6 +215,28 @@ class InformativeAndLossTest(unittest.TestCase):
         self.assertTrue(bool(torch.isfinite(scores.grad).all()))
         self.assertEqual(float(scores.grad[2]), 0.0)
         self.assertLess(abs(float(scores.grad.sum())), 1.0e-6)
+
+    def test_float32_policy_does_not_downcast_normalized_target(self):
+        target = posterior(k=4)
+        probabilities = torch.tensor(
+            [
+                0.00004890616696618095,
+                0.9985631514258229,
+                0.000019412847561756144,
+                0.0013685295596491372,
+            ],
+            dtype=torch.float64,
+        )
+        target = replace(target, target_probabilities=probabilities)
+        scores = torch.tensor(
+            [0.2, -0.1, 0.0, 0.3], dtype=torch.float32, requires_grad=True
+        )
+
+        output = potential_closure_loss(scores, target)
+        output.loss.backward()
+
+        self.assertEqual(output.loss.dtype, torch.float64)
+        self.assertTrue(bool(torch.isfinite(scores.grad).all()))
 
     def test_group_kl_and_ce_are_divided_by_transaction_length(self):
         xyz_target = posterior(k=3, transaction_length=3)

@@ -714,7 +714,12 @@ def potential_closure_loss(
         name="policy_action_log_scores",
         action_count=posterior.action_count,
     )
-    working_dtype = torch.float64 if scores.dtype == torch.float64 else torch.float32
+    # K is at most four, so evaluating the categorical objective in float64 is
+    # negligible compared with the model forward.  More importantly, the
+    # posterior is solved and normalized in float64; down-casting it to
+    # float32 before the normalization check can move a valid sum by one ULP
+    # (1.19e-7) and spuriously abort a long training run.
+    working_dtype = torch.float64
     working_scores = scores.to(dtype=working_dtype)
     legal = posterior.legal_mask.to(device=scores.device)
     if legal.ndim != 1 or legal.numel() != posterior.action_count:
