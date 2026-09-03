@@ -19,6 +19,11 @@ sources yield exactly 512 groups in each of MP20-clean cell/site and on-policy
 cell/site strata. Anchor ranks are balanced `259/253`; actual body species
 order is used when mapping the Llama program to a site.
 
+Candidate transaction job `39598` has been submitted for four A800 and 32
+CPUs. It is currently pending cluster resources; no duplicate submission is
+allowed. The raw CHGNet label job starts only after its immutable action output
+completes.
+
 ## Approach
 
 Test the only new mechanism that directly targets stability: train the existing
