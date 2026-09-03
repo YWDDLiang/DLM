@@ -104,9 +104,24 @@ identical lattices for all 512 stream rows, isolating species order. The final
 BS endpoint restores essentially complete raw execution while retaining the
 learned Llama program and DLM-specific suffix revision.
 
-The matched raw/refined CHGNet evaluation and the fresh prospective official
-S.U.N. endpoint are the active final measurements. The preregistered targets
-are Strict S.U.N. `>10%` and Meta S.U.N. `>50%`.
+Fresh prospective official results on the same fixed 256 requests and two
+streams are:
+
+| Arm | Endpoint | Direct | Strict S.U.N. | Meta S.U.N. |
+|---|---|---:|---:|---:|
+| B0 | refined | 508/512 | 38/512 (7.42%) | 245/512 (47.85%) |
+| BC | refined | 512/512 | 33/512 (6.45%) | 238/512 (46.48%) |
+| BS | raw | 504/512 | 16/512 (3.12%) | 107/512 (20.90%) |
+| BS | refined | **512/512** | 35/512 (6.84%) | 234/512 (45.70%) |
+
+SPAD therefore delivers essentially complete structural execution, while the
+terminal stability targets remain open. The one active follow-up closes the
+loop inside Route B: the frozen model494 endpoint supplies a bounded response
+direction for one suffix-visible, PBC-legal DLM remask pass on the same Plan
+and trajectory. It is explicitly response alignment rather than a claim that
+the saved endpoint exposes a physical force. Full Direct is deferred during
+the first screen; fast validity and CHGNet determine whether it is worth the
+final-table cost.
 
 ## Reproduce and inspect
 

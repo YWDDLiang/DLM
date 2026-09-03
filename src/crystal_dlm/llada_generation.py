@@ -441,7 +441,8 @@ def _apply_pbc_min_distance_mask(
     min_value: float,
     active_generation_mask: torch.Tensor | None,
     mask_id: int,
-) -> None:
+) -> set[tuple[int, int]]:
+    no_legal_completion: set[tuple[int, int]] = set()
     coord_maps = constraints.get("coord_token_to_bin", {})
     coord_ids = constraints.get("coord_bin_to_token_id", {})
     count_token_to_n = constraints.get("count_token_to_n", {})
@@ -515,11 +516,13 @@ def _apply_pbc_min_distance_mask(
             if not bool(legal.any().item()):
                 # Do not create an empty action set; the caller can record the
                 # unresolved risk and retain the model distribution.
+                no_legal_completion.add((int(row), int(z_position)))
                 continue
             for candidate_bin, allowed in zip(candidate_bins, legal, strict=True):
                 if not bool(allowed.detach().item()):
                     token_id = int(coord_ids["Z"][candidate_bin])
                     generation_logits[row, z_position, token_id] = min_value
+    return no_legal_completion
 
 
 def _apply_lightweight_decoding_masks(
@@ -530,9 +533,12 @@ def _apply_lightweight_decoding_masks(
     constraints: dict | None,
     active_generation_mask: torch.Tensor | None = None,
     mask_id: int = 126336,
-) -> None:
+) -> dict[str, set[tuple[int, int]]]:
+    report: dict[str, set[tuple[int, int]]] = {
+        "pbc_no_legal_completion": set()
+    }
     if not constraints:
-        return
+        return report
     generation_logits = logits[:, prompt_length : prompt_length + gen_length, :]
     min_value = torch.finfo(generation_logits.dtype).min
     if active_generation_mask is not None and active_generation_mask.shape != generation_logits.shape[:2]:
@@ -550,7 +556,7 @@ def _apply_lightweight_decoding_masks(
     if constraints.get("duplicate_coordinate_mask"):
         _apply_duplicate_coordinate_mask(generation_logits, x, prompt_length, constraints, min_value)
     if constraints.get("pbc_min_distance_mask"):
-        _apply_pbc_min_distance_mask(
+        report["pbc_no_legal_completion"] = _apply_pbc_min_distance_mask(
             generation_logits,
             x,
             prompt_length,
@@ -559,6 +565,7 @@ def _apply_lightweight_decoding_masks(
             active_generation_mask,
             int(mask_id),
         )
+    return report
 
 
 def _candidate_tokens_and_confidence(

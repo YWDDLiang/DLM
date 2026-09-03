@@ -186,12 +186,12 @@ Only after the SPAD result is frozen:
 
 ## Phase 8 — final evidence
 
-- [ ] Apply the same terminal continuous-refiner setting to frozen A and B
+- [x] Apply the same terminal continuous-refiner setting to frozen B
   cells.
-- [ ] Report raw/refined endpoints separately.
-- [ ] Report Strict/Meta S.U.N., N/U/NU, Direct, composition retention and
+- [x] Report raw/refined endpoints separately.
+- [x] Report Strict/Meta S.U.N., N/U/NU, Direct, composition retention and
   compute on the fixed requested denominator.
-- [ ] Evaluate the target `Strict S.U.N. >10%` and
+- [x] Evaluate the target `Strict S.U.N. >10%` and
   `Meta S.U.N. >50%`; targets never authorize row/seed/checkpoint selection.
 - [ ] Treat CHGNet and MP-reference/CHGNet-candidate hull as surrogate metrics;
   use an independent MLIP or registered DFT subset for stronger claims.
@@ -266,8 +266,20 @@ Only after the SPAD result is frozen:
   100% composition validity and no selection/replacement. Job 39536 froze all
   requested ordinals; 254 exact compositions are unique and both duplicates
   remain in the denominator.
-- jobs 39537/39538 are the active stream17/stream18 three-A800 B0/BC/BS
-  generation+tau800 runs.
+- jobs 39537/39538 completed stream17/stream18 B0/BC/BS generation and tau800
+  refinement. Every BC/BS body matches its Plan; BS raw/refined graph counts
+  are 256/256 in both streams.
+- jobs 39542/39543 completed the 12 raw/refined prospective offline cells.
+  Pooled raw/refined Direct counts over 512 are B0 401/508, BC 501/512 and
+  BS 504/512. BS raw/refined NU counts are 509/441.
+- the single fresh official query resolved 244 of 251 chemical systems; its
+  runtime credential was unset and the query will not be repeated. Official
+  BS-refined Strict S.U.N. is 35/512 (6.84%) and Meta S.U.N. is 234/512
+  (45.70%). The 10%/50% targets were not met. B0-refined is 38/512 (7.42%)
+  and 245/512 (47.85%); BC-refined is 33/512 (6.45%) and 238/512 (46.48%).
+- for BS-refined NU structures, 37 lie within 20 meV/atom above the strict
+  threshold and 37 lie within 20 meV/atom above the meta threshold. This
+  motivates the one authorized local response-aligned follow-up.
 
 Immediate sequence:
 
@@ -278,22 +290,26 @@ Immediate sequence:
   Plan outcomes before any DLM rollout; retain Planner failures in the fixed
   denominator, do not filter training-set overlaps, and never resample the
   Planner after this freeze;
-- [ ] run stream17 and stream18 as two concurrent three-A800 B0/BC/BS
+- [x] run stream17 and stream18 as two concurrent three-A800 B0/BC/BS
   generation+tau800 jobs, followed by two concurrent three-A800 raw/refined
   evaluation jobs; merge the two immutable stream views without recomputation;
-- [ ] run exactly one official MP query over the resulting 12-cell union, then
+- [x] run exactly one official MP query over the resulting 12-cell union, then
   report Strict/Meta S.U.N. against the 10%/50% targets.
 
 Post-endpoint rule (no further approval needed):
 
 - if BS reaches both S.U.N. targets, freeze SPAD and move directly to the paper
   tables, method diagram and ablation narrative;
-- if raw validity remains high but official stability misses a target, run one
-  B-internal 256-request follow-up only: project the fixed model494
-  displacement/force direction onto legal DLM geometry-token moves during a
-  suffix-visible remask, inside the existing PBC feasible support. Keep the
-  same frozen Plans and streams, use no reranking or best-of-N, and compare it
-  directly with BS;
+- [ ] run one B-internal 256-request follow-up only: use each frozen model494
+  tau800 endpoint as a **response**, not as a claimed physical force. Remove
+  global translation, cap each response at 0.15 A, and score legal coordinate
+  tokens by squared response-error reduction. Apply the strongest bias within
+  0.05 nat KL and absolute logit bias 2, then deterministically visit every
+  site once in reverse SPAD order with suffix context visible. Freeze lattice
+  tokens and preserve the same Plans, source BS trajectories and streams;
+- [ ] if a site's Z action has no legal completion under the 0.5 A triclinic
+  PBC support, restore its pre-transaction XYZ and record
+  `guidance_skipped_no_legal_completion`; never reopen illegal logits;
 - for that follow-up, do not let full Direct block the critical path. Run
   immutable generation accounting, the already certified fast-validity screen
   and CHGNet first; record an omitted expensive Direct endpoint explicitly as

@@ -233,6 +233,29 @@ def anchor_revision_slots(program: SpeciesProgram) -> tuple[int, ...]:
     return tuple(reversed(program.anchor_slots))
 
 
+def spad_site_slots(program: SpeciesProgram) -> tuple[int, ...]:
+    """Return sites in the order in which SPAD first commits their geometry."""
+
+    anchors = [entry.anchor_slot for entry in program.entries]
+    remaining = [
+        slot
+        for entry in program.entries
+        for slot in entry.remaining_slots
+    ]
+    slots = tuple(int(value) for value in (*anchors, *remaining))
+    if len(slots) != int(program.num_atoms) or set(slots) != set(
+        range(int(program.num_atoms))
+    ):
+        raise ValueError("SPAD site order is not an exact slot permutation")
+    return slots
+
+
+def response_revision_slots(program: SpeciesProgram) -> tuple[int, ...]:
+    """Visit every site once in reverse SPAD order for response-aligned repair."""
+
+    return tuple(reversed(spad_site_slots(program)))
+
+
 def begin_anchor_revision(
     token_ids: Sequence[int],
     *,
@@ -296,5 +319,7 @@ __all__ = [
     "prefilled_positions",
     "program_from_element_order",
     "program_from_planner_trace",
+    "response_revision_slots",
+    "spad_site_slots",
     "spad_predictor_position_groups",
 ]
