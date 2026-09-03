@@ -69,6 +69,40 @@ class Model494ResponseBackfillTest(unittest.TestCase):
         self.assertIsNone(task)
         self.assertEqual(reason, "model494_atom_order_mismatch")
 
+    def test_pairing_maps_process_graph_order_back_to_body_slots(self):
+        plan = {"N": 2, "elements": ["Na", "Cl"], "counts": [1, 1]}
+        row = {
+            "sample_idx": 4,
+            "parsed": True,
+            "plan_state": plan,
+            "conditioning_prompt": "plan",
+            "text": (
+                "<N_002><LA_040><LB_040><LC_040><AA_090><AB_090><AG_090>"
+                "<E_Cl><X_000><Y_000><Z_000>"
+                "<E_Na><X_050><Y_050><Z_050>"
+            ),
+            "prompt_record": {
+                "species_program": ["Na", "Cl"],
+                "species_program_source": "test",
+            },
+        }
+        endpoint = {
+            "num_atoms": 2,
+            "atom_types": [11, 17],
+            "frac_coords": [[0.51, 0.52, 0.53], [0.01, 0.02, 0.03]],
+        }
+        graph = {
+            "a_type": [11, 17],
+            "x_coord": torch.tensor([[0.5, 0.5, 0.5], [0.0, 0.0, 0.0]]),
+        }
+        task, reason = _pair_task(row, endpoint, graph)
+        self.assertIsNone(reason)
+        self.assertEqual(task["model494_graph_to_body_permutation"], [1, 0])
+        self.assertEqual(
+            task["target_frac_coords"],
+            [[0.01, 0.02, 0.03], [0.51, 0.52, 0.53]],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

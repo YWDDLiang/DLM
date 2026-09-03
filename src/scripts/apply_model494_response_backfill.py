@@ -129,7 +129,9 @@ def _species_program(row: Mapping[str, Any]) -> list[str]:
 
 
 def _pair_task(
-    row: Mapping[str, Any], endpoint: Mapping[str, Any] | None
+    row: Mapping[str, Any],
+    endpoint: Mapping[str, Any] | None,
+    source_graph: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any] | None, str | None]:
     sample_idx = int(row["sample_idx"])
     plan = row.get("plan_state")
@@ -144,7 +146,47 @@ def _pair_task(
         expected_types = [int(SYMBOL_TO_Z[str(symbol)]) for symbol in arrays["species"]]
         if int(endpoint["num_atoms"]) != int(arrays["num_atoms"]):
             return None, "model494_atom_count_mismatch"
-        if list(endpoint["atom_types"]) != expected_types:
+        target_frac_coords = list(endpoint["frac_coords"])
+        graph_to_body = list(range(int(arrays["num_atoms"])))
+        if source_graph is not None:
+            graph_types = [int(value) for value in source_graph["a_type"]]
+            graph_coords = torch.as_tensor(source_graph["x_coord"], dtype=torch.float64)
+            if list(endpoint["atom_types"]) != graph_types:
+                return None, "model494_graph_atom_order_mismatch"
+            raw_coords = torch.as_tensor(arrays["frac_coords"], dtype=torch.float64)
+            if graph_coords.shape != raw_coords.shape:
+                return None, "source_graph_coordinate_shape_mismatch"
+            unused = set(range(int(arrays["num_atoms"])))
+            graph_to_body = []
+            for graph_index, atomic_number in enumerate(graph_types):
+                candidates = [
+                    index for index in unused if expected_types[index] == atomic_number
+                ]
+                if not candidates:
+                    return None, "source_graph_species_mapping_failed"
+                distances: list[tuple[float, int]] = []
+                for body_index in candidates:
+                    delta = graph_coords[graph_index] - raw_coords[body_index]
+                    delta = delta - torch.round(delta)
+                    distances.append(
+                        (float(torch.linalg.vector_norm(delta).item()), body_index)
+                    )
+                distance, selected = min(distances)
+                if distance > 1.0e-5:
+                    return None, "source_graph_coordinate_mapping_failed"
+                unused.remove(selected)
+                graph_to_body.append(int(selected))
+            if unused:
+                return None, "source_graph_mapping_not_bijective"
+            reordered: list[list[float] | None] = [None] * int(arrays["num_atoms"])
+            for graph_index, body_index in enumerate(graph_to_body):
+                reordered[body_index] = [
+                    float(value) for value in target_frac_coords[graph_index]
+                ]
+            if any(value is None for value in reordered):
+                return None, "model494_target_reorder_incomplete"
+            target_frac_coords = [list(value) for value in reordered if value is not None]
+        elif list(endpoint["atom_types"]) != expected_types:
             return None, "model494_atom_order_mismatch"
         program = program_from_element_order(
             plan,
@@ -167,7 +209,8 @@ def _pair_task(
             "source_arrays": arrays,
             "prompt": prompt,
             "answer": str(row["text"]),
-            "target_frac_coords": endpoint["frac_coords"],
+            "target_frac_coords": target_frac_coords,
+            "model494_graph_to_body_permutation": graph_to_body,
             "revision_slots": list(response_revision_slots(program)),
         },
         None,
@@ -238,7 +281,11 @@ def main() -> None:
     unguided: dict[int, str] = {}
     for row in source_rows:
         sample_idx = int(row["sample_idx"])
-        task, reason = _pair_task(row, endpoints.get(sample_idx))
+        task, reason = _pair_task(
+            row,
+            endpoints.get(sample_idx),
+            source_graph_by_idx.get(sample_idx),
+        )
         if task is None:
             unguided[sample_idx] = str(reason)
         else:
@@ -339,6 +386,9 @@ def main() -> None:
                 "one_pass": True,
                 "all_sites_reverse_spad_order": True,
                 "config": config.__dict__,
+                "model494_graph_to_body_permutation": item[
+                    "model494_graph_to_body_permutation"
+                ],
                 **_guidance_summary(logs),
             }
             try:
