@@ -55,12 +55,17 @@ Short glossary:
 | NFE | neural-network forward evaluation |
 | MLIP | machine-learned interatomic potential |
 | Compact-V2 | retained composition-plus-coarse-Plan interface used by the current DLM |
-| G2-PBC-R | historical periodic-relation residual; only an ablation in this plan |
+| G2-PBC-R | rejected as a standalone paper contribution; historical ablation only, never the current fallback |
 | checkpoint 494 | current frozen continuous crystal refiner, internally called model494 |
 | A0/A1 | LLM-only executor without/with periodic commit control |
 | SPAD | Scientific Programmed Anchor–Backfill Denoising, the B-route core |
 | B0/BC/BP/BR/BS | retained schedule / canonical SPAD / Llama-pointer SPAD / suffix-visible remask / matched-SFT endpoint |
 | SPAD-E | terminal model494/CHGNet energy shaping of one suffix-visible SPAD backfill posterior |
+
+The teacher-feedback lock is binding: all current claims and execution choices
+must follow the Llama-programmed DLM route.  Historical G2 results may explain
+why that route was explored, but they cannot be presented as the active method,
+third contribution or fallback.
 
 Read in this order:
 

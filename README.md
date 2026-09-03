@@ -7,6 +7,12 @@ masked crystal language model. The same Plan state controls composition,
 special-token placement, periodic feasibility and the final continuous
 refinement.
 
+Teacher-feedback scope is explicit: the historical G2 periodic-residual route
+is neither a current contribution nor a fallback.  It was replaced by the
+coupled Llama-programmed DLM path in this branch.  If energy-shaped backfill is
+negative, the fallback is the already demonstrated SPAD system with an open
+stability limitation—not a return to G2.
+
 The central question is:
 
 > How can a scientific LLM preserve exact chemistry while programming a

@@ -5,6 +5,18 @@ Status: **EXECUTION APPROVED — tokenizer/checkpoint audit precedes GPU trainin
 Authoritative method update:
 [`06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md`](06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md).
 
+Teacher-feedback method lock:
+
+- [x] The active paper method is the coupled C3FD-supported Llama Planner,
+  Llama species program, programmed non-causal crystal DLM and SPAD-E training
+  of that same suffix-visible DLM backfill posterior.
+- [x] G2-PBC-R is a historical negative/ablation, not a current contribution,
+  active method or fallback.  Do not use its metrics to characterize expected
+  SPAD-E performance or to reassure against a negative SPAD-E result.
+- [x] If SPAD-E is negative, retain SPAD's demonstrated composition and
+  structural-execution contribution and report stability as open; do not
+  silently revert the paper story to G2.
+
 ## Phase 0 — workspace and review
 
 - [x] Preserve the original dirty checkout.
