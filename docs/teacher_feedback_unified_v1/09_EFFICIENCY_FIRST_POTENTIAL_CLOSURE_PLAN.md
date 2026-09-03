@@ -4,6 +4,9 @@ Status: **approved for preflight execution on 2026-09-04**. Phase 0, interface
 implementation and train-only data construction may start immediately. Formal
 DLM training starts only after the frozen launch conditions below are met.
 
+Execution status: Phase 0 is running as Slurm job `39596` (one A800, eight
+CPUs). Formal potential-closure training has not started.
+
 ## Approach
 
 Test the only new mechanism that directly targets stability: train the existing
