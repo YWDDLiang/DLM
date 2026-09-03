@@ -3,7 +3,7 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2
 #SBATCH --mem=300G
 #SBATCH --time=12:00:00
@@ -49,7 +49,7 @@ IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
 run_cell() {
   local mode="$1" gpu="$2"
   env CUDA_VISIBLE_DEVICES="${gpu}" OPENBLAS_NUM_THREADS=1 \
-    OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
+    OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 \
     PYTHONPATH="${SOURCE}/src" "${PYTHON}" \
     "${SOURCE}/src/scripts/train_potential_closure.py" \
     --model-path "${MODEL}" --checkpoint-path "${BS_POLICY}" \

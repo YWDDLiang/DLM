@@ -193,7 +193,7 @@ class PotentialClosureTrainerTest(unittest.TestCase):
         self.assertIn("--cpus-per-task=8", probe)
         self.assertIn("--probe-only", probe)
         self.assertIn("--gres=gpu:NVIDIAA800-SXM4-80GB:2", train)
-        self.assertIn("--cpus-per-task=16", train)
+        self.assertIn("--cpus-per-task=8", train)
         self.assertIn("closure_control", train)
         self.assertIn("potential_closed", train)
         self.assertIn("formal_action_pool_gate", train)
