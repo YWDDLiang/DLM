@@ -51,8 +51,16 @@ all 2,048 updates on one A800/four CPUs with the expected `1024/512/512`
 objective counts, clean/on-policy transaction exposures and sole step-2048
 checkpoint; no scientific setting or data changed. Native stream17 generation
 job `39605` completed in 11 minutes 30 seconds on two A800/eight CPUs; both
-arms are `256/256` parsed and Plan-matched. Batched raw energy and two-validity
-evaluation job `39606` is running on one A800/four CPUs without Direct.
+arms are `256/256` parsed and Plan-matched. Batched raw evaluation job `39606`
+completed in 100 seconds: every arm is composition-valid `256/256`; BS,
+control and potential structural validity are each `255/256`. Potential minus
+control raw CHGNet energy has mean `-0.236 eV/atom`, median approximately zero,
+and `133/118/5` lower/higher/equal pairs; its composition-bootstrap mean 95%
+interval is `[-0.599, +0.131]`, so the predeclared significance continuation
+condition is not met despite a favorable point direction. At the user's
+explicit request to obtain both raw and tau800 results, fixed tau800 diagnostic
+job `39607` is running on four A800/16 CPUs; this does not promote or select the
+method.
 
 ## Approach
 
@@ -259,8 +267,8 @@ pilot outcomes remain reported.
 | Raw CHGNet labels | completed: 1 A800 + 8 CPU | 95 s | complete |
 | Five-batch gradient probe | completed: 1 A800 + 8 CPU | 143 s | complete |
 | Control + potential recovery to 2,048 | completed | 2 h 19 min recovery wall time | complete |
-| Stream17 native generation/eval (no Direct) | generation complete; eval active on 1 A800 + 4 CPU | about 15--30 min | running |
-| Conditional stream18 + tau800 (no Direct) | up to 4 A800 + 4 CPU/GPU | 1.5--2.5 h | **4.5--6.5 h** |
+| Stream17 native generation/eval (no Direct) | completed | generation 11.5 min + eval 100 s | complete |
+| Tau800 diagnostic (no Direct) | active: 4 A800 + 16 CPU, two workers/GPU | about 15--45 min | running |
 
 All future work is capped at four A800 and exactly four requested CPUs per GPU,
 with at most two jobs. CHGNet uses batch 8--16 and does not serialize
