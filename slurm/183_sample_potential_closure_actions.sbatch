@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=32
+#SBATCH --cpus-per-task=16
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4
-#SBATCH --mem=500G
+#SBATCH --mem=300G
 #SBATCH --time=06:00:00
 #SBATCH --output=potential-actions-%j.out
 #SBATCH --error=potential-actions-%j.err
@@ -58,8 +58,8 @@ energy_selection	false
 official_or_test_outcomes	false
 EOF
 
-env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 \
-  NUMEXPR_NUM_THREADS=8 PYTHONPATH="${SOURCE}/src" \
+env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
+  NUMEXPR_NUM_THREADS=4 PYTHONPATH="${SOURCE}/src" \
   "${PYTHON}" -m torch.distributed.run --standalone --master_port=29683 \
   --nproc_per_node=4 "${SOURCE}/src/scripts/sample_potential_closure_actions.py" \
   --model-path "${LLADA}" --checkpoint-path "${BS_POLICY}" \
