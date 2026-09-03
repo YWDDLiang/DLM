@@ -272,3 +272,16 @@ Immediate sequence:
   evaluation jobs; merge the two immutable stream views without recomputation;
 - [ ] run exactly one official MP query over the resulting 12-cell union, then
   report Strict/Meta S.U.N. against the 10%/50% targets.
+
+Post-endpoint rule (no further approval needed):
+
+- if BS reaches both S.U.N. targets, freeze SPAD and move directly to the paper
+  tables, method diagram and ablation narrative;
+- if raw validity remains high but official stability misses a target, run one
+  B-internal 256-request follow-up only: project the fixed model494
+  displacement/force direction onto legal DLM geometry-token moves during a
+  suffix-visible remask, inside the existing PBC feasible support. Keep the
+  same frozen Plans and streams, use no reranking or best-of-N, and compare it
+  directly with BS;
+- do not start a disconnected third method, broad hyperparameter search or a
+  new Planner sample merely because a target is missed.
