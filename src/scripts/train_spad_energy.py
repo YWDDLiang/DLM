@@ -46,7 +46,7 @@ D3PO_SPEC.loader.exec_module(D3PO)
 SCHEMA = "spad_energy_group_v1"
 TRAIN_SCHEMA = "spad_energy_train_v1"
 UPDATES = 348
-GRADIENT_ACCUMULATION = 4
+GRADIENT_ACCUMULATION = 6
 LEARNING_RATE = 5.0e-6
 NOOP_CE_WEIGHT = 0.1
 REFERENCE_KL_WEIGHT = 1.0
@@ -329,8 +329,7 @@ def main() -> None:
         reference_cache: dict[int, torch.Tensor] = {}
         sampler = RandomSampler(
             dataset,
-            replacement=True,
-            num_samples=len(dataset),
+            replacement=False,
             generator=torch.Generator().manual_seed(int(args.seed) + 101),
         )
         loader = DataLoader(

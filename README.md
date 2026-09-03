@@ -122,13 +122,16 @@ streams are:
 | BS | refined | **512/512** | 35/512 (6.84%) | 234/512 (45.70%) |
 
 SPAD therefore delivers essentially complete structural execution, while the
-terminal stability targets remain open. The one active follow-up closes the
-loop inside Route B: the frozen model494 endpoint supplies a bounded response
-direction for one suffix-visible, PBC-legal DLM remask pass on the same Plan
-and trajectory. It is explicitly response alignment rather than a claim that
-the saved endpoint exposes a physical force. Full Direct is deferred during
-the first screen; fast validity and CHGNet determine whether it is worth the
-final-table cost.
+terminal stability targets remain open. A fixed model494-response development
+follow-up retained 512/512 reconstructed outputs and moved refined Strict/Meta
+S.U.N. to 36/512 (7.03%) and 237/512 (46.29%). Its paired refined CHGNet shift
+was -0.00657 eV/atom, but NU fell from 441 to 437; the small gain is not enough.
+
+The active SPAD-E training path treats validity lexicographically and learns
+terminal preference only among legal suffix-visible XYZ actions. Its 2,048
+MP20-train groups are frozen and the four-A800 teacher run is active. Full
+Direct remains `DEFERRED_COST`; the initial screen uses complete accounting,
+fast validity, CHGNet and reused development phase diagrams.
 
 ## Reproduce and inspect
 

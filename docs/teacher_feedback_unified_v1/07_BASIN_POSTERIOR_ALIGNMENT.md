@@ -270,14 +270,15 @@ query, replacement, reranking or final-evaluation selection enters this data.
 
 Measured extrapolation from completed jobs:
 
-- 8,192 BS bodies on six A800: approximately one hour;
-- 8,192 model494 tau800 transitions: approximately 3.1 hours;
+- 8,192 BS bodies on four A800: approximately 1--1.5 hours;
+- 8,192 model494 tau800 transitions on four A800: approximately 4--5 hours;
 - batched raw CHGNet force diagnostics: minutes rather than hours;
 - two equal-compute LoRA cells: approximately one hour;
 - total data plus training: approximately 5--7 hours before evaluation.
 
-The data stage uses one six-GPU job.  Training uses one four-GPU job containing
-two isolated two-GPU DDP process groups.  This respects the two-job limit;
+The active data stage uses one four-GPU job alongside the two-GPU response
+evaluation. Training uses one two-GPU job containing two isolated one-GPU
+cells. This respects the two-job/six-GPU limit;
 training does not start while unrelated jobs occupy the required resources.
 
 ## 11. Minimal identifiable experiment
@@ -291,8 +292,9 @@ ablation appendix.
 | SPAD-CE | one additional equal-data CE/KL epoch | yes | 2 |
 | SPAD-E | replace matched neutral targets with terminal `q*` | yes | 2 |
 
-Both trained cells use one seed, 1,696 updates, effective source batch16,
-LoRA r8/alpha32/dropout0.05, and exactly the same source groups/mask counts.
+Both trained cells use one seed, 348 updates with six microgroups per update
+(2,088 group exposures, at least one shuffled pass through trainable groups),
+LR 5e-6 and exactly the same source groups/mask counts.
 SPAD-E is preregistered as the method.  A positive SPAD-E receives a second
 seed.
 
@@ -401,7 +403,7 @@ Accepted corrections:
 - froze one 5--7 hour data/training plan;
 - required a new deterministic backfill-state collator and dynamic PBC action
   support rather than reusing the old random listwise wrapper;
-- reduced training to two equal-compute two-GPU cells inside one four-GPU job;
+- reduced training to two equal-compute one-GPU cells inside one two-GPU job;
 - retained unknown-energy rows in denominator accounting.
 
 ### Paper/user review — revision 1 required major revision
@@ -445,7 +447,7 @@ p_{\rm ref}(a_i\mid s_i)
 where `s_i` is the Llama-programmed suffix-visible backfill state, action zero
 is no-op, all four actions are PBC-legal XYZ triplets, and the KL budget is
 fixed.  Force is analysis only.  The remaining implementation prerequisites
-are the common-state collator, dynamic legal-action builder and two-GPU trainer
+are the common-state collator, dynamic legal-action builder and one-GPU trainer
 preflight; they add no scientific alternatives.
 
 ### Final arbiter — APPROVED
@@ -457,5 +459,5 @@ no-op plus three legal reference-DLM actions, terminal `V_800` reweighting,
 there is no discovery dual, force/stress loss or inference-time critic.
 
 Implementation must complete the common-state collator, dynamic PBC action
-builder, energy normalization/KL solver, two-GPU step-0 preflight and
+builder, energy normalization/KL solver, one-GPU step-0 preflight and
 suffix-visible versus suffix-hidden mechanism evaluation before training.

@@ -190,8 +190,10 @@ support.
   no MP query or prospective outcome enters labels.
 - [ ] Build the finite-action `q*` under a 0.05-nat reference trust region.
 - [ ] Implement the common-state collator, dynamic triclinic PBC support and
-  two-GPU trainer preflight.
-- [ ] Train equal-compute SPAD-CE and SPAD-E cells for 1,696 updates each.
+  one-GPU-per-cell trainer preflight.
+- [ ] Train equal-compute SPAD-CE and SPAD-E cells concurrently: 348 updates,
+  six microgroups/update and at least one shuffled pass through trainable
+  groups per cell.
 - [ ] At inference use no critic/look-ahead: complete the future canvas,
   re-mask/rewrite the earlier XYZ with the trained DLM, then run model494 once.
 - [ ] Keep raw force as a same-site mechanism diagnostic only; no force/stress
@@ -299,9 +301,19 @@ support.
   wrapper after remote SPAD/geometry/driver tests passed. A full read-only
   pairing audit maps all 256/256 source bodies in each stream through the
   Niggli-reordered model494 tensors back to their original DLM site order.
-- job 39547 is the only active follow-up job (2 A800/16 CPU). It reuses the
+- job 39547 was the fixed follow-up job (2 A800/16 CPU). It reused the
   frozen stream17/18 BS bodies, performs one deterministic all-site response
   pass, then applies the same model494 tau800 setting to the corrected bodies.
+- job 39547 completed `0:0` in 00:43:53. Both streams remained 256/256 parsed,
+  graphable and refined; 229/226 structures changed. Job39549 completed four
+  CHGNet/N/U/NU cells in 01:05:31 with Direct `DEFERRED_COST`. Response refined
+  Strict/Meta S.U.N. is 36/512 (7.03%) and 237/512 (46.29%), versus BS
+  35/512 and 234/512. Refined paired CHGNet delta is -0.00657 eV/atom,
+  composition-bootstrap [-0.01393,-0.00007], while NU falls 441 to 437. This
+  is a small energy-positive but S.U.N.-insufficient development result.
+- the outcome-blind SPAD-E MP20-train cohort is frozen at 2,048 rows. Job39556
+  is the active four-A800 teacher run: predicted pointer programs, BS predictor,
+  K4 validity-first backfill actions, model494 tau800 and endpoint CHGNet labels.
 
 Immediate sequence:
 
