@@ -15,21 +15,23 @@ set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:?}"
 readonly TRAIN_GENERATION_RUN="${POTENTIAL_CLOSURE_NATIVE_RUN:?}"
+readonly ENDPOINT="${POTENTIAL_CLOSURE_ENDPOINT:-raw}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_RUN="${PROJECT}/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly R03E="${V3_RUN}/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1"
 readonly SNAPSHOT="${R03E}/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
-readonly RUN="${ROOT}/runs/potential_closure_native_s17_raw_eval_${SLURM_JOB_ID}"
-readonly BS_GENERATION="${ROOT}/runs/spad_prospective_generation_s17_39537/BS/stream17/raw_generation/generation.jsonl"
-readonly CONTROL_GENERATION="${TRAIN_GENERATION_RUN}/closure_control/stream17/raw_generation/generation.jsonl"
-readonly POTENTIAL_GENERATION="${TRAIN_GENERATION_RUN}/potential_closed/stream17/raw_generation/generation.jsonl"
+readonly RUN="${ROOT}/runs/potential_closure_s17_${ENDPOINT}_eval_${SLURM_JOB_ID}"
+readonly BS_GENERATION="${POTENTIAL_CLOSURE_BS_GENERATION:-${ROOT}/runs/spad_prospective_generation_s17_39537/BS/stream17/raw_generation/generation.jsonl}"
+readonly CONTROL_GENERATION="${POTENTIAL_CLOSURE_CONTROL_GENERATION:-${TRAIN_GENERATION_RUN}/closure_control/stream17/raw_generation/generation.jsonl}"
+readonly POTENTIAL_GENERATION="${POTENTIAL_CLOSURE_POTENTIAL_GENERATION:-${TRAIN_GENERATION_RUN}/potential_closed/stream17/raw_generation/generation.jsonl}"
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\n" "$rc" "$LINENO" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 
 [[ -f "${TRAIN_GENERATION_RUN}/_SUCCESS" ]]
+[[ "${ENDPOINT}" == raw || "${ENDPOINT}" == tau800 ]]
 for generation in "${BS_GENERATION}" "${CONTROL_GENERATION}" "${POTENTIAL_GENERATION}"; do
   [[ -f "${generation}" ]]
   [[ "$(wc -l <"${generation}")" -eq 256 ]]
@@ -80,6 +82,15 @@ wait "${potential_direct_pid}" || direct_status=1
 
 [[ -f "${RUN}/final/NATIVE_RAW_FINAL.json" ]]
 [[ -f "${RUN}/final/_SUCCESS" ]]
+"${PYTHON}" - "${RUN}/final/NATIVE_RAW_FINAL.json" "${RUN}/final/${ENDPOINT^^}_FINAL.json" "${ENDPOINT}" <<'PY'
+import json, pathlib, sys
+source, output, endpoint = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2]), sys.argv[3]
+report = json.loads(source.read_text(encoding="utf-8"))
+report["endpoint"] = endpoint
+report["source_schema"] = report["schema"]
+report["schema"] = "potential_closure_endpoint_final_v1"
+output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+PY
 trap - ERR
 touch "${RUN}/_SUCCESS"
 printf '%s\n' "${RUN}"
