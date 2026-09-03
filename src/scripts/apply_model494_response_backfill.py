@@ -128,6 +128,89 @@ def _species_program(row: Mapping[str, Any]) -> list[str]:
     return [str(value) for value in values]
 
 
+def _match_site_order(
+    *,
+    source_types: list[int],
+    source_coords: torch.Tensor,
+    target_types: list[int],
+    target_coords: torch.Tensor,
+    tolerance: float = 1.0e-5,
+) -> list[int]:
+    """Map target-order sites to source indices by species and PBC coordinates."""
+
+    if source_coords.shape != target_coords.shape or source_coords.ndim != 2:
+        raise ValueError("site coordinate shapes do not match")
+    if len(source_types) != len(target_types) or len(source_types) != source_coords.shape[0]:
+        raise ValueError("site type/coordinate accounting does not match")
+    unused = set(range(len(source_types)))
+    target_to_source: list[int] = []
+    for target_index, atomic_number in enumerate(target_types):
+        candidates = [index for index in unused if source_types[index] == atomic_number]
+        if not candidates:
+            raise ValueError("site species mapping failed")
+        distances: list[tuple[float, int]] = []
+        for source_index in candidates:
+            delta = target_coords[target_index] - source_coords[source_index]
+            delta = delta - torch.round(delta)
+            distances.append((float(torch.linalg.vector_norm(delta).item()), source_index))
+        distance, selected = min(distances)
+        if distance > float(tolerance):
+            raise ValueError("site coordinate mapping failed")
+        unused.remove(selected)
+        target_to_source.append(int(selected))
+    if unused:
+        raise ValueError("site mapping is not bijective")
+    return target_to_source
+
+
+def _source_graph_to_body_permutation(
+    row: Mapping[str, Any],
+    arrays: Mapping[str, Any],
+    source_graph: Mapping[str, Any],
+) -> list[int]:
+    """Reproduce CIF parsing + Niggli reduction while carrying body indices."""
+
+    from pymatgen.core import Structure
+
+    body_types = [int(SYMBOL_TO_Z[str(symbol)]) for symbol in arrays["species"]]
+    body_coords = torch.as_tensor(arrays["frac_coords"], dtype=torch.float64)
+    cif = row.get("cif")
+    if not isinstance(cif, str) or not cif.strip():
+        # Unit tests and diagnostic callers may omit the CIF.  This fallback is
+        # valid only when the supplied graph itself remains in the raw basis.
+        return _match_site_order(
+            source_types=body_types,
+            source_coords=body_coords,
+            target_types=[int(value) for value in source_graph["a_type"]],
+            target_coords=torch.as_tensor(source_graph["x_coord"], dtype=torch.float64),
+        )
+    parsed = Structure.from_str(cif, fmt="cif")
+    parsed_types = [int(value) for value in parsed.atomic_numbers]
+    parsed_coords = torch.as_tensor(parsed.frac_coords, dtype=torch.float64)
+    parsed_to_body = _match_site_order(
+        source_types=body_types,
+        source_coords=body_coords,
+        target_types=parsed_types,
+        target_coords=parsed_coords,
+    )
+    parsed.add_site_property("spad_body_index", parsed_to_body)
+    reduced = parsed.get_reduced_structure()
+    graph_to_body = [int(value) for value in reduced.site_properties["spad_body_index"]]
+    graph_types = [int(value) for value in source_graph["a_type"]]
+    reduced_types = [int(value) for value in reduced.atomic_numbers]
+    if graph_types != reduced_types:
+        raise ValueError("source graph differs from reproduced Niggli species order")
+    graph_coords = torch.as_tensor(source_graph["x_coord"], dtype=torch.float64)
+    reduced_coords = torch.as_tensor(reduced.frac_coords, dtype=torch.float64)
+    if graph_coords.shape != reduced_coords.shape:
+        raise ValueError("source graph differs from reproduced Niggli shape")
+    delta = graph_coords - reduced_coords
+    delta = delta - torch.round(delta)
+    if float(torch.abs(delta).max().item()) > 1.0e-5:
+        raise ValueError("source graph differs from reproduced Niggli coordinates")
+    return graph_to_body
+
+
 def _pair_task(
     row: Mapping[str, Any],
     endpoint: Mapping[str, Any] | None,
@@ -150,34 +233,9 @@ def _pair_task(
         graph_to_body = list(range(int(arrays["num_atoms"])))
         if source_graph is not None:
             graph_types = [int(value) for value in source_graph["a_type"]]
-            graph_coords = torch.as_tensor(source_graph["x_coord"], dtype=torch.float64)
             if list(endpoint["atom_types"]) != graph_types:
                 return None, "model494_graph_atom_order_mismatch"
-            raw_coords = torch.as_tensor(arrays["frac_coords"], dtype=torch.float64)
-            if graph_coords.shape != raw_coords.shape:
-                return None, "source_graph_coordinate_shape_mismatch"
-            unused = set(range(int(arrays["num_atoms"])))
-            graph_to_body = []
-            for graph_index, atomic_number in enumerate(graph_types):
-                candidates = [
-                    index for index in unused if expected_types[index] == atomic_number
-                ]
-                if not candidates:
-                    return None, "source_graph_species_mapping_failed"
-                distances: list[tuple[float, int]] = []
-                for body_index in candidates:
-                    delta = graph_coords[graph_index] - raw_coords[body_index]
-                    delta = delta - torch.round(delta)
-                    distances.append(
-                        (float(torch.linalg.vector_norm(delta).item()), body_index)
-                    )
-                distance, selected = min(distances)
-                if distance > 1.0e-5:
-                    return None, "source_graph_coordinate_mapping_failed"
-                unused.remove(selected)
-                graph_to_body.append(int(selected))
-            if unused:
-                return None, "source_graph_mapping_not_bijective"
+            graph_to_body = _source_graph_to_body_permutation(row, arrays, source_graph)
             reordered: list[list[float] | None] = [None] * int(arrays["num_atoms"])
             for graph_index, body_index in enumerate(graph_to_body):
                 reordered[body_index] = [
