@@ -27,9 +27,12 @@ the variable-K histogram is `K1/K2/K3/K4=44/68/1041/895`, all four strata
 remain 512, and 2,837 duplicate draws were merged with zero invalid draws.
 
 Dependent label job `39600` failed before loading CHGNet because the wrapper
-used Bash's reserved `GROUPS` variable. Commit `5c85531` renames it; recovery
-job `39601` is running on one A800/8 CPU against the immutable 6,883 retained
-candidates. Formal DLM training has not started.
+used Bash's reserved `GROUPS` variable. Commit `5c85531` renamed it; recovery
+job `39601` completed in 95 seconds on one A800/8 CPU. All `6,883/6,883`
+retained candidates have raw CHGNet E/F/stress; `2,003/2,048` groups are
+informative, with strata `512/499/504/488`, and the median within-group energy
+spread is `2.624 eV/atom`. Every action-pool condition passes. Five-batch
+gradient probe job `39602` is running; formal DLM training has not started.
 
 ## Approach
 
@@ -194,7 +197,7 @@ pilot outcomes remain reported.
   temperature or select by energy. Every action is a complete lattice or XYZ
   block.
 
-- [ ] **Label all 6,883 retained raw candidates.** Reconstruct each full crystal, remove
+- [x] **Label all 6,883 retained raw candidates.** Reconstruct each full crystal, remove
   definitively invalid actions from support, and compute CHGNet energy/force/
   stress through the verified explicit `cuda:0` device path.
 
