@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=48
-#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:6
-#SBATCH --mem=500G
+#SBATCH --cpus-per-task=24
+#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:3
+#SBATCH --mem=300G
 #SBATCH --time=08:00:00
 #SBATCH --output=spad-prosp-eval-%j.out
 #SBATCH --error=spad-prosp-eval-%j.err
@@ -14,6 +14,7 @@ set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
 readonly GENERATION_RUN="${SPAD_PROSPECTIVE_GENERATION_RUN:?}"
 readonly COHORT="${SPAD_PROSPECTIVE_COHORT:?}"
+readonly STREAM="${SPAD_STREAM:?set SPAD_STREAM to 17 or 18}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:-/public/home/jiaosz/ywliang/ai4s/.sscd_unified_d0e616b_https}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
@@ -24,7 +25,7 @@ readonly CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.js
 readonly FULL="${SOURCE}/eval_runtime/run_full_reconstructed_eval.py"
 readonly DIRECT="${R03E}/runtime/scripts/a800/run_crysllmgen_metrics.py"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
-readonly RUN="${ROOT}/runs/spad_prospective_offline_${SLURM_JOB_ID}"
+readonly RUN="${ROOT}/runs/spad_prospective_offline_s${STREAM}_${SLURM_JOB_ID}"
 readonly EXIT_GRACE=300
 readonly TERM_GRACE=30
 mkdir "${RUN}"
@@ -33,9 +34,10 @@ trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$B
 [[ -f "${GENERATION_RUN}/_SUCCESS" ]]
 [[ -f "${COHORT}/_SUCCESS" ]]
 IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?}"
-[[ "${#gpu[@]}" -eq 6 ]]
+[[ "${#gpu[@]}" -eq 3 ]]
+[[ "${STREAM}" == 17 || "${STREAM}" == 18 ]]
 
-"${PYTHON}" - "${GENERATION_RUN}/GENERATION_FINAL.json" "${COHORT}" <<'PY'
+"${PYTHON}" - "${GENERATION_RUN}/GENERATION_FINAL.json" "${COHORT}" "${STREAM}" <<'PY'
 import json
 import pathlib
 import sys
@@ -44,19 +46,17 @@ assert report["schema"] == "spad_prospective_generation_v1"
 assert report["one_plan_one_trajectory"] is True
 assert report["selection_retry_replacement"] is False
 assert pathlib.Path(report["frozen_plan_dir"]).resolve() == pathlib.Path(sys.argv[2]).resolve()
-assert len(report["cells"]) == 6
+assert report["stream"] == int(sys.argv[3]) and len(report["cells"]) == 3
 PY
 
 for arm in B0 BC BS; do
-  for stream in 17 18; do
-    for endpoint in raw refined; do
-      source_generation="${GENERATION_RUN}/${arm}/stream${stream}/${endpoint}_generation"
-      cell="${RUN}/${arm}/stream${stream}/${endpoint}"
-      [[ -f "${source_generation}/_SUCCESS" ]]
-      mkdir -p "${cell}"
-      cp -a "${source_generation}" "${cell}/generation"
-      [[ "$(wc -l <"${cell}/generation/generation.jsonl")" -eq 256 ]]
-    done
+  for endpoint in raw refined; do
+    source_generation="${GENERATION_RUN}/${arm}/stream${STREAM}/${endpoint}_generation"
+    cell="${RUN}/${arm}/stream${STREAM}/${endpoint}"
+    [[ -f "${source_generation}/_SUCCESS" ]]
+    mkdir -p "${cell}"
+    cp -a "${source_generation}" "${cell}/generation"
+    [[ "$(wc -l <"${cell}/generation/generation.jsonl")" -eq 256 ]]
   done
 done
 
@@ -130,11 +130,9 @@ run_wave() {
   local endpoint="$1" index=0 status=0 pid
   local -a pids=()
   for arm in B0 BC BS; do
-    for stream in 17 18; do
-      run_cell "${index}" "${arm}" "${stream}" "${endpoint}" &
-      pids+=("$!")
-      index=$((index + 1))
-    done
+    run_cell "${index}" "${arm}" "${STREAM}" "${endpoint}" &
+    pids+=("$!")
+    index=$((index + 1))
   done
   for pid in "${pids[@]}"; do wait "${pid}" || status="$?"; done
   return "${status}"
@@ -143,38 +141,35 @@ run_wave() {
 run_wave raw
 run_wave refined
 
-"${PYTHON}" - "${RUN}" <<'PY'
+"${PYTHON}" - "${RUN}" "${STREAM}" "${COHORT}" <<'PY'
 import json
 import pathlib
 import sys
 
 root = pathlib.Path(sys.argv[1])
+stream = int(sys.argv[2])
+cohort = str(pathlib.Path(sys.argv[3]).resolve())
 cells = []
 for arm in ("B0", "BC", "BS"):
-    for stream in (17, 18):
-        for endpoint in ("raw", "refined"):
-            cell = root / arm / f"stream{stream}" / endpoint / "evaluation"
-            direct = json.load(open(cell / "direct/report.json", encoding="utf-8"))
-            full = cell / "full_reconstructed"
-            for required in ("_SUCCESS", "attempt_labels_preofficial.jsonl", "worker_cleanup.json"):
-                assert (full / required).is_file(), (arm, stream, endpoint, required)
-            cells.append({
-                "arm": arm,
-                "stream": stream,
-                "endpoint": endpoint,
-                "requested": 256,
-                "composition_valid": direct["comp_valid_count"],
-                "structure_valid": direct["struct_valid_count"],
-                "direct_joint": direct["valid_count"],
-            })
-report = {"schema": "spad_prospective_offline_v1", "cells": cells, "official": False}
+    for endpoint in ("raw", "refined"):
+        cell = root / arm / f"stream{stream}" / endpoint / "evaluation"
+        direct = json.load(open(cell / "direct/report.json", encoding="utf-8"))
+        full = cell / "full_reconstructed"
+        for required in ("_SUCCESS", "attempt_labels_preofficial.jsonl", "worker_cleanup.json"):
+            assert (full / required).is_file(), (arm, stream, endpoint, required)
+        cells.append({
+            "arm": arm,
+            "stream": stream,
+            "endpoint": endpoint,
+            "requested": 256,
+            "composition_valid": direct["comp_valid_count"],
+            "structure_valid": direct["struct_valid_count"],
+            "direct_joint": direct["valid_count"],
+        })
+report = {"schema": "spad_prospective_offline_stream_v1", "stream": stream, "cohort": cohort, "cells": cells, "official": False}
 (root / "OFFLINE_FINAL.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
 print(json.dumps(report, sort_keys=True))
 PY
-
-"${PYTHON}" "${SOURCE}/scripts/finalize_spad_offline.py" \
-  --eval-run "${RUN}" --output-dir "${RUN}/final" --arms B0,BC,BS \
-  --ledger "${COHORT}/ledger.jsonl"
 
 trap - ERR
 touch "${RUN}/_OFFLINE_SUCCESS"

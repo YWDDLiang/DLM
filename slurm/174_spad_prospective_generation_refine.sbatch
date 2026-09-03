@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=48
-#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:6
-#SBATCH --mem=500G
+#SBATCH --cpus-per-task=24
+#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:3
+#SBATCH --mem=300G
 #SBATCH --time=04:00:00
 #SBATCH --output=spad-prosp-gen-%j.out
 #SBATCH --error=spad-prosp-gen-%j.err
@@ -13,6 +13,7 @@
 set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
 readonly PLAN_DIR="${SPAD_PROSPECTIVE_PLAN_DIR:?}"
+readonly STREAM="${SPAD_STREAM:?set SPAD_STREAM to 17 or 18}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:-/public/home/jiaosz/ywliang/ai4s/.sscd_unified_d0e616b_https}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly BASE_POLICY="${ROOT}/runs/canonical_compact_v2_dlm_39282/train/checkpoints/step-3392"
@@ -20,7 +21,7 @@ readonly BS_POLICY="${ROOT}/runs/spad_schedule_dlm_39520/train/checkpoints/step-
 readonly REFINER=/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt
 readonly CRYS=/public/home/jiaosz/hengzhang/Code/crysllmgen-main
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
-readonly RUN="${ROOT}/runs/spad_prospective_generation_${SLURM_JOB_ID}"
+readonly RUN="${ROOT}/runs/spad_prospective_generation_s${STREAM}_${SLURM_JOB_ID}"
 readonly POINTER_PLANS="${PLAN_DIR}/plans_for_dlm.jsonl"
 readonly PLAN_LEDGER="${PLAN_DIR}/ledger.jsonl"
 readonly CANONICAL_PLANS="${RUN}/canonical_program_plans.jsonl"
@@ -30,7 +31,8 @@ trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$B
 [[ -f "${PLAN_DIR}/_SUCCESS" && -f "${POINTER_PLANS}" && -f "${PLAN_LEDGER}" ]]
 [[ -f "${BASE_POLICY}/adapter_model.safetensors" && -f "${BS_POLICY}/adapter_model.safetensors" ]]
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
-[[ "${#allocated[@]}" -eq 6 ]]
+[[ "${#allocated[@]}" -eq 3 ]]
+[[ "${STREAM}" == 17 || "${STREAM}" == 18 ]]
 
 "${PYTHON}" - "${PLAN_DIR}/manifest.json" "${POINTER_PLANS}" "${PLAN_LEDGER}" <<'PY'
 import json
@@ -144,57 +146,55 @@ run_cell() {
 index=0
 declare -a pids=()
 for arm in B0 BC BS; do
-  for stream in 17 18; do
-    run_cell "${arm}" "${stream}" "${allocated[${index}]}" &
-    pids+=("$!")
-    index=$((index + 1))
-  done
+  run_cell "${arm}" "${STREAM}" "${allocated[${index}]}" &
+  pids+=("$!")
+  index=$((index + 1))
 done
 status=0
 for pid in "${pids[@]}"; do wait "${pid}" || status="$?"; done
 (( status == 0 ))
 
-"${PYTHON}" - "${RUN}" "${PLAN_DIR}" <<'PY'
+"${PYTHON}" - "${RUN}" "${PLAN_DIR}" "${STREAM}" <<'PY'
 import json
 import pathlib
 import sys
 
 root = pathlib.Path(sys.argv[1])
 plan_dir = pathlib.Path(sys.argv[2]).resolve()
+stream = int(sys.argv[3])
 expected = {
     int(row["sample_idx"]): row["plan_state"]
     for row in (json.loads(line) for line in open(plan_dir / "plans_for_dlm.jsonl", encoding="utf-8"))
 }
 cells = []
 for arm in ("B0", "BC", "BS"):
-    for stream in (17, 18):
-        cell = root / arm / f"stream{stream}"
-        body = json.load(open(cell / "body/sample_metrics.json", encoding="utf-8"))
-        refine = json.load(open(cell / "refine/refinement_metrics.json", encoding="utf-8"))
-        raw = [json.loads(line) for line in open(cell / "raw_generation/generation.jsonl", encoding="utf-8")]
-        refined = [json.loads(line) for line in open(cell / "refined_generation/generation.jsonl", encoding="utf-8")]
-        assert len(raw) == len(refined) == 256
-        assert {row["sample_idx"] for row in raw} == set(range(256))
-        assert {row["sample_idx"] for row in refined} == set(range(256))
-        for rows in (raw, refined):
-            for row in rows:
-                sample_idx = int(row["sample_idx"])
-                if sample_idx in expected:
-                    assert row["plan_state"] == expected[sample_idx]
-                else:
-                    assert row["status"] == "failed" and row["plan_state"] is None
-        cells.append({
-            "arm": arm,
-            "stream": stream,
-            "requested": 256,
-            "body_parsed": body["parse_success"],
-            "body_plan_match": body["plan_match_success"],
-            "graphs": body["graph_success"],
-            "refined": refine.get(
-                "num_proposals",
-                refine.get("num_output_structures", refine.get("output_count")),
-            ),
-        })
+    cell = root / arm / f"stream{stream}"
+    body = json.load(open(cell / "body/sample_metrics.json", encoding="utf-8"))
+    refine = json.load(open(cell / "refine/refinement_metrics.json", encoding="utf-8"))
+    raw = [json.loads(line) for line in open(cell / "raw_generation/generation.jsonl", encoding="utf-8")]
+    refined = [json.loads(line) for line in open(cell / "refined_generation/generation.jsonl", encoding="utf-8")]
+    assert len(raw) == len(refined) == 256
+    assert {row["sample_idx"] for row in raw} == set(range(256))
+    assert {row["sample_idx"] for row in refined} == set(range(256))
+    for rows in (raw, refined):
+        for row in rows:
+            sample_idx = int(row["sample_idx"])
+            if sample_idx in expected:
+                assert row["plan_state"] == expected[sample_idx]
+            else:
+                assert row["status"] == "failed" and row["plan_state"] is None
+    cells.append({
+        "arm": arm,
+        "stream": stream,
+        "requested": 256,
+        "body_parsed": body["parse_success"],
+        "body_plan_match": body["plan_match_success"],
+        "graphs": body["graph_success"],
+        "refined": refine.get(
+            "num_proposals",
+            refine.get("num_output_structures", refine.get("output_count")),
+        ),
+    })
 report = {
     "schema": "spad_prospective_generation_v1",
     "cells": cells,
@@ -202,6 +202,7 @@ report = {
     "one_plan_one_trajectory": True,
     "selection_retry_replacement": False,
     "frozen_plan_dir": str(plan_dir),
+    "stream": stream,
 }
 assert all(cell["body_plan_match"] == cell["body_parsed"] for cell in cells)
 (root / "GENERATION_FINAL.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
