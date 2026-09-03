@@ -46,8 +46,11 @@ the tiny categorical loss in float64, and its 12-test remote regression suite
 passes. The control cell completed all 2,048 updates with the expected
 `1024/512/512` objective counts and its sole step-2048 checkpoint; the parent
 job then exited failed because the original potential process was already
-ineligible. Parameter-identical potential-only recovery job `39604` is running
-on one A800/four CPUs; no scientific setting or data changed.
+ineligible. Parameter-identical potential-only recovery job `39604` completed
+all 2,048 updates on one A800/four CPUs with the expected `1024/512/512`
+objective counts, clean/on-policy transaction exposures and sole step-2048
+checkpoint; no scientific setting or data changed. Native stream17 generation
+job `39605` is running both eligible arms concurrently on two A800/eight CPUs.
 
 ## Approach
 
@@ -253,8 +256,8 @@ pilot outcomes remain reported.
 | Fixed-8 proposal generation | completed: 4 A800 + 16 CPU | 16 min | complete |
 | Raw CHGNet labels | completed: 1 A800 + 8 CPU | 95 s | complete |
 | Five-batch gradient probe | completed: 1 A800 + 8 CPU | 143 s | complete |
-| Control + potential recovery to 2,048 | control complete; recovery active on 1 A800 + 4 CPU | about 2.5 h from recovery start | running |
-| Stream17 native generation/eval (no Direct) | up to 4 A800 + 4 CPU/GPU | 1--1.5 h | **3--4 h** |
+| Control + potential recovery to 2,048 | completed | 2 h 19 min recovery wall time | complete |
+| Stream17 native generation/eval (no Direct) | generation active: 2 A800 + 8 CPU | 1--1.5 h | running |
 | Conditional stream18 + tau800 (no Direct) | up to 4 A800 + 4 CPU/GPU | 1.5--2.5 h | **4.5--6.5 h** |
 
 All future work is capped at four A800 and exactly four requested CPUs per GPU,
