@@ -356,7 +356,9 @@ Three analyses run in parallel before method training.
 
 Start from untouched continuous MP20 validation structures. Encode and decode
 them through the exact current `7+4N` representation without learned
-generation. Compare original and quantized structures using:
+generation. Require codec/parse/composition closure on all 9,047 rows, then use
+one fixed stratified 512-row subset for paired potential and fast-validity
+diagnostics. Compare original and quantized structures using:
 
 - paired CHGNet energy per atom;
 - force RMS and maximum force;
@@ -365,6 +367,11 @@ generation. Compare original and quantized structures using:
 - PBC minimum-distance changes and Direct flips;
 - Strict/Meta status only on the subset supported by an existing compatible
   phase-diagram cache.
+
+For this cached diagnostic only, preserve the fixed-composition DFT hull
+reference and add the paired CHGNet quantization delta to the cached DFT hull
+value. Report both Strict and Meta retention, but gate only on Meta retention
+because the exact-zero Strict boundary is unusually sensitive to proxy error.
 
 Report distributions and tails, not only mean energy. A `15 meV/atom` change is
 a useful reference near S.U.N. thresholds, not a stand-alone decision rule.

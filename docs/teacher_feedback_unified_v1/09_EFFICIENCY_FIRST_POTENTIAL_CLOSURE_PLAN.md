@@ -60,11 +60,13 @@ after all three decisions are available.
 - fast structural validity on a fixed stratified 512-row subset loses at most
   1 percentage point; use cached full Direct when available, but do not wait
   for expensive uncached Direct submetrics before the stability preflight;
-- median quantized-minus-continuous CHGNet energy is at most 15 meV/atom;
+- on the same fixed stratified 512-row subset, median quantized-minus-continuous
+  absolute median CHGNet energy shift is at most 15 meV/atom with paired
+  E/F/stress coverage at least 98%;
 - force/stress distributions and all available cached stability flips are
   reported, with no unexplained nonfinite tail.
 
-If the median energy penalty exceeds 15 meV/atom or fast structural validity
+If the absolute median energy shift exceeds 15 meV/atom or fast structural validity
 loses more than one point, stop before training and revise representation
 precision. On the subset
 with compatible cached stability labels, define
@@ -75,9 +77,12 @@ R_{\rm retain}=
 {\#(\text{continuous stable})}.
 \]
 
-If `R_retain < 0.60`, stop the pure-token trainer and revisit representation
-precision. The force and stress tails diagnose severity but do not create a
-hidden replacement rule.
+Report retention at both the Strict (`0`) and Meta (`0.1 eV/atom`) thresholds.
+Because adding a proxy energy delta to the exact-zero DFT threshold is
+especially noise-sensitive, the formal blocker is Meta retention: if it is
+below `0.60`, stop the pure-token trainer and revisit representation precision.
+Strict retention remains a mandatory diagnostic. The force and stress tails
+diagnose severity but do not create a hidden replacement rule.
 
 ### B. Closure actions are learnable
 
