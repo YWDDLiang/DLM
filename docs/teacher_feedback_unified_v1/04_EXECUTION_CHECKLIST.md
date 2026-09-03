@@ -227,6 +227,51 @@ support.
 - small positives are checked on the second common stream;
 - large positives are frozen, verified and then celebrated.
 
+### A800 utilization and throughput rules
+
+The optimization target is shortest critical-path wall time at reasonable
+A800-hours, not merely allocating all six GPUs.  Idle capacity caused by a
+true data dependency is allowed, but implementation-induced serialization is
+not.
+
+- [ ] Record, for every GPU run, allocated GPUs/CPUs, wall time, A800-hours,
+  stage durations, examples or structures per second per rank, rank-progress
+  skew and the reason for any deliberately idle GPU.
+- [ ] Planner/DLM sampling must use one independent rank per allocated GPU.
+  Four-cell work uses four GPUs and six-cell work uses six GPUs; within a
+  shared cohort, shard rows evenly and keep stable per-rank batch size at least
+  eight when memory permits.
+- [ ] model494 refinement must be sharded across all GPUs allocated to its
+  stage.  Batch size one is acceptable for variable crystal graphs only when
+  all ranks remain active and balanced; report throughput rather than treating
+  allocation as utilization evidence.
+- [ ] CHGNet evaluation/teacher labeling must use multi-GPU row sharding when
+  more than one GPU is allocated, with bounded batches of 8--16 structures per
+  GPU.  Do not leave the other GPUs idle behind a single-GPU serial labeler.
+- [ ] Run necessary Direct and CHGNet cells concurrently with bounded worker
+  queues and no more than eight CPU cores per allocated GPU.  Defer expensive
+  Direct as `DEFERRED_COST` until cheaper body, graphability and CHGNet screens
+  show that the method is worth a full endpoint evaluation.
+- [ ] Do not restart an immutable healthy run solely to increase GPU count.
+  Apply throughput fixes to the next stage/run and preserve the current run's
+  scientific parameters and accounting.
+- [ ] Do not fill dependency-blocked GPUs with unrelated experiments.  Use
+  them only for independent critical-path work whose inputs are already
+  frozen.
+- [ ] Use Slurm accounting, rank logs and stage throughput for utilization
+  audits; the project-wide prohibition on ad-hoc `nvidia-smi`/CUDA probes
+  remains in force.
+
+Current exception and corrective action:
+
+- [x] Job 39556 DLM action generation uses four A800 ranks at batch eight; an
+  observed progress snapshot was balanced at roughly 69--71%, so there is no
+  straggler-driven card loss in this stage.
+- [ ] Job 39556's already-frozen final CHGNet labeler is single-GPU.  Do not
+  mutate or restart this active teacher run; record the under-utilized tail,
+  and require the next CHGNet/Direct implementation to shard across every
+  allocated GPU as specified above.
+
 ## Current run ledger
 
 - job 39508: pointer teacher data complete; train 24,558 and val 8,158.
