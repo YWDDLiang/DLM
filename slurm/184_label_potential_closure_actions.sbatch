@@ -15,7 +15,7 @@ set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:-/public/home/jiaosz/ywliang/ai4s/.sscd_spade_b14c457}"
 readonly ACTIONS="${POTENTIAL_CLOSURE_ACTIONS:?export POTENTIAL_CLOSURE_ACTIONS}"
-readonly GROUPS="${ACTIONS}/candidate_groups.jsonl"
+readonly CANDIDATE_GROUPS="${ACTIONS}/candidate_groups.jsonl"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly RUN="${ROOT}/runs/label_potential_closure_actions_${SLURM_JOB_ID}"
 readonly OUTPUT="${RUN}/labels"
@@ -33,13 +33,13 @@ trap 'on_error "$?" "$LINENO" "$BASH_COMMAND"' ERR
 
 [[ -f "${SOURCE}/scripts/label_potential_closure_actions.py" ]]
 [[ -f "${ACTIONS}/_SUCCESS" ]]
-[[ "$(wc -l <"${GROUPS}")" -eq 2048 ]]
+[[ "$(wc -l <"${CANDIDATE_GROUPS}")" -eq 2048 ]]
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPU}"
 [[ "${#allocated[@]}" -eq 1 ]]
 
 cat >"${RUN}/contract.tsv" <<EOF
 field	value
-candidate_groups	${GROUPS}
+candidate_groups	${CANDIDATE_GROUPS}
 label	raw CHGNet E/F/stress only
 batch_size	16
 device	job-local cuda:0
@@ -50,7 +50,7 @@ env CUDA_VISIBLE_DEVICES="${allocated[0]}" OPENBLAS_NUM_THREADS=1 \
   OMP_NUM_THREADS=8 MKL_NUM_THREADS=8 NUMEXPR_NUM_THREADS=8 \
   PYTHONPATH="${SOURCE}/src" \
   "${PYTHON}" "${SOURCE}/scripts/label_potential_closure_actions.py" \
-  --candidate-groups "${GROUPS}" --output-dir "${OUTPUT}" \
+  --candidate-groups "${CANDIDATE_GROUPS}" --output-dir "${OUTPUT}" \
   --device cuda:0 --batch-size 16 \
   >"${RUN}/label.out" 2>"${RUN}/label.err"
 
