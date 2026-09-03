@@ -1,6 +1,6 @@
 # Energy-Shaped SPAD: Basin-Aligned Programmed Backfill
 
-Status: **APPROVED design; implementation awaits the user's go-ahead**
+Status: **APPROVED; user authorized immediate one-day implementation**
 
 ## 1. One-line method
 
@@ -97,6 +97,15 @@ a_i=(X_i,Y_i,Z_i)\in\mathcal A_i(s_i).
 - exact `N`, species, lattice and non-active tokens are immutable;
 - a triplet producing a sub-0.5 A PBC contact is outside the action set.
 
+Validity and stability are therefore **lexicographic**, not two weighted
+rewards.  An action enters `A_i` only if it preserves the exact Plan/body
+schema, positive finite lattice, atom count/type order, non-duplicate periodic
+coordinates, the 0.5 A triclinic PBC boundary and fast graph construction.
+Only then may terminal energy change its probability.  The source no-op is
+always retained when the source body is valid.  If no legal alternative exists,
+the target is the no-op delta distribution and the example cannot trade
+validity for lower energy.
+
 Unlike an arbitrary completion-level preference, all compared actions share
 one bitwise-identical input state.  Unlike an AR edit, the right-hand suffix is
 not regenerated.
@@ -148,6 +157,19 @@ L_{\rm terminal}=D_{\rm KL}(q^*\Vert p_\theta)
 \]
 
 on this suffix-visible backfill transaction.
+
+Equivalently, version 1 solves
+
+\[
+\min_q\;\mathbb E_q[V_{800}]
++\tau D_{\rm KL}(q\Vert p_{\rm ref})
+\quad\text{s.t.}\quad
+\operatorname{supp}(q)\subseteq\mathcal A_i^{\rm valid}(s_i).
+\]
+
+The zero-invalidity support constraint is enforced before energy labels are
+read.  Unknown-energy legal actions stay in accounting but receive no energy
+preference; they are never interpreted as high or low energy.
 
 ## 7. Potential target and force diagnostic
 

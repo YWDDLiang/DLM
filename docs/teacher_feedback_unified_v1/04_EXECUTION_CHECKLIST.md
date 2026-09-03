@@ -174,12 +174,18 @@ Track A no longer blocks B.
 ## Phase 7 — SPAD-E terminal-energy backfill learning
 
 The design passed sequential skeptic, constraint, paper-reader and arbiter
-review.  Implementation still requires explicit user approval.
+review.  The user authorized immediate implementation on 2026-09-03 with one
+day remaining; stability is optimized only inside the structural-validity
+support.
 
 - [ ] Freeze 2,048 outcome-blind MP20-train Plans and one predicted
   Llama-programmed suffix-visible backfill state per Plan.
 - [ ] Build exactly `K=4` legal XYZ actions: mandatory old-XYZ no-op plus three
   frozen-reference DLM samples; preserve one common state and fixed accounting.
+- [ ] Apply validity lexicographically before energy: exact schema/Plan,
+  lattice, atom order, periodic duplicates, 0.5 A triclinic distance and fast
+  graphability. If no legal alternative exists, retain no-op rather than
+  exchanging validity for stability.
 - [ ] Run model494 tau800 and CHGNet endpoint energy once per complete action;
   no MP query or prospective outcome enters labels.
 - [ ] Build the finite-action `q*` under a 0.05-nat reference trust region.
