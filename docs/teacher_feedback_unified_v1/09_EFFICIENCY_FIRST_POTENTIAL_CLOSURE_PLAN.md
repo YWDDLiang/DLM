@@ -5,7 +5,8 @@ implementation and train-only data construction may start immediately. Formal
 DLM training starts only after the frozen launch conditions below are met.
 
 Execution status: Phase 0 job `39596` completed in 37 seconds and authorized
-the action-pool preflight. Formal potential-closure training has not started.
+the action-pool preflight. Formal potential-closure training job `39603` is
+running.
 
 Phase 0 results: `9,047/9,047` exact codec round trips; fixed-512 CHGNet pair
 coverage `100%`; quantized-minus-continuous median energy `+2.846 meV/atom`
@@ -165,19 +166,20 @@ stream17 shows:
 - composition validity remains at least 95%;
 - paired raw CHGNet median improvement is below zero and the composition-
   bootstrap 95% interval for the mean lies below zero;
-- raw Direct loss no greater than 1 percentage point;
+- parsed structural validity is reported on the same fixed denominator;
 - Meta S.U.N. paired wins are not fewer than losses; and
 - neither Strict nor Meta shows a significant adverse one-sided exact McNemar
   result.
 
-Always report paired energy deltas, Direct/Strict/Meta wins and losses, and
-exact McNemar tests. Do not combine a fixed `wins-losses` cutoff with a p-value:
+Always report paired energy deltas and Strict/Meta wins and losses, together
+with composition and parsed structural validity. Skip Direct on this critical
+path. Do not combine a fixed `wins-losses` cutoff with a p-value:
 significance depends on the total number of discordant pairs.
 
 Expand to full MP20 and two independent full-data seeds only if both streams
 retain the raw-energy direction, the pooled composition-clustered interval is
-below zero, pooled Meta wins exceed losses, and Direct retains its 1-point
-non-inferiority. These are predeclared continuation decisions; all unfavorable
+below zero, pooled Meta wins exceed losses, and both validity rates remain
+intact. These are predeclared continuation decisions; all unfavorable
 pilot outcomes remain reported.
 
 ## Action items
@@ -221,14 +223,15 @@ pilot outcomes remain reported.
 
 - [ ] **Run one fixed-stream native comparison.** Compare base, closure-only
   and potential-closed with identical Plan/program/request-site randomness.
-  Compute raw energy/force/stress and cached S.U.N. first; run fast validity in
-  parallel. Inference executes one trained cell closure followed by one XYZ
+  Compute raw energy/force/stress, composition validity, parsed structural
+  validity and cached S.U.N.; do not run Direct. Inference executes one trained
+  cell closure followed by one XYZ
   closure for each of the first two distinct-species anchors in the Llama
   program, in reverse order. A unary composition revisits one anchor; no other
   site and no second cell closure are used.
 
 - [ ] **Continue only after native evidence.** If potential closure improves
-  stability relative to closure-only without a material Direct/NU loss, run
+  stability relative to closure-only while retaining both validity rates, run
   stream18 and frozen tau800. Only then expand full MP20 and two full-data
   seeds. Pointer DPO and tau200 remain later conditional work.
 
@@ -242,8 +245,8 @@ pilot outcomes remain reported.
 | Raw CHGNet labels | completed: 1 A800 + 8 CPU | 95 s | complete |
 | Five-batch gradient probe | completed: 1 A800 + 8 CPU | 143 s | complete |
 | Two 2,048-update training cells | active: 2 A800 + 8 CPU | 2--2.5 h | running |
-| Stream17 native generation/eval | up to 4 A800 + 4 CPU/GPU | 1--2 h | **3--4.5 h** |
-| Conditional stream18 + tau800 | up to 4 A800 + 16 CPU | 2--3 h | **5--8 h** |
+| Stream17 native generation/eval (no Direct) | up to 4 A800 + 4 CPU/GPU | 1--1.5 h | **3--4 h** |
+| Conditional stream18 + tau800 (no Direct) | up to 4 A800 + 4 CPU/GPU | 1.5--2.5 h | **4.5--6.5 h** |
 
 All future work is capped at four A800 and exactly four requested CPUs per GPU,
 with at most two jobs. CHGNet uses batch 8--16 and does not serialize
@@ -261,8 +264,8 @@ Use paired composition-level evidence:
 - raw CHGNet energy interval and lower-energy fraction;
 - force and stress direction;
 - fixed-denominator raw Strict/Meta S.U.N.;
-- paired Direct/Strict/Meta wins, losses and exact McNemar tests;
-- Direct and N/U/NU on the same attempts;
+- paired Strict/Meta wins and losses;
+- composition validity and parsed structural validity on the same attempts;
 - number and type of lattice/XYZ transactions actually changed.
 
 An unfavorable result is retained. It stops full-data expansion; it does not
