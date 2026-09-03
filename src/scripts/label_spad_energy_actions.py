@@ -133,7 +133,11 @@ def main() -> None:
 
     from chgnet.model.model import CHGNet
 
-    model = CHGNet.load(use_device=args.device, check_cuda_mem=True, verbose=False)
+    # Slurm remaps allocated physical GPUs into a job-local CUDA namespace.
+    # CHGNet's free-memory auto-selection reports physical ordinals, which can
+    # therefore be invalid inside a one-GPU continuation job.  The caller pins
+    # the job-local device explicitly, so auto-selection must stay disabled.
+    model = CHGNet.load(use_device=args.device, check_cuda_mem=False, verbose=False)
     raw_predictions = prediction(model, raw_structures)
     endpoint_predictions = prediction(model, endpoint_values)
     raw_by_idx = {
