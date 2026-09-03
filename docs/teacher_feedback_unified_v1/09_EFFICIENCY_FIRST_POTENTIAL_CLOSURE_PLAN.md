@@ -22,8 +22,14 @@ order is used when mapping the Llama program to a site.
 Candidate transaction job `39598` was reduced from 32 CPU/500G to 16 CPU/300G,
 then failed before model/data/science because an intervening SSH reconnect had
 cleared its submitted ROOT variables. Parameter-identical recovery job `39599`
-uses explicit absolute exports and is running on four A800/16 CPU. The raw
-CHGNet label job starts only after its immutable action output completes.
+completed in 16 minutes on four A800/16 CPU: `2004/2048` groups retain K>=2,
+the variable-K histogram is `K1/K2/K3/K4=44/68/1041/895`, all four strata
+remain 512, and 2,837 duplicate draws were merged with zero invalid draws.
+
+Dependent label job `39600` failed before loading CHGNet because the wrapper
+used Bash's reserved `GROUPS` variable. Commit `5c85531` renames it; recovery
+job `39601` is running on one A800/8 CPU against the immutable 6,883 retained
+candidates. Formal DLM training has not started.
 
 ## Approach
 
@@ -42,7 +48,8 @@ before spending time on full MP20, Pointer DPO or low-tau refinement.
 - current Llama scaffold pointer and programs;
 - exact `7+4N`, SPAD/MIC and suffix-visible revision;
 - trained cell/site closure states;
-- 2,048 K4 groups with raw CHGNet potential labels;
+- 2,048 variable-K groups (K=2..4 when informative) with raw CHGNet potential
+  labels;
 - closure-only and potential-closed training cells;
 - one-stream native stability evaluation;
 - tau800 fallback only after a native positive direction.
@@ -180,14 +187,14 @@ pilot outcomes remain reported.
   on-policy-site. Reuse job39556 programs and BS predictor bodies for the
   on-policy half; never reuse its model494 terminal ranks.
 
-- [ ] **Generate only missing K4 actions.** Each restoration group contains
+- [x] **Generate the fixed variable-K actions.** Each restoration group contains
   no-op, clean teacher and two DLM actions; each on-policy group contains no-op
   and three DLM actions. Use fixed temperature and at most eight proposals,
   retain the first distinct legal actions in request order, and never alter
   temperature or select by energy. Every action is a complete lattice or XYZ
   block.
 
-- [ ] **Label 8,192 raw candidates.** Reconstruct each full crystal, remove
+- [ ] **Label all 6,883 retained raw candidates.** Reconstruct each full crystal, remove
   definitively invalid actions from support, and compute CHGNet energy/force/
   stress through the verified explicit `cuda:0` device path.
 
