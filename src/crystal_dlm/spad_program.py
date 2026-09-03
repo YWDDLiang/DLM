@@ -233,6 +233,25 @@ def anchor_revision_slots(program: SpeciesProgram) -> tuple[int, ...]:
     return tuple(reversed(program.anchor_slots))
 
 
+def limited_anchor_revision_slots(
+    program: SpeciesProgram,
+    *,
+    max_anchors: int = 2,
+) -> tuple[int, ...]:
+    """Revisit only the earliest Planner anchors, once and in reverse order.
+
+    This is the deployment-matched potential-closure schedule.  It preserves
+    Llama's choice of the first scaffold species while avoiding an unsupported
+    full reverse sweep over every generated site.
+    """
+
+    limit = int(max_anchors)
+    if limit <= 0:
+        raise ValueError("max_anchors must be positive")
+    selected = program.anchor_slots[:limit]
+    return tuple(reversed(selected))
+
+
 def spad_site_slots(program: SpeciesProgram) -> tuple[int, ...]:
     """Return sites in the order in which SPAD first commits their geometry."""
 
@@ -316,6 +335,7 @@ __all__ = [
     "canonical_predictor_position_groups",
     "coordinate_positions",
     "element_position",
+    "limited_anchor_revision_slots",
     "prefilled_positions",
     "program_from_element_order",
     "program_from_planner_trace",

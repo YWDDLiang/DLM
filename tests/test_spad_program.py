@@ -5,6 +5,7 @@ from crystal_dlm.spad_program import (
     begin_anchor_revision,
     canonical_predictor_position_groups,
     coordinate_positions,
+    limited_anchor_revision_slots,
     program_from_element_order,
     program_from_planner_trace,
     response_revision_slots,
@@ -117,6 +118,20 @@ class SPADProgramTest(unittest.TestCase):
             order_source="llama_program_head",
         )
         self.assertEqual(anchor_revision_slots(program), (3, 0, 4))
+
+    def test_limited_revision_uses_only_first_two_llama_anchors(self):
+        program = program_from_element_order(
+            self.plan,
+            ["Cl", "O", "Na"],
+            order_source="llama_program_head",
+        )
+        self.assertEqual(limited_anchor_revision_slots(program), (0, 4))
+        self.assertEqual(
+            limited_anchor_revision_slots(program, max_anchors=1),
+            (4,),
+        )
+        with self.assertRaisesRegex(ValueError, "positive"):
+            limited_anchor_revision_slots(program, max_anchors=0)
 
     def test_response_revision_visits_every_site_once_in_reverse_spad_order(self):
         program = program_from_element_order(

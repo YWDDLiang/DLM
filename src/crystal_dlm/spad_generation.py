@@ -15,7 +15,7 @@ from crystal_dlm.llada_generation import (
     _model_logits,
     _prepare_atom_count_grammar,
 )
-from crystal_dlm.spad_program import coordinate_positions
+from crystal_dlm.spad_program import LATTICE_POSITIONS, coordinate_positions
 
 
 @dataclass(frozen=True)
@@ -377,6 +377,113 @@ def _full_attention_mask(
     raise ValueError("attention mask must cover the prompt or complete canvas")
 
 
+def _transaction_candidate_tokens(
+    logits: torch.Tensor,
+    *,
+    active_absolute_positions: dict[int, int],
+    temperature: float,
+    remasking: str,
+    sampling_seeds_by_batch: Sequence[int] | None,
+    salt: int,
+) -> torch.Tensor:
+    """Sample only active transaction positions with optional row-local RNG.
+
+    The row-local path reproduces the deployed LLaDA Gumbel transform while
+    making each proposal independent of batch packing.  The default path is
+    unchanged for existing SPAD callers.
+    """
+
+    if sampling_seeds_by_batch is None:
+        values, _confidence = _candidate_tokens_and_confidence(
+            logits,
+            float(temperature),
+            remasking,
+        )
+        return values
+    if len(sampling_seeds_by_batch) != int(logits.shape[0]):
+        raise ValueError("one sampling seed is required per batch row")
+    if remasking not in {"low_confidence", "random"}:
+        raise NotImplementedError(remasking)
+    selected = torch.argmax(logits, dim=-1)
+    modulus = 2**63 - 1
+    for row_index, absolute_position in active_absolute_positions.items():
+        vector = logits[int(row_index), int(absolute_position)]
+        if float(temperature) == 0.0:
+            token = torch.argmax(vector)
+        else:
+            generator = torch.Generator(device=vector.device)
+            seed = (int(sampling_seeds_by_batch[int(row_index)]) + int(salt)) % modulus
+            generator.manual_seed(seed)
+            noise = torch.rand(
+                vector.shape,
+                dtype=torch.float64,
+                device=vector.device,
+                generator=generator,
+            ).clamp_min(torch.finfo(torch.float64).tiny)
+            gumbel_denominator = (-torch.log(noise)) ** float(temperature)
+            noisy = vector.to(dtype=torch.float64).exp() / gumbel_denominator
+            token = torch.argmax(noisy)
+        selected[int(row_index), int(absolute_position)] = token.to(
+            dtype=selected.dtype
+        )
+    return selected
+
+
+def _complete_cell_is_supported(
+    row: torch.Tensor,
+    *,
+    prompt_length: int,
+    constraints: dict | None,
+) -> bool:
+    if not constraints:
+        return False
+    lattice = _lattice_matrix_from_token_ids(
+        row,
+        prompt_length=int(prompt_length),
+        constraints=constraints,
+    )
+    if lattice is None or float(torch.det(lattice).detach().item()) <= 1.0e-10:
+        return False
+    if not constraints.get("pbc_min_distance_mask"):
+        return True
+    body_offset = int(constraints.get("body_offset", 0))
+    count_token = int(row[int(prompt_length) + body_offset].detach().item())
+    num_atoms = int(constraints.get("count_token_to_n", {}).get(count_token, 0))
+    if num_atoms <= 0:
+        return False
+    if num_atoms == 1:
+        return True
+    period = int(constraints.get("coord_period", 100))
+    if period <= 0:
+        return False
+    maps = constraints.get("coord_token_to_bin", {})
+    coordinates: list[list[float]] = []
+    for slot in range(num_atoms):
+        positions = coordinate_positions(slot)
+        bins: list[int] = []
+        for axis, position in zip(("X", "Y", "Z"), positions, strict=True):
+            token = int(row[int(prompt_length) + int(position)].detach().item())
+            value = maps.get(axis, {}).get(token)
+            if value is None:
+                return False
+            bins.append(int(value))
+        coordinates.append([float(value) / float(period) for value in bins])
+    fractional = torch.tensor(
+        coordinates,
+        dtype=torch.float64,
+        device=row.device,
+    )
+    left, right = torch.triu_indices(num_atoms, num_atoms, offset=1, device=row.device)
+    vectors = _minimum_image_vectors(
+        fractional[left] - fractional[right],
+        lattice,
+        image_radius=int(constraints.get("pbc_image_radius", 2)),
+    )
+    distances = torch.linalg.vector_norm(vectors, dim=1)
+    threshold = float(constraints.get("pbc_min_distance_A", 0.5))
+    return bool(torch.all(distances >= threshold).detach().item())
+
+
 def _validate_revision_slots(
     revision_slots_by_batch: Sequence[Sequence[int]],
     *,
@@ -395,6 +502,195 @@ def _validate_revision_slots(
                 raise ValueError(f"row {row_index} anchor slot lies outside canvas")
         output.append(values)
     return output
+
+
+@torch.no_grad()
+def revise_spad_cell(
+    model: Any,
+    complete_tokens: torch.Tensor,
+    *,
+    prompt_length: int,
+    gen_length: int,
+    attention_mask: torch.Tensor | None,
+    temperature: float,
+    cfg_scale: float,
+    remasking: str,
+    mask_id: int,
+    allowed_token_ids_by_generation_pos: list[list[int]] | None,
+    atom_count_grammar: dict | None,
+    lightweight_decoding_constraints: dict | None,
+    strict_geometry_fallback: bool = True,
+    sampling_seeds_by_batch: Sequence[int] | None = None,
+) -> tuple[torch.Tensor, list[dict[str, Any]]]:
+    """Re-mask and regenerate one complete six-token lattice transaction.
+
+    Every site remains visible.  The six lattice values are resolved in native
+    order and are committed together.  If the resulting cell makes the full
+    crystal leave the existing lattice/PBC support, the complete old cell is
+    restored rather than committing a partial or invalid action.
+    """
+
+    if complete_tokens.ndim != 2:
+        raise ValueError("complete_tokens must have shape [batch, sequence]")
+    if complete_tokens.shape[1] != int(prompt_length) + int(gen_length):
+        raise ValueError("complete token sequence does not match prompt+generation")
+    if sampling_seeds_by_batch is not None and len(sampling_seeds_by_batch) != int(
+        complete_tokens.shape[0]
+    ):
+        raise ValueError("one sampling seed is required per batch row")
+    if strict_geometry_fallback and (
+        not lightweight_decoding_constraints
+        or not lightweight_decoding_constraints.get("pbc_min_distance_mask")
+    ):
+        raise ValueError("strict cell fallback requires PBC geometry support")
+    x = complete_tokens.clone()
+    if bool((x[:, prompt_length:] == int(mask_id)).any()):
+        raise ValueError("SPAD cell closure requires a complete predictor canvas")
+    positions = tuple(int(value) for value in LATTICE_POSITIONS)
+    if positions[-1] >= int(gen_length):
+        raise ValueError("lattice transaction lies outside generation canvas")
+    absolute = torch.tensor(
+        [int(prompt_length) + value for value in positions],
+        dtype=torch.long,
+        device=x.device,
+    )
+    before = x.clone()
+    previous = x.index_select(1, absolute).clone()
+    x[:, absolute] = int(mask_id)
+    full_attention = _full_attention_mask(
+        x,
+        attention_mask,
+        prompt_length=int(prompt_length),
+        gen_length=int(gen_length),
+    )
+    prompt_index = torch.zeros_like(x, dtype=torch.bool)
+    prompt_index[:, : int(prompt_length)] = True
+    vocab_size = model.get_output_embeddings().weight.shape[0]
+    allowed_mask = None
+    if allowed_token_ids_by_generation_pos is not None:
+        if len(allowed_token_ids_by_generation_pos) != int(gen_length):
+            raise ValueError("allowed token schema length changed")
+        allowed_mask = torch.zeros(
+            (int(gen_length), int(vocab_size)),
+            dtype=torch.bool,
+            device=x.device,
+        )
+        for position, token_ids in enumerate(allowed_token_ids_by_generation_pos):
+            if not token_ids:
+                raise ValueError(f"generation position {position} has no legal token")
+            allowed_mask[
+                int(position),
+                torch.tensor(token_ids, dtype=torch.long, device=x.device),
+            ] = True
+    prepared_atom_count_grammar = None
+    if atom_count_grammar is not None:
+        prepared_atom_count_grammar = _prepare_atom_count_grammar(
+            atom_count_grammar,
+            int(vocab_size),
+            x.device,
+        )
+
+    for component, generation_position in enumerate(positions):
+        absolute_position = int(prompt_length) + int(generation_position)
+        group_allowed = torch.zeros_like(x, dtype=torch.bool)
+        group_allowed[:, absolute_position] = True
+        logits = _model_logits(
+            model,
+            x,
+            full_attention,
+            prompt_index,
+            float(cfg_scale),
+            int(mask_id),
+        )
+        if allowed_mask is not None or prepared_atom_count_grammar is not None:
+            _apply_schema_masks(
+                logits,
+                x,
+                int(prompt_length),
+                int(gen_length),
+                allowed_mask,
+                prepared_atom_count_grammar,
+            )
+        _apply_lightweight_decoding_masks(
+            logits,
+            x,
+            int(prompt_length),
+            int(gen_length),
+            lightweight_decoding_constraints,
+            group_allowed[:, int(prompt_length) : int(prompt_length) + int(gen_length)],
+            int(mask_id),
+        )
+        selected = _transaction_candidate_tokens(
+            logits,
+            active_absolute_positions={
+                row_index: absolute_position for row_index in range(int(x.shape[0]))
+            },
+            temperature=float(temperature),
+            remasking=remasking,
+            sampling_seeds_by_batch=sampling_seeds_by_batch,
+            salt=10_007 * int(component),
+        )
+        x[group_allowed] = selected[group_allowed]
+
+    logs: list[dict[str, Any]] = []
+    for row_index in range(int(x.shape[0])):
+        if bool((x[row_index, absolute] == int(mask_id)).any()):
+            raise RuntimeError("cell closure left a masked lattice token")
+        unchanged = torch.ones_like(x[row_index], dtype=torch.bool)
+        unchanged[absolute] = False
+        if not bool(torch.equal(x[row_index][unchanged], before[row_index][unchanged])):
+            raise RuntimeError("cell closure changed a non-lattice token")
+        proposed = tuple(int(value) for value in x[row_index, absolute].tolist())
+        old = tuple(int(value) for value in previous[row_index].tolist())
+        supported = _complete_cell_is_supported(
+            x[row_index],
+            prompt_length=int(prompt_length),
+            constraints=lightweight_decoding_constraints,
+        )
+        restored = bool(strict_geometry_fallback and not supported)
+        if restored:
+            x[row_index, absolute] = previous[row_index]
+        logs.append(
+            {
+                "generation_positions": list(positions),
+                "previous_token_ids": list(old),
+                "proposed_token_ids": list(proposed),
+                "new_token_ids": [
+                    int(value) for value in x[row_index, absolute].tolist()
+                ],
+                "changed_components": sum(
+                    left != right
+                    for left, right in zip(
+                        old,
+                        x[row_index, absolute].tolist(),
+                        strict=True,
+                    )
+                ),
+                "all_sites_visible": True,
+                "geometry_supported_before_restore": bool(supported),
+                "restored_complete_noop": bool(restored),
+                "guidance_status": (
+                    "cell_restored_outside_geometry_support"
+                    if restored
+                    else "unguided_spad_cell_revision"
+                ),
+                "no_op_was_in_schema": bool(
+                    allowed_token_ids_by_generation_pos is None
+                    or all(
+                        old_value
+                        in allowed_token_ids_by_generation_pos[generation_position]
+                        for old_value, generation_position in zip(
+                            old,
+                            positions,
+                            strict=True,
+                        )
+                    )
+                ),
+            }
+        )
+    if bool((x[:, prompt_length:] == int(mask_id)).any()):
+        raise RuntimeError("SPAD cell closure returned a masked canvas")
+    return x, logs
 
 
 @torch.no_grad()
@@ -420,6 +716,7 @@ def revise_spad_anchors(
     | None = None,
     model494_response_config: Model494ResponseConfig | None = None,
     strict_pbc_no_legal_fallback: bool = False,
+    sampling_seeds_by_batch: Sequence[int] | None = None,
 ) -> tuple[torch.Tensor, list[list[dict[str, Any]]]]:
     """Re-mask registered sites once and fill them with full model context.
 
@@ -603,8 +900,17 @@ def revise_spad_anchors(
                     component_reports.setdefault(int(row_index), []).append(report)
                 x0 = torch.argmax(logits, dim=-1)
             else:
-                x0, _confidence = _candidate_tokens_and_confidence(
-                    logits, float(temperature), remasking
+                x0 = _transaction_candidate_tokens(
+                    logits,
+                    active_absolute_positions={
+                        int(row_index): int(prompt_length + positions[component])
+                        for row_index, positions in active.items()
+                        if int(row_index) not in skipped_no_legal
+                    },
+                    temperature=float(temperature),
+                    remasking=remasking,
+                    sampling_seeds_by_batch=sampling_seeds_by_batch,
+                    salt=1_000_003 * int(revision_index) + 1_009 * int(component),
                 )
             x[group_allowed] = x0[group_allowed]
 
@@ -662,4 +968,4 @@ def revise_spad_anchors(
     return x, logs
 
 
-__all__ = ["Model494ResponseConfig", "revise_spad_anchors"]
+__all__ = ["Model494ResponseConfig", "revise_spad_anchors", "revise_spad_cell"]

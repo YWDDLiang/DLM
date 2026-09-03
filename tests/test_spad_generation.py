@@ -10,13 +10,17 @@ try:
         _bounded_translation_free_response,
         _kl_bounded_gain_bias,
         _minimum_image_vector,
+        _transaction_candidate_tokens,
         revise_spad_anchors,
+        revise_spad_cell,
     )
 except ModuleNotFoundError:
     torch = None
     generate = None
     Model494ResponseConfig = None
     revise_spad_anchors = None
+    revise_spad_cell = None
+    _transaction_candidate_tokens = None
 
 
 _TorchModuleBase = torch.nn.Module if torch is not None else object
@@ -66,6 +70,28 @@ class SPADGenerationTest(unittest.TestCase):
         self.assertFalse(bool((result[:, 1:] == 127).any()))
         self.assertTrue(bool((result[:, 1:] == 21).all()))
 
+    def test_row_keyed_transaction_sampling_is_batch_order_invariant(self):
+        logits = torch.zeros((2, 1, 128), dtype=torch.float32)
+        logits[:, :, 20:40] = 1.0
+        first = _transaction_candidate_tokens(
+            logits,
+            active_absolute_positions={0: 0, 1: 0},
+            temperature=0.7,
+            remasking="low_confidence",
+            sampling_seeds_by_batch=[123, 456],
+            salt=17,
+        )
+        swapped = _transaction_candidate_tokens(
+            logits.flip(0),
+            active_absolute_positions={0: 0, 1: 0},
+            temperature=0.7,
+            remasking="low_confidence",
+            sampling_seeds_by_batch=[456, 123],
+            salt=17,
+        )
+        self.assertEqual(int(first[0, 0]), int(swapped[1, 0]))
+        self.assertEqual(int(first[1, 0]), int(swapped[0, 0]))
+
     def test_revision_changes_only_anchor_and_can_hide_literal_suffix(self):
         model = self.TinyModel()
         prompt_length = 2
@@ -95,6 +121,122 @@ class SPADGenerationTest(unittest.TestCase):
         self.assertEqual(logs[0][0]["changed_components"], 3)
         self.assertTrue(logs[0][0]["no_op_was_in_schema"])
         self.assertTrue(any(mask[0, -1].item() == 0 for mask in model.attention_masks))
+
+    def test_cell_closure_changes_only_complete_lattice_transaction(self):
+        model = self.TinyModel()
+        prompt_length = 2
+        gen_length = 15
+        values = torch.arange(prompt_length + gen_length).reshape(1, -1) % 50
+        allowed = [list(range(50)) for _ in range(gen_length)]
+        output, logs = revise_spad_cell(
+            model,
+            values,
+            prompt_length=prompt_length,
+            gen_length=gen_length,
+            attention_mask=torch.ones((1, prompt_length), dtype=torch.long),
+            temperature=0.0,
+            cfg_scale=0.0,
+            remasking="low_confidence",
+            mask_id=127,
+            allowed_token_ids_by_generation_pos=allowed,
+            atom_count_grammar=None,
+            lightweight_decoding_constraints=None,
+            strict_geometry_fallback=False,
+        )
+        active = [prompt_length + position for position in range(1, 7)]
+        inactive = [index for index in range(output.shape[1]) if index not in active]
+        self.assertTrue(torch.equal(output[0, inactive], values[0, inactive]))
+        self.assertEqual(output[0, active].tolist(), [21] * 6)
+        self.assertEqual(logs[0]["changed_components"], 6)
+        self.assertTrue(logs[0]["all_sites_visible"])
+
+    def test_cell_closure_restores_noop_when_new_cell_causes_pbc_collision(self):
+        model = self.TinyModel()
+        prompt_length = 1
+        suffix = torch.tensor(
+            [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                20,
+                30,
+                40,
+                50,
+                20,
+                31,
+                41,
+                51,
+            ],
+            dtype=torch.long,
+        )
+        complete = torch.cat((torch.tensor([1]), suffix)).reshape(1, -1)
+        allowed = [
+            [10],
+            [11, 21],
+            [12, 21],
+            [13, 21],
+            [14, 21],
+            [15, 21],
+            [16, 21],
+            [20],
+            [30],
+            [40],
+            [50],
+            [20],
+            [31],
+            [41],
+            [51],
+        ]
+        constraints = {
+            "representation": "dynamic_v1",
+            "body_offset": 0,
+            "max_atoms": 2,
+            "coord_period": 100,
+            "count_token_to_n": {10: 2},
+            "length_step": 0.1,
+            "length_token_to_bin": {
+                "LA": {11: 40, 21: 1},
+                "LB": {12: 40, 21: 1},
+                "LC": {13: 40, 21: 1},
+            },
+            "angle_token_to_bin": {
+                "AA": {14: 90, 21: 90},
+                "AB": {15: 90, 21: 90},
+                "AG": {16: 90, 21: 90},
+            },
+            "gamma_bin_to_token_id": {90: 21},
+            "coord_token_to_bin": {
+                "X": {30: 0, 31: 50},
+                "Y": {40: 0, 41: 50},
+                "Z": {50: 0, 51: 50},
+            },
+            "lattice_volume_mask": True,
+            "pbc_min_distance_mask": True,
+            "pbc_min_distance_A": 0.5,
+            "pbc_image_radius": 2,
+        }
+        output, logs = revise_spad_cell(
+            model,
+            complete,
+            prompt_length=prompt_length,
+            gen_length=15,
+            attention_mask=torch.ones((1, prompt_length), dtype=torch.long),
+            temperature=0.0,
+            cfg_scale=0.0,
+            remasking="low_confidence",
+            mask_id=127,
+            allowed_token_ids_by_generation_pos=allowed,
+            atom_count_grammar=None,
+            lightweight_decoding_constraints=constraints,
+            strict_geometry_fallback=True,
+        )
+        self.assertTrue(torch.equal(output, complete))
+        self.assertTrue(logs[0]["restored_complete_noop"])
+        self.assertFalse(logs[0]["geometry_supported_before_restore"])
 
     def test_response_bias_respects_kl_and_absolute_logit_budgets(self):
         config = Model494ResponseConfig(kl_budget_nats=0.05, max_abs_logit_bias=2.0)
