@@ -264,5 +264,8 @@ Immediate sequence:
   Plan outcomes before any DLM rollout; retain Planner failures in the fixed
   denominator, do not filter training-set overlaps, and never resample the
   Planner after this freeze;
-- [ ] run the final common prospective comparison and exactly one official MP
-  query, then report Strict/Meta S.U.N. against the 10%/50% targets.
+- [ ] run stream17 and stream18 as two concurrent three-A800 B0/BC/BS
+  generation+tau800 jobs, followed by two concurrent three-A800 raw/refined
+  evaluation jobs; merge the two immutable stream views without recomputation;
+- [ ] run exactly one official MP query over the resulting 12-cell union, then
+  report Strict/Meta S.U.N. against the 10%/50% targets.
