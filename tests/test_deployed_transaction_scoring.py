@@ -481,7 +481,15 @@ class DeployedTransactionScoringTest(unittest.TestCase):
                     v["<AA_090>"],
                     v["<AB_090>"],
                     v["<AG_090>"],
-                ]
+                ],
+                [
+                    v["<LA_040>"],
+                    v["<LB_040>"],
+                    v["<LC_040>"],
+                    v["<AA_090>"],
+                    v["<AB_090>"],
+                    v["<AG_090>"],
+                ],
             ],
         )
         self.assertFalse(result.action_audits[0].valid)
@@ -490,6 +498,9 @@ class DeployedTransactionScoringTest(unittest.TestCase):
             "cell_geometry_unsupported",
         )
         self.assertTrue(torch.isneginf(result.action_logprobs[0]))
+        self.assertTrue(result.action_audits[1].valid)
+        (-result.candidate_log_mass).backward()
+        self.assertIsNotNone(result.candidate_log_mass.grad_fn)
 
     def test_xyz_and_cell_complete_transaction_widths_are_supported(self):
         v = self.vocab

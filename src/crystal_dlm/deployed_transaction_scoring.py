@@ -552,8 +552,10 @@ def score_deployed_transaction_actions(
             current[commit_rows, int(absolute_position)] = target[commit_rows]
 
     if transaction_kind == "cell":
+        cell_supported_by_row: list[bool] = []
         for row in range(action_count):
             if not bool(valid[row].detach().item()):
+                cell_supported_by_row.append(True)
                 continue
             supported = _complete_cell_is_supported(
                 current[row],
@@ -561,13 +563,25 @@ def score_deployed_transaction_actions(
                 constraints=lightweight_decoding_constraints,
             )
             if supported:
+                cell_supported_by_row.append(True)
                 continue
-            valid[row] = False
-            joint_logprob = joint_logprob.clone()
-            joint_logprob[row] = -torch.inf
+            cell_supported_by_row.append(False)
             invalid_step[row] = len(positions)
             invalid_position[row] = None
             invalid_reason[row] = "cell_geometry_unsupported"
+        # Do not mutate ``valid`` in place: it participates in the autograd
+        # graph through earlier ``torch.where`` operations.  An unsupported
+        # completed cell is an out-of-place terminal support update.
+        cell_supported = torch.tensor(
+            cell_supported_by_row, dtype=torch.bool, device=state.device
+        )
+        newly_unsupported = valid & ~cell_supported
+        valid = valid & cell_supported
+        joint_logprob = torch.where(
+            newly_unsupported,
+            torch.full_like(joint_logprob, -torch.inf),
+            joint_logprob,
+        )
 
     duplicate_of: list[int | None] = [None] * action_count
     first_by_action: dict[tuple[int, ...], int] = {}
