@@ -18,6 +18,7 @@ TAU200_FINAL = ROOT / "slurm" / "206_spad_basin_closure_tau200_finalize.sbatch"
 TAU_CALIBRATION = ROOT / "slurm" / "207_spad_basin_closure_tau_calibration.sbatch"
 TAU_CALIBRATION_EVAL = ROOT / "slurm" / "208_spad_basin_closure_tau_calibration_eval.sbatch"
 TAU800_BRIDGE = ROOT / "slurm" / "211_spad_basin_closure_tau800_bridge.sbatch"
+TAU_EVAL2 = ROOT / "slurm" / "217_spad_tau_calibration_eval_2gpu.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -38,6 +39,7 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.tau_calibration = TAU_CALIBRATION.read_text(encoding="utf-8")
         cls.tau_calibration_eval = TAU_CALIBRATION_EVAL.read_text(encoding="utf-8")
         cls.tau800_bridge = TAU800_BRIDGE.read_text(encoding="utf-8")
+        cls.tau_eval2 = TAU_EVAL2.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
         self.assertIn("#SBATCH --cpus-per-task=4", self.build)
@@ -245,6 +247,14 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertIn("--diff-steps 800", self.tau800_bridge)
         self.assertIn("--seed-by-sample-index", self.tau800_bridge)
         self.assertNotIn("chgnet", self.tau800_bridge.lower())
+
+    def test_two_gpu_tau_evaluator_runs_three_fixed_taus_without_query(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", self.tau_eval2)
+        self.assertIn("#SBATCH --cpus-per-task=8", self.tau_eval2)
+        self.assertIn("for tau in 400 600 800", self.tau_eval2)
+        self.assertIn("--shard-count 2", self.tau_eval2)
+        self.assertIn("automatic_selection':False", self.tau_eval2)
+        self.assertNotIn("query", self.tau_eval2.lower())
 
     def test_every_run_is_non_overwriting(self):
         for wrapper in (
