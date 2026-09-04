@@ -144,10 +144,16 @@ Current execution:
 - [x] Finish outcome-blind K<=4 action/terminal job 39748: 128 groups,
   K=`1:3, 2:4, 3:9, 4:112`, 486 retained candidates and 486 legal terminals,
   with all provisional-state EFSM calls known and no group failure.
-- [ ] Finish the two-GPU K3/5/10/20 CHGNet headroom label recovery 39752.
+- [x] Finish the two-GPU K3/5/10/20 CHGNet headroom label recovery 39752.
   Job 39750 failed before any CHGNet call because the validator rejected the
   legitimate `cursor=None` on cell transactions; the type-aware fix leaves all
   candidates and scientific parameters unchanged.
+- [x] Authorize K10 training from the preregistered train-only decision: value
+  coverage `100%`; all 128 groups paired; K10 median best-vs-no-op headroom
+  `167.85 meV/atom`; 100 groups exceed `10 meV/atom`; K10/K20 pooled Kendall
+  tau-b `0.590`. K10-selected actions also improve E0 by median
+  `22.20 meV/atom` (71 lower, 37 higher), so basin and raw signals are not
+  globally opposed.
 
 ## H. Conditional basin training
 
@@ -159,6 +165,11 @@ Current execution:
 - [ ] Alternate clean closure CE and posterior updates; no CE on generated
   states.
 - [ ] One seed, one endpoint, no early stop or checkpoint selection.
+
+Current training: job 39754 uses 2 A800/8 CPU for the preregistered K10 primary,
+four passes over 128 groups, interleaving 256 clean full-MP20 closure-CE and 256
+posterior updates. Job 39753 is a pre-update schema-name engineering negative;
+no scientific parameter changed in the recovery.
 
 ## I. Final evaluation
 
