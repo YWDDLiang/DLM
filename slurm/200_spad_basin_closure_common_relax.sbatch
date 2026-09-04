@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4
-#SBATCH --mem=400G
+#SBATCH --cpus-per-task=8
+#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2
+#SBATCH --mem=240G
 #SBATCH --time=05:00:00
 #SBATCH --output=spad-basin-relax-%j.out
 #SBATCH --error=spad-basin-relax-%j.err
@@ -57,7 +57,7 @@ for path in "${GENERATION_RUN}/_SUCCESS" "${RAW_SCREEN_RUN}/_SUCCESS" \
 done
 [[ "$(wc -l <"${GENERATION}")" -eq 256 ]]
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPU}"
-[[ "${#allocated[@]}" -eq 4 ]]
+[[ "${#allocated[@]}" -eq 2 ]]
 
 env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 \
   MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 PYTHONPATH="${R03E}/runtime" \
@@ -84,7 +84,7 @@ PY
 [[ -f "${FROZEN_INPUT}/input_manifest.json" ]]
 
 declare -a pids=()
-for rank in 0 1 2 3; do
+for rank in 0 1; do
   env CUDA_VISIBLE_DEVICES="${allocated[${rank}]}" OPENBLAS_NUM_THREADS=1 \
     OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 \
     PYTHONPATH="${SOURCE}/src" \
@@ -94,7 +94,7 @@ for rank in 0 1 2 3; do
     --base-cache "${CACHE}" --frozen-resumable-py "${RESUMABLE}" \
     --output-jsonl "${SHARDS}/cache_rank${rank}.jsonl" \
     --report-json "${SHARDS}/report_rank${rank}.json" \
-    --denominator 256 --shard-rank "${rank}" --shard-count 4 --device cuda \
+    --denominator 256 --shard-rank "${rank}" --shard-count 2 --device cuda \
     >"${RUN}/logs/shard${rank}.out" 2>"${RUN}/logs/shard${rank}.err" &
   pids+=("$!")
 done
@@ -109,15 +109,15 @@ import statistics
 import sys
 
 root = pathlib.Path(sys.argv[1])
-reports = [json.load((root / f"report_rank{rank}.json").open()) for rank in range(4)]
-assert [report["shard_rank"] for report in reports] == list(range(4))
-assert all(report["shard_count"] == 4 for report in reports)
+reports = [json.load((root / f"report_rank{rank}.json").open()) for rank in range(2)]
+assert [report["shard_rank"] for report in reports] == list(range(2))
+assert all(report["shard_count"] == 2 for report in reports)
 assert sum(report["assigned_occurrences"] for report in reports) == 256
-assert all((root / f"cache_rank{rank}.jsonl").is_file() for rank in range(4))
+assert all((root / f"cache_rank{rank}.jsonl").is_file() for rank in range(2))
 PY
 
 cp --reflink=auto "${CACHE}" "${CELL}/relax_cache.jsonl"
-for rank in 0 1 2 3; do
+for rank in 0 1; do
   cat "${SHARDS}/cache_rank${rank}.jsonl" >>"${CELL}/relax_cache.jsonl"
 done
 env PYTHONPATH="${SOURCE}/scripts" "${PYTHON}" - \
@@ -180,7 +180,7 @@ baseline = pathlib.Path(sys.argv[3]).resolve(strict=True)
 generation_run = pathlib.Path(sys.argv[4]).resolve(strict=True)
 raw_screen_run = pathlib.Path(sys.argv[5]).resolve(strict=True)
 summary = json.load((output / "summary.json").open(encoding="utf-8"))
-shards = [json.load((run / "relax_cache_shards" / f"report_rank{rank}.json").open()) for rank in range(4)]
+shards = [json.load((run / "relax_cache_shards" / f"report_rank{rank}.json").open()) for rank in range(2)]
 assert summary["raw_attempts"] == 256
 assert summary["generation_succeeded"] == 256
 assert summary["reconstructed"] == 256
@@ -231,7 +231,7 @@ report = {
     "novel_unique": summary["novel_unique"],
     "chgnet_relaxation_known": summary["chgnet_relaxation_known"],
     "chgnet_relaxation_unknown": 256 - summary["chgnet_relaxation_known"],
-    "parallel_relaxation_shards": 4,
+    "parallel_relaxation_shards": 2,
     "frozen_cache_coverage": json.load((run / "CACHE_COVERAGE.json").open()),
     "base_cache_hits": sum(item["base_cache_hits"] for item in shards),
     "unique_missing_relaxed": sum(item["unique_missing_relaxed"] for item in shards),

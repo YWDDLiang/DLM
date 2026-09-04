@@ -143,8 +143,8 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertNotIn("query_official", self.raw_screen)
 
     def test_common_relax_reuses_frozen_evaluator_and_baseline(self):
-        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4", self.common_relax)
-        self.assertIn("#SBATCH --cpus-per-task=16", self.common_relax)
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", self.common_relax)
+        self.assertIn("#SBATCH --cpus-per-task=8", self.common_relax)
         self.assertIn("run_full_reconstructed_eval.py", self.common_relax)
         self.assertIn("relax_spad_basin_closure_shard.py", self.common_relax)
         self.assertIn("a100_sun.prepare_a100_input", self.common_relax)
@@ -155,8 +155,8 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertIn('summary["working_relax_cache_sha256_before"]', self.common_relax)
         self.assertIn('summary["working_relax_cache_sha256_after"]', self.common_relax)
         self.assertIn('"frozen_evaluator_cache_misses": 0', self.common_relax)
-        self.assertIn("for rank in 0 1 2 3", self.common_relax)
-        self.assertIn('--shard-count 4 --device cuda', self.common_relax)
+        self.assertIn("for rank in 0 1", self.common_relax)
+        self.assertIn('--shard-count 2 --device cuda', self.common_relax)
         self.assertIn('sum(report["assigned_occurrences"] for report in reports) == 256', self.common_relax)
         self.assertNotIn('sum(report["failed_relaxations"] for report in reports) == 0', self.common_relax)
         self.assertIn("spad_prospective_offline_s17_39542", self.common_relax)
