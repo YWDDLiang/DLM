@@ -15,6 +15,8 @@ PREFLIGHT_GENERATE = ROOT / "slurm" / "203_generate_spad_basin_preflight_states.
 TAU200_BRIDGE = ROOT / "slurm" / "204_spad_basin_closure_tau200_bridge.sbatch"
 TAU200_RELAX = ROOT / "slurm" / "205_spad_basin_closure_tau200_common_relax.sbatch"
 TAU200_FINAL = ROOT / "slurm" / "206_spad_basin_closure_tau200_finalize.sbatch"
+TAU_CALIBRATION = ROOT / "slurm" / "207_spad_basin_closure_tau_calibration.sbatch"
+TAU_CALIBRATION_EVAL = ROOT / "slurm" / "208_spad_basin_closure_tau_calibration_eval.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -32,6 +34,8 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.tau200_bridge = TAU200_BRIDGE.read_text(encoding="utf-8")
         cls.tau200_relax = TAU200_RELAX.read_text(encoding="utf-8")
         cls.tau200_final = TAU200_FINAL.read_text(encoding="utf-8")
+        cls.tau_calibration = TAU_CALIBRATION.read_text(encoding="utf-8")
+        cls.tau_calibration_eval = TAU_CALIBRATION_EVAL.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
         self.assertIn("#SBATCH --cpus-per-task=4", self.build)
@@ -223,6 +227,15 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertIn("spad_basin_closure_official_20260904_v1", self.tau200_final)
         self.assertIn("--model494-tau 200", self.tau200_final)
         self.assertNotIn("query", self.tau200_final.lower())
+
+    def test_low_noise_calibration_is_development_only_and_fully_parallel(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", self.tau_calibration)
+        self.assertIn("run_tau 0 400", self.tau_calibration)
+        self.assertIn("run_tau 1 600", self.tau_calibration)
+        self.assertIn("'development_only':True", self.tau_calibration)
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4", self.tau_calibration_eval)
+        self.assertIn("run_shard 3 600 1", self.tau_calibration_eval)
+        self.assertNotIn("query", self.tau_calibration_eval.lower())
 
     def test_every_run_is_non_overwriting(self):
         for wrapper in (
