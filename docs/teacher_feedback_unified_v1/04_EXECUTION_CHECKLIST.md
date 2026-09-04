@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **fixed256 native screen passed; one-GPU shard array 39727 running**
+Status: **native closure official result complete; basin-value preflight is next**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -22,10 +22,11 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
   composition remained 256/256, fast structural validity rose 255->256, paired
   raw CHGNet energy improved by median -0.3244 eV/atom with clustered 95% CI
   [-1.4508,-0.0956], stress improved and force was non-adverse.
-- [ ] Promote the result from a native low-energy mechanism to a stability/SUN
-  claim only if the same advantage survives the frozen common relaxation and
-  official hull evaluation. Until then model494 remains a fallback, not the
-  explanation for the native gain.
+- [x] Test whether the native low-energy mechanism becomes a stability/SUN
+  gain under frozen common relaxation and official hull evaluation. Energy
+  survived (median hull delta -0.02274 eV/atom), but Strict S.U.N. was 7/256
+  and Meta S.U.N. 56/256 versus frozen BS 7/256 and 54/256: the threshold-tail
+  gain is not yet material. model494 remains a fallback, not the explanation.
 
 ## A. Frozen method boundary
 
@@ -103,6 +104,8 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
 ## G. Basin-value preflight
 
+- [x] Authorize this stage only after closure-CE demonstrated a real native
+  energy control surface but insufficient S.U.N. tail conversion.
 - [ ] Freeze 128 train-only on-policy closure states spanning cell, XYZ,
   high-N and high-multiplicity cases.
 - [ ] Generate at most four outcome-blind legal actions per state.
@@ -127,8 +130,11 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
 ## I. Final evaluation
 
-- [ ] Compare BS, closure-CE and closure-basin on the same fixed requests.
-- [ ] Raw first: fast validity, E/F/stress, relaxation drop, N/U and
+- [ ] Compare BS, closure-CE and conditional closure-basin on the same fixed
+  requests.
+- [x] Evaluate closure-CE raw first: fast validity, E/F/stress, relaxation,
+  N/U and Strict/Meta S.U.N., with paired wins/losses.
+- [ ] If the basin preflight passes, evaluate closure-basin raw using the same
   Strict/Meta S.U.N., with paired wins/losses.
 - [ ] Run one canonical-versus-Llama program mechanism comparison at fixed
   DLM/composition/noise.

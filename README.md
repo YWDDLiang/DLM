@@ -147,6 +147,27 @@ Plans. The active work therefore trains and tests the non-causal closure before
 any larger energy-alignment run. Full Direct remains `DEFERRED_COST`; raw
 force/stress and common-relaxation stability are the first endpoints.
 
+### Native basin-closure result
+
+The Llama-programmed closure now has a fixed prospective stream-17 result with
+no Direct rerun, inference-time energy model, sample selection or model494:
+
+| Endpoint | Composition | Fast structure | Strict S.U.N. | Meta S.U.N. |
+|---|---:|---:|---:|---:|
+| frozen BS raw | 256/256 | 255/256 | 7/256 (2.73%) | 54/256 (21.09%) |
+| basin-closure CE raw | **256/256** | **256/256** | 7/256 (2.73%) | **56/256 (21.88%)** |
+
+The mechanism changes the physical distribution substantially: before common
+relaxation, paired CHGNet energy improves by median `-0.3244 eV/atom` with a
+composition-cluster 95% interval `[-1.4508,-0.0956]`; after the frozen common
+relaxation, the paired hull/energy shift remains `-0.02274 eV/atom` and favors
+closure on 139 of 248 hull-known pairs. Structural validity is preserved, but
+the strict/meta threshold counts move only `0/+2`. This cleanly identifies the
+next problem: convert an already learned low-energy direction into probability
+mass at the stable tail. The registered next experiment is therefore the
+128-state terminal-basin headroom preflight, not more closure CE epochs or a
+test-time oracle.
+
 ## Reproduce and inspect
 
 The current method, ablations and run ledger are documented here:
