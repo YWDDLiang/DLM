@@ -1163,10 +1163,14 @@ def init_distributed(modules: SimpleNamespace) -> dict[str, Any]:
         raise RuntimeError(f"pilot training requires WORLD_SIZE={WORLD_SIZE}")
     if not modules.torch.cuda.is_available():
         raise RuntimeError("pilot training requires CUDA")
+    # torchrun exports LOCAL_RANK before this process imports the model.  Bind
+    # the rank first so NCCL does not create every communicator on cuda:0;
+    # otherwise four-rank training strands several GiB from ranks 1--3 on the
+    # first GPU and can OOM an otherwise valid single-rank training step.
+    local_rank = int(os.environ.get("LOCAL_RANK", "0"))
+    modules.torch.cuda.set_device(local_rank)
     modules.dist.init_process_group(backend="nccl")
     rank = int(modules.dist.get_rank())
-    local_rank = int(os.environ.get("LOCAL_RANK", str(rank)))
-    modules.torch.cuda.set_device(local_rank)
     return {
         "rank": rank,
         "local_rank": local_rank,
@@ -1496,7 +1500,9 @@ def main() -> None:
         modules.dist.barrier()
         random.seed(int(args.seed) + rank)
         modules.torch.manual_seed(int(args.seed) + rank)
-        modules.torch.cuda.manual_seed_all(int(args.seed) + rank)
+        # The process owns one rank-local device.  Seeding all visible devices
+        # would initialize unnecessary cross-rank CUDA state on cuda:0.
+        modules.torch.cuda.manual_seed(int(args.seed) + rank)
         tokenizer, runtime, adapter_report = _load_runtime(args, modules)
         modules.validate_tokenizer(tokenizer)
         runtime.model.to(device)

@@ -1,10 +1,13 @@
 from collections import Counter
 import importlib.util
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,6 +52,55 @@ def group(sample_idx, candidates, *, state_type="xyz"):
 
 
 class BasinPosteriorPureTest(unittest.TestCase):
+    def test_rank_device_is_bound_before_nccl_initialization(self):
+        events = []
+
+        class Cuda:
+            @staticmethod
+            def is_available():
+                return True
+
+            @staticmethod
+            def set_device(rank):
+                events.append(("set_device", rank))
+
+        class Dist:
+            @staticmethod
+            def init_process_group(*, backend):
+                events.append(("init_process_group", backend))
+
+            @staticmethod
+            def get_rank():
+                return 2
+
+        modules = SimpleNamespace(
+            torch=SimpleNamespace(cuda=Cuda(), device=lambda kind, rank: (kind, rank)),
+            dist=Dist(),
+        )
+        try:
+            MODULE.configure_training_contract(
+                expected_groups=4104,
+                posterior_passes=1,
+                world_size=4,
+                step0_groups=64,
+                warmup_updates=128,
+            )
+            with patch.dict(os.environ, {"WORLD_SIZE": "4", "LOCAL_RANK": "2"}):
+                result = MODULE.init_distributed(modules)
+            self.assertEqual(
+                events,
+                [("set_device", 2), ("init_process_group", "nccl")],
+            )
+            self.assertEqual(result["device"], ("cuda", 2))
+        finally:
+            MODULE.configure_training_contract(
+                expected_groups=128,
+                posterior_passes=4,
+                world_size=2,
+                step0_groups=128,
+                warmup_updates=25,
+            )
+
     def test_scalable_contract_supports_4104_groups_on_three_ranks(self):
         try:
             MODULE.configure_training_contract(
