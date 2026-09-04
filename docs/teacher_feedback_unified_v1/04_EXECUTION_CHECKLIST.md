@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **fixed256 native screen passed; common relaxation implementation under audit**
+Status: **fixed256 native screen passed; common-relax job 39724 submitted**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
