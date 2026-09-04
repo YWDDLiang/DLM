@@ -271,7 +271,10 @@ so job 39770 restarts from the same registered closure-CE policy.
   Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
   fixed tau800. Report raw and refined Strict/Meta S.U.N. without Direct.
 - [ ] If either preregistered primary endpoint reaches Strict>=10% and
-  Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Continue a
+  Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Per the
+  user-authorized, outcome-independent near-miss rule fixed before stream19,
+  launch is also allowed when the same endpoint is no more than three counts
+  short on either target: Strict>=23/256 and Meta>=125/256. Continue a
   fixed random stream until 1,000 parseable CIFs are accumulated; discard only
   parser/CIF failures without reading energy, hull, novelty or S.U.N. Report
   total requests and discarded-CIF count alongside the conditional-on-valid
@@ -280,3 +283,8 @@ so job 39770 restarts from the same registered closure-CE policy.
   `select_first_parseable_spad_body.py`. It freezes the first 1,000 independently
   parseable CIFs in source order, keeps the matching proposal graphs, records
   every request/discard before the cutoff, and cannot consume outcome values.
+- [x] Prepare the gated paper-scale generation/refinement wrapper. It remains
+  unsubmitted until exact 10%/50% or the fixed 23/125 near-miss rule is met,
+  and preregisters Planner seed 25, stream 20,
+  DLM seed 94117, refiner seed 104117, a 1,200-request fixed source stream and
+  the first 1,000 parser-valid CIFs as the conditional evaluation denominator.

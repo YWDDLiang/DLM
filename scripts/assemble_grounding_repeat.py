@@ -161,7 +161,8 @@ def main() -> None:
                 "status": "succeeded" if succeeded else "failed",
                 "reason": failure,
                 "structure": structure,
-                "body_noise_seed": int(args.dlm_seed) + ordinal,
+                "body_noise_seed": int(args.dlm_seed)
+                + int(source.get("source_attempt_idx", ordinal)),
                 "refiner_noise_seed": int(args.refiner_seed) + ordinal,
                 "source_plan_state_sha256": None if plan_state is None else canonical_sha256(plan_state),
                 "plan_state": plan_state,
