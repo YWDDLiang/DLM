@@ -166,13 +166,18 @@ Current execution:
   states.
 - [ ] One seed, one endpoint, no early stop or checkpoint selection.
 
-Current training: job 39758 uses 2 A800/8 CPU for the preregistered K10 primary,
+Current training: job 39759 uses 2 A800/8 CPU for the preregistered K10 primary,
 four passes over 128 groups, interleaving 256 clean full-MP20 closure-CE and 256
 posterior updates. Jobs 39753--39755 are pre-update engineering negatives. The
 39755 diagnosis found that the step-0 no-grad policy/reference equality pass
 left every LoRA parameter frozen before the gradient probe; commit `727d02a`
 restores the trainable policy explicitly and adds a regression test. No data,
 value target, learning rate, schedule or other scientific parameter changed.
+Job 39758 then passed the probe and reached update 96 before a terminal invalid
+cell exposed an in-place Boolean support-mask autograd bug. Commit `63b5b79`
+uses an equivalent out-of-place terminal mask and adds a mixed-validity cell
+backward regression; remote scoring and trainer tests pass. Job 39758 remains a
+negative engineering run and contributes no selected checkpoint.
 
 ## I. Final evaluation
 
