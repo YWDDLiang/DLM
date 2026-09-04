@@ -13,7 +13,7 @@
 set -Eeuo pipefail
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:?}"
-readonly STATES="${ROOT}/data/spad_basin_preflight_states_v1_20260904/states.jsonl"
+readonly STATES="${SPAD_BASIN_STATES_JSONL:-${ROOT}/data/spad_basin_preflight_states_v1_20260904/states.jsonl}"
 readonly TRAIN_RUN="${ROOT}/runs/spad_basin_closure_ce_39700"
 readonly POLICY="$(<"${TRAIN_RUN}/POLICY_PATH")"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
@@ -21,6 +21,8 @@ readonly CRYS=/public/home/jiaosz/hengzhang/Code/crysllmgen-main
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly TORCHRUN=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/torchrun
 readonly RUN="${ROOT}/runs/spad_basin_preflight_actions_${SLURM_JOB_ID}"
+readonly EXPECTED_GROUPS="${SPAD_EXPECTED_GROUPS:-128}"
+readonly ACTION_WORLD_SIZE="${SPAD_ACTION_WORLD_SIZE:-2}"
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
@@ -28,33 +30,35 @@ mkdir "${RUN}/actions"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\n" "$rc" "$LINENO" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 for path in "${STATES}" "${POLICY}/adapter_model.safetensors"; do [[ -f "${path}" ]]; done
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
-[[ "${#allocated[@]}" -eq 2 ]]
+[[ "${#allocated[@]}" -eq "${ACTION_WORLD_SIZE}" ]]
+gpu_csv="$(IFS=,; printf '%s' "${allocated[*]}")"
 
-env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
+env CUDA_VISIBLE_DEVICES="${gpu_csv}" OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
   NUMEXPR_NUM_THREADS=4 TOKENIZERS_PARALLELISM=false \
-  PYTHONPATH="${SOURCE}/src" "${TORCHRUN}" --standalone --nproc_per_node=2 \
+  PYTHONPATH="${SOURCE}/src" "${TORCHRUN}" --standalone --nproc_per_node="${ACTION_WORLD_SIZE}" \
   "${SOURCE}/src/scripts/build_spad_basin_preflight_actions.py" \
   --states-jsonl "${STATES}" --model-path "${MODEL}" \
   --checkpoint-path "${POLICY}" --crysllmgen-dir "${CRYS}" \
   --output-dir "${RUN}/actions" --chgnet-batch-size 16 --original-batch-size 8 \
+  --expected-groups "${EXPECTED_GROUPS}" \
   >"${RUN}/logs/actions.out" 2>"${RUN}/logs/actions.err"
 
-"${PYTHON}" - "${RUN}" <<'PY'
+"${PYTHON}" - "${RUN}" "${EXPECTED_GROUPS}" "${ACTION_WORLD_SIZE}" <<'PY'
 from collections import Counter
 import json
 from pathlib import Path
 import sys
 
-run = Path(sys.argv[1])
+run = Path(sys.argv[1]); expected=int(sys.argv[2]); world=int(sys.argv[3])
 groups = []
 rank_reports = []
-for rank in range(2):
+for rank in range(world):
     rank_reports.append(json.loads((run / "actions" / f"report_rank{rank}.json").read_text()))
     with (run / "actions" / f"groups_rank{rank}.jsonl").open() as handle:
         groups.extend(json.loads(line) for line in handle if line.strip())
 groups.sort(key=lambda row: int(row["sample_idx"]))
-if len(groups) != 128 or [int(row["sample_idx"]) for row in groups] != list(range(128)):
-    raise RuntimeError("distributed action merge changed the fixed 128-state denominator")
+if len(groups) != expected or [int(row["sample_idx"]) for row in groups] != list(range(expected)):
+    raise RuntimeError("distributed action merge changed the fixed state denominator")
 
 expected_sources = ["no_op", "reference_dlm", "physics_downhill", "physics_reverse"]
 contract_errors = []
@@ -91,7 +95,7 @@ with (run / "groups.jsonl").open("x", encoding="utf-8", newline="\n") as output:
 report = {
     "schema": "spad_basin_preflight_actions_final_v1",
     "groups": len(groups),
-    "world_size": 2,
+    "world_size": world,
     "candidate_count_histogram": {str(k): int(v) for k, v in sorted(k_hist.items())},
     "candidate_attempt_status": dict(sorted(attempt_status.items())),
     "proposal_status": dict(sorted(proposal_status.items())),
@@ -118,6 +122,7 @@ if contract_errors:
         f"action build failed: contract_errors={len(contract_errors)}"
     )
 PY
+printf '%s\n' "${RUN}/groups.jsonl" >"${RUN}/GROUPS_PATH"
 
 trap - ERR
 touch "${RUN}/_SUCCESS"

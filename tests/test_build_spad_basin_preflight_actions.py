@@ -144,7 +144,9 @@ class WrapperContractTest(unittest.TestCase):
     def test_resources_and_torchrun_contract(self):
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", self.wrapper)
         self.assertIn("#SBATCH --cpus-per-task=8", self.wrapper)
-        self.assertIn("--nproc_per_node=2", self.wrapper)
+        self.assertIn('--nproc_per_node="${ACTION_WORLD_SIZE}"', self.wrapper)
+        self.assertIn("SPAD_ACTION_WORLD_SIZE", self.wrapper)
+        self.assertIn('--expected-groups "${EXPECTED_GROUPS}"', self.wrapper)
         self.assertIn("envs/diff_meets_diff/bin/torchrun", self.wrapper)
         self.assertIn("--chgnet-batch-size 16", self.wrapper)
         self.assertIn("--original-batch-size 8", self.wrapper)
@@ -152,8 +154,8 @@ class WrapperContractTest(unittest.TestCase):
 
     def test_merge_and_reference_replay_contract(self):
         self.assertIn("groups_rank{rank}.jsonl", self.wrapper)
-        self.assertIn("len(groups) != 128", self.wrapper)
-        self.assertIn("list(range(128))", self.wrapper)
+        self.assertIn("len(groups) != expected", self.wrapper)
+        self.assertIn("list(range(expected))", self.wrapper)
         self.assertIn("reference_mismatch", self.wrapper)
         self.assertIn("exact_match_is_nonblocking_batch_shape_diagnostic", self.wrapper)
         self.assertIn("ACTIONS_FINAL.json", self.wrapper)

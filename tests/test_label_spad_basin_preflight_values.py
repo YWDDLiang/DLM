@@ -448,18 +448,20 @@ class BasinPreflightValueTest(unittest.TestCase):
             self.assertEqual(set(final["coverage"]), {"E0", "K10"})
             self.assertEqual(final["scientific_contract"]["horizons"], [10])
 
-    def test_wrapper_uses_two_a800s_eight_cpus_and_two_rank_processes(self):
+    def test_wrapper_supports_arbitrary_gpu_count_and_k10_only(self):
         wrapper = (
             ROOT / "slurm" / "212_label_spad_basin_preflight_values.sbatch"
         ).read_text(encoding="utf-8")
         self.assertIn("#SBATCH --cpus-per-task=8", wrapper)
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", wrapper)
         self.assertIn("OMP_NUM_THREADS=4", wrapper)
-        self.assertIn("--shard-rank 0 --shard-count 2", wrapper)
-        self.assertIn("--shard-rank 1 --shard-count 2", wrapper)
-        self.assertGreaterEqual(wrapper.count("CUDA_VISIBLE_DEVICES=\"${gpu["), 2)
-        self.assertIn("wait \"${pid0}\"", wrapper)
-        self.assertIn("wait \"${pid1}\"", wrapper)
+        self.assertIn("SPAD_VALUE_WORLD_SIZE", wrapper)
+        self.assertIn("SPAD_EXPECTED_GROUPS", wrapper)
+        self.assertIn("SPAD_K10_ONLY", wrapper)
+        self.assertIn('--shard-rank "${rank}"', wrapper)
+        self.assertIn('--shard-count "${VALUE_WORLD_SIZE}"', wrapper)
+        self.assertIn('CUDA_VISIBLE_DEVICES="${gpu[${rank}]}"', wrapper)
+        self.assertIn('for pid in "${child_pids[@]}"', wrapper)
         self.assertNotIn("--array", wrapper)
 
 
