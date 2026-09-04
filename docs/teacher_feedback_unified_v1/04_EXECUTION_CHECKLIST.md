@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **implementation approved; scientific training blocked on state-replay tests**
+Status: **implementation and state-replay tests passed; closure corpus build is next**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -29,8 +29,8 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 - [x] Selectively retain the independently useful 3/6-token deployed action
   scorer.
 - [x] Complete scientific, skeptic, resource, paper and code audits.
-- [ ] Pass all local pure tests and remote Torch integration tests.
-- [ ] Confirm no credential value, run artifact or model checkpoint is tracked.
+- [x] Pass all local pure tests and remote Torch integration tests.
+- [x] Confirm no credential value, run artifact or model checkpoint is tracked.
 
 ## C. Outcome-free predictor asset
 
@@ -42,24 +42,24 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
 ## D. Closure runtime
 
-- [ ] Add reverse species-block slot compilation with exact one-pass coverage.
-- [ ] Add independent `revise_spad_species_blocks` runtime.
-- [ ] Add opt-in `--spad-basin-closure`:
+- [x] Add reverse species-block slot compilation with exact one-pass coverage.
+- [x] Add independent `revise_spad_species_blocks` runtime.
+- [x] Add opt-in `--spad-basin-closure`:
   predictor -> cell -> reverse species blocks.
-- [ ] Reject simultaneous `--spad-backfill` and `--spad-basin-closure`.
-- [ ] Require closure-capability metadata before formal inference.
-- [ ] Preserve current BS output and seed behavior bit-for-bit.
-- [ ] Test cell atomic rollback, site rollback, non-active-token immutability,
+- [x] Reject simultaneous `--spad-backfill` and `--spad-basin-closure`.
+- [x] Require closure-capability metadata before formal inference.
+- [x] Preserve current BS output and seed behavior bit-for-bit.
+- [x] Test cell atomic rollback, site rollback, non-active-token immutability,
   suffix visibility, row-local RNG and final no-mask/composition invariants.
 
 ## E. Closure-CE data and training
 
 - [ ] Build a new teacher-only full-MP20 closure corpus.
-- [ ] Cell states: all coordinates visible; sequential lattice suffix masked;
+- [x] Implement cell states: all coordinates visible; sequential lattice suffix masked;
   one active lattice component supervised.
-- [ ] Species-block states: other species/full suffix visible; active block
+- [x] Implement species-block states: other species/full suffix visible; active block
   remainder masked; one active coordinate component supervised.
-- [ ] Keep `N/elements` visible and exact on every row.
+- [x] Keep `N/elements` visible and exact on every row.
 - [ ] Add bounded same-structure cell/coordinate/short-pair corruptions only
   after clean state-replay tests pass.
 - [ ] Run a six-state-per-split remote canary covering first/last lattice
