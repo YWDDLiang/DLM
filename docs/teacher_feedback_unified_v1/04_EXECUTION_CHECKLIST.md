@@ -293,3 +293,20 @@ so job 39770 restarts from the same registered closure-CE policy.
   second; Direct and new official queries are omitted, and any chemsys absent
   from the retained MP cache remains an unknown/non-stable row in denominator
   1,000 rather than being dropped.
+
+## L. Single final iteration after a miss
+
+- [ ] If the new stream19 endpoint misses even the fixed near-line gate
+  (Strict 23/256 and Meta 125/256 in the same endpoint), first publish a paired
+  diagnosis covering training movement, K10 teacher headroom/reachability,
+  raw geometry/energy and raw-to-tau800 retention. Classify the failure as
+  exactly one of `UNDERTRAINED`, `LOCAL_CONTROL_INSUFFICIENT`,
+  `REFINER_WASHOUT`, or `EVALUATION_COVERAGE`.
+- [ ] Permit exactly one reproducible final iteration selected by that physical
+  diagnosis: one additional unchanged-LR K10 posterior pass for undertraining;
+  the existing bounded Plan-VPA projection for insufficient cell control; or
+  the preregistered tau600 topology-preserving bridge when tau800 erases a real
+  raw gain. Cache-coverage failure changes reporting only, not the model.
+- [ ] Do not launch a second final iteration and do not edit data, labels,
+  denominators, seeds or checkpoints to manufacture 10%/50%. Aggressive compute
+  is authorized; outcome curation and fabricated results are not.
