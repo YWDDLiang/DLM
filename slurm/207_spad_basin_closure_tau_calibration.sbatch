@@ -26,7 +26,8 @@ for p in "${NATIVE_RUN}/_SUCCESS" "${BODY}/_SUCCESS" "${BODY}/proposal_graphs.pt
 IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?}"; [[ "${#gpu[@]}" -eq 2 ]]
 
 run_tau() {
-  local slot="$1" tau="$2" out="${RUN}/tau${tau}"
+  local slot="$1" tau="$2"
+  local out="${RUN}/tau${tau}"
   mkdir "${out}"
   env CUDA_VISIBLE_DEVICES="${gpu[$slot]}" OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 \
     MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 PYTHONPATH="${SOURCE}/src" \

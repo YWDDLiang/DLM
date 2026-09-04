@@ -46,7 +46,8 @@ PY
 done
 
 run_shard() {
-  local slot="$1" tau="$2" rank="$3" root="${RUN}/tau${tau}"
+  local slot="$1" tau="$2" rank="$3"
+  local root="${RUN}/tau${tau}"
   env CUDA_VISIBLE_DEVICES="${gpu[$slot]}" OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 \
     MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 PYTHONPATH="${SOURCE}/src" \
     "${PYTHON}" "${SOURCE}/scripts/relax_spad_basin_closure_shard.py" \
