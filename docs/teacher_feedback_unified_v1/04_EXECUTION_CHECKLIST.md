@@ -258,18 +258,22 @@ so job 39770 restarts from the same registered closure-CE policy.
   deployment rollouts; the materialized states contain 2,052 cell and 2,052 XYZ
   transactions, four 513-row XYZ cursor buckets, 4,104 unique source rows and
   zero reference-log replay mismatches. Outcomes were not read.
-- [ ] Build one dynamic-K<=4 complete transaction group per state and label
+- [x] Build one dynamic-K<=4 complete transaction group per state and label
   K10 only. Reuse the frozen K10 rule; do not repeat K3/K5/K20 calibration.
   The zero-science pending three-GPU job 39793 was cancelled and replaced by
   job 39794, which completed in 01:40:17 on four A800/16 CPU. It produced all
   4,104 groups with retained-candidate histogram K1/K2/K3/K4 =
   25/292/409/3,378, 15,348 retained candidates and zero contract errors;
-  outcomes, selection and replacement remained false. Job 39796 is now running
-  E0+K10-only labels on four A800. These are throughput-only changes; the
-  cohort, policy, seeds and scientific construction are unchanged.
+  outcomes, selection and replacement remained false. Job 39796 completed
+  E0+K10-only labels in 00:31:36 on four A800: 4,104 groups, 15,348 candidates,
+  complete E0/K10 coverage for all 15,347 legal candidates, median K10
+  best-vs-no-op headroom 143.93 meV/atom, and 2,879 groups above 10 meV/atom.
+  These are throughput-only changes; the cohort, policy, seeds and scientific
+  construction are unchanged.
 - [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
   4,104 clean anchors across the actually schedulable 2/3/4 ranks, one seed and
-  final checkpoint only.
+  final checkpoint only. Job 39797 has been submitted for four A800/16 CPU,
+  one pass, LR 5e-6, 64-group step-0 probe and 128-update warmup.
 - [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
   Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
   fixed tau800. Report raw and refined Strict/Meta S.U.N. without Direct.
