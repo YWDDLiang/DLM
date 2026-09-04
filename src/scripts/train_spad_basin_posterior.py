@@ -36,6 +36,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 
 GROUP_SCHEMA = "spad_basin_preflight_action_group_v1"
+LABELLED_GROUP_SCHEMA = "spad_basin_preflight_labelled_group_v1"
 EXPECTED_GROUPS = 128
 WORLD_SIZE = 2
 POSTERIOR_PASSES = 4
@@ -135,6 +136,7 @@ def _is_supported_group_schema(schema: Any) -> bool:
     value = str(schema or "")
     return bool(
         value == GROUP_SCHEMA
+        or value == LABELLED_GROUP_SCHEMA
         or value.startswith(GROUP_SCHEMA + "_")
         or (
             value.startswith("spad_basin_preflight_")

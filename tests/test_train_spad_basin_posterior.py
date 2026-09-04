@@ -49,6 +49,13 @@ def group(sample_idx, candidates, *, state_type="xyz"):
 
 
 class BasinPosteriorPureTest(unittest.TestCase):
+    def test_accepts_formal_labeler_schema(self):
+        self.assertTrue(
+            MODULE._is_supported_group_schema(
+                "spad_basin_preflight_labelled_group_v1"
+            )
+        )
+
     def test_source_prompt_left_padding_is_replayed(self):
         ids, attention = MODULE.left_pad_prompt_ids(
             [7, 8, 9], target_length=5, pad_token_id=0
