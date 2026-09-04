@@ -49,6 +49,35 @@ def group(sample_idx, candidates, *, state_type="xyz"):
 
 
 class BasinPosteriorPureTest(unittest.TestCase):
+    def test_scalable_contract_supports_4104_groups_on_three_ranks(self):
+        try:
+            MODULE.configure_training_contract(
+                expected_groups=4104,
+                posterior_passes=1,
+                world_size=3,
+                step0_groups=64,
+                warmup_updates=128,
+            )
+            self.assertEqual(MODULE.EXPECTED_GROUPS, 4104)
+            self.assertEqual(MODULE.POSTERIOR_UPDATES, 1368)
+            self.assertEqual(MODULE.TOTAL_UPDATES, 2736)
+            schedule = MODULE.deterministic_posterior_schedule(
+                4104, passes=1, world_size=3
+            )
+            self.assertEqual(len(schedule), 1368)
+            self.assertEqual(
+                Counter(index for step in schedule for index in step),
+                Counter({index: 1 for index in range(4104)}),
+            )
+        finally:
+            MODULE.configure_training_contract(
+                expected_groups=128,
+                posterior_passes=4,
+                world_size=2,
+                step0_groups=128,
+                warmup_updates=25,
+            )
+
     def test_trainable_policy_is_restored_after_no_grad_scoring(self):
         class Parameter:
             requires_grad = False
@@ -246,11 +275,16 @@ class BasinPosteriorWrapperTest(unittest.TestCase):
         self.assertIn("PRELIGHT_TRAINING_AUTHORIZED", self.wrapper)
         self.assertIn("--authorization-marker", self.wrapper)
 
-    def test_primary_only_wrapper_prioritizes_k10_on_two_gpus(self):
+    def test_primary_wrapper_supports_scalable_k10_world_size(self):
         wrapper = (ROOT / "slurm/216_train_spad_basin_posterior_k10_primary.sbatch").read_text(encoding="utf-8")
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", wrapper)
         self.assertIn("#SBATCH --cpus-per-task=8", wrapper)
-        self.assertIn("--nproc_per_node=2", wrapper)
+        self.assertIn("SPAD_EXPECTED_GROUPS", wrapper)
+        self.assertIn("SPAD_TRAIN_WORLD_SIZE", wrapper)
+        self.assertIn('--nproc_per_node="${TRAIN_WORLD_SIZE}"', wrapper)
+        self.assertIn('--expected-groups "${EXPECTED_GROUPS}"', wrapper)
+        self.assertIn('--posterior-passes "${POSTERIOR_PASSES}"', wrapper)
+        self.assertIn('CUDA_VISIBLE_DEVICES="${gpu_csv}"', wrapper)
         self.assertIn("terminal_relax_k10_energy_eV_per_atom", wrapper)
         self.assertIn("PRELIGHT_TRAINING_AUTHORIZED", wrapper)
         self.assertNotIn("terminal_single_point_energy_eV_per_atom", wrapper)

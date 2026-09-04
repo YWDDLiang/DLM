@@ -52,6 +52,7 @@ WARMUP_UPDATES = 25
 MIN_LR_RATIO = 0.1
 GRADIENT_CLIP_NORM = 1.0
 GRADIENT_PROBE_PAIRS = 5
+STEP0_GROUPS = EXPECTED_GROUPS
 MAX_KL_BUDGET_NATS = 0.05
 DEPLOYED_TEMPERATURE = 0.7
 DATA_ORDER_SEED = 20_260_904
@@ -59,6 +60,50 @@ ALLOWED_POSTERIOR_GRADIENT_SCALES = (0.25, 0.5, 1.0, 2.0, 4.0, 8.0)
 DEFAULT_VALUE_FIELD = "terminal_relax_k10_energy_eV_per_atom"
 E0_VALUE_FIELD = "terminal_single_point_energy_eV_per_atom"
 RUN_SCHEMA = "spad_basin_posterior_pilot_train_v1"
+
+
+def configure_training_contract(
+    *,
+    expected_groups: int,
+    posterior_passes: int,
+    world_size: int,
+    step0_groups: int,
+    warmup_updates: int,
+) -> None:
+    """Configure one immutable process-local training contract before loading data."""
+
+    values = {
+        "expected_groups": int(expected_groups),
+        "posterior_passes": int(posterior_passes),
+        "world_size": int(world_size),
+        "step0_groups": int(step0_groups),
+        "warmup_updates": int(warmup_updates),
+    }
+    if any(value <= 0 for value in values.values()):
+        raise ValueError("training contract counts must be positive")
+    if values["world_size"] > 4:
+        raise ValueError("world_size must lie in [1,4]")
+    exposures = values["expected_groups"] * values["posterior_passes"]
+    if exposures % values["world_size"]:
+        raise ValueError("group exposures must be divisible by world_size")
+    if values["step0_groups"] > values["expected_groups"]:
+        raise ValueError("step0_groups cannot exceed expected_groups")
+    posterior_updates = exposures // values["world_size"]
+    total_updates = 2 * posterior_updates
+    if values["warmup_updates"] >= total_updates:
+        raise ValueError("warmup_updates must be smaller than total updates")
+
+    global EXPECTED_GROUPS, WORLD_SIZE, POSTERIOR_PASSES
+    global POSTERIOR_UPDATES, CLEAN_CE_UPDATES, TOTAL_UPDATES
+    global STEP0_GROUPS, WARMUP_UPDATES
+    EXPECTED_GROUPS = values["expected_groups"]
+    WORLD_SIZE = values["world_size"]
+    POSTERIOR_PASSES = values["posterior_passes"]
+    POSTERIOR_UPDATES = posterior_updates
+    CLEAN_CE_UPDATES = posterior_updates
+    TOTAL_UPDATES = total_updates
+    STEP0_GROUPS = values["step0_groups"]
+    WARMUP_UPDATES = values["warmup_updates"]
 
 
 @lru_cache(maxsize=1)
@@ -391,7 +436,7 @@ def _normalize_group(
 
 
 class BasinPosteriorGroupDataset:
-    """Strict, ordered 128-group pilot dataset with dynamic K1..4."""
+    """Strict, ordered deployment-state dataset with dynamic K1..4."""
 
     def __init__(self, path: Path, *, value_field: str) -> None:
         raw = list(iter_jsonl(Path(path)))
@@ -945,7 +990,7 @@ def step0_policy_reference_equality(
 ) -> dict[str, Any]:
     local_max = 0.0
     checked = 0
-    for index in range(int(rank), len(dataset), WORLD_SIZE):
+    for index in range(int(rank), min(len(dataset), STEP0_GROUPS), WORLD_SIZE):
         batch = move_to_device(dataset.materialize(index, tokenizer, modules), device)
         reference = _score_actions(
             runtime, batch, modules, reference=True, require_grad=False
@@ -970,8 +1015,8 @@ def step0_policy_reference_equality(
     modules.dist.all_reduce(max_tensor, op=modules.dist.ReduceOp.MAX)
     global_checked = int(_reduce_scalar(checked, device, modules))
     maximum = float(max_tensor.detach().cpu())
-    if global_checked != EXPECTED_GROUPS:
-        raise RuntimeError("step0 equality did not cover all 128 groups")
+    if global_checked != STEP0_GROUPS:
+        raise RuntimeError("step0 equality did not cover its fixed group subset")
     if not math.isfinite(maximum) or maximum > 1.0e-6:
         raise RuntimeError("step0 policy/reference supplied-action scores differ")
     # The final equality score above is deliberately no-grad and therefore leaves
@@ -981,6 +1026,7 @@ def step0_policy_reference_equality(
     return {
         "passed": True,
         "groups_checked": global_checked,
+        "dataset_groups": EXPECTED_GROUPS,
         "max_abs_supplied_action_score_delta": maximum,
         "tolerance": 1.0e-6,
     }
@@ -1229,8 +1275,12 @@ def train(
     if not parameters:
         raise RuntimeError("policy adapter has no trainable LoRA parameters")
     multiplier = float(gradient_probe["selected_posterior_gradient_multiplier"])
-    schedule = deterministic_posterior_schedule()
-    clean_schedule = deterministic_clean_indices()
+    schedule = deterministic_posterior_schedule(
+        EXPECTED_GROUPS, passes=POSTERIOR_PASSES, world_size=WORLD_SIZE
+    )
+    clean_schedule = deterministic_clean_indices(
+        updates=CLEAN_CE_UPDATES, world_size=WORLD_SIZE
+    )
     if len(schedule) != POSTERIOR_UPDATES or len(clean_schedule) != CLEAN_CE_UPDATES:
         raise RuntimeError("pilot schedule accounting changed")
     optimizer = modules.torch.optim.AdamW(
@@ -1415,11 +1465,23 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--value-field", default=DEFAULT_VALUE_FIELD)
     parser.add_argument("--route-name", choices=("e0", "k10"), required=True)
     parser.add_argument("--seed", type=int, required=True)
+    parser.add_argument("--expected-groups", type=int, default=128)
+    parser.add_argument("--posterior-passes", type=int, default=4)
+    parser.add_argument("--world-size", type=int, default=2)
+    parser.add_argument("--step0-groups", type=int, default=128)
+    parser.add_argument("--warmup-updates", type=int, default=25)
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
+    configure_training_contract(
+        expected_groups=args.expected_groups,
+        posterior_passes=args.posterior_passes,
+        world_size=args.world_size,
+        step0_groups=args.step0_groups,
+        warmup_updates=args.warmup_updates,
+    )
     modules = _runtime_modules()
     dist_info = init_distributed(modules)
     rank = int(dist_info["rank"])
