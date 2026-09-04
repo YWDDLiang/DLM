@@ -991,9 +991,39 @@ def run_gradient_probe(
     cpu_state = modules.torch.get_rng_state()
     cuda_state = modules.torch.cuda.get_rng_state(device)
     records: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
     try:
-        for pair_index in range(GRADIENT_PROBE_PAIRS):
+        for group_index in informative:
+            if len(records) >= GRADIENT_PROBE_PAIRS:
+                break
             runtime.model.zero_grad(set_to_none=True)
+            group = move_to_device(
+                group_dataset.materialize(group_index, tokenizer, modules), device
+            )
+            posterior = transaction_posterior_objective(
+                runtime, group, modules, require_grad=True
+            )
+            posterior["loss"].backward()
+            average_gradients_(parameters, world_size=WORLD_SIZE)
+            post_snapshot = gradient_snapshot(parameters)
+            post_norm = gradient_norm(post_snapshot)
+            if not math.isfinite(post_norm):
+                raise FloatingPointError("gradient probe produced nonfinite posterior gradient")
+            if not posterior["informative"] or post_norm <= 0.0:
+                skipped.append(
+                    {
+                        "posterior_group": int(group_index),
+                        "reason": str(
+                            posterior.get("zero_reason")
+                            or "zero_gradient_after_deployed_masks"
+                        ),
+                        "posterior_gradient_norm": post_norm,
+                    }
+                )
+                continue
+
+            runtime.model.zero_grad(set_to_none=True)
+            pair_index = len(records)
             clean_index = 2 * pair_index + int(rank)
             clean = clean_ce_loss(
                 runtime,
@@ -1008,25 +1038,10 @@ def run_gradient_probe(
             average_gradients_(parameters, world_size=WORLD_SIZE)
             clean_snapshot = gradient_snapshot(parameters)
             clean_norm = gradient_norm(clean_snapshot)
-
-            runtime.model.zero_grad(set_to_none=True)
-            group_index = informative[pair_index]
-            group = move_to_device(
-                group_dataset.materialize(group_index, tokenizer, modules), device
-            )
-            posterior = transaction_posterior_objective(
-                runtime, group, modules, require_grad=True
-            )
-            posterior["loss"].backward()
-            average_gradients_(parameters, world_size=WORLD_SIZE)
-            post_snapshot = gradient_snapshot(parameters)
-            post_norm = gradient_norm(post_snapshot)
             cosine = gradient_cosine(clean_snapshot, post_snapshot)
             if (
                 not math.isfinite(clean_norm)
-                or not math.isfinite(post_norm)
                 or clean_norm <= 0.0
-                or post_norm <= 0.0
                 or cosine is None
                 or not math.isfinite(cosine)
             ):
@@ -1042,6 +1057,10 @@ def run_gradient_probe(
                     "clean_loss_rank0": float(clean.detach().cpu()),
                     "posterior_loss_rank0": float(posterior["loss"].detach().cpu()),
                 }
+            )
+        if len(records) != GRADIENT_PROBE_PAIRS:
+            raise RuntimeError(
+                "fewer than five deployed-informative groups for gradient probe"
             )
     finally:
         runtime.model.zero_grad(set_to_none=True)
@@ -1060,6 +1079,7 @@ def run_gradient_probe(
         "schema": "spad_basin_posterior_gradient_probe_v1",
         "pairs": GRADIENT_PROBE_PAIRS,
         "records": records,
+        "zero_information_groups_skipped_in_fixed_order": skipped,
         "median_clean_posterior_cosine": median_cosine,
         "abort_threshold": -0.8,
         "passed": True,
