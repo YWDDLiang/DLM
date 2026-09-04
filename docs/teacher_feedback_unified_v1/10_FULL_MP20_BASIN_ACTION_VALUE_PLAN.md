@@ -4,6 +4,11 @@ Status: implementation authorized; formal training starts after the scientific
 object preflight below confirms that the frozen labels rank the deployed
 transaction outcomes they claim to rank.
 
+Execution: shared full-source program export, transaction ledger and frozen
+reference on-policy body job `39658` is running on `4 A800 + 16 CPU`. It reads
+no energy or outcome and is shared by both routes. Formal A/B training has not
+started.
+
 ## Question
 
 For the same Llama-programmed DLM transaction and the same finite legal action
