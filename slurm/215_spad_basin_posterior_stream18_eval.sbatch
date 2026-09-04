@@ -189,7 +189,7 @@ run_primary_endpoint_sharded() {
   local -a shard_pids=()
   cell="${RUN}/${arm}/${endpoint}"
   generation="$(generation_path "${arm}" "${endpoint}")"
-  mkdir -p "${cell}/input" "${cell}/shards" "${cell}/full_reconstructed"
+  mkdir -p "${cell}/input" "${cell}/shards"
 
   env CUDA_VISIBLE_DEVICES= PYTHONPATH="${R03E}/runtime" "${PYTHON}" \
     - "${generation}" "${cell}/input" <<'PY'
