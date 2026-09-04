@@ -15,6 +15,7 @@ class PreflightReplayWrapperTest(unittest.TestCase):
         self.assertIn("attempts)==128", WRAPPER)
         self.assertIn("'mismatches':len(mismatch)", WRAPPER)
         self.assertIn("bit_exact_required_before_value_labels", WRAPPER)
+        self.assertIn("--original-batch-size 8", WRAPPER)
         self.assertNotIn("chgnet", WRAPPER.lower())
         self.assertNotIn("model494", WRAPPER.lower())
 

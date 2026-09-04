@@ -47,10 +47,36 @@ def encoded_ids(tokenizer: Any, text: str, device: torch.device) -> torch.Tensor
 
 
 def row_tokens(
-    tokenizer: Any, row: dict[str, Any], device: torch.device
-) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, int, int]:
+    tokenizer: Any,
+    row: dict[str, Any],
+    device: torch.device,
+    *,
+    padded_prompt_length: int,
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, int, int]:
     prompt = str(row["prompt"]).rstrip() + "\n"
-    prompt_ids = encoded_ids(tokenizer, prompt, device)
+    unpadded_prompt_ids = encoded_ids(tokenizer, prompt, device)
+    padding = int(padded_prompt_length) - int(unpadded_prompt_ids.shape[1])
+    if padding < 0:
+        raise ValueError("recorded batch prompt length is shorter than this prompt")
+    prompt_ids = torch.cat(
+        (
+            torch.full(
+                (1, padding),
+                int(tokenizer.pad_token_id),
+                dtype=torch.long,
+                device=device,
+            ),
+            unpadded_prompt_ids,
+        ),
+        dim=1,
+    )
+    prompt_attention = torch.cat(
+        (
+            torch.zeros((1, padding), dtype=torch.long, device=device),
+            torch.ones_like(unpadded_prompt_ids, dtype=torch.long),
+        ),
+        dim=1,
+    )
     predictor = encoded_ids(tokenizer, str(row["predictor_body"]), device)
     state = encoded_ids(tokenizer, str(row["state_body"]), device)
     entry_text = (
@@ -63,15 +89,37 @@ def row_tokens(
     gen_length = 7 + 4 * int(row["N"])
     if any(int(value.shape[1]) != gen_length for value in (predictor, state, entry, final)):
         raise ValueError("a materialized body is not exact 7+4N")
-    return prompt_ids, predictor, state, entry, int(prompt_ids.shape[1]), gen_length
+    return (
+        prompt_ids,
+        prompt_attention,
+        predictor,
+        state,
+        entry,
+        int(prompt_ids.shape[1]),
+        gen_length,
+    )
 
 
-def replay_row(model: Any, tokenizer: Any, row: dict[str, Any], device: torch.device) -> dict[str, Any]:
-    prompt_ids, predictor, state, entry, prompt_length, gen_length = row_tokens(
-        tokenizer, row, device
+def replay_row(
+    model: Any,
+    tokenizer: Any,
+    row: dict[str, Any],
+    device: torch.device,
+    *,
+    padded_prompt_length: int,
+) -> dict[str, Any]:
+    (
+        prompt_ids,
+        attention,
+        predictor,
+        state,
+        entry,
+        prompt_length,
+        gen_length,
+    ) = row_tokens(
+        tokenizer, row, device, padded_prompt_length=int(padded_prompt_length)
     )
     final_ids = encoded_ids(tokenizer, str(row["final_body"]), device)
-    attention = torch.ones_like(prompt_ids)
     plan = row["plan_state"]
     program = program_from_element_order(
         plan, row["species_program"], order_source="frozen_planner_llama_pointer"
@@ -163,12 +211,36 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     states = list(iter_jsonl(args.states_jsonl.resolve()))
     if len(states) != 128 or {int(row["sample_idx"]) for row in states} != set(range(128)):
         raise ValueError("preflight states must cover sample_idx 0..127")
+    prompt_lengths = {
+        int(row["sample_idx"]): int(
+            encoded_ids(
+                tokenizer, str(row["prompt"]).rstrip() + "\n", device
+            ).shape[1]
+        )
+        for row in states
+    }
+    batch_prompt_lengths: dict[int, int] = {}
+    for start in range(0, len(states), int(args.original_batch_size)):
+        batch = states[start : start + int(args.original_batch_size)]
+        batch_prompt_lengths[start // int(args.original_batch_size)] = max(
+            prompt_lengths[int(row["sample_idx"])] for row in batch
+        )
     selected = [row for row in states if int(row["sample_idx"]) % world == rank]
     started = time.time()
     attempts: list[dict[str, Any]] = []
     for row in selected:
         try:
-            attempts.append(replay_row(model, tokenizer, row, device))
+            attempts.append(
+                replay_row(
+                    model,
+                    tokenizer,
+                    row,
+                    device,
+                    padded_prompt_length=batch_prompt_lengths[
+                        int(row["sample_idx"]) // int(args.original_batch_size)
+                    ],
+                )
+            )
         except Exception as error:  # noqa: BLE001
             attempts.append(
                 {
@@ -198,6 +270,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "elapsed_seconds": time.time() - started,
         "tokenizer_contract": contract,
         "outcomes_read": False,
+        "original_batch_size": int(args.original_batch_size),
+        "left_padding_replayed": True,
     }
     (args.output_dir / f"report_rank{rank}.json").write_text(
         json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8"
@@ -211,6 +285,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model-path", type=Path, required=True)
     parser.add_argument("--checkpoint-path", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--original-batch-size", type=int, default=8)
     return parser.parse_args()
 
 
