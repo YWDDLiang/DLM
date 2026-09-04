@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **implementation and state-replay tests passed; closure corpus build is next**
+Status: **closure corpus verified; six-state training canary job 39699 submitted**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -54,7 +54,8 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
 ## E. Closure-CE data and training
 
-- [ ] Build a new teacher-only full-MP20 closure corpus.
+- [x] Build and independently audit a new teacher-only full-MP20 closure corpus
+  with 27,136 train and 9,047 validation rows.
 - [x] Implement cell states: all coordinates visible; sequential lattice suffix masked;
   one active lattice component supervised.
 - [x] Implement species-block states: other species/full suffix visible; active block
