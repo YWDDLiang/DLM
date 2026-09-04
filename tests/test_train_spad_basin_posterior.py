@@ -222,6 +222,15 @@ class BasinPosteriorWrapperTest(unittest.TestCase):
         self.assertIn("PRELIGHT_TRAINING_AUTHORIZED", self.wrapper)
         self.assertIn("--authorization-marker", self.wrapper)
 
+    def test_primary_only_wrapper_prioritizes_k10_on_two_gpus(self):
+        wrapper = (ROOT / "slurm/216_train_spad_basin_posterior_k10_primary.sbatch").read_text(encoding="utf-8")
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", wrapper)
+        self.assertIn("#SBATCH --cpus-per-task=8", wrapper)
+        self.assertIn("--nproc_per_node=2", wrapper)
+        self.assertIn("terminal_relax_k10_energy_eV_per_atom", wrapper)
+        self.assertIn("PRELIGHT_TRAINING_AUTHORIZED", wrapper)
+        self.assertNotIn("terminal_single_point_energy_eV_per_atom", wrapper)
+
 
 if __name__ == "__main__":
     unittest.main()
