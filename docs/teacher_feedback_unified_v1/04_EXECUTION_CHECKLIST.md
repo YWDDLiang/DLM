@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **24-hour SUN10/50 sprint; rollout body complete and job 39732 running**
+Status: **24-hour SUN10/50 sprint; tau200 complete and development tau calibration running**
 
 Sprint deadline: **2026-09-05 22:00 Asia/Shanghai**. The target is final
 prospective Strict/Meta S.U.N. at least `10%/50%` under a fixed, fully disclosed
@@ -161,6 +161,16 @@ Current execution:
 - [ ] In parallel with the native value path, evaluate one preregistered
   low-noise `model494 tau200` bridge (job 39732) on the same closure-CE raw256;
   disclose it regardless of outcome and do not tune tau from its result.
+- [x] Complete the fixed tau200 bridge and existing-cache official evaluation:
+  generation/refinement job 39732, two-shard common relaxation 39733 and
+  finalizer 39735. The result is Strict `15/256 = 5.86%`, Meta
+  `98/256 = 38.28%`, with `256` reconstructed and `244` novel-unique. Relative
+  to native closure raw this adds 8 Strict and 42 Meta S.U.N. outcomes, but it
+  does not meet `10%/50%`.
+- [ ] Treat the completed fixed256 as development after this first outcome.
+  Job 39736 evaluates tau400/tau600 only to calibrate the low-noise bridge;
+  any chosen tau must be confirmed on a disjoint frozen cohort before a final
+  prospective claim.
 - [ ] The desired endpoint is native Strict/Meta `10%/50%`, but claims follow
   observed effect rather than the target.
 
