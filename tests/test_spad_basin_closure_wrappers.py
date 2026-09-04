@@ -10,6 +10,8 @@ NATIVE = ROOT / "slurm" / "198_spad_basin_closure_native_stream17.sbatch"
 RAW_SCREEN = ROOT / "slurm" / "199_spad_basin_closure_native_raw_screen.sbatch"
 COMMON_RELAX = ROOT / "slurm" / "200_spad_basin_closure_common_relax.sbatch"
 COMMON_FINAL = ROOT / "slurm" / "201_spad_basin_closure_common_relax_finalize.sbatch"
+PREFLIGHT_FREEZE = ROOT / "slurm" / "202_freeze_spad_basin_preflight_cohort.sbatch"
+PREFLIGHT_GENERATE = ROOT / "slurm" / "203_generate_spad_basin_preflight_states.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -22,6 +24,8 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.raw_screen = RAW_SCREEN.read_text(encoding="utf-8")
         cls.common_relax = COMMON_RELAX.read_text(encoding="utf-8")
         cls.common_final = COMMON_FINAL.read_text(encoding="utf-8")
+        cls.preflight_freeze = PREFLIGHT_FREEZE.read_text(encoding="utf-8")
+        cls.preflight_generate = PREFLIGHT_GENERATE.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
         self.assertIn("#SBATCH --cpus-per-task=4", self.build)
@@ -176,10 +180,29 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertIn('"direct_run": False', self.common_final)
         self.assertIn('"model494": False', self.common_final)
 
+    def test_preflight_freeze_is_train_only_and_outcome_blind(self):
+        self.assertNotIn("#SBATCH --gres", self.preflight_freeze)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.preflight_freeze)
+        self.assertIn("full_mp20_reference_bodies_39658/programs/plans_for_dlm.jsonl", self.preflight_freeze)
+        self.assertIn("freeze_spad_basin_preflight_cohort.py", self.preflight_freeze)
+        self.assertIn('[[ ! -e "${OUTPUT}" ]]', self.preflight_freeze)
+        self.assertIn("128", self.preflight_freeze)
+
+    def test_preflight_generation_uses_registered_closure_only(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.preflight_generate)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.preflight_generate)
+        self.assertIn("--spad-basin-closure", self.preflight_generate)
+        self.assertIn("--spad-basin-closure-capability-json", self.preflight_generate)
+        self.assertIn("--num-samples 128", self.preflight_generate)
+        self.assertIn("'outcomes_read':False", self.preflight_generate)
+        self.assertIn("'model494_or_energy_used':False", self.preflight_generate)
+        self.assertNotIn("--spad-backfill", self.preflight_generate)
+        self.assertNotIn("refine_dlm_with_crysllmgen", self.preflight_generate)
+
     def test_every_run_is_non_overwriting(self):
         for wrapper in (
             self.build, self.train, self.canary, self.native, self.raw_screen,
-            self.common_final,
+            self.common_final, self.preflight_freeze, self.preflight_generate,
         ):
             self.assertIn('mkdir "${RUN}"', wrapper)
         for wrapper in (self.build, self.train, self.canary):
