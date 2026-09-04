@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **closure corpus verified; six-state training canary job 39699 submitted**
+Status: **six-state canary passed; formal closure-CE job 39700 submitted**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -63,7 +63,7 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 - [x] Keep `N/elements` visible and exact on every row.
 - [ ] Add bounded same-structure cell/coordinate/short-pair corruptions only
   after clean state-replay tests pass.
-- [ ] Run a six-state-per-split remote canary covering first/last lattice
+- [x] Run a six-state-per-split remote canary covering first/last lattice
   components, X/Y/Z and a multi-site block; inspect finite loss/gradient before
   formal training.
 - [ ] Train one full-MP20 seed from BS for one registered endpoint.
