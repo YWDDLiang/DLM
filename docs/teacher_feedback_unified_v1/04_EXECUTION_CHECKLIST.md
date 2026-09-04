@@ -286,9 +286,13 @@ so job 39770 restarts from the same registered closure-CE policy.
   auxiliary allocation while preserving all 4,104 posterior and clean-anchor
   exposures. In parallel, the fourth A800 runs the disjoint seed-24 Planner
   source job 39800. Data, LR, objective and seeds remain unchanged.
-- [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
+- [x] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
   Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
-  fixed tau800. Report raw and refined Strict/Meta S.U.N. without Direct.
+  fixed tau800. Plan job 39800 completed 256/256 parsed and composition-valid;
+  freeze job 39801 retained all requested ordinals without outcome reads or
+  replacement at `$ROOT/cohorts/spad_prospective_seed24_256_v1_20260905`
+  (255 unique exact compositions and one disclosed duplicate). Report raw and
+  refined Strict/Meta S.U.N. without Direct.
 - [ ] If either preregistered primary endpoint reaches Strict>=10% and
   Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Per the
   user-authorized, outcome-independent near-miss rule fixed before stream19,
