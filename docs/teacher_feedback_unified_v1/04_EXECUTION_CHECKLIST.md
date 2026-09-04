@@ -261,9 +261,12 @@ so job 39770 restarts from the same registered closure-CE policy.
 - [ ] Build one dynamic-K<=4 complete transaction group per state and label
   K10 only. Reuse the frozen K10 rule; do not repeat K3/K5/K20 calibration.
   The zero-science pending three-GPU job 39793 was cancelled and replaced by
-  job 39794, now running with four A800/16 CPU. Dependency job 39796 will label
-  E0+K10 only on four A800 immediately after 39794. These are throughput-only
-  changes; the cohort, policy, seeds and scientific construction are unchanged.
+  job 39794, which completed in 01:40:17 on four A800/16 CPU. It produced all
+  4,104 groups with retained-candidate histogram K1/K2/K3/K4 =
+  25/292/409/3,378, 15,348 retained candidates and zero contract errors;
+  outcomes, selection and replacement remained false. Job 39796 is now running
+  E0+K10-only labels on four A800. These are throughput-only changes; the
+  cohort, policy, seeds and scientific construction are unchanged.
 - [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
   4,104 clean anchors across the actually schedulable 2/3/4 ranks, one seed and
   final checkpoint only.
