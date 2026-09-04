@@ -166,7 +166,7 @@ Current execution:
   states.
 - [ ] One seed, one endpoint, no early stop or checkpoint selection.
 
-Current training: job 39759 uses 2 A800/8 CPU for the preregistered K10 primary,
+Current training: job 39770 uses 2 A800/8 CPU for the preregistered K10 primary,
 four passes over 128 groups, interleaving 256 clean full-MP20 closure-CE and 256
 posterior updates. Jobs 39753--39755 are pre-update engineering negatives. The
 39755 diagnosis found that the step-0 no-grad policy/reference equality pass
@@ -178,6 +178,11 @@ cell exposed an in-place Boolean support-mask autograd bug. Commit `63b5b79`
 uses an equivalent out-of-place terminal mask and adds a mixed-validity cell
 backward regression; remote scoring and trainer tests pass. Job 39758 remains a
 negative engineering run and contributes no selected checkpoint.
+Job 39759 completed all 512 finite updates but failed before checkpoint save
+because its exact four-pass coverage counter used NCCL-unsupported `int16`.
+Commit `f911950` changes that bookkeeping tensor to `int32`; it does not change
+the trained objective or schedule. The failed process produced no checkpoint,
+so job 39770 restarts from the same registered closure-CE policy.
 
 ## I. Final evaluation
 
