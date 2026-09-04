@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from types import SimpleNamespace
 from typing import Any, Sequence
 
 import torch
@@ -26,6 +27,43 @@ SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT = (
     * SPAD_BASIN_CLOSURE_SITE_RADIX
     * SPAD_BASIN_CLOSURE_COMPONENT_RADIX
 )
+
+
+class FixedBatchShapeModelView:
+    """Expose one row while preserving the model's deployed batch shape.
+
+    Transformer rows do not attend across the batch, but GPU kernels can make
+    borderline sampled logits differ slightly between batch sizes. Repeating
+    one state to the original batch size and selecting its original row keeps
+    replay/counterfactual continuations numerically aligned with deployment.
+    """
+
+    def __init__(self, model: Any, *, batch_size: int, row_index: int) -> None:
+        if int(batch_size) <= 0 or not 0 <= int(row_index) < int(batch_size):
+            raise ValueError("invalid fixed batch size/row index")
+        self.model = model
+        self.batch_size = int(batch_size)
+        self.row_index = int(row_index)
+
+    def get_output_embeddings(self) -> Any:
+        return self.model.get_output_embeddings()
+
+    def __call__(
+        self, token_ids: torch.Tensor, *, attention_mask: torch.Tensor | None = None
+    ) -> Any:
+        if token_ids.ndim != 2 or int(token_ids.shape[0]) != 1:
+            raise ValueError("fixed-batch model view accepts exactly one logical row")
+        repeated_ids = token_ids.repeat(self.batch_size, 1)
+        repeated_attention = (
+            None
+            if attention_mask is None
+            else attention_mask.repeat(self.batch_size, 1)
+        )
+        output = self.model(repeated_ids, attention_mask=repeated_attention)
+        logits = output.logits
+        if int(logits.shape[0]) != self.batch_size:
+            raise RuntimeError("underlying model changed fixed replay batch size")
+        return SimpleNamespace(logits=logits[self.row_index : self.row_index + 1])
 
 
 def _spad_basin_closure_block_salt(
@@ -1622,6 +1660,7 @@ def continue_spad_species_blocks_from_cursor(
 
 
 __all__ = [
+    "FixedBatchShapeModelView",
     "Model494ResponseConfig",
     "SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT",
     "_spad_basin_closure_block_salt",

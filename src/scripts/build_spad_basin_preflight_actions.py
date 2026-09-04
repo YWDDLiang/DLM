@@ -137,6 +137,7 @@ def _runtime_imports() -> dict[str, Any]:
         validate_dynamic_tokenizer_contract,
     )
     from crystal_dlm.spad_generation import (
+        FixedBatchShapeModelView,
         continue_spad_species_blocks_from_cursor,
         revise_spad_species_blocks,
     )
@@ -166,6 +167,7 @@ def _runtime_imports() -> dict[str, Any]:
         "validate_answer_matches_plan": validate_answer_matches_plan,
         "validate_dynamic_tokenizer_contract": validate_dynamic_tokenizer_contract,
         "continue_from_cursor": continue_spad_species_blocks_from_cursor,
+        "fixed_batch_model_view": FixedBatchShapeModelView,
         "revise_species_blocks": revise_spad_species_blocks,
         "program_from_element_order": program_from_element_order,
         "reverse_species_block_revision_slots": reverse_species_block_revision_slots,
@@ -857,6 +859,7 @@ def _build_group(
     allowed_cache: dict[int, list[list[int]]],
     constraints: Mapping[str, Any],
     padded_prompt_length: int,
+    original_batch_size: int,
     runtime: Mapping[str, Any],
 ) -> dict[str, Any]:
     num_atoms = int(state["N"])
@@ -888,7 +891,11 @@ def _build_group(
     candidates = [
         _execute_candidate(
             candidate,
-            model=model,
+            model=runtime["fixed_batch_model_view"](
+                model,
+                batch_size=int(original_batch_size),
+                row_index=int(state["sample_idx"]) % int(original_batch_size),
+            ),
             tokenizer=tokenizer,
             state=state,
             tensors=tensors,
@@ -1063,6 +1070,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 padded_prompt_length=batch_prompt_lengths[
                     int(state["sample_idx"]) // int(args.original_batch_size)
                 ],
+                original_batch_size=int(args.original_batch_size),
                 runtime=runtime,
             )
         except Exception as error:  # noqa: BLE001

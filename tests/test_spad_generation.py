@@ -6,6 +6,7 @@ try:
     import torch
     from crystal_dlm.llada_generation import generate
     from crystal_dlm.spad_generation import (
+        FixedBatchShapeModelView,
         Model494ResponseConfig,
         _bounded_translation_free_response,
         _kl_bounded_gain_bias,
@@ -21,6 +22,7 @@ except ModuleNotFoundError:
     torch = None
     generate = None
     Model494ResponseConfig = None
+    FixedBatchShapeModelView = None
     revise_spad_anchors = None
     revise_spad_cell = None
     revise_spad_species_blocks = None
@@ -54,6 +56,20 @@ class SPADGenerationTest(unittest.TestCase):
             logits = torch.zeros((batch, length, 128), dtype=torch.float32)
             logits[..., 21] = 2.0
             return SimpleNamespace(logits=logits)
+
+    def test_fixed_batch_shape_model_view_selects_original_row(self):
+        class BatchAware(self.TinyModel):
+            def forward(self, token_ids, attention_mask=None):
+                batch, length = token_ids.shape
+                logits = torch.zeros((batch, length, 128), dtype=torch.float32)
+                for index in range(batch):
+                    logits[index, :, 21] = float(batch * 10 + index)
+                return SimpleNamespace(logits=logits)
+
+        view = FixedBatchShapeModelView(BatchAware(), batch_size=8, row_index=5)
+        output = view(torch.ones((1, 3), dtype=torch.long))
+        self.assertEqual(tuple(output.logits.shape), (1, 3, 128))
+        self.assertTrue(bool((output.logits[..., 21] == 85.0).all()))
 
     def test_row_local_predictor_schedules_batch_without_permuting_canvas(self):
         model = self.TinyModel()

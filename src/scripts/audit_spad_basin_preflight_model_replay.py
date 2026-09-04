@@ -18,6 +18,7 @@ from crystal_dlm.r5_dynamic_length import (
     validate_dynamic_tokenizer_contract,
 )
 from crystal_dlm.spad_generation import (
+    FixedBatchShapeModelView,
     continue_spad_species_blocks_from_cursor,
     revise_spad_species_blocks,
 )
@@ -107,6 +108,7 @@ def replay_row(
     device: torch.device,
     *,
     padded_prompt_length: int,
+    original_batch_size: int,
 ) -> dict[str, Any]:
     (
         prompt_ids,
@@ -137,6 +139,11 @@ def replay_row(
         pbc_image_radius=2,
     )
     action = [int(value) for value in row["reference_action"]["token_ids"]]
+    deployed_model = FixedBatchShapeModelView(
+        model,
+        batch_size=int(original_batch_size),
+        row_index=int(row["sample_idx"]) % int(original_batch_size),
+    )
     if row["state_type"] == "cell":
         complete = torch.cat((prompt_ids, predictor), dim=1)
         for position, token_id in zip(
@@ -144,7 +151,7 @@ def replay_row(
         ):
             complete[0, prompt_length + int(position)] = int(token_id)
         output, _logs = revise_spad_species_blocks(
-            model,
+            deployed_model,
             complete,
             prompt_length=prompt_length,
             gen_length=gen_length,
@@ -166,7 +173,7 @@ def replay_row(
         complete = torch.cat((prompt_ids, state), dim=1)
         block_entry = torch.cat((prompt_ids, entry), dim=1)
         output, continuation_report = continue_spad_species_blocks_from_cursor(
-            model,
+            deployed_model,
             complete,
             block_entry_tokens=block_entry,
             prompt_length=prompt_length,
@@ -239,6 +246,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     padded_prompt_length=batch_prompt_lengths[
                         int(row["sample_idx"]) // int(args.original_batch_size)
                     ],
+                    original_batch_size=int(args.original_batch_size),
                 )
             )
         except Exception as error:  # noqa: BLE001
