@@ -280,6 +280,7 @@ class BasinPosteriorWrapperTest(unittest.TestCase):
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", wrapper)
         self.assertIn("#SBATCH --cpus-per-task=8", wrapper)
         self.assertIn("SPAD_EXPECTED_GROUPS", wrapper)
+        self.assertIn("SPAD_BASIN_AUTHORIZATION_MARKER", wrapper)
         self.assertIn("SPAD_TRAIN_WORLD_SIZE", wrapper)
         self.assertIn('--nproc_per_node="${TRAIN_WORLD_SIZE}"', wrapper)
         self.assertIn('--expected-groups "${EXPECTED_GROUPS}"', wrapper)
