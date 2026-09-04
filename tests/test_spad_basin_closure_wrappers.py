@@ -248,7 +248,7 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertIn("--seed-by-sample-index", self.tau800_bridge)
         self.assertNotIn("chgnet", self.tau800_bridge.lower())
 
-    def test_resource-adaptive_tau_evaluator_runs_three_fixed_taus_without_query(self):
+    def test_resource_adaptive_tau_evaluator_runs_three_fixed_taus_without_query(self):
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.tau_eval2)
         self.assertIn("#SBATCH --cpus-per-task=4", self.tau_eval2)
         self.assertIn("for tau in 400 600 800", self.tau_eval2)
