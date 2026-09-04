@@ -258,6 +258,92 @@ class CandidateRetentionTest(unittest.TestCase):
         )
         self.assertEqual(len(retained), 4)
 
+    def test_stagewise_gate_catches_cell_failure_hidden_by_site_pool(self):
+        def summary(changed):
+            return {
+                "physics_proposal_slots": 2,
+                "direction_defined_proposals": 2,
+                "undefined_direction_proposals": 0,
+                "quantized_changed_at_least_one_token": changed,
+                "quantized_noop_duplicates": 2 - changed,
+                "signed_pair_token_collision": 0,
+                "accepted_legal_physics": changed,
+                "realized_direction_known": changed,
+                "realized_direction_unknown": 2 - changed,
+                "realized_direction_consistent": changed,
+                "realized_direction_expected_cosine_sum": float(changed),
+                "realized_direction_expected_cosine_min": (
+                    None if changed == 0 else 1.0
+                ),
+                "realized_direction_expected_cosine_max": (
+                    None if changed == 0 else 1.0
+                ),
+            }
+
+        rows = [
+            {
+                "deployment_stage": "cell",
+                "physics_quantization_audit": summary(0),
+            }
+        ]
+        for stage in ("anchor_second", "anchor_first"):
+            rows.extend(
+                {
+                    "deployment_stage": stage,
+                    "physics_quantization_audit": summary(2),
+                }
+                for _ in range(10)
+            )
+        pooled = MODULE.merge_physics_quantization_audits(
+            [row["physics_quantization_audit"] for row in rows]
+        )
+        by_stage = MODULE.physics_quantization_by_stage(rows)
+        self.assertTrue(pooled["threshold_passed"])
+        self.assertFalse(by_stage["cell"]["threshold_passed"])
+        self.assertTrue(by_stage["anchor_second"]["threshold_passed"])
+        self.assertTrue(by_stage["anchor_first"]["threshold_passed"])
+        self.assertFalse(MODULE.every_stage_passes_physics_token_change(by_stage))
+
+    def test_hard_cap_above_five_percent_fails_locality_without_resampling(self):
+        def audit(cap_hits):
+            attempts = [self.attempt("noop", ["noop"])]
+            for index in range(20):
+                step = 0.40 if index < cap_hits else 0.10
+                attempts.append(
+                    {
+                        **self.attempt(
+                            "physics_downhill" if index % 2 == 0 else "physics_reverse",
+                            [f"action-{index}"],
+                        ),
+                        "proposal": {
+                            "reason": "accepted",
+                            "kind": "site_xyz",
+                            "step": step,
+                        },
+                    }
+                )
+            return MODULE.physics_quantization_audit(attempts)
+
+        exactly_five_percent = audit(1)
+        above_five_percent = audit(2)
+        self.assertEqual(exactly_five_percent["hard_cap_hit_rate"], 0.05)
+        self.assertTrue(exactly_five_percent["locality_preflight_passed"])
+        self.assertEqual(above_five_percent["hard_cap_hit_rate"], 0.10)
+        self.assertTrue(above_five_percent["locality_preflight_failed"])
+        self.assertFalse(above_five_percent["retry_or_resample"])
+        self.assertEqual(
+            above_five_percent["selected_step_histogram"]["site_xyz:0.4A"],
+            2,
+        )
+        stage_reports = {
+            "cell": above_five_percent,
+            "anchor_second": exactly_five_percent,
+            "anchor_first": exactly_five_percent,
+        }
+        self.assertFalse(
+            MODULE.every_stage_passes_physics_locality(stage_reports)
+        )
+
     def test_one_shared_serialization_is_byte_identical_for_future_A_and_B(self):
         record = {
             "schema": MODULE.OUTPUT_SCHEMA,
@@ -317,6 +403,63 @@ class TransactionAndShardTest(unittest.TestCase):
             list(MODULE.STRAIN_ONE_BIN_SCAN_STEPS),
             sorted(set(MODULE.STRAIN_ONE_BIN_SCAN_STEPS)),
         )
+
+    def test_site_realized_direction_uses_strict_periodic_MIC(self):
+        state = {
+            "lengths": [10.0, 10.0, 10.0],
+            "angles": [90.0, 90.0, 90.0],
+            "species": ["Li", "O"],
+            "frac_coords": [[0.99, 0.20, 0.30], [0.50, 0.50, 0.50]],
+        }
+        positive = {**state, "frac_coords": [[0.01, 0.20, 0.30], [0.50, 0.50, 0.50]]}
+        negative = {**state, "frac_coords": [[0.97, 0.20, 0.30], [0.50, 0.50, 0.50]]}
+        plus = MODULE.realized_site_action_direction(
+            state,
+            positive,
+            site_index=0,
+            cartesian_force=[1.0, 0.0, 0.0],
+            expected_sign=1,
+        )
+        minus = MODULE.realized_site_action_direction(
+            state,
+            negative,
+            site_index=0,
+            cartesian_force=[1.0, 0.0, 0.0],
+            expected_sign=-1,
+        )
+        self.assertAlmostEqual(plus["realized_delta_cart_A"][0], 0.2)
+        self.assertAlmostEqual(plus["cosine_with_original_direction"], 1.0)
+        self.assertAlmostEqual(minus["cosine_with_original_direction"], -1.0)
+        self.assertAlmostEqual(minus["cosine_with_expected_direction"], 1.0)
+        self.assertFalse(plus["energy_read"])
+
+    def test_cell_realized_direction_uses_quantized_symmetric_strain(self):
+        state = {
+            "lengths": [10.0, 10.0, 10.0],
+            "angles": [90.0, 90.0, 90.0],
+            "species": ["Li", "O"],
+            "frac_coords": [[0.10, 0.20, 0.30], [0.50, 0.50, 0.50]],
+        }
+        contracted = {**state, "lengths": [9.9, 9.9, 9.9]}
+        expanded = {**state, "lengths": [10.1, 10.1, 10.1]}
+        downhill = MODULE.realized_cell_action_direction(
+            state,
+            contracted,
+            stress=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+            expected_sign=-1,
+        )
+        reverse = MODULE.realized_cell_action_direction(
+            state,
+            expanded,
+            stress=[[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+            expected_sign=1,
+        )
+        self.assertAlmostEqual(
+            downhill["cosine_with_expected_direction"], 1.0
+        )
+        self.assertAlmostEqual(reverse["cosine_with_expected_direction"], 1.0)
+        self.assertTrue(downhill["direction_consistent"])
+        self.assertFalse(downhill["energy_read"])
 
     def test_complete_site_transaction_only_changes_xyz(self):
         plan = {"N": 2, "elements": ["Li", "O"], "counts": [1, 1]}

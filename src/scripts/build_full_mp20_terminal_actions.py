@@ -38,6 +38,7 @@ if str(SRC_ROOT) not in sys.path:
 from crystal_dlm.dynamic_crystal import (  # noqa: E402
     arrays_to_structure,
 )
+from crystal_dlm.feasible_force_teacher import minimum_image_vector  # noqa: E402
 from crystal_dlm.fixed_slot import (  # noqa: E402
     MASK_TOKEN_ID,
     FixedSlotConfig,
@@ -55,6 +56,7 @@ from crystal_dlm.spad_program import (  # noqa: E402
 )
 from crystal_dlm.transaction_physics import (  # noqa: E402
     TransactionProposal,
+    lattice_matrix_from_dynamic_arrays,
     propose_force_site_transactions,
     propose_stress_lattice_transactions,
 )
@@ -70,6 +72,7 @@ TEMPERATURE = 0.7
 STAGE_SEED_STRIDE = 1_009
 SOURCE_SEED_STRIDE = 1_000_003
 PHYSICS_TOKEN_CHANGE_THRESHOLD = 0.85
+PHYSICS_HARD_CAP_HIT_LIMIT = 0.05
 
 
 def _geometric_steps(start: float, growth: float, stop: float) -> tuple[float, ...]:
@@ -376,6 +379,153 @@ def _active_tokens(answer: str, stage: Mapping[str, Any]) -> list[str]:
     return [tokens[int(position)] for position in stage["active_positions"]]
 
 
+def _direction_metrics(
+    realized: np.ndarray,
+    physical_direction: np.ndarray,
+    *,
+    expected_sign: int,
+) -> dict[str, Any]:
+    """Return signed alignment without consulting an energy or outcome."""
+
+    left = np.asarray(realized, dtype=np.float64)
+    right = np.asarray(physical_direction, dtype=np.float64)
+    if left.shape != right.shape or not np.isfinite(left).all() or not np.isfinite(
+        right
+    ).all():
+        raise ValueError("realized and physical direction tensors must match and be finite")
+    if int(expected_sign) not in (-1, 1):
+        raise ValueError("expected_sign must be -1 or +1")
+    realized_norm = float(np.linalg.norm(left))
+    physical_norm = float(np.linalg.norm(right))
+    if realized_norm <= 1.0e-12:
+        raise ValueError("quantized action has zero realized displacement")
+    if physical_norm <= 1.0e-12:
+        raise ValueError("physical direction has zero norm")
+    dot = float(np.sum(left * right))
+    cosine = max(-1.0, min(1.0, dot / (realized_norm * physical_norm)))
+    expected_cosine = float(int(expected_sign)) * cosine
+    return {
+        "realized_norm": realized_norm,
+        "physical_direction_norm": physical_norm,
+        "dot_with_original_direction": dot,
+        "cosine_with_original_direction": cosine,
+        "expected_direction_sign": int(expected_sign),
+        "cosine_with_expected_direction": expected_cosine,
+        "direction_consistent": bool(expected_cosine > 0.0),
+    }
+
+
+def realized_site_action_direction(
+    state_arrays: Mapping[str, Any],
+    action_arrays: Mapping[str, Any],
+    *,
+    site_index: int,
+    cartesian_force: Sequence[float],
+    expected_sign: int,
+    image_radius: int = 2,
+) -> dict[str, Any]:
+    """Audit the quantized XYZ action using the strict triclinic MIC vector."""
+
+    if list(state_arrays["species"]) != list(action_arrays["species"]):
+        raise ValueError("site direction audit requires unchanged species order")
+    site = int(site_index)
+    if not 0 <= site < len(state_arrays["species"]):
+        raise IndexError("site direction audit index lies outside the crystal")
+    state_lattice = lattice_matrix_from_dynamic_arrays(state_arrays)
+    action_lattice = lattice_matrix_from_dynamic_arrays(action_arrays)
+    if not np.allclose(state_lattice, action_lattice, atol=1.0e-10, rtol=0.0):
+        raise ValueError("site action unexpectedly changed the lattice")
+    old_fractional = np.asarray(state_arrays["frac_coords"][site], dtype=np.float64)
+    new_fractional = np.asarray(action_arrays["frac_coords"][site], dtype=np.float64)
+    delta_cart, _distance = minimum_image_vector(
+        old_fractional,
+        new_fractional,
+        state_lattice,
+        image_radius=int(image_radius),
+    )
+    force = np.asarray(cartesian_force, dtype=np.float64)
+    if force.shape != (3,):
+        raise ValueError("site force must have shape [3]")
+    metrics = _direction_metrics(
+        delta_cart,
+        force,
+        expected_sign=int(expected_sign),
+    )
+    return {
+        "status": "known",
+        "transaction_kind": "site",
+        "definition": "strict_triclinic_MIC_quantized_delta_cart_vs_force",
+        "site_index": site,
+        "image_radius": int(image_radius),
+        "realized_delta_cart_A": [float(value) for value in delta_cart],
+        **metrics,
+        "energy_read": False,
+    }
+
+
+def realized_cell_action_direction(
+    state_arrays: Mapping[str, Any],
+    action_arrays: Mapping[str, Any],
+    *,
+    stress: Sequence[Sequence[float]],
+    expected_sign: int,
+) -> dict[str, Any]:
+    """Audit quantized lattice motion in symmetric small-strain space."""
+
+    if list(state_arrays["species"]) != list(action_arrays["species"]):
+        raise ValueError("cell direction audit requires unchanged species order")
+    if not np.allclose(
+        np.asarray(state_arrays["frac_coords"], dtype=np.float64),
+        np.asarray(action_arrays["frac_coords"], dtype=np.float64),
+        atol=1.0e-12,
+        rtol=0.0,
+    ):
+        raise ValueError("cell action unexpectedly changed fractional coordinates")
+    old_lattice = lattice_matrix_from_dynamic_arrays(state_arrays)
+    new_lattice = lattice_matrix_from_dynamic_arrays(action_arrays)
+    # transaction_physics uses row-vector lattices and L' = L @ exp(epsilon D).
+    relative = np.linalg.solve(old_lattice, new_lattice)
+    small_strain = 0.5 * (
+        (relative - np.eye(3, dtype=np.float64))
+        + (relative - np.eye(3, dtype=np.float64)).T
+    )
+    stress_matrix = np.asarray(stress, dtype=np.float64)
+    if stress_matrix.shape != (3, 3) or not np.isfinite(stress_matrix).all():
+        raise ValueError("cell stress must be a finite 3x3 matrix")
+    symmetric_stress = 0.5 * (stress_matrix + stress_matrix.T)
+    metrics = _direction_metrics(
+        small_strain,
+        symmetric_stress,
+        expected_sign=int(expected_sign),
+    )
+    return {
+        "status": "known",
+        "transaction_kind": "cell",
+        "definition": (
+            "symmetric_quantized_small_strain_vs_symmetric_stress_frobenius"
+        ),
+        "realized_symmetric_small_strain": small_strain.tolist(),
+        **metrics,
+        "energy_read": False,
+    }
+
+
+def unknown_realized_direction(reason: str, transaction_kind: str) -> dict[str, Any]:
+    return {
+        "status": "unknown",
+        "transaction_kind": str(transaction_kind),
+        "reason": str(reason),
+        "realized_norm": None,
+        "physical_direction_norm": None,
+        "dot_with_original_direction": None,
+        "cosine_with_original_direction": None,
+        "expected_direction_sign": None,
+        "cosine_with_expected_direction": None,
+        "direction_consistent": None,
+        "energy_read": False,
+    }
+
+
 def candidate_attempt(
     *,
     source: str,
@@ -421,6 +571,7 @@ def candidate_attempt(
         "active_legal": bool(legal),
         "active_failure": failure,
         "proposal": proposal_metadata,
+        "realized_action_direction": None,
         "runtime_log": runtime_log,
         "retention_status": None,
         "candidate_idx": None,
@@ -524,8 +675,38 @@ def physics_quantization_audit(
     signed_pair_collision = int(
         len(signed_signatures) == 2 and signed_signatures[0] == signed_signatures[1]
     )
+    selected_steps: list[tuple[str, float]] = []
+    hard_cap_hits = 0
+    for item in direction_defined:
+        proposal = item.get("proposal")
+        if not isinstance(proposal, Mapping) or proposal.get("step") is None:
+            continue
+        kind = str(proposal.get("kind"))
+        step = float(proposal["step"])
+        if kind == "site_xyz":
+            unit = "A"
+            cap = float(FORCE_ONE_BIN_SCAN_STEPS_A[-1])
+        elif kind == "lattice":
+            unit = "strain"
+            cap = float(STRAIN_ONE_BIN_SCAN_STEPS[-1])
+        else:
+            continue
+        selected_steps.append((f"{kind}:{step:.12g}{unit}", step))
+        hard_cap_hits += int(abs(step - cap) <= 1.0e-12)
+    selected_step_histogram = Counter(key for key, _step in selected_steps)
+    realized = [
+        item["realized_action_direction"]
+        for item in direction_defined
+        if isinstance(item.get("realized_action_direction"), Mapping)
+        and item["realized_action_direction"].get("status") == "known"
+    ]
+    realized_cosines = [
+        float(value["cosine_with_expected_direction"]) for value in realized
+    ]
     denominator = len(direction_defined)
     rate = None if denominator == 0 else len(changed) / denominator
+    hard_cap_rate = None if denominator == 0 else hard_cap_hits / denominator
+    selected_step_coverage_complete = len(selected_steps) == denominator
     return {
         "physics_proposal_slots": len(physics),
         "direction_defined_proposals": denominator,
@@ -537,9 +718,55 @@ def physics_quantization_audit(
         ),
         "quantized_token_change_rate": rate,
         "signed_pair_token_collision": signed_pair_collision,
+        "selected_step_known": len(selected_steps),
+        "selected_step_coverage_complete": selected_step_coverage_complete,
+        "selected_step_histogram": dict(sorted(selected_step_histogram.items())),
+        "hard_cap_by_kind": {
+            "site_xyz_A": float(FORCE_ONE_BIN_SCAN_STEPS_A[-1]),
+            "lattice_strain": float(STRAIN_ONE_BIN_SCAN_STEPS[-1]),
+        },
+        "hard_cap_hits": hard_cap_hits,
+        "hard_cap_hit_rate": hard_cap_rate,
+        "hard_cap_hit_limit": PHYSICS_HARD_CAP_HIT_LIMIT,
+        "locality_preflight_failed": bool(
+            denominator == 0
+            or not selected_step_coverage_complete
+            or (
+                hard_cap_rate is not None
+                and hard_cap_rate > PHYSICS_HARD_CAP_HIT_LIMIT
+            )
+        ),
+        "locality_preflight_passed": bool(
+            denominator > 0
+            and selected_step_coverage_complete
+            and hard_cap_rate is not None
+            and hard_cap_rate <= PHYSICS_HARD_CAP_HIT_LIMIT
+        ),
         "accepted_legal_physics": sum(
             item.get("active_legal") is True for item in direction_defined
         ),
+        "realized_direction_known": len(realized),
+        "realized_direction_unknown": denominator - len(realized),
+        "realized_direction_consistent": sum(
+            value.get("direction_consistent") is True for value in realized
+        ),
+        "realized_direction_expected_cosine_sum": float(sum(realized_cosines)),
+        "realized_direction_expected_cosine_mean": (
+            None if not realized_cosines else float(np.mean(realized_cosines))
+        ),
+        "realized_direction_expected_cosine_min": (
+            None if not realized_cosines else float(min(realized_cosines))
+        ),
+        "realized_direction_expected_cosine_max": (
+            None if not realized_cosines else float(max(realized_cosines))
+        ),
+        "realized_direction_consistency_rate": (
+            None
+            if not realized
+            else sum(value.get("direction_consistent") is True for value in realized)
+            / len(realized)
+        ),
+        "realized_direction_is_preflight_report_not_gate": True,
         "threshold": float(threshold),
         "threshold_passed": bool(rate is not None and rate >= float(threshold)),
         "outcomes_read": False,
@@ -573,7 +800,44 @@ def merge_physics_quantization_audits(
         for value in audits
     )
     accepted = sum(int(value.get("accepted_legal_physics", 0)) for value in audits)
+    selected_step_known = sum(
+        int(value.get("selected_step_known", 0)) for value in audits
+    )
+    selected_step_histogram: Counter[str] = Counter()
+    for value in audits:
+        selected_step_histogram.update(
+            {
+                str(key): int(count)
+                for key, count in (
+                    value.get("selected_step_histogram") or {}
+                ).items()
+            }
+        )
+    hard_cap_hits = sum(int(value.get("hard_cap_hits", 0)) for value in audits)
+    realized_known = sum(int(value.get("realized_direction_known", 0)) for value in audits)
+    realized_unknown = sum(
+        int(value.get("realized_direction_unknown", 0)) for value in audits
+    )
+    realized_consistent = sum(
+        int(value.get("realized_direction_consistent", 0)) for value in audits
+    )
+    realized_cosine_sum = sum(
+        float(value.get("realized_direction_expected_cosine_sum", 0.0))
+        for value in audits
+    )
+    realized_minima = [
+        float(value["realized_direction_expected_cosine_min"])
+        for value in audits
+        if value.get("realized_direction_expected_cosine_min") is not None
+    ]
+    realized_maxima = [
+        float(value["realized_direction_expected_cosine_max"])
+        for value in audits
+        if value.get("realized_direction_expected_cosine_max") is not None
+    ]
     rate = None if defined == 0 else changed / defined
+    hard_cap_rate = None if defined == 0 else hard_cap_hits / defined
+    selected_step_coverage_complete = selected_step_known == defined
     return {
         "physics_proposal_slots": slots,
         "direction_defined_proposals": defined,
@@ -585,7 +849,48 @@ def merge_physics_quantization_audits(
         ),
         "quantized_token_change_rate": rate,
         "signed_pair_token_collision_groups": signed_collisions,
+        "selected_step_known": selected_step_known,
+        "selected_step_coverage_complete": selected_step_coverage_complete,
+        "selected_step_histogram": dict(sorted(selected_step_histogram.items())),
+        "hard_cap_by_kind": {
+            "site_xyz_A": float(FORCE_ONE_BIN_SCAN_STEPS_A[-1]),
+            "lattice_strain": float(STRAIN_ONE_BIN_SCAN_STEPS[-1]),
+        },
+        "hard_cap_hits": hard_cap_hits,
+        "hard_cap_hit_rate": hard_cap_rate,
+        "hard_cap_hit_limit": PHYSICS_HARD_CAP_HIT_LIMIT,
+        "locality_preflight_failed": bool(
+            defined == 0
+            or not selected_step_coverage_complete
+            or (
+                hard_cap_rate is not None
+                and hard_cap_rate > PHYSICS_HARD_CAP_HIT_LIMIT
+            )
+        ),
+        "locality_preflight_passed": bool(
+            defined > 0
+            and selected_step_coverage_complete
+            and hard_cap_rate is not None
+            and hard_cap_rate <= PHYSICS_HARD_CAP_HIT_LIMIT
+        ),
         "accepted_legal_physics": accepted,
+        "realized_direction_known": realized_known,
+        "realized_direction_unknown": realized_unknown,
+        "realized_direction_consistent": realized_consistent,
+        "realized_direction_expected_cosine_sum": realized_cosine_sum,
+        "realized_direction_expected_cosine_mean": (
+            None if realized_known == 0 else realized_cosine_sum / realized_known
+        ),
+        "realized_direction_expected_cosine_min": (
+            None if not realized_minima else min(realized_minima)
+        ),
+        "realized_direction_expected_cosine_max": (
+            None if not realized_maxima else max(realized_maxima)
+        ),
+        "realized_direction_consistency_rate": (
+            None if realized_known == 0 else realized_consistent / realized_known
+        ),
+        "realized_direction_is_preflight_report_not_gate": True,
         "threshold": float(threshold),
         "threshold_passed": bool(rate is not None and rate >= float(threshold)),
         "denominator_definition": (
@@ -596,6 +901,47 @@ def merge_physics_quantization_audits(
         "energy_used": False,
         "retry_or_resample": False,
     }
+
+
+def physics_quantization_by_stage(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    threshold: float = PHYSICS_TOKEN_CHANGE_THRESHOLD,
+) -> dict[str, dict[str, Any]]:
+    """Keep lattice/site coverage separate so site rows cannot hide cell no-ops."""
+
+    output: dict[str, dict[str, Any]] = {}
+    for stage in DEPLOYMENT_STAGES:
+        audits = [
+            row["physics_quantization_audit"]
+            for row in rows
+            if str(row.get("deployment_stage")) == stage
+            and isinstance(row.get("physics_quantization_audit"), Mapping)
+        ]
+        report = merge_physics_quantization_audits(
+            audits, threshold=float(threshold)
+        )
+        report["deployment_stage"] = stage
+        output[stage] = report
+    return output
+
+
+def every_stage_passes_physics_token_change(
+    reports: Mapping[str, Mapping[str, Any]],
+) -> bool:
+    return set(reports) == set(DEPLOYMENT_STAGES) and all(
+        reports[stage].get("threshold_passed") is True
+        for stage in DEPLOYMENT_STAGES
+    )
+
+
+def every_stage_passes_physics_locality(
+    reports: Mapping[str, Mapping[str, Any]],
+) -> bool:
+    return set(reports) == set(DEPLOYMENT_STAGES) and all(
+        reports[stage].get("locality_preflight_passed") is True
+        for stage in DEPLOYMENT_STAGES
+    )
 
 
 def attach_action_token_ids(
@@ -940,17 +1286,43 @@ def _physics_attempts(
             except Exception as error:  # noqa: BLE001
                 legal = False
                 failure = f"{type(error).__name__}:{error}"
-        attempts.append(
-            candidate_attempt(
-                source=name,
-                state_answer=state_answer,
-                action_answer=answer,
-                stage=stage,
-                legal=legal,
-                failure=failure,
-                proposal=proposal,
-            )
+        attempt = candidate_attempt(
+            source=name,
+            state_answer=state_answer,
+            action_answer=answer,
+            stage=stage,
+            legal=legal,
+            failure=failure,
+            proposal=proposal,
         )
+        try:
+            action_arrays = validate_answer_matches_plan(plan_state, answer)
+            if stage["transaction_kind"] == "cell":
+                expected_sign = -1 if proposal.direction == "negative_stress" else 1
+                direction = realized_cell_action_direction(
+                    arrays,
+                    action_arrays,
+                    stress=prediction["stress"],
+                    expected_sign=expected_sign,
+                )
+            else:
+                expected_sign = 1 if proposal.direction == "positive_force" else -1
+                slot = int(stage["anchor_slot"])
+                direction = realized_site_action_direction(
+                    arrays,
+                    action_arrays,
+                    site_index=slot,
+                    cartesian_force=prediction["forces"][slot],
+                    expected_sign=expected_sign,
+                    image_radius=2,
+                )
+        except Exception as error:  # noqa: BLE001
+            direction = unknown_realized_direction(
+                f"{type(error).__name__}:{error}",
+                str(stage["transaction_kind"]),
+            )
+        attempt["realized_action_direction"] = direction
+        attempts.append(attempt)
     return attempts
 
 
@@ -1414,6 +1786,7 @@ def _rank_manifest(rows: Sequence[Mapping[str, Any]], elapsed: float, rank: int)
             if isinstance(value, Mapping)
         ]
     )
+    physics_by_stage = physics_quantization_by_stage(rows)
     return {
         "schema": MANIFEST_SCHEMA,
         "rank": int(rank),
@@ -1428,6 +1801,13 @@ def _rank_manifest(rows: Sequence[Mapping[str, Any]], elapsed: float, rank: int)
             int(row.get("terminal_legal_count", 0)) for row in rows
         ),
         "physics_quantization": physics,
+        "physics_quantization_by_stage": physics_by_stage,
+        "physics_quantization_all_stages_passed": (
+            every_stage_passes_physics_token_change(physics_by_stage)
+        ),
+        "physics_locality_all_stages_passed": (
+            every_stage_passes_physics_locality(physics_by_stage)
+        ),
         "outcomes_read": False,
         "energy_selection": False,
         "replacement": False,
@@ -1595,6 +1975,26 @@ def main() -> None:
             k_hist.update(
                 {int(k): int(v) for k, v in report["candidate_count_histogram"].items()}
             )
+        pooled_physics = merge_physics_quantization_audits(
+            [report["physics_quantization"] for report in rank_reports]
+        )
+        stage_physics = {
+            stage: merge_physics_quantization_audits(
+                [
+                    report["physics_quantization_by_stage"][stage]
+                    for report in rank_reports
+                ]
+            )
+            for stage in DEPLOYMENT_STAGES
+        }
+        for stage, report in stage_physics.items():
+            report["deployment_stage"] = stage
+        all_stage_physics_passed = every_stage_passes_physics_token_change(
+            stage_physics
+        )
+        all_stage_locality_passed = every_stage_passes_physics_locality(
+            stage_physics
+        )
         manifest = {
             "schema": MANIFEST_SCHEMA,
             "sources": total_rows,
@@ -1628,8 +2028,15 @@ def main() -> None:
             ],
             "temperature": TEMPERATURE,
             "actual_token_quantization": actual_token_quantization_contract(),
-            "physics_quantization": merge_physics_quantization_audits(
-                [report["physics_quantization"] for report in rank_reports]
+            "physics_quantization": pooled_physics,
+            "physics_quantization_by_stage": stage_physics,
+            "physics_quantization_all_stages_passed": all_stage_physics_passed,
+            "physics_locality_all_stages_passed": all_stage_locality_passed,
+            "physics_quantization_gate_definition": (
+                "cell_AND_anchor_second_AND_anchor_first_each_at_or_above_0.85"
+            ),
+            "physics_locality_gate_definition": (
+                "cell_AND_anchor_second_AND_anchor_first_each_hard_cap_hit_at_or_below_0.05"
             ),
             "physics_support_fixed_before_labels": True,
             "physics_retry_or_resample": False,
@@ -1644,11 +2051,9 @@ def main() -> None:
             json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
-        formal_gate_failed = bool(args.formal) and not manifest[
-            "physics_quantization"
-        ][
-            "threshold_passed"
-        ]
+        formal_gate_failed = bool(args.formal) and not (
+            all_stage_physics_passed and all_stage_locality_passed
+        )
         if formal_gate_failed:
             (args.output_dir / "_PHYSICS_PREFLIGHT_FAILED").touch()
         else:
@@ -1662,7 +2067,8 @@ def main() -> None:
     torch.distributed.destroy_process_group()
     if int(gate_tensor.cpu().item()) != 0:
         raise RuntimeError(
-            "formal physics token-change rate is below the frozen 85% threshold"
+            "at least one deployment stage failed the frozen physics "
+            "token-change or locality preflight"
         )
 
 
