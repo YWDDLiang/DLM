@@ -71,7 +71,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     raw_screen = json.loads(args.raw_screen_json.read_text(encoding="utf-8"))
     if raw_screen.get("schema") != "spad_basin_closure_native_raw_screen_v1":
         raise protocol.ContractError("raw screen schema changed")
-    if raw_screen["arms"]["closure_ce"]["composition_valid"] != DENOMINATOR:
+    raw_screen_arm = str(args.raw_screen_arm)
+    if raw_screen_arm not in raw_screen.get("arms", {}):
+        raise protocol.ContractError(f"raw screen omitted arm {raw_screen_arm}")
+    if raw_screen["arms"][raw_screen_arm]["composition_valid"] != DENOMINATOR:
         raise protocol.ContractError("closure composition validity changed")
 
     cache = args.official_cache_dir.resolve()
@@ -177,7 +180,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     }
     report = {
         "schema": "spad_basin_closure_official_final_v1",
-        "endpoint": "native_closure_ce_raw_stream17",
+        "endpoint": str(args.endpoint),
         "fixed_denominator": DENOMINATOR,
         "counts": counts,
         "rates_all_attempts": {
@@ -187,12 +190,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "meta_stable": counts["meta_stable"] / DENOMINATOR,
         },
         "official_e_above_hull_eV_per_atom": describe(hull_values),
-        "paired_vs_frozen_BS_raw_s17": paired,
-        "fast_raw_validity": raw_screen["arms"]["closure_ce"],
+        "paired_vs_registered_baseline_s17": paired,
+        "fast_raw_validity": raw_screen["arms"][raw_screen_arm],
         "official_query_status": "complete_with_explicit_unresolved",
         "official_unresolved_chemsys": len(unresolved),
         "direct_run": False,
-        "model494": False,
+        "model494": bool(args.model494),
+        "model494_tau": None if args.model494_tau is None else int(args.model494_tau),
         "selection_retry_replacement": False,
     }
     output.mkdir(parents=True, exist_ok=False)
@@ -210,6 +214,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--baseline-official-attempts", type=Path, required=True)
     parser.add_argument("--raw-screen-json", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--raw-screen-arm", default="closure_ce")
+    parser.add_argument("--endpoint", default="native_closure_ce_raw_stream17")
+    parser.add_argument("--model494", action="store_true")
+    parser.add_argument("--model494-tau", type=int)
     return parser.parse_args()
 
 
