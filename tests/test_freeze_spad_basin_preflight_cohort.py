@@ -44,10 +44,28 @@ class PreflightCohortTest(unittest.TestCase):
         )
         self.assertEqual(len({value["source_row_idx"] for value in first}), 128)
 
+    def test_round_robin_scales_to_4104_unique_train_rows(self):
+        rows = [
+            row(index, 13, ["Li", "O"], [7, 6])
+            for index in range(5000)
+        ]
+        selected = MODULE.select_round_robin(rows, count=4104, seed=17)
+        self.assertEqual(len(selected), 4104)
+        self.assertEqual(
+            len({value["source_row_idx"] for value in selected}), 4104
+        )
+        self.assertTrue(all(value["outcomes_read"] is False for value in selected))
+
     def test_outcome_read_is_rejected(self):
         value = row(0, 2, ["Li", "O"], [1, 1])
         value["outcomes_read"] = True
         with self.assertRaises(ValueError):
+            MODULE.validate_source(value)
+
+    def test_explicit_non_train_split_is_rejected(self):
+        value = row(0, 2, ["Li", "O"], [1, 1])
+        value["source_split"] = "val"
+        with self.assertRaisesRegex(ValueError, "not MP20 train"):
             MODULE.validate_source(value)
 
 

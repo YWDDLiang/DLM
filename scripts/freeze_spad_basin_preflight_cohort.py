@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Freeze 128 outcome-blind MP20-train plans for basin headroom preflight."""
+"""Freeze an outcome-blind MP20-train cohort for basin supervision."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from typing import Any, Iterable, Mapping
 
 
 STATE_TYPES = ("cell", "terminal_xyz")
+DEFAULT_EXPECTED_GROUPS = 128
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -62,6 +63,13 @@ def deterministic_key(row: Mapping[str, Any], seed: int) -> str:
 def validate_source(row: Mapping[str, Any]) -> None:
     if row.get("outcomes_read") is not False:
         raise ValueError("source is not outcome-blind")
+    split = row.get("source_split", row.get("split"))
+    if split is not None and str(split).lower() not in {
+        "train",
+        "mp20_train_only",
+        "mp20-train-only",
+    }:
+        raise ValueError(f"source is not MP20 train: {split!r}")
     plan = row.get("plan_state")
     if not isinstance(plan, Mapping):
         raise ValueError("source lacks Plan")
@@ -110,11 +118,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     output = args.output_dir.resolve()
     if output.exists():
         raise FileExistsError(output)
+    expected_groups = int(
+        getattr(args, "expected_groups", DEFAULT_EXPECTED_GROUPS)
+    )
+    if expected_groups <= 0:
+        raise ValueError("--expected-groups must be positive")
     rows = list(iter_jsonl(args.plans_jsonl.resolve()))
     source_indices = [int(row["source_row_idx"]) for row in rows]
     if len(rows) != 27136 or len(set(source_indices)) != len(rows):
         raise ValueError("full MP20-train plan source changed")
-    selected = select_round_robin(rows, count=128, seed=int(args.seed))
+    selected = select_round_robin(
+        rows, count=expected_groups, seed=int(args.seed)
+    )
     frozen: list[dict[str, Any]] = []
     for ordinal, source in enumerate(selected):
         row = dict(source)
@@ -124,10 +139,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         row["preflight_state_type"] = STATE_TYPES[ordinal % len(STATE_TYPES)]
         row["selection_uses_energy_force_stress_hull_or_generation"] = False
         frozen.append(row)
-    if Counter(row["preflight_state_type"] for row in frozen) != Counter(
-        {"cell": 64, "terminal_xyz": 64}
-    ):
-        raise RuntimeError("preflight state types are not balanced")
+    state_counts = Counter(row["preflight_state_type"] for row in frozen)
+    expected_state_counts = Counter(
+        STATE_TYPES[ordinal % len(STATE_TYPES)]
+        for ordinal in range(expected_groups)
+    )
+    if state_counts != expected_state_counts:
+        raise RuntimeError("preflight state types do not match exact assignment")
     output.mkdir(parents=True, exist_ok=False)
     with (output / "plans_for_dlm.jsonl").open(
         "x", encoding="utf-8", newline="\n"
@@ -136,7 +154,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             handle.write(json.dumps(row, sort_keys=True) + "\n")
     strata = Counter("|".join(stratum(row)) for row in frozen)
     manifest = {
-        "schema": "spad_basin_preflight_train128_manifest_v1",
+        "schema": (
+            "spad_basin_preflight_train128_manifest_v1"
+            if expected_groups == DEFAULT_EXPECTED_GROUPS
+            else f"spad_basin_preflight_train{expected_groups}_manifest_v1"
+        ),
         "source": str(args.plans_jsonl.resolve()),
         "source_split": "MP20_train_only",
         "selection_seed": int(args.seed),
@@ -152,6 +174,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "outcomes_read": False,
         "selection_or_replacement": False,
     }
+    if expected_groups != DEFAULT_EXPECTED_GROUPS:
+        manifest["expected_groups"] = expected_groups
     (output / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
@@ -164,6 +188,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--plans-jsonl", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=20260904)
+    parser.add_argument(
+        "--expected-groups", type=int, default=DEFAULT_EXPECTED_GROUPS
+    )
     return parser.parse_args()
 
 

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Label the frozen 128-group SPAD basin preflight with CHGNet basin values.
+"""Label frozen SPAD basin action groups with CHGNet basin values.
 
 This module is deliberately independent of the older fixed-100 Route-B
 labeler.  Every retained action remains in the output.  A terminal-legal
 action receives one batched CHGNet EFSM single point and one deterministic
-20-step ``StructOptimizer`` trajectory.  Frames K=3,5,10,20 are read from
-that same trajectory; if the optimizer stops early, its endpoint is reused.
+``StructOptimizer`` trajectory.  The default preserves the original
+K=3,5,10,20 audit; scalable training data can explicitly request K10 only.
+If the optimizer stops early, its endpoint is reused.
 
 The resulting data are a train-only headroom audit.  They do not query hull
 data, run model494 or Direct, select states by outcome, or delete candidates.
@@ -35,13 +36,22 @@ CANDIDATE_LABEL_SCHEMA = "spad_basin_preflight_candidate_value_v1"
 REPORT_SCHEMA = "spad_basin_preflight_value_report_v1"
 FINAL_REPORT_SCHEMA = "spad_basin_preflight_value_final_v1"
 EXPECTED_GROUPS = 128
+DEFAULT_EXPECTED_GROUPS = EXPECTED_GROUPS
 HORIZONS = (3, 5, 10, 20)
+K10_ONLY_HORIZONS = (10,)
 MAX_RELAX_STEPS = 20
 DEFAULT_BATCH_SIZE = 16
 DEFAULT_FMAX_EV_PER_A = 0.1
 DEFAULT_TIE_TOLERANCE = 1.0e-6
 EV_PER_A3_TO_GPA = 160.21766208
 HEADROOM_THRESHOLDS_MEV = (5, 10, 20, 50)
+
+
+def normalize_horizons(horizons: Sequence[int]) -> tuple[int, ...]:
+    values = tuple(int(value) for value in horizons)
+    if values not in {HORIZONS, K10_ONLY_HORIZONS}:
+        raise ValueError("horizons must be either (3,5,10,20) or K10-only")
+    return values
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -151,11 +161,18 @@ def _terminal_identity(candidate: Mapping[str, Any]) -> dict[str, str]:
     }
 
 
-def validate_action_groups(groups: Sequence[Mapping[str, Any]]) -> None:
-    """Validate the frozen, ordered 128-group action contract."""
+def validate_action_groups(
+    groups: Sequence[Mapping[str, Any]],
+    *,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
+) -> None:
+    """Validate a frozen, ordered action-group contract exactly."""
 
-    if len(groups) != EXPECTED_GROUPS:
-        raise ValueError(f"preflight requires exactly {EXPECTED_GROUPS} groups")
+    expected_groups = int(expected_groups)
+    if expected_groups <= 0:
+        raise ValueError("expected_groups must be positive")
+    if len(groups) != expected_groups:
+        raise ValueError(f"preflight requires exactly {expected_groups} groups")
     indices: list[int] = []
     for position, group in enumerate(groups):
         if group.get("schema") != INPUT_SCHEMA:
@@ -219,8 +236,11 @@ def validate_action_groups(groups: Sequence[Mapping[str, Any]]) -> None:
                 )
         if no_ops != 1:
             raise ValueError(f"group {sample_idx}: exactly one no_op source is required")
-    if indices != list(range(EXPECTED_GROUPS)):
-        raise ValueError("sample_idx must be ordered and contiguous from 0 through 127")
+    if indices != list(range(expected_groups)):
+        raise ValueError(
+            "sample_idx must be ordered and contiguous from 0 through "
+            f"{expected_groups - 1}"
+        )
 
 
 def select_groups_for_shard(
@@ -465,10 +485,16 @@ def _trajectory_frame(
     }
 
 
-def unknown_trajectory(error: str) -> dict[str, Any]:
+def unknown_trajectory(
+    error: str,
+    *,
+    horizons: Sequence[int] = HORIZONS,
+) -> dict[str, Any]:
+    horizons = normalize_horizons(horizons)
+    maximum_steps = max(horizons)
     return {
         "known": False,
-        "steps_requested": MAX_RELAX_STEPS,
+        "steps_requested": maximum_steps,
         "steps_taken": None,
         "frame_count": None,
         "relax_cell": True,
@@ -480,7 +506,7 @@ def unknown_trajectory(error: str) -> dict[str, Any]:
         "frame0_energy_eV_per_atom": None,
         "frame0_minus_E0_eV_per_atom": None,
         "horizons": {
-            str(horizon): unknown_horizon(horizon, error) for horizon in HORIZONS
+            str(horizon): unknown_horizon(horizon, error) for horizon in horizons
         },
         "error": error,
     }
@@ -492,15 +518,19 @@ def relaxation_path(
     *,
     e0_energy: float | None,
     fmax: float = DEFAULT_FMAX_EV_PER_A,
+    horizons: Sequence[int] = HORIZONS,
 ) -> dict[str, Any]:
-    """Read K=3/5/10/20 from exactly one deterministic 20-step trajectory."""
+    """Read requested horizons from exactly one deterministic trajectory."""
+
+    horizons = normalize_horizons(horizons)
+    maximum_steps = max(horizons)
 
     try:
         result = relaxer.relax(
             structure,
             relax_cell=True,
             fmax=float(fmax),
-            steps=MAX_RELAX_STEPS,
+            steps=maximum_steps,
             verbose=False,
         )
         trajectory = result["trajectory"]
@@ -510,7 +540,7 @@ def relaxation_path(
         if not energies or not (len(energies) == len(forces) == len(stresses)):
             raise ValueError("trajectory E/F/stress arrays are empty or misaligned")
         actual_steps = _trajectory_steps(
-            trajectory, maximum_steps=MAX_RELAX_STEPS
+            trajectory, maximum_steps=maximum_steps
         )
         if len(energies) < actual_steps + 1:
             raise ValueError("trajectory does not contain all declared optimizer frames")
@@ -519,7 +549,7 @@ def relaxation_path(
         if not math.isfinite(frame0_energy):
             raise ValueError("trajectory frame-zero energy is non-finite")
         horizon_values: dict[str, Any] = {}
-        for horizon in HORIZONS:
+        for horizon in horizons:
             frame_index = min(int(horizon), int(actual_steps), len(energies) - 1)
             try:
                 horizon_values[str(horizon)] = _trajectory_frame(
@@ -538,7 +568,7 @@ def relaxation_path(
                 )
         return {
             "known": all(value["known"] for value in horizon_values.values()),
-            "steps_requested": MAX_RELAX_STEPS,
+            "steps_requested": maximum_steps,
             "steps_taken": int(actual_steps),
             "frame_count": len(energies),
             "relax_cell": True,
@@ -559,7 +589,9 @@ def relaxation_path(
             ),
         }
     except Exception as error:
-        return unknown_trajectory("relaxation_failed:" + _error_text(error))
+        return unknown_trajectory(
+            "relaxation_failed:" + _error_text(error), horizons=horizons
+        )
 
 
 def _candidate_failure(candidate: Mapping[str, Any]) -> str:
@@ -576,21 +608,26 @@ def _candidate_failure(candidate: Mapping[str, Any]) -> str:
 
 
 def _cache_identity(
-    candidate: Mapping[str, Any], runtime: Mapping[str, Any]
+    candidate: Mapping[str, Any],
+    runtime: Mapping[str, Any],
+    *,
+    horizons: Sequence[int] = HORIZONS,
 ) -> dict[str, Any]:
+    horizons = normalize_horizons(horizons)
     terminal = _terminal_identity(candidate)
     package_version = str(runtime.get("chgnet_package_version", "unknown"))
     model = str(runtime.get("chgnet_model", "CHGNet-0.3.0"))
+    horizon_text = ",".join(str(value) for value in horizons)
     key = (
         f"{terminal['identity']}|chgnet={package_version}/{model}"
-        "|K=3,5,10,20|fmax=0.1|relax_cell=1"
+        f"|K={horizon_text}|fmax=0.1|relax_cell=1"
     )
     return {
         "key": key,
         "terminal": terminal,
         "chgnet_package_version": package_version,
         "chgnet_model": model,
-        "horizons": list(HORIZONS),
+        "horizons": list(horizons),
         "fmax_eV_per_A": DEFAULT_FMAX_EV_PER_A,
         "relax_cell": True,
     }
@@ -627,14 +664,18 @@ def _tie_pair_count(values: Sequence[float], *, tolerance: float) -> int:
 
 
 def group_headroom(
-    group: Mapping[str, Any], *, tie_tolerance: float = DEFAULT_TIE_TOLERANCE
+    group: Mapping[str, Any],
+    *,
+    tie_tolerance: float = DEFAULT_TIE_TOLERANCE,
+    horizons: Sequence[int] = HORIZONS,
 ) -> dict[str, Any]:
     """Compare each legal-known candidate against the retained no-op."""
 
+    horizons = normalize_horizons(horizons)
     candidates = list(group["candidates"])
     no_op_indices = [index for index, row in enumerate(candidates) if _is_no_op(row)]
     by_metric: dict[str, Any] = {}
-    for metric in ("E0", *(f"K{value}" for value in HORIZONS)):
+    for metric in ("E0", *(f"K{value}" for value in horizons)):
         known = [
             (index, row, value)
             for index, row in enumerate(candidates)
@@ -703,9 +744,11 @@ def label_groups(
     batch_size: int = DEFAULT_BATCH_SIZE,
     fmax: float = DEFAULT_FMAX_EV_PER_A,
     tie_tolerance: float = DEFAULT_TIE_TOLERANCE,
+    horizons: Sequence[int] = HORIZONS,
 ) -> list[dict[str, Any]]:
-    """Attach E0 and four same-trajectory basin values without filtering rows."""
+    """Attach E0 and requested same-trajectory basin values without filtering."""
 
+    horizons = normalize_horizons(horizons)
     if int(batch_size) != DEFAULT_BATCH_SIZE:
         raise ValueError("batch_size is scientifically fixed at 16")
     if not math.isfinite(float(fmax)) or float(fmax) != DEFAULT_FMAX_EV_PER_A:
@@ -747,15 +790,15 @@ def label_groups(
     for group_position, group in enumerate(output):
         for candidate_position, candidate in enumerate(group["candidates"]):
             key = (group_position, candidate_position)
-            cache = _cache_identity(candidate, runtime)
+            cache = _cache_identity(candidate, runtime, horizons=horizons)
             if candidate.get("terminal_legal") is not True:
                 reason = _candidate_failure(candidate)
                 e0 = unknown_single_point(reason)
-                trajectory = unknown_trajectory(reason)
+                trajectory = unknown_trajectory(reason, horizons=horizons)
             elif key not in parsed:
                 reason = "terminal_structure_parse_failed:" + parse_errors[key]
                 e0 = unknown_single_point(reason)
-                trajectory = unknown_trajectory(reason)
+                trajectory = unknown_trajectory(reason, horizons=horizons)
             else:
                 prediction, prediction_error = prediction_by_key[key]
                 e0 = single_point_fields(prediction, error=prediction_error)
@@ -766,6 +809,7 @@ def label_groups(
                         float(e0["energy_eV_per_atom"]) if e0["known"] else None
                     ),
                     fmax=float(fmax),
+                    horizons=horizons,
                 )
             candidate["basin_value"] = {
                 "schema": CANDIDATE_LABEL_SCHEMA,
@@ -779,7 +823,7 @@ def label_groups(
             candidate["terminal_single_point_energy_eV_per_atom"] = e0[
                 "energy_eV_per_atom"
             ]
-            for horizon in HORIZONS:
+            for horizon in horizons:
                 frame = trajectory["horizons"][str(horizon)]
                 candidate[f"K{horizon}_known"] = bool(frame["known"])
                 candidate[f"K{horizon}_energy_eV_per_atom"] = frame[
@@ -792,7 +836,9 @@ def label_groups(
         group["schema"] = OUTPUT_SCHEMA
         group["K"] = len(group["candidates"])
         group["basin_headroom"] = group_headroom(
-            group, tie_tolerance=float(tie_tolerance)
+            group,
+            tie_tolerance=float(tie_tolerance),
+            horizons=horizons,
         )
         group["candidates_filtered"] = False
         group["outcome_based_state_selection"] = False
@@ -858,9 +904,14 @@ def _describe(values: Iterable[float]) -> dict[str, Any]:
     }
 
 
-def _aggregate_headroom(groups: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def _aggregate_headroom(
+    groups: Sequence[Mapping[str, Any]],
+    *,
+    horizons: Sequence[int] = HORIZONS,
+) -> dict[str, Any]:
+    horizons = normalize_horizons(horizons)
     report: dict[str, Any] = {}
-    for metric in ("E0", *(f"K{value}" for value in HORIZONS)):
+    for metric in ("E0", *(f"K{value}" for value in horizons)):
         entries = [group["basin_headroom"]["by_metric"][metric] for group in groups]
         known = [entry for entry in entries if entry["known"]]
         headrooms = [float(entry["headroom_meV_per_atom"]) for entry in known]
@@ -888,9 +939,14 @@ def _aggregate_headroom(groups: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     return report
 
 
-def _aggregate_kendall(groups: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def _aggregate_kendall(
+    groups: Sequence[Mapping[str, Any]],
+    *,
+    horizons: Sequence[int] = HORIZONS,
+) -> dict[str, Any]:
+    horizons = normalize_horizons(horizons)
     output: dict[str, Any] = {}
-    for left_horizon, right_horizon in combinations(HORIZONS, 2):
+    for left_horizon, right_horizon in combinations(horizons, 2):
         rows: list[dict[str, Any]] = []
         for group in groups:
             paired = [
@@ -952,10 +1008,13 @@ def summarize_groups(
     shard_rank: int | None,
     shard_count: int,
     runtime: Mapping[str, Any] | None = None,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
+    horizons: Sequence[int] = HORIZONS,
 ) -> dict[str, Any]:
+    horizons = normalize_horizons(horizons)
     candidates = [candidate for group in groups for candidate in group["candidates"]]
     legal = [candidate for candidate in candidates if candidate.get("terminal_legal") is True]
-    metric_names = ("E0", *(f"K{value}" for value in HORIZONS))
+    metric_names = ("E0", *(f"K{value}" for value in horizons))
     coverage = {}
     for metric in metric_names:
         known = sum(_metric_value(candidate, metric) is not None for candidate in legal)
@@ -1002,7 +1061,7 @@ def summarize_groups(
             None if not cache_rows else cache_rows[0]["chgnet_package_version"]
         ),
         "chgnet_model": None if not cache_rows else cache_rows[0]["chgnet_model"],
-        "horizons": list(HORIZONS),
+        "horizons": list(horizons),
         "fmax_eV_per_A": DEFAULT_FMAX_EV_PER_A,
         "relax_cell": True,
     }
@@ -1027,16 +1086,16 @@ def summarize_groups(
         ),
         "coverage": coverage,
         "failure_histogram": dict(sorted(failures.items())),
-        "headroom": _aggregate_headroom(groups),
-        "kendall_tau_b": _aggregate_kendall(groups),
+        "headroom": _aggregate_headroom(groups, horizons=horizons),
+        "kendall_tau_b": _aggregate_kendall(groups, horizons=horizons),
         "cache_identity_contract": cache_contract,
         "runtime": dict(runtime or {}),
         "scientific_contract": {
-            "expected_complete_groups": EXPECTED_GROUPS,
+            "expected_complete_groups": int(expected_groups),
             "single_point_batch_size": DEFAULT_BATCH_SIZE,
             "one_trajectory_per_terminal_legal_candidate": True,
-            "horizons": list(HORIZONS),
-            "maximum_relax_steps": MAX_RELAX_STEPS,
+            "horizons": list(horizons),
+            "maximum_relax_steps": max(horizons),
             "fmax_eV_per_A": DEFAULT_FMAX_EV_PER_A,
             "relax_cell": True,
             "invalid_candidates_retained": True,
@@ -1126,8 +1185,12 @@ def _write_jsonl_exclusive(path: Path, rows: Sequence[Mapping[str, Any]]) -> Non
 
 
 def run_shard(args: argparse.Namespace) -> None:
+    expected_groups = int(
+        getattr(args, "expected_groups", DEFAULT_EXPECTED_GROUPS)
+    )
+    horizons = K10_ONLY_HORIZONS if getattr(args, "k10_only", False) else HORIZONS
     groups = list(iter_jsonl(args.candidate_groups.resolve(strict=True)))
-    validate_action_groups(groups)
+    validate_action_groups(groups, expected_groups=expected_groups)
     selected = select_groups_for_shard(
         groups,
         shard_rank=int(args.shard_rank),
@@ -1142,6 +1205,7 @@ def run_shard(args: argparse.Namespace) -> None:
         batch_size=int(args.batch_size),
         fmax=float(args.fmax),
         tie_tolerance=float(args.tie_tolerance),
+        horizons=horizons,
     )
     report = summarize_groups(
         labelled,
@@ -1149,6 +1213,8 @@ def run_shard(args: argparse.Namespace) -> None:
         shard_rank=int(args.shard_rank),
         shard_count=int(args.shard_count),
         runtime=runtime,
+        expected_groups=expected_groups,
+        horizons=horizons,
     )
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1162,9 +1228,21 @@ def run_shard(args: argparse.Namespace) -> None:
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
 
 
-def merge_shards(output_dir: Path, *, shard_count: int) -> dict[str, Any]:
+def merge_shards(
+    output_dir: Path,
+    *,
+    shard_count: int,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
+    horizons: Sequence[int] = HORIZONS,
+) -> dict[str, Any]:
     """Merge complete shard outputs by sample_idx and recompute all statistics."""
 
+    expected_groups = int(expected_groups)
+    horizons = normalize_horizons(horizons)
+    if expected_groups <= 0:
+        raise ValueError("expected_groups must be positive")
+    if int(shard_count) <= 0:
+        raise ValueError("shard_count must be positive")
     output_dir = output_dir.resolve(strict=True)
     rows: list[dict[str, Any]] = []
     shard_reports: list[dict[str, Any]] = []
@@ -1174,17 +1252,30 @@ def merge_shards(output_dir: Path, *, shard_count: int) -> dict[str, Any]:
         rows.extend(iter_jsonl(groups_path.resolve(strict=True)))
         shard_reports.append(json.loads(report_path.read_text(encoding="utf-8")))
     rows.sort(key=lambda group: int(group["sample_idx"]))
-    if len(rows) != EXPECTED_GROUPS:
-        raise ValueError(f"merged shards contain {len(rows)} rather than 128 groups")
-    if [int(group["sample_idx"]) for group in rows] != list(range(EXPECTED_GROUPS)):
+    if len(rows) != expected_groups:
+        raise ValueError(
+            f"merged shards contain {len(rows)} rather than {expected_groups} groups"
+        )
+    if [int(group["sample_idx"]) for group in rows] != list(range(expected_groups)):
         raise ValueError("merged shards duplicate or omit sample_idx values")
     for group in rows:
         if group.get("schema") != OUTPUT_SCHEMA:
             raise ValueError("merged labelled group schema changed")
     for rank, report in enumerate(shard_reports):
-        expected = [index for index in range(EXPECTED_GROUPS) if index % shard_count == rank]
+        expected = [
+            index
+            for index in range(expected_groups)
+            if index % shard_count == rank
+        ]
         if report.get("sample_indices") != expected:
             raise ValueError(f"rank {rank} report does not match its deterministic shard")
+        contract = report.get("scientific_contract")
+        if not isinstance(contract, Mapping):
+            raise ValueError(f"rank {rank} report lacks scientific contract")
+        if int(contract.get("expected_complete_groups", -1)) != expected_groups:
+            raise ValueError(f"rank {rank} expected-group contract changed")
+        if contract.get("horizons") != list(horizons):
+            raise ValueError(f"rank {rank} horizon contract changed")
     runtime = {
         "rank_runtime_identities": [report.get("runtime", {}) for report in shard_reports]
     }
@@ -1194,6 +1285,8 @@ def merge_shards(output_dir: Path, *, shard_count: int) -> dict[str, Any]:
         shard_rank=None,
         shard_count=int(shard_count),
         runtime=runtime,
+        expected_groups=expected_groups,
+        horizons=horizons,
     )
     final = {
         **summary,
@@ -1228,6 +1321,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--shard-rank", type=int, default=0)
     parser.add_argument("--shard-count", type=int, default=1)
     parser.add_argument("--merge-shards", action="store_true")
+    parser.add_argument(
+        "--expected-groups", type=int, default=DEFAULT_EXPECTED_GROUPS
+    )
+    parser.add_argument(
+        "--k10-only",
+        action="store_true",
+        help="label E0 and a single K10 trajectory endpoint (10 steps total)",
+    )
     return parser.parse_args()
 
 
@@ -1236,7 +1337,12 @@ def main() -> None:
     if int(args.shard_count) <= 0:
         raise ValueError("shard_count must be positive")
     if args.merge_shards:
-        final = merge_shards(args.output_dir, shard_count=int(args.shard_count))
+        final = merge_shards(
+            args.output_dir,
+            shard_count=int(args.shard_count),
+            expected_groups=int(args.expected_groups),
+            horizons=(K10_ONLY_HORIZONS if args.k10_only else HORIZONS),
+        )
         print(json.dumps(final, ensure_ascii=False, sort_keys=True))
         return
     if args.candidate_groups is None:

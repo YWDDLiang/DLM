@@ -12,6 +12,9 @@ from typing import Any, Iterable, Mapping, Sequence
 
 
 ROW_COUNT = 128
+DEFAULT_EXPECTED_GROUPS = ROW_COUNT
+MIN_HIGH_N_PER_TYPE = 12
+MIN_HIGH_MULTIPLICITY_PER_TYPE = 16
 STATE_SCHEMA = "spad_basin_preflight_state_v1"
 CURSOR_BUCKETS = ("early", "middle", "late", "terminal")
 MASK_DEFAULT = "<|mdm_mask|>"
@@ -457,8 +460,27 @@ def _row_order(record: Mapping[str, Any]) -> tuple[int, int]:
     return (_source_index(record["plan"]), int(record["sample_idx"]))
 
 
-def assign_state_types(records: Sequence[Mapping[str, Any]]) -> dict[int, str]:
+def _state_type_targets(expected_groups: int) -> dict[str, int]:
+    if expected_groups <= 0:
+        raise ValueError("expected_groups must be positive")
+    return {
+        "cell": (expected_groups + 1) // 2,
+        "xyz": expected_groups // 2,
+    }
+
+
+def assign_state_types(
+    records: Sequence[Mapping[str, Any]],
+    *,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
+) -> dict[int, str]:
     """Split every stratum as evenly as possible under aggregate constraints."""
+
+    targets = _state_type_targets(int(expected_groups))
+    if len(records) != int(expected_groups):
+        raise ValueError(
+            f"state assignment requires exactly {expected_groups} records"
+        )
 
     groups: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for record in records:
@@ -469,7 +491,9 @@ def assign_state_types(records: Sequence[Mapping[str, Any]]) -> dict[int, str]:
         max(int(value) for value in _plan_state(record["plan"])["counts"]) >= 6
         for record in records
     )
-    if total_high_n < 24 or total_high_m < 32:
+    minimum_high_n = MIN_HIGH_N_PER_TYPE
+    minimum_high_m = MIN_HIGH_MULTIPLICITY_PER_TYPE
+    if total_high_n < 2 * minimum_high_n or total_high_m < 2 * minimum_high_m:
         raise ValueError("source cannot satisfy balanced high-N/high-multiplicity minima")
 
     # DP values are the per-stratum number assigned to cell.
@@ -495,9 +519,9 @@ def assign_state_types(records: Sequence[Mapping[str, Any]]) -> dict[int, str]:
     feasible = [
         (state, history)
         for state, history in dp.items()
-        if state[0] == 64
-        and 12 <= state[1] <= total_high_n - 12
-        and 16 <= state[2] <= total_high_m - 16
+        if state[0] == targets["cell"]
+        and minimum_high_n <= state[1] <= total_high_n - minimum_high_n
+        and minimum_high_m <= state[2] <= total_high_m - minimum_high_m
     ]
     if not feasible:
         raise ValueError("balanced state assignment is mathematically infeasible")
@@ -517,16 +541,26 @@ def assign_state_types(records: Sequence[Mapping[str, Any]]) -> dict[int, str]:
         for value in values:
             sample_idx = int(value["sample_idx"])
             assignment[sample_idx] = "cell" if sample_idx in cell_ids else "xyz"
-    if Counter(assignment.values()) != Counter({"cell": 64, "xyz": 64}):
-        raise RuntimeError("state assignment did not produce 64 cell and 64 xyz rows")
+    if Counter(assignment.values()) != Counter(targets):
+        raise RuntimeError("state assignment did not produce exact target counts")
     return assignment
 
 
 def assign_cursor_buckets(
     xyz_records: Sequence[Mapping[str, Any]],
+    *,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
 ) -> dict[int, str]:
-    if len(xyz_records) != 64:
-        raise ValueError("cursor assignment requires exactly 64 xyz rows")
+    expected_xyz = _state_type_targets(int(expected_groups))["xyz"]
+    if len(xyz_records) != expected_xyz:
+        raise ValueError(
+            f"cursor assignment requires exactly {expected_xyz} xyz rows"
+        )
+    quotient, remainder = divmod(expected_xyz, len(CURSOR_BUCKETS))
+    capacities = {
+        name: quotient + int(index < remainder)
+        for index, name in enumerate(CURSOR_BUCKETS)
+    }
     global_counts: Counter[str] = Counter()
     assignment: dict[int, str] = {}
     groups: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
@@ -537,7 +571,11 @@ def assign_cursor_buckets(
         for row_ordinal, record in enumerate(sorted(groups[key], key=_row_order)):
             offset = (group_ordinal + row_ordinal) % len(CURSOR_BUCKETS)
             priority = CURSOR_BUCKETS[offset:] + CURSOR_BUCKETS[:offset]
-            available = [name for name in priority if global_counts[name] < 16]
+            available = [
+                name
+                for name in priority
+                if global_counts[name] < capacities[name]
+            ]
             if not available:
                 raise RuntimeError("cursor bucket capacity exhausted early")
             bucket = min(
@@ -551,7 +589,7 @@ def assign_cursor_buckets(
             assignment[int(record["sample_idx"])] = bucket
             local_counts[bucket] += 1
             global_counts[bucket] += 1
-    if global_counts != Counter({name: 16 for name in CURSOR_BUCKETS}):
+    if global_counts != Counter(capacities):
         raise RuntimeError("cursor buckets are not exactly balanced")
     return assignment
 
@@ -805,9 +843,17 @@ def prepare_records(
     plans: Sequence[dict[str, Any]],
     rollouts: Sequence[dict[str, Any]],
     resolver: TokenResolver,
+    *,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
 ) -> list[dict[str, Any]]:
-    if len(plans) != ROW_COUNT or len(rollouts) != ROW_COUNT:
-        raise ValueError("materializer requires exactly 128 plans and 128 rollouts")
+    expected_groups = int(expected_groups)
+    if expected_groups <= 0:
+        raise ValueError("expected_groups must be positive")
+    if len(plans) != expected_groups or len(rollouts) != expected_groups:
+        raise ValueError(
+            "materializer requires exactly "
+            f"{expected_groups} plans and {expected_groups} rollouts"
+        )
     plan_by_idx: dict[int, dict[str, Any]] = {}
     for plan in plans:
         _validate_plan_row(plan)
@@ -823,8 +869,12 @@ def prepare_records(
         rollout_by_idx[sample_idx] = rollout
     if set(plan_by_idx) != set(rollout_by_idx):
         raise ValueError("plan and rollout sample_idx sets differ")
+    if set(plan_by_idx) != set(range(expected_groups)):
+        raise ValueError(
+            f"sample_idx must cover 0..{expected_groups - 1} exactly once"
+        )
     source_indices = [_source_index(row) for row in plans]
-    if len(set(source_indices)) != ROW_COUNT:
+    if len(set(source_indices)) != expected_groups:
         raise ValueError("MP20-train sources are not unique")
 
     records: list[dict[str, Any]] = []
@@ -892,16 +942,23 @@ def build_states(
     *,
     mask_token: str = MASK_DEFAULT,
     vocabulary: Mapping[str, int] | None = None,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     resolver = TokenResolver(vocabulary)
-    records = prepare_records(plans, rollouts, resolver)
-    type_assignment = assign_state_types(records)
+    records = prepare_records(
+        plans, rollouts, resolver, expected_groups=int(expected_groups)
+    )
+    type_assignment = assign_state_types(
+        records, expected_groups=int(expected_groups)
+    )
     xyz_records = [
         record
         for record in records
         if type_assignment[int(record["sample_idx"])] == "xyz"
     ]
-    cursor_assignment = assign_cursor_buckets(xyz_records)
+    cursor_assignment = assign_cursor_buckets(
+        xyz_records, expected_groups=int(expected_groups)
+    )
     states: list[dict[str, Any]] = []
     for record in records:
         sample_idx = int(record["sample_idx"])
@@ -941,7 +998,10 @@ def build_states(
         )
         for name in ("cell", "xyz")
     }
-    if min(high_n.values()) < 12 or min(high_m.values()) < 16:
+    if (
+        min(high_n.values()) < MIN_HIGH_N_PER_TYPE
+        or min(high_m.values()) < MIN_HIGH_MULTIPLICITY_PER_TYPE
+    ):
         raise RuntimeError("aggregate state-type coverage constraints were not met")
     manifest = {
         "schema": "spad_basin_preflight_state_manifest_v1",
@@ -966,6 +1026,8 @@ def build_states(
         "selection_or_replacement": False,
         "tokenizer_vocabulary_supplied": vocabulary is not None,
     }
+    if int(expected_groups) != DEFAULT_EXPECTED_GROUPS:
+        manifest["expected_groups"] = int(expected_groups)
     return states, manifest
 
 
@@ -976,11 +1038,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     plans_path = args.plans_jsonl.resolve()
     rollouts_path = args.rollouts_jsonl.resolve()
     vocabulary = load_vocabulary(getattr(args, "tokenizer_vocab_json", None))
+    expected_groups = int(
+        getattr(args, "expected_groups", DEFAULT_EXPECTED_GROUPS)
+    )
     states, manifest = build_states(
         list(iter_jsonl(plans_path)),
         list(iter_jsonl(rollouts_path)),
         mask_token=str(args.mask_token),
         vocabulary=vocabulary,
+        expected_groups=expected_groups,
     )
     manifest.update(
         {
@@ -1006,6 +1072,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--mask-token", default=MASK_DEFAULT)
     parser.add_argument("--tokenizer-vocab-json", type=Path)
+    parser.add_argument(
+        "--expected-groups", type=int, default=DEFAULT_EXPECTED_GROUPS
+    )
     return parser.parse_args()
 
 

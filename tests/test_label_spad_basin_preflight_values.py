@@ -164,6 +164,61 @@ def make_labelled_group(
 
 
 class BasinPreflightValueTest(unittest.TestCase):
+    def test_k10_only_runs_ten_steps_and_omits_other_horizons(self):
+        rows = [candidate(0, source="no_op"), candidate(1, source="force")]
+        relaxer = FakeRelaxer(
+            {
+                0: [-1.0 - 0.01 * index for index in range(12)],
+                1: [-1.1 - 0.01 * index for index in range(12)],
+            },
+            steps_taken=10,
+        )
+        labelled = MODULE.label_groups(
+            [group(0, rows)],
+            predictor=FakePredictor({0: -1.0, 1: -1.1}),
+            relaxer=relaxer,
+            structure_loader=loader,
+            horizons=MODULE.K10_ONLY_HORIZONS,
+        )
+        self.assertEqual(Counter(call["steps"] for call in relaxer.calls), {10: 2})
+        first = labelled[0]["candidates"][0]
+        self.assertEqual(set(first["basin_value"]["trajectory"]["horizons"]), {"10"})
+        self.assertNotIn("K3_known", first)
+        self.assertTrue(first["K10_known"])
+        self.assertEqual(
+            first["basin_value"]["cache_identity"]["horizons"], [10]
+        )
+        report = MODULE.summarize_groups(
+            labelled,
+            scope="test",
+            shard_rank=None,
+            shard_count=1,
+            expected_groups=4104,
+            horizons=MODULE.K10_ONLY_HORIZONS,
+        )
+        self.assertEqual(report["scientific_contract"]["expected_complete_groups"], 4104)
+        self.assertEqual(report["scientific_contract"]["horizons"], [10])
+        self.assertEqual(report["scientific_contract"]["maximum_relax_steps"], 10)
+        self.assertEqual(report["kendall_tau_b"], {})
+
+    def test_4104_group_contract_and_odd_world_size_three(self):
+        groups = [
+            group(index, [candidate(0, source="no_op")])
+            for index in range(4104)
+        ]
+        MODULE.validate_action_groups(groups, expected_groups=4104)
+        shards = [
+            MODULE.select_groups_for_shard(
+                groups, shard_rank=rank, shard_count=3
+            )
+            for rank in range(3)
+        ]
+        self.assertEqual([len(shard) for shard in shards], [1368, 1368, 1368])
+        self.assertEqual(
+            sorted(row["sample_idx"] for shard in shards for row in shard),
+            list(range(4104)),
+        )
+
     def test_one_trajectory_supplies_all_horizons_and_reuses_early_endpoint(self):
         rows = [candidate(0, source="no_op"), candidate(1, source="force")]
         predictor = FakePredictor({0: -1.0, 1: -1.1})
@@ -351,6 +406,47 @@ class BasinPreflightValueTest(unittest.TestCase):
             self.assertTrue((root / "labelled_groups.jsonl").is_file())
             self.assertTrue((root / "PRELIGHT_VALUE_FINAL.json").is_file())
             self.assertTrue((root / "_SUCCESS").is_file())
+
+    def test_k10_only_merge_preserves_dynamic_group_contract(self):
+        expected_groups = 6
+        shard_count = 3
+        energies = {
+            metric: (-1.0,) for metric in ("E0", "K3", "K5", "K10", "K20")
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for rank in range(shard_count):
+                rows = []
+                for index in range(rank, expected_groups, shard_count):
+                    value = make_labelled_group(energies, sources=("no_op",))
+                    value["sample_idx"] = index
+                    value["state_type"] = "cell" if index % 2 == 0 else "xyz"
+                    rows.append(value)
+                with (root / f"labelled_groups_rank{rank}.jsonl").open(
+                    "w", encoding="utf-8"
+                ) as handle:
+                    for row in rows:
+                        handle.write(json.dumps(row) + "\n")
+                report = MODULE.summarize_groups(
+                    rows,
+                    scope="shard",
+                    shard_rank=rank,
+                    shard_count=shard_count,
+                    expected_groups=expected_groups,
+                    horizons=MODULE.K10_ONLY_HORIZONS,
+                )
+                (root / f"report_rank{rank}.json").write_text(
+                    json.dumps(report), encoding="utf-8"
+                )
+            final = MODULE.merge_shards(
+                root,
+                shard_count=shard_count,
+                expected_groups=expected_groups,
+                horizons=MODULE.K10_ONLY_HORIZONS,
+            )
+            self.assertEqual(final["groups"], expected_groups)
+            self.assertEqual(set(final["coverage"]), {"E0", "K10"})
+            self.assertEqual(final["scientific_contract"]["horizons"], [10])
 
     def test_wrapper_uses_two_a800s_eight_cpus_and_two_rank_processes(self):
         wrapper = (

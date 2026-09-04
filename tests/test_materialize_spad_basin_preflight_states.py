@@ -240,6 +240,40 @@ def write_jsonl(path, rows):
 
 
 class MaterializeBasinPreflightStatesTest(unittest.TestCase):
+    def test_4104_state_and_cursor_assignments_are_exactly_balanced(self):
+        records = []
+        for index in range(4104):
+            elements, counts = plan_shape(index)
+            records.append(
+                {
+                    "sample_idx": index,
+                    "plan": {
+                        "source_row_idx": index,
+                        "plan_state": {
+                            "N": sum(counts),
+                            "elements": elements,
+                            "counts": counts,
+                        },
+                    },
+                }
+            )
+        state_types = MODULE.assign_state_types(records, expected_groups=4104)
+        self.assertEqual(
+            Counter(state_types.values()), Counter({"cell": 2052, "xyz": 2052})
+        )
+        xyz_records = [
+            record
+            for record in records
+            if state_types[record["sample_idx"]] == "xyz"
+        ]
+        cursors = MODULE.assign_cursor_buckets(
+            xyz_records, expected_groups=4104
+        )
+        self.assertEqual(
+            Counter(cursors.values()),
+            Counter({name: 513 for name in MODULE.CURSOR_BUCKETS}),
+        )
+
     def test_128_rows_are_balanced_without_replacement(self):
         plans, rollouts, _ = fixtures()
         with tempfile.TemporaryDirectory() as temp:

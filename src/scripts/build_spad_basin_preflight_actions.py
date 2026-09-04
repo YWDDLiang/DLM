@@ -21,6 +21,8 @@ ATTEMPT_SOURCES = (
     "physics_reverse",
 )
 MAX_CANDIDATES = 4
+DEFAULT_EXPECTED_GROUPS = 128
+MAX_WORLD_SIZE = 4
 
 
 def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
@@ -32,6 +34,40 @@ def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
             if not isinstance(value, dict):
                 raise TypeError(f"JSONL line {line_number} is not an object")
             yield value
+
+
+def validate_and_shard_states(
+    states: Sequence[Mapping[str, Any]],
+    *,
+    expected_groups: int = DEFAULT_EXPECTED_GROUPS,
+    rank: int = 0,
+    world_size: int = 1,
+) -> list[Mapping[str, Any]]:
+    """Validate exact state accounting and return one modulo rank shard."""
+
+    expected_groups = int(expected_groups)
+    rank = int(rank)
+    world_size = int(world_size)
+    if expected_groups <= 0:
+        raise ValueError("expected_groups must be positive")
+    if not 1 <= world_size <= MAX_WORLD_SIZE or not 0 <= rank < world_size:
+        raise ValueError("rank/world_size must describe one of 1..4 ranks")
+    indices = [int(row["sample_idx"]) for row in states]
+    if len(states) != expected_groups or indices != list(range(expected_groups)):
+        raise ValueError(
+            "states JSONL must contain ordered sample_idx "
+            f"0..{expected_groups - 1} exactly once"
+        )
+    if any(row.get("schema") != "spad_basin_preflight_state_v1" for row in states):
+        raise ValueError("unexpected preflight state schema")
+    if any(
+        row.get("outcomes_read") is not False
+        or row.get("selection") is not False
+        or row.get("replacement") is not False
+        for row in states
+    ):
+        raise ValueError("preflight states are not outcome blind")
+    return [row for row in states if int(row["sample_idx"]) % world_size == rank]
 
 
 def retain_fixed_order_actions(
@@ -973,8 +1009,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     rank = int(os.environ.get("RANK", "0"))
     local_rank = int(os.environ.get("LOCAL_RANK", str(rank)))
     world_size = int(os.environ.get("WORLD_SIZE", "1"))
-    if world_size <= 0 or not 0 <= rank < world_size:
-        raise ValueError("invalid torchrun rank/world size")
+    expected_groups = int(
+        getattr(args, "expected_groups", DEFAULT_EXPECTED_GROUPS)
+    )
+    if not 1 <= world_size <= MAX_WORLD_SIZE or not 0 <= rank < world_size:
+        raise ValueError("rank/world_size must describe one of 1..4 ranks")
     if torch.cuda.is_available():
         torch.cuda.set_device(local_rank)
         device = torch.device("cuda", local_rank)
@@ -982,20 +1021,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         device = torch.device("cpu")
 
     states = list(iter_jsonl(args.states_jsonl.resolve()))
-    if len(states) != 128 or {int(row["sample_idx"]) for row in states} != set(
-        range(128)
-    ):
-        raise ValueError("states JSONL must contain sample_idx 0..127 exactly once")
-    if any(row.get("schema") != "spad_basin_preflight_state_v1" for row in states):
-        raise ValueError("unexpected preflight state schema")
-    if any(
-        row.get("outcomes_read") is not False
-        or row.get("selection") is not False
-        or row.get("replacement") is not False
-        for row in states
-    ):
-        raise ValueError("preflight states are not outcome blind")
-    assigned = [row for row in states if int(row["sample_idx"]) % world_size == rank]
+    assigned = validate_and_shard_states(
+        states,
+        expected_groups=expected_groups,
+        rank=rank,
+        world_size=world_size,
+    )
     if int(args.original_batch_size) <= 0:
         raise ValueError("--original-batch-size must be positive")
 
@@ -1100,6 +1131,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "source_rollout_batch_size": int(args.original_batch_size),
         "reference_exact_match_is_batch_shape_diagnostic": True,
     }
+    if expected_groups != DEFAULT_EXPECTED_GROUPS:
+        report["expected_groups"] = expected_groups
     report_path.write_text(
         json.dumps(_jsonable(report), ensure_ascii=False, indent=2, sort_keys=True)
         + "\n",
@@ -1117,6 +1150,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--chgnet-batch-size", type=int, default=16)
     parser.add_argument("--original-batch-size", type=int, default=8)
+    parser.add_argument(
+        "--expected-groups", type=int, default=DEFAULT_EXPECTED_GROUPS
+    )
     return parser.parse_args()
 
 

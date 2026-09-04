@@ -12,6 +12,7 @@ from scripts.build_spad_basin_preflight_actions import (  # noqa: E402
     ATTEMPT_SOURCES,
     retain_fixed_order_actions,
     summarize_groups,
+    validate_and_shard_states,
 )
 
 
@@ -32,6 +33,49 @@ def attempt(source, ids, *, legal=True, status="supplied"):
 
 
 class FixedOrderRetentionTest(unittest.TestCase):
+    def test_4104_states_shard_exactly_for_world_sizes_one_through_four(self):
+        states = [
+            {
+                "schema": "spad_basin_preflight_state_v1",
+                "sample_idx": index,
+                "outcomes_read": False,
+                "selection": False,
+                "replacement": False,
+            }
+            for index in range(4104)
+        ]
+        for world_size in range(1, 5):
+            shards = [
+                validate_and_shard_states(
+                    states,
+                    expected_groups=4104,
+                    rank=rank,
+                    world_size=world_size,
+                )
+                for rank in range(world_size)
+            ]
+            flattened = sorted(
+                int(row["sample_idx"]) for shard in shards for row in shard
+            )
+            self.assertEqual(flattened, list(range(4104)))
+            self.assertLessEqual(
+                max(map(len, shards)) - min(map(len, shards)), 1
+            )
+        self.assertEqual(
+            [
+                len(
+                    validate_and_shard_states(
+                        states,
+                        expected_groups=4104,
+                        rank=rank,
+                        world_size=3,
+                    )
+                )
+                for rank in range(3)
+            ],
+            [1368, 1368, 1368],
+        )
+
     def test_deduplicates_in_fixed_order_without_replacement(self):
         attempts = [
             attempt("no_op", (10, 11, 12)),
