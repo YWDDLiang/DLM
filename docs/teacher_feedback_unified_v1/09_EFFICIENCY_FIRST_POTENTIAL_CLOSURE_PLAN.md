@@ -4,6 +4,29 @@ Status: **approved for preflight execution on 2026-09-04**. Phase 0, interface
 implementation and train-only data construction may start immediately. Formal
 DLM training starts only after the frozen launch conditions below are met.
 
+Final stream17 result: training, native generation, raw evaluation, fixed
+tau800 refinement and cached-official S.U.N. finalization are complete. All
+three arms are composition-valid `256/256`. Raw structural validity is
+`255/256` for every arm; tau800 is BS/control/potential `256/255/256`.
+
+| Endpoint | Arm | N∩U | Strict S.U.N. | Meta S.U.N. |
+|---|---|---:|---:|---:|
+| raw | BS | 255/256 | 7/256 (2.73%) | 54/256 (21.09%) |
+| raw | closure control | 256/256 | 12/256 (4.69%) | 55/256 (21.48%) |
+| raw | potential closed | 256/256 | 10/256 (3.91%) | 58/256 (22.66%) |
+| tau800 | BS | 222/256 | 18/256 (7.03%) | 116/256 (45.31%) |
+| tau800 | closure control | 220/256 | 17/256 (6.64%) | 115/256 (44.92%) |
+| tau800 | potential closed | 223/256 | **20/256 (7.81%)** | **125/256 (48.83%)** |
+
+Potential versus control at tau800 has Strict wins/losses `6/3` and Meta
+wins/losses `20/10`. It adds three Strict and ten Meta S.U.N. structures while
+retaining full composition and improving parsed structural validity by one.
+The fixed goals require `26/256` Strict and `128/256` Meta, leaving gaps of six
+and three. At raw, the potential-control single-point energy mean difference is
+`-0.236 eV/atom`, but its clustered 95% interval `[-0.599,+0.131]` crosses zero;
+the predeclared expansion gate therefore remains unmet and no second stream or
+full-MP20 expansion is selected from this pilot.
+
 Execution status: Phase 0 job `39596` completed in 37 seconds and authorized
 the action-pool preflight. Formal potential-closure training job `39603` is
 running.
@@ -235,7 +258,7 @@ pilot outcomes remain reported.
   the BS trainable LoRA, record norms/cosines, clear gradients, and apply the
   frozen launch conditions without automatic reweighting.
 
-- [ ] **Train two concurrent cells.** From the same BS checkpoint and seed,
+- [x] **Train two concurrent cells.** From the same BS checkpoint and seed,
   train closure+clean-CE and potential-closed, one A800 each. Use one fixed
   four-step cycle: clean MP20 CE, cell transaction, clean MP20 CE, site
   transaction. Repeat 512 cycles for 2,048 optimizer updates. Cell/site
@@ -243,7 +266,7 @@ pilot outcomes remain reported.
   only. Use 100 warmup updates, LR `5e-6`, and save only update 2048. The base
   DLM remains unchanged.
 
-- [ ] **Run one fixed-stream native comparison.** Compare base, closure-only
+- [x] **Run one fixed-stream native comparison.** Compare base, closure-only
   and potential-closed with identical Plan/program/request-site randomness.
   Compute raw energy/force/stress, composition validity, parsed structural
   validity and cached S.U.N.; do not run Direct. Inference executes one trained
@@ -252,10 +275,10 @@ pilot outcomes remain reported.
   program, in reverse order. A unary composition revisits one anchor; no other
   site and no second cell closure are used.
 
-- [ ] **Continue only after native evidence.** If potential closure improves
-  stability relative to closure-only while retaining both validity rates, run
-  stream18 and frozen tau800. Only then expand full MP20 and two full-data
-  seeds. Pointer DPO and tau200 remain later conditional work.
+- [x] **Apply the continuation decision.** The clustered raw-energy interval
+  crosses zero, so stream18 and full-MP20 expansion stop. The explicitly
+  requested fixed tau800 diagnostic was completed without promoting or
+  selecting the method. Pointer DPO and tau200 remain out of scope.
 
 ## Resource schedule and ETA
 
@@ -268,7 +291,9 @@ pilot outcomes remain reported.
 | Five-batch gradient probe | completed: 1 A800 + 8 CPU | 143 s | complete |
 | Control + potential recovery to 2,048 | completed | 2 h 19 min recovery wall time | complete |
 | Stream17 native generation/eval (no Direct) | completed | generation 11.5 min + eval 100 s | complete |
-| Tau800 diagnostic (no Direct) | active: 4 A800 + 16 CPU, two workers/GPU | about 15--45 min | running |
+| Tau800 diagnostic (no Direct) | completed: 4 A800 + 16 CPU, two workers/GPU | 13 min 39 s | complete |
+| Four-cell N/U + CHGNet relaxation | completed: 4 A800 + 16 CPU | 53 min 29 s | complete |
+| Cached-official S.U.N. finalization | CPU; no new query | seconds | complete |
 
 All future work is capped at four A800 and exactly four requested CPUs per GPU,
 with at most two jobs. CHGNet uses batch 8--16 and does not serialize
