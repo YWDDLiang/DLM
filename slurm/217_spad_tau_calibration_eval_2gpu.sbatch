@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
-#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2
-#SBATCH --mem=240G
+#SBATCH --cpus-per-task=4
+#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1
+#SBATCH --mem=160G
 #SBATCH --time=04:00:00
 #SBATCH --output=spad-tau-eval2-%j.out
 #SBATCH --error=spad-tau-eval2-%j.err
@@ -31,7 +31,7 @@ readonly RUN="${ROOT}/runs/spad_tau_calibration_eval2_${SLURM_JOB_ID}"
 mkdir "${RUN}"; mkdir "${RUN}/logs"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\n" "$rc" "$LINENO" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 for p in "${GEN_RUN}/_SUCCESS" "${TAU800_RUN}/_SUCCESS" "${OFFICIAL}/completion_SUCCESS" "${BASELINE}" "${RAW_SCREEN}"; do [[ -f "$p" ]]; done
-IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?}"; [[ "${#gpu[@]}" -eq 2 ]]
+IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?}"; [[ "${#gpu[@]}" -eq 1 ]]
 
 generation_for_tau() {
   local tau="$1"
@@ -49,7 +49,7 @@ run_shard() {
    --base-cache "${CACHE}" --frozen-resumable-py "${RESUMABLE}" \
    --output-jsonl "${cell}/shards/cache_rank${rank}.jsonl" \
    --report-json "${cell}/shards/report_rank${rank}.json" --denominator 256 \
-   --shard-rank "$rank" --shard-count 2 --device cuda \
+   --shard-rank "$rank" --shard-count 1 --device cuda \
    >"${RUN}/logs/tau${tau}_rank${rank}.out" 2>"${RUN}/logs/tau${tau}_rank${rank}.err"
 }
 
@@ -62,12 +62,10 @@ from crystal_dlm.wqcodiff.crysllmgen import a100_sun
 m=a100_sun.prepare_a100_input(generation_jsonl=pathlib.Path(sys.argv[1]), output_pt=pathlib.Path(sys.argv[2])/'all_attempts.pt', output_manifest=pathlib.Path(sys.argv[2])/'input_manifest.json', expected_attempts=256)
 assert m['total_attempts']==256
 PY
-  run_shard 0 "$tau" 0 & p0=$!; run_shard 1 "$tau" 1 & p1=$!
-  status=0; wait "$p0" || status=$?; wait "$p1" || status=$?; (( status == 0 ))
+  run_shard 0 "$tau" 0
   mkdir "${cell}/evaluation"
   cp --reflink=auto "${CACHE}" "${cell}/evaluation/relax_cache.jsonl"
   cat "${cell}/shards/cache_rank0.jsonl" >>"${cell}/evaluation/relax_cache.jsonl"
-  cat "${cell}/shards/cache_rank1.jsonl" >>"${cell}/evaluation/relax_cache.jsonl"
   env CUDA_VISIBLE_DEVICES="${gpu[0]}" H1_ACTIVE_DENOMINATOR=256 OPENBLAS_NUM_THREADS=1 \
    OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 \
    PYTHONPATH="${SOURCE}/eval_runtime:${R03E}/runtime" "${PYTHON}" "${FULL}" \
