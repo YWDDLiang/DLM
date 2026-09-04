@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **formal closure-CE job 39700 passed; fixed256 native screen is next**
+Status: **fixed256 native screen passed; common relaxation implementation under audit**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -73,10 +73,10 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
 - [x] Implement and independently audit a paired native-screen path that reuses
   frozen BS and generates closure-CE only on fixed256 first.
-- [ ] Run fast validity, PBC distance tail, VPA agreement, CHGNet E/F/stress
-  and common relaxation.
-- [ ] Do not run expensive Direct or model494.
-- [ ] Continue only if execution validity is retained and physical
+- [x] Run fast validity, 125-image PBC distance tail, VPA agreement and CHGNet
+  E/F/stress on fixed256; common relaxation is the next registered stage.
+- [x] Do not run expensive Direct or model494 in the native screen.
+- [x] Continue only if execution validity is retained and physical
   nonstationarity improves materially; do not use S.U.N. as a checkpoint or
   row-selection rule.
 
