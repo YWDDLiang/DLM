@@ -182,7 +182,7 @@ readonly K10_CAPABILITY="${resolved_paths[3]}"
 
 IFS=',' read -r -a allocated_gpus <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"
 expected_gpus=2
-[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus=1
+[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus=4
 [[ "${#allocated_gpus[@]}" -eq "${expected_gpus}" ]] || {
   printf 'expected %s allocated GPUs, observed %s\n' \
     "${expected_gpus}" "${#allocated_gpus[@]}" >&2
@@ -205,7 +205,8 @@ printf '%s\n' \
   >"${RUN}/scientific_contract.tsv"
 
 run_arm() {
-  local arm="$1" gpu="$2" policy capability cell
+  local arm="$1" gpu="$2" world_size="$3" policy capability cell
+  local -a sample_command refine_command
   case "${arm}" in
     closure_ce)
       policy="${CLOSURE_POLICY}"
@@ -223,10 +224,25 @@ run_arm() {
   cell="${RUN}/${arm}/stream18"
   mkdir -p "${cell}"
 
+  sample_command=("${PYTHON}")
+  refine_command=("${PYTHON}")
+  if [[ "${world_size}" -gt 1 ]]; then
+    sample_command+=(
+      -m torch.distributed.run --standalone --master_port=37318
+      "--nproc_per_node=${world_size}"
+    )
+    refine_command+=(
+      -m torch.distributed.run --standalone --master_port=37319
+      "--nproc_per_node=${world_size}"
+    )
+  fi
+  sample_command+=("${SOURCE}/src/scripts/sample_llada_r5_exact_length.py")
+  refine_command+=("${SOURCE}/src/scripts/refine_dlm_with_crysllmgen.py")
+
   env CUDA_VISIBLE_DEVICES="${gpu}" OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 \
     MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 TOKENIZERS_PARALLELISM=false \
     PYTHONPATH="${SOURCE}/src" \
-    "${PYTHON}" "${SOURCE}/src/scripts/sample_llada_r5_exact_length.py" \
+    "${sample_command[@]}" \
     --model-path "${MODEL}" --checkpoint-path "${policy}" \
     --prompt-jsonl "${PLAN_DIR}/plans_for_dlm.jsonl" \
     --output-dir "${cell}/body" --crysllmgen-dir "${CRYS}" \
@@ -253,7 +269,7 @@ run_arm() {
 
   env CUDA_VISIBLE_DEVICES="${gpu}" OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 \
     MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 PYTHONPATH="${SOURCE}/src" \
-    "${PYTHON}" "${SOURCE}/src/scripts/refine_dlm_with_crysllmgen.py" \
+    "${refine_command[@]}" \
     --proposal-graphs "${cell}/body/proposal_graphs.pt" \
     --checkpoint "${REFINER}" --output-dir "${cell}/refine" \
     --crysllmgen-dir "${CRYS}" --batch-size 1 --seed "${REFINER_SEED}" \
@@ -277,12 +293,13 @@ run_arm() {
 }
 
 if [[ "${PRIMARY_ONLY}" == true ]]; then
-  run_arm k10 "${allocated_gpus[0]}" &
+  gpu_csv="$(IFS=,; printf '%s' "${allocated_gpus[*]}")"
+  run_arm k10 "${gpu_csv}" "${expected_gpus}" &
   CHILD_PIDS+=("$!")
 else
-  run_arm closure_ce "${allocated_gpus[0]}" &
+  run_arm closure_ce "${allocated_gpus[0]}" 1 &
   CHILD_PIDS+=("$!")
-  run_arm k10 "${allocated_gpus[1]}" &
+  run_arm k10 "${allocated_gpus[1]}" 1 &
   CHILD_PIDS+=("$!")
 fi
 

@@ -157,18 +157,22 @@ Current execution:
 
 ## H. Conditional basin training
 
-- [ ] Only after G passes, freeze 2,048--4,096 value sources.
-- [ ] Use only current 6-token cell and 3-token XYZ action scoring in pass one.
-- [ ] Use terminal short-relax basin value after the remaining closure.
-- [ ] Keep hard validity and reference KL; do not restore a hard raw-energy
+- [x] After G passed, freeze the 128-group train-only primary pilot with 486
+  retained legal terminal actions; defer a larger source expansion unless the
+  primary result proves it necessary.
+- [x] Use only current 6-token cell and 3-token XYZ action scoring in pass one.
+- [x] Use terminal K10 short-relax basin value after the remaining closure.
+- [x] Keep hard validity and reference KL; do not restore a hard raw-energy
   non-increase constraint.
-- [ ] Alternate clean closure CE and posterior updates; no CE on generated
+- [x] Alternate clean closure CE and posterior updates; no CE on generated
   states.
-- [ ] One seed, one endpoint, no early stop or checkpoint selection.
+- [x] One seed, one endpoint, no early stop or checkpoint selection.
 
-Current training: job 39770 uses 2 A800/8 CPU for the preregistered K10 primary,
+Completed training: job 39770 used 2 A800/8 CPU for the preregistered K10 primary,
 four passes over 128 groups, interleaving 256 clean full-MP20 closure-CE and 256
-posterior updates. Jobs 39753--39755 are pre-update engineering negatives. The
+posterior updates. All 512 updates completed; every group was seen four times,
+with 492 informative and 20 retained zero-information posterior exposures.
+Jobs 39753--39755 are pre-update engineering negatives. The
 39755 diagnosis found that the step-0 no-grad policy/reference equality pass
 left every LoRA parameter frozen before the gradient probe; commit `727d02a`
 restores the trainable policy explicitly and adds a regression test. No data,
@@ -186,15 +190,16 @@ so job 39770 restarts from the same registered closure-CE policy.
 
 ## I. Final evaluation
 
-- [ ] Compare BS, closure-CE and conditional closure-basin on the same fixed
-  requests.
+- [ ] Primary-result-first: run only K10 on frozen stream18, then evaluate its
+  tau800 refined endpoint. Do not repeat closure-CE, four-cell validation or
+  Direct before the primary S.U.N. result. The zero-second pending job 39774 was
+  cancelled before science when the resource policy changed. Its replacement
+  runs the single K10 arm as four deterministic distributed shards on 4 A800 /
+  16 CPU, then merges by sample index before one tau800 refinement result.
 - [x] Evaluate closure-CE raw first: fast validity, E/F/stress, relaxation,
   N/U and Strict/Meta S.U.N., with paired wins/losses.
-- [ ] If the basin preflight passes, evaluate closure-basin raw using the same
-  Strict/Meta S.U.N., with paired wins/losses.
-- [ ] Run one canonical-versus-Llama program mechanism comparison at fixed
-  DLM/composition/noise.
-- [ ] Run fixed model494 only after native improvement; report it separately.
+- [ ] Record K10 raw fast validity from generation, but defer raw CHGNet and all
+  mechanism/control comparisons until after the K10 refined headline result.
 - [ ] In parallel with the native value path, evaluate one preregistered
   low-noise `model494 tau200` bridge (job 39732) on the same closure-CE raw256;
   disclose it regardless of outcome and do not tune tau from its result.
