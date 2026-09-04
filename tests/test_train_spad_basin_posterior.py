@@ -49,6 +49,13 @@ def group(sample_idx, candidates, *, state_type="xyz"):
 
 
 class BasinPosteriorPureTest(unittest.TestCase):
+    def test_source_prompt_left_padding_is_replayed(self):
+        ids, attention = MODULE.left_pad_prompt_ids(
+            [7, 8, 9], target_length=5, pad_token_id=0
+        )
+        self.assertEqual(ids, [0, 0, 7, 8, 9])
+        self.assertEqual(attention, [0, 0, 1, 1, 1])
+
     def test_k1_is_retained_as_exact_zero_contract(self):
         values = MODULE.normalize_candidates(
             [candidate("no_op", [10, 11, 12], terminal_relax_k10_energy_eV_per_atom=-1.0)],

@@ -43,6 +43,7 @@ POSTERIOR_UPDATES = EXPECTED_GROUPS * POSTERIOR_PASSES // WORLD_SIZE
 CLEAN_CE_UPDATES = POSTERIOR_UPDATES
 TOTAL_UPDATES = POSTERIOR_UPDATES + CLEAN_CE_UPDATES
 EXPECTED_CLEAN_ROWS = 27_136
+SOURCE_ROLLOUT_BATCH_SIZE = 8
 MAX_LENGTH = 382
 ANSWER_TOKEN_COUNT = 87
 LEARNING_RATE = 5.0e-6
@@ -262,6 +263,21 @@ def normalize_candidates(
     )
 
 
+def left_pad_prompt_ids(
+    token_ids: Sequence[int], *, target_length: int, pad_token_id: int
+) -> tuple[list[int], list[int]]:
+    """Reproduce the source rollout's left-padded prompt positions."""
+
+    values = [int(value) for value in token_ids]
+    padding = int(target_length) - len(values)
+    if padding < 0:
+        raise ValueError("target prompt length is shorter than the prompt")
+    return (
+        [int(pad_token_id)] * padding + values,
+        [0] * padding + [1] * len(values),
+    )
+
+
 def zero_posterior_reason(candidates: Sequence[Mapping[str, Any]]) -> str | None:
     """K1 and groups with fewer than two known legal values are exact zeros."""
 
@@ -387,6 +403,7 @@ class BasinPosteriorGroupDataset:
         )
         self._allowed_cache: dict[tuple[int, int], Any] = {}
         self._constraints_cache: dict[int, Any] = {}
+        self._prompt_batch_length_cache: dict[tuple[int, int], int] = {}
 
     def __len__(self) -> int:
         return len(self.rows)
@@ -423,10 +440,29 @@ class BasinPosteriorGroupDataset:
     ) -> dict[str, Any]:
         row = self.rows[int(index)]
         prompt_text = str(row["prompt"]).rstrip() + "\n"
-        prompt_ids = [
+        unpadded_prompt_ids = [
             int(value)
             for value in tokenizer(prompt_text, add_special_tokens=False)["input_ids"]
         ]
+        source_batch = int(index) // SOURCE_ROLLOUT_BATCH_SIZE
+        prompt_cache_key = (id(tokenizer), source_batch)
+        if prompt_cache_key not in self._prompt_batch_length_cache:
+            start = source_batch * SOURCE_ROLLOUT_BATCH_SIZE
+            stop = min(start + SOURCE_ROLLOUT_BATCH_SIZE, len(self.rows))
+            self._prompt_batch_length_cache[prompt_cache_key] = max(
+                len(
+                    tokenizer(
+                        str(self.rows[row_index]["prompt"]).rstrip() + "\n",
+                        add_special_tokens=False,
+                    )["input_ids"]
+                )
+                for row_index in range(start, stop)
+            )
+        prompt_ids, prompt_attention = left_pad_prompt_ids(
+            unpadded_prompt_ids,
+            target_length=self._prompt_batch_length_cache[prompt_cache_key],
+            pad_token_id=int(tokenizer.pad_token_id),
+        )
         body_ids = [
             int(value)
             for value in tokenizer(
@@ -482,10 +518,13 @@ class BasinPosteriorGroupDataset:
         }
         torch = modules.torch
         complete = torch.tensor(prompt_ids + body_ids, dtype=torch.long)
+        attention = torch.tensor(
+            prompt_attention + [1] * len(body_ids), dtype=torch.long
+        )
         return {
             "sample_idx": int(row["sample_idx"]),
             "complete_tokens": complete,
-            "attention_mask": torch.ones_like(complete),
+            "attention_mask": attention,
             "prompt_length": len(prompt_ids),
             "gen_length": gen_length,
             "N": int(row["N"]),
@@ -1310,6 +1349,8 @@ def train(
         "clean_ce_generated_states_used": False,
         "supplied_action_path_mass": True,
         "whole_terminal_probability": False,
+        "source_rollout_left_padding_replayed": True,
+        "source_rollout_batch_size": SOURCE_ROLLOUT_BATCH_SIZE,
         "elapsed_seconds": time.time() - started,
     }
     if is_main:
