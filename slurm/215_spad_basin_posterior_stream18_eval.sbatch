@@ -19,6 +19,11 @@ readonly GENERATION_RUN="${SPAD_BASIN_POSTERIOR_GENERATION_RUN:?export the compl
 readonly SELECTED_TAU="${SPAD_SELECTED_TAU:?export the same preregistered tau used by 214}"
 readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"
 readonly PRIMARY_WORLD_SIZE="${SPAD_PRIMARY_WORLD_SIZE:-4}"
+readonly PLAN_DIR="${SPAD_PLAN_DIR:-${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903}"
+readonly PLANNER_SEED="${SPAD_PLANNER_SEED:-23}"
+readonly STREAM="${SPAD_EVAL_STREAM:-18}"
+readonly DLM_SEED="${SPAD_DLM_SEED:-92117}"
+readonly REFINER_SEED="${SPAD_REFINER_SEED:-102117}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly V3_RUN="${PROJECT}/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
@@ -31,7 +36,7 @@ readonly S17_DIAGNOSTIC="${ROOT}/runs/spad_basin_closure_official_final_20260904
 readonly RAW_VALIDITY="${ROOT}/runs/spad_basin_closure_native_raw_screen_39710/screen/RAW_SCREEN_FINAL.json"
 readonly FINALIZER="${SOURCE}/scripts/finalize_spad_basin_closure_official.py"
 readonly PYTHON="${SPAD_BASIN_PYTHON:-/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python}"
-readonly RUN="${ROOT}/runs/spad_basin_posterior_stream18_eval_${SLURM_JOB_ID}"
+readonly RUN="${ROOT}/runs/spad_basin_posterior_stream${STREAM}_eval_${SLURM_JOB_ID}"
 
 case "${SELECTED_TAU}" in
   200|400|600|800) ;;
@@ -49,6 +54,14 @@ esac
   printf 'SPAD_PRIMARY_WORLD_SIZE must lie in [1,4]\n' >&2
   exit 2
 }
+for numeric_name in PLANNER_SEED STREAM DLM_SEED REFINER_SEED; do
+  numeric_value="${!numeric_name}"
+  [[ "${numeric_value}" =~ ^[0-9]+$ ]] || {
+    printf '%s must be a non-negative integer; observed %s\n' \
+      "${numeric_name}" "${numeric_value}" >&2
+    exit 2
+  }
+done
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
@@ -77,6 +90,10 @@ trap 'cleanup_children; exit 130' INT TERM
 for path in \
   "${GENERATION_RUN}/_SUCCESS" \
   "${GENERATION_RUN}/GENERATION_FINAL.json" \
+  "${PLAN_DIR}/_SUCCESS" \
+  "${PLAN_DIR}/manifest.json" \
+  "${PLAN_DIR}/plans_for_dlm.jsonl" \
+  "${PLAN_DIR}/ledger.jsonl" \
   "${GLOBAL_CACHE}" \
   "${RESUMABLE}" \
   "${SOURCE}/scripts/relax_spad_basin_closure_shard.py" \
@@ -93,7 +110,9 @@ for path in \
   }
 done
 
-"${PYTHON}" - "${GENERATION_RUN}" "${SELECTED_TAU}" "${PRIMARY_ONLY}" <<'PY'
+"${PYTHON}" - "${GENERATION_RUN}" "${SELECTED_TAU}" "${PRIMARY_ONLY}" \
+  "${PLAN_DIR}" "${PLANNER_SEED}" "${STREAM}" "${DLM_SEED}" \
+  "${REFINER_SEED}" <<'PY'
 import json
 import pathlib
 import sys
@@ -101,11 +120,18 @@ import sys
 root = pathlib.Path(sys.argv[1]).resolve(strict=True)
 tau = int(sys.argv[2])
 primary_only = sys.argv[3] == "true"
+plan_dir = pathlib.Path(sys.argv[4]).resolve(strict=True)
+planner_seed = int(sys.argv[5])
+stream = int(sys.argv[6])
+dlm_seed = int(sys.argv[7])
+refiner_seed = int(sys.argv[8])
 report = json.loads((root / "GENERATION_FINAL.json").read_text(encoding="utf-8"))
-assert report["schema"] == "spad_basin_posterior_heldout_stream18_generation_v1"
-assert report["stream"] == 18
-assert report["dlm_seed"] == 92117
-assert report["refiner_seed"] == 102117
+assert report["schema"] == f"spad_basin_posterior_heldout_stream{stream}_generation_v1"
+assert pathlib.Path(report["frozen_plan_dir"]).resolve(strict=True) == plan_dir
+assert report["planner_sampling_seed"] == planner_seed
+assert report["stream"] == stream
+assert report["dlm_seed"] == dlm_seed
+assert report["refiner_seed"] == refiner_seed
 assert report["selected_tau"] == tau
 assert report["primary_arm"] == "k10"
 assert report["one_plan_one_trajectory"] is True
@@ -118,7 +144,7 @@ assert report["primary_only"] is primary_only
 assert [cell["arm"] for cell in report["cells"]] == expected_arms
 for arm in expected_arms:
     for endpoint in ("raw", "refined"):
-        path = root / arm / "stream18" / f"{endpoint}_generation" / "generation.jsonl"
+        path = root / arm / f"stream{stream}" / f"{endpoint}_generation" / "generation.jsonl"
         rows = [json.loads(line) for line in path.open(encoding="utf-8") if line.strip()]
         assert len(rows) == 256
         assert [int(row["ordinal"]) for row in rows] == list(range(256))
@@ -144,8 +170,12 @@ expected_gpus=4
 
 printf '%s\n' \
   $'field\tvalue' \
-  $'schema\tspad_basin_posterior_stream18_eval_contract_v1' \
+  $'schema\t'"spad_basin_posterior_stream${STREAM}_eval_contract_v1" \
   "allocation\t${expected_gpus}_A800" \
+  $'planner_seed\t'"${PLANNER_SEED}" \
+  $'stream\t'"${STREAM}" \
+  $'dlm_seed\t'"${DLM_SEED}" \
+  $'refiner_seed\t'"${REFINER_SEED}" \
   "cells\t$([[ "${PRIMARY_ONLY}" == true ]] && printf k10_raw_refined || printf closure_ce_k10_x_raw_refined)" \
   "first_wave\t$([[ "${PRIMARY_ONLY}" == true ]] && printf 2_primary_cells || printf 4_cells)" \
   "selected_tau\t${SELECTED_TAU}" \
@@ -159,7 +189,7 @@ printf '%s\n' \
 generation_path() {
   local arm="$1" endpoint="$2"
   printf '%s\n' \
-    "${GENERATION_RUN}/${arm}/stream18/${endpoint}_generation/generation.jsonl"
+    "${GENERATION_RUN}/${arm}/stream${STREAM}/${endpoint}_generation/generation.jsonl"
 }
 
 run_full_cell() {
@@ -293,7 +323,7 @@ finalize_cell() {
     --official-cache-dir "${OFFICIAL_CACHE}" \
     --baseline-official-attempts "${S17_DIAGNOSTIC}" \
     --raw-screen-json "${RAW_VALIDITY}" --raw-screen-arm closure_ce \
-    --endpoint "${arm}_${endpoint}_stream18" \
+    --endpoint "${arm}_${endpoint}_stream${STREAM}" \
     ${model_args[@]+"${model_args[@]}"} --output-dir "${cell}/official" \
     >"${RUN}/logs/${arm}_${endpoint}_official.out" \
     2>"${RUN}/logs/${arm}_${endpoint}_official.err"
@@ -311,7 +341,9 @@ else
 fi
 
 "${PYTHON}" - "${RUN}" "${GENERATION_RUN}" "${SELECTED_TAU}" \
-  "${OFFICIAL_CACHE}" "${S17_DIAGNOSTIC}" "${PRIMARY_ONLY}" <<'PY'
+  "${OFFICIAL_CACHE}" "${S17_DIAGNOSTIC}" "${PRIMARY_ONLY}" \
+  "${PLAN_DIR}" "${PLANNER_SEED}" "${STREAM}" "${DLM_SEED}" \
+  "${REFINER_SEED}" <<'PY'
 import json
 import pathlib
 import sys
@@ -322,6 +354,11 @@ tau = int(sys.argv[3])
 official_cache = pathlib.Path(sys.argv[4]).resolve(strict=True)
 s17_diagnostic = pathlib.Path(sys.argv[5]).resolve(strict=True)
 primary_only = sys.argv[6] == "true"
+plan_dir = pathlib.Path(sys.argv[7]).resolve(strict=True)
+planner_seed = int(sys.argv[8])
+stream = int(sys.argv[9])
+dlm_seed = int(sys.argv[10])
+refiner_seed = int(sys.argv[11])
 
 cells = []
 by_name = {}
@@ -336,7 +373,7 @@ for arm, endpoint in cell_names:
             .read_text(encoding="utf-8")
         )
         assert report["fixed_denominator"] == 256
-        assert report["endpoint"] == f"{arm}_{endpoint}_stream18"
+        assert report["endpoint"] == f"{arm}_{endpoint}_stream{stream}"
         assert report["selection_retry_replacement"] is False
         if endpoint == "raw":
             assert report["model494"] is False
@@ -389,11 +426,13 @@ primary = by_name[("k10", "refined")]
 strict_met = primary["strict_sun"]["count"] >= 26
 meta_met = primary["meta_sun"]["count"] >= 128
 final = {
-    "schema": "spad_basin_posterior_heldout_stream18_final_v1",
+    "schema": f"spad_basin_posterior_heldout_stream{stream}_final_v1",
     "generation_run": str(generation_run),
-    "stream": 18,
-    "dlm_seed": 92117,
-    "refiner_seed": 102117,
+    "frozen_plan_dir": str(plan_dir),
+    "planner_sampling_seed": planner_seed,
+    "stream": stream,
+    "dlm_seed": dlm_seed,
+    "refiner_seed": refiner_seed,
     "selected_tau": tau,
     "selected_tau_source": "completed_stream17_development_calibration",
     "fixed_denominator": 256,
@@ -419,7 +458,7 @@ final = {
     "automatic_route_tau_seed_checkpoint_choice": False,
     "all_failures_retained_in_fixed_denominator": True,
 }
-(root / "HELDOUT_STREAM18_FINAL.json").write_text(
+(root / f"HELDOUT_STREAM{stream}_FINAL.json").write_text(
     json.dumps(final, indent=2, sort_keys=True) + "\n", encoding="utf-8"
 )
 print(json.dumps(final, sort_keys=True))

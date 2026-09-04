@@ -32,6 +32,15 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
         self.assertIn('CHILD_PIDS+=("$!")', self.generation)
         self.assertIn("k10_primary_only", self.generation)
         self.assertIn("closure_ce_k10_concurrent", self.generation)
+        primary_branch = re.search(
+            r'if \[\[ "\$\{PRIMARY_ONLY\}" == true \]\]; then\n'
+            r'  gpu_csv=.*?\n(.*?)\nelse',
+            self.generation,
+            flags=re.DOTALL,
+        )
+        self.assertIsNotNone(primary_branch)
+        self.assertIn("run_arm k10", primary_branch.group(1))
+        self.assertNotIn("run_arm closure_ce", primary_branch.group(1))
 
     def test_generation_requires_frozen_training_routes_and_selected_tau(self):
         self.assertIn("SPAD_BASIN_POSTERIOR_TRAIN_RUN:?", self.generation)
@@ -43,12 +52,46 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
         self.assertIn("POLICY_PATH", self.generation)
         self.assertIn("CAPABILITY_PATH", self.generation)
 
-    def test_generation_is_exact_stream18_spad_and_failure_preserving(self):
+    def test_plan_stream_and_seed_defaults_are_runtime_parameters(self):
+        expected_defaults = (
+            'readonly PLAN_DIR="${SPAD_PLAN_DIR:-${ROOT}/cohorts/'
+            'spad_prospective_seed23_256_v1_20260903}"',
+            'readonly PLANNER_SEED="${SPAD_PLANNER_SEED:-23}"',
+            'readonly STREAM="${SPAD_EVAL_STREAM:-18}"',
+            'readonly DLM_SEED="${SPAD_DLM_SEED:-92117}"',
+            'readonly REFINER_SEED="${SPAD_REFINER_SEED:-102117}"',
+        )
+        for source in (self.generation, self.evaluation):
+            for value in expected_defaults:
+                self.assertIn(value, source)
+            self.assertIn(
+                "for numeric_name in PLANNER_SEED STREAM DLM_SEED REFINER_SEED",
+                source,
+            )
+
+        self.assertIn(
+            '"${PLANNER_SEED}" "${STREAM}" "${DLM_SEED}" "${REFINER_SEED}"',
+            self.generation,
+        )
+        self.assertIn(
+            '"${PLAN_DIR}" "${PLANNER_SEED}" "${STREAM}" "${DLM_SEED}"',
+            self.evaluation,
+        )
+        self.assertIn(
+            'assert int(manifest["planner_sampling_seed"]) == planner_seed',
+            self.generation,
+        )
+        self.assertIn(
+            'assert report["planner_sampling_seed"] == planner_seed',
+            self.evaluation,
+        )
+
+    def test_generation_is_parameterized_spad_and_failure_preserving(self):
         for value in (
-            "spad_prospective_seed23_256_v1_20260903",
-            "readonly STREAM=18",
-            "readonly DLM_SEED=92117",
-            "readonly REFINER_SEED=102117",
+            'stream${STREAM}_generation_refine_${SLURM_JOB_ID}',
+            'cell="${RUN}/${arm}/stream${STREAM}"',
+            '${arm}_stream${STREAM}_body.out',
+            '${arm}_stream${STREAM}_refine.out',
             "--num-samples 256",
             "--batch-size 8",
             "--temperature 0.7",
@@ -66,6 +109,15 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
             '"retry_rerank_replacement": False',
         ):
             self.assertIn(value, self.generation)
+        for hardcoded in (
+            'root / arm / "stream18"',
+            '${arm}_stream18_',
+            '"stream": 18',
+            '"dlm_seed": 92117',
+            '"refiner_seed": 102117',
+            'heldout_stream18_generation',
+        ):
+            self.assertNotIn(hardcoded, self.generation)
         self.assertNotIn("--spad-backfill", self.generation)
         self.assertNotIn('body_metrics["graph_success"] == 256', self.generation)
         self.assertNotIn('body_metrics["parse_success"] == 256', self.generation)
@@ -95,6 +147,27 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
         self.assertIn("run_wave_one", self.evaluation)
         self.assertIn("run_full_reconstructed_eval.py", self.evaluation)
         self.assertIn("working_relax_cache.jsonl", self.evaluation)
+        primary_branch = first_wave.group(1).split("else", maxsplit=1)[0]
+        self.assertIn("run_primary_endpoint_sharded raw", primary_branch)
+        self.assertIn("run_primary_endpoint_sharded refined", primary_branch)
+        self.assertNotIn("run_full_cell", primary_branch)
+        self.assertNotIn("closure_ce", primary_branch)
+        self.assertIn(
+            'stream${STREAM}/${endpoint}_generation/generation.jsonl',
+            self.evaluation,
+        )
+        self.assertIn(
+            '--endpoint "${arm}_${endpoint}_stream${STREAM}"', self.evaluation
+        )
+        for hardcoded in (
+            'root / arm / "stream18"',
+            '/stream18/',
+            '"stream": 18',
+            '"dlm_seed": 92117',
+            '"refiner_seed": 102117',
+            'heldout_stream18_final',
+        ):
+            self.assertNotIn(hardcoded, self.evaluation)
 
     def test_evaluation_reuses_existing_official_cache_without_external_access(self):
         self.assertIn(
@@ -148,7 +221,7 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
             '"fixed_denominator": 256',
             '"automatic_route_tau_seed_checkpoint_choice": False',
             '"all_failures_retained_in_fixed_denominator": True',
-            "HELDOUT_STREAM18_FINAL.json",
+            'f"HELDOUT_STREAM{stream}_FINAL.json"',
         ):
             self.assertIn(value, self.evaluation)
 
@@ -156,6 +229,11 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
         self.assertIn("SPAD_SELECTED_TAU:?", self.evaluation)
         self.assertIn("200|400|600|800", self.evaluation)
         self.assertIn('assert report["selected_tau"] == tau', self.evaluation)
+        self.assertIn('assert report["stream"] == stream', self.evaluation)
+        self.assertIn('assert report["dlm_seed"] == dlm_seed', self.evaluation)
+        self.assertIn(
+            'assert report["refiner_seed"] == refiner_seed', self.evaluation
+        )
         self.assertIn(
             '"selected_tau_source": "completed_stream17_development_calibration"',
             self.evaluation,

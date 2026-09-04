@@ -19,16 +19,17 @@ readonly TRAIN_RUN="${SPAD_BASIN_POSTERIOR_TRAIN_RUN:?export the completed 213 t
 readonly SELECTED_TAU="${SPAD_SELECTED_TAU:?export the preregistered stream17-selected tau}"
 readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"
 readonly PRIMARY_WORLD_SIZE="${SPAD_PRIMARY_WORLD_SIZE:-4}"
-readonly PLAN_DIR="${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903"
+readonly PLAN_DIR="${SPAD_PLAN_DIR:-${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903}"
+readonly PLANNER_SEED="${SPAD_PLANNER_SEED:-23}"
+readonly STREAM="${SPAD_EVAL_STREAM:-18}"
+readonly DLM_SEED="${SPAD_DLM_SEED:-92117}"
+readonly REFINER_SEED="${SPAD_REFINER_SEED:-102117}"
 readonly CLOSURE_RUN="${ROOT}/runs/spad_basin_closure_ce_39700"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly REFINER=/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt
 readonly CRYS=/public/home/jiaosz/hengzhang/Code/crysllmgen-main
 readonly PYTHON="${SPAD_BASIN_PYTHON:-/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python}"
-readonly RUN="${ROOT}/runs/spad_basin_posterior_stream18_generation_refine_${SLURM_JOB_ID}"
-readonly STREAM=18
-readonly DLM_SEED=92117
-readonly REFINER_SEED=102117
+readonly RUN="${ROOT}/runs/spad_basin_posterior_stream${STREAM}_generation_refine_${SLURM_JOB_ID}"
 
 case "${SELECTED_TAU}" in
   200|400|600|800) ;;
@@ -46,6 +47,14 @@ esac
   printf 'SPAD_PRIMARY_WORLD_SIZE must lie in [1,4]\n' >&2
   exit 2
 }
+for numeric_name in PLANNER_SEED STREAM DLM_SEED REFINER_SEED; do
+  numeric_value="${!numeric_name}"
+  [[ "${numeric_value}" =~ ^[0-9]+$ ]] || {
+    printf '%s must be a non-negative integer; observed %s\n' \
+      "${numeric_name}" "${numeric_value}" >&2
+    exit 2
+  }
+done
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
@@ -79,6 +88,7 @@ for path in \
   "${CLOSURE_RUN}/POLICY_PATH" \
   "${CLOSURE_RUN}/CAPABILITY_PATH" \
   "${PLAN_DIR}/_SUCCESS" \
+  "${PLAN_DIR}/manifest.json" \
   "${PLAN_DIR}/plans_for_dlm.jsonl" \
   "${PLAN_DIR}/ledger.jsonl" \
   "${REFINER}" \
@@ -93,6 +103,7 @@ for path in \
 done
 
 "${PYTHON}" - "${TRAIN_RUN}" "${CLOSURE_RUN}" "${PLAN_DIR}" \
+  "${PLANNER_SEED}" "${STREAM}" "${DLM_SEED}" "${REFINER_SEED}" \
   "${RUN}/RESOLVED_INPUTS.json" <<'PY'
 import json
 import pathlib
@@ -101,7 +112,11 @@ import sys
 train_run = pathlib.Path(sys.argv[1]).resolve(strict=True)
 closure_run = pathlib.Path(sys.argv[2]).resolve(strict=True)
 plan_dir = pathlib.Path(sys.argv[3]).resolve(strict=True)
-output = pathlib.Path(sys.argv[4])
+planner_seed = int(sys.argv[4])
+stream = int(sys.argv[5])
+dlm_seed = int(sys.argv[6])
+refiner_seed = int(sys.argv[7])
+output = pathlib.Path(sys.argv[8])
 resolved = {
     "closure_ce": {
         "policy_adapter_path": (closure_run / "POLICY_PATH").read_text(
@@ -139,7 +154,7 @@ ledger = [
     for line in (plan_dir / "ledger.jsonl").open(encoding="utf-8")
     if line.strip()
 ]
-assert manifest["planner_sampling_seed"] == 23
+assert int(manifest["planner_sampling_seed"]) == planner_seed
 assert manifest["requested"] == 256
 assert manifest["replacement"] is False
 assert manifest["planner_resampled_after_freeze"] is False
@@ -154,9 +169,13 @@ assert {int(row["sample_idx"]) for row in plans} == {
 output.write_text(
     json.dumps(
         {
-            "schema": "spad_basin_posterior_stream18_resolved_inputs_v1",
+            "schema": f"spad_basin_posterior_stream{stream}_resolved_inputs_v1",
             "training_run": str(train_run),
             "frozen_plan_dir": str(plan_dir),
+            "planner_sampling_seed": planner_seed,
+            "stream": stream,
+            "dlm_seed": dlm_seed,
+            "refiner_seed": refiner_seed,
             "routes": resolved,
         },
         indent=2,
@@ -195,11 +214,12 @@ expected_gpus=2
 
 printf '%s\n' \
   $'field\tvalue' \
-  $'schema\tspad_basin_posterior_stream18_generation_contract_v1' \
+  $'schema\t'"spad_basin_posterior_stream${STREAM}_generation_contract_v1" \
   "allocation\t${expected_gpus}_A800" \
-  $'stream\t18' \
-  $'dlm_seed\t92117' \
-  $'refiner_seed\t102117' \
+  $'planner_seed\t'"${PLANNER_SEED}" \
+  $'stream\t'"${STREAM}" \
+  $'dlm_seed\t'"${DLM_SEED}" \
+  $'refiner_seed\t'"${REFINER_SEED}" \
   "selected_tau\t${SELECTED_TAU}" \
   "arms\t$([[ "${PRIMARY_ONLY}" == true ]] && printf k10_primary_only || printf closure_ce_k10_concurrent)" \
   $'primary_arm\tk10' \
@@ -225,7 +245,7 @@ run_arm() {
       return 2
       ;;
   esac
-  cell="${RUN}/${arm}/stream18"
+  cell="${RUN}/${arm}/stream${STREAM}"
   mkdir -p "${cell}"
 
   sample_command=("${PYTHON}")
@@ -255,8 +275,8 @@ run_arm() {
     --generation-schedule spad --canonicalize-periodic-alias \
     --pbc-min-distance-mask --spad-basin-closure \
     --spad-basin-closure-capability-json "${capability}" \
-    >"${RUN}/logs/${arm}_stream18_body.out" \
-    2>"${RUN}/logs/${arm}_stream18_body.err"
+    >"${RUN}/logs/${arm}_stream${STREAM}_body.out" \
+    2>"${RUN}/logs/${arm}_stream${STREAM}_body.err"
   [[ -f "${cell}/body/_SUCCESS" ]]
 
   "${PYTHON}" "${SOURCE}/scripts/pad_spad_body_to_planner_denominator.py" \
@@ -278,8 +298,8 @@ run_arm() {
     --checkpoint "${REFINER}" --output-dir "${cell}/refine" \
     --crysllmgen-dir "${CRYS}" --batch-size 1 --seed "${REFINER_SEED}" \
     --seed-by-sample-index --diff-steps "${SELECTED_TAU}" --max-proposals 256 \
-    >"${RUN}/logs/${arm}_stream18_refine.out" \
-    2>"${RUN}/logs/${arm}_stream18_refine.err"
+    >"${RUN}/logs/${arm}_stream${STREAM}_refine.out" \
+    2>"${RUN}/logs/${arm}_stream${STREAM}_refine.err"
   [[ -f "${cell}/refine/refinement_metrics.json" ]]
 
   "${PYTHON}" "${SOURCE}/scripts/assemble_grounding_repeat.py" \
@@ -314,11 +334,12 @@ for pid in "${CHILD_PIDS[@]}"; do
   fi
 done
 [[ "${arm_failure}" -eq 0 ]] || {
-  printf 'one or more fixed stream18 arms failed\n' >&2
+  printf 'one or more fixed stream%s arms failed\n' "${STREAM}" >&2
   false
 }
 
-"${PYTHON}" - "${RUN}" "${PLAN_DIR}" "${SELECTED_TAU}" "${PRIMARY_ONLY}" <<'PY'
+"${PYTHON}" - "${RUN}" "${PLAN_DIR}" "${SELECTED_TAU}" "${PRIMARY_ONLY}" \
+  "${PLANNER_SEED}" "${STREAM}" "${DLM_SEED}" "${REFINER_SEED}" <<'PY'
 import json
 import pathlib
 import sys
@@ -327,7 +348,15 @@ root = pathlib.Path(sys.argv[1])
 plan_dir = pathlib.Path(sys.argv[2]).resolve(strict=True)
 tau = int(sys.argv[3])
 primary_only = sys.argv[4] == "true"
+planner_seed = int(sys.argv[5])
+stream = int(sys.argv[6])
+dlm_seed = int(sys.argv[7])
+refiner_seed = int(sys.argv[8])
 resolved = json.loads((root / "RESOLVED_INPUTS.json").read_text(encoding="utf-8"))
+assert resolved["planner_sampling_seed"] == planner_seed
+assert resolved["stream"] == stream
+assert resolved["dlm_seed"] == dlm_seed
+assert resolved["refiner_seed"] == refiner_seed
 expected_plans = {
     int(row["sample_idx"]): row["plan_state"]
     for row in (
@@ -338,7 +367,7 @@ expected_plans = {
 }
 cells = []
 for arm in (("k10",) if primary_only else ("closure_ce", "k10")):
-    cell = root / arm / "stream18"
+    cell = root / arm / f"stream{stream}"
     body_metrics = json.loads(
         (cell / "body" / "sample_metrics.json").read_text(encoding="utf-8")
     )
@@ -406,12 +435,13 @@ for arm in (("k10",) if primary_only else ("closure_ce", "k10")):
     )
 
 report = {
-    "schema": "spad_basin_posterior_heldout_stream18_generation_v1",
+    "schema": f"spad_basin_posterior_heldout_stream{stream}_generation_v1",
     "training_run": resolved["training_run"],
     "frozen_plan_dir": str(plan_dir),
-    "stream": 18,
-    "dlm_seed": 92117,
-    "refiner_seed": 102117,
+    "planner_sampling_seed": planner_seed,
+    "stream": stream,
+    "dlm_seed": dlm_seed,
+    "refiner_seed": refiner_seed,
     "selected_tau": tau,
     "selected_tau_source": "completed_stream17_development_calibration",
     "primary_arm": "k10",
