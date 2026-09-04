@@ -21,16 +21,18 @@ readonly POINTER="${ROOT}/runs/spad_species_pointer_39511/train_seed86017/pointe
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly RUN="${ROOT}/runs/spad_prospective_seed23_source_${SLURM_JOB_ID}"
 readonly OUTPUT="${RUN}/plans"
+readonly REQUESTED="${SPAD_PROSPECTIVE_REQUESTED:-256}"
+readonly PLANNER_SEED="${SPAD_PROSPECTIVE_SEED:-23}"
 mkdir "${RUN}"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$BASH_COMMAND" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 IFS=',' read -r -a allocated <<<"${CUDA_VISIBLE_DEVICES:?}"
 [[ "${#allocated[@]}" -eq 1 ]]
 
-"${PYTHON}" - "${RUN}/ordinal_ledger.jsonl" <<'PY'
+"${PYTHON}" - "${RUN}/ordinal_ledger.jsonl" "${REQUESTED}" <<'PY'
 import json
 import sys
 with open(sys.argv[1], "x", encoding="utf-8") as handle:
-    for sample_idx in range(256):
+    for sample_idx in range(int(sys.argv[2])):
         handle.write(json.dumps({"sample_idx": sample_idx}) + "\n")
 PY
 
@@ -55,22 +57,25 @@ env CUDA_VISIBLE_DEVICES="${allocated[0]}" OPENBLAS_NUM_THREADS=2 \
   --expected-typed-state-sha256 "${typed_state_sha}" \
   --expected-adapter-config-sha256 "${adapter_config_sha}" \
   --expected-adapter-model-sha256 "${adapter_model_sha}" \
-  --requested 256 --expected-requested 256 --seed 23 --expected-seed 23 \
+  --requested "${REQUESTED}" --expected-requested "${REQUESTED}" \
+  --seed "${PLANNER_SEED}" --expected-seed "${PLANNER_SEED}" \
   --temperature 0.9 --top-p 0.95 --top-k 0 --max-species 7 \
   --minimum-comp-valid 0.0 \
   >"${RUN}/sampling.out" 2>"${RUN}/sampling.err"
 
-"${PYTHON}" - "${OUTPUT}/sample_metrics.json" "${RUN}" <<'PY'
+"${PYTHON}" - "${OUTPUT}/sample_metrics.json" "${RUN}" \
+ "${REQUESTED}" "${PLANNER_SEED}" <<'PY'
 import json
 import pathlib
 import sys
 metrics = json.load(open(sys.argv[1], encoding="utf-8")); run = pathlib.Path(sys.argv[2])
-assert metrics["requested_samples"] == 256
+requested=int(sys.argv[3]); seed=int(sys.argv[4])
+assert metrics["requested_samples"] == requested
 assert metrics["one_trajectory_per_ordinal"] is True
 summary = {
     "schema": "spad_prospective_actual_plan_source_v2",
-    "seed": 23,
-    "requested": 256,
+    "seed": seed,
+    "requested": requested,
     "parsed": metrics["parsed_samples"],
     "composition_valid_rate": metrics["comp_valid_rate_requested_denominator"],
     "composition_valid_target_95_met": metrics["comp_valid_rate_requested_denominator"] >= 0.95,

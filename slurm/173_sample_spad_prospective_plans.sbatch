@@ -15,7 +15,9 @@ readonly SOURCE="${SSCD_SOURCE_ROOT:-/public/home/jiaosz/ywliang/ai4s/.sscd_unif
 readonly SOURCE_RUN="${SPAD_PROSPECTIVE_SOURCE_RUN:?}"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly RUN="${ROOT}/runs/spad_prospective_freeze_${SLURM_JOB_ID}"
-readonly COHORT="${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903"
+readonly COHORT="${SPAD_PROSPECTIVE_COHORT:-${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903}"
+readonly REQUESTED="${SPAD_PROSPECTIVE_REQUESTED:-256}"
+readonly PLANNER_SEED="${SPAD_PROSPECTIVE_SEED:-23}"
 mkdir "${RUN}"
 trap 'rc=$?; printf "exit_code\t%s\nline\t%s\ncommand\t%s\n" "$rc" "$LINENO" "$BASH_COMMAND" >"${RUN}/ENGINEERING_FAILURE.tsv"; touch "${RUN}/_FAILED"; exit "$rc"' ERR
 [[ -f "${SOURCE_RUN}/_SUCCESS" && ! -e "${COHORT}" ]]
@@ -25,16 +27,17 @@ env CUDA_VISIBLE_DEVICES= OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=8 \
   "${PYTHON}" "${SOURCE}/scripts/freeze_spad_prospective_plans.py" \
   --source-records "${SOURCE_RUN}/plans/raw_generations.jsonl" \
   --source-plans "${SOURCE_RUN}/plans/plans_for_dlm.jsonl" \
-  --output-dir "${COHORT}" --requested 256 --planner-sampling-seed 23 \
+  --output-dir "${COHORT}" --requested "${REQUESTED}" \
+  --planner-sampling-seed "${PLANNER_SEED}" \
   --minimum-comp-valid 0.0 \
   >"${RUN}/freeze.out" 2>"${RUN}/freeze.err"
 
-"${PYTHON}" - "${COHORT}/manifest.json" "${RUN}" <<'PY'
+"${PYTHON}" - "${COHORT}/manifest.json" "${RUN}" "${REQUESTED}" <<'PY'
 import json
 import pathlib
 import sys
 manifest = json.load(open(sys.argv[1], encoding="utf-8")); run = pathlib.Path(sys.argv[2])
-assert manifest["requested"] == 256
+assert manifest["requested"] == int(sys.argv[3])
 assert manifest["selection"] == "none_all_requested_ordinals_retained"
 assert manifest["replacement"] is False
 assert manifest["planner_resampled_after_freeze"] is False
