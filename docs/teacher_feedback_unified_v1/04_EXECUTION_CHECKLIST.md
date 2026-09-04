@@ -141,8 +141,13 @@ Current execution:
   emulating an old random batch. Register one batch-1 counterfactual
   continuation with common seeds for every candidate; old-final exact match is
   a reported nonblocking diagnostic.
-- [ ] Finish outcome-blind K<=4 action/terminal job 39748, then run one
-  two-GPU K3/5/10/20 CHGNet headroom label job.
+- [x] Finish outcome-blind K<=4 action/terminal job 39748: 128 groups,
+  K=`1:3, 2:4, 3:9, 4:112`, 486 retained candidates and 486 legal terminals,
+  with all provisional-state EFSM calls known and no group failure.
+- [ ] Finish the two-GPU K3/5/10/20 CHGNet headroom label recovery 39752.
+  Job 39750 failed before any CHGNet call because the validator rejected the
+  legitimate `cursor=None` on cell transactions; the type-aware fix leaves all
+  candidates and scientific parameters unchanged.
 
 ## H. Conditional basin training
 
