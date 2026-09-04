@@ -1237,7 +1237,9 @@ def train(
         parameters, lr=LEARNING_RATE, weight_decay=0.0
     )
     posterior_seen = modules.torch.zeros(
-        EXPECTED_GROUPS, dtype=modules.torch.int16, device=device
+        # NCCL reductions do not support torch.int16.  Use a supported counter
+        # dtype for the post-training exact four-pass accounting reduction.
+        EXPECTED_GROUPS, dtype=modules.torch.int32, device=device
     )
     objectives: Counter[str] = Counter()
     informative_local = 0
