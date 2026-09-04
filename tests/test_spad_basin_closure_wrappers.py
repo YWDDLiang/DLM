@@ -7,6 +7,7 @@ BUILD = ROOT / "slurm" / "195_build_spad_basin_closure_sft_data.sbatch"
 TRAIN = ROOT / "slurm" / "196_train_spad_basin_closure_ce.sbatch"
 CANARY = ROOT / "slurm" / "197_spad_basin_closure_ce_canary.sbatch"
 NATIVE = ROOT / "slurm" / "198_spad_basin_closure_native_stream17.sbatch"
+RAW_SCREEN = ROOT / "slurm" / "199_spad_basin_closure_native_raw_screen.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -16,6 +17,7 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.train = TRAIN.read_text(encoding="utf-8")
         cls.canary = CANARY.read_text(encoding="utf-8")
         cls.native = NATIVE.read_text(encoding="utf-8")
+        cls.raw_screen = RAW_SCREEN.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
         self.assertIn("#SBATCH --cpus-per-task=4", self.build)
@@ -107,6 +109,7 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
     def test_native_screen_generation_uses_only_registered_closure(self):
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.native)
         self.assertIn("#SBATCH --cpus-per-task=4", self.native)
+        self.assertNotIn("--nproc_per_node", self.native)
         self.assertIn("--generation-schedule spad", self.native)
         self.assertIn("--spad-basin-closure", self.native)
         self.assertIn("--spad-basin-closure-capability-json", self.native)
@@ -116,11 +119,31 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertIn('"one_plan_one_trajectory": True', self.native)
         self.assertIn('"model494_or_inference_critic": False', self.native)
         self.assertIn('"selection_retry_replacement": False', self.native)
+        self.assertIn('"world_size": 1', self.native)
+        self.assertIn('"rank_seed_rule": "seed + rank"', self.native)
         self.assertNotIn("--spad-backfill", self.native)
         self.assertNotIn("refine_dlm_with_crysllmgen.py", self.native)
 
+    def test_raw_screen_is_paired_fast_physics_without_direct_or_refiner(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.raw_screen)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.raw_screen)
+        self.assertIn("evaluate_spad_basin_closure_raw.py", self.raw_screen)
+        self.assertIn("--batch-size 16", self.raw_screen)
+        self.assertIn("--denominator 256", self.raw_screen)
+        self.assertIn("spad_prospective_generation_s17_39537", self.raw_screen)
+        self.assertIn('config["world_size"] == 1', self.raw_screen)
+        self.assertIn('config["batch_size"] == 8', self.raw_screen)
+        self.assertIn('config["seed"] == 91117', self.raw_screen)
+        self.assertIn('config["rank_seed_rule"] == "seed + rank"', self.raw_screen)
+        self.assertIn('bs_report["frozen_plan_dir"]', self.raw_screen)
+        self.assertNotIn("run_crysllmgen_validity", self.raw_screen)
+        self.assertNotIn("refine_dlm_with_crysllmgen.py", self.raw_screen)
+        self.assertNotIn("query_official", self.raw_screen)
+
     def test_every_run_is_non_overwriting(self):
-        for wrapper in (self.build, self.train, self.canary, self.native):
+        for wrapper in (
+            self.build, self.train, self.canary, self.native, self.raw_screen
+        ):
             self.assertIn('mkdir "${RUN}"', wrapper)
         for wrapper in (self.build, self.train, self.canary):
             self.assertNotIn("mkdir -p", wrapper)

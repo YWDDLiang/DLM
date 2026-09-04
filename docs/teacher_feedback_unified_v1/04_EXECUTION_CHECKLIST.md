@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **six-state canary passed; formal closure-CE job 39700 submitted**
+Status: **formal closure-CE job 39700 passed; fixed256 native screen is next**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -66,11 +66,13 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 - [x] Run a six-state-per-split remote canary covering first/last lattice
   components, X/Y/Z and a multi-site block; inspect finite loss/gradient before
   formal training.
-- [ ] Train one full-MP20 seed from BS for one registered endpoint.
+- [x] Train one full-MP20 seed from BS for one registered endpoint: job 39700,
+  1,696 updates, unique step-1696, validation loss 2.2679.
 
 ## F. Closure-CE raw screen
 
-- [ ] Reuse frozen BS; generate closure-CE only on fixed256 first.
+- [x] Implement and independently audit a paired native-screen path that reuses
+  frozen BS and generates closure-CE only on fixed256 first.
 - [ ] Run fast validity, PBC distance tail, VPA agreement, CHGNet E/F/stress
   and common relaxation.
 - [ ] Do not run expensive Direct or model494.
