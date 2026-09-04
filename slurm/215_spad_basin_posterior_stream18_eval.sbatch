@@ -253,22 +253,10 @@ PY
 run_wave_one() {
   CHILD_PIDS=()
   if [[ "${PRIMARY_ONLY}" == true ]]; then
-    if [[ "${expected_gpus}" -eq 1 ]]; then
-      run_primary_endpoint_sharded raw 0 1
-      run_primary_endpoint_sharded refined 0 1
-    else
-      raw_shards=$((expected_gpus / 2))
-      refined_shards=$((expected_gpus - raw_shards))
-      run_primary_endpoint_sharded raw 0 "${raw_shards}" &
-      CHILD_PIDS+=("$!")
-      run_primary_endpoint_sharded refined "${raw_shards}" "${refined_shards}" &
-      CHILD_PIDS+=("$!")
-      local status=0 pid
-      for pid in "${CHILD_PIDS[@]}"; do
-        wait "${pid}" || status=1
-      done
-      [[ "${status}" -eq 0 ]]
-    fi
+    # Raw relaxation is much slower than the already-refined endpoint.  Give
+    # every allocated GPU to raw first, then reuse all ranks for refined.
+    run_primary_endpoint_sharded raw 0 "${expected_gpus}"
+    run_primary_endpoint_sharded refined 0 "${expected_gpus}"
     return
   else
     run_full_cell 0 closure_ce raw & CHILD_PIDS+=("$!")

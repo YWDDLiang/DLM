@@ -82,6 +82,10 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
         self.assertEqual(first_wave.group(1).count("run_full_cell "), 4)
         self.assertIn("run_primary_endpoint_sharded raw", first_wave.group(1))
         self.assertIn("run_primary_endpoint_sharded refined", first_wave.group(1))
+        self.assertIn(
+            'run_primary_endpoint_sharded raw 0 "${expected_gpus}"',
+            first_wave.group(1),
+        )
         self.assertIn('readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"', self.evaluation)
         self.assertIn('readonly PRIMARY_WORLD_SIZE="${SPAD_PRIMARY_WORLD_SIZE:-4}"', self.evaluation)
         self.assertIn("k10_raw_refined", self.evaluation)
