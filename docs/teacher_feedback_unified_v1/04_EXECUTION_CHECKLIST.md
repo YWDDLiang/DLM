@@ -6,6 +6,27 @@ Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
 Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
+## Scientific pain point and adequacy decision
+
+- [x] Define the remaining failure correctly: exact composition and Direct
+  execution are already saturated; the unresolved object is the coupled
+  periodic distribution of lattice and coordinates, whose raw structures have
+  excessive energy, force, stress and short-contact tails.
+- [x] Make the Llama program act on that same object. It first controls the
+  predictor order, then controls the reverse species blocks used to revise the
+  completed geometry; it is not a decorative Plan field.
+- [x] Train the two conditionals that were previously out of distribution:
+  sequential `L | X,c,P` and suffix-visible
+  `X_block | L,X_other,c,P`, using exactly the masks served at inference.
+- [x] Verify the mechanism without sacrificing the validity base. On fixed256,
+  composition remained 256/256, fast structural validity rose 255->256, paired
+  raw CHGNet energy improved by median -0.3244 eV/atom with clustered 95% CI
+  [-1.4508,-0.0956], stress improved and force was non-adverse.
+- [ ] Promote the result from a native low-energy mechanism to a stability/SUN
+  claim only if the same advantage survives the frozen common relaxation and
+  official hull evaluation. Until then model494 remains a fallback, not the
+  explanation for the native gain.
+
 ## A. Frozen method boundary
 
 - [x] Keep C3FD reachable chemical support and the trained Planner-Llama.
