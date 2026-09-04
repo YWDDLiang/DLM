@@ -274,6 +274,19 @@ class BasinPreflightValueTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "ordered and contiguous"):
             MODULE.validate_action_groups(groups)
 
+    def test_cell_cursor_none_is_valid_but_xyz_requires_cursor(self):
+        groups = [
+            group(index, [candidate(0, source="no_op")])
+            for index in range(MODULE.EXPECTED_GROUPS)
+        ]
+        for row in groups:
+            if row["state_type"] == "cell":
+                row["cursor"] = None
+        MODULE.validate_action_groups(groups)
+        groups[1]["cursor"] = None
+        with self.assertRaisesRegex(ValueError, "XYZ cursor is missing"):
+            MODULE.validate_action_groups(groups)
+
     def test_accepts_builder_nested_cursor_terminal_arrays_and_failure_name(self):
         groups = []
         for index in range(MODULE.EXPECTED_GROUPS):

@@ -167,14 +167,15 @@ def validate_action_groups(groups: Sequence[Mapping[str, Any]]) -> None:
         except (KeyError, TypeError, ValueError) as error:
             raise ValueError(f"group {position}: invalid sample_idx") from error
         indices.append(sample_idx)
-        if str(group.get("state_type", "")).lower() not in {"cell", "xyz"}:
+        state_type = str(group.get("state_type", "")).lower()
+        if state_type not in {"cell", "xyz"}:
             raise ValueError(f"group {sample_idx}: state_type must be cell or xyz")
         state = group.get("state")
         cursor = group.get("cursor")
         if cursor is None and isinstance(state, Mapping):
             cursor = state.get("cursor")
-        if cursor is None:
-            raise ValueError(f"group {sample_idx}: cursor is missing")
+        if state_type == "xyz" and not isinstance(cursor, Mapping):
+            raise ValueError(f"group {sample_idx}: XYZ cursor is missing")
         candidates = group.get("candidates")
         if not isinstance(candidates, list) or not 1 <= len(candidates) <= 4:
             raise ValueError(f"group {sample_idx}: candidate K must lie in [1,4]")
