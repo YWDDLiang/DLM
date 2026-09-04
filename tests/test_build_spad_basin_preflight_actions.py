@@ -111,6 +111,7 @@ class WrapperContractTest(unittest.TestCase):
         self.assertIn("len(groups) != 128", self.wrapper)
         self.assertIn("list(range(128))", self.wrapper)
         self.assertIn("reference_mismatch", self.wrapper)
+        self.assertIn("exact_match_is_nonblocking_batch_shape_diagnostic", self.wrapper)
         self.assertIn("ACTIONS_FINAL.json", self.wrapper)
         self.assertIn("touch \"${RUN}/_SUCCESS\"", self.wrapper)
 
