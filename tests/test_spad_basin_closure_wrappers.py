@@ -9,6 +9,7 @@ CANARY = ROOT / "slurm" / "197_spad_basin_closure_ce_canary.sbatch"
 NATIVE = ROOT / "slurm" / "198_spad_basin_closure_native_stream17.sbatch"
 RAW_SCREEN = ROOT / "slurm" / "199_spad_basin_closure_native_raw_screen.sbatch"
 COMMON_RELAX = ROOT / "slurm" / "200_spad_basin_closure_common_relax.sbatch"
+COMMON_FINAL = ROOT / "slurm" / "201_spad_basin_closure_common_relax_finalize.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -20,6 +21,7 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.native = NATIVE.read_text(encoding="utf-8")
         cls.raw_screen = RAW_SCREEN.read_text(encoding="utf-8")
         cls.common_relax = COMMON_RELAX.read_text(encoding="utf-8")
+        cls.common_final = COMMON_FINAL.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
         self.assertIn("#SBATCH --cpus-per-task=4", self.build)
@@ -142,37 +144,42 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertNotIn("refine_dlm_with_crysllmgen.py", self.raw_screen)
         self.assertNotIn("query_official", self.raw_screen)
 
-    def test_common_relax_reuses_frozen_evaluator_and_baseline(self):
-        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", self.common_relax)
-        self.assertIn("#SBATCH --cpus-per-task=8", self.common_relax)
-        self.assertIn("run_full_reconstructed_eval.py", self.common_relax)
+    def test_common_relax_array_can_schedule_each_gpu_independently(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.common_relax)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.common_relax)
+        self.assertIn("#SBATCH --array=0-1", self.common_relax)
         self.assertIn("relax_spad_basin_closure_shard.py", self.common_relax)
         self.assertIn("a100_sun.prepare_a100_input", self.common_relax)
         self.assertIn('--generated-pt "${FROZEN_INPUT}/all_attempts.pt"', self.common_relax)
         self.assertIn('--input-manifest "${FROZEN_INPUT}/input_manifest.json"', self.common_relax)
-        self.assertIn("CACHE_COVERAGE.json", self.common_relax)
-        self.assertIn("assert not missing", self.common_relax)
-        self.assertIn('summary["working_relax_cache_sha256_before"]', self.common_relax)
-        self.assertIn('summary["working_relax_cache_sha256_after"]', self.common_relax)
-        self.assertIn('"frozen_evaluator_cache_misses": 0', self.common_relax)
-        self.assertIn("for rank in 0 1", self.common_relax)
         self.assertIn('--shard-count 2 --device cuda', self.common_relax)
-        self.assertIn('sum(report["assigned_occurrences"] for report in reports) == 256', self.common_relax)
-        self.assertNotIn('sum(report["failed_relaxations"] for report in reports) == 0', self.common_relax)
-        self.assertIn("spad_prospective_offline_s17_39542", self.common_relax)
-        self.assertIn("--arm candidate --repeat 0", self.common_relax)
-        self.assertIn("H1_ACTIVE_DENOMINATOR=256", self.common_relax)
-        self.assertIn('summary["generation_succeeded"] == 256', self.common_relax)
-        self.assertIn('"chgnet_relaxation_unknown": 256 - summary["chgnet_relaxation_known"]', self.common_relax)
-        self.assertIn('"closure_ce_minus_frozen_BS_CHGNet_relaxed_eV_per_atom"', self.common_relax)
-        self.assertIn('left["chgnet_composition"] == right["chgnet_composition"]', self.common_relax)
-        self.assertIn('"direct_run": False', self.common_relax)
-        self.assertIn('"model494": False', self.common_relax)
+        self.assertIn("SLURM_ARRAY_JOB_ID", self.common_relax)
+        self.assertIn('touch "${ARRAY_RUN}/_SUCCESS_rank${RANK}"', self.common_relax)
+
+    def test_common_relax_finalizer_reuses_frozen_evaluator_and_baseline(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.common_final)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.common_final)
+        self.assertIn("run_full_reconstructed_eval.py", self.common_final)
+        self.assertIn("CACHE_COVERAGE.json", self.common_final)
+        self.assertIn("assert not (required - cache)", self.common_final)
+        self.assertIn('summary["working_relax_cache_sha256_before"]', self.common_final)
+        self.assertIn('summary["working_relax_cache_sha256_after"]', self.common_final)
+        self.assertIn('"frozen_evaluator_cache_misses": 0', self.common_final)
+        self.assertIn('sum(report["assigned_occurrences"] for report in reports) == 256', self.common_final)
+        self.assertIn("spad_prospective_offline_s17_39542", self.common_final)
+        self.assertIn("--arm candidate --repeat 0", self.common_final)
+        self.assertIn("H1_ACTIVE_DENOMINATOR=256", self.common_final)
+        self.assertIn('summary["generation_succeeded"] == 256', self.common_final)
+        self.assertIn('"chgnet_relaxation_unknown": 256 - summary["chgnet_relaxation_known"]', self.common_final)
+        self.assertIn('"closure_ce_minus_frozen_BS_CHGNet_relaxed_eV_per_atom"', self.common_final)
+        self.assertIn('left["chgnet_composition"] == right["chgnet_composition"]', self.common_final)
+        self.assertIn('"direct_run": False', self.common_final)
+        self.assertIn('"model494": False', self.common_final)
 
     def test_every_run_is_non_overwriting(self):
         for wrapper in (
             self.build, self.train, self.canary, self.native, self.raw_screen,
-            self.common_relax,
+            self.common_final,
         ):
             self.assertIn('mkdir "${RUN}"', wrapper)
         for wrapper in (self.build, self.train, self.canary):
