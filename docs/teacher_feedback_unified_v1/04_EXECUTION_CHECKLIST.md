@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **24-hour SUN10/50 sprint; K10-4104 rollout and four-GPU action build**
+Status: **24-hour SUN10/50 sprint; K10-4104 four-GPU action/value build**
 
 Current decision: the 128-group K10 run is a completed feasibility-scale
 result, not the data-scale endpoint. Its tau800 stream18 result is Strict/Meta
@@ -253,13 +253,17 @@ so job 39770 restarts from the same registered closure-CE policy.
 - [x] Freeze 4,104 outcome-blind, distinct MP20-train rollout sources from the
   full 27,136 Plan/program pool: balanced cell/XYZ and cursor phase, no old
   three-stage ledger. The fixed cohort is
-  `$ROOT/cohorts/spad_basin_scale4104_train_v1_20260905`; job 39792 is
-  generating the corresponding deployment rollouts and materializing states.
+  `$ROOT/cohorts/spad_basin_scale4104_train_v1_20260905`. Job 39792 completed
+  in 01:20:52 on three A800: 4,104/4,104 Plan-matched, parseable and graph-valid
+  deployment rollouts; the materialized states contain 2,052 cell and 2,052 XYZ
+  transactions, four 513-row XYZ cursor buckets, 4,104 unique source rows and
+  zero reference-log replay mismatches. Outcomes were not read.
 - [ ] Build one dynamic-K<=4 complete transaction group per state and label
   K10 only. Reuse the frozen K10 rule; do not repeat K3/K5/K20 calibration.
   The zero-science pending three-GPU job 39793 was cancelled and replaced by
-  dependency job 39794 using four A800/16 CPU. This changes throughput only;
-  the cohort, policy, seeds and action construction are unchanged.
+  job 39794, now running with four A800/16 CPU. Dependency job 39796 will label
+  E0+K10 only on four A800 immediately after 39794. These are throughput-only
+  changes; the cohort, policy, seeds and scientific construction are unchanged.
 - [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
   4,104 clean anchors across the actually schedulable 2/3/4 ranks, one seed and
   final checkpoint only.
