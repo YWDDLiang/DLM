@@ -297,8 +297,10 @@ so job 39770 restarts from the same registered closure-CE policy.
   replacement at `$ROOT/cohorts/spad_prospective_seed24_256_v1_20260905`
   (255 unique exact compositions and one disclosed duplicate). Report raw and
   refined Strict/Meta S.U.N. without Direct.
-  Final generation/refinement job 39802 is now running on four A800 with this
-  frozen cohort and the completed job-39799 policy.
+  Final generation/refinement job 39802 completed in 00:15:42 on four A800:
+  body decoded/parsed/Plan-matched/graph-valid 256/256 and raw/refined assembly
+  both succeeded 256/256. Raw-first S.U.N. evaluation job 39803 is now running
+  on four A800 with no Direct or new official query.
 - [ ] If either preregistered primary endpoint reaches Strict>=10% and
   Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Per the
   user-authorized, outcome-independent near-miss rule fixed before stream19,
