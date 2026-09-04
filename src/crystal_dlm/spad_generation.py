@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+import re
 from dataclasses import asdict, dataclass
 from types import SimpleNamespace
 from typing import Any, Sequence
@@ -27,6 +29,9 @@ SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT = (
     * SPAD_BASIN_CLOSURE_SITE_RADIX
     * SPAD_BASIN_CLOSURE_COMPONENT_RADIX
 )
+PLAN_VPA_PATTERN = re.compile(r"^volpa_(\d{3})_(\d{3})$")
+PLAN_VPA_MAX_LINEAR_SCALE = 1.05
+PLAN_VPA_MIN_DISTANCE_A = 0.5
 
 
 class FixedBatchShapeModelView:
@@ -553,6 +558,383 @@ def _complete_cell_is_supported(
     distances = torch.linalg.vector_norm(vectors, dim=1)
     threshold = float(constraints.get("pbc_min_distance_A", 0.5))
     return bool(torch.all(distances >= threshold).detach().item())
+
+
+def _parse_plan_vpa_interval(value: Any) -> tuple[float, float] | None:
+    """Parse ``volpa_LLL_UUU`` as the half-open interval [LLL, UUU + 1)."""
+
+    if not isinstance(value, str):
+        return None
+    match = PLAN_VPA_PATTERN.fullmatch(value.strip())
+    if match is None:
+        return None
+    lower = int(match.group(1))
+    inclusive_upper = int(match.group(2))
+    if inclusive_upper < lower:
+        return None
+    return float(lower), float(inclusive_upper + 1)
+
+
+def _strict_projection_geometry_support(
+    row: torch.Tensor,
+    *,
+    prompt_length: int,
+    constraints: dict,
+    min_distance_A: float,
+) -> tuple[bool, str, float | None]:
+    """Validate a projected crystal with a strict triclinic 125-image MIC.
+
+    Unlike the legacy complete-cell guard, this also checks nonzero periodic
+    self-images.  That distinction matters for one-atom cells, where there is
+    no ordinary atom pair to expose an undersized lattice vector.
+    """
+
+    lattice = _lattice_matrix_from_token_ids(
+        row,
+        prompt_length=int(prompt_length),
+        constraints=constraints,
+    )
+    if lattice is None or not bool(torch.isfinite(lattice).all().item()):
+        return False, "invalid_lattice", None
+    determinant = float(torch.det(lattice).detach().item())
+    if determinant <= 1.0e-10:
+        return False, "nonpositive_lattice_volume", None
+
+    body_offset = int(constraints.get("body_offset", 0))
+    count_token = int(row[int(prompt_length) + body_offset].detach().item())
+    num_atoms = int(constraints.get("count_token_to_n", {}).get(count_token, 0))
+    if num_atoms <= 0:
+        return False, "invalid_atom_count", None
+    period = int(constraints.get("coord_period", 100))
+    if period <= 0:
+        return False, "invalid_coordinate_period", None
+
+    coordinate_maps = constraints.get("coord_token_to_bin", {})
+    coordinates: list[list[float]] = []
+    for slot in range(num_atoms):
+        bins: list[int] = []
+        for axis, position in zip(
+            ("X", "Y", "Z"), coordinate_positions(slot), strict=True
+        ):
+            token = int(row[int(prompt_length) + int(position)].detach().item())
+            value = coordinate_maps.get(axis, {}).get(token)
+            if value is None:
+                return False, "invalid_coordinate_token", None
+            bins.append(int(value))
+        coordinates.append([float(value) / float(period) for value in bins])
+
+    values = torch.arange(-2, 3, dtype=lattice.dtype, device=lattice.device)
+    shifts = torch.cartesian_prod(values, values, values).reshape(-1, 3)
+    nonzero_shifts = shifts[torch.any(shifts != 0, dim=1)]
+    self_distances = torch.linalg.vector_norm(nonzero_shifts @ lattice, dim=1)
+    minimum_distance = float(torch.min(self_distances).detach().item())
+    threshold = float(min_distance_A)
+    if minimum_distance < threshold:
+        return False, "nonzero_self_image_collision", minimum_distance
+
+    if num_atoms > 1:
+        fractional = torch.tensor(
+            coordinates,
+            dtype=torch.float64,
+            device=row.device,
+        )
+        left, right = torch.triu_indices(
+            num_atoms, num_atoms, offset=1, device=row.device
+        )
+        vectors = _minimum_image_vectors(
+            fractional[left] - fractional[right],
+            lattice,
+            image_radius=2,
+        )
+        pair_distances = torch.linalg.vector_norm(vectors, dim=1)
+        pair_minimum = float(torch.min(pair_distances).detach().item())
+        minimum_distance = min(minimum_distance, pair_minimum)
+        if pair_minimum < threshold:
+            return False, "atom_pair_collision", minimum_distance
+    return True, "supported", minimum_distance
+
+
+def _length_token_candidates(
+    constraints: dict,
+    *,
+    prefix: str,
+    original_length: float,
+    maximum_log_scale: float,
+) -> list[tuple[float, int]]:
+    step = float(constraints.get("length_step", 0.1))
+    if step <= 0.0 or original_length <= 0.0:
+        return []
+    candidates: list[tuple[float, int]] = []
+    for token_id, raw_bin in constraints.get("length_token_to_bin", {}).get(
+        prefix, {}
+    ).items():
+        length = float(raw_bin) * step
+        if length <= 0.0:
+            continue
+        if abs(math.log(length / original_length)) <= maximum_log_scale + 1.0e-12:
+            candidates.append((length, int(token_id)))
+    return sorted(candidates, key=lambda item: (item[0], item[1]))
+
+
+@torch.no_grad()
+def project_spad_cell_to_plan_vpa(
+    complete_tokens: torch.Tensor,
+    *,
+    volume_per_atom_bins_by_batch: Sequence[Any],
+    prompt_length: int,
+    gen_length: int,
+    lightweight_decoding_constraints: dict | None,
+    enabled: bool = False,
+) -> tuple[torch.Tensor, list[dict[str, Any]]]:
+    """Project a closed SPAD cell into a nearby Planner-Llama VPA interval.
+
+    The operation is intentionally conservative: only the three lattice
+    lengths may change, each by at most five percent.  Angles, fractional
+    coordinates, species, and all other tokens remain bit-identical.  Any
+    parsing, quantization, or geometry failure returns the exact input cell.
+    """
+
+    if not enabled:
+        return complete_tokens, []
+    if complete_tokens.ndim != 2:
+        raise ValueError("complete_tokens must have shape [batch, sequence]")
+    if complete_tokens.shape[1] != int(prompt_length) + int(gen_length):
+        raise ValueError("complete token sequence does not match prompt+generation")
+    if len(volume_per_atom_bins_by_batch) != int(complete_tokens.shape[0]):
+        raise ValueError("one Planner VPA bin is required per batch row")
+    if not lightweight_decoding_constraints:
+        raise ValueError("Plan-VPA projection requires decoding constraints")
+
+    constraints = lightweight_decoding_constraints
+    maximum_log_scale = math.log(PLAN_VPA_MAX_LINEAR_SCALE)
+    positions = tuple(int(value) for value in LATTICE_POSITIONS[:3])
+    absolute_positions = tuple(int(prompt_length) + value for value in positions)
+    output = complete_tokens.clone()
+    logs: list[dict[str, Any]] = []
+
+    for row_index, raw_vpa_bin in enumerate(volume_per_atom_bins_by_batch):
+        source = complete_tokens[row_index]
+        interval = _parse_plan_vpa_interval(raw_vpa_bin)
+        log: dict[str, Any] = {
+            "enabled": True,
+            "applied": False,
+            "reason": "unknown",
+            "plan_vpa_bin": raw_vpa_bin,
+            "target_vpa_interval": (
+                None if interval is None else [interval[0], interval[1]]
+            ),
+            "before_vpa": None,
+            "after_vpa": None,
+        }
+        lattice = _lattice_matrix_from_token_ids(
+            source,
+            prompt_length=int(prompt_length),
+            constraints=constraints,
+        )
+        body_offset = int(constraints.get("body_offset", 0))
+        count_token = int(source[int(prompt_length) + body_offset].detach().item())
+        num_atoms = int(constraints.get("count_token_to_n", {}).get(count_token, 0))
+        if lattice is None or num_atoms <= 0:
+            log["reason"] = "invalid_source_cell_or_atom_count"
+            logs.append(log)
+            continue
+        determinant = float(torch.det(lattice).detach().item())
+        if not math.isfinite(determinant) or determinant <= 1.0e-10:
+            log["reason"] = "invalid_source_cell_or_atom_count"
+            logs.append(log)
+            continue
+        before_vpa = determinant / float(num_atoms)
+        log["before_vpa"] = before_vpa
+        log["after_vpa"] = before_vpa
+        if interval is None:
+            log["reason"] = "unparseable_or_unknown_plan_vpa"
+            logs.append(log)
+            continue
+        lower, upper = interval
+        if lower <= before_vpa < upper:
+            log["reason"] = "already_in_plan_vpa_interval"
+            logs.append(log)
+            continue
+
+        boundary = lower if before_vpa < lower else upper
+        if boundary <= 0.0:
+            log["reason"] = "nonpositive_projection_boundary"
+            logs.append(log)
+            continue
+        requested_scale = (boundary / before_vpa) ** (1.0 / 3.0)
+        log["requested_isotropic_scale"] = requested_scale
+        if abs(math.log(requested_scale)) > maximum_log_scale + 1.0e-12:
+            log["reason"] = "scale_exceeds_five_percent_trust_region"
+            logs.append(log)
+            continue
+
+        step = float(constraints.get("length_step", 0.1))
+        length_maps = constraints.get("length_token_to_bin", {})
+        original_lengths: list[float] = []
+        original_tokens: list[int] = []
+        valid_lengths = step > 0.0
+        for prefix, absolute_position in zip(
+            ("LA", "LB", "LC"), absolute_positions, strict=True
+        ):
+            token_id = int(source[absolute_position].detach().item())
+            raw_bin = length_maps.get(prefix, {}).get(token_id)
+            if raw_bin is None:
+                valid_lengths = False
+                break
+            original_tokens.append(token_id)
+            original_lengths.append(float(raw_bin) * step)
+        if not valid_lengths or min(original_lengths, default=0.0) <= 0.0:
+            log["reason"] = "invalid_source_length_tokens"
+            logs.append(log)
+            continue
+
+        candidate_axes = [
+            _length_token_candidates(
+                constraints,
+                prefix=prefix,
+                original_length=length,
+                maximum_log_scale=maximum_log_scale,
+            )
+            for prefix, length in zip(
+                ("LA", "LB", "LC"), original_lengths, strict=True
+            )
+        ]
+        if any(not candidates for candidates in candidate_axes):
+            log["reason"] = "no_length_tokens_inside_trust_region"
+            logs.append(log)
+            continue
+
+        shape_factor = determinant / math.prod(original_lengths)
+        ideal_lengths = [requested_scale * value for value in original_lengths]
+        ranked_candidates: list[
+            tuple[
+                tuple[float, float, tuple[int, int, int]],
+                tuple[int, int, int],
+                float,
+            ]
+        ] = []
+        for a_length, a_token in candidate_axes[0]:
+            for b_length, b_token in candidate_axes[1]:
+                for c_length, c_token in candidate_axes[2]:
+                    candidate_lengths = (a_length, b_length, c_length)
+                    candidate_vpa = (
+                        shape_factor * math.prod(candidate_lengths) / float(num_atoms)
+                    )
+                    if not lower <= candidate_vpa < upper:
+                        continue
+                    squared_log_error = math.fsum(
+                        math.log(candidate / ideal) ** 2
+                        for candidate, ideal in zip(
+                            candidate_lengths, ideal_lengths, strict=True
+                        )
+                    )
+                    total_log_strain = math.fsum(
+                        abs(math.log(candidate / original))
+                        for candidate, original in zip(
+                            candidate_lengths, original_lengths, strict=True
+                        )
+                    )
+                    token_ids = (a_token, b_token, c_token)
+                    ranked_candidates.append(
+                        (
+                            (squared_log_error, total_log_strain, token_ids),
+                            token_ids,
+                            candidate_vpa,
+                        )
+                    )
+        if not ranked_candidates:
+            log["reason"] = "no_quantized_length_triple_in_plan_vpa_interval"
+            logs.append(log)
+            continue
+
+        ranked_candidates.sort(key=lambda item: item[0])
+        selected: tuple[
+            tuple[float, float, tuple[int, int, int]],
+            tuple[int, int, int],
+            float,
+            torch.Tensor,
+            float | None,
+        ] | None = None
+        first_rejection: tuple[
+            tuple[int, int, int], float, str, float | None
+        ] | None = None
+        for key, proposed_tokens, candidate_vpa in ranked_candidates:
+            candidate = source.clone()
+            for absolute_position, token_id in zip(
+                absolute_positions, proposed_tokens, strict=True
+            ):
+                candidate[absolute_position] = int(token_id)
+            geometry_supported, geometry_reason, minimum_distance = (
+                _strict_projection_geometry_support(
+                    candidate,
+                    prompt_length=int(prompt_length),
+                    constraints=constraints,
+                    min_distance_A=PLAN_VPA_MIN_DISTANCE_A,
+                )
+            )
+            if geometry_supported:
+                selected = (
+                    key,
+                    proposed_tokens,
+                    candidate_vpa,
+                    candidate,
+                    minimum_distance,
+                )
+                break
+            if first_rejection is None:
+                first_rejection = (
+                    proposed_tokens,
+                    candidate_vpa,
+                    geometry_reason,
+                    minimum_distance,
+                )
+        if selected is None:
+            if first_rejection is None:
+                raise RuntimeError("ranked VPA candidates disappeared before validation")
+            proposed_tokens, candidate_vpa, geometry_reason, minimum_distance = (
+                first_rejection
+            )
+            log.update(
+                {
+                    "proposed_length_token_ids": list(proposed_tokens),
+                    "candidate_vpa": candidate_vpa,
+                    "minimum_125_image_distance_A": minimum_distance,
+                    "geometry_validation": geometry_reason,
+                    "geometry_rejected_candidate_count": len(ranked_candidates),
+                }
+            )
+            log["reason"] = "projection_geometry_rollback"
+            logs.append(log)
+            continue
+
+        _key, proposed_tokens, candidate_vpa, candidate, minimum_distance = selected
+        log.update(
+            {
+                "proposed_length_token_ids": list(proposed_tokens),
+                "candidate_vpa": candidate_vpa,
+                "minimum_125_image_distance_A": minimum_distance,
+                "geometry_validation": "supported",
+            }
+        )
+
+        unchanged = torch.ones_like(source, dtype=torch.bool)
+        for absolute_position in absolute_positions:
+            unchanged[absolute_position] = False
+        if not bool(torch.equal(candidate[unchanged], source[unchanged])):
+            raise RuntimeError("Plan-VPA projection changed a non-length token")
+        output[row_index] = candidate
+        log.update(
+            {
+                "applied": True,
+                "reason": "projected_to_nearest_plan_vpa_boundary",
+                "previous_length_token_ids": original_tokens,
+                "new_length_token_ids": list(proposed_tokens),
+                "after_vpa": candidate_vpa,
+            }
+        )
+        logs.append(log)
+
+    return output, logs
 
 
 def _validate_revision_slots(
@@ -1665,6 +2047,7 @@ __all__ = [
     "SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT",
     "_spad_basin_closure_block_salt",
     "continue_spad_species_blocks_from_cursor",
+    "project_spad_cell_to_plan_vpa",
     "revise_spad_anchors",
     "revise_spad_cell",
     "revise_spad_species_blocks",

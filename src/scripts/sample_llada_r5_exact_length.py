@@ -26,6 +26,7 @@ from crystal_dlm.llada_generation import generate  # noqa: E402
 from crystal_dlm.spad_generation import (  # noqa: E402
     SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT,
     _spad_basin_closure_block_salt,
+    project_spad_cell_to_plan_vpa,
     revise_spad_anchors,
     revise_spad_cell,
     revise_spad_species_blocks,
@@ -125,10 +126,17 @@ def validate_spad_basin_closure_configuration(args: Any) -> Dict[str, Any] | Non
     """Validate the opt-in closure contract before model initialization."""
 
     enabled = bool(getattr(args, "spad_basin_closure", False))
+    plan_vpa_projection = bool(
+        getattr(args, "spad_plan_vpa_projection", False)
+    )
     capability_path_value = getattr(
         args, "spad_basin_closure_capability_json", None
     )
     if not enabled:
+        if plan_vpa_projection:
+            raise ValueError(
+                "--spad-plan-vpa-projection requires --spad-basin-closure"
+            )
         if capability_path_value is not None:
             raise ValueError(
                 "--spad-basin-closure-capability-json requires "
@@ -245,13 +253,14 @@ def apply_spad_basin_closure(
     mask_id: int,
     allowed_token_ids_by_generation_pos: list[list[int]] | None,
     lightweight_decoding_constraints: dict | None,
+    plan_vpa_projection: bool = False,
 ) -> tuple[
     torch.Tensor,
     list[dict[str, Any]],
     list[list[dict[str, Any]]],
     list[dict[str, Any]],
 ]:
-    """Execute predictor -> cell -> reverse Llama species-block closure."""
+    """Execute predictor -> cell -> optional VPA projection -> block closure."""
 
     if len(programs) != len(batch):
         raise ValueError("one SPAD program is required per closure batch row")
@@ -291,6 +300,19 @@ def apply_spad_basin_closure(
         strict_geometry_fallback=True,
         sampling_seeds_by_batch=cell_sampling_seeds,
     )
+    vpa_projection_logs: list[dict[str, Any]] = []
+    if plan_vpa_projection:
+        closed_tokens, vpa_projection_logs = project_spad_cell_to_plan_vpa(
+            closed_tokens,
+            volume_per_atom_bins_by_batch=[
+                item.get("plan_state", {}).get("volume_per_atom_bin")
+                for item in batch
+            ],
+            prompt_length=prompt_length,
+            gen_length=gen_length,
+            lightweight_decoding_constraints=lightweight_decoding_constraints,
+            enabled=True,
+        )
     closed_tokens, block_logs = revise_spad_species_blocks(
         model,
         closed_tokens,
@@ -307,10 +329,35 @@ def apply_spad_basin_closure(
         lightweight_decoding_constraints=lightweight_decoding_constraints,
         sampling_seeds_by_batch=block_sampling_seeds,
     )
-    metadata = [
-        {
+    metadata: list[dict[str, Any]] = []
+    for row_index, (
+        program,
+        blocks,
+        cell_seed,
+        block_seed,
+        block_log,
+    ) in enumerate(
+        zip(
+            programs,
+            revision_blocks,
+            cell_sampling_seeds,
+            block_sampling_seeds,
+            block_logs,
+            strict=True,
+        )
+    ):
+        row_metadata: dict[str, Any] = {
             "closure_schedule_version": SPAD_BASIN_CLOSURE_SCHEDULE_VERSION,
-            "stage_order": ["predictor", "cell", "reverse_species_blocks"],
+            "stage_order": (
+                [
+                    "predictor",
+                    "cell",
+                    "plan_vpa_projection",
+                    "reverse_species_blocks",
+                ]
+                if plan_vpa_projection
+                else ["predictor", "cell", "reverse_species_blocks"]
+            ),
             "species_program": list(program.element_order),
             "species_program_source": str(program.order_source),
             "reverse_species_block_slots": blocks,
@@ -324,15 +371,11 @@ def apply_spad_basin_closure(
                 and block_log[-1].get("final_geometry_supported") is True
             ),
         }
-        for program, blocks, cell_seed, block_seed, block_log in zip(
-            programs,
-            revision_blocks,
-            cell_sampling_seeds,
-            block_sampling_seeds,
-            block_logs,
-            strict=True,
-        )
-    ]
+        if plan_vpa_projection:
+            row_metadata["plan_vpa_projection_log"] = dict(
+                vpa_projection_logs[row_index]
+            )
+        metadata.append(row_metadata)
     return closed_tokens, list(cell_logs), list(block_logs), metadata
 
 
@@ -629,6 +672,7 @@ def main() -> None:
     parser.add_argument("--spad-backfill", action="store_true")
     parser.add_argument("--spad-cell-closure", action="store_true")
     parser.add_argument("--spad-basin-closure", action="store_true")
+    parser.add_argument("--spad-plan-vpa-projection", action="store_true")
     parser.add_argument(
         "--spad-basin-closure-capability-json",
         type=Path,
@@ -674,6 +718,8 @@ def main() -> None:
     tasks.sort(key=lambda item: (int(item["plan_state"]["N"]), int(item["sample_idx"])))
 
     run_config = {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}
+    if not args.spad_plan_vpa_projection:
+        run_config.pop("spad_plan_vpa_projection", None)
     if args.body_prompt_style == "formula_only":
         r5_representation = H1_FORMULA_ONLY_BODY_REPRESENTATION
     elif args.body_prompt_style == "hard_anchor_only":
@@ -845,6 +891,7 @@ def main() -> None:
                     mask_id=MASK_TOKEN_ID,
                     allowed_token_ids_by_generation_pos=allowed,
                     lightweight_decoding_constraints=lightweight_constraints,
+                    plan_vpa_projection=bool(args.spad_plan_vpa_projection),
                 )
                 basin_cell_revision_logs = list(basin_cell_logs)
                 basin_block_revision_logs = list(basin_block_logs)

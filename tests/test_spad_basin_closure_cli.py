@@ -48,6 +48,7 @@ if torch is not None:
 def configuration(**overrides):
     values = {
         "spad_basin_closure": True,
+        "spad_plan_vpa_projection": False,
         "spad_basin_closure_capability_json": None,
         "generation_schedule": "spad",
         "spad_backfill": False,
@@ -81,6 +82,13 @@ class SPADBasinClosureCLITest(unittest.TestCase):
             (
                 {"spad_cell_closure": True},
                 "cannot be combined with --spad-cell-closure",
+            ),
+            (
+                {
+                    "spad_basin_closure": False,
+                    "spad_plan_vpa_projection": True,
+                },
+                "requires --spad-basin-closure",
             ),
         )
         for overrides, expected in cases:
@@ -266,6 +274,85 @@ class SPADBasinClosureCLITest(unittest.TestCase):
             block_seed + MODULE._spad_basin_closure_block_salt(1, 0, 0),
             next_sample_block_seed
             + MODULE._spad_basin_closure_block_salt(0, 0, 0),
+        )
+
+    def test_opt_in_vpa_projection_runs_between_cell_and_species_blocks(self):
+        plan = {
+            "N": 2,
+            "elements": ["Na", "Cl"],
+            "counts": [1, 1],
+            "volume_per_atom_bin": "volpa_015_019",
+        }
+        program = MODULE.program_from_element_order(
+            plan,
+            ["Na", "Cl"],
+            order_source="llama_pointer",
+        )
+        calls = []
+
+        def fake_cell(_model, tokens, **kwargs):
+            calls.append(("cell", tokens, kwargs))
+            return "cell_closed", [{"stage": "cell"}]
+
+        def fake_projection(tokens, **kwargs):
+            calls.append(("vpa", tokens, kwargs))
+            return "vpa_projected", [{"applied": True, "after_vpa": 15.1}]
+
+        def fake_blocks(_model, tokens, **kwargs):
+            calls.append(("blocks", tokens, kwargs))
+            return "block_closed", [
+                [{"stage": "block", "final_geometry_supported": True}]
+            ]
+
+        with patch.object(
+            MODULE, "revise_spad_cell", side_effect=fake_cell
+        ), patch.object(
+            MODULE,
+            "project_spad_cell_to_plan_vpa",
+            side_effect=fake_projection,
+        ), patch.object(
+            MODULE, "revise_spad_species_blocks", side_effect=fake_blocks
+        ):
+            output, _, _, metadata = MODULE.apply_spad_basin_closure(
+                object(),
+                "predictor_output",
+                programs=[program],
+                batch=[{"sample_idx": 7, "plan_state": plan}],
+                base_seed=17,
+                prompt_length=2,
+                gen_length=15,
+                attention_mask=None,
+                temperature=0.7,
+                cfg_scale=0.0,
+                remasking="low_confidence",
+                mask_id=126336,
+                allowed_token_ids_by_generation_pos=None,
+                lightweight_decoding_constraints={
+                    "pbc_min_distance_mask": True
+                },
+                plan_vpa_projection=True,
+            )
+
+        self.assertEqual([entry[0] for entry in calls], ["cell", "vpa", "blocks"])
+        self.assertEqual(calls[1][1], "cell_closed")
+        self.assertEqual(calls[2][1], "vpa_projected")
+        self.assertEqual(
+            calls[1][2]["volume_per_atom_bins_by_batch"],
+            ["volpa_015_019"],
+        )
+        self.assertTrue(calls[1][2]["enabled"])
+        self.assertEqual(output, "block_closed")
+        self.assertEqual(
+            metadata[0]["stage_order"],
+            [
+                "predictor",
+                "cell",
+                "plan_vpa_projection",
+                "reverse_species_blocks",
+            ],
+        )
+        self.assertEqual(
+            metadata[0]["plan_vpa_projection_log"]["after_vpa"], 15.1
         )
 
     def test_metadata_records_failed_final_geometry(self):
