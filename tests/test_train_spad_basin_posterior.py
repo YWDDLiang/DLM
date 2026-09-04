@@ -49,6 +49,23 @@ def group(sample_idx, candidates, *, state_type="xyz"):
 
 
 class BasinPosteriorPureTest(unittest.TestCase):
+    def test_trainable_policy_is_restored_after_no_grad_scoring(self):
+        class Parameter:
+            requires_grad = False
+
+        class Runtime:
+            def __init__(self):
+                self.policy_parameters = [Parameter(), Parameter()]
+
+            def activate_policy(self, *, trainable):
+                for parameter in self.policy_parameters:
+                    parameter.requires_grad = trainable
+
+        runtime = Runtime()
+        parameters = MODULE.activate_trainable_policy(runtime)
+        self.assertEqual(len(parameters), 2)
+        self.assertTrue(all(parameter.requires_grad for parameter in parameters))
+
     def test_accepts_formal_labeler_schema(self):
         self.assertTrue(
             MODULE._is_supported_group_schema(

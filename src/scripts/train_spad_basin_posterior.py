@@ -667,6 +667,18 @@ def move_to_device(value: Any, device: Any) -> Any:
     return value
 
 
+def activate_trainable_policy(runtime: Any) -> tuple[Any, ...]:
+    """Restore the policy adapter after any reference/no-grad scoring pass."""
+
+    runtime.activate_policy(trainable=True)
+    parameters = tuple(
+        parameter for parameter in runtime.policy_parameters if parameter.requires_grad
+    )
+    if not parameters:
+        raise RuntimeError("policy adapter has no trainable parameters")
+    return parameters
+
+
 def _score_actions(
     runtime: Any,
     batch: Mapping[str, Any],
@@ -962,6 +974,10 @@ def step0_policy_reference_equality(
         raise RuntimeError("step0 equality did not cover all 128 groups")
     if not math.isfinite(maximum) or maximum > 1.0e-6:
         raise RuntimeError("step0 policy/reference supplied-action scores differ")
+    # The final equality score above is deliberately no-grad and therefore leaves
+    # the policy adapter frozen.  Restore its training state before the gradient
+    # probe and optimizer are constructed.
+    activate_trainable_policy(runtime)
     return {
         "passed": True,
         "groups_checked": global_checked,
@@ -984,9 +1000,7 @@ def run_gradient_probe(
     informative = group_dataset.preinformative_indices
     if len(informative) < GRADIENT_PROBE_PAIRS:
         raise RuntimeError("fewer than five preinformative groups for gradient probe")
-    parameters = tuple(
-        parameter for parameter in runtime.policy_parameters if parameter.requires_grad
-    )
+    parameters = activate_trainable_policy(runtime)
     python_state = random.getstate()
     cpu_state = modules.torch.get_rng_state()
     cuda_state = modules.torch.cuda.get_rng_state(device)
