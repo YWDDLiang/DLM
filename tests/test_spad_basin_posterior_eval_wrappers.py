@@ -24,6 +24,7 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
             "#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", self.generation
         )
         self.assertIn('readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"', self.generation)
+        self.assertIn('readonly PRIMARY_WORLD_SIZE="${SPAD_PRIMARY_WORLD_SIZE:-4}"', self.generation)
         self.assertIn('run_arm k10 "${gpu_csv}" "${expected_gpus}"', self.generation)
         self.assertIn('run_arm closure_ce "${allocated_gpus[0]}" 1', self.generation)
         self.assertIn('run_arm k10 "${allocated_gpus[1]}" 1', self.generation)

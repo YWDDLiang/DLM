@@ -19,6 +19,7 @@ readonly SOURCE="${SSCD_SOURCE_ROOT:?export SSCD_SOURCE_ROOT}"
 readonly TRAIN_RUN="${SPAD_BASIN_POSTERIOR_TRAIN_RUN:?export the completed 213 training run}"
 readonly SELECTED_TAU="${SPAD_SELECTED_TAU:?export the preregistered stream17-selected tau}"
 readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"
+readonly PRIMARY_WORLD_SIZE="${SPAD_PRIMARY_WORLD_SIZE:-4}"
 readonly PLAN_DIR="${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903"
 readonly CLOSURE_RUN="${ROOT}/runs/spad_basin_closure_ce_39700"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
@@ -40,6 +41,10 @@ case "${SELECTED_TAU}" in
 esac
 [[ "${PRIMARY_ONLY}" == true || "${PRIMARY_ONLY}" == false ]] || {
   printf 'SPAD_PRIMARY_ONLY must be true or false\n' >&2
+  exit 2
+}
+[[ "${PRIMARY_WORLD_SIZE}" =~ ^[1-4]$ ]] || {
+  printf 'SPAD_PRIMARY_WORLD_SIZE must lie in [1,4]\n' >&2
   exit 2
 }
 
@@ -182,7 +187,7 @@ readonly K10_CAPABILITY="${resolved_paths[3]}"
 
 IFS=',' read -r -a allocated_gpus <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"
 expected_gpus=2
-[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus=4
+[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus="${PRIMARY_WORLD_SIZE}"
 [[ "${#allocated_gpus[@]}" -eq "${expected_gpus}" ]] || {
   printf 'expected %s allocated GPUs, observed %s\n' \
     "${expected_gpus}" "${#allocated_gpus[@]}" >&2

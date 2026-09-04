@@ -194,8 +194,10 @@ so job 39770 restarts from the same registered closure-CE policy.
   tau800 refined endpoint. Do not repeat closure-CE, four-cell validation or
   Direct before the primary S.U.N. result. The zero-second pending job 39774 was
   cancelled before science when the resource policy changed. Its replacement
-  runs the single K10 arm as four deterministic distributed shards on 4 A800 /
-  16 CPU, then merges by sample index before one tau800 refinement result.
+  runs the single K10 arm as deterministic distributed shards, then merges by
+  sample index before one tau800 refinement result. Use four ranks when all four
+  GPUs are free; while the independent 39772 occupies one GPU, use the other
+  three ranks so aggregate allocation is 4 A800 without waiting for resources.
 - [x] Evaluate closure-CE raw first: fast validity, E/F/stress, relaxation,
   N/U and Strict/Meta S.U.N., with paired wins/losses.
 - [ ] Record K10 raw fast validity from generation, but defer raw CHGNet and all
