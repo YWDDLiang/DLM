@@ -272,8 +272,15 @@ so job 39770 restarts from the same registered closure-CE policy.
   construction are unchanged.
 - [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
   4,104 clean anchors across the actually schedulable 2/3/4 ranks, one seed and
-  final checkpoint only. Job 39797 has been submitted for four A800/16 CPU,
-  one pass, LR 5e-6, 64-group step-0 probe and 128-update warmup.
+  final checkpoint only. Job 39797 reached 64 finite updates but failed before
+  any checkpoint save because NCCL initialized before rank-local device binding:
+  ranks 1--3 each stranded about 6.37 GiB on GPU0 and rank0 missed a 16 MiB
+  allocation. Commit 5f24a02 binds `cuda:LOCAL_RANK` before NCCL and replaces
+  all-visible-device seeding with identical rank-local seeding; 17 local and 17
+  remote tests pass. Recovery job 39798 restarts from the same closure-CE
+  checkpoint on four A800/16 CPU with the unchanged data, LR, one-pass schedule,
+  64-group step-0 probe and 128-update warmup. Job 39797 is a negative
+  engineering run and its partial state is ineligible.
 - [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
   Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
   fixed tau800. Report raw and refined Strict/Meta S.U.N. without Direct.
