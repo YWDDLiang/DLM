@@ -560,6 +560,7 @@ class SPADGenerationTest(unittest.TestCase):
             **kwargs,
         )
         self.assertTrue(torch.equal(first[0], swapped[1]))
+        self.assertTrue(torch.equal(first[1], swapped[0]))
 
     def test_cursor_continuation_replays_reference_with_global_rng_salts(self):
         class FlatSamplingModel(self.TinyModel):
@@ -620,8 +621,6 @@ class SPADGenerationTest(unittest.TestCase):
         self.assertEqual(
             [row["block_index"] for row in report["later_block_revisions"]], [1]
         )
-        self.assertTrue(torch.equal(first[1], swapped[0]))
-
     def test_species_block_mixed_radix_salts_are_unique(self):
         salts = {
             _spad_basin_closure_block_salt(block, site, component)
