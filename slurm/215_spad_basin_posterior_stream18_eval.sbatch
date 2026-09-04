@@ -18,11 +18,13 @@ readonly SOURCE="${SSCD_SOURCE_ROOT:?export SSCD_SOURCE_ROOT}"
 readonly GENERATION_RUN="${SPAD_BASIN_POSTERIOR_GENERATION_RUN:?export the completed 214 generation run}"
 readonly SELECTED_TAU="${SPAD_SELECTED_TAU:?export the same preregistered tau used by 214}"
 readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"
+readonly PRIMARY_WORLD_SIZE="${SPAD_PRIMARY_WORLD_SIZE:-4}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly V3_RUN="${PROJECT}/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly R03E="${V3_RUN}/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1"
 readonly GLOBAL_CACHE="${PROJECT}/data/a100_eval_sun_cache/chgnet_relax_cache_global.jsonl"
+readonly RESUMABLE="${PROJECT}/reference/a100_eval_sun/eval_sun_resumable.py"
 readonly FULL="${SOURCE}/eval_runtime/run_full_reconstructed_eval.py"
 readonly OFFICIAL_CACHE="${ROOT}/runs/spad_basin_closure_official_20260904_v1/official_mp_cache"
 readonly S17_DIAGNOSTIC="${ROOT}/runs/spad_basin_closure_official_final_20260904_v1/attempt_results_official.jsonl"
@@ -41,6 +43,10 @@ case "${SELECTED_TAU}" in
 esac
 [[ "${PRIMARY_ONLY}" == true || "${PRIMARY_ONLY}" == false ]] || {
   printf 'SPAD_PRIMARY_ONLY must be true or false\n' >&2
+  exit 2
+}
+[[ "${PRIMARY_WORLD_SIZE}" =~ ^[1-4]$ ]] || {
+  printf 'SPAD_PRIMARY_WORLD_SIZE must lie in [1,4]\n' >&2
   exit 2
 }
 
@@ -72,6 +78,8 @@ for path in \
   "${GENERATION_RUN}/_SUCCESS" \
   "${GENERATION_RUN}/GENERATION_FINAL.json" \
   "${GLOBAL_CACHE}" \
+  "${RESUMABLE}" \
+  "${SOURCE}/scripts/relax_spad_basin_closure_shard.py" \
   "${FULL}" \
   "${FINALIZER}" \
   "${OFFICIAL_CACHE}/completion_SUCCESS" \
@@ -127,7 +135,7 @@ PY
 
 IFS=',' read -r -a allocated_gpus <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"
 expected_gpus=4
-[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus=1
+[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus="${PRIMARY_WORLD_SIZE}"
 [[ "${#allocated_gpus[@]}" -eq "${expected_gpus}" ]] || {
   printf 'expected %s allocated GPUs, observed %s\n' \
     "${expected_gpus}" "${#allocated_gpus[@]}" >&2
@@ -175,10 +183,77 @@ run_full_cell() {
   [[ -f "${cell}/full_reconstructed/attempt_labels_preofficial.jsonl" ]]
 }
 
+run_primary_refined_sharded() {
+  local arm=k10 endpoint=refined
+  local cell generation rank pid status=0
+  local -a shard_pids=()
+  cell="${RUN}/${arm}/${endpoint}"
+  generation="$(generation_path "${arm}" "${endpoint}")"
+  mkdir -p "${cell}/input" "${cell}/shards" "${cell}/full_reconstructed"
+
+  env CUDA_VISIBLE_DEVICES= PYTHONPATH="${R03E}/runtime" "${PYTHON}" \
+    - "${generation}" "${cell}/input" <<'PY'
+import pathlib
+import sys
+from crystal_dlm.wqcodiff.crysllmgen import a100_sun
+
+output = pathlib.Path(sys.argv[2])
+manifest = a100_sun.prepare_a100_input(
+    generation_jsonl=pathlib.Path(sys.argv[1]),
+    output_pt=output / "all_attempts.pt",
+    output_manifest=output / "input_manifest.json",
+    expected_attempts=256,
+)
+assert manifest["total_attempts"] == 256
+PY
+
+  for ((rank=0; rank<expected_gpus; rank++)); do
+    env CUDA_VISIBLE_DEVICES="${allocated_gpus[${rank}]}" \
+      OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
+      NUMEXPR_NUM_THREADS=4 PYTHONPATH="${SOURCE}/src" \
+      "${PYTHON}" "${SOURCE}/scripts/relax_spad_basin_closure_shard.py" \
+      --generation-jsonl "${generation}" \
+      --generated-pt "${cell}/input/all_attempts.pt" \
+      --input-manifest "${cell}/input/input_manifest.json" \
+      --base-cache "${GLOBAL_CACHE}" --frozen-resumable-py "${RESUMABLE}" \
+      --output-jsonl "${cell}/shards/cache_rank${rank}.jsonl" \
+      --report-json "${cell}/shards/report_rank${rank}.json" \
+      --denominator 256 --shard-rank "${rank}" \
+      --shard-count "${expected_gpus}" --device cuda \
+      >"${RUN}/logs/k10_refined_relax_rank${rank}.out" \
+      2>"${RUN}/logs/k10_refined_relax_rank${rank}.err" &
+    shard_pids+=("$!")
+  done
+  for pid in "${shard_pids[@]}"; do
+    wait "${pid}" || status=1
+  done
+  [[ "${status}" -eq 0 ]]
+
+  cp --reflink=auto "${GLOBAL_CACHE}" "${cell}/working_relax_cache.jsonl"
+  for ((rank=0; rank<expected_gpus; rank++)); do
+    cat "${cell}/shards/cache_rank${rank}.jsonl" \
+      >>"${cell}/working_relax_cache.jsonl"
+  done
+  env CUDA_VISIBLE_DEVICES="${allocated_gpus[0]}" \
+    OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
+    NUMEXPR_NUM_THREADS=4 H1_ACTIVE_DENOMINATOR=256 \
+    PYTHONPATH="${SOURCE}/eval_runtime:${R03E}/runtime" \
+    "${PYTHON}" "${FULL}" --arm candidate --repeat 0 \
+    --generation-jsonl "${generation}" --config "${V3_SOURCE}/CONFIG.json" \
+    --r03e-root "${R03E}" \
+    --working-relax-cache "${cell}/working_relax_cache.jsonl" \
+    --output-dir "${cell}/full_reconstructed" \
+    >"${RUN}/logs/k10_refined_full.out" \
+    2>"${RUN}/logs/k10_refined_full.err"
+  [[ -f "${cell}/full_reconstructed/_SUCCESS" ]]
+  [[ -f "${cell}/full_reconstructed/attempt_labels_preofficial.jsonl" ]]
+}
+
 run_wave_one() {
   CHILD_PIDS=()
   if [[ "${PRIMARY_ONLY}" == true ]]; then
-    run_full_cell 0 k10 refined & CHILD_PIDS+=("$!")
+    run_primary_refined_sharded
+    return
   else
     run_full_cell 0 closure_ce raw & CHILD_PIDS+=("$!")
     run_full_cell 1 closure_ce refined & CHILD_PIDS+=("$!")
