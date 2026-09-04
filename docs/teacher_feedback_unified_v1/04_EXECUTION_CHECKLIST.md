@@ -196,8 +196,9 @@ so job 39770 restarts from the same registered closure-CE policy.
   cancelled before science when the resource policy changed. Its replacement
   runs the single K10 arm as deterministic distributed shards, then merges by
   sample index before one tau800 refinement result. Use four ranks when all four
-  GPUs are free; while the independent 39772 occupies one GPU, use the other
-  three ranks so aggregate allocation is 4 A800 without waiting for resources.
+  GPUs are schedulable. Slurm reported six of eight node GPUs already allocated
+  by other active jobs, so job 39779 uses both remaining GPUs/8 CPU immediately;
+  it is one K10 experiment with two data-parallel ranks, not two arms.
 - [x] Evaluate closure-CE raw first: fast validity, E/F/stress, relaxation,
   N/U and Strict/Meta S.U.N., with paired wins/losses.
 - [ ] Record K10 raw fast validity from generation, but defer raw CHGNet and all
