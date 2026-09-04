@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **24-hour SUN10/50 sprint; tau800 anchor and basin actions running**
+Status: **24-hour SUN10/50 sprint; K10 training and tau calibration running**
 
 Sprint deadline: **2026-09-05 22:00 Asia/Shanghai**. The target is final
 prospective Strict/Meta S.U.N. at least `10%/50%` under a fixed, fully disclosed
@@ -166,10 +166,13 @@ Current execution:
   states.
 - [ ] One seed, one endpoint, no early stop or checkpoint selection.
 
-Current training: job 39754 uses 2 A800/8 CPU for the preregistered K10 primary,
+Current training: job 39758 uses 2 A800/8 CPU for the preregistered K10 primary,
 four passes over 128 groups, interleaving 256 clean full-MP20 closure-CE and 256
-posterior updates. Job 39753 is a pre-update schema-name engineering negative;
-no scientific parameter changed in the recovery.
+posterior updates. Jobs 39753--39755 are pre-update engineering negatives. The
+39755 diagnosis found that the step-0 no-grad policy/reference equality pass
+left every LoRA parameter frozen before the gradient probe; commit `727d02a`
+restores the trainable policy explicitly and adds a regression test. No data,
+value target, learning rate, schedule or other scientific parameter changed.
 
 ## I. Final evaluation
 
@@ -192,8 +195,10 @@ no scientific parameter changed in the recovery.
   to native closure raw this adds 8 Strict and 42 Meta S.U.N. outcomes, but it
   does not meet `10%/50%`.
 - [ ] Treat the completed fixed256 as development after this first outcome.
-  Job 39737 generated tau400/tau600 and job 39747 generates the current-system
-  tau800 anchor; one shared evaluation will calibrate the bridge;
+  Job 39737 generated tau400/tau600 and job 39747 completed the current-system
+  tau800 anchor at 256/256. Job 39757 is evaluating tau400/600/800 sequentially
+  with one GPU, existing official cache and no Direct/query; the preregistered
+  balanced target-attainment rule then selects one bridge tau;
   any chosen tau must be confirmed on a disjoint frozen cohort before a final
   prospective claim.
 - [ ] The desired endpoint is native Strict/Meta `10%/50%`, but claims follow
