@@ -4,7 +4,8 @@ Status: **24-hour SUN10/50 sprint; stream18 raw settling and K10-4104 scale-up**
 
 Current decision: the 128-group K10 run is a completed feasibility-scale
 result, not the data-scale endpoint. Its tau800 stream18 result is Strict/Meta
-`15/119` of 256 with raw/refined validity `254/256`. Scale the same scientific
+`15/119` of 256 with raw/refined validity `254/256`; native raw is Strict/Meta
+`3/48`, with N/U `252/256`. Scale the same scientific
 object to 4,104 unique MP20-train deployment states on the currently available
 three-GPU topology; do not add epochs to the same 128 groups or add a clean-CE
 only route.
