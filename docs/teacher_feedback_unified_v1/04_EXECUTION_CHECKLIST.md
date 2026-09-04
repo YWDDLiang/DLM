@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **native closure official result complete; basin-value preflight is next**
+Status: **train-only preflight cohort frozen; on-policy generation job 39731 running**
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -106,8 +106,9 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
 - [x] Authorize this stage only after closure-CE demonstrated a real native
   energy control surface but insufficient S.U.N. tail conversion.
-- [ ] Freeze 128 train-only on-policy closure states spanning cell, XYZ,
-  high-N and high-multiplicity cases.
+- [x] Freeze 128 outcome-blind MP20-train plans, balanced 64 cell/64 terminal
+  XYZ and stratified across N, multiplicity and species count; generate their
+  on-policy closure trajectories with job 39731.
 - [ ] Generate at most four outcome-blind legal actions per state.
 - [ ] Execute the exact remaining closure with common random numbers.
 - [ ] Calibrate one short relaxation horizon against the normal relaxation;
