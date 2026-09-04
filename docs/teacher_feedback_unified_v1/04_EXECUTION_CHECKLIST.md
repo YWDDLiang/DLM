@@ -5,10 +5,10 @@ Status: **24-hour SUN10/50 sprint; K10-4104 rollout and four-GPU action build**
 Current decision: the 128-group K10 run is a completed feasibility-scale
 result, not the data-scale endpoint. Its tau800 stream18 result is Strict/Meta
 `15/119` of 256 with raw/refined validity `254/256`; native raw is Strict/Meta
-`3/48`, with N/U `252/256`. Scale the same scientific
-object to 4,104 unique MP20-train deployment states on the currently available
-three-GPU topology; do not add epochs to the same 128 groups or add a clean-CE
-only route.
+`3/48`, with N/U `252/256`. Scale the same scientific object to 4,104 unique
+MP20-train deployment states, using the actually schedulable two-, three- or
+four-GPU topology at each stage; do not add epochs to the same 128 groups or
+add a clean-CE-only route.
 
 Sprint deadline: **2026-09-05 22:00 Asia/Shanghai**. The target is final
 prospective Strict/Meta S.U.N. at least `10%/50%` under a fixed, fully disclosed
@@ -261,7 +261,8 @@ so job 39770 restarts from the same registered closure-CE policy.
   dependency job 39794 using four A800/16 CPU. This changes throughput only;
   the cohort, policy, seeds and action construction are unchanged.
 - [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
-  4,104 clean anchors across three ranks, one seed and final checkpoint only.
+  4,104 clean anchors across the actually schedulable 2/3/4 ranks, one seed and
+  final checkpoint only.
 - [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
   Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
   fixed tau800. Report raw and refined Strict/Meta S.U.N. without Direct.
