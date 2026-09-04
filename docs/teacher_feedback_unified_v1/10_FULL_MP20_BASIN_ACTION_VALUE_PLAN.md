@@ -72,6 +72,14 @@ The trained Planner-Llama pointer is used for the 24,558 rows with supported
 typed inputs. The existing canonical fallback is retained for the other 2,578
 rows; no missing scientific certificate is invented.
 
+`species_program` is an executable control variable, not descriptive metadata.
+It controls the initial SPAD species transaction order, identifies
+`anchor_second` and `anchor_first`, fixes their revision order, and determines
+the remaining reference-DLM continuation after every candidate. Consequently
+the learned value is attached to the transaction selected by Llama's program.
+Replacing this order with a global canonical schedule would define a different
+method and is not allowed in either route.
+
 ## One shared action support
 
 Both routes consume byte-identical states, action token blocks, reference
@@ -196,4 +204,3 @@ cache supplies official reference phases but does not make generated energies
 independent DFT. MatterSim failure does not block this experiment; an eventual
 frozen DFT or independent-MLIP subset is external validation, not part of
 inference.
-
