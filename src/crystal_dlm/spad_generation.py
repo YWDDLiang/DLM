@@ -18,6 +18,39 @@ from crystal_dlm.llada_generation import (
 from crystal_dlm.spad_program import LATTICE_POSITIONS, coordinate_positions
 
 
+SPAD_BASIN_CLOSURE_BLOCK_RADIX = 64
+SPAD_BASIN_CLOSURE_SITE_RADIX = 64
+SPAD_BASIN_CLOSURE_COMPONENT_RADIX = 3
+SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT = (
+    SPAD_BASIN_CLOSURE_BLOCK_RADIX
+    * SPAD_BASIN_CLOSURE_SITE_RADIX
+    * SPAD_BASIN_CLOSURE_COMPONENT_RADIX
+)
+
+
+def _spad_basin_closure_block_salt(
+    block_index: int,
+    site_order_index: int,
+    component: int,
+) -> int:
+    """Encode a closure action in a compact collision-free mixed radix."""
+
+    block = int(block_index)
+    site = int(site_order_index)
+    axis = int(component)
+    if not 0 <= block < SPAD_BASIN_CLOSURE_BLOCK_RADIX:
+        raise ValueError("species-block index exceeds closure RNG radix")
+    if not 0 <= site < SPAD_BASIN_CLOSURE_SITE_RADIX:
+        raise ValueError("site index exceeds closure RNG radix")
+    if not 0 <= axis < SPAD_BASIN_CLOSURE_COMPONENT_RADIX:
+        raise ValueError("coordinate component exceeds closure RNG radix")
+    return (
+        (block * SPAD_BASIN_CLOSURE_SITE_RADIX + site)
+        * SPAD_BASIN_CLOSURE_COMPONENT_RADIX
+        + axis
+    )
+
+
 @dataclass(frozen=True)
 class Model494ResponseConfig:
     """Fixed local trust region for model494 endpoint-response guidance."""
@@ -504,6 +537,45 @@ def _validate_revision_slots(
     return output
 
 
+def _validate_revision_blocks(
+    revision_blocks_by_batch: Sequence[Sequence[Sequence[int]]],
+    *,
+    batch_size: int,
+    gen_length: int,
+) -> list[list[tuple[int, ...]]]:
+    if len(revision_blocks_by_batch) != int(batch_size):
+        raise ValueError("one species-block schedule is required per batch row")
+    output: list[list[tuple[int, ...]]] = []
+    for row_index, raw_blocks in enumerate(revision_blocks_by_batch):
+        blocks: list[tuple[int, ...]] = []
+        seen: set[int] = set()
+        for block_index, raw_slots in enumerate(raw_blocks):
+            slots = tuple(int(value) for value in raw_slots)
+            if not slots:
+                raise ValueError(
+                    f"row {row_index} species block {block_index} is empty"
+                )
+            if len(slots) != len(set(slots)):
+                raise ValueError(
+                    f"row {row_index} species block {block_index} repeats a site"
+                )
+            overlap = seen.intersection(slots)
+            if overlap:
+                raise ValueError(
+                    f"row {row_index} revisits sites across species blocks: "
+                    f"{sorted(overlap)}"
+                )
+            for slot in slots:
+                if slot < 0 or coordinate_positions(slot)[-1] >= int(gen_length):
+                    raise ValueError(
+                        f"row {row_index} species-block site lies outside canvas"
+                    )
+            seen.update(slots)
+            blocks.append(slots)
+        output.append(blocks)
+    return output
+
+
 @torch.no_grad()
 def revise_spad_cell(
     model: Any,
@@ -968,4 +1040,350 @@ def revise_spad_anchors(
     return x, logs
 
 
-__all__ = ["Model494ResponseConfig", "revise_spad_anchors", "revise_spad_cell"]
+@torch.no_grad()
+def revise_spad_species_blocks(
+    model: Any,
+    complete_tokens: torch.Tensor,
+    *,
+    prompt_length: int,
+    gen_length: int,
+    revision_blocks_by_batch: Sequence[Sequence[Sequence[int]]],
+    attention_mask: torch.Tensor | None,
+    temperature: float,
+    cfg_scale: float,
+    remasking: str,
+    mask_id: int,
+    allowed_token_ids_by_generation_pos: list[list[int]] | None,
+    atom_count_grammar: dict | None,
+    lightweight_decoding_constraints: dict | None,
+    sampling_seeds_by_batch: Sequence[int] | None = None,
+) -> tuple[torch.Tensor, list[list[dict[str, Any]]]]:
+    """Close complete species blocks while preserving full future context.
+
+    Each block starts with every XYZ coordinate in that block masked.  Sites
+    are then committed in the supplied order, with X, Y and Z resolved
+    sequentially.  The lattice and all non-active species remain immutable and
+    visible.  A site whose Z component has no legal PBC completion is restored
+    atomically to its previous XYZ without rolling back other sites.
+    """
+
+    if complete_tokens.ndim != 2:
+        raise ValueError("complete_tokens must have shape [batch, sequence]")
+    if complete_tokens.shape[1] != int(prompt_length) + int(gen_length):
+        raise ValueError("complete token sequence does not match prompt+generation")
+    if sampling_seeds_by_batch is not None and len(sampling_seeds_by_batch) != int(
+        complete_tokens.shape[0]
+    ):
+        raise ValueError("one sampling seed is required per batch row")
+    x = complete_tokens.clone()
+    if bool((x[:, int(prompt_length) :] == int(mask_id)).any()):
+        raise ValueError("SPAD block closure requires a complete predictor canvas")
+    schedules = _validate_revision_blocks(
+        revision_blocks_by_batch,
+        batch_size=int(x.shape[0]),
+        gen_length=int(gen_length),
+    )
+    full_attention = _full_attention_mask(
+        x,
+        attention_mask,
+        prompt_length=int(prompt_length),
+        gen_length=int(gen_length),
+    )
+    if full_attention is not None:
+        full_attention[
+            :, int(prompt_length) : int(prompt_length) + int(gen_length)
+        ] = 1
+    prompt_index = torch.zeros_like(x, dtype=torch.bool)
+    prompt_index[:, : int(prompt_length)] = True
+    vocab_size = model.get_output_embeddings().weight.shape[0]
+    allowed_mask = None
+    if allowed_token_ids_by_generation_pos is not None:
+        if len(allowed_token_ids_by_generation_pos) != int(gen_length):
+            raise ValueError("allowed token schema length changed")
+        allowed_mask = torch.zeros(
+            (int(gen_length), int(vocab_size)),
+            dtype=torch.bool,
+            device=x.device,
+        )
+        for position, token_ids in enumerate(allowed_token_ids_by_generation_pos):
+            if not token_ids:
+                raise ValueError(f"generation position {position} has no legal token")
+            allowed_mask[
+                int(position),
+                torch.tensor(token_ids, dtype=torch.long, device=x.device),
+            ] = True
+    prepared_atom_count_grammar = None
+    if atom_count_grammar is not None:
+        prepared_atom_count_grammar = _prepare_atom_count_grammar(
+            atom_count_grammar,
+            int(vocab_size),
+            x.device,
+        )
+
+    logs: list[list[dict[str, Any]]] = [[] for _ in range(int(x.shape[0]))]
+    max_blocks = max((len(blocks) for blocks in schedules), default=0)
+    for block_index in range(max_blocks):
+        before = x.clone()
+        active_blocks: dict[int, tuple[int, ...]] = {}
+        previous_by_row: dict[int, dict[int, tuple[int, int, int]]] = {}
+        block_absolute_by_row: dict[int, tuple[int, ...]] = {}
+        for row_index, blocks in enumerate(schedules):
+            if block_index >= len(blocks):
+                continue
+            slots = blocks[block_index]
+            active_blocks[row_index] = slots
+            previous_by_row[row_index] = {}
+            block_absolute: list[int] = []
+            for slot in slots:
+                positions = coordinate_positions(slot)
+                absolute = tuple(
+                    int(prompt_length) + int(position) for position in positions
+                )
+                previous = tuple(
+                    int(x[row_index, position].detach().item()) for position in absolute
+                )
+                if any(value == int(mask_id) for value in previous):
+                    raise RuntimeError("species-block site was not committed")
+                previous_by_row[row_index][slot] = previous
+                block_absolute.extend(absolute)
+            absolute_tuple = tuple(block_absolute)
+            block_absolute_by_row[row_index] = absolute_tuple
+            x[
+                row_index,
+                torch.tensor(absolute_tuple, dtype=torch.long, device=x.device),
+            ] = int(mask_id)
+
+        initially_masked_by_row = {
+            row_index: bool(
+                torch.all(
+                    x[
+                        row_index,
+                        torch.tensor(absolute, dtype=torch.long, device=x.device),
+                    ]
+                    == int(mask_id)
+                ).detach().item()
+            )
+            for row_index, absolute in block_absolute_by_row.items()
+        }
+        site_logs_by_row: dict[int, list[dict[str, Any]]] = {
+            row_index: [] for row_index in active_blocks
+        }
+        max_sites = max((len(slots) for slots in active_blocks.values()), default=0)
+        for site_order_index in range(max_sites):
+            active_sites = {
+                row_index: slots[site_order_index]
+                for row_index, slots in active_blocks.items()
+                if site_order_index < len(slots)
+            }
+            restored_rows: set[int] = set()
+            for component in range(3):
+                group_allowed = torch.zeros_like(x, dtype=torch.bool)
+                active_absolute_positions: dict[int, int] = {}
+                for row_index, slot in active_sites.items():
+                    position = coordinate_positions(slot)[component]
+                    absolute_position = int(prompt_length) + int(position)
+                    group_allowed[row_index, absolute_position] = True
+                    active_absolute_positions[row_index] = absolute_position
+                if not active_absolute_positions:
+                    continue
+                logits = _model_logits(
+                    model,
+                    x,
+                    full_attention,
+                    prompt_index,
+                    float(cfg_scale),
+                    int(mask_id),
+                )
+                if allowed_mask is not None or prepared_atom_count_grammar is not None:
+                    _apply_schema_masks(
+                        logits,
+                        x,
+                        int(prompt_length),
+                        int(gen_length),
+                        allowed_mask,
+                        prepared_atom_count_grammar,
+                    )
+                mask_report = _apply_lightweight_decoding_masks(
+                    logits,
+                    x,
+                    int(prompt_length),
+                    int(gen_length),
+                    lightweight_decoding_constraints,
+                    group_allowed[
+                        :, int(prompt_length) : int(prompt_length) + int(gen_length)
+                    ],
+                    int(mask_id),
+                )
+                if int(component) == 2:
+                    no_legal = mask_report.get("pbc_no_legal_completion", set())
+                    for row_index, slot in active_sites.items():
+                        z_position = coordinate_positions(slot)[2]
+                        if (int(row_index), int(z_position)) not in no_legal:
+                            continue
+                        positions = coordinate_positions(slot)
+                        absolute = tuple(
+                            int(prompt_length) + int(position) for position in positions
+                        )
+                        x[
+                            row_index,
+                            torch.tensor(absolute, dtype=torch.long, device=x.device),
+                        ] = torch.tensor(
+                            previous_by_row[row_index][slot],
+                            dtype=x.dtype,
+                            device=x.device,
+                        )
+                        group_allowed[row_index, int(prompt_length) + z_position] = False
+                        active_absolute_positions.pop(row_index, None)
+                        restored_rows.add(int(row_index))
+                selected = _transaction_candidate_tokens(
+                    logits,
+                    active_absolute_positions=active_absolute_positions,
+                    temperature=float(temperature),
+                    remasking=remasking,
+                    sampling_seeds_by_batch=sampling_seeds_by_batch,
+                    salt=_spad_basin_closure_block_salt(
+                        int(block_index),
+                        int(site_order_index),
+                        int(component),
+                    ),
+                )
+                x[group_allowed] = selected[group_allowed]
+
+            for row_index, slot in active_sites.items():
+                positions = coordinate_positions(slot)
+                absolute = tuple(
+                    int(prompt_length) + int(position) for position in positions
+                )
+                if any(
+                    int(x[row_index, position].detach().item()) == int(mask_id)
+                    for position in absolute
+                ):
+                    raise RuntimeError("species-block closure left a masked coordinate")
+                old = previous_by_row[row_index][slot]
+                new = tuple(
+                    int(x[row_index, position].detach().item()) for position in absolute
+                )
+                site_logs_by_row[row_index].append(
+                    {
+                        "block_index": int(block_index),
+                        "site_order_index": int(site_order_index),
+                        "slot_index": int(slot),
+                        "generation_positions": list(positions),
+                        "previous_token_ids": list(old),
+                        "new_token_ids": list(new),
+                        "changed_components": sum(
+                            left != right
+                            for left, right in zip(old, new, strict=True)
+                        ),
+                        "restored_site_no_legal_z": bool(
+                            int(row_index) in restored_rows
+                        ),
+                        "suffix_visible": True,
+                        "no_op_was_in_schema": bool(
+                            allowed_token_ids_by_generation_pos is None
+                            or all(
+                                old_value
+                                in allowed_token_ids_by_generation_pos[position]
+                                for old_value, position in zip(
+                                    old, positions, strict=True
+                                )
+                            )
+                        ),
+                    }
+                )
+
+        for row_index, slots in active_blocks.items():
+            absolute = block_absolute_by_row[row_index]
+            absolute_tensor = torch.tensor(
+                absolute, dtype=torch.long, device=x.device
+            )
+            if bool((x[row_index, absolute_tensor] == int(mask_id)).any()):
+                raise RuntimeError("species-block closure returned a masked block")
+            proposed_flat = [
+                int(value) for value in x[row_index, absolute_tensor].tolist()
+            ]
+            geometry_check_enabled = bool(
+                lightweight_decoding_constraints
+                and lightweight_decoding_constraints.get("pbc_min_distance_mask")
+            )
+            geometry_supported_before_restore: bool | None = None
+            restored_complete_block = False
+            if geometry_check_enabled:
+                geometry_supported_before_restore = _complete_cell_is_supported(
+                    x[row_index],
+                    prompt_length=int(prompt_length),
+                    constraints=lightweight_decoding_constraints,
+                )
+                restored_complete_block = not geometry_supported_before_restore
+                if restored_complete_block:
+                    x[row_index, absolute_tensor] = before[row_index, absolute_tensor]
+            unchanged = torch.ones_like(x[row_index], dtype=torch.bool)
+            unchanged[absolute_tensor] = False
+            if not bool(
+                torch.equal(x[row_index][unchanged], before[row_index][unchanged])
+            ):
+                raise RuntimeError("species-block closure changed a non-active token")
+            previous_flat = [
+                token
+                for slot in slots
+                for token in previous_by_row[row_index][slot]
+            ]
+            new_flat = [int(value) for value in x[row_index, absolute_tensor].tolist()]
+            logs[row_index].append(
+                {
+                    "block_index": int(block_index),
+                    "slot_indices": list(slots),
+                    "generation_positions": [
+                        position
+                        for slot in slots
+                        for position in coordinate_positions(slot)
+                    ],
+                    "previous_token_ids": previous_flat,
+                    "proposed_token_ids": proposed_flat,
+                    "new_token_ids": new_flat,
+                    "changed_components": sum(
+                        left != right
+                        for left, right in zip(
+                            previous_flat, new_flat, strict=True
+                        )
+                    ),
+                    "all_block_sites_masked_initially": bool(
+                        initially_masked_by_row[row_index]
+                    ),
+                    "suffix_visible": True,
+                    "non_active_tokens_unchanged": True,
+                    "geometry_supported_before_restore": (
+                        geometry_supported_before_restore
+                    ),
+                    "restored_complete_block": bool(restored_complete_block),
+                    "restored_site_count": sum(
+                        bool(site["restored_site_no_legal_z"])
+                        for site in site_logs_by_row[row_index]
+                    ),
+                    "site_revisions": site_logs_by_row[row_index],
+                }
+            )
+    if bool((x[:, int(prompt_length) :] == int(mask_id)).any()):
+        raise RuntimeError("SPAD species-block closure returned a masked canvas")
+    for row_index in range(int(x.shape[0])):
+        final_geometry_supported = _complete_cell_is_supported(
+            x[row_index],
+            prompt_length=int(prompt_length),
+            constraints=lightweight_decoding_constraints,
+        )
+        if not logs[row_index]:
+            raise RuntimeError("species-block closure requires at least one block")
+        logs[row_index][-1]["final_geometry_supported"] = bool(
+            final_geometry_supported
+        )
+    return x, logs
+
+
+__all__ = [
+    "Model494ResponseConfig",
+    "SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT",
+    "_spad_basin_closure_block_salt",
+    "revise_spad_anchors",
+    "revise_spad_cell",
+    "revise_spad_species_blocks",
+]

@@ -1,8 +1,10 @@
 # Full-MP20 Basin Action-Value Distillation
 
-Status: implementation authorized; formal training starts after the scientific
-object preflight below confirms that the frozen labels rank the deployed
-transaction outcomes they claim to rank.
+Status: **superseded as an active method**. Job `39658` may finish because its
+outcome-free predictor bodies are reusable, but this document's
+`cell -> anchor_second -> anchor_first` ledger must not launch labels or
+training. The active closure contract is in
+`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`.
 
 Execution: shared full-source program export, transaction ledger and frozen
 reference on-policy body job `39658` is running on `4 A800 + 16 CPU`. It reads

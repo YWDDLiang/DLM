@@ -233,6 +233,28 @@ def anchor_revision_slots(program: SpeciesProgram) -> tuple[int, ...]:
     return tuple(reversed(program.anchor_slots))
 
 
+def reverse_species_block_revision_slots(
+    program: SpeciesProgram,
+) -> tuple[tuple[int, ...], ...]:
+    """Return reverse-program blocks in reverse predictor order within species.
+
+    SPAD predicts each species' anchor before its remaining native slots.  A
+    closure block therefore visits the remaining slots in reverse order and
+    leaves the anchor until last, after every same-species future site is
+    available as context.
+    """
+
+    blocks = tuple(
+        (*reversed(entry.remaining_slots), entry.anchor_slot)
+        for entry in reversed(program.entries)
+    )
+    flattened = tuple(slot for block in blocks for slot in block)
+    expected = tuple(range(int(program.num_atoms)))
+    if len(flattened) != len(set(flattened)) or set(flattened) != set(expected):
+        raise ValueError("species-block closure is not an exact native-slot cover")
+    return blocks
+
+
 def limited_anchor_revision_slots(
     program: SpeciesProgram,
     *,
@@ -339,6 +361,7 @@ __all__ = [
     "prefilled_positions",
     "program_from_element_order",
     "program_from_planner_trace",
+    "reverse_species_block_revision_slots",
     "response_revision_slots",
     "spad_site_slots",
     "spad_predictor_position_groups",

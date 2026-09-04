@@ -1,467 +1,125 @@
-# Execution Checklist: B-First Scientific Programmed Denoising
+# Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **EXECUTION APPROVED — tokenizer/checkpoint audit precedes GPU training**
+Status: **implementation approved; scientific training blocked on state-replay tests**
 
-Authoritative method update:
-[`06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md`](06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md).
+Authoritative active design:
+[`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
+Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
-Teacher-feedback method lock:
+## A. Frozen method boundary
 
-- [x] The active paper method is the coupled C3FD-supported Llama Planner,
-  Llama species program, programmed non-causal crystal DLM and SPAD-E training
-  of that same suffix-visible DLM backfill posterior.
-- [x] G2-PBC-R is a historical negative/ablation, not a current contribution,
-  active method or fallback.  Do not use its metrics to characterize expected
-  SPAD-E performance or to reassure against a negative SPAD-E result.
-- [x] If SPAD-E is negative, retain SPAD's demonstrated composition and
-  structural-execution contribution and report stability as open; do not
-  silently revert the paper story to G2.
+- [x] Keep C3FD reachable chemical support and the trained Planner-Llama.
+- [x] Keep the trained `species_program` pointer and explicit canonical fallback.
+- [x] Keep exact `7+4N`; do not add tokens, a GNN or a continuous residual head.
+- [x] Keep current BS semantics unchanged: predictor plus all-species anchor
+  backfill, no cell closure.
+- [x] Keep model494 as a separately labelled fallback.
+- [x] Reject the historical G2 route and the old instantaneous
+  Potential-Closure objective as active methods.
+- [x] Reject the old `cell -> anchor_second -> anchor_first` ledger for this
+  method; it matches neither current BS nor the new closure.
 
-## Phase 0 — workspace and review
+## B. Workspace and audit
 
-- [x] Preserve the original dirty checkout.
-- [x] Create clean local branch/worktree
-  `codex/unified-scientific-decoding` at
-  `D:\codex_work\ai4s\DLM_unified_scientific_decoding`.
-- [x] Push the branch from the local machine.
-- [x] Attach `starteam5090 → tmux ssha800`; keep the session alive.
-- [x] Create clean A800 HTTPS clone
-  `/public/home/jiaosz/ywliang/ai4s/.sscd_unified_d0e616b_https`.
-- [x] Complete design, skeptic, resource, reader and arbiter review.
-- [x] Receive explicit user approval.
-- [x] Update ten-minute heartbeat `sscd-a-b-approval-and-execution`.
+- [x] Preserve prior dirty worktrees unchanged.
+- [x] Create clean worktree
+  `D:\codex_work\ai4s\DLM_llama_programmed_basin_closure` on branch
+  `codex/llama-programmed-basin-closure` from remote commit `a22337a`.
+- [x] Exclude the local raw-`E0`-safe posterior implementation.
+- [x] Selectively retain the independently useful 3/6-token deployed action
+  scorer.
+- [x] Complete scientific, skeptic, resource, paper and code audits.
+- [ ] Pass all local pure tests and remote Torch integration tests.
+- [ ] Confirm no credential value, run artifact or model checkpoint is tracked.
 
-## Phase 1 — complete special-token and checkpoint audit
+## C. Outcome-free predictor asset
 
-- [x] Source inventory: 2,481 crystal special-token strings; 2,457 used by
-  dynamic `7+4N`.
-- [x] Real step-3392 boundary probes: N/lattice/angle/Pu/XYZ 000/100 each
-  encode as one token; tokenizer size 128,830; pad/eos 126081 differs from mask
-  126336.
-- [x] Add one reusable audit command and tests.
-- [x] On the real tokenizer, verify all 2,481 tokens exist, encode atomically,
-  decode consistently and use unique IDs.
-- [x] Inspect adapter safetensors without loading the 6 GiB tensor; verify input
-  embedding/output-head saved shapes cover all 128,830 IDs.
-- [x] Parse all MP20 train 27,136 and validation 9,047 rows and report:
-  N range, element coverage, length/angle/coordinate ranges, clipping, zero
-  lengths, coordinate-100 frequency, quantized duplicates and invalid lattices.
-- [x] Verify every body has semantic and tokenizer length exactly `7+4N`.
-- [x] Audit teacher Plan prompt + body against max length
-  382.
-- [x] Verify production uses the exact-length sampler; mark the universal
-  87-position EOS-tail sampler historical-only.
-- [x] Save one concise JSON/CSV/Markdown audit and update this checklist.
+- [x] Let job39658 finish naturally.
+- [x] Verify `27,136` source records, program accounting, body accounting,
+  failure rows and terminal marker.
+- [x] Retain only `reference_body` as a predictor-state asset.
+- [x] Do not reuse its old `%3` transaction ledger.
 
-Job 39507 passed all audit checks in 31 seconds. MP20 train/validation parsing
-and exact-token coverage are 27,136/27,136 and 9,047/9,047; no length clipping
-or quantized duplicate row was found. Coordinate 100 appears 7,829/2,518 times
-and is a compatibility alias, not a missing token.
+## D. Closure runtime
 
-## Phase 2 — core SPAD interfaces
+- [ ] Add reverse species-block slot compilation with exact one-pass coverage.
+- [ ] Add independent `revise_spad_species_blocks` runtime.
+- [ ] Add opt-in `--spad-basin-closure`:
+  predictor -> cell -> reverse species blocks.
+- [ ] Reject simultaneous `--spad-backfill` and `--spad-basin-closure`.
+- [ ] Require closure-capability metadata before formal inference.
+- [ ] Preserve current BS output and seed behavior bit-for-bit.
+- [ ] Test cell atomic rollback, site rollback, non-active-token immutability,
+  suffix visibility, row-local RNG and final no-mask/composition invariants.
 
-### 2.1 Planner program
+## E. Closure-CE data and training
 
-- [x] Implement audited Plan/trace and explicit-element-order compilers.
-- [x] Fold oxidation-state variants and verify trace/Plan composition exactly.
-- [x] Require `species_program` to be an exact permutation of unique Plan
-  elements and preserve counts/N.
-- [x] Audit the C3FD trace: it is canonical because increasing species keys are
-  enforced; do not call it a learned order.
-- [x] Build MP20-train maximum-contact-tree teacher permutations from periodic
-  geometry only.
-- [x] Train a small masked species-pointer on terminal Planner-Llama state with
-  C3FD/Llama/composition heads frozen.
-- [x] Emit the pointer permutation as `species_program`; never change the
-  certified element set or counts.
-- [x] Store the program as metadata; do not let canonical element sorting erase
-  it and do not add fake DLM tokens for it.
+- [ ] Build a new teacher-only full-MP20 closure corpus.
+- [ ] Cell states: all coordinates visible; sequential lattice suffix masked;
+  one active lattice component supervised.
+- [ ] Species-block states: other species/full suffix visible; active block
+  remainder masked; one active coordinate component supervised.
+- [ ] Keep `N/elements` visible and exact on every row.
+- [ ] Add bounded same-structure cell/coordinate/short-pair corruptions only
+  after clean state-replay tests pass.
+- [ ] Run a six-state-per-split remote canary covering first/last lattice
+  components, X/Y/Z and a multi-site block; inspect finite loss/gradient before
+  formal training.
+- [ ] Train one full-MP20 seed from BS for one registered endpoint.
 
-### 2.2 Exact DLM canvas
+## F. Closure-CE raw screen
 
-- [x] Make strict dynamic parsing reject non-whitespace text outside schema
-  tokens.
-- [x] Validate N in every dynamic length helper.
-- [x] Require generation schedules to cover each `7+4N` position exactly once.
-- [x] Resolve the actual tokenizer mask ID and verify it differs from
-  pad/eos/bos/unk/crystal IDs and fits input/output vocab rows.
-- [ ] Exclude zero-length tokens from production support.
-- [x] Aggregate coordinate 000/100 logits as one torus action and emit canonical
-  000 for new commits.
+- [ ] Reuse frozen BS; generate closure-CE only on fixed256 first.
+- [ ] Run fast validity, PBC distance tail, VPA agreement, CHGNet E/F/stress
+  and common relaxation.
+- [ ] Do not run expensive Direct or model494.
+- [ ] Continue only if execution validity is retained and physical
+  nonstationarity improves materially; do not use S.U.N. as a checkpoint or
+  row-selection rule.
 
-### 2.3 Stateful bidirectional sampler
+## G. Basin-value preflight
 
-- [ ] Refactor the current sampler into
-  `initialize_canvas / constrained_forward / commit / remask / resume`.
-- [x] Compile arbitrary species permutations into exact, non-contiguous native
-  DLM positions and support a different complete schedule for every batch row.
-- [x] Implement anchor-first prediction: lattice, one anchor site per species,
-  remaining sites.
-- [x] Implement one suffix-visible remask/backfill sweep over early anchors in
-  reverse program order.
-- [x] Preserve all non-active suffix tokens exactly during backfill.
-- [x] Keep the old anchor triplet as an explicit no-op candidate.
-- [x] Refresh the full DLM forward after every committed transaction.
+- [ ] Freeze 128 train-only on-policy closure states spanning cell, XYZ,
+  high-N and high-multiplicity cases.
+- [ ] Generate at most four outcome-blind legal actions per state.
+- [ ] Execute the exact remaining closure with common random numbers.
+- [ ] Calibrate one short relaxation horizon against the normal relaxation;
+  report rank agreement, ties and per-stage variation.
+- [ ] Report best-vs-no-op terminal energy headroom, proposal-path mass,
+  scorer gradients, peak memory and elapsed time.
+- [ ] If headroom is negligible or scorer/backward is infeasible, stop. Do not
+  expand sources, epochs, candidates or KL to force a pass.
 
-### 2.4 Geometry
+## H. Conditional basin training
 
-- [ ] Commit the complete six-value lattice only after a valid Gram
-  determinant.
-- [ ] Treat XYZ as one site transaction; do not commit X/Y before a legal Z
-  completion exists.
-- [x] Replace duplicate-bin-only masking with a validated 125-image triclinic PBC
-  minimum-distance check at the 0.5 Å boundary.
-- [x] Preserve the old committed coordinate as provisional geometry during a
-  remask; never use an unrestricted soft mean that can create a ghost site.
+- [ ] Only after G passes, freeze 2,048--4,096 value sources.
+- [ ] Use only current 6-token cell and 3-token XYZ action scoring in pass one.
+- [ ] Use terminal short-relax basin value after the remaining closure.
+- [ ] Keep hard validity and reference KL; do not restore a hard raw-energy
+  non-increase constraint.
+- [ ] Alternate clean closure CE and posterior updates; no CE on generated
+  states.
+- [ ] One seed, one endpoint, no early stop or checkpoint selection.
 
-## Phase 3 — tests proving DLM necessity
+## I. Final evaluation
 
-- [x] All 2,481 token atomicity and checkpoint reload tests.
-- [x] Future-first schedule: a later storage position commits before an earlier
-  one under the Planner program.
-- [x] Suffix dependency: modifying a visible later site changes logits of an
-  earlier masked anchor on a real context-sensitive model.
-- [x] Remask invariant: only the selected XYZ block changes; later suffix,
-  exact N and elements remain unchanged.
-- [x] Program coverage: every dynamic position is resolved once in predictor
-  and only registered anchors are revisited.
-- [ ] Train/serve mask parity for program predictor and correction states.
-- [x] Triclinic/000–100/0.5 Å boundary tests.
+- [ ] Compare BS, closure-CE and closure-basin on the same fixed requests.
+- [ ] Raw first: fast validity, E/F/stress, relaxation drop, N/U and
+  Strict/Meta S.U.N., with paired wins/losses.
+- [ ] Run one canonical-versus-Llama program mechanism comparison at fixed
+  DLM/composition/noise.
+- [ ] Run fixed model494 only after native improvement; report it separately.
+- [ ] The desired endpoint is native Strict/Meta `10%/50%`, but claims follow
+  observed effect rather than the target.
 
-## Phase 4 — B-route data and training
+## J. Resources and operating rules
 
-Track B is the priority route.
-
-- [x] Reuse frozen C3FD–Llama Planner and current Compact-V2 DLM.
-- [x] Use full MP20 teacher Compact-Plan prompts for DLM SFT; predicted Plans
-  remain inference inputs under the identical schema.
-- [x] Add `species_program` and two mask classes:
-  program-matched predictor state and complete-state anchor-remask state.
-- [x] Retain deterministic random-geometry mask examples so general denoising
-  is not erased.
-- [x] Start with decoder-only cells before training.
-- [x] Train one BS LoRA from the retained Compact-V2 endpoint:
-  r8/alpha32/dropout0.05, LR 5e-6, effective source batch16, exactly 1,696
-  updates, one model seed, only the endpoint eligible.
-- [x] Use up to 4 A800 and 32 CPU for B; no CHGNet/model494/test outcome enters
-  training.
-
-## Phase 5 — adjacent B experiments
-
-Freeze one 256-request predicted-Plan/program ledger and two common sampling
-streams.
-
-| Cell | Intervention |
-|---|---|
-| B0 | retained DLM, historical confidence-ordered exact-plan schedule |
-| BC | retained DLM, canonical species under SPAD transactions |
-| BP | same weights, learned Llama-pointer anchor-first schedule |
-| BR | BP + one suffix-visible anchor-remask sweep |
-| BS | BR after one schedule-matched MP20 LoRA epoch |
-
-- [x] One Plan and one trajectory per request; no replacement, reranking or
-  best-of-N.
-- [x] Run B0/BC/BP/BR body generation cells with exact N/elements prefilled.
-- [x] First report body, proposal composition validity, body composition
-  retention, raw Direct, graphability, minimum-distance ECDF, collision type,
-  lattice volume/condition and backfill changes.
-- [ ] Run BR-no-suffix only on a shared mechanism subset to prove the value of
-  visible future context.
-- [ ] Deduplicate the structure union before energy evaluation.
-- [ ] Benchmark CHGNet 4/8/10 one-thread workers within 8 allocated CPU cores
-  per GPU; run Direct concurrently only on explicitly allocated CPUs.
-- [x] Report two streams separately and pooled; do not choose a stream.
-
-## Phase 6 — Track A system comparison
-
-Track A no longer blocks B.
-
-- [ ] Build one thin Plan/program-conditioned CrysLLMGen AR dataset/trainer.
-- [ ] Train or adapt one LLM-only body endpoint on up to 2 A800 while B
-  evaluation/training occupies up to 4 A800.
-- [ ] Use the same predicted Plan/program ledger and report raw A versus BC/BP/
-  BR/BS.
-- [ ] Keep AR native text separate from DLM special tokens.
-
-## Phase 7 — SPAD-E terminal-energy backfill learning
-
-The design passed sequential skeptic, constraint, paper-reader and arbiter
-review.  The user authorized immediate implementation on 2026-09-03 with one
-day remaining; stability is optimized only inside the structural-validity
-support.
-
-- [ ] Freeze 2,048 outcome-blind MP20-train Plans and one predicted
-  Llama-programmed suffix-visible backfill state per Plan.
-- [ ] Build exactly `K=4` legal XYZ actions: mandatory old-XYZ no-op plus three
-  frozen-reference DLM samples; preserve one common state and fixed accounting.
-- [ ] Apply validity lexicographically before energy: exact schema/Plan,
-  lattice, atom order, periodic duplicates, 0.5 A triclinic distance and fast
-  graphability. If no legal alternative exists, retain no-op rather than
-  exchanging validity for stability.
-- [ ] Run model494 tau800 and CHGNet endpoint energy once per complete action;
-  no MP query or prospective outcome enters labels.
-- [ ] Build the finite-action `q*` under a 0.05-nat reference trust region.
-- [ ] Implement the common-state collator, dynamic triclinic PBC support and
-  one-GPU-per-cell trainer preflight.
-- [ ] Train equal-compute SPAD-CE and SPAD-E cells concurrently: 348 updates,
-  six microgroups/update and at least one shuffled pass through trainable
-  groups per cell.
-- [ ] At inference use no critic/look-ahead: complete the future canvas,
-  re-mask/rewrite the earlier XYZ with the trained DLM, then run model494 once.
-- [ ] Keep raw force as a same-site mechanism diagnostic only; no force/stress
-  loss in version 1.
-- [ ] First screen one seed; a positive SPAD-E receives seed two and a newly
-  frozen confirmatory cohort.
-
-## Phase 8 — final evidence
-
-- [x] Apply the same terminal continuous-refiner setting to frozen B
-  cells.
-- [x] Report raw/refined endpoints separately.
-- [x] Report Strict/Meta S.U.N., N/U/NU, Direct, composition retention and
-  compute on the fixed requested denominator.
-- [x] Evaluate the target `Strict S.U.N. >10%` and
-  `Meta S.U.N. >50%`; targets never authorize row/seed/checkpoint selection.
-- [ ] Treat CHGNet and MP-reference/CHGNet-candidate hull as surrogate metrics;
-  use an independent MLIP or registered DFT subset for stronger claims.
-- [ ] Update README, paper story, method diagram and contribution table.
-
-## Resource and iteration policy
-
-- maximum 6 A800, 2 concurrent jobs and 8 CPU per GPU;
-- B receives up to 4 A800; A/evaluation receives up to 2;
-- simple implementation/testing/monitoring stays in the main task; complex
-  bounded audits use subagents;
-- small engineering failures receive one minimal repair and one root-cause
-  record;
-- scientific negatives remain visible and may motivate one adjacent method
-  revision, not a sweep;
-- small positives are checked on the second common stream;
-- large positives are frozen, verified and then celebrated.
-
-### A800 utilization and throughput rules
-
-The optimization target is shortest critical-path wall time at reasonable
-A800-hours, not merely allocating all six GPUs.  Idle capacity caused by a
-true data dependency is allowed, but implementation-induced serialization is
-not.
-
-- [ ] Record, for every GPU run, allocated GPUs/CPUs, wall time, A800-hours,
-  stage durations, examples or structures per second per rank, rank-progress
-  skew and the reason for any deliberately idle GPU.
-- [ ] Planner/DLM sampling must use one independent rank per allocated GPU.
-  Four-cell work uses four GPUs and six-cell work uses six GPUs; within a
-  shared cohort, shard rows evenly and keep stable per-rank batch size at least
-  eight when memory permits.
-- [ ] model494 refinement must be sharded across all GPUs allocated to its
-  stage.  Batch size one is acceptable for variable crystal graphs only when
-  all ranks remain active and balanced; report throughput rather than treating
-  allocation as utilization evidence.
-- [ ] CHGNet evaluation/teacher labeling must use multi-GPU row sharding when
-  more than one GPU is allocated, with bounded batches of 8--16 structures per
-  GPU.  Do not leave the other GPUs idle behind a single-GPU serial labeler.
-- [ ] Run necessary Direct and CHGNet cells concurrently with bounded worker
-  queues and no more than eight CPU cores per allocated GPU.  Defer expensive
-  Direct as `DEFERRED_COST` until cheaper body, graphability and CHGNet screens
-  show that the method is worth a full endpoint evaluation.
-- [ ] Do not restart an immutable healthy run solely to increase GPU count.
-  Apply throughput fixes to the next stage/run and preserve the current run's
-  scientific parameters and accounting.
-- [ ] Do not fill dependency-blocked GPUs with unrelated experiments.  Use
-  them only for independent critical-path work whose inputs are already
-  frozen.
-- [ ] Use Slurm accounting, rank logs and stage throughput for utilization
-  audits; the project-wide prohibition on ad-hoc `nvidia-smi`/CUDA probes
-  remains in force.
-
-Current exception and corrective action:
-
-- [x] Job 39556 DLM action generation uses four A800 ranks at batch eight; an
-  observed progress snapshot was balanced at roughly 69--71%, so there is no
-  straggler-driven card loss in this stage.
-- [ ] Job 39556's already-frozen final CHGNet labeler is single-GPU.  Do not
-  mutate or restart this active teacher run; record the under-utilized tail,
-  and require the next CHGNet/Direct implementation to shard across every
-  allocated GPU as specified above.
-
-### Paper-critical program-value revision
-
-Current status: **APPROVED NEXT, only after the SPAD-E executor is frozen**.
-This is the sole revision that can close the teacher-feedback gap; it is not a
-third method branch.
-
-Paper evidence budget: the main text contains only three large result blocks:
-(1) C3FD-supported Llama composition validity, (2) programmed non-causal DLM
-structural execution, and (3) the final value-distilled hierarchy's stability
-and S.U.N.  Equal-compute CE, canonical-order repetition, suffix-hidden scoring,
-extra seeds and expensive Direct are internal/appendix evidence and must not
-block the headline result.
-
-- [ ] Finish SPAD-E teacher/training/evaluation before generating program-level
-  value labels.
-- [ ] Freeze one final SPAD-E DLM executor; never label program values with the
-  old BS executor and deploy a different executor.
-- [ ] Freeze 1,024 MP20-train compositions with at least three unique species;
-  no test/S.U.N./official outcome may influence selection.
-- [ ] Materialize four distinct legal programs per composition: canonical,
-  base-Llama MAP and two distinct Llama samples.  Preserve C3FD composition
-  support and exact element/count identity.
-- [ ] Use request/site-indexed common DLM noise across the four programs, then
-  run one raw trajectory and one model494 tau800 transition per program.
-- [ ] Apply validity before value.  Among valid programs, construct one
-  within-composition terminal-energy target from the same frozen CHGNet value
-  functional used by SPAD-E; no cross-composition energy comparison.
-- [ ] Train one preregistered Llama pointer policy with one fixed KL budget and
-  endpoint.  A second seed is optional appendix evidence only and cannot delay
-  the main result or be used for selection.
-- [ ] Evaluate only base-Llama versus value-trained Llama in the headline run,
-  using the same frozen SPAD-E DLM, frozen compositions and two common streams.
-  Reuse the already measured canonical program result as appendix context; do
-  not rerun it merely to fill a table.  Inference is one program and one
-  trajectory, never program reranking or best-of-N.
-- [ ] First report exact composition, body/graph validity and raw CHGNet.  Run
-  model494/refined S.U.N. for the frozen full cells; keep expensive Direct
-  deferred unless the final table requires it.
-- [ ] Judge the fixed requested-denominator targets: Strict at least 52/512 and
-  Meta at least 256/512, while disclosing N/U and every policy/stream.
-
-Minimum paper-facing figures/tables:
-
-- [ ] one architecture figure showing one hierarchical policy, not a module
-  inventory;
-- [ ] one main result table with composition validity, structural validity and
-  final Strict/Meta S.U.N.;
-- [ ] one compact mechanism plot showing program-value improvement or energy
-  shift.  Keep all other diagnostics in the appendix or repository.
-
-Rejected for this sprint: online DLM-to-Llama controller, speculative dynamic
-transaction verifier, G2 revival, program search at inference and any
-additional unrelated stability method.
-
-## Current run ledger
-
-- job 39508: pointer teacher data complete; train 24,558 and val 8,158.
-  Noncanonical teacher orders are 21,025/24,558 train and 6,977/8,158 val.
-- jobs 39509/39510: preserved engineering failures before a publishable
-  endpoint (inference-tensor autograd, then 11 unsupported validation strata).
-  Training science was unchanged; train contains zero unsupported strata.
-- job 39511: pointer complete in 192 updates. Validation on 8,147 scoreable
-  rows: exact permutation 73.50%, root 80.41%, pairwise order 82.63%; 11 rows
-  are explicitly unscorable under the frozen C3FD strata.
-- job 39512: 256/256 Plan text matches the prior control row-for-row and
-  composition is unchanged; 229/256 learned programs are noncanonical.
-- job 39513: real-checkpoint suffix-dependency audit complete. Perturbing one
-  later Z token changes earlier masked-anchor X/Y/Z logits by maxima
-  0.125/0.09375/0.15625.
-- job 39514: raw BC/BP/BR bodies completed; its parent failure was confined to
-  the Direct environment and the immutable bodies were reused by job 39518.
-- job 39515: full schedule-matched SFT data complete in four seconds. It keeps
-  all MP20 27,136/9,047 train/val rows, balanced predictor/correction/random
-  mask classes, 24,558 learned-contact programs plus 2,578 disclosed canonical
-  fallbacks in train, and reads no energy/refiner outcome.
-- training wrapper 164 was frozen before raw outcomes and submitted only after
-  all decoder-only bodies completed.
-- job 39518: full eight-cell raw Direct complete. Pooled stream means are
-  B0 80.27%, BC 99.22%, BP 98.05%, BR 98.83%; composition validity is
-  100% for BC/BP/BR. B0→BC exact McNemar is strongly positive in both streams.
-- job 39520 completed 1,696 updates; validation loss 2.37035 and one endpoint.
-- job 39521 completed BS body with 256/256 parsed, Plan-matched and graphable
-  in each stream.
-- job 39524 certified the predicted-only validity screen sample-for-sample
-  against full Direct, then measured BS at 255/256 and 256/256 joint validity.
-- job 39525 completed the common model494 tau800 refinement for BC/BR/BS ×
-  streams 17/18 in 01:10:39 (4.71 A800-hours): all six cells preserve 256
-  sample indices and all 1,536 refined attempts succeeded.
-- jobs 39527/39528 were cancelled before allocation after the scheduler
-  projected a multi-day wait for six colocated A800s; no science ran.
-- jobs 39529/39530 were cancelled at 00:08:45/zero after profiling showed that
-  the four-GPU queue layout still serialized two cells; their partial output is
-  retained as an engineering trace.
-- job 39531 completed all six reusable raw CHGNet cells in 01:09:21, then
-  terminated as expected because its two
-  BS Direct workers exposed a pre-science environment error because the frozen
-  Direct runtime rejects two-thread BLAS values. No valid CHGNet result was lost.
-- job 39533 completed in 01:21:08. It verified and reused the
-  six byte-identical raw CHGNet outputs, ran Direct in a separate four-thread
-  wave, and evaluated all six refined cells concurrently. This recovery
-  changes scheduling only; the Plan/model/seed/denominator remain fixed.
-- development pooled Direct and N/U/NU are: BC raw 508 and 512/512/512, BC
-  refined 511 and 430/506/430; BR raw 506 and 511/512/511, BR refined 510 and
-  437/506/437; BS raw 511 and 510/512/510, BS refined 511 and 438/506/438, all
-  over 512 attempts. Model494 lowers paired CHGNet energy for BS by
-  1.464 eV/atom, 95% composition-bootstrap [-1.707,-1.232].
-- job 39534 generated all 256/256 actual seed-23 C3FD–Llama+pointer Plans with
-  100% composition validity and no selection/replacement. Job 39536 froze all
-  requested ordinals; 254 exact compositions are unique and both duplicates
-  remain in the denominator.
-- jobs 39537/39538 completed stream17/stream18 B0/BC/BS generation and tau800
-  refinement. Every BC/BS body matches its Plan; BS raw/refined graph counts
-  are 256/256 in both streams.
-- jobs 39542/39543 completed the 12 raw/refined prospective offline cells.
-  Pooled raw/refined Direct counts over 512 are B0 401/508, BC 501/512 and
-  BS 504/512. BS raw/refined NU counts are 509/441.
-- the single fresh official query resolved 244 of 251 chemical systems; its
-  runtime credential was unset and the query will not be repeated. Official
-  BS-refined Strict S.U.N. is 35/512 (6.84%) and Meta S.U.N. is 234/512
-  (45.70%). The 10%/50% targets were not met. B0-refined is 38/512 (7.42%)
-  and 245/512 (47.85%); BC-refined is 33/512 (6.45%) and 238/512 (46.48%).
-- for BS-refined NU structures, 37 lie within 20 meV/atom above the strict
-  threshold and 37 lie within 20 meV/atom above the meta threshold. This
-  motivates the one authorized local response-aligned follow-up.
-- commit `3dbb121` freezes the response-aligned implementation and two-stream
-  wrapper after remote SPAD/geometry/driver tests passed. A full read-only
-  pairing audit maps all 256/256 source bodies in each stream through the
-  Niggli-reordered model494 tensors back to their original DLM site order.
-- job 39547 was the fixed follow-up job (2 A800/16 CPU). It reused the
-  frozen stream17/18 BS bodies, performs one deterministic all-site response
-  pass, then applies the same model494 tau800 setting to the corrected bodies.
-- job 39547 completed `0:0` in 00:43:53. Both streams remained 256/256 parsed,
-  graphable and refined; 229/226 structures changed. Job39549 completed four
-  CHGNet/N/U/NU cells in 01:05:31 with Direct `DEFERRED_COST`. Response refined
-  Strict/Meta S.U.N. is 36/512 (7.03%) and 237/512 (46.29%), versus BS
-  35/512 and 234/512. Refined paired CHGNet delta is -0.00657 eV/atom,
-  composition-bootstrap [-0.01393,-0.00007], while NU falls 441 to 437. This
-  is a small energy-positive but S.U.N.-insufficient development result.
-- the outcome-blind SPAD-E MP20-train cohort is frozen at 2,048 rows. Job39556
-  is the active four-A800 teacher run: predicted pointer programs, BS predictor,
-  K4 validity-first backfill actions, model494 tau800 and endpoint CHGNet labels.
-
-Immediate sequence:
-
-- [x] finish and audit all six job-39525 refinement cells;
-- [x] finish the six reusable raw CHGNet cells in job 39531, then complete the
-  parameter-identical Direct/refined recovery in job 39533;
-- [x] sample and freeze exactly the first 256 requested C3FD–Llama+pointer
-  Plan outcomes before any DLM rollout; retain Planner failures in the fixed
-  denominator, do not filter training-set overlaps, and never resample the
-  Planner after this freeze;
-- [x] run stream17 and stream18 as two concurrent three-A800 B0/BC/BS
-  generation+tau800 jobs, followed by two concurrent three-A800 raw/refined
-  evaluation jobs; merge the two immutable stream views without recomputation;
-- [x] run exactly one official MP query over the resulting 12-cell union, then
-  report Strict/Meta S.U.N. against the 10%/50% targets.
-
-Post-endpoint rule (no further approval needed):
-
-- if BS reaches both S.U.N. targets, freeze SPAD and move directly to the paper
-  tables, method diagram and ablation narrative;
-- [ ] run one B-internal 256-request follow-up only: use each frozen model494
-  tau800 endpoint as a **response**, not as a claimed physical force. Remove
-  global translation, cap each response at 0.15 A, and score legal coordinate
-  tokens by squared response-error reduction. Apply the strongest bias within
-  0.05 nat KL and absolute logit bias 2, then deterministically visit every
-  site once in reverse SPAD order with suffix context visible. Freeze lattice
-  tokens and preserve the same Plans, source BS trajectories and streams;
-- [ ] if a site's Z action has no legal completion under the 0.5 A triclinic
-  PBC support, restore its pre-transaction XYZ and record
-  `guidance_skipped_no_legal_completion`; never reopen illegal logits;
-- for that follow-up, do not let full Direct block the critical path. Run
-  immutable generation accounting, the already certified fast-validity screen
-  and CHGNet first; record an omitted expensive Direct endpoint explicitly as
-  `DEFERRED_COST` rather than as zero or failure;
-- schedule CHGNet with bounded queues of 8–16 structure items per A800 window.
-  If a stability improvement survives and full Direct is then needed for the
-  final table, run CPU Direct concurrently in separate process groups while
-  keeping total CPU at no more than eight cores per allocated GPU;
-- do not start a disconnected third method, broad hyperparameter search or a
-  new Planner sample merely because a target is missed.
+- Maximum `4 A800`, `4 CPU/GPU`, at most two jobs.
+- Use `starteam5090 -> tmux ssha800/ssha800_2`; do not reconnect an existing
+  nested session unnecessarily.
+- No unrelated jobs, GPU probes, row replacement, reranking or best-of-N.
+- CHGNet may batch 8--16 structures per GPU; do not create 8--16 Python
+  processes per GPU.
+- GitHub pushes originate from the local workstation.
+- Materials Project credentials remain outside Git/docs/checklists/commands,
+  and are not needed before a final authorized official query.

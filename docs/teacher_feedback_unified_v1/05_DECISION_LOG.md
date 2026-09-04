@@ -217,3 +217,38 @@ value-trained Llama policy under the same frozen SPAD-E DLM and two streams.
 Canonical order, SPAD-CE, suffix-hidden scoring, a second pointer seed and full
 Direct remain optional internal/appendix checks.  They cannot delay the final
 method result, enlarge the main contribution list or become selection gates.
+
+## 2026-09-04 native-stability revision
+
+Decision: **APPROVED, staged admission**.
+
+The fresh evidence separates benchmark execution validity from physical
+stationarity. SPAD-BS remains the retained base, while the instantaneous
+Potential-Closure pilot is negative for native stability. The active extension
+is Llama-programmed basin closure: the same Llama species program controls a
+trained full-state cell closure and a reverse species-block coordinate closure.
+
+Accepted objections:
+
+- untrained `L|X` is out of distribution and cannot be enabled directly;
+- one-anchor repair is too small a control surface for the observed global
+  force/stress and distance errors;
+- short CHGNet relaxation is a basin proxy, not equilibrium or DFT truth;
+- whole-species K4 posterior training is too expensive for the first pass;
+- Llama order is executable but not yet proven energy-optimal;
+- model494 remains a separately reported fallback.
+
+Rejected alternatives:
+
+- more ordinary CE without closure-state matching;
+- additional validity gates as the stability method;
+- inference-time CHGNet selection, reranking or best-of-N;
+- restoring the historical G2/residual route;
+- launching the old full-MP20 `cell -> two anchors` value ledger;
+- scaling full-source value training before a 128-state terminal-headroom test.
+
+Approved sequence: implement and test the opt-in closure; train one full-MP20
+closure-CE seed; evaluate raw physical stationarity; run the 128-state value
+preflight; only then admit a 2,048--4,096-source basin posterior and fixed raw
+evaluation. Native evidence determines the claim; tau800 cannot rescue a
+negative DLM result.

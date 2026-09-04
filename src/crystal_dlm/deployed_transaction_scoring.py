@@ -59,8 +59,10 @@ class DeployedTransactionScores:
     """Differentiable scores plus detached path-level diagnostics.
 
     ``candidate_log_mass`` is the log probability of the union of distinct,
-    valid supplied proposal paths.  Duplicate input rows retain their own
-    score and audit record, but are counted once in that union.
+    valid supplied legal proposal paths.  It is conditional on any declared
+    context masks and does not include transaction-fallback outcome mass.
+    Duplicate input rows retain their own score and audit record, but are
+    counted once in that union.
     """
 
     action_logprobs: torch.Tensor
@@ -68,6 +70,7 @@ class DeployedTransactionScores:
     candidate_log_mass: torch.Tensor
     action_audits: tuple[TransactionActionAudit, ...]
     generation_positions: tuple[int, ...]
+    context_masked_generation_positions: tuple[int, ...]
     transaction_kind: str
     temperature: float
     cfg_scale: float
@@ -120,6 +123,24 @@ def _normalize_transaction_positions(
     if positions != tuple(int(value) for value in coordinate_positions(slot)):
         raise ValueError("three-token transactions must use native X/Y/Z order")
     return positions, "xyz"
+
+
+def _normalize_context_masked_positions(
+    context_masked_generation_positions: Sequence[int],
+    *,
+    active_positions: Sequence[int],
+    gen_length: int,
+) -> tuple[int, ...]:
+    positions = tuple(int(value) for value in context_masked_generation_positions)
+    if len(set(positions)) != len(positions):
+        raise ValueError("context-masked generation positions must be unique")
+    if any(value < 0 or value >= int(gen_length) for value in positions):
+        raise ValueError(
+            "context-masked generation position lies outside the generation canvas"
+        )
+    if set(positions).intersection(int(value) for value in active_positions):
+        raise ValueError("context-masked positions must not overlap active positions")
+    return positions
 
 
 def _normalize_actions(
@@ -249,11 +270,14 @@ def score_deployed_transaction_actions(
     atom_count_grammar: dict | None,
     lightweight_decoding_constraints: dict | None,
     temperature: float = DEPLOYED_TEMPERATURE,
+    context_masked_generation_positions: Sequence[int] = (),
 ) -> DeployedTransactionScores:
     """Score fixed complete actions under the deployed SPAD proposal process.
 
     The input may contain old values or masks at the active positions; this
-    function always starts by masking the *entire* active block.  Every other
+    function always starts by masking the *entire* active block.  Positions
+    declared in ``context_masked_generation_positions`` must already contain
+    ``mask_id`` and remain masked during every component score.  Every other
     generation token must already be committed.  The only supported contract
     is the deployed one: temperature 0.7, CFG zero, and a suffix-visible
     attention canvas.
@@ -289,6 +313,11 @@ def score_deployed_transaction_actions(
         generation_positions,
         gen_length=int(gen_length),
     )
+    context_positions = _normalize_context_masked_positions(
+        context_masked_generation_positions,
+        active_positions=positions,
+        gen_length=int(gen_length),
+    )
     actions = _normalize_actions(
         action_token_ids,
         width=len(positions),
@@ -299,15 +328,31 @@ def score_deployed_transaction_actions(
     active_absolute_tensor = torch.tensor(
         absolute_positions, dtype=torch.long, device=state.device
     )
-    outside_active = torch.ones(
+    outside_active_and_context = torch.ones(
         (int(gen_length),), dtype=torch.bool, device=state.device
     )
-    outside_active[
+    outside_active_and_context[
         torch.tensor(positions, dtype=torch.long, device=state.device)
     ] = False
+    if context_positions:
+        outside_active_and_context[
+            torch.tensor(context_positions, dtype=torch.long, device=state.device)
+        ] = False
     generation = state[0, int(prompt_length) : int(prompt_length) + int(gen_length)]
-    if bool((generation[outside_active] == int(mask_id)).any().detach().item()):
-        raise ValueError("non-active generation tokens must already be committed")
+    if context_positions:
+        context_tensor = torch.tensor(
+            context_positions, dtype=torch.long, device=state.device
+        )
+        if not bool(
+            (generation[context_tensor] == int(mask_id)).all().detach().item()
+        ):
+            raise ValueError("declared context-masked positions must contain mask_id")
+    if bool(
+        (generation[outside_active_and_context] == int(mask_id)).any().detach().item()
+    ):
+        raise ValueError(
+            "generation masks outside active and declared context positions are not allowed"
+        )
 
     current = state.repeat(action_count, 1).clone()
     current[:, active_absolute_tensor] = int(mask_id)
@@ -580,6 +625,7 @@ def score_deployed_transaction_actions(
         candidate_log_mass=candidate_log_mass,
         action_audits=tuple(audits),
         generation_positions=positions,
+        context_masked_generation_positions=context_positions,
         transaction_kind=transaction_kind,
         temperature=float(temperature),
         cfg_scale=0.0,

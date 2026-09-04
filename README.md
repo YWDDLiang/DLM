@@ -1,17 +1,22 @@
-# Scientific Programmed Crystal Diffusion Language Model
+# Scientific Programmed Crystal DLM with Basin Closure
 
 This branch contains the paper mainline for **Scientific Programmed
-Anchor–Backfill Denoising (SPAD)**: a C³FD-supported Llama first chooses a
+Anchor–Backfill Denoising (SPAD)** and its active native-stability extension,
+**Llama-Programmed Basin Closure**. A C³FD-supported Llama first chooses a
 chemically reachable crystal Plan and then programs the denoising order of a
 masked crystal language model. The same Plan state controls composition,
 special-token placement, periodic feasibility and the final continuous
-refinement.
+refinement. The DLM then uses the same species program to revisit the complete
+crystal: it closes the lattice with all coordinates visible and closes species
+coordinate blocks with the full future retained.
 
 Teacher-feedback scope is explicit: the historical G2 periodic-residual route
 is neither a current contribution nor a fallback.  It was replaced by the
 coupled Llama-programmed DLM path in this branch.  If energy-shaped backfill is
 negative, the fallback is the already demonstrated SPAD system with an open
-stability limitation—not a return to G2.
+stability limitation—not a return to G2. The previous instantaneous
+Potential-Closure pilot is retained as negative evidence and is not the active
+stability objective.
 
 The central question is:
 
@@ -29,8 +34,10 @@ flowchart LR
     P --> D[7+4N masked crystal DLM]
     O --> D
     D --> A[Anchor-first predictor]
-    A --> B[Suffix-visible backfill]
-    B --> G[PBC-feasible raw crystal]
+    A --> B[Suffix-visible prediction]
+    B --> K[Cell closure with full X visible]
+    K --> Q[Reverse Llama-program species-block closure]
+    Q --> G[PBC-feasible native crystal]
     G --> M[Frozen model494, tau800]
     M --> X[Final crystal]
 ```
@@ -45,12 +52,12 @@ cannot perform without regenerating the suffix.
 Every request uses one Plan, one DLM trajectory and one fixed model494
 trajectory. There is no retry, replacement, reranking or best-of-N.
 
-The accepted SPAD-E training extension does not introduce an inference-time
-energy oracle.  On MP20-train only, model494/CHGNet label four legal actions at
-one Llama-programmed suffix-visible backfill state.  At deployment, the DLM
-first completes the future canvas, then re-masks and rewrites the earlier XYZ
-from its learned parameters; model494 runs once only after discrete generation
-is complete.
+The active stability work does not introduce an inference-time energy oracle.
+Full-MP20 geometry-recovery supervision first trains the exact closure states,
+including `L | X`. Only if a train-only headroom study succeeds, CHGNet
+short-relaxation values supervise legal cell/XYZ closure actions offline. At
+deployment the DLM emits one native trajectory; model494 remains an optional
+terminal fallback.
 
 ## Modules and why each is necessary
 
@@ -133,23 +140,25 @@ follow-up retained 512/512 reconstructed outputs and moved refined Strict/Meta
 S.U.N. to 36/512 (7.03%) and 237/512 (46.29%). Its paired refined CHGNet shift
 was -0.00657 eV/atom, but NU fell from 441 to 437; the small gain is not enough.
 
-The active SPAD-E training path treats validity lexicographically and learns
-terminal preference only among legal suffix-visible XYZ actions. Its 2,048
-MP20-train groups are frozen and the four-A800 teacher run is active. Full
-Direct remains `DEFERRED_COST`; the initial screen uses complete accounting,
-fast validity, CHGNet and reused development phase diagrams.
+The current diagnosis is that high Direct validity does not imply physical
+stationarity. Generated structures remain far above MP20 references in force,
+stress and short-distance tails, including under same-composition teacher
+Plans. The active work therefore trains and tests the non-causal closure before
+any larger energy-alignment run. Full Direct remains `DEFERRED_COST`; raw
+force/stress and common-relaxation stability are the first endpoints.
 
 ## Reproduce and inspect
 
 The current method, ablations and run ledger are documented here:
 
-1. [Unified SPAD method](docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md)
-2. [Pure-Llama Route A](docs/teacher_feedback_unified_v1/01_TRACK_A_PURE_LLM.md)
-3. [Llama-programmed DLM Route B](docs/teacher_feedback_unified_v1/02_TRACK_B_LLM_GUIDED_DLM.md)
-4. [Cross-representation contract](docs/teacher_feedback_unified_v1/03_CROSS_REPRESENTATION_AND_DIFFUSION.md)
-5. [Execution checklist](docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md)
-6. [Decision log](docs/teacher_feedback_unified_v1/05_DECISION_LOG.md)
-7. [Implementation audit](docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
+1. [Active basin-closure design](docs/teacher_feedback_unified_v1/12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md)
+2. [Unified SPAD method](docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md)
+3. [Pure-Llama Route A](docs/teacher_feedback_unified_v1/01_TRACK_A_PURE_LLM.md)
+4. [Llama-programmed DLM Route B](docs/teacher_feedback_unified_v1/02_TRACK_B_LLM_GUIDED_DLM.md)
+5. [Cross-representation contract](docs/teacher_feedback_unified_v1/03_CROSS_REPRESENTATION_AND_DIFFUSION.md)
+6. [Active execution checklist](docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md)
+7. [Decision log](docs/teacher_feedback_unified_v1/05_DECISION_LOG.md)
+8. [Implementation audit](docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
 
 Portable read-only checks remain available:
 

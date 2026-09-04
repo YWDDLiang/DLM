@@ -227,7 +227,16 @@ class DeployedTransactionScoringTest(unittest.TestCase):
             )
         return torch.tensor([v["<PROMPT>"]] + suffix, dtype=torch.long)
 
-    def score(self, model, *, complete, positions, actions, allowed=None):
+    def score(
+        self,
+        model,
+        *,
+        complete,
+        positions,
+        actions,
+        allowed=None,
+        context_masked_positions=(),
+    ):
         num_atoms = (len(complete) - 1 - 7) // 4
         return score_deployed_transaction_actions(
             model,
@@ -243,7 +252,101 @@ class DeployedTransactionScoringTest(unittest.TestCase):
             ),
             atom_count_grammar=None,
             lightweight_decoding_constraints=self.constraints(),
+            context_masked_generation_positions=context_masked_positions,
         )
+
+    def test_species_block_context_masks_are_scoreable_and_audited(self):
+        v = self.vocab
+        complete = self.complete(2).clone()
+        complete[1 + 12 : 1 + 15] = self.MASK_ID
+        model = self.StaticModel()
+        result = self.score(
+            model,
+            complete=complete,
+            positions=(8, 9, 10),
+            actions=[[v["<X_000>"], v["<Y_000>"], v["<Z_000>"]]],
+            context_masked_positions=(12, 13, 14),
+        )
+        self.assertTrue(result.action_audits[0].valid)
+        self.assertEqual(
+            result.context_masked_generation_positions,
+            (12, 13, 14),
+        )
+
+    def test_undeclared_extra_generation_mask_is_rejected(self):
+        v = self.vocab
+        complete = self.complete(2).clone()
+        complete[1 + 12] = self.MASK_ID
+        with self.assertRaisesRegex(ValueError, "outside active and declared context"):
+            self.score(
+                self.StaticModel(),
+                complete=complete,
+                positions=(8, 9, 10),
+                actions=[[v["<X_000>"], v["<Y_000>"], v["<Z_000>"]]],
+            )
+
+    def test_declared_context_position_must_contain_mask(self):
+        v = self.vocab
+        with self.assertRaisesRegex(ValueError, "must contain mask_id"):
+            self.score(
+                self.StaticModel(),
+                complete=self.complete(2),
+                positions=(8, 9, 10),
+                actions=[[v["<X_000>"], v["<Y_000>"], v["<Z_000>"]]],
+                context_masked_positions=(12,),
+            )
+
+    def test_context_positions_must_be_unique_in_range_and_disjoint(self):
+        v = self.vocab
+        action = [[v["<X_000>"], v["<Y_000>"], v["<Z_000>"]]]
+        cases = (
+            ((12, 12), "must be unique"),
+            ((15,), "outside the generation canvas"),
+            ((10,), "must not overlap active positions"),
+        )
+        for positions, message in cases:
+            with self.subTest(positions=positions):
+                with self.assertRaisesRegex(ValueError, message):
+                    self.score(
+                        self.StaticModel(),
+                        complete=self.complete(2),
+                        positions=(8, 9, 10),
+                        actions=action,
+                        context_masked_positions=positions,
+                    )
+
+    def test_context_masks_remain_masked_while_action_is_committed(self):
+        v = self.vocab
+        complete = self.complete(2).clone()
+        complete[1 + 12 : 1 + 15] = self.MASK_ID
+        model = self.StaticModel()
+        self.score(
+            model,
+            complete=complete,
+            positions=(8, 9, 10),
+            actions=[[v["<X_000>"], v["<Y_000>"], v["<Z_000>"]]],
+            context_masked_positions=(12, 13, 14),
+        )
+        for forwarded_state in model.inputs:
+            self.assertTrue(
+                bool(
+                    (
+                        forwarded_state[0, 1 + 12 : 1 + 15]
+                        == self.MASK_ID
+                    ).all()
+                )
+            )
+
+    def test_default_context_mask_contract_remains_empty(self):
+        v = self.vocab
+        result = self.score(
+            self.StaticModel(),
+            complete=self.complete(1),
+            positions=(8, 9, 10),
+            actions=[[v["<X_000>"], v["<Y_000>"], v["<Z_000>"]]],
+        )
+        self.assertEqual(result.context_masked_generation_positions, ())
+        self.assertTrue(result.action_audits[0].valid)
 
     def test_temperature_and_schema_mask_define_normalizer(self):
         v = self.vocab

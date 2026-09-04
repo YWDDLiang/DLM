@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -23,13 +24,17 @@ from crystal_dlm.dynamic_crystal import arrays_to_torch_payload, write_json  # n
 from crystal_dlm.fixed_slot import MASK_TOKEN_ID  # noqa: E402
 from crystal_dlm.llada_generation import generate  # noqa: E402
 from crystal_dlm.spad_generation import (  # noqa: E402
+    SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT,
+    _spad_basin_closure_block_salt,
     revise_spad_anchors,
     revise_spad_cell,
+    revise_spad_species_blocks,
 )
 from crystal_dlm.spad_program import (  # noqa: E402
     anchor_revision_slots,
     limited_anchor_revision_slots,
     program_from_element_order,
+    reverse_species_block_revision_slots,
     spad_predictor_position_groups,
 )
 from crystal_dlm.r5_dynamic_length import (  # noqa: E402
@@ -60,6 +65,293 @@ from scripts.sample_llada_dynamic_crystals import (  # noqa: E402
     read_valid_arrays,
     write_valid_arrays,
 )
+
+
+SPAD_BASIN_CLOSURE_SCHEDULE_VERSION = (
+    "cell_then_reverse_llama_species_blocks_v1"
+)
+SPAD_BASIN_CLOSURE_SAMPLE_SEED_STRIDE = 10_000_000
+SPAD_BASIN_CLOSURE_CELL_STAGE_OFFSET = 1_000_000
+SPAD_BASIN_CLOSURE_BLOCK_STAGE_OFFSET = 2_000_000
+SPAD_BASIN_CLOSURE_CELL_INTERNAL_SALT_LIMIT = 6 * 10_007
+
+if not (
+    SPAD_BASIN_CLOSURE_CELL_STAGE_OFFSET
+    + SPAD_BASIN_CLOSURE_CELL_INTERNAL_SALT_LIMIT
+    < SPAD_BASIN_CLOSURE_BLOCK_STAGE_OFFSET
+    and SPAD_BASIN_CLOSURE_BLOCK_STAGE_OFFSET
+    + SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT
+    < SPAD_BASIN_CLOSURE_SAMPLE_SEED_STRIDE
+):
+    raise RuntimeError("SPAD basin-closure RNG namespaces overlap")
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _spad_basin_closure_stage_seed(
+    base_seed: int,
+    sample_idx: int,
+    stage_offset: int,
+) -> int:
+    """Return the base seed for one sample-local closure stage namespace."""
+
+    if int(sample_idx) < 0:
+        raise ValueError("sample_idx must be nonnegative")
+    return (
+        int(base_seed)
+        + int(sample_idx) * SPAD_BASIN_CLOSURE_SAMPLE_SEED_STRIDE
+        + int(stage_offset)
+    )
+
+
+def _resolve_recorded_checkpoint_path(
+    value: Any,
+    *,
+    manifest_path: Path,
+) -> Path:
+    path = Path(str(value)).expanduser()
+    if not path.is_absolute():
+        path = manifest_path.parent / path
+    return path.resolve()
+
+
+def validate_spad_basin_closure_configuration(args: Any) -> Dict[str, Any] | None:
+    """Validate the opt-in closure contract before model initialization."""
+
+    enabled = bool(getattr(args, "spad_basin_closure", False))
+    capability_path_value = getattr(
+        args, "spad_basin_closure_capability_json", None
+    )
+    if not enabled:
+        if capability_path_value is not None:
+            raise ValueError(
+                "--spad-basin-closure-capability-json requires "
+                "--spad-basin-closure"
+            )
+        return None
+    if getattr(args, "generation_schedule", None) != "spad":
+        raise ValueError(
+            "--spad-basin-closure requires --generation-schedule spad"
+        )
+    if bool(getattr(args, "spad_backfill", False)):
+        raise ValueError(
+            "--spad-basin-closure cannot be combined with --spad-backfill"
+        )
+    if bool(getattr(args, "spad_cell_closure", False)):
+        raise ValueError(
+            "--spad-basin-closure cannot be combined with --spad-cell-closure"
+        )
+    if not bool(getattr(args, "pbc_min_distance_mask", False)):
+        raise ValueError(
+            "--spad-basin-closure requires --pbc-min-distance-mask"
+        )
+    if capability_path_value is None:
+        raise ValueError(
+            "--spad-basin-closure requires "
+            "--spad-basin-closure-capability-json"
+        )
+    checkpoint_value = getattr(args, "checkpoint_path", None)
+    if checkpoint_value is None:
+        raise ValueError("--spad-basin-closure requires --checkpoint-path")
+
+    actual_path = Path(checkpoint_value).expanduser().resolve(strict=True)
+    capability_path = Path(capability_path_value).expanduser().resolve()
+    expected_capability_path = (
+        actual_path / "spad_basin_closure_capability.json"
+    ).resolve()
+    if capability_path != expected_capability_path:
+        raise ValueError(
+            "SPAD basin-closure capability JSON must be the checkpoint-local "
+            f"manifest: {expected_capability_path}"
+        )
+    try:
+        payload = json.loads(capability_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(
+            f"cannot read SPAD basin-closure capability JSON: {capability_path}"
+        ) from exc
+    if not isinstance(payload, dict):
+        raise ValueError("SPAD basin-closure capability JSON must be an object")
+    if payload.get("schema") != "spad_basin_closure_capability_v1":
+        raise ValueError(
+            "SPAD basin-closure capability schema must equal "
+            "'spad_basin_closure_capability_v1'"
+        )
+
+    required_capabilities = {
+        "spad_cell_closure_trained": True,
+        "spad_species_block_closure_trained": True,
+        "closure_schedule_version": SPAD_BASIN_CLOSURE_SCHEDULE_VERSION,
+    }
+    for key, expected in required_capabilities.items():
+        observed = payload.get(key)
+        matches = observed is True if expected is True else observed == expected
+        if not matches:
+            raise ValueError(
+                f"SPAD basin-closure capability {key!r} must equal {expected!r}"
+            )
+
+    recorded_checkpoint = payload.get("checkpoint_path")
+    if not isinstance(recorded_checkpoint, str) or not recorded_checkpoint.strip():
+        raise ValueError("capability checkpoint record requires checkpoint_path")
+
+    recorded_path = _resolve_recorded_checkpoint_path(
+        recorded_checkpoint,
+        manifest_path=capability_path,
+    )
+    if actual_path != recorded_path:
+        raise ValueError(
+            "--checkpoint-path does not match the capability manifest record: "
+            f"{actual_path} != {recorded_path}"
+        )
+    adapter_path = actual_path / "adapter_model.safetensors"
+    if not adapter_path.is_file():
+        raise ValueError(
+            "SPAD basin-closure checkpoint is missing adapter_model.safetensors"
+        )
+    expected_adapter_sha256 = payload.get("adapter_model_sha256")
+    if not isinstance(expected_adapter_sha256, str) or len(expected_adapter_sha256) != 64:
+        raise ValueError("capability manifest requires adapter_model_sha256")
+    adapter_sha256 = _sha256_file(adapter_path)
+    if adapter_sha256 != expected_adapter_sha256.lower():
+        raise ValueError("adapter_model.safetensors SHA256 does not match capability")
+    return {
+        "capability_json": str(capability_path),
+        "checkpoint_path": str(actual_path),
+        "adapter_model_sha256": adapter_sha256,
+        **required_capabilities,
+    }
+
+
+def apply_spad_basin_closure(
+    model: Any,
+    complete_tokens: torch.Tensor,
+    *,
+    programs: List[Any],
+    batch: List[Mapping[str, Any]],
+    base_seed: int,
+    prompt_length: int,
+    gen_length: int,
+    attention_mask: torch.Tensor | None,
+    temperature: float,
+    cfg_scale: float,
+    remasking: str,
+    mask_id: int,
+    allowed_token_ids_by_generation_pos: list[list[int]] | None,
+    lightweight_decoding_constraints: dict | None,
+) -> tuple[
+    torch.Tensor,
+    list[dict[str, Any]],
+    list[list[dict[str, Any]]],
+    list[dict[str, Any]],
+]:
+    """Execute predictor -> cell -> reverse Llama species-block closure."""
+
+    if len(programs) != len(batch):
+        raise ValueError("one SPAD program is required per closure batch row")
+    revision_blocks = [
+        [list(block) for block in reverse_species_block_revision_slots(program)]
+        for program in programs
+    ]
+    cell_sampling_seeds = [
+        _spad_basin_closure_stage_seed(
+            int(base_seed),
+            int(item["sample_idx"]),
+            SPAD_BASIN_CLOSURE_CELL_STAGE_OFFSET,
+        )
+        for item in batch
+    ]
+    block_sampling_seeds = [
+        _spad_basin_closure_stage_seed(
+            int(base_seed),
+            int(item["sample_idx"]),
+            SPAD_BASIN_CLOSURE_BLOCK_STAGE_OFFSET,
+        )
+        for item in batch
+    ]
+    closed_tokens, cell_logs = revise_spad_cell(
+        model,
+        complete_tokens,
+        prompt_length=prompt_length,
+        gen_length=gen_length,
+        attention_mask=attention_mask,
+        temperature=temperature,
+        cfg_scale=cfg_scale,
+        remasking=remasking,
+        mask_id=mask_id,
+        allowed_token_ids_by_generation_pos=allowed_token_ids_by_generation_pos,
+        atom_count_grammar=None,
+        lightweight_decoding_constraints=lightweight_decoding_constraints,
+        strict_geometry_fallback=True,
+        sampling_seeds_by_batch=cell_sampling_seeds,
+    )
+    closed_tokens, block_logs = revise_spad_species_blocks(
+        model,
+        closed_tokens,
+        prompt_length=prompt_length,
+        gen_length=gen_length,
+        revision_blocks_by_batch=revision_blocks,
+        attention_mask=attention_mask,
+        temperature=temperature,
+        cfg_scale=cfg_scale,
+        remasking=remasking,
+        mask_id=mask_id,
+        allowed_token_ids_by_generation_pos=allowed_token_ids_by_generation_pos,
+        atom_count_grammar=None,
+        lightweight_decoding_constraints=lightweight_decoding_constraints,
+        sampling_seeds_by_batch=block_sampling_seeds,
+    )
+    metadata = [
+        {
+            "closure_schedule_version": SPAD_BASIN_CLOSURE_SCHEDULE_VERSION,
+            "stage_order": ["predictor", "cell", "reverse_species_blocks"],
+            "species_program": list(program.element_order),
+            "species_program_source": str(program.order_source),
+            "reverse_species_block_slots": blocks,
+            "cell_sampling_seed": int(cell_seed),
+            "species_block_sampling_seed": int(block_seed),
+            "sample_seed_stride": SPAD_BASIN_CLOSURE_SAMPLE_SEED_STRIDE,
+            "cell_stage_offset": SPAD_BASIN_CLOSURE_CELL_STAGE_OFFSET,
+            "species_block_stage_offset": SPAD_BASIN_CLOSURE_BLOCK_STAGE_OFFSET,
+            "final_geometry_supported": bool(
+                block_log
+                and block_log[-1].get("final_geometry_supported") is True
+            ),
+        }
+        for program, blocks, cell_seed, block_seed, block_log in zip(
+            programs,
+            revision_blocks,
+            cell_sampling_seeds,
+            block_sampling_seeds,
+            block_logs,
+            strict=True,
+        )
+    ]
+    return closed_tokens, list(cell_logs), list(block_logs), metadata
+
+
+def spad_basin_closure_record_fields(
+    *,
+    cell_revision_log: Mapping[str, Any],
+    species_block_revision_log: List[Mapping[str, Any]],
+    metadata: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Build fields that are emitted only by the opt-in closure path."""
+
+    return {
+        "spad_basin_closure": True,
+        "spad_basin_closure_cell_revision_log": dict(cell_revision_log),
+        "spad_basin_closure_species_block_revision_log": [
+            dict(entry) for entry in species_block_revision_log
+        ],
+        "spad_basin_closure_metadata": dict(metadata),
+    }
 
 
 def model_device(model) -> torch.device:
@@ -336,6 +628,12 @@ def main() -> None:
     )
     parser.add_argument("--spad-backfill", action="store_true")
     parser.add_argument("--spad-cell-closure", action="store_true")
+    parser.add_argument("--spad-basin-closure", action="store_true")
+    parser.add_argument(
+        "--spad-basin-closure-capability-json",
+        type=Path,
+        default=None,
+    )
     parser.add_argument("--spad-max-anchor-revisions", type=int, default=0)
     parser.add_argument("--spad-hide-suffix", action="store_true")
     parser.add_argument("--skip-graph-validation", action="store_true")
@@ -347,6 +645,7 @@ def main() -> None:
         raise ValueError("--spad-backfill requires --generation-schedule spad")
     if args.spad_cell_closure and args.generation_schedule != "spad":
         raise ValueError("--spad-cell-closure requires --generation-schedule spad")
+    basin_closure_capability = validate_spad_basin_closure_configuration(args)
     if args.spad_hide_suffix and not args.spad_backfill:
         raise ValueError("--spad-hide-suffix requires --spad-backfill")
     if int(args.spad_max_anchor_revisions) < 0:
@@ -390,6 +689,8 @@ def main() -> None:
             "rank_seed_rule": "seed + sample_idx" if args.seed_by_sample_index else "seed + rank",
         }
     )
+    if basin_closure_capability is not None:
+        run_config["spad_basin_closure_capability"] = basin_closure_capability
     if is_main:
         write_json(str(args.output_dir / "run_config.json"), run_config)
         write_json(
@@ -512,6 +813,42 @@ def main() -> None:
             cell_revision_logs: List[Dict[str, Any] | None] = [
                 None for _ in range(len(batch))
             ]
+            basin_cell_revision_logs: List[Dict[str, Any] | None] = [
+                None for _ in range(len(batch))
+            ]
+            basin_block_revision_logs: List[List[Dict[str, Any]]] = [
+                [] for _ in range(len(batch))
+            ]
+            basin_closure_metadata: List[Dict[str, Any] | None] = [
+                None for _ in range(len(batch))
+            ]
+            if args.spad_basin_closure:
+                if programs is None:
+                    raise RuntimeError("SPAD programs were not built")
+                (
+                    outputs,
+                    basin_cell_logs,
+                    basin_block_logs,
+                    basin_metadata,
+                ) = apply_spad_basin_closure(
+                    model,
+                    outputs,
+                    programs=programs,
+                    batch=batch,
+                    base_seed=int(args.seed),
+                    prompt_length=input_ids.shape[1],
+                    gen_length=gen_length,
+                    attention_mask=attention_mask,
+                    temperature=args.temperature,
+                    cfg_scale=args.cfg_scale,
+                    remasking=args.remasking,
+                    mask_id=MASK_TOKEN_ID,
+                    allowed_token_ids_by_generation_pos=allowed,
+                    lightweight_decoding_constraints=lightweight_constraints,
+                )
+                basin_cell_revision_logs = list(basin_cell_logs)
+                basin_block_revision_logs = list(basin_block_logs)
+                basin_closure_metadata = list(basin_metadata)
             if args.spad_cell_closure:
                 cell_sampling_seeds = [
                     int(args.seed)
@@ -578,11 +915,22 @@ def main() -> None:
                 )
             generated_ids = outputs[:, input_ids.shape[1] :]
             decoded = tokenizer.batch_decode(generated_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
-            for item, text, revision_log, cell_revision_log in zip(
+            for (
+                item,
+                text,
+                revision_log,
+                cell_revision_log,
+                basin_cell_revision_log,
+                basin_block_revision_log,
+                basin_metadata,
+            ) in zip(
                 batch,
                 decoded,
                 revision_logs,
                 cell_revision_logs,
+                basin_cell_revision_logs,
+                basin_block_revision_logs,
+                basin_closure_metadata,
                 strict=True,
             ):
                 sample_idx = int(item["sample_idx"])
@@ -606,12 +954,28 @@ def main() -> None:
                     "spad_revision_log": revision_log,
                     "spad_cell_revision_log": cell_revision_log,
                 }
+                if args.spad_basin_closure:
+                    raw_record.update(
+                        spad_basin_closure_record_fields(
+                            cell_revision_log=basin_cell_revision_log or {},
+                            species_block_revision_log=(
+                                basin_block_revision_log
+                            ),
+                            metadata=basin_metadata or {},
+                        )
+                    )
                 if item.get("prompt_record") is not None:
                     source = dict(item["prompt_record"])
                     source.pop(args.prompt_field, None)
                     raw_record["prompt_record"] = source
                 metrics["decoded_samples"] += 1
                 try:
+                    if args.spad_basin_closure and not bool(
+                        (basin_metadata or {}).get("final_geometry_supported")
+                    ):
+                        raise ValueError(
+                            "SPAD basin closure final geometry is outside support"
+                        )
                     arrays = validate_answer_matches_plan(item["plan_state"], text)
                     metrics["parse_success"] += 1
                     metrics["plan_match_success"] += 1

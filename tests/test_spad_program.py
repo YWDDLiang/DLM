@@ -8,6 +8,7 @@ from crystal_dlm.spad_program import (
     limited_anchor_revision_slots,
     program_from_element_order,
     program_from_planner_trace,
+    reverse_species_block_revision_slots,
     response_revision_slots,
     spad_site_slots,
     spad_predictor_position_groups,
@@ -141,6 +142,18 @@ class SPADProgramTest(unittest.TestCase):
         )
         self.assertEqual(spad_site_slots(program), (4, 0, 3, 5, 1, 2))
         self.assertEqual(response_revision_slots(program), (2, 1, 5, 3, 0, 4))
+
+    def test_reverse_species_blocks_reverse_program_and_predictor_site_order(self):
+        program = program_from_element_order(
+            self.plan,
+            ["Cl", "O", "Na"],
+            order_source="llama_program_head",
+        )
+        blocks = reverse_species_block_revision_slots(program)
+        self.assertEqual(blocks, ((3,), (2, 1, 0), (5, 4)))
+        flattened = tuple(slot for block in blocks for slot in block)
+        self.assertEqual(len(flattened), self.plan["N"])
+        self.assertEqual(set(flattened), set(range(self.plan["N"])))
 
     def test_program_must_be_exact_unique_permutation(self):
         with self.assertRaisesRegex(ValueError, "duplicate"):
