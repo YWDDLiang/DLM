@@ -121,16 +121,29 @@ recorded rather than replaced by an energy-aware search.
 
 ## Two routes
 
-The finite candidate distribution is
+The action score must be the probability of the exact deployed proposal path,
+not an unconstrained 2,457-way model score. For a three-token XYZ or six-token
+cell transaction,
 
 \[
-q_C(a\mid s)=
-\frac{\exp\ell_\theta(a\mid s)}
-{\sum_{a'\in C(s)}\exp\ell_\theta(a'\mid s)}.
+\log p_{\theta,\mathrm{dep}}(a\mid s)
+=\sum_{j=1}^{d(a)}
+\log\operatorname{Softmax}
+\left(\operatorname{Mask}_j(\ell_\theta(s,a_{<j}))/0.7\right)_{a_j}.
 \]
 
-The KL trust region is therefore explicitly a candidate-set KL, not a claim
-about projection over the full vocabulary action space.
+`Mask_j` is exactly the deployed schema/token-family plus dynamic PBC mask, and
+each committed component conditions the next component. For the legal proposal
+set `C(s)`, define
+
+\[
+m_C=\sum_{a\in C(s)}p_{\theta,\mathrm{dep}}(a\mid s),\qquad
+r_C(a\mid s)=p_{\theta,\mathrm{dep}}(a\mid s)/m_C.
+\]
+
+`m_C` is the mass of the enumerated legal proposal paths, not the probability
+of every possible terminal fallback outcome. This distinction is retained in
+all reports.
 
 ### Route A: terminal single-point control
 
@@ -138,9 +151,15 @@ about projection over the full vocabulary action space.
 V_A(s,a)=-E_{\rm CHGNet}(x_T(s,a;\xi)).
 \]
 
-This is the full-source scale control. The 512-source pilot already shows that
-it is not sufficient evidence of relaxed stability, so it is not the proposed
-main contribution.
+Route A constructs the strongest lower-`E0` candidate posterior within
+
+\[
+D_{\rm KL}(q_A^*\Vert r_C)\le 0.05.
+\]
+
+It is the equal-compute single-point control, not a selectable fallback main
+method. The 512-source pilot already shows that it is not sufficient evidence
+of relaxed stability.
 
 ### Route B: basin-consistent action value
 
@@ -150,18 +169,37 @@ V_B^{(K)}(s,a)=
 \]
 
 `R_K` uses the same CHGNet model, cell degrees of freedom and force tolerance as
-the final relaxation, but a frozen short step count. Residual force/stress may
-be reported or used only as a deterministic tie-break within numerical energy
-tolerance. It never replaces basin endpoint energy.
-
-Each route distils its value through the same candidate-set target:
+the calibration relaxation, but a frozen short step count. Route B solves the
+candidate-conditional constrained policy improvement problem
 
 \[
-q_j^*(a\mid s)\propto q_{\rm ref}(a\mid s)
-\exp(\beta V_j(s,a)),\qquad j\in\{A,B\}.
+q_B^*=\arg\min_q\;\mathbb E_q[E_K]
 \]
 
-Invalid actions have zero support before either value is considered.
+subject to
+
+\[
+D_{\rm KL}(q\Vert r_C)\le0.05,\qquad
+\mathbb E_q[E_0]\le\mathbb E_{r_C}[E_0].
+\]
+
+Thus basin accessibility cannot be purchased by worsening expected raw energy
+inside the labelled proposal set. This is a candidate-conditional guarantee;
+unlabelled actions prevent a claim of global raw-energy safety.
+
+Both routes project their target into the actual proposal-path likelihood using
+the same absolute complete-action objective
+
+\[
+\mathcal L_j=-\frac{1}{d(a)}\sum_{a\in C(s)}
+q_j^*(a\mid s)\log p_{\theta,\mathrm{dep}}(a\mid s).
+\]
+
+Unlike candidate-normalized KL alone, this objective contains `-log m_C` and
+therefore trains preferred legal transactions to become more likely against
+the deployed vocabulary outside `C(s)`. Invalid actions have zero support
+before either value is considered. Clean full-MP20 CE remains on separate,
+alternating optimizer updates.
 
 ## Scientific-object preflight
 
@@ -177,7 +215,12 @@ Before generating all labels:
    short-relaxation ranking against the normal full relaxation ranking;
 5. approve Route B only if the short value has better paired ranking agreement
    than the single-point value and retains meaningful within-group variation;
-6. report all full-source attempts and the effective gradient-producing subset.
+6. report all full-source attempts and the effective gradient-producing subset;
+7. report `log m_C` by stage and the attainable KL-0.05 expected-value changes:
+   Route A must lower expected `E0`; Route B must lower expected `EK` while its
+   expected `E0` is non-increasing;
+8. require paired train-source confidence intervals to support nonzero
+   attainable headroom before either formal training job starts.
 
 The preflight chooses no result-facing seed, Plan, checkpoint or cohort. It only
 tests whether the proposed teacher measures the claimed object.
@@ -230,7 +273,8 @@ Both complete-action objectives are normalized by active transaction length,
 so six-token cells do not receive twice the weight of three-token XYZ actions.
 Before the formal jobs, five frozen paired batches at the common initialization
 must report unclipped clean/posterior gradient norms, their ratio and cosine,
-post-clip norms, informative-group count and maximum candidate-set teacher KL.
+post-clip norms, informative-group count, proposal-path mass gradient and
+maximum candidate-set teacher KL.
 Keep the unit posterior multiplier and the `0.05`-nat target-KL budget when the
 median gradient ratio lies in `[0.2, 5]` and all quantities are finite. Do not
 perform batch-adaptive inverse-gradient weighting or change a coefficient in
@@ -244,8 +288,10 @@ weights until the conflict disappears.
 ## Training
 
 Both routes start from the same BS checkpoint and share seed, source order,
-candidate order, update count, clean-CE schedule, optimizer, learning rate and
-candidate-set KL budget.
+candidate order, deployment-matched scorer, absolute complete-action NLL,
+update count, clean-CE schedule, optimizer, learning rate and candidate-set KL
+budget. Route B is preregistered as the main method; Route A is its single-point
+value control.
 
 - Route A: `2 A800 + 8 CPU`;
 - Route B: `2 A800 + 8 CPU`;
@@ -258,12 +304,15 @@ reranking or replacement: one Plan produces one DLM trajectory.
 ## Evaluation and claim boundary
 
 The existing frozen prospective Plan/program/cohort is reused. Report native
-raw validity, relaxed energy, Strict/Meta S.U.N. and the fixed tau800 fallback
-separately. Route A versus B is attributable only to instantaneous versus basin
+raw validity, energy, Strict/Meta S.U.N. and paired wins/losses as the primary
+result. The fixed tau800 endpoint is only a separately labelled system fallback.
+Route A versus B is attributable only to instantaneous versus raw-safe basin
 value.
 
 Because CHGNet is both teacher and the generated-structure relaxation proxy,
-the immediate claim is **CHGNet-basin-aligned transaction distillation**. The MP
+the immediate claim is **Llama-program-conditioned, CHGNet-basin-aligned DLM
+transaction distillation**. Llama remains frozen and is not claimed to learn
+energy value. The MP
 cache supplies official reference phases but does not make generated energies
 independent DFT. MatterSim failure does not block this experiment; an eventual
 frozen DFT or independent-MLIP subset is external validation, not part of
