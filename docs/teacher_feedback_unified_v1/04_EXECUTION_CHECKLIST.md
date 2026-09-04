@@ -201,8 +201,9 @@ so job 39770 restarts from the same registered closure-CE policy.
   it is one K10 experiment with two data-parallel ranks, not two arms.
 - [x] Evaluate closure-CE raw first: fast validity, E/F/stress, relaxation,
   N/U and Strict/Meta S.U.N., with paired wins/losses.
-- [ ] Record K10 raw fast validity from generation, but defer raw CHGNet and all
-  mechanism/control comparisons until after the K10 refined headline result.
+- [ ] Evaluate K10 raw and tau800 refined Strict/Meta S.U.N. as the two primary
+  endpoints, without Direct. Run both endpoint relaxations concurrently when
+  at least two GPUs are available; defer all method/control comparisons.
 - [ ] In parallel with the native value path, evaluate one preregistered
   low-noise `model494 tau200` bridge (job 39732) on the same closure-CE raw256;
   disclose it regardless of outcome and do not tune tau from its result.

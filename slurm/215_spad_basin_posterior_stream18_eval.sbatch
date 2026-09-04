@@ -146,8 +146,8 @@ printf '%s\n' \
   $'field\tvalue' \
   $'schema\tspad_basin_posterior_stream18_eval_contract_v1' \
   "allocation\t${expected_gpus}_A800" \
-  "cells\t$([[ "${PRIMARY_ONLY}" == true ]] && printf k10_refined_only || printf closure_ce_k10_x_raw_refined)" \
-  "first_wave\t$([[ "${PRIMARY_ONLY}" == true ]] && printf 1_cell || printf 4_cells)" \
+  "cells\t$([[ "${PRIMARY_ONLY}" == true ]] && printf k10_raw_refined || printf closure_ce_k10_x_raw_refined)" \
+  "first_wave\t$([[ "${PRIMARY_ONLY}" == true ]] && printf 2_primary_cells || printf 4_cells)" \
   "selected_tau\t${SELECTED_TAU}" \
   $'primary_cell\tk10_refined' \
   $'strict_sun_target\t26_of_256' \
@@ -183,9 +183,9 @@ run_full_cell() {
   [[ -f "${cell}/full_reconstructed/attempt_labels_preofficial.jsonl" ]]
 }
 
-run_primary_refined_sharded() {
-  local arm=k10 endpoint=refined
-  local cell generation rank pid status=0
+run_primary_endpoint_sharded() {
+  local endpoint="$1" first_slot="$2" shard_count="$3" arm=k10
+  local cell generation rank slot pid status=0
   local -a shard_pids=()
   cell="${RUN}/${arm}/${endpoint}"
   generation="$(generation_path "${arm}" "${endpoint}")"
@@ -207,8 +207,9 @@ manifest = a100_sun.prepare_a100_input(
 assert manifest["total_attempts"] == 256
 PY
 
-  for ((rank=0; rank<expected_gpus; rank++)); do
-    env CUDA_VISIBLE_DEVICES="${allocated_gpus[${rank}]}" \
+  for ((rank=0; rank<shard_count; rank++)); do
+    slot=$((first_slot + rank))
+    env CUDA_VISIBLE_DEVICES="${allocated_gpus[${slot}]}" \
       OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
       NUMEXPR_NUM_THREADS=4 PYTHONPATH="${SOURCE}/src" \
       "${PYTHON}" "${SOURCE}/scripts/relax_spad_basin_closure_shard.py" \
@@ -219,9 +220,9 @@ PY
       --output-jsonl "${cell}/shards/cache_rank${rank}.jsonl" \
       --report-json "${cell}/shards/report_rank${rank}.json" \
       --denominator 256 --shard-rank "${rank}" \
-      --shard-count "${expected_gpus}" --device cuda \
-      >"${RUN}/logs/k10_refined_relax_rank${rank}.out" \
-      2>"${RUN}/logs/k10_refined_relax_rank${rank}.err" &
+      --shard-count "${shard_count}" --device cuda \
+      >"${RUN}/logs/k10_${endpoint}_relax_rank${rank}.out" \
+      2>"${RUN}/logs/k10_${endpoint}_relax_rank${rank}.err" &
     shard_pids+=("$!")
   done
   for pid in "${shard_pids[@]}"; do
@@ -230,11 +231,11 @@ PY
   [[ "${status}" -eq 0 ]]
 
   cp --reflink=auto "${GLOBAL_CACHE}" "${cell}/working_relax_cache.jsonl"
-  for ((rank=0; rank<expected_gpus; rank++)); do
+  for ((rank=0; rank<shard_count; rank++)); do
     cat "${cell}/shards/cache_rank${rank}.jsonl" \
       >>"${cell}/working_relax_cache.jsonl"
   done
-  env CUDA_VISIBLE_DEVICES="${allocated_gpus[0]}" \
+  env CUDA_VISIBLE_DEVICES="${allocated_gpus[${first_slot}]}" \
     OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 \
     NUMEXPR_NUM_THREADS=4 H1_ACTIVE_DENOMINATOR=256 \
     PYTHONPATH="${SOURCE}/eval_runtime:${R03E}/runtime" \
@@ -243,8 +244,8 @@ PY
     --r03e-root "${R03E}" \
     --working-relax-cache "${cell}/working_relax_cache.jsonl" \
     --output-dir "${cell}/full_reconstructed" \
-    >"${RUN}/logs/k10_refined_full.out" \
-    2>"${RUN}/logs/k10_refined_full.err"
+    >"${RUN}/logs/k10_${endpoint}_full.out" \
+    2>"${RUN}/logs/k10_${endpoint}_full.err"
   [[ -f "${cell}/full_reconstructed/_SUCCESS" ]]
   [[ -f "${cell}/full_reconstructed/attempt_labels_preofficial.jsonl" ]]
 }
@@ -252,7 +253,22 @@ PY
 run_wave_one() {
   CHILD_PIDS=()
   if [[ "${PRIMARY_ONLY}" == true ]]; then
-    run_primary_refined_sharded
+    if [[ "${expected_gpus}" -eq 1 ]]; then
+      run_primary_endpoint_sharded raw 0 1
+      run_primary_endpoint_sharded refined 0 1
+    else
+      raw_shards=$((expected_gpus / 2))
+      refined_shards=$((expected_gpus - raw_shards))
+      run_primary_endpoint_sharded raw 0 "${raw_shards}" &
+      CHILD_PIDS+=("$!")
+      run_primary_endpoint_sharded refined "${raw_shards}" "${refined_shards}" &
+      CHILD_PIDS+=("$!")
+      local status=0 pid
+      for pid in "${CHILD_PIDS[@]}"; do
+        wait "${pid}" || status=1
+      done
+      [[ "${status}" -eq 0 ]]
+    fi
     return
   else
     run_full_cell 0 closure_ce raw & CHILD_PIDS+=("$!")
@@ -297,6 +313,7 @@ finalize_cell() {
 }
 
 if [[ "${PRIMARY_ONLY}" == true ]]; then
+  finalize_cell k10 raw
   finalize_cell k10 refined
 else
   for arm in closure_ce k10; do
@@ -320,7 +337,7 @@ primary_only = sys.argv[6] == "true"
 
 cells = []
 by_name = {}
-cell_names = (("k10", "refined"),) if primary_only else tuple(
+cell_names = (("k10", "raw"), ("k10", "refined")) if primary_only else tuple(
     (arm, endpoint)
     for arm in ("closure_ce", "k10")
     for endpoint in ("raw", "refined")
