@@ -17,6 +17,7 @@ TAU200_RELAX = ROOT / "slurm" / "205_spad_basin_closure_tau200_common_relax.sbat
 TAU200_FINAL = ROOT / "slurm" / "206_spad_basin_closure_tau200_finalize.sbatch"
 TAU_CALIBRATION = ROOT / "slurm" / "207_spad_basin_closure_tau_calibration.sbatch"
 TAU_CALIBRATION_EVAL = ROOT / "slurm" / "208_spad_basin_closure_tau_calibration_eval.sbatch"
+TAU800_BRIDGE = ROOT / "slurm" / "211_spad_basin_closure_tau800_bridge.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -36,6 +37,7 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.tau200_final = TAU200_FINAL.read_text(encoding="utf-8")
         cls.tau_calibration = TAU_CALIBRATION.read_text(encoding="utf-8")
         cls.tau_calibration_eval = TAU_CALIBRATION_EVAL.read_text(encoding="utf-8")
+        cls.tau800_bridge = TAU800_BRIDGE.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
         self.assertIn("#SBATCH --cpus-per-task=4", self.build)
@@ -235,7 +237,14 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertIn("'development_only':True", self.tau_calibration)
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4", self.tau_calibration_eval)
         self.assertIn("run_shard 3 600 1", self.tau_calibration_eval)
+        self.assertIn("run_shard 1 800 1", self.tau_calibration_eval)
         self.assertNotIn("query", self.tau_calibration_eval.lower())
+
+    def test_tau800_bridge_is_an_explicit_development_anchor(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.tau800_bridge)
+        self.assertIn("--diff-steps 800", self.tau800_bridge)
+        self.assertIn("--seed-by-sample-index", self.tau800_bridge)
+        self.assertNotIn("chgnet", self.tau800_bridge.lower())
 
     def test_every_run_is_non_overwriting(self):
         for wrapper in (
