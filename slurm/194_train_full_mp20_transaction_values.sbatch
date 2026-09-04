@@ -18,16 +18,34 @@ readonly ROOT="${H1A2_CANDIDATE_ROOT:?}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:?}"
 readonly LABELLED_GROUPS="${FULL_MP20_LABELLED_GROUPS:?}"
 readonly ROUTE="${FULL_MP20_VALUE_ROUTE:?single_point_full or basin_consistent_full}"
+readonly AUDIT_ONLY="${FULL_MP20_GRADIENT_AUDIT_ONLY:-0}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
 readonly BS_POLICY="${ROOT}/runs/spad_schedule_dlm_39520/train/checkpoints/step-1696"
 readonly SFT_DATA="${ROOT}/data/spad_schedule_sft_v1_20260903"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
-readonly RUN="${ROOT}/runs/full_mp20_transaction_value_${ROUTE}_${SLURM_JOB_ID}"
+readonly PHASE="$([[ "${AUDIT_ONLY}" == 1 ]] && printf audit || printf train)"
+readonly RUN="${ROOT}/runs/full_mp20_transaction_value_${ROUTE}_${PHASE}_${SLURM_JOB_ID}"
 
 case "${ROUTE}" in
   single_point_full|basin_consistent_full) ;;
   *) printf 'invalid FULL_MP20_VALUE_ROUTE: %s\n' "${ROUTE}" >&2; exit 2 ;;
 esac
+case "${AUDIT_ONLY}" in
+  0|1) ;;
+  *) printf 'FULL_MP20_GRADIENT_AUDIT_ONLY must be 0 or 1\n' >&2; exit 2 ;;
+esac
+
+extra_args=()
+if [[ "${AUDIT_ONLY}" == 1 ]]; then
+  extra_args+=(--audit-only)
+else
+  readonly POSTERIOR_SCALE="${FULL_MP20_POSTERIOR_GRADIENT_SCALE:?run both audits and provide their one shared preregistered scale}"
+  case "${POSTERIOR_SCALE}" in
+    0.25|0.5|1|1.0|2|2.0|4|4.0) ;;
+    *) printf 'posterior scale is outside the preregistered set\n' >&2; exit 2 ;;
+  esac
+  extra_args+=(--posterior-gradient-scale "${POSTERIOR_SCALE}")
+fi
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
@@ -71,17 +89,31 @@ env \
   --route "${ROUTE}" \
   --seed 99017 \
   --require-llama-program \
+  "${extra_args[@]}" \
   >"${RUN}/logs/train.out" 2>"${RUN}/logs/train.err"
 
-"${PYTHON}" - "${RUN}" "${ROUTE}" <<'PY'
+"${PYTHON}" - "${RUN}" "${ROUTE}" "${AUDIT_ONLY}" <<'PY'
 import json
 import pathlib
 import sys
 
 root = pathlib.Path(sys.argv[1])
 route = sys.argv[2]
+audit_only = sys.argv[3] == "1"
 cell = root / "train"
 assert (cell / "_SUCCESS").is_file()
+if audit_only:
+    audit = json.load(open(cell / "AUDIT_FINAL.json"))
+    assert audit["schema"] == "full_mp20_initial_gradient_audit_v1"
+    assert audit["route"] == route and audit["optimizer_updates"] == 0
+    assert audit["audit_batches"] == 5 and audit["passed"] is True
+    assert audit["finite_candidate_kl_budget_nats"] == 0.05
+    assert audit["same_batch_half_half_scalar_mixture"] is False
+    assert audit["per_batch_inverse_scaling"] is False
+    (root / "AUDIT_FINAL.json").write_text(
+        json.dumps(audit, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    raise SystemExit(0)
 final = json.load(open(cell / "TRAIN_FINAL.json"))
 assert final["schema"] == "full_mp20_transaction_value_train_v1"
 assert final["status"] == "success" and final["route"] == route
@@ -96,6 +128,11 @@ assert final["objective_counts"] == {
 assert final["clean_source_coverage"] == 27136
 assert final["posterior_source_coverage"] == 27136
 assert final["manual_gradient_allreduce_mean"] is True
+assert final["finite_candidate_kl_budget_nats"] == 0.05
+assert final["same_batch_half_half_scalar_mixture"] is False
+assert final["initial_gradient_audit"]["audit_batches"] == 5
+assert final["gradient_scale_contract"]["frozen_for_all_updates"] is True
+assert final["gradient_scale_contract"]["per_batch_inverse_scaling"] is False
 assert final["checkpoint"]["only_step3392"] is True
 assert [p.name for p in (cell / "checkpoints").iterdir() if p.is_dir()] == ["step-3392"]
 (root / "TRAIN_FINAL.json").write_text(

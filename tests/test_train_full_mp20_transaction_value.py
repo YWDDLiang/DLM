@@ -92,6 +92,10 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
             counts,
             Counter({"clean_ce": 1696, "transaction_posterior": 1696}),
         )
+        self.assertEqual(MODULE.MAX_KL_BUDGET_NATS, 0.05)
+        self.assertNotEqual(
+            MODULE.optimizer_objective(1), MODULE.optimizer_objective(2)
+        )
 
     def test_two_ranks_are_disjoint_and_cover_one_full_epoch(self):
         permutation = MODULE.frozen_source_permutation(27136, seed=99017)
@@ -187,6 +191,73 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
         )
         self.assertEqual(parameter.grad.tolist(), [3.0])
 
+    def test_gradient_norm_cosine_and_imbalance(self):
+        torch = MODULE.torch
+        clean = (torch.tensor([3.0, 4.0]),)
+        aligned = (torch.tensor([6.0, 8.0]),)
+        opposed = (torch.tensor([-3.0, -4.0]),)
+        self.assertEqual(MODULE.gradient_norm(clean), 5.0)
+        self.assertAlmostEqual(MODULE.gradient_cosine(clean, aligned), 1.0)
+        self.assertAlmostEqual(MODULE.gradient_cosine(clean, opposed), -1.0)
+        self.assertEqual(MODULE.symmetric_gradient_imbalance(10.0, 2.0), 5.0)
+
+    def test_preregistered_scale_is_common_discrete_and_not_per_batch(self):
+        identity = "same-labelled-and-clean-dataset"
+        reports = [
+            {
+                "route": "single_point_full",
+                "dataset_identity": identity,
+                "median_clean_gradient_norm": 10.0,
+                "median_posterior_gradient_norm": 1.0,
+            },
+            {
+                "route": "basin_consistent_full",
+                "dataset_identity": identity,
+                "median_clean_gradient_norm": 8.0,
+                "median_posterior_gradient_norm": 1.0,
+            },
+        ]
+        decision = MODULE.preregistered_common_posterior_scale(reports)
+        self.assertEqual(decision["selected_posterior_gradient_scale"], 4.0)
+        self.assertTrue(decision["passed"])
+        self.assertFalse(decision["per_batch_inverse_scaling"])
+        self.assertIn(
+            decision["selected_posterior_gradient_scale"],
+            MODULE.ALLOWED_POSTERIOR_GRADIENT_SCALES,
+        )
+
+    def test_common_scale_rejects_irreconcilable_a_b_gradients(self):
+        identity = "same"
+        reports = [
+            {
+                "route": "single_point_full",
+                "dataset_identity": identity,
+                "median_clean_gradient_norm": 100.0,
+                "median_posterior_gradient_norm": 1.0,
+            },
+            {
+                "route": "basin_consistent_full",
+                "dataset_identity": identity,
+                "median_clean_gradient_norm": 1.0,
+                "median_posterior_gradient_norm": 100.0,
+            },
+        ]
+        self.assertFalse(
+            MODULE.preregistered_common_posterior_scale(reports)["passed"]
+        )
+
+    def test_frozen_scale_validation_never_uses_batchwise_inverse(self):
+        audit = {
+            "median_clean_gradient_norm": 10.0,
+            "median_posterior_gradient_norm": 1.0,
+        }
+        report = MODULE.validate_frozen_posterior_scale(audit, 4.0)
+        self.assertEqual(report["posterior_gradient_scale"], 4.0)
+        self.assertTrue(report["frozen_for_all_updates"])
+        self.assertFalse(report["per_batch_inverse_scaling"])
+        with self.assertRaisesRegex(ValueError, "preregistered"):
+            MODULE.validate_frozen_posterior_scale(audit, 3.7)
+
     def test_only_step3392_and_single_route_slurm_contract(self):
         self.assertEqual(MODULE.checkpoint_steps(), (3392,))
         wrapper = (
@@ -197,6 +268,9 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
         self.assertIn("--nproc_per_node=2", wrapper)
         self.assertIn("--route \"${ROUTE}\"", wrapper)
         self.assertIn("--require-llama-program", wrapper)
+        self.assertIn("FULL_MP20_GRADIENT_AUDIT_ONLY", wrapper)
+        self.assertIn("FULL_MP20_POSTERIOR_GRADIENT_SCALE", wrapper)
+        self.assertIn("same_batch_half_half_scalar_mixture", wrapper)
         self.assertNotIn(" &", wrapper)
         self.assertEqual(wrapper.count("torch.distributed.run"), 1)
 

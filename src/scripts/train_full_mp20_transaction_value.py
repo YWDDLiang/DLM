@@ -31,6 +31,7 @@ import math
 import os
 from pathlib import Path
 import random
+import statistics
 import sys
 import time
 import traceback
@@ -65,6 +66,9 @@ LEARNING_RATE = 5.0e-6
 WARMUP_UPDATES = 100
 MAX_LENGTH = 382
 LOGGING_UPDATES = 10
+GRADIENT_AUDIT_BATCHES = 5
+MAX_GRADIENT_IMBALANCE = 5.0
+ALLOWED_POSTERIOR_GRADIENT_SCALES = (0.25, 0.5, 1.0, 2.0, 4.0)
 ROUTES = ("single_point_full", "basin_consistent_full")
 VALUE_FIELDS = {
     "single_point_full": "terminal_single_point_energy_eV_per_atom",
@@ -197,6 +201,114 @@ def average_gradients_(
             raise TypeError("sparse gradients are unsupported")
         reducer(parameter.grad)
         parameter.grad.div_(float(world_size))
+
+
+def gradient_snapshot(
+    parameters: Sequence[torch.nn.Parameter],
+) -> tuple[torch.Tensor, ...]:
+    """Copy the already all-reduced gradients for one audit objective."""
+
+    return tuple(
+        (
+            torch.zeros_like(parameter)
+            if parameter.grad is None
+            else parameter.grad.detach().clone()
+        )
+        for parameter in parameters
+    )
+
+
+def gradient_norm(snapshot: Sequence[torch.Tensor]) -> float:
+    total = sum(
+        float(torch.sum(value.detach().double().square()).cpu())
+        for value in snapshot
+    )
+    return math.sqrt(total)
+
+
+def gradient_cosine(
+    left: Sequence[torch.Tensor], right: Sequence[torch.Tensor]
+) -> float | None:
+    if len(left) != len(right):
+        raise ValueError("gradient snapshots differ in length")
+    left_norm = gradient_norm(left)
+    right_norm = gradient_norm(right)
+    if left_norm == 0.0 or right_norm == 0.0:
+        return None
+    dot = sum(
+        float(torch.sum(a.detach().double() * b.detach().double()).cpu())
+        for a, b in zip(left, right, strict=True)
+    )
+    return max(-1.0, min(1.0, dot / (left_norm * right_norm)))
+
+
+def symmetric_gradient_imbalance(clean_norm: float, post_norm: float) -> float:
+    if not math.isfinite(clean_norm) or not math.isfinite(post_norm):
+        return math.inf
+    if clean_norm <= 0.0 or post_norm <= 0.0:
+        return math.inf
+    ratio = clean_norm / post_norm
+    return max(ratio, 1.0 / ratio)
+
+
+def preregistered_common_posterior_scale(
+    audit_reports: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Choose one frozen A/B-common scale from two no-update audits.
+
+    This helper is intentionally not called inside an individual route.  The
+    two audit-only jobs finish first; their reports are then passed together to
+    this deterministic rule.  If both routes are already within five-fold,
+    the scale remains one.  Otherwise the scale is selected from a small,
+    preregistered power-of-two set to minimize the worst route imbalance.  If
+    no common scale brings both routes within five-fold, formal training must
+    not start.
+    """
+
+    if len(audit_reports) != len(ROUTES):
+        raise ValueError("common scaling requires exactly the two route audits")
+    ratios: dict[str, float] = {}
+    identities = set()
+    for report in audit_reports:
+        route = str(report.get("route"))
+        if route not in ROUTES or route in ratios:
+            raise ValueError("audit reports must contain each route exactly once")
+        clean = float(report["median_clean_gradient_norm"])
+        post = float(report["median_posterior_gradient_norm"])
+        if clean <= 0.0 or post <= 0.0 or not all(map(math.isfinite, (clean, post))):
+            raise ValueError("audit gradient norms must be positive and finite")
+        ratios[route] = clean / post
+        identity = report.get("dataset_identity")
+        if not isinstance(identity, str) or not identity:
+            raise ValueError("audit report lacks dataset identity")
+        identities.add(identity)
+    if len(identities) != 1:
+        raise ValueError("A/B audits do not share one dataset identity")
+
+    def worst(scale: float) -> float:
+        return max(max(ratio / scale, scale / ratio) for ratio in ratios.values())
+
+    unscaled = worst(1.0)
+    if unscaled <= MAX_GRADIENT_IMBALANCE:
+        selected = 1.0
+    else:
+        selected = min(
+            ALLOWED_POSTERIOR_GRADIENT_SCALES,
+            key=lambda scale: (worst(scale), abs(math.log2(scale))),
+        )
+    remaining = worst(selected)
+    return {
+        "schema": "full_mp20_common_gradient_scale_v1",
+        "routes": list(ROUTES),
+        "dataset_identity": identities.pop(),
+        "clean_to_posterior_ratio_by_route": ratios,
+        "allowed_scales": list(ALLOWED_POSTERIOR_GRADIENT_SCALES),
+        "selected_posterior_gradient_scale": selected,
+        "worst_unscaled_imbalance": unscaled,
+        "worst_scaled_imbalance": remaining,
+        "passed": remaining <= MAX_GRADIENT_IMBALANCE,
+        "per_batch_inverse_scaling": False,
+    }
 
 
 def _path_value(mapping: Mapping[str, Any], path: str) -> Any:
@@ -755,6 +867,194 @@ def _reduce_scalar(value: float, device: torch.device, *, op: Any = None) -> flo
     return float(tensor.detach().cpu())
 
 
+def run_initial_gradient_audit(
+    args: argparse.Namespace,
+    dist_info: Mapping[str, Any],
+    runtime: Any,
+    dataset: FullMP20TransactionValueDataset,
+    clean_dataset: Any,
+    clean_collator: Any,
+    loss_config: Mapping[str, Any],
+    *,
+    dataset_identity: str,
+) -> dict[str, Any]:
+    """Measure five paired clean/posterior gradients at the common step zero.
+
+    The audit performs no optimizer updates and restores Python, CPU, and CUDA
+    RNG states before returning.  Consequently it neither selects a final
+    result nor changes the subsequent corruption sequence.
+    """
+
+    rank = int(dist_info["rank"])
+    device = dist_info["device"]
+    local_rank = int(dist_info["local_rank"])
+    permutation = frozen_source_permutation(EXPECTED_ROWS, seed=int(args.seed))
+    parameters = tuple(
+        parameter for parameter in runtime.policy_parameters if parameter.requires_grad
+    )
+    python_state = random.getstate()
+    cpu_state = torch.get_rng_state()
+    cuda_state = torch.cuda.get_rng_state(local_rank)
+    records: list[dict[str, Any]] = []
+    try:
+        # A route-independent audit seed makes the clean corruption identical
+        # between A and B; only the declared terminal value field can differ.
+        random.seed(int(args.seed) + rank + 70_000)
+        torch.manual_seed(int(args.seed) + rank + 70_000)
+        torch.cuda.manual_seed_all(int(args.seed) + rank + 70_000)
+        for batch_index in range(GRADIENT_AUDIT_BATCHES):
+            indices = rank_batch_indices(permutation, batch_index, rank)
+            runtime.model.zero_grad(set_to_none=True)
+            clean_loss = clean_batch_loss(
+                runtime,
+                clean_dataset,
+                clean_collator,
+                indices,
+                device,
+                loss_config,
+            )
+            clean_loss.backward()
+            average_gradients_(parameters, world_size=WORLD_SIZE)
+            clean_gradient = gradient_snapshot(parameters)
+            clean_norm = gradient_norm(clean_gradient)
+
+            runtime.model.zero_grad(set_to_none=True)
+            posterior_loss_sum = 0.0
+            informative = 0
+            max_teacher_kl = 0.0
+            for source_idx in indices:
+                batch = move_to_device(
+                    dataset.materialize(source_idx, route=args.route), device
+                )
+                output = transaction_value_loss(runtime, batch)
+                loss = output["loss"]
+                if not isinstance(loss, torch.Tensor) or not bool(
+                    torch.isfinite(loss).item()
+                ):
+                    raise FloatingPointError("audit posterior loss is nonfinite")
+                (loss / float(LOCAL_BATCH_SIZE)).backward()
+                posterior_loss_sum += float(loss.detach().cpu())
+                informative += int(output["informative"])
+                max_teacher_kl = max(
+                    max_teacher_kl, float(output["teacher_kl_nats"])
+                )
+            average_gradients_(parameters, world_size=WORLD_SIZE)
+            posterior_gradient = gradient_snapshot(parameters)
+            posterior_norm = gradient_norm(posterior_gradient)
+            if max_teacher_kl > MAX_KL_BUDGET_NATS + 1.0e-8:
+                raise RuntimeError("finite-candidate posterior exceeded 0.05 nat KL")
+            global_informative = int(_reduce_scalar(informative, device))
+            kl_tensor = torch.tensor(
+                max_teacher_kl, dtype=torch.float64, device=device
+            )
+            dist.all_reduce(kl_tensor, op=dist.ReduceOp.MAX)
+            records.append(
+                {
+                    "audit_batch": batch_index + 1,
+                    "global_source_count": GLOBAL_BATCH_SIZE,
+                    "global_informative_sources": global_informative,
+                    "clean_gradient_norm": clean_norm,
+                    "posterior_gradient_norm": posterior_norm,
+                    "clean_to_posterior_ratio": (
+                        None if posterior_norm == 0.0 else clean_norm / posterior_norm
+                    ),
+                    "symmetric_imbalance": symmetric_gradient_imbalance(
+                        clean_norm, posterior_norm
+                    ),
+                    "clean_posterior_cosine": gradient_cosine(
+                        clean_gradient, posterior_gradient
+                    ),
+                    "max_teacher_kl_nats": float(kl_tensor.detach().cpu()),
+                    "clean_loss": float(clean_loss.detach().cpu()),
+                    "posterior_loss_local_sum": posterior_loss_sum,
+                }
+            )
+    finally:
+        runtime.model.zero_grad(set_to_none=True)
+        random.setstate(python_state)
+        torch.set_rng_state(cpu_state)
+        torch.cuda.set_rng_state(cuda_state, local_rank)
+        runtime.activate_policy(trainable=True)
+
+    clean_norms = [float(row["clean_gradient_norm"]) for row in records]
+    posterior_norms = [float(row["posterior_gradient_norm"]) for row in records]
+    cosines = [
+        float(row["clean_posterior_cosine"])
+        for row in records
+        if row["clean_posterior_cosine"] is not None
+    ]
+    median_clean = statistics.median(clean_norms)
+    median_posterior = statistics.median(posterior_norms)
+    report = {
+        "schema": "full_mp20_initial_gradient_audit_v1",
+        "route": args.route,
+        "dataset_identity": dataset_identity,
+        "optimizer_updates": 0,
+        "audit_batches": GRADIENT_AUDIT_BATCHES,
+        "records": records,
+        "median_clean_gradient_norm": median_clean,
+        "median_posterior_gradient_norm": median_posterior,
+        "median_clean_to_posterior_ratio": (
+            None
+            if median_posterior == 0.0
+            else median_clean / median_posterior
+        ),
+        "median_symmetric_imbalance": symmetric_gradient_imbalance(
+            median_clean, median_posterior
+        ),
+        "median_clean_posterior_cosine": (
+            None if not cosines else statistics.median(cosines)
+        ),
+        "finite_candidate_kl_budget_nats": MAX_KL_BUDGET_NATS,
+        "max_observed_teacher_kl_nats": max(
+            float(row["max_teacher_kl_nats"]) for row in records
+        ),
+        "same_batch_half_half_scalar_mixture": False,
+        "objectives_use_separate_optimizer_updates": True,
+        "per_batch_inverse_scaling": False,
+        "requires_common_scale": symmetric_gradient_imbalance(
+            median_clean, median_posterior
+        )
+        > MAX_GRADIENT_IMBALANCE,
+        "rng_state_restored": True,
+    }
+    if median_clean <= 0.0 or median_posterior <= 0.0:
+        report["passed"] = False
+        report["failure_reason"] = "zero_median_gradient"
+    elif report["max_observed_teacher_kl_nats"] > MAX_KL_BUDGET_NATS + 1.0e-8:
+        report["passed"] = False
+        report["failure_reason"] = "kl_budget_exceeded"
+    else:
+        report["passed"] = True
+        report["failure_reason"] = None
+    return report
+
+
+def validate_frozen_posterior_scale(
+    audit: Mapping[str, Any], scale: float
+) -> dict[str, Any]:
+    if float(scale) not in ALLOWED_POSTERIOR_GRADIENT_SCALES:
+        raise ValueError(
+            "posterior gradient scale must be one preregistered power-of-two value"
+        )
+    clean = float(audit["median_clean_gradient_norm"])
+    posterior = float(audit["median_posterior_gradient_norm"]) * float(scale)
+    imbalance = symmetric_gradient_imbalance(clean, posterior)
+    if imbalance > MAX_GRADIENT_IMBALANCE:
+        raise RuntimeError(
+            "the preregistered common posterior scale leaves gradient imbalance >5; "
+            "do not train until the data/value object is repaired"
+        )
+    return {
+        "posterior_gradient_scale": float(scale),
+        "scaled_median_imbalance": imbalance,
+        "threshold": MAX_GRADIENT_IMBALANCE,
+        "frozen_for_all_updates": True,
+        "shared_between_routes_required": True,
+        "per_batch_inverse_scaling": False,
+    }
+
+
 def step0_policy_reference_equality(
     runtime: Any,
     dataset: FullMP20TransactionValueDataset,
@@ -828,6 +1128,7 @@ def train(
     clean_dataset: Any,
     clean_collator: Any,
     loss_config: Mapping[str, Any],
+    gradient_audit: Mapping[str, Any],
 ) -> dict[str, Any]:
     rank = int(dist_info["rank"])
     device = dist_info["device"]
@@ -838,6 +1139,12 @@ def train(
     )
     if not parameters:
         raise RuntimeError("policy adapter has no trainable parameters")
+    scale_report = validate_frozen_posterior_scale(
+        gradient_audit, float(args.posterior_gradient_scale)
+    )
+    posterior_gradient_scale = float(
+        scale_report["posterior_gradient_scale"]
+    )
     optimizer = torch.optim.AdamW(parameters, lr=LEARNING_RATE, weight_decay=0.0)
     clean_seen = torch.zeros(EXPECTED_ROWS, dtype=torch.int16, device=device)
     posterior_seen = torch.zeros(EXPECTED_ROWS, dtype=torch.int16, device=device)
@@ -897,7 +1204,13 @@ def train(
             loss = output["loss"]
             if not isinstance(loss, torch.Tensor) or not bool(torch.isfinite(loss).item()):
                 raise FloatingPointError("transaction posterior loss is nonfinite")
-            (loss / float(LOCAL_BATCH_SIZE)).backward()
+            if float(output["teacher_kl_nats"]) > MAX_KL_BUDGET_NATS + 1.0e-8:
+                raise RuntimeError("finite-candidate posterior exceeded 0.05 nat KL")
+            (
+                loss
+                * posterior_gradient_scale
+                / float(LOCAL_BATCH_SIZE)
+            ).backward()
             posterior_loss_sum += float(loss.detach().cpu())
             teacher_kl_max = max(teacher_kl_max, float(output["teacher_kl_nats"]))
             local_informative_batch += int(output["informative"])
@@ -940,6 +1253,10 @@ def train(
                     "source_batch": batch_index + 1,
                     "clean_loss": global_clean_loss,
                     "posterior_loss": global_posterior_loss,
+                    "posterior_gradient_scale": posterior_gradient_scale,
+                    "scaled_posterior_loss": (
+                        global_posterior_loss * posterior_gradient_scale
+                    ),
                     "clean_gradient_norm": clean_grad,
                     "posterior_gradient_norm": posterior_grad,
                     "informative_sources": global_informative,
@@ -1003,6 +1320,11 @@ def train(
         "source_weight": 1.0,
         "finite_gradients": finite_gradients,
         "manual_gradient_allreduce_mean": True,
+        "finite_candidate_kl_budget_nats": MAX_KL_BUDGET_NATS,
+        "same_batch_half_half_scalar_mixture": False,
+        "objectives_use_separate_optimizer_updates": True,
+        "initial_gradient_audit": dict(gradient_audit),
+        "gradient_scale_contract": scale_report,
         "checkpoint": checkpoint,
         "elapsed_sec": time.time() - started,
     }
@@ -1017,6 +1339,20 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--route", choices=ROUTES, required=True)
     parser.add_argument("--seed", type=int, default=99_017)
+    parser.add_argument(
+        "--audit-only",
+        action="store_true",
+        help="run the five-batch no-update gradient audit and exit",
+    )
+    parser.add_argument(
+        "--posterior-gradient-scale",
+        type=float,
+        default=None,
+        help=(
+            "one A/B-common scale selected from the two audit reports; "
+            "required for formal training"
+        ),
+    )
     parser.add_argument("--max-length", type=int, default=MAX_LENGTH)
     parser.add_argument("--active-positions-absolute", action="store_true")
     parser.add_argument("--require-llama-program", action="store_true")
@@ -1099,8 +1435,23 @@ def main() -> None:
             "source_shuffle_seed": int(args.seed),
             "a_b_shared_dataset_identity": True,
         }
+        audit_identity = (
+            dataset_identity["labelled_groups_sha256"]
+            + ":"
+            + dataset_identity["clean_train_sha256"]
+        )
         step0 = step0_policy_reference_equality(
             runtime, dataset, device, route=args.route
+        )
+        gradient_audit = run_initial_gradient_audit(
+            args,
+            dist_info,
+            runtime,
+            dataset,
+            clean_dataset,
+            clean_collator,
+            loss_config,
+            dataset_identity=audit_identity,
         )
         config = {
             "schema": RUN_SCHEMA,
@@ -1122,6 +1473,7 @@ def main() -> None:
             ),
             "deployment_stage_order": list(DEPLOYMENT_STAGES),
             "step0_policy_reference_equality": step0,
+            "initial_gradient_audit": gradient_audit,
             "adapter_report": adapter_report,
             "world_size": WORLD_SIZE,
             "local_microexamples": LOCAL_BATCH_SIZE,
@@ -1134,6 +1486,17 @@ def main() -> None:
             "clean_ce_full_mp20_epochs": 1,
             "posterior_full_mp20_epochs": 1,
             "interleaving": ["clean_ce", "transaction_posterior"],
+            "same_batch_half_half_scalar_mixture": False,
+            "gradient_audit_batches": GRADIENT_AUDIT_BATCHES,
+            "gradient_imbalance_threshold": MAX_GRADIENT_IMBALANCE,
+            "posterior_gradient_scale": args.posterior_gradient_scale,
+            "posterior_gradient_scale_policy": (
+                "two audit-only routes -> one shared discrete frozen scale; "
+                "never per-batch inverse scaling"
+            ),
+            "allowed_posterior_gradient_scales": list(
+                ALLOWED_POSTERIOR_GRADIENT_SCALES
+            ),
             "learning_rate": LEARNING_RATE,
             "warmup_updates": WARMUP_UPDATES,
             "kl_budget_nats": MAX_KL_BUDGET_NATS,
@@ -1144,6 +1507,26 @@ def main() -> None:
         if is_main:
             write_json(output_dir / "RUN_CONFIG.json", config)
             append_jsonl(output_dir / "training_log.jsonl", {"event": "start", **config})
+            write_json(output_dir / "GRADIENT_AUDIT.json", gradient_audit)
+        if not bool(gradient_audit["passed"]):
+            raise RuntimeError(
+                "initial gradient audit failed before any optimizer update"
+            )
+        if args.audit_only:
+            if is_main:
+                write_json(output_dir / "AUDIT_FINAL.json", gradient_audit)
+                (output_dir / "_SUCCESS").touch()
+                print(json.dumps(gradient_audit, ensure_ascii=False, sort_keys=True))
+            dist.barrier()
+            return
+        if args.posterior_gradient_scale is None:
+            raise ValueError(
+                "formal training requires the A/B-common "
+                "--posterior-gradient-scale chosen from both audit reports"
+            )
+        validate_frozen_posterior_scale(
+            gradient_audit, float(args.posterior_gradient_scale)
+        )
         report = train(
             args,
             dist_info,
@@ -1153,6 +1536,7 @@ def main() -> None:
             clean_dataset,
             clean_collator,
             loss_config,
+            gradient_audit,
         )
         if is_main:
             report["dataset_identity"] = dataset_identity
