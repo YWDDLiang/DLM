@@ -40,11 +40,16 @@ if [[ "${AUDIT_ONLY}" == 1 ]]; then
   extra_args+=(--audit-only)
 else
   readonly POSTERIOR_SCALE="${FULL_MP20_POSTERIOR_GRADIENT_SCALE:?run both audits and provide their one shared preregistered scale}"
+  readonly COMMON_SCALE_REPORT="${FULL_MP20_COMMON_GRADIENT_SCALE_REPORT:?provide the passed A/B-common scale report}"
   case "${POSTERIOR_SCALE}" in
     0.25|0.5|1|1.0|2|2.0|4|4.0) ;;
     *) printf 'posterior scale is outside the preregistered set\n' >&2; exit 2 ;;
   esac
-  extra_args+=(--posterior-gradient-scale "${POSTERIOR_SCALE}")
+  [[ -f "${COMMON_SCALE_REPORT}" ]]
+  extra_args+=(
+    --posterior-gradient-scale "${POSTERIOR_SCALE}"
+    --common-gradient-scale-report "${COMMON_SCALE_REPORT}"
+  )
 fi
 
 mkdir "${RUN}"
@@ -108,6 +113,11 @@ if audit_only:
     assert audit["route"] == route and audit["optimizer_updates"] == 0
     assert audit["audit_batches"] == 5 and audit["passed"] is True
     assert audit["finite_candidate_kl_budget_nats"] == 0.05
+    assert audit["gradient_clip_norm"] == 1.0
+    assert "negative_cosine_fraction" in audit
+    assert audit["scientific_conflict"] is False
+    assert all("clean_effective_gradient_norm_post_clip" in row for row in audit["records"])
+    assert all("posterior_effective_gradient_norm_post_clip" in row for row in audit["records"])
     assert audit["same_batch_half_half_scalar_mixture"] is False
     assert audit["per_batch_inverse_scaling"] is False
     (root / "AUDIT_FINAL.json").write_text(
@@ -131,8 +141,17 @@ assert final["manual_gradient_allreduce_mean"] is True
 assert final["finite_candidate_kl_budget_nats"] == 0.05
 assert final["same_batch_half_half_scalar_mixture"] is False
 assert final["initial_gradient_audit"]["audit_batches"] == 5
+assert "negative_cosine_fraction" in final["initial_gradient_audit"]
+assert final["initial_gradient_audit"]["scientific_conflict"] is False
+assert final["gradient_clip_norm"] == 1.0
+assert final["post_clip_effective_norm_logged"] is True
 assert final["gradient_scale_contract"]["frozen_for_all_updates"] is True
 assert final["gradient_scale_contract"]["per_batch_inverse_scaling"] is False
+assert final["common_gradient_scale_contract"]["each_route_within_fivefold"] is True
+assert set(final["common_gradient_scale_contract"]["scaled_imbalance_by_route"]) == {
+    "single_point_full",
+    "basin_consistent_full",
+}
 assert final["checkpoint"]["only_step3392"] is True
 assert [p.name for p in (cell / "checkpoints").iterdir() if p.is_dir()] == ["step-3392"]
 (root / "TRAIN_FINAL.json").write_text(

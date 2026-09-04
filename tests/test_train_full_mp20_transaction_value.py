@@ -201,6 +201,29 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
         self.assertAlmostEqual(MODULE.gradient_cosine(clean, opposed), -1.0)
         self.assertEqual(MODULE.symmetric_gradient_imbalance(10.0, 2.0), 5.0)
 
+    def test_gradient_audit_summarizes_post_clip_norms_and_negative_fraction(self):
+        records = []
+        for cosine in (-0.8, -0.7, -0.6, 0.1, 0.2):
+            records.append(
+                {
+                    "clean_gradient_norm_pre_clip": 4.0,
+                    "clean_effective_gradient_norm_post_clip": 1.0,
+                    "posterior_gradient_norm_pre_clip": 2.0,
+                    "posterior_effective_gradient_norm_post_clip": 1.0,
+                    "clean_posterior_cosine": cosine,
+                }
+            )
+        summary = MODULE.summarize_gradient_audit_records(records)
+        self.assertEqual(
+            summary["median_clean_effective_gradient_norm_post_clip"], 1.0
+        )
+        self.assertEqual(
+            summary["median_posterior_effective_gradient_norm_post_clip"], 1.0
+        )
+        self.assertEqual(summary["negative_cosine_fraction"], 3 / 5)
+        self.assertEqual(summary["median_clean_posterior_cosine"], -0.6)
+        self.assertTrue(summary["scientific_conflict"])
+
     def test_preregistered_scale_is_common_discrete_and_not_per_batch(self):
         identity = "same-labelled-and-clean-dataset"
         reports = [
@@ -220,6 +243,13 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
         decision = MODULE.preregistered_common_posterior_scale(reports)
         self.assertEqual(decision["selected_posterior_gradient_scale"], 4.0)
         self.assertTrue(decision["passed"])
+        self.assertTrue(decision["each_route_within_fivefold"])
+        self.assertTrue(
+            all(
+                value <= 5.0
+                for value in decision["scaled_imbalance_by_route"].values()
+            )
+        )
         self.assertFalse(decision["per_batch_inverse_scaling"])
         self.assertIn(
             decision["selected_posterior_gradient_scale"],
@@ -258,6 +288,56 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "preregistered"):
             MODULE.validate_frozen_posterior_scale(audit, 3.7)
 
+    def test_negative_median_cosine_is_a_scientific_conflict(self):
+        audit = {
+            "median_clean_gradient_norm": 1.0,
+            "median_posterior_gradient_norm": 1.0,
+            "median_clean_posterior_cosine": -0.5,
+            "scientific_conflict": True,
+        }
+        with self.assertRaisesRegex(RuntimeError, "scientific conflict"):
+            MODULE.validate_frozen_posterior_scale(audit, 1.0)
+        reports = [
+            {**audit, "route": route, "dataset_identity": "same"}
+            for route in MODULE.ROUTES
+        ]
+        decision = MODULE.preregistered_common_posterior_scale(reports)
+        self.assertFalse(decision["passed"])
+        self.assertEqual(decision["failure_reason"], "preflight_scientific_conflict")
+
+    def test_common_scale_report_requires_both_routes_within_fivefold(self):
+        report = {
+            "schema": "full_mp20_common_gradient_scale_v1",
+            "routes": list(MODULE.ROUTES),
+            "dataset_identity": "same",
+            "selected_posterior_gradient_scale": 2.0,
+            "scaled_imbalance_by_route": {
+                "single_point_full": 2.0,
+                "basin_consistent_full": 4.5,
+            },
+            "each_route_within_fivefold": True,
+            "passed": True,
+        }
+        validated = MODULE.validate_common_scale_report(
+            report,
+            route="single_point_full",
+            dataset_identity="same",
+            scale=2.0,
+        )
+        self.assertTrue(validated["each_route_within_fivefold"])
+        bad = dict(report)
+        bad["scaled_imbalance_by_route"] = {
+            "single_point_full": 2.0,
+            "basin_consistent_full": 5.01,
+        }
+        with self.assertRaisesRegex(RuntimeError, "both routes"):
+            MODULE.validate_common_scale_report(
+                bad,
+                route="single_point_full",
+                dataset_identity="same",
+                scale=2.0,
+            )
+
     def test_only_step3392_and_single_route_slurm_contract(self):
         self.assertEqual(MODULE.checkpoint_steps(), (3392,))
         wrapper = (
@@ -270,7 +350,11 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
         self.assertIn("--require-llama-program", wrapper)
         self.assertIn("FULL_MP20_GRADIENT_AUDIT_ONLY", wrapper)
         self.assertIn("FULL_MP20_POSTERIOR_GRADIENT_SCALE", wrapper)
+        self.assertIn("FULL_MP20_COMMON_GRADIENT_SCALE_REPORT", wrapper)
         self.assertIn("same_batch_half_half_scalar_mixture", wrapper)
+        self.assertIn("negative_cosine_fraction", wrapper)
+        self.assertIn("clean_effective_gradient_norm_post_clip", wrapper)
+        self.assertIn("posterior_effective_gradient_norm_post_clip", wrapper)
         self.assertNotRegex(wrapper, r"(?m)\s&\s*(?:#.*)?$")
         self.assertEqual(wrapper.count("torch.distributed.run"), 1)
 
