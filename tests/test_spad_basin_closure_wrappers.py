@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "slurm" / "195_build_spad_basin_closure_sft_data.sbatch"
 TRAIN = ROOT / "slurm" / "196_train_spad_basin_closure_ce.sbatch"
 CANARY = ROOT / "slurm" / "197_spad_basin_closure_ce_canary.sbatch"
+NATIVE = ROOT / "slurm" / "198_spad_basin_closure_native_stream17.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -14,9 +15,10 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.build = BUILD.read_text(encoding="utf-8")
         cls.train = TRAIN.read_text(encoding="utf-8")
         cls.canary = CANARY.read_text(encoding="utf-8")
+        cls.native = NATIVE.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
-        self.assertIn("#SBATCH --cpus-per-task=16", self.build)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.build)
         self.assertNotIn("#SBATCH --gres", self.build)
         self.assertIn("c3fd_native_teacher_sft_canonical_v2_20260902", self.build)
         self.assertIn("spad_species_pointer_v1_20260903", self.build)
@@ -102,9 +104,25 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
             for term in forbidden:
                 self.assertNotIn(term, lowered)
 
+    def test_native_screen_generation_uses_only_registered_closure(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.native)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.native)
+        self.assertIn("--generation-schedule spad", self.native)
+        self.assertIn("--spad-basin-closure", self.native)
+        self.assertIn("--spad-basin-closure-capability-json", self.native)
+        self.assertIn("--pbc-min-distance-mask", self.native)
+        self.assertIn("--num-samples 256", self.native)
+        self.assertIn("--seed \"${DLM_SEED}\"", self.native)
+        self.assertIn('"one_plan_one_trajectory": True', self.native)
+        self.assertIn('"model494_or_inference_critic": False', self.native)
+        self.assertIn('"selection_retry_replacement": False', self.native)
+        self.assertNotIn("--spad-backfill", self.native)
+        self.assertNotIn("refine_dlm_with_crysllmgen.py", self.native)
+
     def test_every_run_is_non_overwriting(self):
-        for wrapper in (self.build, self.train, self.canary):
+        for wrapper in (self.build, self.train, self.canary, self.native):
             self.assertIn('mkdir "${RUN}"', wrapper)
+        for wrapper in (self.build, self.train, self.canary):
             self.assertNotIn("mkdir -p", wrapper)
 
 
