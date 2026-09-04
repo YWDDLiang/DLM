@@ -276,3 +276,7 @@ so job 39770 restarts from the same registered closure-CE policy.
   parser/CIF failures without reading energy, hull, novelty or S.U.N. Report
   total requests and discarded-CIF count alongside the conditional-on-valid
   1,000 denominator.
+- [x] Implement and unit-test the parser-only denominator constructor
+  `select_first_parseable_spad_body.py`. It freezes the first 1,000 independently
+  parseable CIFs in source order, keeps the matching proposal graphs, records
+  every request/discard before the cutoff, and cannot consume outcome values.
