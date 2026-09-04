@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **24-hour SUN10/50 sprint; tau200 complete and development tau calibration running**
+Status: **24-hour SUN10/50 sprint; tau800 anchor and basin actions running**
 
 Sprint deadline: **2026-09-05 22:00 Asia/Shanghai**. The target is final
 prospective Strict/Meta S.U.N. at least `10%/50%` under a fixed, fully disclosed
@@ -131,10 +131,18 @@ Current execution:
   trajectories and closure logs, 127/128 parse/Plan/graph. The wrapper's obsolete
   128/128 geometry assertion failed after science completion; retain the invalid
   endpoint as a negative example and do not rerun generation.
-- [ ] Correct type-by-stratum assignment at state materialization; cover early,
+- [x] Correct type-by-stratum assignment at state materialization; cover early,
   middle, late and terminal XYZ cursors without replacing any source.
-- [ ] Implement cursor-aware continuation and pass reference-action bit-exact
-  replay before value labeling.
+- [x] Implement cursor-aware continuation and pure log replay: 128/128 states,
+  64 cell/64 XYZ, four cursor buckets of 16, and the invalid endpoint retained.
+- [x] Diagnose real-model old-final replay: 100/128 unpadded and 104/128 with
+  original left padding. The remaining stochastic flips are batch-shape
+  numerical sensitivity, not state/log inconsistency. Do not spend 8x compute
+  emulating an old random batch. Register one batch-1 counterfactual
+  continuation with common seeds for every candidate; old-final exact match is
+  a reported nonblocking diagnostic.
+- [ ] Finish outcome-blind K<=4 action/terminal job 39748, then run one
+  two-GPU K3/5/10/20 CHGNet headroom label job.
 
 ## H. Conditional basin training
 
@@ -168,7 +176,8 @@ Current execution:
   to native closure raw this adds 8 Strict and 42 Meta S.U.N. outcomes, but it
   does not meet `10%/50%`.
 - [ ] Treat the completed fixed256 as development after this first outcome.
-  Job 39736 evaluates tau400/tau600 only to calibrate the low-noise bridge;
+  Job 39737 generated tau400/tau600 and job 39747 generates the current-system
+  tau800 anchor; one shared evaluation will calibrate the bridge;
   any chosen tau must be confirmed on a disjoint frozen cohort before a final
   prospective claim.
 - [ ] The desired endpoint is native Strict/Meta `10%/50%`, but claims follow
