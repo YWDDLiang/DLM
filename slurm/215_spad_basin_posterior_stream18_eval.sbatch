@@ -11,7 +11,6 @@
 #SBATCH --error=spad-post-s18-eval-%j.err
 
 set -Eeuo pipefail
-shopt -s inherit_errexit
 IFS=$'\n\t'
 
 readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
