@@ -12,6 +12,7 @@ try:
         _minimum_image_vector,
         _spad_basin_closure_block_salt,
         _transaction_candidate_tokens,
+        continue_spad_species_blocks_from_cursor,
         revise_spad_anchors,
         revise_spad_cell,
         revise_spad_species_blocks,
@@ -23,6 +24,7 @@ except ModuleNotFoundError:
     revise_spad_anchors = None
     revise_spad_cell = None
     revise_spad_species_blocks = None
+    continue_spad_species_blocks_from_cursor = None
     _transaction_candidate_tokens = None
     _spad_basin_closure_block_salt = None
 
@@ -558,6 +560,66 @@ class SPADGenerationTest(unittest.TestCase):
             **kwargs,
         )
         self.assertTrue(torch.equal(first[0], swapped[1]))
+
+    def test_cursor_continuation_replays_reference_with_global_rng_salts(self):
+        class FlatSamplingModel(self.TinyModel):
+            def forward(self, token_ids, attention_mask=None):
+                batch, length = token_ids.shape
+                logits = torch.full(
+                    (batch, length, 128), -torch.inf, dtype=torch.float32
+                )
+                logits[..., 20:40] = 0.0
+                return SimpleNamespace(logits=logits)
+
+        prompt_length = 1
+        gen_length = 19
+        initial = (torch.arange(prompt_length + gen_length) % 20).reshape(1, -1)
+        blocks = [[2, 1], [0]]
+        kwargs = {
+            "prompt_length": prompt_length,
+            "gen_length": gen_length,
+            "attention_mask": torch.ones((1, prompt_length), dtype=torch.long),
+            "temperature": 0.7,
+            "cfg_scale": 0.0,
+            "remasking": "low_confidence",
+            "mask_id": 127,
+            "allowed_token_ids_by_generation_pos": [
+                list(range(20, 40)) for _ in range(gen_length)
+            ],
+            "atom_count_grammar": None,
+            "lightweight_decoding_constraints": None,
+        }
+        expected, logs = revise_spad_species_blocks(
+            FlatSamplingModel(),
+            initial,
+            revision_blocks_by_batch=[blocks],
+            sampling_seeds_by_batch=[123],
+            **kwargs,
+        )
+        first_site = logs[0][0]["site_revisions"][0]
+        state = initial.clone()
+        masked_positions = [
+            prompt_length + position
+            for slot in blocks[0]
+            for position in (8 + 4 * slot, 9 + 4 * slot, 10 + 4 * slot)
+        ]
+        state[0, torch.tensor(masked_positions)] = 127
+        actual, report = continue_spad_species_blocks_from_cursor(
+            FlatSamplingModel(),
+            state,
+            block_entry_tokens=initial,
+            revision_blocks=blocks,
+            block_index=0,
+            site_order_index=0,
+            action_token_ids=first_site["new_token_ids"],
+            sampling_seed=123,
+            **kwargs,
+        )
+        self.assertTrue(torch.equal(actual, expected))
+        self.assertEqual(report["block_index"], 0)
+        self.assertEqual(
+            [row["block_index"] for row in report["later_block_revisions"]], [1]
+        )
         self.assertTrue(torch.equal(first[1], swapped[0]))
 
     def test_species_block_mixed_radix_salts_are_unique(self):

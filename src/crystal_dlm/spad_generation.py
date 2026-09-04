@@ -1057,6 +1057,7 @@ def revise_spad_species_blocks(
     atom_count_grammar: dict | None,
     lightweight_decoding_constraints: dict | None,
     sampling_seeds_by_batch: Sequence[int] | None = None,
+    block_index_offset: int = 0,
 ) -> tuple[torch.Tensor, list[list[dict[str, Any]]]]:
     """Close complete species blocks while preserving full future context.
 
@@ -1075,6 +1076,8 @@ def revise_spad_species_blocks(
         complete_tokens.shape[0]
     ):
         raise ValueError("one sampling seed is required per batch row")
+    if int(block_index_offset) < 0:
+        raise ValueError("block_index_offset must be non-negative")
     x = complete_tokens.clone()
     if bool((x[:, int(prompt_length) :] == int(mask_id)).any()):
         raise ValueError("SPAD block closure requires a complete predictor canvas")
@@ -1123,6 +1126,7 @@ def revise_spad_species_blocks(
     logs: list[list[dict[str, Any]]] = [[] for _ in range(int(x.shape[0]))]
     max_blocks = max((len(blocks) for blocks in schedules), default=0)
     for block_index in range(max_blocks):
+        global_block_index = int(block_index_offset) + int(block_index)
         before = x.clone()
         active_blocks: dict[int, tuple[int, ...]] = {}
         previous_by_row: dict[int, dict[int, tuple[int, int, int]]] = {}
@@ -1242,7 +1246,7 @@ def revise_spad_species_blocks(
                     remasking=remasking,
                     sampling_seeds_by_batch=sampling_seeds_by_batch,
                     salt=_spad_basin_closure_block_salt(
-                        int(block_index),
+                        global_block_index,
                         int(site_order_index),
                         int(component),
                     ),
@@ -1265,7 +1269,7 @@ def revise_spad_species_blocks(
                 )
                 site_logs_by_row[row_index].append(
                     {
-                        "block_index": int(block_index),
+                        "block_index": global_block_index,
                         "site_order_index": int(site_order_index),
                         "slot_index": int(slot),
                         "generation_positions": list(positions),
@@ -1331,7 +1335,7 @@ def revise_spad_species_blocks(
             new_flat = [int(value) for value in x[row_index, absolute_tensor].tolist()]
             logs[row_index].append(
                 {
-                    "block_index": int(block_index),
+                    "block_index": global_block_index,
                     "slot_indices": list(slots),
                     "generation_positions": [
                         position
@@ -1379,10 +1383,249 @@ def revise_spad_species_blocks(
     return x, logs
 
 
+@torch.no_grad()
+def continue_spad_species_blocks_from_cursor(
+    model: Any,
+    state_tokens: torch.Tensor,
+    *,
+    block_entry_tokens: torch.Tensor,
+    prompt_length: int,
+    gen_length: int,
+    revision_blocks: Sequence[Sequence[int]],
+    block_index: int,
+    site_order_index: int,
+    action_token_ids: Sequence[int],
+    attention_mask: torch.Tensor | None,
+    temperature: float,
+    cfg_scale: float,
+    remasking: str,
+    mask_id: int,
+    allowed_token_ids_by_generation_pos: list[list[int]] | None,
+    atom_count_grammar: dict | None,
+    lightweight_decoding_constraints: dict | None,
+    sampling_seed: int | None = None,
+) -> tuple[torch.Tensor, dict[str, Any]]:
+    """Resume one real closure trajectory after injecting an XYZ action.
+
+    ``state_tokens`` is the suffix-visible state at the start of the selected
+    site: earlier sites in the current species block are committed, while the
+    active site and the block remainder are masked. ``block_entry_tokens`` is
+    the complete canvas immediately before that whole block was masked. The
+    active XYZ transaction is supplied atomically; later sites use the exact
+    deployed component-wise sampler and original global RNG salts. If the
+    completed current block leaves geometric support, the *whole* block is
+    restored to its entry snapshot before subsequent blocks execute.
+
+    This API intentionally handles one row. Preflight candidates have
+    different cursors, and keeping each continuation isolated makes state and
+    RNG identity explicit while avoiding padded cross-row control flow.
+    """
+
+    if state_tokens.ndim != 2 or tuple(state_tokens.shape[:1]) != (1,):
+        raise ValueError("cursor continuation requires state_tokens [1, sequence]")
+    if block_entry_tokens.shape != state_tokens.shape:
+        raise ValueError("block_entry_tokens must match state_tokens")
+    if state_tokens.shape[1] != int(prompt_length) + int(gen_length):
+        raise ValueError("cursor state does not match prompt+generation length")
+    schedules = _validate_revision_blocks(
+        [revision_blocks], batch_size=1, gen_length=int(gen_length)
+    )[0]
+    block_id = int(block_index)
+    site_id = int(site_order_index)
+    if not 0 <= block_id < len(schedules):
+        raise IndexError("block cursor lies outside revision schedule")
+    slots = schedules[block_id]
+    if not 0 <= site_id < len(slots):
+        raise IndexError("site cursor lies outside species block")
+    action = tuple(int(value) for value in action_token_ids)
+    if len(action) != 3 or any(value == int(mask_id) for value in action):
+        raise ValueError("cursor action must contain three committed token ids")
+
+    x = state_tokens.clone()
+    entry = block_entry_tokens.clone()
+    active_slot = int(slots[site_id])
+    active_positions = coordinate_positions(active_slot)
+    active_absolute = tuple(int(prompt_length) + value for value in active_positions)
+    if not bool(
+        (x[0, torch.tensor(active_absolute, device=x.device)] == int(mask_id)).all()
+    ):
+        raise ValueError("active XYZ transaction must be masked in cursor state")
+    x[0, torch.tensor(active_absolute, device=x.device)] = torch.tensor(
+        action, dtype=x.dtype, device=x.device
+    )
+
+    future_slots = tuple(int(value) for value in slots[site_id + 1 :])
+    future_absolute = tuple(
+        int(prompt_length) + position
+        for slot in future_slots
+        for position in coordinate_positions(slot)
+    )
+    if future_absolute and not bool(
+        (state_tokens[0, torch.tensor(future_absolute, device=x.device)] == int(mask_id)).all()
+    ):
+        raise ValueError("all future sites in the current block must stay masked")
+
+    full_attention = _full_attention_mask(
+        x,
+        attention_mask,
+        prompt_length=int(prompt_length),
+        gen_length=int(gen_length),
+    )
+    if full_attention is not None:
+        full_attention[:, int(prompt_length) : int(prompt_length) + int(gen_length)] = 1
+    prompt_index = torch.zeros_like(x, dtype=torch.bool)
+    prompt_index[:, : int(prompt_length)] = True
+    vocab_size = int(model.get_output_embeddings().weight.shape[0])
+    allowed_mask = None
+    if allowed_token_ids_by_generation_pos is not None:
+        if len(allowed_token_ids_by_generation_pos) != int(gen_length):
+            raise ValueError("allowed token schema length changed")
+        allowed_mask = torch.zeros(
+            (int(gen_length), vocab_size), dtype=torch.bool, device=x.device
+        )
+        for position, token_ids in enumerate(allowed_token_ids_by_generation_pos):
+            if not token_ids:
+                raise ValueError(f"generation position {position} has no legal token")
+            allowed_mask[position, torch.tensor(token_ids, device=x.device)] = True
+    prepared_atom_count_grammar = None
+    if atom_count_grammar is not None:
+        prepared_atom_count_grammar = _prepare_atom_count_grammar(
+            atom_count_grammar, vocab_size, x.device
+        )
+
+    future_logs: list[dict[str, Any]] = []
+    for original_site_order, slot in enumerate(
+        future_slots, start=site_id + 1
+    ):
+        positions = coordinate_positions(slot)
+        absolute = tuple(int(prompt_length) + value for value in positions)
+        previous = tuple(int(entry[0, value].item()) for value in absolute)
+        restored = False
+        for component in range(3):
+            generation_position = int(positions[component])
+            absolute_position = int(prompt_length) + generation_position
+            group_allowed = torch.zeros_like(x, dtype=torch.bool)
+            group_allowed[0, absolute_position] = True
+            logits = _model_logits(
+                model, x, full_attention, prompt_index, float(cfg_scale), int(mask_id)
+            )
+            if allowed_mask is not None or prepared_atom_count_grammar is not None:
+                _apply_schema_masks(
+                    logits,
+                    x,
+                    int(prompt_length),
+                    int(gen_length),
+                    allowed_mask,
+                    prepared_atom_count_grammar,
+                )
+            mask_report = _apply_lightweight_decoding_masks(
+                logits,
+                x,
+                int(prompt_length),
+                int(gen_length),
+                lightweight_decoding_constraints,
+                group_allowed[:, int(prompt_length) : int(prompt_length) + int(gen_length)],
+                int(mask_id),
+            )
+            if component == 2 and (0, generation_position) in mask_report.get(
+                "pbc_no_legal_completion", set()
+            ):
+                x[0, torch.tensor(absolute, device=x.device)] = torch.tensor(
+                    previous, dtype=x.dtype, device=x.device
+                )
+                restored = True
+                break
+            selected = _transaction_candidate_tokens(
+                logits,
+                active_absolute_positions={0: absolute_position},
+                temperature=float(temperature),
+                remasking=remasking,
+                sampling_seeds_by_batch=(
+                    None if sampling_seed is None else [int(sampling_seed)]
+                ),
+                salt=_spad_basin_closure_block_salt(
+                    block_id, int(original_site_order), int(component)
+                ),
+            )
+            x[group_allowed] = selected[group_allowed]
+        if bool((x[0, torch.tensor(absolute, device=x.device)] == int(mask_id)).any()):
+            raise RuntimeError("cursor continuation left a masked future site")
+        future_logs.append(
+            {
+                "block_index": block_id,
+                "site_order_index": int(original_site_order),
+                "slot_index": int(slot),
+                "generation_positions": list(positions),
+                "previous_token_ids": list(previous),
+                "new_token_ids": [int(x[0, value].item()) for value in absolute],
+                "restored_site_no_legal_z": bool(restored),
+            }
+        )
+
+    block_positions = tuple(
+        int(prompt_length) + position
+        for slot in slots
+        for position in coordinate_positions(slot)
+    )
+    geometry_check_enabled = bool(
+        lightweight_decoding_constraints
+        and lightweight_decoding_constraints.get("pbc_min_distance_mask")
+    )
+    supported_before_restore: bool | None = None
+    restored_block = False
+    if geometry_check_enabled:
+        supported_before_restore = _complete_cell_is_supported(
+            x[0],
+            prompt_length=int(prompt_length),
+            constraints=lightweight_decoding_constraints,
+        )
+        restored_block = not supported_before_restore
+        if restored_block:
+            block_tensor = torch.tensor(block_positions, device=x.device)
+            x[0, block_tensor] = entry[0, block_tensor]
+
+    later_logs: list[dict[str, Any]] = []
+    if block_id + 1 < len(schedules):
+        x, batched_logs = revise_spad_species_blocks(
+            model,
+            x,
+            prompt_length=int(prompt_length),
+            gen_length=int(gen_length),
+            revision_blocks_by_batch=[[list(value) for value in schedules[block_id + 1 :]]],
+            attention_mask=attention_mask,
+            temperature=float(temperature),
+            cfg_scale=float(cfg_scale),
+            remasking=remasking,
+            mask_id=int(mask_id),
+            allowed_token_ids_by_generation_pos=allowed_token_ids_by_generation_pos,
+            atom_count_grammar=atom_count_grammar,
+            lightweight_decoding_constraints=lightweight_decoding_constraints,
+            sampling_seeds_by_batch=(
+                None if sampling_seed is None else [int(sampling_seed)]
+            ),
+            block_index_offset=block_id + 1,
+        )
+        later_logs = batched_logs[0]
+    if bool((x[:, int(prompt_length) :] == int(mask_id)).any()):
+        raise RuntimeError("cursor continuation returned a masked canvas")
+    return x, {
+        "schema": "spad_basin_cursor_continuation_v1",
+        "block_index": block_id,
+        "site_order_index": site_id,
+        "slot_index": active_slot,
+        "action_token_ids": list(action),
+        "future_site_revisions": future_logs,
+        "geometry_supported_before_restore": supported_before_restore,
+        "restored_complete_block": bool(restored_block),
+        "later_block_revisions": later_logs,
+    }
+
+
 __all__ = [
     "Model494ResponseConfig",
     "SPAD_BASIN_CLOSURE_BLOCK_SALT_LIMIT",
     "_spad_basin_closure_block_salt",
+    "continue_spad_species_blocks_from_cursor",
     "revise_spad_anchors",
     "revise_spad_cell",
     "revise_spad_species_blocks",
