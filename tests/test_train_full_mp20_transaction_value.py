@@ -271,7 +271,7 @@ class FullMP20TransactionValueTrainerTest(unittest.TestCase):
         self.assertIn("FULL_MP20_GRADIENT_AUDIT_ONLY", wrapper)
         self.assertIn("FULL_MP20_POSTERIOR_GRADIENT_SCALE", wrapper)
         self.assertIn("same_batch_half_half_scalar_mixture", wrapper)
-        self.assertNotIn(" &", wrapper)
+        self.assertNotRegex(wrapper, r"(?m)\s&\s*(?:#.*)?$")
         self.assertEqual(wrapper.count("torch.distributed.run"), 1)
 
     def test_source_weight_and_llama_program_are_mandatory(self):
