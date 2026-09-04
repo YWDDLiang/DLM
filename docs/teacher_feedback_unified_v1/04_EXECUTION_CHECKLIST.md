@@ -270,7 +270,7 @@ so job 39770 restarts from the same registered closure-CE policy.
   best-vs-no-op headroom 143.93 meV/atom, and 2,879 groups above 10 meV/atom.
   These are throughput-only changes; the cohort, policy, seeds and scientific
   construction are unchanged.
-- [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
+- [x] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
   4,104 clean anchors across the actually schedulable 2/3/4 ranks, one seed and
   final checkpoint only. Job 39797 reached 64 finite updates but failed before
   any checkpoint save because NCCL initialized before rank-local device binding:
@@ -284,8 +284,12 @@ so job 39770 restarts from the same registered closure-CE policy.
   neither saved an eligible checkpoint. Job 39799 now runs the same one-epoch
   science on the preregistered three-rank topology (12 CPU), which removes one
   auxiliary allocation while preserving all 4,104 posterior and clean-anchor
-  exposures. In parallel, the fourth A800 runs the disjoint seed-24 Planner
-  source job 39800. Data, LR, objective and seeds remain unchanged.
+  exposures. In parallel, the fourth A800 ran the disjoint seed-24 Planner
+  source job 39800. Data, LR, objective and seeds remained unchanged. Job 39799
+  completed in 01:00:58 with 2,736 finite optimizer updates, exactly 1,368
+  clean-CE and 1,368 posterior updates, all 4,104 groups seen once, 3,889
+  informative exposures and 215 retained zero-information exposures. Only its
+  final policy was saved.
 - [x] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
   Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
   fixed tau800. Plan job 39800 completed 256/256 parsed and composition-valid;
@@ -293,6 +297,8 @@ so job 39770 restarts from the same registered closure-CE policy.
   replacement at `$ROOT/cohorts/spad_prospective_seed24_256_v1_20260905`
   (255 unique exact compositions and one disclosed duplicate). Report raw and
   refined Strict/Meta S.U.N. without Direct.
+  Final generation/refinement job 39802 is now running on four A800 with this
+  frozen cohort and the completed job-39799 policy.
 - [ ] If either preregistered primary endpoint reaches Strict>=10% and
   Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Per the
   user-authorized, outcome-independent near-miss rule fixed before stream19,
