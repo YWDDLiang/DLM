@@ -18,17 +18,18 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
         cls.generation = GENERATION.read_text(encoding="utf-8")
         cls.evaluation = EVALUATION.read_text(encoding="utf-8")
 
-    def test_generation_has_exact_allocation_and_two_concurrent_arms(self):
+    def test_generation_supports_primary_only_and_two_arm_modes(self):
         self.assertIn("#SBATCH --cpus-per-task=8", self.generation)
         self.assertIn(
             "#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", self.generation
         )
-        calls = re.findall(
-            r"^run_arm (closure_ce|e0|k10) ", self.generation, flags=re.MULTILINE
-        )
-        self.assertEqual(calls, ["closure_ce", "k10"])
+        self.assertIn('readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"', self.generation)
+        self.assertIn('run_arm k10 "${allocated_gpus[0]}"', self.generation)
+        self.assertIn('run_arm closure_ce "${allocated_gpus[0]}"', self.generation)
+        self.assertIn('run_arm k10 "${allocated_gpus[1]}"', self.generation)
         self.assertIn('CHILD_PIDS+=("$!")', self.generation)
-        self.assertIn("arms\\tclosure_ce_k10_concurrent", self.generation)
+        self.assertIn("k10_primary_only", self.generation)
+        self.assertIn("closure_ce_k10_concurrent", self.generation)
 
     def test_generation_requires_frozen_training_routes_and_selected_tau(self):
         self.assertIn("SPAD_BASIN_POSTERIOR_TRAIN_RUN:?", self.generation)
@@ -67,7 +68,7 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
         self.assertNotIn('body_metrics["graph_success"] == 256', self.generation)
         self.assertNotIn('body_metrics["parse_success"] == 256', self.generation)
 
-    def test_evaluation_has_four_gpu_four_cells_in_one_wave(self):
+    def test_evaluation_supports_primary_only_and_four_cell_modes(self):
         self.assertIn("#SBATCH --cpus-per-task=16", self.evaluation)
         self.assertIn(
             "#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4", self.evaluation
@@ -76,7 +77,10 @@ class SPADBasinPosteriorHeldoutWrapperTest(unittest.TestCase):
             r"run_wave_one\(\) \{(.*?)\n\}", self.evaluation, flags=re.DOTALL
         )
         self.assertIsNotNone(first_wave)
-        self.assertEqual(first_wave.group(1).count("run_full_cell "), 4)
+        self.assertEqual(first_wave.group(1).count("run_full_cell "), 5)
+        self.assertIn("run_full_cell 0 k10 refined", first_wave.group(1))
+        self.assertIn('readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"', self.evaluation)
+        self.assertIn("k10_refined_only", self.evaluation)
         self.assertNotIn("run_wave_two", self.evaluation)
         self.assertIn("run_wave_one", self.evaluation)
         self.assertIn("run_full_reconstructed_eval.py", self.evaluation)

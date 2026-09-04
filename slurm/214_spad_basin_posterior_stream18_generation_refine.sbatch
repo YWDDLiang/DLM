@@ -18,6 +18,7 @@ readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:?export SSCD_SOURCE_ROOT}"
 readonly TRAIN_RUN="${SPAD_BASIN_POSTERIOR_TRAIN_RUN:?export the completed 213 training run}"
 readonly SELECTED_TAU="${SPAD_SELECTED_TAU:?export the preregistered stream17-selected tau}"
+readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"
 readonly PLAN_DIR="${ROOT}/cohorts/spad_prospective_seed23_256_v1_20260903"
 readonly CLOSURE_RUN="${ROOT}/runs/spad_basin_closure_ce_39700"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
@@ -37,6 +38,10 @@ case "${SELECTED_TAU}" in
     exit 2
     ;;
 esac
+[[ "${PRIMARY_ONLY}" == true || "${PRIMARY_ONLY}" == false ]] || {
+  printf 'SPAD_PRIMARY_ONLY must be true or false\n' >&2
+  exit 2
+}
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
@@ -176,21 +181,23 @@ readonly K10_POLICY="${resolved_paths[2]}"
 readonly K10_CAPABILITY="${resolved_paths[3]}"
 
 IFS=',' read -r -a allocated_gpus <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"
-[[ "${#allocated_gpus[@]}" -eq 2 ]] || {
-  printf 'expected exactly two allocated GPUs, observed %s\n' \
-    "${#allocated_gpus[@]}" >&2
+expected_gpus=2
+[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus=1
+[[ "${#allocated_gpus[@]}" -eq "${expected_gpus}" ]] || {
+  printf 'expected %s allocated GPUs, observed %s\n' \
+    "${expected_gpus}" "${#allocated_gpus[@]}" >&2
   exit 2
 }
 
 printf '%s\n' \
   $'field\tvalue' \
   $'schema\tspad_basin_posterior_stream18_generation_contract_v1' \
-  $'allocation\t2_A800_8_CPU' \
+  "allocation\t${expected_gpus}_A800" \
   $'stream\t18' \
   $'dlm_seed\t92117' \
   $'refiner_seed\t102117' \
   "selected_tau\t${SELECTED_TAU}" \
-  $'arms\tclosure_ce_k10_concurrent' \
+  "arms\t$([[ "${PRIMARY_ONLY}" == true ]] && printf k10_primary_only || printf closure_ce_k10_concurrent)" \
   $'primary_arm\tk10' \
   $'automatic_result_choice\tfalse' \
   $'one_plan_one_trajectory\ttrue' \
@@ -269,10 +276,15 @@ run_arm() {
   touch "${cell}/_SUCCESS"
 }
 
-run_arm closure_ce "${allocated_gpus[0]}" &
-CHILD_PIDS+=("$!")
-run_arm k10 "${allocated_gpus[1]}" &
-CHILD_PIDS+=("$!")
+if [[ "${PRIMARY_ONLY}" == true ]]; then
+  run_arm k10 "${allocated_gpus[0]}" &
+  CHILD_PIDS+=("$!")
+else
+  run_arm closure_ce "${allocated_gpus[0]}" &
+  CHILD_PIDS+=("$!")
+  run_arm k10 "${allocated_gpus[1]}" &
+  CHILD_PIDS+=("$!")
+fi
 
 arm_failure=0
 for pid in "${CHILD_PIDS[@]}"; do
@@ -285,7 +297,7 @@ done
   false
 }
 
-"${PYTHON}" - "${RUN}" "${PLAN_DIR}" "${SELECTED_TAU}" <<'PY'
+"${PYTHON}" - "${RUN}" "${PLAN_DIR}" "${SELECTED_TAU}" "${PRIMARY_ONLY}" <<'PY'
 import json
 import pathlib
 import sys
@@ -293,6 +305,7 @@ import sys
 root = pathlib.Path(sys.argv[1])
 plan_dir = pathlib.Path(sys.argv[2]).resolve(strict=True)
 tau = int(sys.argv[3])
+primary_only = sys.argv[4] == "true"
 resolved = json.loads((root / "RESOLVED_INPUTS.json").read_text(encoding="utf-8"))
 expected_plans = {
     int(row["sample_idx"]): row["plan_state"]
@@ -303,7 +316,7 @@ expected_plans = {
     )
 }
 cells = []
-for arm in ("closure_ce", "k10"):
+for arm in (("k10",) if primary_only else ("closure_ce", "k10")):
     cell = root / arm / "stream18"
     body_metrics = json.loads(
         (cell / "body" / "sample_metrics.json").read_text(encoding="utf-8")
@@ -381,6 +394,7 @@ report = {
     "selected_tau": tau,
     "selected_tau_source": "completed_stream17_development_calibration",
     "primary_arm": "k10",
+    "primary_only": primary_only,
     "cells": cells,
     "one_plan_one_trajectory": True,
     "same_plans_order_and_noise_across_arms": True,

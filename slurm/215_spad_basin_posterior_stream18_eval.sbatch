@@ -18,6 +18,7 @@ readonly ROOT="${H1A2_CANDIDATE_ROOT:?export H1A2_CANDIDATE_ROOT}"
 readonly SOURCE="${SSCD_SOURCE_ROOT:?export SSCD_SOURCE_ROOT}"
 readonly GENERATION_RUN="${SPAD_BASIN_POSTERIOR_GENERATION_RUN:?export the completed 214 generation run}"
 readonly SELECTED_TAU="${SPAD_SELECTED_TAU:?export the same preregistered tau used by 214}"
+readonly PRIMARY_ONLY="${SPAD_PRIMARY_ONLY:-false}"
 readonly PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 readonly V3_SOURCE="${PROJECT}/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
 readonly V3_RUN="${PROJECT}/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3"
@@ -39,6 +40,10 @@ case "${SELECTED_TAU}" in
     exit 2
     ;;
 esac
+[[ "${PRIMARY_ONLY}" == true || "${PRIMARY_ONLY}" == false ]] || {
+  printf 'SPAD_PRIMARY_ONLY must be true or false\n' >&2
+  exit 2
+}
 
 mkdir "${RUN}"
 mkdir "${RUN}/logs"
@@ -81,13 +86,14 @@ for path in \
   }
 done
 
-"${PYTHON}" - "${GENERATION_RUN}" "${SELECTED_TAU}" <<'PY'
+"${PYTHON}" - "${GENERATION_RUN}" "${SELECTED_TAU}" "${PRIMARY_ONLY}" <<'PY'
 import json
 import pathlib
 import sys
 
 root = pathlib.Path(sys.argv[1]).resolve(strict=True)
 tau = int(sys.argv[2])
+primary_only = sys.argv[3] == "true"
 report = json.loads((root / "GENERATION_FINAL.json").read_text(encoding="utf-8"))
 assert report["schema"] == "spad_basin_posterior_heldout_stream18_generation_v1"
 assert report["stream"] == 18
@@ -100,8 +106,10 @@ assert report["all_failures_retained_in_fixed_denominator"] is True
 assert report["fixed_denominator"] == 256
 assert report["automatic_route_tau_seed_checkpoint_choice"] is False
 assert report["retry_rerank_replacement"] is False
-assert [cell["arm"] for cell in report["cells"]] == ["closure_ce", "k10"]
-for arm in ("closure_ce", "k10"):
+expected_arms = ["k10"] if primary_only else ["closure_ce", "k10"]
+assert report["primary_only"] is primary_only
+assert [cell["arm"] for cell in report["cells"]] == expected_arms
+for arm in expected_arms:
     for endpoint in ("raw", "refined"):
         path = root / arm / "stream18" / f"{endpoint}_generation" / "generation.jsonl"
         rows = [json.loads(line) for line in path.open(encoding="utf-8") if line.strip()]
@@ -119,18 +127,20 @@ for arm in ("closure_ce", "k10"):
 PY
 
 IFS=',' read -r -a allocated_gpus <<<"${CUDA_VISIBLE_DEVICES:?no allocated GPUs}"
-[[ "${#allocated_gpus[@]}" -eq 4 ]] || {
-  printf 'expected exactly four allocated GPUs, observed %s\n' \
-    "${#allocated_gpus[@]}" >&2
+expected_gpus=4
+[[ "${PRIMARY_ONLY}" == true ]] && expected_gpus=1
+[[ "${#allocated_gpus[@]}" -eq "${expected_gpus}" ]] || {
+  printf 'expected %s allocated GPUs, observed %s\n' \
+    "${expected_gpus}" "${#allocated_gpus[@]}" >&2
   exit 2
 }
 
 printf '%s\n' \
   $'field\tvalue' \
   $'schema\tspad_basin_posterior_stream18_eval_contract_v1' \
-  $'allocation\t4_A800_16_CPU' \
-  $'cells\tclosure_ce_k10_x_raw_refined' \
-  $'first_wave\t4_cells' \
+  "allocation\t${expected_gpus}_A800" \
+  "cells\t$([[ "${PRIMARY_ONLY}" == true ]] && printf k10_refined_only || printf closure_ce_k10_x_raw_refined)" \
+  "first_wave\t$([[ "${PRIMARY_ONLY}" == true ]] && printf 1_cell || printf 4_cells)" \
   "selected_tau\t${SELECTED_TAU}" \
   $'primary_cell\tk10_refined' \
   $'strict_sun_target\t26_of_256' \
@@ -168,10 +178,14 @@ run_full_cell() {
 
 run_wave_one() {
   CHILD_PIDS=()
-  run_full_cell 0 closure_ce raw & CHILD_PIDS+=("$!")
-  run_full_cell 1 closure_ce refined & CHILD_PIDS+=("$!")
-  run_full_cell 2 k10 raw & CHILD_PIDS+=("$!")
-  run_full_cell 3 k10 refined & CHILD_PIDS+=("$!")
+  if [[ "${PRIMARY_ONLY}" == true ]]; then
+    run_full_cell 0 k10 refined & CHILD_PIDS+=("$!")
+  else
+    run_full_cell 0 closure_ce raw & CHILD_PIDS+=("$!")
+    run_full_cell 1 closure_ce refined & CHILD_PIDS+=("$!")
+    run_full_cell 2 k10 raw & CHILD_PIDS+=("$!")
+    run_full_cell 3 k10 refined & CHILD_PIDS+=("$!")
+  fi
   local status=0 pid
   for pid in "${CHILD_PIDS[@]}"; do
     if ! wait "${pid}"; then
@@ -208,13 +222,17 @@ finalize_cell() {
   [[ -f "${cell}/official/_SUCCESS" ]]
 }
 
-for arm in closure_ce k10; do
-  finalize_cell "${arm}" raw
-  finalize_cell "${arm}" refined
-done
+if [[ "${PRIMARY_ONLY}" == true ]]; then
+  finalize_cell k10 refined
+else
+  for arm in closure_ce k10; do
+    finalize_cell "${arm}" raw
+    finalize_cell "${arm}" refined
+  done
+fi
 
 "${PYTHON}" - "${RUN}" "${GENERATION_RUN}" "${SELECTED_TAU}" \
-  "${OFFICIAL_CACHE}" "${S17_DIAGNOSTIC}" <<'PY'
+  "${OFFICIAL_CACHE}" "${S17_DIAGNOSTIC}" "${PRIMARY_ONLY}" <<'PY'
 import json
 import pathlib
 import sys
@@ -224,11 +242,16 @@ generation_run = pathlib.Path(sys.argv[2]).resolve(strict=True)
 tau = int(sys.argv[3])
 official_cache = pathlib.Path(sys.argv[4]).resolve(strict=True)
 s17_diagnostic = pathlib.Path(sys.argv[5]).resolve(strict=True)
+primary_only = sys.argv[6] == "true"
 
 cells = []
 by_name = {}
-for arm in ("closure_ce", "k10"):
-    for endpoint in ("raw", "refined"):
+cell_names = (("k10", "refined"),) if primary_only else tuple(
+    (arm, endpoint)
+    for arm in ("closure_ce", "k10")
+    for endpoint in ("raw", "refined")
+)
+for arm, endpoint in cell_names:
         report = json.loads(
             (root / arm / endpoint / "official" / "BASIN_CLOSURE_OFFICIAL_FINAL.json")
             .read_text(encoding="utf-8")
@@ -296,6 +319,7 @@ final = {
     "selected_tau_source": "completed_stream17_development_calibration",
     "fixed_denominator": 256,
     "primary_cell": "k10_refined",
+    "primary_only": primary_only,
     "cells": cells,
     "target": {
         "strict_sun_min_count": 26,
