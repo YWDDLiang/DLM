@@ -182,6 +182,65 @@ Before generating all labels:
 The preflight chooses no result-facing seed, Plan, checkpoint or cohort. It only
 tests whether the proposed teacher measures the claimed object.
 
+### Preflight addendum: quantization, relaxation horizon and optimizer signal
+
+The deployed coordinate vocabulary is `000..100`, i.e. a `0.01` fractional
+grid, rather than a 1,000-bin coordinate grid. A Cartesian force displacement
+can nevertheless quantize to a no-op in a large or skewed cell. Physics actions
+therefore use an outcome-blind, fixed ascending geometric scan bounded by
+`0.0025..0.40` Angstrom for a site and `0.00025..0.05` strain for a cell, and
+retain the first quantized non-noop action in each direction. The upper bounds
+keep the intervention local; they are not expanded to make the audit pass. This
+is geometry-aware support construction, not energy-based candidate search. On
+a frozen train-only preflight set, report separately by stage:
+
+- the fraction of finite nonzero force/stress directions that change at least
+  one transaction token after quantization (target at least 85%);
+- the fraction for which both signed directions are distinct from no-op and
+  from one another;
+- the selected-step histogram and hard-cap hit rate, which must not exceed 5%
+  in any stage (`0.40` Angstrom site cap; `0.05` cell-strain cap);
+- legality after exact-species, positive-volume, angle and strict triclinic-MIC
+  checks.
+
+Every deployment stage (`cell`, `anchor_second`, `anchor_first`) must pass the
+85% token-change target; a pooled average cannot hide a failed lattice or site
+channel. If any stage is below 85%, no labels or formal training may start. The
+only permitted correction is to derive a deterministic minimum step from the
+state lattice, direction and tokenizer bin width, cap it by a predeclared local
+displacement bound, freeze that rule on MP20-train, and repeat the preflight.
+Energy, relaxation outcomes, prospective data and stochastic retry are
+forbidden in this correction.
+
+The short-relaxation horizon is not assumed to be 64 steps. On 100 frozen
+MP20-train terminal groups, evaluate checkpoints `K in {3,5,10,20}` against a
+fixed 50-step local-relaxation reference using the same initial candidate and
+optimizer trajectory. Report pooled and per-stage Kendall tau-b, pairwise
+ordering agreement, tie rate and within-group energy spread. Select the
+smallest K whose rank agreement is within 0.02 of the best tested K and whose
+non-tied pair coverage is at least 80% of the best tested K. Route B is approved
+only if the selected short value also improves paired ranking agreement over
+E0. The 50-step endpoint is an operational local-basin reference, not a claim
+of DFT or fully converged truth.
+
+The trainer does not add a same-minibatch `0.5 * CE + 0.5 * posterior` scalar
+loss. It alternates one full-MP20 clean-CE update with one on-policy
+transaction-posterior update; clean CE is never computed on generated states.
+Both complete-action objectives are normalized by active transaction length,
+so six-token cells do not receive twice the weight of three-token XYZ actions.
+Before the formal jobs, five frozen paired batches at the common initialization
+must report unclipped clean/posterior gradient norms, their ratio and cosine,
+post-clip norms, informative-group count and maximum candidate-set teacher KL.
+Keep the unit posterior multiplier and the `0.05`-nat target-KL budget when the
+median gradient ratio lies in `[0.2, 5]` and all quantities are finite. Do not
+perform batch-adaptive inverse-gradient weighting or change a coefficient in
+response to downstream loss/S.U.N. If the probe fails, diagnose candidate
+degeneracy and normalization first; any single replacement coefficient or KL
+budget must be declared once, shared by routes A/B, and re-probed before either
+formal route starts. A median clean/posterior cosine at or below `-0.5` is a
+scientific objective-conflict failure, not an invitation to add PCGrad or tune
+weights until the conflict disappears.
+
 ## Training
 
 Both routes start from the same BS checkpoint and share seed, source order,
