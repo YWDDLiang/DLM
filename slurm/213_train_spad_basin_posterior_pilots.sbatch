@@ -83,6 +83,8 @@ printf '%s\n' \
   $'schema\tspad_basin_posterior_pilot_wrapper_v1' \
   $'allocation\t4_A800_16_CPU' \
   $'routes\te0_and_k10_concurrent' \
+  $'primary_route\tk10_basin_consistent' \
+  $'diagnostic_route\te0_single_point' \
   $'groups\t128_ordered_common' \
   $'posterior_passes\t4' \
   $'optimizer_updates_per_route\t512' \
@@ -180,6 +182,8 @@ expected = {
 summary = {
     "schema": "spad_basin_posterior_pilot_routes_v1",
     "automatic_result_choice": False,
+    "primary_route": "k10",
+    "diagnostic_route": "e0",
     "routes": {},
 }
 for route, (field, seed) in expected.items():

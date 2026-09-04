@@ -213,6 +213,7 @@ class BasinPosteriorWrapperTest(unittest.TestCase):
         self.assertIn("K10_MASTER_PORT", self.wrapper)
         self.assertIn("automatic_result_choice", self.wrapper)
         self.assertIn("automatic_result_choice\": False", self.wrapper)
+        self.assertIn('"primary_route": "k10"', self.wrapper)
         self.assertNotIn("train_full_mp20_transaction_value.py", self.wrapper)
         self.assertNotIn("train_potential_closure.py", self.wrapper)
 
