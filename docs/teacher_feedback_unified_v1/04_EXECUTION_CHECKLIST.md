@@ -277,10 +277,15 @@ so job 39770 restarts from the same registered closure-CE policy.
   ranks 1--3 each stranded about 6.37 GiB on GPU0 and rank0 missed a 16 MiB
   allocation. Commit 5f24a02 binds `cuda:LOCAL_RANK` before NCCL and replaces
   all-visible-device seeding with identical rank-local seeding; 17 local and 17
-  remote tests pass. Recovery job 39798 restarts from the same closure-CE
-  checkpoint on four A800/16 CPU with the unchanged data, LR, one-pass schedule,
-  64-group step-0 probe and 128-update warmup. Job 39797 is a negative
-  engineering run and its partial state is ineligible.
+  remote tests pass. Four-rank recovery 39798 reproduced the same update-64
+  memory boundary, showing that rank binding fixed initialization order but did
+  not remove the approximately 6.37 GiB auxiliary allocation per additional
+  rank on physical GPU0. Both 39797 and 39798 are negative engineering runs;
+  neither saved an eligible checkpoint. Job 39799 now runs the same one-epoch
+  science on the preregistered three-rank topology (12 CPU), which removes one
+  auxiliary allocation while preserving all 4,104 posterior and clean-anchor
+  exposures. In parallel, the fourth A800 runs the disjoint seed-24 Planner
+  source job 39800. Data, LR, objective and seeds remain unchanged.
 - [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
   Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
   fixed tau800. Report raw and refined Strict/Meta S.U.N. without Direct.
