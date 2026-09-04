@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 import importlib.util
 from pathlib import Path
 from types import SimpleNamespace
@@ -71,6 +72,45 @@ class FakeRelaxer:
             forces=[np.asarray([[0.02, 0.0, 0.0]] * len(structure))] * frames,
             stresses=[np.eye(3) * 0.001] * frames,
             steps_taken=frames - 2,
+        )
+        return {"final_structure": structure, "trajectory": trajectory}
+
+
+class FakePathRelaxer:
+    def __init__(self, energies_by_horizon):
+        self.energies_by_horizon = {
+            int(step): dict(values) for step, values in energies_by_horizon.items()
+        }
+        self.calls = []
+
+    def relax(self, structure, *, relax_cell, fmax, steps, verbose):
+        self.calls.append(
+            {
+                "candidate_id": structure.candidate_id,
+                "relax_cell": relax_cell,
+                "fmax": fmax,
+                "steps": steps,
+                "verbose": verbose,
+            }
+        )
+        self.assertions = (relax_cell is True, fmax, steps, verbose is False)
+        energies = []
+        for current in range(steps + 2):
+            horizon = max(
+                step
+                for step in self.energies_by_horizon
+                if step <= max(3, min(current, 50))
+            )
+            energies.append(
+                self.energies_by_horizon[horizon][structure.candidate_id]
+                * len(structure)
+            )
+        frames = len(energies)
+        trajectory = SimpleNamespace(
+            energies=energies,
+            forces=[np.asarray([[0.02, 0.0, 0.0]] * len(structure))] * frames,
+            stresses=[np.eye(3) * 0.001] * frames,
+            steps_taken=steps,
         )
         return {"final_structure": structure, "trajectory": trajectory}
 
@@ -237,7 +277,12 @@ class TerminalValueLabelerTest(unittest.TestCase):
         report = MODULE.calibration_report(result)
         self.assertEqual(report["calibration_full_steps"], 500)
         self.assertIn("cell", report["by_stage"])
-        self.assertEqual(report["by_stage"]["cell"]["variation"]["E500"]["groups_with_variation"], 1)
+        self.assertEqual(
+            report["by_stage"]["cell"]["variation"]["E500"][
+                "groups_with_variation"
+            ],
+            1,
+        )
 
     def test_calibration_rejects_non_train_or_unfixed_steps(self):
         test_group = group(0, [candidate(0)])
@@ -266,6 +311,194 @@ class TerminalValueLabelerTest(unittest.TestCase):
         del value["candidates"][0]["terminal_answer"]
         with self.assertRaisesRegex(ValueError, "terminal_answer or terminal_cif"):
             MODULE.validate_groups([value])
+
+    def test_route_b_preflight_uses_fixed_horizons_on_shared_100_crystals(self):
+        groups = []
+        for group_idx in range(100):
+            value = group(group_idx, [candidate(0), candidate(1)], stage="cell")
+            value["shared_terminal_pool"] = True
+            groups.append(value)
+        predictor = FakePredictor({0: -0.5, 1: -0.6})
+        relaxer = FakePathRelaxer(
+            {
+                3: {0: -1.0, 1: -2.0},
+                5: {0: -1.1, 1: -2.1},
+                10: {0: -1.2, 1: -2.2},
+                20: {0: -1.3, 1: -2.3},
+                50: {0: -1.4, 1: -2.4},
+            }
+        )
+        labelled = MODULE.label_groups(
+            groups,
+            predictor=predictor,
+            relaxer=relaxer,
+            structure_loader=loader,
+            preflight_steps=(3, 5, 10, 20, 50),
+        )
+        steps = Counter(call["steps"] for call in relaxer.calls)
+        self.assertEqual(steps, Counter({50: 200}))
+        first = labelled[0]["candidates"][0]
+        self.assertEqual(first["terminal_preflight_k3_energy_eV_per_atom"], -1.0)
+        self.assertEqual(first["terminal_preflight_k50_energy_eV_per_atom"], -1.4)
+        self.assertNotIn("terminal_basin_energy_eV_per_atom", first)
+        report = MODULE.route_b_preflight_report(labelled)
+        self.assertEqual(report["short_horizons"], [3, 5, 10, 20])
+        self.assertEqual(report["full_reference_steps"], 50)
+        self.assertEqual(report["minimum_elbow_rule"]["selected_short_steps"], 3)
+        self.assertFalse(report["prospective_or_final_sun_read"])
+        self.assertFalse(report["remote_runtime_preflight"]["passed"])
+        self.assertTrue(
+            report["remote_runtime_preflight"][
+                "fake_runtime_tests_are_not_sufficient"
+            ]
+        )
+        self.assertFalse(report["route_b_approved"])
+
+    def test_minimum_elbow_uses_rank_not_k3_variance_as_hard_gate(self):
+        values = {
+            3: [0.0, 3.0, 2.0, 1.0],
+            5: [0.0, 1.0, 2.0, 3.0],
+            10: [0.0, 1.1, 2.1, 3.1],
+            20: [0.0, 0.001, 0.002, 0.003],
+            50: [0.0, 1.0, 2.0, 3.0],
+        }
+        candidates = []
+        for candidate_idx in range(4):
+            row = {}
+            for steps, energies in values.items():
+                row[
+                    f"{MODULE.preflight_prefix(steps)}_energy_eV_per_atom"
+                ] = energies[candidate_idx]
+            candidates.append(row)
+        groups = [{"stage": "anchor_first", "candidates": candidates}]
+        horizons = {
+            str(steps): MODULE._horizon_report(
+                groups, steps=steps, tie_tolerance=1.0e-6
+            )
+            for steps in (3, 5, 10, 20, 50)
+        }
+        decision = MODULE.minimum_elbow_k(horizons)
+        self.assertTrue(decision["approved"])
+        self.assertEqual(decision["selected_short_steps"], 5)
+        self.assertTrue(horizons["20"]["variance_retention_vs_k3"]["variance_washout"])
+        self.assertTrue(decision["per_horizon"]["20"]["eligible"])
+
+    def test_elbow_requires_80_percent_of_best_non_tied_coverage(self):
+        def horizon(pair, tau, coverage):
+            return {
+                "pairwise_ordering_vs_full50": {
+                    "agreement_rate_counting_metric_ties_as_unresolved": pair,
+                    "non_tied_pair_coverage": coverage,
+                },
+                "within_group_kendall_tau_b_vs_full50": {
+                    "macro_mean_tau_b": tau,
+                },
+                "variance_retention_vs_k3": {"diagnostic": True},
+            }
+
+        horizons = {
+            "3": horizon(0.95, 0.95, 1.00),
+            "5": horizon(1.00, 1.00, 0.79),
+            "10": horizon(1.00, 1.00, 1.00),
+            "20": horizon(1.00, 1.00, 1.00),
+        }
+        decision = MODULE.minimum_elbow_k(horizons)
+        self.assertFalse(decision["per_horizon"]["5"]["eligible"])
+        self.assertEqual(decision["selected_short_steps"], 10)
+
+    def test_kendall_tau_b_is_within_group_and_tie_aware(self):
+        candidates = [
+            {"metric": 0.0, "reference": 0.0},
+            {"metric": 1.0, "reference": 1.0},
+            {"metric": 1.0, "reference": 2.0},
+        ]
+        report = MODULE.kendall_tau_b_by_group(
+            [{"candidates": candidates}],
+            metric_field="metric",
+            reference_field="reference",
+        )
+        self.assertEqual(report["groups_with_defined_tau_b"], 1)
+        self.assertEqual(report["metric_only_ties"], 1)
+        self.assertGreater(report["pooled_tau_b"], 0.0)
+        self.assertLess(report["pooled_tau_b"], 1.0)
+
+    def test_route_b_preflight_rejects_nonshared_or_wrong_denominator(self):
+        with self.assertRaisesRegex(ValueError, "exactly 100"):
+            MODULE.validate_route_b_preflight([group(0, [candidate(0)])])
+        groups = []
+        for group_idx in range(100):
+            value = group(group_idx, [candidate(0)])
+            value["shared_terminal_pool"] = group_idx != 99
+            groups.append(value)
+        with self.assertRaisesRegex(ValueError, "shared terminal"):
+            MODULE.validate_route_b_preflight(groups)
+
+    def test_preflight_freeze_is_value_blind_and_exactly_100_sources(self):
+        groups = []
+        for group_idx in range(140):
+            value = group(group_idx, [candidate(0)])
+            value["shared_terminal_pool"] = True
+            value["prospective_sun_like_field_that_must_be_ignored"] = group_idx
+            groups.append(value)
+        selected = MODULE.freeze_route_b_preflight_groups(groups)
+        changed = [dict(value) for value in groups]
+        for value in changed:
+            value["prospective_sun_like_field_that_must_be_ignored"] *= -1000
+        selected_changed = MODULE.freeze_route_b_preflight_groups(changed)
+        self.assertEqual(len(selected), 100)
+        self.assertEqual(
+            [value["group_idx"] for value in selected],
+            [value["group_idx"] for value in selected_changed],
+        )
+
+    def test_route_b_approval_requires_selected_ek_to_beat_e0(self):
+        groups = []
+        for group_idx in range(100):
+            candidates = [candidate(0), candidate(1)]
+            for candidate_idx, row in enumerate(candidates):
+                row["terminal_single_point_energy_eV_per_atom"] = [2.0, 1.0][
+                    candidate_idx
+                ]
+                row["terminal_single_point_known"] = True
+                for steps in (3, 5, 10, 20, 50):
+                    prefix = MODULE.preflight_prefix(steps)
+                    row[f"{prefix}_energy_eV_per_atom"] = float(candidate_idx)
+                    row[f"{prefix}_known"] = True
+                row["terminal_preflight_trajectory_initial_matches_E0"] = True
+                row["terminal_preflight_trajectory_index_contract_observed"] = True
+            value = group(group_idx, candidates, stage="anchor_first")
+            value["shared_terminal_pool"] = True
+            groups.append(value)
+
+        report = MODULE.route_b_preflight_report(
+            groups,
+            real_chgnet_runtime=True,
+            runtime_source_contract={"passed": True, "source": "fake-test-only"},
+        )
+        self.assertTrue(
+            report["selected_EK_vs_E0"]["selected_EK_strictly_better_than_E0"]
+        )
+        self.assertTrue(report["remote_runtime_preflight"]["passed"])
+        self.assertTrue(report["route_b_approved"])
+
+        for value in groups:
+            value["candidates"][0][
+                "terminal_single_point_energy_eV_per_atom"
+            ] = 0.0
+            value["candidates"][1][
+                "terminal_single_point_energy_eV_per_atom"
+            ] = 1.0
+        tied_with_ek = MODULE.route_b_preflight_report(
+            groups,
+            real_chgnet_runtime=True,
+            runtime_source_contract={"passed": True, "source": "fake-test-only"},
+        )
+        self.assertFalse(
+            tied_with_ek["selected_EK_vs_E0"][
+                "selected_EK_strictly_better_than_E0"
+            ]
+        )
+        self.assertFalse(tied_with_ek["route_b_approved"])
 
 
 if __name__ == "__main__":
