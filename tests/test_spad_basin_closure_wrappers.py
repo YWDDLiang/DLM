@@ -12,6 +12,7 @@ COMMON_RELAX = ROOT / "slurm" / "200_spad_basin_closure_common_relax.sbatch"
 COMMON_FINAL = ROOT / "slurm" / "201_spad_basin_closure_common_relax_finalize.sbatch"
 PREFLIGHT_FREEZE = ROOT / "slurm" / "202_freeze_spad_basin_preflight_cohort.sbatch"
 PREFLIGHT_GENERATE = ROOT / "slurm" / "203_generate_spad_basin_preflight_states.sbatch"
+TAU200_BRIDGE = ROOT / "slurm" / "204_spad_basin_closure_tau200_bridge.sbatch"
 
 
 class SPADBasinClosureWrapperTest(unittest.TestCase):
@@ -26,6 +27,7 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         cls.common_final = COMMON_FINAL.read_text(encoding="utf-8")
         cls.preflight_freeze = PREFLIGHT_FREEZE.read_text(encoding="utf-8")
         cls.preflight_generate = PREFLIGHT_GENERATE.read_text(encoding="utf-8")
+        cls.tau200_bridge = TAU200_BRIDGE.read_text(encoding="utf-8")
 
     def test_build_uses_full_teacher_pointer_and_preserves_contract(self):
         self.assertIn("#SBATCH --cpus-per-task=4", self.build)
@@ -199,10 +201,21 @@ class SPADBasinClosureWrapperTest(unittest.TestCase):
         self.assertNotIn("--spad-backfill", self.preflight_generate)
         self.assertNotIn("refine_dlm_with_crysllmgen", self.preflight_generate)
 
+    def test_tau200_bridge_is_fixed_and_selection_free(self):
+        self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:1", self.tau200_bridge)
+        self.assertIn("#SBATCH --cpus-per-task=4", self.tau200_bridge)
+        self.assertIn("spad_basin_closure_native_s17_39704", self.tau200_bridge)
+        self.assertIn("--diff-steps 200", self.tau200_bridge)
+        self.assertIn("--seed-by-sample-index", self.tau200_bridge)
+        self.assertIn("--max-proposals 256", self.tau200_bridge)
+        self.assertIn("'selection_retry_replacement':False", self.tau200_bridge)
+        self.assertNotIn("--diff-steps 800", self.tau200_bridge)
+
     def test_every_run_is_non_overwriting(self):
         for wrapper in (
             self.build, self.train, self.canary, self.native, self.raw_screen,
             self.common_final, self.preflight_freeze, self.preflight_generate,
+            self.tau200_bridge,
         ):
             self.assertIn('mkdir "${RUN}"', wrapper)
         for wrapper in (self.build, self.train, self.canary):
