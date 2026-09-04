@@ -1,6 +1,13 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **24-hour SUN10/50 sprint; K10 training and tau calibration running**
+Status: **24-hour SUN10/50 sprint; stream18 raw settling and K10-4104 scale-up**
+
+Current decision: the 128-group K10 run is a completed feasibility-scale
+result, not the data-scale endpoint. Its tau800 stream18 result is Strict/Meta
+`15/119` of 256 with raw/refined validity `254/256`. Scale the same scientific
+object to 4,104 unique MP20-train deployment states on the currently available
+three-GPU topology; do not add epochs to the same 128 groups or add a clean-CE
+only route.
 
 Sprint deadline: **2026-09-05 22:00 Asia/Shanghai**. The target is final
 prospective Strict/Meta S.U.N. at least `10%/50%` under a fixed, fully disclosed
@@ -233,6 +240,27 @@ so job 39770 restarts from the same registered closure-CE policy.
 - No unrelated jobs, GPU probes, row replacement, reranking or best-of-N.
 - CHGNet may batch 8--16 structures per GPU; do not create 8--16 Python
   processes per GPU.
+- Support any actually schedulable `1..4` GPU count, including odd counts. For
+  heterogeneous raw/refined workloads, give all ranks to raw first and then
+  reuse all ranks for refined; do not strand GPUs behind equal endpoint splits.
 - GitHub pushes originate from the local workstation.
 - Materials Project credentials remain outside Git/docs/checklists/commands,
   and are not needed before a final authorized official query.
+
+## K. Scale-up and 1000-valid endpoint
+
+- [ ] Freeze 4,104 outcome-blind, distinct MP20-train rollout states from the
+  full 27,136 Plan/program pool: balanced cell/XYZ and cursor phase, no old
+  three-stage ledger.
+- [ ] Build one dynamic-K<=4 complete transaction group per state and label
+  K10 only. Reuse the frozen K10 rule; do not repeat K3/K5/K20 calibration.
+- [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
+  4,104 clean anchors across three ranks, one seed and final checkpoint only.
+- [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation;
+  report raw and fixed-refinement Strict/Meta S.U.N. without Direct.
+- [ ] If either preregistered primary endpoint reaches Strict>=10% and
+  Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Continue a
+  fixed random stream until 1,000 parseable CIFs are accumulated; discard only
+  parser/CIF failures without reading energy, hull, novelty or S.U.N. Report
+  total requests and discarded-CIF count alongside the conditional-on-valid
+  1,000 denominator.
