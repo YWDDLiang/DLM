@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **24-hour SUN10/50 sprint; stream18 raw settling and K10-4104 scale-up**
+Status: **24-hour SUN10/50 sprint; K10-4104 rollout and four-GPU action build**
 
 Current decision: the 128-group K10 run is a completed feasibility-scale
 result, not the data-scale endpoint. Its tau800 stream18 result is Strict/Meta
@@ -250,11 +250,16 @@ so job 39770 restarts from the same registered closure-CE policy.
 
 ## K. Scale-up and 1000-valid endpoint
 
-- [ ] Freeze 4,104 outcome-blind, distinct MP20-train rollout states from the
+- [x] Freeze 4,104 outcome-blind, distinct MP20-train rollout sources from the
   full 27,136 Plan/program pool: balanced cell/XYZ and cursor phase, no old
-  three-stage ledger.
+  three-stage ledger. The fixed cohort is
+  `$ROOT/cohorts/spad_basin_scale4104_train_v1_20260905`; job 39792 is
+  generating the corresponding deployment rollouts and materializing states.
 - [ ] Build one dynamic-K<=4 complete transaction group per state and label
   K10 only. Reuse the frozen K10 rule; do not repeat K3/K5/K20 calibration.
+  The zero-science pending three-GPU job 39793 was cancelled and replaced by
+  dependency job 39794 using four A800/16 CPU. This changes throughput only;
+  the cohort, policy, seeds and action construction are unchanged.
 - [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
   4,104 clean anchors across three ranks, one seed and final checkpoint only.
 - [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
