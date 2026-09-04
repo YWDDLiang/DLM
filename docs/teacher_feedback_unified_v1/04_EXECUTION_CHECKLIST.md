@@ -199,11 +199,13 @@ negative engineering run and contributes no selected checkpoint.
   `98/256 = 38.28%`, with `256` reconstructed and `244` novel-unique. Relative
   to native closure raw this adds 8 Strict and 42 Meta S.U.N. outcomes, but it
   does not meet `10%/50%`.
-- [ ] Treat the completed fixed256 as development after this first outcome.
+- [x] Treat the completed fixed256 as development after this first outcome.
   Job 39737 generated tau400/tau600 and job 39747 completed the current-system
-  tau800 anchor at 256/256. Job 39757 is evaluating tau400/600/800 sequentially
-  with one GPU, existing official cache and no Direct/query; the preregistered
-  balanced target-attainment rule then selects one bridge tau;
+  tau800 anchor at 256/256. Job 39757 evaluated tau400/600/800 sequentially
+  with one GPU, existing official cache and no Direct/query. Strict/Meta SUN
+  are respectively `11/110`, `19/121`, and `23/119` out of 256. The
+  preregistered balanced target-attainment rule selected tau800 before any
+  held-out stream18 outcome was read;
   any chosen tau must be confirmed on a disjoint frozen cohort before a final
   prospective claim.
 - [ ] The desired endpoint is native Strict/Meta `10%/50%`, but claims follow
