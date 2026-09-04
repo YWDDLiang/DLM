@@ -294,7 +294,7 @@ finalize_cell() {
     --baseline-official-attempts "${S17_DIAGNOSTIC}" \
     --raw-screen-json "${RAW_VALIDITY}" --raw-screen-arm closure_ce \
     --endpoint "${arm}_${endpoint}_stream18" \
-    "${model_args[@]}" --output-dir "${cell}/official" \
+    ${model_args[@]+"${model_args[@]}"} --output-dir "${cell}/official" \
     >"${RUN}/logs/${arm}_${endpoint}_official.out" \
     2>"${RUN}/logs/${arm}_${endpoint}_official.err"
   [[ -f "${cell}/official/_SUCCESS" ]]
