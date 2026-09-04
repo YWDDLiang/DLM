@@ -26,7 +26,8 @@ for p in "${STATES}/_SUCCESS" "${STATES}/states.jsonl" "${POLICY}/adapter_model.
 IFS=',' read -r -a gpu <<<"${CUDA_VISIBLE_DEVICES:?}"; [[ "${#gpu[@]}" -eq 2 ]]
 
 env OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 NUMEXPR_NUM_THREADS=4 \
- PYTHONPATH="${SOURCE}/src" torchrun --standalone --nproc_per_node=2 \
+ PYTHONPATH="${SOURCE}/src" "${PYTHON}" -m torch.distributed.run \
+ --standalone --nproc_per_node=2 \
  "${SOURCE}/src/scripts/audit_spad_basin_preflight_model_replay.py" \
  --states-jsonl "${STATES}/states.jsonl" --model-path "${MODEL}" \
  --checkpoint-path "${POLICY}" --output-dir "${RUN}/replay" \

@@ -11,6 +11,7 @@ class PreflightReplayWrapperTest(unittest.TestCase):
         self.assertIn("#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2", WRAPPER)
         self.assertIn("#SBATCH --cpus-per-task=8", WRAPPER)
         self.assertIn("--nproc_per_node=2", WRAPPER)
+        self.assertIn("-m torch.distributed.run", WRAPPER)
         self.assertIn("attempts)==128", WRAPPER)
         self.assertIn("'mismatches':len(mismatch)", WRAPPER)
         self.assertIn("bit_exact_required_before_value_labels", WRAPPER)
