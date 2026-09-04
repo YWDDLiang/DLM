@@ -30,7 +30,13 @@ class RelaxShardTest(unittest.TestCase):
             }
             for index in range(4)
         ]
-        MODULE.validate_generation(rows, denominator=4)
+        rows[-1] = {
+            "ordinal": 3,
+            "sample_idx": 3,
+            "status": "failed",
+            "structure": None,
+        }
+        self.assertEqual(MODULE.validate_generation(rows, denominator=4), {0, 1, 2})
         with self.assertRaises(ValueError):
             MODULE.validate_generation(rows[:-1], denominator=4)
 
@@ -49,8 +55,30 @@ class RelaxShardTest(unittest.TestCase):
             ],
         }
         self.assertEqual(
-            MODULE.map_structures_to_ordinals(structures, manifest, denominator=2),
+            MODULE.map_structures_to_ordinals(
+                structures, manifest, denominator=2, expected_ordinals={0, 1}
+            ),
             {0: "first", 1: "second"},
+        )
+
+    def test_manifest_retains_failed_ordinal_outside_structure_map(self):
+        manifest = {
+            "total_attempts": 3,
+            "reconstructed_structures": 2,
+            "attempt_records": [
+                {"generation_ordinal": 0, "reconstructed_index": 0},
+                {"generation_ordinal": 1, "reconstructed_index": None},
+                {"generation_ordinal": 2, "reconstructed_index": 1},
+            ],
+        }
+        self.assertEqual(
+            MODULE.map_structures_to_ordinals(
+                ["first", "third"],
+                manifest,
+                denominator=3,
+                expected_ordinals={0, 2},
+            ),
+            {0: "first", 2: "third"},
         )
 
 

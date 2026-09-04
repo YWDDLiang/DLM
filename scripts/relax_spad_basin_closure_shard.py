@@ -50,39 +50,54 @@ def owner_for_key(key: str, *, shard_count: int) -> int:
     return int(text[:16], 16) % int(shard_count)
 
 
-def validate_generation(rows: list[Mapping[str, Any]], *, denominator: int) -> None:
+def validate_generation(
+    rows: list[Mapping[str, Any]], *, denominator: int
+) -> set[int]:
     if len(rows) != denominator:
         raise ValueError("generation denominator changed")
     if [int(row.get("ordinal", -1)) for row in rows] != list(range(denominator)):
         raise ValueError("generation ordinals changed")
+    reconstructed: set[int] = set()
     for ordinal, row in enumerate(rows):
         if int(row.get("sample_idx", -1)) != ordinal:
             raise ValueError(f"sample index mismatch at ordinal {ordinal}")
-        if row.get("status") != "succeeded" or not isinstance(row.get("structure"), dict):
-            raise ValueError(f"common relaxation requires reconstructed ordinal {ordinal}")
+        status = row.get("status")
+        if status == "succeeded":
+            if not isinstance(row.get("structure"), dict):
+                raise ValueError(f"successful ordinal {ordinal} lacks a structure")
+            reconstructed.add(ordinal)
+        elif status != "failed":
+            raise ValueError(f"ordinal {ordinal} has unsupported status {status!r}")
+    return reconstructed
 
 
 def map_structures_to_ordinals(
-    structures: list[Any], manifest: Mapping[str, Any], *, denominator: int
+    structures: list[Any], manifest: Mapping[str, Any], *, denominator: int,
+    expected_ordinals: set[int] | None = None,
 ) -> dict[int, Any]:
     if int(manifest.get("total_attempts", -1)) != denominator:
         raise ValueError("frozen input manifest attempt count changed")
     if int(manifest.get("reconstructed_structures", -1)) != len(structures):
         raise ValueError("frozen input manifest structure count changed")
+    expected = set(range(denominator)) if expected_ordinals is None else set(expected_ordinals)
     mapped: dict[int, Any] = {}
     for record in manifest.get("attempt_records") or ():
         ordinal = int(record.get("generation_ordinal", -1))
         reconstructed_index = record.get("reconstructed_index")
         if reconstructed_index is None:
-            raise ValueError(f"frozen input did not reconstruct ordinal {ordinal}")
+            if ordinal in expected:
+                raise ValueError(f"frozen input did not reconstruct ordinal {ordinal}")
+            continue
         index = int(reconstructed_index)
         if not 0 <= ordinal < denominator or not 0 <= index < len(structures):
             raise ValueError("frozen input manifest index is out of range")
+        if ordinal not in expected:
+            raise ValueError(f"frozen input unexpectedly reconstructed failed ordinal {ordinal}")
         if ordinal in mapped:
             raise ValueError("frozen input manifest repeats an ordinal")
         mapped[ordinal] = structures[index]
-    if set(mapped) != set(range(denominator)):
-        raise ValueError("frozen input manifest does not cover the denominator")
+    if set(mapped) != expected:
+        raise ValueError("frozen input manifest does not cover reconstructed ordinals")
     return mapped
 
 
@@ -90,7 +105,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.output_jsonl.exists() or args.report_json.exists():
         raise FileExistsError("shard output already exists")
     rows = list(iter_jsonl(args.generation_jsonl.resolve()))
-    validate_generation(rows, denominator=int(args.denominator))
+    reconstructed_ordinals = validate_generation(
+        rows, denominator=int(args.denominator)
+    )
     if int(args.shard_count) <= 0 or not 0 <= int(args.shard_rank) < int(args.shard_count):
         raise ValueError("invalid shard rank/count")
     frozen = load_frozen_resumable(args.frozen_resumable_py.resolve())
@@ -99,12 +116,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("frozen structure loader denominator changed")
     manifest = json.loads(args.input_manifest.read_text(encoding="utf-8"))
     structures_by_ordinal = map_structures_to_ordinals(
-        list(structures), manifest, denominator=int(args.denominator)
+        list(structures), manifest, denominator=int(args.denominator),
+        expected_ordinals=reconstructed_ordinals,
     )
     existing_keys = cache_keys(args.base_cache.resolve())
     selected: list[tuple[Mapping[str, Any], str, Any]] = []
     for row in rows:
         ordinal = int(row["ordinal"])
+        if ordinal not in structures_by_ordinal:
+            continue
         structure = structures_by_ordinal[ordinal]
         key = str(frozen.structure_cache_key(structure))
         if owner_for_key(key, shard_count=int(args.shard_count)) == int(args.shard_rank):
@@ -154,6 +174,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "shard_rank": int(args.shard_rank),
         "shard_count": int(args.shard_count),
         "fixed_denominator": int(args.denominator),
+        "reconstructed_occurrences": len(reconstructed_ordinals),
+        "unreconstructed_failures_retained": int(args.denominator)
+        - len(reconstructed_ordinals),
         "assigned_occurrences": len(selected),
         "assigned_unique_keys": len({key for _row, key, _structure in selected}),
         "base_cache_hits": cache_hits,
