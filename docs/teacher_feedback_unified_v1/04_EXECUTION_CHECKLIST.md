@@ -288,3 +288,8 @@ so job 39770 restarts from the same registered closure-CE policy.
   and preregisters Planner seed 25, stream 20,
   DLM seed 94117, refiner seed 104117, a 1,200-request fixed source stream and
   the first 1,000 parser-valid CIFs as the conditional evaluation denominator.
+- [x] Prepare the paper-scale raw-first evaluation wrapper and conservative
+  existing-cache finalizer. All available ranks evaluate raw first and refined
+  second; Direct and new official queries are omitted, and any chemsys absent
+  from the retained MP cache remains an unknown/non-stable row in denominator
+  1,000 rather than being dropped.

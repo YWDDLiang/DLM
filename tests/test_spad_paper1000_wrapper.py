@@ -1,4 +1,7 @@
 from pathlib import Path
+import re
+import shutil
+import subprocess
 import unittest
 
 
@@ -37,6 +40,24 @@ class Paper1000WrapperTests(unittest.TestCase):
     def test_resource_contract_is_dynamic_up_to_four(self) -> None:
         self.assertIn('[[ "${WORLD_SIZE}" =~ ^[1-4]$ ]]', self.text)
         self.assertIn('"--nproc_per_node=${WORLD_SIZE}"', self.text)
+
+    def test_embedded_python_is_syntactically_valid(self) -> None:
+        blocks = re.findall(r"<<'PY'\n(.*?)\nPY", self.text, flags=re.DOTALL)
+        self.assertGreater(len(blocks), 0)
+        for index, block in enumerate(blocks):
+            compile(block, f"{WRAPPER.name}:heredoc-{index}", "exec")
+
+    @unittest.skipUnless(shutil.which("bash"), "bash is unavailable")
+    def test_bash_syntax(self) -> None:
+        result = subprocess.run(
+            [shutil.which("bash"), "-n"],
+            input=self.text.encode("utf-8"),
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(
+            result.returncode, 0, result.stderr.decode("utf-8", errors="replace")
+        )
 
 
 if __name__ == "__main__":
