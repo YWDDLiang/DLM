@@ -1,6 +1,12 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **train-only preflight cohort frozen; on-policy generation job 39731 running**
+Status: **24-hour SUN10/50 sprint; rollout body complete and job 39732 running**
+
+Sprint deadline: **2026-09-05 22:00 Asia/Shanghai**. The target is final
+prospective Strict/Meta S.U.N. at least `10%/50%` under a fixed, fully disclosed
+protocol. The deadline authorizes aggressive use of the registered compute and
+methods, not denominator changes, seed/checkpoint selection, test leakage,
+reranking or result fabrication.
 
 Authoritative active design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
@@ -118,6 +124,18 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 - [ ] If headroom is negligible or scorer/backward is infeasible, stop. Do not
   expand sources, epochs, candidates or KL to force a pass.
 
+Current execution:
+
+- [x] Freeze cohort with job 39730.
+- [x] Finish reusable on-policy rollout body from job 39731: 128/128
+  trajectories and closure logs, 127/128 parse/Plan/graph. The wrapper's obsolete
+  128/128 geometry assertion failed after science completion; retain the invalid
+  endpoint as a negative example and do not rerun generation.
+- [ ] Correct type-by-stratum assignment at state materialization; cover early,
+  middle, late and terminal XYZ cursors without replacing any source.
+- [ ] Implement cursor-aware continuation and pass reference-action bit-exact
+  replay before value labeling.
+
 ## H. Conditional basin training
 
 - [ ] Only after G passes, freeze 2,048--4,096 value sources.
@@ -140,6 +158,9 @@ Historical SPAD/SPAD-E records remain evidence, not active instructions.
 - [ ] Run one canonical-versus-Llama program mechanism comparison at fixed
   DLM/composition/noise.
 - [ ] Run fixed model494 only after native improvement; report it separately.
+- [ ] In parallel with the native value path, evaluate one preregistered
+  low-noise `model494 tau200` bridge (job 39732) on the same closure-CE raw256;
+  disclose it regardless of outcome and do not tune tau from its result.
 - [ ] The desired endpoint is native Strict/Meta `10%/50%`, but claims follow
   observed effect rather than the target.
 

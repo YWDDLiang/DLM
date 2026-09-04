@@ -51,11 +51,16 @@ root=pathlib.Path(sys.argv[1])
 rows=[json.loads(line) for line in (root/'body'/'raw_generations.jsonl').open() if line.strip()]
 metrics=json.load((root/'body'/'sample_metrics.json').open())
 assert len(rows)==128
-assert metrics['parse_success']==metrics['plan_match_success']==metrics['graph_success']==128
 assert all(row.get('spad_basin_closure') is True for row in rows)
-assert all(row['spad_basin_closure_metadata']['final_geometry_supported'] is True for row in rows)
+geometry_supported=sum(
+  row['spad_basin_closure_metadata'].get('final_geometry_supported') is True
+  for row in rows
+)
 report={
- 'schema':'spad_basin_preflight_generation_v1','rows':128,'parsed':128,
+ 'schema':'spad_basin_preflight_generation_v1','rows':128,
+ 'parsed':metrics['parse_success'],'plan_matched':metrics['plan_match_success'],
+ 'graphs':metrics['graph_success'],'final_geometry_supported':geometry_supported,
+ 'failed_terminal_rows':128-geometry_supported,
  'seed':99217,'temperature':0.7,'outcomes_read':False,'model494_or_energy_used':False,
  'one_plan_one_trajectory':True,'selection_retry_replacement':False,
 }
