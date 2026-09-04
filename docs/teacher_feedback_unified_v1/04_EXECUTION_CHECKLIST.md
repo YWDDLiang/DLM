@@ -257,8 +257,9 @@ so job 39770 restarts from the same registered closure-CE policy.
   K10 only. Reuse the frozen K10 rule; do not repeat K3/K5/K20 calibration.
 - [ ] Train one posterior epoch from closure-CE: 4,104 posterior exposures and
   4,104 clean anchors across three ranks, one seed and final checkpoint only.
-- [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation;
-  report raw and fixed-refinement Strict/Meta S.U.N. without Direct.
+- [ ] Freeze a new 256 C3FD->Llama program cohort before outcome evaluation:
+  Planner seed 24, evaluation stream 19, DLM seed 93117, refiner seed 103117,
+  fixed tau800. Report raw and refined Strict/Meta S.U.N. without Direct.
 - [ ] If either preregistered primary endpoint reaches Strict>=10% and
   Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Continue a
   fixed random stream until 1,000 parseable CIFs are accumulated; discard only
