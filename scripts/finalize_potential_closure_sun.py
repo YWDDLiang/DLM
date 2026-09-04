@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 from pathlib import Path
 import sys
 from typing import Any
@@ -25,6 +26,7 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
 
 def load_runtime(source: Path):
     runtime_dir = source / "eval_runtime"
+    os.environ.setdefault("H1_ACTIVE_DENOMINATOR", "256")
     sys.path.insert(0, str(runtime_dir))
     spec = importlib.util.spec_from_file_location("potential_finalize_official", runtime_dir / "finalize_official.py")
     if spec is None or spec.loader is None:
