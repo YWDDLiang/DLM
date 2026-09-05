@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
 import json
 import math
 import os
@@ -25,6 +24,7 @@ from crystal_dlm.manifold_repair_head import (
     ManifoldRepairHead,
 )
 from crystal_dlm.manifold_repair_objective import ManifoldRepairLossConfig
+from crystal_dlm.pmtr_checkpoint import save_pmtr_checkpoint
 from crystal_dlm.pmtr_runtime import PMTRRuntimeConfig
 from crystal_dlm.pmtr_training import (
     PMTRDataCollator,
@@ -40,8 +40,7 @@ from crystal_dlm.pmtr_training import (
 from scripts import llada_sft as SFT
 
 
-FINAL_STATE_NAME = "pmtr_head_state.pt"
-FINAL_CONFIG_NAME = "pmtr_head_config.json"
+FINAL_STATE_NAME = "pmtr_final.pt"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -84,9 +83,11 @@ def _distributed() -> dict[str, Any]:
     if distributed:
         if not torch.cuda.is_available():
             raise RuntimeError("distributed PMTR training requires CUDA")
-        dist.init_process_group(backend="nccl")
         local_rank = int(os.environ.get("LOCAL_RANK", "0"))
         torch.cuda.set_device(local_rank)
+        # Bind before NCCL initialization.  Initializing first is known to
+        # leave auxiliary allocations on GPU 0 in multi-rank jobs.
+        dist.init_process_group(backend="nccl")
         rank = dist.get_rank()
         device = torch.device("cuda", local_rank)
     else:
@@ -163,38 +164,13 @@ def _save_final(
     *,
     head_config: ManifoldRepairConfig,
     runtime_config: PMTRRuntimeConfig,
-    loss_config: ManifoldRepairLossConfig,
-    args: argparse.Namespace,
-    steps: int,
-    repair_rows: int,
 ) -> None:
-    head = module.repair_head
-    state = {name: value.detach().cpu() for name, value in head.state_dict().items()}
-    torch.save(state, output_dir / FINAL_STATE_NAME)
-    payload = {
-        "schema": "pmtr_head_only_v1",
-        "head": asdict(head_config),
-        "runtime": asdict(runtime_config),
-        "loss": asdict(loss_config),
-        "training": {
-            "epochs": int(args.epochs),
-            "optimizer_steps": int(steps),
-            "repair_rows": int(repair_rows),
-            "alternation": ["clean_identity", "corrupt_repair"],
-            "learning_rate": float(args.learning_rate),
-            "weight_decay": float(args.weight_decay),
-            "seed": int(args.seed),
-            "base_frozen": True,
-            "full_transaction_supervision": True,
-        },
-        "base": {
-            "model_path": str(args.model_path),
-            "checkpoint_path": str(args.checkpoint_path),
-        },
-    }
-    (output_dir / FINAL_CONFIG_NAME).write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
+    if module.repair_head.config != head_config:
+        raise RuntimeError("saved PMTR head config differs from the training config")
+    save_pmtr_checkpoint(
+        output_dir / FINAL_STATE_NAME,
+        repair_head=module.repair_head,
+        runtime_config=runtime_config,
     )
 
 
@@ -377,10 +353,6 @@ def run_training(
             train_module,
             head_config=head_config,
             runtime_config=runtime_config,
-            loss_config=loss_config,
-            args=args,
-            steps=optimizer_steps,
-            repair_rows=len(dataset),
         )
     if distributed["distributed"]:
         dist.barrier()

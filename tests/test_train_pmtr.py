@@ -8,6 +8,10 @@ import unittest
 import torch
 
 from crystal_dlm.fixed_slot import MASK_TOKEN_ID
+from crystal_dlm.pmtr_checkpoint import (
+    PMTR_CHECKPOINT_SCHEMA,
+    load_pmtr_checkpoint,
+)
 from scripts import train_pmtr
 
 
@@ -136,6 +140,18 @@ class TrainPMTRTest(unittest.TestCase):
 
             def loader(_args, *, is_main=True):
                 del is_main
+                for name in (
+                    "model_path",
+                    "checkpoint_path",
+                    "data_dir",
+                    "representation",
+                    "skip_data_vocab_resize",
+                    "semantic_init_element_tokens",
+                    "use_lora",
+                ):
+                    self.assertTrue(hasattr(_args, name), name)
+                self.assertFalse(_args.use_lora)
+                self.assertTrue(_args.skip_data_vocab_resize)
                 return tokenizer, model, 0, "fake", "fake", {}
 
             args = train_pmtr.build_parser().parse_args(
@@ -180,15 +196,30 @@ class TrainPMTRTest(unittest.TestCase):
                 self.assertTrue(torch.equal(value, before[name]))
             self.assertEqual(
                 {path.name for path in output.iterdir()},
-                {train_pmtr.FINAL_STATE_NAME, train_pmtr.FINAL_CONFIG_NAME},
+                {train_pmtr.FINAL_STATE_NAME},
             )
-            config = json.loads(
-                (output / train_pmtr.FINAL_CONFIG_NAME).read_text(encoding="utf-8")
+            loaded = load_pmtr_checkpoint(
+                output / train_pmtr.FINAL_STATE_NAME,
+                tokenizer=tokenizer,
+                device="cpu",
+                dtype=torch.float32,
+                expected_hidden_size=8,
             )
-            self.assertTrue(config["training"]["base_frozen"])
-            self.assertTrue(config["training"]["full_transaction_supervision"])
-            state = torch.load(output / train_pmtr.FINAL_STATE_NAME, weights_only=True)
-            self.assertTrue(state)
+            self.assertEqual(loaded.metadata["schema"], PMTR_CHECKPOINT_SCHEMA)
+            self.assertTrue(
+                all(
+                    not parameter.requires_grad
+                    for parameter in loaded.transform.repair_head.parameters()
+                )
+            )
+
+    def test_ddp_binds_local_device_before_process_group(self):
+        source = Path(train_pmtr.__file__).read_text(encoding="utf-8")
+        function = source[source.index("def _distributed") : source.index("def _seed_everything")]
+        self.assertLess(
+            function.index("torch.cuda.set_device(local_rank)"),
+            function.index('dist.init_process_group(backend="nccl")'),
+        )
 
     def test_training_sources_do_not_import_inference_time_mlip(self):
         for path in (
