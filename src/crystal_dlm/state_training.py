@@ -6,7 +6,7 @@ from typing import Any, Sequence
 import torch
 
 from crystal_dlm.spad_program import program_from_element_order
-from crystal_dlm.state_conditioned_model import CrystalStateContext
+from crystal_dlm.state_conditioned_model import CrystalStateContext, REPAIR_TASK_IDS
 
 
 def materialize_state_batch(
@@ -50,7 +50,12 @@ def materialize_state_batch(
         targets.append(int(example["target_token"]))
     return {
         "input_ids": tokens, "attention_mask": attention,
-        "geometry_context": CrystalStateContext(old, prompt_lengths, counts, ranks, active),
+        "geometry_context": CrystalStateContext(
+            old, prompt_lengths, counts, ranks, active,
+            torch.tensor([REPAIR_TASK_IDS[row["phase"]] for row in examples], device=device),
+            torch.tensor([float(row.get("numeric_noise_level", -1.))
+                          for row in examples], device=device),
+        ),
         "positions": torch.tensor(positions, device=device),
         "targets": torch.tensor(targets, device=device), "examples": examples,
     }

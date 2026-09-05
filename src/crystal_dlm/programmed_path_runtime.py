@@ -23,7 +23,7 @@ from crystal_dlm.spad_program import (
     SpeciesProgram, coordinate_positions, reverse_species_block_revision_slots,
     spad_predictor_position_groups,
 )
-from crystal_dlm.state_conditioned_model import context_from_programs
+from crystal_dlm.state_conditioned_model import context_from_programs, REPAIR_TASK_IDS
 
 
 @dataclass
@@ -47,6 +47,15 @@ class ProgrammedPathTrace:
 
 def complete_geometry_supported(body: torch.Tensor, constraints: dict) -> bool:
     """Common bounded-image support, including one-site periodic self images."""
+    if constraints.get("lattice_volume_mask", False):
+        from crystal_dlm.lattice_geometry import lattice_angle_rad
+        maps = constraints["angle_token_to_bin"]
+        angles = [maps[axis].get(int(body[position])) for axis, position in
+                  (("AA", 4), ("AB", 5), ("AG", 6))]
+        if any(value is None for value in angles):
+            return False
+        if lattice_angle_rad(*angles) <= float(constraints.get("min_lattice_rad", 1e-4)):
+            return False
     lattice = _lattice_matrix_from_token_ids(body, prompt_length=0, constraints=constraints)
     if lattice is None or not bool(torch.isfinite(lattice).all()):
         return False
@@ -114,6 +123,11 @@ def cooperative_slots(
     return tuple(selected)
 
 
+def full_cell_transaction_positions(program):
+    """All six lattice and all XYZ values in the retained conditional order."""
+    return tuple(group[0] for group in spad_predictor_position_groups(program)[1:])
+
+
 class ProgrammedPathSampler:
     """Batch equal-N canvases; keep one independent attempted trace per row."""
 
@@ -159,10 +173,13 @@ class ProgrammedPathSampler:
     def processed_logits(
         self, x: torch.Tensor, old: torch.Tensor, positions: dict[int, int],
         transaction_positions: dict[int, Sequence[int]], attention_mask: torch.Tensor,
+        *, phase: str | None = None,
     ) -> tuple[torch.Tensor, set[int]]:
         context = context_from_programs(
             old, prompt_length=self.prompt_length, num_sites=self.num_sites,
             programs=self.programs, active_positions=transaction_positions,
+            task_id=None if phase is None else REPAIR_TASK_IDS[phase],
+            numeric_noise_level=-1.,
         )
         raw = self.model(x, attention_mask=attention_mask, geometry_context=context).logits
         return process_path_logits(
@@ -178,7 +195,9 @@ class ProgrammedPathSampler:
     ) -> set[int]:
         if not positions:
             return set()
-        logits, unavailable = self.processed_logits(x, old, positions, transaction_positions, attention_mask)
+        logits, unavailable = self.processed_logits(
+            x, old, positions, transaction_positions, attention_mask, phase=phase,
+        )
         active = {row: self.prompt_length + pos for row, pos in positions.items() if row not in unavailable}
         selected = _transaction_candidate_tokens(
             logits, active_absolute_positions=active, temperature=self.temperature,
@@ -219,6 +238,7 @@ class ProgrammedPathSampler:
     def run(
         self, initial_tokens: torch.Tensor, attention_mask: torch.Tensor,
         *, construct: bool = True, cooperative: bool = True, closure: bool = True,
+        full_cell_repair: bool = False,
     ) -> tuple[torch.Tensor, list[dict[str, Any]]]:
         x = initial_tokens.clone()
         if x.shape != attention_mask.shape or x.shape != (len(self.programs), self.prompt_length + self.gen_length):
@@ -290,6 +310,26 @@ class ProgrammedPathSampler:
                     if not complete_geometry_supported(x[row, self.prompt_length:], self.constraints):
                         self._restore(x, old, row, transactions[row], "block_final_support")
                     self.traces[row].events.append({"op": "end", "phase": "closure"})
+        if full_cell_repair and alive:
+            transactions = {
+                row: full_cell_transaction_positions(self.programs[row]) for row in alive
+            }
+            old = self._begin(x, transactions, phase="full_cell_repair", kind="full_cell_repair")
+            working = set(alive)
+            for step in range(6 + 3 * self.num_sites):
+                positions = {row: transactions[row][step] for row in working}
+                bad = self._draw(
+                    x, old, positions, transactions, attention_mask,
+                    phase="full_cell_repair", salt=400_000_000 + 10_007 * step,
+                )
+                for row in bad:
+                    self._restore(x, old, row, transactions[row], "full_cell_empty_support")
+                working -= bad
+            for row in working:
+                if not complete_geometry_supported(x[row, self.prompt_length:], self.constraints):
+                    self._restore(x, old, row, transactions[row], "full_cell_final_support")
+            for row in alive:
+                self.traces[row].events.append({"op": "end", "phase": "full_cell_repair"})
         for row in alive:
             if not complete_geometry_supported(x[row, self.prompt_length:], self.constraints):
                 raise RuntimeError("whole-transaction rollback failed to preserve supported input")

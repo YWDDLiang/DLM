@@ -131,6 +131,9 @@ def load_path_model(model_path, checkpoint_path, device, *, trainable=False):
     for marker in (root.parent.parent / "TRAIN_FINAL.json", root.parent / "PREFLIGHT.json"):
         if marker.is_file() and json.loads(marker.read_text()).get("eligible_policy") is False:
             raise ValueError(f"engineering checkpoint is not an eligible collection policy: {root}")
+    if (root / "periodic_repair_config.json").is_file():
+        from crystal_dlm.periodic_repair_model import load_repair_model
+        return load_repair_model(model_path, root, device, trainable=trainable)
     config = PeriodicStateConfig(**json.loads((root / "periodic_state_config.json").read_text()))
     if not (root / "periodic_state.pt").is_file():
         raise FileNotFoundError("checkpoint is missing the trained periodic state conditioner")

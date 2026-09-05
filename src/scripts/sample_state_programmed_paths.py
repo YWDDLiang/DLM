@@ -40,6 +40,7 @@ def parse_args():
     p.add_argument("--replay-jsonl", type=Path)
     p.add_argument("--replay-tolerance", type=float, default=1e-6)
     p.add_argument("--repair-roots-jsonl", type=Path, nargs="+")
+    p.add_argument("--full-cell-repair", action="store_true")
     return p.parse_args()
 
 
@@ -87,6 +88,7 @@ def merge(args):
               "collection_round": args.collection_round, "checkpoint": args.checkpoint_path,
               "seed": args.seed, "purpose": args.purpose, "inference_mlip": False,
               "reference_closure": args.reference_closure,
+              "full_cell_repair": args.full_cell_repair,
               "outcome_selection": False, "failures_retained": True}
     if getattr(args, "repair_roots_jsonl", None):
         report.update(path_mode="self_repair_support_check", diagnostic_only=True,
@@ -129,7 +131,8 @@ def replay(args, model, tokenizer, constraints, device):
             sampler._prepare(x)
             with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
                 logits, bad = sampler.processed_logits(x, old, {0: state["position"]},
-                                                      {0: state["transaction_positions"]}, torch.ones_like(x))
+                                                      {0: state["transaction_positions"]}, torch.ones_like(x),
+                                                      phase=state["phase"])
                 actual = float(torch.log_softmax(logits[0, len(prefix) + state["position"]].double() / state["temperature"], -1)[state["target_token"]])
             difference = abs(actual - state["recorded_log_probability"])
             if bad or not torch.isfinite(torch.tensor(actual)) or difference > args.replay_tolerance:
@@ -158,6 +161,10 @@ def replay(args, model, tokenizer, constraints, device):
 
 def main():
     args = parse_args()
+    if args.full_cell_repair and args.reference_closure:
+        raise ValueError("full-cell repair is not part of the historical reference policy")
+    if (Path(args.checkpoint_path) / "periodic_repair_config.json").is_file() and not args.full_cell_repair:
+        raise ValueError("repair checkpoints require their registered full-cell deployment")
     if args.candidates < 1 or args.batch_size < 1 or args.temperature <= 0:
         raise ValueError("positive occurrence count, batch size and likelihood temperature required")
     if args.reference_closure and (args.purpose != "evaluation" or args.candidates != 1 or args.replay_jsonl):
@@ -227,7 +234,8 @@ def main():
                     else:
                         result, traces = sampler.run(x, torch.ones_like(x), construct=not repair_only,
                                                      cooperative=not args.reference_closure,
-                                                     closure=not args.reference_closure)
+                                                     closure=not args.reference_closure,
+                                                     full_cell_repair=args.full_cell_repair)
                     reference_logs = [None] * len(batch)
                     if args.reference_closure:
                         from crystal_dlm.programmed_path_reference import close_reference

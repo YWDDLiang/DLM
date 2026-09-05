@@ -29,6 +29,12 @@ class CrystalStateContext:
     num_sites: torch.Tensor
     program_rank: torch.Tensor
     active_token_mask: torch.Tensor
+    task_ids: torch.Tensor | None = None
+    numeric_noise_level: torch.Tensor | None = None
+
+
+REPAIR_TASK_IDS = {"construct": 0, "cooperative": 1, "closure": 2,
+                   "full_cell_repair": 3, "structured_denoise": 4}
 
 
 class StateConditionedDLM(nn.Module):
@@ -60,6 +66,14 @@ class StateConditionedDLM(nn.Module):
                 species[int(token_id)] = int(SYMBOL_TO_Z[match.group(1)])
         self.register_buffer("geometry_values", values, persistent=False)
         self.register_buffer("species_by_token", species, persistent=False)
+
+    def _apply(self, fn, recurse=True):
+        # Integer decoding values are geometric constants, not model activations.
+        # Preserve their original FP32 precision across parent dtype conversion.
+        values = self.geometry_values
+        result = super()._apply(fn, recurse=recurse)
+        self.geometry_values = values.to(device=self.geometry_values.device, dtype=torch.float32)
+        return result
 
     @property
     def config(self):
@@ -138,12 +152,9 @@ class StateConditionedDLM(nn.Module):
             "program_rank": rank, "active_sites": active_sites & valid_slot,
         }
 
-    def forward(
-        self, input_ids: torch.Tensor, attention_mask: torch.Tensor | None = None,
-        *, geometry_context: CrystalStateContext | None = None, **kwargs,
-    ):
+    def state_embeddings(self, input_ids, geometry_context):
         if geometry_context is None:
-            return self.base_model(input_ids=input_ids, attention_mask=attention_mask, **kwargs)
+            return self.get_input_embeddings()(input_ids)
         if geometry_context.old_token_ids.shape != input_ids.shape:
             raise ValueError("old context must align with the current canvas")
         encoded = self.state_conditioner(**self.geometry_inputs(geometry_context))
@@ -163,8 +174,16 @@ class StateConditionedDLM(nn.Module):
             positions = (prompt[:, None] + 7 + 4 * slots + offset).clamp_max(length - 1)
             expanded = positions[..., None].expand(-1, -1, hidden)
             residual = residual.scatter_add(1, expanded, site_residual)
+        return embeddings + residual
+
+    def forward(
+        self, input_ids: torch.Tensor, attention_mask: torch.Tensor | None = None,
+        *, geometry_context: CrystalStateContext | None = None, **kwargs,
+    ):
+        if geometry_context is None:
+            return self.base_model(input_ids=input_ids, attention_mask=attention_mask, **kwargs)
         return self.base_model(
-            input_ids=None, inputs_embeds=embeddings + residual,
+            input_ids=None, inputs_embeds=self.state_embeddings(input_ids, geometry_context),
             attention_mask=attention_mask, **kwargs,
         )
 
@@ -213,6 +232,7 @@ def context_from_programs(
     old_token_ids: torch.Tensor, *, prompt_length: int, num_sites: int,
     programs: list[Any], active_positions: Mapping[int, list[int] | tuple[int, ...]],
     max_sites: int = 20,
+    task_id: int | None = None, numeric_noise_level: float = -1.,
 ) -> CrystalStateContext:
     batch = old_token_ids.shape[0]
     device = old_token_ids.device
@@ -229,4 +249,6 @@ def context_from_programs(
         prompt_lengths=torch.full((batch,), int(prompt_length), dtype=torch.long, device=device),
         num_sites=torch.full((batch,), int(num_sites), dtype=torch.long, device=device),
         program_rank=ranks, active_token_mask=active,
+        task_ids=None if task_id is None else torch.full((batch,), task_id, dtype=torch.long, device=device),
+        numeric_noise_level=torch.full((batch,), numeric_noise_level, dtype=torch.float32, device=device),
     )
