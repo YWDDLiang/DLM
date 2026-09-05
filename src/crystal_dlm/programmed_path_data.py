@@ -83,12 +83,31 @@ def trace_terminal_body(trace):
 
 
 def trace_summary(trace):
+    body = list(trace["initial_body"])
+    snapshot, phase, positions = None, "", []
+    changes = Counter()
+    transactions = Counter()
+    for event in trace["events"]:
+        if event["op"] == "begin":
+            snapshot, phase, positions = body.copy(), event["phase"], event["positions"]
+            transactions[phase] += 1
+            for pos in positions:
+                body[pos] = trace["mask_id"]
+        elif event["op"] == "draw":
+            body[event["position"]] = event["token"]
+        elif event["op"] == "rollback":
+            for pos in event["positions"]:
+                body[pos] = snapshot[pos]
+        elif event["op"] == "end":
+            changes[phase] += sum(body[pos] != snapshot[pos] for pos in positions)
+            snapshot = None
     return {
         "sampled_decisions": sum(e["op"] == "draw" for e in trace["events"]),
         "decisions_by_phase": dict(Counter(e["phase"] for e in trace["events"] if e["op"] == "draw")),
         "rollback_reasons": dict(Counter(e["reason"] for e in trace["events"] if e["op"] == "rollback")),
         "cooperative_accepted": any(e["op"] == "begin" and e["phase"] == "cooperative" for e in trace["events"])
             and not any(e["op"] == "rollback" and e["reason"].startswith("cooperative_") for e in trace["events"]),
+        "transactions_by_phase": dict(transactions), "committed_changed_scalars_by_phase": dict(changes),
     }
 
 

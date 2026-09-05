@@ -59,6 +59,9 @@ def main():
     summary, provenance = teacher["summary"], teacher["provenance"]
     if not summary.get("trainable_teacher") and not args.engineering_steps:
         raise ValueError("full pool has no certified positive-gain trainable teacher")
+    normalizer_groups = summary.get("supervised_condition_count", summary["validated_groups"])
+    if normalizer_groups < 1:
+        raise ValueError("no conditions have actual path supervision")
     if args.checkpoint_path.resolve() != Path(provenance["checkpoint"]).resolve():
         raise ValueError("training must start at this collection round's reference policy")
     collection_round = int(provenance["collection_round"])
@@ -124,6 +127,7 @@ def main():
     started = time.monotonic()
     optimizer.zero_grad(set_to_none=True)
     pass_reports = []
+    initial_replay_errors = []
 
     def update(examples, *, kind, padded_size, groups):
         block_loss = 0.
@@ -137,6 +141,10 @@ def main():
                                      geometry_context=batch["geometry_context"]).logits
                     if kind == "path":
                         logp = scorer(logits, batch)
+                        if global_updates == initial_updates:
+                            recorded = torch.tensor([e["recorded_log_probability"] for e in chunk],
+                                                    device=device, dtype=torch.float64)
+                            initial_replay_errors.extend((logp.detach().double() - recorded).abs().cpu().tolist())
                         loss = minibatch_path_loss(logp, chunk, dataset_size=padded_size, validated_groups=groups)
                     else:
                         selected = logits[torch.arange(len(chunk), device=device), batch["positions"]].float()
@@ -174,7 +182,7 @@ def main():
         for begin in range(0, padded_size, args.effective_batch):
             local_ids = order[begin:begin + args.effective_batch][rank::world]
             loss, gradient = update([examples[int(i)] for i in local_ids], kind="path",
-                                    padded_size=padded_size, groups=summary["validated_groups"])
+                                    padded_size=padded_size, groups=normalizer_groups)
             path_updates += 1
             global_updates += 1
             processed += len(local_ids)
@@ -195,6 +203,13 @@ def main():
             break
     if world > 1:
         dist.barrier()
+    replay_reports = [{"rank": rank, "decisions": len(initial_replay_errors),
+                       "mean_error": float(np.mean(initial_replay_errors)),
+                       "maximum_error": max(initial_replay_errors)}]
+    if world > 1:
+        gathered = [None] * world
+        dist.all_gather_object(gathered, replay_reports[0])
+        replay_reports = gathered
     if rank == 0:
         destination = args.output_dir / "checkpoints" / f"step-{global_updates}"
         model.save_pretrained(destination)
@@ -208,6 +223,7 @@ def main():
                   "global_updates": global_updates, "updates_this_run": global_updates - initial_updates,
                   "path_updates": path_updates, "ce_updates": ce_updates, "passes": pass_reports,
                   "teacher_summary": summary, "trainable": counts, "elapsed_seconds": time.monotonic() - started}
+        report["initial_minibatch_replay"] = replay_reports
         (args.output_dir / "TRAIN_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         (args.output_dir / "POLICY_PATH").write_text(str(destination) + "\n", encoding="utf-8")
         (args.output_dir / "_SUCCESS").touch()

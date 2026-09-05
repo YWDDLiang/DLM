@@ -13,7 +13,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from crystal_dlm.basin_path_objective import solve_basin_path_teacher
-from crystal_dlm.programmed_path_data import read_jsonl
+from crystal_dlm.programmed_path_data import read_jsonl, trace_summary
 from crystal_dlm.programmed_path_training import join_terminal_labels
 
 
@@ -37,7 +37,10 @@ def main():
     summary = teacher["summary"]
     summary["label_statuses"] = dict(Counter(r["status"] for r in labels))
     summary["verified_per_condition"] = dict(Counter(sum(c["verified"] is True for c in g["candidates"]) for g in groups))
-    summary["cooperative_accepted_paths"] = sum(bool(r["trace_summary"]["cooperative_accepted"]) for r in paths)
+    execution = [trace_summary(r["trace"]) for r in paths]
+    summary["cooperative_attempted_paths"] = sum(bool(r["transactions_by_phase"].get("cooperative", 0)) for r in execution)
+    summary["cooperative_accepted_paths"] = sum(bool(r["cooperative_accepted"]) for r in execution)
+    summary["cooperative_changed_paths"] = sum(r["committed_changed_scalars_by_phase"].get("cooperative", 0) > 0 for r in execution)
     summary["successful_paths"] = sum(r["success"] for r in paths)
     summary["diagnostic_only"] = args.diagnostic_only
     summary["trainable_teacher"] = bool(not args.diagnostic_only and summary["solver_status"] == "optimal"
