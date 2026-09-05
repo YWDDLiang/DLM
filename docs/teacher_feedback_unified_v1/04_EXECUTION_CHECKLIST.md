@@ -342,11 +342,15 @@ so job 39770 restarts from the same registered closure-CE policy.
   one state exposure did not reduce sampled posterior loss from the first to
   last training quarter. Full evidence is in
   `13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md`.
-- [ ] Permit exactly one reproducible final iteration selected by that physical
+- [x] Permit exactly one reproducible final iteration selected by that physical
   diagnosis: one additional unchanged-LR K10 posterior pass for undertraining;
   the existing bounded Plan-VPA projection for insufficient cell control; or
   the preregistered tau600 topology-preserving bridge when tau800 erases a real
-  raw gain. Cache-coverage failure changes reporting only, not the model.
+  raw gain. Cache-coverage failure changes reporting only, not the model. The
+  selected branch is one warm-start K10 pass from job39799: three-A800 training
+  job39805 uses the same 4,104 labels, LR5e-6, clean interleave and one-pass
+  schedule. The fourth A800 simultaneously freezes the new Planner seed26 for
+  stream21 in job39806; DLM/refiner seeds are fixed to 95117/105117.
 - [ ] Do not launch a second final iteration and do not edit data, labels,
   denominators, seeds or checkpoints to manufacture 10%/50%. Aggressive compute
   is authorized; outcome curation and fabricated results are not.
