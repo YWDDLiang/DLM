@@ -196,7 +196,7 @@ is precise: SPAD closes discrete chemical and geometric execution, while local
 K10 transaction-posterior supervision is not sufficient to make the native DLM
 sample the strict low-energy tail reliably.
 
-The approved next-cycle design is
+The active next-cycle implementation is
 [PMTR](docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md):
 a reward-free, MLIP-free-at-inference manifold-to-token repair mechanism for
 the existing Llama-programmed SPAD closure. The earlier PCTP terminal-reward

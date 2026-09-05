@@ -1,6 +1,8 @@
 # PMTR code-grounded architecture audit and collaboration contract
 
-Status: **code audit complete; PMTR implementation and GPU execution not started**
+Status: **implementation active; reusable geometry, corruption, transaction,
+repair-head, objective, and runtime layers implemented; GPU preflight not yet
+started**
 
 This document is the shared source of truth for implementing
 [PMTR](15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md). It records the code that was
@@ -40,8 +42,8 @@ These rules override informal recollection from prior discussions.
 - PMTR design baseline: commit `3c7f8df`.
 - The working architecture is C3FD compact Plan -> Llama species program ->
   SPAD predictor and basin closure -> optional frozen model494 tau800.
-- No PMTR source module, checkpoint, dataset, Slurm job, or result currently
-  exists.
+- PMTR source modules now exist on this branch. No PMTR checkpoint, certified
+  real-data corpus, Slurm job, or result exists yet.
 
 The audit examined the current implementations in:
 
@@ -190,9 +192,9 @@ backbone can expose the needed state without modifying LLaDA internals.
 PMTR should extract this pattern into a neutral, tested `forward_with_hidden`
 adapter.
 
-## 4. What does not exist yet
+## 4. Initial implementation gaps
 
-The following are real implementation gaps, not completed capabilities:
+The following were the real gaps found before implementation:
 
 1. no joint SPD-logmetric/PBC-Cartesian corruption kernel;
 2. no post-quantization offline CHGNet corruption certifier;
@@ -206,6 +208,9 @@ The following are real implementation gaps, not completed capabilities:
 8. no optional transaction-logit transform hook in cell/species revision;
 9. no PMTR continuous loss path in the trainer;
 10. no explicit runtime test proving that inference cannot call an MLIP.
+
+Items 1, 3--8 now have reusable implementations and focused tests. Items 2,
+9, and 10 are the active integration work before the single GPU preflight.
 
 The PMTR document is a design, not evidence that any item above works.
 
@@ -545,22 +550,40 @@ Main-paper evidence remains compact:
 Historical R03, G2, BTRD, Force-Score, D3PO, K10, and rejected PCTP results stay
 outside the current-method figure and main contribution list.
 
-## 13. Current implementation decision
+## 13. Current implementation decision and ledger
 
-The architecture is **approved for implementation**, subject to the code facts
-and corrections above. Approval means the scientific and software objects are
-coherent enough to build; it does not assert that PMTR already exists or that
+The user approved implementation on 2026-09-05. The architecture is now being
+built under the code facts and corrections above; this does not assert that
 `10%/50%` is guaranteed.
 
-Next implementation order:
+Completed and remotely tested:
 
-1. neutral manifold/vector/token primitives;
-2. transaction context and optional logit-transform hook;
-3. PMTR head and renderer;
-4. paired corruption/repair-state data;
-5. trainer adapter and unit tests;
-6. the single integrated preflight.
+1. neutral Torch SPD, lattice, Cartesian/fractional, MIC-vector, and periodic
+   token-transport primitives;
+2. transaction context, single-forward hidden capture, cached proposal hook,
+   hard-support preservation, lattice version signal, and identity/RNG parity;
+3. zero-output-initialized program-conditioned repair head;
+4. coherent quantized corruption and inference-matched paired repair states;
+5. dimensionless SPD/torus loss components and gradient-norm probe;
+6. inference-time PMTR transform from head output to legal active-family logits.
 
-No GPU experiment is authorized by this document alone; execution begins only
-after the user approves the audited implementation plan.
+One integration correction was made before training: the renderer now computes
+`gain * (phi(target) - phi(old))`, rather than merely adding positive mass near
+the target. This preserves exact zero-head identity while giving the token loss
+a derivative at zero initialization.
 
+Active parallel work:
+
+1. offline-only batched CHGNet certification;
+2. head-only trainer and compact checkpoint;
+3. opt-in production sampler integration and no-MLIP runtime test.
+
+The retained SPAD DLM/LoRA is frozen in the first integrated PMTR run. This is a
+code-grounded refinement of the original optimization plan: the existing DLM
+already provides the measured 99.8% execution-valid base and contextual hidden
+states, while the missing object is the explicit manifold-to-token repair map.
+Clean identity and corrupted repair batches are alternated, so no unverified
+same-step `0.5:0.5` loss mixture or base-policy gradient conflict is introduced.
+
+The next expensive action is still one integrated 512-row train-only preflight;
+formal full-corpus training starts only after its actual-SPAD transfer result.

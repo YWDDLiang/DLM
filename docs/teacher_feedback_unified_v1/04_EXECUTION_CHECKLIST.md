@@ -376,3 +376,43 @@ so job 39770 restarts from the same registered closure-CE policy.
   across independent prospective streams.
 - [x] Do not launch paper1000.
 - [x] Update the repository README and final diagnosis with the observed result.
+
+## N. User-authorized PMTR continuation
+
+The earlier K10 closeout remains final for that failed method. The user later
+authorized one new, scientifically distinct PMTR route on the clean branch.
+
+- [x] Freeze the scientific object before coding: learn a local retraction from
+  a coherent quantized `SPD(3) x T^(3N)` corruption to the original MP20-train
+  relaxed structure; do not optimize a reward or generated endpoint.
+- [x] Preserve current C3FD composition support, Llama species program, SPAD
+  `7+4N` transactions, triclinic PBC support, suffix visibility, and atomic
+  rollback.
+- [x] Implement shared SPD/PBC geometry primitives and exact MIC vectors.
+- [x] Implement coherent corruption and inference-matched paired repair rows.
+- [x] Implement an optional transaction context/logit-transform interface;
+  `None` and a zero PMTR head retain existing output/RNG behavior.
+- [x] Implement the zero-initialized lattice/site repair head, normalized
+  continuous objectives, and old-to-target native-token probability transport.
+- [x] Implement the inference transform with no MLIP dependency.
+- [ ] Complete the offline-only batched CHGNet certificate builder.
+- [ ] Complete the head-only trainer and checkpoint format. Freeze the retained
+  SPAD DLM/LoRA during the first integrated run to protect the measured 99.8%
+  execution-validity base; alternate clean identity and corrupted repair
+  updates rather than mixing two losses in one step.
+- [ ] Complete the opt-in production sampling path and explicit no-MLIP runtime
+  dependency test.
+- [ ] Run all focused and adjacent remote tests, then one tiny real-checkpoint
+  smoke test.
+- [ ] Run one integrated MP20-train 512-row preflight: certify corruptions,
+  train the small head, and evaluate one fixed actual-SPAD raw cohort. This is a
+  mechanism-transfer test, not a hyperparameter or result sweep.
+- [ ] If the preflight transfers to actual raw structures without reducing
+  composition/parse/PBC validity, run the fixed full `27,136 x 2 epochs`
+  head-only training once on up to four A800 with four CPU per GPU.
+- [ ] Evaluate the registered raw endpoint first. Keep model494 tau800 as a
+  separately labelled fallback; do not use CHGNet, force, stress, energy,
+  reranking, replacement, or candidate selection at inference.
+- [ ] If the fixed endpoint reaches Strict/Meta S.U.N. `10%/50%`, start the
+  already defined first-1,000 parser-valid paper endpoint. Do not manufacture
+  counts or alter outcomes.
