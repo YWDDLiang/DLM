@@ -3,9 +3,9 @@
 #SBATCH --partition=gpu
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=24
-#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:6
-#SBATCH --mem=440G
+#SBATCH --cpus-per-task=16
+#SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:4
+#SBATCH --mem=320G
 #SBATCH --time=08:00:00
 #SBATCH --output=spad-state-main-%j.out
 #SBATCH --error=spad-state-main-%j.err
@@ -13,8 +13,8 @@ set -Eeuo pipefail
 ROOT="${H1A2_CANDIDATE_ROOT:?}"
 SOURCE="${SSCD_SOURCE_ROOT:?}"
 COHORT_RUN="${SPAD_MAIN_COHORT_RUN:?}"
-WORLD="${SPAD_MAIN_WORLD_SIZE:-6}"
-[[ "$WORLD" =~ ^[1-6]$ ]]
+WORLD="${SPAD_MAIN_WORLD_SIZE:-4}"
+[[ "$WORLD" =~ ^[1-4]$ ]]
 PY=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 CONFIG="$PROJECT/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/CONFIG.json"

@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 06:38 Asia/Shanghai: K8 labels39911/39916 remainRUNNING on4+2GPUs; last06:27counts4032/5462 and1280/2730. Round0 evaluation39910 completed: nativeSUN7/57,tauSUN19/126 of256, no A/B joint improvement. Self-repair support check237 is implemented and passed local17tests plus remote shell/actual128root checks, but NOTSUBMITTED; see28for gap admission and45min cap. Current code6bde20a is deployed. Final K8 student/main remainpending; extraGT constructionCE remainsreverted.**
+Current status: **2026-09-06 07:40 Asia/Shanghai: K8 label shard A39911 completed all5462 requests (1257verified); shard B39916 is RUNNING, last observed2112/2730. Original final K8 training/evaluation retain4GPUs. The user authorized an independent two-GPU periodic-DLM architecture experiment; new workspace D:/codex_work/ai4s/DLM_periodic_self_repair, branch codex/periodic-self-repair, design/code eec542f submitted. Its engineering/data preparation may use the now-free cards immediately; formal adaptation must start from the completed final K8 checkpoint. New method does not alter this K8 recipe. Unsubmitted237 is superseded and must not run. Extra MP20 construction CE remains rejected.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
