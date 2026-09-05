@@ -66,8 +66,12 @@ def main():
             else:
                 structure = native
             cif = structure.to(fmt="cif")
-            Structure.from_str(cif, fmt="cif")  # Independent parse; no energy or distance selection.
-            result.update(structure=structure.as_dict(), parseable=True,
+            parsed = Structure.from_str(cif, fmt="cif")  # Independent parse; no energy or distance selection.
+            if parsed.num_sites != structure.num_sites or parsed.composition != structure.composition:
+                raise ValueError("CIF roundtrip changed exact composition")
+            # Evaluate every available CIF, including a complete endpoint left
+            # by a failed runtime. Keep the runtime outcome in its own field.
+            result.update(structure=structure.as_dict(), parseable=True, success=True,
                           cif_path=str(args.output_dir / "cifs" / f"{ordinal:06d}.cif"))
             Path(result["cif_path"]).write_text(cif, encoding="utf-8")
             if args.refined_pt:

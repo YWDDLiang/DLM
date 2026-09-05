@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06: full-path implementation and real training checks passed; full train-pool collection and the paired reference evaluation are running. Energy post-training has not started.**
+Current status: **2026-09-06 00:25 Asia/Shanghai: all 1024*K4 paths have been collected; six-GPU full-pool labeling is running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Warmup39853/conditions39857 artifacts were verified and reused. New-process
@@ -10,23 +10,27 @@ initial16decision replay error <=1e-6; this is an ineligible engineering model.
 First128*K4 collection39872 finished512requests/509success; labels39873 finished
 111verified/205not-converged/193invalid-terminal/3generation-failure. On the65
 verified conditions, the diagnostic teacher has ~54meV/atom improvement in each
-mean A/B, not a student result. Remaining896*K4 are in39878 (4GPU); the frozen
-reference's fresh fixed256/common-protocol evaluation is39884 (2GPU).
+mean A/B, not a student result. Remaining896*K4 collection39878 completed58m47:
+3584requests/3561success. Combined4096requests/4070success/26failure; six-GPU
+labeling39885 is running on the remaining3584. The reference39884 completed28m35:
+native Strict/Meta SUN6/256 and55/256; verified-subset1/256 and26/256. These are
+reference results, not the new policy; hull is known for247, unresolved for8,
+and1 input failed reconstruction.
 Latest combined local suite:91PASS. Current implemented code is on the requested
 branch; preserve the two pre-existing untracked PMTR files. Full-path trainer,
 reference, tau800 and parser-only independent-main entrypoints are implemented;
 future main sampling is guarded by a final-method lock. No new-method SUN exists.
 The earlier task is interrupted and its heartbeat is PAUSED; this task owns execution.
 
-## Resume override — 2026-09-05 21:58 Asia/Shanghai
+## Execution ownership after resume
 
 The user explicitly resumed this same mainline. Continue toward measured Strict
 SUN>10% and Meta SUN>50%, without guarantees, outcome-selected replacement or
-historical relabeling. Restore the existing ten-minute heartbeat and original
-deadline. Main agent implements/tests/deploys/monitors directly; no coding delegation.
+historical relabeling. Preserve the original deadline. The earlier task's
+heartbeat remains PAUSED; do not reactivate a second execution owner. Main agent
+implements/tests/deploys/monitors directly; no coding delegation.
 
-Immediate work: finish39878, label its complete remaining pool using available
-4+2 or6 GPUs without exceeding two jobs, join with39873, and solve ONE complete
+Immediate work: finish39885, join its complete labels with39873, and solve ONE complete
 1024-condition teacher. If positive certified gain exists, run two complete
 path passes, one train-only refresh and two more passes. Then evaluate the
 final policy against39884, report tau800 separately, and freeze before main1000.
@@ -85,7 +89,7 @@ Review decisions: [18 Review and resolutions](18_DUAL_OBJECTIVE_REVIEW_AND_DECIS
   train retained LoRA and the small state conditioner; job39853 completed.
 - [x] Prepare the frozen predicted training conditions with unchanged chemistry;
   job39857 completed. Read its manifest after user-authorized resumption.
-- [ ] Collect 1024 train conditions x K4 full paths; use first128 for label/protocol
+- [x] Collect 1024 train conditions x K4 full paths; use first128 for label/protocol
   diagnostics, not composition selection; preserve all attempts and failures.
 - [ ] Build the verified empirical A/B teacher with feasible common improvement;
   fit full-path likelihood for two passes, then one train-only refresh/two passes.
