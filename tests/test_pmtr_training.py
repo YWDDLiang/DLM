@@ -50,7 +50,11 @@ class PMTRTrainingTest(unittest.TestCase):
             ],
             "pmtr_closure": [
                 {"cell_component_index": 3},
-                {"reverse_block_index": 1, "site_index_within_block": 0},
+                {
+                    "reverse_block_index": 1,
+                    "site_index_within_block": 0,
+                    "site_slot_index": 0,
+                },
             ],
             "pmtr_plan_metadata": [{}, {}],
             "pmtr_program_metadata": [
