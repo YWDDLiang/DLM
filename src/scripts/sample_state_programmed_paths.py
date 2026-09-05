@@ -39,6 +39,7 @@ def parse_args():
     p.add_argument("--merge-only", action="store_true")
     p.add_argument("--replay-jsonl", type=Path)
     p.add_argument("--replay-tolerance", type=float, default=1e-6)
+    p.add_argument("--repair-roots-jsonl", type=Path, nargs="+")
     return p.parse_args()
 
 
@@ -56,6 +57,14 @@ def conditions_for_run(args):
         raise ValueError("duplicate condition identity")
     if args.purpose == "train" and any(row.get("source_split") != "train" for _, row in selected):
         raise ValueError("training collection cannot use heldout conditions")
+    if getattr(args, "repair_roots_jsonl", None):
+        from crystal_dlm.self_repair_data import attach_fixed_repair_roots
+        parents = []
+        for path in args.repair_roots_jsonl:
+            if not (path.parent / "_SUCCESS").is_file():
+                raise ValueError("repair root collection is incomplete")
+            parents.extend(read_jsonl(path))
+        selected = attach_fixed_repair_roots(selected, parents)
     return selected
 
 
@@ -79,6 +88,11 @@ def merge(args):
               "seed": args.seed, "purpose": args.purpose, "inference_mlip": False,
               "reference_closure": args.reference_closure,
               "outcome_selection": False, "failures_retained": True}
+    if getattr(args, "repair_roots_jsonl", None):
+        report.update(path_mode="self_repair_support_check", diagnostic_only=True,
+                      repair_roots_jsonl=[str(p) for p in args.repair_roots_jsonl],
+                      root_selection="fixed_candidate_index_zero_no_outcomes",
+                      seed_namespace="self-repair-v1:parent_trajectory_id")
     (args.output_dir / "SAMPLE_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     (args.output_dir / "_SUCCESS").touch()
     print(json.dumps(report), flush=True)
@@ -148,6 +162,10 @@ def main():
         raise ValueError("positive occurrence count, batch size and likelihood temperature required")
     if args.reference_closure and (args.purpose != "evaluation" or args.candidates != 1 or args.replay_jsonl):
         raise ValueError("the old closure is an evaluation-only reference, not a path teacher")
+    repair_only = bool(args.repair_roots_jsonl)
+    if repair_only and (args.purpose != "train" or args.reference_closure or args.collection_round != 2
+                        or args.candidates != 4 or args.batch_size != 4):
+        raise ValueError("self-repair support check requires train-only round2 K4/batch4, without legacy closure")
     if args.merge_only:
         merge(args)
         return
@@ -180,6 +198,9 @@ def main():
         if ordinal % args.world_size != rank:
             continue
         c = compile_condition(row, tokenizer, mask_id=MASK_TOKEN_ID, purpose=args.purpose)
+        if repair_only:
+            from crystal_dlm.self_repair_data import install_repair_initial_body
+            c = install_repair_initial_body(c, tokenizer)
         for j in range(args.candidates):
             buckets[(c["program"].num_atoms, len(c["prompt_token_ids"]))].append((ordinal, j, c))
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -194,8 +215,19 @@ def main():
                 x = torch.tensor([c["prompt_token_ids"] + c["initial_body"] for c in compiled], device=device)
                 sampler = make_sampler(model, tokenizer, constraints, compiled, seeds, args.temperature)
                 with torch.autocast("cuda", dtype=torch.bfloat16):
-                    result, traces = sampler.run(x, torch.ones_like(x), cooperative=not args.reference_closure,
-                                                 closure=not args.reference_closure)
+                    if repair_only and not compiled[0]["record"]["repair_parent_success"]:
+                        if any(c["record"]["repair_parent_success"] for c in compiled):
+                            raise ValueError("failed roots must not be mixed with live repair roots")
+                        result = x
+                        traces = [{"schema": "programmed_crystal_attempt_path_v1",
+                                   "initial_body": c["initial_body"], "mask_id": MASK_TOKEN_ID,
+                                   "temperature": args.temperature, "element_order": list(c["program"].element_order),
+                                   "events": [], "success": False, "failure": "self_repair_parent_unsuccessful"}
+                                  for c in compiled]
+                    else:
+                        result, traces = sampler.run(x, torch.ones_like(x), construct=not repair_only,
+                                                     cooperative=not args.reference_closure,
+                                                     closure=not args.reference_closure)
                     reference_logs = [None] * len(batch)
                     if args.reference_closure:
                         from crystal_dlm.programmed_path_reference import close_reference
@@ -221,6 +253,11 @@ def main():
                               "trace": trace, "trace_summary": trace_summary(trace),
                               "trace_scope": "predictor_only_legacy_revision_ledger" if args.reference_closure else "full_attempted_path",
                               "legacy_reference_closure": reference_logs[row_index]}
+                    if repair_only:
+                        from crystal_dlm.self_repair_data import repair_net_change
+                        record.update(path_mode="self_repair_support_check", diagnostic_only=True,
+                                      trace_scope="full_attempted_self_repair",
+                                      **repair_net_change(trace["initial_body"], body_ids))
                     handle.write(json.dumps(record, ensure_ascii=False) + "\n")
                     completed += 1
                     successful += int(trace["success"])

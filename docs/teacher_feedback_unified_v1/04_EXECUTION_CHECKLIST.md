@@ -9,6 +9,7 @@ Continuous-refiner extension: [22 Code assessment and proposal](22_CONTINUOUS_DI
 First-round evaluation: [25 Matched development results](25_ROUND0_MATCHED_EVALUATION.md).
 A increase diagnosis: [26 Paired geometry and coverage](26_ROUND0_GAP_INCREASE_DIAGNOSIS.md).
 Self-improvement-only repair plan: [27 Candidate support and policy constraints](27_SELF_IMPROVEMENT_REPAIR_PLAN.md).
+Sprint schedule and one bounded self-repair support check: [28 Execution budget](28_FINAL_SPRINT_AND_SELF_REPAIR_CHECK.md).
 User explicitly rejected extra MP20 construction CE. The local attempt was fully
 reverted before commit/deployment/training. Preserve the original CE anchors;
 do not restore or enable a construction anchor profile.
