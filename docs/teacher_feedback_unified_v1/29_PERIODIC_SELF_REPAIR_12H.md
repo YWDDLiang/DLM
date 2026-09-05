@@ -25,6 +25,8 @@ Original K8 checkpoints/results retain their recipe and identity. Formal new-mod
 
 ## Live status
 
+07:45: design/code eec542f committed and pushed. Remote isolated source installed; shell syntax and both entry-point CLI imports passed. **Job39930 submitted** for two A800/eight CPU, script238 round0, first a real architecture check then complete K4 target preparation/physics. Artifacts: grounding/experiments/periodic_self_repair_20260906/runs/prepare_0_39930/. At submission the only other job was K8 label39916 on two GPUs. No scientific repair model has been trained yet.
+
 See [the complete design and mathematical audit](../periodic_self_repair_v1/DESIGN_AND_AUDIT.md). User clarification: retain the paper's Planner/program and legal-set core; other implementation may adapt or be dropped. Three read-only audits completed and concrete issues corrected. User has authorized immediate use of free cards; 238 is prepared for a two-GPU real-model preflight plus full-K4 target quantization/physics, followed by full K8 preparation. Separate remote experiment directory: grounding/experiments/periodic_self_repair_20260906/.
 
 06:56: branch created; existing labels confirmed to contain terminal structures, avoiding a fresh terminal-collection run. Implementation and CPU checks are in progress. **No new GPU job or trained repair model yet.**
