@@ -1,12 +1,46 @@
 # Scientific Programmed Crystal DLM with Basin Closure
 
-Current execution (2026-09-05): the single active extension is **state-conditioned,
+Current execution (2026-09-06): the single active extension is **state-conditioned,
 dual-objective programmed paths**. Full MP20 warmup and frozen train-condition
-preparation are complete; full-path collection/terminal labeling is in progress.
+preparation are complete; all 1024*K4 paths are collected and terminal labeling is running.
 The path trainer has passed bounded real-model gradient/replay checks, but there
 is no post-training SUN result yet. See the [current architecture and execution
 record](docs/teacher_feedback_unified_v1/19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 The completed results below retain their historical model/cohort/protocol labels.
+
+## Active architecture
+
+```mermaid
+flowchart LR
+    C["Frozen C³FD chemical support"] --> L["Frozen typed Llama residual Planner"]
+    L --> P["Composition, soft Plan and species permutation"]
+    P --> K["Canonical slots, anchors and execution order"]
+    K --> D["DLM anchor and suffix construction"]
+    D --> J["Joint cell and multi-atom transaction"]
+    J --> R["Reverse species closure"]
+    R --> X["One native crystal"]
+    S["Periodic state conditioner"] --> D
+    S --> J
+    S --> R
+    X --> M["Optional fixed model494 tau800"]
+```
+
+The conditioner exposes the old periodic geometry even when cell/coordinate tokens
+are masked. The joint transaction replaces the reference's separate cell closure
+and accepts or rolls back the proposed cell and active coordinates together. Only
+DLM LoRA and the conditioner are trained; C³FD, Llama and its species pointer stay frozen.
+
+Offline CHGNet provides `A = e0 - eR` and `B = eR - hull(composition)`. A teacher on
+verified training paths improves both condition-averaged quantities under a limited
+distribution change. The student fits full execution-path likelihood with retained
+MP20 supervision. Neither teacher feasibility nor training loss proves a SUN gain;
+the final native and tau800 evaluations are separate. Native inference uses no MLIP
+or candidate selection. See the [active method](docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md).
+
+## Completed reference and historical evidence
+
+The following sections describe the evaluated closure reference and earlier studies.
+Its separate cell closure is the reference operation replaced by the joint transaction above.
 
 This branch contains the paper mainline for **Scientific Programmed
 Anchor–Backfill Denoising (SPAD)** and its evaluated native-stability extension,
