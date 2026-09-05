@@ -65,14 +65,18 @@ def _symmetric_from_six(values: Tensor) -> Tensor:
     return result
 
 
-def _bound_vectors(values: Tensor, maximum_norm: float) -> Tensor:
-    norms = torch.linalg.vector_norm(values, dim=-1, keepdim=True)
-    scaled = norms / float(maximum_norm)
-    factor = torch.where(
-        norms > 0,
-        torch.tanh(scaled) / scaled.clamp_min(1.0e-12),
-        torch.ones_like(norms),
-    )
+def _bound_translation_free_vectors(values: Tensor, maximum_norm: float) -> Tensor:
+    """Bound a site's displacement without reintroducing translation.
+
+    Per-site clipping does not commute with removal of the centre-of-mass mode:
+    clipping each vector by a different factor can make an exactly centred set
+    translate again.  A single scale per crystal preserves the zero-sum
+    invariant while guaranteeing every active site's Cartesian step is bounded.
+    """
+
+    norms = torch.linalg.vector_norm(values, dim=-1)
+    largest = norms.amax(dim=1, keepdim=True).unsqueeze(-1)
+    factor = (float(maximum_norm) / largest.clamp_min(1.0e-12)).clamp(max=1.0)
     return values * factor
 
 
@@ -254,7 +258,7 @@ class ManifoldRepairHead(nn.Module):
         count = site_mask.sum(dim=1, keepdim=True).clamp_min(1).to(dtype)
         center = site_delta.sum(dim=1, keepdim=True) / count.unsqueeze(-1)
         site_delta = (site_delta - center) * site_mask.unsqueeze(-1).to(dtype)
-        site_delta = _bound_vectors(
+        site_delta = _bound_translation_free_vectors(
             site_delta, float(self.config.max_cartesian_step_A)
         )
 
@@ -278,4 +282,3 @@ __all__ = [
     "ManifoldRepairHead",
     "ManifoldRepairOutput",
 ]
-
