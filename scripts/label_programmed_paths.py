@@ -62,6 +62,9 @@ def force_and_stress(forces, stress, *, stress_unit):
 
 
 def structure_from_record(record):
+    if record.get("structure") is not None:
+        from pymatgen.core import Structure
+        return Structure.from_dict(record["structure"])
     from crystal_dlm.dynamic_crystal import parse_dynamic_answer, arrays_to_structure
     return arrays_to_structure(parse_dynamic_answer(record["body"], strict=True))
 
@@ -88,7 +91,7 @@ def validate_structure_geometry(structure):
 
 def label_record(record, *, model, optimizer, structure_factory=structure_from_record,
                  fmax=.1, stress_tolerance=.5, max_steps=500, optimizer_status=None):
-    result = {key: record.get(key) for key in ("trajectory_id", "group_id", "source_row_idx", "source_split")}
+    result = {key: record.get(key) for key in ("trajectory_id", "group_id", "source_row_idx", "source_split", "endpoint")}
     result.update(raw_energy=None, terminal_energy=None, gap=None, verified=False,
                   status="unknown", error=None, raw=None, terminal=None, actual_steps=None,
                   optimizer_converged=None, final_structure=None)
@@ -228,33 +231,42 @@ def main():
     p.add_argument("--stress-tolerance", type=float, default=.5)
     p.add_argument("--max-steps", type=int, default=500)
     p.add_argument("--shard-rank", type=int, default=0)
+    p.add_argument("--shard-ranks", type=int, nargs="+")
     p.add_argument("--shard-count", type=int, default=1)
     args = p.parse_args()
     if args.shard_count < 1 or not 0 <= args.shard_rank < args.shard_count:
         raise ValueError("invalid label shard")
+    shard_ranks = args.shard_ranks if args.shard_ranks is not None else [args.shard_rank]
+    if not shard_ranks or len(set(shard_ranks)) != len(shard_ranks) or any(not 0 <= r < args.shard_count for r in shard_ranks):
+        raise ValueError("invalid disjoint label shard ranks")
     if not 1 <= args.gpu_count <= 6 or not 1 <= args.workers_per_gpu <= 4:
         raise ValueError("respect six GPUs and four CPUs per GPU")
     if "SLURM_JOB_ID" not in os.environ or not os.environ.get("CUDA_VISIBLE_DEVICES"):
         raise RuntimeError("labeling requires its declared GPU allocation")
+    if args.gpu_count > len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")):
+        raise ValueError("requested workers exceed the GPUs actually allocated")
     args.output_dir.mkdir(parents=True, exist_ok=False)
     records = []
     with args.input_jsonl.open(encoding="utf-8") as handle:
         for index, line in enumerate(handle):
-            if not line.strip() or index % args.shard_count != args.shard_rank:
+            if not line.strip() or index % args.shard_count not in shard_ranks:
                 continue
             record = json.loads(line)
             if args.purpose == "train" and record.get("source_split") != "train":
                 raise ValueError("training labels cannot read heldout conditions")
+            if args.purpose == "train" and record.get("endpoint") not in (None, "native"):
+                raise ValueError("native path teachers cannot use model494 endpoints")
             # Do not ship the complete token trace to each physics worker.
             records.append({key: record.get(key) for key in
-                            ("trajectory_id", "group_id", "source_row_idx", "source_split", "success", "body")})
+                            ("trajectory_id", "group_id", "source_row_idx", "source_split", "success", "body", "structure", "endpoint")})
     identities = [r["trajectory_id"] for r in records]
     if len(set(identities)) != len(identities):
         raise ValueError("duplicate trajectory occurrence in label input")
     # Identical endpoints share physics only. Every path occurrence is retained.
     by_endpoint = {}
     for record in records:
-        key = hashlib.sha256(str(record["body"]).encode()).hexdigest() if record["success"] else record["trajectory_id"]
+        geometry = json.dumps(record["structure"], sort_keys=True) if record.get("structure") is not None else str(record["body"])
+        key = hashlib.sha256(geometry.encode()).hexdigest() if record["success"] else record["trajectory_id"]
         by_endpoint.setdefault(key, []).append(record)
     (args.output_dir / "trajectories").mkdir()
     pools = [ProcessPoolExecutor(max_workers=args.workers_per_gpu, mp_context=mp.get_context("spawn"),
@@ -285,7 +297,7 @@ def main():
                     result["trajectory_file"] = str(destination)
                 for occurrence in occurrences:
                     labelled = dict(result, **{name: occurrence.get(name) for name in
-                                    ("trajectory_id", "group_id", "source_row_idx", "source_split")})
+                                    ("trajectory_id", "group_id", "source_row_idx", "source_split", "endpoint")})
                     labelled["endpoint_cache_key"] = key
                     handle.write(json.dumps(labelled, default=json_default) + "\n")
                     counts[result["status"]] = counts.get(result["status"], 0) + 1
@@ -305,6 +317,7 @@ def main():
                            "cell_mask": "all_six", "fire_dt": .1, "fire_maxstep": .2,
                            "stress_tolerance_GPa": args.stress_tolerance, "max_steps": args.max_steps},
               "gpu_count": args.gpu_count, "workers_per_gpu": args.workers_per_gpu,
+              "shard_count": args.shard_count, "shard_ranks": shard_ranks,
               "elapsed_seconds": time.monotonic() - started, "purpose": args.purpose}
     (args.output_dir / "LABEL_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     (args.output_dir / "_SUCCESS").touch()  # Complete accounting, not universal convergence.

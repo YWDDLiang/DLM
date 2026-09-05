@@ -82,3 +82,23 @@ logaddexp保持梯度。FP32/BF16的dense/scalar logits和梯度逐元素一致�
 评估参考入口直接调用原来的 `revise_spad_cell` 和 `revise_spad_species_blocks`，
 保留独立cell拒绝边界；用共同的构造流程和对应随机数地址，避免错误地把
 `cooperative=False`当成已经执行cell的参考。参考ledger仅作评价，不冒充完整训练trace。
+
+## 首128组诊断完成，继续完整池
+
+39877优化后真实四卡短检查完成2分48秒：4path+1CE、梯度有限；训练27.93秒，
+含保存39.16秒。初始16决策最大logp差9.999e-7，rank0峰值19.21GiB。
+这仍是`eligible_policy=false`的均匀工程检查，没有能量后训练效果。
+
+39873标注31分20秒完成：512请求，111verified、205not_converged、193invalid_terminal、
+3generation_failure，无软件异常。65/128条件至少一条验证路径，30条件有多条；
+只有4条件四条都验证。65个验证条件上的诊断teacher为optimal：rho_max1.08126，
+半程目标0.054063eV/atom，平均A/B分别-0.054063/-0.054063eV/atom，KL0.006744，
+ESS87.94。该128组teacher明确diagnostic_only，不能充当完整1024条件的正式teacher。
+509成功路径里491个联合事务实际接受且改变结构。39878已开始其余896条件×4；
+与首128的末段标注重叠只改变调度，所有条件和参数保持冻结。
+
+后续标签入口支持按实际额度使用1..6卡、或两个不重叠的4+2卡分片；不修改FIRE/
+收敛标准来提高验证率。CPU组合测试最近一套87项通过。新CIF/refiner接入与固定评价
+CLI已实现，实际参考运行待验证。原Stable/SUN保持终态能量阈值定义，同时单列
+满足optimizer/force/stress/几何完整验证的子集；不能把低能但未验证终态当作已经证明
+低能极小值的证据。未知hull/能量不填零，输入N/U仍在共同CHGNet弛豫前计算。

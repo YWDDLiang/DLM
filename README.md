@@ -1,5 +1,13 @@
 # Scientific Programmed Crystal DLM with Basin Closure
 
+Current execution (2026-09-05): the single active extension is **state-conditioned,
+dual-objective programmed paths**. Full MP20 warmup and frozen train-condition
+preparation are complete; full-path collection/terminal labeling is in progress.
+The path trainer has passed bounded real-model gradient/replay checks, but there
+is no post-training SUN result yet. See the [current architecture and execution
+record](docs/teacher_feedback_unified_v1/19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
+The completed results below retain their historical model/cohort/protocol labels.
+
 This branch contains the paper mainline for **Scientific Programmed
 Anchor–Backfill Denoising (SPAD)** and its evaluated native-stability extension,
 **Llama-Programmed Basin Closure**. A C³FD-supported Llama first chooses a
