@@ -23,13 +23,13 @@ trap 'rc=$?; printf "exit_code=%s line=%s\n" "$rc" "$LINENO" >"$RUN/FAILURE.txt"
 export PYTHONPATH="$RUN/code/src" TOKENIZERS_PARALLELISM=false
 export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1
 POLICY=$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))["provenance"]["checkpoint"])' "$TEACHER")
-extra=()
+extra=(--engineering-steps "${SPAD_ENGINEERING_STEPS:-0}")
 if test -n "${SPAD_POST_OPTIMIZER_STATE:-}"; then extra+=(--optimizer-state "$SPAD_POST_OPTIMIZER_STATE"); fi
 "$PY" -m torch.distributed.run --standalone --nproc_per_node="$WORLD" \
   "$RUN/code/src/scripts/train_programmed_path_policy.py" \
   --model-path /public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct --checkpoint-path "$POLICY" \
   --teacher-json "$TEACHER" --ce-data-jsonl "$ROOT/data/spad_basin_closure_sft_v1_20260904/train.jsonl" \
-  --output-dir "$RUN/train" --engineering-steps "${SPAD_ENGINEERING_STEPS:-0}" "${extra[@]}" \
+  --output-dir "$RUN/train" "${extra[@]}" \
   >"$RUN/train.out" 2>"$RUN/train.err"
 test -f "$RUN/train/_SUCCESS"
 touch "$RUN/_SUCCESS"
