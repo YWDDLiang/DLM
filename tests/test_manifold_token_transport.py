@@ -25,9 +25,12 @@ class ManifoldTokenTransportTest(unittest.TestCase):
             values, token_ids, old, target, vocab_size=16, gain=2.0
         )
         touched = torch.nonzero(residual, as_tuple=False).flatten().tolist()
-        self.assertEqual(touched, [8, 11])
-        self.assertEqual(residual[:2].abs().sum().item(), 0.0)
-        residual.sum().backward()
+        self.assertEqual(touched, [2, 5, 8, 11])
+        self.assertLess(residual[2].item(), 0.0)
+        self.assertLess(residual[5].item(), 0.0)
+        self.assertGreater(residual[8].item(), 0.0)
+        self.assertGreater(residual[11].item(), 0.0)
+        (residual * torch.arange(16, dtype=torch.float64)).sum().backward()
         self.assertTrue(torch.isfinite(target.grad))
         self.assertNotEqual(target.grad.item(), 0.0)
 
@@ -50,6 +53,7 @@ class ManifoldTokenTransportTest(unittest.TestCase):
         self.assertEqual(residual[..., non_family].abs().sum().item(), 0.0)
         self.assertGreater(residual[0, 0, 4].item(), 0.0)
         self.assertGreater(residual[0, 0, 7].item(), 0.0)
+        self.assertLess(residual[0, 0, 1].item(), 0.0)
 
     def test_zero_correction_or_gain_is_exactly_zero(self) -> None:
         old = torch.tensor([0.2, 0.8], dtype=torch.float64)
@@ -75,6 +79,8 @@ class ManifoldTokenTransportTest(unittest.TestCase):
         self.assertTrue(torch.allclose(near_upper, equivalent, atol=1.0e-12))
         self.assertGreater(near_upper[1].item(), 0.0)
         self.assertGreater(near_upper[7].item(), 0.0)
+        self.assertLess(near_upper[3].item(), 0.0)
+        self.assertLess(near_upper[5].item(), 0.0)
         self.assertEqual(near_upper[9].item(), 0.0)
         self.assertEqual(near_upper[[0, 2, 4, 6, 8, 10, 11]].abs().sum().item(), 0.0)
 

@@ -7,7 +7,7 @@ from collections.abc import Sequence
 import torch
 from torch import Tensor
 
-from crystal_dlm.manifold_geometry import wrap_fractional, wrapped_fractional_delta
+from crystal_dlm.manifold_geometry import wrap_fractional
 
 
 def _as_values(
@@ -83,6 +83,29 @@ def _scatter_two(
     return output
 
 
+def _linear_basis(
+    values: Tensor,
+    token_ids: Tensor,
+    target: Tensor,
+    *,
+    vocab_size: int,
+) -> Tensor:
+    projected = target.clamp(min=values[0], max=values[-1])
+    upper_index = torch.searchsorted(values, projected.contiguous(), right=True)
+    upper_index = upper_index.clamp(min=1, max=int(values.numel()) - 1)
+    lower_index = upper_index - 1
+    lower_value = values[lower_index]
+    upper_value = values[upper_index]
+    fraction = (projected - lower_value) / (upper_value - lower_value)
+    return _scatter_two(
+        token_ids[lower_index],
+        token_ids[upper_index],
+        1.0 - fraction,
+        fraction,
+        vocab_size=int(vocab_size),
+    )
+
+
 def render_bracketed_token_residual(
     legal_values: Tensor | Sequence[float],
     legal_token_ids: Tensor | Sequence[int],
@@ -95,12 +118,12 @@ def render_bracketed_token_residual(
 ) -> Tensor:
     """Render transport on the two legal bins bracketing a predicted target.
 
-    The residual is sparse in vocabulary space.  Its magnitude is the absolute
-    continuous correction times ``gain`` and its split between the two target
-    bins is linearly differentiable.  Consequently either a zero correction or
-    a zero gain produces an exactly-zero tensor.  Values outside the registered
-    family range are projected to the nearest endpoint without ever touching a
-    non-family token.
+    The residual is ``gain * (basis(target) - basis(old))``.  It removes logit
+    mass from the old interpolation bins and adds it to the predicted target
+    bins.  Consequently a zero correction is exactly identity while retaining
+    a useful target derivative at zero initialization.  Values outside the
+    registered family range are projected to the nearest endpoint without ever
+    touching a non-family token.
     """
 
     if int(vocab_size) <= 0:
@@ -116,22 +139,14 @@ def render_bracketed_token_residual(
         vocab_size=int(vocab_size),
     )
 
-    projected = target.clamp(min=values[0], max=values[-1])
-    upper_index = torch.searchsorted(values, projected.contiguous(), right=True)
-    upper_index = upper_index.clamp(min=1, max=int(values.numel()) - 1)
-    lower_index = upper_index - 1
-    lower_value = values[lower_index]
-    upper_value = values[upper_index]
-    fraction = (projected - lower_value) / (upper_value - lower_value)
-    magnitude = gain_tensor * torch.abs(target - old) * active.to(target.dtype)
-    lower_weights = magnitude * (1.0 - fraction)
-    upper_weights = magnitude * fraction
-    return _scatter_two(
-        token_ids[lower_index],
-        token_ids[upper_index],
-        lower_weights,
-        upper_weights,
-        vocab_size=int(vocab_size),
+    target_basis = _linear_basis(
+        values, token_ids, target, vocab_size=int(vocab_size)
+    )
+    old_basis = _linear_basis(values, token_ids, old, vocab_size=int(vocab_size))
+    return (
+        gain_tensor.unsqueeze(-1)
+        * active.to(target.dtype).unsqueeze(-1)
+        * (target_basis - old_basis)
     )
 
 
@@ -227,37 +242,37 @@ def render_periodic_coordinate_token_residual(
         alias_tolerance=float(alias_tolerance),
     )
 
-    wrapped_target = wrap_fractional(target, period=float(period))
-    upper_index = torch.searchsorted(values, wrapped_target.contiguous(), right=True)
-    wraps = upper_index == int(values.numel())
-    lower_index = torch.where(
-        wraps,
-        torch.full_like(upper_index, int(values.numel()) - 1),
-        (upper_index - 1).clamp_min(0),
-    )
-    upper_index = torch.where(wraps, torch.zeros_like(upper_index), upper_index)
-    lower_value = values[lower_index]
-    upper_value = torch.where(
-        wraps,
-        values[upper_index] + float(period),
-        values[upper_index],
-    )
-    target_for_interval = torch.where(
-        wraps, wrapped_target + 0.0, wrapped_target
-    )
-    fraction = (target_for_interval - lower_value) / (upper_value - lower_value)
-    correction = wrapped_fractional_delta(
-        target - old, period=float(period)
-    )
-    magnitude = gain_tensor * torch.abs(correction) * active.to(target.dtype)
-    lower_weights = magnitude * (1.0 - fraction)
-    upper_weights = magnitude * fraction
-    return _scatter_two(
-        token_ids[lower_index],
-        token_ids[upper_index],
-        lower_weights,
-        upper_weights,
-        vocab_size=int(vocab_size),
+    def circular_basis(query: Tensor) -> Tensor:
+        wrapped = wrap_fractional(query, period=float(period))
+        upper_index = torch.searchsorted(values, wrapped.contiguous(), right=True)
+        wraps = upper_index == int(values.numel())
+        lower_index = torch.where(
+            wraps,
+            torch.full_like(upper_index, int(values.numel()) - 1),
+            (upper_index - 1).clamp_min(0),
+        )
+        upper_index = torch.where(wraps, torch.zeros_like(upper_index), upper_index)
+        lower_value = values[lower_index]
+        upper_value = torch.where(
+            wraps,
+            values[upper_index] + float(period),
+            values[upper_index],
+        )
+        fraction = (wrapped - lower_value) / (upper_value - lower_value)
+        return _scatter_two(
+            token_ids[lower_index],
+            token_ids[upper_index],
+            1.0 - fraction,
+            fraction,
+            vocab_size=int(vocab_size),
+        )
+
+    target_basis = circular_basis(target)
+    old_basis = circular_basis(old)
+    return (
+        gain_tensor.unsqueeze(-1)
+        * active.to(target.dtype).unsqueeze(-1)
+        * (target_basis - old_basis)
     )
 
 
