@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 05:07 Asia/Shanghai: round0 evaluation39910 COMPLETED52m16. Native Strict/Meta SUN7/57 of256 (2.734375/22.265625%); tau800 SUN19/126 (7.421875/49.21875%), versus reference6/55 and19/121. No physical A/B joint improvement is established. K8 label shardA39911 RUNNING4GPUs,1728/5462; shardB39916 RUNNING2GPUs,64/2730. Both shards are already submitted and disjoint. K8 sample39896 is complete8192requests/8093successes/99failures. Final K8 student and independent main remain pending.**
+Current status: **2026-09-06 06:38 Asia/Shanghai: K8 labels39911/39916 remainRUNNING on4+2GPUs; last06:27counts4032/5462 and1280/2730. Round0 evaluation39910 completed: nativeSUN7/57,tauSUN19/126 of256, no A/B joint improvement. Self-repair support check237 is implemented and passed local17tests plus remote shell/actual128root checks, but NOTSUBMITTED; see28for gap admission and45min cap. Current code6bde20a is deployed. Final K8 student/main remainpending; extraGT constructionCE remainsreverted.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
