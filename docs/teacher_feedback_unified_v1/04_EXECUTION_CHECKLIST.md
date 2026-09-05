@@ -111,6 +111,9 @@ Review decisions: [18 Review and resolutions](18_DUAL_OBJECTIVE_REVIEW_AND_DECIS
   fit full-path likelihood for two passes, then one train-only K8 refresh/two passes.
 - [ ] Replace preliminary data-budget estimates with both rounds' actual verified
   paths, covered conditions, multiple-candidate conditions, ESS and update counts.
+- [ ] Report per-condition teacher improvements/worsening, total variation from
+  its verified uniform reference and gain concentration; do not interpret the
+  global mean constraint as a per-condition or student guarantee.
 - [ ] Check remaining compute at13:00, assemble findings/missing items at18:00,
   and deliver actual results by the retained2026-09-06 19:19 deadline.
 - [ ] One fixed256 comparison with one reference; report native e/F/stress,
