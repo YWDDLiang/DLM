@@ -22,6 +22,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 import numpy as np
+from crystal_dlm.terminal_energy_consistency import TERMINAL_VERIFICATION_PROTOCOL, check_terminal_energy
 
 EV_A3_TO_GPA = 160.21766208
 _MODEL = None
@@ -90,7 +91,8 @@ def validate_structure_geometry(structure):
 
 
 def label_record(record, *, model, optimizer, structure_factory=structure_from_record,
-                 fmax=.1, stress_tolerance=.5, max_steps=500, optimizer_status=None):
+                 fmax=.1, stress_tolerance=.5, max_steps=500, optimizer_status=None,
+                 terminal_energy_checker=check_terminal_energy):
     result = {key: record.get(key) for key in ("trajectory_id", "group_id", "source_row_idx", "source_split", "endpoint")}
     result.update(raw_energy=None, terminal_energy=None, gap=None, verified=False,
                   status="unknown", error=None, raw=None, terminal=None, actual_steps=None,
@@ -154,7 +156,10 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
         monotone = result["gap"] >= -.001
         # Missing optimizer status is explicit, never synthesized as a success.
         stop_verified = result["optimizer_converged"] is True
-        result["verified"] = bool(geometry_valid and physical and same_energy and monotone and stop_verified)
+        preliminary_verified = bool(geometry_valid and physical and same_energy and monotone and stop_verified)
+        if preliminary_verified:
+            result["terminal_consistency"] = terminal_energy_checker(model, final, result["terminal_energy"])
+        result["verified"] = bool(preliminary_verified and result["terminal_consistency"]["status"] == "consistent")
         if not same_energy:
             result["status"] = "energy_protocol_mismatch"
         elif not monotone:
@@ -165,10 +170,12 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
             result["status"] = "not_converged"
         elif not stop_verified:
             result["status"] = "optimizer_stop_unverified"
+        elif result["terminal_consistency"]["status"] != "consistent":
+            result["status"] = "terminal_consistency_unverified"
         else:
             result["status"] = "verified"
     except Exception as error:
-        result.update(status="evaluation_error", error=f"{type(error).__name__}: {error}")
+        result.update(status="evaluation_error", verified=False, error=f"{type(error).__name__}: {error}")
     return result
 
 
@@ -310,6 +317,7 @@ def main():
         for pool in pools:
             pool.shutdown(wait=True)
     report = {"requested": len(records), "completed": completed, "statuses": counts,
+              "verification_protocol": TERMINAL_VERIFICATION_PROTOCOL,
               "distinct_endpoint_evaluations": len(by_endpoint),
               "protocol": {"model": "CHGNet-0.3.0", "optimizer": "FIRE", "relax_cell": True,
                            "ase_filter": "FrechetCellFilter", "fmax": args.fmax,

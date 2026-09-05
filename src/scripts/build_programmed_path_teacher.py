@@ -15,6 +15,7 @@ if str(SRC) not in sys.path:
 from crystal_dlm.basin_path_objective import solve_basin_path_teacher
 from crystal_dlm.programmed_path_data import read_jsonl, trace_summary, training_candidates_per_condition
 from crystal_dlm.programmed_path_training import join_terminal_labels
+from crystal_dlm.terminal_energy_consistency import TERMINAL_VERIFICATION_PROTOCOL
 
 
 def main():
@@ -34,6 +35,8 @@ def main():
         label_report = json.loads((path.parent / "LABEL_FINAL.json").read_text())
         if label_report["purpose"] != "train":
             raise ValueError("evaluation labels cannot become a train teacher")
+        if label_report.get("verification_protocol") != TERMINAL_VERIFICATION_PROTOCOL:
+            raise ValueError("formal labels require the uniform terminal-consistency verification")
         protocols.append(label_report["protocol"])
     if any(protocol != protocols[0] for protocol in protocols):
         raise ValueError("terminal protocols differ across teacher label shards")
@@ -78,6 +81,7 @@ def main():
                              "checkpoint": paths[0]["checkpoint"], "collection_round": paths[0]["collection_round"],
                              "candidates_per_condition": args.candidates,
                              "terminal_protocol": protocols[0], "verified_label_versions": [json.loads(v) for v in versions],
+                             "verification_protocol": TERMINAL_VERIFICATION_PROTOCOL,
                              "objective": "separate mean improvements in e0-eR and centered eR; no cross-composition ranking"}
     args.output_dir.mkdir(parents=True, exist_ok=False)
     (args.output_dir / "teacher.json").write_text(json.dumps(teacher, ensure_ascii=False) + "\n", encoding="utf-8")

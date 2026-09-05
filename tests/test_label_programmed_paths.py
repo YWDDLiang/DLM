@@ -40,7 +40,16 @@ class Optimizer:
 class ProgrammedPathLabelTest(unittest.TestCase):
     def run_case(self, optimizer):
         record = {"trajectory_id": "x:0", "group_id": "x", "source_split": "train", "success": True}
-        return label_record(record, model=Model(), optimizer=optimizer, structure_factory=lambda _: Structure())
+        return label_record(record, model=Model(), optimizer=optimizer, structure_factory=lambda _: Structure(),
+                            terminal_energy_checker=lambda *args: {"status": "consistent"})
+
+    def test_terminal_consistency_failure_retains_energy_but_withholds_verification(self):
+        result = label_record({"success": True}, model=Model(), optimizer=Optimizer(),
+                              structure_factory=lambda _: Structure(),
+                              terminal_energy_checker=lambda *args: {"status": "inconsistent"})
+        self.assertFalse(result["verified"])
+        self.assertEqual(result["status"], "terminal_consistency_unverified")
+        self.assertEqual(result["terminal_energy"], 2.)
 
     def test_same_units_and_two_energy_terms(self):
         result = self.run_case(Optimizer())

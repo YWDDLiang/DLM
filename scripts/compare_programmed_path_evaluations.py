@@ -136,7 +136,7 @@ def main():
         if not (directory / "_SUCCESS").is_file():
             raise ValueError("evaluation accounting is incomplete")
         manifests.append(json.loads((directory / "EVALUATION_FINAL.json").read_text()))
-    for key in ("endpoint", "terminal_protocol", "frozen_nu_source_sha256", "official_cache", "cohort_role"):
+    for key in ("endpoint", "terminal_protocol", "verification_protocol", "frozen_nu_source_sha256", "official_cache", "cohort_role"):
         if manifests[0][key] != manifests[1][key]:
             raise ValueError(f"paired evaluation protocols differ: {key}")
     if any(m["cohort_role"] != "fixed_development" or m["counts"]["requests"] != 256 for m in manifests):

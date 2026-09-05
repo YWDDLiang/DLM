@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from crystal_dlm.dynamic_crystal import arrays_to_structure, parse_dynamic_answer
 from crystal_dlm.programmed_path_data import read_jsonl
+from crystal_dlm.terminal_energy_consistency import TERMINAL_VERIFICATION_PROTOCOL
 
 
 def describe(values):
@@ -88,6 +89,8 @@ def main():
         report = json.loads((path.parent / "LABEL_FINAL.json").read_text())
         if report["purpose"] != "evaluation":
             raise ValueError("wrong label purpose")
+        if report.get("verification_protocol") != TERMINAL_VERIFICATION_PROTOCOL:
+            raise ValueError("evaluation requires the same terminal-consistency verification")
         protocols.append(report["protocol"])
         for row in read_jsonl(path):
             if row["trajectory_id"] in labels:
@@ -184,6 +187,7 @@ def main():
                "verified_strict_stable", "verified_meta_stable", "verified_strict_sun", "verified_meta_sun")}
     counts["requests"] = len(output)
     report = {"counts": counts, "endpoint": args.endpoint, "cohort_role": args.cohort_role,
+              "verification_protocol": TERMINAL_VERIFICATION_PROTOCOL,
               "terminal_protocol": protocols[0], "main_stability_criterion": "retained terminal-energy threshold",
               "verified_subset_adds": "optimizer stop, force/stress, geometry and consistent-energy checks",
               "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
