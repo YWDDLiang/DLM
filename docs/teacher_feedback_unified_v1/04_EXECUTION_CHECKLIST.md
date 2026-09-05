@@ -5,6 +5,9 @@ Current status: **2026-09-06 03:00 Asia/Shanghai: formal round0 training39892 co
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
 Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md).
+Continuous-refiner extension: [22 Code assessment and proposal](22_CONTINUOUS_DIFFUSION_EXTENSION_ASSESSMENT.md).
+This is a proposed follow-on design, not a trained refiner or a change to the
+currently scheduled fixed-model494 comparisons. Preserve today's active pipeline.
 Keep the completed initial1024*K4 pool; expand the ONE train-only refresh to
 the same1024 conditions*K8 (8192 requests), then two passes. No additional small
 ablations. K4/K8 is now an explicit recorded data budget, not an inference selector.
