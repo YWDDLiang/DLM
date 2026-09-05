@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import torch
 
 from crystal_dlm.programmed_path_training import sample_path_decisions, minibatch_path_loss, PathLogProbability, join_terminal_labels, shape_matched_batches
-from crystal_dlm.programmed_path_data import trace_terminal_body
+from crystal_dlm.programmed_path_data import trace_terminal_body, training_candidates_per_condition
 from crystal_dlm.programmed_path_runtime import process_path_logits, process_scalar_path_logits
 from crystal_dlm.r5_dynamic_length import exact_dynamic_schema_constraints
 from test_state_programmed_runtime import TinyTokenizer, TinyBase, body, constraints, program
@@ -23,6 +23,26 @@ def example_path(counts):
 
 
 class PathTrainingTest(unittest.TestCase):
+    def test_k8_refresh_keeps_all_occurrences_and_rejects_incomplete_k4_pool(self):
+        self.assertEqual(training_candidates_per_condition(0), 4)
+        self.assertEqual(training_candidates_per_condition(1), 8)
+        with self.assertRaises(ValueError):
+            training_candidates_per_condition(2)
+        paths, labels = [], []
+        for candidate in range(8):
+            path = example_path((3, 3, 3))
+            path.update(trajectory_id=f"group:1:{candidate}", checkpoint="formal-round0", collection_round=1,
+                        group_id="group", source_row_idx=7, source_split="train", success=True,
+                        candidate_index=candidate, final_body_token_ids=trace_terminal_body(path["trace"]))
+            paths.append(path)
+            labels.append({"trajectory_id": path["trajectory_id"], "group_id": "group", "source_row_idx": 7,
+                           "source_split": "train", "verified": candidate < 3})
+        groups = join_terminal_labels(paths, labels, expected_conditions=1, candidates=8)
+        self.assertEqual([c["candidate_index"] for c in groups[0]["candidates"]], list(range(8)))
+        self.assertEqual(sum(c["verified"] for c in groups[0]["candidates"]), 3)
+        with self.assertRaises(ValueError):
+            join_terminal_labels(paths[:4], labels[:4], expected_conditions=1, candidates=8)
+
     def test_shape_buckets_cover_once_and_add_only_zero_mass_rows(self):
         rows = [{"id": i, "prompt_token_ids": [0] * (3 + i % 3), "input_body": [0] * 15,
                  "weight": 1., "inclusion_probability": .5} for i in range(19)]

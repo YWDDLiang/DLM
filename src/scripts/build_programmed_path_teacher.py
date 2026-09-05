@@ -13,7 +13,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from crystal_dlm.basin_path_objective import solve_basin_path_teacher
-from crystal_dlm.programmed_path_data import read_jsonl, trace_summary
+from crystal_dlm.programmed_path_data import read_jsonl, trace_summary, training_candidates_per_condition
 from crystal_dlm.programmed_path_training import join_terminal_labels
 
 
@@ -22,6 +22,7 @@ def main():
     p.add_argument("--paths-jsonl", type=Path, nargs="+", required=True)
     p.add_argument("--labels-jsonl", type=Path, nargs="+", required=True)
     p.add_argument("--expected-conditions", type=int, default=1024)
+    p.add_argument("--candidates", type=int, choices=(4, 8), default=4)
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--diagnostic-only", action="store_true")
     args = p.parse_args()
@@ -48,7 +49,9 @@ def main():
     versions = {json.dumps(r.get("versions"), sort_keys=True) for r in labels if r.get("verified") is True}
     if len(versions) > 1 or "null" in versions:
         raise ValueError("verified teacher labels require one recorded model/package version")
-    groups = join_terminal_labels(paths, labels, expected_conditions=args.expected_conditions)
+    groups = join_terminal_labels(paths, labels, expected_conditions=args.expected_conditions, candidates=args.candidates)
+    if args.candidates != training_candidates_per_condition(int(paths[0]["collection_round"])):
+        raise ValueError("registered data budget is K4 initially and K8 for the one refresh")
     teacher = solve_basin_path_teacher(groups)
     summary = teacher["summary"]
     summary["label_statuses"] = dict(Counter(r["status"] for r in labels))
@@ -58,6 +61,8 @@ def main():
     summary["cooperative_accepted_paths"] = sum(bool(r["cooperative_accepted"]) for r in execution)
     summary["cooperative_changed_paths"] = sum(r["committed_changed_scalars_by_phase"].get("cooperative", 0) > 0 for r in execution)
     summary["successful_paths"] = sum(r["success"] for r in paths)
+    summary["requested_candidates_per_condition"] = args.candidates
+    summary["data_budget_amendment"] = "20260906_K4_then_K8"
     summary["diagnostic_only"] = args.diagnostic_only
     summary["trainable_teacher"] = bool(not args.diagnostic_only and summary["solver_status"] == "optimal"
         and summary["rho_max"] > 0 and summary["primal_residual"] <= 1e-6)
@@ -71,6 +76,7 @@ def main():
     teacher["provenance"] = {"paths_jsonl": [str(p) for p in args.paths_jsonl],
                              "labels_jsonl": [str(p) for p in args.labels_jsonl],
                              "checkpoint": paths[0]["checkpoint"], "collection_round": paths[0]["collection_round"],
+                             "candidates_per_condition": args.candidates,
                              "terminal_protocol": protocols[0], "verified_label_versions": [json.loads(v) for v in versions],
                              "objective": "separate mean improvements in e0-eR and centered eR; no cross-composition ranking"}
     args.output_dir.mkdir(parents=True, exist_ok=False)

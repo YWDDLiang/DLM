@@ -3,6 +3,10 @@
 Current status: **2026-09-06 00:25 Asia/Shanghai: all 1024*K4 paths have been collected; six-GPU full-pool labeling is running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
+Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
+Keep the completed initial1024*K4 pool; expand the ONE train-only refresh to
+the same1024 conditions*K8 (8192 requests), then two passes. No additional small
+ablations. K4/K8 is now an explicit recorded data budget, not an inference selector.
 Warmup39853/conditions39857 artifacts were verified and reused. New-process
 replay39869 checked all153 decisions of two paths with zero error. Optimized
 four-GPU training check39877 completed4path+1CE updates, gradient finite,
@@ -34,7 +38,7 @@ implements/tests/deploys/monitors directly; no coding delegation.
 
 Immediate work: finish39885, join its complete labels with39873, and solve ONE complete
 1024-condition teacher. If positive certified gain exists, run two complete
-path passes, one train-only refresh and two more passes. Then evaluate the
+path passes, one train-only K8 refresh and two more passes. Then evaluate the
 final policy against39884, report tau800 separately, and freeze before main1000.
 Do not repeat completed warmup, preparation, prefix collection or checks.
 
@@ -94,7 +98,11 @@ Review decisions: [18 Review and resolutions](18_DUAL_OBJECTIVE_REVIEW_AND_DECIS
 - [x] Collect 1024 train conditions x K4 full paths; use first128 for label/protocol
   diagnostics, not composition selection; preserve all attempts and failures.
 - [ ] Build the verified empirical A/B teacher with feasible common improvement;
-  fit full-path likelihood for two passes, then one train-only refresh/two passes.
+  fit full-path likelihood for two passes, then one train-only K8 refresh/two passes.
+- [ ] Replace preliminary data-budget estimates with both rounds' actual verified
+  paths, covered conditions, multiple-candidate conditions, ESS and update counts.
+- [ ] Check remaining compute at13:00, assemble findings/missing items at18:00,
+  and deliver actual results by the retained2026-09-06 19:19 deadline.
 - [ ] One fixed256 comparison with one reference; report native e/F/stress,
   paired A/B, Stable/N/U/SUN and the separately labelled tau800 fallback.
 - [ ] Freeze the method before independent main sampling; if using 1000 valid CIFs,

@@ -20,7 +20,7 @@ import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel
 
-from crystal_dlm.programmed_path_data import load_path_model, read_jsonl
+from crystal_dlm.programmed_path_data import load_path_model, read_jsonl, training_candidates_per_condition
 from crystal_dlm.programmed_path_training import (
     PathLogProbability, minibatch_path_loss, sampled_training_examples, shape_matched_batches,
 )
@@ -65,6 +65,8 @@ def main():
     if args.checkpoint_path.resolve() != Path(provenance["checkpoint"]).resolve():
         raise ValueError("training must start at this collection round's reference policy")
     collection_round = int(provenance["collection_round"])
+    if not args.engineering_steps and provenance.get("candidates_per_condition") != training_candidates_per_condition(collection_round):
+        raise ValueError("formal teacher does not match the registered K4/K8 data budget")
     if collection_round not in (0, 1) or (collection_round == 1 and args.optimizer_state is None):
         raise ValueError("only one refresh, continuing the original optimizer, is allowed")
     paths = [row for p in provenance["paths_jsonl"] for row in read_jsonl(p)]

@@ -10,6 +10,13 @@ from crystal_dlm.dynamic_crystal import parse_dynamic_answer
 from crystal_dlm.spad_program import program_from_element_order
 
 
+def training_candidates_per_condition(collection_round: int) -> int:
+    """2026-09-06 data-budget amendment: K4 first round, K8 single refresh."""
+    if collection_round not in (0, 1):
+        raise ValueError("only the initial collection and one refresh are registered")
+    return 4 if collection_round == 0 else 8
+
+
 def path_seed(seed: int, group_id: str, collection_round: int, occurrence: int) -> int:
     payload = json.dumps([seed, str(group_id), collection_round, occurrence]).encode()
     return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big") % (2**63 - 1)
