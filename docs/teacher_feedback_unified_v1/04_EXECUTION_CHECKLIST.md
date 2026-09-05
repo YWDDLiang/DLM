@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 00:25 Asia/Shanghai: all 1024*K4 paths have been collected; six-GPU full-pool labeling is running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
+Current status: **2026-09-06 01:02 Asia/Shanghai: all 1024*K4 paths have been collected; 2624/4096 terminal labels are confirmed, including630verified. Six-GPU labeling39885 is still running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
@@ -20,6 +20,10 @@ labeling39885 is running on the remaining3584. The reference39884 completed28m35
 native Strict/Meta SUN6/256 and55/256; verified-subset1/256 and26/256. These are
 reference results, not the new policy; hull is known for247, unresolved for8,
 and1 input failed reconstruction.
+At01:02,39885 had2112/3584labels:519verified/775not-converged/804invalid-terminal/
+14generation-failure, with no recorded software errors. The K4/K8 amendment is
+deployed atf6c372e; local focused21tests and remote path-training9tests passed,
+and remote226 shell syntax passed. These overlapping suites are not added together.
 Latest combined local suite:91PASS. Current implemented code is on the requested
 branch; preserve the two pre-existing untracked PMTR files. Full-path trainer,
 reference, tau800 and parser-only independent-main entrypoints are implemented;
