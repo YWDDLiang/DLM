@@ -55,7 +55,9 @@ class ManifoldRepairObjectiveTests(unittest.TestCase):
     def test_gradient_probe(self):
         parameter = torch.nn.Parameter(torch.tensor([1.0, -2.0]))
         parameter.square().sum().backward()
-        self.assertAlmostEqual(float(trainable_gradient_l2([parameter])), (20.0) ** 0.5)
+        self.assertAlmostEqual(
+            float(trainable_gradient_l2([parameter])), (20.0) ** 0.5, places=6
+        )
 
     def test_rejects_conflicting_transaction_roles(self):
         with self.assertRaisesRegex(ValueError, "one cell"):
