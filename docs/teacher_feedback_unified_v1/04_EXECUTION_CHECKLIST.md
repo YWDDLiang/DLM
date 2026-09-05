@@ -299,8 +299,12 @@ so job 39770 restarts from the same registered closure-CE policy.
   refined Strict/Meta S.U.N. without Direct.
   Final generation/refinement job 39802 completed in 00:15:42 on four A800:
   body decoded/parsed/Plan-matched/graph-valid 256/256 and raw/refined assembly
-  both succeeded 256/256. Raw-first S.U.N. evaluation job 39803 is now running
-  on four A800 with no Direct or new official query.
+  both succeeded 256/256. Raw-first S.U.N. job 39803 completed its four-A800
+  CHGNet/newness science with no Direct, then its old-cache finalizer stopped on
+  an uncovered chemsys. A fresh official cache resolved 245/253 chemsys with
+  eight explicit unknowns. The recovered final raw
+  Strict/Meta S.U.N. is 12/61; tau800 is 14/107. The exact and near-line gates
+  are both false.
 - [ ] If either preregistered primary endpoint reaches Strict>=10% and
   Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Per the
   user-authorized, outcome-independent near-miss rule fixed before stream19,
@@ -327,12 +331,17 @@ so job 39770 restarts from the same registered closure-CE policy.
 
 ## L. Single final iteration after a miss
 
-- [ ] If the new stream19 endpoint misses even the fixed near-line gate
+- [x] If the new stream19 endpoint misses even the fixed near-line gate
   (Strict 23/256 and Meta 125/256 in the same endpoint), first publish a paired
   diagnosis covering training movement, K10 teacher headroom/reachability,
   raw geometry/energy and raw-to-tau800 retention. Classify the failure as
   exactly one of `UNDERTRAINED`, `LOCAL_CONTROL_INSUFFICIENT`,
   `REFINER_WASHOUT`, or `EVALUATION_COVERAGE`.
+- [x] Classify stream19 as `UNDERTRAINED`: coverage is 4,104/4,104, the K10
+  teacher has strong cell/XYZ headroom, gradients are balanced and finite, but
+  one state exposure did not reduce sampled posterior loss from the first to
+  last training quarter. Full evidence is in
+  `13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md`.
 - [ ] Permit exactly one reproducible final iteration selected by that physical
   diagnosis: one additional unchanged-LR K10 posterior pass for undertraining;
   the existing bounded Plan-VPA projection for insufficient cell control; or

@@ -334,6 +334,8 @@ class BasinPosteriorWrapperTest(unittest.TestCase):
         self.assertIn("SPAD_EXPECTED_GROUPS", wrapper)
         self.assertIn("SPAD_BASIN_AUTHORIZATION_MARKER", wrapper)
         self.assertIn("SPAD_TRAIN_WORLD_SIZE", wrapper)
+        self.assertIn("SPAD_INITIAL_POLICY", wrapper)
+        self.assertIn('POLICY="${SPAD_INITIAL_POLICY:-${DEFAULT_POLICY}}"', wrapper)
         self.assertIn('--nproc_per_node="${TRAIN_WORLD_SIZE}"', wrapper)
         self.assertIn('--expected-groups "${EXPECTED_GROUPS}"', wrapper)
         self.assertIn('--posterior-passes "${POSTERIOR_PASSES}"', wrapper)

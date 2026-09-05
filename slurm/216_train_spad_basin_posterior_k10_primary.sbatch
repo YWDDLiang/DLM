@@ -17,7 +17,8 @@ readonly LABELLED="${SPAD_BASIN_LABELLED_GROUPS:-${ROOT}/runs/spad_basin_preflig
 readonly DECISION="${ROOT}/runs/spad_basin_preflight_decision_20260904_v1"
 readonly AUTH="${SPAD_BASIN_AUTHORIZATION_MARKER:-${DECISION}/PRELIGHT_TRAINING_AUTHORIZED}"
 readonly MODEL=/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct
-readonly POLICY="${ROOT}/runs/spad_basin_closure_ce_39700/train/checkpoints/step-1696"
+readonly DEFAULT_POLICY="${ROOT}/runs/spad_basin_closure_ce_39700/train/checkpoints/step-1696"
+readonly POLICY="${SPAD_INITIAL_POLICY:-${DEFAULT_POLICY}}"
 readonly SFT="${ROOT}/data/spad_basin_closure_sft_v1_20260904"
 readonly PYTHON=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 readonly RUN="${ROOT}/runs/spad_basin_posterior_k10_primary_${SLURM_JOB_ID}"
@@ -44,6 +45,7 @@ objectives	clean_CE_plus_posterior_interleaved
 world_size	runtime_configured
 learning_rate	5e-6
 checkpoint_selection	none_final_only
+initial_policy	runtime_configured
 EOF
 
 CUDA_VISIBLE_DEVICES="${gpu_csv}" OPENBLAS_NUM_THREADS=4 \
