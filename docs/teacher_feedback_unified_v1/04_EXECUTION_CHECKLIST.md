@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 04:03 Asia/Shanghai: formal round0 training39892 is complete. K8 collection39896 is finishing; round0 native/tau800 evaluation39910 is already queued with afterany:39896 to start when GPUs release. Do not submit another236. K8 label shards are not yet submitted. Final-student SUN remains pending; refiner training is explicitly deferred to the next round.**
+Current status: **2026-09-06 04:10 Asia/Shanghai: K8 collection39896 completed in1h29m46 with8192requests,8093successes and99retained failures. Round0 evaluation39910 is RUNNING on2GPUs. K8 labels shardA39911 is RUNNING on4GPUs, covering line-index modulo3 ranks0,1 (5462requests). ShardB (rank2,2730requests) has not been submitted; start it on2GPUs after39910 releases its allocation. Final-student SUN remains pending; refiner training is deferred to the next round.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
@@ -52,14 +52,12 @@ historical relabeling. Preserve the original deadline. Heartbeat
 restore execution in the earlier task. Main agent
 implements/tests/deploys/monitors directly; no coding delegation.
 
-Immediate work: finish39896 and label its complete8192requests with the current
-uniform terminal verification. Latest user request adds ONE round0 fixed256
-development evaluation:39910already queues236on two GPUs for native/tau800
-atstep1020, explicitlyround0_diagnostic. Its dependency only waits for resource
-release; if39896fails, diagnose/recover that separately. Once the full K8 sample
-is successful, in parallel label the refresh using
-four GPUs, shard-count3/shard-ranks0,1 (5462requests). When236finishes, label the
-remaining rank2 shard on two GPUs (2730requests). Merge both label outputs;
+Immediate work: monitor round0 fixed256 evaluation39910 and K8 labels shardA39911.
+The complete8192-request K8 sample is certified by sample/_SUCCESS and
+SAMPLE_FINAL.json; do not regenerate it.39910runs native/tau800 atstep1020,
+explicitlyround0_diagnostic.39911uses four GPUs, shard-count3/shard-ranks0,1
+(5462requests). When39910finishes, label the remaining rank2 shard on two GPUs
+(2730requests), then record that jobID. Merge both complete label outputs;
 never relabel the full8192or duplicate shards. Build round1teacher with--candidates8, review its
 coverage and concentration, then continue the step1020optimizer for two passes.
 The refresh uses a count-based6..24decision budget per path/pass, capped by the

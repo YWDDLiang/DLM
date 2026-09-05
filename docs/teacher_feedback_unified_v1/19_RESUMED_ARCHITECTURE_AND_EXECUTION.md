@@ -1,5 +1,11 @@
 # 当前架构、科学对象与恢复执行
 
+**最新执行状态（2026-09-06 04:10 Asia/Shanghai）：** K8采样39896已完成，
+8192请求/8093成功/99失败保留，耗时1h29m46。K4首轮固定256评估39910已运行，
+占2GPU；K8标签分片A39911已运行，占4GPU，覆盖5462请求。待39910结束后启动
+剩余2730请求的分片B（2GPU）。当前尚无首轮新学生SUN结果。连续diffusion扩展
+经用户确认留到下一轮，本轮保持model494冻结。后续状态以04checklist为准。
+
 2026-09-05 22:30 Asia/Shanghai。新任务获准继续。工作树为
 `D:\codex_work\ai4s\DLM_llama_programmed_basin_closure`，分支为
 `codex/llama-programmed-basin-closure`；恢复时本地和 GitHub 均为 `a5fb9cf`。
