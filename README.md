@@ -198,16 +198,17 @@ sample the strict low-energy tail reliably.
 
 ## Reproduce and inspect
 
-The current method, ablations and run ledger are documented here:
+The current method, next-cycle design, ablations and run ledger are documented here:
 
-1. [Active basin-closure design](docs/teacher_feedback_unified_v1/12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md)
-2. [Unified SPAD method](docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md)
-3. [Pure-Llama Route A](docs/teacher_feedback_unified_v1/01_TRACK_A_PURE_LLM.md)
-4. [Llama-programmed DLM Route B](docs/teacher_feedback_unified_v1/02_TRACK_B_LLM_GUIDED_DLM.md)
-5. [Cross-representation contract](docs/teacher_feedback_unified_v1/03_CROSS_REPRESENTATION_AND_DIFFUSION.md)
-6. [Active execution checklist](docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md)
-7. [Decision log](docs/teacher_feedback_unified_v1/05_DECISION_LOG.md)
-8. [Implementation audit](docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
+1. [PCTP scientific alignment and execution plan](docs/teacher_feedback_unified_v1/14_PCTP_SCIENTIFIC_ALIGNMENT_AND_EXECUTION.md)
+2. [Active basin-closure design](docs/teacher_feedback_unified_v1/12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md)
+3. [Unified SPAD method](docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md)
+4. [Pure-Llama Route A](docs/teacher_feedback_unified_v1/01_TRACK_A_PURE_LLM.md)
+5. [Llama-programmed DLM Route B](docs/teacher_feedback_unified_v1/02_TRACK_B_LLM_GUIDED_DLM.md)
+6. [Cross-representation contract](docs/teacher_feedback_unified_v1/03_CROSS_REPRESENTATION_AND_DIFFUSION.md)
+7. [Active execution checklist](docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md)
+8. [Decision log](docs/teacher_feedback_unified_v1/05_DECISION_LOG.md)
+9. [Implementation audit](docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
 
 Portable read-only checks remain available:
 
