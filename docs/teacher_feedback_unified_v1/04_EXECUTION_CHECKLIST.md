@@ -1,6 +1,62 @@
-# Execution Checklist: Llama-Programmed Basin Closure
+# Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Status: **closed prospective K10 sprint; target not met; documentation only**
+Current status: **user approved implementation on 2026-09-05; combined interface checks in development**.
+
+## Current authorization: one 24-hour implementation sprint
+
+The user approved the audited dual-objective plan and requested full effort toward
+Strict SUN>10% and Meta SUN>50% in 24 hours. On the same turn the quota increased
+to six A800, four CPU per GPU. The initial deadline is 2026-09-06 19:19
+Asia/Shanghai. This authorizes the new plan, not restarting PMTR/K10 or fabricating
+results. Pass the combined interface checks before formal GPU training.
+
+Current proposal: [17 State-conditioned dual-objective SPAD](17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md).
+Review decisions: [18 Review and resolutions](18_DUAL_OBJECTIVE_REVIEW_AND_DECISIONS.md).
+
+- [x] Recheck retained C3FD/Planner-Llama species program, canonical 7+4N and
+  deployed predictor/reverse-species closure from current code.
+- [x] Specify joint optimization of original-to-relaxed energy gap A and
+  terminal basin energy B, with fixed composition/program weights.
+- [x] Complete read-only mathematical and engineering reviews; distinguish
+  a feasible empirical teacher from guaranteed student/SUN improvement.
+- [x] Review the single-method paper story against the teacher's feedback;
+  retain LLM-programmed execution without claiming online control or end-to-end training.
+- [x] Correct the scalar-state/backprop budget and record untested interfaces.
+- [x] Obtain user confirmation; six A800 / 24 CPU maximum, one main method.
+- [ ] Run the three consolidated engineering checks only after authorization:
+  injection/gradient/reload/throughput; joint commit/rollback/support;
+  complete attempted-trace sampling/scoring/zero-weight/HT consistency.
+- [ ] Full MP20 warmup: 27136 sources, one source state each; freeze embedding/head,
+  train retained LoRA and the small state conditioner.
+- [ ] Collect 1024 train conditions x K4 full paths; use first128 for label/protocol
+  diagnostics, not composition selection; preserve all attempts and failures.
+- [ ] Build the verified empirical A/B teacher with feasible common improvement;
+  fit full-path likelihood for two passes, then one train-only refresh/two passes.
+- [ ] One fixed256 comparison with one reference; report native e/F/stress,
+  paired A/B, Stable/N/U/SUN and the separately labelled tau800 fallback.
+- [ ] Freeze the method before independent main sampling; if using 1000 valid CIFs,
+  retain source order and disclose all requested/failed attempts.
+
+Resources: at most 6 A800, 4 CPU per GPU, at most two jobs; no inference MLIP/reranking
+or test-outcome training. Prefer four-GPU training with unchanged effective batch16,
+plus two-GPU data/evaluation; use all six for independent generation/label shards.
+The requested 24h target is an effort deadline, not a guaranteed scientific result.
+
+Implementation progress at 2026-09-05 19:26 Asia/Shanghai:
+- Persistent local SSH to starteam5090 established; attached to existing
+  ssha800:1.0 with TERM=xterm-256color; ssha800_2 untouched.
+- Scoped project queue check found no active spad/pmtr/c3fd/basin/closure job.
+- Main agent owns runtime/trace integration and deployment. Two bounded workers
+  own basin_path_objective plus tests and periodic_state_conditioning plus tests.
+- New ten-minute heartbeat `llm-dlm-sun-24h` is ACTIVE until the requested deadline;
+  the prior h1-a2-stability-ccfd automation no longer exists and was not duplicated.
+- Local isolated .venv is being prepared for CPU tests. No training job submitted yet.
+
+The historical checklist below is retained for provenance only.
+
+## Historical closed K10 sprint — not active instructions
+
+Historical status: **closed prospective K10 sprint; target not met**
 
 Final decision: the data-scale 4,104-state K10 posterior route completed one
 full pass plus its single preregistered warm-start pass. Final stream21 raw
@@ -14,7 +70,7 @@ protocol. The deadline authorizes aggressive use of the registered compute and
 methods, not denominator changes, seed/checkpoint selection, test leakage,
 reranking or result fabrication.
 
-Authoritative active design:
+Historical closed design:
 [`12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md`](12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md).
 Historical SPAD/SPAD-E records remain evidence, not active instructions.
 
