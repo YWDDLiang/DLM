@@ -14,7 +14,7 @@ class StateEntrypointContractTest(unittest.TestCase):
                           and node.name == "build_dynamic_lightweight_constraints")
         required = {arg.arg for arg, default in zip(definition.args.kwonlyargs, definition.args.kw_defaults)
                     if default is None}
-        for filename in ("preflight_state_programmed_spad.py", "train_state_conditioned_spad.py"):
+        for filename in ("preflight_state_programmed_spad.py", "train_state_conditioned_spad.py", "sample_state_programmed_paths.py"):
             tree = ast.parse((ROOT / "src/scripts" / filename).read_text(encoding="utf-8"))
             calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call)
                      and isinstance(node.func, ast.Name) and node.func.id == definition.name]

@@ -1,6 +1,42 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **user approved implementation on 2026-09-05; combined interface checks in development**.
+Current status: **user resumed implementation on 2026-09-05 21:58 Asia/Shanghai; reuse completed warmup39853 and conditions39857**.
+
+Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
+Warmup/conditions artifacts were verified; production path and label interfaces
+are implemented and 74 focused CPU tests pass. Real production check is next.
+The earlier task is interrupted and its heartbeat is PAUSED; this task owns execution.
+
+## Resume override — 2026-09-05 21:58 Asia/Shanghai
+
+The user explicitly resumed this same mainline. Continue toward measured Strict
+SUN>10% and Meta SUN>50%, without guarantees, outcome-selected replacement or
+historical relabeling. Restore the existing ten-minute heartbeat and original
+deadline. Main agent implements/tests/deploys/monitors directly; no coding delegation.
+
+Immediate work: verify/load warmup39853 and conditions39857; finish the native
+full-path sampling CLI, offline labeler and actual path trainer. Do not repeat
+completed training/preparation. The handoff pause below is historical.
+
+## Historical handoff pause
+
+Read [current handoff](../HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md) first.
+The user asked to stop local progress because the session is lagging, then clarified
+that A800 and running tasks should be left alone. No job was cancelled or restarted.
+Automation `llm-dlm-sun-24h` is now PAUSED; do not resume it without explicit approval.
+
+Last scoped remote snapshot, approximately 2026-09-05 21:21 Asia/Shanghai:
+- 39850 preflight FAILED 1:0 / 00:01:50 (missing required constructor argument).
+- 39852 recovery preflight COMPLETED 0:0 / 00:01:57.
+- **39853 full-MP20 state warmup COMPLETED 0:0 / 00:23:18.**
+- **39857 predicted train conditions COMPLETED 0:0 / 00:00:52.**
+- No active/pending `spad-state-*` job in that snapshot; no claim about other jobs.
+
+39852 recorded 51 sampled decisions and replay-checked only the first three (error0);
+same-instance conditioner reload was checked, not fresh-process full-model reload.
+No new SUN was computed. The sampling CLI/full-path trainer are still missing, and
+the uncommitted labeler test currently fails at import/collection. See the handoff
+for exact files and next steps. Earlier execution instructions below are suspended.
 
 ## Current authorization: one 24-hour implementation sprint
 
@@ -23,11 +59,16 @@ Review decisions: [18 Review and resolutions](18_DUAL_OBJECTIVE_REVIEW_AND_DECIS
   retain LLM-programmed execution without claiming online control or end-to-end training.
 - [x] Correct the scalar-state/backprop budget and record untested interfaces.
 - [x] Obtain user confirmation; six A800 / 24 CPU maximum, one main method.
-- [ ] Run the three consolidated engineering checks only after authorization:
+- [x] Run the combined real-model preflight 39852 with the limited coverage recorded
+  above; do not infer exhaustive coverage from its success marker.
+- [ ] Complete fresh-process checkpoint loading and production-path coverage before
+  the next formal generation:
   injection/gradient/reload/throughput; joint commit/rollback/support;
   complete attempted-trace sampling/scoring/zero-weight/HT consistency.
-- [ ] Full MP20 warmup: 27136 sources, one source state each; freeze embedding/head,
-  train retained LoRA and the small state conditioner.
+- [x] Full MP20 warmup: 27136 sources, one source state each; freeze embedding/head,
+  train retained LoRA and the small state conditioner; job39853 completed.
+- [x] Prepare the frozen predicted training conditions with unchanged chemistry;
+  job39857 completed. Read its manifest after user-authorized resumption.
 - [ ] Collect 1024 train conditions x K4 full paths; use first128 for label/protocol
   diagnostics, not composition selection; preserve all attempts and failures.
 - [ ] Build the verified empirical A/B teacher with feasible common improvement;
