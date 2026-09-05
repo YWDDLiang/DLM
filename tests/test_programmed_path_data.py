@@ -1,7 +1,10 @@
 import unittest
+import json
+from pathlib import Path
+import tempfile
 
 from crystal_dlm.fixed_slot import build_special_tokens
-from crystal_dlm.programmed_path_data import compile_condition, path_seed, trace_terminal_body, validate_completed_body
+from crystal_dlm.programmed_path_data import compile_condition, path_seed, trace_terminal_body, validate_completed_body, load_path_model
 
 
 class Tokenizer:
@@ -15,6 +18,15 @@ class Tokenizer:
 
 
 class PathDataTest(unittest.TestCase):
+    def test_ineligible_checkpoint_is_rejected_before_loading_backbone(self):
+        with tempfile.TemporaryDirectory() as directory:
+            train = Path(directory) / "train"
+            checkpoint = train / "checkpoints" / "step-5"
+            checkpoint.mkdir(parents=True)
+            (train / "TRAIN_FINAL.json").write_text(json.dumps({"eligible_policy": False}))
+            with self.assertRaisesRegex(ValueError, "engineering checkpoint"):
+                load_path_model("not-loaded", checkpoint, "cpu")
+
     def setUp(self):
         self.tok = Tokenizer()
         self.row = {"group_id": "23", "source_split": "train", "prompt": "native:\n",

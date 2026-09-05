@@ -120,11 +120,14 @@ def load_path_model(model_path, checkpoint_path, device, *, trainable=False):
     """Load both retained LoRA/tables and the mandatory trained state input."""
     from crystal_dlm.periodic_state_conditioning import PeriodicStateConfig
     from crystal_dlm.state_conditioned_model import StateConditionedDLM, set_state_lora_trainable
-    from scripts.sample_llada_dynamic_crystals import load_model_and_tokenizer
     root = Path(checkpoint_path)
+    for marker in (root.parent.parent / "TRAIN_FINAL.json", root.parent / "PREFLIGHT.json"):
+        if marker.is_file() and json.loads(marker.read_text()).get("eligible_policy") is False:
+            raise ValueError(f"engineering checkpoint is not an eligible collection policy: {root}")
     config = PeriodicStateConfig(**json.loads((root / "periodic_state_config.json").read_text()))
     if not (root / "periodic_state.pt").is_file():
         raise FileNotFoundError("checkpoint is missing the trained periodic state conditioner")
+    from scripts.sample_llada_dynamic_crystals import load_model_and_tokenizer
     base, tokenizer = load_model_and_tokenizer(str(model_path), str(root), device)
     model = StateConditionedDLM(base, tokenizer, config).to(device)
     model.load_state_conditioner(root)

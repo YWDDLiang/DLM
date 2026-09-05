@@ -106,7 +106,11 @@ def main():
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_multiplier)
     global_updates = path_updates = ce_updates = 0
     if args.optimizer_state:
+        if args.optimizer_state.parent.resolve() != args.checkpoint_path.resolve():
+            raise ValueError("optimizer state must belong to the collection policy checkpoint")
         saved = torch.load(args.optimizer_state, map_location="cpu", weights_only=False)
+        if saved.get("eligible_policy") is not True or saved.get("collection_round") != collection_round - 1:
+            raise ValueError("refresh requires the completed previous formal round, not an engineering checkpoint")
         for key in ("seed", "learning_rate", "schedule_updates", "warmup_updates"):
             if saved[key] != getattr(args, key):
                 raise ValueError(f"refresh cannot silently change optimizer setting {key}")
@@ -214,6 +218,7 @@ def main():
         tokenizer.save_pretrained(destination)
         training_state = {"optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
                           "global_updates": global_updates, "path_updates": path_updates, "ce_updates": ce_updates,
+                          "collection_round": collection_round, "eligible_policy": not bool(args.engineering_steps),
                           **{key: getattr(args, key) for key in ("seed", "learning_rate", "schedule_updates", "warmup_updates")}}
         torch.save(training_state, destination / "POST_STATE.pt")
         report = {"phase": "dual_objective_full_path_policy", "collection_round": collection_round,
