@@ -1,7 +1,7 @@
 # Scientific Programmed Crystal DLM with Basin Closure
 
 This branch contains the paper mainline for **Scientific Programmed
-Anchor–Backfill Denoising (SPAD)** and its active native-stability extension,
+Anchor–Backfill Denoising (SPAD)** and its evaluated native-stability extension,
 **Llama-Programmed Basin Closure**. A C³FD-supported Llama first chooses a
 chemically reachable crystal Plan and then programs the denoising order of a
 masked crystal language model. The same Plan state controls composition,
@@ -52,12 +52,12 @@ cannot perform without regenerating the suffix.
 Every request uses one Plan, one DLM trajectory and one fixed model494
 trajectory. There is no retry, replacement, reranking or best-of-N.
 
-The active stability work does not introduce an inference-time energy oracle.
+The stability path does not introduce an inference-time energy oracle.
 Full-MP20 geometry-recovery supervision first trains the exact closure states,
-including `L | X`. Only if a train-only headroom study succeeds, CHGNet
+including `L | X`. A train-only headroom study then uses CHGNet
 short-relaxation values supervise legal cell/XYZ closure actions offline. At
-deployment the DLM emits one native trajectory; model494 remains an optional
-terminal fallback.
+deployment the DLM emits one native trajectory; model494 is reported separately
+as a fixed terminal transition.
 
 ## Modules and why each is necessary
 
@@ -140,12 +140,12 @@ follow-up retained 512/512 reconstructed outputs and moved refined Strict/Meta
 S.U.N. to 36/512 (7.03%) and 237/512 (46.29%). Its paired refined CHGNet shift
 was -0.00657 eV/atom, but NU fell from 441 to 437; the small gain is not enough.
 
-The current diagnosis is that high Direct validity does not imply physical
+The diagnosis is that high Direct validity does not imply physical
 stationarity. Generated structures remain far above MP20 references in force,
 stress and short-distance tails, including under same-composition teacher
-Plans. The active work therefore trains and tests the non-causal closure before
-any larger energy-alignment run. Full Direct remains `DEFERRED_COST`; raw
-force/stress and common-relaxation stability are the first endpoints.
+Plans. The basin-posterior experiment therefore trains the non-causal closure
+action itself rather than adding a test-time oracle. Full Direct remains
+`DEFERRED_COST`; raw and common-relaxation stability are the primary endpoints.
 
 ### Native basin-closure result
 
@@ -162,11 +162,39 @@ relaxation, paired CHGNet energy improves by median `-0.3244 eV/atom` with a
 composition-cluster 95% interval `[-1.4508,-0.0956]`; after the frozen common
 relaxation, the paired hull/energy shift remains `-0.02274 eV/atom` and favors
 closure on 139 of 248 hull-known pairs. Structural validity is preserved, but
-the strict/meta threshold counts move only `0/+2`. This cleanly identifies the
-next problem: convert an already learned low-energy direction into probability
-mass at the stable tail. The registered next experiment is therefore the
-128-state terminal-basin headroom preflight, not more closure CE epochs or a
-test-time oracle.
+the strict/meta threshold counts move only `0/+2`. This identified the next
+problem: convert an already learned low-energy direction into probability mass
+at the stable tail. The completed K10 transaction-posterior experiment below
+tests that hypothesis directly.
+
+### Final K10 transaction-posterior result
+
+The frozen train-only teacher contains 4,104 deployment-matched closure states
+and 15,348 candidate transactions. Among them, 3,889 state exposures are
+informative; median best-versus-no-op K10 headroom is 143.93 meV/atom. The DLM
+was trained for one complete pass and one preregistered warm-start pass, each
+interleaved with clean MP20 closure supervision. Only terminal checkpoints were
+published.
+
+Two independent prospective streams were evaluated without Direct, retries,
+replacement, reranking or inference-time CHGNet:
+
+| Stream / policy | Endpoint | Reconstructed | Novel-unique | Strict S.U.N. | Meta S.U.N. |
+|---|---|---:|---:|---:|---:|
+| stream19 / first pass | raw | 256/256 | 256/256 | 12/256 (4.69%) | 61/256 (23.83%) |
+| stream19 / first pass | tau800 | 256/256 | 229/256 | 14/256 (5.47%) | 107/256 (41.80%) |
+| stream21 / second pass | raw | 256/256 | 254/256 | 5/256 (1.95%) | 49/256 (19.14%) |
+| stream21 / second pass | tau800 | 256/256 | 230/256 | 14/256 (5.47%) | 123/256 (48.05%) |
+
+Stream21 uses fresh official MP thermodynamics for 252/256 rows; the four
+explicit unknowns count as non-stable. The second pass preserves complete
+execution and raises refined Meta S.U.N. relative to stream19, but it does not
+improve Strict S.U.N. and its raw stability is worse. The registered 26/128
+success target and 23/125 paper-scale launch gate are therefore not met, so no
+paper1000 run or further method iteration is selected. The supported conclusion
+is precise: SPAD closes discrete chemical and geometric execution, while local
+K10 transaction-posterior supervision is not sufficient to make the native DLM
+sample the strict low-energy tail reliably.
 
 ## Reproduce and inspect
 

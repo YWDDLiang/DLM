@@ -1,14 +1,12 @@
 # Execution Checklist: Llama-Programmed Basin Closure
 
-Status: **24-hour SUN10/50 sprint; K10-4104 four-GPU action/value build**
+Status: **closed prospective K10 sprint; target not met; documentation only**
 
-Current decision: the 128-group K10 run is a completed feasibility-scale
-result, not the data-scale endpoint. Its tau800 stream18 result is Strict/Meta
-`15/119` of 256 with raw/refined validity `254/256`; native raw is Strict/Meta
-`3/48`, with N/U `252/256`. Scale the same scientific object to 4,104 unique
-MP20-train deployment states, using the actually schedulable two-, three- or
-four-GPU topology at each stage; do not add epochs to the same 128 groups or
-add a clean-CE-only route.
+Final decision: the data-scale 4,104-state K10 posterior route completed one
+full pass plus its single preregistered warm-start pass. Final stream21 raw
+Strict/Meta S.U.N. is `5/49` of 256; tau800 is `14/123`, with 256/256
+reconstructed and 254/230 novel-unique. Exact `26/128` and near `23/125` gates
+both fail. Do not launch paper1000 or any additional method iteration.
 
 Sprint deadline: **2026-09-05 22:00 Asia/Shanghai**. The target is final
 prospective Strict/Meta S.U.N. at least `10%/50%` under a fixed, fully disclosed
@@ -209,7 +207,7 @@ so job 39770 restarts from the same registered closure-CE policy.
   it is one K10 experiment with two data-parallel ranks, not two arms.
 - [x] Evaluate closure-CE raw first: fast validity, E/F/stress, relaxation,
   N/U and Strict/Meta S.U.N., with paired wins/losses.
-- [ ] Evaluate K10 raw and tau800 refined Strict/Meta S.U.N. as the two primary
+- [x] Evaluate K10 raw and tau800 refined Strict/Meta S.U.N. as the two primary
   endpoints, without Direct. Run both endpoint relaxations concurrently when
   at least two GPUs are available; defer all method/control comparisons.
 - [ ] In parallel with the native value path, evaluate one preregistered
@@ -305,7 +303,10 @@ so job 39770 restarts from the same registered closure-CE policy.
   eight explicit unknowns. The recovered final raw
   Strict/Meta S.U.N. is 12/61; tau800 is 14/107. The exact and near-line gates
   are both false.
-- [ ] If either preregistered primary endpoint reaches Strict>=10% and
+- [x] Apply the registered paper-scale gate after the final endpoint. Neither
+  endpoint reached Strict>=10% and Meta>=50%, and the final endpoint also missed
+  the fixed 23/125 near gate, so paper1000 was correctly not launched. The
+  preregistered rule was: if either primary endpoint reaches Strict>=10% and
   Meta>=50%, immediately launch the paper-scale 1000-valid-CIF run. Per the
   user-authorized, outcome-independent near-miss rule fixed before stream19,
   launch is also allowed when the same endpoint is no more than three counts
@@ -352,9 +353,26 @@ so job 39770 restarts from the same registered closure-CE policy.
   interleave and one-pass schedule (2,736 finite updates; 3,889 informative
   posterior exposures; step-0 equality passed; only the final policy saved).
   Planner seed26 job39806 and the outcome-blind 256-row cohort freeze job39807
-  also completed. Final fixed stream21 generation/refinement job39810 is now
-  running on four A800s with DLM/refiner seeds 95117/105117 and tau800.
+  also completed. Final fixed stream21 generation/refinement job39810 completed
+  in 00:15:49 on four A800s: requested/body/parsed/Plan-match/graphs/refined are
+  all 256/256, with no retry or replacement. Raw-first/tau800 evaluation job
+  39814 completed in 00:16:07. A fresh query resolved 247/251 chemsys, yielding
+  hull coverage 252/256 after row mapping; the four unknown rows remain
+  non-stable. Raw Strict/Meta S.U.N. is 5/49 and tau800 is 14/123. Exact and
+  near gates fail; no paper1000 run is authorized.
 - [x] Consume the single allowed final iteration with job39805; do not launch a
   second final iteration or edit data, labels,
   denominators, seeds or checkpoints to manufacture 10%/50%. Aggressive compute
   is authorized; outcome curation and fabricated results are not.
+
+## M. Closeout
+
+- [x] Stop method changes after the single registered final iteration.
+- [x] Keep all 256 attempts in both endpoint denominators.
+- [x] Record the fresh official coverage and explicit unresolved rows.
+- [x] Record that complete execution did not transfer into strict stability:
+  the warm-start pass changed refined Meta S.U.N. from 107 to 123 but left
+  refined Strict S.U.N. at 14 and reduced raw Strict/Meta from 12/61 to 5/49
+  across independent prospective streams.
+- [x] Do not launch paper1000.
+- [x] Update the repository README and final diagnosis with the observed result.

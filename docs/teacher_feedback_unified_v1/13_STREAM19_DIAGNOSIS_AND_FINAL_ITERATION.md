@@ -82,3 +82,32 @@ The credential entered through no-echo stdin, was popped before the first query,
 was never serialized, and no query process or shell copy remained afterward.
 The wrapper failure remains recorded; the recovered science result is
 `HELDOUT_STREAM19_FINAL_FRESH.json` with `_SCIENCE_SUCCESS`.
+
+## Final stream21 outcome
+
+The registered warm-start iteration completed as job39805: 2,736 finite
+updates, 1,368 clean-CE and 1,368 transaction-posterior updates, all 4,104
+groups exposed exactly once, 3,889 informative exposures and only the terminal
+policy saved. Planner seed26 jobs39806/39807 froze a new outcome-blind 256-row
+cohort. Job39810 then decoded, parsed, Plan-matched, constructed and refined all
+256 rows without retry or replacement; job39814 evaluated raw first and tau800
+second without Direct.
+
+A fresh official query covered 252/256 rows after mapping (247/251 unique
+chemsys resolved; four explicit unknowns). The final fixed-denominator result is:
+
+| endpoint | Reconstructed | Novel-unique | Strict stable | Meta stable | Strict S.U.N. | Meta S.U.N. |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| raw DLM | 256/256 | 254/256 | 5/256 | 51/256 | 5/256 (1.95%) | 49/256 (19.14%) |
+| model494 tau800 | 256/256 | 230/256 | 20/256 | 148/256 | 14/256 (5.47%) | 123/256 (48.05%) |
+
+Neither the exact 26/128 target nor the preregistered 23/125 paper1000 gate is
+met. Four unknown rows cannot rescue the Strict gate even under an all-favorable
+bound. The final interpretation therefore supersedes the provisional
+`UNDERTRAINED` diagnosis: one extra full exposure increases refined Meta S.U.N.
+but does not improve Strict S.U.N., and raw stability regresses on the new
+prospective stream. The remaining limitation is `LOCAL_CONTROL_INSUFFICIENT`:
+the K10 teacher has real local headroom, yet moving probability among one cell
+or XYZ transaction at a time does not reliably move complete generated crystals
+into the strict low-energy tail. Per the registered contract, no further method
+iteration or paper1000 scale-up is launched.
