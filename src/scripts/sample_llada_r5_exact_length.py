@@ -237,6 +237,20 @@ def validate_spad_basin_closure_configuration(args: Any) -> Dict[str, Any] | Non
     }
 
 
+def validate_pmtr_configuration(args: Any) -> Path | None:
+    """Resolve the optional PMTR head without changing the baseline path."""
+
+    value = getattr(args, "pmtr_checkpoint", None)
+    if value is None:
+        return None
+    if not bool(getattr(args, "spad_basin_closure", False)):
+        raise ValueError("--pmtr-checkpoint requires --spad-basin-closure")
+    path = Path(value).expanduser().resolve(strict=True)
+    if not path.is_file():
+        raise ValueError("--pmtr-checkpoint must name one checkpoint file")
+    return path
+
+
 def apply_spad_basin_closure(
     model: Any,
     complete_tokens: torch.Tensor,
@@ -254,6 +268,7 @@ def apply_spad_basin_closure(
     allowed_token_ids_by_generation_pos: list[list[int]] | None,
     lightweight_decoding_constraints: dict | None,
     plan_vpa_projection: bool = False,
+    transaction_logit_transform: Any | None = None,
 ) -> tuple[
     torch.Tensor,
     list[dict[str, Any]],
@@ -284,6 +299,40 @@ def apply_spad_basin_closure(
         )
         for item in batch
     ]
+    transform_kwargs: dict[str, Any] = {}
+    lattice_versions: list[int] | None = None
+    plan_metadata: list[Mapping[str, Any]] | None = None
+    program_metadata: list[Mapping[str, Any]] | None = None
+    if transaction_logit_transform is not None:
+        plan_metadata = []
+        program_metadata = []
+        for row_index, (item, program) in enumerate(
+            zip(batch, programs, strict=True)
+        ):
+            plan = item.get("plan_state")
+            if not isinstance(plan, Mapping):
+                raise ValueError(f"PMTR batch row {row_index} lacks Plan metadata")
+            plan_metadata.append(dict(plan))
+            program_metadata.append(
+                {
+                    "species_order": list(program.element_order),
+                    "species_program_source": str(program.order_source),
+                }
+            )
+        lattice_versions = [0 for _ in batch]
+
+        def record_lattice_commit(row_index: int, version: int) -> None:
+            if lattice_versions is None:
+                raise RuntimeError("PMTR lattice-version state was not initialized")
+            lattice_versions[int(row_index)] = int(version)
+
+        transform_kwargs = {
+            "transaction_logit_transform": transaction_logit_transform,
+            "plan_metadata_by_batch": plan_metadata,
+            "program_metadata_by_batch": program_metadata,
+            "lattice_versions_by_batch": lattice_versions,
+            "on_lattice_commit": record_lattice_commit,
+        }
     closed_tokens, cell_logs = revise_spad_cell(
         model,
         complete_tokens,
@@ -299,6 +348,7 @@ def apply_spad_basin_closure(
         lightweight_decoding_constraints=lightweight_decoding_constraints,
         strict_geometry_fallback=True,
         sampling_seeds_by_batch=cell_sampling_seeds,
+        **transform_kwargs,
     )
     vpa_projection_logs: list[dict[str, Any]] = []
     if plan_vpa_projection:
@@ -313,6 +363,18 @@ def apply_spad_basin_closure(
             lightweight_decoding_constraints=lightweight_decoding_constraints,
             enabled=True,
         )
+        if lattice_versions is not None:
+            for row_index, projection_log in enumerate(vpa_projection_logs):
+                if projection_log.get("applied") is True:
+                    lattice_versions[row_index] += 1
+    block_transform_kwargs: dict[str, Any] = {}
+    if transaction_logit_transform is not None:
+        block_transform_kwargs = {
+            "transaction_logit_transform": transaction_logit_transform,
+            "plan_metadata_by_batch": plan_metadata,
+            "program_metadata_by_batch": program_metadata,
+            "lattice_versions_by_batch": lattice_versions,
+        }
     closed_tokens, block_logs = revise_spad_species_blocks(
         model,
         closed_tokens,
@@ -328,6 +390,7 @@ def apply_spad_basin_closure(
         atom_count_grammar=None,
         lightweight_decoding_constraints=lightweight_decoding_constraints,
         sampling_seeds_by_batch=block_sampling_seeds,
+        **block_transform_kwargs,
     )
     metadata: list[dict[str, Any]] = []
     for row_index, (
@@ -375,8 +438,65 @@ def apply_spad_basin_closure(
             row_metadata["plan_vpa_projection_log"] = dict(
                 vpa_projection_logs[row_index]
             )
+        if transaction_logit_transform is not None:
+            if lattice_versions is None:
+                raise RuntimeError("PMTR lattice-version state was not initialized")
+            row_metadata["pmtr"] = {
+                "enabled": True,
+                "lattice_version_for_species_repair": int(
+                    lattice_versions[row_index]
+                ),
+            }
         metadata.append(row_metadata)
     return closed_tokens, list(cell_logs), list(block_logs), metadata
+
+
+def repair_complete_spad_tokens_with_pmtr(
+    model: Any,
+    complete_tokens: torch.Tensor,
+    *,
+    programs: List[Any],
+    batch: List[Mapping[str, Any]],
+    transaction_logit_transform: Any,
+    base_seed: int,
+    prompt_length: int,
+    gen_length: int,
+    attention_mask: torch.Tensor | None,
+    temperature: float,
+    cfg_scale: float,
+    remasking: str,
+    mask_id: int,
+    allowed_token_ids_by_generation_pos: list[list[int]] | None,
+    lightweight_decoding_constraints: dict | None,
+    plan_vpa_projection: bool = False,
+) -> tuple[
+    torch.Tensor,
+    list[dict[str, Any]],
+    list[list[dict[str, Any]]],
+    list[dict[str, Any]],
+]:
+    """Repair an already complete predictor canvas without rerunning it."""
+
+    if transaction_logit_transform is None:
+        raise ValueError("complete-body PMTR repair requires a logit transform")
+    return apply_spad_basin_closure(
+        model,
+        complete_tokens,
+        programs=programs,
+        batch=batch,
+        base_seed=base_seed,
+        prompt_length=prompt_length,
+        gen_length=gen_length,
+        attention_mask=attention_mask,
+        temperature=temperature,
+        cfg_scale=cfg_scale,
+        remasking=remasking,
+        mask_id=mask_id,
+        allowed_token_ids_by_generation_pos=allowed_token_ids_by_generation_pos,
+        lightweight_decoding_constraints=lightweight_decoding_constraints,
+        plan_vpa_projection=plan_vpa_projection,
+        transaction_logit_transform=transaction_logit_transform,
+    )
 
 
 def spad_basin_closure_record_fields(
@@ -678,6 +798,7 @@ def main() -> None:
         type=Path,
         default=None,
     )
+    parser.add_argument("--pmtr-checkpoint", type=Path, default=None)
     parser.add_argument("--spad-max-anchor-revisions", type=int, default=0)
     parser.add_argument("--spad-hide-suffix", action="store_true")
     parser.add_argument("--skip-graph-validation", action="store_true")
@@ -690,6 +811,7 @@ def main() -> None:
     if args.spad_cell_closure and args.generation_schedule != "spad":
         raise ValueError("--spad-cell-closure requires --generation-schedule spad")
     basin_closure_capability = validate_spad_basin_closure_configuration(args)
+    pmtr_checkpoint_path = validate_pmtr_configuration(args)
     if args.spad_hide_suffix and not args.spad_backfill:
         raise ValueError("--spad-hide-suffix requires --spad-backfill")
     if int(args.spad_max_anchor_revisions) < 0:
@@ -705,6 +827,21 @@ def main() -> None:
     args.output_dir.mkdir(parents=True, exist_ok=True)
     process_one = None if args.skip_graph_validation else import_process_one(args.crysllmgen_dir)
     model, tokenizer = load_model_and_tokenizer(args.model_path, args.checkpoint_path, dist_info["device"])
+    pmtr_transform = None
+    pmtr_metadata = None
+    if pmtr_checkpoint_path is not None:
+        from crystal_dlm.pmtr_checkpoint import load_pmtr_checkpoint
+
+        output_weight = model.get_output_embeddings().weight
+        loaded_pmtr = load_pmtr_checkpoint(
+            pmtr_checkpoint_path,
+            tokenizer=tokenizer,
+            device=output_weight.device,
+            dtype=output_weight.dtype,
+            expected_hidden_size=int(output_weight.shape[1]),
+        )
+        pmtr_transform = loaded_pmtr.transform
+        pmtr_metadata = dict(loaded_pmtr.metadata)
     tokenizer_contract = validate_dynamic_tokenizer_contract(
         tokenizer,
         mask_token_id=MASK_TOKEN_ID,
@@ -718,6 +855,8 @@ def main() -> None:
     tasks.sort(key=lambda item: (int(item["plan_state"]["N"]), int(item["sample_idx"])))
 
     run_config = {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}
+    if pmtr_checkpoint_path is None:
+        run_config.pop("pmtr_checkpoint", None)
     if not args.spad_plan_vpa_projection:
         run_config.pop("spad_plan_vpa_projection", None)
     if args.body_prompt_style == "formula_only":
@@ -737,6 +876,8 @@ def main() -> None:
     )
     if basin_closure_capability is not None:
         run_config["spad_basin_closure_capability"] = basin_closure_capability
+    if pmtr_metadata is not None:
+        run_config["pmtr"] = pmtr_metadata
     if is_main:
         write_json(str(args.output_dir / "run_config.json"), run_config)
         write_json(
@@ -892,6 +1033,7 @@ def main() -> None:
                     allowed_token_ids_by_generation_pos=allowed,
                     lightweight_decoding_constraints=lightweight_constraints,
                     plan_vpa_projection=bool(args.spad_plan_vpa_projection),
+                    transaction_logit_transform=pmtr_transform,
                 )
                 basin_cell_revision_logs = list(basin_cell_logs)
                 basin_block_revision_logs = list(basin_block_logs)
