@@ -143,6 +143,43 @@ class FreezePMTRPreflightTest(unittest.TestCase):
             self.assertFalse(manifest["outcomes_read"])
             self.assertTrue((output / "_SUCCESS").is_file())
 
+    def test_missing_pointer_rows_are_disclosed_not_a_sampling_gate(self):
+        teacher = [
+            {
+                "source_row_idx": index,
+                "prompt": "p",
+                "answer": body(),
+                "plan_state": {"N": 2, "elements": ["Li", "O"], "counts": [1, 1]},
+            }
+            for index in range(8)
+        ]
+        pointer = [
+            {"source_row_idx": index, "species_program": ["Li", "O"]}
+            for index in range(7)
+        ]
+        states = [
+            {
+                "mp20_train_source_row_idx": 7,
+                "prompt": "p",
+                "final_body": body(0.01),
+                "plan_state": {"N": 2, "elements": ["Li", "O"], "counts": [1, 1]},
+                "species_program": ["Li", "O"],
+                "outcomes_read": False,
+                "replacement": False,
+            }
+        ]
+        result = MODULE.freeze(
+            teacher_rows=teacher,
+            pointer_rows=pointer,
+            actual_states=states,
+            seed=9,
+            fit_size=3,
+            holdout_size=2,
+            transfer_size=1,
+        )
+        self.assertEqual(result["teacher_without_pointer"], 1)
+        self.assertTrue(set(result["fit_ids"] + result["holdout_ids"]) <= set(range(7)))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -105,13 +105,10 @@ def freeze(
 ) -> dict[str, Any]:
     teacher = _index_unique(teacher_rows)
     pointer = _index_unique(pointer_rows)
-    if set(teacher) != set(pointer):
-        missing_pointer = set(teacher) - set(pointer)
-        missing_teacher = set(pointer) - set(teacher)
-        raise ValueError(
-            f"teacher/pointer source support differs: "
-            f"missing_pointer={len(missing_pointer)} missing_teacher={len(missing_teacher)}"
-        )
+    missing_teacher = set(pointer) - set(teacher)
+    if missing_teacher:
+        raise ValueError(f"pointer contains {len(missing_teacher)} rows absent from teacher")
+    pointer_supported = set(teacher) & set(pointer)
 
     transfer_by_source: dict[int, dict[str, Any]] = {}
     for state in actual_states:
@@ -129,7 +126,11 @@ def freeze(
     transfer_ids = transfer_order[: int(transfer_size)]
 
     coherent_order = sorted(
-        (index for index in teacher if index not in set(transfer_ids)),
+        (
+            index
+            for index in pointer_supported
+            if index not in set(transfer_ids)
+        ),
         key=lambda index: _hash_order(seed, "coherent-corruption", index),
     )
     required = int(fit_size) + int(holdout_size)
@@ -146,6 +147,9 @@ def freeze(
         "fit_ids": fit_ids,
         "holdout_ids": holdout_ids,
         "transfer_ids": transfer_ids,
+        "teacher_sources": len(teacher),
+        "pointer_sources": len(pointer),
+        "teacher_without_pointer": len(set(teacher) - set(pointer)),
     }
 
 
@@ -189,6 +193,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         "fit_sources": len(result["fit_ids"]),
         "holdout_sources": len(result["holdout_ids"]),
         "actual_spad_transfer": len(result["transfer_ids"]),
+        "teacher_sources": int(result["teacher_sources"]),
+        "pointer_sources": int(result["pointer_sources"]),
+        "teacher_without_pointer": int(result["teacher_without_pointer"]),
         "pairwise_disjoint": not (
             set(result["fit_ids"]) & set(result["holdout_ids"])
             or set(result["fit_ids"]) & set(result["transfer_ids"])
