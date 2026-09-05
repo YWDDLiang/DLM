@@ -17,8 +17,8 @@ test -f "${SPAD_PRODUCTION_CHECK_RUN:?}/_SUCCESS"
 RUN="$ROOT/runs/spad_state_paths_${SLURM_JOB_ID}"
 mkdir "$RUN" "$RUN/code"
 trap 'rc=$?; printf "exit_code=%s line=%s\n" "$rc" "$LINENO" >"$RUN/FAILURE.txt"; touch "$RUN/_FAILED"; exit "$rc"' ERR
-git -C "$SOURCE" rev-parse HEAD >"$RUN/CODE_COMMIT"
-git -C "$SOURCE" archive HEAD | tar -x -C "$RUN/code"
+(cd "$SOURCE" && git rev-parse HEAD) >"$RUN/CODE_COMMIT"
+(cd "$SOURCE" && git archive HEAD) | tar -x -C "$RUN/code"
 CODE="$RUN/code"
 export PYTHONPATH="$CODE/src" TOKENIZERS_PARALLELISM=false
 export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1
