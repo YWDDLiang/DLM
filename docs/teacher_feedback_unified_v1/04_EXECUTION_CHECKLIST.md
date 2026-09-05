@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 03:00 Asia/Shanghai: formal round0 training39892 completed1020updates in11m17. Six-GPU K8 refresh collection39896 is running; it targets8192paths on the same1024conditions. Reference tau80039890 and matched verification39893 completed. No final-student SUN exists yet. Old teacher/run39889 remain invalidated.**
+Current status: **2026-09-06 04:03 Asia/Shanghai: formal round0 training39892 is complete. K8 collection39896 is finishing; round0 native/tau800 evaluation39910 is already queued with afterany:39896 to start when GPUs release. Do not submit another236. K8 label shards are not yet submitted. Final-student SUN remains pending; refiner training is explicitly deferred to the next round.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
@@ -8,6 +8,8 @@ Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBIL
 Continuous-refiner extension: [22 Code assessment and proposal](22_CONTINUOUS_DIFFUSION_EXTENSION_ASSESSMENT.md).
 This is a proposed follow-on design, not a trained refiner or a change to the
 currently scheduled fixed-model494 comparisons. Preserve today's active pipeline.
+The user explicitly confirmed this deferral at04:00: prioritize K4/K8 evaluations;
+keep model494 frozen in this round and do not add further method extensions.
 Keep the completed initial1024*K4 pool; expand the ONE train-only refresh to
 the same1024 conditions*K8 (8192 requests), then two passes. No additional small
 ablations. K4/K8 is now an explicit recorded data budget, not an inference selector.
@@ -52,8 +54,10 @@ implements/tests/deploys/monitors directly; no coding delegation.
 
 Immediate work: finish39896 and label its complete8192requests with the current
 uniform terminal verification. Latest user request adds ONE round0 fixed256
-development evaluation: after39896finishes, run236on two GPUs for native/tau800
-atstep1020, explicitlyround0_diagnostic. In parallel label the refresh using
+development evaluation:39910already queues236on two GPUs for native/tau800
+atstep1020, explicitlyround0_diagnostic. Its dependency only waits for resource
+release; if39896fails, diagnose/recover that separately. Once the full K8 sample
+is successful, in parallel label the refresh using
 four GPUs, shard-count3/shard-ranks0,1 (5462requests). When236finishes, label the
 remaining rank2 shard on two GPUs (2730requests). Merge both label outputs;
 never relabel the full8192or duplicate shards. Build round1teacher with--candidates8, review its
