@@ -110,14 +110,24 @@ class PMTRPreflightBuilderTest(unittest.TestCase):
                 parse_dynamic_answer(built["source_answer"], strict=True)["tokens"]
             )
             self.assertEqual(built["answer"], row["answer"])
-            self.assertEqual(built["forced_mask_positions"], state["forced"])
-            self.assertEqual(built["loss_positions"], state["loss"])
+            component_index = (
+                int(state["metadata"].get("coordinate_component_index", 0))
+                if state["kind"] == "reverse_species_block_component"
+                else index
+            )
+            start_index = (
+                0
+                if state["kind"] == "cell_sequential_component"
+                else index - component_index
+            )
+            start_state = states[start_index]
+            self.assertEqual(built["forced_mask_positions"], start_state["forced"])
             self.assertEqual(len(source_tokens), 7 + 4 * 4)
             self.assertEqual(
                 parse_dynamic_answer(built["source_answer"], strict=True)["species"],
                 ["O", "O", "Na", "Cl"],
             )
-            repaired = protected | set(repair_order[:index])
+            repaired = protected | set(repair_order[:start_index])
             for position in range(len(source_tokens)):
                 expected = (
                     clean_tokens[position]
@@ -127,11 +137,17 @@ class PMTRPreflightBuilderTest(unittest.TestCase):
                 self.assertEqual(source_tokens[position], expected)
             if state["kind"] == "cell_sequential_component":
                 observed_cell.add(state["metadata"]["cell_component"])
+                self.assertEqual(built["loss_positions"], [1, 2, 3, 4, 5, 6])
                 self.assertEqual(built["repair_target"]["kind"], "cell")
                 self.assertEqual(len(built["repair_target"]["lattice_tangent"]), 3)
                 self.assertIsNone(built["repair_target"]["site_slot_index"])
             else:
                 observed_coordinate.add(state["metadata"]["coordinate_component"])
+                slot = int(state["metadata"]["site_slot_index"])
+                self.assertEqual(
+                    built["loss_positions"],
+                    [8 + 4 * slot, 9 + 4 * slot, 10 + 4 * slot],
+                )
                 self.assertEqual(built["repair_target"]["kind"], "site")
                 self.assertEqual(
                     built["repair_target"]["site_slot_index"],
@@ -167,12 +183,15 @@ class PMTRPreflightBuilderTest(unittest.TestCase):
         clean = tuple(parse_dynamic_answer(row["answer"], strict=True)["tokens"])
         corrupt = selection.proposal.tokens
         repair_order = [state["loss"][0] for state in states]
-        repaired = {0, 7, 11, 15, 19, *repair_order[:state_index]}
+        start_index = state_index - int(
+            states[state_index]["metadata"]["coordinate_component_index"]
+        )
+        repaired = {0, 7, 11, 15, 19, *repair_order[:start_index]}
         self.assertEqual(
             actual,
             tuple(clean[i] if i in repaired else corrupt[i] for i in range(len(actual))),
         )
-        later_unrepaired = set(repair_order[state_index + 1 :])
+        later_unrepaired = set(repair_order[start_index + 1 :])
         self.assertTrue(later_unrepaired)
         self.assertTrue(all(actual[i] == corrupt[i] for i in later_unrepaired))
 
@@ -197,8 +216,8 @@ class PMTRPreflightBuilderTest(unittest.TestCase):
         self.assertEqual(built["pmtr"]["mode"], "clean_ce_fallback")
         self.assertIsNone(built["repair_target"])
         self.assertEqual(built["source_answer"], built["answer"])
-        self.assertEqual(built["forced_mask_positions"], [5, 6])
-        self.assertEqual(built["loss_positions"], [5])
+        self.assertEqual(built["forced_mask_positions"], [1, 2, 3, 4, 5, 6])
+        self.assertEqual(built["loss_positions"], [1, 2, 3, 4, 5, 6])
 
     def test_cli_reads_jsonl_certificates_and_writes_compact_manifest(self):
         with tempfile.TemporaryDirectory() as directory:

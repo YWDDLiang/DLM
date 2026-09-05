@@ -31,6 +31,7 @@ from crystal_dlm.manifold_corruption import (  # noqa: E402
     select_first_certified_corruption,
 )
 from crystal_dlm.spad_program import (  # noqa: E402
+    coordinate_positions,
     element_position,
     program_from_element_order,
 )
@@ -289,7 +290,18 @@ def build_repair_row(
     )
     if not 0 <= selected_index < len(states):
         raise ValueError("state_index lies outside closure states")
-    state = states[selected_index]
+    sampled_state = states[selected_index]
+    if sampled_state["kind"] == "cell_sequential_component":
+        transaction_start_index = 0
+        transaction_loss_positions = [int(value) for value in states[0]["forced"]]
+    elif sampled_state["kind"] == "reverse_species_block_component":
+        component_index = int(sampled_state["metadata"]["coordinate_component_index"])
+        transaction_start_index = selected_index - component_index
+        slot = int(sampled_state["metadata"]["site_slot_index"])
+        transaction_loss_positions = [int(value) for value in coordinate_positions(slot)]
+    else:
+        raise RuntimeError("unknown PMTR closure state kind")
+    state = states[transaction_start_index]
     repair_order = [int(item["loss"][0]) for item in states]
     if any(len(item["loss"]) != 1 for item in states):
         raise RuntimeError("PMTR requires singleton component closure states")
@@ -301,7 +313,7 @@ def build_repair_row(
         clean_tokens=clean,
         corrupted_tokens=corrupted,
         repair_order=repair_order,
-        state_index=selected_index,
+        state_index=transaction_start_index,
         num_atoms=num_atoms,
     )
     source_answer = "".join(source_tokens)
@@ -312,7 +324,7 @@ def build_repair_row(
         raise RuntimeError("coherent source changed exact composition")
 
     forced = [int(value) for value in state["forced"]]
-    loss = [int(value) for value in state["loss"]]
+    loss = transaction_loss_positions
     protected = {0, *(element_position(slot) for slot in range(num_atoms))}
     if state["kind"] == "cell_sequential_component" and forced != [
         int(value) for value in state["metadata"]["remaining_lattice_positions"]
@@ -337,11 +349,15 @@ def build_repair_row(
     closure.update(
         {
             "schedule": "cell_then_reverse_llama_species_blocks_v1",
-            "state_index": selected_index,
+            "state_index": transaction_start_index,
             "state_count": len(states),
             "program_order": list(program.element_order),
-            "earlier_repaired_positions": repair_order[:selected_index],
-            "active_position": repair_order[selected_index],
+            "sampled_component_state_index": selected_index,
+            "transaction_start_state_index": transaction_start_index,
+            "transaction_level_supervision": True,
+            "transaction_loss_positions": list(loss),
+            "earlier_repaired_positions": repair_order[:transaction_start_index],
+            "active_position": repair_order[transaction_start_index],
             "same_corruption_for_all_unrepaired_positions": True,
         }
     )
