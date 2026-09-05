@@ -2,6 +2,11 @@
 
 Status: **scientific design approved; implementation and GPU execution not yet started**
 
+The code-grounded implementation source of truth is
+[the PMTR architecture audit](16_PMTR_CODE_GROUNDED_ARCHITECTURE_AUDIT.md).
+That audit records what is present in the current branch, what is still missing,
+and the corrections required to preserve the existing SPAD state machine.
+
 ## 1. Decision
 
 The next method is **Programmed Manifold-to-Token Repair (PMTR)**. It replaces
@@ -649,4 +654,3 @@ strictly MLIP-free inference path.
 | No inference MLIP | CHGNet force/energy guidance | Required deployment and scientific boundary |
 
 Final design disposition: **APPROVED**.
-

@@ -207,15 +207,16 @@ proposal is explicitly superseded and will not be implemented.
 The current method, next-cycle design, ablations and run ledger are documented here:
 
 1. [PMTR scientific method and execution plan](docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md)
-2. [Superseded PCTP reward design](docs/teacher_feedback_unified_v1/14_PCTP_SCIENTIFIC_ALIGNMENT_AND_EXECUTION.md)
-3. [Active basin-closure design](docs/teacher_feedback_unified_v1/12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md)
-4. [Unified SPAD method](docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md)
-5. [Pure-Llama Route A](docs/teacher_feedback_unified_v1/01_TRACK_A_PURE_LLM.md)
-6. [Llama-programmed DLM Route B](docs/teacher_feedback_unified_v1/02_TRACK_B_LLM_GUIDED_DLM.md)
-7. [Cross-representation contract](docs/teacher_feedback_unified_v1/03_CROSS_REPRESENTATION_AND_DIFFUSION.md)
-8. [Active execution checklist](docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md)
-9. [Decision log](docs/teacher_feedback_unified_v1/05_DECISION_LOG.md)
-10. [Implementation audit](docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
+2. [PMTR code-grounded architecture audit](docs/teacher_feedback_unified_v1/16_PMTR_CODE_GROUNDED_ARCHITECTURE_AUDIT.md)
+3. [Superseded PCTP reward design](docs/teacher_feedback_unified_v1/14_PCTP_SCIENTIFIC_ALIGNMENT_AND_EXECUTION.md)
+4. [Active basin-closure design](docs/teacher_feedback_unified_v1/12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md)
+5. [Unified SPAD method](docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md)
+6. [Pure-Llama Route A](docs/teacher_feedback_unified_v1/01_TRACK_A_PURE_LLM.md)
+7. [Llama-programmed DLM Route B](docs/teacher_feedback_unified_v1/02_TRACK_B_LLM_GUIDED_DLM.md)
+8. [Cross-representation contract](docs/teacher_feedback_unified_v1/03_CROSS_REPRESENTATION_AND_DIFFUSION.md)
+9. [Active execution checklist](docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md)
+10. [Decision log](docs/teacher_feedback_unified_v1/05_DECISION_LOG.md)
+11. [Implementation audit](docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md)
 
 Portable read-only checks remain available:
 
