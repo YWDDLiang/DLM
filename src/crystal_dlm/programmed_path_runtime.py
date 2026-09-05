@@ -165,25 +165,11 @@ class ProgrammedPathSampler:
             programs=self.programs, active_positions=transaction_positions,
         )
         raw = self.model(x, attention_mask=attention_mask, geometry_context=context).logits
-        logits = raw.clone()
-        _apply_schema_masks(
-            logits, x, self.prompt_length, self.gen_length, self._allowed, self._prepared_grammar
+        return process_path_logits(
+            raw, x, prompt_length=self.prompt_length, gen_length=self.gen_length,
+            allowed=self._allowed, grammar=self._prepared_grammar, constraints=self.constraints,
+            positions=positions, mask_id=self.mask_id,
         )
-        active = torch.zeros(x.shape[0], self.gen_length, dtype=torch.bool, device=x.device)
-        for row, pos in positions.items():
-            active[row, pos] = True
-        report = _apply_lightweight_decoding_masks(
-            logits, x, self.prompt_length, self.gen_length, self.constraints,
-            active, self.mask_id,
-        )
-        unavailable = {row for row, pos in report["pbc_no_legal_completion"] if positions.get(row) == pos}
-        minimum = torch.finfo(logits.dtype).min
-        for row, pos in positions.items():
-            values = logits[row, self.prompt_length + pos]
-            legal = torch.isfinite(values) & (values > minimum)
-            if not bool(legal.any()) or bool(torch.isnan(values).any()) or bool(torch.isposinf(values).any()):
-                unavailable.add(row)
-        return logits, unavailable
 
     def _draw(
         self, x: torch.Tensor, old: torch.Tensor, positions: dict[int, int],
@@ -308,6 +294,27 @@ class ProgrammedPathSampler:
             if not complete_geometry_supported(x[row, self.prompt_length:], self.constraints):
                 raise RuntimeError("whole-transaction rollback failed to preserve supported input")
         return x, [trace.to_dict() for trace in self.traces]
+
+
+def process_path_logits(raw, x, *, prompt_length, gen_length, allowed, grammar,
+                        constraints, positions, mask_id):
+    """The shared deployment transform; autograd is retained for path fitting."""
+    logits = raw.clone()
+    _apply_schema_masks(logits, x, prompt_length, gen_length, allowed, grammar)
+    active = torch.zeros(x.shape[0], gen_length, dtype=torch.bool, device=x.device)
+    for row, pos in positions.items():
+        active[row, pos] = True
+    report = _apply_lightweight_decoding_masks(
+        logits, x, prompt_length, gen_length, constraints, active, mask_id,
+    )
+    unavailable = {row for row, pos in report["pbc_no_legal_completion"] if positions.get(row) == pos}
+    minimum = torch.finfo(logits.dtype).min
+    for row, pos in positions.items():
+        values = logits[row, prompt_length + pos]
+        legal = torch.isfinite(values) & (values > minimum)
+        if not bool(legal.any()) or bool(torch.isnan(values).any()) or bool(torch.isposinf(values).any()):
+            unavailable.add(row)
+    return logits, unavailable
 
 
 def replay_scalar_states(trace: dict[str, Any]) -> Iterator[dict[str, Any]]:

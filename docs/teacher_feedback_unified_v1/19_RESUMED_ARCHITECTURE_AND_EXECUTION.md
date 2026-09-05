@@ -53,7 +53,14 @@ teacher双降不保证学生/SUN双升；force/stress、实际步数、Stable/N/
 - 标注草稿import已修复，固定零外压FIRE/FrechetCellFilter、全晶胞自由度，保存
   真实optimizer返回、原/终态单位和压缩轨迹；重复终点只共享物理计算，路径重数保留。
 - 74项组合CPU测试通过。集群实际CHGNet包0.4.2、ASE3.28.0；势固定CHGNet0.3.0。
-- 两卡生产接口检查待提交；正式1024×4池、路径训练器、刷新及新SUN仍未完成。
+- 39867在模型加载前因旧Git不支持-C退出；15dc3d9修复快照命令。
+- 39869实际完成两条全路径和新进程base+LoRA+conditioner回放：51+102=153个
+  decision全部误差0，非零state residual；label端将非法终态误分类导致总job失败。
+- 0840154修复label分类并保留其能量/停止状态。39871复用39869路径，33秒完成
+  标注协议检查：1 verified、1 invalid_terminal；二者都完整记账，不是性能样本。
+- 四卡39872正在采固定前128组×K4。完整1024池、刷新及新SUN仍未完成。
+- 全路径trainer已接通，正确HT/minibatch条件均值、零权padding、4:1 MP20 CE、
+  optimizer续训和不可选用的工程checkpoint；需真实数据梯度检查后才正式训练。
 
 新run保存明确commit的代码快照。真实检查通过后先固定0..127组，再完成同一池
 128..1023组；不根据能量更换条件。原有`apply_pmtr_fixed_bodies.py`及测试原样保留。
