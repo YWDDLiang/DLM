@@ -347,10 +347,14 @@ so job 39770 restarts from the same registered closure-CE policy.
   the existing bounded Plan-VPA projection for insufficient cell control; or
   the preregistered tau600 topology-preserving bridge when tau800 erases a real
   raw gain. Cache-coverage failure changes reporting only, not the model. The
-  selected branch is one warm-start K10 pass from job39799: three-A800 training
-  job39805 uses the same 4,104 labels, LR5e-6, clean interleave and one-pass
-  schedule. The fourth A800 simultaneously freezes the new Planner seed26 for
-  stream21 in job39806; DLM/refiner seeds are fixed to 95117/105117.
-- [ ] Do not launch a second final iteration and do not edit data, labels,
+  selected branch was one warm-start K10 pass from job39799: three-A800 training
+  job39805 completed successfully with the same 4,104 labels, LR5e-6, clean
+  interleave and one-pass schedule (2,736 finite updates; 3,889 informative
+  posterior exposures; step-0 equality passed; only the final policy saved).
+  Planner seed26 job39806 and the outcome-blind 256-row cohort freeze job39807
+  also completed. Final fixed stream21 generation/refinement job39810 is now
+  running on four A800s with DLM/refiner seeds 95117/105117 and tau800.
+- [x] Consume the single allowed final iteration with job39805; do not launch a
+  second final iteration or edit data, labels,
   denominators, seeds or checkpoints to manufacture 10%/50%. Aggressive compute
   is authorized; outcome curation and fabricated results are not.
