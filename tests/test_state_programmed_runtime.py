@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-import pytest
+import math
 import torch
 from torch import nn
 from torch.utils.checkpoint import checkpoint
@@ -208,4 +208,4 @@ def test_positive_temperature_draw_probabilities_replay():
                                                 {0: state["transaction_positions"]}, torch.ones_like(current))
         assert not bad
         actual = torch.log_softmax(logits[0, state["position"] + 1].double() / .7, -1)[state["target_token"]]
-        assert float(actual) == pytest.approx(state["recorded_log_probability"], abs=1e-10)
+        assert math.isclose(float(actual), state["recorded_log_probability"], rel_tol=0, abs_tol=1e-10)
