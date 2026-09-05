@@ -95,6 +95,7 @@ def repair_row(source_row_idx=0, *, certified=True):
         "closure": {
             "reverse_block_index": 0,
             "site_index_within_block": 0,
+            "site_slot_index": 0,
             "coordinate_component_index": 1,
         },
         "repair_target": (
