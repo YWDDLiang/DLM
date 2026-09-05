@@ -74,7 +74,9 @@ class ProgrammedPathLabelTest(unittest.TestCase):
                 return result
         result = self.run_case(BadOptimizer())
         self.assertFalse(result["verified"])
-        self.assertEqual(result["status"], "evaluation_error")
+        self.assertEqual(result["status"], "invalid_terminal")
+        self.assertIsNotNone(result["terminal_energy"])
+        self.assertEqual(result["actual_steps"], 7)
 
     def test_negative_gap_is_not_clipped(self):
         class UphillOptimizer(Optimizer):

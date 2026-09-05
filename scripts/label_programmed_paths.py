@@ -119,7 +119,12 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
         trajectory = relaxed["trajectory"]
         if int(final.num_sites) != count or final.composition != structure.composition:
             raise ValueError("relaxation changed the fixed composition")
-        result["terminal_min_distance_A"] = validate_structure_geometry(final)
+        geometry_valid = True
+        try:
+            result["terminal_min_distance_A"] = validate_structure_geometry(final)
+        except ValueError as error:
+            geometry_valid = False
+            result["terminal_geometry_error"] = str(error)
         energies = list(trajectory.energies)
         if not energies:
             raise ValueError("missing relaxation energy trajectory")
@@ -146,11 +151,13 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
         monotone = result["gap"] >= -.001
         # Missing optimizer status is explicit, never synthesized as a success.
         stop_verified = result["optimizer_converged"] is True
-        result["verified"] = bool(physical and same_energy and monotone and stop_verified)
+        result["verified"] = bool(geometry_valid and physical and same_energy and monotone and stop_verified)
         if not same_energy:
             result["status"] = "energy_protocol_mismatch"
         elif not monotone:
             result["status"] = "relaxation_energy_increased"
+        elif not geometry_valid:
+            result["status"] = "invalid_terminal"
         elif not physical:
             result["status"] = "not_converged"
         elif not stop_verified:
