@@ -6,7 +6,7 @@ import math
 import re
 from dataclasses import asdict, dataclass
 from types import SimpleNamespace
-from typing import Any, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 import torch
 
@@ -19,6 +19,12 @@ from crystal_dlm.llada_generation import (
     _prepare_atom_count_grammar,
 )
 from crystal_dlm.spad_program import LATTICE_POSITIONS, coordinate_positions
+from crystal_dlm.transaction_logits import (
+    TransactionContext,
+    TransactionLogitTransform,
+    TransactionModelStep,
+    apply_transaction_logit_transform,
+)
 
 
 SPAD_BASIN_CLOSURE_BLOCK_RADIX = 64
@@ -1013,6 +1019,11 @@ def revise_spad_cell(
     lightweight_decoding_constraints: dict | None,
     strict_geometry_fallback: bool = True,
     sampling_seeds_by_batch: Sequence[int] | None = None,
+    transaction_logit_transform: TransactionLogitTransform | None = None,
+    plan_metadata_by_batch: Sequence[Mapping[str, Any] | None] | None = None,
+    program_metadata_by_batch: Sequence[Mapping[str, Any] | None] | None = None,
+    lattice_versions_by_batch: Sequence[int] | None = None,
+    on_lattice_commit: Callable[[int, int], None] | None = None,
 ) -> tuple[torch.Tensor, list[dict[str, Any]]]:
     """Re-mask and regenerate one complete six-token lattice transaction.
 
@@ -1030,6 +1041,21 @@ def revise_spad_cell(
         complete_tokens.shape[0]
     ):
         raise ValueError("one sampling seed is required per batch row")
+    batch_size = int(complete_tokens.shape[0])
+    for values, label in (
+        (plan_metadata_by_batch, "Plan metadata"),
+        (program_metadata_by_batch, "program metadata"),
+        (lattice_versions_by_batch, "lattice version"),
+    ):
+        if values is not None and len(values) != batch_size:
+            raise ValueError(f"one {label} value is required per batch row")
+    lattice_versions = (
+        [0] * batch_size
+        if lattice_versions_by_batch is None
+        else [int(value) for value in lattice_versions_by_batch]
+    )
+    if any(value < 0 for value in lattice_versions):
+        raise ValueError("lattice versions must be non-negative")
     if strict_geometry_fallback and (
         not lightweight_decoding_constraints
         or not lightweight_decoding_constraints.get("pbc_min_distance_mask")
@@ -1048,6 +1074,33 @@ def revise_spad_cell(
     )
     before = x.clone()
     previous = x.index_select(1, absolute).clone()
+    transform_contexts: dict[int, TransactionContext] = {}
+    transform_proposals: dict[int, Any] = {}
+    if transaction_logit_transform is not None:
+        for row_index in range(batch_size):
+            transform_contexts[row_index] = TransactionContext(
+                kind="cell",
+                active_positions=tuple(int(value) for value in absolute.tolist()),
+                complete_pre_remask_tokens=before[row_index].detach().clone(),
+                previous_active_token_ids=tuple(
+                    int(value) for value in previous[row_index].tolist()
+                ),
+                prompt_length=int(prompt_length),
+                gen_length=int(gen_length),
+                plan_metadata=(
+                    None
+                    if plan_metadata_by_batch is None
+                    else plan_metadata_by_batch[row_index]
+                ),
+                program_metadata=(
+                    None
+                    if program_metadata_by_batch is None
+                    else program_metadata_by_batch[row_index]
+                ),
+                batch_index=row_index,
+                component_indices=tuple(range(6)),
+                lattice_version=lattice_versions[row_index],
+            )
     x[:, absolute] = int(mask_id)
     full_attention = _full_attention_mask(
         x,
@@ -1086,14 +1139,36 @@ def revise_spad_cell(
         absolute_position = int(prompt_length) + int(generation_position)
         group_allowed = torch.zeros_like(x, dtype=torch.bool)
         group_allowed[:, absolute_position] = True
-        logits = _model_logits(
-            model,
-            x,
-            full_attention,
-            prompt_index,
-            float(cfg_scale),
-            int(mask_id),
-        )
+        if transaction_logit_transform is None:
+            logits = _model_logits(
+                model,
+                x,
+                full_attention,
+                prompt_index,
+                float(cfg_scale),
+                int(mask_id),
+            )
+        else:
+            model_step = _model_logits(
+                model,
+                x,
+                full_attention,
+                prompt_index,
+                float(cfg_scale),
+                int(mask_id),
+                return_model_step=True,
+            )
+            if not isinstance(model_step, TransactionModelStep):
+                raise RuntimeError("transaction model step was not returned")
+            logits = model_step.logits
+            if int(component) == 0:
+                transform_proposals = {
+                    row_index: transaction_logit_transform.prepare(
+                        transform_contexts[row_index],
+                        model_step.row(row_index),
+                    )
+                    for row_index in range(batch_size)
+                }
         if allowed_mask is not None or prepared_atom_count_grammar is not None:
             _apply_schema_masks(
                 logits,
@@ -1112,6 +1187,17 @@ def revise_spad_cell(
             group_allowed[:, int(prompt_length) : int(prompt_length) + int(gen_length)],
             int(mask_id),
         )
+        if transaction_logit_transform is not None:
+            for row_index in range(batch_size):
+                logits[row_index, absolute_position] = (
+                    apply_transaction_logit_transform(
+                        transaction_logit_transform,
+                        component=int(component),
+                        active_logits=logits[row_index, absolute_position],
+                        proposal=transform_proposals[row_index],
+                        context=transform_contexts[row_index],
+                    )
+                )
         selected = _transaction_candidate_tokens(
             logits,
             active_absolute_positions={
@@ -1142,8 +1228,7 @@ def revise_spad_cell(
         restored = bool(strict_geometry_fallback and not supported)
         if restored:
             x[row_index, absolute] = previous[row_index]
-        logs.append(
-            {
+        log = {
                 "generation_positions": list(positions),
                 "previous_token_ids": list(old),
                 "proposed_token_ids": list(proposed),
@@ -1179,7 +1264,18 @@ def revise_spad_cell(
                     )
                 ),
             }
-        )
+        if lattice_versions_by_batch is not None or on_lattice_commit is not None:
+            lattice_version_after = (
+                lattice_versions[row_index]
+                if restored
+                else lattice_versions[row_index] + 1
+            )
+            log["lattice_version_before"] = lattice_versions[row_index]
+            log["lattice_version_after"] = lattice_version_after
+            log["lattice_commit_signal"] = not restored
+            if not restored and on_lattice_commit is not None:
+                on_lattice_commit(row_index, lattice_version_after)
+        logs.append(log)
     if bool((x[:, prompt_length:] == int(mask_id)).any()):
         raise RuntimeError("SPAD cell closure returned a masked canvas")
     return x, logs
@@ -1478,6 +1574,10 @@ def revise_spad_species_blocks(
     lightweight_decoding_constraints: dict | None,
     sampling_seeds_by_batch: Sequence[int] | None = None,
     block_index_offset: int = 0,
+    transaction_logit_transform: TransactionLogitTransform | None = None,
+    plan_metadata_by_batch: Sequence[Mapping[str, Any] | None] | None = None,
+    program_metadata_by_batch: Sequence[Mapping[str, Any] | None] | None = None,
+    lattice_versions_by_batch: Sequence[int] | None = None,
 ) -> tuple[torch.Tensor, list[list[dict[str, Any]]]]:
     """Close complete species blocks while preserving full future context.
 
@@ -1496,6 +1596,21 @@ def revise_spad_species_blocks(
         complete_tokens.shape[0]
     ):
         raise ValueError("one sampling seed is required per batch row")
+    batch_size = int(complete_tokens.shape[0])
+    for values, label in (
+        (plan_metadata_by_batch, "Plan metadata"),
+        (program_metadata_by_batch, "program metadata"),
+        (lattice_versions_by_batch, "lattice version"),
+    ):
+        if values is not None and len(values) != batch_size:
+            raise ValueError(f"one {label} value is required per batch row")
+    lattice_versions = (
+        [0] * batch_size
+        if lattice_versions_by_batch is None
+        else [int(value) for value in lattice_versions_by_batch]
+    )
+    if any(value < 0 for value in lattice_versions):
+        raise ValueError("lattice versions must be non-negative")
     if int(block_index_offset) < 0:
         raise ValueError("block_index_offset must be non-negative")
     x = complete_tokens.clone()
@@ -1592,6 +1707,10 @@ def revise_spad_species_blocks(
         site_logs_by_row: dict[int, list[dict[str, Any]]] = {
             row_index: [] for row_index in active_blocks
         }
+        complete_pre_remask_by_row = {
+            row_index: before[row_index].detach().clone()
+            for row_index in active_blocks
+        }
         max_sites = max((len(slots) for slots in active_blocks.values()), default=0)
         for site_order_index in range(max_sites):
             active_sites = {
@@ -1600,6 +1719,40 @@ def revise_spad_species_blocks(
                 if site_order_index < len(slots)
             }
             restored_rows: set[int] = set()
+            transform_contexts: dict[int, TransactionContext] = {}
+            transform_proposals: dict[int, Any] = {}
+            if transaction_logit_transform is not None:
+                for row_index, slot in active_sites.items():
+                    positions = coordinate_positions(slot)
+                    active_absolute = tuple(
+                        int(prompt_length) + int(position) for position in positions
+                    )
+                    transform_contexts[row_index] = TransactionContext(
+                        kind="site_xyz",
+                        active_positions=active_absolute,
+                        complete_pre_remask_tokens=complete_pre_remask_by_row[
+                            row_index
+                        ],
+                        previous_active_token_ids=previous_by_row[row_index][slot],
+                        prompt_length=int(prompt_length),
+                        gen_length=int(gen_length),
+                        plan_metadata=(
+                            None
+                            if plan_metadata_by_batch is None
+                            else plan_metadata_by_batch[row_index]
+                        ),
+                        program_metadata=(
+                            None
+                            if program_metadata_by_batch is None
+                            else program_metadata_by_batch[row_index]
+                        ),
+                        batch_index=row_index,
+                        block_index=global_block_index,
+                        site_index=int(slot),
+                        site_order_index=int(site_order_index),
+                        component_indices=(0, 1, 2),
+                        lattice_version=lattice_versions[row_index],
+                    )
             for component in range(3):
                 group_allowed = torch.zeros_like(x, dtype=torch.bool)
                 active_absolute_positions: dict[int, int] = {}
@@ -1610,14 +1763,36 @@ def revise_spad_species_blocks(
                     active_absolute_positions[row_index] = absolute_position
                 if not active_absolute_positions:
                     continue
-                logits = _model_logits(
-                    model,
-                    x,
-                    full_attention,
-                    prompt_index,
-                    float(cfg_scale),
-                    int(mask_id),
-                )
+                if transaction_logit_transform is None:
+                    logits = _model_logits(
+                        model,
+                        x,
+                        full_attention,
+                        prompt_index,
+                        float(cfg_scale),
+                        int(mask_id),
+                    )
+                else:
+                    model_step = _model_logits(
+                        model,
+                        x,
+                        full_attention,
+                        prompt_index,
+                        float(cfg_scale),
+                        int(mask_id),
+                        return_model_step=True,
+                    )
+                    if not isinstance(model_step, TransactionModelStep):
+                        raise RuntimeError("transaction model step was not returned")
+                    logits = model_step.logits
+                    if int(component) == 0:
+                        transform_proposals = {
+                            row_index: transaction_logit_transform.prepare(
+                                transform_contexts[row_index],
+                                model_step.row(row_index),
+                            )
+                            for row_index in active_sites
+                        }
                 if allowed_mask is not None or prepared_atom_count_grammar is not None:
                     _apply_schema_masks(
                         logits,
@@ -1659,6 +1834,17 @@ def revise_spad_species_blocks(
                         group_allowed[row_index, int(prompt_length) + z_position] = False
                         active_absolute_positions.pop(row_index, None)
                         restored_rows.add(int(row_index))
+                if transaction_logit_transform is not None:
+                    for row_index, absolute_position in active_absolute_positions.items():
+                        logits[row_index, absolute_position] = (
+                            apply_transaction_logit_transform(
+                                transaction_logit_transform,
+                                component=int(component),
+                                active_logits=logits[row_index, absolute_position],
+                                proposal=transform_proposals[row_index],
+                                context=transform_contexts[row_index],
+                            )
+                        )
                 selected = _transaction_candidate_tokens(
                     logits,
                     active_absolute_positions=active_absolute_positions,

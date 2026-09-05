@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from crystal_dlm.generation_schedule import n_elements_coords_lattice_schedule
 from crystal_dlm.lattice_geometry import lattice_angle_rad
 from crystal_dlm.periodic_geometry_ops import minimum_image_distances
+from crystal_dlm.transaction_logits import TransactionModelStep
 
 
 def add_gumbel_noise(logits: torch.Tensor, temperature: float) -> torch.Tensor:
@@ -203,19 +204,68 @@ def _model_logits(
     prompt_index: torch.Tensor,
     cfg_scale: float,
     mask_id: int,
-) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
-    if cfg_scale > 0.0:
-        un_x = x.clone()
-        un_x[prompt_index] = mask_id
-        model_input = torch.cat([x, un_x], dim=0)
-        if attention_mask is None:
-            attention_mask_input = None
+    *,
+    return_model_step: bool = False,
+) -> torch.Tensor | TransactionModelStep:
+    # Keep the default path byte-for-byte equivalent in model calls and tensor
+    # operations.  Hidden capture is opt-in and is used only by transaction
+    # transforms, so existing decoding has no extra hooks or forwards.
+    if not return_model_step:
+        if cfg_scale > 0.0:
+            un_x = x.clone()
+            un_x[prompt_index] = mask_id
+            model_input = torch.cat([x, un_x], dim=0)
+            if attention_mask is None:
+                attention_mask_input = None
+            else:
+                attention_mask_input = torch.cat(
+                    [attention_mask, attention_mask], dim=0
+                )
+            logits = model(model_input, attention_mask=attention_mask_input).logits
+            logits, un_logits = torch.chunk(logits, 2, dim=0)
+            return un_logits + (cfg_scale + 1.0) * (logits - un_logits)
+        return model(x, attention_mask=attention_mask).logits
+
+    output_head = model.get_output_embeddings()
+    captured: list[torch.Tensor] = []
+
+    def capture_hidden(_module, inputs) -> None:
+        if inputs and isinstance(inputs[0], torch.Tensor):
+            captured.append(inputs[0])
+
+    hook = output_head.register_forward_pre_hook(capture_hidden)
+    try:
+        if cfg_scale > 0.0:
+            un_x = x.clone()
+            un_x[prompt_index] = mask_id
+            model_input = torch.cat([x, un_x], dim=0)
+            if attention_mask is None:
+                attention_mask_input = None
+            else:
+                attention_mask_input = torch.cat([attention_mask, attention_mask], dim=0)
+            raw_logits = model(model_input, attention_mask=attention_mask_input).logits
+            logits, un_logits = torch.chunk(raw_logits, 2, dim=0)
+            guided_logits = un_logits + (cfg_scale + 1.0) * (logits - un_logits)
         else:
-            attention_mask_input = torch.cat([attention_mask, attention_mask], dim=0)
-        logits = model(model_input, attention_mask=attention_mask_input).logits
-        logits, un_logits = torch.chunk(logits, 2, dim=0)
-        return un_logits + (cfg_scale + 1.0) * (logits - un_logits)
-    return model(x, attention_mask=attention_mask).logits
+            guided_logits = model(x, attention_mask=attention_mask).logits
+    finally:
+        hook.remove()
+
+    hidden = captured[-1] if captured else None
+    if hidden is not None:
+        if cfg_scale > 0.0 and int(hidden.shape[0]) == 2 * int(x.shape[0]):
+            hidden = torch.chunk(hidden, 2, dim=0)[0]
+        elif int(hidden.shape[0]) != int(x.shape[0]):
+            row_index = getattr(model, "row_index", None)
+            if row_index is not None and 0 <= int(row_index) < int(hidden.shape[0]):
+                hidden = hidden[int(row_index) : int(row_index) + 1]
+            else:
+                hidden = None
+    return TransactionModelStep(
+        token_ids=x,
+        logits=guided_logits,
+        hidden_states=hidden,
+    )
 
 
 def _apply_schema_masks(

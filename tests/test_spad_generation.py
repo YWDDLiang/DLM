@@ -34,6 +34,20 @@ except ModuleNotFoundError:
 _TorchModuleBase = torch.nn.Module if torch is not None else object
 
 
+class RecordingIdentityTransform:
+    def __init__(self):
+        self.prepared = []
+        self.applied = []
+
+    def prepare(self, context, model_step):
+        self.prepared.append((context, model_step))
+        return len(self.prepared)
+
+    def apply(self, component, logits, proposal, context):
+        self.applied.append((int(component), proposal, context))
+        return logits
+
+
 @unittest.skipIf(torch is None, "torch unavailable")
 class SPADGenerationTest(unittest.TestCase):
     class TinyModel(_TorchModuleBase):
@@ -148,6 +162,8 @@ class SPADGenerationTest(unittest.TestCase):
 
     def test_cell_closure_changes_only_complete_lattice_transaction(self):
         model = self.TinyModel()
+        transform = RecordingIdentityTransform()
+        commit_signals = []
         prompt_length = 2
         gen_length = 15
         values = torch.arange(prompt_length + gen_length).reshape(1, -1) % 50
@@ -166,6 +182,13 @@ class SPADGenerationTest(unittest.TestCase):
             atom_count_grammar=None,
             lightweight_decoding_constraints=None,
             strict_geometry_fallback=False,
+            transaction_logit_transform=transform,
+            plan_metadata_by_batch=[{"family": "oxide"}],
+            program_metadata_by_batch=[{"species_order": ["O", "Li"]}],
+            lattice_versions_by_batch=[7],
+            on_lattice_commit=lambda row, version: commit_signals.append(
+                (row, version)
+            ),
         )
         active = [prompt_length + position for position in range(1, 7)]
         inactive = [index for index in range(output.shape[1]) if index not in active]
@@ -173,9 +196,30 @@ class SPADGenerationTest(unittest.TestCase):
         self.assertEqual(output[0, active].tolist(), [21] * 6)
         self.assertEqual(logs[0]["changed_components"], 6)
         self.assertTrue(logs[0]["all_sites_visible"])
+        self.assertEqual(len(transform.prepared), 1)
+        self.assertEqual(
+            [component for component, _proposal, _context in transform.applied],
+            list(range(6)),
+        )
+        context, model_step = transform.prepared[0]
+        self.assertEqual(context.kind, "cell")
+        self.assertTrue(torch.equal(context.complete_pre_remask_tokens, values[0]))
+        self.assertEqual(
+            context.previous_active_token_ids,
+            tuple(int(values[0, position]) for position in active),
+        )
+        self.assertEqual(context.plan_metadata["family"], "oxide")
+        self.assertEqual(context.lattice_version, 7)
+        self.assertIsNone(model_step.hidden_states)
+        self.assertEqual(commit_signals, [(0, 8)])
+        self.assertEqual(logs[0]["lattice_version_before"], 7)
+        self.assertEqual(logs[0]["lattice_version_after"], 8)
+        self.assertTrue(logs[0]["lattice_commit_signal"])
 
     def test_cell_closure_restores_noop_when_new_cell_causes_pbc_collision(self):
         model = self.TinyModel()
+        transform = RecordingIdentityTransform()
+        commit_signals = []
         prompt_length = 1
         suffix = torch.tensor(
             [
@@ -257,13 +301,23 @@ class SPADGenerationTest(unittest.TestCase):
             atom_count_grammar=None,
             lightweight_decoding_constraints=constraints,
             strict_geometry_fallback=True,
+            transaction_logit_transform=transform,
+            lattice_versions_by_batch=[3],
+            on_lattice_commit=lambda row, version: commit_signals.append(
+                (row, version)
+            ),
         )
         self.assertTrue(torch.equal(output, complete))
         self.assertTrue(logs[0]["restored_complete_noop"])
         self.assertFalse(logs[0]["geometry_supported_before_restore"])
+        self.assertEqual(commit_signals, [])
+        self.assertEqual(logs[0]["lattice_version_before"], 3)
+        self.assertEqual(logs[0]["lattice_version_after"], 3)
+        self.assertFalse(logs[0]["lattice_commit_signal"])
 
     def test_species_block_masks_whole_block_then_commits_with_future_visible(self):
         model = self.TinyModel()
+        transform = RecordingIdentityTransform()
         prompt_length = 2
         gen_length = 19
         values = torch.arange(prompt_length + gen_length).reshape(1, -1) % 50
@@ -282,6 +336,10 @@ class SPADGenerationTest(unittest.TestCase):
             allowed_token_ids_by_generation_pos=allowed,
             atom_count_grammar=None,
             lightweight_decoding_constraints=None,
+            transaction_logit_transform=transform,
+            plan_metadata_by_batch=[{"family": "oxide"}],
+            program_metadata_by_batch=[{"species_order": ["O", "Li"]}],
+            lattice_versions_by_batch=[8],
         )
         active_generation = [
             position
@@ -311,6 +369,67 @@ class SPADGenerationTest(unittest.TestCase):
             [site["slot_index"] for site in block_log["site_revisions"]],
             [1, 0],
         )
+        self.assertEqual(len(transform.prepared), 2)
+        self.assertEqual(len(transform.applied), 6)
+        self.assertEqual(
+            [component for component, _proposal, _context in transform.applied],
+            [0, 1, 2, 0, 1, 2],
+        )
+        contexts = [context for context, _step in transform.prepared]
+        self.assertEqual([context.site_index for context in contexts], [1, 0])
+        self.assertEqual([context.site_order_index for context in contexts], [0, 1])
+        self.assertTrue(
+            all(
+                torch.equal(context.complete_pre_remask_tokens, values[0])
+                for context in contexts
+            )
+        )
+        self.assertEqual(
+            contexts[0].previous_active_token_ids,
+            tuple(int(values[0, position]) for position in active_absolute[:3]),
+        )
+        self.assertTrue(all(context.lattice_version == 8 for context in contexts))
+
+    def test_identity_transform_matches_none_outputs_rng_and_logs(self):
+        class FlatSamplingModel(self.TinyModel):
+            def forward(self, token_ids, attention_mask=None):
+                batch, length = token_ids.shape
+                logits = torch.full(
+                    (batch, length, 128), -torch.inf, dtype=torch.float32
+                )
+                logits[..., 20:40] = 0.0
+                return SimpleNamespace(logits=logits)
+
+        prompt_length = 1
+        gen_length = 19
+        values = (torch.arange(prompt_length + gen_length) % 20).reshape(1, -1)
+        kwargs = {
+            "prompt_length": prompt_length,
+            "gen_length": gen_length,
+            "revision_blocks_by_batch": [[[1, 0]]],
+            "attention_mask": torch.ones((1, prompt_length), dtype=torch.long),
+            "temperature": 0.7,
+            "cfg_scale": 0.0,
+            "remasking": "low_confidence",
+            "mask_id": 127,
+            "allowed_token_ids_by_generation_pos": [
+                list(range(20, 40)) for _ in range(gen_length)
+            ],
+            "atom_count_grammar": None,
+            "lightweight_decoding_constraints": None,
+            "sampling_seeds_by_batch": [123],
+        }
+        baseline, baseline_logs = revise_spad_species_blocks(
+            FlatSamplingModel(), values, **kwargs
+        )
+        transformed, transformed_logs = revise_spad_species_blocks(
+            FlatSamplingModel(),
+            values,
+            transaction_logit_transform=RecordingIdentityTransform(),
+            **kwargs,
+        )
+        self.assertTrue(torch.equal(transformed, baseline))
+        self.assertEqual(transformed_logs, baseline_logs)
 
     def test_species_block_rolls_back_only_site_with_no_legal_z(self):
         model = self.TinyModel()
