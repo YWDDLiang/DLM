@@ -1,11 +1,14 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 04:10 Asia/Shanghai: K8 collection39896 completed in1h29m46 with8192requests,8093successes and99retained failures. Round0 evaluation39910 is RUNNING on2GPUs. K8 labels shardA39911 is RUNNING on4GPUs, covering line-index modulo3 ranks0,1 (5462requests). ShardB (rank2,2730requests) has not been submitted; start it on2GPUs after39910 releases its allocation. Final-student SUN remains pending; refiner training is deferred to the next round.**
+Current status: **2026-09-06 04:43 Asia/Shanghai: round0 native evaluation39910 completed with Strict/Meta SUN7/256 and57/256 (2.734375/22.265625%); matched reference6/55. Native paired comparison passed, but37jointly verified pairs have mean delta A+0.125768eV/atom and delta B-0.055748eV/atom: no simultaneous improvement.39910now runs fixed-model494 tau800 on2GPUs. K8 labels shardA39911 continues on4GPUs (960/5462at04:42). ShardB rank2,2730requests remains unsubmitted; start after39910 releases2GPUs. K8 sample39896 is complete:8192requests,8093successes,99failures. Final-student SUN is still pending.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
 Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md).
 Continuous-refiner extension: [22 Code assessment and proposal](22_CONTINUOUS_DIFFUSION_EXTENSION_ASSESSMENT.md).
+First-round evaluation: [25 Matched development results](25_ROUND0_MATCHED_EVALUATION.md).
+The user delegated continuous-diffusion training/SDE analysis to a bounded local
+documentation agent; the main agent continues only the K4/K8 execution pipeline.
 This is a proposed follow-on design, not a trained refiner or a change to the
 currently scheduled fixed-model494 comparisons. Preserve today's active pipeline.
 The user explicitly confirmed this deferral at04:00: prioritize K4/K8 evaluations;
