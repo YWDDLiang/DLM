@@ -36,6 +36,7 @@ from crystal_dlm.pmtr_training import (
     materialize_transaction_start,
     move_tensor_batch,
     probe_component_gradient_scales,
+    subset_pmtr_batch,
 )
 from scripts import llada_sft as SFT
 
@@ -204,12 +205,10 @@ def run_training(
         limit=args.limit,
     )
     if args.limit is None and int(args.expected_rows) > 0:
-        if dataset.source_row_count != int(args.expected_rows) or len(dataset) != int(
-            args.expected_rows
-        ):
+        if dataset.source_row_count != int(args.expected_rows) or len(dataset) != int(args.expected_rows):
             raise ValueError(
-                "formal PMTR training requires every expected source row to carry "
-                "a repair_target; use --limit only for preflight"
+                "formal PMTR training requires the complete expected source set; "
+                "use --limit only for preflight"
             )
     sampler = (
         DistributedSampler(
@@ -279,6 +278,8 @@ def run_training(
     maximum_steps = int(args.max_steps) if int(args.max_steps) > 0 else math.inf
     totals = {name: 0.0 for name in ("total", "token", "spd", "torus", "step")}
     mode_steps = {"clean_identity": 0, "corrupt_repair": 0}
+    mode_examples = {"clean_identity": 0, "corrupt_repair": 0}
+    fallback_only_batches = 0
     optimizer_steps = 0
     wrapped.train()
     for epoch in range(int(args.epochs)):
@@ -289,18 +290,29 @@ def run_training(
             for mode in ("clean_identity", "corrupt_repair"):
                 if optimizer_steps >= maximum_steps:
                     break
+                mode_batch = batch
+                if mode == "corrupt_repair":
+                    certified_rows = [
+                        index
+                        for index, target in enumerate(batch["pmtr_repair_targets"])
+                        if target is not None
+                    ]
+                    if not certified_rows:
+                        fallback_only_batches += 1
+                        continue
+                    mode_batch = subset_pmtr_batch(batch, certified_rows)
                 materialized = materialize_transaction_start(
-                    batch,
+                    mode_batch,
                     mode=mode,
                     mask_id=int(MASK_TOKEN_ID),
                 )
                 base_step = frozen_spad_forward(
                     base_model,
-                    batch,
+                    mode_batch,
                     materialized,
                     mask_id=int(MASK_TOKEN_ID),
                 )
-                examples = build_training_examples(batch, materialized, base_step)
+                examples = build_training_examples(mode_batch, materialized, base_step)
                 if optimizer_steps < int(args.probe_batches):
                     scales = probe_component_gradient_scales(wrapped, examples)
                     _json_print(
@@ -324,6 +336,7 @@ def run_training(
                 optimizer.step()
                 optimizer_steps += 1
                 mode_steps[mode] += 1
+                mode_examples[mode] += len(examples)
                 for name in totals:
                     totals[name] += float(getattr(losses, name).detach().cpu())
                 _json_print(
@@ -360,7 +373,12 @@ def run_training(
     report = {
         "optimizer_steps": optimizer_steps,
         "mode_steps": mode_steps,
-        "repair_rows": len(dataset),
+        "mode_examples": mode_examples,
+        "source_rows": len(dataset),
+        "repair_rows": int(dataset.certified_count),
+        "certified_rows": int(dataset.certified_count),
+        "fallback_rows": int(dataset.fallback_count),
+        "fallback_only_batches_skipped": int(fallback_only_batches),
         "frozen_base_parameters": frozen_parameters,
         "mean_losses": {
             name: value / float(optimizer_steps) for name, value in totals.items()

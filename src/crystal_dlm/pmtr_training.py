@@ -92,13 +92,12 @@ class PMTRJsonlDataset(Dataset):
         upper = len(self.sft) if limit is None else min(int(limit), len(self.sft))
         if upper <= 0:
             raise ValueError("PMTR dataset is empty")
-        self.indices = tuple(
-            index
-            for index in range(upper)
-            if self.sft.rows[index].get("repair_target") is not None
+        self.indices = tuple(range(upper))
+        self.certified_count = sum(
+            self.sft.rows[index].get("repair_target") is not None
+            for index in self.indices
         )
-        if not self.indices:
-            raise ValueError("PMTR dataset contains no corrupted repair targets")
+        self.fallback_count = len(self.indices) - int(self.certified_count)
 
     @property
     def source_row_count(self) -> int:
@@ -115,9 +114,9 @@ class PMTRJsonlDataset(Dataset):
         if not isinstance(program, list) or not program:
             raise ValueError("PMTR row lacks a nonempty species_program")
         target = row.get("repair_target")
-        if not isinstance(target, Mapping):
-            raise ValueError("PMTR row lacks repair_target")
-        item["pmtr_repair_target"] = dict(target)
+        if target is not None and not isinstance(target, Mapping):
+            raise ValueError("PMTR repair_target must be a mapping or null")
+        item["pmtr_repair_target"] = None if target is None else dict(target)
         item["pmtr_plan_metadata"] = dict(row.get("plan_state") or {})
         item["pmtr_program_metadata"] = {
             "species_order": [str(value) for value in program],
@@ -162,20 +161,30 @@ def freeze_spad_model(model: nn.Module) -> int:
 
 
 def _transaction_spec(
-    repair_target: Mapping[str, Any],
+    repair_target: Mapping[str, Any] | None,
     closure: Mapping[str, Any],
     *,
     prompt_length: int,
     sequence_length: int,
 ) -> PMTRTransactionSpec:
-    raw_kind = str(repair_target.get("kind") or "")
+    raw_kind = "" if repair_target is None else str(repair_target.get("kind") or "")
+    if not raw_kind:
+        if closure.get("cell_component_index") is not None:
+            raw_kind = "cell"
+        elif closure.get("site_slot_index") is not None:
+            raw_kind = "site"
     if raw_kind == "cell":
         relative = tuple(range(1, 7))
         kind = "cell"
         site_index = None
         components = tuple(range(6))
     elif raw_kind in ("site", "site_xyz"):
-        site_index = int(repair_target.get("site_slot_index"))
+        site_value = (
+            closure.get("site_slot_index")
+            if repair_target is None
+            else repair_target.get("site_slot_index")
+        )
+        site_index = int(site_value)
         relative = tuple(8 + 4 * site_index + component for component in range(3))
         kind = "site_xyz"
         components = (0, 1, 2)
@@ -202,11 +211,10 @@ def materialize_transaction_start(
     mode: str,
     mask_id: int,
 ) -> MaterializedPMTRBatch:
-    """Expand a component row into its inference-time transaction-start state.
+    """Materialize a row as its inference-time transaction-start state.
 
     Existing forced masks retain the unrepaired block suffix.  The active cell
-    or XYZ positions are added back to the mask, recreating component zero/X;
-    only the complete active transaction is supervised.
+    or XYZ positions are verified and supervised as one complete transaction.
     """
 
     if mode not in TRAINING_MODES:
@@ -237,6 +245,8 @@ def materialize_transaction_start(
     transaction_loss = torch.zeros_like(forced, dtype=torch.bool)
     specs: list[PMTRTransactionSpec] = []
     for row_index in range(int(target_ids.shape[0])):
+        if mode == "corrupt_repair" and repair_targets[row_index] is None:
+            raise ValueError("corrupt_repair batch contains a fallback row")
         length = int(batch["attention_mask"][row_index].sum().detach().item())
         prompt = int(batch["prompt_lengths"][row_index].detach().item())
         spec = _transaction_spec(
@@ -259,8 +269,10 @@ def materialize_transaction_start(
             .flatten()
             .tolist()
         )
-        if len(row_loss) != 1 or not row_loss <= set(spec.active_positions):
-            raise ValueError("component row does not belong to reconstructed transaction")
+        if row_loss != set(spec.active_positions):
+            raise ValueError(
+                "PMTR loss positions must equal the complete reconstructed transaction"
+            )
         if bool((forced[row_index] & ~batch["attention_mask"][row_index].bool()).any()):
             raise ValueError("forced mask extends into sequence padding")
 
@@ -540,6 +552,32 @@ def move_tensor_batch(batch: Mapping[str, Any], device: torch.device) -> dict[st
     }
 
 
+def subset_pmtr_batch(
+    batch: Mapping[str, Any], row_indices: Sequence[int]
+) -> dict[str, Any]:
+    """Select logical rows across tensor and metadata fields of a collated batch."""
+
+    batch_size = int(batch["input_ids"].shape[0])
+    indices = tuple(int(value) for value in row_indices)
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("PMTR row subset must be nonempty and unique")
+    if any(not 0 <= value < batch_size for value in indices):
+        raise IndexError("PMTR row subset lies outside the batch")
+    tensor_index = torch.tensor(
+        indices, dtype=torch.long, device=batch["input_ids"].device
+    )
+    result: dict[str, Any] = {}
+    for key, value in batch.items():
+        if isinstance(value, Tensor) and value.ndim > 0 and int(value.shape[0]) == batch_size:
+            result[key] = value.index_select(0, tensor_index)
+        elif isinstance(value, (list, tuple)) and len(value) == batch_size:
+            selected = [value[index] for index in indices]
+            result[key] = tuple(selected) if isinstance(value, tuple) else selected
+        else:
+            result[key] = value
+    return result
+
+
 __all__ = [
     "MaterializedPMTRBatch",
     "PMTRDataCollator",
@@ -556,4 +594,5 @@ __all__ = [
     "materialize_transaction_start",
     "move_tensor_batch",
     "probe_component_gradient_scales",
+    "subset_pmtr_batch",
 ]

@@ -5,6 +5,7 @@ import torch
 from crystal_dlm.pmtr_training import (
     freeze_spad_model,
     materialize_transaction_start,
+    subset_pmtr_batch,
 )
 
 
@@ -19,12 +20,12 @@ class PMTRTrainingTest(unittest.TestCase):
         attention = torch.ones_like(target)
         forced = torch.zeros_like(target, dtype=torch.bool)
         losses = torch.zeros_like(target, dtype=torch.bool)
-        # A later cell component row originally masks only components 3..5.
-        forced[0, 5:8] = True
-        losses[0, 5] = True
-        # A site-Y row keeps later components and a later site masked.
-        forced[1, [10, 11, 13, 14, 15]] = True
-        losses[1, 10] = True
+        # Current PMTR rows supervise the complete transaction from its start.
+        forced[0, 2:8] = True
+        losses[0, 2:8] = True
+        # Future sites in the active species block remain masked but unsupervised.
+        forced[1, [9, 10, 11, 13, 14, 15]] = True
+        losses[1, 9:12] = True
         return {
             "input_ids": target,
             "source_input_ids": source,
@@ -58,7 +59,7 @@ class PMTRTrainingTest(unittest.TestCase):
             ],
         }
 
-    def test_component_rows_rebuild_one_full_transaction_start(self):
+    def test_rows_materialize_one_full_transaction_start(self):
         batch = self._batch()
         observed = materialize_transaction_start(
             batch, mode="corrupt_repair", mask_id=127
@@ -93,6 +94,21 @@ class PMTRTrainingTest(unittest.TestCase):
         self.assertEqual(freeze_spad_model(model), expected)
         self.assertFalse(model.training)
         self.assertTrue(all(not parameter.requires_grad for parameter in model.parameters()))
+
+    def test_fallback_row_remains_available_for_clean_identity_and_can_be_subset(self):
+        batch = self._batch()
+        batch["pmtr_repair_targets"][1] = None
+        clean = materialize_transaction_start(
+            batch, mode="clean_identity", mask_id=127
+        )
+        self.assertEqual(len(clean.specs), 2)
+        certified = subset_pmtr_batch(batch, [0])
+        self.assertEqual(tuple(certified["input_ids"].shape), (1, 20))
+        self.assertEqual(len(certified["pmtr_repair_targets"]), 1)
+        repair = materialize_transaction_start(
+            certified, mode="corrupt_repair", mask_id=127
+        )
+        self.assertEqual(len(repair.specs), 1)
 
 
 if __name__ == "__main__":

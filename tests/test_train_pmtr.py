@@ -64,7 +64,7 @@ class FakeFrozenModel(torch.nn.Module):
         return SimpleNamespace(logits=self.output(hidden))
 
 
-def repair_row():
+def repair_row(source_row_idx=0, *, certified=True):
     clean = (
         "<N_2><LA_040><LB_060><LC_020><AA_090><AB_090><AG_090>"
         "<E_Li><X_000><Y_000><Z_000>"
@@ -77,7 +77,7 @@ def repair_row():
     )
     return {
         "schema": "rollout_matched_transition_v1",
-        "source_row_idx": 0,
+        "source_row_idx": int(source_row_idx),
         "prompt": "plan",
         "answer": clean,
         "source_answer": corrupted,
@@ -89,20 +89,24 @@ def repair_row():
         "num_atoms": 2,
         "species_program": ["Li", "O"],
         "species_program_source": "fake_pointer",
-        # Materialized from site Y; trainer must reconstruct the site-X start.
-        "forced_mask_positions": [9, 10],
-        "loss_positions": [9],
+        # The builder materializes the complete XYZ transaction from site X.
+        "forced_mask_positions": [8, 9, 10],
+        "loss_positions": [8, 9, 10],
         "closure": {
             "reverse_block_index": 0,
             "site_index_within_block": 0,
             "coordinate_component_index": 1,
         },
-        "repair_target": {
-            "kind": "site",
-            "lattice_tangent": None,
-            "site_slot_index": 0,
-            "cartesian_site_delta_A": [-1.0, 0.0, 0.0],
-        },
+        "repair_target": (
+            {
+                "kind": "site",
+                "lattice_tangent": None,
+                "site_slot_index": 0,
+                "cartesian_site_delta_A": [-1.0, 0.0, 0.0],
+            }
+            if certified
+            else None
+        ),
     }
 
 
@@ -131,7 +135,13 @@ class TrainPMTRTest(unittest.TestCase):
             root = Path(directory)
             data = root / "data.jsonl"
             output = root / "output"
-            data.write_text(json.dumps(repair_row()) + "\n", encoding="utf-8")
+            data.write_text(
+                json.dumps(repair_row(0))
+                + "\n"
+                + json.dumps(repair_row(1, certified=False))
+                + "\n",
+                encoding="utf-8",
+            )
             tokenizer = FakeTokenizer()
             model = FakeFrozenModel(len(tokenizer))
             before = {
@@ -167,11 +177,11 @@ class TrainPMTRTest(unittest.TestCase):
                     "--epochs",
                     "1",
                     "--expected-rows",
-                    "1",
+                    "2",
                     "--max-steps",
                     "2",
                     "--batch-size",
-                    "1",
+                    "2",
                     "--num-workers",
                     "0",
                     "--max-length",
@@ -190,6 +200,10 @@ class TrainPMTRTest(unittest.TestCase):
                 report["mode_steps"],
                 {"clean_identity": 1, "corrupt_repair": 1},
             )
+            self.assertEqual(report["certified_rows"], 1)
+            self.assertEqual(report["fallback_rows"], 1)
+            self.assertEqual(report["mode_examples"]["clean_identity"], 2)
+            self.assertEqual(report["mode_examples"]["corrupt_repair"], 1)
             self.assertEqual(model.forward_count, 2)
             self.assertTrue(all(not parameter.requires_grad for parameter in model.parameters()))
             for name, value in model.state_dict().items():
