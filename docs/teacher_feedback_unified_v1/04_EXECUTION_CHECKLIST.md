@@ -1,9 +1,10 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 01:48 Asia/Shanghai: all4096labels completed,973verified across526conditions. Full teacher solved, but its B gain is dominated by one Gd2 terminal at-499eV/atom. Training39889 was stopped for a terminal-consistency audit; do not resume from this teacher or that partial run. Reference tau80039890 continues on two GPUs.**
+Current status: **2026-09-06 02:22 Asia/Shanghai: full terminal audit39891 completed. Uniform verification retains972paths across526conditions; a new teacher gives22.47meV/atom mean improvement in each A/B. Formal training39892 restarted from the original warmup on four GPUs; reference tau80039890 continues on two. Old teacher/run39889 remain invalidated. Student SUN is still pending.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
+Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md).
 Keep the completed initial1024*K4 pool; expand the ONE train-only refresh to
 the same1024 conditions*K8 (8192 requests), then two passes. No additional small
 ablations. K4/K8 is now an explicit recorded data budget, not an inference selector.
@@ -52,13 +53,16 @@ path passes, one train-only K8 refresh and two more passes. Then evaluate the
 final policy against39884, report tau800 separately, and freeze before main1000.
 Do not repeat completed warmup, preparation, prefix collection or checks.
 
-**Current data-quality hold overrides that immediate-work paragraph:**39885 is
-complete. Initial teacher=$ROOT/data/spad_state_teacher_round0_20260906_v1 is
-held with_INVALIDATED. Keep all original labels and reports. Audit every one
-of the973verified terminals with fresh same-model energies and periodic-equivalent
-representations using234(4GPU), alongside39890(2GPU). Diagnose the Gd2 discrepancy
-before releasing a corrected teacher. This is numerical validation, not a new
-scientific ablation or energy-selected deletion. Never use39889 as final policy.
+**Latest release overrides the earlier data-quality hold:**39891 audited all973
+verified terminals;972passed and one exceeded the prespecified1meV representation
+threshold by only7.08micro-eV. The-499prediction was reproduced, not proven a
+recording error. See21for the full limitation. New labels/teacher are in
+data/spad_state_{labels,teacher}_round0_consistent_20260906_v2.39892uses this
+teacher from the original39853warmup. Never use the invalidatedv1teacher or39889.
+After39890completes, use235on two GPUs withSPAD_REFERENCE_NATIVE_RUN pointing to
+39884andSPAD_REFERENCE_TAU_RUN pointing to39890, to update both reference
+verification subsets without repeating generation/relaxation. Use those new
+reference evaluation directories for the final paired comparison.
 
 ## Historical handoff pause
 
