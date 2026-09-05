@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 01:14 Asia/Shanghai: all 1024*K4 paths have been collected; 3246/4096 terminal labels are confirmed, including771verified. Six-GPU labeling39885 is still running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
+Current status: **2026-09-06 01:20 Asia/Shanghai: all 1024*K4 paths have been collected; 3520/4096 terminal labels are confirmed, including839verified. Six-GPU labeling39885 is still running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
