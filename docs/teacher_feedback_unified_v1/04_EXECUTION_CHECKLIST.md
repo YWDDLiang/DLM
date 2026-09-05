@@ -42,6 +42,11 @@ or test-outcome training. Prefer four-GPU training with unchanged effective batc
 plus two-GPU data/evaluation; use all six for independent generation/label shards.
 The requested 24h target is an effort deadline, not a guaranteed scientific result.
 
+Latest work-division instruction: implementation, tests, deployment, monitoring,
+and archiving are performed directly by the main agent. Subagents are reserved
+for large-scale audit or research only. The remaining coding sidecar was stopped
+and its unfinished work taken back; no further coding delegation is authorized.
+
 Implementation progress at 2026-09-05 19:26 Asia/Shanghai:
 - Persistent local SSH to starteam5090 established; attached to existing
   ssha800:1.0 with TERM=xterm-256color; ssha800_2 untouched.
@@ -65,6 +70,8 @@ Update 2026-09-05 20:34 Asia/Shanghai:
   covers both new entrypoints. Preserve job39850 and retry in a new run only.
 - Full-MP20 warmup entrypoint and four-GPU wrapper are implemented; not submitted
   until the real preflight success marker is present.
+- Parameter-identical preflight recovery job39852 was submitted from bb9eebf;
+  check its actual outcome before any further preflight or warmup submission.
 
 The historical checklist below is retained for provenance only.
 
