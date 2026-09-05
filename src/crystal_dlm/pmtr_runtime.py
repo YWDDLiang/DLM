@@ -286,6 +286,11 @@ class PMTRLogitTransform(nn.Module):
             corrected_metric = spd_congruence_update(metric, output.lattice_tangent[0])
             target = _lattice_values(metric_to_lattice(corrected_metric))
             old = lattice_values
+            if int(torch.count_nonzero(output.lattice_tangent[0].detach()).item()) == 0:
+                # Matrix decomposition can introduce roundoff even for an exact
+                # zero tangent.  Preserve exact baseline logits in the forward
+                # pass while retaining the derivative through the SPD update.
+                target = target + (old - target).detach()
         else:
             site = int(context.site_index)
             if not 0 <= site < sites:
@@ -294,6 +299,8 @@ class PMTRLogitTransform(nn.Module):
             fractional_delta = cartesian_to_fractional(cartesian_delta, lattice)
             old = frac[site]
             target = wrap_fractional(old + fractional_delta)
+            if int(torch.count_nonzero(cartesian_delta.detach()).item()) == 0:
+                target = target + (old - target).detach()
         return PMTRTransactionProposal(
             kind=context.kind,
             old_values=old,
