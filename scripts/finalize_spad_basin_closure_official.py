@@ -87,6 +87,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     }
 
     evaluated: list[dict[str, Any]] = []
+    cache_not_covered: set[str] = set()
     for ordinal in range(DENOMINATOR):
         label = labels[ordinal]
         generated = generation[ordinal]
@@ -104,13 +105,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         elif reconstructed:
             pd = phase_diagrams.get(str(chemsys))
             if pd is None:
-                raise protocol.ContractError(f"official cache omitted {chemsys}")
-            e_hull = _e_above_hull(
-                pd, label["chgnet_composition"], float(energy)
-            )
-            if not math.isfinite(e_hull):
-                raise protocol.ContractError("non-finite official hull value")
-            hull_status = "known"
+                # A disjoint prospective stream can contain a chemsys that was
+                # never present in the retained offline MP cache.  Keep that
+                # attempt in the fixed denominator and count it conservatively
+                # as unknown/not stable; never drop it or query during eval.
+                hull_status = "official_cache_not_covered"
+                cache_not_covered.add(str(chemsys))
+            else:
+                e_hull = _e_above_hull(
+                    pd, label["chgnet_composition"], float(energy)
+                )
+                if not math.isfinite(e_hull):
+                    raise protocol.ContractError("non-finite official hull value")
+                hull_status = "known"
         novel_unique = bool(label.get("novel")) and bool(
             label.get("unique_representative")
         )
@@ -194,6 +201,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "fast_raw_validity": raw_screen["arms"][raw_screen_arm],
         "official_query_status": "complete_with_explicit_unresolved",
         "official_unresolved_chemsys": len(unresolved),
+        "official_cache_not_covered_chemsys": sorted(cache_not_covered),
+        "uncovered_cache_rows_count_as_not_stable": True,
         "direct_run": False,
         "model494": bool(args.model494),
         "model494_tau": None if args.model494_tau is None else int(args.model494_tau),

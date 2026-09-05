@@ -20,6 +20,14 @@ except ModuleNotFoundError:
     MODULE = None
 
 
+class BasinClosureOfficialSourceTest(unittest.TestCase):
+    def test_uncovered_cache_is_conservative_not_dropped(self):
+        source = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn('hull_status = "official_cache_not_covered"', source)
+        self.assertIn('"uncovered_cache_rows_count_as_not_stable": True', source)
+        self.assertNotIn("official cache omitted", source)
+
+
 @unittest.skipIf(MODULE is None, "pymatgen is unavailable in workstation Python")
 class BasinClosureOfficialFinalizerTest(unittest.TestCase):
     def test_paired_binary_uses_candidate_minus_baseline_direction(self):
