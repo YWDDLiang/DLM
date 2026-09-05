@@ -69,6 +69,7 @@ def main():
     p.add_argument("--selection-json", type=Path)
     p.add_argument("--endpoint", choices=("native", "tau800"), required=True)
     p.add_argument("--cohort-role", choices=("fixed_development", "independent_main"), required=True)
+    p.add_argument("--policy-stage", choices=("reference", "round0_diagnostic", "final", "unspecified"), default="unspecified")
     args = p.parse_args()
     if "SLURM_JOB_ID" not in os.environ:
         raise RuntimeError("full N/U evaluation must use its allocated workflow CPUs")
@@ -187,6 +188,7 @@ def main():
                "verified_strict_stable", "verified_meta_stable", "verified_strict_sun", "verified_meta_sun")}
     counts["requests"] = len(output)
     report = {"counts": counts, "endpoint": args.endpoint, "cohort_role": args.cohort_role,
+              "policy_stage": args.policy_stage,
               "verification_protocol": TERMINAL_VERIFICATION_PROTOCOL,
               "terminal_protocol": protocols[0], "main_stability_criterion": "retained terminal-energy threshold",
               "verified_subset_adds": "optimizer stop, force/stress, geometry and consistent-energy checks",

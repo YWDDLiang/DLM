@@ -42,7 +42,7 @@ for endpoint in native tau800; do
   "$PY" "$CODE/scripts/evaluate_programmed_paths.py" --paths-jsonl "$PATHS" \
     --labels-jsonl "$RUN/$endpoint-labels/labels.jsonl" --frozen-config "$CONFIG" \
     --official-cache "$ROOT/runs/spad_basin_closure_official_20260904_v1/official_mp_cache" \
-    --output-dir "$RUN/$endpoint-evaluation" --expected-requests 256 --endpoint "$endpoint" --cohort-role fixed_development \
+    --output-dir "$RUN/$endpoint-evaluation" --expected-requests 256 --endpoint "$endpoint" --cohort-role fixed_development --policy-stage reference \
     >"$RUN/$endpoint-evaluate.out" 2>"$RUN/$endpoint-evaluate.err"
   "$PY" -c 'import json,sys; a=json.load(open(sys.argv[1]))["counts"]; b=json.load(open(sys.argv[2]))["counts"]; keys=("requests","reconstructed","strict_stable","meta_stable","strict_sun","meta_sun"); assert all(a[k]==b[k] for k in keys), "verification-only pass changed the retained energy-threshold metric"' \
     "$BASE/evaluation/EVALUATION_FINAL.json" "$RUN/$endpoint-evaluation/EVALUATION_FINAL.json"

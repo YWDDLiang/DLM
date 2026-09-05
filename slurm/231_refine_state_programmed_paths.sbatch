@@ -38,7 +38,7 @@ PAYLOAD=$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))["output_
 "$PY" "$CODE/scripts/evaluate_programmed_paths.py" --paths-jsonl "$RUN/tau800/paths.jsonl" \
   --labels-jsonl "$RUN/labels/labels.jsonl" --frozen-config "$CONFIG" \
   --official-cache "$ROOT/runs/spad_basin_closure_official_20260904_v1/official_mp_cache" \
-  --output-dir "$RUN/evaluation" --expected-requests 256 --endpoint tau800 --cohort-role fixed_development \
+  --output-dir "$RUN/evaluation" --expected-requests 256 --endpoint tau800 --cohort-role fixed_development --policy-stage "${SPAD_EVAL_STAGE:-final}" \
   >"$RUN/evaluate.out" 2>"$RUN/evaluate.err"
 test -f "$RUN/evaluation/_SUCCESS"
 touch "$RUN/_SUCCESS"

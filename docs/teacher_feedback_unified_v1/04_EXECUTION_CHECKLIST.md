@@ -48,7 +48,12 @@ restore execution in the earlier task. Main agent
 implements/tests/deploys/monitors directly; no coding delegation.
 
 Immediate work: finish39896 and label its complete8192requests with the current
-uniform terminal verification. Build round1teacher with--candidates8, review its
+uniform terminal verification. Latest user request adds ONE round0 fixed256
+development evaluation: after39896finishes, run236on two GPUs for native/tau800
+atstep1020, explicitlyround0_diagnostic. In parallel label the refresh using
+four GPUs, shard-count3/shard-ranks0,1 (5462requests). When236finishes, label the
+remaining rank2 shard on two GPUs (2730requests). Merge both label outputs;
+never relabel the full8192or duplicate shards. Build round1teacher with--candidates8, review its
 coverage and concentration, then continue the step1020optimizer for two passes.
 The refresh uses a count-based6..24decision budget per path/pass, capped by the
 registered98304real scalar-state budget; see20. Evaluate the final policy against
@@ -66,7 +71,9 @@ Use runs/spad_state_reference_verification_39893/native-evaluation and
 tau800-evaluation for the final comparison. Reference Strict/Meta SUN is
 2.34375/21.484375% native and7.421875/47.265625% tau800; these remain reference
 results. First new-student development results are provisionally budgeted for
-08:00–10:00; this estimate depends on refresh labeling speed. Deadline19:19 remains.
+08:00–10:00; this estimate depends on refresh labeling speed. The newly requested
+round0process result is provisionally expected04:00–05:00 after sampling releases
+GPUs; it is not the final result or a small component ablation. Deadline19:19 remains.
 
 ## Historical handoff pause
 

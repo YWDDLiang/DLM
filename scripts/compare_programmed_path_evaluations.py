@@ -106,7 +106,7 @@ def compare_results(reference_rows, method_rows):
 
 
 def render_markdown(report):
-    text = [f"# Fixed development comparison: {report['endpoint']}", "",
+    text = [f"# Fixed development comparison: {report['endpoint']} ({report.get('comparison_purpose', 'final')})", "",
             f"{report['requests']} paired requests. Changes are method minus reference.", "",
             "| Metric | Reference | Method | Change (percentage points) |", "|---|---:|---:|---:|"]
     for key in ("reconstructed", "terminal_verified", "strict_sun", "meta_sun", "verified_strict_sun", "verified_meta_sun"):
@@ -130,6 +130,7 @@ def main():
     parser.add_argument("--reference-paths-jsonl", type=Path, required=True)
     parser.add_argument("--method-paths-jsonl", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--comparison-purpose", choices=("round0_diagnostic", "final"), default="final")
     args = parser.parse_args()
     manifests = []
     for directory in (args.reference_eval_dir, args.method_eval_dir):
@@ -141,12 +142,15 @@ def main():
             raise ValueError(f"paired evaluation protocols differ: {key}")
     if any(m["cohort_role"] != "fixed_development" or m["counts"]["requests"] != 256 for m in manifests):
         raise ValueError("this comparison is restricted to the frozen development256")
+    if manifests[1].get("policy_stage") != args.comparison_purpose:
+        raise ValueError("intermediate and final policy evaluation stages cannot be relabeled")
     validate_pairing(read_jsonl(args.reference_paths_jsonl), read_jsonl(args.method_paths_jsonl))
     report = compare_results(read_jsonl(args.reference_eval_dir / "attempt_results.jsonl"),
                              read_jsonl(args.method_eval_dir / "attempt_results.jsonl"))
     if report["requests"] != 256:
         raise ValueError("fixed development denominator changed")
-    report.update(endpoint=manifests[0]["endpoint"], provenance={k: str(v) for k, v in vars(args).items()},
+    report.update(endpoint=manifests[0]["endpoint"], comparison_purpose=args.comparison_purpose,
+                  provenance={k: str(v) for k, v in vars(args).items()},
                   terminal_protocol=manifests[0]["terminal_protocol"], frozen_nu_source_sha256=manifests[0]["frozen_nu_source_sha256"])
     args.output_dir.mkdir(parents=True, exist_ok=False)
     (args.output_dir / "COMPARISON_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

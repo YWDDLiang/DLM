@@ -55,7 +55,7 @@ for pid in "${pids[@]}"; do wait "$pid"; done
   --labels-jsonl "$RUN/native-labels/labels.jsonl" --frozen-config "$CONFIG" \
   --official-cache "$ROOT/runs/spad_basin_closure_official_20260904_v1/official_mp_cache" \
   --selection-json "$RUN/selection/SELECTION_FINAL.json" --output-dir "$RUN/native-evaluation" \
-  --expected-requests 1200 --endpoint native --cohort-role independent_main >"$RUN/native-evaluate.out" 2>"$RUN/native-evaluate.err"
+  --expected-requests 1200 --endpoint native --cohort-role independent_main --policy-stage final >"$RUN/native-evaluate.out" 2>"$RUN/native-evaluate.err"
 "$PY" -m torch.distributed.run --standalone --nproc_per_node="$WORLD" "$CODE/src/scripts/refine_dlm_with_crysllmgen.py" \
   --proposal-graphs "$RUN/native/proposal_graphs.pt" --checkpoint "$CRYS/out/mp_20/22042026/203930/model_494.pt" \
   --crysllmgen-dir "$CRYS" --output-dir "$RUN/refine" --batch-size 1 --seed-from-graph-field refiner_seed \
@@ -70,7 +70,7 @@ PAYLOAD=$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))["output_
   --labels-jsonl "$RUN/tau800-labels/labels.jsonl" --frozen-config "$CONFIG" \
   --official-cache "$ROOT/runs/spad_basin_closure_official_20260904_v1/official_mp_cache" \
   --selection-json "$RUN/selection/SELECTION_FINAL.json" --output-dir "$RUN/tau800-evaluation" \
-  --expected-requests 1200 --endpoint tau800 --cohort-role independent_main >"$RUN/tau800-evaluate.out" 2>"$RUN/tau800-evaluate.err"
+  --expected-requests 1200 --endpoint tau800 --cohort-role independent_main --policy-stage final >"$RUN/tau800-evaluate.out" 2>"$RUN/tau800-evaluate.err"
 test -f "$RUN/native-evaluation/_SUCCESS"
 test -f "$RUN/tau800-evaluation/_SUCCESS"
 touch "$RUN/_SUCCESS"
