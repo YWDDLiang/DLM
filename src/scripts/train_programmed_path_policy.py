@@ -22,7 +22,7 @@ from torch.nn.parallel import DistributedDataParallel
 
 from crystal_dlm.programmed_path_data import load_path_model, read_jsonl, training_candidates_per_condition
 from crystal_dlm.programmed_path_training import (
-    PathLogProbability, minibatch_path_loss, sampled_training_examples, shape_matched_batches,
+    PathLogProbability, minibatch_path_loss, sampled_training_examples, shape_matched_batches, training_decision_budget,
 )
 from crystal_dlm.state_conditioned_model import set_state_lora_trainable
 from crystal_dlm.state_training import enable_native_checkpointing, materialize_state_batch
@@ -71,6 +71,8 @@ def main():
         raise ValueError("formal teacher does not match the registered K4/K8 data budget")
     if collection_round not in (0, 1) or (collection_round == 1 and args.optimizer_state is None):
         raise ValueError("only one refresh, continuing the original optimizer, is allowed")
+    positive_paths = sum(float(c["weight"]) > 0 for g in teacher["groups"] for c in g["candidates"])
+    decision_budget = training_decision_budget(collection_round, positive_paths)
     paths = [row for p in provenance["paths_jsonl"] for row in read_jsonl(p)]
     world, local = int(os.environ.get("WORLD_SIZE", 1)), int(os.environ.get("LOCAL_RANK", 0))
     if args.effective_batch % (world * args.batch_size):
@@ -127,6 +129,8 @@ def main():
         config = {**vars(args), "world_size": world, "gradient_accumulation": accumulation,
                   "trainable": counts, "checkpoint_modules": checkpoint_modules,
                   "collection_round": collection_round, "teacher_summary": summary,
+                  "positive_teacher_paths": positive_paths, "decisions_per_path_per_pass": decision_budget,
+                  "refresh_real_scalar_state_budget": 98304,
                   "likelihood_dropout": 0., "ce_every_path_updates": 4,
                   "objective": "HT full-deployment path NLL, condition mean"}
         (args.output_dir / "training_config.json").write_text(json.dumps(config, indent=2, default=str) + "\n", encoding="utf-8")
@@ -168,7 +172,9 @@ def main():
         return block_loss, float(gradient)
 
     def log_event(kind, loss, gradient, pass_index):
-        if rank == 0 and (global_updates - initial_updates <= 5 or global_updates % 10 == 0):
+        if rank == 0 and (global_updates - initial_updates <= 5
+                          or (kind == "path" and path_updates % 40 == 0)
+                          or (kind == "ce" and ce_updates % 10 == 0)):
             event = {"global_update": global_updates, "path_updates": path_updates, "ce_updates": ce_updates,
                      "kind": kind, "group_pass": pass_index, "loss_rank0": loss, "gradient_norm": gradient,
                      "learning_rate": scheduler.get_last_lr()[0], "elapsed_seconds": time.monotonic() - started}
@@ -178,7 +184,8 @@ def main():
 
     for group_pass in range(args.passes):
         pass_index = 2 * collection_round + group_pass
-        examples = sampled_training_examples(paths, teacher, seed=args.seed, pass_index=pass_index)
+        examples = sampled_training_examples(paths, teacher, seed=args.seed, pass_index=pass_index,
+                                              decision_budget=decision_budget)
         if not examples:
             raise ValueError("no positive-weight path states")
         real_size = len(examples)
@@ -203,6 +210,7 @@ def main():
             if args.engineering_steps and global_updates - initial_updates >= args.engineering_steps:
                 break
         pass_reports.append({"pass_index": pass_index, "real_scalar_states": real_size, "padded_scalar_slots": padded_size,
+                             "decisions_per_path_per_pass": decision_budget,
                              "processed_scalar_slots": processed * world,
                              "complete_pass": processed * world == padded_size})
         if args.engineering_steps:
@@ -223,12 +231,14 @@ def main():
         training_state = {"optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
                           "global_updates": global_updates, "path_updates": path_updates, "ce_updates": ce_updates,
                           "collection_round": collection_round, "eligible_policy": not bool(args.engineering_steps),
+                          "decisions_per_path_per_pass": decision_budget,
                           **{key: getattr(args, key) for key in ("seed", "learning_rate", "schedule_updates", "warmup_updates")}}
         torch.save(training_state, destination / "POST_STATE.pt")
         report = {"phase": "dual_objective_full_path_policy", "collection_round": collection_round,
                   "eligible_policy": not bool(args.engineering_steps), "policy_path": str(destination),
                   "global_updates": global_updates, "updates_this_run": global_updates - initial_updates,
                   "path_updates": path_updates, "ce_updates": ce_updates, "passes": pass_reports,
+                  "positive_teacher_paths": positive_paths, "decisions_per_path_per_pass": decision_budget,
                   "teacher_summary": summary, "trainable": counts, "elapsed_seconds": time.monotonic() - started}
         report["initial_minibatch_replay"] = replay_reports
         report["rank0_peak_allocated_GiB"] = torch.cuda.max_memory_allocated(device) / 2**30

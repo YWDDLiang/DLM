@@ -5,7 +5,7 @@
 
 ## 完整首轮与被暂停的teacher
 
-39885完成1h22m15（label脚本4933.27秒）。连同39873，全4096标签为973verified、
+39885完成1h22m17（label脚本4933.27秒）。连同39873，全4096标签为973verified、
 1531not_converged、1565invalid_terminal、26generation_failure、1relaxation_energy_increased。
 526/1024组成有验证路径，273组多条、253组一条、498组没有验证路径。
 
@@ -61,3 +61,9 @@ KL0.0097533、ESS752.10。q相对组内均匀参考u的平均总变差2.5613%。
 **39892**从原39853 warmup重新开始正式两遍训练，使用新teacher和干净的首轮
 optimizer；先前39889不计作有效训练或可选checkpoint。后续一次K8刷新继续39892
 完成后的optimizer/schedule。原生和tau800学生SUN仍未产生，不以teacher值替代。
+
+03:00更新：39892已完成两遍、1020updates，eligible_policy=true，终点step-1020；
+初始16决策回放最大差8.04e-7，峰值19.28GiB。39896从该点开始唯一K8刷新，六卡。
+参考tau80039890完成约19m23（refiner1013.81秒，labels116.01秒）；39893补齐原生
+和tau800验证完成42秒，63/99验证数及原SUN计数均未改变。参考原生SUN为
+2.34%/21.48%，参考tau800为7.42%/47.27%；不能当成新学生提升。

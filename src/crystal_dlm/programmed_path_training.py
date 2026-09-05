@@ -85,7 +85,19 @@ def sample_path_decisions(path, *, seed, pass_index, budget=6):
     return selected
 
 
-def sampled_training_examples(paths, teacher, *, seed, pass_index):
+def training_decision_budget(collection_round, positive_paths):
+    """Reuse the registered 98,304 refresh-state budget when labels are sparse.
+
+    Depend only on usable path count, never energies or evaluation outcomes.
+    More within-path observations reduce HT sampling noise; they are not new
+    trajectories. Round0 remains unchanged and the single refresh has two passes.
+    """
+    if collection_round not in (0, 1) or positive_paths < 1:
+        raise ValueError("a registered collection round and positive path count are required")
+    return 6 if collection_round == 0 else min(24, max(6, 98304 // (2 * positive_paths)))
+
+
+def sampled_training_examples(paths, teacher, *, seed, pass_index, decision_budget=6):
     weights = {c["trajectory_id"]: c["weight"] for g in teacher["groups"] for c in g["candidates"]}
     examples = []
     for path in paths:
@@ -94,7 +106,7 @@ def sampled_training_examples(paths, teacher, *, seed, pass_index):
             raise ValueError("invalid fixed teacher weight")
         if weight == 0:
             continue
-        states = sample_path_decisions(path, seed=seed, pass_index=pass_index)
+        states = sample_path_decisions(path, seed=seed, pass_index=pass_index, budget=decision_budget)
         if not states:
             raise ValueError("positive teacher weight requires actual path decisions")
         for state in states:

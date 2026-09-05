@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 02:22 Asia/Shanghai: full terminal audit39891 completed. Uniform verification retains972paths across526conditions; a new teacher gives22.47meV/atom mean improvement in each A/B. Formal training39892 restarted from the original warmup on four GPUs; reference tau80039890 continues on two. Old teacher/run39889 remain invalidated. Student SUN is still pending.**
+Current status: **2026-09-06 03:00 Asia/Shanghai: formal round0 training39892 completed1020updates in11m17. Six-GPU K8 refresh collection39896 is running; it targets8192paths on the same1024conditions. Reference tau80039890 and matched verification39893 completed. No final-student SUN exists yet. Old teacher/run39889 remain invalidated.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
@@ -47,10 +47,12 @@ historical relabeling. Preserve the original deadline. Heartbeat
 restore execution in the earlier task. Main agent
 implements/tests/deploys/monitors directly; no coding delegation.
 
-Immediate work: finish39885, join its complete labels with39873, and solve ONE complete
-1024-condition teacher. If positive certified gain exists, run two complete
-path passes, one train-only K8 refresh and two more passes. Then evaluate the
-final policy against39884, report tau800 separately, and freeze before main1000.
+Immediate work: finish39896 and label its complete8192requests with the current
+uniform terminal verification. Build round1teacher with--candidates8, review its
+coverage and concentration, then continue the step1020optimizer for two passes.
+The refresh uses a count-based6..24decision budget per path/pass, capped by the
+registered98304real scalar-state budget; see20. Evaluate the final policy against
+the matched reference39893, then freeze before main1000.
 Do not repeat completed warmup, preparation, prefix collection or checks.
 
 **Latest release overrides the earlier data-quality hold:**39891 audited all973
@@ -59,10 +61,12 @@ threshold by only7.08micro-eV. The-499prediction was reproduced, not proven a
 recording error. See21for the full limitation. New labels/teacher are in
 data/spad_state_{labels,teacher}_round0_consistent_20260906_v2.39892uses this
 teacher from the original39853warmup. Never use the invalidatedv1teacher or39889.
-After39890completes, use235on two GPUs withSPAD_REFERENCE_NATIVE_RUN pointing to
-39884andSPAD_REFERENCE_TAU_RUN pointing to39890, to update both reference
-verification subsets without repeating generation/relaxation. Use those new
-reference evaluation directories for the final paired comparison.
+Reference verification39893 completed42seconds and preserved the primary counts.
+Use runs/spad_state_reference_verification_39893/native-evaluation and
+tau800-evaluation for the final comparison. Reference Strict/Meta SUN is
+2.34375/21.484375% native and7.421875/47.265625% tau800; these remain reference
+results. First new-student development results are provisionally budgeted for
+08:00–10:00; this estimate depends on refresh labeling speed. Deadline19:19 remains.
 
 ## Historical handoff pause
 

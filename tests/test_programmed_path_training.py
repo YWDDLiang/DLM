@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import torch
 
-from crystal_dlm.programmed_path_training import sample_path_decisions, minibatch_path_loss, PathLogProbability, join_terminal_labels, shape_matched_batches
+from crystal_dlm.programmed_path_training import sample_path_decisions, minibatch_path_loss, PathLogProbability, join_terminal_labels, shape_matched_batches, training_decision_budget
 from crystal_dlm.programmed_path_data import trace_terminal_body, training_candidates_per_condition
 from crystal_dlm.programmed_path_runtime import process_path_logits, process_scalar_path_logits
 from crystal_dlm.r5_dynamic_length import exact_dynamic_schema_constraints
@@ -23,6 +23,20 @@ def example_path(counts):
 
 
 class PathTrainingTest(unittest.TestCase):
+    def test_dense_refresh_sampling_preserves_ht_and_the_registered_budget(self):
+        self.assertEqual(training_decision_budget(0, 972), 6)
+        for paths, expected in ((2000, 24), (4096, 12), (8192, 6)):
+            budget = training_decision_budget(1, paths)
+            self.assertEqual(budget, expected)
+            self.assertLessEqual(2 * paths * budget, 98304)
+        for budget in (6, 12, 17, 24):
+            for counts in ((9, 18, 27), (2, 0, 3), (1, 1, 28)):
+                states = sample_path_decisions(example_path(counts), seed=19, pass_index=2, budget=budget)
+                self.assertEqual(len(states), min(budget, sum(counts)))
+                self.assertAlmostEqual(sum(1 / s["inclusion_probability"] for s in states), sum(counts))
+        with self.assertRaises(ValueError):
+            training_decision_budget(2, 100)
+
     def test_k8_refresh_keeps_all_occurrences_and_rejects_incomplete_k4_pool(self):
         self.assertEqual(training_candidates_per_condition(0), 4)
         self.assertEqual(training_candidates_per_condition(1), 8)
