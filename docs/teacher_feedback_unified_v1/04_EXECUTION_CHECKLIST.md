@@ -1,10 +1,21 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **user resumed implementation on 2026-09-05 21:58 Asia/Shanghai; reuse completed warmup39853 and conditions39857**.
+Current status: **2026-09-06: full-path implementation and real training checks passed; full train-pool collection and the paired reference evaluation are running. Energy post-training has not started.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
-Warmup/conditions artifacts were verified; production path and label interfaces
-are implemented and 74 focused CPU tests pass. Real production check is next.
+Warmup39853/conditions39857 artifacts were verified and reused. New-process
+replay39869 checked all153 decisions of two paths with zero error. Optimized
+four-GPU training check39877 completed4path+1CE updates, gradient finite,
+initial16decision replay error <=1e-6; this is an ineligible engineering model.
+First128*K4 collection39872 finished512requests/509success; labels39873 finished
+111verified/205not-converged/193invalid-terminal/3generation-failure. On the65
+verified conditions, the diagnostic teacher has ~54meV/atom improvement in each
+mean A/B, not a student result. Remaining896*K4 are in39878 (4GPU); the frozen
+reference's fresh fixed256/common-protocol evaluation is39884 (2GPU).
+Latest combined local suite:91PASS. Current implemented code is on the requested
+branch; preserve the two pre-existing untracked PMTR files. Full-path trainer,
+reference, tau800 and parser-only independent-main entrypoints are implemented;
+future main sampling is guarded by a final-method lock. No new-method SUN exists.
 The earlier task is interrupted and its heartbeat is PAUSED; this task owns execution.
 
 ## Resume override — 2026-09-05 21:58 Asia/Shanghai
@@ -14,9 +25,12 @@ SUN>10% and Meta SUN>50%, without guarantees, outcome-selected replacement or
 historical relabeling. Restore the existing ten-minute heartbeat and original
 deadline. Main agent implements/tests/deploys/monitors directly; no coding delegation.
 
-Immediate work: verify/load warmup39853 and conditions39857; finish the native
-full-path sampling CLI, offline labeler and actual path trainer. Do not repeat
-completed training/preparation. The handoff pause below is historical.
+Immediate work: finish39878, label its complete remaining pool using available
+4+2 or6 GPUs without exceeding two jobs, join with39873, and solve ONE complete
+1024-condition teacher. If positive certified gain exists, run two complete
+path passes, one train-only refresh and two more passes. Then evaluate the
+final policy against39884, report tau800 separately, and freeze before main1000.
+Do not repeat completed warmup, preparation, prefix collection or checks.
 
 ## Historical handoff pause
 
@@ -61,10 +75,12 @@ Review decisions: [18 Review and resolutions](18_DUAL_OBJECTIVE_REVIEW_AND_DECIS
 - [x] Obtain user confirmation; six A800 / 24 CPU maximum, one main method.
 - [x] Run the combined real-model preflight 39852 with the limited coverage recorded
   above; do not infer exhaustive coverage from its success marker.
-- [ ] Complete fresh-process checkpoint loading and production-path coverage before
+- [x] Complete fresh-process checkpoint loading and production-path coverage before
   the next formal generation:
   injection/gradient/reload/throughput; joint commit/rollback/support;
   complete attempted-trace sampling/scoring/zero-weight/HT consistency.
+  Coverage is the153fresh-process decisions and16initial training decisions
+  above, plus CPU contracts; it is not exhaustive replay of the full4096pool.
 - [x] Full MP20 warmup: 27136 sources, one source state each; freeze embedding/head,
   train retained LoRA and the small state conditioner; job39853 completed.
 - [x] Prepare the frozen predicted training conditions with unchanged chemistry;

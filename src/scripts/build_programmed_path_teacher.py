@@ -28,10 +28,26 @@ def main():
     for path in [*args.paths_jsonl, *args.labels_jsonl]:
         if not (path.parent / "_SUCCESS").is_file():
             raise ValueError(f"input accounting has not completed: {path}")
+    protocols = []
+    for path in args.labels_jsonl:
+        label_report = json.loads((path.parent / "LABEL_FINAL.json").read_text())
+        if label_report["purpose"] != "train":
+            raise ValueError("evaluation labels cannot become a train teacher")
+        protocols.append(label_report["protocol"])
+    if any(protocol != protocols[0] for protocol in protocols):
+        raise ValueError("terminal protocols differ across teacher label shards")
+    expected = {"model": "CHGNet-0.3.0", "optimizer": "FIRE", "relax_cell": True,
+                "ase_filter": "FrechetCellFilter", "fmax": .1, "stress_tolerance_GPa": .5,
+                "max_steps": 500, "scalar_pressure": 0., "constant_volume": False, "hydrostatic_strain": False}
+    if any(protocols[0].get(k) != v for k, v in expected.items()):
+        raise ValueError("registered train terminal protocol changed")
     if not args.diagnostic_only and args.expected_conditions != 1024:
         raise ValueError("formal teacher requires the preregistered 1024 train conditions")
     paths = [r for path in args.paths_jsonl for r in read_jsonl(path)]
     labels = [r for path in args.labels_jsonl for r in read_jsonl(path)]
+    versions = {json.dumps(r.get("versions"), sort_keys=True) for r in labels if r.get("verified") is True}
+    if len(versions) > 1 or "null" in versions:
+        raise ValueError("verified teacher labels require one recorded model/package version")
     groups = join_terminal_labels(paths, labels, expected_conditions=args.expected_conditions)
     teacher = solve_basin_path_teacher(groups)
     summary = teacher["summary"]
@@ -55,6 +71,7 @@ def main():
     teacher["provenance"] = {"paths_jsonl": [str(p) for p in args.paths_jsonl],
                              "labels_jsonl": [str(p) for p in args.labels_jsonl],
                              "checkpoint": paths[0]["checkpoint"], "collection_round": paths[0]["collection_round"],
+                             "terminal_protocol": protocols[0], "verified_label_versions": [json.loads(v) for v in versions],
                              "objective": "separate mean improvements in e0-eR and centered eR; no cross-composition ranking"}
     args.output_dir.mkdir(parents=True, exist_ok=False)
     (args.output_dir / "teacher.json").write_text(json.dumps(teacher, ensure_ascii=False) + "\n", encoding="utf-8")
