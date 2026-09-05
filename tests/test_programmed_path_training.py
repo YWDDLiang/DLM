@@ -4,11 +4,13 @@ from types import SimpleNamespace
 
 import torch
 
-from crystal_dlm.programmed_path_training import sample_path_decisions, minibatch_path_loss, PathLogProbability, join_terminal_labels
+from crystal_dlm.programmed_path_training import sample_path_decisions, minibatch_path_loss, PathLogProbability, join_terminal_labels, shape_matched_batches
 from crystal_dlm.programmed_path_data import trace_terminal_body
-from crystal_dlm.programmed_path_runtime import process_path_logits
+from crystal_dlm.programmed_path_runtime import process_path_logits, process_scalar_path_logits
 from crystal_dlm.r5_dynamic_length import exact_dynamic_schema_constraints
-from test_state_programmed_runtime import TinyTokenizer, body, constraints
+from test_state_programmed_runtime import TinyTokenizer, TinyBase, body, constraints, program
+from crystal_dlm.periodic_state_conditioning import PeriodicStateConfig
+from crystal_dlm.state_conditioned_model import StateConditionedDLM, context_from_programs, set_state_lora_trainable
 
 
 def example_path(counts):
@@ -21,6 +23,17 @@ def example_path(counts):
 
 
 class PathTrainingTest(unittest.TestCase):
+    def test_shape_buckets_cover_once_and_add_only_zero_mass_rows(self):
+        rows = [{"id": i, "prompt_token_ids": [0] * (3 + i % 3), "input_body": [0] * 15,
+                 "weight": 1., "inclusion_probability": .5} for i in range(19)]
+        batches = shape_matched_batches(rows, global_batch=16, seed=23, pass_index=0)
+        self.assertEqual(len(batches), 3)
+        for batch in batches:
+            self.assertEqual(len(batch), 16)
+            self.assertEqual(len({len(e["prompt_token_ids"]) + len(e["input_body"]) for e in batch}), 1)
+        retained = [e["id"] for batch in batches for e in batch if e["weight"] > 0]
+        self.assertEqual(sorted(retained), list(range(19)))
+
     def test_label_join_preserves_occurrences_and_excludes_heldout_or_missing_rows(self):
         paths, labels = [], []
         for group in range(2):
@@ -92,6 +105,51 @@ class PathTrainingTest(unittest.TestCase):
         self.assertTrue(torch.isfinite(raw.grad).all())
         self.assertNotEqual(float(raw.grad[0, 9, canonical]), 0.)
         self.assertNotEqual(float(raw.grad[0, 9, alias]), 0.)
+
+    def test_scalar_projection_matches_dense_forward_and_gradient(self):
+        tok = TinyTokenizer()
+        c = constraints(tok)
+        source = body(tok)
+        allowed = torch.zeros(len(source), len(tok.vocab), dtype=torch.bool)
+        for pos, ids in enumerate(exact_dynamic_schema_constraints(tok, 2)):
+            allowed[pos, ids] = True
+        for dtype in (torch.float32, torch.bfloat16):
+            for position in (1, 6, 8, 9, 10):
+                x = torch.tensor([[0] + source])
+                x[0, position + 1] = tok.mask_id
+                dense_input = torch.randn(1, x.shape[1], len(tok.vocab), dtype=dtype, requires_grad=True)
+                scalar_input = dense_input.detach().clone().requires_grad_(True)
+                dense, bad = process_path_logits(dense_input, x, prompt_length=1, gen_length=len(source),
+                    allowed=allowed, grammar=None, constraints=c, positions={0: position}, mask_id=tok.mask_id)
+                scalar, scalar_bad = process_scalar_path_logits(scalar_input, x, prompt_length=1,
+                    gen_length=len(source), allowed=allowed, constraints=c, position=position, mask_id=tok.mask_id)
+                self.assertEqual(bad, scalar_bad)
+                self.assertTrue(torch.equal(dense[0, position + 1], scalar))
+                target = source[position]
+                dense_loss = -torch.log_softmax(dense[0, position + 1].float() / .7, -1)[target]
+                scalar_loss = -torch.log_softmax(scalar.float() / .7, -1)[target]
+                dense_loss.backward()
+                scalar_loss.backward()
+                self.assertTrue(torch.equal(dense_input.grad, scalar_input.grad))
+
+    def test_active_projection_keeps_lora_and_conditioner_gradients(self):
+        tok = TinyTokenizer()
+        base = TinyBase(len(tok.vocab), recompute=True)
+        model = StateConditionedDLM(base, tok, PeriodicStateConfig(16, width=12, radial_basis_count=4))
+        set_state_lora_trainable(model)
+        old = torch.tensor([[0] + body(tok)])
+        x = old.clone()
+        x[:, 9:12] = tok.mask_id
+        context = context_from_programs(old, prompt_length=1, num_sites=2, programs=[program()], active_positions={0: [8, 9, 10]})
+        logits = model(x, attention_mask=torch.ones_like(x), geometry_context=context).logits
+        batch = {"input_ids": x, "geometry_context": context,
+                 "examples": [{"num_atoms": 2, "position": 8, "target_token": tok.vocab["<X_000>"], "temperature": .7}]}
+        loss = -PathLogProbability(tok, constraints(tok))(logits, batch).sum()
+        loss.backward()
+        self.assertGreater(float(model.state_conditioner.cell_projection.weight.grad.abs().sum()), 0.)
+        self.assertGreater(float(base.lora_B["default"].weight.grad.abs().sum()), 0.)
+        self.assertIsNone(base.embedding.weight.grad)
+        self.assertIsNone(base.output.weight.grad)
 
 
 if __name__ == "__main__":

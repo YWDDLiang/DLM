@@ -64,3 +64,21 @@ teacher双降不保证学生/SUN双升；force/stress、实际步数、Stable/N/
 
 新run保存明确commit的代码快照。真实检查通过后先固定0..127组，再完成同一池
 128..1023组；不根据能量更换条件。原有`apply_pmtr_fixed_bodies.py`及测试原样保留。
+
+## 路径训练实际短检查与等价优化
+
+39872已完成：512请求、509成功、3失败，9分21秒。39873正在标注全部512条。
+39874在模型加载前受旧Bash `nounset` 空数组行为影响，aba489c修复；39875从同一
+warmup和真实train轨迹完成4个路径更新+1个CE更新，参数梯度有限，`eligible_policy=false`。
+这次只用均匀工程权重，没有能量teacher。训练部分58.38秒（80 scalar），包括保存75.37秒。
+微批2+不同长度padding时，初始16 scalar与采样记录的最大logp差0.07679 nat，不能写成0。
+
+现在只对实际active logits保留autograd；离散schema/几何支持仍调用同一实现，alias
+logaddexp保持梯度。FP32/BF16的dense/scalar logits和梯度逐元素一致，LoRA/conditioner
+端到端梯度测试通过。按无padding的相同序列长度组batch、微批4×4卡、accumulation1，
+全局batch仍16；不足的bucket仅补零权重，loss使用相应总slot数保持condition均值。
+这项等价工程优化需下一次真实短检查，不按SUN调参。
+
+评估参考入口直接调用原来的 `revise_spad_cell` 和 `revise_spad_species_blocks`，
+保留独立cell拒绝边界；用共同的构造流程和对应随机数地址，避免错误地把
+`cooperative=False`当成已经执行cell的参考。参考ledger仅作评价，不冒充完整训练trace。

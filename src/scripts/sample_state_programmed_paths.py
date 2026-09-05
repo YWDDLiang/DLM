@@ -33,6 +33,7 @@ def parse_args():
     p.add_argument("--collection-round", type=int, default=0)
     p.add_argument("--seed", type=int, default=20260905)
     p.add_argument("--purpose", choices=("train", "evaluation"), default="train")
+    p.add_argument("--reference-closure", action="store_true")
     p.add_argument("--temperature", type=float, default=.7)
     p.add_argument("--world-size", type=int, default=int(os.environ.get("WORLD_SIZE", 1)))
     p.add_argument("--merge-only", action="store_true")
@@ -43,6 +44,11 @@ def parse_args():
 
 def conditions_for_run(args):
     rows = read_jsonl(args.conditions)
+    if args.purpose == "evaluation":
+        if any(row.get("source_split") == "train" for row in rows):
+            raise ValueError("train path conditions cannot be renamed as evaluation")
+        rows = [dict(row, group_id=row.get("group_id", f"eval:{row['sample_idx']}"),
+                     source_split="evaluation", source_row_idx=int(row["sample_idx"])) for row in rows]
     if not 0 <= args.condition_start < args.condition_stop <= len(rows):
         raise ValueError("condition range is outside the frozen source pool")
     selected = list(enumerate(rows))[args.condition_start:args.condition_stop]
@@ -71,6 +77,7 @@ def merge(args):
               "condition_start": args.condition_start, "condition_stop": args.condition_stop,
               "collection_round": args.collection_round, "checkpoint": args.checkpoint_path,
               "seed": args.seed, "purpose": args.purpose, "inference_mlip": False,
+              "reference_closure": args.reference_closure,
               "outcome_selection": False, "failures_retained": True}
     (args.output_dir / "SAMPLE_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     (args.output_dir / "_SUCCESS").touch()
@@ -139,6 +146,8 @@ def main():
     args = parse_args()
     if args.candidates < 1 or args.batch_size < 1 or args.temperature <= 0:
         raise ValueError("positive occurrence count, batch size and likelihood temperature required")
+    if args.reference_closure and (args.purpose != "evaluation" or args.candidates != 1 or args.replay_jsonl):
+        raise ValueError("the old closure is an evaluation-only reference, not a path teacher")
     if args.merge_only:
         merge(args)
         return
@@ -152,7 +161,13 @@ def main():
     torch.cuda.set_device(local)
     torch.manual_seed(args.seed)
     device = torch.device("cuda", local)
-    model, tokenizer = load_path_model(args.model_path, args.checkpoint_path, device)
+    if args.reference_closure:
+        from scripts.sample_llada_dynamic_crystals import load_model_and_tokenizer
+        from crystal_dlm.programmed_path_reference import UnconditionedReferenceModel
+        base, tokenizer = load_model_and_tokenizer(args.model_path, args.checkpoint_path, device)
+        model = UnconditionedReferenceModel(base).requires_grad_(False).eval()
+    else:
+        model, tokenizer = load_path_model(args.model_path, args.checkpoint_path, device)
     constraints = build_dynamic_lightweight_constraints(
         tokenizer, duplicate_coordinate_mask=True, lattice_volume_mask=True, min_lattice_rad=1e-4,
         canonicalize_periodic_alias=True, pbc_min_distance_mask=True, pbc_min_distance_A=.5, pbc_image_radius=2,
@@ -179,11 +194,19 @@ def main():
                 x = torch.tensor([c["prompt_token_ids"] + c["initial_body"] for c in compiled], device=device)
                 sampler = make_sampler(model, tokenizer, constraints, compiled, seeds, args.temperature)
                 with torch.autocast("cuda", dtype=torch.bfloat16):
-                    result, traces = sampler.run(x, torch.ones_like(x))
+                    result, traces = sampler.run(x, torch.ones_like(x), cooperative=not args.reference_closure,
+                                                 closure=not args.reference_closure)
+                    reference_logs = [None] * len(batch)
+                    if args.reference_closure:
+                        from crystal_dlm.programmed_path_reference import close_reference
+                        result, reference_logs = close_reference(model, result, traces,
+                            programs=[c["program"] for c in compiled], seeds=seeds, prompt_length=sampler.prompt_length,
+                            attention_mask=torch.ones_like(x), allowed=sampler.allowed_ids, constraints=constraints,
+                            temperature=args.temperature)
                 for row_index, (ordinal, candidate, c) in enumerate(batch):
                     body_ids = result[row_index, len(c["prompt_token_ids"]):].tolist()
                     trace = traces[row_index]
-                    if trace_terminal_body(trace) != body_ids:
+                    if not args.reference_closure and trace_terminal_body(trace) != body_ids:
                         raise RuntimeError("recorded attempted trace does not reconstruct endpoint")
                     body = tokenizer.decode(body_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
                     if trace["success"]:
@@ -192,9 +215,12 @@ def main():
                               "condition_ordinal": ordinal, "candidate_index": candidate,
                               "trajectory_id": f"{c['record']['group_id']}:{args.collection_round}:{candidate}",
                               "collection_round": args.collection_round, "sampling_seed": seeds[row_index],
+                              "sampling_batch_size": len(batch),
                               "num_atoms": c["program"].num_atoms, "checkpoint": args.checkpoint_path,
                               "success": trace["success"], "body": body, "final_body_token_ids": body_ids,
-                              "trace": trace, "trace_summary": trace_summary(trace)}
+                              "trace": trace, "trace_summary": trace_summary(trace),
+                              "trace_scope": "predictor_only_legacy_revision_ledger" if args.reference_closure else "full_attempted_path",
+                              "legacy_reference_closure": reference_logs[row_index]}
                     handle.write(json.dumps(record, ensure_ascii=False) + "\n")
                     completed += 1
                     successful += int(trace["success"])

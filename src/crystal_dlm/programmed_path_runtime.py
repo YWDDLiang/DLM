@@ -317,6 +317,35 @@ def process_path_logits(raw, x, *, prompt_length, gen_length, allowed, grammar,
     return logits, unavailable
 
 
+def process_scalar_path_logits(raw, x, *, prompt_length, gen_length, allowed,
+                               constraints, position, mask_id):
+    """Equivalent active-vector transform without full-canvas CopySlices grads.
+
+    Schema/geometry supports are discrete functions of recorded integer state.
+    Only that support calculation is detached. The actual active LM logits and
+    canonical/alias logaddexp retain gradients into LoRA AND the conditioner.
+    """
+    if raw.shape[0] != 1:
+        raise ValueError("scalar projection accepts one logical row")
+    with torch.no_grad():
+        processed, bad = process_path_logits(
+            raw.detach(), x, prompt_length=prompt_length, gen_length=gen_length,
+            allowed=allowed, grammar=None, constraints=constraints,
+            positions={0: position}, mask_id=mask_id,
+        )
+        minimum = torch.finfo(raw.dtype).min
+        legal = processed[0, prompt_length + position] > minimum
+    vector = raw[0, prompt_length + position].masked_fill(~allowed[position], minimum)
+    component = (position - 8) % 4
+    if position >= 8 and component < 3 and constraints.get("canonicalize_periodic_alias"):
+        pair = constraints.get("coordinate_alias_token_ids", {}).get("XYZ"[component])
+        if pair is not None:
+            canonical, alias = map(int, pair)
+            merged = torch.logaddexp(vector[canonical], vector[alias])
+            vector = vector.scatter(0, torch.tensor([canonical], device=raw.device), merged.reshape(1))
+    return vector.masked_fill(~legal, minimum), bad
+
+
 def replay_scalar_states(trace: dict[str, Any]) -> Iterator[dict[str, Any]]:
     """Rebuild exact conditioning before every sampled scalar, including rejection."""
     body = list(trace["initial_body"])

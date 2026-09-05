@@ -9,7 +9,7 @@ import torch
 
 from crystal_dlm.fixed_slot import MASK_TOKEN_ID
 from crystal_dlm.programmed_path_data import path_seed, trace_terminal_body
-from crystal_dlm.programmed_path_runtime import process_path_logits, replay_scalar_states
+from crystal_dlm.programmed_path_runtime import process_scalar_path_logits, replay_scalar_states
 from crystal_dlm.r5_dynamic_length import exact_dynamic_schema_constraints
 
 
@@ -103,6 +103,7 @@ def sampled_training_examples(paths, teacher, *, seed, pass_index):
                              "prompt": path["prompt"], "prompt_token_ids": path["prompt_token_ids"],
                              "plan_state": path["plan_state"], "species_program": path["species_program"],
                              "species_program_source": path["species_program_source"]})
+            examples[-1]["sampling_batch_size"] = int(path.get("sampling_batch_size", 4))
     return examples
 
 
@@ -124,12 +125,11 @@ class PathLogProbability:
                 for pos, ids in enumerate(exact_dynamic_schema_constraints(self.tokenizer, count)):
                     mask[pos, ids] = True
                 self.allowed[key] = mask
-            logits, bad = process_path_logits(
+            vector, bad = process_scalar_path_logits(
                 raw[row:row+1, :width], batch["input_ids"][row:row+1, :width],
-                prompt_length=prompt, gen_length=body_length, allowed=self.allowed[key], grammar=None,
-                constraints=self.constraints, positions={0: example["position"]}, mask_id=MASK_TOKEN_ID,
+                prompt_length=prompt, gen_length=body_length, allowed=self.allowed[key],
+                constraints=self.constraints, position=example["position"], mask_id=MASK_TOKEN_ID,
             )
-            vector = logits[0, prompt + example["position"]]
             target = int(example["target_token"])
             if bad or vector[target] <= torch.finfo(vector.dtype).min:
                 raise ValueError("recorded teacher decision is outside deployed support")
@@ -153,3 +153,27 @@ def minibatch_path_loss(log_probs, examples, *, dataset_size, validated_groups):
         [e["inclusion_probability"] for e in examples],
         len(examples) * validated_groups / dataset_size,
     )
+
+
+def shape_matched_batches(examples, *, global_batch, seed, pass_index):
+    """One exact pass, grouping by unpadded sequence width for deployed numerics.
+
+    Each real state occurs once. Short buckets receive zero-mass copies only;
+    the loss uses this padded population size, preserving the condition mean.
+    Batch order is shuffled without consulting energy, weights or outcomes.
+    """
+    rng = np.random.default_rng(np.random.SeedSequence([seed, pass_index, 71]))
+    buckets = defaultdict(list)
+    for example in examples:
+        width = len(example["prompt_token_ids"]) + len(example["input_body"])
+        buckets[width].append(example)
+    batches = []
+    for width in sorted(buckets):
+        rows = buckets[width]
+        order = rng.permutation(len(rows))
+        shuffled = [rows[int(i)] for i in order]
+        missing = (-len(shuffled)) % global_batch
+        shuffled += [dict(shuffled[0], weight=0., inclusion_probability=1.) for _ in range(missing)]
+        batches.extend(shuffled[i:i + global_batch] for i in range(0, len(shuffled), global_batch))
+    order = rng.permutation(len(batches))
+    return [batches[int(i)] for i in order]

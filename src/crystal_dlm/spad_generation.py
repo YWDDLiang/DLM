@@ -1574,6 +1574,7 @@ def revise_spad_species_blocks(
     lightweight_decoding_constraints: dict | None,
     sampling_seeds_by_batch: Sequence[int] | None = None,
     block_index_offset: int = 0,
+    sampling_salt_fn: Callable[[int, int, int], int] | None = None,
     transaction_logit_transform: TransactionLogitTransform | None = None,
     plan_metadata_by_batch: Sequence[Mapping[str, Any] | None] | None = None,
     program_metadata_by_batch: Sequence[Mapping[str, Any] | None] | None = None,
@@ -1851,7 +1852,7 @@ def revise_spad_species_blocks(
                     temperature=float(temperature),
                     remasking=remasking,
                     sampling_seeds_by_batch=sampling_seeds_by_batch,
-                    salt=_spad_basin_closure_block_salt(
+                    salt=(sampling_salt_fn or _spad_basin_closure_block_salt)(
                         global_block_index,
                         int(site_order_index),
                         int(component),

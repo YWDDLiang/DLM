@@ -22,7 +22,7 @@ from torch.nn.parallel import DistributedDataParallel
 
 from crystal_dlm.programmed_path_data import load_path_model, read_jsonl
 from crystal_dlm.programmed_path_training import (
-    PathLogProbability, minibatch_path_loss, sampled_training_examples,
+    PathLogProbability, minibatch_path_loss, sampled_training_examples, shape_matched_batches,
 )
 from crystal_dlm.state_conditioned_model import set_state_lora_trainable
 from crystal_dlm.state_training import enable_native_checkpointing, materialize_state_batch
@@ -39,7 +39,7 @@ def parse_args():
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--optimizer-state", type=Path)
     p.add_argument("--passes", type=int, default=2)
-    p.add_argument("--batch-size", type=int, default=2)
+    p.add_argument("--batch-size", type=int, default=4)
     p.add_argument("--effective-batch", type=int, default=16)
     p.add_argument("--learning-rate", type=float, default=5e-6)
     p.add_argument("--warmup-updates", type=int, default=100)
@@ -174,18 +174,16 @@ def main():
         if not examples:
             raise ValueError("no positive-weight path states")
         real_size = len(examples)
-        padded_size = math.ceil(real_size / args.effective_batch) * args.effective_batch
-        # Ghost rows have ZERO teacher mass, not repeated positive trajectories.
-        examples += [dict(examples[0], weight=0., inclusion_probability=1.) for _ in range(padded_size - real_size)]
-        order = np.random.default_rng(np.random.SeedSequence([args.seed, pass_index, 71])).permutation(padded_size)
+        batches = shape_matched_batches(examples, global_batch=args.effective_batch, seed=args.seed, pass_index=pass_index)
+        padded_size = len(batches) * args.effective_batch
         processed = 0
-        for begin in range(0, padded_size, args.effective_batch):
-            local_ids = order[begin:begin + args.effective_batch][rank::world]
-            loss, gradient = update([examples[int(i)] for i in local_ids], kind="path",
+        for global_examples in batches:
+            local_examples = global_examples[rank::world]
+            loss, gradient = update(local_examples, kind="path",
                                     padded_size=padded_size, groups=normalizer_groups)
             path_updates += 1
             global_updates += 1
-            processed += len(local_ids)
+            processed += len(local_examples)
             log_event("path", loss, gradient, pass_index)
             if path_updates % 4 == 0:
                 source_ids = [(ce_updates * args.effective_batch + i) % len(anchors) for i in range(rank, args.effective_batch, world)]
@@ -224,6 +222,7 @@ def main():
                   "path_updates": path_updates, "ce_updates": ce_updates, "passes": pass_reports,
                   "teacher_summary": summary, "trainable": counts, "elapsed_seconds": time.monotonic() - started}
         report["initial_minibatch_replay"] = replay_reports
+        report["rank0_peak_allocated_GiB"] = torch.cuda.max_memory_allocated(device) / 2**30
         (args.output_dir / "TRAIN_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         (args.output_dir / "POLICY_PATH").write_text(str(destination) + "\n", encoding="utf-8")
         (args.output_dir / "_SUCCESS").touch()
