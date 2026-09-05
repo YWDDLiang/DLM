@@ -55,6 +55,8 @@ def main():
         raise RuntimeError("path policy training requires its declared allocation")
     if args.effective_batch != 16 or args.passes != 2:
         raise ValueError("retain the fixed effective batch16 and two complete passes")
+    if (args.teacher_json.parent / "_INVALIDATED").exists():
+        raise ValueError("teacher is held or invalidated; inspect its recorded data-quality audit")
     teacher = json.loads(args.teacher_json.read_text(encoding="utf-8"))
     summary, provenance = teacher["summary"], teacher["provenance"]
     if not summary.get("trainable_teacher") and not args.engineering_steps:
