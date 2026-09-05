@@ -1,6 +1,6 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 01:07 Asia/Shanghai: all 1024*K4 paths have been collected; 2880/4096 terminal labels are confirmed, including670verified. Six-GPU labeling39885 is still running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
+Current status: **2026-09-06 01:14 Asia/Shanghai: all 1024*K4 paths have been collected; 3246/4096 terminal labels are confirmed, including771verified. Six-GPU labeling39885 is still running. The paired reference native evaluation is complete. Formal energy post-training has not started.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
@@ -27,6 +27,9 @@ and remote226 shell syntax passed. These overlapping suites are not added togeth
 Heartbeat01:07:39885 remainsRUNNING54m04;2368/3584labels complete. One occurrence
 has relaxation_energy_increased and is retained with zero teacher weight under
 the existing verification rule. No software error or new job submission.
+User status check01:14:39885 RUNNING1h00m39,2734/3584labels complete;660verified,
+1007not-converged,1049invalid-terminal,17generation-failure,1energy-increased.
+850labels remain across the initial complete pool. No final student SUN exists.
 Latest combined local suite:91PASS. Current implemented code is on the requested
 branch; preserve the two pre-existing untracked PMTR files. Full-path trainer,
 reference, tau800 and parser-only independent-main entrypoints are implemented;
