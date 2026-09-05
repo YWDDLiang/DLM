@@ -1,0 +1,207 @@
+{
+  "scope": "algebra_and_toy_counterexamples_only_not_crystal_experiments",
+  "wrapped_transition": {
+    "integral_on_unit_torus": 1.0,
+    "common_translation_density_error": 0.0,
+    "boundary_correct_log_density": 1.7567937403493177,
+    "boundary_naive_gaussian_log_density": -182.24320625965066
+  },
+  "kl_chain_and_fixed_endpoint_map": {
+    "joint_kl": 0.13707971650548678,
+    "chain_rule_rhs": 0.13707971650548678,
+    "chain_rule_residual": 0.0,
+    "endpoint_kl": 0.02502955933159598
+  },
+  "deterministic_limit": {
+    "mean_shift": 0.01,
+    "gaussian_kl_by_sigma": {
+      "0.1": 0.004999999999999999,
+      "0.01": 0.5,
+      "0.001": 50.00000000000001
+    },
+    "sigma_zero_different_dirac_means_kl": "infinite"
+  },
+  "mean_objectives_do_not_guarantee_sun": {
+    "baseline_A_mean": 0.02,
+    "improved_A_mean": 0.01,
+    "baseline_B_mean": 0.145,
+    "improved_B_mean": 0.14,
+    "baseline_stable_fraction": 0.5,
+    "improved_stable_fraction": 0.0,
+    "assumption": "all_valid_unique_novel_for_this_toy_example"
+  },
+  "sampler_schedule_800_of_1000_float64": {
+    "alpha_bar": 0.094009470909837,
+    "lattice_clean_coefficient": 0.3066096392970009,
+    "lattice_noise_coefficient": 0.9518353476784538,
+    "fractional_forward_sigma": 0.19887015120290172,
+    "fractional_corrector_std": 0.17787487071413993,
+    "actual_initial_state": "unnoised_DLM_proposal"
+  },
+  "sde_kl_limit": {
+    "fixed_noise_girsanov_kl": 0.22222222222222227,
+    "fixed_noise_euler_kl_by_steps": {
+      "16": 0.22222222222222227,
+      "64": 0.22222222222222227,
+      "256": 0.22222222222222227,
+      "1024": 0.22222222222222227
+    },
+    "changed_noise_euler_kl_by_steps": {
+      "16": 0.42247801165275645,
+      "64": 1.6899120466110258,
+      "256": 6.759648186444103,
+      "1024": 27.038592745776413
+    },
+    "changed_noise_continuous_path_laws": "singular_by_quadratic_variation"
+  },
+  "finite_KL_teacher_not_realizable_by_one_gaussian_mean_update": {
+    "teacher": "0.5*N(-0.6,0.4^2)+0.5*N(0.6,0.4^2)",
+    "reference_and_student_family": "reference=N(0,1); student=N(mu,1)",
+    "teacher_kl_to_reference": 0.1495134253524331,
+    "optimal_student_mean": 0.0,
+    "terminal_cost": "(x^2-0.6^2)^2",
+    "teacher_expected_cost": 0.30720000000000003,
+    "reference_and_projected_student_expected_cost": 2.4096,
+    "scope": "one_step_counterexample_not_impossibility_for_a_full_SDE"
+  },
+  "weighted_endpoint_denoising_score_identity": {
+    "clean_endpoint_support": [
+      -1,
+      1
+    ],
+    "reference_weights": [
+      0.5,
+      0.5
+    ],
+    "target_weights": [
+      0.2,
+      0.8
+    ],
+    "forward_noise_sigma": 0.45,
+    "probe_points": [
+      -1.7,
+      -0.7,
+      0.0,
+      0.3,
+      1.4
+    ],
+    "reference_noisy_score": [
+      3.456790627824155,
+      -1.4716720540410793,
+      0.0,
+      2.9715811411851414,
+      -1.9753184041154062
+    ],
+    "target_noisy_score": [
+      3.4567921409259417,
+      -1.4423603376116079,
+      2.962962962962963,
+      3.330847449920885,
+      -1.975311082512142
+    ],
+    "finite_difference_log_noise_H_gradient": [
+      1.5131007558011331e-06,
+      0.029311716481794644,
+      2.962962961440266,
+      0.3592663092188974,
+      7.321598882725765e-06
+    ],
+    "max_identity_residual": 1.5226966354475735e-09,
+    "scope": "positive_noise_toy_law_not_a_population_crystal_KL_certificate"
+  },
+  "terminal_tilt_and_initial_distribution_boundary": {
+    "reference_initial_law": [
+      0.5,
+      0.5
+    ],
+    "reference_good_endpoint_probability": 0.5,
+    "terminal_weights_good_ordinary": [
+      2.0,
+      1.0
+    ],
+    "H_at_initial_states": [
+      1.9000000000000001,
+      1.1
+    ],
+    "global_tilt_initial_law": [
+      0.6333333333333333,
+      0.36666666666666664
+    ],
+    "global_tilt_good_probability": 0.6666666666666666,
+    "fixed_initial_law": [
+      0.5,
+      0.5
+    ],
+    "fixed_initial_conditional_tilt_good_probability": 0.5645933014354066,
+    "scope": "random_initial_law_counterexample_not_a_fixed_xD_failure"
+  },
+  "discontinuous_terminal_cost_smooth_future_H": {
+    "reference": "one_dimensional_Brownian_motion",
+    "terminal_weight": "2_if_Y_positive_else_1",
+    "remaining_time": 0.25,
+    "sigma": 0.6,
+    "probe_points_off_basin_boundary": [
+      -0.2,
+      0.1,
+      0.4
+    ],
+    "local_terminal_cost_gradient": [
+      0,
+      0,
+      0
+    ],
+    "future_H": [
+      1.252492537546923,
+      1.6305586598182364,
+      1.9087887802741321
+    ],
+    "future_log_H_gradient": [
+      0.8501660913365843,
+      0.7714804277266568,
+      0.28641212404940053
+    ],
+    "optimal_drift_change": [
+      0.3060597928811703,
+      0.2777329539815964,
+      0.10310836465778418
+    ],
+    "max_gradient_finite_difference_residual": 1.5048462476130453e-10
+  },
+  "unscaled_corrector_rule_is_not_fixed_horizon_grid_refinement": {
+    "full_sigma_range": [
+      0.005,
+      0.5
+    ],
+    "step_lr": 1e-05,
+    "sum_corrector_step_sizes_by_grid_size": {
+      "250": 2.7535260080032335,
+      "1000": 10.895501856939456,
+      "4000": 43.464273160281145
+    },
+    "4000_to_1000_ratio": 3.989194231801109,
+    "scope": "schedule_algebra_only_not_a_model494_convergence_experiment"
+  },
+  "wrapped_prior_not_exactly_uniform_at_finite_sigma": {
+    "sigma_T": 0.5,
+    "first_fourier_mode_magnitude": 0.007191883355826368,
+    "scope": "one_coordinate_mode_not_a_joint_total_variation_bound"
+  },
+  "rare_basin_illustrations_not_measured_crystal_probabilities": [
+    {
+      "hypothetical_reference_basin_probability": 0.0001,
+      "at_least_one_hit_in_K8": 0.0007997200559929363,
+      "max_new_probability_under_population_KL_0_2": 0.039906238559363615
+    },
+    {
+      "hypothetical_reference_basin_probability": 0.001,
+      "at_least_one_hit_in_K8": 0.00797205593005601,
+      "max_new_probability_under_population_KL_0_2": 0.06276636312548933
+    },
+    {
+      "hypothetical_reference_basin_probability": 0.01,
+      "at_least_one_hit_in_K8": 0.07725530557207994,
+      "max_new_probability_under_population_KL_0_2": 0.12209002762978748
+    }
+  ],
+  "all_assertions_passed": true
+}

@@ -1,14 +1,16 @@
 # Execution Checklist: Llama-Programmed Basin Closure / Dual-Objective Review
 
-Current status: **2026-09-06 04:43 Asia/Shanghai: round0 native evaluation39910 completed with Strict/Meta SUN7/256 and57/256 (2.734375/22.265625%); matched reference6/55. Native paired comparison passed, but37jointly verified pairs have mean delta A+0.125768eV/atom and delta B-0.055748eV/atom: no simultaneous improvement.39910now runs fixed-model494 tau800 on2GPUs. K8 labels shardA39911 continues on4GPUs (960/5462at04:42). ShardB rank2,2730requests remains unsubmitted; start after39910 releases2GPUs. K8 sample39896 is complete:8192requests,8093successes,99failures. Final-student SUN is still pending.**
+Current status: **2026-09-06 05:07 Asia/Shanghai: round0 evaluation39910 COMPLETED52m16. Native Strict/Meta SUN7/57 of256 (2.734375/22.265625%); tau800 SUN19/126 (7.421875/49.21875%), versus reference6/55 and19/121. No physical A/B joint improvement is established. K8 label shardA39911 RUNNING4GPUs,1728/5462; shardB39916 RUNNING2GPUs,64/2730. Both shards are already submitted and disjoint. K8 sample39896 is complete8192requests/8093successes/99failures. Final K8 student and independent main remain pending.**
 
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
 Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md).
 Continuous-refiner extension: [22 Code assessment and proposal](22_CONTINUOUS_DIFFUSION_EXTENSION_ASSESSMENT.md).
 First-round evaluation: [25 Matched development results](25_ROUND0_MATCHED_EVALUATION.md).
-The user delegated continuous-diffusion training/SDE analysis to a bounded local
-documentation agent; the main agent continues only the K4/K8 execution pipeline.
+A increase diagnosis: [26 Paired geometry and coverage](26_ROUND0_GAP_INCREASE_DIAGNOSIS.md).
+The delegated continuous-diffusion/SDE audit is complete in
+[24 Training and SDE audit](24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md).
+It is documentation only; the main agent continues the K4/K8 execution pipeline.
 This is a proposed follow-on design, not a trained refiner or a change to the
 currently scheduled fixed-model494 comparisons. Preserve today's active pipeline.
 The user explicitly confirmed this deferral at04:00: prioritize K4/K8 evaluations;
@@ -55,12 +57,12 @@ historical relabeling. Preserve the original deadline. Heartbeat
 restore execution in the earlier task. Main agent
 implements/tests/deploys/monitors directly; no coding delegation.
 
-Immediate work: monitor round0 fixed256 evaluation39910 and K8 labels shardA39911.
+Immediate work: monitor K8 labels shardA39911 and shardB39916; do not resubmit either.
 The complete8192-request K8 sample is certified by sample/_SUCCESS and
-SAMPLE_FINAL.json; do not regenerate it.39910runs native/tau800 atstep1020,
+SAMPLE_FINAL.json; do not regenerate it.39910completed native/tau800 atstep1020,
 explicitlyround0_diagnostic.39911uses four GPUs, shard-count3/shard-ranks0,1
-(5462requests). When39910finishes, label the remaining rank2 shard on two GPUs
-(2730requests), then record that jobID. Merge both complete label outputs;
+(5462requests).39916uses two GPUs, shard-count3/shard-ranks2 (2730requests).
+Merge both complete label outputs;
 never relabel the full8192or duplicate shards. Build round1teacher with--candidates8, review its
 coverage and concentration, then continue the step1020optimizer for two passes.
 The refresh uses a count-based6..24decision budget per path/pass, capped by the

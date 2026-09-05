@@ -1,12 +1,12 @@
 # 当前架构、科学对象与恢复执行
 
-**最新执行状态（2026-09-06 04:43 Asia/Shanghai）：** K4首轮原生评估完成，
-Strict/Meta SUN为7/256、57/256，参考6/256、55/256；配对核对已通过。
-双方验证交集37例的平均delta A为+0.125768eV/atom，delta B为-0.055748eV/atom，
-尚未出现A/B共同改善。39910继续用2GPU做tau800评估；39911用4GPU标注K8分片A。
-K8采样已完成8192请求/8093成功/99失败保留；分片B尚未提交，待39910结束后启动。
-详见[25首轮结果](25_ROUND0_MATCHED_EVALUATION.md)。连续diffusion分析已交给
-用户要求的文档智能体，本轮模型保持冻结；主agent只盯K4/K8主线。
+**最新执行状态（2026-09-06 05:07 Asia/Shanghai）：** K4首轮39910已完成，
+原生Strict/Meta SUN7/57，tau800为19/126，分母均256；参考分别6/55、19/121。
+原生双方验证交集37例的delta A=+0.125768、delta B=-0.055748eV/atom；
+tau800验证交集63例两项均值都上升，尚无A/B共同改善证据。
+K8分片A39911在4GPU运行，分片B39916已在2GPU运行，切勿重复提交。
+详见[25首轮结果](25_ROUND0_MATCHED_EVALUATION.md)及[26 A上升诊断](26_ROUND0_GAP_INCREASE_DIAGNOSIS.md)。
+受委派的连续diffusion数学审查已完成于24，本轮模型仍保持冻结。
 
 2026-09-05 22:30 Asia/Shanghai。新任务获准继续。工作树为
 `D:\codex_work\ai4s\DLM_llama_programmed_basin_closure`，分支为
