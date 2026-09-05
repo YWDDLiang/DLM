@@ -12,12 +12,30 @@ if str(SRC) not in sys.path:
 
 from crystal_dlm.dynamic_crystal import parse_dynamic_answer
 from crystal_dlm.manifold_corruption import (
+    canonical_lattice_from_metric,
     CorruptionCertificate,
     CorruptionConfig,
     CrystalGeometry,
     minimum_image_cartesian_retraction,
+    relative_spd_tangent,
     select_first_certified_corruption,
+    spd_congruence_update,
 )
+
+try:
+    import torch
+
+    from crystal_dlm.manifold_geometry import (
+        cartesian_to_fractional as torch_cartesian_to_fractional,
+        fractional_to_cartesian as torch_fractional_to_cartesian,
+        metric_to_lattice as torch_metric_to_lattice,
+        relative_spd_tangent as torch_relative_spd_tangent,
+        spd_congruence_update as torch_spd_congruence_update,
+        wrap_fractional as torch_wrap_fractional,
+        wrapped_fractional_delta as torch_wrapped_fractional_delta,
+    )
+except ImportError:
+    torch = None
 
 
 def clean_geometry():
@@ -59,6 +77,72 @@ class ManifoldCorruptionTest(unittest.TestCase):
             lattice=np.diag([10.0, 8.0, 7.0]),
         )
         self.assertTrue(np.allclose(vectors, [[0.2, 0.0, 0.0]], atol=1.0e-12))
+
+    @unittest.skipIf(torch is None, "Torch is unavailable in the lightweight local runtime")
+    def test_numpy_spd_builder_matches_training_torch_primitive(self):
+        metric = np.asarray(
+            [[12.0, 1.2, -0.4], [1.2, 15.0, 0.8], [-0.4, 0.8, 18.0]],
+            dtype=float,
+        )
+        tangent = np.asarray(
+            [[0.03, -0.02, 0.01], [-0.02, -0.01, 0.015], [0.01, 0.015, 0.02]],
+            dtype=float,
+        )
+        numpy_updated = spd_congruence_update(metric, tangent)
+        torch_metric = torch.tensor(metric, dtype=torch.float64)
+        torch_tangent = torch.tensor(tangent, dtype=torch.float64)
+        torch_updated = torch_spd_congruence_update(torch_metric, torch_tangent)
+        self.assertTrue(
+            np.allclose(numpy_updated, torch_updated.detach().cpu().numpy(), atol=1.0e-10)
+        )
+        self.assertTrue(
+            np.allclose(
+                canonical_lattice_from_metric(numpy_updated),
+                torch_metric_to_lattice(torch_updated).detach().cpu().numpy(),
+                atol=1.0e-10,
+            )
+        )
+        numpy_reverse = relative_spd_tangent(numpy_updated, metric)
+        torch_reverse = torch_relative_spd_tangent(torch_updated, torch_metric)
+        self.assertTrue(
+            np.allclose(numpy_reverse, torch_reverse.detach().cpu().numpy(), atol=1.0e-10)
+        )
+        lattice = canonical_lattice_from_metric(numpy_updated)
+        fractional = np.asarray([[0.99, -0.02, 1.04], [0.21, 0.35, 0.48]])
+        numpy_cartesian = fractional @ lattice
+        torch_lattice = torch.tensor(lattice, dtype=torch.float64)
+        torch_fractional = torch.tensor(fractional, dtype=torch.float64)
+        torch_cartesian = torch_fractional_to_cartesian(
+            torch_fractional, torch_lattice
+        )
+        self.assertTrue(
+            np.allclose(
+                numpy_cartesian, torch_cartesian.detach().cpu().numpy(), atol=1.0e-10
+            )
+        )
+        torch_roundtrip = torch_cartesian_to_fractional(
+            torch_cartesian, torch_lattice
+        )
+        self.assertTrue(
+            np.allclose(
+                np.mod(fractional, 1.0),
+                torch_wrap_fractional(torch_roundtrip).detach().cpu().numpy(),
+                atol=1.0e-10,
+            )
+        )
+        delta = np.asarray([[0.98, -0.98, 1.02]])
+        self.assertTrue(
+            np.allclose(
+                delta - np.round(delta),
+                torch_wrapped_fractional_delta(
+                    torch.tensor(delta, dtype=torch.float64)
+                )
+                .detach()
+                .cpu()
+                .numpy(),
+                atol=1.0e-10,
+            )
+        )
 
     def test_spd_pbc_native_roundtrip_and_request_determinism(self):
         first = select_first_certified_corruption(

@@ -24,7 +24,10 @@ from crystal_dlm.manifold_corruption import (  # noqa: E402
     CorruptionConfig,
     CorruptionProposal,
     CorruptionSelection,
+    CrystalGeometry,
     canonical_request_key,
+    minimum_image_cartesian_retraction,
+    relative_spd_tangent,
     select_first_certified_corruption,
 )
 from crystal_dlm.spad_program import (  # noqa: E402
@@ -212,6 +215,50 @@ def coherent_source_tokens(
     return tuple(output)
 
 
+def repair_target_for_state(
+    *,
+    clean_answer: str,
+    source_answer: str,
+    state: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compute the repair target from the exact hybrid state seen at inference."""
+
+    clean = CrystalGeometry.from_mapping(
+        parse_dynamic_answer(clean_answer, strict=True)
+    )
+    current = CrystalGeometry.from_mapping(
+        parse_dynamic_answer(source_answer, strict=True)
+    )
+    if tuple(current.species) != tuple(clean.species):
+        raise RuntimeError("repair target source changed species/site order")
+    if state["kind"] == "cell_sequential_component":
+        tangent = relative_spd_tangent(current.metric, clean.metric)
+        return {
+            "kind": "cell",
+            "lattice_tangent": tangent.tolist(),
+            "site_slot_index": None,
+            "cartesian_site_delta_A": None,
+        }
+
+    if state["kind"] != "reverse_species_block_component":
+        raise ValueError(f"unsupported closure state kind {state['kind']!r}")
+    slot = int(state["metadata"]["site_slot_index"])
+    if not 0 <= slot < len(clean.species):
+        raise RuntimeError("active repair site lies outside exact N")
+    vectors = minimum_image_cartesian_retraction(
+        clean.frac_coords,
+        current.frac_coords,
+        current.lattice,
+        image_radius=2,
+    )
+    return {
+        "kind": "site",
+        "lattice_tangent": None,
+        "site_slot_index": slot,
+        "cartesian_site_delta_A": vectors[slot].tolist(),
+    }
+
+
 def build_repair_row(
     source: Mapping[str, Any],
     *,
@@ -277,6 +324,15 @@ def build_repair_row(
     proposal = selection.proposal
     certificate = selection.certificate
     mode = "clean_ce_fallback" if selection.fallback else "manifold_repair"
+    repair_target = (
+        None
+        if selection.fallback
+        else repair_target_for_state(
+            clean_answer=selection.clean_body,
+            source_answer=source_answer,
+            state=state,
+        )
+    )
     closure = dict(state["metadata"])
     closure.update(
         {
@@ -308,6 +364,7 @@ def build_repair_row(
         "forced_mask_positions": forced,
         "loss_positions": loss,
         "closure": closure,
+        "repair_target": repair_target,
         "pmtr": {
             "mode": mode,
             "request_key": request_key_for_source(source),

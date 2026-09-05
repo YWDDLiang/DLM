@@ -69,6 +69,23 @@ def symmetric_matrix_log(matrix: Array) -> Array:
     return _symmetric((eigenvectors * np.log(eigenvalues)) @ eigenvectors.T)
 
 
+def spd_congruence_update(metric: Array, tangent: Array) -> Array:
+    """NumPy equivalent of ``manifold_geometry.spd_congruence_update``."""
+
+    source = _finite_array(metric, shape=(3, 3), name="metric")
+    direction = _finite_array(tangent, shape=(3, 3), name="tangent")
+    root = spd_matrix_power(source, 0.5)
+    return _symmetric(root @ symmetric_matrix_exp(direction) @ root)
+
+
+def relative_spd_tangent(metric_from: Array, metric_to: Array) -> Array:
+    """NumPy equivalent of the Torch congruence-frame SPD log tangent."""
+
+    inverse_sqrt = spd_matrix_power(metric_from, -0.5)
+    whitened = inverse_sqrt @ np.asarray(metric_to, dtype=float) @ inverse_sqrt
+    return symmetric_matrix_log(_symmetric(whitened))
+
+
 def lattice_matrix_from_parameters(
     lengths: Sequence[float], angles_deg: Sequence[float]
 ) -> Array:
@@ -400,12 +417,6 @@ def _zero_com_cartesian_displacement(
     return displacement
 
 
-def _affine_spd_retraction(source_metric: Array, target_metric: Array) -> Array:
-    inverse_sqrt = spd_matrix_power(source_metric, -0.5)
-    whitened = inverse_sqrt @ target_metric @ inverse_sqrt
-    return symmetric_matrix_log(_symmetric(whitened))
-
-
 def generate_corruption_proposal(
     clean: CrystalGeometry,
     *,
@@ -423,10 +434,7 @@ def generate_corruption_proposal(
         request_seed(seed=int(seed), request_key=key, proposal_index=int(proposal_index))
     )
     tangent = _bounded_symmetric_tangent(rng, config)
-    clean_metric_sqrt = spd_matrix_power(clean.metric, 0.5)
-    corrupted_metric = _symmetric(
-        clean_metric_sqrt @ symmetric_matrix_exp(tangent) @ clean_metric_sqrt
-    )
+    corrupted_metric = spd_congruence_update(clean.metric, tangent)
     corrupted_lattice = canonical_lattice_from_metric(corrupted_metric)
 
     displacement = _zero_com_cartesian_displacement(rng, len(clean.species), config)
@@ -462,7 +470,7 @@ def generate_corruption_proposal(
         decoded.lattice,
         image_radius=2,
     )
-    clean_spd_retraction = _affine_spd_retraction(decoded.metric, clean.metric)
+    clean_spd_retraction = relative_spd_tangent(decoded.metric, clean.metric)
     return CorruptionProposal(
         request_key=key,
         proposal_index=int(proposal_index),
@@ -556,8 +564,10 @@ __all__ = [
     "lattice_matrix_from_parameters",
     "lattice_parameters_from_matrix",
     "minimum_image_cartesian_retraction",
+    "relative_spd_tangent",
     "request_seed",
     "select_first_certified_corruption",
+    "spd_congruence_update",
     "spd_matrix_power",
     "symmetric_matrix_exp",
     "symmetric_matrix_log",

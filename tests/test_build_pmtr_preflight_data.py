@@ -127,8 +127,19 @@ class PMTRPreflightBuilderTest(unittest.TestCase):
                 self.assertEqual(source_tokens[position], expected)
             if state["kind"] == "cell_sequential_component":
                 observed_cell.add(state["metadata"]["cell_component"])
+                self.assertEqual(built["repair_target"]["kind"], "cell")
+                self.assertEqual(len(built["repair_target"]["lattice_tangent"]), 3)
+                self.assertIsNone(built["repair_target"]["site_slot_index"])
             else:
                 observed_coordinate.add(state["metadata"]["coordinate_component"])
+                self.assertEqual(built["repair_target"]["kind"], "site")
+                self.assertEqual(
+                    built["repair_target"]["site_slot_index"],
+                    state["metadata"]["site_slot_index"],
+                )
+                self.assertEqual(
+                    len(built["repair_target"]["cartesian_site_delta_A"]), 3
+                )
 
         self.assertEqual(observed_cell, {"a", "b", "c", "alpha", "beta", "gamma"})
         self.assertEqual(observed_coordinate, {"x", "y", "z"})
@@ -184,6 +195,7 @@ class PMTRPreflightBuilderTest(unittest.TestCase):
         )
         self.assertTrue(selection.fallback)
         self.assertEqual(built["pmtr"]["mode"], "clean_ce_fallback")
+        self.assertIsNone(built["repair_target"])
         self.assertEqual(built["source_answer"], built["answer"])
         self.assertEqual(built["forced_mask_positions"], [5, 6])
         self.assertEqual(built["loss_positions"], [5])
