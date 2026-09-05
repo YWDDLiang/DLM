@@ -137,6 +137,7 @@ def main():
             raise RuntimeError("conditioner reload changed logits")
         constraints = build_dynamic_lightweight_constraints(
             tokenizer, duplicate_coordinate_mask=True, lattice_volume_mask=True,
+            min_lattice_rad=1e-4,
             canonicalize_periodic_alias=True, pbc_min_distance_mask=True,
             pbc_min_distance_A=.5, pbc_image_radius=2,
         )

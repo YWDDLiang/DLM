@@ -52,6 +52,20 @@ Implementation progress at 2026-09-05 19:26 Asia/Shanghai:
   the prior h1-a2-stability-ccfd automation no longer exists and was not duplicated.
 - Local isolated .venv is being prepared for CPU tests. No training job submitted yet.
 
+Update 2026-09-05 20:34 Asia/Shanghai:
+- CPU suite: 105 local tests PASS; remote state/runtime/objective 18+6+6 PASS.
+- Current deployed source is the isolated
+  `/public/home/jiaosz/ywliang/ai4s/.sscd_state_programmed_20260905_v1` checkout.
+  Code/docs pushed from the local machine (6dc53b5, a8c6c60).
+- Preflight job39850 used 2A800/8CPU and failed after 00:01:50. Both ranks completed
+  five finite-gradient steps (~0.30s/step); failure was a missing required
+  `min_lattice_rad` argument when creating sampling constraints after reload.
+  It is an engineering preflight, not an eligible policy or SUN result.
+- Fix pins the retained `min_lattice_rad=1e-4`; an AST contract regression test
+  covers both new entrypoints. Preserve job39850 and retry in a new run only.
+- Full-MP20 warmup entrypoint and four-GPU wrapper are implemented; not submitted
+  until the real preflight success marker is present.
+
 The historical checklist below is retained for provenance only.
 
 ## Historical closed K10 sprint — not active instructions
