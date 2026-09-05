@@ -20,14 +20,16 @@ Latest combined local suite:91PASS. Current implemented code is on the requested
 branch; preserve the two pre-existing untracked PMTR files. Full-path trainer,
 reference, tau800 and parser-only independent-main entrypoints are implemented;
 future main sampling is guarded by a final-method lock. No new-method SUN exists.
-The earlier task is interrupted and its heartbeat is PAUSED; this task owns execution.
+The earlier task remains interrupted. At00:35 the existing ten-minute heartbeat
+was migrated to this task and activated; this task is the sole execution owner.
 
 ## Execution ownership after resume
 
 The user explicitly resumed this same mainline. Continue toward measured Strict
 SUN>10% and Meta SUN>50%, without guarantees, outcome-selected replacement or
-historical relabeling. Preserve the original deadline. The earlier task's
-heartbeat remains PAUSED; do not reactivate a second execution owner. Main agent
+historical relabeling. Preserve the original deadline. Heartbeat
+`llm-dlm-sun-24h` now targets `01a071d2-ebe3-79b1-a311-14a5107cb6c6`; do not
+restore execution in the earlier task. Main agent
 implements/tests/deploys/monitors directly; no coding delegation.
 
 Immediate work: finish39885, join its complete labels with39873, and solve ONE complete
