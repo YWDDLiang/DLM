@@ -167,29 +167,34 @@ def _transaction_spec(
     prompt_length: int,
     sequence_length: int,
 ) -> PMTRTransactionSpec:
-    raw_kind = "" if repair_target is None else str(repair_target.get("kind") or "")
-    if not raw_kind:
-        if closure.get("cell_component_index") is not None:
-            raw_kind = "cell"
-        elif closure.get("site_slot_index") is not None:
-            raw_kind = "site"
-    if raw_kind == "cell":
+    if closure.get("cell_component") is not None or closure.get(
+        "cell_component_index"
+    ) is not None:
+        closure_kind = "cell"
+    elif closure.get("site_slot_index") is not None:
+        closure_kind = "site_xyz"
+    else:
+        raise ValueError("PMTR closure does not identify a cell or site transaction")
+
+    target_kind = "" if repair_target is None else str(repair_target.get("kind") or "")
+    normalized_target_kind = "site_xyz" if target_kind == "site" else target_kind
+    if repair_target is not None and normalized_target_kind != closure_kind:
+        raise ValueError("PMTR repair target kind disagrees with closure transaction")
+
+    if closure_kind == "cell":
         relative = tuple(range(1, 7))
         kind = "cell"
         site_index = None
         components = tuple(range(6))
-    elif raw_kind in ("site", "site_xyz"):
-        site_value = (
-            closure.get("site_slot_index")
-            if repair_target is None
-            else repair_target.get("site_slot_index")
-        )
-        site_index = int(site_value)
+    else:
+        site_index = int(closure["site_slot_index"])
+        if repair_target is not None and int(
+            repair_target.get("site_slot_index")
+        ) != site_index:
+            raise ValueError("PMTR repair target site disagrees with closure transaction")
         relative = tuple(8 + 4 * site_index + component for component in range(3))
         kind = "site_xyz"
         components = (0, 1, 2)
-    else:
-        raise ValueError(f"unsupported PMTR repair target kind {raw_kind!r}")
     absolute = tuple(int(prompt_length) + position for position in relative)
     if any(not 0 <= position < int(sequence_length) for position in absolute):
         raise ValueError("PMTR transaction lies outside the token sequence")

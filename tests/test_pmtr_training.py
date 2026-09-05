@@ -114,6 +114,19 @@ class PMTRTrainingTest(unittest.TestCase):
         )
         self.assertEqual(len(repair.specs), 1)
 
+    def test_closure_owns_transaction_identity_and_target_must_agree(self):
+        batch = self._batch()
+        batch["pmtr_repair_targets"][1] = {
+            "kind": "cell",
+            "lattice_tangent": torch.eye(3).tolist(),
+            "site_slot_index": None,
+            "cartesian_site_delta_A": None,
+        }
+        with self.assertRaisesRegex(ValueError, "disagrees"):
+            materialize_transaction_start(
+                batch, mode="clean_identity", mask_id=127
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
