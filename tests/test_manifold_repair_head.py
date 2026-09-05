@@ -85,7 +85,16 @@ class ManifoldRepairHeadTests(unittest.TestCase):
             if parameter.grad is not None:
                 self.assertTrue(torch.isfinite(parameter.grad).all())
 
+    def test_bfloat16_backbone_hidden_is_cast_before_float32_layer_norm(self):
+        head = ManifoldRepairHead(ManifoldRepairConfig(hidden_size=12, width=16))
+        values = self._inputs()
+        values["lattice_hidden"] = values["lattice_hidden"].to(torch.bfloat16)
+        values["site_hidden"] = values["site_hidden"].to(torch.bfloat16)
+        values["plan_hidden"] = values["plan_hidden"].to(torch.bfloat16)
+        output = head(**values)
+        self.assertEqual(output.lattice_tangent.dtype, torch.float32)
+        self.assertEqual(output.cartesian_site_delta.dtype, torch.float32)
+
 
 if __name__ == "__main__":
     unittest.main()
-

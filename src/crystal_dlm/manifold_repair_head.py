@@ -214,8 +214,11 @@ class ManifoldRepairHead(nn.Module):
             plan_hidden,
         )
         dtype = self.cell_projection.weight.dtype
-        lattice_hidden = self.hidden_norm(lattice_hidden).to(dtype=dtype)
-        site_hidden = self.hidden_norm(site_hidden).to(dtype=dtype)
+        # The retained LLaDA exposes bfloat16 hidden states while this small
+        # repair head is intentionally trained in float32.  Cast before
+        # LayerNorm so its input and parameters share dtype.
+        lattice_hidden = self.hidden_norm(lattice_hidden.to(dtype=dtype))
+        site_hidden = self.hidden_norm(site_hidden.to(dtype=dtype))
         species = species.to(device=site_hidden.device, dtype=torch.long)
         site_mask = site_mask.to(device=site_hidden.device)
         program_rank = program_rank.to(device=site_hidden.device, dtype=torch.long)
@@ -228,7 +231,9 @@ class ManifoldRepairHead(nn.Module):
         site_state = site_state + self.program_rank_embedding(program_rank)
         if plan_hidden is not None:
             context = self.plan_projection(
-                self.hidden_norm(plan_hidden).to(device=site_hidden.device, dtype=dtype)
+                self.hidden_norm(
+                    plan_hidden.to(device=site_hidden.device, dtype=dtype)
+                )
             )
             cell_state = cell_state + context
             site_state = site_state + context.unsqueeze(1)
