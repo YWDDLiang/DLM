@@ -8,6 +8,10 @@ SPEC.loader.exec_module(MODULE)
 
 
 class EvaluationMetricsTest(unittest.TestCase):
+    def test_missing_refined_endpoint_cannot_fall_back_to_native_body(self):
+        with self.assertRaises(ValueError):
+            MODULE.read_input_structure({"endpoint": "tau800", "body": "native_body"})
+
     def test_energy_definition_and_verified_subset_remain_distinct(self):
         result = MODULE.classify_stability(verified=False, energy=-2., hull_energy=-1.9, novel=True, unique=True)
         self.assertTrue(result["strict_sun"])

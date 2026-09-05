@@ -51,6 +51,9 @@ def main():
     for ordinal, record in zip(ordinals, rows):
         result = dict(record, evaluation_ordinal=ordinal, endpoint="tau800" if args.refined_pt else "native",
                       parseable=False, artifact_error=None, native_execution_success=record.get("native_execution_success", record["success"]))
+        if args.refined_pt:
+            result.pop("structure", None)
+            result.pop("cif_path", None)
         try:
             arrays = parse_dynamic_answer(record["body"], strict=True)
             native = arrays_to_structure(arrays)

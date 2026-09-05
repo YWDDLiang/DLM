@@ -47,9 +47,13 @@ def sha256_file(path):
 
 
 def read_input_structure(record):
+    if record.get("parseable") is False:
+        raise ValueError(record.get("artifact_error") or "recorded CIF parser failure")
     if record.get("structure") is not None:
         from pymatgen.core import Structure
         return Structure.from_dict(record["structure"])
+    if record.get("endpoint") == "tau800":
+        raise ValueError("refined endpoint is missing; native body is not a substitute")
     return arrays_to_structure(parse_dynamic_answer(record["body"], strict=True))
 
 
@@ -60,7 +64,8 @@ def main():
     p.add_argument("--frozen-config", type=Path, required=True)
     p.add_argument("--official-cache", type=Path, required=True)
     p.add_argument("--output-dir", type=Path, required=True)
-    p.add_argument("--expected-requests", type=int, choices=(256, 1000), required=True)
+    p.add_argument("--expected-requests", type=int, choices=(256, 1000, 1200), required=True)
+    p.add_argument("--selection-json", type=Path)
     p.add_argument("--endpoint", choices=("native", "tau800"), required=True)
     p.add_argument("--cohort-role", choices=("fixed_development", "independent_main"), required=True)
     args = p.parse_args()
@@ -74,6 +79,8 @@ def main():
         raise ValueError("evaluation source order changed")
     if any(r.get("source_split") != "evaluation" for r in records):
         raise ValueError("train paths cannot supply evaluation results")
+    if any(r.get("endpoint", args.endpoint) != args.endpoint for r in records):
+        raise ValueError("input evaluation endpoints were mixed")
     labels, protocols = {}, []
     for path in args.labels_jsonl:
         if not (path.parent / "_SUCCESS").is_file():
@@ -194,12 +201,36 @@ def main():
               "label_statuses": dict(Counter(r["terminal_status"] for r in output)),
               "hull_statuses": dict(Counter(r["official_hull_status"] for r in output)),
               "frozen_nu_source_sha256": evaluator_hash, "official_cache": str(args.official_cache),
-              "new_official_query": False, "historical_protocol_comparison": "new common verified-terminal protocol; historical values are not relabeled"}
+              "new_official_query": False, "historical_protocol_comparison": "new common relaxation protocol with verification reported separately; historical values are not relabeled"}
+    selected_output = []
+    if args.selection_json:
+        selection = json.loads(args.selection_json.read_text())
+        chosen = selection["selected_source_ordinals"]
+        if len(chosen) != 1000 or chosen != sorted(set(chosen)) or max(chosen) >= len(output):
+            raise ValueError("conditional main sample must have 1000 fixed source ordinals")
+        if selection["selection_basis"] != "CIF_parser_only_in_source_order" or selection["energy_or_stability_selection"] is not False:
+            raise ValueError("main sample selection was not parser-only")
+        if args.endpoint == "native" and chosen != [i for i, r in enumerate(output) if r["reconstructed"]][:1000]:
+            raise ValueError("frozen selection is not the first 1000 reconstructed inputs")
+        selected_output = [dict(output[i], source_request_ordinal=i, ordinal=j) for j, i in enumerate(chosen)]
+        selected_counts = {key: sum(bool(r[key]) for r in selected_output) for key in counts if key != "requests"}
+        selected_counts["requests"] = len(selected_output)
+        report["conditional_1000"] = {"counts": selected_counts,
+            "strict_sun_percent": selected_counts["strict_sun"] / 10,
+            "meta_sun_percent": selected_counts["meta_sun"] / 10,
+            "verified_strict_sun_percent": selected_counts["verified_strict_sun"] / 10,
+            "verified_meta_sun_percent": selected_counts["verified_meta_sun"] / 10,
+            "selection": selection,
+            "nu_semantics": "first parseable prefix: later rows cannot change earlier uniqueness representatives"}
     args.output_dir.mkdir(parents=True, exist_ok=False)
     with (args.output_dir / "attempt_results.jsonl").open("x", encoding="utf-8") as handle:
         for row in output:
             handle.write(json.dumps(row) + "\n")
     (args.output_dir / "EVALUATION_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    if selected_output:
+        with (args.output_dir / "conditional_1000_results.jsonl").open("x", encoding="utf-8") as handle:
+            for row in selected_output:
+                handle.write(json.dumps(row) + "\n")
     (args.output_dir / "_SUCCESS").touch()
     print(json.dumps(report), flush=True)
 
