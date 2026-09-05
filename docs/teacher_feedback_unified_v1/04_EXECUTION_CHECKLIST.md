@@ -8,6 +8,10 @@ Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBIL
 Continuous-refiner extension: [22 Code assessment and proposal](22_CONTINUOUS_DIFFUSION_EXTENSION_ASSESSMENT.md).
 First-round evaluation: [25 Matched development results](25_ROUND0_MATCHED_EVALUATION.md).
 A increase diagnosis: [26 Paired geometry and coverage](26_ROUND0_GAP_INCREASE_DIAGNOSIS.md).
+Self-improvement-only repair plan: [27 Candidate support and policy constraints](27_SELF_IMPROVEMENT_REPAIR_PLAN.md).
+User explicitly rejected extra MP20 construction CE. The local attempt was fully
+reverted before commit/deployment/training. Preserve the original CE anchors;
+do not restore or enable a construction anchor profile.
 The delegated continuous-diffusion/SDE audit is complete in
 [24 Training and SDE audit](24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md).
 It is documentation only; the main agent continues the K4/K8 execution pipeline.
