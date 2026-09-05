@@ -130,6 +130,18 @@ class PMTRRuntimeTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "does not match"):
             PMTRLogitTransform(FixedHead(), self.tokenizer).prepare(bad, self.step)
 
+    def test_bfloat16_model_step_uses_float32_periodic_algebra(self):
+        step = TransactionModelStep(
+            token_ids=self.step.token_ids,
+            logits=self.step.logits.to(torch.bfloat16),
+            hidden_states=self.step.hidden_states.to(torch.bfloat16),
+        )
+        transform = PMTRLogitTransform(FixedHead(), self.tokenizer)
+        proposal = transform.prepare(self._context("site_xyz"), step)
+        self.assertEqual(proposal.old_values.dtype, torch.float32)
+        self.assertEqual(proposal.target_values.dtype, torch.float32)
+        self.assertTrue(torch.isfinite(proposal.target_values).all())
+
 
 if __name__ == "__main__":
     unittest.main()

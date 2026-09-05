@@ -206,7 +206,9 @@ class PMTRLogitTransform(nn.Module):
                     raise ValueError("coordinate token lies outside registered family")
                 row.append(mapping[token_id])
             coordinates.append(row)
-        dtype = model_step.hidden_states.dtype if model_step.hidden_states is not None else torch.float32
+        # Keep the small SPD/PBC algebra in float32 independently of the
+        # bfloat16 language-model/head execution dtype.
+        dtype = torch.float32
         device = model_step.logits.device
         lattice_values_tensor = torch.tensor(lattice_values, dtype=dtype, device=device)
         lattice = _lattice_from_values(lattice_values_tensor)
@@ -283,7 +285,10 @@ class PMTRLogitTransform(nn.Module):
             )
         if context.kind == "cell":
             metric = lattice_to_metric(lattice)
-            corrected_metric = spd_congruence_update(metric, output.lattice_tangent[0])
+            corrected_metric = spd_congruence_update(
+                metric,
+                output.lattice_tangent[0].to(device=metric.device, dtype=metric.dtype),
+            )
             target = _lattice_values(metric_to_lattice(corrected_metric))
             old = lattice_values
             if int(torch.count_nonzero(output.lattice_tangent[0].detach()).item()) == 0:
@@ -295,7 +300,9 @@ class PMTRLogitTransform(nn.Module):
             site = int(context.site_index)
             if not 0 <= site < sites:
                 raise ValueError("active site lies outside committed geometry")
-            cartesian_delta = output.cartesian_site_delta[0, site]
+            cartesian_delta = output.cartesian_site_delta[0, site].to(
+                device=lattice.device, dtype=lattice.dtype
+            )
             fractional_delta = cartesian_to_fractional(cartesian_delta, lattice)
             old = frac[site]
             target = wrap_fractional(old + fractional_delta)
