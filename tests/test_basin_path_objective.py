@@ -147,6 +147,108 @@ class BasinPathObjectiveTest(unittest.TestCase):
         self.assertLess(result["summary"]["rho_duality_gap"], 2e-6)
         self.assertLess(result["summary"]["primal_residual"], 1e-8)
 
+    def test_uniform_reference_constraint_preserves_support_and_global_denominator(self):
+        fixed = _group("13087", [(0.2, -10.0), (73.03, -83.8574), (0.4, -9.8)])
+        fixed["candidates"][2]["trajectory_id"] = fixed["candidates"][1]["trajectory_id"]
+        fixed["candidates"].append({"trajectory_id": "unverified", "verified": False,
+                                    "raw_energy": -1000.0, "terminal_energy": -1001.0,
+                                    "status": "not_converged"})
+        fixed["candidates"].append({"trajectory_id": "missing", "verified": True,
+                                    "raw_energy": None, "terminal_energy": -2000.0,
+                                    "status": "original_status"})
+        groups = [fixed, _group("free", [(0.0, 0.0), (0.2, 0.2)])]
+        before = copy.deepcopy(groups)
+        reason = "Unresolved training-label energy scale; no physical disproof."
+        result = solve_basin_path_teacher(groups, uniform_reference_groups={"13087": reason})
+        self.assertEqual(groups, before)
+        for original_group, returned_group in zip(before, result["groups"]):
+            self.assertEqual(original_group["candidates"],
+                             [{k: v for k, v in row.items() if k != "weight"}
+                              for row in returned_group["candidates"]])
+        np.testing.assert_array_equal(_weights(result, 0), [1 / 3, 1 / 3, 1 / 3, 0, 0])
+        summary = result["summary"]
+        self.assertEqual(summary["validated_groups"], 2)
+        self.assertEqual(summary["validated_candidates"], 5)
+        self.assertEqual(summary["total_candidates"], 7)
+        self.assertEqual(summary["optimizable_groups"], 1)
+        self.assertEqual(summary["uniform_reference_group_ids"], ["13087"])
+        self.assertEqual(summary["fixed_reference_residual"], 0)
+        fixed_report = summary["fixed_reference_groups"][0]
+        self.assertEqual(fixed_report["reason"], reason)
+        self.assertEqual(fixed_report["mean_delta_gap"], 0)
+        self.assertEqual(fixed_report["mean_delta_terminal"], 0)
+        self.assertAlmostEqual(fixed_report["kl"], 0)
+        self.assertFalse(summary["physical_disproof_claimed"])
+        self.assertTrue(summary["fixed_groups_retain_path_supervision"])
+        # One free group may use KL=.4 when the two-group mean budget is .2.
+        p = brentq(lambda p: p * np.log(2 * p) + (1 - p) * np.log(2 * (1 - p)) - .4,
+                   .5, .999999)
+        np.testing.assert_allclose(_weights(result, 1),
+                                   [.5 + (p - .5) / 2, .5 - (p - .5) / 2], atol=1e-8)
+        self.assertAlmostEqual(summary["rho_max"], p - .5, places=8)
+        actual_delta = np.zeros(2)
+        squared_mass = 0.0
+        for group in result["groups"]:
+            usable = [row for row in group["candidates"]
+                      if row["verified"] and row["raw_energy"] is not None]
+            values = np.array([(row["raw_energy"] - row["terminal_energy"], row["terminal_energy"])
+                               for row in usable])
+            q = np.array([row["weight"] for row in usable])
+            actual_delta += (q - 1 / len(usable)) @ values / 2
+            squared_mass += np.square(q).sum()
+        np.testing.assert_allclose(actual_delta, [summary["mean_delta_gap"], summary["mean_delta_terminal"]], atol=1e-12)
+        self.assertAlmostEqual(summary["ESS"], 4 / squared_mass, places=10)
+        self.assertLess(summary["primal_residual"], 1e-9)
+        self.assertLess(summary["projection_duality_gap"], 1e-7)
+        self.assertAlmostEqual(summary["max_common_mean_kl"], .2, places=10)
+
+    def test_fixed_uncertain_energy_scale_cannot_change_free_preference_weights(self):
+        groups = [_group("fixed", [(0.2, -10.0), (73.03, -83.8574), (0.4, -9.8)]),
+                  _group("free", [(0.0, 0.0), (0.2, 0.2)])]
+        original = solve_basin_path_teacher(groups, uniform_reference_groups={"fixed": "uncertain"})
+        changed = copy.deepcopy(groups)
+        changed[0]["candidates"][1].update(raw_energy=-1e8, terminal_energy=-1e9)
+        alternate = solve_basin_path_teacher(changed, uniform_reference_groups={"fixed": "uncertain"})
+        np.testing.assert_array_equal(_weights(original, 1), _weights(alternate, 1))
+        for key in ("rho_max", "target_gain", "mean_delta_gap", "mean_delta_terminal", "mean_kl"):
+            self.assertEqual(original["summary"][key], alternate["summary"][key])
+        self.assertEqual(alternate["groups"][0]["candidates"][1]["terminal_energy"], -1e9)
+
+    def test_reference_constraint_zero_temperature_and_no_free_gain(self):
+        groups = [_group("fixed", [(0, 0), (100, 100)]),
+                  _group("free", [(0, 0), (1, 1), (1, 1)])]
+        result = solve_basin_path_teacher(groups, kappa=2,
+                                         uniform_reference_groups={"fixed": "uncertain"})
+        np.testing.assert_array_equal(_weights(result, 0), [.5, .5])
+        np.testing.assert_allclose(_weights(result, 1), [2 / 3, 1 / 6, 1 / 6], atol=1e-8)
+        self.assertLess(result["summary"]["rho_duality_gap"], 1e-7)
+        constrained = solve_basin_path_teacher(groups, uniform_reference_groups={
+            "fixed": "uncertain", "free": "uncertain"})
+        self.assertEqual(constrained["summary"]["solver_status"], "uniform_all_groups_reference_constrained")
+        self.assertEqual(constrained["summary"]["rho_max"], 0)
+        self.assertEqual(constrained["summary"]["mean_delta_gap"], 0)
+        self.assertEqual(constrained["summary"]["mean_delta_terminal"], 0)
+        self.assertEqual(constrained["summary"]["mean_kl"], 0)
+        np.testing.assert_array_equal(_weights(constrained, 1), [1 / 3] * 3)
+        groups[1] = _group("free", [(1, 1), (1, 1)])
+        constant = solve_basin_path_teacher(groups, uniform_reference_groups={"fixed": "uncertain"})
+        self.assertEqual(constant["summary"]["solver_status"], "uniform_constant_unfixed_labels")
+        self.assertEqual(constant["summary"]["rho_max"], 0)
+
+    def test_reference_constraint_requires_explicit_unique_group_and_reason(self):
+        groups = [_group("one", [(0, 0), (1, 1)])]
+        self.assertEqual(solve_basin_path_teacher(groups),
+                         solve_basin_path_teacher(groups, uniform_reference_groups={}))
+        for settings in ({"missing": "uncertain"}, {"one": ""}, {"one": "  "}, {"one": 4}):
+            with self.subTest(settings=settings), self.assertRaises(ValueError):
+                solve_basin_path_teacher(groups, uniform_reference_groups=settings)
+        with self.assertRaises(ValueError):
+            solve_basin_path_teacher(groups * 2, uniform_reference_groups={"one": "uncertain"})
+        groups[0]["candidates"][0]["verified"] = False
+        groups[0]["candidates"][1]["raw_energy"] = None
+        with self.assertRaisesRegex(ValueError, "no verified finite support"):
+            solve_basin_path_teacher(groups, uniform_reference_groups={"one": "uncertain"})
+
     def test_optional_torch_ht_loss_and_zero_weight_gradients(self):
         try:
             import torch
