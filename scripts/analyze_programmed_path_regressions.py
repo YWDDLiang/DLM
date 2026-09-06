@@ -306,24 +306,34 @@ def _geometry_from_body(body):
     return geometry_from_arrays(lattice, arrays["frac_coords"], source="stored_native_integer_tokens")
 
 
-def stored_geometry(path, *, endpoint, native_body_only=False):
+def _geometry_from_stored_structure(structure, *, source):
+    lattice = structure["lattice"]["matrix"]
+    sites = structure["sites"]
+    if all("abc" in site for site in sites):
+        fractions = [site["abc"] for site in sites]
+    elif all("xyz" in site for site in sites):
+        fractions = np.asarray([site["xyz"] for site in sites]) @ np.linalg.inv(np.asarray(lattice))
+    else:
+        raise ValueError("stored structure lacks complete fractional or Cartesian site coordinates")
+    return geometry_from_arrays(lattice, fractions, source=source)
+
+
+def stored_geometry(path, *, endpoint, native_upstream=False, native_body_only=False):
     """Read existing coordinates only, keeping missing tau800 geometry missing."""
     try:
-        if native_body_only:
+        if native_upstream or native_body_only:
+            # native_body_only is the legacy spelling. Presence of the new
+            # field is authoritative, including an explicit unavailable value.
+            if "native_structure" in path:
+                if path["native_structure"] is None:
+                    raise ValueError("upstream native structure unavailable; diagnostic body is not a substitute")
+                return _geometry_from_stored_structure(path["native_structure"], source="stored_native_structure_dict")
             return _geometry_from_body(path["body"])
         if path.get("parseable") is False:
             raise ValueError(path.get("artifact_error") or "recorded endpoint parser failure")
         structure = path.get("structure")
         if structure is not None:
-            lattice = structure["lattice"]["matrix"]
-            sites = structure["sites"]
-            if all("abc" in site for site in sites):
-                fractions = [site["abc"] for site in sites]
-            elif all("xyz" in site for site in sites):
-                fractions = np.asarray([site["xyz"] for site in sites]) @ np.linalg.inv(np.asarray(lattice))
-            else:
-                raise ValueError("stored structure lacks complete fractional or Cartesian site coordinates")
-            return geometry_from_arrays(lattice, fractions, source="stored_endpoint_structure_dict")
+            return _geometry_from_stored_structure(structure, source="stored_endpoint_structure_dict")
         cif = path.get("cif")
         cif_path = path.get("cif_path")
         if isinstance(cif, str) or cif_path:
@@ -437,9 +447,9 @@ def analyze_regressions(reference_rows, method_rows, reference_paths, method_pat
             "method_evidence": recorded_failure_evidence(method[index], method_paths[index], method_manifest["terminal_protocol"]),
         }
         if endpoint == "tau800":
-            entry["upstream_native_token_geometry"] = {
-                "reference": stored_geometry(reference_paths[index], endpoint="native", native_body_only=True),
-                "method": stored_geometry(method_paths[index], endpoint="native", native_body_only=True),
+            entry["upstream_native_geometry"] = {
+                "reference": stored_geometry(reference_paths[index], endpoint="native", native_upstream=True),
+                "method": stored_geometry(method_paths[index], endpoint="native", native_upstream=True),
                 "interpretation": "upstream DLM input to refinement, separate from the evaluated tau800 geometry",
             }
         tails.append(entry)
@@ -538,7 +548,7 @@ def render_markdown(report):
                      f"{arrow('volume_per_atom_A3')} | {arrow('minimum_distinct_pair_distance_A')} | "
                      f"{arrow('minimum_self_image_distance_A')} | {arrow('lattice_condition_number_2')} |")
     lines += ["", "Distances use the stored full row-vector lattice and a centered 125-image shell; this does not certify exact MIC for an arbitrary unreduced basis. "
-              "For tau800, input geometry means the stored refined structure; upstream native token geometry is separate in the JSON.", "",
+              "For tau800, input geometry means the stored refined structure; upstream native geometry is separate in the JSON, with legacy token-body fallback only when native_structure was not recorded.", "",
               "The JSON also contains top-five increases/decreases for every physical metric, signed tail contributions, coverage counts and per-case existing evidence.", ""]
     return "\n".join(lines)
 

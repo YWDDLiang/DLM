@@ -283,7 +283,9 @@ def vp_coefficients(t: Tensor) -> tuple[Tensor, Tensor]:
     _time(t, t.shape, t.device)
     alpha, sigma = (math.pi * t / 2).cos(), (math.pi * t / 2).sin()
     # Declare the mathematical endpoint exactly, not cos(pi/2) roundoff.
-    return torch.where(t == 1, 0.0, alpha), torch.where(t == 0, 0.0, sigma)
+    alpha = torch.where(t == 0, 1.0, torch.where(t == 1, 0.0, alpha))
+    sigma = torch.where(t == 0, 0.0, torch.where(t == 1, 1.0, sigma))
+    return alpha, sigma
 
 
 @torch.no_grad()

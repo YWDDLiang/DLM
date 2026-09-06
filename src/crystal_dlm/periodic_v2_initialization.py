@@ -81,11 +81,27 @@ def initialize_periodic_v2_model(model_path, device, *, trainable=True, torch_dt
 
 def load_periodic_v2_model(model_path, checkpoint_path, device, *, trainable=False,
                            torch_dtype=None):
-    """Reconstruct original frozen vocabulary means and restore only V2 deltas."""
+    """Load a V2 sampling policy, retaining its registered completed-final gate."""
     root = Path(checkpoint_path)
     if not (root / V2_MARKER).is_file():
         raise ValueError("checkpoint is not marked as periodic DLM V2")
     validate_v2_final_checkpoint(root)
+    return load_periodic_v2_architecture(model_path, root, device, trainable=trainable,
+                                         torch_dtype=torch_dtype)
+
+
+def load_periodic_v2_architecture(model_path, checkpoint_path, device, *, trainable=False,
+                                  torch_dtype=None):
+    """Reconstruct the saved V2 architecture/deltas, without selecting a policy.
+
+    This shared ABI loader is used by the strict public V2 policy loader and by
+    separately marked derived architectures.  Callers own their method-specific
+    checkpoint eligibility checks; this is not a V2 sampling-policy entrypoint.
+    Raw-source, vocabulary, LoRA and module provenance checks remain mandatory.
+    """
+    root = Path(checkpoint_path)
+    if not (root / V2_MARKER).is_file():
+        raise ValueError("checkpoint is not marked as periodic DLM V2")
     recorded = json.loads((root / INITIALIZATION_MARKER).read_text(encoding="utf-8"))
     if (recorded.get("schema") != INITIALIZATION_SCHEMA
             or recorded.get("legacy_dlm_checkpoint") is not None
