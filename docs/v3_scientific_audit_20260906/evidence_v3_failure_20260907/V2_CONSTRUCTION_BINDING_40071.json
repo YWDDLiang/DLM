@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "requests": 256,
+  "parseable": 256,
+  "structure_identity": "exact original/native dictionaries and label endpoint hash",
+  "original_labels_reused": true,
+  "new_raw_energy_calls": 0,
+  "outcome_selection": false,
+  "sources": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction/paths.jsonl": "1fde9b2fba9255bcae3dedecae25694e78ad5df10b95537ed5e2bf4612b1a682",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction-labels/labels.jsonl": "f844a23d4e31623dc34e33bf9c82cbb9989dd15d2a7f6f7bf107712809740eba",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/token_eval_40071/v2-construction/paths.jsonl": "1fcf8c4c9ca72d37d0cdfe66c8b5aa626b59756fbcceb1cc530ff73b412780f0"
+  }
+}

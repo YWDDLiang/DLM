@@ -1,6 +1,6 @@
 # 全链路科学审计与 V3 研究
 
-2026-09-07（上海）更新。**H-P33 G正式评测40066结束：raw9/61、tau80013/116，均256，未达目标；CPU诊断40069输出链全通过但坐标场风险未实质优于零预测。** 当前有界测试同权重T构造，并补匹配V2 constructor→tau800；用户指定若V2/V3最终无效则最终使用K4或K8，重点分析两者稳定/失败结构并实际尝试有据的改动。上海07:00交付最新与最好SUN。[实际跨策略失败诊断](V3_FAILURE_CROSS_STRATEGY_PHYSICS.md)、[原始G最终报告](evidence_v3_failure_20260907/EVAL_FINAL_40066.json)。
+2026-09-07（上海）更新。**V2/V3本轮均完整结束且未达目标；40074正在执行K4/K8固定软惩罚。** 最新40071 T raw13/53→τ17/111，匹配V2构造12/44→17/120，均256；G此前9/61→13/116。按用户方向，当前聚焦K4/K8稳定与失败结构及其统一改动，上海07:00交付最新与最好SUN。[K4/K8专门诊断](K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)、[固定候选](K4_K8_SOFT_CONTACT_CANDIDATE.md)、[执行复核](K4_K8_SOFT_CONTACT_EXECUTION_REVIEW.md)、[最新完整结果](evidence_v3_failure_20260907/TOKEN_EVAL_FINAL_40071.json)。
 
 本目录覆盖完整C³FD/Llama/soft/P→DLM→repair/refiner→物理/N-U/hull/统计、近期变更、历史成功失败、外部晶体生成机制及文档清理。先读 [整合报告](FINAL_AUDIT_REPORT.md) 和 [当前状态](../CURRENT_STATE.md)。
 

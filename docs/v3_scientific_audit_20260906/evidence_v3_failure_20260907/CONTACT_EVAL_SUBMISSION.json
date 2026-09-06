@@ -1,0 +1,19 @@
+{
+  "status": "submitted",
+  "created_at_utc": "2026-09-06T18:17:17.787192+00:00",
+  "code_commit": "fa4bd808b0fb9e379875b80635ed0a314bd52964",
+  "manifest_sha256": "22ccc6ab1da1e1403657adf63eeb270a3e699b63227041e317ac58f917205c15",
+  "resources": {
+    "gpus": 6,
+    "cpus": 24,
+    "memory": "440G",
+    "walltime": "02:00:00"
+  },
+  "method_order": [
+    "k4",
+    "k8"
+  ],
+  "requests_per_method": 256,
+  "job_id": "40074",
+  "run_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074"
+}
