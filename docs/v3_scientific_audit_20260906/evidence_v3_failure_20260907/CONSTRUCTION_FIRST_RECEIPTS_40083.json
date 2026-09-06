@@ -1,0 +1,18 @@
+{
+  "CONSTRUCTION_EVAL_LAUNCH_MANIFEST.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/LAUNCH_MANIFEST.json",
+    "sha256": "1f0a0355000ff1bcf9473c5924de231653bc20a4239e88b89a510844508820ab"
+  },
+  "CONSTRUCTION_EVAL_SUBMISSION.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/SUBMISSION.json",
+    "sha256": "1806c25baa5de828e1878907d99f27363b280c4b607689d2aced1849717488e8"
+  },
+  "CONSTRUCTION_INDEPENDENT_K8_READINESS.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/INDEPENDENT_K8_SOURCE_READINESS.json",
+    "sha256": "0e68e689e8378e88fbbdd3967e2242dcf80bf628457f0f92e5bf9e44436e1da6"
+  },
+  "K4_CONSTRUCTION_EXTRACTION_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k4/sample/CONSTRUCTION_EXTRACTION.json",
+    "sha256": "066135ae30e375c0a433e101d23bd0e3078426a526d67d3551c729067466fbcd"
+  }
+}

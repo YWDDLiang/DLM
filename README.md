@@ -2,7 +2,7 @@
 
 C³FD 提供化学动作支持，Typed Llama 生成组成、软计划与物种程序，周期 DLM 生成和修订晶体几何；固定 model494 refiner 单独报告。
 
-最近完整评测40076：K4/K8等权概率混合 raw Strict/Meta SUN为 **10/51**，tau800为 **18/118**，均256，未达同端10%/50%。此前固定软约束K4为6/56→20/122、K8为11/68→15/123。[当前全部结果](docs/v3_scientific_audit_20260906/evidence_v3_failure_20260907/SUN_SNAPSHOT_AFTER_40076.md)保留各方法与端点，当前准备统一提取K4/K8构造完成、尚未修订的阶段进行评估；尚无该候选新SUN。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
+最近完整评测40076：K4/K8等权概率混合 raw Strict/Meta SUN为 **10/51**，tau800为 **18/118**，均256，未达同端10%/50%。此前固定软约束K4为6/56→20/122、K8为11/68→15/123。[当前全部结果](docs/v3_scientific_audit_20260906/evidence_v3_failure_20260907/SUN_SNAPSHOT_AFTER_40076.md)保留各方法与端点，当前40083正在评估K4/K8构造完成、尚未修订的统一阶段；K4全256前缀已校验，尚无该候选新SUN。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
 
 ## 项目入口
 

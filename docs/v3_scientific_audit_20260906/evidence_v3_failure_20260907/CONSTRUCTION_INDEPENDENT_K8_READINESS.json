@@ -1,0 +1,44 @@
+{
+  "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/sample/paths.jsonl",
+  "exists": true,
+  "sha256": "0ca4ce629f8e65ca7316a2f1a080aee5f27ac8117a74687de5087cb8d7af730d",
+  "bytes": 19462049,
+  "requests": 1200,
+  "source_success": true,
+  "sample_indices_full": true,
+  "condition_ordinals_full": true,
+  "checkpoints": [
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977"
+  ],
+  "rounds": [
+    0
+  ],
+  "sampling_layouts": [
+    "None"
+  ],
+  "constructor_end_count": 1200,
+  "current_job": {
+    "slurm": "40083           RUNNING      0:0   00:01:16 \n40083.batch     RUNNING      0:0   00:01:16 \n40083.extern    RUNNING      0:0   00:01:16 \n",
+    "failed": false,
+    "k4_extraction": {
+      "method": "k4_construction_only_v1",
+      "requests": 256,
+      "successful": 254,
+      "failed": 2,
+      "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/sample/paths.jsonl",
+      "source_sha256": "bc8c6d32b15ed18adc3f4be133f156c0f615c2203b25cd7cb5425d07f0dbca13",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+      "omitted_later_events": 15237,
+      "failure_reasons": {
+        "construct_empty_support": 2
+      },
+      "uniform_phase_ablation": true,
+      "outcome_selection": false,
+      "all_failures_retained": true,
+      "model_forwards": 0,
+      "extra_DLM_samples": 0,
+      "optimizer_steps": 0,
+      "energy_evaluations": 0
+    }
+  }
+}
