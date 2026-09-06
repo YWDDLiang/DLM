@@ -1,0 +1,9 @@
+{
+  "status": "runtime_unavailable_before_any_model_forward",
+  "torch_version": "2.8.0+cpu",
+  "platform": "Windows",
+  "backend": "gloo",
+  "attempted_world_size": 2,
+  "error": "RuntimeError: makeDeviceForHostname(): unsupported gloo device",
+  "interpretation": "No DDP pass/fail conclusion about H-P33; initialization failed before toy forward. The separate algebra-only check does not replace the registered multi-GPU acceptance."
+}

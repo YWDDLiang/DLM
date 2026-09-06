@@ -1,0 +1,198 @@
+{
+  "scope": "independent mathematical CPU examples, no neural-model or GPU execution",
+  "reviewed_spec_sha256": "294bfc604a8ec7477e16dbea0124b66bbf3cad7c222b21d55e6863a9c4c3dd80",
+  "epsilon": 0.002,
+  "intervals": 32,
+  "grid": [
+    0.002,
+    0.0029746093750000003,
+    0.0058984375,
+    0.010771484375,
+    0.01759375,
+    0.026365234374999998,
+    0.0370859375,
+    0.049755859375,
+    0.064375,
+    0.080943359375,
+    0.0994609375,
+    0.119927734375,
+    0.14234375,
+    0.166708984375,
+    0.1930234375,
+    0.221287109375,
+    0.2515,
+    0.283662109375,
+    0.3177734375,
+    0.353833984375,
+    0.39184375,
+    0.431802734375,
+    0.4737109375,
+    0.517568359375,
+    0.563375,
+    0.611130859375,
+    0.6608359375,
+    0.712490234375,
+    0.76609375,
+    0.821646484375,
+    0.8791484375,
+    0.938599609375,
+    1.0
+  ],
+  "gaussian_oracle_cases": [
+    {
+      "clean_variance": 0.2,
+      "exact_variance_at_epsilon": 0.20000789565754518,
+      "Euler32_variance_at_epsilon": 0.2037379466438235,
+      "exact_flow_then_readout_variance": 0.19999013081768705,
+      "H_P33_variance": 0.20371985049825259,
+      "relative_H_P33_variance_error": 0.01859925249126282
+    },
+    {
+      "clean_variance": 1.0,
+      "exact_variance_at_epsilon": 1.0,
+      "Euler32_variance_at_epsilon": 1.0,
+      "exact_flow_then_readout_variance": 0.9999901304280686,
+      "H_P33_variance": 0.9999901304280686,
+      "relative_H_P33_variance_error": -9.869571931386822e-06
+    },
+    {
+      "clean_variance": 1.8,
+      "exact_variance_at_epsilon": 1.799992104342455,
+      "Euler32_variance_at_epsilon": 1.7646562556742862,
+      "exact_flow_then_readout_variance": 1.799990130384776,
+      "H_P33_variance": 1.764654320467594,
+      "relative_H_P33_variance_error": -0.01963648862911449
+    }
+  ],
+  "gaussian_interpretation": "Eigenvalues .2 and 1.8 form covariance [[1,.8],[.8,1]], consistent with per-channel unit-variance normalization.",
+  "fourier_oracle": {
+    "1": {
+      "points": 65536,
+      "noise_factor": 1,
+      "true_clean_cosine_moment": 0.4,
+      "exact_epsilon_cosine_moment": 0.3999684185127201,
+      "Euler32_epsilon_cosine_moment": 0.3855422819670714,
+      "exact_flow_then_readout_cosine_moment": 0.40003158023995145,
+      "H_P33_cosine_moment": 0.385605823733628
+    },
+    "2": {
+      "points": 65536,
+      "noise_factor": 2,
+      "true_clean_cosine_moment": 0.4,
+      "exact_epsilon_cosine_moment": 0.399936839518916,
+      "Euler32_epsilon_cosine_moment": 0.38267706474740215,
+      "exact_flow_then_readout_cosine_moment": 0.40006315548980315,
+      "H_P33_cosine_moment": 0.38280430635173407
+    }
+  },
+  "fourier_factor2_interpretation": "Joint p0(f1,f2)=1+.8*cos(2pi*(f2-f1)); both coordinates have noise std t, so the relative coordinate has variance 2t^2 and update u2-u1=2t*d_delta log p_t.",
+  "fourier_quadrature_change_32768_to65536": {
+    "1": 5.551115123125783e-17,
+    "2": 0.0
+  },
+  "readout_examples": {
+    "point_clean_coordinate": 0.0049,
+    "local_noisy_extent_in_sigmas": 6,
+    "point_max_periodic_readout_error": 1.1102230246251565e-16,
+    "point_Q_bin_change_count_in_test_grid": 0,
+    "multimodal_clean_modes": [
+      [
+        0.2,
+        0.3
+      ],
+      [
+        0.3,
+        0.2
+      ]
+    ],
+    "observation": [
+      0.25,
+      0.25
+    ],
+    "mode_posterior": [
+      0.5,
+      0.5
+    ],
+    "readout": [
+      0.25,
+      0.25
+    ],
+    "clean_pair_distances_A_at_lattice6": [
+      0.5999999999999999,
+      0.5999999999999999
+    ],
+    "readout_pair_distance_A_at_lattice6": 0.0,
+    "observation_log_density_each_mode": [
+      -614.4086608695646,
+      -614.4086608695646
+    ],
+    "caveat": "The ambiguous observation is extraordinarily unlikely under exact low-noise data; no real-crystal failure rate is claimed."
+  },
+  "wrapped_truncation": {
+    "window8_vs32": [
+      {
+        "t": 0.002,
+        "max_u_error": 0.0,
+        "max_log_density_error": 0.0
+      },
+      {
+        "t": 0.01,
+        "max_u_error": 0.0,
+        "max_log_density_error": 0.0
+      },
+      {
+        "t": 0.1,
+        "max_u_error": 0.0,
+        "max_log_density_error": 0.0
+      },
+      {
+        "t": 0.5,
+        "max_u_error": 1.683426875397871e-48,
+        "max_log_density_error": 0.0
+      },
+      {
+        "t": 1.0,
+        "max_u_error": 4.044738250660501e-14,
+        "max_log_density_error": 4.9960036108132044e-15
+      }
+    ],
+    "relative_tail_mass_bound_all_abs_delta_le1_t_le1": 2.870659933646487e-14,
+    "normalized_u_error_bound_all_abs_delta_le1_t_le1": 5.454312279637571e-13
+  },
+  "T_G_budget": {
+    "layouts": [
+      {
+        "world": 6,
+        "microbatch": 1,
+        "accumulation": 4,
+        "global_batch": 24,
+        "per_mode_examples_per_window": 12,
+        "updates_per_epoch": 2262,
+        "padded_per_mode_per_epoch": 27144,
+        "zero_weight_padding_per_mode": 8,
+        "real_T_and_G_in_last_window": 4
+      },
+      {
+        "world": 4,
+        "microbatch": 1,
+        "accumulation": 6,
+        "global_batch": 24,
+        "per_mode_examples_per_window": 12,
+        "updates_per_epoch": 2262,
+        "padded_per_mode_per_epoch": 27144,
+        "zero_weight_padding_per_mode": 8,
+        "real_T_and_G_in_last_window": 4
+      }
+    ],
+    "view_average_objective": "(mean(L_T)+mean(L_G))/2",
+    "microbatch_scalar_multiplier": "1/accumulation, with DDP rank averaging; zero-weight padding retains the registered denominator",
+    "clip_counterexample": {
+      "micro_gradients": [
+        2.0,
+        -1.0
+      ],
+      "clip_after_sum": 1.0,
+      "sum_individually_clipped": 0.0
+    }
+  }
+}

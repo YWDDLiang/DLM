@@ -1,0 +1,225 @@
+{
+  "schema": "hp33_physics_r2_analytic_checks_v1",
+  "model_calls": 0,
+  "GPU_calls": 0,
+  "MLIP_calls": 0,
+  "source_identity_gate_closed": {
+    "train": {
+      "records": 27136,
+      "identity_method": {
+        "unique_complete_quantized_answer": 27136
+      },
+      "source_csv_sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde",
+      "training_jsonl_sha256": "1a3fdea6c710d7b2dd397b6de332918ed239c6a0f46b6aab8b662bf4011e6b04"
+    },
+    "val": {
+      "records": 9047,
+      "identity_method": {
+        "unique_complete_quantized_answer": 9047
+      },
+      "source_csv_sha256": "ae7b87064fb63cdd9b2e3a69b4695046edede96c96b652c5aae7fcf195aff398",
+      "training_jsonl_sha256": "7e598846dcfea5673dc16d67f887658a6bf34ad0df00d097d7c7053ff9b637d2"
+    }
+  },
+  "registered_prior_cell_shell_probe": {
+    "normalizer_source": "GEOMETRY_NUMERICS_40013.json, train-only fitted normalizer",
+    "seed": 20260906033,
+    "per_N": [
+      {
+        "N": 1,
+        "draws": 256,
+        "complete_image_boxes": 256,
+        "image_budget_exceeded": 0,
+        "maximum_box_images": 567,
+        "cells_with_self_images_inside_6A_omitted_by_radius2": 136,
+        "radius2_false_pass_of_05A_self_image_floor": 0
+      },
+      {
+        "N": 10,
+        "draws": 256,
+        "complete_image_boxes": 256,
+        "image_budget_exceeded": 0,
+        "maximum_box_images": 75,
+        "cells_with_self_images_inside_6A_omitted_by_radius2": 0,
+        "radius2_false_pass_of_05A_self_image_floor": 0
+      },
+      {
+        "N": 20,
+        "draws": 256,
+        "complete_image_boxes": 256,
+        "image_budget_exceeded": 0,
+        "maximum_box_images": 27,
+        "cells_with_self_images_inside_6A_omitted_by_radius2": 0,
+        "radius2_false_pass_of_05A_self_image_floor": 0
+      }
+    ],
+    "interpretation": "Fixed small CPU lattice-prior probe. Same Gaussian draws across N; checks self-image omissions only, not non-self pairs or generated endpoint frequencies."
+  },
+  "point_oracle_readout": {
+    "lattice_max_error": 4.440892098500626e-16,
+    "coordinate_cases": [
+      {
+        "clean": 0.0049,
+        "noise": -3.0,
+        "state_at_epsilon": 0.9989,
+        "u_oracle": 3.0000000000000027,
+        "after_33rd_readout": 0.0049000000000001265,
+        "canonical_Q_bin": 0
+      },
+      {
+        "clean": 0.0049,
+        "noise": -0.7,
+        "state_at_epsilon": 0.0034999999999999996,
+        "u_oracle": 0.7000000000000002,
+        "after_33rd_readout": 0.0049,
+        "canonical_Q_bin": 0
+      },
+      {
+        "clean": 0.0049,
+        "noise": 0.0,
+        "state_at_epsilon": 0.0049,
+        "u_oracle": -0.0,
+        "after_33rd_readout": 0.0049,
+        "canonical_Q_bin": 0
+      },
+      {
+        "clean": 0.0049,
+        "noise": 0.7,
+        "state_at_epsilon": 0.0063,
+        "u_oracle": -0.7000000000000002,
+        "after_33rd_readout": 0.0049,
+        "canonical_Q_bin": 0
+      },
+      {
+        "clean": 0.0049,
+        "noise": 2.0,
+        "state_at_epsilon": 0.0089,
+        "u_oracle": -2.0000000000000004,
+        "after_33rd_readout": 0.004899999999999999,
+        "canonical_Q_bin": 0
+      }
+    ],
+    "interpretation": "The old p_epsilon point-target bin-flip example does not apply to final H-P33 under a correct point oracle."
+  },
+  "Gaussian_clean_distribution_readout": {
+    "ideal_probability_flow_variance_at_epsilon": 1.0,
+    "variance_after_conditional_mean_readout": 0.9999901304280686,
+    "variance_deficit": 9.869571931386822e-06,
+    "interpretation": "A clean conditional mean is not a posterior sample, even though this Gaussian deficit is tiny at epsilon=.002."
+  },
+  "two_mode_readout": {
+    "clean_centers": [
+      0.494,
+      0.506
+    ],
+    "sigma": 0.002,
+    "observed_state": 0.5,
+    "u_at_midpoint": -0.0,
+    "readout": 0.5,
+    "clean_Q_bins": [
+      49,
+      51
+    ],
+    "readout_Q_bin": 50,
+    "toy_energy_formula": "E(f)=.05*(1-((f-.5)/.006)^2)^2 eV/atom",
+    "energy_at_modes_eV_atom": 0.0,
+    "energy_at_readout_eV_atom": 0.05,
+    "first_derivative_at_readout": 0.0,
+    "second_derivative_per_fractional_squared": -5555.555555555556,
+    "true_noisy_mixture_mass_mapping_between_half_modes": 0.0016959652349230253,
+    "interpretation": "Multimodal mean can lie on a low-density energy maximum; no actual crystal energy or frequency was measured."
+  },
+  "finite_shell": {
+    "lattice_A": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        2.9708042062247113,
+        0.41751930288019634,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        4.0
+      ]
+    ],
+    "radius2_minimum_self_image_A": 1.0,
+    "missed_shift": [
+      -3.0,
+      1.0,
+      0.0
+    ],
+    "missed_image_A": 0.41853884246475176,
+    "complete_box_for_6A_cutoff": [
+      43,
+      14,
+      1
+    ],
+    "radius2_self_images_in_6A": 48,
+    "all_self_images_in_6A": 570,
+    "interpretation": "Shows lack of a universal finite-shell guarantee, not its frequency under the as-yet unprofiled registered normalizer/prior."
+  },
+  "legacy_bin_guard_float_counterexample": {
+    "lattice_edge_A": 30.0,
+    "fractional_sites": [
+      [
+        0.9951,
+        0.9951,
+        0.9951
+      ],
+      [
+        0.0049,
+        0.0049,
+        0.0049
+      ]
+    ],
+    "exact_periodic_min_distance_A": 0.5092229374252515,
+    "old_graph_bin_keys": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "interpretation": "Distinct float geometry can pass the .5A floor yet be rejected by the old .01-bin duplicate guard; this is not a stability example."
+  },
+  "source_receipts": [
+    {
+      "path": "docs/v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md",
+      "sha256": "fe2fc38d57a2f2c6ff1333c78648a4fe7318266c7ba88f7b7865e3139dd8533d"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json",
+      "sha256": "eb7753b8d0fbf2629dfa743af1df0be94ca87e63339271ee2096651c41500010"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/evidence/V2_ACTUAL_EVALUATION_SEEDS.json",
+      "sha256": "a5153b4d82903965b610d698a4e4b91ad9d1b3ea56ddbf285910d146b7126b3f"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/evidence/GEOMETRY_NUMERICS_40013.json",
+      "sha256": "662539127f529ab956ddb485999d514e4fac89e10a7bb9bcfabe3371f5a296ef"
+    },
+    {
+      "path": "scripts/export_programmed_path_artifacts.py",
+      "sha256": "4dd9c2f021ca227b37bfc7cc866b7e1f028cede5c19d7e0420142e744df10e62"
+    },
+    {
+      "path": "src/scripts/sample_llada_dynamic_crystals.py",
+      "sha256": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123"
+    },
+    {
+      "path": "src/crystal_dlm/periodic_state_conditioning.py",
+      "sha256": "f9821e57b0475558f3b5ad7da4a6c2324ace9a1e2d8a6eb582076ed92e678822"
+    }
+  ]
+}

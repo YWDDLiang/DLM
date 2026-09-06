@@ -1,0 +1,25 @@
+{
+  "status": "submitted",
+  "code_commit": "e1439cbc840d7fd743499ac9654fd20759a9f903",
+  "entry_sha256": "be5798429bf516dddc985c0a3336574dfce53e4eab36935f7e5792d09fa74cef",
+  "resources": {
+    "gpus": 6,
+    "cpus": 16,
+    "walltime": "00:30:00"
+  },
+  "created_at_utc": "2026-09-06T13:41:48.752004+00:00",
+  "submission_attempts": [
+    {
+      "created_at_utc": "2026-09-06T13:41:48.752004+00:00",
+      "status": "rejected",
+      "reason": "QOSMaxSubmitJobPerUserLimit",
+      "job_created": false
+    }
+  ],
+  "retry_created_at_utc": "2026-09-06T13:50:50.487346+00:00",
+  "job_id": "40060",
+  "run_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/preflight_40060",
+  "microbatch": 2,
+  "accumulation": 2,
+  "effective_batch": 24
+}

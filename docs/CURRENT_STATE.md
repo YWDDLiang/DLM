@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**全面科学审计进行中，V3 具体规格进入第二轮独立复核，尚未实施或训练。** V2 训练、完整评测和冻结权重诊断均已完成。审计覆盖整链路、近期变更、全部可追溯失败与成功证据，并扩大晶体 diffusion、DLM 与 GNN 融合研究。最终使用 SUN 判断改动是否有效。
+**V3两轮独立攻击、实现和真实4/6卡验收已通过，正在冻结并启动H-P33正式新增两轮训练。** V2 训练、完整评测和冻结权重诊断均已完成。全链路审计和晶体 diffusion、DLM、GNN对照已有整合裁决；后续使用 SUN 判断改动是否有效。
 
 统一目录：[全链路审计](v3_scientific_audit_20260906/README.md)。
 
@@ -40,9 +40,21 @@ V2 构造终点原生 SUN 为 12/44，一次 full-cell repair 后为 8/50；Stri
 
 冻结诊断 **40004** 已 `COMPLETED 0:0`，4A800/16CPU、00:02:24。100来源/200状态、5变体，0训练、新晶体与MLIP；原目标风险复算最大差5.25e−7。旧几何遮蔽主要损害repair风险，真实噪声相对unknown没有清晰平均收益，真实soft降低部分风险但不是可用oracle或SUN证据。真实prefix logits的float64 exp未出现溢出。[完整证据](v3_scientific_audit_20260906/evidence/V2_CONDITIONING_PROBE_40004.json)。
 
-## V3 审查中的具体对象
+## V3 实施与验收
 
-[H-P33 规格](v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md) 复用 V2 final 与共享 LLaDA，保留 T construction、以 G 全几何 v/torus 去噪替代旧 repair CE；拟再训练两epoch。主采样为32个Euler区间加一次明确末端读出，float CIF为主终点，同样样本Q raw为精度诊断。P在G中仅作条件/rank，不新增rank噪声时钟；这是混合表示模型。当前正在核验原CIF全量身份、独立第二轮数学/物理审稿，之后仍须实际计算图与DDP验收。没有SUN收益保证，也未提交新训练。
+[H-P33 规格](v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md) 复用 V2 final 与共享 LLaDA，保留 T construction、以 G 全几何 v/torus 去噪替代旧 repair CE；拟再训练两epoch。主采样为32个Euler区间加一次明确末端读出，float CIF为主终点，同样样本Q raw为精度诊断。P在G中仅作条件/rank，不新增rank噪声时钟；这是混合表示模型。[第二轮数学](v3_scientific_audit_20260906/V3_REVIEW_R2_MATH.md)与[第二轮物理](v3_scientific_audit_20260906/V3_REVIEW_R2_PHYSICS.md)均允许进入有界实现验收，没有SUN收益保证。
+
+实施冻结提交`1111739bc5a590734b02a61f395faa59be605531`包含共享hidden-only/G头、原V2加载兼容、来源与T/G调度、正式trainer、float导出与真实preflight。模型/数学/数据共40项本机CPU测试通过，40045中Torch2.4再次40项通过；旧V2 loader另2项、export/regression新旧29项通过。[模型CPU验收](v3_scientific_audit_20260906/MIXED_GEOMETRY_MODEL_CPU_ACCEPTANCE.md)、[独立数据调度审查](v3_scientific_audit_20260906/IMPLEMENTATION_DATA_SCHEDULE_REVIEW.md)。
+
+真实预检 **40045**（4卡micro1/acc6）与 **40060**（6卡micro2/acc2）均`COMPLETED 0:0`且全PASS，分别4分48秒、4分21秒。真实共享G梯度非零、T-only增量0、各rank权重一致、33NFE与末端解码有限、T/G保存恢复差0。4卡人口梯度相对误差2.45e−8；6卡整体0.476%、最大片组1.901%，在事前2% BF16门内，不称逐bit相同。[实现验收汇总](v3_scientific_audit_20260906/MIXED_IMPLEMENTATION_ACCEPTANCE.md)。
+
+实际CIF→CrysLLMGen process_one→FP32 refiner输入回环 **40058** 已PASS，8CPU/2分30秒、无模型/MLIP调用。4个例子含N=1/10/20和非Q网格fixture，显式Niggli后Gram/按元素坐标双射检查通过；FP32坐标误差≤2.92e−8，单原子等体积量化反例被拒绝。[实际回环](v3_scientific_audit_20260906/evidence/CONTINUOUS_GRAPHS_40058.json)。
+
+正式配置6A800/24CPU、micro2/acc2/global24，完整27136来源各1T+1G/epoch，新增2epoch共4524更新/108544真实状态。新训练保持fresh optimizer和事先种子。6小时上限按6卡实测保守外推4.07小时加初始化/验证与余量推导，非完成时长保证。冻结采样器11项CPU测试通过，主float raw/refined、同256 secondary Q raw均已实现；尚无新SUN。
+
+原CIF全量身份 **40009** 已 `COMPLETED 0:0`，8CPU、1分40秒、无GPU。27136/9047全部通过唯一完整Q结构匹配，与原CSV一一对应；0解析/编码错误、0重复Q歧义、0未核验或丢行。精确site permutation后原连续几何重新编码全部等于source_answer，primary original_cif的来源阻断已关闭。[全量身份与parser证据](v3_scientific_audit_20260906/evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json)。
+
+数值 **40013** 已`COMPLETED 0:0`，19项CPU检查通过，train-only normalizer使用全部27136来源且无std floor命中；val只应用这个normalizer。[数值与normalizer证据](v3_scientific_audit_20260906/evidence/GEOMETRY_NUMERICS_40013.json)。
 
 ## 已授权的接续
 

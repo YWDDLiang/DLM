@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "actual_process_one": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/data_utils.py",
+  "process_one_sha256": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+  "input_identity_sha256": "30ededa3854f6fcbde209fed709df86c00a9a6ad6ab0994c9bc9121e8ee4adb3",
+  "rejected_equal_volume_single_atom_quantization": {
+    "gram_error_A2": 0.28995318728579633,
+    "relative_gram_error": 0.008054255202383231,
+    "coordinate_error": 0.0,
+    "passed": false
+  },
+  "model_forwards": 0,
+  "refiner_forwards": 0,
+  "physics_or_SUN_evaluation": false,
+  "checks": [
+    {
+      "source_key": "analytic_sub_bin_fixture",
+      "num_atoms": 2,
+      "passed": true,
+      "graph_identity": {
+        "gram_error_A2": 8.881784197001252e-15,
+        "relative_gram_error": 2.4409739884899646e-16,
+        "coordinate_error": 0.0,
+        "passed": true
+      },
+      "pair_distance_error_A": 4.440892098500626e-16,
+      "relative_volume_error": 0.0,
+      "native_coordinate_error": 0.0,
+      "cif_gram_error_A2": 6.661338147750939e-15,
+      "cif_coordinate_error": 0.0,
+      "refiner_fp32_coordinate_error": 2.030944823427916e-08,
+      "refiner_input_max_off_0p01_grid_in_bins": 0.48220062255859375,
+      "refiner_seed": 20260905
+    },
+    {
+      "source_key": [
+        "val",
+        232
+      ],
+      "num_atoms": 1,
+      "passed": true,
+      "graph_identity": {
+        "gram_error_A2": 0.0,
+        "relative_gram_error": 0.0,
+        "coordinate_error": 0.0,
+        "passed": true
+      },
+      "pair_distance_error_A": 0.0,
+      "relative_volume_error": 0.0,
+      "native_coordinate_error": 0.0,
+      "cif_gram_error_A2": 0.0,
+      "cif_coordinate_error": 0.0,
+      "refiner_fp32_coordinate_error": 0.0,
+      "refiner_input_max_off_0p01_grid_in_bins": 0.0,
+      "refiner_seed": 20260906
+    },
+    {
+      "source_key": [
+        "val",
+        7
+      ],
+      "num_atoms": 10,
+      "passed": true,
+      "graph_identity": {
+        "gram_error_A2": 0.0,
+        "relative_gram_error": 0.0,
+        "coordinate_error": 0.0,
+        "passed": true
+      },
+      "pair_distance_error_A": 1.7763568394002505e-15,
+      "relative_volume_error": 0.0,
+      "native_coordinate_error": 0.0,
+      "cif_gram_error_A2": 5.684341886080802e-14,
+      "cif_coordinate_error": 0.0,
+      "refiner_fp32_coordinate_error": 2.794265752115166e-08,
+      "refiner_input_max_off_0p01_grid_in_bins": 0.4967002868652344,
+      "refiner_seed": 20260907
+    },
+    {
+      "source_key": [
+        "val",
+        2
+      ],
+      "num_atoms": 20,
+      "passed": true,
+      "graph_identity": {
+        "gram_error_A2": 0.0,
+        "relative_gram_error": 0.0,
+        "coordinate_error": 0.0,
+        "passed": true
+      },
+      "pair_distance_error_A": 2.6645352591003757e-15,
+      "relative_volume_error": 0.0,
+      "native_coordinate_error": 0.0,
+      "cif_gram_error_A2": 0.0,
+      "cif_coordinate_error": 0.0,
+      "refiner_fp32_coordinate_error": 2.9106140164714134e-08,
+      "refiner_input_max_off_0p01_grid_in_bins": 0.49790191650390625,
+      "refiner_seed": 20260908
+    }
+  ]
+}

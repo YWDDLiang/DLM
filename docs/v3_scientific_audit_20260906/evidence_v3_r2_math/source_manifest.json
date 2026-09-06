@@ -1,0 +1,22 @@
+{
+  "reviewed_spec_sha256": "294bfc604a8ec7477e16dbea0124b66bbf3cad7c222b21d55e6863a9c4c3dd80",
+  "math_and_training_sections_3_through_7_match_6f572af": true,
+  "sources": [
+    {
+      "path": "docs/v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md",
+      "sha256": "294bfc604a8ec7477e16dbea0124b66bbf3cad7c222b21d55e6863a9c4c3dd80"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json",
+      "sha256": "eb7753b8d0fbf2629dfa743af1df0be94ca87e63339271ee2096651c41500010"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/evidence/V2_ACTUAL_EVALUATION_SEEDS.json",
+      "sha256": "a5153b4d82903965b610d698a4e4b91ad9d1b3ea56ddbf285910d146b7126b3f"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/evidence/LLADA_ACTUAL_CORE_FORWARD.json",
+      "sha256": "6a98a6b7fba386bda5c07095353a663d6a6be8cce26c60a79fffa41b6b232031"
+    }
+  ]
+}

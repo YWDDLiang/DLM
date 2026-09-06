@@ -1,6 +1,6 @@
 # 全链路科学审计与 V3 研究
 
-2026-09-06。**分组件与一般交叉审计、V2完整评测及冻结模型诊断已完成；具体V3正在第二轮独立审查，尚未训练。**
+2026-09-06。**全链路与V3两轮独立审查、H-P33实现、真实4/6卡及float图回环验收已通过，正在冻结并启动正式新增两轮训练。** V2完整评测及冻结模型诊断已经关闭。
 
 本目录覆盖完整C³FD/Llama/soft/P→DLM→repair/refiner→物理/N-U/hull/统计、近期变更、历史成功失败、外部晶体生成机制及文档清理。先读 [整合报告](FINAL_AUDIT_REPORT.md) 和 [当前状态](../CURRENT_STATE.md)。
 
@@ -22,14 +22,19 @@
 
 ## 具体V3与攻击性复核
 
-[H-P33规格](V3_H_P33_SPECIFICATION.md)为当前唯一第二轮对象：共享V2/LLaDA、T construction＋G联合去噪、新增两epoch、明确33NFE及float/Q终点。原CIF身份及实际计算图/DDP验收仍须完成；它是混合表示，P在G中仅条件，尚无SUN保证。
+[H-P33规格](V3_H_P33_SPECIFICATION.md)为当前唯一第二轮对象：共享V2/LLaDA、T construction＋G联合去噪、新增两epoch、明确33NFE及float/Q终点。原连续CIF身份已全量通过，实际计算图/DDP验收仍须完成；它是混合表示，P在G中仅条件，尚无SUN保证。
 
 - [A/B/C候选及攻击](V3_DLM_CANDIDATES_AND_ATTACKS.md)
 - [共享几何头独立反提案](V3_GEOMETRIC_HEAD_COUNTERPROPOSAL.md)
 - [V3第一轮数学](V3_REVIEW_R1_MATH.md)
 - [V3第一轮物理](V3_REVIEW_R1_PHYSICS.md)
 
-第二轮独立数学/物理报告正在写，完成后增列裁决。已承认的边界不重复当新发现，新实质问题修订后复核，不无限扩张路线。
+- [V3第二轮数学](V3_REVIEW_R2_MATH.md)
+- [V3第二轮物理](V3_REVIEW_R2_PHYSICS.md)
+- [模型CPU实现验收](MIXED_GEOMETRY_MODEL_CPU_ACCEPTANCE.md)
+- [独立来源/调度实现审查](IMPLEMENTATION_DATA_SCHEDULE_REVIEW.md)
+
+两份R2均允许进入有界实现验收。模型核心冻结`1111739`，后续`e1439cb`加入六卡微批与图回环检查；40045、40060和40058均已实际PASS，见[实施验收](MIXED_IMPLEMENTATION_ACCEPTANCE.md)。CPU数学/模型/数据41项和采样器11项通过；它们支持启动完整实证，不是SUN收益保证。
 
 ## 直接证据
 
@@ -40,6 +45,11 @@
 - [冻结probe40004](evidence/V2_CONDITIONING_PROBE_40004.json)：100来源/200状态/五变体，模型不变。
 - [全量条件](evidence/FROZEN_CONDITIONING_AUDIT.json)、[N/U函数](evidence/FROZEN_NU_FUNCTIONS.json)、[终态/SUN交叉表](evidence/TERMINAL_STATUS_SUN_CROSSTAB.json)。
 - [连续CIF输入](evidence/CONTINUOUS_SOURCE_INPUT_PATHS.json)、[实际LLaDA core](evidence/LLADA_ACTUAL_CORE_FORWARD.json)。
+- [连续CIF全量身份40009](evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json)：27136/9047全通过，0错误/歧义/丢行；[核验工具说明](audit_continuous_source_identity.README.md)。
+- [数值与normalizer40013](evidence/GEOMETRY_NUMERICS_40013.json)：19项CPU检查、完整train-only标准化。
+- [实际V2评测种子](evidence/V2_ACTUAL_EVALUATION_SEEDS.json)：保留64位整数及logical batch配对语义。
+- [真实4卡预检40045提交](evidence/MIXED_PREFLIGHT_40045_SUBMISSION.json)：工程检查，不能用于SUN或当作正式policy。
+- [4卡实际结果](evidence/MIXED_PREFLIGHT_40045.json)、[6卡微批2实际结果](evidence/MIXED_BATCH_PREFLIGHT_40060.json)、[实际连续图回环40058](evidence/CONTINUOUS_GRAPHS_40058.json)。
 - [早期V2快照](EVIDENCE_RUNTIME_SNAPSHOT.json)仅表示当时状态，终态以上述产物为准。
 
 ## 文档整理

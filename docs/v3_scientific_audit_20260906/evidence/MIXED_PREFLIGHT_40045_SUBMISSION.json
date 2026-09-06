@@ -1,0 +1,9 @@
+{
+  "status": "submitted",
+  "code_commit": "1111739bc5a590734b02a61f395faa59be605531",
+  "entry_sha256": "688d28f4b56d1afe6225f396be772aa6c3d03d524af0a581162257befbebf9c9",
+  "resources": {"gpus": 4, "cpus": 16, "walltime": "00:30:00"},
+  "created_at_utc": "2026-09-06T13:15:36.192425+00:00",
+  "job_id": "40045",
+  "run_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/preflight_40045"
+}

@@ -1,0 +1,10 @@
+{
+  "status": "submitted",
+  "model_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+  "tools_commit": "35af956a88704eda268bb1c40fff1808284a3b96",
+  "config_sha256": "ad90f9d9fc81c07cce1b23e8e3af4e51854445592b4f2b84171d51bf688868f6",
+  "entry_sha256": "04bd1614ccf78129cd9307cf1cfb0ad4773f442de7abb10965e6b82570493b20",
+  "created_at_utc": "2026-09-06T11:50:24.979436+00:00",
+  "job_id": "40009",
+  "run_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009"
+}

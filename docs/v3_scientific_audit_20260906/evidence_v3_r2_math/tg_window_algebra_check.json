@@ -1,0 +1,21 @@
+{
+  "scope": "single-process explicit rank-averaging algebra; not a DDP runtime acceptance",
+  "torch_version": "2.8.0+cpu",
+  "cases": [
+    {
+      "world": 4,
+      "accumulation": 6,
+      "max_gradient_difference": 2.7755575615628914e-17
+    },
+    {
+      "world": 6,
+      "accumulation": 4,
+      "max_gradient_difference": 1.3877787807814457e-17
+    }
+  ],
+  "existing_grad_is_not_mode_leakage": {
+    "token_head_grad_norm_after_T": 0.08062554734057839,
+    "token_head_grad_norm_after_G": 0.08062554734057839,
+    "token_head_grad_increment_from_G": 0.0
+  }
+}

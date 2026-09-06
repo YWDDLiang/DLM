@@ -1,0 +1,214 @@
+{
+  "slurm": "40009         COMPLETED      0:0   00:01:40          8 \n40009.batch   COMPLETED      0:0   00:01:40          8 \n40009.extern  COMPLETED      0:0   00:01:41          8 \n",
+  "run_exists": true,
+  "success": true,
+  "failed": false,
+  "train_tail": [
+    "{\"event\": \"audit_finished\", \"output_dir\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/train\", \"status\": \"pass\", \"elapsed_seconds\": 74.14234106615186, \"training_records\": 27136, \"unique_training_sources\": 27136, \"expected_training_sources\": 27136, \"source_count_matches_expected\": true, \"blank_jsonl_lines\": 0, \"csv_rows\": 27136, \"csv_parse_or_encode_errors\": 0, \"verified_training_records\": 27136, \"unverified_training_records\": 0, \"unique_matched_csv_rows\": 27136, \"csv_full_answer_duplicate_groups\": 0, \"r5_records\": 0, \"r5_errors\": 0}"
+  ],
+  "train_summary": {
+    "schema": "continuous_source_identity_audit_v1",
+    "status": "pass",
+    "audit_complete": true,
+    "original_cif_identity_gate_passed": true,
+    "split": "train",
+    "counts": {
+      "training_records": 27136,
+      "unique_training_sources": 27136,
+      "expected_training_sources": 27136,
+      "source_count_matches_expected": true,
+      "blank_jsonl_lines": 0,
+      "csv_rows": 27136,
+      "csv_parse_or_encode_errors": 0,
+      "verified_training_records": 27136,
+      "unverified_training_records": 0,
+      "unique_matched_csv_rows": 27136,
+      "csv_full_answer_duplicate_groups": 0,
+      "r5_records": 0,
+      "r5_errors": 0
+    },
+    "statuses": {
+      "verified": 27136
+    },
+    "identity_methods": {
+      "unique_complete_quantized_answer": 27136
+    },
+    "csv_columns": [
+      "Unnamed: 0.1",
+      "Unnamed: 0",
+      "material_id",
+      "formation_energy_per_atom",
+      "band_gap",
+      "pretty_formula",
+      "e_above_hull",
+      "elements",
+      "cif",
+      "spacegroup.number",
+      "spacegroup.number.conv",
+      "cif.conv"
+    ],
+    "blank_line_numbers": [],
+    "input_receipts": {
+      "source_csv": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+        "sha256": "9b8031cf4ea7bb62709c74735da7ec11d00e367c5eaa05658fad5b5e7a530dde",
+        "selected_cif_column": "cif",
+        "id_column": "material_id",
+        "cif_hash_definition": "SHA256 of UTF-8 decoded selected CSV CIF field before parser"
+      },
+      "training_jsonl": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/train.jsonl",
+        "sha256": "1a3fdea6c710d7b2dd397b6de332918ed239c6a0f46b6aab8b662bf4011e6b04",
+        "target_field": "source_answer"
+      },
+      "r5_jsonl": null,
+      "parser": {
+        "call": "pymatgen.core.Structure.from_str(cif, fmt='cif')",
+        "signature": "(input_string: 'str', fmt: 'FileFormats', primitive: 'bool' = False, sort: 'bool' = False, merge_tol: 'float' = 0.0, **kwargs) -> 'Structure | Self'",
+        "pymatgen": "2025.6.14",
+        "pandas": "2.3.1",
+        "numpy": "1.26.4",
+        "python": "3.10.18 (main, Jun  5 2025, 13:14:17) [GCC 11.2.0]"
+      },
+      "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/code",
+      "project_source_sha256": {
+        "src/crystal_dlm/dynamic_crystal.py": "f2b038b1a42fa8d314b1d86d3dcecd444b331651f5f7ffc3ac0b938475780e22",
+        "src/crystal_dlm/fixed_slot.py": "aa06e8c240a47c3f3696239bcf07adbcf73c95cab1b3f0d7be07ba560a6476eb",
+        "src/crystal_dlm/canonical_site_order.py": "104c5163b79d4e27ca9b376d532afbd22dc4c50011f3108d09f7a8ec7ec49b59",
+        "src/scripts/build_r5_exact_length_sft_data.py": "3d4431607d6e78e8915254ef9063ac14ff2923c61a37be364bf205f7bada5e0e",
+        "scripts/build_c3fd_native_sft_data.py": "e8a50593dc3ca8d7e5b21c97a6008d497f04355b9572f8ef2a5c2dda0d2c1f5b",
+        "scripts/canonicalize_c3fd_native_teacher_sft.py": "0f1a8fa11046aabc8b92d17bb6d08d64874cb0b1d1aad25eb503f1e24324304d"
+      },
+      "native_codec": {
+        "max_atoms": 20,
+        "length_step": 0.1,
+        "length_min_bin": 0,
+        "length_max_bin": 500,
+        "angle_min_bin": 1,
+        "angle_max_bin": 179,
+        "coord_min_bin": 0,
+        "coord_max_bin": 100,
+        "max_atomic_number": 94
+      },
+      "audit_tool_sha256": "1a097e25af007089dab1a14fa7da3820653cc6245b668c3844af936c4e75f08e",
+      "no_formula_matching": true,
+      "decoded_target_fallback": false,
+      "bare_source_index_is_not_csv_proof": true
+    },
+    "complete_csv_quantized_answer_index": true,
+    "all_input_source_records_reported": true,
+    "site_permutation_direction": "aligned training slot -> parsed original CIF site index",
+    "signature_definition": "Complete native Q answer, periodic 100->0 alias canonicalized, stable alphabetical element grouping only; includes every lattice and coordinate token.",
+    "r5_identity_rule": "Only explicit source index or matching complete-answer evidence plus consistent stable material ID. Bare intermediate file ordinal is not original CSV proof.",
+    "remaining_csv_rows_not_assigned": [],
+    "model_calls": 0,
+    "GPU_calls": 0,
+    "formula_matching": false,
+    "decoded_targets_used": false,
+    "scope": "Identity and numerical data alignment only; no energy/force/stability certificate and no filtered training dataset."
+  },
+  "val_tail": [
+    "{\"event\": \"audit_finished\", \"output_dir\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/val\", \"status\": \"pass\", \"elapsed_seconds\": 22.348269937559962, \"training_records\": 9047, \"unique_training_sources\": 9047, \"expected_training_sources\": 9047, \"source_count_matches_expected\": true, \"blank_jsonl_lines\": 0, \"csv_rows\": 9047, \"csv_parse_or_encode_errors\": 0, \"verified_training_records\": 9047, \"unverified_training_records\": 0, \"unique_matched_csv_rows\": 9047, \"csv_full_answer_duplicate_groups\": 0, \"r5_records\": 0, \"r5_errors\": 0}"
+  ],
+  "val_summary": {
+    "schema": "continuous_source_identity_audit_v1",
+    "status": "pass",
+    "audit_complete": true,
+    "original_cif_identity_gate_passed": true,
+    "split": "val",
+    "counts": {
+      "training_records": 9047,
+      "unique_training_sources": 9047,
+      "expected_training_sources": 9047,
+      "source_count_matches_expected": true,
+      "blank_jsonl_lines": 0,
+      "csv_rows": 9047,
+      "csv_parse_or_encode_errors": 0,
+      "verified_training_records": 9047,
+      "unverified_training_records": 0,
+      "unique_matched_csv_rows": 9047,
+      "csv_full_answer_duplicate_groups": 0,
+      "r5_records": 0,
+      "r5_errors": 0
+    },
+    "statuses": {
+      "verified": 9047
+    },
+    "identity_methods": {
+      "unique_complete_quantized_answer": 9047
+    },
+    "csv_columns": [
+      "Unnamed: 0.1",
+      "Unnamed: 0",
+      "material_id",
+      "formation_energy_per_atom",
+      "band_gap",
+      "pretty_formula",
+      "e_above_hull",
+      "elements",
+      "cif",
+      "spacegroup.number",
+      "spacegroup.number.conv",
+      "cif.conv"
+    ],
+    "blank_line_numbers": [],
+    "input_receipts": {
+      "source_csv": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/val.csv",
+        "sha256": "ae7b87064fb63cdd9b2e3a69b4695046edede96c96b652c5aae7fcf195aff398",
+        "selected_cif_column": "cif",
+        "id_column": "material_id",
+        "cif_hash_definition": "SHA256 of UTF-8 decoded selected CSV CIF field before parser"
+      },
+      "training_jsonl": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/val.jsonl",
+        "sha256": "7e598846dcfea5673dc16d67f887658a6bf34ad0df00d097d7c7053ff9b637d2",
+        "target_field": "source_answer"
+      },
+      "r5_jsonl": null,
+      "parser": {
+        "call": "pymatgen.core.Structure.from_str(cif, fmt='cif')",
+        "signature": "(input_string: 'str', fmt: 'FileFormats', primitive: 'bool' = False, sort: 'bool' = False, merge_tol: 'float' = 0.0, **kwargs) -> 'Structure | Self'",
+        "pymatgen": "2025.6.14",
+        "pandas": "2.3.1",
+        "numpy": "1.26.4",
+        "python": "3.10.18 (main, Jun  5 2025, 13:14:17) [GCC 11.2.0]"
+      },
+      "project_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/code",
+      "project_source_sha256": {
+        "src/crystal_dlm/dynamic_crystal.py": "f2b038b1a42fa8d314b1d86d3dcecd444b331651f5f7ffc3ac0b938475780e22",
+        "src/crystal_dlm/fixed_slot.py": "aa06e8c240a47c3f3696239bcf07adbcf73c95cab1b3f0d7be07ba560a6476eb",
+        "src/crystal_dlm/canonical_site_order.py": "104c5163b79d4e27ca9b376d532afbd22dc4c50011f3108d09f7a8ec7ec49b59",
+        "src/scripts/build_r5_exact_length_sft_data.py": "3d4431607d6e78e8915254ef9063ac14ff2923c61a37be364bf205f7bada5e0e",
+        "scripts/build_c3fd_native_sft_data.py": "e8a50593dc3ca8d7e5b21c97a6008d497f04355b9572f8ef2a5c2dda0d2c1f5b",
+        "scripts/canonicalize_c3fd_native_teacher_sft.py": "0f1a8fa11046aabc8b92d17bb6d08d64874cb0b1d1aad25eb503f1e24324304d"
+      },
+      "native_codec": {
+        "max_atoms": 20,
+        "length_step": 0.1,
+        "length_min_bin": 0,
+        "length_max_bin": 500,
+        "angle_min_bin": 1,
+        "angle_max_bin": 179,
+        "coord_min_bin": 0,
+        "coord_max_bin": 100,
+        "max_atomic_number": 94
+      },
+      "audit_tool_sha256": "1a097e25af007089dab1a14fa7da3820653cc6245b668c3844af936c4e75f08e",
+      "no_formula_matching": true,
+      "decoded_target_fallback": false,
+      "bare_source_index_is_not_csv_proof": true
+    },
+    "complete_csv_quantized_answer_index": true,
+    "all_input_source_records_reported": true,
+    "site_permutation_direction": "aligned training slot -> parsed original CIF site index",
+    "signature_definition": "Complete native Q answer, periodic 100->0 alias canonicalized, stable alphabetical element grouping only; includes every lattice and coordinate token.",
+    "r5_identity_rule": "Only explicit source index or matching complete-answer evidence plus consistent stable material ID. Bare intermediate file ordinal is not original CSV proof.",
+    "remaining_csv_rows_not_assigned": [],
+    "model_calls": 0,
+    "GPU_calls": 0,
+    "formula_matching": false,
+    "decoded_targets_used": false,
+    "scope": "Identity and numerical data alignment only; no energy/force/stability certificate and no filtered training dataset."
+  }
+}

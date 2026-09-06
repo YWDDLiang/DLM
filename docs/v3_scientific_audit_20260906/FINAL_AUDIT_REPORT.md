@@ -1,6 +1,6 @@
 # 全链路科学审计整合报告
 
-2026-09-06。分组件审计、一般交叉审查、V2完整终点及冻结模型诊断已完成；具体V3第二轮审查和来源身份核验进行中，尚未训练。本文随新证据更新，**不表示用户授权的后续实验已经完成**。
+2026-09-06。全链路与V3两轮独立审查、V2完整终点及冻结诊断已完成；H-P33已实施，连续来源、CPU检查、真实4/6卡及图回环验收均通过，正在冻结并启动正式新增两轮训练。本文随新证据更新，**不表示用户授权的后续实验已经完成**。
 
 ## 1. 裁决与实际SUN
 
@@ -117,7 +117,9 @@ C的forward/score可定义生成器，但64步β_tilde在oracle Gaussian数据�
 4. 32Euler区间加一次ε=.002实际forward/readout，共33NFE；确定性readout不冒充精确posterior sample。float native主终点，同样样本Q raw为secondary。
 5. 明示混合表示、G中P仅条件、新增曝光和活参数/NFE；共同评估/refiner/失败分母不改。
 
-尚未证明它是最佳架构或会提高SUN。它必须区别于旧PMTR的冻结head-only路径，以真实共享梯度证明实现。第二轮审稿由非候选作者进行；定义通过仍须来源、hidden-only、T/G累计DDP、低σ敏感度及实际训练验证。
+尚未证明它是最佳架构或会提高SUN。它必须区别于旧PMTR的冻结head-only路径，以真实共享梯度证明实现。[第二轮数学](V3_REVIEW_R2_MATH.md)与[第二轮物理](V3_REVIEW_R2_PHYSICS.md)已经完成，均允许推进有界实现。模型接口、来源调度、trainer与float导出已冻结为1111739；40项mixed CPU检查通过，[独立模型验收](MIXED_GEOMETRY_MODEL_CPU_ACCEPTANCE.md)与[数据调度审查](IMPLEMENTATION_DATA_SCHEDULE_REVIEW.md)注明小模型/CPU边界。真实8B、DDP、低σ敏感度、33次前向和保存恢复由40045执行，尚不能据此宣称SUN收益。
+
+来源门已由实际CPU40009关闭：train27136/val9047全verified、与CSV一一对应，唯一完整量化answer匹配；0解析错误、0完整Q重复歧义、0未核验或丢行。原连续值经精确site permutation后Q全部等于现有source_answer，未用formula匹配、cif.conv或decoded fallback。它支持original_cif监督，不证明模型梯度、稳定性或SUN。[完整证据](evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json)
 
 ## 9. 清理与剩余执行
 
@@ -125,4 +127,6 @@ C的forward/score可定义生成器，但64步β_tilde在oracle Gaussian数据�
 
 旧公式曾被误识别为Markdown链接，已恢复原字节并修正检查器；历史旧prompt原先缺5目标不伪造补齐，当前入口单独增量检查。原执行归档、权重、数据及其他工作树不随清理变动。
 
-剩余：全量CIF身份CPU核验；具体V3第二轮与修订；共享梯度/DDP/数值验收；冻结隔离版本并新增2epoch；固定256 primary raw/refined与Q诊断；满足门槛则1000/1200；据实际SUN记录得失、完成入口及提交收尾。已有授权允许接续，不能在综述完成时提前结束，也不以没有事先SUN保证为由无限审计。
+真实实现验收已关闭：[40045/40060及40058汇总](MIXED_IMPLEMENTATION_ACCEPTANCE.md)。正式选择6卡micro2/acc2/global24，数据窗口与108544状态不变；实际checkpoint重复输出差0，不把BF16分组梯度容差或非零敏感度当作精确score/良好条件数证明。
+
+剩余：冻结启动清单并新增2epoch；固定256 primary raw/refined与Q诊断；满足门槛则1000/1200；据实际SUN记录得失、完成入口及提交收尾。已有授权允许接续，不能在综述完成时提前结束，也不以没有事先SUN保证为由无限审计。
