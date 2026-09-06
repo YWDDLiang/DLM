@@ -233,8 +233,8 @@ def main():
                                   for c in compiled]
                     else:
                         result, traces = sampler.run(x, torch.ones_like(x), construct=not repair_only,
-                                                     cooperative=not args.reference_closure,
-                                                     closure=not args.reference_closure,
+                                                     cooperative=not args.reference_closure and not hasattr(model, "raw_initialization"),
+                                                     closure=not args.reference_closure and not hasattr(model, "raw_initialization"),
                                                      full_cell_repair=args.full_cell_repair)
                     reference_logs = [None] * len(batch)
                     if args.reference_closure:

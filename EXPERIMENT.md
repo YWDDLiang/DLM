@@ -1,12 +1,13 @@
-# Periodic DLM self-repair
+# New periodic DLM from original LLaDA
 
-This is the separate implementation workspace for the user's 2026-09-06 DLM architecture experiment.
+Current direction: original LLaDA-8B-Instruct plus fresh LoRA and crystal-token rows, trained on original MP20. No K4/K8 weights, data or feedback.
 
+- [Current design](docs/periodic_self_repair_v1/RAW_LLADA_DESIGN.md)
+- [Current checklist](docs/periodic_self_repair_v1/CHECKLIST.md)
+- Entry: slurm/240_train_periodic_dlm_from_base.sbatch
 - Branch: codex/periodic-self-repair
-- [Design, mathematical scope, and audit](docs/periodic_self_repair_v1/DESIGN_AND_AUDIT.md)
-- [Execution registration and live status](docs/teacher_feedback_unified_v1/29_PERIODIC_SELF_REPAIR_12H.md)
-- Local workspace: D:/codex_work/ai4s/DLM_periodic_self_repair
-- Separate remote source: /public/home/jiaosz/ywliang/ai4s/.sscd_periodic_self_repair_20260906_v1
-- Separate experiment outputs: grounding/experiments/periodic_self_repair_20260906/
+- Outputs: grounding/experiments/periodic_self_repair_20260906/from_original_llada_v1/
 
-The original K8 experiment retains its own source, recipe, checkpoints, and evaluation. Following the user's 07:58 instruction to start the new two-GPU training immediately, repair round0 starts from completed original K4 policy39892 using complete K4 feedback. Repair round1 continues that new model on complete K4+K8 feedback, with final K8 as the frozen reference policy. Engineering weights from job39930 were discarded. This two-stage amendment supersedes the earlier plan to wait for K8 before any scientific repair training.
+The retained core is Planner/species program, exact composition and geometric legal logits. New mechanisms are typed numerical output learning and periodic geometry inside Transformer attention.
+
+Previous238/239 warm-start plans are superseded;39934 was cancelled/invalidated.39930 remains historical engineering/data work and supplies no input or result to this new model. Original K4/K8 work continues separately.

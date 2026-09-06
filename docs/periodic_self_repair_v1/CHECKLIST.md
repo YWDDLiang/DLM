@@ -1,24 +1,22 @@
-# Periodic DLM implementation and execution checklist
+# New DLM execution checklist
 
-Latest: 2026-09-06 07:58 Asia/Shanghai. Independent branch codex/periodic-self-repair; remote root grounding/experiments/periodic_self_repair_20260906/. Two A800/eight CPU reserved for this new method, four A800/sixteen CPU for original K8. Count only this experiment's jobs; do not manage unrelated projects' jobs.
+Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 weights/data. Priority: new DLM, original K4/K8, diffusion joint work, then self-improvement. New model2A800/8CPU; original mainline4A800/16CPU.
 
-- [x] Preserve paper core: C³FD/typed Llama Planner, species program, exact composition/canvas, legal-set definition and conditional token sampling.
-- [x] Implement zero-initialized numerical output increments and internal periodic attention bias.
-- [x] Supply explicit mask/task/noise information, with unknown errors distinct from zero noise.
-- [x] Retain exact conditional full-cell draws and whole-transaction rollback.
-- [x] Complete three independent read-only audits and fix identified correctness problems.
-- [x] Pass36 local related CPU tests plus independent BF16/FP32 probability/gradient checks.
-- [x] Commit and push design/code; deploy to separate remote source.
-- [x] Run two-GPU actual-model preflight39930: zero initial logits difference, zero replay difference, finite gradients, ~34.73GiB/GPU.
-- [x] Prepare all4096 K4 requests:972 target candidates; preserve3124 unavailable requests.
-- [x] Complete fresh target labels39930:695 verified,277 not converged,3124 unavailable.
-- [ ] Finalize raw-target admission and start formal repair round0 on two GPUs from39892, four passes, original CE anchors and actual-policy KL.
-- [ ] In parallel, complete original K8 labels and original four-GPU teacher/training pipeline.
-- [ ] Prepare and label all8192 K8 quantized-target requests on this method's two GPUs.
-- [ ] Continue the round0 repair model on complete K4+K8 data, four passes; frozen reference becomes original final K8.
-- [ ] Verify the fixed-start repair results with the unfiltered repair-validation denominator.
-- [ ] Evaluate the final new model on the frozen256 native requests and the same requests with frozen model494 tau800; preserve all failures.
-- [ ] Record native physical distributions, paired A/B, Stable, N, U and SUN separately.
-- [ ] At18:49, report completed new-method results and missing work; original mainline deadline remains19:19.
+- [x] Retain Planner, species program, exact canvas and geometric legal logits.
+- [x] Implement periodic coordinate Fourier and ordered lattice numerical logits.
+- [x] Add actual periodic geometry inside Transformer attention.
+- [x] Add explicit mask/task/noise and prevent hidden-GT geometry leakage.
+- [x] Implement fresh LoRA and trainable new input/output token rows, compact save/reload.
+- [x] Implement original-MP20 dense construction and structured repair views.
+- [x] Reuse measured r8/alpha32/dropout.05, global16, max382, LR5e-5 to1e-5, warmup100/stage, weight decay0.
+- [x] Implement two full epochs/two views,6784 updates, final checkpoint, fixed validation monitor.
+- [x] Keep full-source schema CE and separately gated legal CE with conflict ledger.
+- [x] Cancel and invalidate incorrect K4 warm-start39934; do not resume239.
+- [ ] Submit raw training240 on two A800 and record job ID.
+- [ ] Check initialization, first ten updates, gradients, throughput and coverage during training.
+- [ ] Finish declared endpoint and evaluate fixed256 native generation.
+- [ ] Evaluate same inputs with frozen model494 tau800 separately.
+- [ ] Keep original K4/K8 monitoring active without mixing its data into this model.
+- [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.
 
-The immediate-start amendment changes the previous wait-for-K8 starting point. It does not add database construction targets, change the existing K8 recipe, or treat engineering checkpoints as trained scientific models. Early repair scores, if reported, are round0 diagnostics.
+Design: RAW_LLADA_DESIGN.md. Older warm-start documents are historical and superseded by this checklist.

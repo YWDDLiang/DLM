@@ -35,6 +35,7 @@ class ProgrammedPathTrace:
     events: list[dict[str, Any]] = field(default_factory=list)
     success: bool = True
     failure: str | None = None
+    construct_active_scope: str = "scalar"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -42,6 +43,7 @@ class ProgrammedPathTrace:
             "initial_body": self.initial_body, "mask_id": self.mask_id,
             "temperature": self.temperature, "element_order": self.element_order,
             "events": self.events, "success": self.success, "failure": self.failure,
+            "construct_active_scope": self.construct_active_scope,
         }
 
 
@@ -247,6 +249,7 @@ class ProgrammedPathSampler:
         self.traces = [ProgrammedPathTrace(
             x[row, self.prompt_length:].tolist(), self.mask_id, self.temperature,
             list(program.element_order),
+            construct_active_scope="masked_numeric" if hasattr(self.model, "raw_initialization") else "scalar",
         ) for row, program in enumerate(self.programs)]
         alive = set(range(x.shape[0]))
         if construct:
@@ -255,8 +258,13 @@ class ProgrammedPathSampler:
                 self.traces[row].events.append({"op": "begin", "phase": "construct", "kind": "construct", "positions": []})
             for step in range(6 + 3 * self.num_sites):
                 pos = {row: schedules[row][step] for row in alive}
+                active_context = {
+                    row: ([p for p in schedules[row] if int(x[row, self.prompt_length + p]) == self.mask_id]
+                          if self.traces[row].construct_active_scope == "masked_numeric" else [position])
+                    for row, position in pos.items()
+                }
                 unavailable = self._draw(
-                    x, x.clone(), pos, {row: [p] for row, p in pos.items()}, attention_mask,
+                    x, x.clone(), pos, active_context, attention_mask,
                     phase="construct", salt=100_000_000 + 10_007 * step,
                 )
                 for row in unavailable:
@@ -405,9 +413,15 @@ def replay_scalar_states(trace: dict[str, Any]) -> Iterator[dict[str, Any]]:
         elif op == "draw":
             pos = int(event["position"])
             old = body.copy() if kind == "construct" else snapshot.copy()
+            active = positions.copy()
+            if kind == "construct":
+                active = ([index for index, token in enumerate(body)
+                           if token == int(trace["mask_id"]) and
+                           (1 <= index <= 6 or (index >= 8 and (index - 8) % 4 < 3))]
+                          if trace.get("construct_active_scope") == "masked_numeric" else [pos])
             yield {
                 "decision_index": decision, "input_body": body.copy(), "old_body": old,
-                "transaction_positions": [pos] if kind == "construct" else positions.copy(),
+                "transaction_positions": active,
                 "position": pos, "target_token": int(event["token"]), "phase": phase,
                 "recorded_log_probability": float(event["log_probability"]),
                 "temperature": float(trace["temperature"]),
