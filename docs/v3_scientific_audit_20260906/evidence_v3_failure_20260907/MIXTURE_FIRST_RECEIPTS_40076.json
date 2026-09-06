@@ -1,0 +1,34 @@
+{
+  "MIXTURE_EVAL_LAUNCH_MANIFEST.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/LAUNCH_MANIFEST.json",
+    "sha256": "dcb341f71fddbe28eda868d76577815721a4e1c65604274df7338c836f34b900"
+  },
+  "MIXTURE_EVAL_SUBMISSION.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/SUBMISSION.json",
+    "sha256": "f7e093a3999e121e43d6a59f7be75f10adfd8a01f8bfe9cc700e18a70c4d10dd"
+  },
+  "MIXTURE_PREFIX_PROBE_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/prefix-probe/PROBE.json",
+    "sha256": "6ddac1e2b3a528074c3c148a076d21c7614bb5f5b58cedc07ec3aef284df2adb"
+  },
+  "CONTACT_ATTRIBUTION_V1_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/contact_attribution_40074/ATTRIBUTION.json",
+    "sha256": "cdd80176355d7b7021c784f3dc9330a512cb0182c9943bf47bd6ced259ccce29"
+  },
+  "CONTACT_ATTRIBUTION_CASES_V1_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/contact_attribution_40074/CASES.json",
+    "sha256": "0cafcfd3128085b0d52a9d556dee469acc99e0c0947adfbb3e9615a510539b65"
+  },
+  "REFINER_METADATA_PRECHECK.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/REFINER_REPLAY_DIAGNOSTIC_INPUTS.json",
+    "sha256": "b216a73bbe80b99111a8348be6c7c3f2a141166416a6d417e26d337dd0bff191"
+  },
+  "SUN_SNAPSHOT_AFTER_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/snapshots/20260906T191925Z/SUN_SNAPSHOT.json",
+    "sha256": "3dc1ab890e34ca7d019fd6130e002c3358cd51b642aab008f95f76497f7f18c4"
+  },
+  "SUN_SNAPSHOT_AFTER_40074.md": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/snapshots/20260906T191925Z/SUN_SNAPSHOT.md",
+    "sha256": "b7556df6f416200ab11d5bad5e7452c7f0e1e1da2fb232cdf8ddf5deb65424c7"
+  }
+}

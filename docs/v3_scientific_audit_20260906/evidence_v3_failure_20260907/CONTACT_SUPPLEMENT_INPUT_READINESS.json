@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "development_requests": 256,
+  "supplement_valid_conditions": 1200,
+  "development_elements": 80,
+  "supplement_elements": 83,
+  "radii_missing_development": [],
+  "radii_missing_supplement": [],
+  "hull_coverage": {
+    "schema": "cohort_official_hull_coverage_v1",
+    "coverage_accounted": true,
+    "wanted_chemsys": 1092,
+    "resolved_chemsys": 1072,
+    "explicitly_unresolved_chemsys": [
+      "Ag-Pt-Yb",
+      "Al-Ge-Yb",
+      "As-Ni-Yb",
+      "Ba-Bi-O-Sr-Yb",
+      "Ca-Tl-Yb",
+      "Cd-Ir-Yb",
+      "Cd-Mg-Yb",
+      "Co-Ge-Yb",
+      "Co-La-Yb",
+      "Cu-Pd-Yb",
+      "Ga-Ni-Yb",
+      "H-O-Yb",
+      "H-Yb",
+      "Hf-Te-Yb",
+      "Hg-Nd-Yb",
+      "I-Yb",
+      "In-Pd-Yb",
+      "O-P-Yb",
+      "Pd-Sn-Yb",
+      "Sr-Yb"
+    ],
+    "unqueried_chemsys": [],
+    "unknown_is_not_zero_energy": true
+  },
+  "inputs": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/spad_prospective_seed23_256_v1_20260903/plans_for_dlm.jsonl": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_plans_39949/cohort/plans_for_dlm.jsonl": "e42a9c902cdb89190b60abc92151208d1994c69e12958f1c8755c6c4f55f4019",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/code/docs/v3_scientific_audit_20260906/evidence_v3_failure_20260907/k4k8_physics/covalent_radii.json": "74bf9289545246bead1fa2b2a70bd5cbd73498ae3cef74f5d7ec24007c78bec7",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_official_20260906_v1/official_mp_cache/official_slim_cache.jsonl": "3d4c11d2c1a1f2d8f41058f627cb83066985a0564cab24b76724423899b1b8b8",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_official_20260906_v1/official_mp_cache/unresolved_chemsys.jsonl": "6ad8fcaa39f86f32c988c2be204650b095fdee8a17282c2610e13752722c1d04"
+  },
+  "new_API_queries": 0,
+  "new_model_forwards": 0,
+  "new_energy_calls": 0
+}

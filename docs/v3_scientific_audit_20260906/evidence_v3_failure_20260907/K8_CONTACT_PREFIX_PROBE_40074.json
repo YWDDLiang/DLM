@@ -1,0 +1,108 @@
+{
+  "status": "PASS",
+  "method": "k8",
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977",
+  "probe_only": true,
+  "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/sample/paths.jsonl",
+  "source_sha256": "a0cf3e319fc815e9d1d0eb38dfec643afbb3bc8bdae750d76273aaf5fd3750d0",
+  "input_manifest_sha256": "3c983695c797d3ab67d5eef6926aecb0d9818739593e0b7e636ccf89810ff60a",
+  "short_contact_policy": {
+    "schema": "k4k8_short_contact_z_soft_v1",
+    "spec_sha256": "5789ed98a16627dbc0ad052f18bbd5c992604b339a006d2475e8231b6d8d9336",
+    "radii_sha256": "74bf9289545246bead1fa2b2a70bd5cbd73498ae3cef74f5d7ec24007c78bec7",
+    "strength": 1.0,
+    "temperature": 0.7,
+    "action_scope": "current_known_Z_completion",
+    "old_geometry_imputation": false,
+    "hard_support_changed": false
+  },
+  "requested_first_conditions": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "bindings": [
+    {
+      "sample_idx": 2,
+      "trajectory_id": "eval:2:0:0",
+      "requested_probe": true,
+      "batch_ordinals": [
+        2
+      ],
+      "success": true,
+      "failure": null,
+      "maximum_logp_error": 0.0,
+      "model_forward_calls_for_batch": 66
+    },
+    {
+      "sample_idx": 0,
+      "trajectory_id": "eval:0:0:0",
+      "requested_probe": true,
+      "batch_ordinals": [
+        0
+      ],
+      "success": false,
+      "failure": "construct_empty_support",
+      "maximum_logp_error": 0.0,
+      "model_forward_calls_for_batch": 63
+    },
+    {
+      "sample_idx": 1,
+      "trajectory_id": "eval:1:0:0",
+      "requested_probe": true,
+      "batch_ordinals": [
+        1
+      ],
+      "success": true,
+      "failure": null,
+      "maximum_logp_error": 0.0,
+      "model_forward_calls_for_batch": 30
+    },
+    {
+      "sample_idx": 3,
+      "trajectory_id": "eval:3:0:0",
+      "requested_probe": true,
+      "batch_ordinals": [
+        3,
+        207
+      ],
+      "success": true,
+      "failure": null,
+      "maximum_logp_error": 0.0,
+      "model_forward_calls_for_batch": 114
+    },
+    {
+      "sample_idx": 207,
+      "trajectory_id": "eval:207:0:0",
+      "requested_probe": false,
+      "batch_ordinals": [
+        3,
+        207
+      ],
+      "success": true,
+      "failure": null,
+      "maximum_logp_error": 0.0,
+      "model_forward_calls_for_batch": 114
+    }
+  ],
+  "Z_prefixes": 75,
+  "positive_penalty_prefixes": 42,
+  "Z_prefixes_by_phase": {
+    "construct": 40,
+    "cooperative": 13,
+    "closure": 22
+  },
+  "changed_same_seed_tokens": 0,
+  "zero_penalty_winners": 58,
+  "zero_penalty_winner_violations": 0,
+  "maximum_logp_error": 0.0,
+  "model_forward_calls": 273,
+  "extra_counterfactual_model_forwards": 0,
+  "new_candidates": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0,
+  "sampling_layout_world_size_in_original": null,
+  "effective_legacy_layout": 2,
+  "elapsed_seconds": 31.90385447256267
+}

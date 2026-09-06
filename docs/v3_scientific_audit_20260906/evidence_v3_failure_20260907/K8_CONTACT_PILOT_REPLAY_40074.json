@@ -1,0 +1,9 @@
+{
+  "kind": "fresh_process_base_lora_conditioner_replay",
+  "paths": 4,
+  "all_recorded_decisions_checked": 269,
+  "maximum_logp_error": 0.0,
+  "trained_state_residual_l1": 1.74746835231781,
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977",
+  "scope": "all decisions of the recorded engineering probe paths"
+}

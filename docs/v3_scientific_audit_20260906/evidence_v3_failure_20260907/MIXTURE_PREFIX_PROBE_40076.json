@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "scope": "numerical_distribution_probe_only_no_stability_claim",
+  "schema": "k4k8_equal_same_state_probability_mixture_v1",
+  "weights": [
+    0.5,
+    0.5
+  ],
+  "temperature": 0.7,
+  "state_count": 8,
+  "actual_model_forwards": 16,
+  "new_trajectories": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0,
+  "contact_enabled": false,
+  "state_selection": "each origin: ordinal0 first construct cell and Z; ordinal1 first cooperative Z; ordinal2 first closure Z",
+  "input_manifest_sha256": "3c983695c797d3ab67d5eef6926aecb0d9818739593e0b7e636ccf89810ff60a",
+  "candidate_spec_sha256": "686549783a62aab72efafacf4a0cf838e18f6930e8b9c313bc8e68580972cebf",
+  "checkpoint_bindings": {
+    "k4": {
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+      "train_final_sha256": "6b59241add85c8df584f0222e5b35f552d0373264fb73d600d4d34cf228399e7",
+      "train_final_policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+      "source_sha256": "bc8c6d32b15ed18adc3f4be133f156c0f615c2203b25cd7cb5425d07f0dbca13"
+    },
+    "k8": {
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977",
+      "train_final_sha256": "2ed5b10aa05bb88f7a00652486ba909673332a17da9dd307fc9cfe80ed5b0361",
+      "train_final_policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977",
+      "source_sha256": "a0cf3e319fc815e9d1d0eb38dfec643afbb3bc8bdae750d76273aaf5fd3750d0"
+    }
+  },
+  "source_sha256": {
+    "src/crystal_dlm/programmed_path_runtime.py": "cc2aac4f0f15347b65c7c002e34dab5598a2a62b87ac76eb683edff11cc92cf0",
+    "src/crystal_dlm/programmed_path_data.py": "4bdb9ef3694990f23be36890dcfe82dcedad40a1175afc4c1abdaa95d9a261cd",
+    "src/crystal_dlm/spad_generation.py": "33933a4f74fd735940ebcf3959a86bcb763cc4271d223dca799bc4bbf4b7e408",
+    "src/crystal_dlm/sampling_layout.py": "72e1c9f2881e8d9364cbc1cef45fd74b9ee232f05e1ad85ade20d7bb103016db",
+    "src/crystal_dlm/probability_mixture_sampling.py": "b0660995896749cac5c0f5ba9cd9ec9d58b6c2f7658428c4b9c60ec98ce89528",
+    "src/scripts/sample_state_programmed_paths.py": "26aa71599b07ed4b226a9d205e3a9f5dd549bcc9c5fd4740057998c0e8487fe7",
+    "src/scripts/sample_llada_dynamic_crystals.py": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123"
+  },
+  "probe_sha256": "3a2c969cd828865f9b13ecbf89bf976b5b276c1de21cc9aec33c89e1e74195ec",
+  "token_abi": {
+    "vocab_sha256": "e48b754bb5d3d9b647ad04c3cc4b2111b99768ba018b7bdea073e825c32aae38",
+    "output_vocab_size": 128830
+  },
+  "maximum_origin_logp_error": 8.881784197001252e-16,
+  "maximum_production_cuda_raw_logit_error": 3.552713678800501e-15,
+  "maximum_tv_components": 0.13159342234370056,
+  "distribution_difference_above_numerical_floor_1e_8": true,
+  "distribution_difference_is_stability_gate": false,
+  "component_winners_differ": 0,
+  "mixture_winner_differs_from_k4": 0,
+  "mixture_winner_differs_from_k8": 0,
+  "shared_component_winners": 8,
+  "shared_winner_violations": 0,
+  "gumbel_device": "cuda:0",
+  "load_seconds": {
+    "k4": 72.507697455585,
+    "k8": 69.74862988851964
+  },
+  "forward_and_replay_seconds": {
+    "k4": 27.88687145151198,
+    "k8": 31.348363572731614
+  },
+  "peak_allocated_GiB": 17.136037826538086,
+  "elapsed_seconds": 271.97383382357657,
+  "sampling_layout_world_size_in_original": null,
+  "reconstructed_effective_layout": 2,
+  "all_selected_original_batch_memberships": "singleton, checked against full original ledgers"
+}

@@ -1,6 +1,6 @@
 # 全链路科学审计与 V3 研究
 
-2026-09-07（上海）更新。**V2/V3本轮均完整结束且未达目标；40074正在执行K4/K8固定软惩罚。** 最新40071 T raw13/53→τ17/111，匹配V2构造12/44→17/120，均256；G此前9/61→13/116。按用户方向，当前聚焦K4/K8稳定与失败结构及其统一改动，上海07:00交付最新与最好SUN。[K4/K8专门诊断](K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)、[固定候选](K4_K8_SOFT_CONTACT_CANDIDATE.md)、[执行复核](K4_K8_SOFT_CONTACT_EXECUTION_REVIEW.md)、[最新完整结果](evidence_v3_failure_20260907/TOKEN_EVAL_FINAL_40071.json)。
+2026-09-07（上海）更新。**V2/V3本轮均未达目标；40074软约束已完整结束，40076在评估固定K4/K8等权概率混合。** 40074的K4 raw6/56→τ20/122、K8 raw11/68→τ15/123，均256，未达同端26/128。40076真实8前缀/16NN已PASS，尚无混合SUN。上海07:00交付最新与最好实测结果。[K4/K8专门诊断](K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)、[软约束完整结果](evidence_v3_failure_20260907/CONTACT_EVAL_FINAL_40074.json)、[当前全部方法快照](evidence_v3_failure_20260907/SUN_SNAPSHOT_AFTER_40074.md)、[等权混合审查](K4_K8_EQUAL_MIXTURE_BOUNDED_REVIEW.md)。
 
 本目录覆盖完整C³FD/Llama/soft/P→DLM→repair/refiner→物理/N-U/hull/统计、近期变更、历史成功失败、外部晶体生成机制及文档清理。先读 [整合报告](FINAL_AUDIT_REPORT.md) 和 [当前状态](../CURRENT_STATE.md)。
 
@@ -22,7 +22,7 @@
 
 ## 具体V3与攻击性复核
 
-[H-P33规格](V3_H_P33_SPECIFICATION.md)为当前唯一第二轮对象：共享V2/LLaDA、T construction＋G联合去噪、新增两epoch、明确33NFE及float/Q终点。原连续CIF身份已全量通过，实际计算图/DDP验收仍须完成；它是混合表示，P在G中仅条件，尚无SUN保证。
+[H-P33规格](V3_H_P33_SPECIFICATION.md)记录已完成的第二轮对象：共享V2/LLaDA、T construction＋G联合去噪、新增两epoch、33NFE及float/Q终点。连续CIF身份、计算图/DDP、完整训练和评测均已结束；G raw9/61→τ13/116，T构造raw13/53→τ17/111，均未达目标。混合表示的P在G中仅作条件，原因与后续以当前状态页为准。
 
 - [A/B/C候选及攻击](V3_DLM_CANDIDATES_AND_ATTACKS.md)
 - [共享几何头独立反提案](V3_GEOMETRIC_HEAD_COUNTERPROPOSAL.md)

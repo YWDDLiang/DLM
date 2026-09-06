@@ -1,0 +1,74 @@
+{
+  "CONTACT_EVAL_FINAL_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/EVAL_FINAL.json",
+    "sha256": "21236229b678cef833d21e9ea2dd05319cbd51de592cd7b2ffabcd64301dbaea"
+  },
+  "CONTACT_SUPPLEMENT_INPUT_READINESS.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/SUPPLEMENT_INPUT_READINESS.json",
+    "sha256": "eec926b99b342730fa1e1cbc1a6ca6e1292c1bf10e6260af04db4b88ce9979db"
+  },
+  "K4_CONTACT_EVAL_FINAL_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/EVAL_FINAL.json",
+    "sha256": "02aae6a6bc30147118171c6e6b3dbd42300b9b9e0c8c7ed9b92bbea0126f108a"
+  },
+  "K4_CONTACT_PREFIX_PROBE_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/prefix-probe/PROBE.json",
+    "sha256": "769fa7eb2bbb1159153e6386f54cd8168eeafc757efa64a28877bae2a35b39c8"
+  },
+  "K4_CONTACT_PILOT_REPLAY_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/pilot/replay/REPLAY.json",
+    "sha256": "86a88848daeb0a460bb32bd5188cc1604436070ca82db4246425f5bd83eaf6a0"
+  },
+  "K4_CONTACT_SAMPLE_FINAL_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/sample/SAMPLE_FINAL.json",
+    "sha256": "75e47b2b70eee0e882b382ab466c39c891aef33234adc6787d4819fa9b244aef"
+  },
+  "K4_CONTACT_NATIVE_EVALUATION_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/native-evaluation/EVALUATION_FINAL.json",
+    "sha256": "f508945c2a91e45748c130861076dc10f7762fc009212a07dda1129bdbb87d43"
+  },
+  "K4_CONTACT_TAU800_EVALUATION_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/tau800-evaluation/EVALUATION_FINAL.json",
+    "sha256": "e5014349b5442155a2bf359d838ef5fa5d9687fd4a0832f593d5e648096776e0"
+  },
+  "K4_CONTACT_NATIVE_COMPARISON_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/native-vs-original/COMPARISON_FINAL.json",
+    "sha256": "0a710c7cb7bcfb3d6f53673433d25d3caf2c0b6c4b0253d2f9052cea03cf81bf"
+  },
+  "K4_CONTACT_TAU800_COMPARISON_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/tau800-vs-original/COMPARISON_FINAL.json",
+    "sha256": "87fad264c6ed90eb37fc431670344b8cbbc47c417e1d805a3eb42f532ad545b3"
+  },
+  "K8_CONTACT_EVAL_FINAL_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/EVAL_FINAL.json",
+    "sha256": "12217d58373d3f3714745e7a55c6874c4f544c9b84febf0701f73b737025fb1f"
+  },
+  "K8_CONTACT_PREFIX_PROBE_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/prefix-probe/PROBE.json",
+    "sha256": "ce733f0d9a80439cd5d6b7c76fcef78400d5830e2027ebdaed12d77c9448df84"
+  },
+  "K8_CONTACT_PILOT_REPLAY_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/pilot/replay/REPLAY.json",
+    "sha256": "487b73117800a919e03e3316ec47ce7601f59e024d6ad913de346d618afc776c"
+  },
+  "K8_CONTACT_SAMPLE_FINAL_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/sample/SAMPLE_FINAL.json",
+    "sha256": "11d763604cd1ddc7200294b2457e73b6153a9d1fa4de343bc706b96d900948b7"
+  },
+  "K8_CONTACT_NATIVE_EVALUATION_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native-evaluation/EVALUATION_FINAL.json",
+    "sha256": "0ad938bfd94c6c02805e6177b52495afa0800b31e130c4041153f658f565778d"
+  },
+  "K8_CONTACT_TAU800_EVALUATION_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/tau800-evaluation/EVALUATION_FINAL.json",
+    "sha256": "5944495f2c753f997fd5970ba07dfb1b1703c5150725a20ecb6749b663765bc1"
+  },
+  "K8_CONTACT_NATIVE_COMPARISON_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native-vs-original/COMPARISON_FINAL.json",
+    "sha256": "7079430b615ba00793b9939c8531b086a0ed4a611cf70febfa7d46a67e05d5a0"
+  },
+  "K8_CONTACT_TAU800_COMPARISON_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/tau800-vs-original/COMPARISON_FINAL.json",
+    "sha256": "656a8bf43e69457df8f1416b8462361a6911fa114699e969e731a6f5df5d0bac"
+  }
+}

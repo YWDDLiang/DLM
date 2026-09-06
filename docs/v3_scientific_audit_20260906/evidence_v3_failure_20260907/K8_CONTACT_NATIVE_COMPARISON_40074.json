@@ -1,0 +1,353 @@
+{
+  "requests": 256,
+  "binary_all_requests": {
+    "reconstructed": {
+      "reference_count": 252,
+      "method_count": 252,
+      "reference_percent": 98.4375,
+      "method_percent": 98.4375,
+      "change_percentage_points": 0.0,
+      "both": 252,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 4
+    },
+    "native_execution_success": {
+      "reference_count": 252,
+      "method_count": 252,
+      "reference_percent": 98.4375,
+      "method_percent": 98.4375,
+      "change_percentage_points": 0.0,
+      "both": 252,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 4
+    },
+    "endpoint_execution_success": {
+      "reference_count": 252,
+      "method_count": 252,
+      "reference_percent": 98.4375,
+      "method_percent": 98.4375,
+      "change_percentage_points": 0.0,
+      "both": 252,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 4
+    },
+    "novel": {
+      "reference_count": 251,
+      "method_count": 251,
+      "reference_percent": 98.046875,
+      "method_percent": 98.046875,
+      "change_percentage_points": 0.0,
+      "both": 251,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 5
+    },
+    "unique_representative": {
+      "reference_count": 251,
+      "method_count": 251,
+      "reference_percent": 98.046875,
+      "method_percent": 98.046875,
+      "change_percentage_points": 0.0,
+      "both": 251,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 5
+    },
+    "novel_unique": {
+      "reference_count": 250,
+      "method_count": 250,
+      "reference_percent": 97.65625,
+      "method_percent": 97.65625,
+      "change_percentage_points": 0.0,
+      "both": 250,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 6
+    },
+    "terminal_verified": {
+      "reference_count": 76,
+      "method_count": 72,
+      "reference_percent": 29.6875,
+      "method_percent": 28.125,
+      "change_percentage_points": -1.5625,
+      "both": 64,
+      "reference_only": 12,
+      "method_only": 8,
+      "neither": 172
+    },
+    "strict_stable": {
+      "reference_count": 12,
+      "method_count": 12,
+      "reference_percent": 4.6875,
+      "method_percent": 4.6875,
+      "change_percentage_points": 0.0,
+      "both": 12,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 244
+    },
+    "meta_stable": {
+      "reference_count": 67,
+      "method_count": 69,
+      "reference_percent": 26.171875,
+      "method_percent": 26.953125,
+      "change_percentage_points": 0.78125,
+      "both": 63,
+      "reference_only": 4,
+      "method_only": 6,
+      "neither": 183
+    },
+    "strict_sun": {
+      "reference_count": 11,
+      "method_count": 11,
+      "reference_percent": 4.296875,
+      "method_percent": 4.296875,
+      "change_percentage_points": 0.0,
+      "both": 11,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 245
+    },
+    "meta_sun": {
+      "reference_count": 66,
+      "method_count": 68,
+      "reference_percent": 25.78125,
+      "method_percent": 26.5625,
+      "change_percentage_points": 0.78125,
+      "both": 62,
+      "reference_only": 4,
+      "method_only": 6,
+      "neither": 184
+    },
+    "verified_strict_sun": {
+      "reference_count": 4,
+      "method_count": 4,
+      "reference_percent": 1.5625,
+      "method_percent": 1.5625,
+      "change_percentage_points": 0.0,
+      "both": 4,
+      "reference_only": 0,
+      "method_only": 0,
+      "neither": 252
+    },
+    "verified_meta_sun": {
+      "reference_count": 30,
+      "method_count": 34,
+      "reference_percent": 11.71875,
+      "method_percent": 13.28125,
+      "change_percentage_points": 1.5625,
+      "both": 28,
+      "reference_only": 2,
+      "method_only": 6,
+      "neither": 220
+    }
+  },
+  "raw_finite_pairs": {
+    "energy_eV_atom": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": 2.7082429646499575,
+      "method_mean": 2.817520856384247,
+      "mean_method_minus_reference": 0.10927789173428974,
+      "median_method_minus_reference": 0.0,
+      "method_lower": 90,
+      "method_higher": 78,
+      "equal": 84
+    },
+    "force_max_eV_A": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": 70.54528023404417,
+      "method_mean": 117.08930819976807,
+      "mean_method_minus_reference": 46.544027965723885,
+      "median_method_minus_reference": 2.8301114257667237e-08,
+      "method_lower": 125,
+      "method_higher": 127,
+      "equal": 0
+    },
+    "stress_max_GPa": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": 157.48043066972778,
+      "method_mean": 665.9578089297764,
+      "mean_method_minus_reference": 508.4773782600486,
+      "median_method_minus_reference": 3.337860107421875e-06,
+      "method_lower": 115,
+      "method_higher": 127,
+      "equal": 10
+    }
+  },
+  "verified_terminal_pairs": {
+    "A_gap_eV_atom": {
+      "pairs": 64,
+      "excluded_requests": 192,
+      "reference_mean": 6.281350051984191,
+      "method_mean": 6.349755449220538,
+      "mean_method_minus_reference": 0.0684053972363472,
+      "median_method_minus_reference": -3.5762786865234375e-07,
+      "method_lower": 36,
+      "method_higher": 20,
+      "equal": 8
+    },
+    "B_terminal_energy_eV_atom": {
+      "pairs": 64,
+      "excluded_requests": 192,
+      "reference_mean": -4.440263744443655,
+      "method_mean": -4.441215001046658,
+      "mean_method_minus_reference": -0.0009512566030025482,
+      "median_method_minus_reference": 0.0,
+      "method_lower": 18,
+      "method_higher": 31,
+      "equal": 15
+    },
+    "relaxation_steps": {
+      "pairs": 64,
+      "excluded_requests": 192,
+      "reference_mean": 70.6875,
+      "method_mean": 70.59375,
+      "mean_method_minus_reference": -0.09375,
+      "median_method_minus_reference": 0.0,
+      "method_lower": 5,
+      "method_higher": 5,
+      "equal": 54
+    },
+    "force_max_eV_A": {
+      "pairs": 64,
+      "excluded_requests": 192,
+      "reference_mean": 0.061878059694694426,
+      "method_mean": 0.06138494756421165,
+      "mean_method_minus_reference": -0.0004931121304827715,
+      "median_method_minus_reference": 4.852497456093313e-07,
+      "method_lower": 30,
+      "method_higher": 34,
+      "equal": 0
+    },
+    "stress_max_GPa": {
+      "pairs": 64,
+      "excluded_requests": 192,
+      "reference_mean": 0.37578133589198165,
+      "method_mean": 0.3755659747393456,
+      "mean_method_minus_reference": -0.00021536115263599527,
+      "median_method_minus_reference": 7.982966416769655e-06,
+      "method_lower": 26,
+      "method_higher": 38,
+      "equal": 0
+    }
+  },
+  "available_terminal_pairs": {
+    "A_gap_eV_atom": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": 7.036173261820324,
+      "method_mean": 7.147501478592555,
+      "mean_method_minus_reference": 0.11132821677223084,
+      "median_method_minus_reference": -5.960464477539063e-08,
+      "method_lower": 126,
+      "method_higher": 105,
+      "equal": 21
+    },
+    "B_terminal_energy_eV_atom": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": -4.327930297170367,
+      "method_mean": -4.329980622208308,
+      "mean_method_minus_reference": -0.0020503250379411,
+      "median_method_minus_reference": 0.0,
+      "method_lower": 101,
+      "method_higher": 124,
+      "equal": 27
+    },
+    "relaxation_steps": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": 249.12698412698413,
+      "method_mean": 246.13095238095238,
+      "mean_method_minus_reference": -2.996031746031746,
+      "median_method_minus_reference": 0.0,
+      "method_lower": 25,
+      "method_higher": 29,
+      "equal": 198
+    },
+    "force_max_eV_A": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": 3.3312208020572984,
+      "method_mean": 3.8152399529674375,
+      "mean_method_minus_reference": 0.4840191509101391,
+      "median_method_minus_reference": 6.656038680670495e-07,
+      "method_lower": 119,
+      "method_higher": 133,
+      "equal": 0
+    },
+    "stress_max_GPa": {
+      "pairs": 252,
+      "excluded_requests": 4,
+      "reference_mean": 34.77666226208254,
+      "method_mean": 37.72455775122399,
+      "mean_method_minus_reference": 2.947895489141449,
+      "median_method_minus_reference": -1.305625348502204e-06,
+      "method_lower": 127,
+      "method_higher": 125,
+      "equal": 0
+    }
+  },
+  "label_statuses": {
+    "reference": {
+      "generation_failure": 4,
+      "verified": 76,
+      "not_converged": 99,
+      "invalid_terminal": 77
+    },
+    "method": {
+      "generation_failure": 4,
+      "verified": 72,
+      "not_converged": 101,
+      "invalid_terminal": 79
+    }
+  },
+  "hull_statuses": {
+    "reference": {
+      "input_not_reconstructed": 4,
+      "known": 244,
+      "official_cache_unresolved": 8
+    },
+    "method": {
+      "input_not_reconstructed": 4,
+      "known": 244,
+      "official_cache_unresolved": 8
+    }
+  },
+  "delta_sign": "method minus reference; negative energy, force, stress and steps is lower",
+  "B_difference": "same-composition hull cancels: delta B = method eR - reference eR; absolute means shown are eR",
+  "coverage": "physical paired means exclude missing values; verified means additionally require both terminal verifications",
+  "interpretation": "descriptive fixed-development comparison; teacher feasibility does not imply these outcomes",
+  "endpoint": "native",
+  "comparison_purpose": "final",
+  "provenance": {
+    "reference_eval_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/evaluation",
+    "method_eval_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native-evaluation",
+    "reference_paths_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/native/paths.jsonl",
+    "method_paths_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native/paths.jsonl",
+    "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native-vs-original",
+    "comparison_purpose": "final"
+  },
+  "terminal_protocol": {
+    "model": "CHGNet-0.3.0",
+    "optimizer": "FIRE",
+    "relax_cell": true,
+    "ase_filter": "FrechetCellFilter",
+    "fmax": 0.1,
+    "scalar_pressure": 0.0,
+    "constant_volume": false,
+    "hydrostatic_strain": false,
+    "cell_mask": "all_six",
+    "fire_dt": 0.1,
+    "fire_maxstep": 0.2,
+    "stress_tolerance_GPa": 0.5,
+    "max_steps": 500
+  },
+  "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+}

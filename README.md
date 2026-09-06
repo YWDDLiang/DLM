@@ -2,7 +2,7 @@
 
 C³FD 提供化学动作支持，Typed Llama 生成组成、软计划与物种程序，周期 DLM 生成和修订晶体几何；固定 model494 refiner 单独报告。
 
-最近完整评测40071：**V3 T构造** raw Strict/Meta SUN为 **13/53**，tau800为 **17/111**；匹配V2构造为 **12/44→17/120**，均256请求。V3 G此前为9/61→13/116，V2/V3均未达到目标。当前按用户方向转向K4/K8，固定短接触软惩罚作业**40074**正在运行；[K4/K8实际稳定与失败结构](docs/v3_scientific_audit_20260906/K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)和[唯一候选规则](docs/v3_scientific_audit_20260906/K4_K8_SOFT_CONTACT_CANDIDATE.md)记录了依据。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
+最近完整评测40074：K4短接触软约束 raw Strict/Meta SUN为 **6/56**、tau800为 **20/122**；K8同规则为 **11/68→15/123**，均256请求，均未达同端10%/50%。[完整证据](docs/v3_scientific_audit_20260906/evidence_v3_failure_20260907/CONTACT_EVAL_FINAL_40074.json)与[K4/K8实际稳定和失败结构](docs/v3_scientific_audit_20260906/K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)保留。当前**40076**在评估固定K4/K8等权同态概率混合，真实8前缀/16次模型计算已验收通过，尚无新SUN；[方法与边界](docs/v3_scientific_audit_20260906/K4_K8_EQUAL_MIXTURE_BOUNDED_REVIEW.md)。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
 
 ## 项目入口
 
