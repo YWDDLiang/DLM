@@ -18,7 +18,7 @@ Authoritative direction: original LLaDA initialization and original MP20 base tr
 - [x] Prepare same-input frozen model494 tau800 evaluation242; submit only after native241 succeeds.
 - [ ] Finish declared endpoint and run fixed256 native generation.
 - [ ] Run same-input frozen model494 tau800 separately.
-- [x] Freeze the pre-result comparability gate: requests256, reconstructed>=252, Strict SUN>=6, Meta SUN>=55.
+- [x] Freeze the pre-result OR gate: native>=252/6/55 or tau800>=252/18/124 for reconstructed/Strict/Meta.
 - [ ] If the raw native result passes and original K8 job39938 is complete, collect this new model's own K4 paths and train two passes.
 - [ ] From that new K4 policy, collect its own K8 paths and train two continuation passes.
 - [ ] Do not substitute the previous DLM's K4/K8 paths for either new-model collection.

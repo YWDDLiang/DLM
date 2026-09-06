@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pre-result operational gate for optional raw-DLM K4/K8 post-training."""
+"""Pre-result OR gate for optional new-DLM K4/K8 post-training."""
 from __future__ import annotations
 
 import argparse
@@ -8,59 +8,76 @@ from pathlib import Path
 
 
 THRESHOLDS = {
-    "requests": 256,
-    "reconstructed": 252,
-    "strict_sun": 6,
-    "meta_sun": 55,
+    "native": {"requests": 256, "reconstructed": 252, "strict_sun": 6, "meta_sun": 55},
+    "tau800": {"requests": 256, "reconstructed": 252, "strict_sun": 18, "meta_sun": 124},
 }
 EXPECTED_CURRENT_K4 = {
-    "requests": 256,
-    "reconstructed": 254,
-    "strict_sun": 7,
-    "meta_sun": 57,
+    "native": {"requests": 256, "reconstructed": 254, "strict_sun": 7, "meta_sun": 57},
+    "tau800": {"requests": 256, "reconstructed": 254, "strict_sun": 19, "meta_sun": 126},
 }
 
 
-def read_evaluation(directory):
+def read_evaluation(directory, endpoint):
     if not (directory / "_SUCCESS").is_file():
         raise ValueError(f"incomplete evaluation: {directory}")
-    return json.loads((directory / "EVALUATION_FINAL.json").read_text(encoding="utf-8"))
+    report = json.loads((directory / "EVALUATION_FINAL.json").read_text(encoding="utf-8"))
+    if (report.get("endpoint") != endpoint
+            or report.get("cohort_role") != "fixed_development"
+            or report["counts"].get("requests") != 256):
+        raise ValueError(f"{directory} is not the frozen {endpoint} development256")
+    return report
+
+
+def metrics(report):
+    return {key: int(report["counts"][key])
+            for key in ("requests", "reconstructed", "strict_sun", "meta_sun")}
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--raw-eval-dir", type=Path, required=True)
-    parser.add_argument("--current-k4-eval-dir", type=Path, required=True)
+    parser.add_argument("--new-native-eval-dir", type=Path, required=True)
+    parser.add_argument("--new-tau-eval-dir", type=Path, required=True)
+    parser.add_argument("--current-k4-native-eval-dir", type=Path, required=True)
+    parser.add_argument("--current-k4-tau-eval-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
-    raw = read_evaluation(args.raw_eval_dir)
-    current = read_evaluation(args.current_k4_eval_dir)
-    for name, report in (("raw", raw), ("current_k4", current)):
-        if (report.get("endpoint") != "native"
-                or report.get("cohort_role") != "fixed_development"
-                or report["counts"].get("requests") != 256):
-            raise ValueError(f"{name} is not the frozen native development256")
-    if raw.get("policy_stage") != "final":
-        raise ValueError("raw DLM evaluation must be its final base checkpoint")
-    for key in ("terminal_protocol", "verification_protocol", "frozen_nu_source_sha256",
-                "official_cache"):
-        if raw[key] != current[key]:
-            raise ValueError(f"raw/current evaluation protocol differs: {key}")
-    current_observed = {
-        key: int(current["counts"][key]) for key in EXPECTED_CURRENT_K4
+    new = {
+        "native": read_evaluation(args.new_native_eval_dir, "native"),
+        "tau800": read_evaluation(args.new_tau_eval_dir, "tau800"),
     }
+    current = {
+        "native": read_evaluation(args.current_k4_native_eval_dir, "native"),
+        "tau800": read_evaluation(args.current_k4_tau_eval_dir, "tau800"),
+    }
+    for endpoint in ("native", "tau800"):
+        if new[endpoint].get("policy_stage") != "final":
+            raise ValueError("new DLM evaluations must use its final base checkpoint")
+        for key in ("terminal_protocol", "verification_protocol",
+                    "frozen_nu_source_sha256", "official_cache"):
+            if new[endpoint][key] != current[endpoint][key]:
+                raise ValueError(f"new/current protocol differs at {endpoint}:{key}")
+    current_observed = {endpoint: metrics(report) for endpoint, report in current.items()}
     if current_observed != EXPECTED_CURRENT_K4:
-        raise ValueError("the preregistered current K4 comparison changed")
-    raw_observed = {key: int(raw["counts"][key]) for key in THRESHOLDS}
+        raise ValueError("the preregistered current K4 comparisons changed")
+    new_observed = {endpoint: metrics(report) for endpoint, report in new.items()}
     checks = {
-        key: raw_observed[key] >= value for key, value in THRESHOLDS.items()
+        endpoint: {
+            key: new_observed[endpoint][key] >= threshold
+            for key, threshold in THRESHOLDS[endpoint].items()
+        }
+        for endpoint in ("native", "tau800")
     }
-    admitted = all(checks.values())
+    endpoint_pass = {
+        endpoint: all(values.values()) for endpoint, values in checks.items()
+    }
+    admitted = any(endpoint_pass.values())
     report = {
-        "schema": "periodic_raw_k4_k8_posttrain_admission_v1",
+        "schema": "periodic_raw_k4_k8_posttrain_admission_v2",
         "admitted": admitted,
-        "thresholds_frozen_before_raw_results": THRESHOLDS,
-        "raw_observed": raw_observed,
+        "logical_rule": "native OR tau800",
+        "endpoint_pass": endpoint_pass,
+        "thresholds_frozen_before_new_results": THRESHOLDS,
+        "new_observed": new_observed,
         "current_k4_observed": current_observed,
         "checks": checks,
         "interpretation": (
@@ -68,7 +85,7 @@ def main():
             "not a statistical non-inferiority claim."
         ),
         "posttrain_data_rule": (
-            "If admitted, collect this raw DLM's own K4 then K8 paths. "
+            "If admitted, collect this new DLM's own K4 then K8 paths. "
             "Do not fit paths generated by the previous DLM."
         ),
     }

@@ -71,8 +71,4 @@ for pid in "${pids[@]}"; do wait "$pid"; done
   --comparison-purpose final >"$RUN/compare.out" 2>"$RUN/compare.err"
 test -f "$RUN/evaluation/_SUCCESS"
 test -f "$RUN/comparison/_SUCCESS"
-"$PY" "$CODE/scripts/check_periodic_raw_posttrain_admission.py" \
-  --raw-eval-dir "$RUN/evaluation" \
-  --current-k4-eval-dir "$ROOT/runs/spad_state_eval_method_39910/evaluation" \
-  --output-dir "$RUN/posttrain-admission" >"$RUN/admission.out" 2>"$RUN/admission.err"
 touch "$RUN/_SUCCESS"

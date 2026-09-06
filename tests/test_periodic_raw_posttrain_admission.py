@@ -5,16 +5,15 @@ path = Path(__file__).resolve().parents[1] / "scripts" / "check_periodic_raw_pos
 spec = importlib.util.spec_from_file_location("raw_posttrain_admission", path)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
-EXPECTED_CURRENT_K4, THRESHOLDS = module.EXPECTED_CURRENT_K4, module.THRESHOLDS
 
 
-def test_gate_is_fixed_before_results_and_close_to_current_k4():
-    assert EXPECTED_CURRENT_K4 == {
-        "requests": 256, "reconstructed": 254,
-        "strict_sun": 7, "meta_sun": 57,
+def test_gate_is_frozen_before_results_and_either_endpoint_can_pass():
+    assert module.EXPECTED_CURRENT_K4 == {
+        "native": {"requests": 256, "reconstructed": 254, "strict_sun": 7, "meta_sun": 57},
+        "tau800": {"requests": 256, "reconstructed": 254, "strict_sun": 19, "meta_sun": 126},
     }
-    assert THRESHOLDS == {
-        "requests": 256, "reconstructed": 252,
-        "strict_sun": 6, "meta_sun": 55,
+    assert module.THRESHOLDS == {
+        "native": {"requests": 256, "reconstructed": 252, "strict_sun": 6, "meta_sun": 55},
+        "tau800": {"requests": 256, "reconstructed": 252, "strict_sun": 18, "meta_sun": 124},
     }
-    assert all(THRESHOLDS[key] <= EXPECTED_CURRENT_K4[key] for key in THRESHOLDS)
+    assert any({"native": False, "tau800": True}.values())

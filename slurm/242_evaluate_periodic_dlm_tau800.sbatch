@@ -54,4 +54,10 @@ PAYLOAD="$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))["output
   --comparison-purpose final >"$RUN/compare.out" 2>"$RUN/compare.err"
 test -f "$RUN/evaluation/_SUCCESS"
 test -f "$RUN/comparison/_SUCCESS"
+"$PY" "$CODE/scripts/check_periodic_raw_posttrain_admission.py" \
+  --new-native-eval-dir "$NATIVE/evaluation" \
+  --new-tau-eval-dir "$RUN/evaluation" \
+  --current-k4-native-eval-dir "$ROOT/runs/spad_state_eval_method_39910/evaluation" \
+  --current-k4-tau-eval-dir "$ROOT/runs/spad_state_tau800_39910/evaluation" \
+  --output-dir "$RUN/posttrain-admission" >"$RUN/admission.out" 2>"$RUN/admission.err"
 touch "$RUN/_SUCCESS"
