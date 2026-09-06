@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "scope": "local CPU behavioral checks; final 8B checkpoint sampling/fresh-process CUDA replay not run by this agent",
+  "method": "mixed_token_construction",
+  "training_method": "mixed_geometry_h_p33",
+  "source_sha256": {
+    "src/crystal_dlm/mixed_token_sampling.py": "017b6d7b4a8953cd76d92a3b2df15f621a89c64f1f9755cf35271a5f84620716",
+    "src/scripts/sample_mixed_token_paths.py": "ac54d0eb53e35598be638cfd895d7c77bab91fc2f99ff4c22f004edca708dea0",
+    "tests/test_mixed_token_sampling.py": "62249413fe45eae0a062d0769ce33a12812a5bf13db19f181b97caf316744bae"
+  },
+  "command": "python -B -m pytest tests/test_mixed_token_sampling.py -q",
+  "tests_passed": 13,
+  "test_elapsed_seconds": 2.07,
+  "checks": [
+    "strict mixed final gate before loading, then token_model extraction",
+    "construction matches existing ProgrammedPathSampler exactly",
+    "noncanonical multi-species P, masked-numeric active context and canonical periodic alias",
+    "fresh complete logical-batch scalar replay verifies state, log probability, seeded Gumbel draw, final geometry support",
+    "empty-support row retained with exact live and padding counts",
+    "unattributed batch runtime error retained without retry",
+    "parser failure keeps active preview fields empty and cannot pass acceptance",
+    "seed/round/temperature/logical-cap/layout constraints",
+    "full merge ledger, exact 64-bit JSON seeds, replay JSON and completion marker",
+    "logical batch membership invariant across two/four/six execution workers"
+  ],
+  "cli_help": "PASS",
+  "python_ast": "PASS",
+  "trailing_whitespace": "none",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "torch": "2.8.0+cpu",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "real_model_forwards": 0,
+  "optimizer_steps": 0,
+  "gpu_jobs_submitted": 0,
+  "git_commits_created": 0
+}
