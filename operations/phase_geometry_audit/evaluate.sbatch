@@ -38,4 +38,3 @@ o={"methods":{k:json.loads((r/k/"SUMMARY.json").read_text()) for k in ("k4","k8"
 (r/"SUMMARY.json").write_text(json.dumps(o,indent=2)+"\n")
 PY
 touch "$RUN/_SUCCESS"
-
