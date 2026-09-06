@@ -1,0 +1,333 @@
+{
+  "scope": "Intersection of observed complete construct/cooperative/closure results for both K4 and K8; each method retains all256",
+  "source_sha256": "c8f9e596c1b45410377c6d3fcc37515f99cdcdde878512bb31b88313b84c1f94",
+  "endpoints": {
+    "native": {
+      "verified_strict_sun": {
+        "count": 0,
+        "records": []
+      },
+      "verified_meta_sun": {
+        "count": 1,
+        "records": [
+          {
+            "sample_idx": 96,
+            "group_id": "eval:96",
+            "composition": {
+              "Ca": 1,
+              "Cd": 2,
+              "Nd": 1
+            }
+          }
+        ]
+      },
+      "all_three_verified_known_above_Meta": {
+        "count": 4,
+        "records": [
+          {
+            "sample_idx": 1,
+            "group_id": "eval:1",
+            "composition": {
+              "Pr": 1,
+              "Pu": 1
+            }
+          },
+          {
+            "sample_idx": 112,
+            "group_id": "eval:112",
+            "composition": {
+              "Ce": 1,
+              "Tl": 3
+            }
+          },
+          {
+            "sample_idx": 138,
+            "group_id": "eval:138",
+            "composition": {
+              "F": 2,
+              "I": 2,
+              "Ba": 2
+            }
+          },
+          {
+            "sample_idx": 144,
+            "group_id": "eval:144",
+            "composition": {
+              "Y": 1,
+              "In": 2,
+              "Eu": 1
+            }
+          }
+        ]
+      }
+    },
+    "tau800": {
+      "verified_strict_sun": {
+        "count": 2,
+        "records": [
+          {
+            "sample_idx": 88,
+            "group_id": "eval:88",
+            "composition": {
+              "Al": 1,
+              "Ag": 1,
+              "Lu": 2
+            }
+          },
+          {
+            "sample_idx": 250,
+            "group_id": "eval:250",
+            "composition": {
+              "Ba": 6,
+              "Pt": 2
+            }
+          }
+        ]
+      },
+      "verified_meta_sun": {
+        "count": 18,
+        "records": [
+          {
+            "sample_idx": 4,
+            "group_id": "eval:4",
+            "composition": {
+              "P": 4,
+              "Se": 8,
+              "Ag": 4
+            }
+          },
+          {
+            "sample_idx": 33,
+            "group_id": "eval:33",
+            "composition": {
+              "Na": 1,
+              "Au": 2,
+              "Tl": 1
+            }
+          },
+          {
+            "sample_idx": 66,
+            "group_id": "eval:66",
+            "composition": {
+              "Li": 2,
+              "Sb": 2,
+              "Sm": 2
+            }
+          },
+          {
+            "sample_idx": 68,
+            "group_id": "eval:68",
+            "composition": {
+              "Na": 2,
+              "K": 4,
+              "As": 2
+            }
+          },
+          {
+            "sample_idx": 80,
+            "group_id": "eval:80",
+            "composition": {
+              "Ag": 1,
+              "Ce": 2,
+              "Pt": 1
+            }
+          },
+          {
+            "sample_idx": 82,
+            "group_id": "eval:82",
+            "composition": {
+              "Mg": 1,
+              "Sr": 3
+            }
+          },
+          {
+            "sample_idx": 88,
+            "group_id": "eval:88",
+            "composition": {
+              "Al": 1,
+              "Ag": 1,
+              "Lu": 2
+            }
+          },
+          {
+            "sample_idx": 105,
+            "group_id": "eval:105",
+            "composition": {
+              "Sb": 6,
+              "Dy": 2
+            }
+          },
+          {
+            "sample_idx": 107,
+            "group_id": "eval:107",
+            "composition": {
+              "Cl": 6,
+              "K": 2,
+              "As": 1,
+              "Rb": 1
+            }
+          },
+          {
+            "sample_idx": 135,
+            "group_id": "eval:135",
+            "composition": {
+              "As": 8,
+              "Cd": 2,
+              "Tl": 4
+            }
+          },
+          {
+            "sample_idx": 167,
+            "group_id": "eval:167",
+            "composition": {
+              "Cd": 1,
+              "Er": 1,
+              "Hg": 2
+            }
+          },
+          {
+            "sample_idx": 168,
+            "group_id": "eval:168",
+            "composition": {
+              "Al": 1,
+              "Ga": 1,
+              "Sm": 2
+            }
+          },
+          {
+            "sample_idx": 183,
+            "group_id": "eval:183",
+            "composition": {
+              "Pr": 6,
+              "Hg": 2
+            }
+          },
+          {
+            "sample_idx": 190,
+            "group_id": "eval:190",
+            "composition": {
+              "Cl": 6,
+              "K": 1,
+              "Rb": 2,
+              "Sb": 1
+            }
+          },
+          {
+            "sample_idx": 192,
+            "group_id": "eval:192",
+            "composition": {
+              "Cl": 6,
+              "K": 2,
+              "As": 1,
+              "Cs": 1
+            }
+          },
+          {
+            "sample_idx": 233,
+            "group_id": "eval:233",
+            "composition": {
+              "Zn": 1,
+              "Tm": 2,
+              "Ir": 1
+            }
+          },
+          {
+            "sample_idx": 236,
+            "group_id": "eval:236",
+            "composition": {
+              "Na": 2,
+              "Br": 6,
+              "Th": 1
+            }
+          },
+          {
+            "sample_idx": 250,
+            "group_id": "eval:250",
+            "composition": {
+              "Ba": 6,
+              "Pt": 2
+            }
+          }
+        ]
+      },
+      "all_three_verified_known_above_Meta": {
+        "count": 7,
+        "records": [
+          {
+            "sample_idx": 1,
+            "group_id": "eval:1",
+            "composition": {
+              "Pr": 1,
+              "Pu": 1
+            }
+          },
+          {
+            "sample_idx": 39,
+            "group_id": "eval:39",
+            "composition": {
+              "Si": 2,
+              "As": 1,
+              "Ba": 1,
+              "Tl": 1
+            }
+          },
+          {
+            "sample_idx": 74,
+            "group_id": "eval:74",
+            "composition": {
+              "Cl": 2,
+              "Ca": 1
+            }
+          },
+          {
+            "sample_idx": 139,
+            "group_id": "eval:139",
+            "composition": {
+              "Sc": 1,
+              "Zn": 2,
+              "Sn": 1
+            }
+          },
+          {
+            "sample_idx": 165,
+            "group_id": "eval:165",
+            "composition": {
+              "Sr": 4,
+              "In": 2,
+              "Th": 2
+            }
+          },
+          {
+            "sample_idx": 169,
+            "group_id": "eval:169",
+            "composition": {
+              "P": 4,
+              "Co": 2,
+              "Br": 10,
+              "Hg": 2
+            }
+          },
+          {
+            "sample_idx": 201,
+            "group_id": "eval:201",
+            "composition": {
+              "Ho": 3,
+              "Ir": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "outcome_selection": false,
+  "new_model_forwards": 0,
+  "new_energy_evaluations": 0,
+  "all12_hull_statuses": {
+    "official_cache_unresolved": 8,
+    "official_cache_not_covered": 0,
+    "input_not_reconstructed": {
+      "k4": 2,
+      "k8": 4
+    }
+  }
+}

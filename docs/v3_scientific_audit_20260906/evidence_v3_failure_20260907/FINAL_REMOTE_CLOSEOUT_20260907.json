@@ -1,0 +1,55 @@
+{
+  "observed_at_server_utc": "2026-09-06T22:26:53.559744+00:00",
+  "accepted_runs": {
+    "40064": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "01:29:21"
+    },
+    "40066": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:23:50"
+    },
+    "40069": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:00:12"
+    },
+    "40071": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:30:37"
+    },
+    "40074": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:52:26"
+    },
+    "40076": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:36:46"
+    },
+    "40083": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:31:42"
+    },
+    "40086": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:01:30"
+    },
+    "40088": {
+      "state": "COMPLETED",
+      "exit_code": "0:0",
+      "elapsed": "00:30:05"
+    }
+  },
+  "new_supplement_submissions": [],
+  "last_evaluation_job": "40088",
+  "last_evaluation_sha256": "cefd70bcc73ce4e97dd50b69920641d46014ec4f5d67ffc470f9fa6246d3e673",
+  "joint_target_met": false,
+  "remaining_work": "scheduled Shanghai20260907 07:00 final delivery"
+}

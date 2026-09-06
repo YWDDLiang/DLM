@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**40088合作修复终点对照正在运行；此前V2/V3、contact、等权混合与构造终点都未达到同端10%/50%。** 最新完整40083为K4 raw5/48→tau15/126、K8 raw5/54→tau16/119，均256且无1000资格。40088复用原full paths，所有成功构造请求统一停在coop END，原构造失败保留；不按病例挑阶段。上海Sep7 07:00交付最新和最好实测SUN，06:31为6小时实验窗口末端。
+**本轮实验及逐请求分析已全部完成；没有达到同端10%/50%。** 最后40088为K4 raw8/48→tau18/114、K8 raw10/57→tau15/122，均256，无新1000资格。保留原K4完整循环（tau19/126）；K4短接触的最高Strict为20/122，两个最优值不能合并。[最终结果报告](v3_scientific_audit_20260906/FINAL_SUN_RESULT_20260907.md)已准备，上海Sep7 07:00按约定交付。
 
 统一目录：[全链路审计](v3_scientific_audit_20260906/README.md)。
 
@@ -37,6 +37,8 @@ V2 训练作业 **39993** 已完成，Slurm `COMPLETED 0:0`，用时 01:11:28；
 | K4/K8等权概率混合 / 同开发 256 | 10 / 51 | 18 / 118 |
 | K4构造终点 / 同开发 256 | 5 / 48 | 15 / 126 |
 | K8构造终点 / 同开发 256 | 5 / 54 | 16 / 119 |
+| K4合作修复终点 / 同开发 256 | 8 / 48 | 18 / 114 |
+| K8合作修复终点 / 同开发 256 | 10 / 57 | 15 / 122 |
 | 旧 K8 / 独立条件 1000 | 39 / 244 | 65 / 484 |
 | 旧 K8 / 对应全部 1200 请求 | 47 / 285 | 79 / 570 |
 
@@ -78,7 +80,9 @@ CPU诊断 **40069** 已`COMPLETED 0:0`，8CPU、12秒、无模型/能量调用�
 
 **40086**只读CPU阶段审计已COMPLETED0:0，1:30，0GPU/2CPU/16G，执行2d0dfd96d7f9c9e7f4cef67cfd1742c0348625e6。两方法各256、metadata_errors0、三END与原完整末态tokens精确核对PASS；真实构造失败后阶段记not_executed。有效结构的完整周期最短距均满足原0.5Å硬约束。构造/coop/closure的最短距中位：K4 .926/.9705/.972Å，K8 .9496/1.0337/1.135Å；closure体积逐例不变但改253/254、246/252条末态tokens。这只描述几何，不能证明SUN收益。[真实全量摘要](v3_scientific_audit_20260906/evidence_v3_failure_20260907/PHASE_GEOMETRY_SUMMARY_40086.json)、[提交](v3_scientific_audit_20260906/evidence_v3_failure_20260907/PHASE_GEOMETRY_SUBMISSION.json)。
 
-**40088**已提交并确认RUNNING，6A800/24CPU/440G/2h，执行5d0904d842aa6ca5886632bb534a38b569792b49。48项CPU检查PASS4.37s，源码LF绑定与两batch接口/语法检查通过。固定k4_cooperative_endpoint_v1/k8_cooperative_endpoint_v1：原模型原全256轨迹，统一保留构造+唯一coop的全部draw/rollback，到coop END停止；构造失败不删行，无新DLM/MLIP选择，原R/tau/hull/N-U不变。K4 raw已完成8/48（verified3/27），tau与K8尚待完成；不据partial申请1000。若完整结果有真实26/128，冻结对应方法补评固定独立条件1000及全部1200；若两者都达，K4优先。[固定规格](v3_scientific_audit_20260906/evidence_v3_failure_20260907/k4k8_cooperative/candidate_spec.json)、[冻结清单](v3_scientific_audit_20260906/evidence_v3_failure_20260907/COOPERATIVE_EVAL_LAUNCH_MANIFEST.json)、[唯一提交](v3_scientific_audit_20260906/evidence_v3_failure_20260907/COOPERATIVE_EVAL_SUBMISSION.json)、[源码与48项检查](v3_scientific_audit_20260906/evidence_v3_failure_20260907/k4k8_cooperative/EXECUTION_LF_BINDING.json)。
+**40088**已COMPLETED0:0，用时30:05，6A800/24CPU，执行5d0904d842aa6ca5886632bb534a38b569792b49。48项CPU检查PASS4.37s，源码LF绑定与两batch接口/语法检查通过；各256原轨迹统一保留构造+唯一coop的全部draw/rollback，不删构造失败，无新DLM采样，原R/tau/hull/N-U不变。K4 raw8/48→tau18/114（verified3/27→10/44）；K8 raw10/57→tau15/122（verified2/30→9/49）。根及两method完整_SUCCESS，没有26/128，不触发1000。[完整结果](v3_scientific_audit_20260906/evidence_v3_failure_20260907/COOPERATIVE_EVAL_FINAL_40088.json)、[冻结清单](v3_scientific_audit_20260906/evidence_v3_failure_20260907/COOPERATIVE_EVAL_LAUNCH_MANIFEST.json)、[唯一提交](v3_scientific_audit_20260906/evidence_v3_failure_20260907/COOPERATIVE_EVAL_SUBMISSION.json)。
+
+最后只读阶段比较已通过24原文件SHA、全部256身份和bool计数、R及N-U终点检查，保留3072阶段记录、2048相邻配对，0新NN/MLIP/优化。共同K4/K8三个阶段的六个tau800观察端点，verified Strict SUN只有88/AlAgLu2与250/Ba6Pt2，verified Meta有18；六端均verified+known但未达Meta的有7条，未把unknown或not_converged当可信高能。8条均为official_cache_unresolved、not_covered为0；生成/重建失败另计2/4。[真实CPU核对](v3_scientific_audit_20260906/evidence_v3_failure_20260907/phase_outcomes_40088/REAL_CPU_EXECUTION.json)、[配对结论](v3_scientific_audit_20260906/evidence_v3_failure_20260907/phase_outcomes_40088/CONCLUSIONS.md)、[跨模型共同成功和失败](v3_scientific_audit_20260906/evidence_v3_failure_20260907/phase_outcomes_40088/CROSS_MODEL_COMMON_OBSERVATIONS.json)、[后续保留基线](v3_scientific_audit_20260906/evidence_v3_failure_20260907/FINAL_BASELINE_DECISION_20260907.json)。
 
 重复性诊断已收束：各171个相同有效native结构，实际refiner输入张量与逐图seed全部相同；4次运行共1011有效tau结果也通过rank合并/样本/原子映射，坐标误差0。N=2各5例精确复现，N≥3各166例不精确；归约顺序是有形状证据支持的候选原因，未确认首个分叉算子。有限平移/同元素对应残差只是达到的上界。原生R标签自己也有小幅重复差异，因此小幅SUN变化不能全部归因contact或refiner。[收束结论](v3_scientific_audit_20260906/REFINER_REPEATABILITY_DIAGNOSIS.md)。
 
@@ -86,15 +90,15 @@ CPU诊断 **40069** 已`COMPLETED 0:0`，8CPU、12秒、无模型/能量调用�
 
 数值 **40013** 已`COMPLETED 0:0`，19项CPU检查通过，train-only normalizer使用全部27136来源且无std floor命中；val只应用这个normalizer。[数值与normalizer证据](v3_scientific_audit_20260906/evidence/GEOMETRY_NUMERICS_40013.json)。
 
-## 已授权的接续
+## 本轮完成状态
 
 1. V2 完整终点的固定256 raw/refined及construction→repair评测已完成，保留为对照，不重复提交。
 2. 任一端同时达到 Strict SUN ≥10% 和 Meta SUN ≥50%（256 中至少 26/128），追加同索引 1000 raw/refined，并另报所有 1200 请求。
 3. G有界定位和40071的T/V2构造实验已完整结束，保留其负面与权衡结果，不再扩大G积分器或T参数尝试。
-4. 用户指定V2/V3最终无效后采用K4或K8。实际稳定/失败产物分析已完成，40074固定软惩罚已完整评估且未达标，40076等权混合也已失败，40083构造终点也未达标，最后的40088合作修复终点正在评估；不按ID路由，不根据SUN改系数，不改共同R、hull、N/U或失败分母。必要1000入口已准备，只有真实26/128才登记和启动。总上限仍为6 A800、24 CPU、两个作业；旧自生成能量teacher等暂停路线不自动恢复。
+4. 用户指定V2/V3最终无效后采用K4或K8。实际稳定/失败产物分析已完成，40074固定软惩罚已完整评估且未达标，40076等权混合也已失败，40083构造终点及40088合作修复终点均未达标；不按ID路由，不根据SUN改系数，不改共同R、hull、N/U或失败分母。必要1000入口保留为准备态，本次没有符合条件的方法，未登记或启动新1000。总上限仍为6 A800、24 CPU、两个作业；旧自生成能量teacher等暂停路线不自动恢复。
 5. 根目录入口与142份历史/组件文件迁移、6份完全重复文档去重已完成；唯一历史证据与hash/迁移映射保留。当前收尾新稿引用、状态入口和提交，不再把历史计划当成运行状态。
 
-自动任务`llm-dlm-sun-24h`每十分钟检查，同一任务包含上海07:00最终交付。6小时实证窗口截止Sep7 06:31，07:00报告最新完整及最好实测SUN；异cohort/端点不拼接两个最优值。常规无变化保持安静，必要进展及时告知。详细诊断保存在审计目录。
+自动任务`llm-dlm-sun-24h`保留到上海07:00最终交付；各实证作业均已结束，期间无变化保持安静。6小时实证窗口截止Sep7 06:31，07:00报告最新完整及最好实测SUN；异cohort/端点不拼接两个最优值。常规无变化保持安静，必要进展及时告知。详细诊断保存在审计目录。
 
 论文安排以用户最新方向为准：效果优先且保持LLM+DLM主线。V3若有效，围绕一个科学问题的what/why/how组织2–3项互补贡献；若不足，回到既有有效路径做稳定性改进。P、语言预训练、离散扩散的独立价值没有对应证据时缩小主张，不硬凑贡献。
 

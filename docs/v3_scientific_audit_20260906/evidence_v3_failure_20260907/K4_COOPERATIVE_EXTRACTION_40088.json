@@ -1,0 +1,18 @@
+{
+  "method": "k4_cooperative_endpoint_v1",
+  "requests": 256,
+  "successful": 254,
+  "failed": 2,
+  "cooperative_executed": 254,
+  "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/sample/paths.jsonl",
+  "source_sha256": "bc8c6d32b15ed18adc3f4be133f156c0f615c2203b25cd7cb5425d07f0dbca13",
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+  "failure_reasons": {
+    "construct_empty_support": 2
+  },
+  "finite_named_stage_ablation": true,
+  "per_request_stage_search": false,
+  "model_forwards": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0
+}

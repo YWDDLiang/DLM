@@ -1,0 +1,166 @@
+{
+  "schema": "recorded_named_phase_outcomes_v1",
+  "requests": 256,
+  "methods": {
+    "k4": {
+      "construct": {
+        "native": {
+          "attempts": {
+            "file": "K4_CONSTRUCT_NATIVE_ATTEMPTS.jsonl",
+            "sha256": "824499a4717f6bcb3976435d785252ab6ecf368a4b90791d20af947042d7d080",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k4/native-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K4_CONSTRUCT_NATIVE_EVALUATION.json",
+            "sha256": "bb3999e746fa3f0b50116f3fc7de29ce72d1a92390ac69a3b05a953aaf577baa",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k4/native-evaluation/EVALUATION_FINAL.json"
+          }
+        },
+        "tau800": {
+          "attempts": {
+            "file": "K4_CONSTRUCT_TAU800_ATTEMPTS.jsonl",
+            "sha256": "7d8f5168e2b15609dcd751fb91903033979c7e5bb361df0092308f63c4dad01f",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k4/tau800-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K4_CONSTRUCT_TAU800_EVALUATION.json",
+            "sha256": "76f54631c54235084995ce209ad463779b8e9032d11737f065a7c67cceb83b05",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k4/tau800-evaluation/EVALUATION_FINAL.json"
+          }
+        }
+      },
+      "cooperative": {
+        "native": {
+          "attempts": {
+            "file": "K4_COOPERATIVE_NATIVE_ATTEMPTS.jsonl",
+            "sha256": "fd2a7b1d8e0f66a17845813b462f7f196347f49de19091bfef1b651e06793a22",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k4/native-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K4_COOPERATIVE_NATIVE_EVALUATION.json",
+            "sha256": "c7d3deb4d0fea3d236d4180636dbfe5f74e4c23a3d232390dbb2620819a5998c",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k4/native-evaluation/EVALUATION_FINAL.json"
+          }
+        },
+        "tau800": {
+          "attempts": {
+            "file": "K4_COOPERATIVE_TAU800_ATTEMPTS.jsonl",
+            "sha256": "a533a95b6c55a9c8c7ff77df335664a4b2b847906442886186b168698b9186ed",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k4/tau800-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K4_COOPERATIVE_TAU800_EVALUATION.json",
+            "sha256": "b1dc0cabae07f79448a2c7a0bb0c0498c3451bc36f40c3fba0f6cd38f8bef227",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k4/tau800-evaluation/EVALUATION_FINAL.json"
+          }
+        }
+      },
+      "closure": {
+        "native": {
+          "attempts": {
+            "file": "K4_CLOSURE_NATIVE_ATTEMPTS.jsonl",
+            "sha256": "f2822c789ef8206eba8ab45f711b69db61b3ffc7ae0adac2b03ca77ce73e2200",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K4_CLOSURE_NATIVE_EVALUATION.json",
+            "sha256": "7313ea95313c098dd705b7549bc974567250666c44167b817686a47b371d1644",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/evaluation/EVALUATION_FINAL.json"
+          }
+        },
+        "tau800": {
+          "attempts": {
+            "file": "K4_CLOSURE_TAU800_ATTEMPTS.jsonl",
+            "sha256": "d802b9fe968dcf1303d50878b556e9838b7e24706f42a4cbf81cb5a927c512f5",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K4_CLOSURE_TAU800_EVALUATION.json",
+            "sha256": "6f6ff26fd9ec18156cb42211387f8b761f70a25d575bdc6052cec609fe14ace0",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/evaluation/EVALUATION_FINAL.json"
+          }
+        }
+      }
+    },
+    "k8": {
+      "construct": {
+        "native": {
+          "attempts": {
+            "file": "K8_CONSTRUCT_NATIVE_ATTEMPTS.jsonl",
+            "sha256": "bf2444b4ffdcce44eecbfe16a80d5d0262a5144129691fa67191acb515b1695d",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/native-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K8_CONSTRUCT_NATIVE_EVALUATION.json",
+            "sha256": "efe3ce5ba43f632ad8c09c2c73b1213be50c72eb426ba0b25599ac09f61232d3",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/native-evaluation/EVALUATION_FINAL.json"
+          }
+        },
+        "tau800": {
+          "attempts": {
+            "file": "K8_CONSTRUCT_TAU800_ATTEMPTS.jsonl",
+            "sha256": "d9372befd5e96f5468f6def82b9a4e3283ea796af66101621abdf73c544fbfe6",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/tau800-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K8_CONSTRUCT_TAU800_EVALUATION.json",
+            "sha256": "117b41f77162abbbfc4a3cd8fe1fcf2d9ce5136789a239a8f9b434e57f4d167e",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/tau800-evaluation/EVALUATION_FINAL.json"
+          }
+        }
+      },
+      "cooperative": {
+        "native": {
+          "attempts": {
+            "file": "K8_COOPERATIVE_NATIVE_ATTEMPTS.jsonl",
+            "sha256": "81ec0ad48e221e31dd3d05845103815078e6c27ad556bcfbf177856bfb4f4491",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k8/native-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K8_COOPERATIVE_NATIVE_EVALUATION.json",
+            "sha256": "732f7a630c20e869e78706affc8a6b3578c525094c288989c8b7f86ae051d32c",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k8/native-evaluation/EVALUATION_FINAL.json"
+          }
+        },
+        "tau800": {
+          "attempts": {
+            "file": "K8_COOPERATIVE_TAU800_ATTEMPTS.jsonl",
+            "sha256": "c126187b8ef4d93fe07b782a5bf761cab41a42f2741926f7adb14172993841e9",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k8/tau800-evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K8_COOPERATIVE_TAU800_EVALUATION.json",
+            "sha256": "602ed1ef710eca3c0eb92e6a95222b97e61e1fb8845802883cd8785eaa649422",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088/k8/tau800-evaluation/EVALUATION_FINAL.json"
+          }
+        }
+      },
+      "closure": {
+        "native": {
+          "attempts": {
+            "file": "K8_CLOSURE_NATIVE_ATTEMPTS.jsonl",
+            "sha256": "9699de09c3db11827c9514a67425fbb943e21b615b6a2bbad9c28fd443343d25",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K8_CLOSURE_NATIVE_EVALUATION.json",
+            "sha256": "e636b39923a4c723ccf55758fd9bcb324342c5917fb7ccc085985ad0419fde45",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/evaluation/EVALUATION_FINAL.json"
+          }
+        },
+        "tau800": {
+          "attempts": {
+            "file": "K8_CLOSURE_TAU800_ATTEMPTS.jsonl",
+            "sha256": "2bd263477d145a89148f6be375cbdcce4d4f7bbe6b7885e0002805144ff64552",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/evaluation/attempt_results.jsonl"
+          },
+          "evaluation": {
+            "file": "K8_CLOSURE_TAU800_EVALUATION.json",
+            "sha256": "778fc1715a352a516ca601c63b308e7193dd82e1fb4cc995c1ec1d4960af84f1",
+            "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/evaluation/EVALUATION_FINAL.json"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "PHASE_GEOMETRY_K4_CASES_40086.jsonl": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/phase_geometry_20260907/run_40086/k4/per_request.jsonl",
+    "sha256": "6f563ad02821e3d69256a0ba83410bdf4b36ebe0c883d1a65add8e0ba180d7b7",
+    "bytes": 2897272,
+    "requests": 256
+  },
+  "PHASE_GEOMETRY_K8_CASES_40086.jsonl": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/phase_geometry_20260907/run_40086/k8/per_request.jsonl",
+    "sha256": "23f0b852bc2b8654aff610fbe25e0a34b8bcf00529013ab2ee4c25b97ec0a0a1",
+    "bytes": 2884676,
+    "requests": 256
+  }
+}

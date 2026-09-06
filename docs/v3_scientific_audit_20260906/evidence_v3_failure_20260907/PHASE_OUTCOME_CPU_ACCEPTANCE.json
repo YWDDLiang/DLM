@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "scope": "synthetic complete12-cell/3072-row CPU fixture; actual full manifest not yet run",
+  "tests": 2,
+  "elapsed_seconds": 0.7,
+  "source_sha256": {
+    "scripts/compare_legacy_phase_outcomes.py": "04581788422e74cb13b152a72171375d2211bff13867c045c293841d0a69c2d4",
+    "tests/test_legacy_phase_outcomes.py": "99e37246aeaa4773706d74bbd578924db10699d6a345b33220355ab119b7d53d"
+  },
+  "checks": [
+    "SHA and256 typed identities",
+    "original bool counts and S/NU/SUN/verified relation consistency",
+    "verified-known flips distinct from verification/NU/unknown/generation changes",
+    "not_converged/unknown excluded from trusted high energy",
+    "3072 outcome plus2048 adjacent rows and CSV/JSONL/report output",
+    "SHA/identity/count mismatch rejection",
+    "NU retained, geometry auxiliary only",
+    "official unresolved/not-covered hull separated from input-not-reconstructed and other unavailability",
+    "novelty_uniqueness_endpoint protocol equality",
+    "common trusted above-Meta uses original meta_stable=False and preserves actual energies",
+    "same upstream tokens with S/verified differences distinguished from NU-only changes, including cohort U representative changes"
+  ],
+  "python_ast": "PASS",
+  "cli_help": "PASS",
+  "model_forwards": 0,
+  "MLIP_calls": 0,
+  "optimizer_steps": 0,
+  "new_candidates": 0,
+  "SSH_or_GPU_submissions": 0
+}

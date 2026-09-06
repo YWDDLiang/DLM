@@ -1,6 +1,6 @@
 # 全链路科学审计与 V3 研究
 
-2026-09-07（上海）更新。**40083构造终点已完整结束：K4 raw5/48→tau15/126、K8 raw5/54→tau16/119，均256且未达同端26/128。** V2/V3、固定contact与等权混合此前也未达标。40086只读阶段重建全512通过；40088合作修复终点对照已运行，K4 raw8/48、其余待完成。上海07:00交付最新与最好实测结果。[当前状态](../CURRENT_STATE.md)、[构造完整结果](evidence_v3_failure_20260907/CONSTRUCTION_EVAL_FINAL_40083.json)、[真实阶段几何](evidence_v3_failure_20260907/PHASE_GEOMETRY_SUMMARY_40086.json)、[K4/K8稳定与失败结构](K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)、[细化重复性诊断](REFINER_REPEATABILITY_DIAGNOSIS.md)。
+2026-09-07（上海）更新。**本轮完整实测均未达到同端26/128。** 最后40088为K4 raw8/48→tau18/114、K8 raw10/57→tau15/122；保留原K4完整循环（tau19/126），另报最高Strict的K4短接触20/122，不拼接。全部256请求、失败记账和共同口径保留，12格逐请求阶段比较已核对完成。[最终结果报告](FINAL_SUN_RESULT_20260907.md)、[完整14组SUN快照](evidence_v3_failure_20260907/SUN_SNAPSHOT_AFTER_40088.md)、[稳定/失败病例与阶段归因](evidence_v3_failure_20260907/phase_outcomes_40088/CONCLUSIONS.md)、[当前状态](../CURRENT_STATE.md)。按约定上海07:00交付最终结果。
 
 本目录覆盖完整C³FD/Llama/soft/P→DLM→repair/refiner→物理/N-U/hull/统计、近期变更、历史成功失败、外部晶体生成机制及文档清理。先读 [整合报告](FINAL_AUDIT_REPORT.md) 和 [当前状态](../CURRENT_STATE.md)。
 

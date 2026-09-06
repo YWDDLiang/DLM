@@ -1,0 +1,106 @@
+{
+  "counts": {
+    "reconstructed": 252,
+    "native_execution_success": 252,
+    "endpoint_execution_success": 252,
+    "novel": 216,
+    "unique_representative": 250,
+    "novel_unique": 216,
+    "terminal_verified": 94,
+    "strict_stable": 22,
+    "meta_stable": 154,
+    "strict_sun": 15,
+    "meta_sun": 122,
+    "verified_strict_stable": 12,
+    "verified_meta_stable": 61,
+    "verified_strict_sun": 9,
+    "verified_meta_sun": 49,
+    "requests": 256
+  },
+  "endpoint": "tau800",
+  "cohort_role": "fixed_development",
+  "policy_stage": "final",
+  "verification_protocol": {
+    "fresh_terminal_energy": true,
+    "periodic_coordinate_wrap": true,
+    "rigid_fractional_shift": [
+      0.137,
+      0.271,
+      0.419
+    ],
+    "energy_tolerance_eV_atom": 0.001
+  },
+  "terminal_protocol": {
+    "model": "CHGNet-0.3.0",
+    "optimizer": "FIRE",
+    "relax_cell": true,
+    "ase_filter": "FrechetCellFilter",
+    "fmax": 0.1,
+    "scalar_pressure": 0.0,
+    "constant_volume": false,
+    "hydrostatic_strain": false,
+    "cell_mask": "all_six",
+    "fire_dt": 0.1,
+    "fire_maxstep": 0.2,
+    "stress_tolerance_GPa": 0.5,
+    "max_steps": 500
+  },
+  "main_stability_criterion": "retained terminal-energy threshold",
+  "verified_subset_adds": "optimizer stop, force/stress, geometry and consistent-energy checks",
+  "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+  "strict_sun_percent": 5.859375,
+  "meta_sun_percent": 47.65625,
+  "verified_strict_sun_percent": 3.515625,
+  "verified_meta_sun_percent": 19.140625,
+  "strictly_exceeds_10_and_50": false,
+  "verified_subset_strictly_exceeds_10_and_50": false,
+  "raw_energy_eV_atom": {
+    "count": 252,
+    "mean": -5.451200945036752,
+    "median": -5.480330467224121,
+    "minimum": -11.986994743347168,
+    "maximum": -1.6186416149139404
+  },
+  "verified_gap_eV_atom": {
+    "count": 94,
+    "mean": 0.06043846049207322,
+    "median": 0.021789073944091797,
+    "minimum": -2.384185791015625e-07,
+    "maximum": 1.0583322048187256
+  },
+  "verified_terminal_eV_atom": {
+    "count": 94,
+    "mean": -4.882179194308342,
+    "median": -4.766163349151611,
+    "minimum": -11.990793228149414,
+    "maximum": -1.6354669332504272
+  },
+  "raw_force_max_eV_A": {
+    "count": 252,
+    "mean": 1.035727594775462,
+    "median": 0.39384467862025274,
+    "minimum": 0.0008761615077771691,
+    "maximum": 14.744460936604632
+  },
+  "raw_stress_max_GPa": {
+    "count": 252,
+    "mean": 4.3436234132165,
+    "median": 3.2026654481887817,
+    "minimum": 0.06207181513309479,
+    "maximum": 26.93108367919922
+  },
+  "label_statuses": {
+    "generation_failure": 4,
+    "verified": 94,
+    "not_converged": 158
+  },
+  "hull_statuses": {
+    "input_not_reconstructed": 4,
+    "known": 244,
+    "official_cache_unresolved": 8
+  },
+  "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b",
+  "official_cache": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_basin_closure_official_20260904_v1/official_mp_cache",
+  "new_official_query": false,
+  "historical_protocol_comparison": "new common relaxation protocol with verification reported separately; historical values are not relabeled"
+}

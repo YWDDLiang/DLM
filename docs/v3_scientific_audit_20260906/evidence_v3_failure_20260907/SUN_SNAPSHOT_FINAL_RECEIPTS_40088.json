@@ -1,0 +1,10 @@
+{
+  "SUN_SNAPSHOT_AFTER_40088.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/snapshots/20260906T220050Z/SUN_SNAPSHOT.json",
+    "sha256": "6d208936ac51670cee43c4a41854f040161aeea6ea03d643dfe36a079b966dd1"
+  },
+  "SUN_SNAPSHOT_AFTER_40088.md": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/snapshots/20260906T220050Z/SUN_SNAPSHOT.md",
+    "sha256": "2abe882bc2c3fcfada951ea3b9411616faab26f957f5f100bcea8fb74c5b6720"
+  }
+}

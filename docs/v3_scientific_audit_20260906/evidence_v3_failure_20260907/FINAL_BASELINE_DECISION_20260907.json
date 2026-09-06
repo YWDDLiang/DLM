@@ -1,0 +1,78 @@
+{
+  "purpose": "Baseline retained for subsequent work after the time-bounded evaluated candidates failed the joint target",
+  "method": "original_K4_full_cycle",
+  "policy": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+    "files_sha256": {
+      "README.md": "994978b0352fcdadef1d24a249cd7ff663b07334b3a13d6a8a54997f1003f973",
+      "adapter_model.safetensors": "84f2ee269617dc2c820cc57513f166a5738d4d7a8bf115afb2057ca1b8cea5a6",
+      "adapter_config.json": "26dbbb718e27827bf476143272da58f6999be1351cad38ff92a194c99f495f71",
+      "periodic_state_config.json": "d79d4a18dcb8970fc53ecd011dae3615efeff3a8993de3a8955fb1350ab8caf7",
+      "periodic_state.pt": "ac215460707bb419841a827ef157aa62418e4eb553aac5b8502cbe72bb0eca71",
+      "chat_template.jinja": "b48c47f6443892716176eb200bf4ef108f64e06ca26ed0fa8ebc0a4b3992fcb2",
+      "tokenizer_config.json": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+      "special_tokens_map.json": "ab123ae27cd63c425c706a51bde5a34090f8f5fbf3b3533e5423fd80a17e5979",
+      "tokenizer.json": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+    }
+  },
+  "training_final": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/TRAIN_FINAL.json",
+    "sha256": "6b59241add85c8df584f0222e5b35f552d0373264fb73d600d4d34cf228399e7"
+  },
+  "sampling_phases": {
+    "construct": true,
+    "cooperative": true,
+    "closure": true
+  },
+  "runtime_temperature": 0.7,
+  "candidates_per_condition": 1,
+  "development_requests": 256,
+  "development_observed": {
+    "native": {
+      "reconstructed": 254,
+      "native_execution_success": 254,
+      "endpoint_execution_success": 254,
+      "novel": 253,
+      "unique_representative": 253,
+      "novel_unique": 252,
+      "terminal_verified": 61,
+      "strict_stable": 8,
+      "meta_stable": 58,
+      "strict_sun": 7,
+      "meta_sun": 57,
+      "verified_strict_stable": 3,
+      "verified_meta_stable": 30,
+      "verified_strict_sun": 3,
+      "verified_meta_sun": 30,
+      "requests": 256
+    },
+    "tau800": {
+      "reconstructed": 254,
+      "native_execution_success": 254,
+      "endpoint_execution_success": 254,
+      "novel": 217,
+      "unique_representative": 252,
+      "novel_unique": 217,
+      "terminal_verified": 100,
+      "strict_stable": 28,
+      "meta_stable": 160,
+      "strict_sun": 19,
+      "meta_sun": 126,
+      "verified_strict_stable": 11,
+      "verified_meta_stable": 68,
+      "verified_strict_sun": 9,
+      "verified_meta_sun": 53,
+      "requests": 256
+    }
+  },
+  "development_report_sha256": {
+    "native": "7313ea95313c098dd705b7549bc974567250666c44167b817686a47b371d1644",
+    "tau800": "6f6ff26fd9ec18156cb42211387f8b761f70a25d575bdc6052cec609fe14ace0"
+  },
+  "joint_target_met": false,
+  "qualified_for_new_1000": false,
+  "independent_K4_evaluation_completed": false,
+  "reason": "Original K4 tau800 dominates both of its uniform truncated endpoints; the contact variant trades a single headline Strict gain for lower Meta and has no verified Strict SUN gain.",
+  "selection_is_development_evidence": true,
+  "created_at_utc": "2026-09-06T22:19:09.433304+00:00"
+}

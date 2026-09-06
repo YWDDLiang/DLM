@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "real_cpu_runs": 1,
+  "command": "python -B scripts/compare_legacy_phase_outcomes.py --input-manifest docs\\v3_scientific_audit_20260906\\evidence_v3_failure_20260907\\phase_outcome_inputs_40088\\INPUTS.json --output-dir docs\\v3_scientific_audit_20260906\\evidence_v3_failure_20260907\\phase_outcomes_40088",
+  "source_script_sha256": "04581788422e74cb13b152a72171375d2211bff13867c045c293841d0a69c2d4",
+  "input_manifest_sha256": "a56c443037b309e1ddec44cf4d553246c8fc6be787db8b61b706ef097b0302db",
+  "referenced_outcome_files_SHA_checked": 24,
+  "cells": 12,
+  "requests_per_cell": 256,
+  "outcome_rows": 3072,
+  "adjacent_rows": 2048,
+  "auxiliary_geometry_status": "bound_auxiliary_only",
+  "all_original_bool_counts_verified": true,
+  "all_phase_identities_bound": true,
+  "N_U_recomputed": false,
+  "new_model_forwards": 0,
+  "MLIP_calls": 0,
+  "optimizer_steps": 0,
+  "GPU_or_SSH_calls": 0,
+  "new_candidates": 0,
+  "all_cells_below_joint_26_128": true,
+  "output_sha256": {
+    "SUMMARY.json": "19ddc7a430b29f0634b908bc39cec113f4129b430eec1ce3dab680a7adf75142",
+    "all_outcomes.jsonl": "345fcc8b15fe2de8d4d4dd4eec32cfca9e013b8bae638cbe5c899690a5a78b6a",
+    "all_outcomes.csv": "433de9c688e9975aa3b68e2469b304350693d568774d4c65d68a5f23fb94e04c",
+    "adjacent_changes.jsonl": "d4013b87b9bd7dbae3e5574350e63e62d9c0739d2f0cd22ef5c523a51f09e7c6",
+    "adjacent_changes.csv": "ffc16944b24fe46b292abce3f0d1582ec1527e4814de379bd1cf5badb5eb8fe9",
+    "COMMON_VERIFIED_IDS.json": "c8f9e596c1b45410377c6d3fcc37515f99cdcdde878512bb31b88313b84c1f94",
+    "REPORT.md": "94fc663e9b72f7f49b6fa20c17e467d253d6ed7e88ddb4daea2e5e86188b8bc2",
+    "CONCLUSIONS.md": "a10be936d3aa3a2f24be3582eced269683b5d2d09113a71fa9297cca253b1130"
+  }
+}
