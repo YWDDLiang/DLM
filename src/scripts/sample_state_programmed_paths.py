@@ -45,6 +45,7 @@ def parse_args():
     p.add_argument("--full-cell-repair", action="store_true")
     p.add_argument("--short-contact-spec", type=Path)
     p.add_argument("--legacy-layout-world-size", type=int)
+    p.add_argument("--mixture-peer-checkpoint", type=Path)
     return p.parse_args()
 
 
@@ -101,6 +102,12 @@ def merge(args):
         report.update(short_contact_policy=ContactSpec.load(args.short_contact_spec).metadata(),
                       legacy_layout_world_size=args.legacy_layout_world_size,
                       effective_sampling_layout_world_size=args.sampling_layout_world_size or args.legacy_layout_world_size)
+    if getattr(args,"mixture_peer_checkpoint",None):
+        report.update(probability_mixture={"schema":"k4k8_equal_same_state_probability_mixture_v1",
+                      "checkpoints":[str(args.checkpoint_path),str(args.mixture_peer_checkpoint)],"weights":[.5,.5],
+                      "temperature":.7,"same_state":True,"contact":False},
+                      effective_sampling_layout_world_size=args.sampling_layout_world_size or args.legacy_layout_world_size,
+                      component_model_forward_calls=[sum(row.get("mixture_counted_forward_calls",[0,0])[i] for row in records) for i in range(2)])
     if getattr(args, "repair_roots_jsonl", None):
         report.update(path_mode="self_repair_support_check", diagnostic_only=True,
                       repair_roots_jsonl=[str(p) for p in args.repair_roots_jsonl],
@@ -112,7 +119,7 @@ def merge(args):
 
 
 def make_sampler(model, tokenizer, constraints, compiled, seeds, temperature, contact_spec=None,
-                 *, probe_only=False, collect_vectors=False):
+                 *, probe_only=False, collect_vectors=False, mixture_peer_model=None):
     from crystal_dlm.fixed_slot import MASK_TOKEN_ID
     from crystal_dlm.programmed_path_runtime import ProgrammedPathSampler
     from crystal_dlm.r5_dynamic_length import exact_dynamic_schema_constraints
@@ -122,6 +129,12 @@ def make_sampler(model, tokenizer, constraints, compiled, seeds, temperature, co
         from crystal_dlm.short_contact_sampling import ShortContactProgrammedPathSampler
         sampler_type = ShortContactProgrammedPathSampler
         extra = dict(contact_spec=contact_spec, probe_only=probe_only, collect_vectors=collect_vectors)
+    if mixture_peer_model is not None:
+        if contact_spec is not None:
+            raise ValueError("probability mixture cannot be combined with contact tilt")
+        from crystal_dlm.probability_mixture_sampling import ProbabilityMixtureProgrammedPathSampler
+        sampler_type=ProbabilityMixtureProgrammedPathSampler
+        extra=dict(peer_model=mixture_peer_model)
     return sampler_type(
         model, prompt_length=len(first["prompt_token_ids"]), gen_length=len(first["initial_body"]),
         mask_id=MASK_TOKEN_ID, programs=[c["program"] for c in compiled],
@@ -135,6 +148,7 @@ def replay(args, model, tokenizer, constraints, device):
     from crystal_dlm.fixed_slot import MASK_TOKEN_ID
     from crystal_dlm.programmed_path_runtime import replay_scalar_states
     maximum, total, state_effect = 0., 0, 0.
+    mixture_calls=[0,0]
     rows = read_jsonl(args.replay_jsonl)
     for record in rows:
         compiled = compile_condition(record, tokenizer, mask_id=MASK_TOKEN_ID, purpose=args.purpose)
@@ -144,8 +158,16 @@ def replay(args, model, tokenizer, constraints, device):
         contact_spec = getattr(args, "_contact_settings", None)
         if contact_spec is not None and record["trace"].get("short_contact_policy", {}).get("spec_sha256") != contact_spec.spec_sha256:
             raise ValueError("replay record differs from the frozen short-contact specification")
+        if getattr(args,"mixture_peer_checkpoint",None):
+            recorded=record.get("probability_mixture",{})
+            if (recorded.get("schema")!="k4k8_equal_same_state_probability_mixture_v1" or recorded.get("weights")!=[.5,.5]
+                    or recorded.get("temperature")!=.7 or recorded.get("contact") is not False
+                    or [str(Path(p).resolve()) for p in recorded.get("checkpoints",[])] !=
+                       [str(Path(args.checkpoint_path).resolve()),str(Path(args.mixture_peer_checkpoint).resolve())]):
+                raise ValueError("replay record differs from the fixed K4/K8 mixture identity")
         sampler = make_sampler(model, tokenizer, constraints, [compiled], [record["sampling_seed"]],
-                               record["trace"]["temperature"], contact_spec)
+                               record["trace"]["temperature"], contact_spec,
+                               mixture_peer_model=getattr(args,"_mixture_model",None))
         for state in replay_scalar_states(record["trace"]):
             x = torch.tensor([prefix + state["input_body"]], device=device)
             old = torch.tensor([prefix + state["old_body"]], device=device)
@@ -168,12 +190,18 @@ def replay(args, model, tokenizer, constraints, device):
             maximum, total = max(maximum, difference), total + 1
         if trace_terminal_body(record["trace"]) != record["final_body_token_ids"]:
             raise RuntimeError("trace replay does not reconstruct the deployed endpoint")
+        if getattr(args,"mixture_peer_checkpoint",None):
+            mixture_calls=[a+b for a,b in zip(mixture_calls,sampler.component_forward_calls)]
     if total == 0 or state_effect == 0:
         raise RuntimeError("probe did not exercise the trained periodic state input")
     report = {"kind": "fresh_process_base_lora_conditioner_replay", "paths": len(rows),
               "all_recorded_decisions_checked": total, "maximum_logp_error": maximum,
               "trained_state_residual_l1": state_effect, "checkpoint": args.checkpoint_path,
               "scope": "all decisions of the recorded engineering probe paths"}
+    if getattr(args,"mixture_peer_checkpoint",None):
+        report.update(component_model_forward_calls=mixture_calls,
+                      probability_mixture={"schema":"k4k8_equal_same_state_probability_mixture_v1","weights":[.5,.5],
+                        "checkpoints":[str(args.checkpoint_path),str(args.mixture_peer_checkpoint)],"temperature":.7,"contact":False})
     args.output_dir.mkdir(parents=True, exist_ok=False)
     (args.output_dir / "REPLAY.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     (args.output_dir / "_SUCCESS").touch()
@@ -184,6 +212,14 @@ def main():
     args = parse_args()
     if args.legacy_layout_world_size is not None and (args.legacy_layout_world_size < 1 or args.sampling_layout_world_size is not None):
         raise ValueError("choose one positive explicit or legacy logical layout")
+    if args.mixture_peer_checkpoint:
+        if args.short_contact_spec or args.purpose!="evaluation" or args.reference_closure or args.repair_roots_jsonl or args.full_cell_repair or args.temperature!=.7:
+            raise ValueError("equal K4/K8 mixture retains original evaluation phases and has no contact tilt")
+        from crystal_dlm.short_contact_sampling import validate_legacy_contact_policy
+        left=validate_legacy_contact_policy(args.checkpoint_path)
+        right=validate_legacy_contact_policy(args.mixture_peer_checkpoint)
+        if left.get("collection_round")!=0 or right.get("collection_round")!=1:
+            raise ValueError("mixture components must be ordered completed K4 then K8")
     if args.short_contact_spec:
         if args.purpose != "evaluation" or args.reference_closure or args.repair_roots_jsonl:
             raise ValueError("short-contact deployment is an evaluation-only legacy K4/K8 candidate")
@@ -222,6 +258,10 @@ def main():
         model = UnconditionedReferenceModel(base).requires_grad_(False).eval()
     else:
         model, tokenizer = load_path_model(args.model_path, args.checkpoint_path, device)
+    if args.mixture_peer_checkpoint:
+        args._mixture_model, peer_tokenizer=load_path_model(args.model_path,args.mixture_peer_checkpoint,device)
+        if tokenizer.get_vocab()!=peer_tokenizer.get_vocab():
+            raise ValueError("mixture tokenizer vocabularies differ")
     constraints = build_dynamic_lightweight_constraints(
         tokenizer, duplicate_coordinate_mask=True, lattice_volume_mask=True, min_lattice_rad=1e-4,
         canonicalize_periodic_alias=True, pbc_min_distance_mask=True, pbc_min_distance_A=.5, pbc_image_radius=2,
@@ -235,6 +275,8 @@ def main():
         if effective_layout is None and ordinal % args.world_size != rank:
             continue
         c = compile_condition(row, tokenizer, mask_id=MASK_TOKEN_ID, purpose=args.purpose)
+        if args.mixture_peer_checkpoint and peer_tokenizer(c["prompt"],add_special_tokens=False)["input_ids"]!=c["prompt_token_ids"]:
+            raise ValueError("mixture tokenizers encode a condition differently")
         if repair_only:
             from crystal_dlm.self_repair_data import install_repair_initial_body
             c = install_repair_initial_body(c, tokenizer)
@@ -250,7 +292,7 @@ def main():
             seeds = [path_seed(args.seed, c["record"]["group_id"], args.collection_round, j) for _, j, c in batch]
             x = torch.tensor([c["prompt_token_ids"] + c["initial_body"] for c in compiled], device=device)
             sampler = make_sampler(model, tokenizer, constraints, compiled, seeds, args.temperature,
-                                   getattr(args, "_contact_settings", None))
+                                   getattr(args, "_contact_settings", None),mixture_peer_model=getattr(args,"_mixture_model",None))
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 if repair_only and not compiled[0]["record"]["repair_parent_success"]:
                     if any(c["record"]["repair_parent_success"] for c in compiled):
@@ -301,6 +343,12 @@ def main():
                     record.update(short_contact_policy=args._contact_settings.metadata(),
                                   legacy_layout_world_size=args.legacy_layout_world_size,
                                   effective_sampling_layout_world_size=effective_layout)
+                if args.mixture_peer_checkpoint:
+                    record.update(probability_mixture={"schema":"k4k8_equal_same_state_probability_mixture_v1",
+                        "checkpoints":[str(args.checkpoint_path),str(args.mixture_peer_checkpoint)],"weights":[.5,.5],
+                        "temperature":.7,"same_state":True,"contact":False},
+                        effective_sampling_layout_world_size=effective_layout,
+                        mixture_counted_forward_calls=list(sampler.component_forward_calls) if row_index==0 else [0,0])
                 handle.write(json.dumps(record, ensure_ascii=False) + "\n")
                 completed += 1
                 successful += int(trace["success"])

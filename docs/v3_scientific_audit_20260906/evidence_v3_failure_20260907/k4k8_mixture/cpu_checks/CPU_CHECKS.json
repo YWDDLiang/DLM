@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "checks": [
+    "identical components reproduce their normalized probabilities",
+    "arithmetic probability mixture differs from averaged logits",
+    "original BF16 and FP32 sentinels stay outside support",
+    "unequal support, NaN and empty component reject without fallback",
+    "actual original same-seed Gumbel keeps a shared component winner",
+    "mixture may choose a third action when component winners differ",
+    "original Gumbel and selected-action trace use the same mixed law"
+  ],
+  "checks_passed": 7,
+  "actual_gumbel_random_cases": 100,
+  "shared_component_winners": 40,
+  "real_model_forwards": 0,
+  "GPU_tested": false,
+  "schema": "k4k8_equal_same_state_probability_mixture_v1"
+}

@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "scope": "local CPU implementation checks; no actual dual-model CUDA sampling by this agent",
+  "schema": "k4k8_equal_same_state_probability_mixture_v1",
+  "weights": [
+    0.5,
+    0.5
+  ],
+  "temperature": 0.7,
+  "test_command": "python -B -m pytest tests/test_probability_mixture_sampling.py tests/test_short_contact_sampling.py tests/test_mixed_token_sampling.py -q",
+  "passed_tests": 29,
+  "elapsed_seconds": 2.46,
+  "root_reported_broader_check": {
+    "passed": 35,
+    "elapsed_seconds": 3.44,
+    "includes": "state runtime tests"
+  },
+  "source_sha256": {
+    "src/crystal_dlm/probability_mixture_sampling.py": "b0660995896749cac5c0f5ba9cd9ec9d58b6c2f7658428c4b9c60ec98ce89528",
+    "src/scripts/sample_state_programmed_paths.py": "26aa71599b07ed4b226a9d205e3a9f5dd549bcc9c5fd4740057998c0e8487fe7",
+    "src/scripts/sample_probability_mixture_paths.py": "0caf35b2d5c03a67920619586dc2ac959ce67fc6cbc84a846feeb2fa3b8c9f7c",
+    "tests/test_probability_mixture_sampling.py": "4987a400708113f9808f1a95b6058b64aa928bbc98125f17b172414baef4ca24"
+  },
+  "source_LF_sha256": {
+    "src/crystal_dlm/probability_mixture_sampling.py": "b0660995896749cac5c0f5ba9cd9ec9d58b6c2f7658428c4b9c60ec98ce89528",
+    "src/scripts/sample_state_programmed_paths.py": "26aa71599b07ed4b226a9d205e3a9f5dd549bcc9c5fd4740057998c0e8487fe7",
+    "src/scripts/sample_probability_mixture_paths.py": "0caf35b2d5c03a67920619586dc2ac959ce67fc6cbc84a846feeb2fa3b8c9f7c",
+    "tests/test_probability_mixture_sampling.py": "4987a400708113f9808f1a95b6058b64aa928bbc98125f17b172414baef4ca24"
+  },
+  "checks": [
+    "probabilities normalized per component before equal mixture; invariant to per-component logit offsets",
+    "BF16/FP32/FP64 support/sentinel preservation and same-policy Gumbel coupling",
+    "mismatched support/empty/NaN/positive infinity rejected without component fallback",
+    "actual sampler passes identical current/old/P/phase/active context to both models",
+    "FP64 canvas view backed by B*V active values; intermediate full logits released",
+    "original construct/cooperative/closure, no contact or training",
+    "fresh scalar replay recomputes dual-model mixture log probability",
+    "one nonfinite peer makes action unavailable, never switches to sole healthy component",
+    "default-off contact and T call-site regression"
+  ],
+  "python_ast": "PASS",
+  "trailing_whitespace": "none",
+  "real_model_forwards_by_this_agent": 0,
+  "new_training_steps": 0,
+  "MLIP_calls": 0,
+  "GPU_or_SSH_submissions": 0,
+  "git_commits_created": 0,
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "torch": "2.8.0+cpu",
+  "platform": "Windows-11-10.0.26200-SP0"
+}

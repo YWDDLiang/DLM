@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "files": {
+    "src/crystal_dlm/probability_mixture_sampling.py": {
+      "cpu_test_worktree_sha256": "b0660995896749cac5c0f5ba9cd9ec9d58b6c2f7658428c4b9c60ec98ce89528",
+      "execution_lf_sha256": "b0660995896749cac5c0f5ba9cd9ec9d58b6c2f7658428c4b9c60ec98ce89528",
+      "ast_equal": true
+    },
+    "src/scripts/sample_probability_mixture_paths.py": {
+      "cpu_test_worktree_sha256": "0caf35b2d5c03a67920619586dc2ac959ce67fc6cbc84a846feeb2fa3b8c9f7c",
+      "execution_lf_sha256": "0caf35b2d5c03a67920619586dc2ac959ce67fc6cbc84a846feeb2fa3b8c9f7c",
+      "ast_equal": true
+    },
+    "src/scripts/sample_state_programmed_paths.py": {
+      "cpu_test_worktree_sha256": "26aa71599b07ed4b226a9d205e3a9f5dd549bcc9c5fd4740057998c0e8487fe7",
+      "execution_lf_sha256": "26aa71599b07ed4b226a9d205e3a9f5dd549bcc9c5fd4740057998c0e8487fe7",
+      "ast_equal": true
+    },
+    "tests/test_probability_mixture_sampling.py": {
+      "cpu_test_worktree_sha256": "4987a400708113f9808f1a95b6058b64aa928bbc98125f17b172414baef4ca24",
+      "execution_lf_sha256": "4987a400708113f9808f1a95b6058b64aa928bbc98125f17b172414baef4ca24",
+      "ast_equal": true
+    },
+    "docs/v3_scientific_audit_20260906/evidence_v3_failure_20260907/k4k8_mixture/probe_same_state_mixture.py": {
+      "cpu_test_worktree_sha256": "3a2c969cd828865f9b13ecbf89bf976b5b276c1de21cc9aec33c89e1e74195ec",
+      "execution_lf_sha256": "3a2c969cd828865f9b13ecbf89bf976b5b276c1de21cc9aec33c89e1e74195ec",
+      "ast_equal": true
+    }
+  },
+  "pytest_passed": 35,
+  "pytest_elapsed_seconds": 3.44,
+  "pytest_files": [
+    "tests/test_probability_mixture_sampling.py",
+    "tests/test_short_contact_sampling.py",
+    "tests/test_mixed_token_sampling.py",
+    "tests/test_state_programmed_runtime.py"
+  ],
+  "bash_syntax": [
+    "operations/probability_mixture/evaluate_mixture.sbatch",
+    "operations/probability_mixture/evaluate_supplement.sbatch"
+  ],
+  "real_gpu_tested": false,
+  "created_at_utc": "2026-09-06T19:14:44.411379+00:00"
+}

@@ -54,6 +54,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--candidate-root", type=Path, required=True)
     p.add_argument("--contact-run", type=Path, action="append", default=[])
+    p.add_argument("--mixture-run", type=Path, action="append", default=[])
+    p.add_argument("--mixture-supplement", type=Path, action="append", default=[])
     p.add_argument("--output-dir", type=Path, required=True)
     args = p.parse_args()
     root = args.candidate_root
@@ -73,6 +75,9 @@ def main():
         for method in ("k4", "k8"):
             entries.append((method.upper()+" short-contact v1 ("+run.name+")",
                             run/method/"native-evaluation", run/method/"tau800-evaluation", True))
+    for run in args.mixture_run:
+        entries.append(("K4/K8 equal probability mixture ("+run.name+")",
+                        run/"native-evaluation", run/"tau800-evaluation", True))
     rows, common = [], None
     for method, native, refined, candidate in entries:
         row = {"method": method, "candidate": candidate,
@@ -91,6 +96,12 @@ def main():
         independent.append({"method": "K8 original", "requests": n,
             "raw": measure(run/"native-evaluation-hull-complete", n, "native", conditional=n == 1000),
             "tau800": measure(run/"tau800-evaluation-hull-complete", n, "tau800", conditional=n == 1000)})
+    mixture_supplements = []
+    for run in args.mixture_supplement:
+        for n in (1000, 1200):
+            mixture_supplements.append({"method": "K4/K8 equal probability mixture ("+run.name+")", "requests": n,
+                "raw": measure(run/"native-evaluation", n, "native", conditional=n == 1000),
+                "tau800": measure(run/"tau800-evaluation", n, "tau800", conditional=n == 1000)})
     completed = [row for row in rows if row["complete"] and row["candidate"]]
     report = {"created_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
               "development_requests_per_method": 256, "development": rows,
@@ -99,6 +110,7 @@ def main():
               "qualified_complete_endpoints": [{"method": row["method"], "endpoint": name}
                   for row in rows if row["complete"] for name in ("raw", "tau800") if row[name]["joint_target_met"]],
               "independent_original_k8": independent, "combined_best_metrics_across_methods": False,
+              "independent_mixture": mixture_supplements,
               "score_or_selection_mutations": 0}
     args.output_dir.mkdir(parents=True, exist_ok=False)
     (args.output_dir/"SUN_SNAPSHOT.json").write_text(json.dumps(report, indent=2)+"\n")
@@ -113,6 +125,10 @@ def main():
     lines += ["", "Original K8 independent cohorts are separate from development:", "",
               "| Requests | Raw | Tau800 |", "|---:|---:|---:|"]
     lines.extend(f"| {row['requests']} | {cell(row['raw'])} | {cell(row['tau800'])} |" for row in independent)
+    if mixture_supplements:
+        lines += ["", "Frozen mixture on the same independent cohort:", "",
+                  "| Method | Requests | Raw | Tau800 |", "|---|---:|---:|---:|"]
+        lines.extend(f"| {row['method']} | {row['requests']} | {cell(row['raw'])} | {cell(row['tau800'])} |" for row in mixture_supplements)
     lines += ["", "Source paths, original report hashes, verified counts, incomplete endpoints and target checks are in SUN_SNAPSHOT.json.",
               "No metric from one method is combined with another method. No evaluation file or selection is changed.", ""]
     (args.output_dir/"SUN_SNAPSHOT.md").write_text("\n".join(lines))
