@@ -14,8 +14,10 @@ Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 
 - [x] Cancel and invalidate incorrect K4 warm-start39934; do not resume239.
 - [x] Submit raw training240 on two A800: job39937, started from original LLaDA with original MP20 only.
 - [ ] Check initialization, first ten updates, gradients, throughput and coverage during training.
-- [ ] Finish declared endpoint and evaluate fixed256 native generation.
-- [ ] Evaluate same inputs with frozen model494 tau800 separately.
+- [x] Prepare fixed256 native evaluation241 with matched reference comparison; submit only after39937 succeeds.
+- [x] Prepare same-input frozen model494 tau800 evaluation242; submit only after native241 succeeds.
+- [ ] Finish declared endpoint and run fixed256 native generation.
+- [ ] Run same-input frozen model494 tau800 separately.
 - [ ] Keep original K4/K8 monitoring active without mixing its data into this model.
 - [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.
 
