@@ -1,6 +1,6 @@
 # New DLM execution checklist
 
-Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 weights/data. Priority: new DLM, original K4/K8, diffusion joint work, then self-improvement. New model2A800/8CPU; original mainline4A800/16CPU.
+Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 weights/data. Active work is limited to the new DLM and original K4/K8 continuation. Diffusion joint work and self-improvement are paused by later user instruction. New model2A800/8CPU; original mainline4A800/16CPU.
 
 - [x] Retain Planner, species program, exact canvas and geometric legal logits.
 - [x] Implement periodic coordinate Fourier and ordered lattice numerical logits.
@@ -18,8 +18,8 @@ Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 
 - [x] Prepare same-input frozen model494 tau800 evaluation242; submit only after native241 succeeds.
 - [ ] Finish declared endpoint and run fixed256 native generation.
 - [ ] Run same-input frozen model494 tau800 separately.
-- [x] Prepare self-generated data job243: raw DLM on1024 frozen train Planner conditions, K4 requests, common parent/quantized-target verification, all failures retained.
-- [ ] After raw native evaluation, collect new model's own errors with243; do not read old K4/K8 paths, weights or labels.
+- [x] Preserve the unsubmitted self-generated data draft243 behind an explicit reauthorization gate.
+- [ ] PAUSED: do not collect own errors or start any self-improvement job.
 - [ ] Train an explicitly separate self-repair continuation only from admitted own-error pairs, retaining original-MP20 anchors.
 - [ ] Keep original K4/K8 monitoring active without mixing its data into this model.
 - [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.

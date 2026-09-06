@@ -10,6 +10,10 @@
 #SBATCH --output=periodic-self-data-%j.out
 #SBATCH --error=periodic-self-data-%j.err
 set -Eeuo pipefail
+if [[ "${PERIODIC_RAW_SELF_IMPROVEMENT_APPROVED:-no}" != yes ]]; then
+  printf '%s\n' "Self-improvement is paused by user instruction; explicit reauthorization is required." >&2
+  exit 2
+fi
 ROOT="${H1A2_CANDIDATE_ROOT:?}"
 SOURCE="${PERIODIC_REPAIR_SOURCE:?}"
 TRAIN_RUN="${PERIODIC_RAW_TRAIN_RUN:?}"
