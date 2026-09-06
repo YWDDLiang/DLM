@@ -12,7 +12,8 @@ Authoritative direction: original LLaDA initialization and original MP20 base tr
 - [x] Implement two full epochs/two views,6784 updates, final checkpoint, fixed validation monitor.
 - [x] Keep full-source schema CE and separately gated legal CE with conflict ledger.
 - [x] Cancel and invalidate incorrect K4 warm-start39934; do not resume239.
-- [x] Submit raw training240 on two A800: job39937, started from original LLaDA with original MP20 only.
+- [x] Replace checkpoint-free job39937 at step822 with job39942; preserve39937 logs but use no model artifact.
+- [x] Run39942 on two A800 with microbatch2/global16 and a recoverable epoch-one checkpoint at step3392.
 - [ ] Check initialization, first ten updates, gradients, throughput and coverage during training.
 - [x] Prepare fixed256 native evaluation241 with matched reference comparison; submit only after39937 succeeds.
 - [x] Prepare same-input frozen model494 tau800 evaluation242; submit only after native241 succeeds.
@@ -29,6 +30,4 @@ Authoritative direction: original LLaDA initialization and original MP20 base tr
 
 Design: RAW_LLADA_DESIGN.md. Older warm-start documents are historical and superseded by this checklist.
 
-Latest observed healthy startup: steps1–3 losses5.8872/6.0712/5.9611, finite clipped gradients, peak memory16.03GiB/GPU. Per user instruction, let39937 run naturally and check again only for failure, stage completion, or before consuming its checkpoint.
-
-09:45 one-time ETA check: step768/6784 at2498.97s, latest loss3.7853 and peak16.10GiB/GPU. Estimated training completion15:03–15:10. The scheduler denied extending its six-hour limit, so completion is close to the hard limit and carries a small timeout risk. Do not interrupt/restart; act only on the completion or timeout marker.
+Historical39937 startup was numerically healthy but its final-only checkpointing and six-hour limit created a concrete loss risk. It was superseded at step822. Job39942 requests seven hours; estimated epoch-one checkpoint11:30–12:00 and final training13:00–13:45. Check its first healthy throughput once, then return to marker-only monitoring.
