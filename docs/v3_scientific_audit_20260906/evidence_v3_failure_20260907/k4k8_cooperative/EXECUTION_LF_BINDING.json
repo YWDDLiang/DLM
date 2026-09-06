@@ -1,0 +1,26 @@
+{
+  "files": {
+    "scripts/extract_legacy_cooperative_endpoint.py": {
+      "reviewed_sha256": "44a85fe30fc0cc22100400d35f18e52bcd71f8154740dee8bb88ce2a32816942",
+      "execution_lf_sha256": "44a85fe30fc0cc22100400d35f18e52bcd71f8154740dee8bb88ce2a32816942"
+    },
+    "src/scripts/sample_state_programmed_paths.py": {
+      "reviewed_sha256": "506546df13e8b10f534093f69efa13e9fc0617742b8dffa2c10886781a47f14c",
+      "execution_lf_sha256": "506546df13e8b10f534093f69efa13e9fc0617742b8dffa2c10886781a47f14c"
+    },
+    "src/scripts/sample_legacy_cooperative_paths.py": {
+      "reviewed_sha256": "2d56d04e414b9daf2b011b0d8f2d5dce7a009439c3a23f47b88e103475e48376",
+      "execution_lf_sha256": "2d56d04e414b9daf2b011b0d8f2d5dce7a009439c3a23f47b88e103475e48376"
+    },
+    "tests/test_legacy_cooperative_extraction.py": {
+      "reviewed_sha256": "94edd88bb3e89af15a17129283aafa37fb261fcf8d57bdf8bed1a226bc3a63a7",
+      "execution_lf_sha256": "94edd88bb3e89af15a17129283aafa37fb261fcf8d57bdf8bed1a226bc3a63a7"
+    }
+  },
+  "operation": "CRLF to LF only; root final test before commit",
+  "root_post_freeze_cpu_check": {
+    "passed_tests": 48,
+    "elapsed_seconds": 4.37,
+    "command": "pytest -q tests/test_legacy_cooperative_extraction.py tests/test_legacy_construction_extraction.py tests/test_legacy_phase_geometry.py tests/test_state_programmed_runtime.py tests/test_probability_mixture_sampling.py tests/test_short_contact_sampling.py tests/test_mixed_token_sampling.py"
+  }
+}

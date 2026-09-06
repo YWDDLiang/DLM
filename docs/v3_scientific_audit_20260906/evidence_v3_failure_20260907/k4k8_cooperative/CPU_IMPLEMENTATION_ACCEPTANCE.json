@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "scope": "local CPU fixtures and default-off regressions; no actual GPU candidate launched by this agent",
+  "test_command": "python -B -m pytest tests/test_legacy_cooperative_extraction.py tests/test_legacy_construction_extraction.py tests/test_legacy_phase_geometry.py tests/test_probability_mixture_sampling.py tests/test_short_contact_sampling.py tests/test_mixed_token_sampling.py -q",
+  "passed_tests": 42,
+  "elapsed_seconds": 3.37,
+  "source_sha256": {
+    "scripts/extract_legacy_cooperative_endpoint.py": "44a85fe30fc0cc22100400d35f18e52bcd71f8154740dee8bb88ce2a32816942",
+    "src/scripts/sample_state_programmed_paths.py": "506546df13e8b10f534093f69efa13e9fc0617742b8dffa2c10886781a47f14c",
+    "src/scripts/sample_legacy_cooperative_paths.py": "2d56d04e414b9daf2b011b0d8f2d5dce7a009439c3a23f47b88e103475e48376",
+    "tests/test_legacy_cooperative_extraction.py": "94edd88bb3e89af15a17129283aafa37fb261fcf8d57bdf8bed1a226bc3a63a7"
+  },
+  "candidate_spec_sha256": "c718f729c90f8d28519d783dc8645015b1ef9dcda3341b40d5d780d142cc7147",
+  "method_ids": [
+    "k4_cooperative_endpoint_v1",
+    "k8_cooperative_endpoint_v1"
+  ],
+  "checks": [
+    "exact construct+cooperative prefix excludes later closure/failure",
+    "cooperative no_support plus full rollback yields the original supported endpoint",
+    "constructor failures remain failed without invented cooperative state",
+    "missing/duplicate cooperative boundaries fail explicitly",
+    "cooperative END schema/support violation stops extraction",
+    "live flag defaults off, conflicts and temperature rejected",
+    "fresh construct+cooperative replay retains original scalar probabilities and periodic state check",
+    "256/1200 extraction count/source SHA interface; live seed/layout remain explicit"
+  ],
+  "cli_help": "both PASS",
+  "python_ast": "PASS",
+  "wrapper_review": "development extraction and supplement K8 cached1200/K4 live1200 interfaces match root wrappers",
+  "extraction_model_forwards": 0,
+  "real_model_forwards_by_agent": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0,
+  "GPU_or_SSH_submissions": 0,
+  "git_commits_created": 0,
+  "line_endings": "Source normalized to LF before root final 48-test check and git archive"
+}
