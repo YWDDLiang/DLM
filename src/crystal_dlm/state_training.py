@@ -55,6 +55,8 @@ def materialize_state_batch(
             torch.tensor([REPAIR_TASK_IDS[row["phase"]] for row in examples], device=device),
             torch.tensor([float(row.get("numeric_noise_level", -1.))
                           for row in examples], device=device),
+            torch.tensor([row.get("numeric_noise_components", [-1., -1., -1.])
+                          for row in examples], dtype=torch.float32, device=device),
         ),
         "positions": torch.tensor(positions, device=device),
         "targets": torch.tensor(targets, device=device), "examples": examples,

@@ -31,6 +31,9 @@ class CrystalStateContext:
     active_token_mask: torch.Tensor
     task_ids: torch.Tensor | None = None
     numeric_noise_level: torch.Tensor | None = None
+    # V2: declared log-volume, log-shape and Cartesian noise parameters.
+    # None (legacy runtime) or an all-minus-one row means all three are unknown.
+    numeric_noise_components: torch.Tensor | None = None
 
 
 REPAIR_TASK_IDS = {"construct": 0, "cooperative": 1, "closure": 2,

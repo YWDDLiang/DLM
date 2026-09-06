@@ -1,33 +1,33 @@
-# New DLM execution checklist
+# 当前执行清单：原任务完成后运行 V2
 
-Authoritative direction: original LLaDA initialization and original MP20 base training. Active work is the new DLM, original K4/K8 continuation, and a conditional new-DLM K4/K8 post-training stage. New model2A800/8CPU; original mainline4A800/16CPU.
+2026-09-06 用户最新授权覆盖此前暂停交接及条件式新版 K4/K8 安排。本轮新版仅使用原始 LLaDA 与原始 MP20；不提交 243、245、246，不恢复连续联合 diffusion。当前旧 K4/K8 流程独立完成，其路径和 teacher 不进入 V2。
 
-- [x] Retain Planner, species program, exact canvas and geometric legal logits.
-- [x] Implement periodic coordinate Fourier and ordered lattice numerical logits.
-- [x] Add actual periodic geometry inside Transformer attention.
-- [x] Add explicit mask/task/noise and prevent hidden-GT geometry leakage.
-- [x] Implement fresh LoRA and trainable new input/output token rows, compact save/reload.
-- [x] Implement original-MP20 dense construction and structured repair views.
-- [x] Reuse measured r8/alpha32/dropout.05, global16, max382, LR5e-5 to1e-5, warmup100/stage, weight decay0.
-- [x] Implement two full epochs/two views,6784 updates, final checkpoint, fixed validation monitor.
-- [x] Keep full-source schema CE and separately gated legal CE with conflict ledger.
-- [x] Cancel and invalidate incorrect K4 warm-start39934; do not resume239.
-- [x] Replace checkpoint-free job39937 at step822 with job39942; preserve39937 logs but use no model artifact.
-- [x] Run39942 on two A800 with microbatch2/global16 and a recoverable epoch-one checkpoint at step3392.
-- [ ] Check initialization, first ten updates, gradients, throughput and coverage during training.
-- [x] Prepare fixed256 native evaluation241 with matched reference comparison; submit only after39937 succeeds.
-- [x] Prepare same-input frozen model494 tau800 evaluation242; submit only after native241 succeeds.
-- [ ] Finish declared endpoint and run fixed256 native generation.
-- [ ] Run same-input frozen model494 tau800 separately.
-- [x] Freeze the pre-result OR gate: native>=252/6/55 or tau800>=252/18/124 for reconstructed/Strict/Meta.
-- [ ] If the raw native result passes and original K8 job39938 is complete, collect this new model's own K4 paths and train two passes.
-- [ ] From that new K4 policy, collect its own K8 paths and train two continuation passes.
-- [ ] Do not substitute the previous DLM's K4/K8 paths for either new-model collection.
-- [x] Prepare generic two-GPU K4/K8 collection245 and path-training246 entries, with own-policy checkpoints and original-MP20 anchors.
-- [ ] DEFERRED: do not modify, submit, or run245/246 until both241/242 evaluations finish and the native-OR-tau800 gate passes.
-- [ ] Keep original K4/K8 monitoring active without mixing its data into this model.
-- [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.
+- [x] 完整核实旧 C³FD→Typed Llama→species pointer→编译程序→DLM 顺序控制。
+- [x] 修订 loss、状态、噪声、几何 attention 和论文表述；见 [正式设计](LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md)。
+- [x] 原 K8 train39938、native39945、tau80039948 完成，两个 matched comparison 完成。
+- [x] 记录混合结果：native SUN11/66；tau SUN17/123，低于 K4 的19/126；共同 verified A 未改善。
+- [x] 按预登记最终 K8 step7977 冻结方法；独立1200 Planner39949 已提交，种子27。
+- [ ] 39949 完成后接续233：raw39942仍占2卡时用4卡/16CPU，全部空闲则6卡/24CPU；写 K8_MAIN_EVALUATION_JOB 指针。
+- [ ] 原 raw-v1 39942 自然完成6784updates，不恢复错误39934/39937。
+- [ ] raw-v1 顺序运行241 native、242 tau800；分别写 RAW_BASE_NATIVE_EVAL_JOB 和 RAW_BASE_TAU800_EVAL_JOB。
+- [ ] 完成原独立主评测：源序 parser-only first1000、1200总分母、raw/tau同索引；失败不补样本。
 
-Design: RAW_LLADA_DESIGN.md. Older warm-start documents are historical and superseded by this checklist.
+V2 本地准备：
 
-Historical39937 startup was numerically healthy but its final-only checkpointing and six-hour limit created a concrete loss risk. It was superseded at step822. Job39942 requests seven hours; estimated epoch-one checkpoint11:30–12:00 and final training13:00–13:45. Check its first healthy throughput once, then return to marker-only monitoring.
+- [x] 原始来源的 frozen Planner 预测与明确 fallback；保留全27136/9047来源、原clean answer/hash、逐源条件证据。
+- [x] 精确合法 prefix CE、dense typed CE、对象归一化与逆mask包含概率，T=.7、无平滑。
+- [x] log-SPD体积/形状与Cartesian扰动；量化后支持核验、重试与fallback日志。
+- [x] 真正 head-specific/layer-shared 周期attention，包含六晶格槽↔site交互及known/noise gate。
+- [x] 原始LLaDA初始化、新token行、LoRA及V2保存/加载；拒绝中间checkpoint作为推理政策。
+- [x] 六卡global24/4524updates、完整view覆盖、padding校正、正确validation计数、梯度与state audit。
+- [x] 249训练、250 native/tau及同trace construction→repair诊断入口。
+- [x] 冻结原两worker采样批次后分派六worker，保持配对membership。
+- [x] 已完成88项集成CPU回归检查及两个Slurm入口bash语法检查；真实六卡DDP尚未运行。
+- [ ] 完成固定代码包、尾部分析报告和最后manifest审查，标记ready并发布。
+- [ ] 所有八项前置阶段正式完成、项目额度六卡全部释放后，queue helper一次性提交249。
+- [ ] 249完整成功后同版本提交250；native/tau、原参考/raw-v1/repair净作用分开报告。
+- [ ] 任一效果低于预期，完成支持/状态/梯度/物理/尾部/N-U/终态验证分析，再考虑必要修改。
+
+调度最多6张A800、24CPU、2个项目jobs。新版按 [V2_LAUNCH_MANIFEST.json](V2_LAUNCH_MANIFEST.json) 校验阶段完整性与实现版本，不仅看squeue是否为空。正常运行只查完成/失败/正式checkpoint，不反复读取普通loss。旧18:49/19:19节点不撤销新增排队授权，也不擅自延长已运行作业walltime。
+
+V2当前保存optimizer/scheduler状态，但没有断点续训入口；不得把中间checkpoint直接投入评测，或声称可自动从任意中断位置恢复。

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-from collections import defaultdict
 import json
 import os
 from pathlib import Path
@@ -18,6 +17,7 @@ from crystal_dlm.programmed_path_data import (
     compile_condition, load_path_model, path_seed, read_jsonl,
     trace_summary, trace_terminal_body, validate_completed_body,
 )
+from crystal_dlm.sampling_layout import sampling_batches
 
 
 def parse_args():
@@ -36,6 +36,8 @@ def parse_args():
     p.add_argument("--reference-closure", action="store_true")
     p.add_argument("--temperature", type=float, default=.7)
     p.add_argument("--world-size", type=int, default=int(os.environ.get("WORLD_SIZE", 1)))
+    p.add_argument("--sampling-layout-world-size", type=int,
+                   help="Freeze reference batch membership before redistributing whole batches to workers")
     p.add_argument("--merge-only", action="store_true")
     p.add_argument("--replay-jsonl", type=Path)
     p.add_argument("--replay-tolerance", type=float, default=1e-6)
@@ -87,6 +89,8 @@ def merge(args):
               "condition_start": args.condition_start, "condition_stop": args.condition_stop,
               "collection_round": args.collection_round, "checkpoint": args.checkpoint_path,
               "seed": args.seed, "purpose": args.purpose, "inference_mlip": False,
+              "execution_world_size": args.world_size,
+              "sampling_layout_world_size": args.sampling_layout_world_size,
               "reference_closure": args.reference_closure,
               "full_cell_repair": args.full_cell_repair,
               "outcome_selection": False, "failures_retained": True}
@@ -200,78 +204,78 @@ def main():
     if args.replay_jsonl:
         replay(args, model, tokenizer, constraints, device)
         return
-    buckets = defaultdict(list)
+    scheduled_items = []
     for ordinal, row in conditions_for_run(args):
-        if ordinal % args.world_size != rank:
+        if args.sampling_layout_world_size is None and ordinal % args.world_size != rank:
             continue
         c = compile_condition(row, tokenizer, mask_id=MASK_TOKEN_ID, purpose=args.purpose)
         if repair_only:
             from crystal_dlm.self_repair_data import install_repair_initial_body
             c = install_repair_initial_body(c, tokenizer)
         for j in range(args.candidates):
-            buckets[(c["program"].num_atoms, len(c["prompt_token_ids"]))].append((ordinal, j, c))
+            scheduled_items.append((ordinal, j, c))
     args.output_dir.mkdir(parents=True, exist_ok=True)
     started, completed, successful = time.monotonic(), 0, 0
     with (args.output_dir / f"records.rank{rank}.jsonl").open("x", encoding="utf-8") as handle:
-        for key in sorted(buckets):
-            items = buckets[key]
-            for offset in range(0, len(items), args.batch_size):
-                batch = items[offset:offset + args.batch_size]
-                compiled = [c for _, _, c in batch]
-                seeds = [path_seed(args.seed, c["record"]["group_id"], args.collection_round, j) for _, j, c in batch]
-                x = torch.tensor([c["prompt_token_ids"] + c["initial_body"] for c in compiled], device=device)
-                sampler = make_sampler(model, tokenizer, constraints, compiled, seeds, args.temperature)
-                with torch.autocast("cuda", dtype=torch.bfloat16):
-                    if repair_only and not compiled[0]["record"]["repair_parent_success"]:
-                        if any(c["record"]["repair_parent_success"] for c in compiled):
-                            raise ValueError("failed roots must not be mixed with live repair roots")
-                        result = x
-                        traces = [{"schema": "programmed_crystal_attempt_path_v1",
-                                   "initial_body": c["initial_body"], "mask_id": MASK_TOKEN_ID,
-                                   "temperature": args.temperature, "element_order": list(c["program"].element_order),
-                                   "events": [], "success": False, "failure": "self_repair_parent_unsuccessful"}
-                                  for c in compiled]
-                    else:
-                        result, traces = sampler.run(x, torch.ones_like(x), construct=not repair_only,
-                                                     cooperative=not args.reference_closure and not hasattr(model, "raw_initialization"),
-                                                     closure=not args.reference_closure and not hasattr(model, "raw_initialization"),
-                                                     full_cell_repair=args.full_cell_repair)
-                    reference_logs = [None] * len(batch)
-                    if args.reference_closure:
-                        from crystal_dlm.programmed_path_reference import close_reference
-                        result, reference_logs = close_reference(model, result, traces,
-                            programs=[c["program"] for c in compiled], seeds=seeds, prompt_length=sampler.prompt_length,
-                            attention_mask=torch.ones_like(x), allowed=sampler.allowed_ids, constraints=constraints,
-                            temperature=args.temperature)
-                for row_index, (ordinal, candidate, c) in enumerate(batch):
-                    body_ids = result[row_index, len(c["prompt_token_ids"]):].tolist()
-                    trace = traces[row_index]
-                    if not args.reference_closure and trace_terminal_body(trace) != body_ids:
-                        raise RuntimeError("recorded attempted trace does not reconstruct endpoint")
-                    body = tokenizer.decode(body_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
-                    if trace["success"]:
-                        validate_completed_body(body, c)
-                    record = {**c["record"], "prompt": c["prompt"], "prompt_token_ids": c["prompt_token_ids"],
-                              "condition_ordinal": ordinal, "candidate_index": candidate,
-                              "trajectory_id": f"{c['record']['group_id']}:{args.collection_round}:{candidate}",
-                              "collection_round": args.collection_round, "sampling_seed": seeds[row_index],
-                              "sampling_batch_size": len(batch),
-                              "num_atoms": c["program"].num_atoms, "checkpoint": args.checkpoint_path,
-                              "success": trace["success"], "body": body, "final_body_token_ids": body_ids,
-                              "trace": trace, "trace_summary": trace_summary(trace),
-                              "trace_scope": "predictor_only_legacy_revision_ledger" if args.reference_closure else "full_attempted_path",
-                              "legacy_reference_closure": reference_logs[row_index]}
-                    if repair_only:
-                        from crystal_dlm.self_repair_data import repair_net_change
-                        record.update(path_mode="self_repair_support_check", diagnostic_only=True,
-                                      trace_scope="full_attempted_self_repair",
-                                      **repair_net_change(trace["initial_body"], body_ids))
-                    handle.write(json.dumps(record, ensure_ascii=False) + "\n")
-                    completed += 1
-                    successful += int(trace["success"])
-                handle.flush()
-                print(json.dumps({"rank": rank, "completed": completed, "successful": successful,
-                                  "elapsed_seconds": time.monotonic() - started}), flush=True)
+        for batch in sampling_batches(scheduled_items, batch_size=args.batch_size, rank=rank,
+                                      world_size=args.world_size,
+                                      layout_world_size=args.sampling_layout_world_size):
+            compiled = [c for _, _, c in batch]
+            seeds = [path_seed(args.seed, c["record"]["group_id"], args.collection_round, j) for _, j, c in batch]
+            x = torch.tensor([c["prompt_token_ids"] + c["initial_body"] for c in compiled], device=device)
+            sampler = make_sampler(model, tokenizer, constraints, compiled, seeds, args.temperature)
+            with torch.autocast("cuda", dtype=torch.bfloat16):
+                if repair_only and not compiled[0]["record"]["repair_parent_success"]:
+                    if any(c["record"]["repair_parent_success"] for c in compiled):
+                        raise ValueError("failed roots must not be mixed with live repair roots")
+                    result = x
+                    traces = [{"schema": "programmed_crystal_attempt_path_v1",
+                               "initial_body": c["initial_body"], "mask_id": MASK_TOKEN_ID,
+                               "temperature": args.temperature, "element_order": list(c["program"].element_order),
+                               "events": [], "success": False, "failure": "self_repair_parent_unsuccessful"}
+                              for c in compiled]
+                else:
+                    result, traces = sampler.run(x, torch.ones_like(x), construct=not repair_only,
+                                                 cooperative=not args.reference_closure and not hasattr(model, "raw_initialization"),
+                                                 closure=not args.reference_closure and not hasattr(model, "raw_initialization"),
+                                                 full_cell_repair=args.full_cell_repair)
+                reference_logs = [None] * len(batch)
+                if args.reference_closure:
+                    from crystal_dlm.programmed_path_reference import close_reference
+                    result, reference_logs = close_reference(model, result, traces,
+                        programs=[c["program"] for c in compiled], seeds=seeds, prompt_length=sampler.prompt_length,
+                        attention_mask=torch.ones_like(x), allowed=sampler.allowed_ids, constraints=constraints,
+                        temperature=args.temperature)
+            for row_index, (ordinal, candidate, c) in enumerate(batch):
+                body_ids = result[row_index, len(c["prompt_token_ids"]):].tolist()
+                trace = traces[row_index]
+                if not args.reference_closure and trace_terminal_body(trace) != body_ids:
+                    raise RuntimeError("recorded attempted trace does not reconstruct endpoint")
+                body = tokenizer.decode(body_ids, skip_special_tokens=False, clean_up_tokenization_spaces=False)
+                if trace["success"]:
+                    validate_completed_body(body, c)
+                record = {**c["record"], "prompt": c["prompt"], "prompt_token_ids": c["prompt_token_ids"],
+                          "condition_ordinal": ordinal, "candidate_index": candidate,
+                          "trajectory_id": f"{c['record']['group_id']}:{args.collection_round}:{candidate}",
+                          "collection_round": args.collection_round, "sampling_seed": seeds[row_index],
+                          "sampling_batch_size": len(batch),
+                          "sampling_layout_world_size": args.sampling_layout_world_size,
+                          "num_atoms": c["program"].num_atoms, "checkpoint": args.checkpoint_path,
+                          "success": trace["success"], "body": body, "final_body_token_ids": body_ids,
+                          "trace": trace, "trace_summary": trace_summary(trace),
+                          "trace_scope": "predictor_only_legacy_revision_ledger" if args.reference_closure else "full_attempted_path",
+                          "legacy_reference_closure": reference_logs[row_index]}
+                if repair_only:
+                    from crystal_dlm.self_repair_data import repair_net_change
+                    record.update(path_mode="self_repair_support_check", diagnostic_only=True,
+                                  trace_scope="full_attempted_self_repair",
+                                  **repair_net_change(trace["initial_body"], body_ids))
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+                completed += 1
+                successful += int(trace["success"])
+            handle.flush()
+            print(json.dumps({"rank": rank, "completed": completed, "successful": successful,
+                              "elapsed_seconds": time.monotonic() - started}), flush=True)
     (args.output_dir / f"_SUCCESS.rank{rank}").touch()
 
 

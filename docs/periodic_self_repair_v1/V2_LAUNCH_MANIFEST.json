@@ -1,0 +1,222 @@
+{
+  "schema": "periodic_dlm_v2_launch_manifest_v1",
+  "ready": false,
+  "implementation_commit": "",
+  "authorization": "User 2026-09-06: execute new DLM training and inference after every current predecessor completes and all six project A800 quota are free; no new K4/K8.",
+  "resources": {
+    "gpus": 6,
+    "cpus": 24,
+    "simultaneous_project_jobs_max": 2
+  },
+  "initialization": "original_LLaDA-8B-Instruct_only_no_adapted_start",
+  "train": {
+    "script": "slurm/249_train_periodic_dlm_v2.sbatch",
+    "epochs": 2,
+    "sources": 27136,
+    "validation_sources": 9047,
+    "views_per_source_epoch": 2,
+    "effective_states": 108544,
+    "microbatch": 2,
+    "accumulation": 2,
+    "global_batch": 24,
+    "updates": 4524,
+    "planner_preparation": "full_sources_predicted_conditioning_with_explicit_fallback",
+    "checkpoint": "registered_final_only"
+  },
+  "evaluate": {
+    "script": "slurm/250_evaluate_periodic_dlm_v2.sbatch",
+    "requests": 256,
+    "cohort": "cohorts/spad_prospective_seed23_256_v1_20260903/plans_for_dlm.jsonl",
+    "dlm_seed": 20260905,
+    "temperature": 0.7,
+    "sampling_layout_world_size": 2,
+    "execution_world_size": 6,
+    "native": true,
+    "tau800": true,
+    "frozen_refiner": "model_494",
+    "reference": "registered_reference_39893_and_raw_v1_final",
+    "new_K4_K8": false
+  },
+  "prerequisites": [
+    {
+      "id": "raw_v1_train",
+      "run_dir": "experiments/periodic_self_repair_20260906/from_original_llada_v1/runs/train_39942",
+      "success_markers": [
+        "_SUCCESS",
+        "train/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "train/TRAIN_FINAL.json",
+          "equals": {
+            "eligible_policy": true,
+            "updates": 6784,
+            "method": "periodic_dlm_from_original_llada_v1",
+            "old_dlm_weights_loaded": false,
+            "K4_K8_data_read": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "raw_v1_native",
+      "job_pointer": "runs/RAW_BASE_NATIVE_EVAL_JOB",
+      "run_pattern": "experiments/periodic_self_repair_20260906/from_original_llada_v1/runs/eval_native_{job_id}",
+      "success_markers": [
+        "_SUCCESS",
+        "evaluation/_SUCCESS",
+        "comparison/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "evaluation/EVALUATION_FINAL.json",
+          "equals": {
+            "endpoint": "native",
+            "cohort_role": "fixed_development",
+            "policy_stage": "final",
+            "counts.requests": 256
+          }
+        }
+      ]
+    },
+    {
+      "id": "raw_v1_tau800",
+      "job_pointer": "runs/RAW_BASE_TAU800_EVAL_JOB",
+      "run_pattern": "experiments/periodic_self_repair_20260906/from_original_llada_v1/runs/eval_tau800_{job_id}",
+      "success_markers": [
+        "_SUCCESS",
+        "evaluation/_SUCCESS",
+        "comparison/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "evaluation/EVALUATION_FINAL.json",
+          "equals": {
+            "endpoint": "tau800",
+            "cohort_role": "fixed_development",
+            "policy_stage": "final",
+            "counts.requests": 256
+          }
+        }
+      ]
+    },
+    {
+      "id": "old_k8_train",
+      "run_dir": "runs/spad_state_path_train_39938",
+      "success_markers": [
+        "_SUCCESS",
+        "train/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "train/TRAIN_FINAL.json",
+          "equals": {
+            "eligible_policy": true,
+            "collection_round": 1,
+            "global_updates": 7977
+          }
+        }
+      ]
+    },
+    {
+      "id": "old_k8_native",
+      "run_dir": "runs/spad_state_eval_method_39945",
+      "success_markers": [
+        "_SUCCESS",
+        "evaluation/_SUCCESS",
+        "comparison/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "evaluation/EVALUATION_FINAL.json",
+          "equals": {
+            "endpoint": "native",
+            "cohort_role": "fixed_development",
+            "policy_stage": "final",
+            "counts.requests": 256
+          }
+        }
+      ]
+    },
+    {
+      "id": "old_k8_tau800",
+      "run_dir": "runs/spad_state_tau800_39948",
+      "success_markers": [
+        "_SUCCESS",
+        "evaluation/_SUCCESS",
+        "comparison/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "evaluation/EVALUATION_FINAL.json",
+          "equals": {
+            "endpoint": "tau800",
+            "cohort_role": "fixed_development",
+            "policy_stage": "final",
+            "counts.requests": 256
+          }
+        }
+      ]
+    },
+    {
+      "id": "old_k8_main_plans",
+      "job_pointer": "runs/K8_MAIN_PLANS_JOB",
+      "run_pattern": "runs/spad_state_main_plans_{job_id}",
+      "success_markers": [
+        "_SUCCESS",
+        "cohort/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "METHOD_LOCK.json",
+          "equals": {
+            "method_frozen": true,
+            "planner_seed": 27,
+            "dlm_seed": 20260906
+          }
+        }
+      ]
+    },
+    {
+      "id": "old_k8_main_evaluation",
+      "job_pointer": "runs/K8_MAIN_EVALUATION_JOB",
+      "run_pattern": "runs/spad_state_main_{job_id}",
+      "success_markers": [
+        "_SUCCESS",
+        "selection/_SUCCESS",
+        "native-evaluation/_SUCCESS",
+        "tau800-evaluation/_SUCCESS"
+      ],
+      "reports": [
+        {
+          "path": "native-evaluation/EVALUATION_FINAL.json",
+          "equals": {
+            "endpoint": "native",
+            "cohort_role": "independent_main",
+            "policy_stage": "final",
+            "counts.requests": 1200
+          }
+        },
+        {
+          "path": "tau800-evaluation/EVALUATION_FINAL.json",
+          "equals": {
+            "endpoint": "tau800",
+            "cohort_role": "independent_main",
+            "policy_stage": "final",
+            "counts.requests": 1200
+          }
+        }
+      ]
+    }
+  ],
+  "validation": {
+    "status": "implementation_and_review_in_progress",
+    "gpu_preflight": "runs_only_inside_future_registered_six_GPU_allocation"
+  },
+  "notes": [
+    "No source filtering on energies or deployment support.",
+    "Unknown/missing/failed predecessor phases block submission even if squeue is empty.",
+    "The claim file prevents duplicate training submission; uncertain scheduler responses require inspection.",
+    "Underperformance requires matched full-denominator physical, support, state, gradient, novelty and tail analysis before further changes."
+  ]
+}
