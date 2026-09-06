@@ -18,6 +18,9 @@ Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 
 - [x] Prepare same-input frozen model494 tau800 evaluation242; submit only after native241 succeeds.
 - [ ] Finish declared endpoint and run fixed256 native generation.
 - [ ] Run same-input frozen model494 tau800 separately.
+- [x] Prepare self-generated data job243: raw DLM on1024 frozen train Planner conditions, K4 requests, common parent/quantized-target verification, all failures retained.
+- [ ] After raw native evaluation, collect new model's own errors with243; do not read old K4/K8 paths, weights or labels.
+- [ ] Train an explicitly separate self-repair continuation only from admitted own-error pairs, retaining original-MP20 anchors.
 - [ ] Keep original K4/K8 monitoring active without mixing its data into this model.
 - [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.
 
