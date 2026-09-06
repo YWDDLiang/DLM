@@ -1,6 +1,6 @@
 # New DLM execution checklist
 
-Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 weights/data. Active work is limited to the new DLM and original K4/K8 continuation. Diffusion joint work and self-improvement are paused by later user instruction. New model2A800/8CPU; original mainline4A800/16CPU.
+Authoritative direction: original LLaDA initialization and original MP20 base training. Active work is the new DLM, original K4/K8 continuation, and a conditional new-DLM K4/K8 post-training stage. New model2A800/8CPU; original mainline4A800/16CPU.
 
 - [x] Retain Planner, species program, exact canvas and geometric legal logits.
 - [x] Implement periodic coordinate Fourier and ordered lattice numerical logits.
@@ -18,9 +18,10 @@ Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 
 - [x] Prepare same-input frozen model494 tau800 evaluation242; submit only after native241 succeeds.
 - [ ] Finish declared endpoint and run fixed256 native generation.
 - [ ] Run same-input frozen model494 tau800 separately.
-- [x] Preserve the unsubmitted self-generated data draft243 behind an explicit reauthorization gate.
-- [ ] PAUSED: do not collect own errors or start any self-improvement job.
-- [ ] Train an explicitly separate self-repair continuation only from admitted own-error pairs, retaining original-MP20 anchors.
+- [x] Freeze the pre-result comparability gate: requests256, reconstructed>=252, Strict SUN>=6, Meta SUN>=55.
+- [ ] If the raw native result passes and original K8 job39938 is complete, collect this new model's own K4 paths and train two passes.
+- [ ] From that new K4 policy, collect its own K8 paths and train two continuation passes.
+- [ ] Do not substitute the previous DLM's K4/K8 paths for either new-model collection.
 - [ ] Keep original K4/K8 monitoring active without mixing its data into this model.
 - [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.
 

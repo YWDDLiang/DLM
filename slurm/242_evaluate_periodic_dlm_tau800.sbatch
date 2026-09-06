@@ -45,7 +45,7 @@ PAYLOAD="$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))["output
   --labels-jsonl "$RUN/labels/labels.jsonl" --frozen-config "$CONFIG" \
   --official-cache "$ROOT/runs/spad_basin_closure_official_20260904_v1/official_mp_cache" \
   --output-dir "$RUN/evaluation" --expected-requests 256 --endpoint tau800 \
-  --cohort-role fixed_development --policy-stage unspecified >"$RUN/evaluate.out" 2>"$RUN/evaluate.err"
+  --cohort-role fixed_development --policy-stage final >"$RUN/evaluate.out" 2>"$RUN/evaluate.err"
 "$PY" "$CODE/scripts/compare_programmed_path_evaluations.py" \
   --reference-eval-dir "$ROOT/runs/spad_state_reference_verification_39893/tau800-evaluation" \
   --method-eval-dir "$RUN/evaluation" \
