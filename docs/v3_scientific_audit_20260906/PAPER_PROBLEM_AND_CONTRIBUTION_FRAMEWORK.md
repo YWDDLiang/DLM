@@ -1,6 +1,6 @@
 # 化学可达性与周期几何协同的 de novo 晶体生成
 
-2026-09-06。约两页定位草稿；**主任务是自主生成组成与结构的 de novo 晶体生成，固定组成只作机制诊断。** 本轮故事依据限定为已核验接收的 NeurIPS 主会 FlowLLM、GenMS、CrysLLMGen，阅读位置见[顶会写法核读](TOPCONF_LANGUAGE_STORY_PATTERNS.md)。H-P33 尚无最终效果结论，本稿不改变实验合同。
+2026-09-06。约两页定位草稿；**主任务是自主生成组成与结构的 de novo 晶体生成，外部给定组成的CSP只作机制诊断。** 缓存上游自主生成的组成以比较后端，完整输出仍属于de novo系统样本；[当前256来源](DE_NOVO_COHORT_ACCOUNTING.md)已核。本轮故事依据限定为已核验接收的 NeurIPS 主会 FlowLLM、GenMS、CrysLLMGen，阅读位置见[顶会写法核读](TOPCONF_LANGUAGE_STORY_PATTERNS.md)。H-P33 尚无最终效果结论，本稿不改变实验合同。
 
 ## 统一问题：What / Why / How
 

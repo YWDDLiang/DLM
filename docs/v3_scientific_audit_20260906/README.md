@@ -37,6 +37,7 @@
 - [同权重T部署可行性](V3_TOKEN_DEPLOYMENT_FEASIBILITY.md)：仅接口与对照分析，尚未注册新增采样。
 - [科学问题与贡献框架](PAPER_PROBLEM_AND_CONTRIBUTION_FRAMEWORK.md)：统一what/why/how、两项互补候选贡献及结果分支的证据边界。
 - [顶会de novo写法](TOPCONF_DE_NOVO_WRITING_REVIEW.md)、[顶会语言路线细读](TOPCONF_LANGUAGE_STORY_PATTERNS.md)：仅已核ICLR/ICML/NeurIPS主会，主任务为组成与结构联合生成。
+- [当前de novo cohort记账](DE_NOVO_COHORT_ACCOUNTING.md)：自主生成条件的缓存与外部给定组成CSP的区别，256全请求来源证据。
 - [V3不足时的稳定性候选](V3_FAILURE_FALLBACK_SHORTLIST.md)：有界准备，等待原G/Q结果后条件触发。
 
 两份R2均允许进入有界实现验收。模型核心冻结`1111739`，后续`e1439cb`加入六卡微批与图回环检查；40045、40060和40058均已实际PASS，见[实施验收](MIXED_IMPLEMENTATION_ACCEPTANCE.md)。CPU数学/模型/数据41项和采样器11项通过；它们支持启动完整实证，不是SUN收益保证。

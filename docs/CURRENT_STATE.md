@@ -70,4 +70,4 @@ V2 构造终点原生 SUN 为 12/44，一次 full-cell repair 后为 8/50；Stri
 
 论文安排以用户最新方向为准：效果优先且保持LLM+DLM主线。V3若有效，围绕一个科学问题的what/why/how组织2–3项互补贡献；若不足，回到既有有效路径做稳定性改进。P、语言预训练、离散扩散的独立价值没有对应证据时缩小主张，不硬凑贡献。
 
-主任务明确为**de novo组成与结构联合生成**。固定C/S/P用于机制诊断，不能把给定组成CSP改写为论文主问题。本次科学问题与写法研究只用已核ICLR/ICML/NeurIPS主会论文：[顶会de novo写法](v3_scientific_audit_20260906/TOPCONF_DE_NOVO_WRITING_REVIEW.md)。
+主任务明确为**de novo组成与结构联合生成**。外部给定组成CSP只用于条件诊断；缓存同一批上游自主生成C/S/P的完整输出仍是de novo系统样本，配对差值用于后端归因。当前256来源已核：全请求保留、无结果筛选/替换、上游失败0、重复组成2，仍属于开发样本。[cohort记账](v3_scientific_audit_20260906/DE_NOVO_COHORT_ACCOUNTING.md)。本次科学问题与写法研究只用已核ICLR/ICML/NeurIPS主会论文：[顶会de novo写法](v3_scientific_audit_20260906/TOPCONF_DE_NOVO_WRITING_REVIEW.md)。

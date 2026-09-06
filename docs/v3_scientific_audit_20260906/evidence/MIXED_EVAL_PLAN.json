@@ -1,0 +1,46 @@
+{
+  "schema": "mixed_geometry_evaluation_launch_v1",
+  "created_at_utc": "2026-09-06T15:42:45.466876+00:00",
+  "code_commit": "0bf8e8870f96c54e86cbd080e64c527f55fb6943",
+  "train_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064",
+  "training_manifest_sha256": "6eb46261caa90b361fa2b60723a39f053c1a3c282b7738a6f21643076a9db07f",
+  "expected_policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+  "conditions": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/spad_prospective_seed23_256_v1_20260903/plans_for_dlm.jsonl",
+  "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+  "frozen_config": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/CONFIG.json",
+  "frozen_config_sha256": "a79a574209b9ebc4432778dc89ca65b5c18d337d7d7f20408a607f4ab25004ab",
+  "entry_sha256": "c84c6233e13365f74f3f72f4c0a9a5b115955f68c2b98965b9227be7c0458a7f",
+  "requests": 256,
+  "cohort_role": "fixed_development_model_generated_conditions",
+  "primary": [
+    "native",
+    "tau800"
+  ],
+  "secondary": [
+    "quantized_native"
+  ],
+  "selection_by_outcome": false,
+  "seeds": {
+    "base_seed": 20260905,
+    "collection_round": 0,
+    "request_rule": "existing SHA256 group/round/candidate path_seed"
+  },
+  "sampling": {
+    "nfe": 33,
+    "logical_batch_cap": 4,
+    "sampling_layout_world_size": 2
+  },
+  "refiner": {
+    "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "diff_steps": 800,
+    "seed_field": "refiner_seed"
+  },
+  "resources": {
+    "gpus": 6,
+    "cpus": 24,
+    "memory": "440G",
+    "walltime": "03:00:00"
+  },
+  "policy_selection": "completed two new epochs final only; no validation or SUN checkpoint choice",
+  "supplement_rule": "same primary endpoint strict_sun>=26 AND meta_sun>=128 out of all256; Q cannot trigger"
+}
