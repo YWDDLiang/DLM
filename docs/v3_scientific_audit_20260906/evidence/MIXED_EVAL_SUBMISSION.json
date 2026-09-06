@@ -1,0 +1,15 @@
+{
+  "status": "submitted",
+  "created_at_utc": "2026-09-06T16:00:48.320434+00:00",
+  "code_commit": "0bf8e8870f96c54e86cbd080e64c527f55fb6943",
+  "manifest_sha256": "420f1a978e142eaf581138ab89fad0de1a9870853474c003fc89453cc3168c04",
+  "resources": {
+    "gpus": 6,
+    "cpus": 24,
+    "memory": "440G",
+    "walltime": "03:00:00"
+  },
+  "policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+  "job_id": "40066",
+  "run_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066"
+}

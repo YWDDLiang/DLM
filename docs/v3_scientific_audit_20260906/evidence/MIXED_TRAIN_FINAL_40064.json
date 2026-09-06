@@ -1,0 +1,28 @@
+{
+  "method": "mixed_geometry_h_p33",
+  "eligible_policy": true,
+  "policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+  "source_count": 27136,
+  "world_size": 6,
+  "microbatch": 2,
+  "effective_batch": 24,
+  "gradient_accumulation": 2,
+  "epochs": 2,
+  "epoch_updates": 2262,
+  "updates": 4524,
+  "real_states_per_epoch": 54272,
+  "padded_states_per_epoch": 54288,
+  "padding_per_epoch": 16,
+  "effective_states": 108544,
+  "padding_normalization": 1.0002948113207548,
+  "totals": {
+    "geometry_padding_states": 16.0,
+    "geometry_real_states": 54272.0,
+    "token_padding_states": 16.0,
+    "token_real_states": 54272.0
+  },
+  "coverage_min": 2,
+  "coverage_max": 2,
+  "elapsed_seconds": 5251.143976662308,
+  "physical_benefit": "unmeasured_until_complete_registered_SUN_evaluation"
+}

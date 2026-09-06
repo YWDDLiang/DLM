@@ -1,10 +1,10 @@
 # 当前项目状态
 
-更新日期：2026-09-06。此文件统一维护当前状态；历史材料中的旧状态不覆盖本页。
+更新日期：2026-09-07（上海）。此文件统一维护当前状态；历史材料中的旧状态不覆盖本页。
 
 ## 当前阶段
 
-**H-P33正式新增两轮训练40064运行中。** 两轮独立攻击、实现、真实4/6卡及图回环验收已通过。它仍是连续几何扩展实验，是否契合原“LLM程序→离散DLM执行”故事与SUN分开判断，[当前边界](v3_scientific_audit_20260906/V3_STORY_FIT.md)已明确。V2完整训练、评测与冻结诊断保持既有结论。
+**H-P33正式新增两轮训练40064已完整完成，固定256评测40066运行中。** 两轮独立攻击、实现、真实4/6卡及图回环验收已通过。它仍是连续几何扩展实验，是否契合原“LLM程序→离散DLM执行”故事与SUN分开判断，[当前边界](v3_scientific_audit_20260906/V3_STORY_FIT.md)已明确。V2完整训练、评测与冻结诊断保持既有结论。
 
 统一目录：[全链路审计](v3_scientific_audit_20260906/README.md)。
 
@@ -52,7 +52,9 @@ V2 构造终点原生 SUN 为 12/44，一次 full-cell repair 后为 8/50；Stri
 
 正式配置6A800/24CPU、micro2/acc2/global24，完整27136来源各1T+1G/epoch，新增2epoch共4524更新/108544真实状态。新训练保持fresh optimizer和事先种子。6小时上限按6卡实测保守外推4.07小时加初始化/验证与余量推导，非完成时长保证。冻结采样器11项CPU测试通过，主float raw/refined、同256 secondary Q raw均已实现；尚无新SUN。
 
-**40064**已于2026-09-06 22:29（上海）提交，代码`0bf8e8870f96c54e86cbd080e64c527f55fb6943`，运行归档保持不变；23:38快照为第2epoch/3380更新、无失败，第一轮训练/验证已完成，稳态约1.1秒/更新。中间2262 checkpoint不具正式采样资格。[冻结启动清单](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_LAUNCH_MANIFEST.json)、[提交记录](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_SUBMISSION.json)。
+**40064**已`COMPLETED 0:0`，实际用时01:29:21；2新增epoch、4524更新、108544有效状态，所有source的T/G覆盖min=max=2，两轮验证均完成，最终step-4524取得采样资格。[完整训练终点](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_FINAL_40064.json)。训练与评测代码均固定`0bf8e8870f96c54e86cbd080e64c527f55fb6943`，运行归档保持不变。[冻结训练清单](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_LAUNCH_MANIFEST.json)、[训练提交](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_SUBMISSION.json)。
+
+评测 **40066** 已提交并运行，6A800/24CPU、3小时上限，完整256 primary float raw/refined与secondary Q raw。最终policy文件哈希已封存，清单SHA256为`420f1a978e142eaf581138ab89fad0de1a9870853474c003fc89453cc3168c04`。当前仍在采样阶段，尚无SUN；不重抽、不选择中间权重。[评测清单](v3_scientific_audit_20260906/evidence/MIXED_EVAL_LAUNCH_MANIFEST.json)、[唯一提交](v3_scientific_audit_20260906/evidence/MIXED_EVAL_SUBMISSION.json)。
 
 原CIF全量身份 **40009** 已 `COMPLETED 0:0`，8CPU、1分40秒、无GPU。27136/9047全部通过唯一完整Q结构匹配，与原CSV一一对应；0解析/编码错误、0重复Q歧义、0未核验或丢行。精确site permutation后原连续几何重新编码全部等于source_answer，primary original_cif的来源阻断已关闭。[全量身份与parser证据](v3_scientific_audit_20260906/evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json)。
 

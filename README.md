@@ -2,7 +2,7 @@
 
 C³FD 提供化学动作支持，Typed Llama 生成组成、软计划与物种程序，周期 DLM 生成和修订晶体几何；固定 model494 refiner 单独报告。
 
-最近完成的版本为 **Periodic DLM V2**：两 epoch 训练及固定 256 的完整评测已完成，raw Strict/Meta SUN 为 **8/50**，固定 tau800 后为 **16/113**，未达到目标。全链路审计与V3两轮独立复核已完成；[H-P33](docs/v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md)通过真实4/6卡与图回环验收，正式新增两轮训练40064正在运行。它是连续几何扩展实验，尚未采用为论文主线；[与原故事的契合边界](docs/v3_scientific_audit_20260906/V3_STORY_FIT.md)须与SUN分开判断。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
+最近完成SUN评测的版本为 **Periodic DLM V2**：raw Strict/Meta SUN 为 **8/50**，固定 tau800 后为 **16/113**（256请求），未达到目标。全链路审计与V3两轮独立复核已完成；[H-P33](docs/v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md)通过真实4/6卡与图回环验收，正式新增两轮训练40064已完整完成，评测40066运行中。它是连续几何扩展实验，尚未采用为论文主线；[与原故事的契合边界](docs/v3_scientific_audit_20260906/V3_STORY_FIT.md)须与SUN分开判断。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
 
 ## 项目入口
 
