@@ -30,3 +30,5 @@ Authoritative direction: original LLaDA initialization and original MP20 base tr
 Design: RAW_LLADA_DESIGN.md. Older warm-start documents are historical and superseded by this checklist.
 
 Latest observed healthy startup: steps1–3 losses5.8872/6.0712/5.9611, finite clipped gradients, peak memory16.03GiB/GPU. Per user instruction, let39937 run naturally and check again only for failure, stage completion, or before consuming its checkpoint.
+
+09:45 one-time ETA check: step768/6784 at2498.97s, latest loss3.7853 and peak16.10GiB/GPU. Estimated training completion15:03–15:10. The scheduler denied extending its six-hour limit, so completion is close to the hard limit and carries a small timeout risk. Do not interrupt/restart; act only on the completion or timeout marker.
