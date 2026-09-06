@@ -1,36 +1,56 @@
 # 全链路科学审计与 V3 研究
 
-开始日期：2026-09-06。状态：**正在进行；未形成最终根因结论或 V3 采用决定。**
+2026-09-06。**分组件与一般交叉审计、V2完整评测及冻结模型诊断已完成；具体V3正在第二轮独立审查，尚未训练。**
 
-本目录是当前统一审计入口。范围包括完整数据与实验历史、C³FD、Typed Llama / PoE、化学与软计划、物种程序、离散 DLM 的初始化/训练/解码、周期几何与修订、连续 refiner、物理终态、N/U/hull 与统计，以及项目文件与文档整理。目录名中的 V3 表示后续实现方向，不限制审计范围。
+本目录覆盖完整C³FD/Llama/soft/P→DLM→repair/refiner→物理/N-U/hull/统计、近期变更、历史成功失败、外部晶体生成机制及文档清理。先读 [整合报告](FINAL_AUDIT_REPORT.md) 和 [当前状态](../CURRENT_STATE.md)。
 
-## 任务与证据规则
+## 报告与裁决
 
-- 追查成功与失败原因；同时审查近期全部变更、历史失败、工程故障、评测修正和此前过度确定的主张。原始材料缺失时登记缺口，不声称已独立复算。
-- 广泛检索晶体 diffusion / flow / symmetry / discrete generative / Transformer 工作，核对原论文与作者实现。区分 CSP 匹配率、生成有效率、MLIP 稳定性与 DFT SUN，记录条件、分母、参考库及训练量。
-- 允许质疑所有组件、现有论文主线及最初假设；分工用于避免重复，不预设应保留哪个模块。
-- 每项结论给数学定义或反例、代码位置、产物、竞争解释、证据强度和可证伪实验。机制合理、单元检查、训练 loss 和真实梯度分别只能支持其对应层面的结论。
-- 有依据的小改动已获用户授权进行受控尝试。若需要 V3，须先完成独立挑战、修订及不同审稿者复核；解决实质问题后冻结版本，训练 1–2 epoch，采样并计算 raw/refined SUN。理论自洽不是 SUN 保证。
+| 报告 | 内容 |
+|---|---|
+| [整合报告](FINAL_AUDIT_REPORT.md) | SUN、原因排序、证据边界与接续 |
+| [实验/变更台账](EXPERIMENT_CHANGE_CASEBOOK.md) | 739个commit清单、实验族与证据等级 |
+| [主张审计](CLAIM_AUDIT.md) | 既往收益承诺、代理指标与归因 |
+| [晶体diffusion机制](CRYSTAL_DIFFUSION_MECHANISMS.md) | 原论文/作者代码和任务边界 |
+| [Transformer/GNN](TRANSFORMER_AND_GNN_SUPPLEMENT.md) | 额外工作、已有消息路径与增量候选 |
+| [C³FD/Typed Llama](C3FD_LLM_UPSTREAM_AUDIT.md) | 实际支持、PoE、M/S/P与程序 |
+| [DLM概率/kernel](DLM_PROBABILITY_AND_KERNEL_AUDIT.md) | 条件观测、目标、alias、支持/rollback |
+| [物理与评测](PHYSICS_PIPELINE_AND_STORY_AUDIT.md) | 几何、R/refiner、force/stress及SUN事件 |
+| [一般交叉审稿：DLM](ROUND2_DLM_ON_CRYSTAL_AND_CLAIMS.md) | 已完成，不作为具体V3第二轮 |
+| [一般交叉审稿：物理](ROUND2_PHYSICS_ON_DLM_AND_CLAIMS.md) | 已完成，不作为具体V3第二轮 |
+| [V2冻结probe解释](V2_FROZEN_PROBE_INTERPRETATION.md) | 40004已完成，实际风险/响应/exp，不是SUN提点 |
 
-## 正在工作的审计线
+## 具体V3与攻击性复核
 
-| 工作 | 产物 | 状态 |
-|---|---|---|
-| 晶体 diffusion 原始机制、成功条件和可迁移边界 | `CRYSTAL_DIFFUSION_MECHANISMS.md` | 进行中 |
-| DLM 概率、条件 kernel、训练采样一致性及反例 | `DLM_PROBABILITY_AND_KERNEL_AUDIT.md` | 进行中 |
-| 物理、评测、全链路接口与论文主张 | `PHYSICS_PIPELINE_AND_STORY_AUDIT.md` | 进行中 |
-| 全实验/变更台账、数据与梯度、交叉审查和最终整合 | 主审整合文件与 `evidence/` | 进行中 |
-| 文档去重、过时入口清理、引用与文件依赖核验 | 清理清单与 `historical/` | 进行中 |
+[H-P33规格](V3_H_P33_SPECIFICATION.md)为当前唯一第二轮对象：共享V2/LLaDA、T construction＋G联合去噪、新增两epoch、明确33NFE及float/Q终点。原CIF身份及实际计算图/DDP验收仍须完成；它是混合表示，P在G中仅条件，尚无SUN保证。
 
-## 已保存的运行证据
+- [A/B/C候选及攻击](V3_DLM_CANDIDATES_AND_ATTACKS.md)
+- [共享几何头独立反提案](V3_GEOMETRIC_HEAD_COUNTERPROPOSAL.md)
+- [V3第一轮数学](V3_REVIEW_R1_MATH.md)
+- [V3第一轮物理](V3_REVIEW_R1_PHYSICS.md)
 
-- [V2 运行快照](EVIDENCE_RUNTIME_SNAPSHOT.json)：39993 已进入训练；冻结 Planner 条件来源、fallback 和 annotation agreement；真实早期梯度记录。
-- [评测原始汇总](evidence/EVALUATION_SUMMARIES_20260906.json)：K8 独立 cohort 更正后的两端结果、hull 覆盖修复证明、raw-v1 两端评测和配对比较。各项保留远端路径及原文件 SHA256。
+第二轮独立数学/物理报告正在写，完成后增列裁决。已承认的边界不重复当新发现，新实质问题修订后复核，不无限扩张路线。
 
-训练快照不能代替最终 checkpoint 或效果结果。原始 V2 执行版本保持 `2e904c260bafb6750c9a5dbb0d920c4ff8c3a868`；研究与清理不改运行中的归档。
+## 直接证据
 
-## 实验与文件纪律
+- [历史评测与hash](evidence/EVALUATION_SUMMARIES_20260906.json)：含旧K8官方hull覆盖修正。
+- [V2最终训练/M签名](evidence/V2_FINAL_TRAIN_AND_METADATA.json)：39993完成，完整27136/9047。
+- [V2两端](evidence/V2_EVALUATION_SUMMARIES_39998.json)：39998 raw8/50、tau16/113，各256。
+- [完整构造/修订配对](evidence/V2_CONSTRUCTION_AND_REPAIR_39998.json)：construction12/44、repair8/50。
+- [冻结probe40004](evidence/V2_CONDITIONING_PROBE_40004.json)：100来源/200状态/五变体，模型不变。
+- [全量条件](evidence/FROZEN_CONDITIONING_AUDIT.json)、[N/U函数](evidence/FROZEN_NU_FUNCTIONS.json)、[终态/SUN交叉表](evidence/TERMINAL_STATUS_SUN_CROSSTAB.json)。
+- [连续CIF输入](evidence/CONTINUOUS_SOURCE_INPUT_PATHS.json)、[实际LLaDA core](evidence/LLADA_ACTUAL_CORE_FORWARD.json)。
+- [早期V2快照](EVIDENCE_RUNTIME_SNAPSHOT.json)仅表示当时状态，终态以上述产物为准。
 
-最多 6 张 A800、24 CPU、同时 2 个本项目作业，健康训练及已登记评测正常接续。新 K4/K8、自生成能量 teacher 和旧连续联合路线仍暂停；可完整分析其历史和替代方案。所有新实验事先登记假设、版本、样本、预算和成败标准，保留负结果。现有开发集用于诊断；被用于选方案的旧 1000 不能再称为未见确认集。
+## 文档整理
 
-清理将过时入口与重复叙述收敛到当前状态、架构和实验记录。唯一历史证据保留在本目录有序归档或来源索引中，确证重复材料再删除。移动/删除前核实依赖和工作树边界，维护迁移映射并更新引用。审计结论、小改动验证、必要 V3 实验及清理全部完成后才收尾。
+142份历史/组件文件迁移、6份完全重复去重已执行，唯一证据及hash保留；新稿/入口继续增量检查。
+[方案](DOCUMENT_CLEANUP_PLAN.md)、[迁移报告](DOCUMENT_MIGRATION_REPORT.md)、[映射](DOCUMENT_MIGRATION_MAP.json)、[父引用](PARENT_REFERENCE_MIGRATION.json)、[当前链接检查](CURRENT_DOCUMENT_LINK_CHECK.json)、[旧根入口字节快照](historical/root_entrypoints/MIGRATION_MANIFEST.json)。
+
+历史current/approved只表示写作当时；当前说明以本目录和CURRENT_STATE为准。原2e运行归档、权重、数据和其他工作树不随整理改变。
+
+## 执行边界
+
+用户已授权审查后1–2epoch V3及有依据的小方法，当前先完成具体复核/必要验收；使用4–6A800，项目总限6A800/24CPU/2jobs。旧新K4/K8、自生成能量teacher和旧连续联合路线保持暂停。
+
+全请求SUN决定采用。开发256同一端Strict≥26、Meta≥128才触发固定源序1000 raw/refined，并另报1200全部请求。失败不补样，不按能量/SUN/verified筛索引，official cache匹配cohort。数学自洽、梯度、代理指标、来源完整分别只支持对应层，不是SUN保证。

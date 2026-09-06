@@ -1,0 +1,225 @@
+{
+  "created_utc": "2026-09-06T09:08:47.639576+00:00",
+  "frozen_source": [
+    {
+      "path": "src/crystal_dlm/c3fd_calibration.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "bace276f7c3df75fa96a813c82cd026c7adbac251834865d6e8a202f840f9264",
+      "lines": 238
+    },
+    {
+      "path": "src/crystal_dlm/c3fd_planner_model.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "4b87dcb89c8bcfd71082522996c25d8e7a0f269d065644d2e8c8b32e660bbdef",
+      "lines": 123
+    },
+    {
+      "path": "src/crystal_dlm/semantic_composition_head.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "247987c5a1bf76ed4d872cc68f56e98cf70d06af8e8b43eae14ea2ccaaca88a1",
+      "lines": 643
+    },
+    {
+      "path": "src/crystal_dlm/species_physics.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "6b4e592f5aa6406e2455097c4a93f2e609d716aa81fb1fbc50b6c6b12e9797a3",
+      "lines": 119
+    },
+    {
+      "path": "src/crystal_dlm/family_reachability.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "2a5fb15462f109370c4f377ed3fe8a7c969036823dc4d4c900f99af15eb91ef6",
+      "lines": 968
+    },
+    {
+      "path": "src/crystal_dlm/ccfd_v2.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "643faa72a4b3a75edbf2f4e133e4032244f426204542b0ba567f963c44e49cc1",
+      "lines": 955
+    },
+    {
+      "path": "src/crystal_dlm/composition_validity.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "ca1c94f583e0c97a172b5c9b7ba96505257fd74dedfc618b584c34486ac1f178",
+      "lines": 341
+    },
+    {
+      "path": "src/crystal_dlm/c3fd_llama_typed_planner.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "707acfe7dccbe63e2b52f8cb7a9febae9d27ff2a8b59ec79338fcb74fa231a29",
+      "lines": 526
+    },
+    {
+      "path": "src/crystal_dlm/c3fd_llama_fused_plan.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "724ff9141d805bb80f27bb1ba3c8e353b80d3e4aeab567eae6589e5a2a7ab537",
+      "lines": 426
+    },
+    {
+      "path": "src/crystal_dlm/c3fd_native_plan.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "566830481cbfb990b2dd63d15d4ec0cf8db815759744b16a46762c5bfc8f219f",
+      "lines": 166
+    },
+    {
+      "path": "src/crystal_dlm/species_program_pointer.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "1317be2ec7a6c794a520d9bf16e179ebd301f34805a621d31b18ae1088609a33",
+      "lines": 310
+    },
+    {
+      "path": "src/crystal_dlm/spad_program.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "ae160f19f9e9e02eacbcf71427eb4ba639a7c53e0e74d353721c6f1b05573f3c",
+      "lines": 368
+    },
+    {
+      "path": "src/crystal_dlm/periodic_v2_plan_data.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "9631afc5c11e4911fd6c870df477a8c5e71a5f1f58a33b860d200d02276a53ee",
+      "lines": 434
+    },
+    {
+      "path": "src/scripts/train_c3fd_llama_typed_planner.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "ad54e41d43d44bc575d5c5b735c6decf7319b72dc669f2d3f52f51feeaa289f8",
+      "lines": 1158
+    },
+    {
+      "path": "src/scripts/sample_c3fd_llama_typed_planner.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "ddaff3fd59e06510f20dbff46d9436b24dfd64aafcb21d0cc1f47622ff1895ee",
+      "lines": 1138
+    },
+    {
+      "path": "src/scripts/train_spad_species_pointer.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "b736c657cb2434b192b06a1aa3a41073577af3640bc8f77da5f9bcbb4029321f",
+      "lines": 515
+    },
+    {
+      "path": "src/scripts/prepare_periodic_v2_plans.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "773a10b11c1e161b508f4bb0ad4a54f79d00091ab27e702d665c37705bc54e52",
+      "lines": 345
+    },
+    {
+      "path": "scripts/build_c3fd_planner_data.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "54c7bba5b3976e2bf6eeb10c49c4449c3984bb5585dd184c64e95d208f4a5774",
+      "lines": 357
+    },
+    {
+      "path": "scripts/extract_c3fd_planner_context.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "b0dfd916865b07ed0c8e033d9a088178f38fe49ab1db9052719e356e37760695",
+      "lines": 88
+    },
+    {
+      "path": "scripts/build_c3fd_llama_fused_data.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "233ec1fb0be85ac856c7d82bf3d06a1e4c09424adf12562a6e7427591adb2cdb",
+      "lines": 376
+    },
+    {
+      "path": "scripts/build_spad_species_pointer_data.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "e8035c2fca77247c07b41b8ca83ec685d58cd784b5c0dd8fd87fe80f77e5681e",
+      "lines": 229
+    },
+    {
+      "path": "scripts/sample_c3fd_plans.py",
+      "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+      "sha256": "0fca6923b8600f7d94c2af1c0409038f515d481f572ec55a4861691055c1a7f3",
+      "lines": 570
+    }
+  ],
+  "source_metrics": [
+    {
+      "path": "results/remote_screens/C3FD_PLANNER_FINAL.json",
+      "sha256": "8b62b402b07b3b9210c8dc1a78c90db5c3588179bdd643a8579ee4a0591647bc"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V21_PILOT_FINAL.json",
+      "sha256": "6513f4080ba34758cdf5ce3e812ac01aff07c5506ebd8df99be528c77159f85d"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V21_STEP1_DATA_AUDIT.json",
+      "sha256": "bbd382e16878e3ecf961a7905252afd3e219c3a20d285082432a8d842e1a8bd8"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V21_STEP3_CALIBRATION.json",
+      "sha256": "027cf2f1adad9510b5c3f537e1dd91dc3d1f1d840a05ff0ca32ba2358ab19262"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V21_STEP4_PROPOSAL_SIM.json",
+      "sha256": "2f4319a754c7674411d064a67d62ff3247128eefd53e11007cb59358fba855df"
+    },
+    {
+      "path": "results/remote_screens/C3FD_DRIFT_DIAGNOSTIC.json",
+      "sha256": "ebf440f5c491881844865320eabd0fb11ca58cd63930e553275835f7eaf72eed"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V25_PILOT_FINAL.json",
+      "sha256": "228b36bedcdbe7a9aee039249f94e313f21347fd2cff64149476c0ab969d1971"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V25_REQUESTED1000_FINAL.json",
+      "sha256": "6b71cf7cfb493c735daff43254dc8fa51da98baad96076cbe35031c829cc6ffb"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V25_TEACHER_WITNESS_AUDIT.json",
+      "sha256": "2b94e26eb8329fa08cd1a8801753a1a5761642b27cffcc3bc7e1be465748cf41"
+    },
+    {
+      "path": "results/remote_screens/PLANNER_COUNTVALENCE_FACTORIAL_FINAL.json",
+      "sha256": "ee1a977da75eefa7c2049cf056937a8d74965a800e70d712a27aba2767ddce46"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V22_AUDIT_V1_ENGINEERING_FAILURE.json",
+      "sha256": "5566734df608c994ff9170fbc91e05ed5703fa262268c72cb7eee0ecbaa8b8b0"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V22_AUDIT_V2_ENGINEERING_FAILURE.json",
+      "sha256": "d53fc332751ef133f57f364acafbee01bbd5811aab39f03bb76707bf8272aa8d"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V23_AUDIT_ENGINEERING_FAILURE.json",
+      "sha256": "b5ec5f6d191927a3907d9da01d359f3a13d23bd733ad7d69d05729679ba2c791"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V24_AUDIT_ENGINEERING_FAILURE.json",
+      "sha256": "ff6ca369d782636e0e201e2a897b64ed53710481a7d6da65b4524a6a14cdacc9"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/evidence/FROZEN_CONDITIONING_AUDIT.json",
+      "sha256": "86ff89a42e188350a1ef9aeeba05504e598c9e74d0c56b56daf5b517e91cb4ba"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.json",
+      "sha256": "eb35810b7d2fff3771cc657d28c7e4cb1a56937b71fb6356f02b20903e3faca7"
+    }
+  ],
+  "supplemental_evidence": [
+    {
+      "path": "docs\\v3_scientific_audit_20260906\\evidence_upstream\\audit_teacher_metadata_signatures.py",
+      "sha256": "65eb51fb13775d8db102e18432893063b4a383a82a3d98783c76634ae46f656d"
+    },
+    {
+      "path": "docs\\v3_scientific_audit_20260906\\evidence_upstream\\metadata_signature_selfcheck.json",
+      "sha256": "f8f377127f931bc81c13e483939ccef997752c7099155116b089fa7dc0c10c34"
+    },
+    {
+      "path": "docs\\v3_scientific_audit_20260906\\evidence_upstream\\observed_metadata_signatures.json",
+      "sha256": "0875fc22acb08c54692f5d7ec5ae46d38f50b65864d6ef3a213a2d11e492494f"
+    },
+    {
+      "path": "docs\\v3_scientific_audit_20260906\\evidence\\V2_FINAL_TRAIN_AND_METADATA.json",
+      "sha256": "ffeaa1d825709d6674d27205f10a05fea50d2b5366bb69a9853f675c249dfa10"
+    },
+    {
+      "path": "docs\\v3_scientific_audit_20260906\\evidence\\V2_EVALUATION_SUMMARIES_39998.json",
+      "sha256": "21b521cdce8ac69e059b8d1369aefb3b2657705f7a0929f696b628af93c07e6d"
+    }
+  ]
+}

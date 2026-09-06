@@ -1,0 +1,66 @@
+[
+  {
+    "path": "papers/symmcd_2502.03638v1.html",
+    "url": "https://arxiv.org/html/2502.03638v1",
+    "accessed_utc": "2026-09-06T08:06:31.295265+00:00",
+    "status": 200,
+    "bytes": 311355,
+    "sha256": "c1ebfd660138e29196d0aa3325788011b68fad01131475c7a11151943d7d7ca0"
+  },
+  {
+    "path": "papers/wyckoffdiff_2502.06485v4.html",
+    "url": "https://arxiv.org/html/2502.06485v4",
+    "accessed_utc": "2026-09-06T08:06:31.295674+00:00",
+    "status": 200,
+    "bytes": 491122,
+    "sha256": "728f50dceeb2ae36d042a79baf8e9b0701aa82fd8d21fbee494257bde5fd51a8"
+  },
+  {
+    "path": "papers/wyckoffdiff_adapter_2601.08115v1.html",
+    "url": "https://arxiv.org/html/2601.08115v1",
+    "accessed_utc": "2026-09-06T08:06:31.295963+00:00",
+    "status": 200,
+    "bytes": 119270,
+    "sha256": "0c7e6fa7287c6300b91150fd9c985129fd3a00988fd2563ff72192f2e50f46b0"
+  },
+  {
+    "path": "papers/crystalflow_nature_2025.html",
+    "url": "https://www.nature.com/articles/s41467-025-64364-4",
+    "accessed_utc": "2026-09-06T08:06:31.296174+00:00",
+    "status": 200,
+    "bytes": 489319,
+    "sha256": "44daf8c5b537ccc92ec5154c5f65c46c7d5d0a84899ad6e18f39051ff7de3352"
+  },
+  {
+    "path": "papers/diffcrysgen_npj_2026.html",
+    "url": "https://www.nature.com/articles/s41524-026-02147-1",
+    "accessed_utc": "2026-09-06T08:06:31.296392+00:00",
+    "status": 200,
+    "bytes": 511527,
+    "sha256": "758d11c5b51ddfa8b97c9970c400d74f3823f980629a40dfbdb7e735342b027e"
+  },
+  {
+    "path": "papers/dynacrys_2608.07401v1.html",
+    "url": "https://arxiv.org/html/2608.07401v1",
+    "accessed_utc": "2026-09-06T08:06:31.297951+00:00",
+    "status": 200,
+    "bytes": 621666,
+    "sha256": "ddc5268a5fbc320c1afca537095ef577a79afc6f0c88dbcdf1e6414e043f8cd2"
+  },
+  {
+    "path": "papers/chargediff_nature_2026.html",
+    "url": "https://www.nature.com/articles/s41467-026-73985-2",
+    "accessed_utc": "2026-09-06T08:06:31.298128+00:00",
+    "status": 200,
+    "bytes": 434357,
+    "sha256": "873e9f96c38f90cb6c69d0aadd696b8fbce7017e5b31312deb05bc9f7614db47"
+  },
+  {
+    "path": "papers/symmetry_bfn_2026.html",
+    "url": "https://www.nature.com/articles/s41524-026-02140-8",
+    "accessed_utc": "2026-09-06T08:06:31.298351+00:00",
+    "status": 200,
+    "bytes": 340292,
+    "sha256": "0db18fde25148b0e6f472815ff4ed6e008cc9c3eb46afb7b8d17ffa481d229fb"
+  }
+]

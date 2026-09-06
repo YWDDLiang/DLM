@@ -1,0 +1,62 @@
+{
+  "k8_native": {
+    "schema": "saved_physics_field_export_v1",
+    "records": 1200,
+    "new_samples": 0,
+    "scores_recomputed": false,
+    "coordinates_recomputed": false,
+    "omissions": "Fields not read by audit_saved_physics_lane.py, including chemical identity and event traces, are omitted.",
+    "sources": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/native-labels/labels.jsonl": "b91a26e81358dab34a8a62d3d7de00a19c0140125945dbda57f2c6d52e51f030",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/native/paths.jsonl": "da273a56b5ede6fc0d9b0b3b65bfd389d18a3d9aba4c9f276022364ff0f6e3d6"
+    },
+    "output": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/physics_inputs/k8_native.jsonl",
+    "output_sha256": "0fbb79ec7709e2b4a273894fc61364bbf52e7547e991351cbf5991b1febd41cf",
+    "bytes": 2465388
+  },
+  "k8_tau800": {
+    "schema": "saved_physics_field_export_v1",
+    "records": 1200,
+    "new_samples": 0,
+    "scores_recomputed": false,
+    "coordinates_recomputed": false,
+    "omissions": "Fields not read by audit_saved_physics_lane.py, including chemical identity and event traces, are omitted.",
+    "sources": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/tau800-labels/labels.jsonl": "49252f5a61be457cec74f126bcdf03dc066e6021db640dfa706b90780bc42aa9",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/tau800/paths.jsonl": "c13c2cd2ec1e284e36b5dfd6ed6320943c821c15bb8d5b3241f279091723a9a5"
+    },
+    "output": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/physics_inputs/k8_tau800.jsonl",
+    "output_sha256": "49f22f9c6ac01722e149787526f8b9f418e0c0e6949b4923f557367c0eb5bca3",
+    "bytes": 3087682
+  },
+  "raw_native": {
+    "schema": "saved_physics_field_export_v1",
+    "records": 256,
+    "new_samples": 0,
+    "scores_recomputed": false,
+    "coordinates_recomputed": false,
+    "omissions": "Fields not read by audit_saved_physics_lane.py, including chemical identity and event traces, are omitted.",
+    "sources": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/from_original_llada_v1/runs/eval_native_39975/labels/labels.jsonl": "f9f1204e14bcef049271f9aca104cbbebf50a017e555db5446c365bd36c210f4",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/from_original_llada_v1/runs/eval_native_39975/native/paths.jsonl": "5db0631a988a4772b7b7dd90255b99d37b94359991edebeef3785339ee637ede"
+    },
+    "output": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/physics_inputs/raw_native.jsonl",
+    "output_sha256": "a6c17340ec77313c27067b19bf49eb01b9aa4f783e5ee38fca6c81c4e944b80c",
+    "bytes": 529817
+  },
+  "raw_tau800": {
+    "schema": "saved_physics_field_export_v1",
+    "records": 256,
+    "new_samples": 0,
+    "scores_recomputed": false,
+    "coordinates_recomputed": false,
+    "omissions": "Fields not read by audit_saved_physics_lane.py, including chemical identity and event traces, are omitted.",
+    "sources": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/from_original_llada_v1/runs/eval_tau800_39984/labels/labels.jsonl": "04ac0eab83c7a98f2bc7937c37e725e6ca05c4b775e861fb22785f38eb794ee9",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/from_original_llada_v1/runs/eval_tau800_39984/tau800/paths.jsonl": "f385471d9940bf4bd60c25b03995c7ff4d4aac22019c284b839390f760b47690"
+    },
+    "output": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/physics_inputs/raw_tau800.jsonl",
+    "output_sha256": "b6000043f6488e1120a76f1b7c909cfc6627d5ea4d2c7203f5f3afe9644eb2c5",
+    "bytes": 667745
+  }
+}

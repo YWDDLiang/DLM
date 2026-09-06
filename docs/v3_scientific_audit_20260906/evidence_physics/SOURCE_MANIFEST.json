@@ -1,0 +1,293 @@
+{
+  "audit_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+  "local_sources": [
+    {
+      "source": "scripts/label_programmed_paths.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\scripts\\label_programmed_paths.py.txt",
+      "sha256": "197f798c58988cf872a21286790c169dbec725d777179599c722c6db517eba15"
+    },
+    {
+      "source": "scripts/evaluate_programmed_paths.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\scripts\\evaluate_programmed_paths.py.txt",
+      "sha256": "2393a8f9c08c90c1ad31caa1090749ddfab5ae8561cc7ad0b6b8b31d4654cbe3"
+    },
+    {
+      "source": "scripts/compare_programmed_path_evaluations.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\scripts\\compare_programmed_path_evaluations.py.txt",
+      "sha256": "adeb3c60819f239d2d673c5ce3d0ada01a0f3901858b214e232994b80a61e45e"
+    },
+    {
+      "source": "src/crystal_dlm/terminal_energy_consistency.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\src\\crystal_dlm\\terminal_energy_consistency.py.txt",
+      "sha256": "d2efb40bfcf6126aacf166006d2ebc5b93a7a703f9d39c7eec10276a68474954"
+    },
+    {
+      "source": "scripts/export_programmed_path_artifacts.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\scripts\\export_programmed_path_artifacts.py.txt",
+      "sha256": "4dd9c2f021ca227b37bfc7cc866b7e1f028cede5c19d7e0420142e744df10e62"
+    },
+    {
+      "source": "src/scripts/refine_dlm_with_crysllmgen.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\src\\scripts\\refine_dlm_with_crysllmgen.py.txt",
+      "sha256": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498"
+    },
+    {
+      "source": "src/scripts/prepare_periodic_v2_plans.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\src\\scripts\\prepare_periodic_v2_plans.py.txt",
+      "sha256": "773a10b11c1e161b508f4bb0ad4a54f79d00091ab27e702d665c37705bc54e52"
+    },
+    {
+      "source": "src/crystal_dlm/periodic_v2_plan_data.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\src\\crystal_dlm\\periodic_v2_plan_data.py.txt",
+      "sha256": "9631afc5c11e4911fd6c870df477a8c5e71a5f1f58a33b860d200d02276a53ee"
+    },
+    {
+      "source": "src/crystal_dlm/programmed_path_runtime.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\src\\crystal_dlm\\programmed_path_runtime.py.txt",
+      "sha256": "cc2aac4f0f15347b65c7c002e34dab5598a2a62b87ac76eb683edff11cc92cf0"
+    },
+    {
+      "source": "src/scripts/sample_c3fd_llama_typed_planner.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\frozen\\src\\scripts\\sample_c3fd_llama_typed_planner.py.txt",
+      "sha256": "ddaff3fd59e06510f20dbff46d9436b24dfd64aafcb21d0cc1f47622ff1895ee"
+    }
+  ],
+  "author_repositories": {
+    "jiaor17/DiffCSP-PP": {
+      "commit": "e82e7ffa7cb2a383bde69b067a343ca137d73e47",
+      "url": "https://github.com/jiaor17/DiffCSP-PP/tree/e82e7ffa7cb2a383bde69b067a343ca137d73e47",
+      "candidate_paths": [
+        "diffcsp/pl_data/dataset.py",
+        "scripts/compute_metrics.py",
+        "scripts/eval_utils.py",
+        "scripts/evaluate.py",
+        "scripts/generation.py"
+      ]
+    },
+    "microsoft/mattergen": {
+      "commit": "92423660a8bd70e83679086e88f88596d484dc16",
+      "url": "https://github.com/microsoft/mattergen/tree/92423660a8bd70e83679086e88f88596d484dc16",
+      "candidate_paths": [
+        "mattergen/common/data/dataset.py",
+        "mattergen/common/data/dataset_transform.py",
+        "mattergen/common/utils/eval_utils.py",
+        "mattergen/diffusion/training/metrics.py",
+        "mattergen/evaluation/__init__.py",
+        "mattergen/evaluation/evaluate.py",
+        "mattergen/evaluation/metrics/__init__.py",
+        "mattergen/evaluation/metrics/core.py",
+        "mattergen/evaluation/metrics/energy.py",
+        "mattergen/evaluation/metrics/evaluator.py",
+        "mattergen/evaluation/metrics/property.py",
+        "mattergen/evaluation/metrics/structure.py",
+        "mattergen/evaluation/reference/__init__.py",
+        "mattergen/evaluation/reference/correction_schemes.py",
+        "mattergen/evaluation/reference/presets.py",
+        "mattergen/evaluation/reference/reference_dataset.py",
+        "mattergen/evaluation/reference/reference_dataset_serializer.py",
+        "mattergen/evaluation/utils/__init__.py",
+        "mattergen/evaluation/utils/dataset_matcher.py",
+        "mattergen/evaluation/utils/globals.py",
+        "mattergen/evaluation/utils/lmdb_utils.py",
+        "mattergen/evaluation/utils/logging.py",
+        "mattergen/evaluation/utils/metrics_structure_summary.py",
+        "mattergen/evaluation/utils/relaxation.py",
+        "mattergen/evaluation/utils/structure_matcher.py",
+        "mattergen/evaluation/utils/symmetry_analysis.py",
+        "mattergen/evaluation/utils/utils.py",
+        "mattergen/evaluation/utils/vasprunlike.py",
+        "mattergen/scripts/csv_to_dataset.py",
+        "mattergen/scripts/evaluate.py"
+      ]
+    },
+    "CederGroupHub/chgnet": {
+      "commit": "48a6bada7f42603cf0133b24470c7924587effaa",
+      "url": "https://github.com/CederGroupHub/chgnet/tree/48a6bada7f42603cf0133b24470c7924587effaa",
+      "candidate_paths": [
+        "chgnet/data/dataset.py",
+        "chgnet/model/dynamics.py",
+        "tests/test_dataset.py",
+        "tests/test_relaxation.py"
+      ]
+    },
+    "joshrosie/crystalite": {
+      "commit": "3b2d4eacf3f0b17a04851b7bed1fcedc9733cda9",
+      "url": "https://github.com/joshrosie/crystalite/tree/3b2d4eacf3f0b17a04851b7bed1fcedc9733cda9",
+      "candidate_paths": [
+        "src/eval/__init__.py",
+        "src/eval/crystal.py",
+        "src/eval/csp_eval.py",
+        "src/eval/diagnostics.py",
+        "src/eval/dng_eval.py",
+        "src/eval/sample_runtime.py",
+        "src/eval/stability.py",
+        "src/eval/uniqueness_novelty.py",
+        "src/eval/wasserstein.py",
+        "src/eval_crystalite_ckpt.py",
+        "src/eval_csp_ckpt.py"
+      ]
+    }
+  },
+  "author_sources": [
+    {
+      "repository": "CederGroupHub/chgnet",
+      "source": "README.md",
+      "url": "https://raw.githubusercontent.com/CederGroupHub/chgnet/48a6bada7f42603cf0133b24470c7924587effaa/README.md",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\CederGroupHub\\chgnet\\README.md.txt",
+      "sha256": "b2b754620c2a2d075925b19c7d360b937b5c0c24f3a737ac0c4adbf847649cae"
+    },
+    {
+      "repository": "CederGroupHub/chgnet",
+      "source": "chgnet/model/dynamics.py",
+      "url": "https://raw.githubusercontent.com/CederGroupHub/chgnet/48a6bada7f42603cf0133b24470c7924587effaa/chgnet/model/dynamics.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\CederGroupHub\\chgnet\\chgnet\\model\\dynamics.py.txt",
+      "sha256": "bdc724a48253e4e248f1723ed61eaaf457ca80e30092119b44a77fd6ac9f797c"
+    },
+    {
+      "repository": "jiaor17/DiffCSP-PP",
+      "source": "README.md",
+      "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/README.md",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\jiaor17\\DiffCSP-PP\\README.md.txt",
+      "sha256": "49c92b192005ed64d1e2d2cc63d92d64e27666e2d76b0912c631c613207b9218"
+    },
+    {
+      "repository": "jiaor17/DiffCSP-PP",
+      "source": "diffcsp/pl_data/dataset.py",
+      "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/diffcsp/pl_data/dataset.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\jiaor17\\DiffCSP-PP\\diffcsp\\pl_data\\dataset.py.txt",
+      "sha256": "dbc2cb2859bc707645d3e7917f5451eb5548d16962f17ba151e23c3185763d1c"
+    },
+    {
+      "repository": "jiaor17/DiffCSP-PP",
+      "source": "scripts/compute_metrics.py",
+      "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/scripts/compute_metrics.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\jiaor17\\DiffCSP-PP\\scripts\\compute_metrics.py.txt",
+      "sha256": "61c39c62b67a6e3a37a5c964c9de3c5d3e0dd542ea1df35998f7de22d1b514b5"
+    },
+    {
+      "repository": "jiaor17/DiffCSP-PP",
+      "source": "scripts/eval_utils.py",
+      "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/scripts/eval_utils.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\jiaor17\\DiffCSP-PP\\scripts\\eval_utils.py.txt",
+      "sha256": "52876bac0d813b8018b17d5149a80abf38724e5322ee6c8557bcaa723f606462"
+    },
+    {
+      "repository": "jiaor17/DiffCSP-PP",
+      "source": "scripts/evaluate.py",
+      "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/scripts/evaluate.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\jiaor17\\DiffCSP-PP\\scripts\\evaluate.py.txt",
+      "sha256": "b2a4442b0e6e2321039ab2968e9254ad66ed429128f19fe83918769df56aef09"
+    },
+    {
+      "repository": "jiaor17/DiffCSP-PP",
+      "source": "scripts/generation.py",
+      "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/scripts/generation.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\jiaor17\\DiffCSP-PP\\scripts\\generation.py.txt",
+      "sha256": "61cad61ff1726d902333af89d9838de44df0149d567d17c85d5b499694d11eb3"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "README.md",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/README.md",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\README.md.txt",
+      "sha256": "4a0f0213ad5458046ef8ee59b86a1050a8adb1f0876c146712fdb9efd71a3e5e"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/evaluate.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/evaluate.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\evaluate.py.txt",
+      "sha256": "51bd004c6fe768069c401757a55f2472834df2d7cbb0f6f947e4c58016df953e"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/metrics/energy.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/metrics/energy.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\metrics\\energy.py.txt",
+      "sha256": "7e290933acf164f6e20f27f13493c68f188c8a8f3f28a3c8e8f3240191b0a5c2"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/metrics/evaluator.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/metrics/evaluator.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\metrics\\evaluator.py.txt",
+      "sha256": "f8e2fe3b4652ab5eccbf8bad38a9df56d69a01026dd7db5573569b60ed33d4e1"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/metrics/structure.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/metrics/structure.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\metrics\\structure.py.txt",
+      "sha256": "da08f891e59433f5162e4ee677f65b3e3e0f558e298e8d621c25bfeb39093d37"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/reference/presets.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/reference/presets.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\reference\\presets.py.txt",
+      "sha256": "5e3d2635716c92062c33018702a0d1b8fc54a00e4c9633936464f912ca667140"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/utils/globals.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/utils/globals.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\utils\\globals.py.txt",
+      "sha256": "ba7f916b331c7c59eafb977978dbf99d9658aeaed9f1648d29528393099a060c"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/utils/metrics_structure_summary.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/utils/metrics_structure_summary.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\utils\\metrics_structure_summary.py.txt",
+      "sha256": "07608d93b8df8de115992cd01e6b071555ecf63167f095cce363791c441c982f"
+    },
+    {
+      "repository": "microsoft/mattergen",
+      "source": "mattergen/evaluation/utils/relaxation.py",
+      "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/mattergen/evaluation/utils/relaxation.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\microsoft\\mattergen\\mattergen\\evaluation\\utils\\relaxation.py.txt",
+      "sha256": "c6b0a73a6536511f0c6c7922c3087de8bbde40802f8f546bff94ed368b4956c7"
+    },
+    {
+      "repository": "joshrosie/crystalite",
+      "source": "src/eval/dng_eval.py",
+      "url": "https://raw.githubusercontent.com/joshrosie/crystalite/3b2d4eacf3f0b17a04851b7bed1fcedc9733cda9/src/eval/dng_eval.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\joshrosie\\crystalite\\src\\eval\\dng_eval.py.txt",
+      "sha256": "5871604f41cc2dce343db9d69462970a82a7c90b5c20cb1837342e0f825a22b3"
+    },
+    {
+      "repository": "joshrosie/crystalite",
+      "source": "src/eval/stability.py",
+      "url": "https://raw.githubusercontent.com/joshrosie/crystalite/3b2d4eacf3f0b17a04851b7bed1fcedc9733cda9/src/eval/stability.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\joshrosie\\crystalite\\src\\eval\\stability.py.txt",
+      "sha256": "85ae1535225e0853aab000b8a5ee21afacdd49f6a96772c416458e429ccc9b74"
+    },
+    {
+      "repository": "joshrosie/crystalite",
+      "source": "src/eval/uniqueness_novelty.py",
+      "url": "https://raw.githubusercontent.com/joshrosie/crystalite/3b2d4eacf3f0b17a04851b7bed1fcedc9733cda9/src/eval/uniqueness_novelty.py",
+      "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\joshrosie\\crystalite\\src\\eval\\uniqueness_novelty.py.txt",
+      "sha256": "c08604a85086cb7d8ee0a2f23b7cf6b506f19c275074c6323d7b3009d4d3dfea"
+    }
+  ],
+  "ase_release": {
+    "version": "3.28.0",
+    "pypi_metadata": "https://pypi.org/pypi/ase/3.28.0/json",
+    "wheel_url": "https://files.pythonhosted.org/packages/6c/25/4f103d1bedb3593718713b3f743df7b3ff3fc68d36d6666c30265ef59c8a/ase-3.28.0-py3-none-any.whl",
+    "wheel_sha256": "0e24056302d7307b7247f90de281de15e3031c14cf400bedb1116c3b0d0e50b8",
+    "pypi_declared_sha256": "0e24056302d7307b7247f90de281de15e3031c14cf400bedb1116c3b0d0e50b8",
+    "extracted_read_only_sources": [
+      {
+        "source": "ase/filters.py",
+        "sha256": "38c20fdb3197c51c1eebed88dec14fd6b158ce0e1021ace64bd34c165534bc89",
+        "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\ase-3.28.0\\ase\\filters.py.txt"
+      },
+      {
+        "source": "ase/optimize/optimize.py",
+        "sha256": "579228df16674192eadf562a76918e65099920431034de828e562c5d14cf77b4",
+        "snapshot": "docs\\v3_scientific_audit_20260906\\evidence_physics\\authors\\ase-3.28.0\\ase\\optimize\\optimize.py.txt"
+      }
+    ],
+    "installed": false
+  }
+}

@@ -27,7 +27,7 @@ flowchart LR
   R --> T["固定 model494 tau800 后处理与评测"]
 ```
 
-[逐函数追踪报告](review_notes/OLD_LLM_DLM_ORDER_TRACE.md) 给出了代码位置与旧、新文件对照：
+[逐函数追踪报告](../v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/review_notes/OLD_LLM_DLM_ORDER_TRACE.md) 给出了代码位置与旧、新文件对照：
 
 1. C³FD typed ledger 定义可达化学动作；Typed Llama 在同一支持内提供 residual PoE，生成组成及软计划。
 2. 组成确定后，Planner terminal hidden、元素/计数和实际软字段 IDs 进入 species pointer，得到一次物种排列。

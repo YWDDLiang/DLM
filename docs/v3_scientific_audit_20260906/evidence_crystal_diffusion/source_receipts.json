@@ -1,0 +1,346 @@
+[
+  {
+    "path": "code/diffcsppp/README.md",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/README.md",
+    "accessed_utc": "2026-09-06T07:58:56.799153+00:00",
+    "status": 200,
+    "bytes": 4092,
+    "sha256": "49c92b192005ed64d1e2d2cc63d92d64e27666e2d76b0912c631c613207b9218"
+  },
+  {
+    "path": "code/diffcsppp/diffcsp/pl_modules/diffusion.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/diffcsp/pl_modules/diffusion.py",
+    "accessed_utc": "2026-09-06T07:58:56.799526+00:00",
+    "status": 200,
+    "bytes": 14324,
+    "sha256": "e58f287d60150df59c19c5788f1e7a526a9788b27a0977fb2484c1d6859540d6"
+  },
+  {
+    "path": "code/diffcsppp/diffcsp/pl_modules/diffusion_w_type.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/diffcsp/pl_modules/diffusion_w_type.py",
+    "accessed_utc": "2026-09-06T07:58:56.799786+00:00",
+    "status": 200,
+    "bytes": 14356,
+    "sha256": "10f0ef8d80c14513e840f2f762f607029d9ad5af5e5b7f540ea5d2678b938457"
+  },
+  {
+    "path": "code/diffcsppp/diffcsp/pl_modules/cspnet.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/diffcsp/pl_modules/cspnet.py",
+    "accessed_utc": "2026-09-06T07:58:56.799982+00:00",
+    "status": 200,
+    "bytes": 7349,
+    "sha256": "c7504f5ace1ffb837c20981dfead390da4b514d1d0ea026c563045119a6d1a18"
+  },
+  {
+    "path": "code/diffcsppp/diffcsp/pl_modules/lattice/crystal_family.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/diffcsp/pl_modules/lattice/crystal_family.py",
+    "accessed_utc": "2026-09-06T07:58:56.800165+00:00",
+    "status": 200,
+    "bytes": 3905,
+    "sha256": "fb62ddafa7587ba2a05aac0d11f8c912dc54cf28901ed44ed08ae3a251b79c35"
+  },
+  {
+    "path": "code/diffcsppp/diffcsp/pl_modules/lattice/matrix.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/diffcsp/pl_modules/lattice/matrix.py",
+    "accessed_utc": "2026-09-06T07:58:56.800326+00:00",
+    "status": 200,
+    "bytes": 706,
+    "sha256": "ef1347adeb8658129e55bfaff49300c2b33f774adf51bf7e9cc02e94dc5b5396"
+  },
+  {
+    "path": "code/diffcsppp/diffcsp/common/data_utils.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/diffcsp/common/data_utils.py",
+    "accessed_utc": "2026-09-06T07:58:56.800460+00:00",
+    "status": 200,
+    "bytes": 49945,
+    "sha256": "86121bc8bdbefdd207f198a4f9babe667389098ac998f4204942ac493d752c83"
+  },
+  {
+    "path": "code/diffcsppp/conf/train/default.yaml",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/conf/train/default.yaml",
+    "accessed_utc": "2026-09-06T07:58:56.800600+00:00",
+    "status": 200,
+    "bytes": 673,
+    "sha256": "de955a1c215d376a2879a4e93a849ff596012a57703dd3c442b8775e6097a950"
+  },
+  {
+    "path": "code/diffcsppp/conf/data/mp_20.yaml",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/conf/data/mp_20.yaml",
+    "accessed_utc": "2026-09-06T07:58:57.881026+00:00",
+    "status": 200,
+    "bytes": 2345,
+    "sha256": "9424ad089bb099de276c61959d85800588dc519e0eed5d265cb0f4d56889b154"
+  },
+  {
+    "path": "code/diffcsppp/conf/model/diffusion.yaml",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/conf/model/diffusion.yaml",
+    "accessed_utc": "2026-09-06T07:58:57.886636+00:00",
+    "status": 200,
+    "bytes": 368,
+    "sha256": "aabc770f9d5c5c14a1d8078ede0813ee05dcd6a55cedbd96eaa8de540225fc20"
+  },
+  {
+    "path": "code/diffcsppp/conf/model/decoder/cspnet.yaml",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/conf/model/decoder/cspnet.yaml",
+    "accessed_utc": "2026-09-06T07:58:57.889149+00:00",
+    "status": 200,
+    "bytes": 237,
+    "sha256": "c6102cd9e7c91f671aba3d40fa69d62ca81f874ec1fac16b510278cd21d92e99"
+  },
+  {
+    "path": "code/diffcsppp/scripts/compute_metrics.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/scripts/compute_metrics.py",
+    "accessed_utc": "2026-09-06T07:58:57.890308+00:00",
+    "status": 200,
+    "bytes": 13451,
+    "sha256": "61c39c62b67a6e3a37a5c964c9de3c5d3e0dd542ea1df35998f7de22d1b514b5"
+  },
+  {
+    "path": "code/diffcsppp/scripts/generation.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP-PP/e82e7ffa7cb2a383bde69b067a343ca137d73e47/scripts/generation.py",
+    "accessed_utc": "2026-09-06T07:58:57.895387+00:00",
+    "status": 200,
+    "bytes": 3594,
+    "sha256": "61cad61ff1726d902333af89d9838de44df0149d567d17c85d5b499694d11eb3"
+  },
+  {
+    "path": "code/diffcsp/README.md",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP/7121d159826efa2ba9500bf299250d96da37f146/README.md",
+    "accessed_utc": "2026-09-06T07:58:57.904312+00:00",
+    "status": 200,
+    "bytes": 3383,
+    "sha256": "536d4824f68b9c2d68df99964a44c6dfea18889b855b25fddb7b1b9bf98812e3"
+  },
+  {
+    "path": "code/diffcsp/diffcsp/pl_modules/diffusion.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP/7121d159826efa2ba9500bf299250d96da37f146/diffcsp/pl_modules/diffusion.py",
+    "accessed_utc": "2026-09-06T07:58:58.273762+00:00",
+    "status": 200,
+    "bytes": 9873,
+    "sha256": "d13a56c8634477ceb77fa3686263c64877b8fb43e800313c6ad4a9a1efe8c1d0"
+  },
+  {
+    "path": "code/diffcsp/diffcsp/pl_modules/cspnet.py",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP/7121d159826efa2ba9500bf299250d96da37f146/diffcsp/pl_modules/cspnet.py",
+    "accessed_utc": "2026-09-06T07:58:58.677064+00:00",
+    "status": 200,
+    "bytes": 11004,
+    "sha256": "ffd693a552122dd52f27cd8f75ee0f8698bd0e3c392f26946816ee38ac8bab52"
+  },
+  {
+    "path": "code/diffcsp/conf/train/default.yaml",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP/7121d159826efa2ba9500bf299250d96da37f146/conf/train/default.yaml",
+    "accessed_utc": "2026-09-06T07:58:58.904724+00:00",
+    "status": 200,
+    "bytes": 583,
+    "sha256": "50333f8ac230842784b573f71898d416223d701478c5083039e0bd6c97dbf55a"
+  },
+  {
+    "path": "code/diffcsp/conf/data/mp_20.yaml",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP/7121d159826efa2ba9500bf299250d96da37f146/conf/data/mp_20.yaml",
+    "accessed_utc": "2026-09-06T07:58:58.936638+00:00",
+    "status": 200,
+    "bytes": 2346,
+    "sha256": "f241a28a6b96150c114ddf25510ae81f405f74f888472c5bc91abdfd6da23b25"
+  },
+  {
+    "path": "code/diffcsp/conf/model/diffusion.yaml",
+    "url": "https://raw.githubusercontent.com/jiaor17/DiffCSP/7121d159826efa2ba9500bf299250d96da37f146/conf/model/diffusion.yaml",
+    "accessed_utc": "2026-09-06T07:58:58.982147+00:00",
+    "status": 200,
+    "bytes": 368,
+    "sha256": "aabc770f9d5c5c14a1d8078ede0813ee05dcd6a55cedbd96eaa8de540225fc20"
+  },
+  {
+    "path": "code/cdvae/README.md",
+    "url": "https://raw.githubusercontent.com/txie-93/cdvae/f857f598d6f6cca5dc1ea0582d228f12dcc2c2ea/README.md",
+    "accessed_utc": "2026-09-06T07:58:59.308943+00:00",
+    "status": 200,
+    "bytes": 6441,
+    "sha256": "ea9c9204540815cc14164026371179f9a2d76242ff1d6b9fdbfbe6574507870e"
+  },
+  {
+    "path": "code/cdvae/cdvae/pl_modules/model.py",
+    "url": "https://raw.githubusercontent.com/txie-93/cdvae/f857f598d6f6cca5dc1ea0582d228f12dcc2c2ea/cdvae/pl_modules/model.py",
+    "accessed_utc": "2026-09-06T07:58:59.314010+00:00",
+    "status": 200,
+    "bytes": 26689,
+    "sha256": "676947f29c30dd8fe5e9f3f778cee5177ea9272573838656aa45d6c4499b87eb"
+  },
+  {
+    "path": "code/cdvae/conf/train/default.yaml",
+    "url": "https://raw.githubusercontent.com/txie-93/cdvae/f857f598d6f6cca5dc1ea0582d228f12dcc2c2ea/conf/train/default.yaml",
+    "accessed_utc": "2026-09-06T07:58:59.585529+00:00",
+    "status": 200,
+    "bytes": 544,
+    "sha256": "4e116b0488f5664d6e565dc3792b2c1ab6a622d630a7c42b4f9b6badb86c8bee"
+  },
+  {
+    "path": "code/cdvae/conf/data/mp_20.yaml",
+    "url": "https://raw.githubusercontent.com/txie-93/cdvae/f857f598d6f6cca5dc1ea0582d228f12dcc2c2ea/conf/data/mp_20.yaml",
+    "accessed_utc": "2026-09-06T07:58:59.587283+00:00",
+    "status": 200,
+    "bytes": 1748,
+    "sha256": "d2a2754e3be4e11ef6fe3d8986b2697f458d292e53c5e6285c88839a69a6fa23"
+  },
+  {
+    "path": "code/cdvae/conf/model/vae.yaml",
+    "url": "https://raw.githubusercontent.com/txie-93/cdvae/f857f598d6f6cca5dc1ea0582d228f12dcc2c2ea/conf/model/vae.yaml",
+    "accessed_utc": "2026-09-06T07:58:59.660254+00:00",
+    "status": 200,
+    "bytes": 659,
+    "sha256": "260fe885754c7200edcf37a2c9a8dae67ff65699974cae594d3a784e039419f1"
+  },
+  {
+    "path": "code/cdvae/scripts/compute_metrics.py",
+    "url": "https://raw.githubusercontent.com/txie-93/cdvae/f857f598d6f6cca5dc1ea0582d228f12dcc2c2ea/scripts/compute_metrics.py",
+    "accessed_utc": "2026-09-06T07:58:59.874468+00:00",
+    "status": 200,
+    "bytes": 13900,
+    "sha256": "660961127d549b0edc11852a4e2a89299a50ebd2253642e0e94c631070c0c25a"
+  },
+  {
+    "path": "code/flowmm/README.md",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/README.md",
+    "accessed_utc": "2026-09-06T07:58:59.899930+00:00",
+    "status": 200,
+    "bytes": 11082,
+    "sha256": "2a8610f74dd22d019ac635cdca48fe19029f9cfc0a5215e553ab22e2c8fc8f44"
+  },
+  {
+    "path": "code/flowmm/src/flowmm/model/model_pl.py",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/src/flowmm/model/model_pl.py",
+    "accessed_utc": "2026-09-06T07:59:00.239492+00:00",
+    "status": 200,
+    "bytes": 38451,
+    "sha256": "d4f1e69d433cf4863fe39f512081ff4f06cb8314cc32472b71a73fbf084ea71e"
+  },
+  {
+    "path": "code/flowmm/src/flowmm/model/arch.py",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/src/flowmm/model/arch.py",
+    "accessed_utc": "2026-09-06T07:59:00.262848+00:00",
+    "status": 200,
+    "bytes": 23323,
+    "sha256": "3a7ece6105dab5fafda0b78b36a25c817aafb7b122420cf321f3c04b2b85dd33"
+  },
+  {
+    "path": "code/flowmm/src/flowmm/rfm/manifolds/flat_torus.py",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/src/flowmm/rfm/manifolds/flat_torus.py",
+    "accessed_utc": "2026-09-06T07:59:00.293168+00:00",
+    "status": 200,
+    "bytes": 8703,
+    "sha256": "110f786e6be03c63000d6a3851a450eb9499713f98d640e870b6974cca48a4a7"
+  },
+  {
+    "path": "code/flowmm/src/flowmm/rfm/manifolds/lattice_params.py",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/src/flowmm/rfm/manifolds/lattice_params.py",
+    "accessed_utc": "2026-09-06T07:59:00.561402+00:00",
+    "status": 200,
+    "bytes": 12807,
+    "sha256": "90985a1f0d01b3a03cfadc3b6a5c7491c3712a51740251c8730a4e865eac94ea"
+  },
+  {
+    "path": "code/flowmm/src/flowmm/rfm/manifold_getter.py",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/src/flowmm/rfm/manifold_getter.py",
+    "accessed_utc": "2026-09-06T07:59:00.579597+00:00",
+    "status": 200,
+    "bytes": 21173,
+    "sha256": "835baea83cf0a755537465f2ed6d6f9ca1f366842de0178d258b198c13418aac"
+  },
+  {
+    "path": "code/flowmm/src/flowmm/model/solvers.py",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/src/flowmm/model/solvers.py",
+    "accessed_utc": "2026-09-06T07:59:00.678036+00:00",
+    "status": 200,
+    "bytes": 1467,
+    "sha256": "8a5a585b02b9a190f444f41495aa9f6c195ae9a0360b898473ebe60e1c732adb"
+  },
+  {
+    "path": "code/flowmm/scripts_model/conf/default.yaml",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/scripts_model/conf/default.yaml",
+    "accessed_utc": "2026-09-06T07:59:00.849410+00:00",
+    "status": 200,
+    "bytes": 2023,
+    "sha256": "22df8a3c6a9cb9e81df7855e4e384f0965dbb50cd8a4408113b73793dfa8d363"
+  },
+  {
+    "path": "code/flowmm/scripts_model/conf/data/mp20_llama.yaml",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/scripts_model/conf/data/mp20_llama.yaml",
+    "accessed_utc": "2026-09-06T07:59:00.855494+00:00",
+    "status": 200,
+    "bytes": 2396,
+    "sha256": "59058d3f11aec6a1a6a4eeb65050f995c6ec09a94c5eab8c7b508cbc7d3061bf"
+  },
+  {
+    "path": "code/flowmm/scripts_model/conf/model/null_params.yaml",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/scripts_model/conf/model/null_params.yaml",
+    "accessed_utc": "2026-09-06T07:59:01.199401+00:00",
+    "status": 200,
+    "bytes": 272,
+    "sha256": "cc074dd484b20b7960b2f8fecfea1de38e464f7d3c62a515adebef2a1587cb13"
+  },
+  {
+    "path": "code/flowmm/scripts_model/conf/model/abits_params.yaml",
+    "url": "https://raw.githubusercontent.com/facebookresearch/flowmm/6a96aec3b6eba89f6fa07436f0c8837979abb285/scripts_model/conf/model/abits_params.yaml",
+    "accessed_utc": "2026-09-06T07:59:01.223889+00:00",
+    "status": 200,
+    "bytes": 317,
+    "sha256": "e5ccdd176a2ecd57272bdc7f613b7369a5917ce5be59b4db78ed605f18d5bc49"
+  },
+  {
+    "path": "code/mattergen/README.md",
+    "url": "https://raw.githubusercontent.com/microsoft/mattergen/92423660a8bd70e83679086e88f88596d484dc16/README.md",
+    "accessed_utc": "2026-09-06T07:59:01.255619+00:00",
+    "status": 200,
+    "bytes": 26329,
+    "sha256": "4a0f0213ad5458046ef8ee59b86a1050a8adb1f0876c146712fdb9efd71a3e5e"
+  },
+  {
+    "path": "papers/diffcsppp_2402.03992v2.html",
+    "url": "https://arxiv.org/html/2402.03992v2",
+    "accessed_utc": "2026-09-06T07:59:01.542935+00:00",
+    "status": 200,
+    "bytes": 383922,
+    "sha256": "efd57e92ead471d4b365bc11546c416c8d72f9ae7f96d377ed3301cb45a21452"
+  },
+  {
+    "path": "papers/diffcsp_2309.04475v2.html",
+    "url": "https://arxiv.org/html/2309.04475v2",
+    "accessed_utc": "2026-09-06T07:59:01.556829+00:00",
+    "status": 200,
+    "bytes": 740395,
+    "sha256": "0b0460a37706a62a3b9a74253d3bc50fe17feace4cb11db74b1d8e2806b3b442"
+  },
+  {
+    "path": "papers/cdvae_2110.06197v3.html",
+    "url": "https://arxiv.org/html/2110.06197v3",
+    "accessed_utc": "2026-09-06T07:59:01.631433+00:00",
+    "status": 200,
+    "bytes": 306798,
+    "sha256": "6805dc84ed6dd908d63dd5b39f58be02feff26cf08ac4bbaa34858dbbce30ba6"
+  },
+  {
+    "path": "papers/flowmm_2406.04713v1.html",
+    "url": "https://arxiv.org/html/2406.04713v1",
+    "accessed_utc": "2026-09-06T07:59:01.790940+00:00",
+    "status": 200,
+    "bytes": 607629,
+    "sha256": "9e082d6bc78426dcf5e4cbd369d9e2fbdcd4a8839e4e9af2c8d029f59ef75e35"
+  },
+  {
+    "path": "papers/flowllm_2410.23405v1.html",
+    "url": "https://arxiv.org/html/2410.23405v1",
+    "accessed_utc": "2026-09-06T07:59:01.803467+00:00",
+    "status": 200,
+    "bytes": 277295,
+    "sha256": "e38f9432b3ab4212d98cb67160f87eba2610c7dcd55bf4adc5a3b0fb170ca6e0"
+  },
+  {
+    "path": "papers/mattergen_nature_2025.html",
+    "url": "https://www.nature.com/articles/s41586-025-08628-5",
+    "accessed_utc": "2026-09-06T07:59:02.180913+00:00",
+    "status": 200,
+    "bytes": 471557,
+    "sha256": "6fcf4a8d21299c2e1fddcda0b4f72303a3e608203c7dd9097af0937c8b96d832"
+  }
+]

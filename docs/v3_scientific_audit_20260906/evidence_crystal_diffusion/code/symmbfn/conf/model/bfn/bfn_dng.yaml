@@ -1,0 +1,14 @@
+_target_: symmbfn.model.bfn.bfn_dng.bfn4DNG
+sigma1_coord: 0.02
+sigma1_lattice: 0.02
+beta1: 0.75
+beta1_sym: 1.5
+sample_steps: 100
+t_min: 0.0001
+smooth: True
+pred_type: True
+max_atoms: 100
+
+
+defaults:
+  - dynamics: cspnet

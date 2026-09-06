@@ -1,0 +1,23 @@
+_target_: wyckoffdiff_adapter.diffusion.diffusion_module.WyckoffDiffusionModule
+
+d3pm_config:
+  device: cuda
+  dataset: mp20
+  "t_max": 1000
+  "num_elements": 100
+  "max_num_atoms": 54
+  "d3pm_transition": "zeros_init"
+  "loss_fn": "ce"
+  "inf_loss_factor": 1.0
+  "gnn": "base"
+
+  "num_gnn_layers": 3
+  "hidden_dim": 256
+  "dof_pos_sg_emb_size": 16
+  "gnn_activation": "SiLU"
+  # MLP
+  "mlp_hidden_layers": 2
+  "mlp_activation": "SiLU"
+
+  "target_spg": 
+  verbose_losses: false

@@ -1,0 +1,82 @@
+{
+  "purpose": "Numerical illustrations of derived limits, not model or physical evaluations.",
+  "log_spd_global_rotation_error": 2.220446049250313e-16,
+  "log_spd_equivalent_integer_basis_difference": 0.8757643372511495,
+  "fractional_third_grid100_residual": 0.0033333333333332993,
+  "old_vpa_46_4117_to_12_7358_log_change": -1.2931346571577134,
+  "same_log_change_in_largest_v2_sigma_units": 6.465673285788567,
+  "coordinate_quantization_scalar_unchanged_probability_sigma_A_0_05": {
+    "5": 0.3829249225480261,
+    "10": 0.6826894921370857,
+    "20": 0.9544997361036417
+  },
+  "wrapped_score_counterexamples": {
+    "sigma=0.1,delta=0.49": {
+      "wrapped_score": -22.10585786300048,
+      "nearest_image_score": -48.99999999999999
+    },
+    "sigma=0.1,delta=0.5": {
+      "wrapped_score": -0.0,
+      "nearest_image_score": 49.99999999999999
+    },
+    "sigma=0.5,delta=0.49": {
+      "wrapped_score": -0.0057573890049940095,
+      "nearest_image_score": -1.96
+    },
+    "sigma=0.5,delta=0.5": {
+      "wrapped_score": -4.83235123836214e-62,
+      "nearest_image_score": 2.0
+    }
+  },
+  "hard_mirror_constraint_saddle": {
+    "E_x0": 1.0,
+    "E_xplusminus1": 0.0,
+    "second_derivative_at_x0": -4.0
+  },
+  "fractional_sgwn_metric_counterexample": {
+    "fractional_rotation": [
+      [
+        0.0,
+        -1.0
+      ],
+      [
+        1.0,
+        -1.0
+      ]
+    ],
+    "hexagonal_metric": [
+      [
+        1.0,
+        -0.5
+      ],
+      [
+        -0.5,
+        1.0
+      ]
+    ],
+    "R_transpose_G_R_error": 0.0,
+    "R_not_orthogonal_error": 1.7320508075688772,
+    "q_euclidean_x": 0.4040365236633422,
+    "q_euclidean_Rx": 0.666143610703488,
+    "q_metric_x": 0.5522524501630207,
+    "q_metric_Rx": 0.5522524501630206,
+    "scope": "2D plane embeds in a 3D trigonal crystal; independent formula check, not execution of SGEquiDiff."
+  },
+  "independent_soft_condition_demo": {
+    "P_geometry1_given_soft1": 0.8,
+    "P_geometry1_given_soft0": 0.8
+  },
+  "illustrative_teacher_fallback_mixture_demo": {
+    "fallback_fraction": 0.095,
+    "P_geometry1_given_soft1": 0.8245557350565429,
+    "P_geometry1_given_soft0": 0.7601049868766405,
+    "warning": "Synthetic Bernoulli example; not a fit to project data."
+  },
+  "training_exposure_context": {
+    "v2_registered_source_views": 108544,
+    "diffcsppp_mp20_epoch_upper_budget_structure_exposures": 27136000,
+    "flowllm_rfm_upper_budget_pairs": 66000000,
+    "mattergen_base_structure_exposures": 890880000,
+    "warning": "Different objectives, early stopping, parameter counts and pretraining; not FLOP-equivalent."
+  }
+}

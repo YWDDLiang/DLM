@@ -1,0 +1,115 @@
+{
+  "scope": "Algebra and expected-label/NFE accounting, not model performance or measured runtime.",
+  "vp_v_parameterization": [
+    {
+      "t": 0.002,
+      "z0_error": 2.220446049250313e-16,
+      "eps_error": 4.440892098500626e-16,
+      "score_error": 5.684341886080802e-14
+    },
+    {
+      "t": 0.1,
+      "z0_error": 4.440892098500626e-16,
+      "eps_error": 1.1102230246251565e-16,
+      "score_error": 1.7763568394002505e-15
+    },
+    {
+      "t": 0.5,
+      "z0_error": 5.551115123125783e-17,
+      "eps_error": 1.1102230246251565e-16,
+      "score_error": 4.440892098500626e-16
+    },
+    {
+      "t": 1.0,
+      "z0_error": 0.0,
+      "eps_error": 0.0,
+      "score_error": 0.0
+    }
+  ],
+  "zero_head_initialization": {
+    "alpha_bar_terminal": 0.0,
+    "naive_epsilon_to_x0_at_exact_prior": "undefined at alpha=0; use the regular v parameterization",
+    "zero_v_probability_flow_drift": 0.0,
+    "meaning": "Zero v is a stationary Gaussian-reference probability flow, not a trained crystal denoiser."
+  },
+  "prior_approximations": {
+    "lattice_terminal_prior_is_exact_standard_Gaussian": true,
+    "torus_1d_TV_upper_sigma1": 2.675287991074243e-09,
+    "torus_60d_TV_upper_sigma1": 1.6051727946445457e-07,
+    "boundary": "Coordinate prior is an explicitly bounded uniform approximation; these are prior bounds only."
+  },
+  "write_order_of_precomputed_independent_site_updates": {
+    "max_difference": 0.0
+  },
+  "parameter_accounting": {
+    "v2_trainable_inventory": 36993232,
+    "input_delta_table": 10162176,
+    "output_delta_table": 10162176,
+    "numeric_adapter": 651264,
+    "legacy_repair_task_projection": 36864,
+    "new_geometry_heads": 36873,
+    "new_time_mlp": 536704,
+    "new_task_vector": 4096,
+    "G_graph_eligible_existing_inventory": 26142928,
+    "T_plus_G_optimizer_union_candidate": 37570905,
+    "boundary": "Static module inventory, not measured nonzero gradients. G bypasses legacy logits and task projection; whole input_delta tensor remains eligible but absent-token rows have zero direct G gradient."
+  },
+  "example_budgets": [
+    {
+      "N": 1,
+      "geometric_channels": 9,
+      "v2_expected_targets_per_forward": 1.9875,
+      "v2_expected_targets_per_source_two_epochs": 7.95,
+      "hybrid_token_targets_per_source_two_epochs": 3.975,
+      "hybrid_geometric_targets_per_source_two_epochs": 18,
+      "dense_to_v2_repair_target_ratio_not_information_ratio": 4.528301886792453,
+      "nfe_v2_construction_and_repair": 18,
+      "nfe_prior_euler32": 32,
+      "nfe_prior_heun32": 64,
+      "nfe_token_construction_plus_euler32": 41,
+      "nfe_token_construction_plus_heun32": 73
+    },
+    {
+      "N": 10,
+      "geometric_channels": 36,
+      "v2_expected_targets_per_forward": 5.7,
+      "v2_expected_targets_per_source_two_epochs": 22.8,
+      "hybrid_token_targets_per_source_two_epochs": 11.4,
+      "hybrid_geometric_targets_per_source_two_epochs": 72,
+      "dense_to_v2_repair_target_ratio_not_information_ratio": 6.315789473684211,
+      "nfe_v2_construction_and_repair": 72,
+      "nfe_prior_euler32": 32,
+      "nfe_prior_heun32": 64,
+      "nfe_token_construction_plus_euler32": 68,
+      "nfe_token_construction_plus_heun32": 100
+    },
+    {
+      "N": 20,
+      "geometric_channels": 66,
+      "v2_expected_targets_per_forward": 9.825000000000001,
+      "v2_expected_targets_per_source_two_epochs": 39.300000000000004,
+      "hybrid_token_targets_per_source_two_epochs": 19.650000000000002,
+      "hybrid_geometric_targets_per_source_two_epochs": 132,
+      "dense_to_v2_repair_target_ratio_not_information_ratio": 6.717557251908397,
+      "nfe_v2_construction_and_repair": 132,
+      "nfe_prior_euler32": 32,
+      "nfe_prior_heun32": 64,
+      "nfe_token_construction_plus_euler32": 98,
+      "nfe_token_construction_plus_heun32": 130
+    }
+  ],
+  "MP20_train_aggregate": {
+    "source_count": 27136,
+    "atom_count": 282847,
+    "mean_N": 10.42331220518868,
+    "channels_per_full_view": 1011357,
+    "v2_two_epoch_forward_examples": 108544,
+    "v2_two_epoch_expected_numeric_labels": 637654.3500000001,
+    "hybrid_two_epoch_forward_examples": 108544,
+    "hybrid_two_epoch_token_labels": 318827.17500000005,
+    "hybrid_two_epoch_geometric_labels": 2022714,
+    "all_geometry_two_epoch_labels": 4045428,
+    "geometry_views_if_one_token_and_one_geometry_per_source_epoch": 54272,
+    "updates_two_epochs_at_global24": 4524
+  }
+}

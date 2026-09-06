@@ -2,7 +2,7 @@
 
 C³FD 提供化学动作支持，Typed Llama 生成组成、软计划与物种程序，周期 DLM 生成和修订晶体几何；固定 model494 refiner 单独报告。
 
-当前运行版本为 **Periodic DLM V2**，从原始 LLaDA 与完整 MP20 训练。V2 已开始正式训练，尚无最终 SUN 结果。当前研究同时开展全面科学审计，决定有依据的最小修复或 V3；具体状态以 [当前记录](docs/CURRENT_STATE.md) 为准。
+最近完成的版本为 **Periodic DLM V2**：两 epoch 训练及固定 256 的完整评测已完成，raw Strict/Meta SUN 为 **8/50**，固定 tau800 后为 **16/113**，未达到目标。全面科学审计已形成分组件报告与首轮交叉审查；[V3 具体规格](docs/v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md) 正在第二轮独立复核，尚未训练。具体状态以 [当前记录](docs/CURRENT_STATE.md) 为准。
 
 ## 项目入口
 

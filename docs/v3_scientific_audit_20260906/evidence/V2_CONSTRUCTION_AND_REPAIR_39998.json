@@ -1,0 +1,461 @@
+{
+  "success": true,
+  "failed": false,
+  "failure": null,
+  "reports": {
+    "construction-evaluation/EVALUATION_FINAL.json": {
+      "counts": {
+        "reconstructed": 256,
+        "native_execution_success": 256,
+        "endpoint_execution_success": 256,
+        "novel": 251,
+        "unique_representative": 256,
+        "novel_unique": 251,
+        "terminal_verified": 68,
+        "strict_stable": 14,
+        "meta_stable": 48,
+        "strict_sun": 12,
+        "meta_sun": 44,
+        "verified_strict_stable": 5,
+        "verified_meta_stable": 24,
+        "verified_strict_sun": 4,
+        "verified_meta_sun": 21,
+        "requests": 256
+      },
+      "endpoint": "native",
+      "cohort_role": "fixed_development",
+      "policy_stage": "final",
+      "verification_protocol": {
+        "fresh_terminal_energy": true,
+        "periodic_coordinate_wrap": true,
+        "rigid_fractional_shift": [
+          0.137,
+          0.271,
+          0.419
+        ],
+        "energy_tolerance_eV_atom": 0.001
+      },
+      "terminal_protocol": {
+        "model": "CHGNet-0.3.0",
+        "optimizer": "FIRE",
+        "relax_cell": true,
+        "ase_filter": "FrechetCellFilter",
+        "fmax": 0.1,
+        "scalar_pressure": 0,
+        "constant_volume": false,
+        "hydrostatic_strain": false,
+        "cell_mask": "all_six",
+        "fire_dt": 0.1,
+        "fire_maxstep": 0.2,
+        "stress_tolerance_GPa": 0.5,
+        "max_steps": 500
+      },
+      "main_stability_criterion": "retained terminal-energy threshold",
+      "verified_subset_adds": "optimizer stop, force/stress, geometry and consistent-energy checks",
+      "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+      "strict_sun_percent": 4.6875,
+      "meta_sun_percent": 17.1875,
+      "verified_strict_sun_percent": 1.5625,
+      "verified_meta_sun_percent": 8.203125,
+      "strictly_exceeds_10_and_50": false,
+      "verified_subset_strictly_exceeds_10_and_50": false,
+      "raw_energy_eV_atom": {
+        "count": 256,
+        "mean": 1.4757438828237355,
+        "median": 1.8217161893844604,
+        "minimum": -9.14224910736084,
+        "maximum": 33.253719329833984
+      },
+      "verified_gap_eV_atom": {
+        "count": 68,
+        "mean": 4.282446580774644,
+        "median": 3.103453040122986,
+        "minimum": -3.5762786865234375e-7,
+        "maximum": 12.709331035614014
+      },
+      "verified_terminal_eV_atom": {
+        "count": 68,
+        "mean": -4.42694976049311,
+        "median": -4.284238815307617,
+        "minimum": -11.723073959350586,
+        "maximum": -0.4606204032897949
+      },
+      "raw_force_max_eV_A": {
+        "count": 256,
+        "mean": 91.8285451218897,
+        "median": 37.670084859613226,
+        "minimum": 1.2904784139758924e-8,
+        "maximum": 3495.665610306734
+      },
+      "raw_stress_max_GPa": {
+        "count": 256,
+        "mean": 221.36395468236879,
+        "median": 58.604597091674805,
+        "minimum": 0.315269410610199,
+        "maximum": 27531.5859375
+      },
+      "label_statuses": {
+        "not_converged": 109,
+        "verified": 68,
+        "invalid_terminal": 79
+      },
+      "hull_statuses": {
+        "known": 248,
+        "official_cache_unresolved": 8
+      },
+      "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b",
+      "official_cache": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_basin_closure_official_20260904_v1/official_mp_cache",
+      "new_official_query": false,
+      "historical_protocol_comparison": "new common relaxation protocol with verification reported separately; historical values are not relabeled"
+    },
+    "repair-effect/COMPARISON_FINAL.json": {
+      "requests": 256,
+      "binary_all_requests": {
+        "reconstructed": {
+          "reference_count": 256,
+          "method_count": 256,
+          "reference_percent": 100,
+          "method_percent": 100,
+          "change_percentage_points": 0,
+          "both": 256,
+          "reference_only": 0,
+          "method_only": 0,
+          "neither": 0
+        },
+        "native_execution_success": {
+          "reference_count": 256,
+          "method_count": 256,
+          "reference_percent": 100,
+          "method_percent": 100,
+          "change_percentage_points": 0,
+          "both": 256,
+          "reference_only": 0,
+          "method_only": 0,
+          "neither": 0
+        },
+        "endpoint_execution_success": {
+          "reference_count": 256,
+          "method_count": 256,
+          "reference_percent": 100,
+          "method_percent": 100,
+          "change_percentage_points": 0,
+          "both": 256,
+          "reference_only": 0,
+          "method_only": 0,
+          "neither": 0
+        },
+        "novel": {
+          "reference_count": 251,
+          "method_count": 251,
+          "reference_percent": 98.046875,
+          "method_percent": 98.046875,
+          "change_percentage_points": 0,
+          "both": 249,
+          "reference_only": 2,
+          "method_only": 2,
+          "neither": 3
+        },
+        "unique_representative": {
+          "reference_count": 256,
+          "method_count": 255,
+          "reference_percent": 100,
+          "method_percent": 99.609375,
+          "change_percentage_points": -0.390625,
+          "both": 255,
+          "reference_only": 1,
+          "method_only": 0,
+          "neither": 0
+        },
+        "novel_unique": {
+          "reference_count": 251,
+          "method_count": 251,
+          "reference_percent": 98.046875,
+          "method_percent": 98.046875,
+          "change_percentage_points": 0,
+          "both": 249,
+          "reference_only": 2,
+          "method_only": 2,
+          "neither": 3
+        },
+        "terminal_verified": {
+          "reference_count": 68,
+          "method_count": 70,
+          "reference_percent": 26.5625,
+          "method_percent": 27.34375,
+          "change_percentage_points": 0.78125,
+          "both": 33,
+          "reference_only": 35,
+          "method_only": 37,
+          "neither": 151
+        },
+        "strict_stable": {
+          "reference_count": 14,
+          "method_count": 11,
+          "reference_percent": 5.46875,
+          "method_percent": 4.296875,
+          "change_percentage_points": -1.171875,
+          "both": 6,
+          "reference_only": 8,
+          "method_only": 5,
+          "neither": 237
+        },
+        "meta_stable": {
+          "reference_count": 48,
+          "method_count": 54,
+          "reference_percent": 18.75,
+          "method_percent": 21.09375,
+          "change_percentage_points": 2.34375,
+          "both": 22,
+          "reference_only": 26,
+          "method_only": 32,
+          "neither": 176
+        },
+        "strict_sun": {
+          "reference_count": 12,
+          "method_count": 8,
+          "reference_percent": 4.6875,
+          "method_percent": 3.125,
+          "change_percentage_points": -1.5625,
+          "both": 4,
+          "reference_only": 8,
+          "method_only": 4,
+          "neither": 240
+        },
+        "meta_sun": {
+          "reference_count": 44,
+          "method_count": 50,
+          "reference_percent": 17.1875,
+          "method_percent": 19.53125,
+          "change_percentage_points": 2.34375,
+          "both": 18,
+          "reference_only": 26,
+          "method_only": 32,
+          "neither": 180
+        },
+        "verified_strict_sun": {
+          "reference_count": 4,
+          "method_count": 2,
+          "reference_percent": 1.5625,
+          "method_percent": 0.78125,
+          "change_percentage_points": -0.78125,
+          "both": 0,
+          "reference_only": 4,
+          "method_only": 2,
+          "neither": 250
+        },
+        "verified_meta_sun": {
+          "reference_count": 21,
+          "method_count": 18,
+          "reference_percent": 8.203125,
+          "method_percent": 7.03125,
+          "change_percentage_points": -1.171875,
+          "both": 5,
+          "reference_only": 16,
+          "method_only": 13,
+          "neither": 222
+        }
+      },
+      "raw_finite_pairs": {
+        "energy_eV_atom": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": 1.4757438828237355,
+          "method_mean": 1.2976796007715166,
+          "mean_method_minus_reference": -0.17806428205221891,
+          "median_method_minus_reference": 0.191267728805542,
+          "method_lower": 117,
+          "method_higher": 137,
+          "equal": 2
+        },
+        "force_max_eV_A": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": 91.8285451218897,
+          "method_mean": 61.12863597858146,
+          "mean_method_minus_reference": -30.699909143308243,
+          "median_method_minus_reference": -0.0000015098561272480825,
+          "method_lower": 134,
+          "method_higher": 122,
+          "equal": 0
+        },
+        "stress_max_GPa": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": 221.36395468236879,
+          "method_mean": 77.87477591173956,
+          "mean_method_minus_reference": -143.48917877062922,
+          "median_method_minus_reference": 0.09255516529083252,
+          "method_lower": 126,
+          "method_higher": 130,
+          "equal": 0
+        }
+      },
+      "verified_terminal_pairs": {
+        "A_gap_eV_atom": {
+          "pairs": 33,
+          "excluded_requests": 223,
+          "reference_mean": 3.826974615906224,
+          "method_mean": 3.315406640370687,
+          "mean_method_minus_reference": -0.5115679755355372,
+          "median_method_minus_reference": 0,
+          "method_lower": 16,
+          "method_higher": 16,
+          "equal": 1
+        },
+        "B_terminal_energy_eV_atom": {
+          "pairs": 33,
+          "excluded_requests": 223,
+          "reference_mean": -4.127059141794841,
+          "method_mean": -4.128582986918363,
+          "mean_method_minus_reference": -0.0015238451235222094,
+          "median_method_minus_reference": 0,
+          "method_lower": 16,
+          "method_higher": 16,
+          "equal": 1
+        },
+        "relaxation_steps": {
+          "pairs": 33,
+          "excluded_requests": 223,
+          "reference_mean": 47.15151515151515,
+          "method_mean": 44.121212121212125,
+          "mean_method_minus_reference": -3.0303030303030303,
+          "median_method_minus_reference": 1,
+          "method_lower": 13,
+          "method_higher": 17,
+          "equal": 3
+        },
+        "force_max_eV_A": {
+          "pairs": 33,
+          "excluded_requests": 223,
+          "reference_mean": 0.05273338701145935,
+          "method_mean": 0.03994655917832065,
+          "mean_method_minus_reference": -0.012786827833138696,
+          "median_method_minus_reference": -0.0015866115156237055,
+          "method_lower": 23,
+          "method_higher": 10,
+          "equal": 0
+        },
+        "stress_max_GPa": {
+          "pairs": 33,
+          "excluded_requests": 223,
+          "reference_mean": 0.2809520748311688,
+          "method_mean": 0.29045416785119127,
+          "mean_method_minus_reference": 0.009502093020022489,
+          "median_method_minus_reference": 0.006972999928414492,
+          "method_lower": 14,
+          "method_higher": 19,
+          "equal": 0
+        }
+      },
+      "available_terminal_pairs": {
+        "A_gap_eV_atom": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": 5.694581525865942,
+          "method_mean": 5.575649436563253,
+          "mean_method_minus_reference": -0.11893208930268884,
+          "median_method_minus_reference": 0.03334784507751465,
+          "method_lower": 125,
+          "method_higher": 130,
+          "equal": 1
+        },
+        "B_terminal_energy_eV_atom": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": -4.218837643042207,
+          "method_mean": -4.277969835791737,
+          "mean_method_minus_reference": -0.05913219274953008,
+          "median_method_minus_reference": 0.00006008148193359375,
+          "method_lower": 126,
+          "method_higher": 129,
+          "equal": 1
+        },
+        "relaxation_steps": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": 248.19921875,
+          "method_mean": 258.12109375,
+          "mean_method_minus_reference": 9.921875,
+          "median_method_minus_reference": 0,
+          "method_lower": 90,
+          "method_higher": 95,
+          "equal": 71
+        },
+        "force_max_eV_A": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": 4.599916187774696,
+          "method_mean": 2.3328695327846867,
+          "mean_method_minus_reference": -2.267046654990009,
+          "median_method_minus_reference": -0.0000036877004921559133,
+          "method_lower": 134,
+          "method_higher": 122,
+          "equal": 0
+        },
+        "stress_max_GPa": {
+          "pairs": 256,
+          "excluded_requests": 0,
+          "reference_mean": 18.819932292638875,
+          "method_mean": 22.005304840543022,
+          "mean_method_minus_reference": 3.185372547904148,
+          "median_method_minus_reference": -0.0007797754135190627,
+          "method_lower": 130,
+          "method_higher": 126,
+          "equal": 0
+        }
+      },
+      "label_statuses": {
+        "reference": {
+          "not_converged": 109,
+          "verified": 68,
+          "invalid_terminal": 79
+        },
+        "method": {
+          "invalid_terminal": 83,
+          "verified": 70,
+          "not_converged": 103
+        }
+      },
+      "hull_statuses": {
+        "reference": {
+          "known": 248,
+          "official_cache_unresolved": 8
+        },
+        "method": {
+          "known": 248,
+          "official_cache_unresolved": 8
+        }
+      },
+      "delta_sign": "method minus reference; negative energy, force, stress and steps is lower",
+      "B_difference": "same-composition hull cancels: delta B = method eR - reference eR; absolute means shown are eR",
+      "coverage": "physical paired means exclude missing values; verified means additionally require both terminal verifications",
+      "interpretation": "descriptive fixed-development comparison; teacher feasibility does not imply these outcomes",
+      "endpoint": "native",
+      "comparison_purpose": "final",
+      "provenance": {
+        "reference_eval_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction-evaluation",
+        "method_eval_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/native-evaluation",
+        "reference_paths_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction/paths.jsonl",
+        "method_paths_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/native/paths.jsonl",
+        "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/repair-effect",
+        "comparison_purpose": "final"
+      },
+      "terminal_protocol": {
+        "model": "CHGNet-0.3.0",
+        "optimizer": "FIRE",
+        "relax_cell": true,
+        "ase_filter": "FrechetCellFilter",
+        "fmax": 0.1,
+        "scalar_pressure": 0,
+        "constant_volume": false,
+        "hydrostatic_strain": false,
+        "cell_mask": "all_six",
+        "fire_dt": 0.1,
+        "fire_maxstep": 0.2,
+        "stress_tolerance_GPa": 0.5,
+        "max_steps": 500
+      },
+      "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+    }
+  }
+}

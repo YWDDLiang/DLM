@@ -1,0 +1,7 @@
+{
+  "source_identity_and_labels_excluded": true,
+  "actual_species_input_detected": true,
+  "goal_not_in_dlm_hard_key": true,
+  "goal_in_planner_key": true,
+  "scope": "Synthetic input signature validation only, no model/data inference"
+}

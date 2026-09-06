@@ -1,0 +1,20 @@
+_target_: symmcd.pl_modules.discrete_diffusion_w_site_symm.CSPDiffusion
+time_dim: 10
+latent_dim: 512
+cost_coord: 1.
+cost_lattice: 5
+cost_type: 0.1
+cost_symm: 10
+max_neighbors: 20  # maximum number of neighbors for OTF graph bulding in decoder
+radius: 7.  # maximum search radius for OTF graph building in decoder
+timesteps: 1000
+ip: false
+use_ks: true
+use_gt_frac_coords: true
+use_site_symm: true
+prior: marginal
+
+defaults:
+  - decoder: cspnet
+  - beta_scheduler: cosine
+  - sigma_scheduler: wrapped

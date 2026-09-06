@@ -1,0 +1,358 @@
+{
+  "sha": "9c4694291be1c20e4f06cc33f02baed7daaf0b7a",
+  "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/9c4694291be1c20e4f06cc33f02baed7daaf0b7a",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4b762362465d96d92679af83eef2b9ae0b88b70f",
+      "size": 165,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/4b762362465d96d92679af83eef2b9ae0b88b70f"
+    },
+    {
+      "path": ".pre-commit-config.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2082dd7575c465aae5879f5bcdac7e1c60b77fcc",
+      "size": 1052,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/2082dd7575c465aae5879f5bcdac7e1c60b77fcc"
+    },
+    {
+      "path": "INSTALL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "109da181e9ab4aafe920b12ac6082151c01e0d4b",
+      "size": 1020,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/109da181e9ab4aafe920b12ac6082151c01e0d4b"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "942f13be8bb20ac047d377c5786e101366c4071d",
+      "size": 1084,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/942f13be8bb20ac047d377c5786e101366c4071d"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c928fb9ce09ee9efc880aa7c0281302b2f7d7ca",
+      "size": 4339,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/0c928fb9ce09ee9efc880aa7c0281302b2f7d7ca"
+    },
+    {
+      "path": "assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fb4bda80442e1da808ac87e6006bff592e2a0d9d",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/fb4bda80442e1da808ac87e6006bff592e2a0d9d"
+    },
+    {
+      "path": "assets/wyckoffdiff_graphical_abstract.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f7b97c2769085a5dc1ccc7246131ed8a4316b30",
+      "size": 94401,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/8f7b97c2769085a5dc1ccc7246131ed8a4316b30"
+    },
+    {
+      "path": "data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c5d2f27314dd42e0499b3a7f29a81c9530e1be17",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/c5d2f27314dd42e0499b3a7f29a81c9530e1be17"
+    },
+    {
+      "path": "data/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "79b62f67025795001aeb1e9ded6ff5e464e930a5",
+      "size": 4570,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/79b62f67025795001aeb1e9ded6ff5e464e930a5"
+    },
+    {
+      "path": "main.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c543079308fc065938a78a0eb80eae8532201c78",
+      "size": 1076,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/c543079308fc065938a78a0eb80eae8532201c78"
+    },
+    {
+      "path": "setup.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec5e7c803baf4d6414875f77d9b7736c78063d32",
+      "size": 749,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/ec5e7c803baf4d6414875f77d9b7736c78063d32"
+    },
+    {
+      "path": "wyckoff_generation",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c15a0f5b7cb62acf0d55551c3f669f33d56f3638",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/c15a0f5b7cb62acf0d55551c3f669f33d56f3638"
+    },
+    {
+      "path": "wyckoff_generation/common",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4aad1c566333c0e17e4bff5ae4295cb8e5b67cb7",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/4aad1c566333c0e17e4bff5ae4295cb8e5b67cb7"
+    },
+    {
+      "path": "wyckoff_generation/common/args_and_config.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5932c7f54676e06007417d07e30e1a86223dbf4",
+      "size": 12039,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/c5932c7f54676e06007417d07e30e1a86223dbf4"
+    },
+    {
+      "path": "wyckoff_generation/common/constants.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2818ec72d7b4ad19a5b1d196b031019539b5df2a",
+      "size": 141,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/2818ec72d7b4ad19a5b1d196b031019539b5df2a"
+    },
+    {
+      "path": "wyckoff_generation/common/logging.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78297810209bae8fefd1d67a3a6f82602db6c0d2",
+      "size": 6126,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/78297810209bae8fefd1d67a3a6f82602db6c0d2"
+    },
+    {
+      "path": "wyckoff_generation/common/registry.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb0ab295fd4f8b9d3cbe28c16790f12e92539feb",
+      "size": 13299,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/fb0ab295fd4f8b9d3cbe28c16790f12e92539feb"
+    },
+    {
+      "path": "wyckoff_generation/common/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7d51fa26c9c2d78ceefca487266350d0a2558c3",
+      "size": 5806,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/c7d51fa26c9c2d78ceefca487266350d0a2558c3"
+    },
+    {
+      "path": "wyckoff_generation/datasets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c0d4de8bbdc796b1623a737ffbb9b6e704fe4d12",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/c0d4de8bbdc796b1623a737ffbb9b6e704fe4d12"
+    },
+    {
+      "path": "wyckoff_generation/datasets/data_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "937e82344c4845e74f7db1266e281afdc1281e08",
+      "size": 14034,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/937e82344c4845e74f7db1266e281afdc1281e08"
+    },
+    {
+      "path": "wyckoff_generation/datasets/dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0767180b61246b17af1b9240be9de2aca6173d7f",
+      "size": 16538,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/0767180b61246b17af1b9240be9de2aca6173d7f"
+    },
+    {
+      "path": "wyckoff_generation/datasets/dataset_infos.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c54613b5ab32d0164c621c55cf0f8507bacd4f2",
+      "size": 26356,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/8c54613b5ab32d0164c621c55cf0f8507bacd4f2"
+    },
+    {
+      "path": "wyckoff_generation/datasets/lookup_tables.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af5c91241d65629f553c481932e38dd0126a2a53",
+      "size": 77772,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/af5c91241d65629f553c481932e38dd0126a2a53"
+    },
+    {
+      "path": "wyckoff_generation/evaluation",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fcc2fd3a12f755fbe18434e0448edc6f739ee064",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/fcc2fd3a12f755fbe18434e0448edc6f739ee064"
+    },
+    {
+      "path": "wyckoff_generation/evaluation/compute_fwd.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23d5efbf1dab2a1a85872ed0083cdd27a16b843c",
+      "size": 5138,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/23d5efbf1dab2a1a85872ed0083cdd27a16b843c"
+    },
+    {
+      "path": "wyckoff_generation/evaluation/compute_prototype_stats.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f87b9bf6f193e0942e245631096bd5d873d015a",
+      "size": 472,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/7f87b9bf6f193e0942e245631096bd5d873d015a"
+    },
+    {
+      "path": "wyckoff_generation/evaluation/eval_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ccab7dd9b174d60dc3c5d7dc8fb2239244e73316",
+      "size": 1568,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/ccab7dd9b174d60dc3c5d7dc8fb2239244e73316"
+    },
+    {
+      "path": "wyckoff_generation/evaluation/frechet_distance.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "316763bc081fe39a2252e8c3f9fc9c0f590d750c",
+      "size": 1039,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/316763bc081fe39a2252e8c3f9fc9c0f590d750c"
+    },
+    {
+      "path": "wyckoff_generation/evaluation/novelty_helper.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6fd8816926734c2bdb055996ba9b9c61f5127606",
+      "size": 1997,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/6fd8816926734c2bdb055996ba9b9c61f5127606"
+    },
+    {
+      "path": "wyckoff_generation/evaluation/read_file_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "009d7e6e836351473492353c6e44dabcaf8c7d1e",
+      "size": 4286,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/009d7e6e836351473492353c6e44dabcaf8c7d1e"
+    },
+    {
+      "path": "wyckoff_generation/models",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5bdade0c7deb38844a53ef9cca9038605dc71433",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/5bdade0c7deb38844a53ef9cca9038605dc71433"
+    },
+    {
+      "path": "wyckoff_generation/models/d3pm",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ba764192a851f4b984033a75142043cac190f15f",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/ba764192a851f4b984033a75142043cac190f15f"
+    },
+    {
+      "path": "wyckoff_generation/models/d3pm/LICENSE.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "size": 11358,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/d645695673349e3947e8e5ae42332d0ac3164cd7"
+    },
+    {
+      "path": "wyckoff_generation/models/d3pm/README",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fdd118dbad4e7e297c37c2105875e17ac21c5168",
+      "size": 797,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/fdd118dbad4e7e297c37c2105875e17ac21c5168"
+    },
+    {
+      "path": "wyckoff_generation/models/d3pm/d3pm.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a4a9f4688701e1f3c22bacbd567e41a6ddd3adfa",
+      "size": 26596,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/a4a9f4688701e1f3c22bacbd567e41a6ddd3adfa"
+    },
+    {
+      "path": "wyckoff_generation/models/d3pm/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d450773dd8655b073d9145545268a67f3e081a81",
+      "size": 2403,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/d450773dd8655b073d9145545268a67f3e081a81"
+    },
+    {
+      "path": "wyckoff_generation/models/gnn.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf9c1a95f61acf81a571451b5f877a114b66d188",
+      "size": 5637,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/cf9c1a95f61acf81a571451b5f877a114b66d188"
+    },
+    {
+      "path": "wyckoff_generation/models/mlp.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56f5148a0620c7a20983bdff0f78efad800b9637",
+      "size": 407,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/56f5148a0620c7a20983bdff0f78efad800b9637"
+    },
+    {
+      "path": "wyckoff_generation/models/model_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb5d3bdbb7d77c6754a21c3273bb6e436ba5ee69",
+      "size": 470,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/eb5d3bdbb7d77c6754a21c3273bb6e436ba5ee69"
+    },
+    {
+      "path": "wyckoff_generation/runners",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6deff61291e4aa10d8ef784d4722636618ace255",
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/trees/6deff61291e4aa10d8ef784d4722636618ace255"
+    },
+    {
+      "path": "wyckoff_generation/runners/base_runner.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb44e0165417ffebbf7c70a909197eecec817b1b",
+      "size": 1069,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/fb44e0165417ffebbf7c70a909197eecec817b1b"
+    },
+    {
+      "path": "wyckoff_generation/runners/d3pm_trainer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48bfd1a5cbaef5df23b1362da33a42306bda628d",
+      "size": 6812,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/48bfd1a5cbaef5df23b1362da33a42306bda628d"
+    },
+    {
+      "path": "wyckoff_generation/runners/evaluation_runner.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d69c9a041e65e4b3cff99820de80c94c30bccff1",
+      "size": 3310,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/d69c9a041e65e4b3cff99820de80c94c30bccff1"
+    },
+    {
+      "path": "wyckoff_generation/runners/generation_post_processer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "519de2e7f92b1c0c5ee9be07b1ccc3aa75f23878",
+      "size": 5801,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/519de2e7f92b1c0c5ee9be07b1ccc3aa75f23878"
+    },
+    {
+      "path": "wyckoff_generation/runners/generation_runner.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27213f13dcc21202c438de78f3010098005ccd55",
+      "size": 1674,
+      "url": "https://api.github.com/repos/httk/wyckoffdiff/git/blobs/27213f13dcc21202c438de78f3010098005ccd55"
+    }
+  ],
+  "truncated": false
+}

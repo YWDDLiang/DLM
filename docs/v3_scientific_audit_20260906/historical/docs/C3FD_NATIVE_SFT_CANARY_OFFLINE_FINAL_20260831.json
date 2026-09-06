@@ -1,0 +1,59 @@
+{
+  "schema": "c3fd_native_sft_canary_offline_final_summary_v1",
+  "date": "2026-08-31",
+  "status": "SUCCESS",
+  "job_id": 38768,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 7124,
+  "resources": {
+    "a800": 4,
+    "cpu": 32,
+    "observed_a800_hours": 7.915555555555556,
+    "kill_ceiling_a800_hours": 32.0
+  },
+  "headline": {
+    "body_parse_rate": {"82017": 0.98046875, "82018": 0.98828125},
+    "raw_direct_joint_rate": {"82017": 0.30078125, "82018": 0.373046875},
+    "refined_direct_joint_rate": {"82017": 0.890625, "82018": 0.900390625},
+    "raw_novel_unique": {"82017": 502, "82018": 505, "denominator": 512},
+    "refined_novel_unique": {"82017": 391, "82018": 400, "denominator": 512}
+  },
+  "paired_effects_eV_per_atom": {
+    "policy82018_minus_policy82017_raw": {
+      "mean": -0.1646328608868486,
+      "ci95": [-0.41783007297475455, 0.08315531362668921],
+      "fraction_lower": 0.5211864406779662,
+      "compositions": 236
+    },
+    "policy82018_minus_policy82017_refined": {
+      "mean": -0.00010491735186458619,
+      "ci95": [-0.022510224762411157, 0.022594207506780765],
+      "fraction_lower": 0.4214876033057851,
+      "compositions": 242
+    },
+    "model494_refined_minus_raw_policy82017": {
+      "mean": -2.7721861858259547,
+      "ci95": [-3.0343937973992143, -2.512439854113647],
+      "fraction_lower": 0.9752066115702479,
+      "compositions": 242
+    },
+    "model494_refined_minus_raw_policy82018": {
+      "mean": -2.6142783787355843,
+      "ci95": [-2.891950888147795, -2.350890752996307],
+      "fraction_lower": 0.9718875502008032,
+      "compositions": 249
+    }
+  },
+  "decision": {
+    "execution_recovered": true,
+    "raw_geometry_insufficient": true,
+    "refiner_rescue_large": true,
+    "next_route": "fresh_mp20_train_on_policy_same_composition_alignment",
+    "historical_3614_formal_training_allowed": false,
+    "seed_or_checkpoint_selection": false
+  },
+  "official_query_run": false,
+  "final_report_sha256": "9b19b458852f750970e723200cfa2eb93695411e31ae23fadb16ede990264758",
+  "archive_success": true
+}

@@ -1,0 +1,2938 @@
+{
+  "created_at_utc": "2026-09-06T08:24:34.179179+00:00",
+  "model_calls": 0,
+  "new_generation": false,
+  "source_files": {
+    "train": {
+      "original": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_basin_closure_sft_v1_20260904/train.jsonl",
+      "prepared": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/train.jsonl",
+      "original_sha256": "232f7e1e6f0d4a634db8a9cfd01c0e3fd61f31f154adf142b5cc11af57c61a1c",
+      "prepared_sha256": "1a3fdea6c710d7b2dd397b6de332918ed239c6a0f46b6aab8b662bf4011e6b04"
+    },
+    "val": {
+      "original": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_basin_closure_sft_v1_20260904/val.jsonl",
+      "prepared": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/val.jsonl",
+      "original_sha256": "c35f98404c5780201707c95493f231b930cb7e5b4de96ba91bd2413ea510650d",
+      "prepared_sha256": "7e598846dcfea5673dc16d67f887658a6bf34ad0df00d097d7c7053ff9b637d2"
+    }
+  },
+  "splits": {
+    "train": {
+      "rows": 27136,
+      "statuses": {
+        "predicted_direct": 24558,
+        "teacher_soft_fallback": 2578
+      },
+      "reasons": {
+        "None": 24558,
+        "missing_typed_metadata": 2578
+      },
+      "goals": {
+        "meta_or_better": 24558,
+        "None": 2578
+      },
+      "checks": {
+        "unchanged_clean_answer": 27136,
+        "unchanged_composition": 27136,
+        "valid_program_permutation": 27136,
+        "predicted": 24558,
+        "all_three_soft_match": 6613,
+        "any_soft_mismatch": 17945
+      },
+      "soft_agreement_predicted_only": {
+        "lattice_system": 14103,
+        "spacegroup_bucket": 13987,
+        "volume_per_atom_bin": 16217
+      },
+      "confusion_predicted_only": {
+        "lattice_system": [
+          {
+            "original": "cubic",
+            "prepared": "cubic",
+            "count": 551
+          },
+          {
+            "original": "cubic",
+            "prepared": "hexagonal",
+            "count": 59
+          },
+          {
+            "original": "cubic",
+            "prepared": "monoclinic",
+            "count": 34
+          },
+          {
+            "original": "cubic",
+            "prepared": "orthorhombic",
+            "count": 33
+          },
+          {
+            "original": "cubic",
+            "prepared": "tetragonal",
+            "count": 31
+          },
+          {
+            "original": "cubic",
+            "prepared": "triclinic",
+            "count": 157
+          },
+          {
+            "original": "cubic",
+            "prepared": "trigonal",
+            "count": 133
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "cubic",
+            "count": 46
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "hexagonal",
+            "count": 1953
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "monoclinic",
+            "count": 309
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "orthorhombic",
+            "count": 112
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "tetragonal",
+            "count": 101
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "triclinic",
+            "count": 570
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "trigonal",
+            "count": 307
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "cubic",
+            "count": 35
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "hexagonal",
+            "count": 336
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "monoclinic",
+            "count": 1017
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "orthorhombic",
+            "count": 407
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "tetragonal",
+            "count": 163
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "triclinic",
+            "count": 972
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "trigonal",
+            "count": 177
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "cubic",
+            "count": 19
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "hexagonal",
+            "count": 107
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "monoclinic",
+            "count": 403
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "orthorhombic",
+            "count": 1005
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "tetragonal",
+            "count": 146
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "triclinic",
+            "count": 368
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "trigonal",
+            "count": 62
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "cubic",
+            "count": 51
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "hexagonal",
+            "count": 116
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "monoclinic",
+            "count": 235
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "orthorhombic",
+            "count": 137
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "tetragonal",
+            "count": 703
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "triclinic",
+            "count": 481
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "trigonal",
+            "count": 189
+          },
+          {
+            "original": "triclinic",
+            "prepared": "cubic",
+            "count": 115
+          },
+          {
+            "original": "triclinic",
+            "prepared": "hexagonal",
+            "count": 507
+          },
+          {
+            "original": "triclinic",
+            "prepared": "monoclinic",
+            "count": 957
+          },
+          {
+            "original": "triclinic",
+            "prepared": "orthorhombic",
+            "count": 248
+          },
+          {
+            "original": "triclinic",
+            "prepared": "tetragonal",
+            "count": 393
+          },
+          {
+            "original": "triclinic",
+            "prepared": "triclinic",
+            "count": 3797
+          },
+          {
+            "original": "triclinic",
+            "prepared": "trigonal",
+            "count": 640
+          },
+          {
+            "original": "trigonal",
+            "prepared": "cubic",
+            "count": 112
+          },
+          {
+            "original": "trigonal",
+            "prepared": "hexagonal",
+            "count": 250
+          },
+          {
+            "original": "trigonal",
+            "prepared": "monoclinic",
+            "count": 161
+          },
+          {
+            "original": "trigonal",
+            "prepared": "orthorhombic",
+            "count": 38
+          },
+          {
+            "original": "trigonal",
+            "prepared": "tetragonal",
+            "count": 128
+          },
+          {
+            "original": "trigonal",
+            "prepared": "triclinic",
+            "count": 610
+          },
+          {
+            "original": "trigonal",
+            "prepared": "trigonal",
+            "count": 5077
+          }
+        ],
+        "spacegroup_bucket": [
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_001_002",
+            "count": 245
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_003_015",
+            "count": 403
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_016_074",
+            "count": 152
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_075_142",
+            "count": 86
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_143_167",
+            "count": 110
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_168_194",
+            "count": 17
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_195_230",
+            "count": 25
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_001_002",
+            "count": 294
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_003_015",
+            "count": 1392
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_016_074",
+            "count": 955
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_075_142",
+            "count": 499
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_143_167",
+            "count": 333
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_168_194",
+            "count": 115
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_195_230",
+            "count": 116
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_001_002",
+            "count": 103
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_003_015",
+            "count": 816
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_016_074",
+            "count": 2533
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_075_142",
+            "count": 657
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_143_167",
+            "count": 254
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_168_194",
+            "count": 292
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_195_230",
+            "count": 147
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_001_002",
+            "count": 55
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_003_015",
+            "count": 508
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_016_074",
+            "count": 653
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_075_142",
+            "count": 1983
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_143_167",
+            "count": 257
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_168_194",
+            "count": 152
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_195_230",
+            "count": 381
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_001_002",
+            "count": 78
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_003_015",
+            "count": 352
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_016_074",
+            "count": 255
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_075_142",
+            "count": 327
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_143_167",
+            "count": 1434
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_168_194",
+            "count": 143
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_195_230",
+            "count": 236
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_001_002",
+            "count": 5
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_003_015",
+            "count": 109
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_016_074",
+            "count": 365
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_075_142",
+            "count": 150
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_143_167",
+            "count": 151
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_168_194",
+            "count": 1591
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_195_230",
+            "count": 108
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_001_002",
+            "count": 19
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_003_015",
+            "count": 117
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_016_074",
+            "count": 165
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_075_142",
+            "count": 321
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_143_167",
+            "count": 196
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_168_194",
+            "count": 94
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_195_230",
+            "count": 4809
+          }
+        ],
+        "volume_per_atom_bin": [
+          {
+            "original": "volpa_005_009",
+            "prepared": "volpa_005_009",
+            "count": 470
+          },
+          {
+            "original": "volpa_005_009",
+            "prepared": "volpa_010_014",
+            "count": 362
+          },
+          {
+            "original": "volpa_005_009",
+            "prepared": "volpa_015_019",
+            "count": 7
+          },
+          {
+            "original": "volpa_005_009",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_005_009",
+            "count": 233
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_010_014",
+            "count": 5837
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_015_019",
+            "count": 974
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_020_024",
+            "count": 34
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_025_029",
+            "count": 2
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_005_009",
+            "count": 18
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_010_014",
+            "count": 1015
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_015_019",
+            "count": 4283
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_020_024",
+            "count": 833
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_025_029",
+            "count": 33
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_055_059",
+            "count": 1
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_005_009",
+            "count": 2
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_010_014",
+            "count": 41
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_015_019",
+            "count": 887
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_020_024",
+            "count": 3110
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_025_029",
+            "count": 640
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_030_034",
+            "count": 81
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_035_039",
+            "count": 9
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_040_044",
+            "count": 2
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_070_074",
+            "count": 1
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_010_014",
+            "count": 2
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_015_019",
+            "count": 39
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_020_024",
+            "count": 689
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_025_029",
+            "count": 1557
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_030_034",
+            "count": 445
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_035_039",
+            "count": 74
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_040_044",
+            "count": 16
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_045_049",
+            "count": 5
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_050_054",
+            "count": 4
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_005_009",
+            "count": 1
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_010_014",
+            "count": 1
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_015_019",
+            "count": 6
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_020_024",
+            "count": 68
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_025_029",
+            "count": 514
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_030_034",
+            "count": 629
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_035_039",
+            "count": 202
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_040_044",
+            "count": 46
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_045_049",
+            "count": 9
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_050_054",
+            "count": 4
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_055_059",
+            "count": 2
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_060_064",
+            "count": 1
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_015_019",
+            "count": 2
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_020_024",
+            "count": 11
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_025_029",
+            "count": 117
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_030_034",
+            "count": 240
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_035_039",
+            "count": 185
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_040_044",
+            "count": 93
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_045_049",
+            "count": 20
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_050_054",
+            "count": 4
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_055_059",
+            "count": 1
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_060_064",
+            "count": 1
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_020_024",
+            "count": 3
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_025_029",
+            "count": 31
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_030_034",
+            "count": 92
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_035_039",
+            "count": 76
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_040_044",
+            "count": 90
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_045_049",
+            "count": 41
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_050_054",
+            "count": 9
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_055_059",
+            "count": 1
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_015_019",
+            "count": 1
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_020_024",
+            "count": 3
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_025_029",
+            "count": 7
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_030_034",
+            "count": 33
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_035_039",
+            "count": 30
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_040_044",
+            "count": 53
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_045_049",
+            "count": 43
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_050_054",
+            "count": 7
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_055_059",
+            "count": 2
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_020_024",
+            "count": 3
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_025_029",
+            "count": 6
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_030_034",
+            "count": 5
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_035_039",
+            "count": 14
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_040_044",
+            "count": 13
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_045_049",
+            "count": 16
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_050_054",
+            "count": 6
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_055_059",
+            "count": 2
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_060_064",
+            "count": 1
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_015_019",
+            "count": 1
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_030_034",
+            "count": 7
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_035_039",
+            "count": 7
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_040_044",
+            "count": 7
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_045_049",
+            "count": 6
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_050_054",
+            "count": 2
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_020_024",
+            "count": 3
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_030_034",
+            "count": 3
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_035_039",
+            "count": 1
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_040_044",
+            "count": 3
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_045_049",
+            "count": 5
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_050_054",
+            "count": 3
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_060_064",
+            "count": 1
+          },
+          {
+            "original": "volpa_065_069",
+            "prepared": "volpa_015_019",
+            "count": 1
+          },
+          {
+            "original": "volpa_065_069",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_065_069",
+            "prepared": "volpa_035_039",
+            "count": 2
+          },
+          {
+            "original": "volpa_065_069",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_065_069",
+            "prepared": "volpa_045_049",
+            "count": 2
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_010_014",
+            "count": 1
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_035_039",
+            "count": 1
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_045_049",
+            "count": 1
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_050_054",
+            "count": 1
+          },
+          {
+            "original": "volpa_075_079",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_075_079",
+            "prepared": "volpa_035_039",
+            "count": 1
+          },
+          {
+            "original": "volpa_075_079",
+            "prepared": "volpa_075_079",
+            "count": 1
+          },
+          {
+            "original": "volpa_075_079",
+            "prepared": "volpa_085_089",
+            "count": 2
+          },
+          {
+            "original": "volpa_075_079",
+            "prepared": "volpa_115_119",
+            "count": 1
+          },
+          {
+            "original": "volpa_080_084",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_080_084",
+            "prepared": "volpa_035_039",
+            "count": 3
+          },
+          {
+            "original": "volpa_080_084",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_085_089",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_085_089",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_085_089",
+            "prepared": "volpa_035_039",
+            "count": 2
+          },
+          {
+            "original": "volpa_085_089",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_085_089",
+            "prepared": "volpa_045_049",
+            "count": 2
+          },
+          {
+            "original": "volpa_085_089",
+            "prepared": "volpa_055_059",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_035_039",
+            "count": 2
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_045_049",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_055_059",
+            "count": 1
+          },
+          {
+            "original": "volpa_095_099",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_095_099",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_095_099",
+            "prepared": "volpa_035_039",
+            "count": 1
+          },
+          {
+            "original": "volpa_095_099",
+            "prepared": "volpa_050_054",
+            "count": 1
+          },
+          {
+            "original": "volpa_100_104",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_100_104",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_105_109",
+            "prepared": "volpa_025_029",
+            "count": 2
+          },
+          {
+            "original": "volpa_110_114",
+            "prepared": "volpa_035_039",
+            "count": 1
+          },
+          {
+            "original": "volpa_115_119",
+            "prepared": "volpa_045_049",
+            "count": 2
+          },
+          {
+            "original": "volpa_115_119",
+            "prepared": "volpa_115_119",
+            "count": 5
+          }
+        ]
+      },
+      "unique_exact_compositions": 24830,
+      "composition_multiplicity_histogram": {
+        "1": 23340,
+        "2": 1124,
+        "3": 208,
+        "4": 67,
+        "5": 33,
+        "6": 16,
+        "7": 16,
+        "8": 5,
+        "9": 5,
+        "10": 4,
+        "11": 1,
+        "12": 5,
+        "13": 2,
+        "14": 1,
+        "15": 1,
+        "16": 2
+      },
+      "compositions_with_multiple_target_strings": 1490,
+      "source_order_examples_of_soft_mismatch": [
+        {
+          "source_row_idx": 0,
+          "composition": [
+            [
+              "Co",
+              1
+            ],
+            [
+              "Mn",
+              1
+            ],
+            [
+              "Na",
+              3
+            ],
+            [
+              "Ni",
+              1
+            ],
+            [
+              "O",
+              6
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_143_167",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 1,
+          "composition": [
+            [
+              "Al",
+              8
+            ],
+            [
+              "Cu",
+              4
+            ],
+            [
+              "Nd",
+              1
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_015_019"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_015_019"
+          }
+        },
+        {
+          "source_row_idx": 3,
+          "composition": [
+            [
+              "C",
+              4
+            ],
+            [
+              "Li",
+              4
+            ],
+            [
+              "N",
+              4
+            ],
+            [
+              "S",
+              4
+            ]
+          ],
+          "original": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_015_019"
+          },
+          "prepared": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_020_024"
+          }
+        },
+        {
+          "source_row_idx": 4,
+          "composition": [
+            [
+              "Eu",
+              2
+            ],
+            [
+              "La",
+              4
+            ],
+            [
+              "S",
+              8
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_020_024"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_025_029"
+          }
+        },
+        {
+          "source_row_idx": 6,
+          "composition": [
+            [
+              "C",
+              3
+            ],
+            [
+              "Li",
+              3
+            ],
+            [
+              "Na",
+              3
+            ],
+            [
+              "O",
+              9
+            ]
+          ],
+          "original": {
+            "lattice_system": "hexagonal",
+            "spacegroup_bucket": "sg_168_194",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 7,
+          "composition": [
+            [
+              "Bi",
+              2
+            ],
+            [
+              "Na",
+              4
+            ],
+            [
+              "O",
+              6
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "trigonal",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 8,
+          "composition": [
+            [
+              "Bi",
+              2
+            ],
+            [
+              "In",
+              2
+            ],
+            [
+              "S",
+              6
+            ]
+          ],
+          "original": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_025_029"
+          },
+          "prepared": {
+            "lattice_system": "hexagonal",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_025_029"
+          }
+        },
+        {
+          "source_row_idx": 9,
+          "composition": [
+            [
+              "Al",
+              1
+            ],
+            [
+              "Ni",
+              4
+            ],
+            [
+              "Tb",
+              1
+            ]
+          ],
+          "original": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "hexagonal",
+            "spacegroup_bucket": "sg_143_167",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 10,
+          "composition": [
+            [
+              "As",
+              1
+            ],
+            [
+              "Cd",
+              1
+            ],
+            [
+              "In",
+              3
+            ],
+            [
+              "Te",
+              4
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_001_002",
+            "volume_per_atom_bin": "volpa_035_039"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_035_039"
+          }
+        },
+        {
+          "source_row_idx": 11,
+          "composition": [
+            [
+              "Cu",
+              16
+            ],
+            [
+              "Ti",
+              4
+            ]
+          ],
+          "original": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "tetragonal",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 12,
+          "composition": [
+            [
+              "Na",
+              4
+            ],
+            [
+              "S",
+              4
+            ]
+          ],
+          "original": {
+            "lattice_system": "hexagonal",
+            "spacegroup_bucket": "sg_168_194",
+            "volume_per_atom_bin": "volpa_020_024"
+          },
+          "prepared": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_025_029"
+          }
+        },
+        {
+          "source_row_idx": 13,
+          "composition": [
+            [
+              "Co",
+              1
+            ],
+            [
+              "Li",
+              2
+            ],
+            [
+              "O",
+              2
+            ]
+          ],
+          "original": {
+            "lattice_system": "hexagonal",
+            "spacegroup_bucket": "sg_143_167",
+            "volume_per_atom_bin": "volpa_005_009"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_001_002",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        }
+      ]
+    },
+    "val": {
+      "rows": 9047,
+      "statuses": {
+        "predicted_direct": 8147,
+        "teacher_soft_fallback": 900
+      },
+      "reasons": {
+        "None": 8147,
+        "missing_typed_metadata": 889,
+        "unsupported_frozen_stratum": 11
+      },
+      "goals": {
+        "meta_or_better": 8158,
+        "None": 889
+      },
+      "checks": {
+        "unchanged_clean_answer": 9047,
+        "unchanged_composition": 9047,
+        "valid_program_permutation": 9047,
+        "predicted": 8147,
+        "all_three_soft_match": 1946,
+        "any_soft_mismatch": 6201
+      },
+      "soft_agreement_predicted_only": {
+        "lattice_system": 4412,
+        "spacegroup_bucket": 4379,
+        "volume_per_atom_bin": 5192
+      },
+      "confusion_predicted_only": {
+        "lattice_system": [
+          {
+            "original": "cubic",
+            "prepared": "cubic",
+            "count": 173
+          },
+          {
+            "original": "cubic",
+            "prepared": "hexagonal",
+            "count": 27
+          },
+          {
+            "original": "cubic",
+            "prepared": "monoclinic",
+            "count": 12
+          },
+          {
+            "original": "cubic",
+            "prepared": "orthorhombic",
+            "count": 13
+          },
+          {
+            "original": "cubic",
+            "prepared": "tetragonal",
+            "count": 12
+          },
+          {
+            "original": "cubic",
+            "prepared": "triclinic",
+            "count": 49
+          },
+          {
+            "original": "cubic",
+            "prepared": "trigonal",
+            "count": 51
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "cubic",
+            "count": 24
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "hexagonal",
+            "count": 600
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "monoclinic",
+            "count": 121
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "orthorhombic",
+            "count": 51
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "tetragonal",
+            "count": 37
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "triclinic",
+            "count": 202
+          },
+          {
+            "original": "hexagonal",
+            "prepared": "trigonal",
+            "count": 109
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "cubic",
+            "count": 14
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "hexagonal",
+            "count": 112
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "monoclinic",
+            "count": 305
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "orthorhombic",
+            "count": 121
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "tetragonal",
+            "count": 71
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "triclinic",
+            "count": 302
+          },
+          {
+            "original": "monoclinic",
+            "prepared": "trigonal",
+            "count": 79
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "cubic",
+            "count": 10
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "hexagonal",
+            "count": 45
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "monoclinic",
+            "count": 130
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "orthorhombic",
+            "count": 311
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "tetragonal",
+            "count": 53
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "triclinic",
+            "count": 158
+          },
+          {
+            "original": "orthorhombic",
+            "prepared": "trigonal",
+            "count": 26
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "cubic",
+            "count": 13
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "hexagonal",
+            "count": 47
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "monoclinic",
+            "count": 86
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "orthorhombic",
+            "count": 39
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "tetragonal",
+            "count": 216
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "triclinic",
+            "count": 144
+          },
+          {
+            "original": "tetragonal",
+            "prepared": "trigonal",
+            "count": 61
+          },
+          {
+            "original": "triclinic",
+            "prepared": "cubic",
+            "count": 48
+          },
+          {
+            "original": "triclinic",
+            "prepared": "hexagonal",
+            "count": 163
+          },
+          {
+            "original": "triclinic",
+            "prepared": "monoclinic",
+            "count": 343
+          },
+          {
+            "original": "triclinic",
+            "prepared": "orthorhombic",
+            "count": 115
+          },
+          {
+            "original": "triclinic",
+            "prepared": "tetragonal",
+            "count": 134
+          },
+          {
+            "original": "triclinic",
+            "prepared": "triclinic",
+            "count": 1202
+          },
+          {
+            "original": "triclinic",
+            "prepared": "trigonal",
+            "count": 215
+          },
+          {
+            "original": "trigonal",
+            "prepared": "cubic",
+            "count": 30
+          },
+          {
+            "original": "trigonal",
+            "prepared": "hexagonal",
+            "count": 108
+          },
+          {
+            "original": "trigonal",
+            "prepared": "monoclinic",
+            "count": 63
+          },
+          {
+            "original": "trigonal",
+            "prepared": "orthorhombic",
+            "count": 16
+          },
+          {
+            "original": "trigonal",
+            "prepared": "tetragonal",
+            "count": 44
+          },
+          {
+            "original": "trigonal",
+            "prepared": "triclinic",
+            "count": 237
+          },
+          {
+            "original": "trigonal",
+            "prepared": "trigonal",
+            "count": 1605
+          }
+        ],
+        "spacegroup_bucket": [
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_001_002",
+            "count": 85
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_003_015",
+            "count": 119
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_016_074",
+            "count": 52
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_075_142",
+            "count": 23
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_143_167",
+            "count": 37
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_168_194",
+            "count": 1
+          },
+          {
+            "original": "sg_001_002",
+            "prepared": "sg_195_230",
+            "count": 8
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_001_002",
+            "count": 95
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_003_015",
+            "count": 402
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_016_074",
+            "count": 312
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_075_142",
+            "count": 144
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_143_167",
+            "count": 128
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_168_194",
+            "count": 36
+          },
+          {
+            "original": "sg_003_015",
+            "prepared": "sg_195_230",
+            "count": 38
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_001_002",
+            "count": 34
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_003_015",
+            "count": 279
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_016_074",
+            "count": 842
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_075_142",
+            "count": 218
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_143_167",
+            "count": 95
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_168_194",
+            "count": 110
+          },
+          {
+            "original": "sg_016_074",
+            "prepared": "sg_195_230",
+            "count": 75
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_001_002",
+            "count": 17
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_003_015",
+            "count": 163
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_016_074",
+            "count": 222
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_075_142",
+            "count": 677
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_143_167",
+            "count": 100
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_168_194",
+            "count": 63
+          },
+          {
+            "original": "sg_075_142",
+            "prepared": "sg_195_230",
+            "count": 128
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_001_002",
+            "count": 27
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_003_015",
+            "count": 133
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_016_074",
+            "count": 114
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_075_142",
+            "count": 132
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_143_167",
+            "count": 424
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_168_194",
+            "count": 56
+          },
+          {
+            "original": "sg_143_167",
+            "prepared": "sg_195_230",
+            "count": 84
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_001_002",
+            "count": 2
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_003_015",
+            "count": 52
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_016_074",
+            "count": 153
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_075_142",
+            "count": 59
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_143_167",
+            "count": 53
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_168_194",
+            "count": 464
+          },
+          {
+            "original": "sg_168_194",
+            "prepared": "sg_195_230",
+            "count": 42
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_001_002",
+            "count": 5
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_003_015",
+            "count": 47
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_016_074",
+            "count": 74
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_075_142",
+            "count": 126
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_143_167",
+            "count": 71
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_168_194",
+            "count": 41
+          },
+          {
+            "original": "sg_195_230",
+            "prepared": "sg_195_230",
+            "count": 1485
+          }
+        ],
+        "volume_per_atom_bin": [
+          {
+            "original": "volpa_005_009",
+            "prepared": "volpa_005_009",
+            "count": 154
+          },
+          {
+            "original": "volpa_005_009",
+            "prepared": "volpa_010_014",
+            "count": 108
+          },
+          {
+            "original": "volpa_005_009",
+            "prepared": "volpa_015_019",
+            "count": 3
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_005_009",
+            "count": 84
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_010_014",
+            "count": 1884
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_015_019",
+            "count": 329
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_020_024",
+            "count": 17
+          },
+          {
+            "original": "volpa_010_014",
+            "prepared": "volpa_025_029",
+            "count": 2
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_005_009",
+            "count": 6
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_010_014",
+            "count": 403
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_015_019",
+            "count": 1383
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_020_024",
+            "count": 349
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_025_029",
+            "count": 24
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_015_019",
+            "prepared": "volpa_065_069",
+            "count": 1
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_005_009",
+            "count": 2
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_010_014",
+            "count": 17
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_015_019",
+            "count": 279
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_020_024",
+            "count": 991
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_025_029",
+            "count": 217
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_030_034",
+            "count": 27
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_035_039",
+            "count": 6
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_045_049",
+            "count": 1
+          },
+          {
+            "original": "volpa_020_024",
+            "prepared": "volpa_115_119",
+            "count": 1
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_010_014",
+            "count": 1
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_015_019",
+            "count": 26
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_020_024",
+            "count": 250
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_025_029",
+            "count": 472
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_030_034",
+            "count": 143
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_035_039",
+            "count": 23
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_040_044",
+            "count": 5
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_045_049",
+            "count": 1
+          },
+          {
+            "original": "volpa_025_029",
+            "prepared": "volpa_050_054",
+            "count": 1
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_015_019",
+            "count": 1
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_020_024",
+            "count": 26
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_025_029",
+            "count": 178
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_030_034",
+            "count": 205
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_035_039",
+            "count": 79
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_040_044",
+            "count": 16
+          },
+          {
+            "original": "volpa_030_034",
+            "prepared": "volpa_045_049",
+            "count": 2
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_015_019",
+            "count": 1
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_020_024",
+            "count": 8
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_025_029",
+            "count": 37
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_030_034",
+            "count": 77
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_035_039",
+            "count": 62
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_040_044",
+            "count": 18
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_045_049",
+            "count": 8
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_050_054",
+            "count": 2
+          },
+          {
+            "original": "volpa_035_039",
+            "prepared": "volpa_070_074",
+            "count": 1
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_020_024",
+            "count": 2
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_025_029",
+            "count": 13
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_030_034",
+            "count": 23
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_035_039",
+            "count": 27
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_040_044",
+            "count": 22
+          },
+          {
+            "original": "volpa_040_044",
+            "prepared": "volpa_045_049",
+            "count": 12
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_030_034",
+            "count": 8
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_035_039",
+            "count": 13
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_040_044",
+            "count": 13
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_045_049",
+            "count": 16
+          },
+          {
+            "original": "volpa_045_049",
+            "prepared": "volpa_055_059",
+            "count": 1
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_030_034",
+            "count": 4
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_035_039",
+            "count": 7
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_040_044",
+            "count": 2
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_045_049",
+            "count": 5
+          },
+          {
+            "original": "volpa_050_054",
+            "prepared": "volpa_050_054",
+            "count": 1
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_045_049",
+            "count": 4
+          },
+          {
+            "original": "volpa_055_059",
+            "prepared": "volpa_050_054",
+            "count": 3
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_025_029",
+            "count": 2
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_030_034",
+            "count": 2
+          },
+          {
+            "original": "volpa_060_064",
+            "prepared": "volpa_045_049",
+            "count": 3
+          },
+          {
+            "original": "volpa_065_069",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_025_029",
+            "count": 2
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_030_034",
+            "count": 2
+          },
+          {
+            "original": "volpa_070_074",
+            "prepared": "volpa_045_049",
+            "count": 1
+          },
+          {
+            "original": "volpa_075_079",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_075_079",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_080_084",
+            "prepared": "volpa_050_054",
+            "count": 1
+          },
+          {
+            "original": "volpa_085_089",
+            "prepared": "volpa_035_039",
+            "count": 3
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_030_034",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_035_039",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_065_069",
+            "count": 1
+          },
+          {
+            "original": "volpa_090_094",
+            "prepared": "volpa_090_094",
+            "count": 1
+          },
+          {
+            "original": "volpa_095_099",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_095_099",
+            "prepared": "volpa_025_029",
+            "count": 1
+          },
+          {
+            "original": "volpa_095_099",
+            "prepared": "volpa_060_064",
+            "count": 1
+          },
+          {
+            "original": "volpa_100_104",
+            "prepared": "volpa_035_039",
+            "count": 1
+          },
+          {
+            "original": "volpa_100_104",
+            "prepared": "volpa_040_044",
+            "count": 1
+          },
+          {
+            "original": "volpa_110_114",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_115_119",
+            "prepared": "volpa_020_024",
+            "count": 1
+          },
+          {
+            "original": "volpa_115_119",
+            "prepared": "volpa_045_049",
+            "count": 1
+          },
+          {
+            "original": "volpa_115_119",
+            "prepared": "volpa_115_119",
+            "count": 1
+          }
+        ]
+      },
+      "unique_exact_compositions": 8704,
+      "composition_multiplicity_histogram": {
+        "1": 8440,
+        "2": 216,
+        "3": 32,
+        "4": 7,
+        "5": 4,
+        "6": 4,
+        "7": 1
+      },
+      "compositions_with_multiple_target_strings": 264,
+      "source_order_examples_of_soft_mismatch": [
+        {
+          "source_row_idx": 2,
+          "composition": [
+            [
+              "Ca",
+              2
+            ],
+            [
+              "Na",
+              2
+            ],
+            [
+              "O",
+              12
+            ],
+            [
+              "Ta",
+              2
+            ],
+            [
+              "Ti",
+              2
+            ]
+          ],
+          "original": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 3,
+          "composition": [
+            [
+              "N",
+              8
+            ],
+            [
+              "Zn",
+              12
+            ]
+          ],
+          "original": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_005_009"
+          }
+        },
+        {
+          "source_row_idx": 9,
+          "composition": [
+            [
+              "Ca",
+              10
+            ],
+            [
+              "Pt",
+              6
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_020_024"
+          },
+          "prepared": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_025_029"
+          }
+        },
+        {
+          "source_row_idx": 10,
+          "composition": [
+            [
+              "Co",
+              6
+            ],
+            [
+              "Ga",
+              6
+            ],
+            [
+              "Y",
+              1
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "hexagonal",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_015_019"
+          }
+        },
+        {
+          "source_row_idx": 11,
+          "composition": [
+            [
+              "F",
+              8
+            ],
+            [
+              "Mn",
+              4
+            ]
+          ],
+          "original": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 12,
+          "composition": [
+            [
+              "Lu",
+              2
+            ],
+            [
+              "O",
+              6
+            ],
+            [
+              "Rb",
+              6
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_003_015",
+            "volume_per_atom_bin": "volpa_020_024"
+          },
+          "prepared": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_168_194",
+            "volume_per_atom_bin": "volpa_025_029"
+          }
+        },
+        {
+          "source_row_idx": 13,
+          "composition": [
+            [
+              "In",
+              1
+            ],
+            [
+              "Ti",
+              3
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_075_142",
+            "volume_per_atom_bin": "volpa_015_019"
+          },
+          "prepared": {
+            "lattice_system": "cubic",
+            "spacegroup_bucket": "sg_195_230",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 15,
+          "composition": [
+            [
+              "Np",
+              8
+            ],
+            [
+              "S",
+              12
+            ]
+          ],
+          "original": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_020_024"
+          },
+          "prepared": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_015_019"
+          }
+        },
+        {
+          "source_row_idx": 16,
+          "composition": [
+            [
+              "Bi",
+              1
+            ],
+            [
+              "Cs",
+              2
+            ],
+            [
+              "I",
+              6
+            ],
+            [
+              "K",
+              1
+            ]
+          ],
+          "original": {
+            "lattice_system": "trigonal",
+            "spacegroup_bucket": "sg_195_230",
+            "volume_per_atom_bin": "volpa_050_054"
+          },
+          "prepared": {
+            "lattice_system": "trigonal",
+            "spacegroup_bucket": "sg_195_230",
+            "volume_per_atom_bin": "volpa_045_049"
+          }
+        },
+        {
+          "source_row_idx": 20,
+          "composition": [
+            [
+              "Ni",
+              6
+            ],
+            [
+              "Sb",
+              2
+            ]
+          ],
+          "original": {
+            "lattice_system": "orthorhombic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_168_194",
+            "volume_per_atom_bin": "volpa_010_014"
+          }
+        },
+        {
+          "source_row_idx": 21,
+          "composition": [
+            [
+              "C",
+              6
+            ],
+            [
+              "Ga",
+              2
+            ],
+            [
+              "Ti",
+              8
+            ]
+          ],
+          "original": {
+            "lattice_system": "hexagonal",
+            "spacegroup_bucket": "sg_168_194",
+            "volume_per_atom_bin": "volpa_010_014"
+          },
+          "prepared": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_005_009"
+          }
+        },
+        {
+          "source_row_idx": 22,
+          "composition": [
+            [
+              "Dy",
+              2
+            ],
+            [
+              "Fe",
+              2
+            ],
+            [
+              "Mn",
+              2
+            ]
+          ],
+          "original": {
+            "lattice_system": "triclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_015_019"
+          },
+          "prepared": {
+            "lattice_system": "monoclinic",
+            "spacegroup_bucket": "sg_016_074",
+            "volume_per_atom_bin": "volpa_015_019"
+          }
+        }
+      ]
+    }
+  },
+  "interpretation": "Annotation agreement is not plan utility or causal evidence of harm.",
+  "train_val_overlap": {
+    "exact_compositions": 1004,
+    "exact_clean_answer_strings": 0,
+    "note": "Answer-string equality is a limited duplicate diagnostic, not full crystallographic structure matching."
+  }
+}

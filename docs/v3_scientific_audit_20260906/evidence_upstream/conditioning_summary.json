@@ -1,0 +1,125 @@
+{
+  "source_files": {
+    "train": {
+      "original": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_basin_closure_sft_v1_20260904/train.jsonl",
+      "prepared": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/train.jsonl",
+      "original_sha256": "232f7e1e6f0d4a634db8a9cfd01c0e3fd61f31f154adf142b5cc11af57c61a1c",
+      "prepared_sha256": "1a3fdea6c710d7b2dd397b6de332918ed239c6a0f46b6aab8b662bf4011e6b04"
+    },
+    "val": {
+      "original": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_basin_closure_sft_v1_20260904/val.jsonl",
+      "prepared": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/val.jsonl",
+      "original_sha256": "c35f98404c5780201707c95493f231b930cb7e5b4de96ba91bd2413ea510650d",
+      "prepared_sha256": "7e598846dcfea5673dc16d67f887658a6bf34ad0df00d097d7c7053ff9b637d2"
+    }
+  },
+  "train_val_overlap": {
+    "exact_compositions": 1004,
+    "exact_clean_answer_strings": 0,
+    "note": "Answer-string equality is a limited duplicate diagnostic, not full crystallographic structure matching."
+  },
+  "splits": {
+    "train": {
+      "rows": 27136,
+      "statuses": {
+        "predicted_direct": 24558,
+        "teacher_soft_fallback": 2578
+      },
+      "reasons": {
+        "None": 24558,
+        "missing_typed_metadata": 2578
+      },
+      "goals": {
+        "meta_or_better": 24558,
+        "None": 2578
+      },
+      "checks": {
+        "unchanged_clean_answer": 27136,
+        "unchanged_composition": 27136,
+        "valid_program_permutation": 27136,
+        "predicted": 24558,
+        "all_three_soft_match": 6613,
+        "any_soft_mismatch": 17945
+      },
+      "soft_agreement_predicted_only": {
+        "lattice_system": 14103,
+        "spacegroup_bucket": 13987,
+        "volume_per_atom_bin": 16217
+      },
+      "unique_exact_compositions": 24830,
+      "composition_multiplicity_histogram": {
+        "1": 23340,
+        "2": 1124,
+        "3": 208,
+        "4": 67,
+        "5": 33,
+        "6": 16,
+        "7": 16,
+        "8": 5,
+        "9": 5,
+        "10": 4,
+        "11": 1,
+        "12": 5,
+        "13": 2,
+        "14": 1,
+        "15": 1,
+        "16": 2
+      },
+      "compositions_with_multiple_target_strings": 1490,
+      "all_three_soft_agreement_fraction": 0.26928088606564055,
+      "single_field_agreement_fraction": {
+        "lattice_system": 0.5742731492792573,
+        "spacegroup_bucket": 0.5695496375926379,
+        "volume_per_atom_bin": 0.6603550777750631
+      },
+      "product_of_aggregate_field_agreements_not_joint_probability": 0.2159870000699588
+    },
+    "val": {
+      "rows": 9047,
+      "statuses": {
+        "predicted_direct": 8147,
+        "teacher_soft_fallback": 900
+      },
+      "reasons": {
+        "None": 8147,
+        "missing_typed_metadata": 889,
+        "unsupported_frozen_stratum": 11
+      },
+      "goals": {
+        "meta_or_better": 8158,
+        "None": 889
+      },
+      "checks": {
+        "unchanged_clean_answer": 9047,
+        "unchanged_composition": 9047,
+        "valid_program_permutation": 9047,
+        "predicted": 8147,
+        "all_three_soft_match": 1946,
+        "any_soft_mismatch": 6201
+      },
+      "soft_agreement_predicted_only": {
+        "lattice_system": 4412,
+        "spacegroup_bucket": 4379,
+        "volume_per_atom_bin": 5192
+      },
+      "unique_exact_compositions": 8704,
+      "composition_multiplicity_histogram": {
+        "1": 8440,
+        "2": 216,
+        "3": 32,
+        "4": 7,
+        "5": 4,
+        "6": 4,
+        "7": 1
+      },
+      "compositions_with_multiple_target_strings": 264,
+      "all_three_soft_agreement_fraction": 0.23886093040382964,
+      "single_field_agreement_fraction": {
+        "lattice_system": 0.5415490364551369,
+        "spacegroup_bucket": 0.5374984656928931,
+        "volume_per_atom_bin": 0.6372897999263533
+      },
+      "product_of_aggregate_field_agreements_not_joint_probability": 0.1855034469116714
+    }
+  }
+}

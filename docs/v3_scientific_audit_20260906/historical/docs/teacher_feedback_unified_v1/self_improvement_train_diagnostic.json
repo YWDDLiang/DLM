@@ -1,0 +1,45 @@
+{
+  "scope": "train_teacher_readonly; candidate thresholds are descriptive bins, not new gates",
+  "conditions": 526,
+  "verified_paths": 972,
+  "multiple_candidate_groups": 273,
+  "equal_condition_mean_A_uniform": 6.538570705456578,
+  "equal_condition_mean_A_teacher": 6.516098544570633,
+  "gap_occurrence_quantiles": {
+    "min": 0.007187962532043457,
+    "p25": 3.3114449977874756,
+    "median": 6.25710916519165,
+    "p75": 8.909855008125305,
+    "p90": 11.186864852905273,
+    "max": 15.53920292854309
+  },
+  "best_A_per_condition_quantiles": {
+    "min": 0.007187962532043457,
+    "p25": 2.4697887301445007,
+    "median": 5.178374528884888,
+    "p75": 7.988816738128662,
+    "p90": 10.88808822631836,
+    "max": 14.296124458312988
+  },
+  "groups_with_candidate_A_at_most": {
+    "0.1": 13,
+    "0.5": 39,
+    "1.0": 68
+  },
+  "groups_with_single_candidate_both_better_than_uniform": 159,
+  "teacher_A_worsened_groups": 98,
+  "teacher_B_worsened_groups": 38,
+  "pareto_dominance_pairs": 317,
+  "equal_condition_dominated_candidate_mass_uniform": 0.15906210392902415,
+  "equal_condition_dominated_candidate_mass_teacher": 0.14664966329644272,
+  "diagnostic_only_condition_nonregression_projection": {
+    "groups_reset_to_uniform": 136,
+    "delta_A": -0.05085088735681853,
+    "delta_B": -0.0037057089271115523,
+    "mean_kl": 0.0029431135230956296,
+    "trained_or_used_for_weights": false,
+    "optimality_claim": false
+  },
+  "equal_condition_best_A_mean": 5.4841873463908986,
+  "teacher_improvement_fraction": 0.003436861341453518
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "h1a2_dlm_stability_option_checklist_36h_v1",
+  "date": "2026-08-30",
+  "deadline": "2026-08-31T23:30:00+08:00",
+  "resource_ceiling": {"a800": 6, "cpus_per_gpu": [4, 8], "concurrent_jobs": 2},
+  "recommended_portfolio": ["A_primary", "B_preoutcome_fallback", "C_D_nonblocking_feasibility", "E_conditional", "F_deferred"],
+  "options": {
+    "A": {
+      "name": "minimal_listwise_anchored_DLM",
+      "role": "primary",
+      "new_model_heads": 0,
+      "training_gpus": 2,
+      "training_seeds": [82017, 82018],
+      "updates": 348,
+      "prospective_authorized": true
+    },
+    "B": {
+      "name": "energy_weighted_winner_SFT",
+      "role": "sole_preoutcome_fallback",
+      "trigger": "A_not_train_ready_within_4_hours",
+      "mix": {"winner_CE": 0.2, "base_CE": 0.8},
+      "prospective_authorized_only_if_A_stops_before_outcomes": true
+    },
+    "C": {
+      "name": "C3FD_style_constrained_structural_planner",
+      "role": "train_validation_feasibility",
+      "prospective_authorized": false
+    },
+    "D": {
+      "name": "DLM_self_intent_VPA_CN",
+      "role": "diagnostic_deferred",
+      "intent_manifest_sha256": "a5872e1ffa3455c41f0179732dfddec92fc1f5d6ed31433c948ea62f2551b13c",
+      "prospective_authorized": false
+    },
+    "E": {
+      "name": "valid_forward_noise_refiner_bridge",
+      "role": "conditional_attribution",
+      "trigger": "replicated_raw_left_shift_erased_or_reversed_by_tau800"
+    },
+    "F": {
+      "name": "periodic_E3_graph_adapter",
+      "role": "deferred_beyond_deadline"
+    }
+  },
+  "forbidden": ["AR", "external_rich_plan_main", "direct_planner_CIF", "best_of_N", "rerank", "replacement", "composition_tilt", "tau_temperature_checkpoint_sweep", "RL_GRPO_SMC"]
+}

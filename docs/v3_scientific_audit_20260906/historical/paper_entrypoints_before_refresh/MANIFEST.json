@@ -1,0 +1,18 @@
+{
+  "recorded_utc": "2026-09-06T11:37:55.404764+00:00",
+  "reason": "Retire G2-era paper headlines and unsupported current claims after whole-chain audit.",
+  "files": [
+    {
+      "source": "docs/paper/README.md",
+      "archive": "docs/v3_scientific_audit_20260906/historical/paper_entrypoints_before_refresh/README.c8971cc433d7.md",
+      "sha256": "c8971cc433d7bc96423e524f031a9e3b7f1a4dcc8a47e54e28a0568f2f9d1400",
+      "bytes": 3345
+    },
+    {
+      "source": "docs/paper/METHOD_AT_A_GLANCE.md",
+      "archive": "docs/v3_scientific_audit_20260906/historical/paper_entrypoints_before_refresh/METHOD_AT_A_GLANCE.9cee4fac1ed8.md",
+      "sha256": "9cee4fac1ed82db09e5c36ebb74eab2215df671d5cabf86de788e42d16edd323",
+      "bytes": 5219
+    }
+  ]
+}

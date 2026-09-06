@@ -1,0 +1,209 @@
+{
+  "sha": "88562cb8ec89c67272b191b362b340104fbd7f56",
+  "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/trees/88562cb8ec89c67272b191b362b340104fbd7f56",
+  "tree": [
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "acec6be50037bebf1b3a7f23eb62b2696ad5f290",
+      "size": 1067,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/acec6be50037bebf1b3a7f23eb62b2696ad5f290"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "15fffef552efe769bebba6b2cf2927015703b9a0",
+      "size": 2616,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/15fffef552efe769bebba6b2cf2927015703b9a0"
+    },
+    {
+      "path": "assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b2426fd0eac98319a48658931de38e752be331e9",
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/trees/b2426fd0eac98319a48658931de38e752be331e9"
+    },
+    {
+      "path": "assets/ircr_diffusion_scaler.pkl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e2b88bea2e34bc58b7cf73a9af04d8b2748cff6",
+      "size": 6103,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/4e2b88bea2e34bc58b7cf73a9af04d8b2748cff6"
+    },
+    {
+      "path": "assets/saved-model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "778dd148d5c967912b56e5ff12639318f448112f",
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/trees/778dd148d5c967912b56e5ff12639318f448112f"
+    },
+    {
+      "path": "assets/saved-model/sdm.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "911410ac0a76e6f4371d2bd1a6f997119f0f42f3",
+      "size": 5364650,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/911410ac0a76e6f4371d2bd1a6f997119f0f42f3"
+    },
+    {
+      "path": "diffcrysgen",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c931c8f2472c7eb59e6d87a683f840e042da958b",
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/trees/c931c8f2472c7eb59e6d87a683f840e042da958b"
+    },
+    {
+      "path": "diffcrysgen/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "diffcrysgen/analyze_generated_structures.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f310ea0023a642bfa60841f4a0880af62be03bbf",
+      "size": 3475,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/f310ea0023a642bfa60841f4a0880af62be03bbf"
+    },
+    {
+      "path": "diffcrysgen/invert_pcr.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17fa31aa6b85b2ea15e98953e954306cccee9281",
+      "size": 5944,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/17fa31aa6b85b2ea15e98953e954306cccee9281"
+    },
+    {
+      "path": "diffcrysgen/model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "137604cf9b17e971d1f0beb0128f188dbb155ab7",
+      "size": 11166,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/137604cf9b17e971d1f0beb0128f188dbb155ab7"
+    },
+    {
+      "path": "diffcrysgen/sampler.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1e3199ca6bfd5b9e776ed98f99138585e823ab8",
+      "size": 4092,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/b1e3199ca6bfd5b9e776ed98f99138585e823ab8"
+    },
+    {
+      "path": "diffcrysgen/trainer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c654aecfba467b51d7cea0fe170052831bc4f745",
+      "size": 4189,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/c654aecfba467b51d7cea0fe170052831bc4f745"
+    },
+    {
+      "path": "diffcrysgen/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a1b01503b6d7b275d8ba886609b9795902d5f24",
+      "size": 1094,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/7a1b01503b6d7b275d8ba886609b9795902d5f24"
+    },
+    {
+      "path": "images",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "55fdb16010104c6377ea096f2a9c0d15ca807cca",
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/trees/55fdb16010104c6377ea096f2a9c0d15ca807cca"
+    },
+    {
+      "path": "images/analysis-generated-materials.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d1ecdf85dccbf3a649210e9e2d0e30f54975de5",
+      "size": 740088,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/9d1ecdf85dccbf3a649210e9e2d0e30f54975de5"
+    },
+    {
+      "path": "images/architecture.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6cf7ae8390c8f15448884ec56b46dd766a978cb",
+      "size": 439423,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/c6cf7ae8390c8f15448884ec56b46dd766a978cb"
+    },
+    {
+      "path": "images/diffusion-schematic.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6366d1929b209ed52200394917f0bc3d8f6683b",
+      "size": 471419,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/f6366d1929b209ed52200394917f0bc3d8f6683b"
+    },
+    {
+      "path": "images/logo-DiffCrysGen.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9764340caecc9071f88b89f8052475647e7615d0",
+      "size": 286432,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/9764340caecc9071f88b89f8052475647e7615d0"
+    },
+    {
+      "path": "notebooks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0cf5e82b3a785aa7a8e034367efc229d85213422",
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/trees/0cf5e82b3a785aa7a8e034367efc229d85213422"
+    },
+    {
+      "path": "notebooks/DiffCrysGen-demo.ipynb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca840e8e622e0db353b3380cd3ab84a2787f0fdb",
+      "size": 19595,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/ca840e8e622e0db353b3380cd3ab84a2787f0fdb"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4aff98bb74055fc95e1bfb2146e0eec713eee77b",
+      "size": 98,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/4aff98bb74055fc95e1bfb2146e0eec713eee77b"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7c7d82c0516026356678e178ac2e332bcd548388",
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/trees/7c7d82c0516026356678e178ac2e332bcd548388"
+    },
+    {
+      "path": "scripts/sample.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7785d2c0fa6648ff411c969626e58a21a5e6fa32",
+      "size": 152,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/7785d2c0fa6648ff411c969626e58a21a5e6fa32"
+    },
+    {
+      "path": "scripts/train.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b49803ba75edd3f6e473f9b7cc47b7c24ae08d5e",
+      "size": 274,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/b49803ba75edd3f6e473f9b7cc47b7c24ae08d5e"
+    },
+    {
+      "path": "setup.cfg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03a48c8e925204ef353a1a3a152392be9fa8c9fa",
+      "size": 1017,
+      "url": "https://api.github.com/repos/SouravMal/DiffCrysGen/git/blobs/03a48c8e925204ef353a1a3a152392be9fa8c9fa"
+    }
+  ],
+  "truncated": false
+}

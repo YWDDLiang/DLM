@@ -1,0 +1,42 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/kiyoung98/maskgxt/3c256778b55693b9386fde00f4909068d806f7f7/configs.py",
+    "repo_commit": "3c256778b55693b9386fde00f4909068d806f7f7",
+    "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_transformer\\kiyoung98__maskgxt__configs.py",
+    "sha256": "20F12D22BBBBF4494853BE556977441E79392FDE7DED7E6F65E99B44671C5F36",
+    "accessed_utc": "2026-09-06T09:06:05.1473974Z",
+    "role": "author implementation read only; not executed"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/kiyoung98/maskgxt/3c256778b55693b9386fde00f4909068d806f7f7/train.py",
+    "repo_commit": "3c256778b55693b9386fde00f4909068d806f7f7",
+    "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_transformer\\kiyoung98__maskgxt__train.py",
+    "sha256": "5A5DFDE97E3364F675E464B374CADB2064EFA51CD6BDE2D309DD88968EC7304C",
+    "accessed_utc": "2026-09-06T09:06:05.6592616Z",
+    "role": "author implementation read only; not executed"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/kiyoung98/maskgxt/3c256778b55693b9386fde00f4909068d806f7f7/sample.py",
+    "repo_commit": "3c256778b55693b9386fde00f4909068d806f7f7",
+    "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_transformer\\kiyoung98__maskgxt__sample.py",
+    "sha256": "ADF3336FF6E7EF3BD6A260E1C05CC93E9C4059AD09022BB167FAC4C306E80298",
+    "accessed_utc": "2026-09-06T09:06:06.1161418Z",
+    "role": "author implementation read only; not executed"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/hanyi2021/CrystalDiT/e87bcec549476b3bee55ff48b75772bdb950e685/train_crystal_dit.py",
+    "repo_commit": "e87bcec549476b3bee55ff48b75772bdb950e685",
+    "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_transformer\\hanyi2021__CrystalDiT__train_crystal_dit.py",
+    "sha256": "044B90CC20188FBF1F84707D6751ECF3A031DBE54FCC09EB533BDC579116CFBF",
+    "accessed_utc": "2026-09-06T09:06:06.9780232Z",
+    "role": "author implementation read only; not executed"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/hanyi2021/CrystalDiT/e87bcec549476b3bee55ff48b75772bdb950e685/diffusion/models.py",
+    "repo_commit": "e87bcec549476b3bee55ff48b75772bdb950e685",
+    "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_transformer\\hanyi2021__CrystalDiT__diffusion__models.py",
+    "sha256": "1B8031A1340A3D1045C0BDB382334068F5F20E32EDF67B3E6ABA961BA91846CA",
+    "accessed_utc": "2026-09-06T09:06:07.4196634Z",
+    "role": "author implementation read only; not executed"
+  }
+]

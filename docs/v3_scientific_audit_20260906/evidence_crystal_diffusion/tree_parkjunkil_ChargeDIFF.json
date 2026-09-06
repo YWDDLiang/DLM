@@ -1,0 +1,648 @@
+{
+  "sha": "32acf56b88883108621eb044451b9220df17b609",
+  "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/32acf56b88883108621eb044451b9220df17b609",
+  "tree": [
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b48a087c0d36353ddbad2676632627bc9ea5ce9",
+      "size": 1067,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/2b48a087c0d36353ddbad2676632627bc9ea5ce9"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9587b61ce7dcc532bd6839201b9669b6f8be0956",
+      "size": 5994,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/9587b61ce7dcc532bd6839201b9669b6f8be0956"
+    },
+    {
+      "path": "configs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1c4a9d58717e0610ca418ddb504052b39e5edddb",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/1c4a9d58717e0610ca418ddb504052b39e5edddb"
+    },
+    {
+      "path": "configs/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "configs/chargediff_cond.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "67b245c4ecb41f61911a9868a4ab3f6bd6111677",
+      "size": 1828,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/67b245c4ecb41f61911a9868a4ab3f6bd6111677"
+    },
+    {
+      "path": "configs/chargediff_uncond.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "532c7bf3c158bda2e73354f0d84acf70c99d6062",
+      "size": 1793,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/532c7bf3c158bda2e73354f0d84acf70c99d6062"
+    },
+    {
+      "path": "configs/vqvae.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3ae0fa439032bce35e273690952bf15a4d38d01",
+      "size": 1218,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/f3ae0fa439032bce35e273690952bf15a4d38d01"
+    },
+    {
+      "path": "datasets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f12d966e924ebaa781812892b8270eb1958875d8",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/f12d966e924ebaa781812892b8270eb1958875d8"
+    },
+    {
+      "path": "datasets/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "datasets/base_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94a011ab21c3b40c4175a53c64254433c8e693a3",
+      "size": 1329,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/94a011ab21c3b40c4175a53c64254433c8e693a3"
+    },
+    {
+      "path": "datasets/chargediff_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "428e7dcadf674b31cd0700f204a757081a6389cc",
+      "size": 7745,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/428e7dcadf674b31cd0700f204a757081a6389cc"
+    },
+    {
+      "path": "datasets/dataloader.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e94130fa27f10440dfe5701c0243c3464b55798",
+      "size": 2030,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/1e94130fa27f10440dfe5701c0243c3464b55798"
+    },
+    {
+      "path": "demo_chage_density_inpainting.ipynb",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0608af97222d388655665564675e95dbea11bb6",
+      "size": 4926,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/d0608af97222d388655665564675e95dbea11bb6"
+    },
+    {
+      "path": "docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "276bc03dd3b154ad78452b9c6cee7b78f1312f88",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/276bc03dd3b154ad78452b9c6cee7b78f1312f88"
+    },
+    {
+      "path": "docs/objects",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5e7dca2544c63bc6ae7e5c5a037c89057e9d31e1",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/5e7dca2544c63bc6ae7e5c5a037c89057e9d31e1"
+    },
+    {
+      "path": "docs/objects/Cond.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "267caa7c464ea6e2cb6ebe93c63554c53020d2e8",
+      "size": 1496896,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/267caa7c464ea6e2cb6ebe93c63554c53020d2e8"
+    },
+    {
+      "path": "docs/objects/Fig1.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7688dd7d969d9a50e1f8ebe7c13963246bb0788d",
+      "size": 57244,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/7688dd7d969d9a50e1f8ebe7c13963246bb0788d"
+    },
+    {
+      "path": "docs/objects/Inpainting.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e82839dba0369fe6d8e36ca477fec101d0c7d13",
+      "size": 1236707,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/7e82839dba0369fe6d8e36ca477fec101d0c7d13"
+    },
+    {
+      "path": "docs/objects/Uncond.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2490d44a9c9b67e3fcc675963bebaa95ef338eb9",
+      "size": 1872549,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/2490d44a9c9b67e3fcc675963bebaa95ef338eb9"
+    },
+    {
+      "path": "docs/objects/VQVAE.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "626d2d7206f818fcacd716df870037c8664d3637",
+      "size": 713388,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/626d2d7206f818fcacd716df870037c8664d3637"
+    },
+    {
+      "path": "docs/objects/cross-modal_message_passing.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55e37e60ef7d80048fb429f9b67a9a50dc8dcc5d",
+      "size": 446148,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/55e37e60ef7d80048fb429f9b67a9a50dc8dcc5d"
+    },
+    {
+      "path": "docs/objects/uncond.gif",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b7bd8e1bf1ef975b1e05ab2b589b03e76bdf606",
+      "size": 3006961,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/0b7bd8e1bf1ef975b1e05ab2b589b03e76bdf606"
+    },
+    {
+      "path": "docs/static",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c02cb187edbc57def7ad2cfe6c15a747e299e015",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/c02cb187edbc57def7ad2cfe6c15a747e299e015"
+    },
+    {
+      "path": "docs/static/css",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e94df4156d34273dae64b1d8c5493b081748f8f4",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/e94df4156d34273dae64b1d8c5493b081748f8f4"
+    },
+    {
+      "path": "docs/static/css/bulma-carousel.min.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d4b7d103e0013f64e4dedd2ad0b2947cc0d11a5",
+      "size": 3645,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/4d4b7d103e0013f64e4dedd2ad0b2947cc0d11a5"
+    },
+    {
+      "path": "docs/static/css/bulma-slider.min.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09b4aeb2fb19d7d883a0b01cb1982cb382992f95",
+      "size": 13782,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/09b4aeb2fb19d7d883a0b01cb1982cb382992f95"
+    },
+    {
+      "path": "docs/static/css/bulma.css.map.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed3a9d377ba3c30e6eb8b2a35e08e8dc814a0725",
+      "size": 96528,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/ed3a9d377ba3c30e6eb8b2a35e08e8dc814a0725"
+    },
+    {
+      "path": "docs/static/css/bulma.min.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a807a314caa0df0ddccacd6b732d83f5ffde7a89",
+      "size": 204030,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/a807a314caa0df0ddccacd6b732d83f5ffde7a89"
+    },
+    {
+      "path": "docs/static/css/fontawesome.all.min.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "656a50745f7224b3eca827869677851c705b26c9",
+      "size": 59344,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/656a50745f7224b3eca827869677851c705b26c9"
+    },
+    {
+      "path": "docs/static/css/index.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "21076ef552588e5831c9e503067762142cb7c9c0",
+      "size": 2118,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/21076ef552588e5831c9e503067762142cb7c9c0"
+    },
+    {
+      "path": "docs/static/js",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "33c6408e052c38d3dabbfa4d02dbc6022fa0628d",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/33c6408e052c38d3dabbfa4d02dbc6022fa0628d"
+    },
+    {
+      "path": "docs/static/js/bulma-carousel.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "229edba242bb190698662cdce6bdacde9f0769fe",
+      "size": 82823,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/229edba242bb190698662cdce6bdacde9f0769fe"
+    },
+    {
+      "path": "docs/static/js/bulma-carousel.min.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5fff0695f00cf9da60dd87aa72c51367b00e92ff",
+      "size": 40723,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/5fff0695f00cf9da60dd87aa72c51367b00e92ff"
+    },
+    {
+      "path": "docs/static/js/bulma-slider.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6718de5c5ae59d2c22141a147f5afba41af9cbb",
+      "size": 16404,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/c6718de5c5ae59d2c22141a147f5afba41af9cbb"
+    },
+    {
+      "path": "docs/static/js/bulma-slider.min.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e62685763cf7668cfa8857fac0b27af2c277286",
+      "size": 6926,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/7e62685763cf7668cfa8857fac0b27af2c277286"
+    },
+    {
+      "path": "docs/static/js/fontawesome.all.min.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ee22fdb7753983bae3986b2436bdd167730cd5b",
+      "size": 1194960,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/9ee22fdb7753983bae3986b2436bdd167730cd5b"
+    },
+    {
+      "path": "docs/static/js/index.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8daed0c67f71a02472f1c35c474aa0888974a6ec",
+      "size": 2344,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/8daed0c67f71a02472f1c35c474aa0888974a6ec"
+    },
+    {
+      "path": "generate.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b1ebd17760ef54c68717d2544b6b34ba49ba30",
+      "size": 4182,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/89b1ebd17760ef54c68717d2544b6b34ba49ba30"
+    },
+    {
+      "path": "index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0b408fee80997745bc5f139e09d92b47c9f7522",
+      "size": 11295,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/f0b408fee80997745bc5f139e09d92b47c9f7522"
+    },
+    {
+      "path": "launchers",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3e2d78ff2afb1fa726ebe5e900215ecd60f3615c",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/3e2d78ff2afb1fa726ebe5e900215ecd60f3615c"
+    },
+    {
+      "path": "launchers/train_chargediff_bandgap.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "37968d8606997c382b2595321dd4d1cb588be2ad",
+      "size": 2655,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/37968d8606997c382b2595321dd4d1cb588be2ad"
+    },
+    {
+      "path": "launchers/train_chargediff_chemical_system.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ec39ee95e40061bc7b4cc80291adc096aef6e83",
+      "size": 2663,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/3ec39ee95e40061bc7b4cc80291adc096aef6e83"
+    },
+    {
+      "path": "launchers/train_chargediff_density.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "335bcc62fc40c91b7d3b9cba6be7d0c5ab618e71",
+      "size": 2655,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/335bcc62fc40c91b7d3b9cba6be7d0c5ab618e71"
+    },
+    {
+      "path": "launchers/train_chargediff_magnetic_density.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3135f3b0d474d97fc2df6948aabf07c20a263a7",
+      "size": 2664,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/a3135f3b0d474d97fc2df6948aabf07c20a263a7"
+    },
+    {
+      "path": "launchers/train_chargediff_uncond.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7606bdd747b300569f8e4d1d6921064d70eca05",
+      "size": 2656,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e7606bdd747b300569f8e4d1d6921064d70eca05"
+    },
+    {
+      "path": "launchers/train_vqvae.sh",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "368aac3f100702e3eaf039c6e59ad35a70f9d069",
+      "size": 2386,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/368aac3f100702e3eaf039c6e59ad35a70f9d069"
+    },
+    {
+      "path": "models",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7507b266c3b46900d91569cf9b2ce53b56f776ee",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/7507b266c3b46900d91569cf9b2ce53b56f776ee"
+    },
+    {
+      "path": "models/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "models/base_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0bbdb14ca13c4521cc99c9917ecf896e8fc994b2",
+      "size": 3775,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/0bbdb14ca13c4521cc99c9917ecf896e8fc994b2"
+    },
+    {
+      "path": "models/chargediff_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5fe592f3657125c417e3ec7ec94429a9e4601cf8",
+      "size": 33285,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/5fe592f3657125c417e3ec7ec94429a9e4601cf8"
+    },
+    {
+      "path": "models/losses.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6bae19159c74e54c7f2158d1ba45ce376d715f78",
+      "size": 881,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/6bae19159c74e54c7f2158d1ba45ce376d715f78"
+    },
+    {
+      "path": "models/model_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d4912281c20c0a35fec5409049e16dad9cf0aa3",
+      "size": 960,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/6d4912281c20c0a35fec5409049e16dad9cf0aa3"
+    },
+    {
+      "path": "models/networks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "30f0db6abf818eeeebd0213b62bab62e4bec2def",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/30f0db6abf818eeeebd0213b62bab62e4bec2def"
+    },
+    {
+      "path": "models/networks/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "models/networks/diffusion_networks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1e81ccd11f475487a818e97f9255759a10f29dae",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/1e81ccd11f475487a818e97f9255759a10f29dae"
+    },
+    {
+      "path": "models/networks/diffusion_networks/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "models/networks/diffusion_networks/decoder.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b4a71ed323210584f5696c54e7a28508cda6ea0",
+      "size": 22319,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/5b4a71ed323210584f5696c54e7a28508cda6ea0"
+    },
+    {
+      "path": "models/networks/diffusion_networks/network.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "150dd187019bacbf301c494ee053b4496a9aa00f",
+      "size": 2155,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/150dd187019bacbf301c494ee053b4496a9aa00f"
+    },
+    {
+      "path": "models/networks/vqvae_networks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "db8a735d0485f9a15222a9c5953723a200b34de7",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/db8a735d0485f9a15222a9c5953723a200b34de7"
+    },
+    {
+      "path": "models/networks/vqvae_networks/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "models/networks/vqvae_networks/network.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "efc4511d184acfdf484d3db2817444186c4e9c6c",
+      "size": 5115,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/efc4511d184acfdf484d3db2817444186c4e9c6c"
+    },
+    {
+      "path": "models/networks/vqvae_networks/quantizer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "085f431e90d8b4ce669233f913d880ea7bc4095a",
+      "size": 5719,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/085f431e90d8b4ce669233f913d880ea7bc4095a"
+    },
+    {
+      "path": "models/networks/vqvae_networks/vqvae_modules.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40cee8d5f23dca06cda235f30344fcf6d4609efa",
+      "size": 16343,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/40cee8d5f23dca06cda235f30344fcf6d4609efa"
+    },
+    {
+      "path": "models/vqvae_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e0fefd1e9f0596969229943588fe02ddf1e8e4a",
+      "size": 8654,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/8e0fefd1e9f0596969229943588fe02ddf1e8e4a"
+    },
+    {
+      "path": "options",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d42a3337e6c48576bd907fb25e1876e2cf151919",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/d42a3337e6c48576bd907fb25e1876e2cf151919"
+    },
+    {
+      "path": "options/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "options/base_options.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c786f0e64a80f77ca22b23087fcd6f94d8b3a288",
+      "size": 7775,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/c786f0e64a80f77ca22b23087fcd6f94d8b3a288"
+    },
+    {
+      "path": "options/test_options.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a928ca793212600a5f49a2245997d51a019cbd20",
+      "size": 857,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/a928ca793212600a5f49a2245997d51a019cbd20"
+    },
+    {
+      "path": "options/train_options.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "704e85425c711d14b28c58eac41c7bbe2fef3b5c",
+      "size": 1812,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/704e85425c711d14b28c58eac41c7bbe2fef3b5c"
+    },
+    {
+      "path": "saved_ckpt",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2d7a1765d54d70a00d84567778847b63c080548f",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/2d7a1765d54d70a00d84567778847b63c080548f"
+    },
+    {
+      "path": "saved_ckpt/scaler_bandgap.pth",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa616f4d5518f15a5653d7ba85efb74081be02e7",
+      "size": 1091,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/fa616f4d5518f15a5653d7ba85efb74081be02e7"
+    },
+    {
+      "path": "saved_ckpt/scaler_density.pth",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "04e8e56cdfc9d5ae53fb794bd7f97e8df21b673f",
+      "size": 1091,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/04e8e56cdfc9d5ae53fb794bd7f97e8df21b673f"
+    },
+    {
+      "path": "saved_ckpt/scaler_magden.pth",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64869f54fd8d9709274a90d8e6b8fbb955e69185",
+      "size": 1087,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/64869f54fd8d9709274a90d8e6b8fbb955e69185"
+    },
+    {
+      "path": "train.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "82220f1251381bd46f830e16b7c1733623859eb8",
+      "size": 6206,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/82220f1251381bd46f830e16b7c1733623859eb8"
+    },
+    {
+      "path": "utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "520c5d921666a2b8017cc103b74b3daa09702001",
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/trees/520c5d921666a2b8017cc103b74b3daa09702001"
+    },
+    {
+      "path": "utils/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "utils/data_util.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e4dd96370a95bf3f7839349951ef94a339b2a68",
+      "size": 65739,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/3e4dd96370a95bf3f7839349951ef94a339b2a68"
+    },
+    {
+      "path": "utils/demo_util.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba20199964bd6bfa332cce36bd4c1254e3dff1b4",
+      "size": 11770,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/ba20199964bd6bfa332cce36bd4c1254e3dff1b4"
+    },
+    {
+      "path": "utils/distributed.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "320af6f6849970bf87d1ec3100596d9f26de1e56",
+      "size": 2949,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/320af6f6849970bf87d1ec3100596d9f26de1e56"
+    },
+    {
+      "path": "utils/util.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60341ecf43bea3b1fe5ee811954616b41fdffce9",
+      "size": 17854,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/60341ecf43bea3b1fe5ee811954616b41fdffce9"
+    },
+    {
+      "path": "utils/util_3d.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a0c997c6e726cd57d750133fc0307d5d1215093",
+      "size": 22056,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/8a0c997c6e726cd57d750133fc0307d5d1215093"
+    },
+    {
+      "path": "utils/visualizer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9837fb86be6dd39b44f6970eb7bdd0cc442d2bdd",
+      "size": 5198,
+      "url": "https://api.github.com/repos/parkjunkil/ChargeDIFF/git/blobs/9837fb86be6dd39b44f6970eb7bdd0cc442d2bdd"
+    }
+  ],
+  "truncated": false
+}

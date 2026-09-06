@@ -22,4 +22,4 @@
 
 六A800、真实8B forward/backward及长期优化尚未执行，将在所有前置任务结束后的正式allocation内验证。Windows本机Gloo不能代替该验证；没有将未运行的DDP报告为通过。训练器保存optimizer/scheduler状态，但当前没有resume入口，只认完整正式final。
 
-原K8两个端点的实际已完成数据已由同一版本CPU诊断脚本运行成功，配对、协议、计数与能量分解均通过；见 [结果及原因分析](K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)。这验证诊断入口适配现有产物，不意味着证明V2的物理收益。
+原K8两个端点的实际已完成数据已由同一版本CPU诊断脚本运行成功，配对、协议、计数与能量分解均通过；见 [结果及原因分析](../v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)。这验证诊断入口适配现有产物，不意味着证明V2的物理收益。

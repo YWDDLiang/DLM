@@ -1,0 +1,382 @@
+{
+  "sha": "94bb287751cd20a882c7c1df7ca736633d78e5e1",
+  "date": "2026-03-09T15:01:01Z",
+  "accessed_utc": "2026-09-06T08:11:28.209868+00:00",
+  "tree": {
+    "sha": "94bb287751cd20a882c7c1df7ca736633d78e5e1",
+    "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/trees/94bb287751cd20a882c7c1df7ca736633d78e5e1",
+    "tree": [
+      {
+        "path": ".DS_Store",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "eab1b94a1bb787efb9aeb5c0ee9a5ec42ab41fd7",
+        "size": 6148,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/eab1b94a1bb787efb9aeb5c0ee9a5ec42ab41fd7"
+      },
+      {
+        "path": ".gitignore",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b7faf403d915ca307532bb0eb9cceaf0214e8e5b",
+        "size": 4688,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/b7faf403d915ca307532bb0eb9cceaf0214e8e5b"
+      },
+      {
+        "path": ".idea",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "9f2f666482fa416e7ae592819adc87d01153e14d",
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/trees/9f2f666482fa416e7ae592819adc87d01153e14d"
+      },
+      {
+        "path": ".idea/crysllmgen.iml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d0876a78d06ac03b5d78c8dcdb95570281c6f1d6",
+        "size": 284,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/d0876a78d06ac03b5d78c8dcdb95570281c6f1d6"
+      },
+      {
+        "path": ".idea/inspectionProfiles",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "a412ff5341bd081a3dfd2f8376cb8e27c0be2de0",
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/trees/a412ff5341bd081a3dfd2f8376cb8e27c0be2de0"
+      },
+      {
+        "path": ".idea/inspectionProfiles/Project_Default.xml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ac21435ff56574cdca5c5840825818701d9c6248",
+        "size": 270,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/ac21435ff56574cdca5c5840825818701d9c6248"
+      },
+      {
+        "path": ".idea/inspectionProfiles/profiles_settings.xml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "105ce2da2d6447d11dfe32bfb846c3d5b199fc99",
+        "size": 174,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/105ce2da2d6447d11dfe32bfb846c3d5b199fc99"
+      },
+      {
+        "path": ".idea/modules.xml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9a6bd2c4c03c84aa89221dbffae19aba2bbf74d0",
+        "size": 272,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/9a6bd2c4c03c84aa89221dbffae19aba2bbf74d0"
+      },
+      {
+        "path": "CrysLLMGen.png",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "1dd3f6f017d06a9bb09e71a685dfb09149d12492",
+        "size": 432358,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/1dd3f6f017d06a9bb09e71a685dfb09149d12492"
+      },
+      {
+        "path": "LICENSE",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "671a32a3f09317da3b73201051a7e95d921f3ecc",
+        "size": 1074,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/671a32a3f09317da3b73201051a7e95d921f3ecc"
+      },
+      {
+        "path": "README.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cc8708706ba48203bfa9efbf5dc3914d45aaee24",
+        "size": 5163,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/cc8708706ba48203bfa9efbf5dc3914d45aaee24"
+      },
+      {
+        "path": "compute_metrics.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cd4337bc6ca08d21140c6909fe5f73aa8ad76c40",
+        "size": 15193,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/cd4337bc6ca08d21140c6909fe5f73aa8ad76c40"
+      },
+      {
+        "path": "config.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "42cf6d54879daa57c02909e1c3b88ead28fb45cd",
+        "size": 904,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/42cf6d54879daa57c02909e1c3b88ead28fb45cd"
+      },
+      {
+        "path": "constants.py",
+        "mode": "100755",
+        "type": "blob",
+        "sha": "505de09dca5d0f3a43bf06fe4ecedf4735fe182e",
+        "size": 6315,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/505de09dca5d0f3a43bf06fe4ecedf4735fe182e"
+      },
+      {
+        "path": "crysllmgen_sample.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "e1c0a3aeb0fab4fb674ba7722a4578c0d9d3a15a",
+        "size": 14047,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/e1c0a3aeb0fab4fb674ba7722a4578c0d9d3a15a"
+      },
+      {
+        "path": "data",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "4ef92a546863a9eb48caecfb1dd3e3900a308ad2",
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/trees/4ef92a546863a9eb48caecfb1dd3e3900a308ad2"
+      },
+      {
+        "path": "data/.DS_Store",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6c0909ea520f790ed39d68c5082060639efd4baa",
+        "size": 6148,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/6c0909ea520f790ed39d68c5082060639efd4baa"
+      },
+      {
+        "path": "data/mp_20",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "d86962b5fb9af6280db173b68765d9ff5087b243",
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/trees/d86962b5fb9af6280db173b68765d9ff5087b243"
+      },
+      {
+        "path": "data/mp_20/test.csv",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "133f5697e1d3fd94f9bf0ab6a3b6c5054d325955",
+        "size": 26846148,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/133f5697e1d3fd94f9bf0ab6a3b6c5054d325955"
+      },
+      {
+        "path": "data/mp_20/train.csv",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "206f82f8dd4d5ddf4d6e33ae2b2928dbba8a011a",
+        "size": 80920549,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/206f82f8dd4d5ddf4d6e33ae2b2928dbba8a011a"
+      },
+      {
+        "path": "data/mp_20/val.csv",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6070ef70053415f6436eddc30f2f4137fcac19eb",
+        "size": 26864684,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/6070ef70053415f6436eddc30f2f4137fcac19eb"
+      },
+      {
+        "path": "data/perov_5",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "bbc13e379441cffc7b79e0c0aa74760380e732ed",
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/trees/bbc13e379441cffc7b79e0c0aa74760380e732ed"
+      },
+      {
+        "path": "data/perov_5/test.csv",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "cb97501bed31c8cdcb603f9b9c3a59842828c9d8",
+        "size": 7229328,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/cb97501bed31c8cdcb603f9b9c3a59842828c9d8"
+      },
+      {
+        "path": "data/perov_5/train.csv",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "62ce91686595d45d484d026bbfd14c2518b66abd",
+        "size": 21695296,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/62ce91686595d45d484d026bbfd14c2518b66abd"
+      },
+      {
+        "path": "data/perov_5/val.csv",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "872fc814e6a513024cb923a0576d723fca25969c",
+        "size": 7233118,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/872fc814e6a513024cb923a0576d723fca25969c"
+      },
+      {
+        "path": "data_utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b4ea17ffada0e447b937b3bc3d07651f837c3f63",
+        "size": 47885,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/b4ea17ffada0e447b937b3bc3d07651f837c3f63"
+      },
+      {
+        "path": "diff_refinement.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "42ba50ee7060bc54a4bc1730e9fd16c09d896b6a",
+        "size": 11016,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/42ba50ee7060bc54a4bc1730e9fd16c09d896b6a"
+      },
+      {
+        "path": "diff_train.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2065b9b3d541c5af3b2eb4f39294d486709614f1",
+        "size": 5815,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/2065b9b3d541c5af3b2eb4f39294d486709614f1"
+      },
+      {
+        "path": "eval_utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "af4ea719df5ba5a551846839de3eba415efd22c1",
+        "size": 9551,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/af4ea719df5ba5a551846839de3eba415efd22c1"
+      },
+      {
+        "path": "install.sh",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "13e9d8acabcad682774d540516c5b8ca127e9db1",
+        "size": 398,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/13e9d8acabcad682774d540516c5b8ca127e9db1"
+      },
+      {
+        "path": "llm_finetune.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4b20ee6c5eb6467a97a4bf6da085450874000b4b",
+        "size": 15158,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/4b20ee6c5eb6467a97a4bf6da085450874000b4b"
+      },
+      {
+        "path": "llm_sample.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "2d2d47d4025e150e14d32c5ba6dec1cb455915a0",
+        "size": 8998,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/2d2d47d4025e150e14d32c5ba6dec1cb455915a0"
+      },
+      {
+        "path": "models_ddpm",
+        "mode": "040000",
+        "type": "tree",
+        "sha": "6a2d9f82a89be43412d7149f319cf5105e9411f7",
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/trees/6a2d9f82a89be43412d7149f319cf5105e9411f7"
+      },
+      {
+        "path": "models_ddpm/.DS_Store",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5008ddfcf53c02e82d7eee2e57c38e5672ef89f6",
+        "size": 6148,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/5008ddfcf53c02e82d7eee2e57c38e5672ef89f6"
+      },
+      {
+        "path": "models_ddpm/constants.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "505de09dca5d0f3a43bf06fe4ecedf4735fe182e",
+        "size": 6315,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/505de09dca5d0f3a43bf06fe4ecedf4735fe182e"
+      },
+      {
+        "path": "models_ddpm/cspnet.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "5a89d392ae6c41edb027408a23103c260336e672",
+        "size": 11174,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/5a89d392ae6c41edb027408a23103c260336e672"
+      },
+      {
+        "path": "models_ddpm/data_utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "59ee908d7db43f11b1c698fa8aaee5d2cec94d8b",
+        "size": 49035,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/59ee908d7db43f11b1c698fa8aaee5d2cec94d8b"
+      },
+      {
+        "path": "models_ddpm/dataset.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8fa9c07bc78f1619bed965a9393367e70a47a209",
+        "size": 5485,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/8fa9c07bc78f1619bed965a9393367e70a47a209"
+      },
+      {
+        "path": "models_ddpm/decoder.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "88866d066ac7f50ad068194324ab065e119251a6",
+        "size": 1231,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/88866d066ac7f50ad068194324ab065e119251a6"
+      },
+      {
+        "path": "models_ddpm/diff_utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "12a0d4378237d3e765005ca1adf8fec8f66ad56e",
+        "size": 3828,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/12a0d4378237d3e765005ca1adf8fec8f66ad56e"
+      },
+      {
+        "path": "models_ddpm/diffusion.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "4a131e30c0179115ea2c25c1e997ef0fb013c6e9",
+        "size": 7607,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/4a131e30c0179115ea2c25c1e997ef0fb013c6e9"
+      },
+      {
+        "path": "models_ddpm/eval_utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "304020ffeb5aea9bf20a1f27e67e935a6e5f03e1",
+        "size": 10577,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/304020ffeb5aea9bf20a1f27e67e935a6e5f03e1"
+      },
+      {
+        "path": "models_ddpm/model.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9783a73ce57933e25317bb64a69b4813c3ced254",
+        "size": 4785,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/9783a73ce57933e25317bb64a69b4813c3ced254"
+      },
+      {
+        "path": "models_ddpm/utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ca7c0e68e718a3dc7ab34f48433342c63c9600f3",
+        "size": 52155,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/ca7c0e68e718a3dc7ab34f48433342c63c9600f3"
+      },
+      {
+        "path": "requirements.txt",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "62b1612fcfb88be1bad7c6cfd4e156cdacc9c34d",
+        "size": 2435,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/62b1612fcfb88be1bad7c6cfd4e156cdacc9c34d"
+      },
+      {
+        "path": "templating.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9a66f520b4e5d13aa40ea290c076b78d2e998ca5",
+        "size": 3789,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/9a66f520b4e5d13aa40ea290c076b78d2e998ca5"
+      },
+      {
+        "path": "utils.py",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "f8b813a951746d085f7b0b3fc7a809c638cccb62",
+        "size": 2334,
+        "url": "https://api.github.com/repos/kdmsit/crysllmgen/git/blobs/f8b813a951746d085f7b0b3fc7a809c638cccb62"
+      }
+    ],
+    "truncated": false
+  }
+}

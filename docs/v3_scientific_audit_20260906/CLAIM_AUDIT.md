@@ -1,6 +1,6 @@
 # 主张与既往归因的攻击性复核
 
-状态：第一轮，尚待交叉审稿和完整实验台账核定。目标是纠正推理强度，不预设任何组件一定应删或一定有效。
+状态：已完成一般交叉审稿，并与完整实验族台账、V2终点和冻结诊断互相核对；具体V3另有独立两轮审查。目标是纠正推理强度，不预设任何组件一定应删或一定有效。
 
 ## 1. 旧结论不能以重复引用获得更高置信度
 
@@ -18,7 +18,7 @@
 | SUN 证明已生成经过验证的原生极小值 | 既定 evaluator 的 N/U 与 hull 阈值事件成立 | 原生力/应力及终态一致性通过、或获得 DFT 证明 | headline SUN、verified SUN 和所用势模型的结论边界分开 |
 | DLM 修订是只有 DLM 才能完成的计算 | 当前 DLM 容易表达任意可见上下文下的 masked conditional | 所有 AR / encoder-decoder / infilling 模型都不能表达相同条件分布 | 必须以功能与有效对照论证 DLM 价值，不声称普遍不可替代性 |
 
-历史来源包括 [旧稳定性审计](../DLM_STABILITY_PROGRAM_AUDIT_20260830.md)、[stream19/21 判定](../teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md)、[旧失败方法汇总](../FAILED_METHODS.md)、[双目标路径解释](../teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md)。这些是待审证据与旧解释，不是新的独立确认。
+历史来源包括 [旧稳定性审计](historical/docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md)、[stream19/21 判定](historical/docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md)、[旧失败方法汇总](historical/docs/FAILED_METHODS.md)、[双目标路径解释](historical/docs/teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md)。这些是待审证据与旧解释，不是新的独立确认。
 
 ## 2. 预测软条件与目标的联合分布
 
@@ -31,7 +31,7 @@ p_{\mathrm{train}}(G\mid C,S)=p_{\mathrm{data}}(G\mid C).
 
 若程序 P 仅依赖 C、S 和独立抽样，信息论上的结论同样适用于 P。最优似然目标本身不识别“按 S 改变几何”的控制语义。改变程序仍可能通过有限容量模型的计算次序/归纳偏置提供效用；信息冗余不等于计算路由无效。
 
-这个命题的前提必须核对。近乎唯一组成的有限数据、化学 transcript 中与几何相关的变量、冻结 Planner 同源训练、teacher-soft fallback 及预测随机性的依赖，都限制经验推断。V2 的软字段也并非硬 SG/Wyckoff 约束。因此 annotation agreement 低不能直接证明实现 bug 或 SUN 损害。
+这个命题的前提必须核对，尤其要区分 Planner 的全部输入 C 与 DLM 实际看见的输入。如果 Planner 还读取与 G 相关的 M，而 DLM 没直接读取 M，即使 G 与 S 在给定 (C,M) 时独立，边缘的 S/P 仍可能向 DLM 传递 M 的信息；不能先在推导中把 M 放进 C，再在实际模型中省略它而宣布 S 冗余。近乎唯一组成的有限数据、冻结 Planner 同源训练、teacher-soft fallback 及预测随机性的依赖，也限制经验推断。V2 的软字段并非硬 SG/Wyckoff 约束。因此 annotation agreement 低不能直接证明实现 bug 或 SUN 损害。
 
 可证伪诊断：固定 C 与目标，交换 S 并重新生成 P，比较目标条件风险、实际软计划遵从性与 SUN；区分真实计划条件、预测提示和潜变量三种语义。不得把新设置的 oracle 输入作为正常 de novo 结果。
 
@@ -45,11 +45,11 @@ q(G\mid C,P,U)=\prod_j q(G_{o_j}\mid G_{o_{<j}},C,P,U),
 
 其中 U 可以是完整旧几何。使用双向预训练 backbone 估计这些因子是可行的实现，但这个因式分解本身没有证明另一类条件模型不能表达它。论文应实证回答：双向 mask 训练、几何状态暴露、程序控制或 pretrained weights 哪部分贡献了 SUN 与效率，而不是把通用条件计算写成架构独占能力。
 
-同样，规范化 CE 能学习任意离散条件分布，不等于有限样本下低能几何一定可学。需分别检查条件支持、量化、几何归纳偏置、优化与采样 kernel。外部 diffusion 的成功不能证明“必须加入能量损失”，也不能证明“现有 token CE 已足够”。
+同样，规范化 CE 在声明的合法支持内可学习任意离散条件分布，不等于有限样本下低能几何一定可学。需分别检查条件支持、量化、几何归纳偏置、优化与采样 kernel。外部 diffusion 的成功不能证明“必须加入能量损失”，也不能证明“现有 token CE 已足够”。
 
 ## 4. 历史证据缺口
 
-[旧失败方法](../FAILED_METHODS.md) 明确记录部分 BTRD checkpoint、数据、脚本与详细契约已在先前清理时删除。当前能审查保留下来的汇总、Git 历史以及尚存日志；不能声称重新独立运行或逐样本复算已删除资产。两次有限训练失败只否定已测试的实现/预算/分布，不自动否定所有 endpoint distillation 或几何 transport 方案。
+[旧失败方法](historical/docs/FAILED_METHODS.md) 明确记录部分 BTRD checkpoint、数据、脚本与详细契约已在先前清理时删除。当前能审查保留下来的汇总、Git 历史以及尚存日志；不能声称重新独立运行或逐样本复算已删除资产。两次有限训练失败只否定已测试的实现/预算/分布，不自动否定所有 endpoint distillation 或几何 transport 方案。
 
 第一轮库存发现 739 个近期 first-parent commit、209 个审计前受版本管理的 Markdown 和 559 条失败相关文本线索。文本线索不等于 559 个独立失败实验；台账必须去重并逐项判定工程失败、科学负结果、统计问题、未执行提案和重复描述。
 

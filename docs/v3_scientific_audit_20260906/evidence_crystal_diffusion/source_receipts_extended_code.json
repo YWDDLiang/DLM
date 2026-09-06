@@ -1,0 +1,240 @@
+[
+  {
+    "path": "code/SymmCD/README.md",
+    "url": "https://raw.githubusercontent.com/sibasmarak/SymmCD/a50bc003e8c5fa2348336dc77477d2439f165fd4/README.md",
+    "accessed_utc": "2026-09-06T08:08:39.118579+00:00",
+    "status": 200,
+    "bytes": 3693,
+    "sha256": "febec04617121c2a460c2beadcb5e1f5aae9489a52fe41959c90a3b7318cb51f"
+  },
+  {
+    "path": "code/SymmCD/symmcd/pl_modules/discrete_diffusion_w_site_symm.py",
+    "url": "https://raw.githubusercontent.com/sibasmarak/SymmCD/a50bc003e8c5fa2348336dc77477d2439f165fd4/symmcd/pl_modules/discrete_diffusion_w_site_symm.py",
+    "accessed_utc": "2026-09-06T08:08:39.119085+00:00",
+    "status": 200,
+    "bytes": 41353,
+    "sha256": "534680db8b6342c4087e1488150b89e1309f71e8cbd7d18ce8dba50e63bfae15"
+  },
+  {
+    "path": "code/SymmCD/conf/model/discrete_diffusion_w_site_symm.yaml",
+    "url": "https://raw.githubusercontent.com/sibasmarak/SymmCD/a50bc003e8c5fa2348336dc77477d2439f165fd4/conf/model/discrete_diffusion_w_site_symm.yaml",
+    "accessed_utc": "2026-09-06T08:08:39.119374+00:00",
+    "status": 200,
+    "bytes": 499,
+    "sha256": "80b4ae104f691cd5dff96ddc9181577f82eabeafcbd87523a4c215e88503a22e"
+  },
+  {
+    "path": "code/wyckoffdiff/README.md",
+    "url": "https://raw.githubusercontent.com/httk/wyckoffdiff/9c4694291be1c20e4f06cc33f02baed7daaf0b7a/README.md",
+    "accessed_utc": "2026-09-06T08:08:39.121722+00:00",
+    "status": 200,
+    "bytes": 4339,
+    "sha256": "609e82788f8ff5495753d563284cb8a54320192f14da1ffd272f24ffed71ba70"
+  },
+  {
+    "path": "code/wyckoffdiff/wyckoff_generation/models/gnn.py",
+    "url": "https://raw.githubusercontent.com/httk/wyckoffdiff/9c4694291be1c20e4f06cc33f02baed7daaf0b7a/wyckoff_generation/models/gnn.py",
+    "accessed_utc": "2026-09-06T08:08:39.122182+00:00",
+    "status": 200,
+    "bytes": 5637,
+    "sha256": "55fe4f04cb5b21e05060fc0a4dc4142a2ca6c83088075d51ba20229c3e6d19f7"
+  },
+  {
+    "path": "code/wyckoffdiff/wyckoff_generation/models/d3pm/d3pm.py",
+    "url": "https://raw.githubusercontent.com/httk/wyckoffdiff/9c4694291be1c20e4f06cc33f02baed7daaf0b7a/wyckoff_generation/models/d3pm/d3pm.py",
+    "accessed_utc": "2026-09-06T08:08:39.122459+00:00",
+    "status": 200,
+    "bytes": 26596,
+    "sha256": "710db86d60b59b06c38863791e1852152903a404f73a7a131707c30f3c2c3bd5"
+  },
+  {
+    "path": "code/wyckoffdiff/wyckoff_generation/common/args_and_config.py",
+    "url": "https://raw.githubusercontent.com/httk/wyckoffdiff/9c4694291be1c20e4f06cc33f02baed7daaf0b7a/wyckoff_generation/common/args_and_config.py",
+    "accessed_utc": "2026-09-06T08:08:39.122714+00:00",
+    "status": 200,
+    "bytes": 12039,
+    "sha256": "1c91a845a0da80a2d785261d7b123e347da3da7e880bbb95ecc7e1e75c141fbe"
+  },
+  {
+    "path": "code/wyckoffdiff_adapter/README.md",
+    "url": "https://raw.githubusercontent.com/pfnet-research/wyckoffdiff_adapter/9cb01bbc0fcf17e8d16968cf2d76cda9761ca070/README.md",
+    "accessed_utc": "2026-09-06T08:08:39.124930+00:00",
+    "status": 200,
+    "bytes": 4157,
+    "sha256": "53e820dd9d13fd7f43ae5f03ea39d1e786051ada3b911bf3a088df2727d52f57"
+  },
+  {
+    "path": "code/wyckoffdiff_adapter/wyckoffdiff_adapter/conf/lightning_module/diffusion_module/wyckoff.yaml",
+    "url": "https://raw.githubusercontent.com/pfnet-research/wyckoffdiff_adapter/9cb01bbc0fcf17e8d16968cf2d76cda9761ca070/wyckoffdiff_adapter/conf/lightning_module/diffusion_module/wyckoff.yaml",
+    "accessed_utc": "2026-09-06T08:08:40.183705+00:00",
+    "status": 200,
+    "bytes": 478,
+    "sha256": "1464be657268e2de1e4fcc68ae2af3ceb89f3d59a40892bff9b2cbbd30f35a7c"
+  },
+  {
+    "path": "code/CrystalFlow/README.md",
+    "url": "https://raw.githubusercontent.com/ixsluo/CrystalFlow/9c25ff0245d787efd87c9d1d797a8968443608cc/README.md",
+    "accessed_utc": "2026-09-06T08:08:40.186820+00:00",
+    "status": 200,
+    "bytes": 7643,
+    "sha256": "556945782a24bbff3d4faa353589a097263448a32072c852ea43cef0ac8a968a"
+  },
+  {
+    "path": "code/CrystalFlow/diffcsp/pl_modules/flow.py",
+    "url": "https://raw.githubusercontent.com/ixsluo/CrystalFlow/9c25ff0245d787efd87c9d1d797a8968443608cc/diffcsp/pl_modules/flow.py",
+    "accessed_utc": "2026-09-06T08:08:40.192721+00:00",
+    "status": 200,
+    "bytes": 36050,
+    "sha256": "cd5808feaacbc2f804b1a3a8ba9812133e39ab89095221291d705298b1fdc4ca"
+  },
+  {
+    "path": "code/CrystalFlow/diffcsp/pl_modules/flow_polar.py",
+    "url": "https://raw.githubusercontent.com/ixsluo/CrystalFlow/9c25ff0245d787efd87c9d1d797a8968443608cc/diffcsp/pl_modules/flow_polar.py",
+    "accessed_utc": "2026-09-06T08:08:40.193540+00:00",
+    "error": "404 Client Error: Not Found for url: https://raw.githubusercontent.com/ixsluo/CrystalFlow/9c25ff0245d787efd87c9d1d797a8968443608cc/diffcsp/pl_modules/flow_polar.py"
+  },
+  {
+    "path": "code/CrystalFlow/conf/model/flow_polar.yaml",
+    "url": "https://raw.githubusercontent.com/ixsluo/CrystalFlow/9c25ff0245d787efd87c9d1d797a8968443608cc/conf/model/flow_polar.yaml",
+    "accessed_utc": "2026-09-06T08:08:40.196099+00:00",
+    "status": 200,
+    "bytes": 521,
+    "sha256": "cc70ebd588828dc536284dab98ec1d9548f16ba8eba0666178a07e4d350a66e9"
+  },
+  {
+    "path": "code/sgequidiff/README.md",
+    "url": "https://raw.githubusercontent.com/rees-c/sgequidiff/2231031fdabbf6b372031f3f233f8638922fa91e/README.md",
+    "accessed_utc": "2026-09-06T08:08:40.197999+00:00",
+    "status": 200,
+    "bytes": 6188,
+    "sha256": "d4c6514cda808a0190e454a7dee0777915e7cef5329b003b346cbf70555f5f19"
+  },
+  {
+    "path": "code/sgequidiff/src/model/diffusion/diffusion_model.py",
+    "url": "https://raw.githubusercontent.com/rees-c/sgequidiff/2231031fdabbf6b372031f3f233f8638922fa91e/src/model/diffusion/diffusion_model.py",
+    "accessed_utc": "2026-09-06T08:08:40.213270+00:00",
+    "status": 200,
+    "bytes": 47419,
+    "sha256": "9481ea64af79b647b759089e2a368c3354976c66c98e2362c44d06e3b5414b64"
+  },
+  {
+    "path": "code/sgequidiff/src/model/diffusion/diffusion_utils.py",
+    "url": "https://raw.githubusercontent.com/rees-c/sgequidiff/2231031fdabbf6b372031f3f233f8638922fa91e/src/model/diffusion/diffusion_utils.py",
+    "accessed_utc": "2026-09-06T08:08:40.221751+00:00",
+    "status": 200,
+    "bytes": 45363,
+    "sha256": "1397f66ca2314ab9b3308cda8accc9a97d6634297695497e4e0bfdaeefb837bf"
+  },
+  {
+    "path": "code/sgequidiff/src/model/lattice_sampler.py",
+    "url": "https://raw.githubusercontent.com/rees-c/sgequidiff/2231031fdabbf6b372031f3f233f8638922fa91e/src/model/lattice_sampler.py",
+    "accessed_utc": "2026-09-06T08:08:41.256356+00:00",
+    "status": 200,
+    "bytes": 48420,
+    "sha256": "3a7f5578714fed324030980540eb6438d3e234e99fb4f6de911b0cf829408eb9"
+  },
+  {
+    "path": "code/sgequidiff/src/model/wyckoff_and_element_transformer.py",
+    "url": "https://raw.githubusercontent.com/rees-c/sgequidiff/2231031fdabbf6b372031f3f233f8638922fa91e/src/model/wyckoff_and_element_transformer.py",
+    "accessed_utc": "2026-09-06T08:08:41.276744+00:00",
+    "status": 200,
+    "bytes": 49941,
+    "sha256": "adb555e7f09745882b6864260306e3351de20abafc225254021180f7741904d9"
+  },
+  {
+    "path": "code/sgequidiff/configurations/model/default.yaml",
+    "url": "https://raw.githubusercontent.com/rees-c/sgequidiff/2231031fdabbf6b372031f3f233f8638922fa91e/configurations/model/default.yaml",
+    "accessed_utc": "2026-09-06T08:08:41.284664+00:00",
+    "status": 200,
+    "bytes": 1656,
+    "sha256": "0905422313d544350de6d5c7d7885866192641bd9e3c1ffba3d2bbcd1ae3865d"
+  },
+  {
+    "path": "code/DiffCrysGen/README.md",
+    "url": "https://raw.githubusercontent.com/SouravMal/DiffCrysGen/88562cb8ec89c67272b191b362b340104fbd7f56/README.md",
+    "accessed_utc": "2026-09-06T08:08:41.298217+00:00",
+    "status": 200,
+    "bytes": 2616,
+    "sha256": "4ca71d4d40d7a1caa6c297276cb7ae67ffc92456d9af0b95739b6ba29f0c2e29"
+  },
+  {
+    "path": "code/DiffCrysGen/diffcrysgen/model.py",
+    "url": "https://raw.githubusercontent.com/SouravMal/DiffCrysGen/88562cb8ec89c67272b191b362b340104fbd7f56/diffcrysgen/model.py",
+    "accessed_utc": "2026-09-06T08:08:41.323336+00:00",
+    "status": 200,
+    "bytes": 11166,
+    "sha256": "b1be3649024f9bd9d035218c34df3c457c16134b48b289a9ca9159c662686f79"
+  },
+  {
+    "path": "code/symmbfn/README.md",
+    "url": "https://raw.githubusercontent.com/aimat-lab/symmbfn/697e99ae910a1336aa51e2be838d7c6e7f3fdc11/README.md",
+    "accessed_utc": "2026-09-06T08:08:41.539670+00:00",
+    "status": 200,
+    "bytes": 5238,
+    "sha256": "278cd6b6701fe557f438e01ed0636862a3e9be705bc415c48b0aad9e1e3e44e1"
+  },
+  {
+    "path": "code/symmbfn/symmbfn/model/bfn/bfn_dng.py",
+    "url": "https://raw.githubusercontent.com/aimat-lab/symmbfn/697e99ae910a1336aa51e2be838d7c6e7f3fdc11/symmbfn/model/bfn/bfn_dng.py",
+    "accessed_utc": "2026-09-06T08:08:41.814793+00:00",
+    "status": 200,
+    "bytes": 13579,
+    "sha256": "3e02379257f1941443451e17415a94041f09afa58718986a496b0eb3e438961b"
+  },
+  {
+    "path": "code/symmbfn/conf/model/bfn/bfn_dng.yaml",
+    "url": "https://raw.githubusercontent.com/aimat-lab/symmbfn/697e99ae910a1336aa51e2be838d7c6e7f3fdc11/conf/model/bfn/bfn_dng.yaml",
+    "accessed_utc": "2026-09-06T08:08:41.825337+00:00",
+    "status": 200,
+    "bytes": 219,
+    "sha256": "e0faaf906a54c576bf73a27f85b01681e881aed5eb05ca014397b4bae72bd356"
+  },
+  {
+    "path": "code/ChargeDIFF/README.md",
+    "url": "https://raw.githubusercontent.com/parkjunkil/ChargeDIFF/32acf56b88883108621eb044451b9220df17b609/README.md",
+    "accessed_utc": "2026-09-06T08:08:42.258212+00:00",
+    "status": 200,
+    "bytes": 5994,
+    "sha256": "e241d4798110b606e559cee8a65e66c9e59e71ab30ef707a394c8c609c2a73aa"
+  },
+  {
+    "path": "code/ChargeDIFF/models/chargediff_model.py",
+    "url": "https://raw.githubusercontent.com/parkjunkil/ChargeDIFF/32acf56b88883108621eb044451b9220df17b609/models/chargediff_model.py",
+    "accessed_utc": "2026-09-06T08:08:42.272417+00:00",
+    "status": 200,
+    "bytes": 33285,
+    "sha256": "5d0fd9adf8f2a96f7277349190a5d5855292a910afbb2b37e5b047dc242e60b1"
+  },
+  {
+    "path": "code/ChargeDIFF/models/networks/diffusion_networks/network.py",
+    "url": "https://raw.githubusercontent.com/parkjunkil/ChargeDIFF/32acf56b88883108621eb044451b9220df17b609/models/networks/diffusion_networks/network.py",
+    "accessed_utc": "2026-09-06T08:08:42.285697+00:00",
+    "status": 200,
+    "bytes": 2155,
+    "sha256": "0c04eb0090ff052579dc2ae6ba1a44afea8dfdefea4fb34470403634607e8a4d"
+  },
+  {
+    "path": "code/ChargeDIFF/configs/chargediff_uncond.yaml",
+    "url": "https://raw.githubusercontent.com/parkjunkil/ChargeDIFF/32acf56b88883108621eb044451b9220df17b609/configs/chargediff_uncond.yaml",
+    "accessed_utc": "2026-09-06T08:08:42.296810+00:00",
+    "status": 200,
+    "bytes": 1793,
+    "sha256": "11c36beb0229aefac3ac94c702332d25ae7dc7830ec47b6e42b163f3283e570f"
+  },
+  {
+    "path": "papers/sgequidiff_2505.10994v3.html",
+    "url": "https://arxiv.org/html/2505.10994v3",
+    "accessed_utc": "2026-09-06T08:08:42.320945+00:00",
+    "status": 200,
+    "bytes": 542287,
+    "sha256": "0b125af5f3aca219b54b0b362dd97034371e70fb1a4807f2bbc369d7bb96b066"
+  },
+  {
+    "path": "papers/crysllmgen_2510.23040v1.html",
+    "url": "https://arxiv.org/html/2510.23040v1",
+    "accessed_utc": "2026-09-06T08:08:42.592215+00:00",
+    "status": 200,
+    "bytes": 382568,
+    "sha256": "308bc28afe10b0e4278bd018e6e8546a442a07f0ba69c7646656df21f910e2a9"
+  }
+]

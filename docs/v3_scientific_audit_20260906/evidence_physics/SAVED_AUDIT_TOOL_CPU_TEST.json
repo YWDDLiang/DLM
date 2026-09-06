@@ -1,0 +1,74 @@
+{
+  "model_calls": 0,
+  "random_image_box_checks": 60,
+  "known_missed_image_detected": {
+    "status": "audited",
+    "sites": 1,
+    "volume_per_atom_A3": 1.6700772115207854,
+    "lattice_condition_number": 30.269406292076,
+    "declared_radius2_min_A": 1.0,
+    "declared_witness": {
+      "atom_pair": [
+        0,
+        0
+      ],
+      "image": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "declared_radius2_pass": true,
+    "complete_image_box_halfwidths": [
+      4,
+      1,
+      0
+    ],
+    "search_cutoff_A": 0.49999999,
+    "certified_at_cutoff": true,
+    "missed_radius2_violation": true,
+    "complete_image_box_size": 27,
+    "extra_box_min_A": 0.41853884246475176,
+    "extra_witness": {
+      "atom_pair": [
+        0,
+        0
+      ],
+      "image": [
+        -3,
+        1,
+        0
+      ]
+    }
+  },
+  "cubic_control": {
+    "status": "audited",
+    "sites": 1,
+    "volume_per_atom_A3": 27.0,
+    "lattice_condition_number": 1.0,
+    "declared_radius2_min_A": 3.0,
+    "declared_witness": {
+      "atom_pair": [
+        0,
+        0
+      ],
+      "image": [
+        -1,
+        0,
+        0
+      ]
+    },
+    "declared_radius2_pass": true,
+    "complete_image_box_halfwidths": [
+      0,
+      0,
+      0
+    ],
+    "search_cutoff_A": 0.49999999,
+    "certified_at_cutoff": true,
+    "missed_radius2_violation": false
+  },
+  "cli_labels": 2,
+  "units": "A/eV/GPa as declared",
+  "actual_dataset_prevalence": "not measured"
+}

@@ -1,0 +1,92 @@
+{
+  "k8_native": {
+    "not_converged": 504,
+    "not_converged_but_optimizer_true": 399,
+    "ratio": 0.7916666666666666,
+    "geometry_declared_failures": {
+      "raw": 0,
+      "terminal": 393
+    },
+    "all_available_geometry_certified": true,
+    "fresh_threshold_exceptions": []
+  },
+  "k8_tau800": {
+    "not_converged": 763,
+    "not_converged_but_optimizer_true": 762,
+    "ratio": 0.9986893840104849,
+    "geometry_declared_failures": {
+      "raw": 0,
+      "terminal": 1
+    },
+    "all_available_geometry_certified": true,
+    "fresh_threshold_exceptions": []
+  },
+  "raw_native": {
+    "not_converged": 105,
+    "not_converged_but_optimizer_true": 77,
+    "ratio": 0.7333333333333333,
+    "geometry_declared_failures": {
+      "raw": 0,
+      "terminal": 90
+    },
+    "all_available_geometry_certified": true,
+    "fresh_threshold_exceptions": [
+      {
+        "trajectory_id": "eval:44:0:0",
+        "group_id": "eval:44",
+        "stored": {
+          "force_max_eV_A": 0.09988552307881263,
+          "force_rms_eV_A": 0.06620000950181448,
+          "stress_max_GPa": 0.44030998782696246,
+          "stress_GPa": [
+            0.36139202318829416,
+            -0.3263604537294343,
+            0.04897880499682227,
+            -0.21453916355718614,
+            -0.44030998782696246,
+            -0.040351880843408704
+          ]
+        },
+        "fresh_scores": [
+          {
+            "representation": "stored_geometry",
+            "energy_eV_atom": -4.89401388168335,
+            "force_max_eV_A": 0.09984858808247059,
+            "stress_max_GPa": 0.4403424561023712
+          },
+          {
+            "representation": "wrapped_geometry",
+            "energy_eV_atom": -4.89401388168335,
+            "force_max_eV_A": 0.09977113760623403,
+            "stress_max_GPa": 0.4402090013027191
+          },
+          {
+            "representation": "shifted_geometry",
+            "energy_eV_atom": -4.894014835357666,
+            "force_max_eV_A": 0.1000360946253602,
+            "stress_max_GPa": 0.4401434063911438
+          }
+        ],
+        "energy_consistency": {
+          "stored_terminal_energy_eV_atom": -4.89401388168335,
+          "stored_energy_matches_fresh": true,
+          "periodic_representation_consistent": true,
+          "fresh_minus_stored_eV_atom": 0.0,
+          "representation_spread_eV_atom": 9.5367431640625e-07,
+          "status": "consistent"
+        }
+      }
+    ]
+  },
+  "raw_tau800": {
+    "not_converged": 164,
+    "not_converged_but_optimizer_true": 164,
+    "ratio": 1.0,
+    "geometry_declared_failures": {
+      "raw": 0,
+      "terminal": 0
+    },
+    "all_available_geometry_certified": true,
+    "fresh_threshold_exceptions": []
+  }
+}

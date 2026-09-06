@@ -1,0 +1,244 @@
+{
+  "scope": "Only the three refreshed entrypoints; local Markdown target existence and original snapshot hashes",
+  "files_checked": 3,
+  "links_checked": 34,
+  "missing_links": [],
+  "all_snapshots_intact": true,
+  "passed": true,
+  "files": [
+    {
+      "source": "docs/periodic_self_repair_v1/CHECKLIST.md",
+      "before_sha256": "4126c7ecc54cfb68014535d07a8b899314872a0ff49b65881678c4d98ea37027",
+      "after_sha256": "6d0f7f482a20b88e2d0d721a97a877c8802513668f156fed739f442374df5b0f",
+      "bytes": 4100,
+      "original_snapshot_intact": true,
+      "link_count": 12,
+      "links": [
+        {
+          "target": "../CURRENT_STATE.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\CURRENT_STATE.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/EVALUATION_SUMMARIES_20260906.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\EVALUATION_SUMMARIES_20260906.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\periodic_self_repair_v1\\LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "V2_IMPLEMENTATION_REVIEW_20260906.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\periodic_self_repair_v1\\V2_IMPLEMENTATION_REVIEW_20260906.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_FINAL_TRAIN_AND_METADATA.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_FINAL_TRAIN_AND_METADATA.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_EVALUATION_SUMMARIES_39998.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_EVALUATION_SUMMARIES_39998.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_CONSTRUCTION_AND_REPAIR_39998.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_CONSTRUCTION_AND_REPAIR_39998.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_CONDITIONING_PROBE_40004.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_CONDITIONING_PROBE_40004.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "V2_EXECUTION_PACKAGE_20260906.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\periodic_self_repair_v1\\V2_EXECUTION_PACKAGE_20260906.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "V2_LAUNCH_MANIFEST.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\periodic_self_repair_v1\\V2_LAUNCH_MANIFEST.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/README.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\README.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/historical/current_entrypoints_before_status_refresh/manifest_aa5d826c7e39cd442817d49c7605444332b95a5fbe5f45c28b80f7fead43da78.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\current_entrypoints_before_status_refresh\\manifest_aa5d826c7e39cd442817d49c7605444332b95a5fbe5f45c28b80f7fead43da78.json",
+          "exists": true,
+          "kind": "local"
+        }
+      ]
+    },
+    {
+      "source": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "before_sha256": "fbb1c86fe4546be08c3925b8ecf14e6b19040c0240739dde3b0513f29ceb8248",
+      "after_sha256": "8ca850477fb382348698b8b1fc1e2c42bb172b6c75172cb7b238b7577d06544a",
+      "bytes": 6797,
+      "original_snapshot_intact": true,
+      "link_count": 15,
+      "links": [
+        {
+          "target": "../CURRENT_STATE.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\CURRENT_STATE.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../operations/supplement_1000/README.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\operations\\supplement_1000\\README.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_FINAL_TRAIN_AND_METADATA.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_FINAL_TRAIN_AND_METADATA.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_EVALUATION_SUMMARIES_39998.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_EVALUATION_SUMMARIES_39998.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_CONSTRUCTION_AND_REPAIR_39998.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_CONSTRUCTION_AND_REPAIR_39998.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/V2_CONDITIONING_PROBE_40004.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\V2_CONDITIONING_PROBE_40004.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "V2_LAUNCH_MANIFEST.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\periodic_self_repair_v1\\V2_LAUNCH_MANIFEST.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\periodic_self_repair_v1\\LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "V2_IMPLEMENTATION_REVIEW_20260906.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\periodic_self_repair_v1\\V2_IMPLEMENTATION_REVIEW_20260906.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../slurm/249_train_periodic_dlm_v2.sbatch",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\slurm\\249_train_periodic_dlm_v2.sbatch",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../slurm/250_evaluate_periodic_dlm_v2.sbatch",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\slurm\\250_evaluate_periodic_dlm_v2.sbatch",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../scripts/check_periodic_v2_queue.py",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\scripts\\check_periodic_v2_queue.py",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/README.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\README.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\docs\\periodic_self_repair_v1\\K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/historical/current_entrypoints_before_status_refresh/manifest_aa5d826c7e39cd442817d49c7605444332b95a5fbe5f45c28b80f7fead43da78.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\current_entrypoints_before_status_refresh\\manifest_aa5d826c7e39cd442817d49c7605444332b95a5fbe5f45c28b80f7fead43da78.json",
+          "exists": true,
+          "kind": "local"
+        }
+      ]
+    },
+    {
+      "source": "docs/periodic_self_repair_v1/RAW_LLADA_DESIGN.md",
+      "before_sha256": "d847fd930f9ce047511e8b2895e6834efd350265dbe8adad7208b471a9129d94",
+      "after_sha256": "5e8d1ab027b9ba730392504577d7cbacde955af3f4b1ad78c138b68ba161461d",
+      "bytes": 5011,
+      "original_snapshot_intact": true,
+      "link_count": 7,
+      "links": [
+        {
+          "target": "../CURRENT_STATE.md",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\CURRENT_STATE.md",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../slurm/240_train_periodic_dlm_from_base.sbatch",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\slurm\\240_train_periodic_dlm_from_base.sbatch",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../src/scripts/train_periodic_dlm_from_base.py",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\src\\scripts\\train_periodic_dlm_from_base.py",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../slurm/241_evaluate_periodic_dlm_native.sbatch",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\slurm\\241_evaluate_periodic_dlm_native.sbatch",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../../slurm/242_evaluate_periodic_dlm_tau800.sbatch",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\slurm\\242_evaluate_periodic_dlm_tau800.sbatch",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/evidence/EVALUATION_SUMMARIES_20260906.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\EVALUATION_SUMMARIES_20260906.json",
+          "exists": true,
+          "kind": "local"
+        },
+        {
+          "target": "../v3_scientific_audit_20260906/historical/current_entrypoints_before_status_refresh/manifest_aa5d826c7e39cd442817d49c7605444332b95a5fbe5f45c28b80f7fead43da78.json",
+          "resolved": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\current_entrypoints_before_status_refresh\\manifest_aa5d826c7e39cd442817d49c7605444332b95a5fbe5f45c28b80f7fead43da78.json",
+          "exists": true,
+          "kind": "local"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,673 @@
+Article
+
+Open access
+
+Published: 27 May 2026
+
+DiffCrysGen: a generative diffusion model for accelerated design of inorganic crystalline materials
+
+Sourav Mal 1 , 2 ,
+
+Nehad Ahmed 3 ,
+
+Junaid Jami 1 , 2 ,
+
+Subhankar Mishra 2 , 4 &
+
+…
+
+Prasenjit Sen 1 , 2
+
+npj Computational Materials volume 12 , Article number: 282 ( 2026 ) Cite this article
+
+3893 Accesses
+
+Metrics details
+
+Abstract
+
+Efficient exploration of the vast chemical space is a fundamental challenge in materials design and discovery, particularly for designing functional inorganic crystalline materials with targeted properties. Diffusion-based generative models have emerged as a powerful route, but most existing approaches require domain-specific constraints and separate diffusion processes for atom types, atomic positions, and lattice parameters, adding complexity and limiting efficiency. Here, we present DiffCrysGen, a fully data-driven, score-based diffusion model that generates complete crystal structures in a single, end-to-end diffusion process. This unified framework simplifies the model architecture and accelerates sampling by two to three orders of magnitude compared to existing methods without compromising the chemical and structural diversity of the generated materials. In order to demonstrate the efficacy of DiffCrysGen in generating valid and useful materials, using density functional theory (DFT), we validate a number of newly generated rare-earth-free magnetic materials that are energetically and dynamically stable, and are potentially synthesizable. These include ferromagnets with high saturation magnetization and large magnetocrystalline anisotropy, as well as metallic antiferromagnets. These results establish DiffCrysGen as a general platform for accelerated design of functional materials.
+
+Similar content being viewed by others
+
+Guided diffusion for the discovery of new superconductors
+
+CrystalCGAIN: efficient generation and inverse design of porous crystal structures with target properties
+
+A generative diffusion model for amorphous materials
+
+Explore related subjects
+
+Chemistry
+
+Materials science
+
+Physics
+
+Introduction
+
+The ability to generate entirely new, stable materials without human bias could revolutionize fields like energy storage, catalysis, and quantum materials. Designing such high-performance materials with targeted properties is challenging due to the astronomically large chemical and structural design space. Traditional materials design relies on trial-and-error experimentation and human intuition, typically modifying known compounds, such as via elemental substitutions or introducing site-specific dopants. Properties of these candidate materials are then evaluated via high-throughput density functional theory (DFT) calculations. This process is ultimately constrained by the high computational cost of DFT.
+
+Availability of large, high-quality materials databases in recent years 1 , 2 , 3 , 4 , 5 , 6 , 7 has enabled machine learning (ML) to accelerate the design by predicting material properties with high accuracy 8 , 9 , 10 , thereby reducing the number of candidates requiring expensive DFT validation. However, most workflows still construct initial candidates by modifying known materials, a strategy lacking universal design rules, making them dependent on prior human knowledge and limiting scalability and innovation. Generative ML models offer a path to overcome this limitation by directly learning the distribution of crystal structures and enabling the de novo design of materials without predefined templates.
+
+Early generative models for crystals, principally those employing variational autoencoders (VAEs) 11 , 12 , 13 , 14 , 15 , 16 , 17 and generative adversarial networks (GANs) 18 , 19 , 20 , 21 , 22 , 23 , 24 , have demonstrated considerable potential, enabling the design of novel materials across a range of applications 25 , 26 , 27 , 28 . However, these approaches often suffer from drawbacks, including unstable training and limited diversity in generated structures.
+
+Diffusion models 29 , 30 , 31 , 32 , which iteratively denoise random noise into realistic samples, have recently surpassed these methods in generating diverse and high-quality crystal structures. However, state-of-the-art crystal diffusion models 33 , 34 , 35 , 36 often require separate diffusion processes for atom types, atomic positions, and lattice parameters, each with its own latent space. Structural correlations are then introduced only during the reverse denoising process via conditional coupling, which complicates the overall framework and slows down the sampling for new crystal generation.
+
+Here, we present DiffCrysGen, a fully data-driven, score-based diffusion model that unifies the generation of all structural components into a single end-to-end diffusion process. The unified latent space of the model naturally captures inter-dependencies among the different components, reducing the computational overhead and simplifying the framework. We demonstrate its ability in generating chemically valid, diverse inorganic crystalline materials at sampling speeds two to three orders of magnitude faster than the existing models.
+
+As a proof of concept, we target the urgent challenge of designing rare earth (RE)-free magnets, critical for sustainable energy technologies but constrained by natural and geopolitical factors. Structures generated by DiffCrysGen were screened using ML property predictors for thermodynamic stability and magnetization, followed by rigorous DFT validation on selected candidates, including structural relaxation, magnetic property evaluation, and phonon stability analysis. This led to the identification of multiple previously unreported RE-free magnetic materials, which include both ferromagnets with high saturation magnetization and magnetocrystalline anisotropy, and metallic antiferromagnets.
+
+Our work bridges generative AI, machine learning, and inorganic materials design, introducing a generalizable platform for the de novo design of functional materials. By performing structure generation within a unified diffusion-based framework, DiffCrysGen accelerates the exploration of crystal chemical space and enables the design of novel materials with important implications for all areas of technology requiring advanced materials.
+
+Results
+
+Diffusion model for crystalline materials
+
+DiffCrysGen is a score-based diffusion model developed within the stochastic differential equation (SDE) framework 31 . It is trained on a compact 2D point cloud representation that jointly encodes atom types, lattice parameters, and atomic coordinates, as detailed in the Methods section. The model is trained on a large curated dataset of 151,294 optimized crystal structures from the Alexandria database 5 , 6 , 7 , each containing up to 20 atoms per unit cell. The size of this dataset is crucial, enabling our model to implicitly learn complex crystallographic priors directly from data without reliance on handcrafted constraints.
+
+The diffusion process involves two stages: forward and reverse diffusion. In the forward diffusion, Gaussian noise is progressively added to corrupt the input structure, transforming the complex data distribution into a simple Gaussian prior. The reverse diffusion process is the generative phase, where noise is gradually removed from an initial random sample to reconstruct a valid crystal structure. This process is illustrated schematically in Fig. 1 a. To enable reverse diffusion, we train a denoising neural network, based on a noise conditional UNet that takes as input the noisy structure and its noise level, and predicts the underlying clean data, schematically shown in Fig. 1 b. The underlying theory and implementation details of DiffCrysGen are provided in the “Methods” section.
+
+a The diffusion process consists of two stages: forward diffusion (corruption) and reverse diffusion (denoising), both governed by the corresponding stochastic differential equations (SDEs) with a time-dependent noise level σ ( t ). Here, p data ( x 0 ) and p T ( x T ) denote the initial data distribution and prior distribution, respectively. The reverse diffusion is guided by the score function \({\nabla }_{{\boldsymbol{x}}}\log {p}_{t}({\boldsymbol{x}})\) of the marginal probability density p t ( x ) at each time step t . b Schematic of the denoising process implemented by a noise-conditional UNet as the denoising neural network. It takes as input noisy data ( x t ) and corresponding noise level ( σ t ), and predicts the ground-truth denoised structure ( x 0 ).
+
+Key characteristics of DiffCrysGen are its conceptual simplicity and ease of implementation: it treats the entire materials representation with a single, unified diffusion process, allowing a single denoising neural network to predict a holistic score for the entire noisy crystal data. This is unlike graph-based models, which treat atomic types, fractional coordinates, and lattice vectors through separate diffusion processes. This unified treatment not only significantly simplifies DiffCrysGen’s architecture but also dramatically improves its computational efficiency. Quantitatively, DiffCrysGen comprises only 1.3 million trainable parameters, making it an order of magnitude (or more) smaller than other recent diffusion-based generative models (see Table 1 for a detailed comparison). This positions DiffCrysGen as one of the most lightweight diffusion-based generative models for crystalline materials reported to date. One practical benefit of this efficiency is its extremely fast generation speed: 100,000 crystal structures are generated in only 5.41 min on a single NVIDIA H100 GPU. This corresponds to a generation rate of 308.07 samples/s.
+
+Comparative benchmarking against state-of-the-art models
+
+We start by benchmarking DiffCrysGen against MatterGen 33 and DiffCSP 34 using a comprehensive set of evaluation metrics, summarized in Table 2 . There are also a few recent symmetry-aware generative models, such as DiffCSP++ 35 , SymmCD 37 , WyckoffDiff 38 , which can perform symmetry-constrained crystal generation through group-theoretic parameterizations and Wyckoff-position-based representations. Their primary objective is to enforce crystallographic symmetry directly within the generative process. DiffCrysGen, in contrast, is intentionally designed as a general-purpose, symmetry-agnostic diffusion framework. Rather than explicitly constraining space-group symmetry, our aim was to make the model learn structural regularities implicitly from data through a unified representation of atomic species, coordinates, and lattice parameters.
+
+The commonly used metrics in the literature—namely the validity rate ( V ), negative formation energy rate, stability rate ( S ), Stable, unique, and novel (S.U.N.) rate, and average RMSD (definitions are given in Table 2 ) are employed. In addition, we introduce three new evaluation metrics that overcome limitations of the current benchmarking practices and provide a more rigorous assessment of generative models.
+
+P1 rate ( P ) quantifies the percentage of generated structures assigned to the P1 space group prior to structural optimization. Existing generative models are biased towards generating structures with the P1 space group, and it is a well-known limitation. By explicitly introducing the P1 rate, we enable direct assessment of a model’s ability to learn and generate crystallographic symmetry. Lower values of P are desirable.
+
+Generation rate ( G ) measures the number of structures generated per second and directly reflects the computational throughput of a generative model. To the best of our knowledge, this metric has not been reported or systematically compared in prior studies, despite its central importance for large-scale materials design and discovery. Incorporating G explicitly allows benchmarking to account for computational efficiency, with higher values indicating better throughput.
+
+Effective generation rate (EGR) combines structural quality and computational efficiency into a single throughput-aware metric, defined as
+
+This metric represents the rate at which S.U.N. structures are produced, thereby providing a realistic measure of a model’s utility in practical design pipelines. We believe EGR captures an essential but previously overlooked aspect of generative model performance and offers a natural basis for a fair comparison across models with differing trade-offs between speed and accuracy. We hope that the introduction of these metrics will help establish more comprehensive and practically relevant benchmarking standards for future generative models in materials science.
+
+Before proceeding further, we would like to emphasize that all calculations were performed under an identical computational protocol for all compared models to ensure a fair benchmark. We randomly selected 4000 generated structures from each model and optimized them using the same MLFF workflow (details provided in the “Methods” section), under identical computational settings on the same H100 GPU. We used a consistent batch size of 1000 across all models to avoid bias arising from hardware utilization or batching differences. For each of these models, we used the respective training set for novelty evaluation. The RMSD values are calculated between each generated structure and its optimized version after relaxation. The E hull values are computed with respect to the same set of reference stable phases from the Materials Project 1 database for all compared models. This standardized setup ensures that the reported comparisons reflect intrinsic model characteristics rather than discrepancies in computational configuration.
+
+Figure 2 presents a comparison of the models on a number of metrics. DiffCrysGen is competitive with MatterGen and DiffCSP on most of the stability metrics, though it lags somewhat in RMSD. On a wider landscape, the RMSD values for DiffCrysGen are of the same order of magnitude as those for MatterGen and DiffCSP, while PG-SchNet, G-SchNet 39 , and FTCP 14 exhibit substantially larger deviations, with mean RMSD values exceeding 1.2 Å 33 . More recently, the transformer-based CrystalFormer 40 model reported a mean RMSD of 0.96 Å, while random structure generation using PyXtal 41 yielded an even higher mean RMSD of 1.74 Å. Within this broader landscape, DiffCrysGen is positioned between the most precise models and weaker generative baselines—thereby demonstrating a favorable balance between structural fidelity and model simplicity. This establishes the promise of our diffusion-based approach for realistic structure generation, while highlighting opportunities for further improvement in fidelity.
+
+Benchmarking is performed using multiple evaluation metrics defined in Table 2 : a validity rate, b negative h form rate, c stability rate, d stable, unique, and novel (S.U.N.) rate, e average RMSD, f P1 rate, g generation rate, and h effective generation rate (EGR). Upward (downward) arrows indicate that higher (lower) values correspond to better performance for the respective metric.
+
+Most crucially, DiffCrysGen exhibits a substantially higher generation rate, producing structures several orders of magnitude faster than competing diffusion models. This improvement arises from its reduced architectural complexity and streamlined sampling procedure. Eventually, the performance of a model should be measured by the rate at which it generates stable, unique, and novel (S.U.N.) structures. And it is clear that DiffCrysGen has EGR 2–3 orders of magnitude higher than MatterGen and DiffCSP. Thus, DiffCrysGen demonstrates a clear, quantitative advantage, yielding a significantly higher rate of physically valid and thermodynamically stable structures per unit time. This shifts the evaluation of generative models from asking “which method is most accurate?” to “which method produces the largest number of physically meaningful and usable structures per unit time?” Under this throughput-aware metric, DiffCrysGen generates ~907× more S.U.N. structures per unit time than MatterGen, and ~76× more than DiffCSP (Fig. 2 ), representing a significant improvement in practical design efficiency.
+
+Evaluation of the generated materials
+
+We generated 1.3 million crystal structures using DiffCrysGen. spglib (symprec = 0.1) 42 could successfully assign space groups to 98.03% of these. For the remaining 1.97%, the assignment of the space group failed, and upon detailed inspection, these failures were due to the presence of overlapping atoms within the unit cell.
+
+84.80% of the generated structures are valid based on the minimum pairwise interatomic distance as defined in the earlier section. We then evaluated the uniqueness and novelty of the valid materials.
+
+We find that 81.21% of the generated materials (~1.06 million) are V.U.N. (valid, unique, and novel). Among these V.U.N. materials, 16.16% are binary compositions and 83.07% are ternary compositions, showcasing a diverse range of chemical complexities. Figure 3 a shows several randomly selected V.U.N. materials, each exhibiting characteristic coordination environments commonly found in inorganic crystals.
+
+a Visualization of four randomly selected V.U.N. materials generated by DiffCrysGen, with corresponding reduced formula and space group. b Distribution of space groups among V.U.N. materials in the triclinic and monoclinic crystal systems. c Distribution of space groups among V.U.N. materials in high-symmetry crystal systems (space group number ≥ 16). d Distribution of different chemical compositions within the RE-free subset of V.U.N. materials containing transition metal (TM) elements.
+
+Here, we want to highlight that we have considered V.U.N. instead of the previously defined S.U.N. metric. It is because calculating the stability rate for all the 1.3 million structures within a reasonable time is computationally prohibitive with the resources we have.
+
+To assess the structural diversity of the V.U.N. materials, we analyzed their space group distribution. Notably, a substantial 41% exhibit high symmetry, with space group numbers >16, corresponding to the orthorhombic, tetragonal, trigonal, hexagonal, and cubic systems. Distribution of the low-symmetry and high-symmetry structures is shown in Fig. 3 b and c, respectively. Existence of 41% high-symmetry structures represents a significant improvement over earlier VAE- or GAN-based generative models, which predominantly produced triclinic structures (over 99%), as highlighted in a previous work 24 . Only 38% of the V.U.N. materials have the trivial space group P1. Overall, 59% of the V.U.N. materials fall within the low-symmetry triclinic and monoclinic systems, as detailed in Fig. 3 b.
+
+In our previous work, the VAE-based model MagGen 28 , trained on 40,048 materials, exhibited a strong bias toward generating low-symmetry structures: 99.99% of the generated materials were either monoclinic or triclinic, with 94.49% crystallizing in the trivial P1 space group. To evaluate whether the observed low-symmetry bias stemmed from the limited size of the training dataset, we retrained MagGen using the same, significantly larger dataset employed to train DiffCrysGen. The results remained practically unchanged: 99.82% of the generated materials were still monoclinic or triclinic, and 94.10% belonged to P1. This persistent low-symmetry bias, despite the expanded training data, highlights a fundamental limitation of the VAE architecture and underscores the clear advantage of DiffCrysGen’s unified diffusion-based approach in capturing and generating materials with diverse crystallographic symmetries.
+
+In the image domain, diffusion models have consistently outperformed VAEs and GANs in generating high-fidelity outputs. Based on the above analyses, we demonstrate that this advantage extends to materials science, particularly in capturing structural symmetries.
+
+Search for RE-free magnets in DiffCrysGen’s generation space
+
+Since DiffCrysGen generates a wide variety of inorganic materials, we asked if it could help design RE-free magnetic materials with high saturation magnetization ( M s ). RE-free materials are promising candidates for sustainable permanent magnet applications. For technological applications, such materials are required to have a saturation magnetization M s > 1 Tesla (as is the common practice, we multiply saturation magnetization obtained in units of μ B per Å 3 by the vacuum permeability μ 0 , and express it in Tesla), and high magnetic anisotropy energy (MAE) with the anisotropy constant K 1 > 1 MJ/m 3 43 .
+
+To address the question, first, we select the subset of the V.U.N. materials that do not contain any RE elements. Specifically, we selected materials having all constituent elements with atomic number Z max ≤ 54. This RE-free subset contains a total of 237,011 materials with diverse chemistry, including transition metal (TM) oxides, alloys, halides, and chalcogenides. Distribution of these different chemical compositions is given in Fig. 3 d.
+
+These RE-free materials were then evaluated using pre-trained machine learning (ML) property prediction models for formation energy ( h form ) and saturation magnetization ( M s ) (see the “Methods” section for details). We used h form as a key proxy for material stability. Model predictions revealed that 70.67% of these materials are likely stable with negative h form , and a more restricted subset of 43.94% have h form ≤ −0.2 eV/atom. Within the latter subset, containing 104,136 materials, we identified 2488 candidates predicted to possess high saturation magnetization M s ≥ 1 T. These 2488 materials represent highly promising candidates for further investigation as potential sustainable permanent magnets. Subjecting this entire set to first-principles DFT calculations, though not impossible, is computationally expensive. We implemented additional hierarchical filtering criteria based on our domain knowledge of materials to arrive at a much smaller subset for a more rigorous analysis.
+
+First, to further ensure structural stability and chemical plausibility, we selected materials with a minimum interatomic distance of 1 Å, which reduced the candidate pool to 1226 materials. We then pruned this dataset by prioritizing ternary materials that belong to high-symmetry crystal classes (space group numbers > 16). This specific focus on high-symmetry materials, particularly those within the orthorhombic, tetragonal, and hexagonal crystal systems, was motivated by our previous statistical analysis 44 of magnetic material datasets. We had seen a strong correlation between these symmetries and high uniaxial magnetic anisotropy ( K 1 > 0). This comprehensive filtering process in the present case yielded a final set of 187 highly promising candidates. This hierarchical screening approach, coupled with our computational workflow, is shown schematically in Fig. 4 a.
+
+a Hierarchical screening pipeline applied to crystal structures generated by DiffCrysGen for identifying RE-free magnetic materials with high saturation magnetization. The filtering process selects valid, unique, and novel (V.U.N.) compounds without RE elements ( Z max ≤ 54), followed by screening based on formation energy ( h form ) and saturation magnetization ( M s ) as predicted by machine-learning surrogate models. The shortlisted candidates are refined through two complementary workflows: DFT (workflow-1) and combined MLFF-DFT (workflow-2) for structural optimization. The final set of materials is then evaluated with DFT to confirm their thermodynamic, dynamical, and magnetic properties. b Distribution of root-mean-square deviation (RMSD) between structures generated by DiffCrysGen and those optimized with DFT. c Distribution of RMSD between DiffCrysGen-generated and MLFF-optimized structures. d Distribution of RMSD between MLFF-optimized and DFT-optimized structures.
+
+Structure optimization and property evaluation
+
+Having identified this small set of 187 materials generated by DiffCrysGen as the likely candidates for RE-free permanent magnets, we subject them to two independent workflows and subsequently merge these to arrive at the most promising materials. Since the structures generated by DiffCrysGen are generally not at their equilibrium, the most important step is to relax these to the nearest local minima on the potential energy surface (PES). The first workflow (workflow-1) involves relaxing the generated structures via DFT and then calculating their relevant properties. In the second workflow (workflow-2), we made use of machine learning force fields (MLFFs), which have recently emerged as a powerful alternative to direct DFT relaxations, delivering near-DFT accuracy at a fraction of the cost. While there were no a priori justifications for employing workflow-2 other than curiosity, as workflow-1 already uses DFT, it turns out, a posteriori, that the two workflows complement each other. In some cases, they lead to two different polymorphs, one of which would have been missed had we followed only one workflow.
+
+To quantitatively assess the performance of DiffCrysGen and the integrated property prediction pipeline in generating materials that meet preferred design targets, we used the following two key metrics 14 , 28 , which have been used in the literature.
+
+(i) DFT validity rate : The proportion of materials for which structural relaxation converges successfully, relative to the total number of materials subjected to DFT calculations.
+
+(ii) DFT success rate : The proportion of materials that meet the specified design criteria after DFT relaxation, relative to the total number of materials subjected to DFT calculations.
+
+A successful DFT relaxation confirms both structural and chemical validity, ensuring that the resulting crystal structures exhibit physically meaningful bond lengths, angles, and coordination environments. Importantly, the success rate goes beyond mere structural feasibility. It quantifies how effectively DiffCrysGen can generate novel, stable materials that also meet targeted functional properties.
+
+Workflow-1: DFT
+
+We optimized the structures of all 187 selected candidates using DFT. Structural relaxation was successful for 155 materials, corresponding to a DFT validity rate of 82.9%. To assess their structural fidelity, i.e., to quantify how closely the generated structures resemble their equilibrium counterparts, we computed the root-mean-square deviation (RMSD) between the unoptimized and the DFT-optimized atomic positions. The distribution of these RMSD values is shown in Fig. 4 b. On average, the generated structures deviate from the DFT-relaxed local minima by 0.65 Å. We also note that 47 structures (30% of the optimized set) exhibit RMSD values below 0.1 Å, indicating that DiffCrysGen often generates configurations already very close to their equilibrium geometries.
+
+Formation energies were calculated after successful structure relaxation. Out of 155, 145 materials exhibit negative formation energies, and 139 meet the target h form ≤ −0.2 eV/atom. A different but overlapping set of 138 materials satisfies the target saturation magnetization ( M s ≥ 1 T). Strikingly, as many as 127 candidates satisfy both design targets simultaneously, giving DFT success rates of 74.3% for h form , 73.8% for M s , and an overall DFT success rate of 67.9% for both targets taken together.
+
+To estimate thermodynamic stability beyond h form , we computed the distance from the convex hull ( E hull ) for the 127 materials that satisfied both design targets. 83 of these are found to lie within 0.4 eV/atom of the convex hull, including 30 materials within 0.1 eV/atom. This corresponds to a DFT stability rate 23.6% among these 127 materials, where the stability rate is defined as the percentage of materials lying within 0.1 eV/atom from the hull.
+
+Workflow-2: MLFF-DFT
+
+In this workflow, we employed the MatterSim MLFF 45 to relax the generated structures. Out of the 187 materials, 182 could be successfully optimized. The distribution of RMSD between the unoptimized and MLFF-optimized structures is shown in Fig. 4 c. The mean RMSD is 0.72 Å, with 47 materials having RMSD below 0.1 Å.
+
+After successful structure optimization with MLFF, the magnetic and thermodynamic properties of these 182 materials were calculated using DFT (no structure relaxation). Out of the 182 MLFF-converged structures, 174 have negative formation energy, 166 exhibit h form ≤ −0.2 eV/atom and 154 materials possess M s ≥ 1 T. A total of 139 materials simultaneously meet both design targets of h form ≤ −0.2 eV/atom and M s > 1 T.
+
+Use of MLFF gives us an inexpensive avenue for screening materials for their dynamical stability via phonon calculations. Since phonon calculations in DFT are computationally demanding, we reserve these for later, to be performed on a yet smaller set of materials. Out of 139 materials, 78 were found to be dynamically stable without any imaginary phonon frequencies.
+
+Although they have come through a few layers of optimization and screening, these 78 materials are still not at the local minima of the DFT PES. Therefore, these structures were optimized further with DFT. This step yielded 75 converged structures. We refer to this set as the MS-DFT structures. Mean RMSD between the MS-DFT and MLFF-converged structures is only 0.051 Å. Distribution of RMSD for all the materials is shown in Fig. 4 d. The small mean value shows that the local minima on the MatterSim and DFT PESs are quite close, and a pre-relaxation by an MLFF before a final DFT relaxation can accelerate the screening process substantially.
+
+DFT relaxation simultaneously produced h form and M S values. Among the 75 MS-DFT structures, 72 meet the design target h form ≤ −0.2 eV/atom, and 74 meet the target M S ≥ 1 T. Overall, 71 materials satisfy both design targets. Convex hull analysis further reveals that 23 out of the 71 materials lie within 0.1 eV/atom from the hull, and 62 materials are within 0.4 eV/atom from the hull. Considering the stable materials within 0.1 eV/atom of the hull, and removing the overlap with workflow-1, yields 19 unique, magnetic materials.
+
+Having described the two workflows, we are now in a position to highlight the advantage of using two parallel pathways with an example. The generated material CoMnO 2 (smps-792765) had space group 59. Direct DFT relaxation (workflow-1) transformed it to a structure having space group 129, whereas the MLFF-DFT workflow (workflow-2) converged it to space group 31. Remarkably, both structures emerge as low-energy polymorphs close to the convex hull, with E hull of 33 and 17 meV/atom, respectively. The corresponding RMSD between the generated and optimized structures is 1.06 and 1.09 Å in the two workflows, indicating that the starting configuration was far from equilibrium. This implies that the generated structures far from any local minimum may converge to different local minima in the two workflows. This is because it is conceivable that DFT and MLFF can produce slightly different forces. Over long trajectories, as is the case for structures far from equilibrium, the two can end up in two different local minima. Another way of viewing this is that the DFT and MLFF PES are slightly different, particularly far from the minima.
+
+In contrast, when a generated structure is already close to equilibrium, both workflows converge to nearly the same minimum. For example, CaMn 3 O 4 (smps-1144884), initially in space group 123, relaxed to space group 221 under both workflows, with an RMSD of only 0.01 Å in both workflows.
+
+Thus, this dual-path approach not only improves robustness and efficiency of the procedure, but also broadens the accessible landscape of low-energy polymorphs, underscoring the synergistic roles MLFF and DFT can play in accelerating AI-driven materials design.
+
+Final candidate pool
+
+From workflow-1, we selected all materials that satisfy both design targets of h form and M s . To avoid missing promising candidates that could still be realized experimentally, we included metastable phases within 0.4 eV/atom of the convex hull, a range that remains accessible through non-equilibrium synthesis routes. This yielded a total of 83 materials.
+
+From workflow-2, we restricted the selection to unique structures that are within 0.1 eV/atom of the convex hull, and that simultaneously meet the design targets, resulting in 19 materials. Although workflow-2 also yields metastable phases (between 0.1 and 0.4 eV/atom from the hull) that may not appear in workflow-1, we defer their detailed analysis to future work. Our intention here is to make workflow-2 complementary to workflow-1 for the stable materials. workflow-1 already produces a broad selection of metastable phases (up to 0.4 eV/atom). workflow-2 is focused on capturing the most promising stable candidates that may have been missed by direct DFT optimization.
+
+By combining both workflows, we arrive at a final pool of 102 promising candidates, spanning both metastable and thermodynamically stable regimes. All these candidates exhibit large saturation magnetization ( M s ≥ 1 T). Beyond magnetization, however, a permanent magnet must also display a significant constant K 1 , which stabilizes the magnetization direction and underpins coercivity. We therefore computed K 1 for all the 102 materials using DFT. Remarkably but serendipitously, 80.7% exhibit the necessary uniaxial anisotropy, K 1 > 0.
+
+Some details need to be discussed at this point. So far, the implicit assumption has been that all the materials are ferromagnetic. But this need not be true, as materials may have other magnetic ground states. K 1 is evaluated in the FM state before a thorough search for the magnetic ground state is performed, and dynamical stability is established. This strategy is motivated by two considerations. First, computing K 1 in the FM configuration provides an efficient screening step that allows us to identify candidates with high uniaxial anisotropy and to search for their possible AFM states. Second, K 1 in the FM configuration serves as a reliable estimate for the intrinsic anisotropy of the material in any magnetic configuration. Since anisotropy is largely dictated by symmetry and spin-orbit interactions, as long as the AFM state does not induce significant structural changes or a change in the atomic moments, K 1 is not expected to be much different.
+
+We subjected all thermodynamically stable and metastable materials ( E hull ≤ 0.4 eV/atom) to a dynamical stability check via DFT since their proximity to the convex hull implies enhanced experimental synthesizability, even if their initial anisotropy was modest. Their properties may be further fine-tuned via doping or strain engineering. Energies of possible AFM configurations were searched for all materials up to 0.1 meV/atom from the hull, and those with K 1 > 1 MJ/m 3 all the way up to 0.4 meV/atom from the hull. For materials with AFM configurations lower in energy than FM, we re-examined dynamical stability in the AFM state, and recalculated K 1 , consistently adopting the dynamically stable lowest-energy state as the true magnetic ground state.
+
+By combining (i) the set of high-anisotropy candidates that are dynamically stable and (ii) the set of thermodynamically and dynamically stable candidates near the convex hull, we ultimately identified 14 ferromagnets and 14 antiferromagnets. These materials exhibit large magnetization (FMs) or sublattice magnetization (AFMs), and some of them have large K 1 values. Furthermore, we verified the nonmagnetic (NM) configurations of all these 28 materials and found them to be consistently higher in energy than the corresponding magnetic ground states. The FMs are listed in Table 3 and the AFMs in Table 4 , with all properties reported in their respective ground states.
+
+We cross-referenced all 28 materials against our training set and three major databases, both experimental and DFT-generated: Materials Project 1 , ICSD 46 , and OQMD 2 . For each match at the composition level, we compared space group numbers to verify structural equivalence (see Supplementary Tables S1 and S2 for details).
+
+Among the 14 ferromagnets, eight share the same composition as entries in these databases. However, only four—CaMnO 2 (smps-1180384), AlCo 2 Fe (smps-47828), Fe 2 NiSi (smps-70138), and Co 2 MnSi (smps-579308)—also match in space group. Detailed inspection reveals that CaMnO 2 , Fe 2 NiSi, and Co 2 MnSi are crystallographically identical to the training set structures (apart from a shift of the unit cell), indicating they are successfully regenerated by the model. It is important to point out that the last three materials converge to the same structure as in the training set after relaxation. As generated, they were found to be in space groups different from those in the training set, and therefore were not discarded while screening for V.U.N. materials.
+
+AlCo 2 Fe, despite sharing the same lattice and space group, exhibits different site occupations and thus constitutes a new structure. Also, Fe 2 NiSi turns out to be a ferromagnet with high uniaxial anisotropy, which was previously not reported (we discuss this later in detail). This demonstrates that DiffCrysGen not only generates novel compounds but is also capable of regenerating known materials. We have retained all four materials in Table 3 since we have studied them in detail, established their dynamical stability, and the true magnetic ground state.
+
+For the 14 antiferromagnets, eight match at the composition level, but only MgMnO 2 (smps-573484) and MnZnO 2 (smps-113421) share the same space group as training set entries. Upon detailed inspection, they are found to be crystallographically the same structure. Again, note that they converge to the same structures as in the training set only after relaxation. When generated, they were found to be in different space groups than in the training set.
+
+These were previously studied only in their FM states; we identify their true AFM ground states and establish their dynamical stability, and hence included them in Table 4 .
+
+In terms of composition, the list contains TM oxides, alloys, and a couple of TM-Si materials. There are both FMs and AFMs among the oxides and alloys. Indeed, identification of metallic AFMs among the generated materials is an interesting development. Metallic AFMs are currently sought after due to their potential application in spintronic devices 47 . Mn 2 Rh 3 Ti is a particularly interesting metallic AFM due to its large uniaxial anisotropy. LiFe 2 O 2 is another AFM material with large uniaxial anisotropy. Among the FMs, Fe 2 ZnO 3 turns out to have a very large uniaxial anisotropy. LiFeO and ScFe 4 O 5 are also fundamentally interesting materials.
+
+All our discussions so far on the thermodynamic stability of the designed materials have been for 0 K. However, any practical application requires the materials to be stable at finite temperatures, more specifically, a window of temperature around the room temperature would be of utmost importance. To address this issue, we have explicitly evaluated the temperature-dependent formation of Helmholtz free energy for two of the highlighted ferromagnets Fe 2 ZnO 3 and Fe 2 NiSi. To assess finite-temperature stability, vibrational contributions to the Helmholtz free energy were computed from the phonon band structure (within the harmonic approximation) post-processed with Phonopy 48 , 49 . This allows us to assess the temperature window of stability of these materials beyond the 0 K convex hull analysis. The calculation details are discussed in the methods section. Fig. S1 in SI shows the temperature-dependent formation of Helmholtz free energy Δ A ( T ) for Fe 2 ZnO 3 and Fe 2 NiSi. Fe 2 ZnO 3 is found to be stable up to 447 K, while Fe 2 NiSi remains stable up to 473 K. Above these temperatures, vibrational entropy favors decomposition into the elemental phases. In this context, it should be clear that the formation free energy assesses the stability of a compound material with respect to its elemental constituents in their respective reference states, and is not a finite temperature extension of the hull. The latter would require phonon band structure calculations for all the binary and ternary materials used to construct the hulls in the respective phase spaces. This calls for a larger, community effort.
+
+Another important property of any magnetic material is its transition temperature, and in our context, the Curie temperature ( T C ) and Néel temperature ( T N ) for FM and AFM materials, respectively. We calculated T C and T N for several of the non-oxide FM and AFM materials. The calculations are done within the mean-field approximation using the calculated Heisenberg exchange coupling parameters obtained from SPRKKR 50 . The computational methodology and technical details are discussed in the “Methods” section, and the T C and T N are presented in Tables S 3 and S4 in the SI. We encountered technical difficulties with the materials requiring the use of Hubbard U on the TM atoms, and results for these are not reported here. It is interesting to note that the FM material Fe 2 NiSi and the AFM material Mn 2 Rh 3 Ti, which have large K 1 values, also have transition temperatures of 1078 and 976 K, well above room temperature. Although mean field methods are known to overestimate transition temperatures, our experience is that the overestimation is approximately a couple of hundred Kelvins 51 . Given that Fe 2 NiSi is thermodynamically stable up to ~450 K, and has a mean-field T C exceeding 1000 K, we can confidently claim that its temperature range of stability is well within the temperature range over which it remains FM. This makes it attractive for practical applications and would be an ideal candidate for attempted synthesis.
+
+Understanding some of the interesting materials
+
+In this section, we analyze the electronic and magnetic properties of some of the interesting candidates found in our pipeline. MAE, as calculated above, arises from the spin–orbit coupling (SOC) effects, which are higher for heavy elements, being proportional to Z 4 , Z being the atomic number of the constituent elements. As pointed out earlier, many of the materials generated by DiffCrysGen, though containing only 3 d and/or 4 d elements, have quite high anisotropies. For example, K 1 of Fe 2 ZnO 3 is as high as 6.8 MJ/m 3 , much higher than that of the widely used RE-containing permanent magnet Nd 2 Fe 14 B (4.5 MJ/m 3 ). Hence, it is interesting and imperative to understand the origin of such a large MAE in materials without any heavy elements.
+
+In 3 d and 4 d transition-metal systems, SOC energies are typically of the order of a few meV, much smaller than the characteristic electronic (band) energies ( O (eV)). Therefore, SOC can be treated as a perturbation to the non-relativistic (NR) Hamiltonian. The SOC Hamiltonian is of the form H LS = λ L ⋅ S , where λ , the SOC constant ~ Z 4 . The first-order energy correction vanishes by symmetry, and the first non-zero contributions are obtained at the second order of perturbation 52 .
+
+In tetragonal and hexagonal crystal systems, where in-plane rotational symmetry ensures E x = E y , MAE simplifies to the energy difference between in-plane and out-of-plane magnetization directions, i.e., MAE = E x − E z . In this case, to second-order in SOC
+
+For lower-symmetry systems (e.g., orthorhombic), where E x ≠ E y , a full anisotropy characterization would require considering energies along all three crystallographic directions.
+
+Here, \(\left|u,\sigma \right\rangle\) and \(\left|o,\sigma \right\rangle\) denote unoccupied and occupied electronic states with spin σ , and ϵ u , σ , ϵ o , σ are their corresponding energies. L x and L z represent the angular momentum operators along the crystallographic a and c axes, respectively. Z 4 dependence of λ makes SOC stronger for heavier elements, leading to large anisotropies in RE magnets. However, Eq. ( 2 ) shows that MAE also depends on the matrix elements of the angular momentum operator connecting the occupied and unoccupied states in the same or different spin channels near the Fermi level for materials in which such a perturbative approach is valid. Therefore, even in systems composed of lighter elements, favorable orbital hybridization and electronic structure can lead to large values of MAE. Further consideration shows that, expressed in terms of the atomic d -orbitals, only the following SOC matrix elements are non-zero: \(\langle {d}_{yz}| {L}_{x}| {d}_{{z}^{2}}\rangle ,\,\langle {d}_{xy}| {L}_{x}| {d}_{xz}\rangle ,\,\langle {d}_{yz}| {L}_{x}| {d}_{{x}^{2}-{y}^{2}}\rangle ,\,\langle {d}_{xy}| {L}_{z}| {d}_{{x}^{2}-{y}^{2}}\rangle\) , and 〈 d y z ∣ L z ∣ d x z 〉, and the remaining ones vanish identically.
+
+Armed with this information, we arrive at a semi-quantitative explanation for large magnetic anisotropy in the FM material Fe 2 ZnO 3 using DFT-calculated density of states (DOS) and partial DOS. In addition, we establish the metallic AFM character of Mn 2 Rh 3 Ti by calculating its DOS. Finally, highlight Fe 2 NiSi as another promising candidate for RE-free PMs.
+
+(a) Fe 2 ZnO 3 has a tetragonal crystal structure (Fig. 5 a) with space group I4/mmm (No. 139). The unit cell consists of a total of 12 atoms. It lies directly on the convex hull, confirming its stability with respect to competing phases. Phonon calculations reveal the absence of any imaginary modes (Fig. 5 b), confirming that the structure is dynamically stable. We investigated both FM and AFM configurations. Interestingly, the AFM arrangement has a slightly lower energy, but turns out to be dynamically unstable. Therefore, the FM phase is identified as the true ground state. The spin-resolved density of states (DOS) (Fig. 5 c) indicates that the system is an insulator.
+
+a Side and top views of the Fe 2 ZnO 3 crystal structure. b Phonon band structure along high-symmetry directions of the Brillouin zone, indicating the dynamical stability of the system. c Total and atom-projected density of states (DOS). The shaded green region denotes the total DOS, while lines represent projections onto Fe- d , O- p , and Zn- d orbitals. Positive and negative DOS correspond to the spin-up and spin-down channels, respectively, with the Fermi level ( E F ) set to 0 eV. d Orbital-resolved projected DOS (PDOS) for the five Fe- d orbitals ( \({d}_{{z}^{2}},\,{d}_{xy},\,{d}_{yz},\,{d}_{xz}\) , and \({d}_{{x}^{2}-{y}^{2}}\) ). e Heatmap of the Fe- d orbital-resolved spin–orbit coupling (SOC) matrix element contributions to the magnetocrystalline anisotropy energy (MAE). The color scale represents the magnitude and sign of the contributions.
+
+The magnetic moment in the material arises almost entirely from the Fe sublattice, with each Fe atom carrying a local moment of 3.83 μ B . Contributions from Zn and O are negligible. The resulting saturation magnetization ( M s ) is 1.472 T.
+
+To elucidate the microscopic origin of the unusually high K 1 value, we first examined the atom-resolved spin–orbit coupling (SOC) contributions. The Fe atoms dominate, each contributing 3.364 meV. This leads to the uniaxial anisotropy of the material. Further orbital-resolved analysis of the SOC energy differences (Fig. 5 e) reveals that the largest contribution arises from the \(\langle {d}_{xy}| {L}_{z}| {d}_{{x}^{2}-{y}^{2}}\rangle\) matrix element, 1.51 meV per Fe atom. A closer look at the orbital-resolved DOS of the Fe atoms in Fig. 5 d shows that the dominant coupling between these two orbitals has to arise from the same (down) spin channel due to the small gap. First term in Eq. ( 2 ) then shows that this contribution will be positive, fully justifying our results.
+
+We have also analyzed the site-resolved orbital angular moments (Table S5 in SI) to provide a microscopic understanding of the large spin–orbit coupling contribution. The results show that Zn and O atoms possess negligible orbital moments for both magnetization directions, whereas the Fe atom carries a significant orbital moment. Notably, the orbital moment of Fe is larger along the crystallographic c-direction than along the a-direction, consistent with the c -axis being the easy magnetization axis. This behavior aligns with Bruno’s model 53 , which relates magnetocrystalline anisotropy to the anisotropy of orbital moments, predicting that the easy axis corresponds to the direction of the larger orbital moment. These results confirm that the large originates primarily from Fe 3 d states and is physically consistent with established SOC-driven anisotropy mechanisms.
+
+A very interesting finding is a large K 1 , 6.8 MJ/m 3 , for the 3 d transition metal oxide Fe 2 ZnO 3 . As is demanded by physics, to take into account electron correlation effects correctly, one needs to use a Hubbard U on the TM 3 d orbitals. We used U = 5.3 eV on the Fe-3 d orbitals, as used in the Alexandria database. However, the exact value of K 1 may be sensitive to value of U , which make our conclusions dependent on the particular choice of U . To remove this uncertainty, we evaluated the dependence of K 1 on U in the range 3–6 eV a reasonable range of values for Fe 3 d states. K 1 decreases to 4.72 MJ/m 3 at U = 3 eV but remains in the range 6.55–6.89 MJ/m 3 for U = 4−6; eV. Thus, while the absolute magnitude of K 1 exhibits moderate sensitivity at lower values of U , the predicted large anisotropy remains robust across a physically reasonable range of correlation strengths.
+
+Taken together, these results establish Fe 2 ZnO 3 as a stable ferromagnet with significant uniaxial anisotropy. Such a combination of properties makes it an attractive candidate for RE-free permanent magnet applications.
+
+(b) Mn 2 Rh 3 Ti is a metallic antiferromagnet crystallizing in an orthorhombic structure with space group Pmmm (No. 47), as shown in Fig. 6 a. Thermodynamically, it lies only 0.127 eV/atom above the convex hull, placing it within realistic reach of experimental synthesis. The structure is dynamically stable, as confirmed by its phonon dispersion (Fig. 6 b). Metallic behavior is confirmed by the finite DOS at the Fermi level (Fig. 6 c). The magnetic moments originate primarily from the Mn atoms, each carrying an absolute moment of 3.256 μ B . Importantly, this material exhibits a large uniaxial anisotropy with K 1 = 1.56 MJ/m 3 with the crystallographic c -axis as the magnetic easy axis.
+
+a Side and top views of the Mn 2 Rh 3 Ti crystal structure. b Phonon band structure along high-symmetry directions of the Brillouin zone, indicating the dynamical stability of the system. c Total and atom-projected density of states (DOS). The shaded green region denotes the total DOS, while lines represent projections onto Mn-3 d , Rh-4 d , and Ti-3 d orbitals. Positive and negative DOS correspond to the spin-up and spin-down channels, respectively, with the Fermi level ( E F ) set to 0 eV.
+
+(c) Fe 2 NiSi is an FM metal in a tetragonal structure with space group P4/mmm (No. 123; Fig. S1 a). It is thermodynamically stable, lying 55 meV/atom above the convex hull, and also dynamically stable (Fig. S1 b). The electronic DOS (Fig. S1 c) confirms its metallic nature. Each Fe atom carries a moment of 2.05 μ B , giving a saturation magnetization of M s = 1.126 T. Importantly, Fe 2 NiSi exhibits large uniaxial anisotropy, with K 1 = 1.09 MJ/m 3 with the crystallographic c -axis as the easy axis, and is estimated to have a Curie temperature well above its temperature range of thermodynamic stability, the latter extending up to ~450 K. These make Fe 2 NiSi another strong candidate for RE-free permanent magnets.
+
+Intriguingly, this material appears in the training set, that is, in the Alexandria database. But its magnetic anisotropy had not been explored. Nominally, a training set material being generated by the model would not be considered for further processing. However, the structure of Fe 2 NiSi generated by DiffCrysGen was found to have space group Pmmm (No. 47), while the one in the training set belongs to P4/mmm (No. 123). That is why it was included for further processing. But after DFT relaxation, it converged to the same structure as the training set sample. Its successful identification by our generative screening pipeline highlights the capability of our approach to identify not only novel but also previously overlooked promising candidates.
+
+A polymorph of Fe 2 NiSi in the inverse Heusler structure (Hg 2 CuTi prototype) and space group F \(\bar{4}\) 3m (No. 216) has been experimentally synthesized 54 . As expected for cubic systems, this phase exhibits negligible magnetocrystalline anisotropy ( K 1 ≈ 0) and lies 41 meV/atom above the convex hull. In contrast, the tetragonal polymorph identified here combines large saturation magnetization and significant uniaxial anisotropy, making it a particularly compelling candidate for experimental realization and further study.
+
+Discussion
+
+Diffusion models represent a paradigm shift in the generative design of novel materials. Our study demonstrates that, when trained on sufficiently large datasets, a powerful and expressive diffusion model can inherently learn the complex correlations among atom types, atomic coordinates, and lattice parameters within a single, unified latent space. This approach obviates the need for handcrafted inductive biases or physics-based constraints, thereby simplifying the generative framework.
+
+Our model, DiffCrysGen, exemplifies this capability by successfully generating diverse, novel crystalline materials that exhibit thermodynamic stability, metastability, and dynamic stability. Even though the generation process was random and unconditional, we are able to identify a number of RE-free magnets, both permanent FM candidates with large saturation magnetization, and metallic AFMs, a testament to the diversity of the generated pool. The efficiency of this design pipeline is particularly noteworthy. By leveraging DiffCrysGen’s generative power, alongside our hierarchical ML and DFT filtering, we identified 28 high-performance materials from a pool of 187 generated materials. We emphasize that to keep the model architecture simple, we did not enforce equivariance to atom permutations, rotations, or reflections, unlike previous approaches 33 , 34 , 35 , 36 . Despite this, the model achieved competitive performance.
+
+Ultimately, DiffCrysGen is a true game-changer for materials design through its ultra-rapid exploration speed of vast and complex materials spaces, dramatically accelerating the search for novel materials with targeted, high-performance properties.
+
+Despite its remarkable advantages, DiffCrysGen can be improved further. For example, in a small number of cases (1.97%), the model generates materials with overlapping atoms in the unit cell. We believe that incorporating specifically crafted loss functions can more efficiently handle local geometry and resolve this issue.
+
+A recurring challenge for generative models is their inherent bias towards low-symmetry crystal structures. DiffCrysGen has already shown significant progress in overcoming this by generating a large percentage of high-symmetry structures. Further enhancements may be possible through more sophisticated material representations that explicitly encode crystallographic symmetries 35 , 37 , 38 , 55 , architectural refinements of the model, and expansion of training datasets. These are the focus of our ongoing research.
+
+In this work, we focused on unconditional material generation to demonstrate the capability of the model to generate diverse inorganic materials. However, the foundational model can be fine-tuned to steer the generation process toward specific properties or compositions. Such advancements will pave the way for more targeted inverse design in materials science, a direction we are pursuing currently.
+
+Methods
+
+Representation of crystalline materials
+
+Crystalline materials are uniquely defined by their unit cell, characterized by its lattice parameters ( a , b , c , α , β , γ ), atomic composition, and atomic positions. To systematically encode these components, we employ the Invertible Real-Space Crystallographic Representation (IRCR), a 2D point cloud representation introduced in our previous work 28 .
+
+Briefly, IRCR encodes the unit cell information with five vertically concatenated matrices:
+
+where E , L , C , O , and P contain information regarding constituent elements, lattice structure, fractional coordinates, site occupancy, and elemental chemical properties, respectively, summarized in Supplementary Table S3 . While the property matrix ( P ) is not directly used for unconditional material generation in this study, it is crucial for property-conditioned design and training predictive models. This representation ensures complete and invertible reconstruction of a material’s lattice, atomic positions, and composition from its encoded data, and offers the flexibility to accommodate diverse compositions and structures. For this work, IRCR was used to encode up to ternary materials.
+
+Diffusion model
+
+The essence of generative models lies in modeling the underlying probability distribution of a dataset. Once this distribution is captured, it becomes possible to generate new samples that share similar characteristics with the original data. Here, we implement a score-based diffusion model to learn the data distribution through a stochastic differential equation (SDE)-based framework 31 . Let the original data be denoted by x 0 , characterized by the unknown complex distribution p data ( x 0 ). This data represents the IRCRs of crystalline materials.
+
+Forward diffusion process
+
+In the forward diffusion process, indexed by a continuous time variable t ∈ [0, T ], we smoothly transform p data ( x 0 ) to a known prior distribution p T ( x T ) by slowly injecting Gaussian noise to the data. This transformation is modeled by the following SDE:
+
+where σ ( t ) is the time-dependent noise level and w is a standard Weiner process. Here, we implement a variance-exploding (VE) diffusion process by setting σ ( t ) = t , leading to a linear increase in variance over time. For this SDE, the perturbation kernel (the conditional distribution of x t given x 0 ) can be directly formulated as a Gaussian distribution
+
+Consequently, the noisy data x t at any time t is obtained as
+
+where \({\boldsymbol{\epsilon }} \sim {\mathcal{N}}(0,I)\) represents noise sampled from a standard normal distribution.
+
+In this VE setup, the forward diffusion process is governed entirely by stochastic noise. The data diffuses with x 0 as the mean, while its variance steadily increases with time. By the final step T, the original data structure is fully destroyed and transformed into pure noise with a maximum variance σ max , yielding the prior distribution p T , which effectively contains no information about the initial data distribution p data .
+
+Reverse diffusion process
+
+The reverse diffusion process associated with the forward diffusion described above is given by an SDE of the form
+
+where \(\bar{{\boldsymbol{w}}}\) is the Wiener process defined in reverse time, evolving from T to 0, and d t represents an infinitesimal negative timestep. Here, p t ( x ) denotes the marginal distribution at time t , and \({\nabla }_{{\boldsymbol{x}}}\log {p}_{t}({\boldsymbol{x}})\) is the corresponding score function. The only unknown in this equation is the score function itself. By learning an accurate approximation of the score function, we can numerically integrate the reverse SDE Eq. ( 7 ) to generate new samples, effectively mapping from the known prior at t = T back to the data distribution at t = 0.
+
+Probability flow ODE
+
+For any given diffusion process described by an SDE, there exists a corresponding deterministic counterpart described by an ordinary differential equation (ODE), known as the probability flow ODE 31 . The trajectories of this ODE share the same marginal distributions as the original stochastic process at every time step. This property allows the probability flow ODE to serve as a deterministic alternative for sampling from the reverse-time SDE.
+
+For our specific VE diffusion process, the probability flow ODE is given by
+
+Solving this ODE backward in time provides a deterministic path to generate new samples from the data distribution p data ( x 0 ), leveraging the score function.
+
+Score estimation
+
+To estimate the score of the marginal distribution, we train a denoiser function D θ ( x t ; σ ( t )), implemented as a noise-conditional denoising neural network. It takes the noisy data x t and the corresponding noise level σ ( t ) as inputs and predicts the clean data x 0 .
+
+The training of the denoiser is guided by minimizing the following loss function:
+
+where x 0 , x t and σ are sampled from p data , p ( x t ∣ x 0 ) and p train , respectively. Here p train specifies the noise level distribution used for training. The weighting function λ ( σ ) regulates the contribution of different noise levels during training, ensuring robustness across a wide range of noise levels. After training, the score function \({\nabla }_{{\boldsymbol{x}}}\log {p}_{t}({{\boldsymbol{x}}}_{{\boldsymbol{t}}})\) can be computed directly from the denoiser using the relation:
+
+Architecture of the denoising network
+
+The denoiser is implemented as a UNet architecture 56 comprising an encoder and a decoder. The fundamental building block for both components is a ResNet block 57 , incorporating group normalization 58 and the SiLU activation function throughout. The model utilizes one-dimensional convolutions, with weight standardization applied to each convolutional filter to ensure zero mean and unit variance in filter weights. The detailed structure of the ResNet block is illustrated in Fig. 7 a.
+
+a ResNet block, b Self-attention block, where Q , K , and V represent query, key, and value, respectively. c UNet architecture, used as the denoising network. Each blue box represents a multi-channel feature map, with the number of channels indicated above the box and the spatial resolution shown at its lower-left corner. Colored arrows denote different operations (e.g., convolution, upsampling, downsampling, skip connection etc.), with color-coding used to distinguish between them.
+
+At each resolution level within both the encoder and decoder, we employ a sequential stack of three ResNet blocks. Skip connections link corresponding resolution levels between the encoder and decoder. Additionally, a self-attention block 59 , implemented using multi-head attention with a single attention head, is incorporated at a feature map resolution of 17. The design of the attention block is depicted in Fig. 7 b. The overall UNet architecture is presented in Fig. 7 c.
+
+Noise levels are provided to each resolution level in the UNet via sinusoidal positional embeddings, inspired by Transformer models 59 , ensuring effective conditioning on the noise scale.
+
+Preconditioning and training the denoiser
+
+To achieve stable and efficient training across the broad dynamic range of noise levels inherent in the diffusion process, we precondition the denoiser. This parameterization follows the framework proposed by Karras et al. 32 ,
+
+Here, F θ denotes the UNet being trained. The noise level distribution ( p train ) for training is specified as \(\mathrm{ln}(\sigma ) \sim {\mathcal{N}}({P}_{\mathrm{mean}},{P}_{\mathrm{std}}^{2})\) with P mean = −1.2 and P std = 1.2. Additionally, σ data is set to 0.5.
+
+The denoising model comprises 1.32 million trainable parameters and was trained for up to 1,000 epochs with a batch size of 64. The training was conducted on a single H100 GPU and four CPU cores, with a requested memory allocation of 16 GB. The total training duration was 16.82 h.
+
+Generating samples
+
+For sample generation, we solve the probability flow ODE in Eq. ( 8 ) using a stochastic sampler 32 , which employs an iterative Heun’s second-order method to denoise samples from an initial noisy state. Unlike deterministic approaches, it introduces a controlled amount of random noise at each time step, subtly perturbing the sample’s trajectory. This inherent stochasticity ensures greater diversity in the final generated samples.
+
+The reverse diffusion timesteps are discretized and geometrically spaced according to the following formula.
+
+where N (the number of reverse diffusion steps) is set to 100, ρ = 7, σ min = 0.002 and σ max = 80. We experimented with a larger number of reverse diffusion steps, up to N = 500, but observed no significant improvement in the quality of generated samples compared to N = 100. This robust performance with a reduced number of steps ( N = 100) significantly enhances sampling speed without compromising generative fidelity.
+
+Data set construction
+
+To train DiffCrysGen, we curated a large and diverse dataset from the Alexandria 5 , 6 , 7 database, which contains DFT-computed material properties and crystal structures. The original database comprises 4,489,295 materials. We first filtered structures with ≤20 atoms per unit cell, elemental, binary, or ternary compositions, and elements up to Pu ( Z = 94), reducing the dataset to 2,584,689 materials.
+
+Next, we applied constraints on lattice parameters (≤25 Å), convex hull energy ( E hull ≤ 0.1 eV/atom), and formation energy ( h form ≤ 0 eV/atom), yielding 537,049 materials. Since this set included many non-magnetic materials, we further filtered for structures with a saturation magnetization M s ≥ 10 −5 T, resulting in 151,294 materials. We call this curated dataset Alex-1.
+
+The majority of the materials (94%) in Alex-1 are ternary. The Supplementary Fig. S3 a shows the distribution of atoms per unit cell in the dataset, revealing that most materials contain more than 10 atoms in the unit cell. In Supplementary Fig. S3 b, we plot the distribution of space groups, highlighting that the dataset spans all crystal classes. The majority of the materials belong to tetragonal (38.8%), orthorhombic (20.2%), and monoclinic (15.9%) crystal systems.
+
+Supplementary Fig. S3 c and d illustrates the distributions of E hull and h form . 8.8% of the materials lie directly on the convex hull. We have used stable and metastable materials close to the hull to enhance the model’s ability to generate energetically viable structures.
+
+In Supplementary Fig. S3 e, we show the distribution of saturation magnetization ( M s ). Most materials exhibit relatively low magnetization. Notably, only 21% of the materials have a saturation magnetization exceeding 0.5 T. Only a small fraction of materials have significantly high magnetization. This underscores the inherent challenge in designing high-performance magnetic materials.
+
+Finally, we split Alex-1 into an 80:10:10 ratio for training, validation, and testing the diffusion model. Supplementary Fig. S4 a presents the learning curve, which exhibits stable convergence, with the loss decreasing smoothly and gradually, without abrupt fluctuations, indicating a well-behaved and effective training process.
+
+Property prediction models
+
+We trained two separate property prediction models, built using convolutional neural networks 60 , with IRCR as the input feature: one for h form and another for M s . For M s prediction, we used the Alex-1 dataset. However, since Alex-1 contains materials with negative h form only, we expanded the dataset by including unstable materials also to improve the robustness of the h form predictor. Specifically, we augmented Alex-1 with 313,670 unstable materials, resulting in a combined dataset of 464,964 materials, which we refer to as Alex-2. This expanded dataset was used exclusively for training the h form regressor.
+
+The property prediction models exhibit exceptional accuracy, with the formation energy ( h form ) predictor achieving a mean absolute error (MAE) of 0.046 eV/atom and an R 2 score of 0.99, while the saturation magnetization ( M s ) predictor attains an MAE of 0.054 T with an R 2 score of 0.92. We present the parity plots for h form and M s , comparing the actual and predicted values, in Supplementary Fig. S4 b and c. The predictions exhibit a well-balanced distribution across the entire property range, demonstrating the robustness of both models.
+
+While the state-of-the-art graph neural networks trained on the entire Alexandria database 61 have achieved lower MAEs (0.0164 eV/atom for h form and 0.031 T for M s ), our models demonstrate comparable performance even with a much smaller training data set. This highlights the efficiency of our model, making it a powerful tool for high-throughput screening of novel magnetic materials.
+
+DFT calculations
+
+All structure optimizations and total energy calculations were performed using spin-polarized DFT within VASP 62 , 63 . The computational parameters were chosen to be consistent with the Alexandria database, which is borrowed from the Materials Project (MP) database. We employed the projector-augmented wave (PAW) 64 method with Perdew–Burke–Ernzerhof (PBE) 65 exchange-correlation pseudopotentials and a plane-wave cutoff energy of 520 eV. Brillouin zone integrations were carried out using uniform Γ-centered k -point meshes with a density of 0.15 Å −1 . Full structural relaxations were performed, allowing both lattice vectors and atomic positions to vary until the total energy and atomic forces converged below 10 −5 eV and 0.005 eV/Å, respectively.
+
+For transition-metal oxides and fluorides, we employed GGA + U calculations following the Dudarev approach 66 , while standard GGA was used for all other compounds. The Hubbard U parameters were adopted from the Materials Project (MP) database 1 , consistent with those used in the Alexandria database (e.g., U = 5.3 eV for Fe). To calculate the formation energy, we have included (i) the energy corrections of transition metal atoms for mixing GGA and GGA + U frameworks 67 , and (ii) anionic energy correction terms for oxygen and fluorine atoms 68 . Energy from the hull ( E hull ) is calculated using the pymatgen 69 PhaseDiagram module with respect to the materials in the MP database.
+
+For the calculation of the magnetocrystalline anisotropy energy constant K 1 , we performed non-collinear DFT calculations including spin–orbit coupling (SOC) in the Hamiltonian. A denser k -point mesh with a sampling density of 0.10 Å −1 , and an energy convergence criterion of 10 −7 eV were used to ensure convergence of the total energy.
+
+First, we evaluated the total energies with magnetization constrained along the crystallographic a , b , and c axes. The lowest-energy orientation defines the easy direction (easy axis or, if a plane of directions is degenerate, easy plane) and the highest energy orientation defines the hard axis.
+
+For systems with three distinct energies ( E a ≠ E b ≠ E c ), we define the MAE as the smallest reorientation energy barrier relative to the easy direction:
+
+where the direction with the second lowest total energy is the intermediate axis. This choice reflects the first barrier encountered by the magnetization when rotating away from the easy axis.
+
+For cases where a plane of directions is energetically degenerate but lies at higher energy than the remaining direction (i.e., E a = E b > E c ), the degenerate plane is taken as the hard direction, and the MAE is defined as
+
+For easy-plane systems, the MAE is taken as
+
+giving a negative value.
+
+The first-order anisotropy constant was then extracted as
+
+where V is the unit-cell volume, and θ is the angle between the magnetization direction and the easy direction. A positive K 1 ( K 1 > 0) indicates easy-axis anisotropy, whereas a negative K 1 ( K 1 < 0) corresponds to easy-plane anisotropy.
+
+Phonon calculations were performed using density functional perturbation theory (DFPT) 70 with a strict electronic energy convergence threshold of 10 −8 eV. Post-processing was performed using phonopy 48 , 49 .
+
+For each material, we determined the magnetic ground state by comparing FM and multiple AFM configurations. The AFM configurations were systematically generated using the MagneticStructureEnumerator module in pymatgen 69 , ensuring an exhaustive exploration of symmetry-distinct spin arrangements.
+
+Finite temperature stability
+
+The vibrational Helmholtz free energy is given by
+
+where w q ν denotes the phonon frequency at wave-vector q and branch index ν , and k B is the Boltzmann constant. The first term corresponds to the zero-point energy (ZPE), while the second term accounts for the temperature-dependent vibrational entropy. The total Helmholtz free energy of a phase at temperature T was constructed as
+
+where E DFT is the static DFT total energy at 0 K.
+
+The temperature-dependent formation Helmholtz free energy was then evaluated as
+
+where the sum over i runs over all the constituent elements of the compound material, x i are the stoichiometric coefficients and A i ( T ) are the Helmholtz free energies of the elemental reference phases. Since vibrational contributions were computed relative to 0 K, the formation free energy can be written as
+
+with
+
+All quantities were normalized per atom. For crystalline solids at ambient pressure, the p V term is negligible (10 −5 eV/atom), such that the Helmholtz free energy provides an excellent approximation to the Gibbs free energy.
+
+We also wish to highlight that for oxygen, the reference state was taken as gas-phase O 2 , consistent with standard thermodynamic conventions for oxide-formation reactions. The temperature-dependent thermodynamic properties of O 2 were evaluated using the Shomate equation, with fitting parameters obtained from the NIST Chemistry WebBook 71 . This yields the Gibbs free energy for oxygen gas. The Shomate coefficients employed in this work are valid within the temperature range of 100–700 K. Accordingly, the temperature-dependent formation Helmholtz free energy (which is essentially equal to the Gibbs free energy, as the p V term is very small) for Fe 2 ZnO 3 was evaluated and plotted only within this temperature window to ensure thermodynamic consistency with the validity range of the NIST Shomate parameters for gaseous O 2 .
+
+For most practical purposes, one would be interested in a temperature range in the neighborhood of the room temperature. Our analysis shows that both compounds are stable in this temperature region. The formation free energy plot analyzes the stability of a compound relative to its constituent elemental phases at finite temperatures. It is not a finite temperature extension of the convex hull, however. The latter would require phonon band structure calculations of all the binary and ternary phases used to construct the hull, and requires serious computational efforts and resources. It can be a part of a worthwhile future community effort to construct more realistic free-energy hulls.
+
+Curie and Néel temperature calculations
+
+The calculation of the Heisenberg exchange coupling constant J i j is imperative in exploring the details of the magnetic exchange interactions between the atoms. Spin-polarized relativistic Korringa–Kohn–Rostoker (SPRKKR) code 50 , has been used to calculate J i j within the real space approach introduced by Liechtenstein and co-workers, referred to as the LKAG formalism 72 . All our calculations are done within the scalar relativistic representation of the valence states, while the exchange-correlation potential was modeled using the Perdew–Burke–Ernzerhof (PBE) parametrization 65 and the angular momentum expansion up to l max = 3 was taken for each atom. In order to further improve the charge convergence with respect to l max , Lloyd’s formula has been employed for determining the Fermi energy 73 , 74
+
+Considering the classical Heisenberg model, the Hamiltonian of a spin system can be given by
+
+where J i j denotes the Heisenberg pair exchange coupling parameter between sites i and j , and e i ( e j ) is the unit vector pointing along the direction of the local magnetic moment at site i ( j ).
+
+Within the mean-field approximation (MFA), the Curie temperature \({T}_{{\rm{c}}}^{{\rm{MFA}}}\) for a single-sublattice system is given by
+
+where J 0 represents the on-site exchange parameter arising from interactions of a reference atom with all neighboring magnetic atoms.
+
+For a multi-sublattice system, the magnetic moments on different crystallographically inequivalent sites must be treated separately. Hence, one has to solve the following coupled equations:
+
+with
+
+Here, the indices μ and ν label the distinct magnetic sublattices, while r denotes the lattice vector specifying the position of atoms within a given sublattice. The quantity 〈 e ν 〉 represents the thermal average of the z component of the unit vector \({{\bf{e}}}_{r}^{\nu }\) describing the direction of the local magnetic moment at site ( ν , r ), and therefore corresponds to the reduced (sublattice-resolved) magnetization. The matrix element \({J}_{0}^{\mu \nu }\) denotes the total exchange field acting on a reference atom in sublattice μ due to all magnetic atoms belonging to sublattice ν . The diagonal elements ( μ = ν ) account for intra-sublattice exchange interactions, while the off-diagonal elements ( μ ≠ ν ) describe the inter-sublattice exchange coupling between different magnetic networks.
+
+The coupled mean-field equations can be written in matrix form as
+
+where I is the identity matrix and E ν = 〈 e ν 〉 is the vector of sublattice-resolved order parameters. The elements of the matrix Θ are defined as
+
+The condition for a non-trivial solution of Eq. ( 26 ) requires that the determinant of ( Θ − T I ) vanishes, which leads to an eigenvalue problem. The solution of the eigenvalue problem can lead us to T c , which is the largest eigenvalue of the Θ matrix 75 . The r -summation in Eq. ( 25 ) has been carried out for a radius of r max = 7 a , where a denotes the lattice constant.
+
+Machine learning force field
+
+MatterSim v1.0.0-5M was employed as the MLFF in workflow-2. Structural optimizations were carried out using the FIRE optimizer in conjunction with the Frechet Cell Filter, as implemented in the atomic simulation environment (ASE) 76 .
+
+At the MLFF level, phonon band structures were computed using the finite-displacement method with (5 × 5 × 5) supercells, as implemented in ASE. This setup ensures adequate sampling of the Brillouin zone and provides reliable predictions of dynamical stability prior to DFT refinement.
+
+Software
+
+All codes were written in Python (v3.11.11). For dataset preparation, we used NumPy (v2.0.1) and Pandas (v2.2.3). The neural network models were implemented in PyTorch 77 (v2.5.1). Data normalization was done using scikit-learn 78 (v1.6.1). All the crystallographic information files (CIFs) were processed by the atomic simulation environment (ASE-v3.24.0) 76 . Space groups were determined using the spglib library 42 (v2.5.0) 79 .
+
+Data availability
+
+The datasets used to train the generative model and the property prediction models, and the DFT-optimized crystal structures of the final candidate materials highlighted in the manuscript are available at the GitHub repository: https://github.com/SouravMal/DiffCrysGen .
+
+Code availability
+
+The source code for the generative model developed in this work is available at the GitHub repository: https://github.com/SouravMal/DiffCrysGen .
+
+References
+
+Jain, A. et al. Commentary: the materials project: a materials genome approach to accelerating materials innovation. APL Mater. 1 , 011002 (2013). Article Google Scholar
+
+Saal, J. E., Kirklin, S., Aykol, M., Meredig, B. & Wolverton, C. Materials design and discovery with high-throughput density functional theory: the open quantum materials database (OQMD). JOM 65 , 1501–1509 (2013). Article CAS Google Scholar
+
+Choudhary, K. et al. The joint automated repository for various integrated simulations (Jarvis) for data-driven materials design. npj Comput. Mater. 6 , 173 (2020). Article Google Scholar
+
+Curtarolo, S. et al. Aflow: an automatic framework for high-throughput materials discovery. Comput. Mater. Sci. 58 , 218–226 (2012). Article CAS Google Scholar
+
+Schmidt, J., Wang, H.-C., Cerqueira, T. F. T., Botti, S. & Marques, M. A. L. A dataset of 175k stable and metastable materials calculated with the PBEsol and scan functionals. Sci. Data 9 , 64 (2022). Article CAS PubMed PubMed Central Google Scholar
+
+Schmidt, J., Pettersson, L., Verdozzi, C., Botti, S. & Marques, M. A. L. Crystal graph attention networks for the prediction of stable materials. Sci. Adv. 7 , eabi7948 (2021). Article CAS PubMed PubMed Central Google Scholar
+
+Schmidt, J. et al. Machine-learning-assisted determination of the global zero-temperature phase diagram of materials. Adv. Mater. 35 , 2210788 (2023). Article CAS Google Scholar
+
+Xie, T. & Grossman, J. C. Crystal graph convolutional neural networks for an accurate and interpretable prediction of material properties. Phys. Rev. Lett. 120 , 145301 (2018). Article CAS PubMed Google Scholar
+
+Chen, C., Ye, W., Zuo, Y., Zheng, C. & Ong, S. P. Graph networks as a universal machine learning framework for molecules and crystals. Chem. Mater. 31 , 3564–3572 (2019). Article CAS Google Scholar
+
+Choudhary, K. & DeCost, B. Atomistic line graph neural network for improved materials property predictions. npj Comput. Mater. 7 , 185 (2021). Article Google Scholar
+
+Kingma, D. P. & Welling, M. Auto-encoding variational Bayes. Preprint at https://arxiv.org/abs/1312.6114 (2022).
+
+Kingma, D. P. & Welling, M. An introduction to variational autoencoders. Found. Trends® Mach. Learn. 12 , 307–392 (2019). Article Google Scholar
+
+Noh, J. et al. Inverse design of solid-state materials via a continuous representation. Matter 1 , 1370–1384 (2019). Article Google Scholar
+
+Ren, Z. et al. An invertible crystallographic representation for general inverse design of inorganic crystals with targeted properties. Matter 5 , 314–335 (2022). Article CAS Google Scholar
+
+Xie, T., Fu, X., Ganea, O.-E., Barzilay, R. & Jaakkola, T. Crystal diffusion variational autoencoder for periodic material generation. Preprint at https://arxiv.org/abs/2110.06197 (ICLR, 2022).
+
+Court, C. J., Yildirim, B., Jain, A. & Cole, J. M. 3-d inorganic crystal structure generation and property prediction via representation learning. J. Chem. Inf. Model. 60 , 4518–4535 (2020). Article CAS PubMed PubMed Central Google Scholar
+
+Court, C. J., Jain, A. & Cole, J. M. Inverse design of materials that exhibit the magnetocaloric effect by text-mining of the scientific literature and generative deep learning. Chem. Mater. 33 , 7217–7231 (2021). Article CAS Google Scholar
+
+Goodfellow, I. J. et al. Generative adversarial networks. Preprint at https://arxiv.org/abs/1406.2661 (NeurIPS, 2014).
+
+Long, T. et al. Constrained crystals deep convolutional generative adversarial network for the inverse design of crystal structures. npj Comput. Mater. 7 , 66 (2021). Article CAS Google Scholar
+
+Zhao, Y. et al. High-throughput discovery of novel cubic crystal materials using deep generative neural networks. Adv. Sci. 8 , 2100566 (2021). Article CAS Google Scholar
+
+Kim, B., Lee, S. & Kim, J. Inverse design of porous materials using artificial neural networks. Sci. Adv. 6 , eaax9324 (2020). Article CAS PubMed PubMed Central Google Scholar
+
+Nouira, A., Sokolovska, N. & Crivello, J.-C. Crystalgan: learning to discover crystallographic structures with generative adversarial networks. (AAAI Spring Symposium: Combining Machine Learning with Knowledge Engineering, 2019).
+
+Kim, S., Noh, J., Gu, G. H., Aspuru-Guzik, A. & Jung, Y. Generative adversarial networks for crystal structure prediction. ACS Cent. Sci. 6 , 1412–1420 (2020). Article CAS PubMed PubMed Central Google Scholar
+
+Zhao, Y. et al. Physics guided deep learning for generative design of crystal materials with symmetry constraints. npj Comput. Mater. 9 , 38 (2023). Article CAS Google Scholar
+
+Choubisa, H. et al. Crystal site feature embedding enables exploration of large chemical spaces. Matter 3 , 433–448 (2020). Article Google Scholar
+
+Wines, D., Xie, T. & Choudhary, K. Inverse design of next-generation superconductors using data-driven deep generative models. J. Phys. Chem. Lett. 14 , 6630–6638 (2023). Article CAS PubMed Google Scholar
+
+Lyngby, P. & Thygesen, K. S. Data-driven discovery of 2d materials by deep generative models. npj Comput. Mater. 8 , 232 (2022). Article Google Scholar
+
+Mal, S., Seal, G. & Sen, P. Maggen: a graph-aided deep generative model for inverse design of permanent magnets. J. Phys. Chem. Lett. 15 , 3221–3228 (2024). Article CAS PubMed Google Scholar
+
+Sohl-Dickstein, J., Weiss, E. A., Maheswaranathan, N. & Ganguli, S. Deep unsupervised learning using nonequilibrium thermodynamics. Preprint at https://arxiv.org/abs/1503.03585 (2015).
+
+Ho, J., Jain, A. & Abbeel, P. Denoising diffusion probabilistic models. In 34th Conference on Neural Information Processing Systems (NeurIPS) , (Vancouver, Canada, 2020).
+
+Song, Y. et al. Score-based generative modeling through stochastic differential equations. (ICLR, 2021).
+
+Karras, T., Aittala, M., Aila, T. & Laine, S. Elucidating the design space of diffusion-based generative models. Preprint at https://arxiv.org/abs/2206.00364 (NeurIPS, 2022).
+
+Zeni, C. et al. A generative model for inorganic materials design. Nature 639 , 624–632 (2025). Article CAS PubMed PubMed Central Google Scholar
+
+Jiao, R. et al. Crystal structure prediction by joint equivariant diffusion. Preprint at https://arxiv.org/abs/2309.04475 (NeurIPS, 2023).
+
+Jiao, R., Huang, W., Liu, Y., Zhao, D. & Liu, Y. Space group constrained crystal generation. Preprint at https://arxiv.org/abs/2402.03992 (ICLR, 2024).
+
+Park, H., Onwuli, A. & Walsh, A. Exploration of crystal chemical space using text-guided generative artificial intelligence. Nat. Commun. 16 , 4379 (2025). Article CAS PubMed PubMed Central Google Scholar
+
+Levy, D. et al. Symmcd: symmetry-preserving crystal generation with diffusion models. International Conference on Learning Representations (ICLR, 2025).
+
+Kelvinius, F. E. et al. Wyckoffdiff—a generative diffusion model for crystal symmetry. https://arxiv.org/abs/2502.06485 (ICML, 2025).
+
+Gebauer, N. W. A., Gastegger, M. & Schütt, K. T. Symmetry-adapted generation of 3d point sets for the targeted discovery of molecules. In 33rd Conference on Neural Information Processing Systems (NeurIPS 2019) , (Vancouver, Canada, 2020).
+
+Cao, Z., Luo, X., Lv, J. & Wang, L. Space group informed transformer for crystalline materials generation. Sci. Bullet. 70 , 3522–3533 (2025). Article CAS Google Scholar
+
+Fredericks, S., Parrish, K., Sayre, D. & Zhu, Q. Pyxtal: a Python library for crystal structure generation and symmetry analysis. Comput. Phys. Commun. 261 , 107810 (2021). Article CAS Google Scholar
+
+Togo, A., Shinohara, K. & and, I. T. Spglib: a software library for crystal symmetry search. Sci. Technol. Adv. Mater.: Methods 4 , 2384822 (2024). Google Scholar
+
+Coey, J. Permanent magnets: plugging the gap. Scr. Mater. 67 , 524–529 (2012). Article CAS Google Scholar
+
+Mal, S. & Sen, P. Leveraging available data for efficient exploration of materials space using machine learning: a case study for identifying rare earth-free permanent magnets. J. Magn. Magn. Mater. 589 , 171590 (2024). Article CAS Google Scholar
+
+Yang, H. et al. Mattersim: a deep learning atomistic model across elements, temperatures and pressures. Preprint at https://arxiv.org/abs/2405.04967 (2024).
+
+ICSD - the world’s largest database for completely identified inorganic crystal structures. https://icsd.products.fiz-karlsruhe.de/ .
+
+Siddiqui, S. A. et al. Metallic antiferromagnets. J. Appl. Phys. 128 , 040904 (2020). Article CAS Google Scholar
+
+Togo, A., Chaput, L., Tadano, T. & Tanaka, I. Implementation strategies in phonopy and phono3py. J. Phys. Condens. Matter 35 , 353001 (2023). Article CAS Google Scholar
+
+Togo, A. First-principles phonon calculations with phonopy and phono3py. J. Phys. Soc. Jpn. 92 , 012001 (2023). Article Google Scholar
+
+Ebert, H., Koedderitzsch, D. & Minar, J. Calculating condensed matter properties using the kkr-green’s function method—recent developments and applications. Rep. Prog. Phys. 74 , 096501 (2011). Article Google Scholar
+
+Jami, J., Bhagat, N. & Bhattacharya, A. Data-driven high-throughput search for the accelerated discovery of rare-earth-free permanent magnets. Phys. Rev. Mater. 9 , 104401 (2025). Article CAS Google Scholar
+
+Wang, D. -s, Wu, R. & Freeman, A. J. First-principles theory of surface magnetocrystalline anisotropy and the diatomic-pair model. Phys. Rev. B 47 , 14932–14947 (1993). Article CAS Google Scholar
+
+Bruno, P. Tight-binding approach to the orbital magnetic moment and magnetocrystalline anisotropy of transition-metal monolayers. Phys. Rev. B 39 , 865–868 (1989). Article CAS Google Scholar
+
+Luo, H. et al. Electronic structure and magnetic properties of Fe 2 YSi (Y = Cr, Mn, Fe, Co, Ni) Heusler alloys: a theoretical and experimental study. J. Phys. D: Appl. Phys. 40 , 7121–7126 (2007). Article CAS Google Scholar
+
+Kazeev, N. et al. Wyckoff Transformer: Generation of Symmetric Crystals. In Proc. 42nd International Conference on Machine Learning (eds Singh, A. et al.) Vol. 267, 29495–29526 (PMLR, 2025).
+
+Ronneberger, O., Fischer, P. & Brox, T. U-net: convolutional networks for biomedical image segmentation. Preprint at https://arxiv.org/abs/1505.04597 (MICCAI, 2015).
+
+He, K., Zhang, X., Ren, S. & Sun, J. Deep residual learning for image recognition. Preprint at https://arxiv.org/abs/1512.03385 (2015).
+
+Wu, Y. & He, K. Group normalization. Preprint at https://arxiv.org/abs/1803.08494 (2018).
+
+Vaswani, A. et al. Attention is all you need. 31st Conference on Neural Information Processing Systems (NIPS 2017) , (Long Beach, CA, USA, 2023).
+
+O’Shea, K. & Nash, R. An introduction to convolutional neural networks. Preprint at https://arxiv.org/abs/1511.08458 (2015).
+
+Schmidt, J. et al. Improving machine-learning models in materials science through large datasets. Mater. Today Phys. 48 , 101560 (2024). Article Google Scholar
+
+Kresse, G. & Furthmüller, J. Efficiency of ab-initio total energy calculations for metals and semiconductors using a plane-wave basis set. Comput. Mater. Sci. 6 , 15–50 (1996). Article CAS Google Scholar
+
+Kresse, G. & Furthmüller, J. Efficient iterative schemes for ab initio total-energy calculations using a plane-wave basis set. Phys. Rev. B 54 , 11169–11186 (1996). Article CAS Google Scholar
+
+Blöchl, P. E. Projector augmented-wave method. Phys. Rev. B 50 , 17953–17979 (1994). Article Google Scholar
+
+Perdew, J. P., Burke, K. & Ernzerhof, M. Generalized gradient approximation made simple. Phys. Rev. Lett. 77 , 3865–3868 (1996). Article CAS PubMed Google Scholar
+
+Dudarev, S. L., Botton, G. A., Savrasov, S. Y., Humphreys, C. J. & Sutton, A. P. Electron-energy-loss spectra and the structural stability of nickel oxide: an lsda+u study. Phys. Rev. B 57 , 1505–1509 (1998). Article CAS Google Scholar
+
+Jain, A. et al. Formation enthalpies by mixing gga and gga + u calculations. Phys. Rev. B 84 , 045115 (2011). Article Google Scholar
+
+Wang, A. et al. A framework for quantifying uncertainty in DFT energy corrections. Sci. Rep. 11 , 15496 (2021). Article CAS PubMed PubMed Central Google Scholar
+
+Ong, S. P. et al. Python materials genomics (pymatgen): a robust, open-source python library for materials analysis. Comput. Mater. Sci. 68 , 314–319 (2013). Article CAS Google Scholar
+
+Baroni, S., de Gironcoli, S., Dal Corso, A. & Giannozzi, P. Phonons and related crystal properties from density-functional perturbation theory. Rev. Mod. Phys. 73 , 515–562 (2001). Article CAS Google Scholar
+
+National Institute of Standards and Technology. Nist Chemistry Webbook , srd 69. Thermochemical data for Oxygen ( O 2 ); 2026 https://webbook.nist.gov/cgi/cbook.cgi?ID=C7782447&Mask=1&Type=JANAFG&Table=on (National Institute of Standards and Technology, accessed 24 February 2026).
+
+Liechtenstein, A. I., Katsnelson, M., Antropov, V. & Gubanov, V. Local spin density functional approach to the theory of exchange interactions in ferromagnetic metals and alloys. J. Magn. Magn. Mater. 67 , 65–74 (1987). Article CAS Google Scholar
+
+Lloyd, P. & Smith, P. Multiple scattering theory in condensed materials. Adv. Phys. 21 , 69–142 (1972). Article Google Scholar
+
+Zeller, R. Improving the charge density normalization in Korringa–Kohn–Rostoker green-function calculations. J. Phys.: Condens. Matter 20 , 035220 (2008). Google Scholar
+
+Anderson, P. W. Theory of magnetic exchange interactions: exchange in insulators and semiconductors. In Solid State Physics Vol. 14 (eds Seitz, F. & Turnbull, D.) 99–214 (Academic Press, 1963).
+
+Larsen, A. H. et al. The atomic simulation environment—a Python library for working with atoms. J. Phys.: Condens. Matter 29 , 273002 (2017). Google Scholar
+
+Paszke, A. et al. Pytorch: an imperative style, high-performance deep learning library. In 33rd Conference on Neural Information Processing Systems (NeurIPS) , (Vancouver, Canada, 2019).
+
+Pedregosa, F. et al. Scikit-learn: Machine Learning in Python CoRRabs/1201.0490 (2012).
+
+HRI Cluster Computing Facility. https://www.hri.res.in/cluster/ .
+
+Download references
+
+Acknowledgements
+
+The work was funded by the DAE, Government of India, through institutional funding to HRI. All calculations were performed in the cluster computing facility at HRI ( https://www.hri.res.in/cluster/ ).
+
+Author information
+
+Authors and Affiliations
+
+Harish-Chandra Research Institute, Chhatnag Road, Jhunsi, Prayagraj, 211019, India Sourav Mal, Junaid Jami & Prasenjit Sen
+
+Homi Bhabha National Institute, Training School Complex, Anushakti Nagar, Mumbai, 400094, India Sourav Mal, Junaid Jami, Subhankar Mishra & Prasenjit Sen
+
+Department of Chemistry, Indian Institute of Science Education and Research (IISER) Tirupati, Tirupati, Andhra Pradesh, 517619, India Nehad Ahmed
+
+School of Computer Sciences, National Institute of Science Education and Research (NISER), Jatni, Odisha, 752050, India Subhankar Mishra
+
+Sourav Mal View author publications Search author on: PubMed Google Scholar
+
+Nehad Ahmed View author publications Search author on: PubMed Google Scholar
+
+Junaid Jami View author publications Search author on: PubMed Google Scholar
+
+Subhankar Mishra View author publications Search author on: PubMed Google Scholar
+
+Prasenjit Sen View author publications Search author on: PubMed Google Scholar
+
+Contributions
+
+S. Mal developed the DiffCrysGen model, the property prediction models, performed the DFT-based validation of generated materials (workflow-1), and analyzed the electronic structure and origin of large magnetic anisotropy in selected materials. N. Ahmed performed the combined MLFF and DFT-based validation (workflow-2). S. Mal and N. Ahmed performed the comparative benchmarking against other state-of-the-art crystal diffusion models and prepared the manuscript. J. Jami calculated T c s and T N s. S. Mishra suggested and supervised the implementation of the diffusion-based generative model. P. Sen conceived of the project, performed an overall supervision of the project, and also contributed to manuscript writing. All authors have read and approved the manuscript.
+
+Corresponding authors
+
+Correspondence to Subhankar Mishra or Prasenjit Sen .
+
+Ethics declarations
+
+Competing interests
+
+The authors declare no competing interests.
+
+Additional information
+
+Publisher’s note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+Supplementary information
+
+Supplementary Information (download PDF )
+
+Rights and permissions
+
+Open Access This article is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License, which permits any non-commercial use, sharing, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if you modified the licensed material. You do not have permission under this licence to share adapted material derived from this article or parts of it. The images or other third party material in this article are included in the article’s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article’s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ .
+
+Reprints and permissions
+
+About this article
+
+Cite this article
+
+Mal, S., Ahmed, N., Jami, J. et al. DiffCrysGen: a generative diffusion model for accelerated design of inorganic crystalline materials. npj Comput Mater 12 , 282 (2026). https://doi.org/10.1038/s41524-026-02147-1
+
+Download citation
+
+Received : 22 October 2025
+
+Accepted : 13 May 2026
+
+Published : 27 May 2026
+
+Version of record : 21 August 2026
+
+DOI : https://doi.org/10.1038/s41524-026-02147-1
+
+Share this article
+
+Anyone you share the following link with will be able to read this content:
+
+Sorry, a shareable link is not currently available for this article.
+
+Provided by the Springer Nature SharedIt content-sharing initiative

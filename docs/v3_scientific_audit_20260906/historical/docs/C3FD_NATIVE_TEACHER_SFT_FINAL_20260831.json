@@ -1,0 +1,78 @@
+{
+  "schema": "c3fd_native_teacher_sft_final_v1",
+  "date": "2026-08-31",
+  "status": "SUCCESS",
+  "job_id": 38703,
+  "slurm_state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 4491,
+  "resources": {
+    "a800": 4,
+    "cpu": 32,
+    "observed_a800_hours": 4.99,
+    "kill_ceiling_a800_hours": 32.0
+  },
+  "training_contract": {
+    "initialization": "fresh_lora_from_shared_pretrained_llada8b",
+    "old_adapter_loaded": false,
+    "training_view": "mp20_teacher_rich_c3fd_native_plan_v2_only",
+    "train_rows": 27136,
+    "validation_rows": 9047,
+    "seeds": [82017, 82018],
+    "lora_rank": 8,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": ["q", "k", "v", "ff", "up"],
+    "effective_batch_per_seed": 16,
+    "stage1_updates": 1696,
+    "stage1_learning_rate": 0.00005,
+    "stage2_updates": 1696,
+    "stage2_learning_rate": 0.00001,
+    "total_updates": 3392,
+    "monitoring_only_step": 1696,
+    "eligible_checkpoints": [3392],
+    "seed_or_checkpoint_selection": false
+  },
+  "step0_canary": {
+    "both_passed": true,
+    "checkpoint": null,
+    "fresh_lora": true,
+    "lora_b_max_abs": 0.0,
+    "lora_b_tensor_count_per_seed": 160
+  },
+  "policies": [
+    {
+      "seed": 82017,
+      "checkpoint": "step-3392",
+      "validation_loss_step1696": 2.7781652107089756,
+      "validation_loss_step3392": 2.7043892790935935,
+      "adapter_bytes": 6391016776,
+      "adapter_sha256": "06cd5465d1c12dc70c695a12602a4bd99f6c5561f2dc44daa431aadeef962b20",
+      "logged_train_events": 339,
+      "nonfinite_events": 0
+    },
+    {
+      "seed": 82018,
+      "checkpoint": "step-3392",
+      "validation_loss_step1696": 2.1264180888421835,
+      "validation_loss_step3392": 1.8198185446858406,
+      "adapter_bytes": 6391016776,
+      "adapter_sha256": "7f22580a78b4823b44ee841a25cce9fd39541bb0a2192171b0adb4788725526c",
+      "logged_train_events": 339,
+      "nonfinite_events": 0
+    }
+  ],
+  "endpoint_audit": {
+    "one_checkpoint_per_seed": true,
+    "checkpoint_name": "step-3392",
+    "final_alias_present": false,
+    "adapter_hash_checks_passed": true
+  },
+  "archive": {
+    "path": "archive/native_sft/train_success_38703",
+    "success_marker": true,
+    "large_adapters_referenced_not_duplicated": true
+  },
+  "scientific_interpretation": "planner_interface_sft_terminal_not_a_stability_or_sun_claim",
+  "next_step": "fixed_train_and_mp20_standard_validation_raw_first_canary"
+}

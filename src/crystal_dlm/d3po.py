@@ -2,7 +2,7 @@
 
 The functions in this module intentionally know nothing about models, PEFT,
 datasets, or trainers.  They implement the frozen mathematical core from
-``docs/D3PO_256_MIN_CONTRACT_V1.md`` while preserving the dynamic ``7 + 4N``
+``docs/v3_scientific_audit_20260906/historical/docs/D3PO_256_MIN_CONTRACT_V1.md`` while preserving the dynamic ``7 + 4N``
 representation used by the existing crystal DLM.
 """
 

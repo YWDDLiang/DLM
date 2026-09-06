@@ -1,0 +1,703 @@
+DynaCrys: Crystal Generation with Dynamic Space-Group Diffusion
+
+Abstract
+
+The search for new crystalline materials spans an enormous compositional and structural space. Generating candidates in this space requires jointly modeling discrete crystallographic symmetry, elemental composition, and continuous geometry. We introduce DynaCrys, a generative model for crystals in which the space group co-evolves with Wyckoff occupations and elements through a coupled symbolic diffusion process. The structured space-group transitions follow crystallographic group–subgroup relations. As the space group changes, a shared, pretrained symmetry codebook provides both the legality-constrained stochastic decoder and the symmetry-constrained crystal-geometry model with a common representation of the corresponding Wyckoff vocabulary. Across large-scale evaluations using two independent relaxation-and-evaluation engines, DynaCrys achieves best-in-class performance in symmetry-aware discovery of stable, unique, and novel crystals, both overall and under the additional requirement of nontrivial post-relaxation symmetry. It also enables fast sampling while generating structures with consistently low relaxation-induced structural displacements.
+
+1 Introduction
+
+Discovering functional inorganic materials requires searching an enormous space for crystals that are both novel and thermodynamically promising. Deep generative models have emerged as a way to propose such candidates directly ( Xie et al., 2022 ; Jiao et al., 2023 ; Miller et al., 2024 ; Zeni et al., 2025 ) . Crystals, however, are not unconstrained point clouds: a space group $G$ specifies the admissible Wyckoff positions, their multiplicities, and their coordinate degrees of freedom ( Aroyo, 2016 ) . A crystal generator must therefore couple a discrete symmetry description to the continuous geometry it constrains.
+
+In the explicit- $G$ generation procedures reviewed in Section 2 , the space group is fixed before subsequent crystal variables are generated conditionally on it. Because $G$ determines the admissible Wyckoff vocabulary and possible orbit decompositions ( Aroyo, 2016 ) , this conditioning keeps subsequent variables compatible with the initial $G$ , but does not allow $G$ itself to be revised as generation proceeds.
+
+We introduce DynaCrys, a two-stage crystal generator that keeps $G$ inside the evolving generative state. Its symbolic diffusion stage jointly updates the space group, Wyckoff occupations, and chemical elements along the reverse trajectory. Each occupation selects one space-group-specific Wyckoff row and an element, leaving the row’s remaining free coordinates to be generated during the geometry stage. The space-group corruption kernel incorporates crystallographic group–subgroup relations underlying Bärnighausen trees ( Bärnighausen, 1980 ) , while a pretrained symmetry codebook shared by the symbolic and geometry stages provides a common representation for the space-group-dependent Wyckoff vocabularies.
+
+The symbolic process alternates legality-constrained decoding with re-noising until it reaches a final clean protostructure. A separate symmetry-constrained geometry stage then uses this protostructure to generate the lattice and free Wyckoff coordinates while enforcing the symmetry constraints encoded by the decoded space group throughout sampling (Section 4 ; Figure 1 ).
+
+To compare these methods on a common basis, we apply the same protocol for relaxation and analysis to approximately 10,000 candidates per method and independently repeat the complete evaluation with a second MLIP. This large candidate count reduces finite-sample variation, while consistent downstream settings limit differences caused by evaluation choices (Section 5.1 ).
+
+Our contributions are:
+
+• Dynamic space-group diffusion. We introduce a coupled symbolic diffusion process that treats the space group itself as a diffusion variable that can be revised jointly with Wyckoff occupations and elements throughout the reverse process. The space-group corruption kernel incorporates crystallographic group–subgroup relations.
+
+• A legal symbolic-to-geometric interface. We develop a crystal-specific legality-constrained decoder whose accepted samples follow the model distribution conditioned on crystallographic legality, without evaluating its global constrained normalizer. We then couple each decoded protostructure to a symmetry-constrained geometry diffusion model through the shared symmetry codebook.
+
+• Empirical validation. Across two independent relaxation-and-evaluation engines and a same-machine timing comparison, DynaCrys shows consistently strong performance across discovery metrics, energetic stability, relaxation-induced structural displacement, and sampling efficiency.
+
+2 Related Work
+
+Crystal generators without an explicit space-group variable.
+
+CDVAE, DiffCSP, FlowMM, and MatterGen ( Xie et al., 2022 ; Jiao et al., 2023 ; Miller et al., 2024 ; Zeni et al., 2025 ) generate lattices, fractional coordinates, and compositions with no space-group variable in the generative state; crystallographic symmetry is therefore an a posteriori property of the generated coordinates rather than an explicit sampled state.
+
+Symmetry-aware, static- $G$ generators.
+
+A second family makes the space group explicit but fixes it before generating subsequent crystal variables ( Levy et al., 2025 ; Ekström Kelvinius et al., 2025 ; Chang et al., 2025 ; Ruple et al., 2026 ; Chang et al., 2026 ; Kazeev et al., 2025 ; Jiao et al., 2024 ) . Whether sampled or supplied externally, the group conditions the remainder of the generation process and is not revised thereafter. In DynaCrys, $G$ is instead part of the diffusion state and can be revised jointly with Wyckoff occupations and elements throughout the reverse process.
+
+Symmetry representations.
+
+SymmCD ( Levy et al., 2025 ) encodes site symmetries as binary operation–axis descriptors, WyckoffDiff ( Ekström Kelvinius et al., 2025 ) represents Wyckoff occupations with space-group-specific discrete variables, and SGEquiDiff ( Chang et al., 2025 ) uses predefined crystallographic features for space groups and Wyckoff positions. DynaCrys instead learns a shared codebook of continuous embeddings from operation-based descriptors of space groups and Wyckoff rows. The row embeddings parameterize both the continuous corruption channel and space-group-conditional row prediction for the vocabulary associated with each $G_{t}$ (Section 4.2 ).
+
+Constrained sampling in diffusion models.
+
+Existing approaches to constrained or conditional diffusion sampling include iterative projection ( Christopher et al., 2024 ) , discrete-state guidance ( Nisonoff et al., 2025 ) , and sequential Monte Carlo ( Wu et al., 2023 ) . DynaCrys instead enforces symbolic legality by rejection sampling over its finite symbolic state space. Conditional on acceptance, the decoder samples exactly from the denoiser’s factorized clean-state distribution conditioned on legality, without evaluating the global constrained normalizer (Section 4.3 ).
+
+3 Space Groups and Wyckoff Orbits
+
+A periodic crystal consists of a lattice basis $L\in\mathbb{R}^{3\times 3}$ and atoms in one unit cell, represented here by fractional coordinates $\mathbf{x}\in[0,1)^{3}$ . Rather than treating these atoms as independent points, a space group $G$ organizes them into symmetry orbits. There are 230 three-dimensional space-group types ( Aroyo, 2016 ) . Each operation $g=(R_{g},\mathbf{t}_{g})$ acts on fractional coordinates as $g\cdot\mathbf{x}=(R_{g}\mathbf{x}+\mathbf{t}_{g})\bmod 1$ . The orbit of a representative coordinate is the set of distinct symmetry-equivalent sites obtained by applying all operations in $G$ .
+
+A Wyckoff position, represented here by a row $r\in\mathcal{R}_{G}$ of the space-group table, describes a family of such orbits. The row specifies an orbit multiplicity $\mu_{G,r}$ and the number of coordinates $\operatorname{dof}_{G,r}$ left free by symmetry. Choosing those coordinates fixes one particular orbit from the family. In a label such as $4e$ , the numeral gives the orbit multiplicity, while the letter is a conventional identifier local to that space group and distinguishes Wyckoff positions ( Aroyo, 2016 ) . A symbolic orbit occupation selects a row and an element $Z$ but leaves the free coordinates unspecified; multiple occupations may use the same row. Once its coordinates are chosen, $Z$ is placed on all $\mu_{G,r}$ sites of the resulting orbit. A collection of orbit occupations therefore determines the crystal’s symbolic symmetry and composition, while the lattice parameters and free coordinates remain to be generated as continuous geometry (Figure 2 a).
+
+(a)
+
+(b)
+
+(c)
+
+The vocabulary $\mathcal{R}_{G}$ is specific to the space group. Wyckoff letters are labels local to each space group, and changing $G$ changes the available rows, their multiplicities, and their free-coordinate parameterizations. Group–subgroup relations organize these changes (Figure 2 c). A maximal relation connects two space groups with no intermediate space group. Every such step is either translationengleiche ( $t$ ), which preserves the translation lattice while reducing point group symmetry, or klassengleiche ( $k$ ), which retains the point group while reducing translational symmetry ( Aroyo, 2016 ) . Restricting $G$ to a subgroup $H$ can split one $G$ -orbit into several independently parameterized $H$ -orbits (Figure 2 b). In the illustrated $Pm\rightarrow P1$ example, the orbit occupying the $Pm$ row $1b$ becomes one occupation of the $P1$ row $1a$ , while the orbit occupying the $Pm$ row $2c$ splits into two $P1$ $1a$ occupations. Once the mirror constraint is removed, the three resulting representative coordinates may vary independently.
+
+Consequently, revising the space group during symbolic generation does more than update a categorical label: it changes the admissible orbit representation and the continuous degrees of freedom available to the subsequent geometry stage. Section 4 therefore treats $G$ , the orbit occupations, and their elements as coupled components of one evolving symbolic state.
+
+4 Dynamic Space-Group Crystal Generation
+
+DynaCrys separates crystal generation into two stages. A symbolic diffusion model first samples a protostructure containing the space group, Wyckoff-row occupations, and their elements. Conditioned on this discrete state, a symmetry-constrained geometry model then generates the lattice and the free coordinates that instantiate the complete crystal.
+
+4.1 Protostructure state and shared symmetry representation
+
+Let $\mathcal{G}$ denote the space-group vocabulary supported by the model. A protostructure $P$ ( Goodall et al., 2022 ) is
+
+$P=\bigl(G,\;K,\;\{(Z_{i},r_{i})\}_{i=1}^{K}\bigr),$ (1)
+
+where $G\in\mathcal{G}$ is the space group, $K$ is the number of orbit occupations, $r_{i}\in\mathcal{R}_{G}$ is a Wyckoff row, and $Z_{i}$ is the element assigned to that occupation. The occupations form an unordered multiset, the same row may occur more than once, and $P$ contains neither a lattice nor free coordinates.
+
+The symbolic diffusion represents $P$ with a fixed-width padded clean state $x_{0}$ . At noise level $t$ , the corresponding state is
+
+$x_{t}=\bigl(G_{t},\;K_{t},\;\{(m_{i,t},Z_{i,t},y_{i,t})\}_{i=1}^{M}\bigr).$ (2)
+
+Here $m_{i,t}$ marks an active or padded slot, $Z_{i,t}$ is the corresponding element or padding symbol, and $y_{i,t}\in\mathbb{R}^{d}$ is a noisy Wyckoff-row vector. At $t=0$ , the active slots encode the occupations of $P$ and the remaining slots are padding. The noisy state $x_{t}$ need not decode directly to a legal protostructure.
+
+Because the row vocabulary $\mathcal{R}_{G}$ depends on $G$ , DynaCrys represents space groups and Wyckoff rows with a shared symmetry codebook containing vectors $c_{G}$ and $c_{G,r}$ . The codebook is pretrained from crystallographic descriptors. Its row vectors serve as the clean centers of the continuous row channel and as the tied vectors of the space-group-conditional row head. The geometry model also receives the space-group and row codebook embeddings as conditioning features. At each diffusion step, $c_{G_{t}}$ represents the current noisy space group $G_{t}$ . The shared codebook therefore provides a common representation of space-group-specific Wyckoff vocabularies across the symbolic and geometry stages. Appendix C provides details of the codebook construction.
+
+4.2 Coupled symbolic diffusion
+
+Forward corruption.
+
+The symbolic forward process is a diffusion process defined by a family of marginal kernels $q_{t}(x_{t}\mid x_{0})$ ( Austin et al., 2021 ) . Its space-group channel mixes a structured transition with a reset to the training distribution:
+
+$q_{t}^{G}(G_{t}\mid G_{0})=\lambda_{t}R_{t}(G_{t}\mid G_{0})+(1-\lambda_{t})\pi_{G}(G_{t}).$ (3)
+
+The transition $R_{t}$ diffuses over the undirected graph induced by maximal translationengleiche and klassengleiche group–subgroup relations on $\mathcal{G}$ . This graph supplies the transition geometry of the space-group corruption; the reset component makes the terminal distribution independent of $G_{0}$ .
+
+After drawing $G_{t}$ , the forward process samples $K_{t}$ and partitions the $M$ slots into survivors, births, and padding. Survivors retain a corrupted signal from distinct clean occupations, whereas birth rows are drawn from the vocabulary of the current $G_{t}$ ; the row vectors and elements are then corrupted conditionally on this partition. This construction accommodates a changing number of occupations and defines the same marginal kernel for training-time corruption and sampling-time re-noising. Further details on the channel distributions and noise schedules are provided in Appendix B .
+
+Set denoising network.
+
+The denoiser represents $x_{t}$ by one global token for $(G_{t},K_{t},t)$ and $M$ orbit-slot tokens containing $(m_{i,t},Z_{i,t},y_{i,t})$ . A Transformer encoder ( Vaswani et al., 2017 ) processes these tokens without slot positional encodings, making its slot outputs permutation equivariant. Global and slot-wise heads predict the clean state as
+
+$p_{\theta}(G_{0}\mid x_{t}),\qquad p_{\theta}(K_{0}\mid x_{t}),\qquad\left\{p_{i}^{\mathrm{act}}(\,\cdot\mid x_{t}),\;p_{i}(r\mid G,x_{t}),\;p_{i}(Z\mid G,r,x_{t})\right\}_{i=1}^{M}.$ (4)
+
+Here $p_{\theta}(G_{0}\mid x_{t})$ and $p_{\theta}(K_{0}\mid x_{t})$ are the global predictions of the clean space group and orbit count. For slot $i$ , $p_{i}^{\mathrm{act}}$ is the binary active-state distribution: values $1$ and $0$ denote an occupied and padded slot, respectively. The row head $p_{i}(r\mid G,x_{t})$ assigns probability only to valid rows $r\in\mathcal{R}_{G}$ and uses their shared-codebook vectors as classifier weights. The element head $p_{i}(Z\mid G,r,x_{t})$ predicts the element.
+
+Training objective.
+
+The symbolic model predicts $x_{0}$ with the set objective
+
+$\displaystyle\mathcal{L}_{\mathrm{sym}}={}$ $\displaystyle\mathcal{L}_{G}+w_{K}\mathcal{L}_{K}+w_{m}\mathcal{L}_{\mathrm{mask}}+w_{r}\mathcal{L}_{r}+w_{Z}\mathcal{L}_{Z}$ (5) $\displaystyle+s_{\mathrm{aux}}\left(w_{\mathrm{cap}}\mathcal{L}_{\mathrm{cap}}+w_{N}\mathcal{L}_{N}+w_{\mathrm{comp}}\mathcal{L}_{\mathrm{comp}}\right).$
+
+Here $\mathcal{L}_{G}$ and $\mathcal{L}_{K}$ are cross-entropies for the global space-group and orbit-count predictions. We first use a Hungarian assignment ( Carion et al., 2020 ) to match the $M$ predicted slots to the $K_{0}$ clean occupations and $M-K_{0}$ padding targets. Writing $\pi(j)$ for the predicted slot matched to target $j$ , and $\mathfrak{S}_{M}$ for the set of permutations of the $M$ slots, the optimal assignment is
+
+$\displaystyle\pi^{\star}=\arg\min_{\pi\in\mathfrak{S}_{M}}\left[\sum_{j=1}^{K_{0}}C_{\mathrm{occ}}\bigl(\pi(j),j\bigr)+\sum_{j=K_{0}+1}^{M}C_{\mathrm{pad}}\bigl(\pi(j)\bigr)\right],$ (6) $\displaystyle C_{\mathrm{occ}}(i,j)=-w_{m}\log p_{i}^{\mathrm{act}}(1\mid x_{t})-w_{r}\log p_{i}(r_{j}\mid G_{0},x_{t})-w_{Z}\log p_{i}(Z_{j}\mid G_{0},r_{j},x_{t}),$ $\displaystyle C_{\mathrm{pad}}(i)=-w_{m}\log p_{i}^{\mathrm{act}}(0\mid x_{t}).$
+
+Here $C_{\mathrm{occ}}$ is the cost of assigning a predicted slot to a clean occupation, whereas $C_{\mathrm{pad}}$ is the cost of assigning it to a padding target. After matching, $\mathcal{L}_{\mathrm{mask}}$ is the active-state binary cross-entropy over all matched slots, while $\mathcal{L}_{r}$ and $\mathcal{L}_{Z}$ are the row and element negative log-likelihoods over the occupied matches. Among the auxiliary terms, $\mathcal{L}_{\mathrm{cap}}$ penalizes excess expected row occupancy, while $\mathcal{L}_{N}$ and $\mathcal{L}_{\mathrm{comp}}$ match the expected conventional-cell atom count and composition to the clean target. The sampler separately enforces row-capacity limits and the fixed atom-count cap. The row-conditioned element head is refined with an additional identity regularizer. Further details on the prediction heads, assignment costs, loss terms, and optimization settings are provided in Appendix D .
+
+4.3 Legality-constrained reverse sampling
+
+The heads in Eq. ( 4 ) define a factorized clean-state distribution, but their independent predictions need not jointly satisfy the model’s symbolic legality constraints. Let $\mathcal{X}_{\mathrm{legal}}$ denote the corresponding legal set: $G$ must lie in $\mathcal{G}$ , exactly $K$ slots must be active, every selected row must belong to $\mathcal{R}_{G}$ , and the collection of occupations must satisfy the row-capacity and atom-count constraints. The stochastic decoder targets the factorized distribution conditioned on this set,
+
+$\widetilde{p}_{\theta}(x_{0}\mid x_{t})\propto p_{\theta}^{\mathrm{fac}}(x_{0}\mid x_{t})\mathbf{1}[x_{0}\in\mathcal{X}_{\mathrm{legal}}].$ (7)
+
+Here $p_{\theta}^{\mathrm{fac}}$ is the factorized distribution induced by the heads in Eq. ( 4 ), $\mathbf{1}[\cdot]$ is the legality indicator, and $\widetilde{p}_{\theta}$ is the resulting distribution restricted to and renormalized over $\mathcal{X}_{\mathrm{legal}}$ .
+
+Direct normalization of Eq. ( 7 ) over $\mathcal{X}_{\mathrm{legal}}$ would require summing over a combinatorial number of legal symbolic states. Instead, let $a_{i}$ be the active logit of slot $i$ , let $\omega_{i}=\exp(a_{i})$ , and define the elementary symmetric polynomial
+
+$e_{K}(\boldsymbol{\omega})=\sum_{\begin{subarray}{c}A\subseteq\{1,\ldots,M\}\\ |A|=K\end{subarray}}\prod_{i\in A}\omega_{i}.$
+
+After drawing $G$ , the decoder samples the orbit count $K$ and active-slot set $A$ according to
+
+$\displaystyle q_{\mathrm{prop}}(K\mid x_{t})\propto p_{\theta}(K_{0}=K\mid x_{t})e_{K}(\boldsymbol{\omega}),$ (8) $\displaystyle q_{\mathrm{prop}}(A\mid K,x_{t})=\frac{\prod_{i\in A}\omega_{i}}{e_{K}(\boldsymbol{\omega})}\qquad(|A|=K).$
+
+The $e_{K}$ factors cancel when the two proposal distributions are multiplied. After sampling $G$ , $K$ , the active set, and the selected rows, the decoder rejects skeletons that violate these constraints and draws their elements after acceptance.
+
+Proposition 1 .
+
+Conditional on acceptance, the stochastic decoder returns an exact draw from $\widetilde{p}_{\theta}(\cdot\mid x_{t})$ without evaluating its global normalizer.
+
+Appendix E gives the derivation and complete sampling procedure. Reverse generation repeatedly predicts a legal clean state and then applies the same marginal forward kernel at the next lower noise level:
+
+$\hat{x}_{0}^{(t)}\sim\widetilde{p}_{\theta}(\cdot\mid x_{t}),\qquad x_{t-1}\sim q_{t-1}(\cdot\mid\hat{x}_{0}^{(t)})\quad(t>0).$ (9)
+
+At $t=0$ , removing inactive slots from $\hat{x}_{0}^{(0)}$ and disregarding slot order yields the final protostructure $P$ . The space group is thus resampled jointly with the other symbolic variables throughout the reverse trajectory rather than fixed in advance.
+
+4.4 Symmetry-constrained geometry generation
+
+The final protostructure $P$ specifies the space group, Wyckoff occupations, and composition. The geometry stage generates a lattice compatible with the crystal family of $G$ and the free fractional coordinates of one representative point, or orbit anchor, per occupied orbit.
+
+Geometry denoising.
+
+Building on the continuous diffusion framework of DiffCSP++ ( Jiao et al., 2024 ) , an atom-level message-passing network operates on the full conventional cell reconstructed from the occupied orbit anchors and is conditioned on $P$ , the diffusion time, and the shared symmetry codebook. Let $b_{t}$ denote the noisy lattice representation and $X_{t}$ the noisy full-cell fractional coordinates. The two heads minimize
+
+$\displaystyle\mathcal{L}_{\mathrm{lat}}=\mathbb{E}\!\left[\left\lVert\epsilon_{G}-\widehat{\epsilon}_{\theta}(b_{t},X_{t},P,t)\right\rVert_{2}^{2}\right],\qquad\epsilon_{G}=\Pi_{G}^{\mathrm{lin}}\epsilon,$ (10) $\displaystyle\mathcal{L}_{\mathrm{coord}}=\mathbb{E}\!\left[\left\lVert\Pi_{\mathcal{A}(P)}\!\left(\widehat{u}_{\theta}(X_{t},b_{t},P,t)-u_{\mathrm{wn}}^{*}(X_{t},X_{0};\sigma_{t})\right)\right\rVert_{2}^{2}\right].$
+
+Here $\epsilon\sim\mathcal{N}(0,I)$ is standard Gaussian lattice noise, $\epsilon_{G}=\Pi_{G}^{\mathrm{lin}}\epsilon$ is its projection onto the crystal-family subspace, and $\widehat{\epsilon}_{\theta}$ is the lattice-noise prediction. The clean full-cell fractional coordinates are denoted by $X_{0}$ , $\sigma_{t}$ is the coordinate-noise scale, and $u_{\mathrm{wn}}^{*}$ is the wrapped-normal denoising target. The coordinate head predicts the denoising field $\widehat{u}_{\theta}$ . Finally, $\Pi_{\mathcal{A}(P)}$ projects a full-cell coordinate field onto $\mathcal{A}(P)$ , the free degrees of freedom of the orbit anchors specified by $P$ .
+
+Symmetry-constrained sampling.
+
+At every reverse step, the lattice representation is projected to the subspace compatible with the crystal family of $G$ . The anchor coordinates are updated only along their allowed degrees of freedom and expanded through the corresponding Wyckoff operations into complete atomic orbits. By construction, every intermediate geometry is invariant under the operations of the decoded space group $G$ . Further details on the lattice representation, geometry objectives, and reverse sampling procedure are provided in Appendix F .
+
+5 Evaluation
+
+5.1 Evaluation setup
+
+We evaluate unconditional crystal generation on MP-20 ( Xie et al., 2022 ) . Its training partition is used to train DynaCrys and as the reference set for novelty. Each evaluated set contains approximately 10,000 candidates. Using relatively large and similar generation budgets reduces finite-sample variation.
+
+Generated structures are relaxed and then evaluated for energy above the convex hull, novelty with respect to the training partition, uniqueness within the generated set, and post-relaxation space-group symmetry. We apply the same relaxation, hull, structure-matching, and symmetry-analysis settings to all available methods so that differences in these downstream choices do not obscure the comparison. CHGNet ( Deng et al., 2023 ) provides the primary relaxation endpoint, and we independently repeat the complete relaxation and analysis pipeline using MACE-MP-0 ( Batatia et al., 2025 ) . The two engines are treated as separate evaluation rulers.
+
+Following the criterion used by MatterGen ( Zeni et al., 2025 ) , we define the stable–unique–novel rate, SUN@ $\tau$ , as the fraction of generated candidates that are stable at threshold $\tau$ ( $e_{\mathrm{hull}}\leq\tau$ ), unique, and novel. SSUN@ $\tau$ additionally requires the relaxed structure to exhibit nontrivial (non- $P1$ ) space-group symmetry. We report the strict threshold $\tau=0$ and the metastable threshold $\tau=0.1$ eV/atom. Space groups used for the main SSUN comparison are identified at symprec $=0.1$ Å. Full metric definitions and denominator conventions are given in Appendix G .
+
+We compare with DiffCSP ( Jiao et al., 2023 ) , MatterGen ( Zeni et al., 2025 ) , FlowMM ( Miller et al., 2024 ) , DiffCSP++ ( Jiao et al., 2024 ) , SymmCD ( Levy et al., 2025 ) , WyFormer ( Kazeev et al., 2025 ) , and SGEquiDiff ( Chang et al., 2025 ) . Publicly released samples are used when available; SGEquiDiff is sampled from its released checkpoint. All baseline values in this comparison are obtained under the common evaluation protocol.
+
+For readability, Table 1 separates the evaluated generators by whether they explicitly represent crystallographic symmetry. Generators in the second block use a space group, Wyckoff description, or crystallographic template; those in the first do not.
+
+5.2 Stable, symmetric, and novel material discovery
+
+The core comparison reports SUN and SSUN at both stability thresholds together with the median relaxed $e_{\mathrm{hull}}$ . Reporting both stability thresholds separates the strict-stability candidates from the broader metastable regime; the median $e_{\mathrm{hull}}$ characterizes the typical energetic quality of the relaxed population. The canonical DynaCrys configuration is the reference model throughout the paper; DynaCrys-B and DynaCrys-C share its architecture and differ only in the row-capacity rule and symbolic training schedule specified in Appendix D.4 .
+
+CHGNet endpoint Method SUN@0 SSUN@0 SUN@0.1 SSUN@0.1 Med. $e_{\mathrm{hull}}$ Without explicit symmetry representation DiffCSP $\mathbf{8.53}$ $7.10$ $48.48$ $36.45$ $0.0772$ MatterGen $8.10$ $\mathbf{7.27}$ $\mathbf{54.37}$ $\mathbf{45.16}$ $\mathbf{0.0710}$ FlowMM $7.20$ $5.95$ $43.83$ $31.65$ $0.0865$ With explicit symmetry representation DiffCSP++ $7.71$ $7.64$ $37.95$ $37.31$ $0.1069$ SymmCD $7.34$ $7.18$ $33.11$ $32.02$ $0.1153$ WyFormer $6.76$ $6.69$ $33.28$ $32.11$ $0.1302$ SGEquiDiff $8.45$ $8.31$ $38.00$ $36.38$ $0.0819$ DynaCrys $\mathbf{9.39}$ $\mathbf{9.31}$ $\mathbf{41.49}$ $\mathbf{40.12}$ $0.0719$ DynaCrys-B $9.34$ $9.24$ $40.76$ $39.32$ $0.0729$ DynaCrys-C $9.18$ $9.10$ $41.32$ $39.87$ $\mathbf{0.0599}$ MACE-MP-0 endpoint Method SUN@0 SSUN@0 SUN@0.1 SSUN@0.1 Med. $e_{\mathrm{hull}}$ Without explicit symmetry representation DiffCSP $\mathbf{8.56}$ $\mathbf{7.15}$ $43.89$ $34.24$ $0.0878$ MatterGen $7.84$ $7.01$ $\mathbf{49.20}$ $\mathbf{41.49}$ $\mathbf{0.0796}$ FlowMM $7.22$ $6.05$ $38.65$ $29.63$ $0.0991$ With explicit symmetry representation DiffCSP++ $7.93$ $7.87$ $34.69$ $34.40$ $0.1218$ SymmCD $7.88$ $7.79$ $30.04$ $29.69$ $0.1276$ WyFormer $6.43$ $6.40$ $29.66$ $29.09$ $0.1527$ SGEquiDiff $9.11$ $8.98$ $35.28$ $34.51$ $0.0883$ DynaCrys $9.55$ $9.44$ $38.17$ $37.24$ $0.0796$ DynaCrys-B $9.26$ $9.19$ $37.59$ $36.69$ $0.0803$ DynaCrys-C $\mathbf{9.61}$ $\mathbf{9.53}$ $\mathbf{38.69}$ $\mathbf{37.67}$ $\mathbf{0.0616}$
+
+Across both evaluation engines, all three DynaCrys configurations outperform every baseline on SUN@0 and SSUN@0, and occupy the top three positions in the explicit-symmetry block on SUN@0.1 and SSUN@0.1. All three configurations also have lower median $e_{\mathrm{hull}}$ than every explicit-symmetry baseline under both engines, while DynaCrys-C ranks first overall.
+
+To test whether DynaCrys uses the evolving symbolic state when updating the space group, we replace the learned proposal for $G$ at every reverse step with the empirical space-group marginal of the training set, leaving the rest of the sampler unchanged. For the canonical configuration, SUN@0 falls from $9.28\%$ to $3.01\%$ with the generation seed held fixed. This degradation supports conditioning the space-group proposal on the evolving symbolic state. Results across all three configurations are reported in Appendix K .
+
+5.3 Sample quality and relaxed stability
+
+We complement the SUN and SSUN rates with standard crystal-generation proxy metrics ( Xie et al., 2022 ) : structural and compositional validity, coverage recall and precision, distributional distances for density and the number of distinct elements, the Template U.N. rate in crystallographic-template space, the effective number of generated space groups $N_{\mathrm{eff}}^{G}=\exp(-\sum_{g}p_{g}\log p_{g})$ ( Betala et al., 2025 ) , and relaxed stability. Together, these quantities check whether strong discovery performance is accompanied by chemically valid samples, broad coverage of the reference distribution, diverse crystallographic templates and space groups, and favorable relaxed energies.
+
+Validity (%) Distribution Symmetry RelStab (%) Coverage (%) Method Struct. $\uparrow$ Comp. $\uparrow$ $d_{\rho}$ $\downarrow$ $d_{N_{\mathrm{el}}}$ $\downarrow$ U.N. (%) $\uparrow$ Eff. SGs @0 $\uparrow$ @0.1 $\uparrow$ Cov.R $\uparrow$ Cov.P $\uparrow$ Without explicit symmetry representation DiffCSP $100.00$ $83.22$ $0.5726$ $0.3031$ $8.03$ $20.04$ $\mathbf{11.23}$ $59.10$ $99.77$ $99.80$ MatterGen $99.98$ $\mathbf{83.26}$ $0.2464$ $0.1710$ $\mathbf{10.75}$ $27.71$ $9.88$ $\mathbf{63.32}$ $99.68$ $99.72$ FlowMM $99.25$ $81.84$ $\mathbf{0.2303}$ $\mathbf{0.1498}$ $5.69$ $18.75$ $9.74$ $54.94$ $99.69$ $99.61$ With explicit symmetry representation DiffCSP++ $99.91$ $85.12$ $\mathbf{0.0877}$ $0.3781$ $5.40$ $49.97$ $9.95$ $47.96$ $99.79$ $99.41$ SymmCD $98.54$ $\mathbf{86.27}$ $0.3168$ $0.3856$ $10.29$ $48.07$ $10.26$ $44.26$ $99.78$ $99.24$ WyFormer $99.84$ $82.65$ $0.3272$ $0.0551$ $\mathbf{19.50}$ $47.71$ $8.80$ $41.84$ $99.79$ $99.00$ SGEquiDiff $99.50$ $86.13$ $0.2766$ $0.0983$ $14.02$ $49.25$ $12.39$ $54.65$ $99.76$ $99.14$ DynaCrys $99.97$ $83.36$ $0.2102$ $0.0585$ $12.59$ $47.60$ $13.54$ $58.32$ $99.71$ $99.31$ DynaCrys-B $99.97$ $82.77$ $0.2035$ $0.0581$ $13.19$ $46.86$ $13.59$ $57.82$ $99.70$ $99.32$ DynaCrys-C $99.95$ $83.30$ $0.2462$ $\mathbf{0.0539}$ $10.91$ $47.73$ $\mathbf{14.28}$ $\mathbf{62.68}$ $99.70$ $99.42$
+
+Overall, the DynaCrys models combine strong sample quality with leading relaxed stability. Table 2 shows that structural validity and coverage are near saturation across the comparison. All three DynaCrys configurations exceed every baseline on strict relaxed stability, while DynaCrys-C ranks second overall at the metastable threshold. The canonical DynaCrys configuration attains a lower density-distribution distance than every baseline except DiffCSP++ ( Jiao et al., 2024 ) , which uses fixed crystallographic templates sampled from the training set, and a lower element-count distance than every baseline except WyFormer. DynaCrys-C attains the lowest element-count distance overall. The joint discovery gains in Table 1 are accompanied by high relaxed stability and near-saturated structural validity and coverage. The DynaCrys models also remain competitive in compositional validity, distributional agreement, and crystallographic-template discovery.
+
+5.4 Relaxation-induced structural displacement
+
+The preceding metrics characterize discovery and sample quality, but not how far a generated geometry moves during relaxation. We therefore compare each as-generated structure with its independently relaxed endpoint under both evaluation engines. This analysis characterizes the geometric response to relaxation and is kept separate from the discovery table so that energetic quality and structural displacement are not conflated.
+
+CHGNet MACE-MP-0 Method Mean RMSD $\downarrow$ Matched (%) $\uparrow$ Mean RMSD $\downarrow$ Matched (%) $\uparrow$ Without explicit symmetry representation DiffCSP $0.1955$ $98.38$ $0.2179$ $97.42$ MatterGen $\mathbf{0.0956}$ $\mathbf{99.50}$ $\mathbf{0.1012}$ $\mathbf{99.40}$ FlowMM $0.2293$ $96.46$ $0.2503$ $95.08$ With explicit symmetry representation DiffCSP++ $0.2061$ $95.29$ $0.2063$ $94.18$ SymmCD $0.3772$ $85.27$ $0.3756$ $84.30$ WyFormer $0.1911$ $95.54$ $0.1871$ $94.92$ SGEquiDiff $0.1901$ $91.38$ $0.1916$ $90.22$ DynaCrys $0.1717$ $96.18$ $0.1735$ $95.43$ DynaCrys-B $0.1722$ $96.05$ $0.1739$ $95.34$ DynaCrys-C $\mathbf{0.1641}$ $\mathbf{96.65}$ $\mathbf{0.1655}$ $\mathbf{95.87}$
+
+In Table 3 , all three DynaCrys models achieve lower mean RMSD than every baseline except MatterGen while maintaining high matched-pair rates, indicating that their generated structures remain comparatively close to the relaxed endpoints.
+
+5.5 Quality–efficiency trade-off
+
+Same-machine sampling times are available for SGEquiDiff, SymmCD, WyFormer, DynaCrys, and DynaCrys-small. The canonical DynaCrys configuration serves as the quality reference, whereas DynaCrys-small uses a smaller hidden dimension and fewer layers in the crystal-geometry model while retaining the same symbolic generator.
+
+Method SUN@0 SSUN@0 SUN@0.1 SSUN@0.1 Med. $e_{\mathrm{hull}}$ Time SGEquiDiff $8.45$ $8.31$ $38.00$ $36.38$ $0.0819$ $0.1670$ SymmCD $7.34$ $7.18$ $33.11$ $32.02$ $0.1153$ $0.2380$ WyFormer $6.76$ $6.69$ $33.28$ $32.11$ $0.1302$ $0.4760$ DynaCrys $\mathbf{9.39}$ $\mathbf{9.31}$ $\mathbf{41.49}$ $\mathbf{40.12}$ $\mathbf{0.0719}$ $0.2199$ DynaCrys-small $9.23$ $9.16$ $40.89$ $39.54$ $0.0742$ $\mathbf{0.1383}$
+
+Reducing the size of the crystal-geometry model makes DynaCrys-small $1.59\times$ faster while retaining close SUN and SSUN values at both stability thresholds. DynaCrys-small exceeds every baseline in this comparison on all four SUN/SSUN columns while maintaining a low median $e_{\mathrm{hull}}$ .
+
+The sensitivity of the SUN rates to the number of geometry reverse steps is reported in Appendix J .
+
+6 Limitations and Conclusion
+
+Limitations.
+
+As in prior computational crystal-generation work, our stability assessments rely on computational screening proxies. In our evaluation, hull distances are referenced to a finite snapshot of known structures. A low $e_{\mathrm{hull}}$ does not by itself imply that a structure can be synthesized experimentally. The models in this comparison represent infinite, fully ordered crystals at zero temperature; defects, disorder, and finite-temperature effects lie outside the modeled scope.
+
+Conclusion.
+
+DynaCrys makes the space group part of the evolving generative state, allowing it to be revised jointly with Wyckoff occupations and elements throughout symbolic generation. A legality-constrained stochastic decoder connects this state to a symmetry-constrained crystal-geometry model. Across both evaluation engines, the DynaCrys models lead symmetry-aware generators in stable–unique–novel discovery, both overall and under the additional requirement of nontrivial post-relaxation symmetry. They also enable fast sampling while generating structures with consistently low relaxation-induced structural displacements. Together, these results demonstrate that dynamic space-group diffusion provides an effective foundation for symmetry-aware crystal generation.
+
+Acknowledgments
+
+Computational resources used in this work were provided by NVIDIA. We thank Kelvin Lee and Logan Ward for helpful discussions, and Dallas Foster for assistance with compute scheduling.
+
+Large language models assisted with manuscript drafting and editing and research code development; the authors verified all results and claims and take full responsibility for the work.
+
+References
+
+Aroyo (2016) M. I. Aroyo (ed.). International Tables for Crystallography: Space-group symmetry , volume A. International Union of Crystallography, Chester, England, 2nd edition, December 2016. ISBN 9780470974230. doi: 10.1107/97809553602060000114 . URL https://it.iucr.org/Ac/ .
+
+Austin et al. (2021) Jacob Austin, Daniel D. Johnson, Jonathan Ho, Daniel Tarlow, and Rianne van den Berg. Structured denoising diffusion models in discrete state-spaces. In Advances in Neural Information Processing Systems , volume 34, 2021.
+
+Bärnighausen (1980) Hartmut Bärnighausen. Group-subgroup relations between space groups: a useful tool in crystal chemistry. MATCH Communications in Mathematical Chemistry , 9:139–175, 1980.
+
+Batatia et al. (2025) Ilyes Batatia, Philipp Benner, Yuan Chiang, Alin M. Elena, Dávid P. Kovács, Janosh Riebesell, Xavier R. Advincula, Mark Asta, Matthew Avaylon, William J. Baldwin, et al. A foundation model for atomistic materials chemistry. The Journal of Chemical Physics , 163(18):184110, 2025. doi: 10.1063/5.0297006 .
+
+Betala et al. (2025) Siddharth Betala, Samuel P. Gleason, Ali Ramlaoui, Andy Xu, Georgia Channing, Daniel Levy, Clémentine Fourrier, Nikita Kazeev, Chaitanya K. Joshi, Sékou-Oumar Kaba, Félix Therrien, Alex Hernandez-Garcia, Rocío Mercado, N. M. Anoop Krishnan, and Alexandre Duval. LeMat-GenBench: A unified evaluation framework for crystal generative models. arXiv preprint arXiv:2512.04562, 2025.
+
+Carion et al. (2020) Nicolas Carion, Francisco Massa, Gabriel Synnaeve, Nicolas Usunier, Alexander Kirillov, and Sergey Zagoruyko. End-to-end object detection with transformers. In Computer Vision – ECCV 2020 , volume 12346 of Lecture Notes in Computer Science , pp. 213–229. Springer, 2020. doi: 10.1007/978-3-030-58452-8_13 .
+
+Chang et al. (2025) Rees Chang, Angela Pak, Alex Guerra, Ni Zhan, Nick Richardson, Elif Ertekin, and Ryan P. Adams. Space group equivariant crystal diffusion. In Advances in Neural Information Processing Systems , volume 38, 2025.
+
+Chang et al. (2026) Rees Chang, Andrew Novick, Ryan P. Adams, and Elif Ertekin. SLayerGen: a crystal generative model for all space and layer groups. arXiv preprint arXiv:2605.08262, 2026.
+
+Christopher et al. (2024) Jacob K. Christopher, Stephen Baek, and Ferdinando Fioretto. Constrained synthesis with projected diffusion models. In Advances in Neural Information Processing Systems , volume 37, 2024.
+
+Deng et al. (2023) Bowen Deng, Peichen Zhong, KyuJung Jun, Janosh Riebesell, Kevin Han, Christopher J. Bartel, and Gerbrand Ceder. CHGNet as a pretrained universal neural network potential for charge-informed atomistic modelling. Nature Machine Intelligence , 5:1031–1041, 2023. doi: 10.1038/s42256-023-00716-3 .
+
+Ekström Kelvinius et al. (2025) Filip Ekström Kelvinius, Oskar B. Andersson, Abhijith S. Parackal, Dong Qian, Rickard Armiento, and Fredrik Lindsten. WyckoffDiff – a generative diffusion model for crystal symmetry. In Proceedings of the 42nd International Conference on Machine Learning (ICML) , 2025.
+
+Fredericks et al. (2021) Scott Fredericks, Kevin Parrish, Dean Sayre, and Qiang Zhu. PyXtal: A Python library for crystal structure generation and symmetry analysis. Computer Physics Communications , 261:107810, 2021. doi: 10.1016/j.cpc.2020.107810 .
+
+Goodall et al. (2022) Rhys E. A. Goodall, Abhijith S. Parackal, Felix A. Faber, Rickard Armiento, and Alpha A. Lee. Rapid discovery of stable materials by coordinate-free coarse graining. Science Advances , 8(30):eabn4117, 2022. doi: 10.1126/sciadv.abn4117 .
+
+Ho et al. (2020) Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. In Advances in Neural Information Processing Systems , volume 33, 2020.
+
+Jain et al. (2013) Anubhav Jain, Shyue Ping Ong, Geoffroy Hautier, Wei Chen, William Davidson Richards, Stephen Dacek, Shreyas Cholia, Dan Gunter, David Skinner, Gerbrand Ceder, and Kristin A. Persson. Commentary: The Materials Project: A materials genome approach to accelerating materials innovation. APL Materials , 1(1):011002, 2013. doi: 10.1063/1.4812323 .
+
+Jiao et al. (2023) Rui Jiao, Wenbing Huang, Peijia Lin, Jiaqi Han, Pin Chen, Yutong Lu, and Yang Liu. Crystal structure prediction by joint equivariant diffusion. In Advances in Neural Information Processing Systems , volume 36, 2023.
+
+Jiao et al. (2024) Rui Jiao, Wenbing Huang, Yu Liu, Deli Zhao, and Yang Liu. Space group constrained crystal generation. In International Conference on Learning Representations (ICLR) , 2024.
+
+Kazeev et al. (2025) Nikita Kazeev, Wei Nong, Ignat Romanov, Ruiming Zhu, Andrey E Ustyuzhanin, Shuya Yamazaki, and Kedar Hippalgaonkar. Wyckoff transformer: Generation of symmetric crystals. In Forty-second International Conference on Machine Learning , 2025. URL https://openreview.net/forum?id=eFHfRQRjJo .
+
+Levy et al. (2025) Daniel Levy, Siba Smarak Panigrahi, Sékou-Oumar Kaba, Qiang Zhu, Kin Long Kelvin Lee, Mikhail Galkin, Santiago Miret, and Siamak Ravanbakhsh. SymmCD: Symmetry-preserving crystal generation with diffusion models. In International Conference on Learning Representations (ICLR) , 2025.
+
+Loshchilov & Hutter (2019) Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. In International Conference on Learning Representations , 2019. URL https://openreview.net/forum?id=Bkg6RiCqY7 .
+
+Miller et al. (2024) Benjamin Kurt Miller, Ricky T. Q. Chen, Anuroop Sriram, and Brandon M. Wood. FlowMM: Generating materials with Riemannian flow matching. In Proceedings of the 41st International Conference on Machine Learning (ICML) , 2024.
+
+Nisonoff et al. (2025) Hunter Nisonoff, Junhao Xiong, Stephan Allenspach, and Jennifer Listgarten. Unlocking guidance for discrete state-space diffusion and flow models. In International Conference on Learning Representations (ICLR) , 2025.
+
+Ong et al. (2013) Shyue Ping Ong, William Davidson Richards, Anubhav Jain, Geoffroy Hautier, Michael Kocher, Shreyas Cholia, Dan Gunter, Vincent L. Chevrier, Kristin A. Persson, and Gerbrand Ceder. Python Materials Genomics (pymatgen): A robust, open-source Python library for materials analysis. Computational Materials Science , 68:314–319, 2013. doi: 10.1016/j.commatsci.2012.10.028 .
+
+Perez et al. (2018) Ethan Perez, Florian Strub, Harm de Vries, Vincent Dumoulin, and Aaron Courville. FiLM: Visual reasoning with a general conditioning layer. In Proceedings of the AAAI Conference on Artificial Intelligence , 2018.
+
+Ruple et al. (2026) Laura Ruple, Luca Torresi, Henrik Schopmans, and Pascal Friederich. Symmetry-aware Bayesian flow networks for crystal generation. npj Computational Materials , 12:182, 2026. doi: 10.1038/s41524-026-02140-8 .
+
+Togo et al. (2024) Atsushi Togo, Kohei Shinohara, and Isao Tanaka. Spglib: a software library for crystal symmetry search. Science and Technology of Advanced Materials: Methods , 4(1):2384822, 2024. doi: 10.1080/27660400.2024.2384822 .
+
+Vaswani et al. (2017) Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. In Advances in Neural Information Processing Systems , volume 30, pp. 5998–6008, 2017.
+
+Wu et al. (2023) Luhuan Wu, Brian L. Trippe, Christian A. Naesseth, David M. Blei, and John P. Cunningham. Practical and asymptotically exact conditional sampling in diffusion models. In Advances in Neural Information Processing Systems , volume 36, 2023.
+
+Xie et al. (2022) Tian Xie, Xiang Fu, Octavian-Eugen Ganea, Regina Barzilay, and Tommi Jaakkola. Crystal diffusion variational autoencoder for periodic material generation. In International Conference on Learning Representations (ICLR) , 2022.
+
+Zeni et al. (2025) Claudio Zeni, Robert Pinsler, Daniel Zügner, Andrew Fowler, Matthew Horton, Xiang Fu, Zilong Wang, Aliaksandra Shysheya, Jonathan Crabbé, Shoko Ueda, Roberto Sordillo, Lixin Sun, Jake Smith, Bichlien Nguyen, Hannes Schulz, Sarah Lewis, Chin-Wei Huang, Ziheng Lu, Yichi Zhou, Han Yang, Hongxia Hao, Jielan Li, Chunlei Yang, Wenjie Li, Ryota Tomioka, and Tian Xie. A generative model for inorganic materials design. Nature , 639:624–632, 2025. doi: 10.1038/s41586-025-08628-5 .
+
+Zhang & Sennrich (2019) Biao Zhang and Rico Sennrich. Root mean square layer normalization. In Advances in Neural Information Processing Systems , volume 32, 2019.
+
+Appendix A Symbolic State Space and Legality
+
+This appendix defines the finite state space of the symbolic model and the legal clean states used by the decoder.
+
+A.1 Symbolic state space
+
+Let
+
+$\mathcal{G}=\{G:n_{G}^{\mathrm{train}}>0\}$
+
+be the model vocabulary of 168 training-supported space groups. Using PyXtal’s space group and Wyckoff position tables ( Fredericks et al., 2021 ) , we construct the crystallographic row catalogue and associated symmetry operations for all 230 space groups, with $\mathcal{R}_{G}$ denoting the valid Wyckoff rows of group $G$ . Across this catalogue there are 1,731 valid $(G,r)$ pairs, and the row table for each space group is padded to width 27.
+
+The symbolic state uses $M=20$ orbit slots. A clean state has
+
+$G\in\mathcal{G},\qquad K\in\{1,\ldots,M\},\qquad\sum_{i=1}^{M}m_{i}=K.$
+
+Each active slot has $r_{i}\in\mathcal{R}_{G}$ and carries a categorical element label $Z_{i}\in\mathcal{Z}$ , while inactive slots use separate PAD symbols. Noisy states replace the row index by the continuous row vector $y_{i}$ defined in Appendix B .
+
+A.2 Crystallographic tables
+
+The symbolic and geometry stages share the following crystallographic metadata for each valid $(G,r)$ :
+
+Symbol Meaning $\mu_{G,r}$ multiplicity in the conventional cell $\operatorname{dof}_{G,r}$ number of free anchor coordinates $s_{G,r}$ site-symmetry label $e_{G,r}$ enumeration within $(G,s_{G,r})$
+
+The valid-row mask restricts every space-group-conditional row distribution to $\mathcal{R}_{G}$ . Multiplicity enters the atom-count constraint, while the remaining metadata parameterize the shared symmetry codebook and the geometry model. The configuration-specific capacity $u_{G,r}$ is defined below.
+
+A.3 Capacity and legal clean states
+
+For the canonical DynaCrys configuration, let $q_{0.99}^{\mathrm{train}}(G,r)$ be the 99th percentile of the within-structure repetition count of row $(G,r)$ , computed on the training partition. Let $b_{G,r}=\lfloor N_{\max}/\mu_{G,r}\rfloor$ be the largest occupation compatible with a cap of $N_{\max}=80$ atoms in the conventional cell. The resulting capacity is
+
+$u_{G,r}=\begin{cases}0,&r\notin\mathcal{R}_{G},\\ 1,&\operatorname{dof}_{G,r}=0\text{ or }q_{0.99}^{\mathrm{train}}(G,r)\text{ is unavailable},\\ \displaystyle\max\!\left\{1,\,\min\!\left(\left\lceil q_{0.99}^{\mathrm{train}}(G,r)\right\rceil,\,b_{G,r}\right)\right\},&\text{otherwise}.\end{cases}$ (11)
+
+The alternative reported configurations use the multiplicity-based capacity rule in Appendix D.4 ; Table 5 records the configuration differences.
+
+Write a padded clean state as $x_{0}=(G,K,A,R,Z)$ , where $A\subseteq\{1,\ldots,M\}$ is the active-slot set and $R=(r_{i})_{i\in A}$ , $Z=(Z_{i})_{i\in A}$ . Define the number of active occupations assigned to row $r$ by
+
+$n_{r}(A,R)=\sum_{i\in A}\mathbf{1}[r_{i}=r].$
+
+For a chosen capacity table $u$ , the legal clean-state set in Eq. ( 7 ) is
+
+$\mathcal{X}_{\mathrm{legal}}\equiv\mathcal{X}_{\mathrm{legal}}(u)=\left\{\begin{aligned} &(G,K,A,R,Z):\quad G\in\mathcal{G},\quad|A|=K,\\ &(r_{i},Z_{i})\in\mathcal{R}_{G}\times\mathcal{Z}\quad\forall i\in A,\\ &n_{r}(A,R)\leq u_{G,r}\quad\forall r\in\mathcal{R}_{G},\\ &\displaystyle\sum_{i\in A}\mu_{G,r_{i}}\leq N_{\max}\end{aligned}\right\}.$ (12)
+
+Appendix B Forward Corruption Kernels
+
+The symbolic forward process is a family of marginal kernels $q_{t}(x_{t}\mid x_{0})$ . At each noise level it samples
+
+$G_{t}\longrightarrow K_{t}\longrightarrow\text{survivor--birth--PAD partition}\longrightarrow\{(m_{i,t},Z_{i,t},y_{i,t})\}_{i=1}^{M}.$
+
+The same family is used for training-time corruption and reverse-time re-noising.
+
+B.1 Training priors
+
+All reset and birth distributions are estimated on the training partition. Writing $n_{G}$ , $n_{G,r}$ , and $n_{Z}$ for the corresponding counts,
+
+$\pi_{G}(G)=\frac{n_{G}}{\sum_{G^{\prime}\in\mathcal{G}}n_{G^{\prime}}},\qquad\pi_{Z}(Z)=\frac{n_{Z}}{\sum_{Z^{\prime}\in\mathcal{Z}}n_{Z^{\prime}}}.$ (13)
+
+The row prior is smoothed within the valid vocabulary of each group:
+
+$\pi_{R}(r\mid G)=\frac{n_{G,r}+1}{\sum_{r^{\prime}\in\mathcal{R}_{G}}(n_{G,r^{\prime}}+1)},\qquad r\in\mathcal{R}_{G}.$ (14)
+
+For the orbit count, let $\widehat{p}_{\mathrm{train}}(K\mid G)$ and $\widehat{p}_{\mathrm{train}}(K)$ be the space-group-conditional and global empirical distributions. We use
+
+$\pi_{K}(K\mid G)=(1-\rho_{G})\widehat{p}_{\mathrm{train}}(K\mid G)+\rho_{G}\widehat{p}_{\mathrm{train}}(K),\qquad\rho_{G}=\frac{\alpha_{K}}{n_{G}+\alpha_{K}},\quad\alpha_{K}=20.$ (15)
+
+Here $\alpha_{K}=20$ is a smoothing pseudo-count controlling shrinkage toward the global orbit-count distribution.
+
+B.2 Space-group graph and kernel
+
+The graph on $\mathcal{G}$ contains the maximal translationengleiche and klassengleiche group–subgroup relations, with edge directions removed and self-relations omitted. Let $A$ be its adjacency matrix, $\widetilde{A}=A+I$ , $D=\operatorname{diag}(\widetilde{A}\mathbf{1})$ , and
+
+$W_{\mathcal{G}}=D^{-1}\widetilde{A},\qquad Q=W_{\mathcal{G}}-I,\qquad R_{s}=\exp\!\left(\beta_{\max}sQ\right),\quad\beta_{\max}=4,$ (16)
+
+where $s=t/T$ . The space-group channel is
+
+$q_{t}^{G}(G_{t}\mid G_{0})=\lambda_{G}(s)R_{s}(G_{t}\mid G_{0})+\bigl[1-\lambda_{G}(s)\bigr]\pi_{G}(G_{t}).$ (17)
+
+B.3 Orbit-count and slot channels
+
+Given the sampled group, the orbit count follows
+
+$q_{t}^{K}(K_{t}\mid K_{0},G_{t})=\lambda_{K}(s)\delta_{K_{0}}(K_{t})+\bigl[1-\lambda_{K}(s)\bigr]\pi_{K}(K_{t}\mid G_{t}).$ (18)
+
+The number of surviving clean occupations is
+
+$S_{t}\sim\operatorname{Binomial}\!\left(\min(K_{0},K_{t}),\,\alpha_{S}(s)\right).$ (19)
+
+The $S_{t}$ survivors are matched to distinct clean occupations sampled uniformly without replacement. Together with $K_{t}-S_{t}$ births, they are placed uniformly among the $M$ slots; the remaining slots are PAD.
+
+Let $c_{G,r}$ and $c_{\mathrm{pad}}$ be the row and padding vectors of the shared codebook in Appendix C . For each slot,
+
+$y_{i,t}=\mu_{i,t}+\sigma_{y}(s)\epsilon_{i},\qquad\epsilon_{i}\sim\mathcal{N}(0,I_{d}),$ (20)
+
+with
+
+$\mu_{i,t}=\begin{cases}\sqrt{\bar{\alpha}_{y}(s)}\,c_{G_{0},r_{i}^{0}},&\text{survivor matched to }r_{i}^{0},\\ c_{G_{t},r_{i}^{\mathrm{birth}}},\quad r_{i}^{\mathrm{birth}}\sim\pi_{R}(\cdot\mid G_{t}),&\text{birth},\\ c_{\mathrm{pad}},&\text{PAD}.\end{cases}$ (21)
+
+At survivor slots, elements follow
+
+$q_{t}^{Z}(Z_{i,t}\mid Z_{i}^{0})=\alpha_{Z}(s)\delta_{Z_{i}^{0}}(Z_{i,t})+\bigl[1-\alpha_{Z}(s)\bigr]\pi_{Z}(Z_{i,t}).$ (22)
+
+Birth elements are drawn from $\pi_{Z}$ , while PAD slots carry the element PAD symbol.
+
+B.4 Schedules and terminal prior
+
+The discrete channels share a quadratic retention schedule, and the row channel uses a cosine signal schedule:
+
+$\displaystyle\lambda_{G}(s)=\lambda_{K}(s)=\alpha_{S}(s)=\alpha_{Z}(s)=(1-s)^{2},$ (23) $\displaystyle\bar{\alpha}_{y}(s)=\cos^{2}\!\left(\frac{\pi s}{2}\right),\qquad\sigma_{y}(s)=\sqrt{1-\bar{\alpha}_{y}(s)}.$
+
+Here $\bar{\alpha}_{y}(s)$ is the retained row-signal power and $\sigma_{y}(s)$ is the row-noise scale. The training horizon is $T=1000$ ; at generation time, the reverse sampler operates at 200 noise levels arranged in descending order along this schedule.
+
+At $s=1$ , all clean-state retention terms vanish. The terminal state can therefore be sampled directly as
+
+$\displaystyle G_{T}\sim\pi_{G},\qquad K_{T}\sim\pi_{K}(\cdot\mid G_{T}),\qquad A_{T}\sim\operatorname{Unif}\{A\subseteq\{1,\ldots,M\}:|A|=K_{T}\},$ (24) $\displaystyle r_{i,T}\sim\pi_{R}(\cdot\mid G_{T}),\qquad Z_{i,T}\sim\pi_{Z},\qquad y_{i,T}=c_{G_{T},r_{i,T}}+\epsilon_{i}\quad(i\in A_{T}).$
+
+Here $m_{i,T}=\mathbf{1}[i\in A_{T}]$ . On PAD slots, $y_{i,T}=c_{\mathrm{pad}}+\epsilon_{i}$ , and $Z_{i,T}$ is the element PAD symbol. This distribution contains no dependence on $x_{0}$ and is the starting distribution of the reverse sampler.
+
+Appendix C Shared Symmetry Codebook
+
+The codebook maps space groups and space-group-specific Wyckoff rows into a common vector space. It is constructed once, frozen, and shared by the symbolic and geometry stages.
+
+C.1 Space-group and row representations
+
+For a symmetry operation $g=(R\mid\tau)$ in the fractional-coordinate basis, define
+
+$\phi(g)=\left[\operatorname{vec}(R),\,\tau\bmod 1,\,\det R,\,\operatorname{tr}R\right]\in\mathbb{R}^{14}.$ (25)
+
+A shared operation encoder $e_{\phi}$ maps these features to $\mathbb{R}^{d}$ . Let $S_{G}$ denote the operation set of space group $G$ . A learned map $f_{G}$ produces the space-group embedding from the pooled operation features:
+
+$c_{G}=f_{G}\!\left[\operatorname{mean}_{g\in S_{G}}e_{\phi}(g)\;\middle\|\;\operatorname{max}_{g\in S_{G}}e_{\phi}(g)\right].$ (26)
+
+For row $r$ , let $\mathcal{C}_{G,r}$ be its orbit-generating coset representatives and $\mathcal{H}_{G,r}$ the stabilizer of its representative. A learned map $f_{R}$ produces the row embedding from the space-group embedding, operation-derived features, and row metadata:
+
+$\displaystyle c_{G,r}=f_{R}\Big[$ $\displaystyle c_{G},\,\operatorname{mean}_{g\in\mathcal{C}_{G,r}}e_{\phi}(g),\,\operatorname{mean}_{g\in\mathcal{H}_{G,r}}e_{\phi}(g),$ (27) $\displaystyle\operatorname{emb}(\mu_{G,r}),\,\operatorname{emb}(\operatorname{dof}_{G,r}),\,\operatorname{emb}(s_{G,r}),\,\operatorname{emb}(e_{G,r})\Big].$
+
+Here $e_{G,r}$ enumerates rows within the same $(G,\text{site-symmetry})$ class. The codebook width is $d=128$ , and each metadata embedding has width 16. A separately initialized $c_{\mathrm{pad}}$ represents padded rows.
+
+C.2 Pretraining and freezing
+
+Pretraining has two stages. The first fits deterministic crystallographic labels from operation-derived representations. From $c_{G}$ , the model predicts the space-group type, crystal system, centering, and point group; an operation-only row representation predicts the number of free coordinates and the site-symmetry label. The sum of these cross-entropies is denoted by $\mathcal{L}_{\mathrm{struct}}$ .
+
+The second stage freezes the symmetry-operation encoder and the space-group encoder and refines the modules that construct the row embeddings. A row center is corrupted with the row-channel cosine schedule in Eq. ( 23 ),
+
+$\widetilde{c}_{G,r}=\sqrt{\bar{\alpha}_{y}(s)}\,c_{G,r}+\sqrt{1-\bar{\alpha}_{y}(s)}\,\epsilon,\qquad\epsilon\sim\mathcal{N}(0,I_{d}),$
+
+and retrieved among the valid rows of the same group with a cosine-softmax loss
+
+$\mathcal{L}_{\mathrm{retr}}=-\log\frac{\exp\!\left(\cos(\widetilde{c}_{G,r},c_{G,r})/\tau_{\mathrm{retr}}\right)}{\displaystyle\sum_{r^{\prime}\in\mathcal{R}_{G}}\exp\!\left(\cos(\widetilde{c}_{G,r},c_{G,r^{\prime}})/\tau_{\mathrm{retr}}\right)},$
+
+where $\tau_{\mathrm{retr}}$ is the retrieval temperature. Distinct rows within a group are separated by
+
+$\mathcal{L}_{\mathrm{sep}}=\underset{\begin{subarray}{c}G,\ r\neq r^{\prime}\\ r,r^{\prime}\in\mathcal{R}_{G}\end{subarray}}{\operatorname{mean}}\left[\operatorname{ReLU}\!\left(\cos(c_{G,r},c_{G,r^{\prime}})-m\right)\right]^{2}.$ (28)
+
+The second-stage objective is
+
+$\mathcal{L}_{\mathrm{cb}}=\mathcal{L}_{\mathrm{retr}}+\lambda_{\mathrm{sep}}\mathcal{L}_{\mathrm{sep}}.$ (29)
+
+The shared training settings are summarized below.
+
+Setting Value operation / codebook width 128 / 128 metadata width 16 steps per stage 3,000 optimizer AdamW ( Loshchilov & Hutter, 2019 ) with cosine decay learning rate $3\times 10^{-3}$ stage-1 / stage-2 weight decay 0 / 0.01 retrieval temperature / noise draws 0.1 / 4 separation margin $m$ / weight $\lambda_{\mathrm{sep}}$ 0.5 / 1
+
+After training, every nonzero vector is normalized as
+
+$c\leftarrow\sqrt{d}\,\frac{c}{\lVert c\rVert_{2}},$ (30)
+
+so each vector has unit root-mean-square coordinate magnitude. The resulting $c_{G}$ , $c_{G,r}$ , and $c_{\mathrm{pad}}$ tables are frozen.
+
+C.3 Use in DynaCrys
+
+The frozen $c_{G_{t}}$ represents the current noisy space group in the symbolic denoiser. The row vectors $c_{G,r}$ serve both as centers of the continuous row channel and as the tied vectors of the space-group-conditional row head. The accepted $c_{G}$ and $c_{G,r}$ also condition the geometry model. The three reported DynaCrys configurations and their geometry stage use the same frozen codebook.
+
+Appendix D Symbolic Denoiser and Training
+
+This appendix specifies the set denoiser, its prediction heads, and the objective summarized in Section 4.2 .
+
+D.1 Permutation-equivariant set denoiser
+
+The noisy state is encoded as one global token and $M$ orbit-slot tokens:
+
+$h_{\mathrm{global}}^{\mathrm{in}}=\mathrm{MLP}\!\left[c_{G_{t}},e_{K_{t}},e_{t}\right],\qquad h_{i}^{\mathrm{in}}=\mathrm{MLP}\!\left[e_{m_{i}},e_{Z_{i}},y_{i},e_{t},c_{G_{t}}\right].$ (31)
+
+Here $e_{t}$ is a sinusoidal time embedding passed through an MLP. A Transformer encoder processes the tokens without slot positional encodings. Its slot outputs are therefore equivariant to permutations of the orbit occupations, while the global output is invariant to those permutations.
+
+Linear heads on the global output predict $G_{0}$ and $K_{0}$ . A slot-wise active head predicts whether each output corresponds to an occupied orbit or padding. The remaining slot heads predict its Wyckoff row and element.
+
+D.2 Row and element heads
+
+For a candidate space group $G$ , the row head classifies only over $\mathcal{R}_{G}$ . Its logits are tied to the shared codebook with RMS normalization ( Zhang & Sennrich, 2019 ) :
+
+$\displaystyle\ell_{i,r}^{(G)}=\frac{\widehat{q}_{i}^{\top}\widehat{c}_{G,r}}{\tau}+b_{G,r},$ (32) $\displaystyle\widehat{q}_{i}=\operatorname{normalize}\!\left(\operatorname{RMSNorm}(W_{q}h_{i})+g_{y}(t)\lambda_{y}\operatorname{RMSNorm}(y_{i})\right),$
+
+where $\widehat{c}_{G,r}=\operatorname{normalize}(c_{G,r})$ , $\tau$ and $\lambda_{y}$ are learned scalars, $b_{G,r}$ is a row bias, $s=t/T$ , and $g_{y}(t)=\sqrt{\bar{\alpha}_{y}(s)}$ . The invalid-row logits are masked before the row-wise softmax. During training, the clean space group $G_{0}$ determines the row vocabulary $\mathcal{R}_{G_{0}}$ ; during sampling, the row head is evaluated over $\mathcal{R}_{G}$ for each proposed clean space group $G$ .
+
+The element head conditions its logits on the selected $(G,r)$ through feature-wise linear modulation (FiLM) ( Perez et al., 2018 ) :
+
+$\ell_{i}^{Z}(G,r)=\left[1+\gamma_{\mathrm{raw}}(c_{G,r})\right]\odot W_{Z}h_{i}+\beta(c_{G,r}),$ (33)
+
+where a shared MLP produces $\gamma_{\mathrm{raw}}$ and $\beta$ from the row code. The modulation is initialized at the identity. Its regularizer is
+
+$\mathcal{L}_{\mathrm{FiLM}}=\lambda_{\mathrm{FiLM}}\,\frac{1}{|\mathcal{Z}|}\underset{(G,r)\ \mathrm{valid}}{\operatorname{mean}}\left(\lVert\gamma_{\mathrm{raw}}(c_{G,r})\rVert_{2}^{2}+\lVert\beta(c_{G,r})\rVert_{2}^{2}\right).$ (34)
+
+Here $|\mathcal{Z}|$ is the element vocabulary size.
+
+D.3 Set objective and assignment
+
+The clean-state prediction loss is
+
+$\displaystyle\mathcal{L}_{\mathrm{sym}}={}$ $\displaystyle\mathcal{L}_{G}+w_{K}\mathcal{L}_{K}+w_{m}\mathcal{L}_{\mathrm{mask}}+w_{r}\mathcal{L}_{r}+w_{Z}\mathcal{L}_{Z}$ (35) $\displaystyle+s_{\mathrm{aux}}\left(w_{\mathrm{cap}}\mathcal{L}_{\mathrm{cap}}+w_{N}\mathcal{L}_{N}+w_{\mathrm{comp}}\mathcal{L}_{\mathrm{comp}}\right).$
+
+The global losses are the clean-target cross-entropies $\mathcal{L}_{G}=-\log p_{\theta}(G_{0}\mid x_{t})$ and $\mathcal{L}_{K}=-\log p_{\theta}(K_{0}\mid x_{t})$ for the predicted space-group and orbit-count distributions, respectively. For the slot losses, a Hungarian assignment aligns the $M$ predictions with the $K_{0}$ clean occupations and $M-K_{0}$ padding targets. The assignment cost is
+
+$\displaystyle C_{\mathrm{occ}}(i,j)=-w_{m}\log\sigma(a_{i})-w_{r}\log p_{i}(r_{j}\mid G_{0})-w_{Z}\log p_{i}(Z_{j}\mid G_{0},r_{j}),$ (36) $\displaystyle C_{\mathrm{pad}}(i)=-w_{m}\log\!\left(1-\sigma(a_{i})\right).$
+
+After assignment, $\mathcal{L}_{\mathrm{mask}}$ is the binary cross-entropy between each slot’s active-state prediction and its matched target. The losses $\mathcal{L}_{r}$ and $\mathcal{L}_{Z}$ are cross-entropies between the predicted row and element distributions and their respective clean targets over the matched occupied slots.
+
+The auxiliary losses are computed from the expected row occupations $\widehat{n}_{r}=\sum_{i}p_{i}^{\mathrm{act}}p_{i}(r\mid G_{0})$ :
+
+$\displaystyle\begin{aligned} &\mathcal{L}_{\mathrm{cap}}=\sum_{r}\operatorname{ReLU}\!\left(\widehat{n}_{r}-u_{G_{0},r}\right)^{2},\\ &\mathcal{L}_{N}=(\widehat{N}-N_{\mathrm{sym},0})^{2},\\ &\text{where}\quad\widehat{N}=\sum_{i}p_{i}^{\mathrm{act}}\sum_{r}p_{i}(r\mid G_{0})\mu_{G_{0},r}.\end{aligned}$ (37) $\displaystyle\begin{aligned} &\mathcal{L}_{\mathrm{comp}}=\sum_{a}(\widehat{C}_{a}-C_{0,a})^{2},\\ &\text{where}\quad\widehat{C}_{a}=\sum_{i}p_{i}^{\mathrm{act}}\sum_{r}p_{i}(r\mid G_{0})\mu_{G_{0},r}p_{i}(a\mid G_{0},r).\end{aligned}$ (38)
+
+Here $u_{G_{0},r}$ is the permitted occupation count, $\mu_{G_{0},r}$ is the Wyckoff multiplicity, and $\widehat{N}$ and $N_{\mathrm{sym},0}$ are the expected and clean conventional-cell atom counts, respectively. Likewise, $\widehat{C}_{a}$ and $C_{0,a}$ are the expected and clean multiplicity-weighted counts of element $a$ . The decoder in Appendix E separately enforces the row-capacity limits and its fixed atom-count cap.
+
+D.4 Training settings
+
+The symbolic denoiser is trained with Eq. ( 35 ). The row-conditioned element head is then refined while all other parameters are frozen, using
+
+$\mathcal{L}_{\mathrm{refine}}=\mathcal{L}_{\mathrm{sym}}+\mathcal{L}_{\mathrm{FiLM}}.$ (39)
+
+The reported configurations differ only in their capacity rule and symbolic training schedule. Under the multiplicity-based rule, a valid row has capacity
+
+$u_{G,r}^{\mathrm{mult}}=\begin{cases}1,&\operatorname{dof}_{G,r}=0,\\ \max\!\left\{1,\left\lfloor N_{\max}/\mu_{G,r}\right\rfloor\right\},&\operatorname{dof}_{G,r}>0.\end{cases}$
+
+Table 5 summarizes the differences.
+
+Configuration Capacity rule Backbone steps Element-head steps DynaCrys training-set 99th percentile 100,000 20,000 DynaCrys-B multiplicity-based 100,000 20,000 DynaCrys-C multiplicity-based 150,000 40,000
+
+Table 6 lists the architecture and optimization settings shared by all three configurations.
+
+Architecture Value Optimization Value hidden width 512 optimizer AdamW layers / attention heads 8 / 8 peak learning rate $3\times 10^{-4}$ FFN width / dropout $4d_{h}$ / 0 weight decay / grad. clip 0.01 / 1.0 time / $K$ / mask / element emb. 128 / 32 / 16 / 64 batch size 256 orbit slots $M$ 20 learning-rate schedule 2,000-step warmup; cosine to $0.05\times$ peak FiLM hidden width 128 core loss weights $w_{K}=w_{m}=w_{r}=w_{Z}=1$ auxiliary ramp 5,000 steps auxiliary weights $w_{\mathrm{cap}}=0.1,\ w_{N}=w_{\mathrm{comp}}=0.01$ $\lambda_{\mathrm{FiLM}}$ $10^{-4}$
+
+Appendix E Legality-Constrained Decoding
+
+E.1 Constrained target
+
+Fix a noisy state $x_{t}$ , and abbreviate the denoiser outputs in Eq. ( 4 ) as $p_{G}(G)$ , $p_{K}(K)$ , active probabilities $\pi_{i}$ , row distributions $p_{i}(r\mid G)$ , and element conditionals $p_{i}(Z\mid G,r)$ . For a clean symbolic state $x_{0}=(G,K,A,\mathbf{r},\mathbf{Z})$ with active-slot set $A\subseteq\{1,\ldots,M\}$ , the factorized joint distribution is
+
+$p_{\theta}^{\mathrm{fac}}(x_{0}\mid x_{t})=p_{G}(G)\,p_{K}(K)\prod_{i\in A}\pi_{i}\,p_{i}(r_{i}\mid G)\,p_{i}(Z_{i}\mid G,r_{i})\prod_{i\notin A}(1-\pi_{i}).$ (40)
+
+Its joint score is $S_{\theta}(x_{0}\mid x_{t})=\log p_{\theta}^{\mathrm{fac}}(x_{0}\mid x_{t})$ . Given the legal set $\mathcal{X}_{\mathrm{legal}}$ from Section 4.3 , the stochastic decoder targets the constrained distribution
+
+$\widetilde{p}_{\theta}(x_{0}\mid x_{t})=\frac{p_{\theta}^{\mathrm{fac}}(x_{0}\mid x_{t})\mathbf{1}[x_{0}\in\mathcal{X}_{\mathrm{legal}}]}{\sum_{x\in\mathcal{X}_{\mathrm{legal}}}p_{\theta}^{\mathrm{fac}}(x\mid x_{t})}.$ (41)
+
+For the decoder comparison, we use a constrained maximum a posteriori (MAP) comparator that retains the top five candidates under $p_{G}$ and $p_{K}$ , respectively, and performs deterministic constrained search over the resulting $G$ – $K$ pairs.
+
+E.2 Elementary-symmetric stochastic proposal
+
+Write $\omega_{i}=\pi_{i}/(1-\pi_{i})=\exp(a_{i})$ , where $a_{i}$ is the active logit. The elementary symmetric polynomial
+
+$e_{k}(\boldsymbol{\omega})=\sum_{\begin{subarray}{c}A\subseteq\{1,\ldots,M\}\\ |A|=k\end{subarray}}\prod_{i\in A}\omega_{i}$ (42)
+
+normalizes the distribution over size- $k$ active sets. It is evaluated by the recursion
+
+$F_{i}(k)=F_{i+1}(k)+\omega_{i}F_{i+1}(k-1),\qquad F_{M+1}(0)=1,\quad F_{M+1}(k>0)=0,$ (43)
+
+for which $F_{1}(k)=e_{k}(\boldsymbol{\omega})$ . The same table gives the conditional inclusion probability
+
+$\Pr(i\in A\mid k\text{ active slots remain})=\frac{\omega_{i}F_{i+1}(k-1)}{F_{i}(k)}.$ (44)
+
+The proposal draws $G\sim p_{G}$ , draws $K$ with probability proportional to $p_{K}(K)e_{K}(\boldsymbol{\omega})$ , draws $A$ from
+
+$q(A\mid K)=\frac{\prod_{i\in A}\omega_{i}}{e_{K}(\boldsymbol{\omega})}\quad\text{for }|A|=K,$ (45)
+
+and then draws each $r_{i}\sim p_{i}(\cdot\mid G)$ .
+
+E.3 Exactness
+
+We prove Proposition 1 . Let $s=(G,K,A,\mathbf{r})$ denote the symbolic skeleton, and let $\mathcal{S}_{\mathrm{legal}}$ be the projection of $\mathcal{X}_{\mathrm{legal}}$ onto these variables. Because $\sum_{Z\in\mathcal{Z}}p_{i}(Z\mid G,r_{i})=1$ for every occupied slot, marginalizing Eq. ( 40 ) over $\mathbf{Z}$ gives
+
+$p_{\theta}^{\mathrm{skel}}(s\mid x_{t})=c_{0}\,p_{G}(G)\,p_{K}(K)\prod_{i\in A}\omega_{i}\,p_{i}(r_{i}\mid G),\qquad c_{0}=\prod_{i=1}^{M}(1-\pi_{i}).$ (46)
+
+Let $Z_{K}=\sum_{k}p_{K}(k)e_{k}(\boldsymbol{\omega})$ . One proposal attempt has density
+
+$\displaystyle q(s)$ $\displaystyle=p_{G}(G)\frac{p_{K}(K)e_{K}(\boldsymbol{\omega})}{Z_{K}}\frac{\prod_{i\in A}\omega_{i}}{e_{K}(\boldsymbol{\omega})}\prod_{i\in A}p_{i}(r_{i}\mid G)$ $\displaystyle=\frac{p_{\theta}^{\mathrm{skel}}(s\mid x_{t})}{Z_{K}c_{0}}.$ (47)
+
+The elementary-symmetric factors therefore cancel, and the proposal is proportional to the unconstrained skeleton marginal. Conditioning an attempt on $s\in\mathcal{S}_{\mathrm{legal}}$ cancels the remaining constant:
+
+$\Pr(s\mid s\in\mathcal{S}_{\mathrm{legal}})=\frac{p_{\theta}^{\mathrm{skel}}(s\mid x_{t})\mathbf{1}[s\in\mathcal{S}_{\mathrm{legal}}]}{\sum_{s^{\prime}\in\mathcal{S}_{\mathrm{legal}}}p_{\theta}^{\mathrm{skel}}(s^{\prime}\mid x_{t})}.$ (48)
+
+After acceptance, drawing each element from $p_{i}(\cdot\mid G,r_{i})$ restores the full joint distribution in Eq. ( 41 ). Thus the accepted output is an exact sample from the constrained target without evaluating its global normalizer.
+
+E.4 Sampling procedure
+
+For each reverse step, the elementary-symmetric table is computed once. For at most $R$ attempts, the decoder draws $(G,K,A,\mathbf{r})$ from the proposal above and checks whether the resulting skeleton lies in $\mathcal{S}_{\mathrm{legal}}$ . On acceptance, it draws $\mathbf{Z}$ from the element conditionals and returns the complete clean symbolic state; otherwise it redraws the entire skeleton. If none of the $R$ attempts is accepted, the decoder reports a rejection to the reverse sampler.
+
+E.5 Decoder comparison
+
+$e_{\mathrm{hull}}\leq 0$ $e_{\mathrm{hull}}\leq 0.1$ Decoder U (rel.) $\uparrow$ N (rel.) $\uparrow$ RelStab $\uparrow$ SUN $\uparrow$ RelStab $\uparrow$ SUN $\uparrow$ Med. $e_{\mathrm{hull}}$ $\downarrow$ Stochastic constrained $96.74$ $84.32$ $13.34$ $9.34$ $58.65$ $41.89$ $0.0706$ Constrained MAP $84.71$ $76.02$ $16.57$ $8.02$ $62.90$ $33.48$ $0.0543$
+
+Table 7 compares the two decoders using the same trained symbolic checkpoint. Stochastic constrained decoding gives higher uniqueness and novelty, as well as higher SUN rates at both stability thresholds. Constrained MAP instead gives higher RelStab at both thresholds and a lower median $e_{\mathrm{hull}}$ . This pattern reflects a mode-seeking trade-off: constrained MAP concentrates outputs in a more stable region, whereas stochastic decoding retains higher uniqueness and novelty and yields higher SUN rates.
+
+Appendix F Symmetry-Constrained Geometry Generation
+
+The geometry model receives an accepted protostructure $P=(G,K,\{(Z_{i},r_{i})\}_{i=1}^{K})$ from the symbolic stage and generates a lattice together with the free fractional coordinates of its occupied Wyckoff orbits. Its symmetry-constrained diffusion of the lattice representation and orbit-anchor coordinates builds on DiffCSP++ ( Jiao et al., 2024 ) . Here $G$ determines the lattice subspace, each $r_{i}$ determines the orbit chart and expansion operators, and the denoiser receives the corresponding element and shared-codebook embeddings.
+
+F.1 Geometry denoiser
+
+The denoiser is an atom-level message-passing network over the expanded unit cell. Periodicity enters through Fourier features of fractional-coordinate differences and the current lattice representation. The network also receives the diffusion time and protostructure conditioning. It produces a coordinate denoising field for every atom and a pooled lattice-noise prediction.
+
+F.2 Lattice diffusion under crystal-family constraints
+
+Let $b\in\mathbb{R}^{6}$ be the coordinates of $\log\sqrt{LL^{\top}}$ in an orthonormal basis for symmetric matrices. This rotation-invariant representation is projected onto the crystal-family subspace associated with $G$ by the affine map $\Pi_{G}(b)=\Pi_{G}^{\mathrm{lin}}b+d_{G}$ . The forward process is
+
+$b_{t}=\Pi_{G}\!\left(\sqrt{\bar{\alpha}_{t}}\,b_{0}+\sqrt{1-\bar{\alpha}_{t}}\,\epsilon\right),\qquad\epsilon_{G}=\Pi_{G}^{\mathrm{lin}}\epsilon,\quad\epsilon\sim\mathcal{N}(0,I),$ (49)
+
+and the lattice head minimizes
+
+$\mathcal{L}_{\mathrm{lat}}=\mathbb{E}\left[\left\lVert\epsilon_{G}-\widehat{\epsilon}_{\theta}(b_{t},X_{t},P,t)\right\rVert_{2}^{2}\right].$ (50)
+
+Projection is applied after every noising and reverse update. With the usual DDPM notation ( Ho et al., 2020 ) , the reverse step is
+
+$b_{t-1}=\Pi_{G}\!\left[\frac{1}{\sqrt{\alpha_{t}}}\left(b_{t}-\frac{1-\alpha_{t}}{\sqrt{1-\bar{\alpha}_{t}}}\,\widehat{\epsilon}_{\theta}\right)+\sigma_{t}z\right],\qquad\sigma_{t}^{2}=\beta_{t}\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_{t}}.$ (51)
+
+F.3 Anchor-coordinate score matching
+
+Each occupied Wyckoff orbit is parameterized by one anchor coordinate. Its Wyckoff affine operators deterministically expand that anchor into the full orbit. During training, coordinate noise and denoising targets are projected onto the free anchor coordinates; during sampling, the predicted field is projected in the same way before the updated anchors are re-expanded.
+
+Let $u_{\mathrm{wn}}^{*}(X_{t},X_{0};\sigma_{t})$ denote the wrapped-normal denoising target on the fractional-coordinate torus under the adopted noise normalization, and let $\Pi_{\mathcal{A}(P)}$ project a full-cell field to the anchor chart defined by $P$ . The coordinate objective is
+
+$\mathcal{L}_{\mathrm{coord}}=\mathbb{E}\left[\left\lVert\Pi_{\mathcal{A}(P)}\left(\widehat{u}_{\theta}(X_{t},b_{t},P,t)-u_{\mathrm{wn}}^{*}(X_{t},X_{0};\sigma_{t})\right)\right\rVert_{2}^{2}\right].$ (52)
+
+The reverse process uses a coordinate corrector followed by a joint predictor step for the lattice and coordinates. After each update, orbit expansion reconstructs the complete unit cell, so every intermediate structure obeys the generated space group.
+
+F.4 Architecture and training settings
+
+The geometry model is trained on the conventional-cell lattice and orbit anchors of each training structure. Table 8 lists the settings used by DynaCrys and its smaller size variant, DynaCrys-small.
+
+Architecture Value Optimization / diffusion Value DynaCrys width / layers 512 / 6 optimizer AdamW DynaCrys-small width / layers 256 / 4 learning rate / weight decay $10^{-3}$ / $10^{-2}$ batch size / grad. clip 128 / 1.0 warmup / training-step budget 500 / 60,000 lattice schedule cosine, 1,000 levels coordinate noise range $[0.005,0.5]$ , 1,000 levels corrector coefficient $10^{-5}$
+
+Appendix G Evaluation Protocol
+
+This appendix specifies the common evaluation chain summarized in Section 5.1 . All cross-method values are computed from generated structures.
+
+G.1 Relaxation and downstream analysis
+
+Benchmark and generation budget.
+
+We evaluate crystal generation on MP-20 ( Xie et al., 2022 ) . The training partition is the novelty reference and the test partition is the coverage reference. Each method contributes approximately 10,000 candidates. The fixed generation budget is 10,000 per run except for WyFormer, whose released set contains 9,999 structures.
+
+Relaxation and stability.
+
+Structures are relaxed without symmetry constraints. CHGNet ( Deng et al., 2023 ) is the primary relaxation engine, and the same as-generated structures are independently re-relaxed and analyzed with MACE-MP-0 ( Batatia et al., 2025 ) . They define two separate evaluation rulers: values are compared across methods within an engine, not across engines. Energy above the convex hull is evaluated against a fixed, MP2020-corrected DFT hull snapshot from the Materials Project ( Jain et al., 2013 ) , dated 2023-02-07. We use thresholds $\tau\in\{0,0.1\}$ eV/atom and summarize the relaxed population by median $e_{\mathrm{hull}}$ .
+
+Matching and symmetry.
+
+Structural novelty is evaluated against the MP-20 training partition and uniqueness within each generated set using pymatgen’s StructureMatcher ( Ong et al., 2013 ) with ltol $=0.2$ , stol $=0.3$ , and angle_tol $=5^{\circ}$ . Coverage uses the MP-20 test partition. Space groups are identified from the relaxed structures with spglib ( Togo et al., 2024 ) through SpacegroupAnalyzer , using symprec $=0.1$ Å and angle_tolerance $=5^{\circ}$ . SSUN counts only structures successfully identified as non- $P1$ .
+
+G.2 Metrics and accounting
+
+For a threshold $\tau$ , RelStab@ $\tau$ counts relaxed structures with $e_{\mathrm{hull}}\leq\tau$ , SUN@ $\tau$ additionally requires uniqueness and novelty, and SSUN@ $\tau$ further requires a non- $P1$ space group.
+
+For each geometry-relaxed structure, a template key comprises the re-identified space group and the multiset of occupied conventional Wyckoff rows; element labels are excluded. Template U.N. counts the distinct keys absent from the MP-20 training-template reference.
+
+The RMSD analysis pairs each as-generated structure with its relaxed endpoint using the MatterGen-style matching protocol ( Zeni et al., 2025 ) . The main-text mean RMSD is averaged over pairs for which a structural correspondence is found; the matched percentage uses all evaluated pairs as its denominator. The CHGNet and MACE-MP-0 endpoint pairs are formed and summarized independently.
+
+G.3 Evaluation runs and aggregation
+
+SGEquiDiff and each reported DynaCrys configuration are evaluated over five independent sampling runs and summarized by the arithmetic mean of the per-run metrics, without pooling structures across runs. When dispersion is reported, it is the sample standard deviation of those per-run values. The other baselines are single evaluated sets.
+
+G.4 Timing
+
+Sampling time covers each method’s complete generation procedure through the as-generated structure. For DynaCrys, this includes both symbolic generation and symmetry-constrained geometry generation. Time per structure is elapsed generation time divided by the number of requested structures. All timed methods are measured on the same machine with one NVIDIA H100 GPU and 32 physical CPU cores. The baseline timing runs contain 2,000 structures; comparisons are restricted to methods for which this same-machine measurement is available.
+
+G.5 Symmetry sensitivity
+
+Table 9 applies the SSUN symmetry gate with the spglib detection tolerance symprec set to $0.01$ , $0.05$ , or $0.1$ Å, while angle_tolerance remains fixed at $5^{\circ}$ . Relaxed structures and their stability, uniqueness, and novelty labels remain fixed; only space-group re-identification changes. Across both evaluation rulers and stability thresholds, SSUN varies by less than one percentage point over this range, and the ordering of the three configurations is unchanged.
+
+SSUN@0 SSUN@0.1 Configuration 0.01 0.05 0.1 0.01 0.05 0.1 CHGNet endpoint DynaCrys 9.19 9.28 9.31 39.35 39.94 40.12 DynaCrys-B 9.15 9.22 9.24 38.60 39.10 39.32 DynaCrys-C 9.04 9.09 9.10 39.20 39.70 39.87 MACE-MP-0 endpoint DynaCrys 9.41 9.43 9.44 37.04 37.16 37.24 DynaCrys-B 9.17 9.18 9.19 36.52 36.62 36.69 DynaCrys-C 9.51 9.53 9.53 37.53 37.62 37.67
+
+Appendix H Additional Evaluation Results
+
+H.1 Across-run variability
+
+The main-text tables report means so that multi-run methods and single evaluated sets share the same presentation. Table H.1 provides the corresponding sample standard deviations for methods evaluated over five sampling runs. Each panel uses the same metric definition and evaluation ruler as its main-text counterpart.
+
+CHGNet discovery and energy Method SUN@0 SSUN@0 SUN@0.1 SSUN@0.1 Med. $e_{\mathrm{hull}}$ SGEquiDiff $8.45\mathbin{\pm}0.34$ $8.31\mathbin{\pm}0.35$ $38.00\mathbin{\pm}0.32$ $36.38\mathbin{\pm}0.36$ $0.0819\mathbin{\pm}0.0011$ DynaCrys $9.39\mathbin{\pm}0.14$ $9.31\mathbin{\pm}0.12$ $41.49\mathbin{\pm}0.34$ $40.12\mathbin{\pm}0.25$ $0.0719\mathbin{\pm}0.0013$ DynaCrys-B $9.34\mathbin{\pm}0.32$ $9.24\mathbin{\pm}0.33$ $40.76\mathbin{\pm}0.46$ $39.32\mathbin{\pm}0.47$ $0.0729\mathbin{\pm}0.0006$ DynaCrys-C $9.18\mathbin{\pm}0.30$ $9.10\mathbin{\pm}0.29$ $41.32\mathbin{\pm}0.51$ $39.87\mathbin{\pm}0.52$ $0.0599\mathbin{\pm}0.0027$ DynaCrys-small $9.23\mathbin{\pm}0.14$ $9.16\mathbin{\pm}0.14$ $40.89\mathbin{\pm}0.11$ $39.54\mathbin{\pm}0.13$ $0.0742\mathbin{\pm}0.0019$
+
+MACE-MP-0 discovery and energy Method SUN@0 SSUN@0 SUN@0.1 SSUN@0.1 Med. $e_{\mathrm{hull}}$ SGEquiDiff $9.11\mathbin{\pm}0.23$ $8.98\mathbin{\pm}0.24$ $35.28\mathbin{\pm}0.27$ $34.51\mathbin{\pm}0.28$ $0.0883\mathbin{\pm}0.0006$ DynaCrys $9.55\mathbin{\pm}0.36$ $9.44\mathbin{\pm}0.37$ $38.17\mathbin{\pm}0.32$ $37.24\mathbin{\pm}0.33$ $0.0796\mathbin{\pm}0.0017$ DynaCrys-B $9.26\mathbin{\pm}0.40$ $9.19\mathbin{\pm}0.39$ $37.59\mathbin{\pm}0.66$ $36.69\mathbin{\pm}0.58$ $0.0803\mathbin{\pm}0.0012$ DynaCrys-C $9.61\mathbin{\pm}0.45$ $9.53\mathbin{\pm}0.45$ $38.69\mathbin{\pm}0.53$ $37.67\mathbin{\pm}0.62$ $0.0616\mathbin{\pm}0.0027$
+
+Primary-ruler validity, symmetry, templates, and coverage Method Struct. Comp. Template U.N. Eff. SGs Cov.R Cov.P SGEquiDiff $99.50\mathbin{\pm}0.10$ $86.13\mathbin{\pm}0.43$ $14.02\mathbin{\pm}0.12$ $49.25\mathbin{\pm}0.66$ $99.76\mathbin{\pm}0.04$ $99.14\mathbin{\pm}0.06$ DynaCrys $99.97\mathbin{\pm}0.01$ $83.36\mathbin{\pm}0.19$ $12.59\mathbin{\pm}0.25$ $47.60\mathbin{\pm}0.51$ $99.71\mathbin{\pm}0.05$ $99.31\mathbin{\pm}0.10$ DynaCrys-B $99.97\mathbin{\pm}0.01$ $82.77\mathbin{\pm}0.33$ $13.19\mathbin{\pm}0.33$ $46.86\mathbin{\pm}0.54$ $99.70\mathbin{\pm}0.05$ $99.32\mathbin{\pm}0.03$ DynaCrys-C $99.95\mathbin{\pm}0.02$ $83.30\mathbin{\pm}0.54$ $10.91\mathbin{\pm}0.29$ $47.73\mathbin{\pm}0.24$ $99.70\mathbin{\pm}0.07$ $99.42\mathbin{\pm}0.07$
+
+Primary-ruler distributions and relaxed stability Method $d_{\rho}$ $d_{N_{\mathrm{el}}}$ RelStab@0 RelStab@0.1 SGEquiDiff $0.2766\mathbin{\pm}0.0182$ $0.0983\mathbin{\pm}0.0086$ $12.39\mathbin{\pm}0.29$ $54.65\mathbin{\pm}0.27$ DynaCrys $0.2102\mathbin{\pm}0.0409$ $0.0585\mathbin{\pm}0.0093$ $13.54\mathbin{\pm}0.28$ $58.32\mathbin{\pm}0.50$ DynaCrys-B $0.2035\mathbin{\pm}0.0493$ $0.0581\mathbin{\pm}0.0084$ $13.59\mathbin{\pm}0.50$ $57.82\mathbin{\pm}0.22$ DynaCrys-C $0.2462\mathbin{\pm}0.0423$ $0.0539\mathbin{\pm}0.0075$ $14.28\mathbin{\pm}0.44$ $62.68\mathbin{\pm}0.96$
+
+CHGNet MACE-MP-0 Method Mean RMSD Matched (%) Mean RMSD Matched (%) SGEquiDiff $0.1901\mathbin{\pm}0.0019$ $91.38\mathbin{\pm}0.10$ $0.1916\mathbin{\pm}0.0021$ $90.22\mathbin{\pm}0.25$ DynaCrys $0.1717\mathbin{\pm}0.0029$ $96.18\mathbin{\pm}0.21$ $0.1735\mathbin{\pm}0.0018$ $95.43\mathbin{\pm}0.22$ DynaCrys-B $0.1722\mathbin{\pm}0.0033$ $96.05\mathbin{\pm}0.20$ $0.1739\mathbin{\pm}0.0030$ $95.34\mathbin{\pm}0.22$ DynaCrys-C $0.1641\mathbin{\pm}0.0026$ $96.65\mathbin{\pm}0.25$ $0.1655\mathbin{\pm}0.0031$ $95.87\mathbin{\pm}0.30$
+
+H.2 Space-group distribution
+
+Table 2 summarizes the breadth of the generated space-group distribution through Eff. SGs. Figure 3 shows the corresponding distribution for the canonical DynaCrys configuration, whose samples span a broad set of space groups.
+
+Appendix I Penalty-Inclusive RMSD
+
+Table 11 complements the matched-pair mean in Table 3 . When the common matcher does not recover a correspondence, the penalty-inclusive mean assigns that pair the finite cap used by the common MatterGen-style evaluator before averaging. The resulting quantity retains every evaluated pair while using the same as-generated structures and relaxation endpoints as the main-text RMSD comparison.
+
+Method CHGNet MACE-MP-0 Without explicit symmetry representation DiffCSP $0.2140$ $0.2466$ MatterGen $0.1017$ $0.1085$ FlowMM $0.2685$ $0.3037$ With explicit symmetry representation DiffCSP++ $0.2550$ $0.2678$ SymmCD $0.5034$ $0.5126$ WyFormer $0.2363$ $0.2402$ SGEquiDiff $0.2824\mathbin{\pm}0.0019$ $0.2971\mathbin{\pm}0.0009$ DynaCrys $0.2111\mathbin{\pm}0.0031$ $0.2213\mathbin{\pm}0.0030$ DynaCrys-B $0.2131\mathbin{\pm}0.0049$ $0.2224\mathbin{\pm}0.0049$ DynaCrys-C $0.1991\mathbin{\pm}0.0044$ $0.2092\mathbin{\pm}0.0044$
+
+Appendix J Geometry-Step Sensitivity
+
+To isolate the geometry schedule, we reuse the canonical DynaCrys symbolic samples and geometry checkpoint while varying only the number of reverse steps.
+
+The moderately shortened schedule remains close to the full schedule, whereas more aggressive reductions sharply reduce SUN rates at both stability thresholds. We therefore use the full geometry reverse schedule in the reported configurations.
+
+Appendix K Dynamic Space-Group Coupling
+
+At each reverse step, DynaCrys predicts the clean space-group factor $p_{\theta}(G_{0}\mid x_{t})$ from the current symbolic state. Marginal- $G$ replaces this state-dependent factor with the training-set marginal at every reverse step, while the legality constraints and the remaining generation process are unchanged:
+
+$p_{\theta}(G_{0}\mid x_{t})\;\longrightarrow\;\pi_{G}(G_{0}).$ (53)
+
+Configuration SUN@0 (%) $\uparrow$ SUN@0.1 (%) $\uparrow$ RelStab@0 (%) $\uparrow$ RelStab@0.1 (%) $\uparrow$ Med. $e_{\mathrm{hull}}$ $\downarrow$ DynaCrys $9.28\rightarrow 3.01$ $41.08\rightarrow 22.13$ $13.11\rightarrow 3.12$ $57.85\rightarrow 22.95$ $0.0726\rightarrow 0.2052$ DynaCrys-B $9.79\rightarrow 3.68$ $41.35\rightarrow 21.34$ $13.95\rightarrow 3.80$ $58.08\rightarrow 22.24$ $0.0724\rightarrow 0.2233$ DynaCrys-C $9.46\rightarrow 3.20$ $42.20\rightarrow 20.78$ $14.80\rightarrow 3.30$ $63.74\rightarrow 21.90$ $0.0573\rightarrow 0.2339$
+
+Marginal- $G$ lowers SUN and RelStab at both thresholds and raises median $e_{\mathrm{hull}}$ for all three configurations. This consistent degradation supports coupling the space-group update to the evolving symbolic state.

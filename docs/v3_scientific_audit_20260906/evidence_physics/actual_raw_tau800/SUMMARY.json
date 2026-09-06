@@ -1,0 +1,132 @@
+{
+  "schema": "saved_physics_lane_audit_v1",
+  "model_calls": 0,
+  "relaxations": 0,
+  "new_samples": 0,
+  "input_sha256": {
+    "docs\\v3_scientific_audit_20260906\\evidence\\physics_inputs\\raw_tau800.labels.jsonl": "c53815ab8a56a664f0d25911ed5ff83bde31f6a52d19f863a689938b2543cb8d",
+    "docs\\v3_scientific_audit_20260906\\evidence\\physics_inputs\\raw_tau800.paths.jsonl": "3f2e7765ba9d16524ea74197140d080607b1b17672319230adc9c635f45b0a0f"
+  },
+  "thresholds": {
+    "force_eV_A": 0.1,
+    "entrywise_stress_GPa": 0.5,
+    "max_steps": 500,
+    "distance_A": 0.49999999
+  },
+  "counters": {
+    "labels": 256,
+    "verified": 91,
+    "optimizer_true_force_pass_stress_above": 140,
+    "optimizer_true_force_pass_stress_above_below_500": 139,
+    "optimizer_true_force_pass_stress_above_zero": 1
+  },
+  "stop_crossings": [
+    {
+      "optimizer_converged": "missing",
+      "step_bucket": "missing",
+      "force": "missing",
+      "stress": "missing",
+      "status": "generation_failure",
+      "count": 1
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "above",
+      "stress": "above",
+      "status": "not_converged",
+      "count": 12
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "above",
+      "stress": "pass",
+      "status": "not_converged",
+      "count": 12
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "pass",
+      "stress": "above",
+      "status": "not_converged",
+      "count": 139
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "pass",
+      "stress": "pass",
+      "status": "verified",
+      "count": 85
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "zero",
+      "force": "pass",
+      "stress": "above",
+      "status": "not_converged",
+      "count": 1
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "zero",
+      "force": "pass",
+      "stress": "pass",
+      "status": "verified",
+      "count": 6
+    }
+  ],
+  "fresh_representation_checks": [
+    {
+      "representation": "shifted_geometry",
+      "force": "pass",
+      "stress": "pass",
+      "labelled_verified": true,
+      "count": 91
+    },
+    {
+      "representation": "stored_geometry",
+      "force": "pass",
+      "stress": "pass",
+      "labelled_verified": true,
+      "count": 91
+    },
+    {
+      "representation": "wrapped_geometry",
+      "force": "pass",
+      "stress": "pass",
+      "labelled_verified": true,
+      "count": 91
+    }
+  ],
+  "image_audit": [
+    {
+      "stage": "raw",
+      "status": "audited",
+      "missed_radius2_violation": false,
+      "count": 255
+    },
+    {
+      "stage": "raw",
+      "status": "saved_geometry_missing",
+      "missed_radius2_violation": false,
+      "count": 1
+    },
+    {
+      "stage": "terminal",
+      "status": "audited",
+      "missed_radius2_violation": false,
+      "count": 255
+    },
+    {
+      "stage": "terminal",
+      "status": "saved_geometry_missing",
+      "missed_radius2_violation": false,
+      "count": 1
+    }
+  ],
+  "max_images_per_structure": 200000,
+  "claim_boundary": "Saved-artifact checks only; incomplete geometry/image searches are never labelled valid. No frozen evaluation result is changed."
+}

@@ -1,0 +1,1343 @@
+{
+  "sha": "9c25ff0245d787efd87c9d1d797a8968443608cc",
+  "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/9c25ff0245d787efd87c9d1d797a8968443608cc",
+  "tree": [
+    {
+      "path": ".env.template",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ea5bd7488c05a9c849e7855814e05a6810c6d7d",
+      "size": 63,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0ea5bd7488c05a9c849e7855814e05a6810c6d7d"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7769622197fadbdc45f72f822c3ed0c7a1eed130",
+      "size": 3159,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/7769622197fadbdc45f72f822c3ed0c7a1eed130"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0dc536a3691c53da989a41f60158bea84c00853",
+      "size": 2216,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/c0dc536a3691c53da989a41f60158bea84c00853"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a34be8eb569b25748fa409def2114310109a1379",
+      "size": 7643,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/a34be8eb569b25748fa409def2114310109a1379"
+    },
+    {
+      "path": "conf",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "55ca8832f68e47e11dded96de613edcd44962e56",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/55ca8832f68e47e11dded96de613edcd44962e56"
+    },
+    {
+      "path": "conf/data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8bdd133811b57ee950aef99edcdbabf21ab80e34",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/8bdd133811b57ee950aef99edcdbabf21ab80e34"
+    },
+    {
+      "path": "conf/data/Li-HCurve_sym.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b2f4317851abe06418c21b5e5410a2a09bf17bb",
+      "size": 2502,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3b2f4317851abe06418c21b5e5410a2a09bf17bb"
+    },
+    {
+      "path": "conf/data/alex_20.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "adcf0293b3d9fca26d29709032ee97e7c02333d1",
+      "size": 2536,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/adcf0293b3d9fca26d29709032ee97e7c02333d1"
+    },
+    {
+      "path": "conf/data/alex_20_eform.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "adcf0293b3d9fca26d29709032ee97e7c02333d1",
+      "size": 2536,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/adcf0293b3d9fca26d29709032ee97e7c02333d1"
+    },
+    {
+      "path": "conf/data/alex_20_ehull.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30f41dab2107cb7090464a65894affb252354d71",
+      "size": 2510,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/30f41dab2107cb7090464a65894affb252354d71"
+    },
+    {
+      "path": "conf/data/alex_ehull.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "86001c6089e95dcd4baa1b61f17d848d9b8a7b43",
+      "size": 2517,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/86001c6089e95dcd4baa1b61f17d848d9b8a7b43"
+    },
+    {
+      "path": "conf/data/alex_ene_by_hull.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e0fae884791c32398db5a9841ba7a9524a87f7f",
+      "size": 2530,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/6e0fae884791c32398db5a9841ba7a9524a87f7f"
+    },
+    {
+      "path": "conf/data/alex_mp_20_ehull.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6337d7f36c93a4d62c1c558c2bf705339a640257",
+      "size": 2492,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/6337d7f36c93a4d62c1c558c2bf705339a640257"
+    },
+    {
+      "path": "conf/data/calypso.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f44d0101b4cdb33fafdbf6651b4c3c8a5ef7c80",
+      "size": 2499,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/1f44d0101b4cdb33fafdbf6651b4c3c8a5ef7c80"
+    },
+    {
+      "path": "conf/data/calypso_60.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "75031c92c01a6a4d226e8017405137eb33d94d04",
+      "size": 2502,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/75031c92c01a6a4d226e8017405137eb33d94d04"
+    },
+    {
+      "path": "conf/data/calypso_60_sym.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2828829ed1c8d5f6c2d05078350fc92b9f393673",
+      "size": 2503,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/2828829ed1c8d5f6c2d05078350fc92b9f393673"
+    },
+    {
+      "path": "conf/data/carbon_24.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "424f01e85c63dbb0f95e73bd39e3332401f2c2dd",
+      "size": 2343,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/424f01e85c63dbb0f95e73bd39e3332401f2c2dd"
+    },
+    {
+      "path": "conf/data/mp_20.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6fb4f1c27b6e0be15dc7d3b957eaf2e4e6bb3602",
+      "size": 2505,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/6fb4f1c27b6e0be15dc7d3b957eaf2e4e6bb3602"
+    },
+    {
+      "path": "conf/data/mp_20_chgnet.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fcbdd092e821b6b24d420ad1913351916137e79",
+      "size": 2512,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/4fcbdd092e821b6b24d420ad1913351916137e79"
+    },
+    {
+      "path": "conf/data/mp_20_ehull.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f98715b21369aab8266398c022fd8749caa60c7",
+      "size": 2472,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/1f98715b21369aab8266398c022fd8749caa60c7"
+    },
+    {
+      "path": "conf/data/mp_20_sym.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d5322dd7d21fa772bcbff690d9dbf4dba0f7a94e",
+      "size": 2508,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/d5322dd7d21fa772bcbff690d9dbf4dba0f7a94e"
+    },
+    {
+      "path": "conf/data/mpts_52.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b3d80aa5ee0ffc2c8069b8b0ba53320aab8dd48",
+      "size": 2506,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/5b3d80aa5ee0ffc2c8069b8b0ba53320aab8dd48"
+    },
+    {
+      "path": "conf/data/mpts_52_sym.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc29c203c05582bbb67a4ebcb2b3515733086fe5",
+      "size": 2509,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/bc29c203c05582bbb67a4ebcb2b3515733086fe5"
+    },
+    {
+      "path": "conf/data/perov_5.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97dec7a729a1f8df17a62e8ec85c705b41caa455",
+      "size": 2342,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/97dec7a729a1f8df17a62e8ec85c705b41caa455"
+    },
+    {
+      "path": "conf/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3dccbd9e16fb65479fed50478d643af444f2c268",
+      "size": 610,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3dccbd9e16fb65479fed50478d643af444f2c268"
+    },
+    {
+      "path": "conf/hydra",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fd2d04a5690478a3f6e6b00ca3838944a8eb2c12",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/fd2d04a5690478a3f6e6b00ca3838944a8eb2c12"
+    },
+    {
+      "path": "conf/hydra/job_logging",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bf460d6faf18dcae0e2af173010c476f8cd4ff20",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/bf460d6faf18dcae0e2af173010c476f8cd4ff20"
+    },
+    {
+      "path": "conf/hydra/job_logging/custom.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "673885062a27932798136c725c1eaff695c0bb6d",
+      "size": 891,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/673885062a27932798136c725c1eaff695c0bb6d"
+    },
+    {
+      "path": "conf/logging",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "148082ae16438067bd7df091033504cbd3c79d76",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/148082ae16438067bd7df091033504cbd3c79d76"
+    },
+    {
+      "path": "conf/logging/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d27759c423e19879ea1a75c3f2ae65c150be18e5",
+      "size": 368,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/d27759c423e19879ea1a75c3f2ae65c150be18e5"
+    },
+    {
+      "path": "conf/model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "dfad05e67918fa1fb42c37a5ebff931cadc21840",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/dfad05e67918fa1fb42c37a5ebff931cadc21840"
+    },
+    {
+      "path": "conf/model/beta_scheduler",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c762538ddd3ad10994cae0deab8ff6970b366d23",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/c762538ddd3ad10994cae0deab8ff6970b366d23"
+    },
+    {
+      "path": "conf/model/beta_scheduler/cosine.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5fadee5ec4523e68ecf099b84cbc2f5039bf02a4",
+      "size": 106,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/5fadee5ec4523e68ecf099b84cbc2f5039bf02a4"
+    },
+    {
+      "path": "conf/model/conditions",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "003129406576662fd2dc6b5c80b7c1ba64f8f9ab",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/003129406576662fd2dc6b5c80b7c1ba64f8f9ab"
+    },
+    {
+      "path": "conf/model/conditions/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8e6a3d155d7b8dd87950786b454110de6103581",
+      "size": 2780,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/f8e6a3d155d7b8dd87950786b454110de6103581"
+    },
+    {
+      "path": "conf/model/decoder",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "14f6cdc67a6334c5b42c2543702b05db5a11a4b9",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/14f6cdc67a6334c5b42c2543702b05db5a11a4b9"
+    },
+    {
+      "path": "conf/model/decoder/cspnet.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28169eb716cc1331b55d3f7d1f5ae91dc9f2442d",
+      "size": 281,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/28169eb716cc1331b55d3f7d1f5ae91dc9f2442d"
+    },
+    {
+      "path": "conf/model/decoder/diffcsppp_cspnet.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de8b13ed41d5b8f0ccd3dd221d7084fee6336bbd",
+      "size": 282,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/de8b13ed41d5b8f0ccd3dd221d7084fee6336bbd"
+    },
+    {
+      "path": "conf/model/decoder/gemnet.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b8c0926dcb6d9cf47b3214238b4da6206fb9d22",
+      "size": 316,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3b8c0926dcb6d9cf47b3214238b4da6206fb9d22"
+    },
+    {
+      "path": "conf/model/diffcsppp_diffusion.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c3af9e439729fc8346bb881f5fab5b4d7b6bb54b",
+      "size": 388,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/c3af9e439729fc8346bb881f5fab5b4d7b6bb54b"
+    },
+    {
+      "path": "conf/model/diffcsppp_diffusion_w_type.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0eb62217ae3731a34bf4000af25cf1e13db65b8d",
+      "size": 409,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0eb62217ae3731a34bf4000af25cf1e13db65b8d"
+    },
+    {
+      "path": "conf/model/diffusion.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6a5bb787ee5add410e96e30cff61ddd65a49d61",
+      "size": 368,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/b6a5bb787ee5add410e96e30cff61ddd65a49d61"
+    },
+    {
+      "path": "conf/model/diffusion_w_type.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f11e0055cd1fdb404d3dcb3204eb81291805a48d",
+      "size": 389,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/f11e0055cd1fdb404d3dcb3204eb81291805a48d"
+    },
+    {
+      "path": "conf/model/energy.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51e75ed150795780b46e396403efe5b2338c4136",
+      "size": 399,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/51e75ed150795780b46e396403efe5b2338c4136"
+    },
+    {
+      "path": "conf/model/flow.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80f989389a7ac0953f0460aa8be3fc72e7f3d51f",
+      "size": 472,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/80f989389a7ac0953f0460aa8be3fc72e7f3d51f"
+    },
+    {
+      "path": "conf/model/flow_polar.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b53075b72268dc6f632086a7515b184a3cc092a8",
+      "size": 521,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/b53075b72268dc6f632086a7515b184a3cc092a8"
+    },
+    {
+      "path": "conf/model/flow_polar_w_type.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf1e05648073558d50da256e837375f0d7ce7744",
+      "size": 520,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/bf1e05648073558d50da256e837375f0d7ce7744"
+    },
+    {
+      "path": "conf/model/flow_w_type.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "354128681f55c73982dd1eb2d51ac398af824ba9",
+      "size": 486,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/354128681f55c73982dd1eb2d51ac398af824ba9"
+    },
+    {
+      "path": "conf/model/sigma_scheduler",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4400775333dac822bfa936b2cac72a080b66dc5a",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/4400775333dac822bfa936b2cac72a080b66dc5a"
+    },
+    {
+      "path": "conf/model/sigma_scheduler/wrapped.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "395caedd087ed3acbcd7212f98c933b9c142cdc3",
+      "size": 118,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/395caedd087ed3acbcd7212f98c933b9c142cdc3"
+    },
+    {
+      "path": "conf/optim",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b588da10571ab0da35530583fe4935e4c36e88d4",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/b588da10571ab0da35530583fe4935e4c36e88d4"
+    },
+    {
+      "path": "conf/optim/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c076b755775d4b4b54dd541e08e88b3121e53318",
+      "size": 89,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/c076b755775d4b4b54dd541e08e88b3121e53318"
+    },
+    {
+      "path": "conf/optim/lr_scheduler",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "720bbbdfc7b445bbdea0a6d06637e0d62f49e828",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/720bbbdfc7b445bbdea0a6d06637e0d62f49e828"
+    },
+    {
+      "path": "conf/optim/lr_scheduler/CosineAnnealingWarmRestarts.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "613a3d9955d50d2c26a30a40d033da95a84b7c45",
+      "size": 97,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/613a3d9955d50d2c26a30a40d033da95a84b7c45"
+    },
+    {
+      "path": "conf/optim/lr_scheduler/ReduceLROnPlateau.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51049bf2a9a53460268886b8cffc1400dabac331",
+      "size": 91,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/51049bf2a9a53460268886b8cffc1400dabac331"
+    },
+    {
+      "path": "conf/optim/optimizer",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "51db488bae28c1d7f4f430e2866e6f864f819231",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/51db488bae28c1d7f4f430e2866e6f864f819231"
+    },
+    {
+      "path": "conf/optim/optimizer/Adam.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d66d105487bfcc4519663b72a23d1ccdf288f93b",
+      "size": 176,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/d66d105487bfcc4519663b72a23d1ccdf288f93b"
+    },
+    {
+      "path": "conf/train",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e99fbfd5a695436966bbd18db532225582b9fc89",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/e99fbfd5a695436966bbd18db532225582b9fc89"
+    },
+    {
+      "path": "conf/train/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f99a4d0c4c00172e4e5bc5346e003b25415cd12",
+      "size": 621,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0f99a4d0c4c00172e4e5bc5346e003b25415cd12"
+    },
+    {
+      "path": "data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a9e14fa536ac31185e345bb67b8e33e45ab66116",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/a9e14fa536ac31185e345bb67b8e33e45ab66116"
+    },
+    {
+      "path": "data/carbon_24",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e94db147c4fff5d7fa52236c5aede932b8e6c8e1",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/e94db147c4fff5d7fa52236c5aede932b8e6c8e1"
+    },
+    {
+      "path": "data/carbon_24/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bf4df81530defe1e103ac080b3ebce127ca2bff",
+      "size": 5075854,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/1bf4df81530defe1e103ac080b3ebce127ca2bff"
+    },
+    {
+      "path": "data/carbon_24/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c6428f80e99040cbade289a3168590b226e6c76",
+      "size": 15214751,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0c6428f80e99040cbade289a3168590b226e6c76"
+    },
+    {
+      "path": "data/carbon_24/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "883bdfde2a30bc55536e31e96e9f1f648be2ebd8",
+      "size": 5068178,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/883bdfde2a30bc55536e31e96e9f1f648be2ebd8"
+    },
+    {
+      "path": "data/mp_20",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d86962b5fb9af6280db173b68765d9ff5087b243",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/d86962b5fb9af6280db173b68765d9ff5087b243"
+    },
+    {
+      "path": "data/mp_20/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "133f5697e1d3fd94f9bf0ab6a3b6c5054d325955",
+      "size": 26846148,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/133f5697e1d3fd94f9bf0ab6a3b6c5054d325955"
+    },
+    {
+      "path": "data/mp_20/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "206f82f8dd4d5ddf4d6e33ae2b2928dbba8a011a",
+      "size": 80920549,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/206f82f8dd4d5ddf4d6e33ae2b2928dbba8a011a"
+    },
+    {
+      "path": "data/mp_20/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6070ef70053415f6436eddc30f2f4137fcac19eb",
+      "size": 26864684,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/6070ef70053415f6436eddc30f2f4137fcac19eb"
+    },
+    {
+      "path": "data/mpts_52",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c00da7bb3f614b60c7b43fc85ea55778aef8f27c",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/c00da7bb3f614b60c7b43fc85ea55778aef8f27c"
+    },
+    {
+      "path": "data/mpts_52/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e8af159618f63be346b6527f155514323964423",
+      "size": 16358482,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/2e8af159618f63be346b6527f155514323964423"
+    },
+    {
+      "path": "data/mpts_52/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28c53b0a0fd3f32fb8078aca8e5b484e372790c6",
+      "size": 45705353,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/28c53b0a0fd3f32fb8078aca8e5b484e372790c6"
+    },
+    {
+      "path": "data/mpts_52/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a377ba0ca7bee37ee69d9f50f8362eaa35d9f690",
+      "size": 9941357,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/a377ba0ca7bee37ee69d9f50f8362eaa35d9f690"
+    },
+    {
+      "path": "data/perov_5",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bbc13e379441cffc7b79e0c0aa74760380e732ed",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/bbc13e379441cffc7b79e0c0aa74760380e732ed"
+    },
+    {
+      "path": "data/perov_5/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb97501bed31c8cdcb603f9b9c3a59842828c9d8",
+      "size": 7229328,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/cb97501bed31c8cdcb603f9b9c3a59842828c9d8"
+    },
+    {
+      "path": "data/perov_5/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62ce91686595d45d484d026bbfd14c2518b66abd",
+      "size": 21695296,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/62ce91686595d45d484d026bbfd14c2518b66abd"
+    },
+    {
+      "path": "data/perov_5/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "872fc814e6a513024cb923a0576d723fca25969c",
+      "size": 7233118,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/872fc814e6a513024cb923a0576d723fca25969c"
+    },
+    {
+      "path": "diffcsp",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "223804ab29744918b01b13b23ced0318dd0080f7",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/223804ab29744918b01b13b23ced0318dd0080f7"
+    },
+    {
+      "path": "diffcsp/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "diffcsp/common",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7aa0eeb6b25a34d4ef324b38fe2b816e5d20cfd6",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/7aa0eeb6b25a34d4ef324b38fe2b816e5d20cfd6"
+    },
+    {
+      "path": "diffcsp/common/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "diffcsp/common/constants.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "faa70853671c790afbfffed35f6b70f3f23e0f6a",
+      "size": 6317,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/faa70853671c790afbfffed35f6b70f3f23e0f6a"
+    },
+    {
+      "path": "diffcsp/common/data_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b607a0f4723e55fe436786de6a677591b624573f",
+      "size": 54148,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/b607a0f4723e55fe436786de6a677591b624573f"
+    },
+    {
+      "path": "diffcsp/common/gemnet",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9ef597e3e095a7782219ecdfc39e07b306317505",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/9ef597e3e095a7782219ecdfc39e07b306317505"
+    },
+    {
+      "path": "diffcsp/common/gemnet/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "diffcsp/common/gemnet/cgmanifest.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9e50fd5999ef2b57958f824ee84cefd327243085",
+      "size": 465,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/9e50fd5999ef2b57958f824ee84cefd327243085"
+    },
+    {
+      "path": "diffcsp/common/gemnet/gemnet-dT.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "98aac8b55c33dc42064a4e7d740e5ec298a48109",
+      "size": 925,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/98aac8b55c33dc42064a4e7d740e5ec298a48109"
+    },
+    {
+      "path": "diffcsp/common/gemnet/gemnet.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ae45412672cef9973b2b1d03dbef1c5c501c40fa",
+      "size": 28708,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/ae45412672cef9973b2b1d03dbef1c5c501c40fa"
+    },
+    {
+      "path": "diffcsp/common/gemnet/gemnet_ctrl.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3bbd5a7e2793488194b8e45418eb551d17bec455",
+      "size": 10544,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3bbd5a7e2793488194b8e45418eb551d17bec455"
+    },
+    {
+      "path": "diffcsp/common/gemnet/initializers.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a59f6bb492fa9fe07187896f90729364774e46c4",
+      "size": 1706,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/a59f6bb492fa9fe07187896f90729364774e46c4"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "af92478461abfcb222604c9752e7b2ed594dece4",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/af92478461abfcb222604c9752e7b2ed594dece4"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/atom_update_block.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f7df745ceae3779854670bbba85a064e72e19f32",
+      "size": 6903,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/f7df745ceae3779854670bbba85a064e72e19f32"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/base_layers.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c64e3bb4c5999ef1d31fb56b3ae558cb3d142a3",
+      "size": 3141,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/8c64e3bb4c5999ef1d31fb56b3ae558cb3d142a3"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/basis_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eba6b9fcf1d2cb62efda158642803e3320da0ab6",
+      "size": 10059,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/eba6b9fcf1d2cb62efda158642803e3320da0ab6"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/efficient.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "649a49d26d86d8fa14499106cc442901f533478a",
+      "size": 5223,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/649a49d26d86d8fa14499106cc442901f533478a"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/embedding_block.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd98ef931324b80911edcce72faac4236a4905cc",
+      "size": 2755,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/cd98ef931324b80911edcce72faac4236a4905cc"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/interaction_block.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e518faa4737305c8b21ddfb7a1fd679b39b29858",
+      "size": 10813,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e518faa4737305c8b21ddfb7a1fd679b39b29858"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/radial_basis.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8f1fb7f1afadb2f535442238825c980a8b1e667",
+      "size": 6081,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e8f1fb7f1afadb2f535442238825c980a8b1e667"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/scaling.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b9cd43f91b51dd0bd8227f5478406e46a39d4d0",
+      "size": 6071,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0b9cd43f91b51dd0bd8227f5478406e46a39d4d0"
+    },
+    {
+      "path": "diffcsp/common/gemnet/layers/spherical_basis.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c023879228de6c604aba3b89b1db0abb901b9f41",
+      "size": 3039,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/c023879228de6c604aba3b89b1db0abb901b9f41"
+    },
+    {
+      "path": "diffcsp/common/gemnet/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aa95ebd26099a8285e7d8bd1924b9ca7343f524d",
+      "size": 10535,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/aa95ebd26099a8285e7d8bd1924b9ca7343f524d"
+    },
+    {
+      "path": "diffcsp/common/lattice_score.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b46f502ee2893753dd6dd156a43fae253f3e24f5",
+      "size": 1633,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/b46f502ee2893753dd6dd156a43fae253f3e24f5"
+    },
+    {
+      "path": "diffcsp/common/ocp_graph_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "66f7497a83a0cb7573c945e5b07a86e91b00f952",
+      "size": 17484,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/66f7497a83a0cb7573c945e5b07a86e91b00f952"
+    },
+    {
+      "path": "diffcsp/common/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4215a5a2ea4f373bc91287777275607eb04b1a96",
+      "size": 3171,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/4215a5a2ea4f373bc91287777275607eb04b1a96"
+    },
+    {
+      "path": "diffcsp/finetune.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8919092e0dd88a4501c73708354944b3cfbd4f65",
+      "size": 302,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/8919092e0dd88a4501c73708354944b3cfbd4f65"
+    },
+    {
+      "path": "diffcsp/pl_data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "426942f71883cfd96aaa399b84f7448102afc454",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/426942f71883cfd96aaa399b84f7448102afc454"
+    },
+    {
+      "path": "diffcsp/pl_data/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "diffcsp/pl_data/datamodule.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9c3d9561567a680c08ac11edd1090cbfac64b0d",
+      "size": 6202,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/b9c3d9561567a680c08ac11edd1090cbfac64b0d"
+    },
+    {
+      "path": "diffcsp/pl_data/dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "694af61691f9429981894370b4603feb98a588c5",
+      "size": 9194,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/694af61691f9429981894370b4603feb98a588c5"
+    },
+    {
+      "path": "diffcsp/pl_modules",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bc93a8be397fdd8cfda127e020c1121aa2c6a16a",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/bc93a8be397fdd8cfda127e020c1121aa2c6a16a"
+    },
+    {
+      "path": "diffcsp/pl_modules/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "diffcsp/pl_modules/conditioning.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0b08a0223539d63724c03d05b49ebc31f5dbac23",
+      "size": 8563,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0b08a0223539d63724c03d05b49ebc31f5dbac23"
+    },
+    {
+      "path": "diffcsp/pl_modules/cspnet.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c6ffc852125fbe1809ff25b3e033b63fe7ad991",
+      "size": 20005,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/4c6ffc852125fbe1809ff25b3e033b63fe7ad991"
+    },
+    {
+      "path": "diffcsp/pl_modules/diff_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12a0d4378237d3e765005ca1adf8fec8f66ad56e",
+      "size": 3828,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/12a0d4378237d3e765005ca1adf8fec8f66ad56e"
+    },
+    {
+      "path": "diffcsp/pl_modules/diffcsppp_cspnet.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3944035e15d5bdc95eb732ea37b196f287a9cd28",
+      "size": 7350,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3944035e15d5bdc95eb732ea37b196f287a9cd28"
+    },
+    {
+      "path": "diffcsp/pl_modules/diffcsppp_diffusion.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe260b611972f7e517cc109729a512929cc139c8",
+      "size": 14252,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/fe260b611972f7e517cc109729a512929cc139c8"
+    },
+    {
+      "path": "diffcsp/pl_modules/diffcsppp_diffusion_w_type.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca11551b07489d7ac4bf10d44e0558eed02ea76c",
+      "size": 14283,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/ca11551b07489d7ac4bf10d44e0558eed02ea76c"
+    },
+    {
+      "path": "diffcsp/pl_modules/diffusion.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "464af834ece36dd233d747a90f1b92b7039a4d9e",
+      "size": 9860,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/464af834ece36dd233d747a90f1b92b7039a4d9e"
+    },
+    {
+      "path": "diffcsp/pl_modules/diffusion_w_type.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec3434ce05b23707c911dccb728faa74df8768d3",
+      "size": 10683,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/ec3434ce05b23707c911dccb728faa74df8768d3"
+    },
+    {
+      "path": "diffcsp/pl_modules/energy_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4800a63cd1a088508a1ed33ce7061e8a0f7db204",
+      "size": 16339,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/4800a63cd1a088508a1ed33ce7061e8a0f7db204"
+    },
+    {
+      "path": "diffcsp/pl_modules/flow.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "529f4431ac9ce587676ed43d4db8df50dee56c95",
+      "size": 36050,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/529f4431ac9ce587676ed43d4db8df50dee56c95"
+    },
+    {
+      "path": "diffcsp/pl_modules/flow_cls_guide.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "58fc3c05eac036ecbfee4049989818bfb97a222f",
+      "size": 14116,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/58fc3c05eac036ecbfee4049989818bfb97a222f"
+    },
+    {
+      "path": "diffcsp/pl_modules/flow_w_type.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6770eabd29c3f7f0aab31988efd6cd3e29837ab",
+      "size": 32154,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/d6770eabd29c3f7f0aab31988efd6cd3e29837ab"
+    },
+    {
+      "path": "diffcsp/pl_modules/gemnet.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c021eb94387a8a32b662d882de4567067dcbccb",
+      "size": 2787,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/8c021eb94387a8a32b662d882de4567067dcbccb"
+    },
+    {
+      "path": "diffcsp/pl_modules/gnn.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc553dc7b588d90911ef6afdd0fafe1438bc3f17",
+      "size": 13674,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/dc553dc7b588d90911ef6afdd0fafe1438bc3f17"
+    },
+    {
+      "path": "diffcsp/pl_modules/hungarian.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "644b85c361ae7f422883a6938200f07ff8b1e09f",
+      "size": 1553,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/644b85c361ae7f422883a6938200f07ff8b1e09f"
+    },
+    {
+      "path": "diffcsp/pl_modules/lattice",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "447ef7bb7105bf49cca0ef91f01efe8b6e80058e",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/447ef7bb7105bf49cca0ef91f01efe8b6e80058e"
+    },
+    {
+      "path": "diffcsp/pl_modules/lattice/crystal_family.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b77163eb0b37dc2017097f05cb9b69167c4995b",
+      "size": 3757,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/2b77163eb0b37dc2017097f05cb9b69167c4995b"
+    },
+    {
+      "path": "diffcsp/pl_modules/lattice/matrix.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3476820ae03afe9a217ff2264c5fe185795b1621",
+      "size": 706,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3476820ae03afe9a217ff2264c5fe185795b1621"
+    },
+    {
+      "path": "diffcsp/pl_modules/lattice_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "08479cb0e16f7007d65e84ca7f7fcd91416f105f",
+      "size": 3934,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/08479cb0e16f7007d65e84ca7f7fcd91416f105f"
+    },
+    {
+      "path": "diffcsp/pl_modules/model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "789d96198198f93f55a1a51eb3e6d0887f829bf6",
+      "size": 4764,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/789d96198198f93f55a1a51eb3e6d0887f829bf6"
+    },
+    {
+      "path": "diffcsp/pl_modules/ode_solvers.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db07ea8f558a983a0587acf5ab774570f75081a8",
+      "size": 1422,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/db07ea8f558a983a0587acf5ab774570f75081a8"
+    },
+    {
+      "path": "diffcsp/pl_modules/symmetrize.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1d0cdc0df787cf2ca3bea13d9ac078dcc436e6a",
+      "size": 1973,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/b1d0cdc0df787cf2ca3bea13d9ac078dcc436e6a"
+    },
+    {
+      "path": "diffcsp/pl_modules/time_scheduler.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c0822b89aa2a9f32ae7dd378a452221fb295eb7",
+      "size": 561,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/9c0822b89aa2a9f32ae7dd378a452221fb295eb7"
+    },
+    {
+      "path": "diffcsp/pl_modules/type_module.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10b9480dee1e9114a17c1281d9ca7273ba7e18ad",
+      "size": 8545,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/10b9480dee1e9114a17c1281d9ca7273ba7e18ad"
+    },
+    {
+      "path": "diffcsp/prop_models",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "dd31ff92edb0eecd9bbae34f6b1acfd2ad88106a",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/dd31ff92edb0eecd9bbae34f6b1acfd2ad88106a"
+    },
+    {
+      "path": "diffcsp/prop_models/carbon",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f6ad2be3cfc1d76f284a8084710fc25ffb343ea5",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/f6ad2be3cfc1d76f284a8084710fc25ffb343ea5"
+    },
+    {
+      "path": "diffcsp/prop_models/carbon/epoch=2364-step=56759.ckpt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2fb51fbfd42e4d320bdb5201b045d2f5faac25cf",
+      "size": 7606673,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/2fb51fbfd42e4d320bdb5201b045d2f5faac25cf"
+    },
+    {
+      "path": "diffcsp/prop_models/carbon/hparams.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb081ab6ffbdcabaeaa5c152309977180d657777",
+      "size": 3556,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/fb081ab6ffbdcabaeaa5c152309977180d657777"
+    },
+    {
+      "path": "diffcsp/prop_models/carbon/lattice_scaler.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d328a5761622220f4fe224cce7e0390611ed20d",
+      "size": 1063,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0d328a5761622220f4fe224cce7e0390611ed20d"
+    },
+    {
+      "path": "diffcsp/prop_models/carbon/prop_scaler.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "945c811b26f7928baa104f02dc090251548bdf69",
+      "size": 1063,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/945c811b26f7928baa104f02dc090251548bdf69"
+    },
+    {
+      "path": "diffcsp/prop_models/mp20",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b93e18b3a7cd613a87e4f9d06a3345d2c40a239c",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/b93e18b3a7cd613a87e4f9d06a3345d2c40a239c"
+    },
+    {
+      "path": "diffcsp/prop_models/mp20/epoch=839-step=89039.ckpt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2585071a29d602482a61332cb557a14d760067d9",
+      "size": 7606673,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/2585071a29d602482a61332cb557a14d760067d9"
+    },
+    {
+      "path": "diffcsp/prop_models/mp20/hparams.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "404decf6c14393c01c39027149b9276a27409842",
+      "size": 3558,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/404decf6c14393c01c39027149b9276a27409842"
+    },
+    {
+      "path": "diffcsp/prop_models/mp20/lattice_scaler.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d4ee9571da48f40836103b127a4988d62520ae2a",
+      "size": 1063,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/d4ee9571da48f40836103b127a4988d62520ae2a"
+    },
+    {
+      "path": "diffcsp/prop_models/mp20/prop_scaler.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "66c5f4f5092fc5c64c23a88bb4d61e037e56105d",
+      "size": 1063,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/66c5f4f5092fc5c64c23a88bb4d61e037e56105d"
+    },
+    {
+      "path": "diffcsp/prop_models/perovskite",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3e896d1fd3340f2efb06a28904dc6bc717ad47f2",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/3e896d1fd3340f2efb06a28904dc6bc717ad47f2"
+    },
+    {
+      "path": "diffcsp/prop_models/perovskite/epoch=2664-step=61294.ckpt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d44932a0939da5636dd2731caf65227aa6dfcb4",
+      "size": 7606673,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/4d44932a0939da5636dd2731caf65227aa6dfcb4"
+    },
+    {
+      "path": "diffcsp/prop_models/perovskite/hparams.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3702ec6ee56dd631b614fb42a597cab2f3be8586",
+      "size": 3550,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3702ec6ee56dd631b614fb42a597cab2f3be8586"
+    },
+    {
+      "path": "diffcsp/prop_models/perovskite/lattice_scaler.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3b94dab508dd5a19dbbc91d9052d63ea94c432ad",
+      "size": 1063,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3b94dab508dd5a19dbbc91d9052d63ea94c432ad"
+    },
+    {
+      "path": "diffcsp/prop_models/perovskite/prop_scaler.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2a49490d23378928d8b447542281f0f1f25f5287",
+      "size": 1063,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/2a49490d23378928d8b447542281f0f1f25f5287"
+    },
+    {
+      "path": "diffcsp/run.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0a69716cc2baf56570d52d431b2f9475561e595d",
+      "size": 14102,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/0a69716cc2baf56570d52d431b2f9475561e595d"
+    },
+    {
+      "path": "fig",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a361b22c869812e8fdf10d7c79aa9570308e0a01",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/a361b22c869812e8fdf10d7c79aa9570308e0a01"
+    },
+    {
+      "path": "fig/demo.gif",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1eebeb49eb31bb02b97bae08ef63ee2d1fc34f19",
+      "size": 6189166,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/1eebeb49eb31bb02b97bae08ef63ee2d1fc34f19"
+    },
+    {
+      "path": "fig/overview.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "184f71d0a3cc0a5712844aac2642c881c1bbcdc1",
+      "size": 1210093,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/184f71d0a3cc0a5712844aac2642c881c1bbcdc1"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0f42f9b1e9a3857da8694e67d40312dcb779f645",
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/trees/0f42f9b1e9a3857da8694e67d40312dcb779f645"
+    },
+    {
+      "path": "scripts/calypso_run_mlp.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8ac2147733f6c9114487b5f88acb2b70260e9781",
+      "size": 12674,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/8ac2147733f6c9114487b5f88acb2b70260e9781"
+    },
+    {
+      "path": "scripts/compute_metrics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3715e5eed2ac445185bfb2a00220f3a9e4bd62dd",
+      "size": 20575,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/3715e5eed2ac445185bfb2a00220f3a9e4bd62dd"
+    },
+    {
+      "path": "scripts/compute_metrics_rec.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "407a1d42c2a0a80f881972cf9c684c18e744449f",
+      "size": 3133,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/407a1d42c2a0a80f881972cf9c684c18e744449f"
+    },
+    {
+      "path": "scripts/eval_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3f639ae8822367ed2252136003af34a9eac9c55",
+      "size": 11759,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/a3f639ae8822367ed2252136003af34a9eac9c55"
+    },
+    {
+      "path": "scripts/evaluate.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2f67cf5ddea43b817f10623c7c54df1eaedb31a",
+      "size": 5257,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/a2f67cf5ddea43b817f10623c7c54df1eaedb31a"
+    },
+    {
+      "path": "scripts/evaluate_ode.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44defe096041e5bd3fd451ae41396cad72209375",
+      "size": 5328,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/44defe096041e5bd3fd451ae41396cad72209375"
+    },
+    {
+      "path": "scripts/extract_gen.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "05a7f8c74847af18a7fcd91031a1b1f98e18fe68",
+      "size": 3456,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/05a7f8c74847af18a7fcd91031a1b1f98e18fe68"
+    },
+    {
+      "path": "scripts/generation.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "160f5807129582a5d445cf6e89e36b256fe72930",
+      "size": 13246,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/160f5807129582a5d445cf6e89e36b256fe72930"
+    },
+    {
+      "path": "scripts/optimization.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "42e0996c7076469abfee75c4d14910773186e687",
+      "size": 5653,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/42e0996c7076469abfee75c4d14910773186e687"
+    },
+    {
+      "path": "scripts/prepare_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf87961ac9d31fe11e48313f44c3b10b61fbc520",
+      "size": 2163,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/cf87961ac9d31fe11e48313f44c3b10b61fbc520"
+    },
+    {
+      "path": "scripts/prepare_mp_default_relax.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4cdcbda8b53f10510365213b90af46cd6b2e00bf",
+      "size": 2413,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/4cdcbda8b53f10510365213b90af46cd6b2e00bf"
+    },
+    {
+      "path": "scripts/readout_opt.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d862ca6ecf089bb69e33b154582ce4c9ce021bc",
+      "size": 3875,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/9d862ca6ecf089bb69e33b154582ce4c9ce021bc"
+    },
+    {
+      "path": "scripts/sample.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "926f99b139a9eacfbe5956facd040c037d85f60c",
+      "size": 16458,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/926f99b139a9eacfbe5956facd040c037d85f60c"
+    },
+    {
+      "path": "scripts/sample_ode.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7506748ab39e94556a1495a281bdf378d447080f",
+      "size": 13241,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/7506748ab39e94556a1495a281bdf378d447080f"
+    },
+    {
+      "path": "setup.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "228df359bb57411e10ffec0717d9c61bfdf19911",
+      "size": 157,
+      "url": "https://api.github.com/repos/ixsluo/CrystalFlow/git/blobs/228df359bb57411e10ffec0717d9c61bfdf19911"
+    }
+  ],
+  "truncated": false
+}

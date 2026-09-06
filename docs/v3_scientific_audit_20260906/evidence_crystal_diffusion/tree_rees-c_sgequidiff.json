@@ -1,0 +1,574 @@
+{
+  "sha": "2231031fdabbf6b372031f3f233f8638922fa91e",
+  "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/2231031fdabbf6b372031f3f233f8638922fa91e",
+  "tree": [
+    {
+      "path": "Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2af33b0a7dfbfe23c4227d7ba9990ef63529e2f2",
+      "size": 839,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/2af33b0a7dfbfe23c4227d7ba9990ef63529e2f2"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a16145bd6de66e506a5fabe5a3df6e02d91791dd",
+      "size": 1066,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/a16145bd6de66e506a5fabe5a3df6e02d91791dd"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31aaa3e37f31f46c76856f7ad42358cc738de918",
+      "size": 6188,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/31aaa3e37f31f46c76856f7ad42358cc738de918"
+    },
+    {
+      "path": "assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3fbaf15522603d03e601d75459e49a41b1cf5cd8",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/3fbaf15522603d03e601d75459e49a41b1cf5cd8"
+    },
+    {
+      "path": "assets/fig_overview.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9bd8622d4697cad9042369814af3f05b653f5fa",
+      "size": 1142522,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/b9bd8622d4697cad9042369814af3f05b653f5fa"
+    },
+    {
+      "path": "assets/sgequidiff_animation.gif",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e89365f599237332b21c2e2a70333fb1ac8f770",
+      "size": 23526706,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/2e89365f599237332b21c2e2a70333fb1ac8f770"
+    },
+    {
+      "path": "configurations",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d64199a8ad993d7ccc17a9198d514c65fd8b1b5c",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/d64199a8ad993d7ccc17a9198d514c65fd8b1b5c"
+    },
+    {
+      "path": "configurations/dataset",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3332d45f05f91218fa37870f6ccb77e7c1deaa74",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/3332d45f05f91218fa37870f6ccb77e7c1deaa74"
+    },
+    {
+      "path": "configurations/dataset/mp_20.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ef72b4b4c782debac2dc7adc113b175ad54b712",
+      "size": 177,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/4ef72b4b4c782debac2dc7adc113b175ad54b712"
+    },
+    {
+      "path": "configurations/dataset/mpts_52.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e2489c3e9f27596763c9055a2a7bfe97749cf0d0",
+      "size": 180,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/e2489c3e9f27596763c9055a2a7bfe97749cf0d0"
+    },
+    {
+      "path": "configurations/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da60362e5810ed32e3e4211717866e691f2b285c",
+      "size": 1000,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/da60362e5810ed32e3e4211717866e691f2b285c"
+    },
+    {
+      "path": "configurations/model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c1f05ed5e4da4d769bc443673796358e09d7d327",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/c1f05ed5e4da4d769bc443673796358e09d7d327"
+    },
+    {
+      "path": "configurations/model/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b037887ecc5324a4423d5c1625939ac305c41fc",
+      "size": 1656,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/5b037887ecc5324a4423d5c1625939ac305c41fc"
+    },
+    {
+      "path": "configurations/optim",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c30a8257c58faf34b02f73f44e2db597b1bdba0f",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/c30a8257c58faf34b02f73f44e2db597b1bdba0f"
+    },
+    {
+      "path": "configurations/optim/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f4c0892dc5edf2535c09f8b112d5df8ba29e03c",
+      "size": 671,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/9f4c0892dc5edf2535c09f8b112d5df8ba29e03c"
+    },
+    {
+      "path": "data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "15f57d29c87e75111fb88cf5e98ce2ae982161e4",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/15f57d29c87e75111fb88cf5e98ce2ae982161e4"
+    },
+    {
+      "path": "data/expected_score_norms_minSigma0.002_maxSigma0.500_T1000_2500MCsamples_3LatticeTranslations.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e3de186167de4803db2f5740f2f3fbd1a5f4b0d",
+      "size": 24841974,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/7e3de186167de4803db2f5740f2f3fbd1a5f4b0d"
+    },
+    {
+      "path": "data/init_tokens",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7a29cf36618c64d44344fbcc9e60ae2962e6df51",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/7a29cf36618c64d44344fbcc9e60ae2962e6df51"
+    },
+    {
+      "path": "data/init_tokens/cgcnn_atom_init.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f6b76401826cd382b91f17799d4f15f69b156aa",
+      "size": 28675,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/7f6b76401826cd382b91f17799d4f15f69b156aa"
+    },
+    {
+      "path": "data/init_tokens/space_group_features",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ac77b2bfdf086c0e01745b62a56034c43b6fd5c5",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/ac77b2bfdf086c0e01745b62a56034c43b6fd5c5"
+    },
+    {
+      "path": "data/init_tokens/space_group_features/HM_Full.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9142d6565cde7db53cf43a5e047218d905c474d",
+      "size": 22280,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/b9142d6565cde7db53cf43a5e047218d905c474d"
+    },
+    {
+      "path": "data/init_tokens/space_group_features/generate_space_group_features.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7cec119c1aaa7e81b62c1f20b2e49a5420a38e40",
+      "size": 11114,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/7cec119c1aaa7e81b62c1f20b2e49a5420a38e40"
+    },
+    {
+      "path": "data/init_tokens/space_group_features/generate_symmcd_space_group_features.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8121cd7181ccf9dd711549e19fdabc167d0d4485",
+      "size": 1354,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/8121cd7181ccf9dd711549e19fdabc167d0d4485"
+    },
+    {
+      "path": "data/init_tokens/space_group_features/space_group_embeddings_62dim.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49b1de0fcbfe02a70b513aff3f1a56d45ad0a8b7",
+      "size": 44742,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/49b1de0fcbfe02a70b513aff3f1a56d45ad0a8b7"
+    },
+    {
+      "path": "data/init_tokens/space_group_features/symmcd_space_group_features.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de8e90ed56d6da5dcf7aea5a3da3f4f0e5cbf0dc",
+      "size": 458512,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/de8e90ed56d6da5dcf7aea5a3da3f4f0e5cbf0dc"
+    },
+    {
+      "path": "data/init_tokens/wyckoff_features",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5550c3ce3e4a2df7a20f47903d4186afdee44c43",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/5550c3ce3e4a2df7a20f47903d4186afdee44c43"
+    },
+    {
+      "path": "data/init_tokens/wyckoff_features/generate_symmcd_wyckoff_features.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65f8c0d17465aed3bd32110ddf4c91516d4cda9f",
+      "size": 1261,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/65f8c0d17465aed3bd32110ddf4c91516d4cda9f"
+    },
+    {
+      "path": "data/init_tokens/wyckoff_features/generate_wyckoff_features.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f7e8865aec8a44c1e5acf136b74239de4f4b3d69",
+      "size": 7863,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/f7e8865aec8a44c1e5acf136b74239de4f4b3d69"
+    },
+    {
+      "path": "data/init_tokens/wyckoff_features/symmcd_wyckoff_features.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "681794a59cfa3d3b9a3bfce6b30bca495e4ceb0a",
+      "size": 1701804,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/681794a59cfa3d3b9a3bfce6b30bca495e4ceb0a"
+    },
+    {
+      "path": "data/init_tokens/wyckoff_features/wyckoff_embeddings_231dim.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f49e3f38d4a94b2299aaa093ac4b767e08eec169",
+      "size": 2884199,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/f49e3f38d4a94b2299aaa093ac4b767e08eec169"
+    },
+    {
+      "path": "data/mp_20.tar.bz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "514a2153890ac19d4c71a87d5f8e9941b962c954",
+      "size": 7096717,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/514a2153890ac19d4c71a87d5f8e9941b962c954"
+    },
+    {
+      "path": "data/mpts_52.tar.bz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab0518f1822e4823bc153fd0067c2a71938cbb21",
+      "size": 10197125,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/ab0518f1822e4823bc153fd0067c2a71938cbb21"
+    },
+    {
+      "path": "data/wyckoff_positions",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ffa925232f20b8420fafd3696259a2cd2e459843",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/ffa925232f20b8420fafd3696259a2cd2e459843"
+    },
+    {
+      "path": "data/wyckoff_positions/clean_wyckoffs_in_asu_v6.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53f274661c3dd0aef2117bbc048e35f041a9529a",
+      "size": 239290,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/53f274661c3dd0aef2117bbc048e35f041a9529a"
+    },
+    {
+      "path": "data/wyckoff_positions/readme.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1039803d9064c6abc805e44013f53f2d2706f905",
+      "size": 879,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/1039803d9064c6abc805e44013f53f2d2706f905"
+    },
+    {
+      "path": "experiments",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e1768690bf9fe39fe79c39eaba891d8e3af1952b",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/e1768690bf9fe39fe79c39eaba891d8e3af1952b"
+    },
+    {
+      "path": "experiments/run.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5fa002c04f76612d10b5de731d6cd5f649febc9d",
+      "size": 6147,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/5fa002c04f76612d10b5de731d6cd5f649febc9d"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ccdbf26a84d354ebaf42bf00a3c797e4db33201a",
+      "size": 1168,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/ccdbf26a84d354ebaf42bf00a3c797e4db33201a"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1a5509d26a1a4262fb4714c18369c8bb545a896d",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/1a5509d26a1a4262fb4714c18369c8bb545a896d"
+    },
+    {
+      "path": "scripts/evaluate_samples.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00953e6b203dd30f8dda5eddb1b7c3d0a2c9d7ea",
+      "size": 28886,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/00953e6b203dd30f8dda5eddb1b7c3d0a2c9d7ea"
+    },
+    {
+      "path": "scripts/generate_crystals.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8aeff9a88ca08a7736963340b09c00f870f511e0",
+      "size": 6045,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/8aeff9a88ca08a7736963340b09c00f870f511e0"
+    },
+    {
+      "path": "scripts/preprocess_datasets.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b45956a7b5ccf94aaf442488f19f76cb91adafb4",
+      "size": 6168,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/b45956a7b5ccf94aaf442488f19f76cb91adafb4"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f0768ba8615890e2192421cfe56ae78d93f4f27a",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/f0768ba8615890e2192421cfe56ae78d93f4f27a"
+    },
+    {
+      "path": "src/aliases.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f45c9345de9b6ee9fe36051037bc7126d82503ef",
+      "size": 883,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/f45c9345de9b6ee9fe36051037bc7126d82503ef"
+    },
+    {
+      "path": "src/constants.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd231be2a3f9f8e35f25849c0369f8f223f995e7",
+      "size": 12726,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/dd231be2a3f9f8e35f25849c0369f8f223f995e7"
+    },
+    {
+      "path": "src/crystal_classes.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6220138e4145b3235cb5b2dab73e203f6f3c9aad",
+      "size": 21310,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/6220138e4145b3235cb5b2dab73e203f6f3c9aad"
+    },
+    {
+      "path": "src/custom_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5998d8d042f800e865f52b5c09e526c87ea883fc",
+      "size": 8839,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/5998d8d042f800e865f52b5c09e526c87ea883fc"
+    },
+    {
+      "path": "src/global_vars.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d4e253789351619f980f1ce76c698fadce4bd61",
+      "size": 22851,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/8d4e253789351619f980f1ce76c698fadce4bd61"
+    },
+    {
+      "path": "src/model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4453a16444dc8ee8ea574c383dcbaaca9241762e",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/4453a16444dc8ee8ea574c383dcbaaca9241762e"
+    },
+    {
+      "path": "src/model/crystal_sampler.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7cbd9761f02b784b2efe52ea3953aa24a1a8399",
+      "size": 43829,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/a7cbd9761f02b784b2efe52ea3953aa24a1a8399"
+    },
+    {
+      "path": "src/model/diffusion",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "606f6ad332a94b8eb1796ff64d20b9b98787c68e",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/606f6ad332a94b8eb1796ff64d20b9b98787c68e"
+    },
+    {
+      "path": "src/model/diffusion/diffusion_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "692cbbca6dcf5ea99cd541e15d9929a06e7890a6",
+      "size": 47419,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/692cbbca6dcf5ea99cd541e15d9929a06e7890a6"
+    },
+    {
+      "path": "src/model/diffusion/diffusion_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60fae7fbe61aee5e63c1e66254100ec085eda4e7",
+      "size": 45363,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/60fae7fbe61aee5e63c1e66254100ec085eda4e7"
+    },
+    {
+      "path": "src/model/diffusion/non_equivariant_drift_modules.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ccc86af5591ca58c2cad3f3fc7ed1683361b5bd1",
+      "size": 32662,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/ccc86af5591ca58c2cad3f3fc7ed1683361b5bd1"
+    },
+    {
+      "path": "src/model/diffusion/test_diffusion_model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "67c2271a0df2e245b38a1b82a55f6f7b0b490eb8",
+      "size": 7089,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/67c2271a0df2e245b38a1b82a55f6f7b0b490eb8"
+    },
+    {
+      "path": "src/model/diffusion/test_ground_truth_scores.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9201cc754e7baf76ca08fd1c0d3b1b33874d10a8",
+      "size": 6165,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/9201cc754e7baf76ca08fd1c0d3b1b33874d10a8"
+    },
+    {
+      "path": "src/model/lattice_sampler.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a83c9ff8a29e490ba0e0b84ee3db2f78437aea08",
+      "size": 48420,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/a83c9ff8a29e490ba0e0b84ee3db2f78437aea08"
+    },
+    {
+      "path": "src/model/submodules.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b8a79c5885edb71f607cbdfa86d33fe0b70a799",
+      "size": 6874,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/7b8a79c5885edb71f607cbdfa86d33fe0b70a799"
+    },
+    {
+      "path": "src/model/wyckoff_and_element_transformer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9276403921d0ecff9e7ccd5ffab148e43c2c23e0",
+      "size": 49941,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/9276403921d0ecff9e7ccd5ffab148e43c2c23e0"
+    },
+    {
+      "path": "src/spacegroup_data.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "35b46d6acbdcbe532eca79483e01cfc379f94265",
+      "size": 5870,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/35b46d6acbdcbe532eca79483e01cfc379f94265"
+    },
+    {
+      "path": "src/trainer.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31b8e7c191f0f3e00109174bbfa72956a8634480",
+      "size": 15751,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/31b8e7c191f0f3e00109174bbfa72956a8634480"
+    },
+    {
+      "path": "src/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ae9735be9d2cef8c09e3a9c5ee9a3f9c44451136",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/ae9735be9d2cef8c09e3a9c5ee9a3f9c44451136"
+    },
+    {
+      "path": "src/utils/crystal_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eada73528dd5607dfaf1cebcbe5158dab42fae93",
+      "size": 10223,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/eada73528dd5607dfaf1cebcbe5158dab42fae93"
+    },
+    {
+      "path": "src/utils/data_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b98083ad46177401fe2d30a842b34df2add202b",
+      "size": 81918,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/5b98083ad46177401fe2d30a842b34df2add202b"
+    },
+    {
+      "path": "src/utils/embedding_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "495cc18ae78fc50703611ced210fb365d905ab76",
+      "size": 9456,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/495cc18ae78fc50703611ced210fb365d905ab76"
+    },
+    {
+      "path": "src/utils/eval_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f1da509177c7e10741bc9035001256358e9a34cf",
+      "size": 36938,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/f1da509177c7e10741bc9035001256358e9a34cf"
+    },
+    {
+      "path": "src/utils/io_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f2307bd746a6b17830267b04ddca664aa4057528",
+      "size": 3579,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/f2307bd746a6b17830267b04ddca664aa4057528"
+    },
+    {
+      "path": "src/utils/logging_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "586cd89d3d22849cd201badd6786a5041d1591a2",
+      "size": 2092,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/586cd89d3d22849cd201badd6786a5041d1591a2"
+    },
+    {
+      "path": "src/utils/train_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f89c375f84b2c9468036df60608d2ec7081bba98",
+      "size": 20159,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/f89c375f84b2c9468036df60608d2ec7081bba98"
+    },
+    {
+      "path": "src/utils/wyckoff_shape_decomp_dict_builder.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "70c2152c570eb66b0b678c62773a494e5fc6f42e",
+      "size": 7194,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/70c2152c570eb66b0b678c62773a494e5fc6f42e"
+    },
+    {
+      "path": "test",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4301c915c27b9c35fd48eefde7c03b9ddca2a562",
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/trees/4301c915c27b9c35fd48eefde7c03b9ddca2a562"
+    },
+    {
+      "path": "test/sg_equivariant_test.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d0a6dd68e2f95576a053d43f726bc3f546981227",
+      "size": 17920,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/d0a6dd68e2f95576a053d43f726bc3f546981227"
+    },
+    {
+      "path": "test/test_pyxtal_conventional_to_asu_and_back.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d6325822e8a85a382fcdae2f1e8ddeaf6eedc695",
+      "size": 4932,
+      "url": "https://api.github.com/repos/rees-c/sgequidiff/git/blobs/d6325822e8a85a382fcdae2f1e8ddeaf6eedc695"
+    }
+  ],
+  "truncated": false
+}

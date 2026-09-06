@@ -1,0 +1,273 @@
+{
+  "schema": "document_link_only_verification_v2",
+  "documents_checked_before_exclusion": 19,
+  "documents_with_final_reference_edits": 18,
+  "all_original_hashes_reconstructed": true,
+  "checks": [
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/BUILD_STATUS.md",
+      "reconstructed_original_sha256": "cc38c49d5a6c399ec7280e226df136527c649db3cd1fb0b7bc25b87c9ec11429",
+      "matches_original": true,
+      "current_sha256": "78b4fb9f1d5cab7d737336c6d9177b1519f2ae60d62d2788a77aba84c69772bd",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 21,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "reconstructed_original_sha256": "6edf4445adb3d8190dd2fafbe4878af4dac93cee8743115e87f5a597eddd0bc1",
+      "matches_original": true,
+      "current_sha256": "60c391a2e0fc157495f0482af15fb50774b0f2ccc9f8b71ad8d7d73edaf563b3",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 3,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "reconstructed_original_sha256": "bb9ac546da1f9c07379824dfbcfc0c461823a87259c772865cd8f50957035662",
+      "matches_original": true,
+      "current_sha256": "ddd11bba8eaef50e4b78f14d4072294db138fb3e753d2923b74de18f8686f60f",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 23,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "reconstructed_original_sha256": "cc01e1d72410cd9d7e87b1b9aebcc18546cb5037ddc0949a1a1999cda365e59d",
+      "matches_original": true,
+      "current_sha256": "6e1cd7b8a2201afaaf6d7ffacc7f4aa71b3d9e2221657480978498c4719ab4e9",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 12,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/NEXT_CONVERSATION_PROMPT.md",
+      "reconstructed_original_sha256": "fa8c8dd7466bea615d3fe053bd5d865979f311ec33f0002927ba8ac41df41ba7",
+      "matches_original": true,
+      "current_sha256": "95d1a6ef10c96970840c189437a54edc3cf606e851eaf0d074c53a96fb676454",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 1,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/PAPER_STORY_INTERNAL.md",
+      "reconstructed_original_sha256": "100c7917240ca7520df2a53fc8c35f4f12a62c108343521f0a93bba87b407699",
+      "matches_original": true,
+      "current_sha256": "3d37e6d2f034781db327a34aff53402d61ab89f2181d150cfc79bc1662a53352",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 7,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/RICH_DLM_EXECUTION_GAP_AUDIT_V1.md",
+      "reconstructed_original_sha256": "69f30d115ed432b656f99b735641f20a369d9f3fa6f1e443c69c28b81fdb9ec6",
+      "matches_original": true,
+      "current_sha256": "a8a06c80bc3388264fb914a5b272748b0771e2c8039d3ec777703efbcdefd111",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 3,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/paper/EXPERIMENT_MATRIX.md",
+      "reconstructed_original_sha256": "eba230de060fdbf3af733c97bdb77bc712dd205dc5b72b1c87323b56bd80c87f",
+      "matches_original": true,
+      "current_sha256": "375452eb4e05b4655dd2d476246dfece5da2c202a4f816e79df0900691c66bc8",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 6,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/paper/PAPER_STORY.md",
+      "reconstructed_original_sha256": "57d274e68b650523beb4f6d5a6133d233f12bb02969989ec9d07a88a1622f6c5",
+      "matches_original": true,
+      "current_sha256": "028aef0745289a577e4cad5fe7d62b8f2760833bfaeb767bb94c02a17bd66cd1",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 1,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/paper/README.md",
+      "reconstructed_original_sha256": "916d082925771dd35161be463eaa3b0bd28b93d86f6000fc07447967f3bedfc0",
+      "matches_original": true,
+      "current_sha256": "c8971cc433d7bc96423e524f031a9e3b7f1a4dcc8a47e54e28a0568f2f9d1400",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 7,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/paper/REPRODUCIBILITY.md",
+      "reconstructed_original_sha256": "2d1c774252903967c39d5735a945954ed428d5079d20fb1fc215b539004293ee",
+      "matches_original": true,
+      "current_sha256": "6b016ffc59cf751a75f173eab6e61581259486a04c657bfecc3321205a792116",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 1,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/GPT56_HANDOFF_20260906.md",
+      "reconstructed_original_sha256": "d07a0e582cbcbe8ef1b9dde562655295b42ea76211d2db02e5f4c7de21332623",
+      "matches_original": true,
+      "current_sha256": "b56e56f4b89cf38cc8ebabe98f7b1180374775ab1117989ee01ca1aecd9cdc15",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 3,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "reconstructed_original_sha256": "1a5eb8af740e181a4850dbb959eaa636ac42a8a9e0b7542a4f2f4c90c59fcd78",
+      "matches_original": true,
+      "current_sha256": "d2b442595e251bc59f9b2550f65ebdbd969d84f09333cb939cd01958a88d8caf",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 6,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/review_notes/LOSS_REVIEW_AGENT.md",
+      "reconstructed_original_sha256": "d675b9d64723e7a64ab4d05bd25eeb845d2e8ae228237703272147cb667b7755",
+      "matches_original": true,
+      "current_sha256": "d675b9d64723e7a64ab4d05bd25eeb845d2e8ae228237703272147cb667b7755",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 0,
+      "entire_file_restored_to_original_bytes": true
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "reconstructed_original_sha256": "dc2bdf8b15c045ad1f1b24d3acfe2766d59eb5bc26345cbb586887a709af473b",
+      "matches_original": true,
+      "current_sha256": "266bc6ff4142b012340a94c8f5e16d18041811073a29e2e6efab6e757630138b",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 2,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "reconstructed_original_sha256": "b8da4e15076303d3e29f01273fa37b3bd63d36a4b3906e48d34d83800b2ccf84",
+      "matches_original": true,
+      "current_sha256": "8f62f8c6d621c2bc28dc4e134af66e225a9767aab4d60054dd1edf56bd2555ae",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 11,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/23_CONTINUOUS_DIFFUSION_MATHEMATICAL_FEASIBILITY.md",
+      "reconstructed_original_sha256": "a43e22e1c8fd6d5eaa6b65ecb15d934f6c9f8f5d5942a36d36b31e85129294fc",
+      "matches_original": true,
+      "current_sha256": "d3d543925b23aef016b8fb5928fab63b8c0d759788f30a1d15c9105bd27e736a",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 2,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md",
+      "reconstructed_original_sha256": "e52a57819d54c5e5dbd835b2aeb802176ef9d5f39b49a0eaf8b78596bbf5e9b1",
+      "matches_original": true,
+      "current_sha256": "0cf15e254e8ce085e9d6e9ee35918bd6bde29c23f27dfb0fb547c1e443f69cf8",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 5,
+      "entire_file_restored_to_original_bytes": false
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/29_PERIODIC_SELF_REPAIR_12H.md",
+      "reconstructed_original_sha256": "17f51680ce8c9fa314182b832bbf608d0dc436af3d81dafff2a1f30c860d76e3",
+      "matches_original": true,
+      "current_sha256": "459c20d272cf3836ce686e4133e621393e0cc177d7754c220d2ee08f320b488a",
+      "line_count_unchanged": true,
+      "remaining_reference_edits": 1,
+      "entire_file_restored_to_original_bytes": false
+    }
+  ],
+  "false_positive_corrections": [
+    {
+      "path": "docs/v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/review_notes/LOSS_REVIEW_AGENT.md",
+      "line": 26,
+      "old_target": "1/K_f",
+      "discarded_target": "../../../../../periodic_self_repair_v1/review_notes/1/K_f",
+      "reason": "code_math_or_unknown_target_not_a_rendered_file_link"
+    }
+  ],
+  "parser_checks": [
+    {
+      "case": "`1[K_f>0](1/K_f)`",
+      "ignored_as_code_or_math": true
+    },
+    {
+      "case": "```text\n[x](nonexistent.md)\n```",
+      "ignored_as_code_or_math": true
+    },
+    {
+      "case": "\\(1[K_f>0](1/K_f)\\)",
+      "ignored_as_code_or_math": true
+    },
+    {
+      "case": "\\[1[K_f>0](1/K_f)\\]",
+      "ignored_as_code_or_math": true
+    },
+    {
+      "case": "$1[K_f>0](1/K_f)$",
+      "ignored_as_code_or_math": true
+    },
+    {
+      "case": "$$1[K_f>0](1/K_f)$$",
+      "ignored_as_code_or_math": true
+    }
+  ],
+  "unknown_target_preserved_test": true,
+  "known_mapped_file_rewritten_test": true,
+  "protected_contracts_unchanged": [
+    {
+      "path": "docs/DATA_LICENSES.md",
+      "exists": true,
+      "sha256": "be68173748e55149b462c1dc2f1a88bab8d47372872baeb6b34f276f0ecee36f",
+      "same_as_plan": true
+    },
+    {
+      "path": "docs/MODEL_LICENSES.md",
+      "exists": true,
+      "sha256": "dfdde067b9290ae697b799ba95b117ded1d86e8b147b64e5402c31e95e44a102",
+      "same_as_plan": true
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/CHECKLIST.md",
+      "exists": true,
+      "sha256": "4126c7ecc54cfb68014535d07a8b899314872a0ff49b65881678c4d98ea37027",
+      "same_as_plan": true
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+      "exists": true,
+      "sha256": "f371d45f747fa46addcf0b0e8fb95dd07e79655dcdfccd99a47f922133a6211b",
+      "same_as_plan": true
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/RAW_LLADA_DESIGN.md",
+      "exists": true,
+      "sha256": "d847fd930f9ce047511e8b2895e6834efd350265dbe8adad7208b471a9129d94",
+      "same_as_plan": true
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "exists": true,
+      "sha256": "97264f0136017c9cb6b822df5f17a894232747a4cffa7e87ddda13cbdec9fcab",
+      "same_as_plan": true
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_IMPLEMENTATION_REVIEW_20260906.md",
+      "exists": true,
+      "sha256": "b674e457a621daffad398e239a4c3b94ff435d006cff7bc66c1e3d0fb0d77cc9",
+      "same_as_plan": true
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_LAUNCH_MANIFEST.json",
+      "exists": true,
+      "sha256": "983495a3752fde7372cf38074ac9d6c4af11f0218ae38a91ba11108b06c399d0",
+      "same_as_plan": true
+    }
+  ],
+  "tests": {
+    "command": "python -m pytest -q tests/test_paper_pipeline_layout.py tests/test_periodic_v2_queue.py",
+    "passed": 5,
+    "failed": 1,
+    "failure": "test_reader_entrypoint_explains_every_module_and_evidence_profile still asserts historical G2 phrases/numbers in the parent-owned current README",
+    "owner": "Parent will remove/reframe obsolete assertion; README and test untouched by this lane."
+  }
+}

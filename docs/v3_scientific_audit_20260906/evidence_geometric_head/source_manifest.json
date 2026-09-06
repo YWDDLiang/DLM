@@ -1,0 +1,87 @@
+[
+  {
+    "source": "src/crystal_dlm/pmtr_training.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "cae7f488e940d3ad631cdfcede468feeea41cddffbef4307fbe3f375abed1926"
+  },
+  {
+    "source": "src/scripts/train_pmtr.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "3903a17bd2c5775c3f86e051c6e8197cded8e2d448b82b605bd5bf2b5ef91ca7"
+  },
+  {
+    "source": "src/crystal_dlm/manifold_repair_head.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "667b9e708dfdd331b13d9318c721bb4398d81af3f5e5c71a0d377f52dd844df5"
+  },
+  {
+    "source": "src/crystal_dlm/manifold_token_transport.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "372ed6f2d835f977fbb3094c7ed6abe2fb2997445bc2e9a19bcd1e629c74d8f7"
+  },
+  {
+    "source": "src/crystal_dlm/manifold_repair_objective.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "30c7b4bb8d85ed145fdb6a0ca1d364844bf07126d48a2660e5e89373bc6753da"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_v2_initialization.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "1fff0cc04397fa869a4a1d2287f8d14c6e3cb352c3d3cd4068f4b22c8062128c"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_v2_model.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "5d89f105e2ab590b3298633fe5b42c306e112e81e65a9b2fea4c33cff2547575"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_state_conditioning.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "f9821e57b0475558f3b5ad7da4a6c2324ace9a1e2d8a6eb582076ed92e678822"
+  },
+  {
+    "source": "src/crystal_dlm/state_conditioned_model.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "e5ade428900972f4f61283966fc33f4e83046b7b8ae8a83305ab78eb8ffb665e"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_v2_training_data.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "1159d8af6bd60ba1ba7012a282695c0b8d09ebe71b580aaf16a7186c2875d21e"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_v2_objective.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "d12a28e0348ad9e27f4b5286efd9795a8f939aa73e27f27f69e9e3b58e2b9b04"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_repair_initialization.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "f9dc36daa0711fbd6b0899196539115a41db82bf4ee487d631bcda8f62ec258c"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_repair_model.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "7b469a4cafd072612c456f515ca13eb09b64cb9d0c9d7816b42c11ff85359ed1"
+  },
+  {
+    "source": "src/crystal_dlm/canonical_site_order.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "104c5163b79d4e27ca9b376d532afbd22dc4c50011f3108d09f7a8ec7ec49b59"
+  },
+  {
+    "source": "src/scripts/train_periodic_dlm_v2.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "56b11dfcd72f3df08b6de9de20db0e11b359c8c383de3e920ab5477662a86174"
+  },
+  {
+    "source": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "7afa22a7ff2c55b32993869d277ad600b21502b501e25121a6bab5defcc1428b"
+  },
+  {
+    "source": "docs/teacher_feedback_unified_v1/16_PMTR_CODE_GROUNDED_ARCHITECTURE_AUDIT.md",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "c2c58ceb044ed43522a9d7d82b1aaa61090be659a6de74de3ca01b7f21816a68"
+  }
+]

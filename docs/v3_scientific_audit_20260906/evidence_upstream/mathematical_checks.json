@@ -1,0 +1,70 @@
+{
+  "unit_poe_step0": [
+    0.8,
+    0.2
+  ],
+  "unit_poe_residual_can_fit_target": {
+    "target": [
+      0.35,
+      0.65
+    ],
+    "fitted": [
+      0.35000000000000003,
+      0.65
+    ]
+  },
+  "independently_relearning_same_base_squares_prior": [
+    0.9411764705882353,
+    0.058823529411764705
+  ],
+  "full_vs_legal_support_nll": {
+    "full": 1.6094379124341003,
+    "legal": 0.916290731874155,
+    "difference": 0.6931471805599453
+  },
+  "viability_mask_vs_global_conditioning": {
+    "local_first": [
+      0.5,
+      0.5
+    ],
+    "global_conditioned_first": [
+      0.09090909090909091,
+      0.9090909090909091
+    ]
+  },
+  "local_poe_vs_global_path_poe": {
+    "local": [
+      0.4939024390243903,
+      0.006097560975609756,
+      0.25,
+      0.25
+    ],
+    "global": [
+      0.6136363636363636,
+      0.007575757575757577,
+      0.1893939393939394,
+      0.1893939393939394
+    ]
+  },
+  "independent_soft_heads_two_mode_example": {
+    "data": {
+      "00": 0.5,
+      "11": 0.5
+    },
+    "product_marginal_mass_off_data_modes": 0.5
+  },
+  "conditional_independence_does_not_imply_unconditional_independence": {
+    "mean_field_success": 0.5,
+    "product_of_means": 0.125,
+    "mean_product_given_shared_easy_hard_context": 0.36500000000000005
+  },
+  "single_valence_grammar_example": {
+    "mixed_valence_charge": 0,
+    "single_Fe_valence_charges_for_catalog_2_3": [
+      -2,
+      1
+    ],
+    "scope": "Finite-alphabet algebra example; no assertion about DFT stability or the complete production vocabulary."
+  },
+  "scope": "Independent mathematical examples; not actual model outputs, performance, or physical simulations."
+}

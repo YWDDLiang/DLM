@@ -1,0 +1,252 @@
+[
+  {
+    "path": "docs/periodic_self_repair_v1/LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+    "before_sha256": "f371d45f747fa46addcf0b0e8fb95dd07e79655dcdfccd99a47f922133a6211b",
+    "after_sha256": "55054c558e8f5b89d2129701545f4f0a539799468ef3d434c08084adfb81fe33",
+    "changes": [
+      {
+        "before": "](review_notes/OLD_LLM_DLM_ORDER_TRACE.md)",
+        "after": "](../v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/review_notes/OLD_LLM_DLM_ORDER_TRACE.md)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+    "before_sha256": "97264f0136017c9cb6b822df5f17a894232747a4cffa7e87ddda13cbdec9fcab",
+    "after_sha256": "fbb1c86fe4546be08c3925b8ecf14e6b19040c0240739dde3b0513f29ceb8248",
+    "changes": [
+      {
+        "before": "](K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)",
+        "after": "](../v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/periodic_self_repair_v1/V2_IMPLEMENTATION_REVIEW_20260906.md",
+    "before_sha256": "b674e457a621daffad398e239a4c3b94ff435d006cff7bc66c1e3d0fb0d77cc9",
+    "after_sha256": "32785af8f4f1002a78172bd6895c5afcc3aee076b723b4271b5a488ba294e158",
+    "changes": [
+      {
+        "before": "](K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)",
+        "after": "](../v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/v3_scientific_audit_20260906/C3FD_LLM_UPSTREAM_AUDIT.md",
+    "before_sha256": "d890c5c7ef2d6d1cce2cd3fbadccb7fcdddd721ffb8f0c6844a869847f35f37c",
+    "after_sha256": "432441fdc5a9dd5bbe41b65df31a386d47dab1d1dce9d0d94e2227fe667b78c7",
+    "changes": [
+      {
+        "before": "](../C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.json)",
+        "after": "](historical/docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.json)",
+        "count": 1
+      },
+      {
+        "before": "](../C3FD_RICH_FIELD_SEMANTICS_AUDIT_V2.md)",
+        "after": "](reference/component_specs/C3FD_RICH_FIELD_SEMANTICS_AUDIT_V2.md)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/v3_scientific_audit_20260906/CLAIM_AUDIT.md",
+    "before_sha256": "f9758f56092357bbf9459b36fff99fc9d799ca25019dd704c85c37f543a21441",
+    "after_sha256": "5050e0ca2bd08030cb05697413c2edc6ab223c1762df72ce5239a2da5c6ec7a5",
+    "changes": [
+      {
+        "before": "](../DLM_STABILITY_PROGRAM_AUDIT_20260830.md)",
+        "after": "](historical/docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md)",
+        "count": 1
+      },
+      {
+        "before": "](../teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md)",
+        "after": "](historical/docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md)",
+        "count": 1
+      },
+      {
+        "before": "](../FAILED_METHODS.md)",
+        "after": "](historical/docs/FAILED_METHODS.md)",
+        "count": 2
+      },
+      {
+        "before": "](../teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md)",
+        "after": "](historical/docs/teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/v3_scientific_audit_20260906/CRYSTAL_DIFFUSION_MECHANISMS.md",
+    "before_sha256": "0cffdffff0ead15997fd4851421faf082ea641d82a3429d092091c21dca3a208",
+    "after_sha256": "87572a83979de1c30a9a87fd008c969256a3be34a432a194a94417bc7ef0858d",
+    "changes": [
+      {
+        "before": "](../teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md)",
+        "after": "](historical/docs/teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md)",
+        "count": 2
+      },
+      {
+        "before": "](../teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md)",
+        "after": "](historical/docs/teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md)",
+        "count": 1
+      },
+      {
+        "before": "](../teacher_feedback_unified_v1/24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md)",
+        "after": "](historical/docs/teacher_feedback_unified_v1/24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/v3_scientific_audit_20260906/DLM_PROBABILITY_AND_KERNEL_AUDIT.md",
+    "before_sha256": "9a508d6e8c8fed4271dc45318644fcc2da32925a697d913e92309c361b46d407",
+    "after_sha256": "c475ec561275756818116f61b705317e2ab8b3865309754f926dcc99a91d066a",
+    "changes": [
+      {
+        "before": "](../teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md)",
+        "after": "](historical/docs/teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/v3_scientific_audit_20260906/PHYSICS_PIPELINE_AND_STORY_AUDIT.md",
+    "before_sha256": "d200f234e41018eb1b8ad36261d98f1971beba87c07d9c8bab8506276d8018f2",
+    "after_sha256": "51deac4546b6f3cf52bdb01ff395059ddf632c67c1037d9cfccdbfb58a075826",
+    "changes": [
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md:41)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md:41)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md:12)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md:12)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/ADR_C3FD_LLAMA_FUSED_TYPED_PLANNER_20260831.md:80)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/reference/component_specs/ADR_C3FD_LLAMA_FUSED_TYPED_PLANNER_20260831.md:80)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md:187)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md:187)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/periodic_self_repair_v1/review_notes/OLD_LLM_DLM_ORDER_TRACE.md:5)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/periodic_self_repair_v1/review_notes/OLD_LLM_DLM_ORDER_TRACE.md:5)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md:222)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md:222)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md:143)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md:143)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md:199)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/06_MODULE_AUDIT_AND_B_FIRST_PIVOT.md:199)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/FAILED_METHODS.md:41)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/FAILED_METHODS.md:41)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/36H_FINAL_REPORT_C3FD_G2_20260901.md:45)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/36H_FINAL_REPORT_C3FD_G2_20260901.md:45)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md:49)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md:49)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md:273)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md:273)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md:91)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md:91)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/FORCE_SCORE_DLM_CHECKLIST_V1.md:41)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/FORCE_SCORE_DLM_CHECKLIST_V1.md:41)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/FAILED_METHODS.md:34)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/FAILED_METHODS.md:34)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/FAILED_METHODS.md:3)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/FAILED_METHODS.md:3)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md:293)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md:293)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md:88)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md:88)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md:9)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md:9)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md:45)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md:45)",
+        "count": 1
+      },
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/GPT6_AUDIT_HANDOFF_20260905.md:416)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/GPT6_AUDIT_HANDOFF_20260905.md:416)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "docs/v3_scientific_audit_20260906/ROUND2_PHYSICS_ON_DLM_AND_CLAIMS.md",
+    "before_sha256": "05cab981a6a3be93cb101411d4d544c0540e9f5e99a884fad6b3885279ee4ec2",
+    "after_sha256": "3d90944084244d0baabdd777200ab3e489e89233514bb457cc351a853f0ac2ce",
+    "changes": [
+      {
+        "before": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md:9)",
+        "after": "](D:/codex_work/ai4s/DLM_periodic_self_repair/docs/v3_scientific_audit_20260906/historical/docs/teacher_feedback_unified_v1/27_SELF_IMPROVEMENT_REPAIR_PLAN.md:9)",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "path": "src/crystal_dlm/d3po.py",
+    "before_sha256": "9711c8a6e4c782677fc17b18e90c39be9a71a46a1ca478b67d0bda707c876512",
+    "after_sha256": "26ae32e47f06b55072fd1b8efa1946d896c615bd86423ba6c455b7bdec5e6c95",
+    "changes": [
+      {
+        "before": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+        "after": "docs/v3_scientific_audit_20260906/historical/docs/D3PO_256_MIN_CONTRACT_V1.md",
+        "count": 1
+      }
+    ]
+  }
+]

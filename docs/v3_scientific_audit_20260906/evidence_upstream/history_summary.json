@@ -1,0 +1,3674 @@
+{
+  "C3FD_PLANNER_FINAL.json": {
+    "cells": [
+      {
+        "all_metal": 279,
+        "all_metal_rate": 0.279,
+        "arm": "p0",
+        "assignable": 948,
+        "assignable_rate": 0.948,
+        "distributions": {
+          "arity": {
+            "2": 191,
+            "3": 621,
+            "4": 162,
+            "5": 21,
+            "failed": 5
+          },
+          "family": {
+            "chalcogenide": 59,
+            "failed": 5,
+            "halide": 106,
+            "nitride": 18,
+            "other": 394,
+            "oxide": 335,
+            "phosphide_or_phosphate": 13,
+            "sulfide": 70
+          },
+          "n": {
+            "10": 118,
+            "11": 16,
+            "12": 126,
+            "13": 26,
+            "14": 77,
+            "15": 12,
+            "16": 75,
+            "17": 9,
+            "18": 58,
+            "19": 12,
+            "2": 13,
+            "20": 60,
+            "3": 13,
+            "4": 121,
+            "5": 62,
+            "6": 83,
+            "7": 15,
+            "8": 69,
+            "9": 30,
+            "failed": 5
+          }
+        },
+        "formula_valid": 995,
+        "formula_valid_rate": 0.995,
+        "legacy_comp_valid": 861,
+        "legacy_comp_valid_rate": 0.861,
+        "novel": 789,
+        "novel_rate": 0.789,
+        "novel_unique": 786,
+        "novel_unique_rate": 0.786,
+        "plan_parsed": 995,
+        "plan_parsed_rate": 0.995,
+        "requested": 1000,
+        "seed": 17,
+        "unique": 981,
+        "unique_formula_count": 981,
+        "unique_rate": 0.981
+      },
+      {
+        "all_metal": 296,
+        "all_metal_rate": 0.296,
+        "arm": "p0",
+        "assignable": 950,
+        "assignable_rate": 0.95,
+        "distributions": {
+          "arity": {
+            "1": 5,
+            "2": 181,
+            "3": 600,
+            "4": 188,
+            "5": 20,
+            "failed": 6
+          },
+          "family": {
+            "chalcogenide": 40,
+            "failed": 6,
+            "halide": 98,
+            "nitride": 18,
+            "other": 390,
+            "oxide": 344,
+            "phosphide_or_phosphate": 19,
+            "sulfide": 85
+          },
+          "n": {
+            "1": 1,
+            "10": 134,
+            "11": 21,
+            "12": 120,
+            "13": 19,
+            "14": 83,
+            "15": 20,
+            "16": 78,
+            "17": 10,
+            "18": 56,
+            "19": 7,
+            "2": 13,
+            "20": 71,
+            "3": 11,
+            "4": 107,
+            "5": 43,
+            "6": 77,
+            "7": 10,
+            "8": 70,
+            "9": 43,
+            "failed": 6
+          }
+        },
+        "formula_valid": 994,
+        "formula_valid_rate": 0.994,
+        "legacy_comp_valid": 863,
+        "legacy_comp_valid_rate": 0.863,
+        "novel": 749,
+        "novel_rate": 0.749,
+        "novel_unique": 744,
+        "novel_unique_rate": 0.744,
+        "plan_parsed": 994,
+        "plan_parsed_rate": 0.994,
+        "requested": 1000,
+        "seed": 18,
+        "unique": 980,
+        "unique_formula_count": 980,
+        "unique_rate": 0.98
+      },
+      {
+        "all_metal": 330,
+        "all_metal_rate": 0.33,
+        "arm": "c3fd_v2",
+        "assignable": 962,
+        "assignable_rate": 0.962,
+        "distributions": {
+          "arity": {
+            "2": 111,
+            "3": 465,
+            "4": 271,
+            "5": 110,
+            "6": 22,
+            "7": 6,
+            "failed": 15
+          },
+          "family": {
+            "chalcogenide": 28,
+            "failed": 15,
+            "halide": 79,
+            "nitride": 22,
+            "other": 348,
+            "oxide": 418,
+            "phosphide_or_phosphate": 13,
+            "sulfide": 77
+          },
+          "n": {
+            "10": 126,
+            "12": 108,
+            "13": 18,
+            "14": 64,
+            "16": 56,
+            "18": 62,
+            "2": 17,
+            "20": 110,
+            "3": 21,
+            "4": 169,
+            "5": 44,
+            "6": 71,
+            "8": 84,
+            "9": 35,
+            "failed": 15
+          }
+        },
+        "formula_valid": 985,
+        "formula_valid_rate": 0.985,
+        "legacy_comp_valid": 985,
+        "legacy_comp_valid_rate": 0.985,
+        "novel": 825,
+        "novel_rate": 0.825,
+        "novel_unique": 816,
+        "novel_unique_rate": 0.816,
+        "plan_parsed": 985,
+        "plan_parsed_rate": 0.985,
+        "requested": 1000,
+        "seed": 17,
+        "unique": 960,
+        "unique_formula_count": 960,
+        "unique_rate": 0.96
+      },
+      {
+        "all_metal": 394,
+        "all_metal_rate": 0.394,
+        "arm": "c3fd_v2",
+        "assignable": 964,
+        "assignable_rate": 0.964,
+        "distributions": {
+          "arity": {
+            "2": 131,
+            "3": 500,
+            "4": 229,
+            "5": 97,
+            "6": 23,
+            "7": 7,
+            "failed": 13
+          },
+          "family": {
+            "chalcogenide": 29,
+            "failed": 13,
+            "halide": 71,
+            "nitride": 15,
+            "other": 408,
+            "oxide": 365,
+            "phosphide_or_phosphate": 7,
+            "sulfide": 92
+          },
+          "n": {
+            "10": 96,
+            "12": 87,
+            "14": 54,
+            "16": 77,
+            "18": 36,
+            "2": 24,
+            "20": 103,
+            "3": 22,
+            "4": 215,
+            "5": 44,
+            "6": 101,
+            "7": 20,
+            "8": 78,
+            "9": 30,
+            "failed": 13
+          }
+        },
+        "formula_valid": 987,
+        "formula_valid_rate": 0.987,
+        "legacy_comp_valid": 987,
+        "legacy_comp_valid_rate": 0.987,
+        "novel": 780,
+        "novel_rate": 0.78,
+        "novel_unique": 767,
+        "novel_unique_rate": 0.767,
+        "plan_parsed": 987,
+        "plan_parsed_rate": 0.987,
+        "requested": 1000,
+        "seed": 18,
+        "unique": 959,
+        "unique_formula_count": 959,
+        "unique_rate": 0.959
+      }
+    ],
+    "claim_boundary": "composition correctness only; no stability attribution or external CrysVCD comparison",
+    "drift": {
+      "all_metal_abs_pp": 0.07450000000000001,
+      "arity_tvd": 0.19550000000000003,
+      "family_tvd": 0.068,
+      "max_family_abs_pp": 0.05199999999999999,
+      "n_tvd": 0.162
+    },
+    "gates": {
+      "all_metal_drift_at_most_3pp": false,
+      "arity_tvd_at_most_0p05": false,
+      "both_seeds_positive": true,
+      "c3fd_v2_pass": false,
+      "candidate_formula_bpe_disabled": true,
+      "candidate_no_repair_replacement_rerank_rl": true,
+      "formal_requested1000": true,
+      "independent_comp_strictly_positive": true,
+      "max_family_drift_at_most_3pp": false,
+      "n_tvd_at_most_0p05": false,
+      "novel_noninferior_1pp": true,
+      "paired_ci_lower_positive": true,
+      "parse_noninferior_1pp": true,
+      "unique_noninferior_1pp": false
+    },
+    "mcnemar_independent_comp": {
+      "discordant": 294,
+      "exact_two_sided_p": 6.4901820611032634e-55,
+      "f0_only": 23,
+      "f1_only": 271
+    },
+    "paired_independent_comp_ci95": {
+      "delta": 0.124,
+      "high": 0.13990410507342746,
+      "low": 0.10809589492657252,
+      "method": "paired_normal"
+    },
+    "pooled": [
+      {
+        "all_metal": 575,
+        "all_metal_rate": 0.2875,
+        "arm": "p0",
+        "assignable": 1898,
+        "assignable_rate": 0.949,
+        "distributions": {
+          "arity": {
+            "1": 5,
+            "2": 372,
+            "3": 1221,
+            "4": 350,
+            "5": 41,
+            "failed": 11
+          },
+          "family": {
+            "chalcogenide": 99,
+            "failed": 11,
+            "halide": 204,
+            "nitride": 36,
+            "other": 784,
+            "oxide": 679,
+            "phosphide_or_phosphate": 32,
+            "sulfide": 155
+          },
+          "n": {
+            "1": 1,
+            "10": 252,
+            "11": 37,
+            "12": 246,
+            "13": 45,
+            "14": 160,
+            "15": 32,
+            "16": 153,
+            "17": 19,
+            "18": 114,
+            "19": 19,
+            "2": 26,
+            "20": 131,
+            "3": 24,
+            "4": 228,
+            "5": 105,
+            "6": 160,
+            "7": 25,
+            "8": 139,
+            "9": 73,
+            "failed": 11
+          }
+        },
+        "formula_valid": 1989,
+        "formula_valid_rate": 0.9945,
+        "legacy_comp_valid": 1724,
+        "legacy_comp_valid_rate": 0.862,
+        "novel": 1538,
+        "novel_rate": 0.769,
+        "novel_unique": 1530,
+        "novel_unique_rate": 0.765,
+        "plan_parsed": 1989,
+        "plan_parsed_rate": 0.9945,
+        "requested": 2000,
+        "seed": "pooled",
+        "unique": 1961,
+        "unique_rate": 0.9805
+      },
+      {
+        "all_metal": 724,
+        "all_metal_rate": 0.362,
+        "arm": "c3fd_v2",
+        "assignable": 1926,
+        "assignable_rate": 0.963,
+        "distributions": {
+          "arity": {
+            "2": 242,
+            "3": 965,
+            "4": 500,
+            "5": 207,
+            "6": 45,
+            "7": 13,
+            "failed": 28
+          },
+          "family": {
+            "chalcogenide": 57,
+            "failed": 28,
+            "halide": 150,
+            "nitride": 37,
+            "other": 756,
+            "oxide": 783,
+            "phosphide_or_phosphate": 20,
+            "sulfide": 169
+          },
+          "n": {
+            "10": 222,
+            "12": 195,
+            "13": 18,
+            "14": 118,
+            "16": 133,
+            "18": 98,
+            "2": 41,
+            "20": 213,
+            "3": 43,
+            "4": 384,
+            "5": 88,
+            "6": 172,
+            "7": 20,
+            "8": 162,
+            "9": 65,
+            "failed": 28
+          }
+        },
+        "formula_valid": 1972,
+        "formula_valid_rate": 0.986,
+        "legacy_comp_valid": 1972,
+        "legacy_comp_valid_rate": 0.986,
+        "novel": 1605,
+        "novel_rate": 0.8025,
+        "novel_unique": 1583,
+        "novel_unique_rate": 0.7915,
+        "plan_parsed": 1972,
+        "plan_parsed_rate": 0.986,
+        "requested": 2000,
+        "seed": "pooled",
+        "unique": 1919,
+        "unique_rate": 0.9595
+      }
+    ],
+    "schema": "h1a2_c3fd_planner_final_v1",
+    "seed_independent_comp_deltas": {
+      "17": 0.124,
+      "18": 0.124
+    }
+  },
+  "C3FD_V21_PILOT_FINAL.json": {
+    "candidate_all_metal_rate_parsed": 0.39565217391304347,
+    "cells": [
+      {
+        "all_metal": 62,
+        "all_metal_rate": 0.2421875,
+        "arm": "p0",
+        "assignable": 238,
+        "assignable_rate": 0.9296875,
+        "distributions": {
+          "arity": {
+            "2": 41,
+            "3": 168,
+            "4": 42,
+            "5": 4,
+            "failed": 1
+          },
+          "family": {
+            "chalcogenide": 11,
+            "failed": 1,
+            "halide": 39,
+            "nitride": 5,
+            "other": 98,
+            "oxide": 83,
+            "phosphide_or_phosphate": 4,
+            "sulfide": 15
+          },
+          "n": {
+            "10": 38,
+            "11": 4,
+            "12": 28,
+            "13": 9,
+            "14": 17,
+            "15": 2,
+            "16": 18,
+            "17": 1,
+            "18": 17,
+            "19": 4,
+            "2": 1,
+            "20": 14,
+            "3": 3,
+            "4": 33,
+            "5": 21,
+            "6": 16,
+            "7": 4,
+            "8": 19,
+            "9": 6,
+            "failed": 1
+          }
+        },
+        "formula_valid": 255,
+        "formula_valid_rate": 0.99609375,
+        "legacy_comp_valid": 218,
+        "legacy_comp_valid_rate": 0.8515625,
+        "novel": 197,
+        "novel_rate": 0.76953125,
+        "novel_unique": 197,
+        "novel_unique_rate": 0.76953125,
+        "plan_parsed": 255,
+        "plan_parsed_rate": 0.99609375,
+        "requested": 256,
+        "seed": 17,
+        "unique": 253,
+        "unique_formula_count": 253,
+        "unique_rate": 0.98828125
+      },
+      {
+        "all_metal": 74,
+        "all_metal_rate": 0.2890625,
+        "arm": "p0",
+        "assignable": 243,
+        "assignable_rate": 0.94921875,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 49,
+            "3": 149,
+            "4": 48,
+            "5": 8,
+            "failed": 1
+          },
+          "family": {
+            "chalcogenide": 10,
+            "failed": 1,
+            "halide": 19,
+            "nitride": 5,
+            "other": 102,
+            "oxide": 93,
+            "phosphide_or_phosphate": 5,
+            "sulfide": 21
+          },
+          "n": {
+            "1": 1,
+            "10": 31,
+            "11": 2,
+            "12": 27,
+            "13": 10,
+            "14": 21,
+            "15": 5,
+            "16": 17,
+            "17": 3,
+            "18": 16,
+            "19": 5,
+            "2": 3,
+            "20": 26,
+            "3": 4,
+            "4": 19,
+            "5": 8,
+            "6": 19,
+            "7": 2,
+            "8": 27,
+            "9": 9,
+            "failed": 1
+          }
+        },
+        "formula_valid": 255,
+        "formula_valid_rate": 0.99609375,
+        "legacy_comp_valid": 220,
+        "legacy_comp_valid_rate": 0.859375,
+        "novel": 191,
+        "novel_rate": 0.74609375,
+        "novel_unique": 191,
+        "novel_unique_rate": 0.74609375,
+        "plan_parsed": 255,
+        "plan_parsed_rate": 0.99609375,
+        "requested": 256,
+        "seed": 18,
+        "unique": 255,
+        "unique_formula_count": 255,
+        "unique_rate": 0.99609375
+      },
+      {
+        "all_metal": 89,
+        "all_metal_rate": 0.34765625,
+        "arm": "c3fd_v21",
+        "assignable": 220,
+        "assignable_rate": 0.859375,
+        "distributions": {
+          "arity": {
+            "2": 48,
+            "3": 131,
+            "4": 46,
+            "5": 6,
+            "failed": 25
+          },
+          "family": {
+            "chalcogenide": 8,
+            "failed": 25,
+            "halide": 13,
+            "nitride": 1,
+            "other": 111,
+            "oxide": 73,
+            "phosphide_or_phosphate": 2,
+            "sulfide": 23
+          },
+          "n": {
+            "10": 20,
+            "11": 4,
+            "12": 19,
+            "13": 5,
+            "14": 16,
+            "15": 4,
+            "16": 14,
+            "17": 1,
+            "18": 11,
+            "19": 5,
+            "2": 6,
+            "20": 24,
+            "3": 2,
+            "4": 37,
+            "5": 9,
+            "6": 18,
+            "7": 4,
+            "8": 29,
+            "9": 3,
+            "failed": 25
+          }
+        },
+        "formula_valid": 231,
+        "formula_valid_rate": 0.90234375,
+        "legacy_comp_valid": 231,
+        "legacy_comp_valid_rate": 0.90234375,
+        "novel": 208,
+        "novel_rate": 0.8125,
+        "novel_unique": 208,
+        "novel_unique_rate": 0.8125,
+        "plan_parsed": 231,
+        "plan_parsed_rate": 0.90234375,
+        "requested": 256,
+        "seed": 17,
+        "unique": 231,
+        "unique_formula_count": 231,
+        "unique_rate": 0.90234375
+      },
+      {
+        "all_metal": 93,
+        "all_metal_rate": 0.36328125,
+        "arm": "c3fd_v21",
+        "assignable": 220,
+        "assignable_rate": 0.859375,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 38,
+            "3": 137,
+            "4": 48,
+            "5": 5,
+            "failed": 27
+          },
+          "family": {
+            "chalcogenide": 10,
+            "failed": 27,
+            "halide": 17,
+            "nitride": 3,
+            "other": 119,
+            "oxide": 63,
+            "phosphide_or_phosphate": 1,
+            "sulfide": 16
+          },
+          "n": {
+            "10": 28,
+            "12": 19,
+            "13": 5,
+            "14": 15,
+            "15": 5,
+            "16": 14,
+            "17": 1,
+            "18": 24,
+            "19": 3,
+            "2": 3,
+            "20": 18,
+            "4": 36,
+            "5": 11,
+            "6": 14,
+            "7": 4,
+            "8": 23,
+            "9": 6,
+            "failed": 27
+          }
+        },
+        "formula_valid": 229,
+        "formula_valid_rate": 0.89453125,
+        "legacy_comp_valid": 229,
+        "legacy_comp_valid_rate": 0.89453125,
+        "novel": 209,
+        "novel_rate": 0.81640625,
+        "novel_unique": 209,
+        "novel_unique_rate": 0.81640625,
+        "plan_parsed": 229,
+        "plan_parsed_rate": 0.89453125,
+        "requested": 256,
+        "seed": 18,
+        "unique": 229,
+        "unique_formula_count": 229,
+        "unique_rate": 0.89453125
+      }
+    ],
+    "claim_boundary": "requested256 promotion screen only; not a headline result",
+    "distance_to_full_train": {
+      "c3fd_v21": {
+        "N": 0.08661268201394588,
+        "arity": 0.02567998872026251,
+        "family": 0.09008248308039377
+      },
+      "p0": {
+        "N": 0.11616346420643728,
+        "arity": 0.039574228866074736,
+        "family": 0.09913464206437289
+      }
+    },
+    "distributions": {
+      "c3fd_v21": {
+        "arity": {
+          "1": 1,
+          "2": 86,
+          "3": 268,
+          "4": 94,
+          "5": 11
+        },
+        "family": {
+          "chalcogenide": 18,
+          "halide": 30,
+          "nitride": 4,
+          "other": 230,
+          "oxide": 136,
+          "phosphide_or_phosphate": 3,
+          "sulfide": 39
+        },
+        "n": {
+          "10": 48,
+          "11": 4,
+          "12": 38,
+          "13": 10,
+          "14": 31,
+          "15": 9,
+          "16": 28,
+          "17": 2,
+          "18": 35,
+          "19": 8,
+          "2": 9,
+          "20": 42,
+          "3": 2,
+          "4": 73,
+          "5": 20,
+          "6": 32,
+          "7": 8,
+          "8": 52,
+          "9": 9
+        }
+      },
+      "p0": {
+        "arity": {
+          "1": 1,
+          "2": 90,
+          "3": 317,
+          "4": 90,
+          "5": 12
+        },
+        "family": {
+          "chalcogenide": 21,
+          "halide": 58,
+          "nitride": 10,
+          "other": 200,
+          "oxide": 176,
+          "phosphide_or_phosphate": 9,
+          "sulfide": 36
+        },
+        "n": {
+          "1": 1,
+          "10": 69,
+          "11": 6,
+          "12": 55,
+          "13": 19,
+          "14": 38,
+          "15": 7,
+          "16": 35,
+          "17": 4,
+          "18": 33,
+          "19": 9,
+          "2": 4,
+          "20": 40,
+          "3": 7,
+          "4": 52,
+          "5": 29,
+          "6": 35,
+          "7": 6,
+          "8": 46,
+          "9": 15
+        }
+      }
+    },
+    "full_train_all_metal_rate": 0.3490566037735849,
+    "gates": {
+      "N_distance_not_worse_than_p0_plus_0p01": true,
+      "all_metal_within_3pp_of_full_train": false,
+      "arity_distance_not_worse_than_p0_plus_0p01": true,
+      "both_seed_comp_valid_positive": true,
+      "family_distance_not_worse_than_p0_plus_0p01": true,
+      "ionic_comp_valid_positive": true,
+      "novel_unique_noninferior_1pp": true,
+      "paired_ci_lower_positive": true,
+      "parse_noninferior_1pp": false,
+      "pooled_comp_valid_positive": true,
+      "requested256_frozen": true,
+      "step5_pass": false
+    },
+    "ionic": {
+      "c3fd_v21": {
+        "denominator": 278,
+        "rate": 1.0,
+        "valid": 278
+      },
+      "p0": {
+        "denominator": 374,
+        "rate": 0.8074866310160428,
+        "valid": 302
+      }
+    },
+    "mcnemar_comp_valid": {
+      "discordant": 110,
+      "exact_two_sided_p": 0.04476209415697353,
+      "f0_only": 44,
+      "f1_only": 66
+    },
+    "paired_comp_valid_ci95": {
+      "delta": 0.04296875,
+      "high": 0.08298393501686388,
+      "low": 0.00295356498313612,
+      "method": "paired_normal"
+    },
+    "pooled": [
+      {
+        "all_metal": 136,
+        "all_metal_rate": 0.265625,
+        "arm": "p0",
+        "assignable": 481,
+        "assignable_rate": 0.939453125,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 90,
+            "3": 317,
+            "4": 90,
+            "5": 12,
+            "failed": 2
+          },
+          "family": {
+            "chalcogenide": 21,
+            "failed": 2,
+            "halide": 58,
+            "nitride": 10,
+            "other": 200,
+            "oxide": 176,
+            "phosphide_or_phosphate": 9,
+            "sulfide": 36
+          },
+          "n": {
+            "1": 1,
+            "10": 69,
+            "11": 6,
+            "12": 55,
+            "13": 19,
+            "14": 38,
+            "15": 7,
+            "16": 35,
+            "17": 4,
+            "18": 33,
+            "19": 9,
+            "2": 4,
+            "20": 40,
+            "3": 7,
+            "4": 52,
+            "5": 29,
+            "6": 35,
+            "7": 6,
+            "8": 46,
+            "9": 15,
+            "failed": 2
+          }
+        },
+        "formula_valid": 510,
+        "formula_valid_rate": 0.99609375,
+        "legacy_comp_valid": 438,
+        "legacy_comp_valid_rate": 0.85546875,
+        "novel": 388,
+        "novel_rate": 0.7578125,
+        "novel_unique": 388,
+        "novel_unique_rate": 0.7578125,
+        "plan_parsed": 510,
+        "plan_parsed_rate": 0.99609375,
+        "requested": 512,
+        "seed": "pooled",
+        "unique": 508,
+        "unique_rate": 0.9921875
+      },
+      {
+        "all_metal": 182,
+        "all_metal_rate": 0.35546875,
+        "arm": "c3fd_v21",
+        "assignable": 440,
+        "assignable_rate": 0.859375,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 86,
+            "3": 268,
+            "4": 94,
+            "5": 11,
+            "failed": 52
+          },
+          "family": {
+            "chalcogenide": 18,
+            "failed": 52,
+            "halide": 30,
+            "nitride": 4,
+            "other": 230,
+            "oxide": 136,
+            "phosphide_or_phosphate": 3,
+            "sulfide": 39
+          },
+          "n": {
+            "10": 48,
+            "11": 4,
+            "12": 38,
+            "13": 10,
+            "14": 31,
+            "15": 9,
+            "16": 28,
+            "17": 2,
+            "18": 35,
+            "19": 8,
+            "2": 9,
+            "20": 42,
+            "3": 2,
+            "4": 73,
+            "5": 20,
+            "6": 32,
+            "7": 8,
+            "8": 52,
+            "9": 9,
+            "failed": 52
+          }
+        },
+        "formula_valid": 460,
+        "formula_valid_rate": 0.8984375,
+        "legacy_comp_valid": 460,
+        "legacy_comp_valid_rate": 0.8984375,
+        "novel": 417,
+        "novel_rate": 0.814453125,
+        "novel_unique": 417,
+        "novel_unique_rate": 0.814453125,
+        "plan_parsed": 460,
+        "plan_parsed_rate": 0.8984375,
+        "requested": 512,
+        "seed": "pooled",
+        "unique": 460,
+        "unique_rate": 0.8984375
+      }
+    ],
+    "schema": "h1a2_c3fd_v21_pilot_final_v1",
+    "seed_comp_valid_deltas": {
+      "17": 0.05078125,
+      "18": 0.03515625
+    }
+  },
+  "C3FD_V21_STEP1_DATA_AUDIT.json": {
+    "datasets": [
+      {
+        "counts": {
+          "composition_supervision": 24558,
+          "ledger_exact": 27136,
+          "proposal": 27136,
+          "proposal_exact": 27136,
+          "reachable_rows": 27070
+        },
+        "failures": {},
+        "name": "train",
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/c3fd_semantic_v21_step1b_20260828/train.jsonl",
+        "rates": {
+          "ledger_exact": 1.0,
+          "proposal_coverage": 1.0,
+          "proposal_exact": 1.0,
+          "reachable_row_mass": 0.9975678066037735,
+          "reachable_weighted_mass": 0.9975678066037735
+        },
+        "rows": 27136
+      },
+      {
+        "counts": {
+          "composition_supervision": 8159,
+          "ledger_exact": 9047,
+          "proposal": 9047,
+          "proposal_exact": 9047,
+          "reachable_rows": 9004
+        },
+        "failures": {},
+        "name": "val",
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/c3fd_semantic_v21_step1b_20260828/val.jsonl",
+        "rates": {
+          "ledger_exact": 1.0,
+          "proposal_coverage": 1.0,
+          "proposal_exact": 1.0,
+          "reachable_row_mass": 0.9952470432187466,
+          "reachable_weighted_mass": 0.9952470432187466
+        },
+        "rows": 9047
+      },
+      {
+        "counts": {
+          "composition_supervision": 8223,
+          "ledger_exact": 9046,
+          "proposal": 9046,
+          "proposal_exact": 9046,
+          "reachable_rows": 9008
+        },
+        "failures": {},
+        "name": "test",
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/c3fd_semantic_v21_step1b_20260828/test.jsonl",
+        "rates": {
+          "ledger_exact": 1.0,
+          "proposal_coverage": 1.0,
+          "proposal_exact": 1.0,
+          "reachable_row_mass": 0.9957992482865354,
+          "reachable_weighted_mass": 0.9957992482865354
+        },
+        "rows": 9046
+      }
+    ],
+    "gate": {
+      "all_rows_have_exact_or_inapplicable_ledger": true,
+      "all_rows_have_exact_proposal_labels": true,
+      "step1_pass": true,
+      "train_reachable_weighted_mass_at_least_99pct": true,
+      "train_val_present": true,
+      "val_reachable_weighted_mass_at_least_99pct": true
+    },
+    "reachable_strata_from_train_benchmark": 393,
+    "schema": "h1a2_c3fd_v21_step1_data_audit_v1"
+  },
+  "C3FD_V21_STEP3_CALIBRATION.json": {
+    "gate": {
+      "global_pair_prior_weight_frozen_zero": true,
+      "interaction_uses_train_only_supported_strata": true,
+      "species_top_k_frozen_zero": true,
+      "step1_was_passed": true,
+      "step3_pass": true,
+      "temperature_fit_reduces_nll": true,
+      "temperature_uses_optimizer_not_grid": true,
+      "top_p_one_preserves_all_finite_support": true,
+      "validation_supported_mass_at_least_99pct": true
+    },
+    "sampling_contract": {
+      "global_pair_prior_weight": 0.0,
+      "species_top_k": 0,
+      "temperature_fit": "one LBFGS scalar per family/N/arity/species/count head",
+      "top_p_only": true
+    },
+    "schema": "h1a2_c3fd_v21_step3_calibration_audit_v1",
+    "supported_strata": 393,
+    "temperature_preflight": {
+      "examples": 4,
+      "nll_after": 0.698138952255249,
+      "nll_before": 2.0181498527526855,
+      "optimizer": "LBFGS",
+      "temperature": 20.0
+    },
+    "validation_supported_mass": 0.9952470432187466
+  },
+  "C3FD_V21_STEP4_PROPOSAL_SIM.json": {
+    "all_metal_note": "not determined by proposal tuple; retained as a pilot-stage train-reference gate",
+    "draws": 100000,
+    "full_train_all_metal_reference": 0.3490566037735849,
+    "gate": {
+      "N_tvd_not_worse_than_p0_plus_0p01": true,
+      "arity_tvd_not_worse_than_p0_plus_0p01": true,
+      "draws_at_least_100000": true,
+      "family_tvd_not_worse_than_p0_plus_0p01": true,
+      "global_pair_prior_zero": true,
+      "outcome_labels_unused": true,
+      "species_top_k_zero": true,
+      "step4_pass": true,
+      "supported_train_mass_at_least_99pct": true
+    },
+    "p0_tvd_to_full_train": {
+      "N": 0.10173111977313906,
+      "all_metal": 0.059966608801237,
+      "arity": 0.031881921173767064,
+      "family": 0.09475577127621732
+    },
+    "reference": {
+      "N": {
+        "1": 59,
+        "10": 2640,
+        "11": 361,
+        "12": 2624,
+        "13": 585,
+        "14": 1770,
+        "15": 390,
+        "16": 1819,
+        "17": 264,
+        "18": 1443,
+        "19": 287,
+        "2": 572,
+        "20": 2441,
+        "3": 538,
+        "4": 4144,
+        "5": 1279,
+        "6": 2297,
+        "7": 572,
+        "8": 2119,
+        "9": 932
+      },
+      "arity": {
+        "1": 226,
+        "2": 5524,
+        "3": 15793,
+        "4": 4865,
+        "5": 706,
+        "6": 21,
+        "7": 1
+      },
+      "family": {
+        "0": 1740,
+        "1": 2869,
+        "2": 553,
+        "3": 12640,
+        "4": 7041,
+        "5": 527,
+        "6": 1766
+      }
+    },
+    "schema": "h1a2_c3fd_v21_step4_proposal_sim_v1",
+    "seed": 20260828,
+    "simulated": {
+      "N": {
+        "1": 216,
+        "10": 9980,
+        "11": 1102,
+        "12": 9826,
+        "13": 2007,
+        "14": 6699,
+        "15": 1317,
+        "16": 6856,
+        "17": 749,
+        "18": 5514,
+        "19": 930,
+        "2": 2212,
+        "20": 8957,
+        "3": 1878,
+        "4": 15558,
+        "5": 4601,
+        "6": 8715,
+        "7": 1822,
+        "8": 7830,
+        "9": 3231
+      },
+      "arity": {
+        "1": 702,
+        "2": 19687,
+        "3": 59914,
+        "4": 17382,
+        "5": 2315
+      },
+      "family": {
+        "0": 6138,
+        "1": 10249,
+        "2": 1561,
+        "3": 48080,
+        "4": 26390,
+        "5": 1432,
+        "6": 6150
+      }
+    },
+    "supported_strata": 393,
+    "supported_train_mass": 0.9975678066037735,
+    "top_p": 0.95,
+    "tvd_to_full_train": {
+      "N": 0.015950707547169804,
+      "arity": 0.017145601415094358,
+      "family": 0.019427299528301908
+    }
+  },
+  "C3FD_DRIFT_DIAGNOSTIC.json": {
+    "correlations": {
+      "c3_N_vs_benchmark_train_N": 0.9894223323154552,
+      "c3_N_vs_total_legal": -0.04394065488077825,
+      "c3_N_vs_zero_legal": -0.04394065488077825
+    },
+    "distance_to_training": {
+      "c3fd_v2": {
+        "train_benchmark": {
+          "N": 0.07030295626679696,
+          "all_metal": 0.018559201737427644,
+          "arity": 0.170527337113266,
+          "family": 0.14364305753304632
+        },
+        "train_full": {
+          "N": 0.0865724207298404,
+          "all_metal": 0.01808335565846378,
+          "arity": 0.1818210698601171,
+          "family": 0.15820820795380608
+        }
+      },
+      "p0": {
+        "train_benchmark": {
+          "N": 0.11268708903120596,
+          "all_metal": 0.09660916619712842,
+          "arity": 0.04375660316937391,
+          "family": 0.08161993333232612
+        },
+        "train_full": {
+          "N": 0.10173111977313906,
+          "all_metal": 0.059966608801237,
+          "arity": 0.031881921173767064,
+          "family": 0.09475577127621732
+        }
+      }
+    },
+    "groups": {
+      "c3fd_v2": {
+        "all_metal_rate": 0.3671399594320487,
+        "benchmark_valid_rate": 1.0,
+        "distributions": {
+          "N": {
+            "10": 222,
+            "12": 195,
+            "13": 18,
+            "14": 118,
+            "16": 133,
+            "18": 98,
+            "2": 41,
+            "20": 213,
+            "3": 43,
+            "4": 384,
+            "5": 88,
+            "6": 172,
+            "7": 20,
+            "8": 162,
+            "9": 65
+          },
+          "all_metal": {
+            "False": 1248,
+            "True": 724
+          },
+          "arity": {
+            "2": 242,
+            "3": 965,
+            "4": 500,
+            "5": 207,
+            "6": 45,
+            "7": 13
+          },
+          "family": {
+            "chalcogenide": 57,
+            "halide": 150,
+            "nitride": 37,
+            "other": 756,
+            "oxide": 783,
+            "phosphide_or_phosphate": 20,
+            "sulfide": 169
+          }
+        },
+        "duplicate_excess": 82,
+        "max_formula_multiplicity": 8,
+        "mean_train_formula_frequency": 0.4497971602434077,
+        "pair_score": {
+          "mean": 0.7703095211990538,
+          "q10": 0.1682072433645328,
+          "q25": 0.46659401378549237,
+          "q50": 0.7848447464219347,
+          "q75": 1.0618287715690726,
+          "q90": 1.334101438305925
+        },
+        "pair_score_duplicated": {
+          "mean": 0.9716440083995694,
+          "q10": 0.3999482016271701,
+          "q25": 0.6765929422093169,
+          "q50": 0.9825658365305809,
+          "q75": 1.2018534482033547,
+          "q90": 1.708639783607949
+        },
+        "pair_score_singleton": {
+          "mean": 0.7549236979413725,
+          "q10": 0.15733384340136214,
+          "q25": 0.44443354417407027,
+          "q50": 0.7790596061131132,
+          "q75": 1.0504071979480645,
+          "q90": 1.298359484402625
+        },
+        "rows": 1972,
+        "top_formulas": [
+          [
+            "O4F4V4",
+            8
+          ],
+          [
+            "O4F4Mn4",
+            5
+          ],
+          [
+            "O16Os4",
+            5
+          ],
+          [
+            "Li12N4",
+            5
+          ],
+          [
+            "S6Cr2",
+            4
+          ],
+          [
+            "O2F10Mn6",
+            4
+          ],
+          [
+            "Mg4Cd2",
+            3
+          ],
+          [
+            "Se4Mo4Te4",
+            3
+          ],
+          [
+            "Li2O4Fe2",
+            3
+          ],
+          [
+            "O4F8Mn6",
+            3
+          ],
+          [
+            "O10F2V6",
+            3
+          ],
+          [
+            "K6CuSe2Te",
+            2
+          ],
+          [
+            "LiAg2In",
+            2
+          ],
+          [
+            "Cu2Sn2Er2",
+            2
+          ],
+          [
+            "S12Zn4Sn4",
+            2
+          ],
+          [
+            "Li6NAs",
+            2
+          ],
+          [
+            "Al2Ge2Eu",
+            2
+          ],
+          [
+            "O4F12Mn2Os2",
+            2
+          ],
+          [
+            "Mg2Ag4",
+            2
+          ],
+          [
+            "Li2F8V2",
+            2
+          ]
+        ],
+        "unary_rate": 0.0,
+        "unique_formulas": 1890
+      },
+      "p0": {
+        "all_metal_rate": 0.28908999497234794,
+        "benchmark_valid_rate": 0.8667672197083962,
+        "distributions": {
+          "N": {
+            "1": 1,
+            "10": 252,
+            "11": 37,
+            "12": 246,
+            "13": 45,
+            "14": 160,
+            "15": 32,
+            "16": 153,
+            "17": 19,
+            "18": 114,
+            "19": 19,
+            "2": 26,
+            "20": 131,
+            "3": 24,
+            "4": 228,
+            "5": 105,
+            "6": 160,
+            "7": 25,
+            "8": 139,
+            "9": 73
+          },
+          "all_metal": {
+            "False": 1414,
+            "True": 575
+          },
+          "arity": {
+            "1": 5,
+            "2": 372,
+            "3": 1221,
+            "4": 350,
+            "5": 41
+          },
+          "family": {
+            "chalcogenide": 99,
+            "halide": 204,
+            "nitride": 36,
+            "other": 784,
+            "oxide": 679,
+            "phosphide_or_phosphate": 32,
+            "sulfide": 155
+          }
+        },
+        "duplicate_excess": 61,
+        "max_formula_multiplicity": 3,
+        "mean_train_formula_frequency": 0.45449974861739567,
+        "pair_score": {
+          "mean": 0.9001818295925244,
+          "q10": 0.29995412442815705,
+          "q25": 0.5889591344590963,
+          "q50": 0.8916590957505456,
+          "q75": 1.1535625635274158,
+          "q90": 1.5098830459118942
+        },
+        "pair_score_duplicated": {
+          "mean": 1.1097660229266075,
+          "q10": 0.23669315513714695,
+          "q25": 0.7807822524090535,
+          "q50": 1.1064475305682173,
+          "q75": 1.5025393197937635,
+          "q90": 1.7652023066010774
+        },
+        "pair_score_singleton": {
+          "mean": 0.8861314926092339,
+          "q10": 0.3003546036699997,
+          "q25": 0.5841910116410198,
+          "q50": 0.8825369937424031,
+          "q75": 1.1350739551241926,
+          "q90": 1.460910759194255
+        },
+        "rows": 1989,
+        "top_formulas": [
+          [
+            "O8F4Mn6",
+            3
+          ],
+          [
+            "O2F10Cu6",
+            3
+          ],
+          [
+            "F6V2",
+            3
+          ],
+          [
+            "Li2F8V2",
+            3
+          ],
+          [
+            "O2F10V4",
+            3
+          ],
+          [
+            "O2F10Co6",
+            3
+          ],
+          [
+            "Li4O8Mn3Co",
+            3
+          ],
+          [
+            "Li4O8Mn3Cu",
+            3
+          ],
+          [
+            "YRh2Ho",
+            2
+          ],
+          [
+            "Li4O8V4",
+            2
+          ],
+          [
+            "O8Na4Bi6",
+            2
+          ],
+          [
+            "Li2O8Mn3Cu",
+            2
+          ],
+          [
+            "S8K4Sn4",
+            2
+          ],
+          [
+            "Si2Fe2La",
+            2
+          ],
+          [
+            "Mg2Si2Ba",
+            2
+          ],
+          [
+            "H4O8P2K2",
+            2
+          ],
+          [
+            "Cl6Rb2SbCs",
+            2
+          ],
+          [
+            "O4Cu3In",
+            2
+          ],
+          [
+            "Mg2Cd4",
+            2
+          ],
+          [
+            "F6SbCs2",
+            2
+          ]
+        ],
+        "unary_rate": 0.002513826043237808,
+        "unique_formulas": 1928
+      },
+      "train_benchmark": {
+        "all_metal_rate": 0.38569916116947633,
+        "benchmark_valid_rate": 1.0,
+        "distributions": {
+          "N": {
+            "1": 59,
+            "10": 2498,
+            "11": 294,
+            "12": 2418,
+            "13": 454,
+            "14": 1564,
+            "15": 307,
+            "16": 1678,
+            "17": 178,
+            "18": 1267,
+            "19": 227,
+            "2": 559,
+            "20": 2287,
+            "3": 487,
+            "4": 3853,
+            "5": 1030,
+            "6": 2125,
+            "7": 466,
+            "8": 1994,
+            "9": 813
+          },
+          "all_metal": {
+            "False": 15086,
+            "True": 9472
+          },
+          "arity": {
+            "1": 226,
+            "2": 4992,
+            "3": 14001,
+            "4": 4623,
+            "5": 695,
+            "6": 20,
+            "7": 1
+          },
+          "family": {
+            "chalcogenide": 1524,
+            "halide": 2698,
+            "nitride": 513,
+            "other": 11135,
+            "oxide": 6699,
+            "phosphide_or_phosphate": 360,
+            "sulfide": 1629
+          }
+        },
+        "duplicate_excess": 2191,
+        "max_formula_multiplicity": 16,
+        "mean_train_formula_frequency": 1.3573580910497598,
+        "pair_score": {
+          "mean": 1.0277359958277987,
+          "q10": 0.3910978256017439,
+          "q25": 0.6901957792042622,
+          "q50": 0.9687773634240473,
+          "q75": 1.2761214956667568,
+          "q90": 1.7365942090996516
+        },
+        "pair_score_duplicated": {
+          "mean": null,
+          "q10": null,
+          "q25": null,
+          "q50": null,
+          "q75": null,
+          "q90": null
+        },
+        "pair_score_singleton": {
+          "mean": 1.0277359958277987,
+          "q10": 0.3910978256017439,
+          "q25": 0.6901957792042622,
+          "q50": 0.9687773634240473,
+          "q75": 1.2761214956667568,
+          "q90": 1.7365942090996516
+        },
+        "rows": 24558,
+        "top_formulas": [
+          [
+            "O10F2Mn6",
+            16
+          ],
+          [
+            "Li4O8Mn3Co",
+            16
+          ],
+          [
+            "O2F10Mn6",
+            15
+          ],
+          [
+            "O10F2V6",
+            14
+          ],
+          [
+            "O8F4V6",
+            13
+          ],
+          [
+            "O7F5V6",
+            13
+          ],
+          [
+            "O4F8Mn6",
+            12
+          ],
+          [
+            "Li2F8V2",
+            12
+          ],
+          [
+            "O8Si4",
+            12
+          ],
+          [
+            "O2F10Ni6",
+            12
+          ],
+          [
+            "O2F10Co6",
+            12
+          ],
+          [
+            "Li4O8Mn2Co2",
+            11
+          ],
+          [
+            "O4F12V4",
+            10
+          ],
+          [
+            "Li2Mg4",
+            10
+          ],
+          [
+            "Li6O10Mn2Co2",
+            10
+          ],
+          [
+            "Li6O10Mn3Co",
+            10
+          ],
+          [
+            "O8F4Mn6",
+            9
+          ],
+          [
+            "Li6O10Mn4",
+            9
+          ],
+          [
+            "Mg4Zn2",
+            9
+          ],
+          [
+            "O5F7Mn6",
+            9
+          ]
+        ],
+        "unary_rate": 0.009202703803241306,
+        "unique_formulas": 22367
+      },
+      "train_full": {
+        "all_metal_rate": 0.3490566037735849,
+        "benchmark_valid_rate": 0.9049970518867925,
+        "distributions": {
+          "N": {
+            "1": 59,
+            "10": 2640,
+            "11": 361,
+            "12": 2624,
+            "13": 585,
+            "14": 1770,
+            "15": 390,
+            "16": 1819,
+            "17": 264,
+            "18": 1443,
+            "19": 287,
+            "2": 572,
+            "20": 2441,
+            "3": 538,
+            "4": 4144,
+            "5": 1279,
+            "6": 2297,
+            "7": 572,
+            "8": 2119,
+            "9": 932
+          },
+          "all_metal": {
+            "False": 17664,
+            "True": 9472
+          },
+          "arity": {
+            "1": 226,
+            "2": 5524,
+            "3": 15793,
+            "4": 4865,
+            "5": 706,
+            "6": 21,
+            "7": 1
+          },
+          "family": {
+            "chalcogenide": 1740,
+            "halide": 2869,
+            "nitride": 553,
+            "other": 12640,
+            "oxide": 7041,
+            "phosphide_or_phosphate": 527,
+            "sulfide": 1766
+          }
+        },
+        "duplicate_excess": 2306,
+        "max_formula_multiplicity": 16,
+        "mean_train_formula_frequency": 1.334094929245283,
+        "pair_score": {
+          "mean": 1.0284596415317935,
+          "q10": 0.3338505191807379,
+          "q25": 0.6725140374919636,
+          "q50": 0.9683328380292374,
+          "q75": 1.2973061777723496,
+          "q90": 1.8146831789714606
+        },
+        "pair_score_duplicated": {
+          "mean": null,
+          "q10": null,
+          "q25": null,
+          "q50": null,
+          "q75": null,
+          "q90": null
+        },
+        "pair_score_singleton": {
+          "mean": 1.0284596415317935,
+          "q10": 0.3338505191807379,
+          "q25": 0.6725140374919636,
+          "q50": 0.9683328380292374,
+          "q75": 1.2973061777723496,
+          "q90": 1.8146831789714606
+        },
+        "rows": 27136,
+        "top_formulas": [
+          [
+            "O10F2Mn6",
+            16
+          ],
+          [
+            "Li4O8Mn3Co",
+            16
+          ],
+          [
+            "O2F10Mn6",
+            15
+          ],
+          [
+            "O10F2V6",
+            14
+          ],
+          [
+            "O8F4V6",
+            13
+          ],
+          [
+            "O7F5V6",
+            13
+          ],
+          [
+            "O4F8Mn6",
+            12
+          ],
+          [
+            "Li2F8V2",
+            12
+          ],
+          [
+            "O8Si4",
+            12
+          ],
+          [
+            "O2F10Ni6",
+            12
+          ],
+          [
+            "O2F10Co6",
+            12
+          ],
+          [
+            "Li4O8Mn2Co2",
+            11
+          ],
+          [
+            "O4F12V4",
+            10
+          ],
+          [
+            "Li2Mg4",
+            10
+          ],
+          [
+            "Li6O10Mn2Co2",
+            10
+          ],
+          [
+            "Li6O10Mn3Co",
+            10
+          ],
+          [
+            "O8F4Mn6",
+            9
+          ],
+          [
+            "Li6O10Mn4",
+            9
+          ],
+          [
+            "Mg4Zn2",
+            9
+          ],
+          [
+            "O5F7Mn6",
+            9
+          ]
+        ],
+        "unary_rate": 0.008328419811320755,
+        "unique_formulas": 24830
+      }
+    },
+    "hypotheses": {
+      "benchmark_subset_selection": "compare C3/P0 distance to train_full versus train_benchmark",
+      "legal_volume_bias": "compare C3 N frequencies with legal first-action volume",
+      "pair_prior_concentration": "compare pair-score distributions and duplicate versus singleton pair scores",
+      "small_head_mode_concentration": "compare duplicate excess, top formula multiplicity, and train formula frequency"
+    },
+    "legal_first_action_volume": {
+      "1": {
+        "ionic": 0,
+        "total": 85,
+        "zero": 85
+      },
+      "10": {
+        "ionic": 1885,
+        "total": 2726,
+        "zero": 841
+      },
+      "11": {
+        "ionic": 2056,
+        "total": 2981,
+        "zero": 925
+      },
+      "12": {
+        "ionic": 2287,
+        "total": 3296,
+        "zero": 1009
+      },
+      "13": {
+        "ionic": 2452,
+        "total": 3545,
+        "zero": 1093
+      },
+      "14": {
+        "ionic": 2752,
+        "total": 3929,
+        "zero": 1177
+      },
+      "15": {
+        "ionic": 2923,
+        "total": 4184,
+        "zero": 1261
+      },
+      "16": {
+        "ionic": 3096,
+        "total": 4441,
+        "zero": 1345
+      },
+      "17": {
+        "ionic": 3266,
+        "total": 4695,
+        "zero": 1429
+      },
+      "18": {
+        "ionic": 3574,
+        "total": 5087,
+        "zero": 1513
+      },
+      "19": {
+        "ionic": 3634,
+        "total": 5231,
+        "zero": 1597
+      },
+      "2": {
+        "ionic": 271,
+        "total": 440,
+        "zero": 169
+      },
+      "20": {
+        "ionic": 3927,
+        "total": 5608,
+        "zero": 1681
+      },
+      "3": {
+        "ionic": 483,
+        "total": 736,
+        "zero": 253
+      },
+      "4": {
+        "ionic": 673,
+        "total": 1010,
+        "zero": 337
+      },
+      "5": {
+        "ionic": 880,
+        "total": 1301,
+        "zero": 421
+      },
+      "6": {
+        "ionic": 1103,
+        "total": 1608,
+        "zero": 505
+      },
+      "7": {
+        "ionic": 1280,
+        "total": 1869,
+        "zero": 589
+      },
+      "8": {
+        "ionic": 1493,
+        "total": 2166,
+        "zero": 673
+      },
+      "9": {
+        "ionic": 1746,
+        "total": 2503,
+        "zero": 757
+      }
+    },
+    "schema": "h1a2_c3fd_drift_diagnostic_v1"
+  },
+  "C3FD_V25_PILOT_FINAL.json": {
+    "candidate_all_metal_rate_parsed": 0.357421875,
+    "candidate_arm": "c3fd_v25",
+    "cells": [
+      {
+        "all_metal": 62,
+        "all_metal_rate": 0.2421875,
+        "arm": "p0",
+        "assignable": 238,
+        "assignable_rate": 0.9296875,
+        "distributions": {
+          "arity": {
+            "2": 41,
+            "3": 168,
+            "4": 42,
+            "5": 4,
+            "failed": 1
+          },
+          "family": {
+            "chalcogenide": 11,
+            "failed": 1,
+            "halide": 39,
+            "nitride": 5,
+            "other": 98,
+            "oxide": 83,
+            "phosphide_or_phosphate": 4,
+            "sulfide": 15
+          },
+          "n": {
+            "10": 38,
+            "11": 4,
+            "12": 28,
+            "13": 9,
+            "14": 17,
+            "15": 2,
+            "16": 18,
+            "17": 1,
+            "18": 17,
+            "19": 4,
+            "2": 1,
+            "20": 14,
+            "3": 3,
+            "4": 33,
+            "5": 21,
+            "6": 16,
+            "7": 4,
+            "8": 19,
+            "9": 6,
+            "failed": 1
+          }
+        },
+        "formula_valid": 255,
+        "formula_valid_rate": 0.99609375,
+        "legacy_comp_valid": 218,
+        "legacy_comp_valid_rate": 0.8515625,
+        "novel": 197,
+        "novel_rate": 0.76953125,
+        "novel_unique": 197,
+        "novel_unique_rate": 0.76953125,
+        "plan_parsed": 255,
+        "plan_parsed_rate": 0.99609375,
+        "requested": 256,
+        "seed": 17,
+        "unique": 253,
+        "unique_formula_count": 253,
+        "unique_rate": 0.98828125
+      },
+      {
+        "all_metal": 74,
+        "all_metal_rate": 0.2890625,
+        "arm": "p0",
+        "assignable": 243,
+        "assignable_rate": 0.94921875,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 49,
+            "3": 149,
+            "4": 48,
+            "5": 8,
+            "failed": 1
+          },
+          "family": {
+            "chalcogenide": 10,
+            "failed": 1,
+            "halide": 19,
+            "nitride": 5,
+            "other": 102,
+            "oxide": 93,
+            "phosphide_or_phosphate": 5,
+            "sulfide": 21
+          },
+          "n": {
+            "1": 1,
+            "10": 31,
+            "11": 2,
+            "12": 27,
+            "13": 10,
+            "14": 21,
+            "15": 5,
+            "16": 17,
+            "17": 3,
+            "18": 16,
+            "19": 5,
+            "2": 3,
+            "20": 26,
+            "3": 4,
+            "4": 19,
+            "5": 8,
+            "6": 19,
+            "7": 2,
+            "8": 27,
+            "9": 9,
+            "failed": 1
+          }
+        },
+        "formula_valid": 255,
+        "formula_valid_rate": 0.99609375,
+        "legacy_comp_valid": 220,
+        "legacy_comp_valid_rate": 0.859375,
+        "novel": 191,
+        "novel_rate": 0.74609375,
+        "novel_unique": 191,
+        "novel_unique_rate": 0.74609375,
+        "plan_parsed": 255,
+        "plan_parsed_rate": 0.99609375,
+        "requested": 256,
+        "seed": 18,
+        "unique": 255,
+        "unique_formula_count": 255,
+        "unique_rate": 0.99609375
+      },
+      {
+        "all_metal": 89,
+        "all_metal_rate": 0.34765625,
+        "arm": "c3fd_v25",
+        "assignable": 241,
+        "assignable_rate": 0.94140625,
+        "distributions": {
+          "arity": {
+            "2": 51,
+            "3": 150,
+            "4": 49,
+            "5": 6
+          },
+          "family": {
+            "chalcogenide": 15,
+            "halide": 25,
+            "nitride": 1,
+            "other": 111,
+            "oxide": 77,
+            "phosphide_or_phosphate": 2,
+            "sulfide": 25
+          },
+          "n": {
+            "10": 25,
+            "11": 5,
+            "12": 21,
+            "13": 5,
+            "14": 19,
+            "15": 4,
+            "16": 15,
+            "17": 1,
+            "18": 12,
+            "19": 5,
+            "2": 6,
+            "20": 26,
+            "3": 2,
+            "4": 38,
+            "5": 13,
+            "6": 22,
+            "7": 4,
+            "8": 30,
+            "9": 3
+          }
+        },
+        "formula_valid": 256,
+        "formula_valid_rate": 1.0,
+        "legacy_comp_valid": 256,
+        "legacy_comp_valid_rate": 1.0,
+        "novel": 230,
+        "novel_rate": 0.8984375,
+        "novel_unique": 230,
+        "novel_unique_rate": 0.8984375,
+        "plan_parsed": 256,
+        "plan_parsed_rate": 1.0,
+        "requested": 256,
+        "seed": 17,
+        "unique": 256,
+        "unique_formula_count": 256,
+        "unique_rate": 1.0
+      },
+      {
+        "all_metal": 94,
+        "all_metal_rate": 0.3671875,
+        "arm": "c3fd_v25",
+        "assignable": 243,
+        "assignable_rate": 0.94921875,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 46,
+            "3": 153,
+            "4": 50,
+            "5": 6
+          },
+          "family": {
+            "chalcogenide": 16,
+            "halide": 26,
+            "nitride": 4,
+            "other": 120,
+            "oxide": 70,
+            "phosphide_or_phosphate": 1,
+            "sulfide": 19
+          },
+          "n": {
+            "10": 29,
+            "11": 2,
+            "12": 20,
+            "13": 5,
+            "14": 16,
+            "15": 5,
+            "16": 14,
+            "17": 1,
+            "18": 25,
+            "19": 3,
+            "2": 3,
+            "20": 22,
+            "3": 1,
+            "4": 38,
+            "5": 11,
+            "6": 17,
+            "7": 6,
+            "8": 31,
+            "9": 7
+          }
+        },
+        "formula_valid": 256,
+        "formula_valid_rate": 1.0,
+        "legacy_comp_valid": 256,
+        "legacy_comp_valid_rate": 1.0,
+        "novel": 233,
+        "novel_rate": 0.91015625,
+        "novel_unique": 233,
+        "novel_unique_rate": 0.91015625,
+        "plan_parsed": 256,
+        "plan_parsed_rate": 1.0,
+        "requested": 256,
+        "seed": 18,
+        "unique": 256,
+        "unique_formula_count": 256,
+        "unique_rate": 1.0
+      }
+    ],
+    "claim_boundary": "requested256 promotion screen only; not a headline result",
+    "distance_to_full_train": {
+      "c3fd_v25": {
+        "N": 0.08387382075471699,
+        "arity": 0.023879716981132088,
+        "family": 0.048496462264150934
+      },
+      "p0": {
+        "N": 0.11616346420643728,
+        "arity": 0.039574228866074736,
+        "family": 0.09913464206437289
+      }
+    },
+    "distributions": {
+      "c3fd_v25": {
+        "arity": {
+          "1": 1,
+          "2": 97,
+          "3": 303,
+          "4": 99,
+          "5": 12
+        },
+        "family": {
+          "chalcogenide": 31,
+          "halide": 51,
+          "nitride": 5,
+          "other": 231,
+          "oxide": 147,
+          "phosphide_or_phosphate": 3,
+          "sulfide": 44
+        },
+        "n": {
+          "10": 54,
+          "11": 7,
+          "12": 41,
+          "13": 10,
+          "14": 35,
+          "15": 9,
+          "16": 29,
+          "17": 2,
+          "18": 37,
+          "19": 8,
+          "2": 9,
+          "20": 48,
+          "3": 3,
+          "4": 76,
+          "5": 24,
+          "6": 39,
+          "7": 10,
+          "8": 61,
+          "9": 10
+        }
+      },
+      "p0": {
+        "arity": {
+          "1": 1,
+          "2": 90,
+          "3": 317,
+          "4": 90,
+          "5": 12
+        },
+        "family": {
+          "chalcogenide": 21,
+          "halide": 58,
+          "nitride": 10,
+          "other": 200,
+          "oxide": 176,
+          "phosphide_or_phosphate": 9,
+          "sulfide": 36
+        },
+        "n": {
+          "1": 1,
+          "10": 69,
+          "11": 6,
+          "12": 55,
+          "13": 19,
+          "14": 38,
+          "15": 7,
+          "16": 35,
+          "17": 4,
+          "18": 33,
+          "19": 9,
+          "2": 4,
+          "20": 40,
+          "3": 7,
+          "4": 52,
+          "5": 29,
+          "6": 35,
+          "7": 6,
+          "8": 46,
+          "9": 15
+        }
+      }
+    },
+    "full_train_all_metal_rate": 0.3490566037735849,
+    "gates": {
+      "N_distance_not_worse_than_p0_plus_0p01": true,
+      "all_metal_within_3pp_of_full_train": true,
+      "arity_distance_not_worse_than_p0_plus_0p01": true,
+      "both_seed_comp_valid_positive": true,
+      "family_distance_not_worse_than_p0_plus_0p01": true,
+      "ionic_comp_valid_positive": true,
+      "novel_unique_noninferior_1pp": true,
+      "paired_ci_lower_positive": true,
+      "parse_noninferior_1pp": true,
+      "pooled_comp_valid_positive": true,
+      "requested256_frozen": true,
+      "semantic_dead_end_zero_both_seeds": true,
+      "step3_pass": true
+    },
+    "ionic": {
+      "c3fd_v25": {
+        "denominator": 329,
+        "rate": 1.0,
+        "valid": 329
+      },
+      "p0": {
+        "denominator": 374,
+        "rate": 0.8074866310160428,
+        "valid": 302
+      }
+    },
+    "joint_reachability_stats": {
+      "17": {},
+      "18": {}
+    },
+    "mcnemar_comp_valid": {
+      "discordant": 74,
+      "exact_two_sided_p": 1.0587911840678754e-22,
+      "f0_only": 0,
+      "f1_only": 74
+    },
+    "paired_comp_valid_ci95": {
+      "delta": 0.14453125,
+      "high": 0.1750186644804867,
+      "low": 0.11404383551951329,
+      "method": "paired_normal"
+    },
+    "pooled": [
+      {
+        "all_metal": 136,
+        "all_metal_rate": 0.265625,
+        "arm": "p0",
+        "assignable": 481,
+        "assignable_rate": 0.939453125,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 90,
+            "3": 317,
+            "4": 90,
+            "5": 12,
+            "failed": 2
+          },
+          "family": {
+            "chalcogenide": 21,
+            "failed": 2,
+            "halide": 58,
+            "nitride": 10,
+            "other": 200,
+            "oxide": 176,
+            "phosphide_or_phosphate": 9,
+            "sulfide": 36
+          },
+          "n": {
+            "1": 1,
+            "10": 69,
+            "11": 6,
+            "12": 55,
+            "13": 19,
+            "14": 38,
+            "15": 7,
+            "16": 35,
+            "17": 4,
+            "18": 33,
+            "19": 9,
+            "2": 4,
+            "20": 40,
+            "3": 7,
+            "4": 52,
+            "5": 29,
+            "6": 35,
+            "7": 6,
+            "8": 46,
+            "9": 15,
+            "failed": 2
+          }
+        },
+        "formula_valid": 510,
+        "formula_valid_rate": 0.99609375,
+        "legacy_comp_valid": 438,
+        "legacy_comp_valid_rate": 0.85546875,
+        "novel": 388,
+        "novel_rate": 0.7578125,
+        "novel_unique": 388,
+        "novel_unique_rate": 0.7578125,
+        "plan_parsed": 510,
+        "plan_parsed_rate": 0.99609375,
+        "requested": 512,
+        "seed": "pooled",
+        "unique": 508,
+        "unique_rate": 0.9921875
+      },
+      {
+        "all_metal": 183,
+        "all_metal_rate": 0.357421875,
+        "arm": "c3fd_v25",
+        "assignable": 484,
+        "assignable_rate": 0.9453125,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 97,
+            "3": 303,
+            "4": 99,
+            "5": 12
+          },
+          "family": {
+            "chalcogenide": 31,
+            "halide": 51,
+            "nitride": 5,
+            "other": 231,
+            "oxide": 147,
+            "phosphide_or_phosphate": 3,
+            "sulfide": 44
+          },
+          "n": {
+            "10": 54,
+            "11": 7,
+            "12": 41,
+            "13": 10,
+            "14": 35,
+            "15": 9,
+            "16": 29,
+            "17": 2,
+            "18": 37,
+            "19": 8,
+            "2": 9,
+            "20": 48,
+            "3": 3,
+            "4": 76,
+            "5": 24,
+            "6": 39,
+            "7": 10,
+            "8": 61,
+            "9": 10
+          }
+        },
+        "formula_valid": 512,
+        "formula_valid_rate": 1.0,
+        "legacy_comp_valid": 512,
+        "legacy_comp_valid_rate": 1.0,
+        "novel": 463,
+        "novel_rate": 0.904296875,
+        "novel_unique": 463,
+        "novel_unique_rate": 0.904296875,
+        "plan_parsed": 512,
+        "plan_parsed_rate": 1.0,
+        "requested": 512,
+        "seed": "pooled",
+        "unique": 512,
+        "unique_rate": 1.0
+      }
+    ],
+    "schema": "h1a2_c3fd_v25_pilot_final_v1",
+    "seed_comp_valid_deltas": {
+      "17": 0.1484375,
+      "18": 0.140625
+    },
+    "semantic_dead_ends": {
+      "17": 0,
+      "18": 0
+    }
+  },
+  "C3FD_V25_REQUESTED1000_FINAL.json": {
+    "candidate_all_metal_rate_parsed": 0.3725,
+    "candidate_arm": "c3fd_v25",
+    "cells": [
+      {
+        "all_metal": 279,
+        "all_metal_rate": 0.279,
+        "arm": "p0",
+        "assignable": 948,
+        "assignable_rate": 0.948,
+        "distributions": {
+          "arity": {
+            "2": 191,
+            "3": 621,
+            "4": 162,
+            "5": 21,
+            "failed": 5
+          },
+          "family": {
+            "chalcogenide": 59,
+            "failed": 5,
+            "halide": 106,
+            "nitride": 18,
+            "other": 394,
+            "oxide": 335,
+            "phosphide_or_phosphate": 13,
+            "sulfide": 70
+          },
+          "n": {
+            "10": 118,
+            "11": 16,
+            "12": 126,
+            "13": 26,
+            "14": 77,
+            "15": 12,
+            "16": 75,
+            "17": 9,
+            "18": 58,
+            "19": 12,
+            "2": 13,
+            "20": 60,
+            "3": 13,
+            "4": 121,
+            "5": 62,
+            "6": 83,
+            "7": 15,
+            "8": 69,
+            "9": 30,
+            "failed": 5
+          }
+        },
+        "formula_valid": 995,
+        "formula_valid_rate": 0.995,
+        "legacy_comp_valid": 861,
+        "legacy_comp_valid_rate": 0.861,
+        "novel": 789,
+        "novel_rate": 0.789,
+        "novel_unique": 786,
+        "novel_unique_rate": 0.786,
+        "plan_parsed": 995,
+        "plan_parsed_rate": 0.995,
+        "requested": 1000,
+        "seed": 17,
+        "unique": 981,
+        "unique_formula_count": 981,
+        "unique_rate": 0.981
+      },
+      {
+        "all_metal": 296,
+        "all_metal_rate": 0.296,
+        "arm": "p0",
+        "assignable": 950,
+        "assignable_rate": 0.95,
+        "distributions": {
+          "arity": {
+            "1": 5,
+            "2": 181,
+            "3": 600,
+            "4": 188,
+            "5": 20,
+            "failed": 6
+          },
+          "family": {
+            "chalcogenide": 40,
+            "failed": 6,
+            "halide": 98,
+            "nitride": 18,
+            "other": 390,
+            "oxide": 344,
+            "phosphide_or_phosphate": 19,
+            "sulfide": 85
+          },
+          "n": {
+            "1": 1,
+            "10": 134,
+            "11": 21,
+            "12": 120,
+            "13": 19,
+            "14": 83,
+            "15": 20,
+            "16": 78,
+            "17": 10,
+            "18": 56,
+            "19": 7,
+            "2": 13,
+            "20": 71,
+            "3": 11,
+            "4": 107,
+            "5": 43,
+            "6": 77,
+            "7": 10,
+            "8": 70,
+            "9": 43,
+            "failed": 6
+          }
+        },
+        "formula_valid": 994,
+        "formula_valid_rate": 0.994,
+        "legacy_comp_valid": 863,
+        "legacy_comp_valid_rate": 0.863,
+        "novel": 749,
+        "novel_rate": 0.749,
+        "novel_unique": 744,
+        "novel_unique_rate": 0.744,
+        "plan_parsed": 994,
+        "plan_parsed_rate": 0.994,
+        "requested": 1000,
+        "seed": 18,
+        "unique": 980,
+        "unique_formula_count": 980,
+        "unique_rate": 0.98
+      },
+      {
+        "all_metal": 367,
+        "all_metal_rate": 0.367,
+        "arm": "c3fd_v25",
+        "assignable": 953,
+        "assignable_rate": 0.953,
+        "distributions": {
+          "arity": {
+            "1": 6,
+            "2": 178,
+            "3": 611,
+            "4": 176,
+            "5": 29
+          },
+          "family": {
+            "chalcogenide": 67,
+            "halide": 105,
+            "nitride": 12,
+            "other": 448,
+            "oxide": 283,
+            "phosphide_or_phosphate": 19,
+            "sulfide": 66
+          },
+          "n": {
+            "10": 97,
+            "11": 12,
+            "12": 99,
+            "13": 18,
+            "14": 73,
+            "15": 10,
+            "16": 60,
+            "17": 9,
+            "18": 49,
+            "19": 15,
+            "2": 22,
+            "20": 89,
+            "3": 11,
+            "4": 167,
+            "5": 42,
+            "6": 88,
+            "7": 18,
+            "8": 86,
+            "9": 35
+          }
+        },
+        "formula_valid": 1000,
+        "formula_valid_rate": 1.0,
+        "legacy_comp_valid": 1000,
+        "legacy_comp_valid_rate": 1.0,
+        "novel": 878,
+        "novel_rate": 0.878,
+        "novel_unique": 875,
+        "novel_unique_rate": 0.875,
+        "plan_parsed": 1000,
+        "plan_parsed_rate": 1.0,
+        "requested": 1000,
+        "seed": 17,
+        "unique": 993,
+        "unique_formula_count": 993,
+        "unique_rate": 0.993
+      },
+      {
+        "all_metal": 378,
+        "all_metal_rate": 0.378,
+        "arm": "c3fd_v25",
+        "assignable": 953,
+        "assignable_rate": 0.953,
+        "distributions": {
+          "arity": {
+            "1": 3,
+            "2": 203,
+            "3": 590,
+            "4": 182,
+            "5": 22
+          },
+          "family": {
+            "chalcogenide": 59,
+            "halide": 106,
+            "nitride": 18,
+            "other": 465,
+            "oxide": 274,
+            "phosphide_or_phosphate": 11,
+            "sulfide": 67
+          },
+          "n": {
+            "1": 1,
+            "10": 105,
+            "11": 11,
+            "12": 97,
+            "13": 28,
+            "14": 65,
+            "15": 12,
+            "16": 51,
+            "17": 6,
+            "18": 81,
+            "19": 12,
+            "2": 19,
+            "20": 89,
+            "3": 20,
+            "4": 137,
+            "5": 43,
+            "6": 82,
+            "7": 18,
+            "8": 86,
+            "9": 37
+          }
+        },
+        "formula_valid": 1000,
+        "formula_valid_rate": 1.0,
+        "legacy_comp_valid": 1000,
+        "legacy_comp_valid_rate": 1.0,
+        "novel": 885,
+        "novel_rate": 0.885,
+        "novel_unique": 881,
+        "novel_unique_rate": 0.881,
+        "plan_parsed": 1000,
+        "plan_parsed_rate": 1.0,
+        "requested": 1000,
+        "seed": 18,
+        "unique": 992,
+        "unique_formula_count": 992,
+        "unique_rate": 0.992
+      }
+    ],
+    "claim_boundary": "requested256 promotion screen only; not a headline result",
+    "distance_to_full_train": {
+      "c3fd_v25": {
+        "N": 0.03489475235849056,
+        "arity": 0.01850560141509437,
+        "family": 0.020449587264150942
+      },
+      "p0": {
+        "N": 0.10173111977313906,
+        "arity": 0.031881921173767064,
+        "family": 0.09475577127621732
+      }
+    },
+    "distributions": {
+      "c3fd_v25": {
+        "arity": {
+          "1": 9,
+          "2": 381,
+          "3": 1201,
+          "4": 358,
+          "5": 51
+        },
+        "family": {
+          "chalcogenide": 126,
+          "halide": 211,
+          "nitride": 30,
+          "other": 913,
+          "oxide": 557,
+          "phosphide_or_phosphate": 30,
+          "sulfide": 133
+        },
+        "n": {
+          "1": 1,
+          "10": 202,
+          "11": 23,
+          "12": 196,
+          "13": 46,
+          "14": 138,
+          "15": 22,
+          "16": 111,
+          "17": 15,
+          "18": 130,
+          "19": 27,
+          "2": 41,
+          "20": 178,
+          "3": 31,
+          "4": 304,
+          "5": 85,
+          "6": 170,
+          "7": 36,
+          "8": 172,
+          "9": 72
+        }
+      },
+      "p0": {
+        "arity": {
+          "1": 5,
+          "2": 372,
+          "3": 1221,
+          "4": 350,
+          "5": 41
+        },
+        "family": {
+          "chalcogenide": 99,
+          "halide": 204,
+          "nitride": 36,
+          "other": 784,
+          "oxide": 679,
+          "phosphide_or_phosphate": 32,
+          "sulfide": 155
+        },
+        "n": {
+          "1": 1,
+          "10": 252,
+          "11": 37,
+          "12": 246,
+          "13": 45,
+          "14": 160,
+          "15": 32,
+          "16": 153,
+          "17": 19,
+          "18": 114,
+          "19": 19,
+          "2": 26,
+          "20": 131,
+          "3": 24,
+          "4": 228,
+          "5": 105,
+          "6": 160,
+          "7": 25,
+          "8": 139,
+          "9": 73
+        }
+      }
+    },
+    "full_train_all_metal_rate": 0.3490566037735849,
+    "gates": {
+      "N_distance_not_worse_than_p0_plus_0p01": true,
+      "all_metal_within_3pp_of_full_train": true,
+      "arity_distance_not_worse_than_p0_plus_0p01": true,
+      "both_seed_comp_valid_positive": true,
+      "family_distance_not_worse_than_p0_plus_0p01": true,
+      "ionic_comp_valid_positive": true,
+      "novel_unique_noninferior_1pp": true,
+      "paired_ci_lower_positive": true,
+      "parse_noninferior_1pp": true,
+      "pooled_comp_valid_positive": true,
+      "requested1000_frozen": true,
+      "semantic_dead_end_zero_both_seeds": true,
+      "step4_pass": true
+    },
+    "ionic": {
+      "c3fd_v25": {
+        "denominator": 1255,
+        "rate": 1.0,
+        "valid": 1255
+      },
+      "p0": {
+        "denominator": 1412,
+        "rate": 0.8123229461756374,
+        "valid": 1147
+      }
+    },
+    "joint_reachability_stats": {
+      "17": {},
+      "18": {}
+    },
+    "mcnemar_comp_valid": {
+      "discordant": 276,
+      "exact_two_sided_p": 1.6472184286297693e-83,
+      "f0_only": 0,
+      "f1_only": 276
+    },
+    "paired_comp_valid_ci95": {
+      "delta": 0.138,
+      "high": 0.15311941090222314,
+      "low": 0.1228805890977769,
+      "method": "paired_normal"
+    },
+    "pooled": [
+      {
+        "all_metal": 575,
+        "all_metal_rate": 0.2875,
+        "arm": "p0",
+        "assignable": 1898,
+        "assignable_rate": 0.949,
+        "distributions": {
+          "arity": {
+            "1": 5,
+            "2": 372,
+            "3": 1221,
+            "4": 350,
+            "5": 41,
+            "failed": 11
+          },
+          "family": {
+            "chalcogenide": 99,
+            "failed": 11,
+            "halide": 204,
+            "nitride": 36,
+            "other": 784,
+            "oxide": 679,
+            "phosphide_or_phosphate": 32,
+            "sulfide": 155
+          },
+          "n": {
+            "1": 1,
+            "10": 252,
+            "11": 37,
+            "12": 246,
+            "13": 45,
+            "14": 160,
+            "15": 32,
+            "16": 153,
+            "17": 19,
+            "18": 114,
+            "19": 19,
+            "2": 26,
+            "20": 131,
+            "3": 24,
+            "4": 228,
+            "5": 105,
+            "6": 160,
+            "7": 25,
+            "8": 139,
+            "9": 73,
+            "failed": 11
+          }
+        },
+        "formula_valid": 1989,
+        "formula_valid_rate": 0.9945,
+        "legacy_comp_valid": 1724,
+        "legacy_comp_valid_rate": 0.862,
+        "novel": 1538,
+        "novel_rate": 0.769,
+        "novel_unique": 1530,
+        "novel_unique_rate": 0.765,
+        "plan_parsed": 1989,
+        "plan_parsed_rate": 0.9945,
+        "requested": 2000,
+        "seed": "pooled",
+        "unique": 1961,
+        "unique_rate": 0.9805
+      },
+      {
+        "all_metal": 745,
+        "all_metal_rate": 0.3725,
+        "arm": "c3fd_v25",
+        "assignable": 1906,
+        "assignable_rate": 0.953,
+        "distributions": {
+          "arity": {
+            "1": 9,
+            "2": 381,
+            "3": 1201,
+            "4": 358,
+            "5": 51
+          },
+          "family": {
+            "chalcogenide": 126,
+            "halide": 211,
+            "nitride": 30,
+            "other": 913,
+            "oxide": 557,
+            "phosphide_or_phosphate": 30,
+            "sulfide": 133
+          },
+          "n": {
+            "1": 1,
+            "10": 202,
+            "11": 23,
+            "12": 196,
+            "13": 46,
+            "14": 138,
+            "15": 22,
+            "16": 111,
+            "17": 15,
+            "18": 130,
+            "19": 27,
+            "2": 41,
+            "20": 178,
+            "3": 31,
+            "4": 304,
+            "5": 85,
+            "6": 170,
+            "7": 36,
+            "8": 172,
+            "9": 72
+          }
+        },
+        "formula_valid": 2000,
+        "formula_valid_rate": 1.0,
+        "legacy_comp_valid": 2000,
+        "legacy_comp_valid_rate": 1.0,
+        "novel": 1763,
+        "novel_rate": 0.8815,
+        "novel_unique": 1756,
+        "novel_unique_rate": 0.878,
+        "plan_parsed": 2000,
+        "plan_parsed_rate": 1.0,
+        "requested": 2000,
+        "seed": "pooled",
+        "unique": 1985,
+        "unique_rate": 0.9925
+      }
+    ],
+    "schema": "h1a2_c3fd_v25_requested1000_final_v1",
+    "seed_comp_valid_deltas": {
+      "17": 0.139,
+      "18": 0.137
+    },
+    "semantic_dead_ends": {
+      "17": 0,
+      "18": 0
+    }
+  },
+  "C3FD_V25_TEACHER_WITNESS_AUDIT.json": {
+    "data_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/c3fd_semantic_v21_step1b_20260828",
+    "elapsed_sec": 2.1378093101084232,
+    "gate": {
+      "model_weights_unused": true,
+      "outcome_labels_unused": true,
+      "teacher_gate_pass": true,
+      "train_teacher_witness_100pct": true,
+      "val_teacher_witness_100pct": true
+    },
+    "schema": "h1a2_c3fd_v25_teacher_witness_audit_v1",
+    "teacher_witness": {
+      "train": {
+        "rate": 1.0,
+        "total": 24558,
+        "valid": 24558
+      },
+      "val": {
+        "rate": 1.0,
+        "total": 8159,
+        "valid": 8159
+      }
+    }
+  },
+  "PLANNER_COUNTVALENCE_FACTORIAL_FINAL.json": {
+    "audit_gate": {
+      "candidate_training_authorized": true,
+      "raw1000_within_3pp_of_train": true,
+      "required_train_val_present": true,
+      "train_val_roundtrip_95pct": true,
+      "train_val_valence_and_neutral_95pct": true
+    },
+    "cells": [
+      {
+        "all_metal_rate": 0.2795275590551181,
+        "arm": "p0",
+        "composition_valid": 254,
+        "composition_valid_rate": 0.9921875,
+        "distributions": {
+          "arity": {
+            "2": 54,
+            "3": 138,
+            "4": 56,
+            "5": 6
+          },
+          "charge": {
+            "all_metal": 71,
+            "charge_fail": 108,
+            "neutral_plausible": 71,
+            "oxidation_missing": 2,
+            "pauling_fail": 2
+          },
+          "family": {
+            "chalcogenide": 15,
+            "halide": 27,
+            "other": 102,
+            "oxide": 89,
+            "phosphide_or_phosphate": 5,
+            "sulfide": 16
+          },
+          "lattice": {
+            "cubic": 7,
+            "hexagonal": 29,
+            "monoclinic": 31,
+            "orthorhombic": 26,
+            "tetragonal": 19,
+            "triclinic": 83,
+            "trigonal": 59
+          },
+          "n_bin": {
+            "01_04": 38,
+            "05_08": 64,
+            "09_12": 69,
+            "13_20": 83
+          },
+          "spacegroup": {
+            "sg_001_002": 9,
+            "sg_003_015": 44,
+            "sg_016_074": 56,
+            "sg_075_142": 47,
+            "sg_143_167": 28,
+            "sg_168_194": 19,
+            "sg_195_230": 51
+          },
+          "volume": {
+            "volpa_005_009": 16,
+            "volpa_010_014": 94,
+            "volpa_015_019": 64,
+            "volpa_020_024": 44,
+            "volpa_025_029": 20,
+            "volpa_030_034": 10,
+            "volpa_035_039": 3,
+            "volpa_040_044": 2,
+            "volpa_045_049": 1
+          }
+        },
+        "emitted_charge_known": 0,
+        "emitted_charge_neutral": 0,
+        "emitted_charge_neutral_rate": null,
+        "lattice_spacegroup_match": 101,
+        "lattice_spacegroup_match_rate": 0.39763779527559057,
+        "oxide_rate": 0.35039370078740156,
+        "parse_rate": 0.9921875,
+        "parsed": 254,
+        "physics_assignable": 238,
+        "physics_assignable_rate": 0.9296875,
+        "requested": 256,
+        "seed": 17,
+        "unique_formula": 253,
+        "unique_formula_rate": 0.9960629921259843,
+        "unique_plan": 254
+      },
+      {
+        "all_metal_rate": 0.29880478087649404,
+        "arm": "countfields",
+        "composition_valid": 251,
+        "composition_valid_rate": 0.98046875,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 38,
+            "3": 172,
+            "4": 34,
+            "5": 6
+          },
+          "charge": {
+            "all_metal": 75,
+            "charge_fail": 110,
+            "neutral_plausible": 58,
+            "oxidation_missing": 4,
+            "pauling_fail": 3,
+            "single_element": 1
+          },
+          "family": {
+            "chalcogenide": 17,
+            "halide": 22,
+            "nitride": 1,
+            "other": 100,
+            "oxide": 85,
+            "phosphide_or_phosphate": 7,
+            "sulfide": 19
+          },
+          "lattice": {
+            "cubic": 5,
+            "hexagonal": 34,
+            "monoclinic": 36,
+            "orthorhombic": 20,
+            "tetragonal": 19,
+            "triclinic": 76,
+            "trigonal": 61
+          },
+          "n_bin": {
+            "01_04": 48,
+            "05_08": 74,
+            "09_12": 71,
+            "13_20": 58
+          },
+          "spacegroup": {
+            "sg_001_002": 8,
+            "sg_003_015": 48,
+            "sg_016_074": 45,
+            "sg_075_142": 50,
+            "sg_143_167": 27,
+            "sg_168_194": 22,
+            "sg_195_230": 51
+          },
+          "volume": {
+            "volpa_005_009": 9,
+            "volpa_010_014": 99,
+            "volpa_015_019": 63,
+            "volpa_020_024": 40,
+            "volpa_025_029": 29,
+            "volpa_030_034": 10,
+            "volpa_035_039": 1
+          }
+        },
+        "emitted_charge_known": 0,
+        "emitted_charge_neutral": 0,
+        "emitted_charge_neutral_rate": null,
+        "final_val_nll": 0.2677652159333229,
+        "lattice_spacegroup_match": 108,
+        "lattice_spacegroup_match_rate": 0.4302788844621514,
+        "oxide_rate": 0.3386454183266932,
+        "parse_rate": 0.98046875,
+        "parsed": 251,
+        "physics_assignable": 223,
+        "physics_assignable_rate": 0.87109375,
+        "requested": 256,
+        "seed": 17,
+        "unique_formula": 251,
+        "unique_formula_rate": 1.0,
+        "unique_plan": 251
+      },
+      {
+        "all_metal_rate": 0.4796747967479675,
+        "arm": "countvalence",
+        "composition_valid": 246,
+        "composition_valid_rate": 0.9609375,
+        "distributions": {
+          "arity": {
+            "1": 2,
+            "2": 47,
+            "3": 159,
+            "4": 33,
+            "5": 5
+          },
+          "charge": {
+            "all_metal": 118,
+            "charge_fail": 116,
+            "neutral_plausible": 10,
+            "single_element": 2
+          },
+          "family": {
+            "chalcogenide": 12,
+            "halide": 29,
+            "nitride": 1,
+            "other": 105,
+            "oxide": 81,
+            "phosphide_or_phosphate": 1,
+            "sulfide": 17
+          },
+          "lattice": {
+            "cubic": 4,
+            "hexagonal": 32,
+            "monoclinic": 38,
+            "orthorhombic": 14,
+            "tetragonal": 17,
+            "triclinic": 73,
+            "trigonal": 68
+          },
+          "n_bin": {
+            "01_04": 56,
+            "05_08": 75,
+            "09_12": 57,
+            "13_20": 58
+          },
+          "spacegroup": {
+            "sg_001_002": 13,
+            "sg_003_015": 41,
+            "sg_016_074": 44,
+            "sg_075_142": 42,
+            "sg_143_167": 32,
+            "sg_168_194": 26,
+            "sg_195_230": 48
+          },
+          "volume": {
+            "volpa_005_009": 13,
+            "volpa_010_014": 82,
+            "volpa_015_019": 61,
+            "volpa_020_024": 48,
+            "volpa_025_029": 30,
+            "volpa_030_034": 9,
+            "volpa_035_039": 2,
+            "volpa_040_044": 1
+          }
+        },
+        "emitted_charge_known": 245,
+        "emitted_charge_neutral": 130,
+        "emitted_charge_neutral_rate": 0.5284552845528455,
+        "final_val_nll": 0.21355958461761473,
+        "lattice_spacegroup_match": 105,
+        "lattice_spacegroup_match_rate": 0.4268292682926829,
+        "oxide_rate": 0.32926829268292684,
+        "parse_rate": 0.9609375,
+        "parsed": 246,
+        "physics_assignable": 224,
+        "physics_assignable_rate": 0.875,
+        "requested": 256,
+        "seed": 17,
+        "unique_formula": 246,
+        "unique_formula_rate": 1.0,
+        "unique_plan": 246
+      },
+      {
+        "all_metal_rate": 0.30980392156862746,
+        "arm": "p0",
+        "composition_valid": 255,
+        "composition_valid_rate": 0.99609375,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 38,
+            "3": 145,
+            "4": 65,
+            "5": 6
+          },
+          "charge": {
+            "all_metal": 79,
+            "charge_fail": 105,
+            "neutral_plausible": 67,
+            "oxidation_missing": 2,
+            "pauling_fail": 2
+          },
+          "family": {
+            "chalcogenide": 16,
+            "halide": 24,
+            "nitride": 2,
+            "other": 105,
+            "oxide": 84,
+            "phosphide_or_phosphate": 9,
+            "sulfide": 15
+          },
+          "lattice": {
+            "cubic": 7,
+            "hexagonal": 30,
+            "monoclinic": 39,
+            "orthorhombic": 25,
+            "tetragonal": 27,
+            "triclinic": 62,
+            "trigonal": 65
+          },
+          "n_bin": {
+            "01_04": 41,
+            "05_08": 59,
+            "09_12": 69,
+            "13_20": 86
+          },
+          "spacegroup": {
+            "sg_001_002": 11,
+            "sg_003_015": 45,
+            "sg_016_074": 48,
+            "sg_075_142": 45,
+            "sg_143_167": 21,
+            "sg_168_194": 26,
+            "sg_195_230": 59
+          },
+          "volume": {
+            "volpa_005_009": 14,
+            "volpa_010_014": 83,
+            "volpa_015_019": 75,
+            "volpa_020_024": 49,
+            "volpa_025_029": 17,
+            "volpa_030_034": 14,
+            "volpa_035_039": 1,
+            "volpa_040_044": 1,
+            "volpa_045_049": 1
+          }
+        },
+        "emitted_charge_known": 0,
+        "emitted_charge_neutral": 0,
+        "emitted_charge_neutral_rate": null,
+        "lattice_spacegroup_match": 119,
+        "lattice_spacegroup_match_rate": 0.4666666666666667,
+        "oxide_rate": 0.32941176470588235,
+        "parse_rate": 0.99609375,
+        "parsed": 255,
+        "physics_assignable": 234,
+        "physics_assignable_rate": 0.9140625,
+        "requested": 256,
+        "seed": 18,
+        "unique_formula": 255,
+        "unique_formula_rate": 1.0,
+        "unique_plan": 255
+      },
+      {
+        "all_metal_rate": 0.3157894736842105,
+        "arm": "countfields",
+        "composition_valid": 247,
+        "composition_valid_rate": 0.96484375,
+        "distributions": {
+          "arity": {
+            "1": 1,
+            "2": 36,
+            "3": 160,
+            "4": 46,
+            "5": 4
+          },
+          "charge": {
+            "all_metal": 78,
+            "charge_fail": 105,
+            "neutral_plausible": 53,
+            "oxidation_missing": 2,
+            "pauling_fail": 8,
+            "single_element": 1
+          },
+          "family": {
+            "chalcogenide": 14,
+            "halide": 24,
+            "nitride": 7,
+            "other": 108,
+            "oxide": 73,
+            "phosphide_or_phosphate": 7,
+            "sulfide": 14
+          },
+          "lattice": {
+            "cubic": 6,
+            "hexagonal": 16,
+            "monoclinic": 31,
+            "orthorhombic": 21,
+            "tetragonal": 16,
+            "triclinic": 76,
+            "trigonal": 81
+          },
+          "n_bin": {
+            "01_04": 48,
+            "05_08": 77,
+            "09_12": 64,
+            "13_20": 58
+          },
+          "spacegroup": {
+            "sg_001_002": 9,
+            "sg_003_015": 49,
+            "sg_016_074": 48,
+            "sg_075_142": 37,
+            "sg_143_167": 31,
+            "sg_168_194": 10,
+            "sg_195_230": 63
+          },
+          "volume": {
+            "volpa_005_009": 10,
+            "volpa_010_014": 90,
+            "volpa_015_019": 67,
+            "volpa_020_024": 49,
+            "volpa_025_029": 19,
+            "volpa_030_034": 4,
+            "volpa_035_039": 5,
+            "volpa_040_044": 1,
+            "volpa_045_049": 2
+          }
+        },
+        "emitted_charge_known": 0,
+        "emitted_charge_neutral": 0,
+        "emitted_charge_neutral_rate": null,
+        "final_val_nll": 0.2658870521187782,
+        "lattice_spacegroup_match": 93,
+        "lattice_spacegroup_match_rate": 0.3765182186234818,
+        "oxide_rate": 0.29554655870445345,
+        "parse_rate": 0.96484375,
+        "parsed": 247,
+        "physics_assignable": 228,
+        "physics_assignable_rate": 0.890625,
+        "requested": 256,
+        "seed": 18,
+        "unique_formula": 247,
+        "unique_formula_rate": 1.0,
+        "unique_plan": 247
+      },
+      {
+        "all_metal_rate": 0.43673469387755104,
+        "arm": "countvalence",
+        "composition_valid": 245,
+        "composition_valid_rate": 0.95703125,
+        "distributions": {
+          "arity": {
+            "2": 39,
+            "3": 155,
+            "4": 49,
+            "5": 2
+          },
+          "charge": {
+            "all_metal": 107,
+            "charge_fail": 128,
+            "neutral_plausible": 10
+          },
+          "family": {
+            "chalcogenide": 15,
+            "halide": 25,
+            "nitride": 2,
+            "other": 102,
+            "oxide": 80,
+            "phosphide_or_phosphate": 5,
+            "sulfide": 16
+          },
+          "lattice": {
+            "cubic": 3,
+            "hexagonal": 30,
+            "monoclinic": 32,
+            "orthorhombic": 19,
+            "tetragonal": 21,
+            "triclinic": 83,
+            "trigonal": 57
+          },
+          "n_bin": {
+            "01_04": 40,
+            "05_08": 73,
+            "09_12": 69,
+            "13_20": 63
+          },
+          "spacegroup": {
+            "sg_001_002": 8,
+            "sg_003_015": 46,
+            "sg_016_074": 41,
+            "sg_075_142": 60,
+            "sg_143_167": 21,
+            "sg_168_194": 24,
+            "sg_195_230": 45
+          },
+          "volume": {
+            "volpa_005_009": 12,
+            "volpa_010_014": 104,
+            "volpa_015_019": 60,
+            "volpa_020_024": 39,
+            "volpa_025_029": 18,
+            "volpa_030_034": 9,
+            "volpa_035_039": 2,
+            "volpa_040_044": 1
+          }
+        },
+        "emitted_charge_known": 244,
+        "emitted_charge_neutral": 117,
+        "emitted_charge_neutral_rate": 0.4775510204081633,
+        "final_val_nll": 0.2153437939286232,
+        "lattice_spacegroup_match": 97,
+        "lattice_spacegroup_match_rate": 0.39591836734693875,
+        "oxide_rate": 0.32653061224489793,
+        "parse_rate": 0.95703125,
+        "parsed": 245,
+        "physics_assignable": 222,
+        "physics_assignable_rate": 0.8671875,
+        "requested": 256,
+        "seed": 18,
+        "unique_formula": 245,
+        "unique_formula_rate": 1.0,
+        "unique_plan": 245
+      }
+    ],
+    "design": {
+      "candidate": "countvalence with CrysVCD-first tiered catalog",
+      "matched_control": "countfields without oxidation labels",
+      "p0": "original rich-Plan checkpoint and frozen seed17/18 samples",
+      "repair": false,
+      "requested_per_cell": 256,
+      "rerank": false,
+      "rl": false,
+      "seeds": [
+        17,
+        18
+      ]
+    },
+    "gates": {
+      "assignability_noninferior_to_countfields": false,
+      "both_seed_parse_at_least_250": false,
+      "coverage_audit": true,
+      "downstream_authorized": false,
+      "emitted_neutral_at_least_90pct": false,
+      "lattice_spacegroup_at_least_95pct": false,
+      "lattice_spacegroup_noninferior_1pp": true,
+      "no_all_metal_shortcut_10pp": false,
+      "no_oxide_shortcut_10pp": true,
+      "parse_noninferior_to_countfields_1pp": false,
+      "parse_noninferior_to_p0_1pp": false,
+      "unique_formula_noninferior_5pp": true
+    },
+    "pooled": [
+      {
+        "all_metal_rate": 0.29469548133595286,
+        "arm": "p0",
+        "composition_valid": 509,
+        "composition_valid_rate": 0.994140625,
+        "emitted_charge_known": 0,
+        "emitted_charge_neutral": 0,
+        "emitted_charge_neutral_rate": null,
+        "lattice_spacegroup_match": 220,
+        "lattice_spacegroup_match_rate": 0.43222003929273084,
+        "oxide_rate": 0.33988212180746563,
+        "parse_rate": 0.994140625,
+        "parsed": 509,
+        "physics_assignable": 472,
+        "physics_assignable_rate": 0.921875,
+        "requested": 512,
+        "seed": "pooled",
+        "unique_formula": 505,
+        "unique_formula_rate": 0.9921414538310412,
+        "unique_plan": 507
+      },
+      {
+        "all_metal_rate": 0.3072289156626506,
+        "arm": "countfields",
+        "composition_valid": 498,
+        "composition_valid_rate": 0.97265625,
+        "emitted_charge_known": 0,
+        "emitted_charge_neutral": 0,
+        "emitted_charge_neutral_rate": null,
+        "lattice_spacegroup_match": 201,
+        "lattice_spacegroup_match_rate": 0.4036144578313253,
+        "oxide_rate": 0.3172690763052209,
+        "parse_rate": 0.97265625,
+        "parsed": 498,
+        "physics_assignable": 451,
+        "physics_assignable_rate": 0.880859375,
+        "requested": 512,
+        "seed": "pooled",
+        "unique_formula": 497,
+        "unique_formula_rate": 0.9979919678714859,
+        "unique_plan": 498
+      },
+      {
+        "all_metal_rate": 0.45824847250509165,
+        "arm": "countvalence",
+        "composition_valid": 491,
+        "composition_valid_rate": 0.958984375,
+        "emitted_charge_known": 489,
+        "emitted_charge_neutral": 247,
+        "emitted_charge_neutral_rate": 0.5030549898167006,
+        "lattice_spacegroup_match": 202,
+        "lattice_spacegroup_match_rate": 0.41140529531568226,
+        "oxide_rate": 0.32790224032586557,
+        "parse_rate": 0.958984375,
+        "parsed": 491,
+        "physics_assignable": 446,
+        "physics_assignable_rate": 0.87109375,
+        "requested": 512,
+        "seed": "pooled",
+        "unique_formula": 491,
+        "unique_formula_rate": 1.0,
+        "unique_plan": 491
+      }
+    ],
+    "schema": "h1a2_planner_countvalence_factorial_final_v1"
+  },
+  "C3FD_V22_AUDIT_V1_ENGINEERING_FAILURE.json": {
+    "schema": "h1a2_c3fd_v22_audit_engineering_failure_v1",
+    "date": "2026-08-28",
+    "scientific_result": false,
+    "gpu_authorized": false,
+    "frozen_runtime_limit_sec": 300,
+    "observed_running_sec": 312,
+    "termination": "SIGTERM",
+    "cause": "boolean suffix existence recursively materialized all viable descendant actions",
+    "recovery": "short-circuit internal existence search at first exact witness",
+    "scientific_contract_changed": false
+  },
+  "C3FD_V22_AUDIT_V2_ENGINEERING_FAILURE.json": {
+    "schema": "h1a2_c3fd_v22_audit_engineering_failure_v2",
+    "date": "2026-08-28",
+    "scientific_result": false,
+    "gpu_authorized": false,
+    "frozen_runtime_limit_sec": 300,
+    "observed_running_sec": 317,
+    "termination": "SIGTERM",
+    "recovery_used": "short-circuit internal exact suffix existence",
+    "result": "runtime gate failed; C3FD-v2.2 stopped",
+    "next_candidate": "C3FD-v2.3 constructive Pauling-witness finite-state DP",
+    "scientific_gate_relaxed": false
+  },
+  "C3FD_V23_AUDIT_ENGINEERING_FAILURE.json": {
+    "schema": "h1a2_c3fd_v23_audit_engineering_failure_v1",
+    "date": "2026-08-28",
+    "scientific_result": false,
+    "gpu_authorized": false,
+    "frozen_runtime_limit_sec": 120,
+    "observed_running_sec": 120,
+    "observed_rss_mb": 1240,
+    "termination": "SIGTERM",
+    "result": "runtime gate failed; C3FD-v2.3 stopped",
+    "next_candidate": "same witness with bitset charge convolution",
+    "scientific_gate_relaxed": false
+  },
+  "C3FD_V24_AUDIT_ENGINEERING_FAILURE.json": {
+    "schema": "h1a2_c3fd_v24_audit_engineering_failure_v1",
+    "date": "2026-08-28",
+    "scientific_result": false,
+    "gpu_authorized": false,
+    "frozen_runtime_limit_sec": 60,
+    "observed_running_sec": 126,
+    "observed_rss_mb": 856,
+    "termination": "SIGTERM",
+    "result": "full-strata enumeration runtime gate failed; C3FD-v2.4 stopped",
+    "teacher_witness_train": "24558/24558",
+    "teacher_witness_val": "8159/8159",
+    "next_candidate": "same bitset witness with frozen 32-request online canary",
+    "scientific_gate_relaxed": false
+  }
+}

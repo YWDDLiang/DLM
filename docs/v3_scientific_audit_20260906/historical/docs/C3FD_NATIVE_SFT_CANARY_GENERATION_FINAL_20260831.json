@@ -1,0 +1,46 @@
+{
+  "schema": "c3fd_native_sft_canary_generation_final_v1",
+  "date": "2026-08-31",
+  "status": "SUCCESS",
+  "job_id": 38745,
+  "state": "COMPLETED",
+  "exit_code": "0:0",
+  "elapsed_seconds": 3621,
+  "resources": {
+    "a800": 4,
+    "cpu": 32,
+    "observed_a800_hours": 4.023333333333333,
+    "kill_ceiling_a800_hours": 32.0
+  },
+  "cohort": {
+    "requested": 256,
+    "split_counts": {"train": 128, "validation": 128},
+    "manifest_sha256": "73177562b54e30276af833ebffcf1a07082bc9a610d1099f28693b64a7a1b116"
+  },
+  "science": {
+    "policies": [82017, 82018],
+    "streams": [17, 18],
+    "planner_checkpoint_by_stream": {"17": "seed17", "18": "seed18"},
+    "temperature": 0.7,
+    "schedule": "exact_axis",
+    "model494_tau": 800,
+    "attempts_per_plan": 1,
+    "retry_rerank_replacement": false,
+    "official_query": false
+  },
+  "cells": [
+    {"stream": 17, "policy_seed": 82017, "requested": 256, "parsed": 248, "graphs": 248, "refined": 248, "missing_count": 8},
+    {"stream": 17, "policy_seed": 82018, "requested": 256, "parsed": 252, "graphs": 252, "refined": 252, "missing_count": 4},
+    {"stream": 18, "policy_seed": 82017, "requested": 256, "parsed": 254, "graphs": 254, "refined": 254, "missing_count": 2},
+    {"stream": 18, "policy_seed": 82018, "requested": 256, "parsed": 254, "graphs": 254, "refined": 254, "missing_count": 2}
+  ],
+  "policy_body_aggregate": {
+    "82017": {"parsed": 502, "requested": 512, "parse_rate": 0.98046875},
+    "82018": {"parsed": 506, "requested": 512, "parse_rate": 0.98828125}
+  },
+  "outputs_sha256_verified": true,
+  "run_report_sha256": "d25baacbab66238a3380632674093644b71eb7195a7690605b0cd652fb92ce5f",
+  "archive_success": true,
+  "interpretation": "execution_and_refinement_complete_stability_not_yet_evaluated",
+  "next_step": "one_raw_first_then_refined_offline_evaluation"
+}

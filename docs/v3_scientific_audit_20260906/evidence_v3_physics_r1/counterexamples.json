@@ -1,0 +1,469 @@
+{
+  "schema": "v3_physics_r1_counterexamples_v1",
+  "model_calls": 0,
+  "new_crystal_samples": 0,
+  "MLIP_calls": 0,
+  "relaxations": 0,
+  "claim_boundary": "Analytic toys and local source inspection, not candidate performance or original-CIF coverage.",
+  "last_euler_step_codec_boundary": [
+    {
+      "clean_fractional_coordinate": 0.0049,
+      "canonical_clean_bin": 0,
+      "upper_bin_boundary": 0.005,
+      "gamma": 1.0,
+      "last_step_sigma_fractional": 0.001,
+      "oracle_last_Euler_step_probability_of_different_codec_bin": 0.4601721627229709,
+      "per_axis_last_noise_A_at_cell_length_20A": 0.02
+    },
+    {
+      "clean_fractional_coordinate": 0.0049,
+      "canonical_clean_bin": 0,
+      "upper_bin_boundary": 0.005,
+      "gamma": 1.5,
+      "last_step_sigma_fractional": 3.1622776601683795e-05,
+      "oracle_last_Euler_step_probability_of_different_codec_bin": 0.0007827011290012509,
+      "per_axis_last_noise_A_at_cell_length_20A": 0.0006324555320336759
+    }
+  ],
+  "H_probability_flow_finite_epsilon_endpoint": {
+    "epsilon_time": 0.002,
+    "sigma_fractional": 0.002,
+    "clean_fractional_coordinate": 0.0049,
+    "perfect_marginal_probability_of_different_codec_bin": 0.4800615652290354,
+    "cartesian_axis_std_at_20A": 0.04,
+    "interpretation": "A perfect ODE ends at p_epsilon, not p_0; this is marginal residual blur, not newly injected terminal Euler noise."
+  },
+  "gaussian_VP_perfect_predictor_finite_kernel": [
+    {
+      "steps": 32,
+      "lambda_z": 18.0,
+      "terminal_abar": 1.522997974471263e-08,
+      "largest_beta": 0.6695902985419842,
+      "clean_target_variance": 1.0,
+      "generated_variance_with_perfect_epsilon_and_beta_tilde": 0.7455710858682282,
+      "relative_variance_deficit": 0.2544289141317718,
+      "reason": "beta_tilde omits posterior uncertainty in z0; exact Gaussian-data reverse variance is beta"
+    },
+    {
+      "steps": 64,
+      "lambda_z": 18.0,
+      "terminal_abar": 1.522997974471263e-08,
+      "largest_beta": 0.4277077369760859,
+      "clean_target_variance": 1.0,
+      "generated_variance_with_perfect_epsilon_and_beta_tilde": 0.8520226434777936,
+      "relative_variance_deficit": 0.14797735652220645,
+      "reason": "beta_tilde omits posterior uncertainty in z0; exact Gaussian-data reverse variance is beta"
+    },
+    {
+      "steps": 128,
+      "lambda_z": 18.0,
+      "terminal_abar": 1.522997974471263e-08,
+      "largest_beta": 0.24433065074574556,
+      "clean_target_variance": 1.0,
+      "generated_variance_with_perfect_epsilon_and_beta_tilde": 0.9184305769906876,
+      "relative_variance_deficit": 0.08156942300931236,
+      "reason": "beta_tilde omits posterior uncertainty in z0; exact Gaussian-data reverse variance is beta"
+    }
+  ],
+  "dense_target_information_is_not_component_count": [
+    {
+      "sigma": 0.001,
+      "integrated_density": 1.0,
+      "E_q_of_squared_sigma_times_conditional_score": 1.0000000000000002
+    },
+    {
+      "sigma": 0.05,
+      "integrated_density": 1.0,
+      "E_q_of_squared_sigma_times_conditional_score": 0.9999999999999998
+    },
+    {
+      "sigma": 0.2,
+      "integrated_density": 1.0,
+      "E_q_of_squared_sigma_times_conditional_score": 0.7631019133987131
+    },
+    {
+      "sigma": 0.5,
+      "integrated_density": 1.0,
+      "E_q_of_squared_sigma_times_conditional_score": 0.0010210275777280224
+    },
+    {
+      "sigma": 1.0,
+      "integrated_density": 1.0000000000000002,
+      "E_q_of_squared_sigma_times_conditional_score": 5.651071633460337e-16
+    }
+  ],
+  "N_and_A_scale": [
+    {
+      "N": 1,
+      "VPA_A3": 20,
+      "cubic_edge_A": 2.7144176165949063,
+      "fractional_sigma": 0.05,
+      "cartesian_axis_std_A": 0.13572088082974532,
+      "V2_construct_and_repair_NFE": 18,
+      "C_NFE": 64
+    },
+    {
+      "N": 4,
+      "VPA_A3": 20,
+      "cubic_edge_A": 4.308869380063767,
+      "fractional_sigma": 0.05,
+      "cartesian_axis_std_A": 0.21544346900318834,
+      "V2_construct_and_repair_NFE": 36,
+      "C_NFE": 64
+    },
+    {
+      "N": 10,
+      "VPA_A3": 20,
+      "cubic_edge_A": 5.848035476425731,
+      "fractional_sigma": 0.05,
+      "cartesian_axis_std_A": 0.29240177382128657,
+      "V2_construct_and_repair_NFE": 72,
+      "C_NFE": 64
+    },
+    {
+      "N": 20,
+      "VPA_A3": 20,
+      "cubic_edge_A": 7.368062997280773,
+      "fractional_sigma": 0.05,
+      "cartesian_axis_std_A": 0.36840314986403866,
+      "V2_construct_and_repair_NFE": 132,
+      "C_NFE": 64
+    }
+  ],
+  "anisotropic_noise_example": {
+    "lattice_A": [
+      [
+        2.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        20.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        5.0
+      ]
+    ],
+    "fractional_sigma": 0.05,
+    "cartesian_covariance_A2": [
+      [
+        0.010000000000000002,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0000000000000002,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.06250000000000001
+      ]
+    ]
+  },
+  "same_lattice_different_chart": {
+    "row_lattice_original": [
+      [
+        3.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        3.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        3.0
+      ]
+    ],
+    "unimodular_M": [
+      [
+        1.0,
+        3.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "row_lattice_changed": [
+      [
+        3.0,
+        9.0,
+        0.0
+      ],
+      [
+        0.0,
+        3.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        3.0
+      ]
+    ],
+    "volume_both_A3": 27.0,
+    "shape_distance_Frobenius": 1.6896503457119436,
+    "angle_gamma_changed_degrees": 18.434948822922,
+    "interpretation": "Same simple-cubic translation lattice under a determinant-one basis change; metric-cell classifier may say monoclinic while conventional symmetry remains cubic."
+  },
+  "translation_gauge_changes_forward_measure": [
+    {
+      "N": 1,
+      "projected_unit_noise_covariance": [
+        [
+          0.0
+        ]
+      ],
+      "rank": 0,
+      "per_site_variance": 0.0
+    },
+    {
+      "N": 2,
+      "projected_unit_noise_covariance": [
+        [
+          0.5,
+          -0.5
+        ],
+        [
+          -0.5,
+          0.5
+        ]
+      ],
+      "rank": 1,
+      "per_site_variance": 0.5
+    },
+    {
+      "N": 4,
+      "projected_unit_noise_covariance": [
+        [
+          0.75,
+          -0.25,
+          -0.25,
+          -0.25
+        ],
+        [
+          -0.25,
+          0.75,
+          -0.25,
+          -0.25
+        ],
+        [
+          -0.25,
+          -0.25,
+          0.75,
+          -0.25
+        ],
+        [
+          -0.25,
+          -0.25,
+          -0.25,
+          0.75
+        ]
+      ],
+      "rank": 3,
+      "per_site_variance": 0.75
+    }
+  ],
+  "arithmetic_fractional_centering_discontinuity": {
+    "F": [
+      0.99,
+      0.01
+    ],
+    "wrap_F_plus_002": [
+      0.010000000000000009,
+      0.03
+    ],
+    "centered_F": [
+      0.49,
+      0.51
+    ],
+    "centered_shifted_F": [
+      0.99,
+      0.009999999999999995
+    ],
+    "interpretation": "Representatives jump by half a cell despite a small common translation; physical relative geometry remains equivalent."
+  },
+  "codec_does_not_close_third_translation": {
+    "exact_orbit": [
+      0.0,
+      0.3333333333333333,
+      0.6666666666666666
+    ],
+    "quantized_orbit": [
+      0.0,
+      0.33,
+      0.67
+    ],
+    "max_residual_fractional_after_translation_one_third": 0.00666666666666671,
+    "max_residual_A_if_axis_6A": 0.04000000000000026,
+    "interpretation": "Geometric group-closure counterexample; no spglib SG classification was run."
+  },
+  "rollback_selection_can_change_stationary_distribution": {
+    "target": [
+      0.5,
+      0.5
+    ],
+    "D_ok": [
+      0.5,
+      0.0
+    ],
+    "explicit_failure_probability": 0.5,
+    "rollback_kernel": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.5,
+        0.5
+      ]
+    ],
+    "one_step_from_target": [
+      0.75,
+      0.25
+    ],
+    "limiting_distribution": [
+      1.0,
+      0.0
+    ],
+    "interpretation": "An otherwise uniform denoiser with output-dependent execution failure loses one mode under rollback."
+  },
+  "A_independent_marginals_miss_joint_support": {
+    "observed_tuples": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        1,
+        1
+      ]
+    ],
+    "data_mass_each": 0.5,
+    "perfect_marginal_probability_each_bit": 0.5,
+    "independent_prior_mass_on_observed_joint_support": 0.25,
+    "independent_prior_mass_on_unobserved_combinations": 0.75,
+    "interpretation": "Unobserved is not necessarily physically impossible; exact conditional likelihood on data leaves these requests unidentified."
+  },
+  "chart_score_is_not_energy_gradient": {
+    "physical_density": "p(V)=exp(-V), V>0",
+    "chart": "v=log(V)",
+    "chart_density": "p(v)=exp(v-exp(v))",
+    "chart_score_at_v0": 0.0,
+    "negative_energy_gradient_at_v0": -1.0,
+    "interpretation": "Jacobian changes physical-density score; this does not demand adding a Jacobian to an already declared empirical dz dF training measure."
+  },
+  "ordinal_source_join_counterexample": {
+    "csv_rows": [
+      "A",
+      "B",
+      "C"
+    ],
+    "failed_parse_rows": [
+      "B"
+    ],
+    "written_SFT_rows": [
+      "A",
+      "C"
+    ],
+    "later_assigned_source_row_idx": [
+      0,
+      1
+    ],
+    "unsafe_join_second_source_to_csv_row": "B",
+    "true_second_source": "C",
+    "interpretation": "Possible under available skip-failure and assign-ordinal code paths, not an observed MP20 misalignment."
+  },
+  "program_clock_endpoint_boundary": {
+    "theorem": "If clean conditional data are independent of P and each P-specific forward process has its exact reverse and correct terminal marginal, all clocks recover the same clean distribution.",
+    "implication": "P can change computational paths and finite-step error without creating identifiable target semantics; compare gamma=1 before making the 0.5 rank-clock mandatory."
+  },
+  "supervision_exposure": {
+    "T": 64,
+    "views_per_source_after_2_epochs": 4,
+    "expected_distinct_time_levels_per_source": 3.9072227478027344,
+    "interpretation": "Dense coordinates increase target components, not independent structures, time coverage, or a SUN guarantee."
+  },
+  "H_log_uniform_time_exposure": {
+    "epsilon": 0.002,
+    "G_views_per_source_after_two_additional_epochs": 2,
+    "probability_t_above_09": 0.016953686216283858,
+    "expected_t_above_09_views_across_27136_sources": 920.1104583301575,
+    "probability_a_source_has_no_t_above_09_G_view": 0.9663800550437525,
+    "interpretation": "A coverage expectation, not actual training counts or a theorem requiring every source at every time."
+  },
+  "zero_initialized_shared_head": {
+    "x": 2.0,
+    "frozen_base_weight": 3.0,
+    "adapter_weight": 0.5,
+    "target": 1.0,
+    "initial_head_weight": 0.0,
+    "first_head_gradient": -7.0,
+    "first_adapter_gradient": 0.0,
+    "head_weight_after_one_SGD_step_lr_001": 0.07,
+    "next_adapter_gradient": -0.0714,
+    "interpretation": "A zero first hidden/adapter gradient can be expected; persistent detach remains a different failure."
+  },
+  "source_receipts": [
+    {
+      "path": "docs/v3_scientific_audit_20260906/V3_DLM_CANDIDATES_AND_ATTACKS.md",
+      "sha256": "bd98573df716b73c867e5624721e2babf982dcaa58b247e868eec9b260a3d366"
+    },
+    {
+      "path": "docs/v3_scientific_audit_20260906/V3_GEOMETRIC_HEAD_COUNTERPROPOSAL.md",
+      "sha256": "d229a661585005a484387ec8263db0c88c6396b5f37b862f8273ce616cecb7ac"
+    },
+    {
+      "path": "src/crystal_dlm/programmed_path_runtime.py",
+      "sha256": "cc2aac4f0f15347b65c7c002e34dab5598a2a62b87ac76eb683edff11cc92cf0"
+    },
+    {
+      "path": "src/crystal_dlm/r5_plan_state.py",
+      "sha256": "7125c1adac236257a3fbcc0756e56e6dc62844e48e688969a08df1ae10059b87"
+    },
+    {
+      "path": "src/crystal_dlm/canonical_site_order.py",
+      "sha256": "104c5163b79d4e27ca9b376d532afbd22dc4c50011f3108d09f7a8ec7ec49b59"
+    },
+    {
+      "path": "src/scripts/build_r5_exact_length_sft_data.py",
+      "sha256": "3d4431607d6e78e8915254ef9063ac14ff2923c61a37be364bf205f7bada5e0e"
+    },
+    {
+      "path": "scripts/build_c3fd_native_sft_data.py",
+      "sha256": "e8a50593dc3ca8d7e5b21c97a6008d497f04355b9572f8ef2a5c2dda0d2c1f5b"
+    },
+    {
+      "path": "scripts/canonicalize_c3fd_native_teacher_sft.py",
+      "sha256": "0f1a8fa11046aabc8b92d17bb6d08d64874cb0b1d1aad25eb503f1e24324304d"
+    },
+    {
+      "path": "src/crystal_dlm/periodic_repair_model.py",
+      "sha256": "7b469a4cafd072612c456f515ca13eb09b64cb9d0c9d7816b42c11ff85359ed1"
+    },
+    {
+      "path": "src/crystal_dlm/periodic_repair_initialization.py",
+      "sha256": "f9dc36daa0711fbd6b0899196539115a41db82bf4ee487d631bcda8f62ec258c"
+    }
+  ]
+}

@@ -1,0 +1,618 @@
+{
+  "sha": "697e99ae910a1336aa51e2be838d7c6e7f3fdc11",
+  "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/697e99ae910a1336aa51e2be838d7c6e7f3fdc11",
+  "tree": [
+    {
+      "path": ".env.example",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c61ccd21310af0d29f8fa149c8261c497176627",
+      "size": 383,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/9c61ccd21310af0d29f8fa149c8261c497176627"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5f85951765c56a44ff708ca0a018ac30991bc556",
+      "size": 932,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/5f85951765c56a44ff708ca0a018ac30991bc556"
+    },
+    {
+      "path": "README.md",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "4d2afc714ab292946e7b774229970a6f8b5e7e06",
+      "size": 5238,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/4d2afc714ab292946e7b774229970a6f8b5e7e06"
+    },
+    {
+      "path": "conf",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a9ce88ee155616f74bd1fe240a1cf6971272ff4f",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/a9ce88ee155616f74bd1fe240a1cf6971272ff4f"
+    },
+    {
+      "path": "conf/data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4e1a672c04c607ed2a21fb8b6200bb68c049d179",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/4e1a672c04c607ed2a21fb8b6200bb68c049d179"
+    },
+    {
+      "path": "conf/data/carbon_24.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28f98cd0d1428998bbc482d88b7339b9ea7a9611",
+      "size": 1911,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/28f98cd0d1428998bbc482d88b7339b9ea7a9611"
+    },
+    {
+      "path": "conf/data/mp_20.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6ae8726d3c28d478063fe14e45acfd2ee5468eae",
+      "size": 1937,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/6ae8726d3c28d478063fe14e45acfd2ee5468eae"
+    },
+    {
+      "path": "conf/data/mpts_52.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee788c39d5b96419f3dd3c7c40fa56395fbbb6e3",
+      "size": 1919,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/ee788c39d5b96419f3dd3c7c40fa56395fbbb6e3"
+    },
+    {
+      "path": "conf/data/perov.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "82108f068e331a47b97464bae5dbde6e87ecf11e",
+      "size": 1930,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/82108f068e331a47b97464bae5dbde6e87ecf11e"
+    },
+    {
+      "path": "conf/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11506211d963c42ce0906c7906a56ad5b4266ead",
+      "size": 640,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/11506211d963c42ce0906c7906a56ad5b4266ead"
+    },
+    {
+      "path": "conf/logging",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2495d14ca341651bc9fb3b381eb4c87a986004c2",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/2495d14ca341651bc9fb3b381eb4c87a986004c2"
+    },
+    {
+      "path": "conf/logging/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3b8ffa39195a8792d4934cddf7387ec4d8ddf8a",
+      "size": 296,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/e3b8ffa39195a8792d4934cddf7387ec4d8ddf8a"
+    },
+    {
+      "path": "conf/model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fdf12ffcd10be09103d5b67f4810a16109eaf31f",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/fdf12ffcd10be09103d5b67f4810a16109eaf31f"
+    },
+    {
+      "path": "conf/model/bfn",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f6f4c94e81d18d5c4f37a9f4b8d28a5d8fd76a1e",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/f6f4c94e81d18d5c4f37a9f4b8d28a5d8fd76a1e"
+    },
+    {
+      "path": "conf/model/bfn/bfn_csp.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "622779cae270634b73cfdc879f5177b640677d5c",
+      "size": 207,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/622779cae270634b73cfdc879f5177b640677d5c"
+    },
+    {
+      "path": "conf/model/bfn/bfn_dng.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a5eb29e3c4eea113acc30808ab732db4bf312fd2",
+      "size": 219,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/a5eb29e3c4eea113acc30808ab732db4bf312fd2"
+    },
+    {
+      "path": "conf/model/bfn/dynamics",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5249715d0a8387fda3ed1057d77b2a0fe64e052d",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/5249715d0a8387fda3ed1057d77b2a0fe64e052d"
+    },
+    {
+      "path": "conf/model/bfn/dynamics/cspnet.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09a660b7e58e8475d1436f66854e8dc5e30b24e7",
+      "size": 290,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/09a660b7e58e8475d1436f66854e8dc5e30b24e7"
+    },
+    {
+      "path": "conf/model/csp.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "977fdbba4560780f948e048e7fb67612b8f75164",
+      "size": 131,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/977fdbba4560780f948e048e7fb67612b8f75164"
+    },
+    {
+      "path": "conf/model/dng.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b97dd37352bfbe8a05e93524f788513845ad846",
+      "size": 144,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/8b97dd37352bfbe8a05e93524f788513845ad846"
+    },
+    {
+      "path": "conf/optim",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1f14c7805a3da869b57c3d2860ffb82d44210168",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/1f14c7805a3da869b57c3d2860ffb82d44210168"
+    },
+    {
+      "path": "conf/optim/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a351bcf603c3b5b5cbffca1300f5a826af412dae",
+      "size": 339,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/a351bcf603c3b5b5cbffca1300f5a826af412dae"
+    },
+    {
+      "path": "conf/train",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "26689af8c2b3a7a52e2a9a1408a197204ce884db",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/26689af8c2b3a7a52e2a9a1408a197204ce884db"
+    },
+    {
+      "path": "conf/train/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e62c5e123beafa19f94ae940710a486c360d6e7c",
+      "size": 642,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/e62c5e123beafa19f94ae940710a486c360d6e7c"
+    },
+    {
+      "path": "data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "dea8308d6883613675dc7d1065c9f2001a480ca4",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/dea8308d6883613675dc7d1065c9f2001a480ca4"
+    },
+    {
+      "path": "data/carbon_24",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7c24088e4f376edbc06d57e69e49b77649766fa5",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/7c24088e4f376edbc06d57e69e49b77649766fa5"
+    },
+    {
+      "path": "data/carbon_24/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df3669087d6511566d12a9852b4d2be175fb15a0",
+      "size": 1377,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/df3669087d6511566d12a9852b4d2be175fb15a0"
+    },
+    {
+      "path": "data/carbon_24/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bf4df81530defe1e103ac080b3ebce127ca2bff",
+      "size": 5075854,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/1bf4df81530defe1e103ac080b3ebce127ca2bff"
+    },
+    {
+      "path": "data/carbon_24/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c6428f80e99040cbade289a3168590b226e6c76",
+      "size": 15214751,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/0c6428f80e99040cbade289a3168590b226e6c76"
+    },
+    {
+      "path": "data/carbon_24/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "883bdfde2a30bc55536e31e96e9f1f648be2ebd8",
+      "size": 5068178,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/883bdfde2a30bc55536e31e96e9f1f648be2ebd8"
+    },
+    {
+      "path": "data/mp_20",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3d2f5c1fe6c3a88c2192ed854f8690cfbee15d6f",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/3d2f5c1fe6c3a88c2192ed854f8690cfbee15d6f"
+    },
+    {
+      "path": "data/mp_20/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "498076c5663bc478e41a3405e8c2da530973f06a",
+      "size": 1622,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/498076c5663bc478e41a3405e8c2da530973f06a"
+    },
+    {
+      "path": "data/mp_20/dist.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9f96255f84c90911143d6a3dda8c528bce4302d",
+      "size": 47343,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/f9f96255f84c90911143d6a3dda8c528bce4302d"
+    },
+    {
+      "path": "data/mp_20/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5dc643041df53f5ce4970a79930ad262b4f07acd",
+      "size": 11599133,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/5dc643041df53f5ce4970a79930ad262b4f07acd"
+    },
+    {
+      "path": "data/mp_20/test_bg.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f297f8eb7b21c2dee8092c48bbdd5530be4860e",
+      "size": 11865019,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/0f297f8eb7b21c2dee8092c48bbdd5530be4860e"
+    },
+    {
+      "path": "data/mp_20/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1c9d498565ac2fd8d075a51ff2ef5e51ba6c21f",
+      "size": 34975028,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/b1c9d498565ac2fd8d075a51ff2ef5e51ba6c21f"
+    },
+    {
+      "path": "data/mp_20/train_bg.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8f61a6bebaece6138246f279cba47ee0e3ef6def",
+      "size": 36215690,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/8f61a6bebaece6138246f279cba47ee0e3ef6def"
+    },
+    {
+      "path": "data/mp_20/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7efe4d7ebeb4f460ceaad35e5326c42111d9c9a1",
+      "size": 11617279,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/7efe4d7ebeb4f460ceaad35e5326c42111d9c9a1"
+    },
+    {
+      "path": "data/mp_20/val_bg.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b40371e9793561fdfa853eae893c622fee25b11e",
+      "size": 12248510,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/b40371e9793561fdfa853eae893c622fee25b11e"
+    },
+    {
+      "path": "data/mpts_52",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2539e87e2199534e74374afc16bce89821f9ee47",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/2539e87e2199534e74374afc16bce89821f9ee47"
+    },
+    {
+      "path": "data/mpts_52/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de12ea4cbf183917047abd76c083ac899992a43c",
+      "size": 1586,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/de12ea4cbf183917047abd76c083ac899992a43c"
+    },
+    {
+      "path": "data/mpts_52/dist.pt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8ecd49f5618f0af8f11dbb671cfbc51e907254db",
+      "size": 105775,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/8ecd49f5618f0af8f11dbb671cfbc51e907254db"
+    },
+    {
+      "path": "data/mpts_52/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e8af159618f63be346b6527f155514323964423",
+      "size": 16358482,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/2e8af159618f63be346b6527f155514323964423"
+    },
+    {
+      "path": "data/mpts_52/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "476d8b32fb4197103157cb982109779cf0f9a7a8",
+      "size": 46393736,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/476d8b32fb4197103157cb982109779cf0f9a7a8"
+    },
+    {
+      "path": "data/mpts_52/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e25a0937e5e293d6f3872b4330c99ccca714efa0",
+      "size": 10060706,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/e25a0937e5e293d6f3872b4330c99ccca714efa0"
+    },
+    {
+      "path": "data/perov_5",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5ad984603d8862d1d3402a75bc0084d7ca2ddabd",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/5ad984603d8862d1d3402a75bc0084d7ca2ddabd"
+    },
+    {
+      "path": "data/perov_5/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4185f618153f5c2a19bc40038e87daccc91f880c",
+      "size": 2040,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/4185f618153f5c2a19bc40038e87daccc91f880c"
+    },
+    {
+      "path": "data/perov_5/test.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb97501bed31c8cdcb603f9b9c3a59842828c9d8",
+      "size": 7229328,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/cb97501bed31c8cdcb603f9b9c3a59842828c9d8"
+    },
+    {
+      "path": "data/perov_5/train.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62ce91686595d45d484d026bbfd14c2518b66abd",
+      "size": 21695296,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/62ce91686595d45d484d026bbfd14c2518b66abd"
+    },
+    {
+      "path": "data/perov_5/val.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "872fc814e6a513024cb923a0576d723fca25969c",
+      "size": 7233118,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/872fc814e6a513024cb923a0576d723fca25969c"
+    },
+    {
+      "path": "env_gpu.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c93af1534ca03e1fe96d670bd313497f89432b9",
+      "size": 13533,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/2c93af1534ca03e1fe96d670bd313497f89432b9"
+    },
+    {
+      "path": "setup.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d54b7f1d73c1e2ca8b3c58e6c6275e8321bed95c",
+      "size": 157,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/d54b7f1d73c1e2ca8b3c58e6c6275e8321bed95c"
+    },
+    {
+      "path": "symmbfn",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "710701825d3ebfc3ff386c1741574bd3413d4bd5",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/710701825d3ebfc3ff386c1741574bd3413d4bd5"
+    },
+    {
+      "path": "symmbfn/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "symmbfn/common",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "96b4d6a54400cf1a544b15c63e85900dec6ccd4d",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/96b4d6a54400cf1a544b15c63e85900dec6ccd4d"
+    },
+    {
+      "path": "symmbfn/common/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "symmbfn/common/constants.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "505de09dca5d0f3a43bf06fe4ecedf4735fe182e",
+      "size": 6315,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/505de09dca5d0f3a43bf06fe4ecedf4735fe182e"
+    },
+    {
+      "path": "symmbfn/common/data_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "33b8fffeb16f58086cdcb61d5b7bee393b9e6da2",
+      "size": 51302,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/33b8fffeb16f58086cdcb61d5b7bee393b9e6da2"
+    },
+    {
+      "path": "symmbfn/common/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d5b786842f350140f1ebb4b3bd462a8f0f3afef",
+      "size": 3177,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/3d5b786842f350140f1ebb4b3bd462a8f0f3afef"
+    },
+    {
+      "path": "symmbfn/data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4266bfb87e1db626127896be1777439eb733f68f",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/4266bfb87e1db626127896be1777439eb733f68f"
+    },
+    {
+      "path": "symmbfn/data/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "symmbfn/data/datamodule.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54bd12b3d618f9fed6bdd70b5362e5cc6bfc3c54",
+      "size": 4058,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/54bd12b3d618f9fed6bdd70b5362e5cc6bfc3c54"
+    },
+    {
+      "path": "symmbfn/data/dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c15f4e5f637b5b363c6382f2f6e2a4b44d86d906",
+      "size": 5526,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/c15f4e5f637b5b363c6382f2f6e2a4b44d86d906"
+    },
+    {
+      "path": "symmbfn/model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c5dec8b4c9300c293c5484ef7ec4b157c6857f3f",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/c5dec8b4c9300c293c5484ef7ec4b157c6857f3f"
+    },
+    {
+      "path": "symmbfn/model/bfn",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1fe8fc28328d34181d77755272cb4569480b83f8",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/1fe8fc28328d34181d77755272cb4569480b83f8"
+    },
+    {
+      "path": "symmbfn/model/bfn/bfn_csp.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48c0e2389fce8c92333ba93211202e8012731882",
+      "size": 12864,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/48c0e2389fce8c92333ba93211202e8012731882"
+    },
+    {
+      "path": "symmbfn/model/bfn/bfn_dng.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "321e5d34b8ecf3d5b673c244d853edd4bc9d05b9",
+      "size": 13579,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/321e5d34b8ecf3d5b673c244d853edd4bc9d05b9"
+    },
+    {
+      "path": "symmbfn/model/callbacks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "42e969e5a17706c3fe09a29ad859a5181faa707c",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/42e969e5a17706c3fe09a29ad859a5181faa707c"
+    },
+    {
+      "path": "symmbfn/model/callbacks/basic.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9fba53e4092f09abc2e20e8488181ebdb444c11",
+      "size": 18116,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/c9fba53e4092f09abc2e20e8488181ebdb444c11"
+    },
+    {
+      "path": "symmbfn/model/cspnet",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "43868fb6081884281f09ebe0206ab227b5edb398",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/43868fb6081884281f09ebe0206ab227b5edb398"
+    },
+    {
+      "path": "symmbfn/model/cspnet/cspnet.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb211defc750cd1fe15594210532ef0fb423faeb",
+      "size": 12654,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/bb211defc750cd1fe15594210532ef0fb423faeb"
+    },
+    {
+      "path": "symmbfn/model/model.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7bcad38f672aa24a37176e851c7b8f4d6b008b9e",
+      "size": 14807,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/7bcad38f672aa24a37176e851c7b8f4d6b008b9e"
+    },
+    {
+      "path": "symmbfn/model/symmbfn_train.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47f9c7b8c6a0733219e2bd2e1ebba7848cd17954",
+      "size": 3541,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/47f9c7b8c6a0733219e2bd2e1ebba7848cd17954"
+    },
+    {
+      "path": "symmbfn/scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c53d2b7fbbe9b97f1c6865bfa3c8bf20ef4784cd",
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/trees/c53d2b7fbbe9b97f1c6865bfa3c8bf20ef4784cd"
+    },
+    {
+      "path": "symmbfn/scripts/compute_metrics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92b09743f8ecc5b5214788940ba873379711343a",
+      "size": 24375,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/92b09743f8ecc5b5214788940ba873379711343a"
+    },
+    {
+      "path": "symmbfn/scripts/energy_relaxation.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "752eac261ab2c2cf6afa3990b77947203057f056",
+      "size": 5795,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/752eac261ab2c2cf6afa3990b77947203057f056"
+    },
+    {
+      "path": "symmbfn/scripts/eval_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "438123faf3967a2b6b0b15f883f9f0c4171f1e6a",
+      "size": 11804,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/438123faf3967a2b6b0b15f883f9f0c4171f1e6a"
+    },
+    {
+      "path": "symmbfn/scripts/evaluate.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8767274ab16095a593d460dad56d1dac69af6513",
+      "size": 3767,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/8767274ab16095a593d460dad56d1dac69af6513"
+    },
+    {
+      "path": "symmbfn/scripts/generation.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "02e31adc547ecdae4d3e6741b2c253be1b74dc5e",
+      "size": 6243,
+      "url": "https://api.github.com/repos/aimat-lab/symmbfn/git/blobs/02e31adc547ecdae4d3e6741b2c253be1b74dc5e"
+    }
+  ],
+  "truncated": false
+}

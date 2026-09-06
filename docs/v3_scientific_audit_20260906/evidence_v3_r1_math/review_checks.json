@@ -1,0 +1,154 @@
+{
+  "scope": "Independent R1 mathematical counterexamples; no checkpoint, GPU, MLIP, source CIF, or performance measurement.",
+  "C_clock_and_endpoint": [
+    {
+      "gamma": 1.0,
+      "sigma_at_k1": 0.001,
+      "sigma_at_k64": 1.0,
+      "relative_variance_increment_at_k_ge_2": 0.19691427786084809,
+      "max_normalized_score_update_gain": 0.19691427786084958,
+      "time_indices_strictly_below_fractional_sigma_0p005": 15,
+      "time_indices_strictly_below_fractional_sigma_0p001": 0,
+      "point_source_last_step_Q_bin_change_probability_f0_0p0049": 0.4601721627229709
+    },
+    {
+      "gamma": 1.25,
+      "sigma_at_k1": 0.0001778279410038923,
+      "sigma_at_k64": 1.0,
+      "relative_variance_increment_at_k_ge_2": 0.2397570859157368,
+      "max_normalized_score_update_gain": 0.23975708591573874,
+      "time_indices_strictly_below_fractional_sigma_0p005": 25,
+      "time_indices_strictly_below_fractional_sigma_0p001": 13,
+      "point_source_last_step_Q_bin_change_probability_f0_0p0049": 0.286941743726048
+    },
+    {
+      "gamma": 1.5,
+      "sigma_at_k1": 3.1622776601683795e-05,
+      "sigma_at_k64": 1.0,
+      "relative_variance_increment_at_k_ge_2": 0.2803143269988472,
+      "max_normalized_score_update_gain": 0.2803143269988493,
+      "time_indices_strictly_below_fractional_sigma_0p005": 31,
+      "time_indices_strictly_below_fractional_sigma_0p001": 21,
+      "point_source_last_step_Q_bin_change_probability_f0_0p0049": 0.0007827011290012544
+    }
+  ],
+  "C_VP_reverse": [
+    {
+      "illustrative_max_squared_chart_norm_not_measured_data": 6.0,
+      "lambda_for_conditional_KL_bound_1e_6": 14.914123013299047,
+      "terminal_alpha_bar": 3.333332777777835e-07,
+      "terminal_conditional_KL_bound": 9.999999999999987e-07,
+      "largest_forward_beta": 0.3702454891490715,
+      "data_and_prior_standard_Gaussian_true_final_variance": 1.0,
+      "candidate_reverse_final_variance_with_oracle_epsilon": 0.863136597584513,
+      "zero_epsilon_head_final_std_not_a_trained_model": 2216.7484840778784,
+      "x0_based_mean_vs_simplified_mean_max_error": 2.1094237467877974e-15,
+      "boundary": "The rates are illustrative. The perfect-score variance defect is a finite reverse approximation error, not a normalization failure or a SUN forecast."
+    },
+    {
+      "illustrative_max_squared_chart_norm_not_measured_data": 100.0,
+      "lambda_for_conditional_KL_bound_1e_6": 17.727533563992424,
+      "terminal_alpha_bar": 1.999999998799993e-08,
+      "terminal_conditional_KL_bound": 9.999999999999966e-07,
+      "largest_forward_beta": 0.42285250010999487,
+      "data_and_prior_standard_Gaussian_true_final_variance": 1.0,
+      "candidate_reverse_final_variance_with_oracle_epsilon": 0.852951437506607,
+      "zero_epsilon_head_final_std_not_a_trained_model": 8900.279983043467,
+      "x0_based_mean_vs_simplified_mean_max_error": 5.551115123125783e-16,
+      "boundary": "The rates are illustrative. The perfect-score variance defect is a finite reverse approximation error, not a normalization failure or a SUN forecast."
+    }
+  ],
+  "A_identifiability_and_prior": {
+    "unique_composition_toy": {
+      "rows": [
+        {
+          "c": 0,
+          "g": 0,
+          "s": 0,
+          "probability": 0.5
+        },
+        {
+          "c": 1,
+          "g": 1,
+          "s": 1,
+          "probability": 0.5
+        }
+      ],
+      "I_G_S_nats": 0.6931471805599453,
+      "I_G_S_given_C_nats": 0.0,
+      "two_perfect_fit_models": [
+        "G=C (ignores S)",
+        "G=S (uses S)"
+      ],
+      "intervention_C0_S1_predictions": [
+        0,
+        1
+      ]
+    },
+    "frozen_independent_prior_toy": {
+      "attainable_triplets": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "individually_calibrated_Bernoulli_marginals": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "independent_prior_mass_with_nonempty_attribute_preimage": 0.25,
+      "maximum_requested_triplet_compliance": 0.25,
+      "boundary": "This is a semantic support counterexample, not a statement that 75% of actual project Plans are impossible or that SUN is bounded by 25%."
+    }
+  },
+  "B_outer_rollback": {
+    "inner_trace_fixture": {
+      "success": true,
+      "failure": null,
+      "events": [
+        {
+          "op": "rollback",
+          "reason": "full_cell_empty_support"
+        }
+      ]
+    },
+    "noise_kernel": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0
+      ]
+    ],
+    "event_aware_outer_rollback_kernel": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ]
+    ],
+    "wrong_success_flag_only_outer_kernel": [
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0
+      ]
+    ],
+    "boundary": "Both are normalized kernels; they are different algorithms. This fixture demonstrates the actual status-interface trap without running a model."
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "synthetic_cpu_physics_counterexamples_v1",
+  "frozen_code_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+  "MLIP_or_DLM_executed": false,
+  "scope": "Synthetic counterexamples establish contract boundaries, not prevalence or model effects.",
+  "finite_shell": {
+    "lattice_parameters": [
+      1.0,
+      3.0,
+      4.0,
+      90.0,
+      90.0,
+      8.0
+    ],
+    "declared_shell_radius": 2,
+    "reported_minimum_A": 1.0,
+    "larger_shell_radius": 5,
+    "shortest_found_A": 0.41853884246475176,
+    "shortest_found_image": [
+      -3,
+      1,
+      0
+    ]
+  },
+  "filter_stop": {
+    "verification_type": "analytic_reference_deformation_formula_not_executed_ASE",
+    "ASE_executed": false,
+    "volume_per_atom_A3": 18.0,
+    "entrywise_stress_GPa": 0.6,
+    "initial_generalized_fmax_eV_A": 0.06740829855953918,
+    "FIRE_fmax": 0.1,
+    "generalized_force_criterion_passes": true,
+    "external_stress_threshold_GPa": 0.5,
+    "external_verification_passes": false
+  },
+  "unverified_energy_threshold_SUN": {
+    "e_above_hull_eV_atom": -0.09999999999999964,
+    "strict_stable": true,
+    "meta_stable": true,
+    "strict_sun": true,
+    "meta_sun": true,
+    "verified_strict_stable": false,
+    "verified_meta_stable": false,
+    "verified_strict_sun": false,
+    "verified_meta_sun": false
+  },
+  "missing_hull_not_relabelled_as_energy": {
+    "e_above_hull_eV_atom": null,
+    "strict_stable": false,
+    "meta_stable": false,
+    "strict_sun": false,
+    "meta_sun": false,
+    "verified_strict_stable": false,
+    "verified_meta_stable": false,
+    "verified_strict_sun": false,
+    "verified_meta_sun": false
+  },
+  "stress_convention": {
+    "entrywise_max_before_GPa": 0.6,
+    "entrywise_max_after_rotation_GPa": 0.30000000000000004,
+    "spectral_norm_before_GPa": 0.6,
+    "spectral_norm_after_GPa": 0.6
+  },
+  "A_B_identity": {
+    "delta_e0": 0.0,
+    "delta_A": 0.09999999999999964,
+    "delta_B": -0.09999999999999964
+  }
+}

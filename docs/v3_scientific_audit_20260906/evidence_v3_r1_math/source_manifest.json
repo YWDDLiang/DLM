@@ -1,0 +1,53 @@
+[
+  {
+    "source": "V3_DLM_CANDIDATES_AND_ATTACKS.md",
+    "sha256": "bd98573df716b73c867e5624721e2babf982dcaa58b247e868eec9b260a3d366",
+    "snapshot": "reviewed\\V3_DLM_CANDIDATES_AND_ATTACKS.md"
+  },
+  {
+    "source": "v3_candidate_cpu_checks.py",
+    "sha256": "c0bac9d4c2160f617abb77962e3e05f55b3cceb655e3179a0970cd5ebd46f30c",
+    "snapshot": "reviewed\\v3_candidate_cpu_checks.py"
+  },
+  {
+    "source": "v3_candidate_cpu_checks.json",
+    "sha256": "e1183995d9740ae927d12498b02b7e9707a0e21467a4db13d630ce413541036f",
+    "snapshot": "reviewed\\v3_candidate_cpu_checks.json"
+  },
+  {
+    "source": "src/crystal_dlm/programmed_path_runtime.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "cc2aac4f0f15347b65c7c002e34dab5598a2a62b87ac76eb683edff11cc92cf0",
+    "snapshot": "frozen\\src\\crystal_dlm\\programmed_path_runtime.py.txt"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_v2_corruption.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "d7e6de32e62639b77cbc12627de9a3bb8504bf60996728364a279b4aa13adc05",
+    "snapshot": "frozen\\src\\crystal_dlm\\periodic_v2_corruption.py.txt"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_v2_training_data.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "1159d8af6bd60ba1ba7012a282695c0b8d09ebe71b580aaf16a7186c2875d21e",
+    "snapshot": "frozen\\src\\crystal_dlm\\periodic_v2_training_data.py.txt"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_repair_initialization.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "f9dc36daa0711fbd6b0899196539115a41db82bf4ee487d631bcda8f62ec258c",
+    "snapshot": "frozen\\src\\crystal_dlm\\periodic_repair_initialization.py.txt"
+  },
+  {
+    "source": "src/crystal_dlm/periodic_repair_model.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "7b469a4cafd072612c456f515ca13eb09b64cb9d0c9d7816b42c11ff85359ed1",
+    "snapshot": "frozen\\src\\crystal_dlm\\periodic_repair_model.py.txt"
+  },
+  {
+    "source": "src/scripts/train_periodic_dlm_v2.py",
+    "git_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+    "sha256": "56b11dfcd72f3df08b6de9de20db0e11b359c8c383de3e920ab5477662a86174",
+    "snapshot": "frozen\\src\\scripts\\train_periodic_dlm_v2.py.txt"
+  }
+]

@@ -1,0 +1,285 @@
+{
+  "scope": "tiny CPU mathematics/implementation fixtures; no trained model inference, MLIP, relaxation, or SUN evaluation",
+  "execution_commit_reference": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
+  "source_sha256": {
+    "periodic_v2_training_data.py": "1159d8af6bd60ba1ba7012a282695c0b8d09ebe71b580aaf16a7186c2875d21e",
+    "periodic_v2_objective.py": "d12a28e0348ad9e27f4b5286efd9795a8f939aa73e27f27f69e9e3b58e2b9b04",
+    "periodic_v2_corruption.py": "d7e6de32e62639b77cbc12627de9a3bb8504bf60996728364a279b4aa13adc05",
+    "periodic_v2_model.py": "5d89f105e2ab590b3298633fe5b42c306e112e81e65a9b2fea4c33cff2547575",
+    "programmed_path_runtime.py": "cc2aac4f0f15347b65c7c002e34dab5598a2a62b87ac76eb683edff11cc92cf0",
+    "spad_generation.py": "33933a4f74fd735940ebcf3959a86bcb763cc4271d223dca799bc4bbf4b7e408"
+  },
+  "denoise_vs_data_augmentation": {
+    "data": [
+      0.9,
+      0.1
+    ],
+    "forward_C": [
+      [
+        0.8,
+        0.2
+      ],
+      [
+        0.2,
+        0.8
+      ]
+    ],
+    "Bayes_D": [
+      [
+        0.9729729729729729,
+        0.02702702702702703
+      ],
+      [
+        0.6923076923076924,
+        0.30769230769230776
+      ]
+    ],
+    "data_after_direct_D": [
+      0.9449064449064449,
+      0.055093555093555104
+    ],
+    "stationary_of_direct_D": [
+      0.9624277456647384,
+      0.037572254335260236
+    ],
+    "data_after_C_then_D": [
+      0.9000000000000001,
+      0.10000000000000003
+    ],
+    "data_after_low_C_but_mixture_D": [
+      0.9336798336798335,
+      0.06632016632016634
+    ],
+    "toy_energy": [
+      0.0,
+      -10.0
+    ],
+    "data_mean_toy_energy": -1.0,
+    "repeated_direct_D_mean_toy_energy": -0.37572254335260236
+  },
+  "prefix_admission_counterexample": {
+    "data_states": [
+      "00",
+      "01",
+      "11"
+    ],
+    "data_probabilities": [
+      0.1,
+      0.4,
+      0.5
+    ],
+    "fully_legal_states": [
+      "00",
+      "11"
+    ],
+    "locally_fitted_legal_chain": [
+      0.5,
+      0.5
+    ],
+    "globally_restricted_data": [
+      0.16666666666666666,
+      0.8333333333333334
+    ]
+  },
+  "parallel_marginals_are_not_joint_posterior": {
+    "true_joint": [
+      [
+        0.5,
+        0.0
+      ],
+      [
+        0.0,
+        0.5
+      ]
+    ],
+    "one_shot_independent_marginals": [
+      [
+        0.25,
+        0.25
+      ],
+      [
+        0.25,
+        0.25
+      ]
+    ],
+    "unsupported_probability": 0.5,
+    "sequential_oracle_conditional_unsupported_probability": 0.0
+  },
+  "random_soft_plan_independence": {
+    "joint_G_S": [
+      [
+        0.13999999999999999,
+        0.5599999999999999
+      ],
+      [
+        0.06,
+        0.24
+      ]
+    ],
+    "p_G_given_each_S": [
+      [
+        0.7,
+        0.3
+      ],
+      [
+        0.7,
+        0.3
+      ]
+    ],
+    "mutual_information_nats": 6.661338147750938e-17,
+    "illustrative_9p5_teacher_fallback_MI_nats": 0.0053050041120728565,
+    "scope": "population toy, not measured V2 conditional independence"
+  },
+  "alias_measure_and_temperature": {
+    "raw_equal_logits_physical_zero_probability_at_T0p7": 0.026470184326171875,
+    "other_physical_class_probability": 0.009833634831011295,
+    "uniform_physical_class_probability": 0.01,
+    "alias_split_mass_correction_uniform_max_error": 0.0,
+    "scope": "a prior/measure effect, not an alias implementation bug"
+  },
+  "current_sampler_shift_invariance_edge_case": {
+    "0.0": {
+      "current_exp_sampler": 2,
+      "equivalent_log_space_sampler": 2,
+      "stable_softmax": [
+        0.0,
+        0.05431326613264062,
+        0.9456867338673594
+      ]
+    },
+    "1000.0": {
+      "current_exp_sampler": 1,
+      "equivalent_log_space_sampler": 2,
+      "stable_softmax": [
+        0.0,
+        0.054313266132638954,
+        0.945686733867361
+      ]
+    },
+    "-1000.0": {
+      "current_exp_sampler": 0,
+      "equivalent_log_space_sampler": 2,
+      "stable_softmax": [
+        0.0,
+        0.054313266132638954,
+        0.945686733867361
+      ]
+    }
+  },
+  "quantized_gaussian_marginals_not_naive_semigroup": {
+    "max_abs_Q0p2_Q0p4_minus_Qsqrt0p2": 0.04376879963149394
+  },
+  "representation_limits": {
+    "fractional_bin": 0.01,
+    "worst_coordinate_error_bound_cube4_A": 0.06,
+    "coordinate_rounding_rms_cube4_A": 0.02,
+    "isotropic_cartesian_noise_fractional_variance_ratio_cell_1_10_10": 100.0,
+    "legal_distance_repulsive_proxy_energy_ratio_r0p6_to_r1p2": 4096.0
+  },
+  "two_epoch_repair_coordinate_supervision": {
+    "1": {
+      "no_coordinate_prefix_probability": 0.390625,
+      "no_coordinate_target_any_branch_probability_before_admission": 0.17687281640625
+    },
+    "5": {
+      "no_coordinate_prefix_probability": 0.390625,
+      "no_coordinate_target_any_branch_probability_before_admission": 0.14304813610810996
+    },
+    "20": {
+      "no_coordinate_prefix_probability": 0.390625,
+      "no_coordinate_target_any_branch_probability_before_admission": 0.14063052365147358
+    }
+  },
+  "geometry_routing": {
+    "construction_prefix": [
+      {
+        "position": 1,
+        "lattice_known": false,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 2,
+        "lattice_known": false,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 3,
+        "lattice_known": false,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 4,
+        "lattice_known": false,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 5,
+        "lattice_known": false,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 6,
+        "lattice_known": false,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 8,
+        "lattice_known": true,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 9,
+        "lattice_known": true,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 10,
+        "lattice_known": true,
+        "known_sites": 0,
+        "global_bias_abs_sum": 0.0,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 12,
+        "lattice_known": true,
+        "known_sites": 1,
+        "global_bias_abs_sum": 5.934990406036377,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 13,
+        "lattice_known": true,
+        "known_sites": 1,
+        "global_bias_abs_sum": 5.867363929748535,
+        "active_query_bias_abs_sum": 0.0
+      },
+      {
+        "position": 14,
+        "lattice_known": true,
+        "known_sites": 1,
+        "global_bias_abs_sum": 5.799951553344727,
+        "active_query_bias_abs_sum": 0.0
+      }
+    ],
+    "repair_global_bias_abs_sum": 41.628639221191406,
+    "missing_and_explicit_unknown_sigma_features_equal": true,
+    "scope": "nonzero artificial weights prove routing availability; not trained-model effectiveness"
+  },
+  "all_assertions_passed": true
+}

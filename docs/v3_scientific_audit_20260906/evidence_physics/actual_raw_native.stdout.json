@@ -1,0 +1,178 @@
+{
+  "schema": "saved_physics_lane_audit_v1",
+  "model_calls": 0,
+  "relaxations": 0,
+  "new_samples": 0,
+  "input_sha256": {
+    "docs\\v3_scientific_audit_20260906\\evidence\\physics_inputs\\raw_native.labels.jsonl": "7526f4065ddf2518ab1017a01c3643b4a0eddd86c5f8641b4a08b9ed2eaeef67",
+    "docs\\v3_scientific_audit_20260906\\evidence\\physics_inputs\\raw_native.paths.jsonl": "90df9fcbba77e1c392023c3923c49268861e72d5d6daa031cf42d780102c0d47"
+  },
+  "thresholds": {
+    "force_eV_A": 0.1,
+    "entrywise_stress_GPa": 0.5,
+    "max_steps": 500,
+    "distance_A": 0.49999999
+  },
+  "counters": {
+    "labels": 256,
+    "verified": 60,
+    "optimizer_true_force_pass_stress_above": 59,
+    "optimizer_true_force_pass_stress_above_below_500": 59
+  },
+  "stop_crossings": [
+    {
+      "optimizer_converged": "false",
+      "step_bucket": "at_or_above_500",
+      "force": "above",
+      "stress": "above",
+      "status": "invalid_terminal",
+      "count": 87
+    },
+    {
+      "optimizer_converged": "false",
+      "step_bucket": "at_or_above_500",
+      "force": "above",
+      "stress": "above",
+      "status": "not_converged",
+      "count": 27
+    },
+    {
+      "optimizer_converged": "false",
+      "step_bucket": "at_or_above_500",
+      "force": "pass",
+      "stress": "above",
+      "status": "invalid_terminal",
+      "count": 1
+    },
+    {
+      "optimizer_converged": "false",
+      "step_bucket": "at_or_above_500",
+      "force": "pass",
+      "stress": "above",
+      "status": "not_converged",
+      "count": 1
+    },
+    {
+      "optimizer_converged": "missing",
+      "step_bucket": "missing",
+      "force": "missing",
+      "stress": "missing",
+      "status": "generation_failure",
+      "count": 1
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "above",
+      "stress": "above",
+      "status": "not_converged",
+      "count": 6
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "above",
+      "stress": "pass",
+      "status": "invalid_terminal",
+      "count": 1
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "above",
+      "stress": "pass",
+      "status": "not_converged",
+      "count": 12
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "pass",
+      "stress": "above",
+      "status": "not_converged",
+      "count": 59
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "pass",
+      "stress": "pass",
+      "status": "invalid_terminal",
+      "count": 1
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "below_500",
+      "force": "pass",
+      "stress": "pass",
+      "status": "verified",
+      "count": 58
+    },
+    {
+      "optimizer_converged": "true",
+      "step_bucket": "zero",
+      "force": "pass",
+      "stress": "pass",
+      "status": "verified",
+      "count": 2
+    }
+  ],
+  "fresh_representation_checks": [
+    {
+      "representation": "shifted_geometry",
+      "force": "above",
+      "stress": "pass",
+      "labelled_verified": true,
+      "count": 1
+    },
+    {
+      "representation": "shifted_geometry",
+      "force": "pass",
+      "stress": "pass",
+      "labelled_verified": true,
+      "count": 59
+    },
+    {
+      "representation": "stored_geometry",
+      "force": "pass",
+      "stress": "pass",
+      "labelled_verified": true,
+      "count": 60
+    },
+    {
+      "representation": "wrapped_geometry",
+      "force": "pass",
+      "stress": "pass",
+      "labelled_verified": true,
+      "count": 60
+    }
+  ],
+  "image_audit": [
+    {
+      "stage": "raw",
+      "status": "audited",
+      "missed_radius2_violation": false,
+      "count": 255
+    },
+    {
+      "stage": "raw",
+      "status": "saved_geometry_missing",
+      "missed_radius2_violation": false,
+      "count": 1
+    },
+    {
+      "stage": "terminal",
+      "status": "audited",
+      "missed_radius2_violation": false,
+      "count": 255
+    },
+    {
+      "stage": "terminal",
+      "status": "saved_geometry_missing",
+      "missed_radius2_violation": false,
+      "count": 1
+    }
+  ],
+  "max_images_per_structure": 200000,
+  "claim_boundary": "Saved-artifact checks only; incomplete geometry/image searches are never labelled valid. No frozen evaluation result is changed."
+}

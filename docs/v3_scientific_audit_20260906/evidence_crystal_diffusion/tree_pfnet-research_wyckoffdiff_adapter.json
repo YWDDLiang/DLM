@@ -1,0 +1,841 @@
+{
+  "sha": "9cb01bbc0fcf17e8d16968cf2d76cda9761ca070",
+  "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/9cb01bbc0fcf17e8d16968cf2d76cda9761ca070",
+  "tree": [
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fc650d4981c1ca96a2f2e46921d03d2c4dd85750",
+      "size": 1142,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/fc650d4981c1ca96a2f2e46921d03d2c4dd85750"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5163ade202b06b69494ae8b7f57dd3f8c2a5d52d",
+      "size": 4157,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/5163ade202b06b69494ae8b7f57dd3f8c2a5d52d"
+    },
+    {
+      "path": "assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4bfcc150f9344362207cecf5cf430def84dae40e",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/4bfcc150f9344362207cecf5cf430def84dae40e"
+    },
+    {
+      "path": "assets/graphical_abstract.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de88448c4c9a423c4410a496328d87aa3bbac8d0",
+      "size": 232096,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/de88448c4c9a423c4410a496328d87aa3bbac8d0"
+    },
+    {
+      "path": "data-release",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ed534ab9ddbb3db1f2715bba9848f7a4199c3bc2",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/ed534ab9ddbb3db1f2715bba9848f7a4199c3bc2"
+    },
+    {
+      "path": "data-release/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd70272555f54ca9b3e6895a2682c99f0ebc1c5f",
+      "size": 1025,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/fd70272555f54ca9b3e6895a2682c99f0ebc1c5f"
+    },
+    {
+      "path": "data-release/cifs.zip",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5b7bf943763a0c9a599f1a930077ddcac5f8a8d",
+      "size": 131,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/c5b7bf943763a0c9a599f1a930077ddcac5f8a8d"
+    },
+    {
+      "path": "data-release/mp-20",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8352102a49801c104054e9fc68ab550505801c91",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/8352102a49801c104054e9fc68ab550505801c91"
+    },
+    {
+      "path": "data-release/mp-20/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c6d91dd4b3c1b932b31e8ad61985ea01ecb1e43",
+      "size": 839,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/0c6d91dd4b3c1b932b31e8ad61985ea01ecb1e43"
+    },
+    {
+      "path": "data-release/mp-20/mp_20.zip",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a86683f1ac28125bd54758dc2262a2d97141b057",
+      "size": 133,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/a86683f1ac28125bd54758dc2262a2d97141b057"
+    },
+    {
+      "path": "outputs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "169d75ca8031c0703a27c0bcf6f37cfd923b9779",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/169d75ca8031c0703a27c0bcf6f37cfd923b9779"
+    },
+    {
+      "path": "outputs/checkpoints",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "014d1e78159b821e178da2fc56d67f1b9b2dcde2",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/014d1e78159b821e178da2fc56d67f1b9b2dcde2"
+    },
+    {
+      "path": "outputs/checkpoints/.hydra",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0e5be0cc66bb6a6c6bd103d8e421e46bc583938c",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/0e5be0cc66bb6a6c6bd103d8e421e46bc583938c"
+    },
+    {
+      "path": "outputs/checkpoints/.hydra/config.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30abc4f130933e93c13098d70869cb4a6b2da607",
+      "size": 3790,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/30abc4f130933e93c13098d70869cb4a6b2da607"
+    },
+    {
+      "path": "outputs/checkpoints/.hydra/hydra.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "08c730b2731ae5f42de7c99459777f44bdbb8242",
+      "size": 4045,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/08c730b2731ae5f42de7c99459777f44bdbb8242"
+    },
+    {
+      "path": "outputs/checkpoints/.hydra/overrides.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3eb1581e2f22f240171afe46022db5bc54dba55d",
+      "size": 285,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/3eb1581e2f22f240171afe46022db5bc54dba55d"
+    },
+    {
+      "path": "outputs/checkpoints/config.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb2b8e182068cdae2f9a75eee7ffd6744172e53e",
+      "size": 3657,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/eb2b8e182068cdae2f9a75eee7ffd6744172e53e"
+    },
+    {
+      "path": "outputs/checkpoints/epoch=189-loss_val=0.03.ckpt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3666573b679ddb884d0f618ac5e2c07acd15123f",
+      "size": 133,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/3666573b679ddb884d0f618ac5e2c07acd15123f"
+    },
+    {
+      "path": "outputs/checkpoints/last.ckpt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de34933af567b7216f4a10934a23bff82d1b14b0",
+      "size": 133,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/de34933af567b7216f4a10934a23bff82d1b14b0"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a9295fd0cf9e5bd26df10fb45921787f27869bd5",
+      "size": 1724,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/a9295fd0cf9e5bd26df10fb45921787f27869bd5"
+    },
+    {
+      "path": "uv.lock",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c84a89ede3c7291557ed45bc6174c0509df2781",
+      "size": 1168217,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/6c84a89ede3c7291557ed45bc6174c0509df2781"
+    },
+    {
+      "path": "wyckoffdiff_adapter",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "16cf08206310fdd335407eba8a6bd6134a76a62f",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/16cf08206310fdd335407eba8a6bd6134a76a62f"
+    },
+    {
+      "path": "wyckoffdiff_adapter/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b501c54de4a476261bb642e197d2d20f2101617f",
+      "size": 95,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/b501c54de4a476261bb642e197d2d20f2101617f"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "cb0f036353831f31a76c1c1410be760bf74737d2",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/cb0f036353831f31a76c1c1410be760bf74737d2"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f63beed9d314ccd7ca1ae4705b6701b98dc89b92",
+      "size": 95,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/f63beed9d314ccd7ca1ae4705b6701b98dc89b92"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "17f989332b064d3323f0b8278ba2bdac6475f389",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/17f989332b064d3323f0b8278ba2bdac6475f389"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/callback.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed62bb32e196cdaf280efa7784cefaa809cb80b3",
+      "size": 2438,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/ed62bb32e196cdaf280efa7784cefaa809cb80b3"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/datamodule.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c079a6e83f225a4e12ddd111cd60c70eced088f3",
+      "size": 3169,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/c079a6e83f225a4e12ddd111cd60c70eced088f3"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7749dc2400fa1b673a64c4ca230c417d1314d96b",
+      "size": 49156,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/7749dc2400fa1b673a64c4ca230c417d1314d96b"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/dataset_infos.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50dae2e02897c995b8872cfb428321a575f102a9",
+      "size": 26360,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/50dae2e02897c995b8872cfb428321a575f102a9"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/lookup_tables.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af5c91241d65629f553c481932e38dd0126a2a53",
+      "size": 77772,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/af5c91241d65629f553c481932e38dd0126a2a53"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/transform.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1a0fd04c44e8f1510456267189ab40b0c2e4a72",
+      "size": 1569,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/d1a0fd04c44e8f1510456267189ab40b0c2e4a72"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/types.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "952b9466f9bdf2d962e1349c442fa92fa3cbb7df",
+      "size": 1542,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/952b9466f9bdf2d962e1349c442fa92fa3cbb7df"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/wyckoff_data_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aeb37b748767569c5c1e1cb72e291cda32a9ae8c",
+      "size": 11231,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/aeb37b748767569c5c1e1cb72e291cda32a9ae8c"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/data/wyckoffgraph.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "956a8d97c0583a72a14bfc4cb50e0875adb03f0a",
+      "size": 7855,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/956a8d97c0583a72a14bfc4cb50e0875adb03f0a"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/globals.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0e5b5fdb46a1d8bc17827de42f220664125e54bc",
+      "size": 244,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/0e5b5fdb46a1d8bc17827de42f220664125e54bc"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7b33e95e58e9b93a14985e0d126ce832e4af1c56",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/7b33e95e58e9b93a14985e0d126ce832e4af1c56"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils/data_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "439dd8e1966069bb48ab1a29721f99aac4b6be7d",
+      "size": 15007,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/439dd8e1966069bb48ab1a29721f99aac4b6be7d"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils/eval_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "42e4dcd7786ee6c3be88413c936f6d1f6d7b4008",
+      "size": 6111,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/42e4dcd7786ee6c3be88413c936f6d1f6d7b4008"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils/globals.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5d5e375344ad53ca7e9bf7a8f10e4af10c977157",
+      "size": 1591,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/5d5e375344ad53ca7e9bf7a8f10e4af10c977157"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils/ocp_graph_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "670716a59377e03cd9e3dcd3393d16e1ed218c61",
+      "size": 13906,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/670716a59377e03cd9e3dcd3393d16e1ed218c61"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils/registry.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31bdcc0c1f538ad08e2d592c52eb4db577563f1a",
+      "size": 13278,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/31bdcc0c1f538ad08e2d592c52eb4db577563f1a"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/utils/wyckoff_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d450773dd8655b073d9145545268a67f3e081a81",
+      "size": 2403,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/d450773dd8655b073d9145545268a67f3e081a81"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e15ff0da3b0bbfe4f90a3cc62cdf58195d0eac8b",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/e15ff0da3b0bbfe4f90a3cc62cdf58195d0eac8b"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/d3pm",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fd9199a5181c6e69b1f087f5322b63982714deb8",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/fd9199a5181c6e69b1f087f5322b63982714deb8"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/d3pm/LICENSE.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a4a3ea2424c09fbe48d455aed1eaa94d9124835",
+      "size": 11357,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/7a4a3ea2424c09fbe48d455aed1eaa94d9124835"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/d3pm/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5fbb743d11078232f6eab5f2090937d21ee7498",
+      "size": 796,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/e5fbb743d11078232f6eab5f2090937d21ee7498"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/d3pm/d3pm.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a11b17329dfbaed3eee389c0226d39faf24b73db",
+      "size": 31726,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/a11b17329dfbaed3eee389c0226d39faf24b73db"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/d3pm/utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d450773dd8655b073d9145545268a67f3e081a81",
+      "size": 2403,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/d450773dd8655b073d9145545268a67f3e081a81"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/gnn.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "919d6b9faa6a7a58b3cc793fcb7dd705e9a9c964",
+      "size": 12246,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/919d6b9faa6a7a58b3cc793fcb7dd705e9a9c964"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/mlp.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56f5148a0620c7a20983bdff0f78efad800b9637",
+      "size": 407,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/56f5148a0620c7a20983bdff0f78efad800b9637"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/model_utils.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb5d3bdbb7d77c6754a21c3273bb6e436ba5ee69",
+      "size": 470,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/eb5d3bdbb7d77c6754a21c3273bb6e436ba5ee69"
+    },
+    {
+      "path": "wyckoffdiff_adapter/common/wyckoffgnn/wyckoffgnn.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f20b0b7371dbe24a3016e77e5be7b3b05a0979c",
+      "size": 5636,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/0f20b0b7371dbe24a3016e77e5be7b3b05a0979c"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d8df63fe4d14c71c335108cdeb289182bb24146d",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/d8df63fe4d14c71c335108cdeb289182bb24146d"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/csp.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa9d880df3903a59c920e35863ea52a076e754e1",
+      "size": 351,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/fa9d880df3903a59c920e35863ea52a076e754e1"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/data_module",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "81dcc0160526f78bd4be716d51c97d7c89ac8709",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/81dcc0160526f78bd4be716d51c97d7c89ac8709"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/data_module/alex_mp_20.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "125e3b062790184f2d3dfe04b452057354cc10a8",
+      "size": 1664,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/125e3b062790184f2d3dfe04b452057354cc10a8"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/data_module/mp_20.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "669992cf8a438ca821aaa1955c42e6b9884ae053",
+      "size": 1887,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/669992cf8a438ca821aaa1955c42e6b9884ae053"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/data_module/mp_20_plus.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7cf9e33a89510282a56c23f02135507b11783f2",
+      "size": 1896,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/b7cf9e33a89510282a56c23f02135507b11783f2"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/data_module/mp_20_plus_wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a467ba8ce2ef206f49b846e453de1f3c6246667",
+      "size": 1975,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/9a467ba8ce2ef206f49b846e453de1f3c6246667"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/data_module/mp_20_wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e905569fead66f6493cc7185259137d6d9864ee0",
+      "size": 2030,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/e905569fead66f6493cc7185259137d6d9864ee0"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb8893f8b4b0fb343ae673642fc4951f577262cc",
+      "size": 358,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/bb8893f8b4b0fb343ae673642fc4951f577262cc"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/default_wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "83b80a24fb86dd25409d183811c41e91ba85636f",
+      "size": 264,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/83b80a24fb86dd25409d183811c41e91ba85636f"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/finetune.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a9c53fa537a1205cc61f711c4162d9d01897d0f",
+      "size": 377,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/9a9c53fa537a1205cc61f711c4162d9d01897d0f"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/finetune_wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "365817790e10d29e0339279084abf1659b322d07",
+      "size": 1536,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/365817790e10d29e0339279084abf1659b322d07"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9971bda6e1949e14c268bf8bc4747e3505ce740a",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/9971bda6e1949e14c268bf8bc4747e3505ce740a"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "61cc8908133025d80494f87d94c03aabdac8f638",
+      "size": 400,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/61cc8908133025d80494f87d94c03aabdac8f638"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "533ed0c940434d31f6f42d58cea87ab9f1be32eb",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/533ed0c940434d31f6f42d58cea87ab9f1be32eb"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/corruption",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5d469d11c13eac68be6644aaf867a135f62e3960",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/5d469d11c13eac68be6644aaf867a135f62e3960"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/corruption/csp.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c4942e28e3192f42b29de31a4b7abd6bb3f09ef",
+      "size": 494,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/8c4942e28e3192f42b29de31a4b7abd6bb3f09ef"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/corruption/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a516cdb978eb630c50af161a9feb315747ee2c6e",
+      "size": 854,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/a516cdb978eb630c50af161a9feb315747ee2c6e"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/corruption/wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "908ed2e1271739bf7d78325c659a901a2d21845f",
+      "size": 770,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/908ed2e1271739bf7d78325c659a901a2d21845f"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/csp.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f4efc61dcfa6da9014fda65ddb9e73d95d956b4",
+      "size": 409,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/0f4efc61dcfa6da9014fda65ddb9e73d95d956b4"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1217be39b971fb9ce42fdef68813ebfb0dae2c3d",
+      "size": 461,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/1217be39b971fb9ce42fdef68813ebfb0dae2c3d"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a7a0f6b31750e3d96d69a8b20bb782799bb58096",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/a7a0f6b31750e3d96d69a8b20bb782799bb58096"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/mattergen.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b3f190b33458192e084cda5876a4e741dec18de4",
+      "size": 1679,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/b3f190b33458192e084cda5876a4e741dec18de4"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d8feeab06679a246452e8c975e531296b13d0d7a",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/d8feeab06679a246452e8c975e531296b13d0d7a"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/chemical_system.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5182103fb576894849ce0aa0bb0b04bc3357a515",
+      "size": 448,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/5182103fb576894849ce0aa0bb0b04bc3357a515"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/dft_band_gap.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36570e57b0f1df7d0e734ec391802231ee334436",
+      "size": 467,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/36570e57b0f1df7d0e734ec391802231ee334436"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/dft_bulk_modulus.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f63f8e0508ba392a7c8efebd723c79dbc63434a",
+      "size": 495,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/4f63f8e0508ba392a7c8efebd723c79dbc63434a"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/dft_mag_density.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f5f0b1b18a788464917707b34bcba65ba885d0a",
+      "size": 470,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/3f5f0b1b18a788464917707b34bcba65ba885d0a"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/energy_above_hull.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0624a24eacad86141a171748a481d482302d71b1",
+      "size": 472,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/0624a24eacad86141a171748a481d482302d71b1"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/hhi_score.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38685988edfdfb7a4b35b186b49e0f3914fae5d2",
+      "size": 464,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/38685988edfdfb7a4b35b186b49e0f3914fae5d2"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/ml_bulk_modulus.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6769d026d2d05f6d7abaf621d7d1b178b5bcaf3d",
+      "size": 493,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/6769d026d2d05f6d7abaf621d7d1b178b5bcaf3d"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/property_embeddings/space_group.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ca8a04f042d8003d6aba89445b11509a9e73731",
+      "size": 438,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/3ca8a04f042d8003d6aba89445b11509a9e73731"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/model/wyckoff_mattergen.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "76026f2864cf117b5c04c77cbdd029a15047c742",
+      "size": 1450,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/76026f2864cf117b5c04c77cbdd029a15047c742"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/diffusion_module/wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "241fb99f70afa558a7ffe3b1ca9217b714401aea",
+      "size": 478,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/241fb99f70afa558a7ffe3b1ca9217b714401aea"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/lightning_module/wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1376c77b91087b54ffc14ba292c5a82e425c1d1",
+      "size": 422,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/d1376c77b91087b54ffc14ba292c5a82e425c1d1"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/trainer",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a815b26a0823cf14e1b4811a008541cd484caf85",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/a815b26a0823cf14e1b4811a008541cd484caf85"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/trainer/default.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c66d97879ffe74dfe55a0945f111d30ce5eb69a",
+      "size": 1022,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/8c66d97879ffe74dfe55a0945f111d30ce5eb69a"
+    },
+    {
+      "path": "wyckoffdiff_adapter/conf/trainer/wyckoff.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7bcde4c2d6916f862bb0165f2ff78439ca52a056",
+      "size": 1145,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/7bcde4c2d6916f862bb0165f2ff78439ca52a056"
+    },
+    {
+      "path": "wyckoffdiff_adapter/denoiser.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4df3b2e1fe1b8e9f2bbd3a73c1f2595527d1a9e",
+      "size": 14050,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/b4df3b2e1fe1b8e9f2bbd3a73c1f2595527d1a9e"
+    },
+    {
+      "path": "wyckoffdiff_adapter/diffusion",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6c995a39a068aeb46e4d98b1b72ac0618dacbaaa",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/6c995a39a068aeb46e4d98b1b72ac0618dacbaaa"
+    },
+    {
+      "path": "wyckoffdiff_adapter/diffusion/diffusion_module.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "88ea0e57508b19ac1cc44c7d539efd234e3c269f",
+      "size": 10640,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/88ea0e57508b19ac1cc44c7d539efd234e3c269f"
+    },
+    {
+      "path": "wyckoffdiff_adapter/generator.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb8a14d4e12910a43df7db0c96cf1cdd6554c959",
+      "size": 34073,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/bb8a14d4e12910a43df7db0c96cf1cdd6554c959"
+    },
+    {
+      "path": "wyckoffdiff_adapter/property_embeddings.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d566dea9910270d4a955c06f89d1b9e4f60d8ec3",
+      "size": 26072,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/d566dea9910270d4a955c06f89d1b9e4f60d8ec3"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8a2147758ace3d8fdae600fc7477fe851c7d0b32",
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/trees/8a2147758ace3d8fdae600fc7477fe851c7d0b32"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/csv_to_wyckoff_dataset.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2591741edba7927dba84ef02d8b49715cc998458",
+      "size": 1476,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/2591741edba7927dba84ef02d8b49715cc998458"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/evaluate.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9119a73cde1266961334f3fc159f7d53852265a0",
+      "size": 1907,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/9119a73cde1266961334f3fc159f7d53852265a0"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/finetune_wyckoff.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5ac852ca022e9b6588356cd7d12db9e509fb1dd",
+      "size": 6887,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/f5ac852ca022e9b6588356cd7d12db9e509fb1dd"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/gen_cif.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2139d39ca482f296bc9f2f07dcc93d1692ad5824",
+      "size": 7335,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/2139d39ca482f296bc9f2f07dcc93d1692ad5824"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/generate_wyckoff.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28537fe78afdbc1923f0320c58eb230bfa5dcbb5",
+      "size": 6072,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/28537fe78afdbc1923f0320c58eb230bfa5dcbb5"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/post_process.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad00c1bf33148d1f3ba27b9ceccfb97564b5b6e4",
+      "size": 4058,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/ad00c1bf33148d1f3ba27b9ceccfb97564b5b6e4"
+    },
+    {
+      "path": "wyckoffdiff_adapter/scripts/run_wyckoff.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "362ee2e947157df98e8abfd94fb03dcd3ca8f098",
+      "size": 1685,
+      "url": "https://api.github.com/repos/pfnet-research/wyckoffdiff_adapter/git/blobs/362ee2e947157df98e8abfd94fb03dcd3ca8f098"
+    }
+  ],
+  "truncated": false
+}

@@ -1,0 +1,441 @@
+Article
+
+Open access
+
+Published: 02 June 2026
+
+Generative modelling of inorganic materials with explicit electronic structure
+
+Junkil Park 1 , 2 ,
+
+Junyoung Choi 1 &
+
+Yousung Jung ORCID: orcid.org/0000-0003-2615-8394 1 , 2 , 3
+
+Nature Communications volume 17 , Article number: 7070 ( 2026 ) Cite this article
+
+4554 Accesses
+
+Metrics details
+
+Abstract
+
+Recent advances in generative models have introduced a new paradigm for the inverse design of inorganic materials, enabling the discovery of new crystalline structures with desired properties. However, existing generative models focus solely on structural aspects of materials during generation, while overlooking the underlying electronic behavior that fundamentally governs materials’ stability and functionality. In this work, we present ChargeDIFF, a generative model for inorganic materials that explicitly incorporates electronic structure into the generation process. Specifically, ChargeDIFF leverages charge density, a direct spatial representation of a material’s electronic structure, as an additional modality for generation. ChargeDIFF demonstrates exceptional performance in both unconditional and conditional generation tasks compared to baseline models, with ablation studies revealing that this improvement is directly due to its ability to capture the material’s electronic structure during generation. Moreover, the ability to control charge density during generation allows ChargeDIFF to introduce an inverse design method based on three-dimensional charge density, illustrating the potential to generate lithium-ion battery cathode materials with desired ion migration pathways, as further validated by physics-based simulations. By highlighting the importance of accounting for electronic characteristics during material generation, ChargeDIFF expands the applicability of generative design toward stable and functional materials.
+
+Similar content being viewed by others
+
+A generative model for inorganic materials design
+
+Higher-order equivariant neural networks for charge density prediction in materials
+
+A representation-independent electronic charge density database for crystalline materials
+
+Explore related subjects
+
+Computational methods
+
+Electronic structure
+
+Method development
+
+Introduction
+
+The development of materials with desired properties has long been the ultimate goal in the field of materials science, which drives innovation across a wide range of industries 1 , 2 , 3 . In particular, inorganic materials have been at the center of attention for their structural and chemical versatility, which underpins key applications in energy storage 4 , 5 , catalysis 6 , 7 , and semiconductors 8 , 9 . Traditionally, the discovery of such functional materials has relied heavily on experimental trial-and-error processes guided by the intuition of researchers, which is constrained by the limited number of target structures 10 . Recent advances in computational chemistry and machine learning have transformed this paradigm, enabling the virtual high-throughput screening of hundreds of thousands of candidate structures within the database 11 , 12 , 13 . Although this high-throughput approach has accelerated progress across various applications, it remains inherently confined by the limited search space defined by known materials, representing only a small fraction of the vast and largely unexplored chemical space of crystalline structures 14 .
+
+Over the past decade, rapid advances in generative models have established a new paradigm in materials discovery 15 , 16 . Generative models learn the intrinsic distribution of materials data and enable the generation of new materials without being restricted to the search space defined by existing databases. Various generative model architectures, such as variational autoencoder (VAE) 17 , 18 and generative adversarial network (GAN) 19 , 20 , have been applied to inorganic materials generation, successfully demonstrating a proof of concept in the early stages of adopting generative models in this field. Most recently, diffusion models have emerged as the mainstream approach due to their superior generation performance, and several diffusion-based models for inorganic materials generation have been proposed to date 21 , 22 , 23 , 24 , 25 . In particular, MatterGen 23 has garnered significant attention by achieving experimental validation of inversely designed materials, bringing generative models one step closer to practical applicability.
+
+Reflecting on the progress made so far, most reported diffusion models for inorganic materials generation, except for a few unconventional approaches 26 , consider only the structural components of materials during the generation process 21 , 22 , 23 , 25 , 27 . Typically, materials are represented as a combination of atom types (A), atomic coordinates (X), and lattice parameters (L), which serve as both inputs and outputs within these models. We refer to this as the AXL representation in this paper. Although this representation provides a minimal basis for describing inorganic materials, it remains unclear whether it sufficiently captures the underlying electronic structure, which fundamentally governs materials’ stability and functionality, during the generation process. Given that recent studies have primarily focused on expanding databases 23 , 25 , refining algorithms 22 , 23 , or incorporating new technical features 27 while adhering to the representational conventions established by earlier successful models (e.g., CDVAE 21 ), revisiting the foundational question of how materials are represented during the generation process is timely and crucial for the future advancement of this field.
+
+In this work, we propose ChargeDIFF, a generative model for inorganic materials that explicitly considers electronic structure during the generation process. Specifically, ChargeDIFF is a diffusion model that considers valence electron density (conventionally and hereafter referred to as charge density, denoted as C), which is the direct spatial representation of a material’s electronic structure, as an additional modality for generation alongside the conventional AXL representations (Fig. 1a ). We refer to this new method as the AXLC representation. Building upon additional architectural features, including a vector quantized-variation autoencoder (VQ-VAE) 28 , ChargeDIFF exhibited strong performance in the unconditional generation task and various inverse design tasks compared to baseline models. Ablation studies showed that the performance improvements arise from the model’s deeper understanding of the electronic characteristics of generated structures, enabled by the use of charge density. Moreover, the introduction of three-dimensional (3D) charge density data allows a generation approach based on an inpainting technique 29 , which we showcase by generating lithium-ion battery (LIB) cathode materials with user-desired ion migration pathways.
+
+a A graphical illustration of the noising and denoising process in ChargeDIFF. Inorganic materials are represented as a combination of atom types (A), atomic coordinates (X), lattice parameters (L), and charge density (C), and these components undergo a joint diffusion process. b Incorporation of charge density. Charge density data is incorporated into the representation of inorganic materials as voxel-based data, comprising a 3D arrangement of probes, each containing the charge density value at its corresponding spatial location. c Cross-modal message passing during the denoising process. During the denoising process, atom node features and charge probe node features mutually influence each other to predict the material state at the previous timestep.
+
+Results
+
+Diffusion process of materials in chargeDIFF
+
+In the diffusion process of ChargeDIFF, an inorganic material is represented as a combination of atom types, atomic coordinates, lattice parameters, and charge density (i.e., A, X, L, and C), where the incorporation of charge density C is the new distinctive feature of ChargeDIFF compared with previous works (Fig. 1a ). Charge density is represented as a three-dimensional voxel, where charge density values at each location assigned to uniformly distributed probe points within the unit cell (Fig. 1b ). This follows the standard representation of charge density in inorganic materials and is consistent with the file format used in the widely adopted VASP package 30 for density functional theory (DFT) calculations.
+
+Each of the four components defining the material (A, X, L, and C) undergoes a joint diffusion process, where they are progressively corrupted into random noise during the noising process, and this corruption is reversed during the denoising process. In ChargeDIFF, the diffusion process for each component is carefully formulated to reflect its inherent characteristics. Specifically, the diffusion process of discrete atom types is modeled using the Discrete Denoising Diffusion Probabilistic Model (D3PM) 31 , while the continuous-valued lattice parameters and charge density are handled with the standard Denoising Diffusion Probabilistic Model (DDPM) 32 . For atomic coordinates, which are both cyclic and bounded due to periodic boundary conditions (PBCs), the diffusion process is formulated using score matching with a Wrapped Normal distribution 33 . A more detailed description of the diffusion processes in ChargeDIFF is provided in the Methods section.
+
+Once the diffusion process is formulated, a denoising network is trained to predict the noise (or score) at each state, and is then applied iteratively during the denoising process to progressively refine sampled noise into new structures randomly. A central aspect of the ChargeDIFF workflow is how the newly incorporated charge density is processed in conjunction with other structural components within the denoising network. In ChargeDIFF, the denoising network is uniquely implemented as a heterogeneous graph neural network (GNN), in which atoms and charge density probes are represented as distinct types of nodes within the same graph. In particular, charge probe nodes behave differently during the denoising process, with their coordinates fixed at the grid points and only their features updated, unlike atom nodes, whose coordinates are also adjusted. The architecture is inspired by previous works that predicted charge density of a given structure at specific spatial query locations 34 , 35 . Within the denoising network, message passing between atom probe nodes and charge probe nodes (referred to as cross-modal message passing, Fig. 1c ) is facilitated, enabling structural and electronic components to mutually influence each other during generation, which eventually leads to the generation of electronically stable structures.
+
+Latent diffusion approach using VQ-VAE
+
+For the MP-20-Charge dataset used in training (see Methods section for details), the charge density data for each structure is prepared in a voxel resolution of 32×32×32. However, this requires the aforementioned denoising network to process 32 3 probe nodes within the graph, which is computationally impractical. It is also possible to process the charge density to a lower resolution (e.g., 8×8×8) via interpolation, but it results in a substantial loss of fine-grained information and significantly degrades generation quality (further discussed in later sections). Consequently, an approach is required that reduces the computational demands while maintaining as much fine-grained electronic information as possible, ensuring the effective generation that accurately reflects the charge density.
+
+A field that has faced similar computational challenges is high-resolution image generation 36 , 37 . In this domain, latent diffusion models 36 , which operate by encoding high-resolution images into a lower-resolution latent space during generation, have proven effective and facilitated the creation of high-quality images. Inspired by this, we adopt a similar strategy for handling charge density data by mapping it to a lower-resolution latent space. To achieve this, a VQ-VAE is implemented within the framework, which is an essential architectural component that compresses continuous input data into quantized codebook tokens (Fig. 2a ) 28 . In ChargeDIFF, the VQ-VAE encoder compresses the charge density resolution from 32×32×32 to 8×8×8, while preserving the rich information contained in the high-resolution voxels. This compression enables the denoising network to operate on a significantly reduced number of probe nodes, substantially improving the computational efficiency of the generation process (Supplementary Fig. 3 ).
+
+a The architecture of VQ-VAE implemented within ChargeDIFF. The VQ-VAE is composed of encoder and decoder, with a codebook used for vector quantization for mapping into a discrete latent space. Through the VQ-VAE, the charge density voxels are compressed into a lower-resolution, which significantly reduces the number of voxel probes that need to be processed during the diffusion process. b A t-SNE plot of latent charge density data, depicting the top five most frequently occurring space groups within the training database.
+
+Within the overall workflow, the VQ-VAE is first trained independently and then serves as a fixed encoder during the training of the denoising network. A detailed description of the VQ-VAE training process can be found in the Methods section. To verify that the trained VQ-VAE captures meaningful features and effectively preserves charge density information during the mapping process, the latent space of VQ-VAE was visualized using t-distributed stochastic neighbor embedding (t-SNE) 38 in Fig. 2b . The embedded latent charge density vectors corresponding to structures with the top 5 most frequently occurring space groups in the database were assessed, revealing that the charge densities belonging to the same space group cluster together within the latent space. A similar clustering pattern was also observed in the comparative visualization based on the metallicity of the structures (Supplementary Fig. 5 ). The results indicate that the trained VQ-VAE effectively captures both the geometric and chemical features of the charge density during the mapping process, allowing it to be handled much more efficiently through the latent diffusion approach in ChargeDIFF’s material generation process.
+
+Electronic structure-aware generation of inorganic materials
+
+ChargeDIFF is capable of generating inorganic structures comprising a diverse set of elements across the periodic table (Supplementary Fig. 7 ), with several random samples shown in Fig. 3a . It can be observed that charge densities are generated alongside other structural components, and their visualizations qualitatively confirm they exhibit physically plausible distributions, forming approximately spherical shapes around each atom. This indicates that, during the material generation process, the charge density interacted with other structural components via cross-modal message passing, and the generated structures reflect the outcome of these mutual interactions.
+
+a Generated sample structures from ChargeDIFF. Isosurfaces of the generated charge density at +0.5 e/Å 3 are visualized in yellow. b Visualization of the difference between the generated charge density and the charge density recalculated via DFT from the generated structure. Isosurfaces of generated charge density at +0.5 e/Å 3 (yellow) and −0.5 e/Å 3 (blue) are visualized. c Distribution of energy above hull values of 1000 generated structures using ChargeDIFF. The stability of materials was evaluated using 0.1 eV/atom as the threshold. d Comparison of generation performance in terms of the percentage of mSUN structures. ChargeDIFF (orange) is compared with its ablated variant without charge density, ChargeDIFF (AXL) (blue), and several baseline models (gray), including MatterGen-MP 23 , CDVAE 21 , DiffCSP 22 , P-G-SchNet, G-SchNet 69 , and FTCP 18 .
+
+To quantitatively evaluate the consistency between the generated charge density and the corresponding atomic structures, we recalculated the charge density from the generated structures using DFT and compared it with that generated by ChargeDIFF. The difference between the DFT-calculated and ChargeDIFF-generated charge densities is visualized in Fig. 3b . It can be seen that the two charge densities are largely consistent, and a quantitative evaluation over 1000 generated structures indicates a mean square deviation of 2.2 % (see Methods section). This suggests that ChargeDIFF effectively captures the electronic structure during the generation process, resulting in self-consistent structures in which the charge density and atomic configuration are mutually compatible.
+
+To assess the capability of ChargeDIFF in generating stable structures, the thermodynamic stability of 1000 generated structures was assessed based on energy above hull values calculated using DFT. When evaluated against commonly used stability criterion of 0.1 eV/atom 23 , 25 , 39 , 40 (which has been referred to as metastable in the literature 25 , 41 ), 54.4 % of the generated structures fell within this threshold, confirming that ChargeDIFF can generate energetically favorable structures (Fig. 3c ). Currently, mSUN (metastable, unique, and new) are among the most commonly used metrics for evaluating the performance of inorganic material generation models. These metrics not only reflect the generation of stable structures but also serve as a composite measure to evaluate whether the model can produce a wider variety of structures that were not seen during training (see Supplementary Note 2 - 3 for details). According to this metric, ChargeDIFF achieves a high percentage of mSUN structures and surpasses previously reported baselines (Fig. 3d ), indicating its superior generation performance.
+
+To investigate the origin of the outstanding generative performance of ChargeDIFF, an ablation study was conducted. A variant model in which the charge density was removed from the representation (thus matching conventional AXL representation), while all other components remained unchanged, denoted as ChargeDIFF (AXL), was evaluated for its material generation performance. As shown in Fig. 3d , ChargeDIFF (AXL) exhibited a mSUN structure ratio of 21.3 %, which is considerably lower than that of the original ChargeDIFF model (24.8 %) and, in some cases, lower than certain baseline models. These results provide direct evidence that the superior generation performance of ChargeDIFF arises from the incorporation of charge density, which captures the electronic structure information and thereby enables the generation of chemically stable structures.
+
+In addition, to evaluate the effectiveness of the latent diffusion approach implemented via VQ-VAE within ChargeDIFF, an ablation study on the latent diffusion process was conducted. A variant model was trained in which the VQ-VAE was removed, directly using the lower resolution (8×8×8) charge density data without latent mapping (denoted as ChargeDIFF (w/o VQ-VAE)), and its generation performance was assessed. As shown in Supplementary Fig. 9 , for structures generated by ChargeDIFF (w/o VQ-VAE), the deviation from DFT-calculated charge density increased to 20.6 %, and the mSUN structure ratio decreased to 19.6 %. Notably, this mSUN ratio is even lower than that of ChargeDIFF (AXL), which does not incorporate charge density at all. These findings demonstrate that incorporating latent diffusion through VQ-VAE is critical and that the architectural refinements of ChargeDIFF are central to the improved generation performance.
+
+Inverse design of materials with desired chemical properties
+
+Conditional generation of materials with desired chemical properties is an ultimate goal of generative modeling, and the capability of ChargeDIFF in generating materials with target chemical properties is assessed. ChargeDIFF utilizes a standard conditioning approach, in which the target property information is embedded and concatenated with the timestep embedding. The chemical property labels for model training were obtained from the values reported in the Materials Project database 42 . A detailed technical description of ChargeDIFF’s conditional generation process is provided in Supplementary Note 4 .
+
+The target properties considered include bandgap, magnetic density, and crystal density, which encompass the material’s electrical, magnetic, and structural characteristics, respectively. For each property, two different target values were considered, and the distributions of the corresponding property values for 500 generated structures are shown in Fig. 4a–c . It can be seen that each generation exhibited distinct distributions well aligned with the respective target values, implying that ChargeDIFF can selectively generate structures according to the specified property targets. An undesired peak near 0 eV appeared in the bandgap distribution, which is interpreted as arising from the severe imbalance in the training data, as the majority of structures exhibit near-zero band gaps (see Supplementary Fig. 2 ). Notably, while a similar imbalance exists in the magnetic density data, it nonetheless exhibited a distribution that is considerably more clearly defined.
+
+a–c Conditional generation results for magnetic density ( a ), bandgap ( b ), and crystal density ( c ). The property distributions of generated structures for different target values are shown. d–f Example generated structures for magnetic density ( d ), bandgap ( e ), and crystal density ( f ) at each target value. For clarity, the generated charge density is omitted, and only the atomic structures are visualized. g Ablation study on charge density. Conditional generation results for ChargeDIFF (orange) and its ablated variant without charge density, ChargeDIFF (AXL) (blue), are compared. Performance is measured by success rate, defined as the percentage of generated raw structures whose properties fall within 10% of the target value.
+
+A few sample structures obtained from conditional generation are shown in Fig. 4d–f , with the generated charge density omitted from the visualization for clarity. Examination of the generated structures confirmed that they are chemically plausible and consistent with established chemical knowledge. For example, the structures generated to achieve high magnetic density targets included transition metals with partially filled 3d orbitals (e.g., Fe 3 O 4 ), and those generated with high band gaps showed strong ionic bonds with valence bands dominated by highly electronegative anions (e.g., NaLiI 2 ). Additionally, the structures generated with high target crystal density contained heavy elements, which favor close-packed metallic arrangements (e.g., HfCoPt).
+
+A primary motivation for introducing charge density into the generation process was the expectation that explicitly capturing electronic structure would improve the model’s inverse design capabilities. To investigate this, we conducted an ablation study to quantify the contribution of charge density in conditional generation performance. To date, generative models for inorganic materials have generally been compared only in terms of unconditional generation performance, and, to the best of our knowledge, systematic comparison of their conditional generation remain limited. Therefore, in this study, we defined a performance metric for evaluating conditional generation based on the proportion of generated structures whose property values fall within 10 % of the target, referred to as the success rate, to facilitate the comparison of inverse design capability between models.
+
+Based on this metric, we conducted an ablation study on charge density to assess its impact on inverse design capability. The ablation study was performed for the same three properties (bandgap, magnetic density, and crystal density), with three different target values considered for each property (Fig. 4g ). Across all three properties and target values, ChargeDIFF consistently achieved higher success rates than its ablated variant, ChargeDIFF (AXL), indicating a clear improvement in conditional generation performance. This gain is attributable to the direct relationship between a material’s functionality and its electronic structure, with the incorporation of charge density enabling ChargeDIFF to more effectively capture electronic structure and thus achieve superior inverse design performance. In particular, for crystal density, although it is a structural property and might be presumed to have only a weak correlation with the electronic structure, the incorporation of charge density provides rich information on bond strength, coordination, and packing. Combined with the improved understanding of material symmetry observed during the latent diffusion process (Fig. 2b ), this facilitates the generation of structures with the desired crystal density. Taken together, the pronounced improvements in conditional generation achieved by ChargeDIFF indicate that incorporating electronic structure-awareness can more effectively advance materials inverse design, which is the ultimate goal of generative modeling.
+
+Furthermore, the conditioning performance of ChargeDIFF was compared with that of the previously reported MatterGen (Supplementary Fig. 13 ). ChargeDIFF showed performance broadly comparable to MatterGen, while exhibiting better conditioning performance on bandgap. This is plausibly due to the stronger correlation between bandgap and the electronic structure information provided by the incorporated charge density. Notably, MatterGen was pre-trained on a massive dataset of approximately 650,000 structures, whereas ChargeDIFF was trained on the much smaller MP-20-Charge dataset (40,516 structures), further highlighting its strong inverse design capability. Beyond this, ChargeDIFF also demonstrated robust performance in additional conditional generation tasks targeting energy above hull and space group (Supplementary Figs. 14 and 15 ), suggesting that inverse design can be extended to a broader set of target properties.
+
+3D charge density-based inverse design of functional inorganic materials
+
+The introduction of a new 3D voxel-based modality into the generation process enables new generative approaches for inorganic materials that were previously unattainable. In particular, we focus on an inpainting technique commonly used in image processing that fills in missing or masked regions in a given input, either based on surrounding context or guided by desired features 29 , 43 . By incorporating inpainting techniques into ChargeDIFF, it becomes possible to specify a target region within the unit cell and guide the charge density in that region toward a desired profile (e.g., low or high) during the generation process. We referred to this new materials generation approach as 3D charge density-based inverse design.
+
+3D charge density-based inverse design can, in principle, be applied to a wide range of applications, but it is particularly well suited for fine-tuning transport behavior within a structure. In lithium-ion battery (LIB) cathode materials, for example, battery performance is strongly influenced by the dimensionality of the Li-ion migration pathways 44 , 45 , 46 , 47 , and prior studies have reported that these pathways tend to follow regions of low charge density within the host material 48 , 49 , 50 . Based on these considerations, cathode materials with desired Li-ion migration pathways were designed using the 3D charge density-based inverse design approach (Fig. 5a ). An inpainting technique was employed to specify a target region within the unit cell and suppress the charge density in that region toward zero during generation, which, in the final structure, can serve as Li-ion migration pathways. Additional conditioning on the chemical system was applied jointly during the generation process to ensure that the resulting structures are not composed of arbitrary atoms but instead belong to desired material classes—for example, transition metal oxides commonly used in practical batteries. Further details on the charge density-guided design process are provided in the Supplementary Note 5 .
+
+a 3D charge density-based inverse design scheme. Using inpainting techniques, a target region within the unit cell is specified so that the charge density in that region is kept low during the generation process. The designated region serves as a lithium migration pathway, enabling the inverse design of cathode materials with a desired ion migration pathway topology. By additionally performing conditioning on the material’s chemical system, the generated materials can be restricted to desired classes, such as transition metal oxides. b , c Example cathode materials generated via 3D charge density-based inverse design targeting Li-ion migration pathway of 1D ( b ) and 2D ( c ) channels, respectively. Atomic structures are shown on the left (with charge density omitted for clarity), while the lithium-ion migration pathways obtained from molecular dynamics simulations are visualized in green on the right.
+
+Using this approach, transition metal oxides with target ion migration channels of one-dimensional (1D) and two-dimensional (2D) were generated. For each case, 1000 structures were generated, and the dimensionality of the Li-ion migration network was screened using a geometric connectivity analysis of the Li subnetwork under periodic boundary conditions (see Supplementary Note 5 for details). Based on this analysis, 323 (1D target) and 413 (2D target) structures were identified as possessing Li-ion networks with the desired dimensionality. Additional nudged elastic band (NEB) calculations were performed to analyze the Li-ion migration energy barriers, identifying structures with energy barriers of below 0.5 eV (Supplementary Fig. 18b ). Figure 5b, c show representative examples of the generated structures and their Li-ion migration pathways obtained from molecular dynamics (MD) simulations. Notably, the obtained set includes novel structures that were not present in the training data, yet identical or closely similar structures have been investigated as LIB materials. For example, among the structures designed to exhibit 2D ion migration pathways, the layered lithium titanium oxide (LiTi 2 O 4 ; Supplementary Fig. 20f ) and layered lithium manganese oxide (Li 3 Mn 4 O 8 ; Supplementary Fig. 20g ) possess structural analogs that have been experimentally examined as LIB cathodes 51 , 52 , further underscoring the practical relevance of the proposed method.
+
+Taken together, these results demonstrate that the 3D charge density-based inverse design strategy can be applied to generate functional materials by enabling precise tuning of their electronic structures. More broadly, this highlights a conceptual expansion of inverse design, from matching scalar target properties to directly shaping the electronic structure associated with desired material functionality. The approach is readily extensible to more intricate charge density targets (e.g., more complex migration pathways) and to additional material classes, including transition metal phosphates and polyanion compounds. To our knowledge, this represents an initial implementation of inverse design targeting ion migration pathways. We anticipate that this approach will support the design of advanced battery materials while inspiring new generative modeling strategies of electronic materials in a broad range of applications.
+
+Discussion
+
+The generative design of inorganic materials holds immense potential to accelerate the discovery of new functional materials, driving innovation in industrial applications. ChargeDIFF introduces a distinct method in material representation for their generative modeling, which was previously limited to a structure-only representation, by explicitly incorporating charge density as an additional modality. Based on a deeper understanding of the materials’ electronic structure, ChargeDIFF exhibited exceptional generation performance, where this improvement is particularly pronounced in inverse design tasks targeting various chemical properties. Furthermore, the demonstration of charge density-based inverse design in LIB cathode materials highlights the broader potential of this methodology for a wider range of applications. For any applications where functionality is closely related to electronic structure—catalysis, energy materials, superconductors, semiconductors, and low-dimensional systems—ChargeDIFF’s capability of electronic structure-aware generative design could be impactful. The electronic-informed inverse design pipeline proposed in this work seamlessly bridges structural generation with functional electronic behavior.
+
+Beyond charge density, incorporating various other types of material properties as additional modalities in the generative process provides additional flexibility and potential. For instance, spin density 53 (representing the difference between up-spin and down-spin electrons) can be incorporated without any modification to the methodology, which is expected to provide even greater performance improvements when targeting properties related to the material’s magnetism. Moreover, other types of data, including non-voxel representations, could also be incorporated into the generation process with minor modifications to the architecture, further broadening the model’s capabilities for future direction.
+
+From a broader perspective, a note can be made between generative and predictive models when incorporating additional modalities of data. For predictive models, additional inputs, such as charge density, may improve prediction performance, but they require complex feature preparation (e.g., DFT calculations) for every prediction, which is burdensome for general users. In contrast, for generative models, including such modalities may slightly increase the complexity of the training process, but imposes little to no additional cost during generation. (For instance, charge density is generated through denoising from random noise, without requiring DFT or other expensive computations.) This work shows that introducing additional modality of data, such as charge density, into generative model training is both effective and cost-efficient, making ChargeDIFF the first demonstration of such an approach for future inverse materials discovery.
+
+Methods
+
+MP-20-charge dataset
+
+In reference to the MP-20 dataset 21 , which has been the most widely used benchmark for training generative models for inorganic materials, MP-20-Charge dataset was newly curated for training ChargeDIFF. Since the Materials Project 42 provides DFT-calculated charge density data for a substantial fraction of structures, we utilized this resource for training rather than recalculating charge densities. The MP-20-Charge dataset was constructed by querying the Materials Project database for structures that (1) contain 20 atoms or fewer, (2) have an energy above hull ≤ 0.1 eV/atom, (3) possess a longest cell length ≤ 20 Å, and, most importantly, (4) include available charge density data (as of March 21 st , 2025). For charge density specifically, Fourier interpolation 54 was used to standardize the resolution to a uniform 32×32×32 grid, as detailed in the Supplementary Note 1 . As a result, a total of 40,516 structures were collected to form the database. Given that the number of structures with available charge density data in the Materials Project continues to grow, the dataset size is expected to further expand in the future
+
+VQ-VAE
+
+The VQ-VAE model was trained using charge density data within the MP-20-charge database to map the original charge density resolution of 32×32×32 into a latent resolution of 8 × 8 × 8. The dimensionality of the latent embedding space is treated as a hyperparameter; in this work, an embedding space of \(e\in {R}^{8192\times 3}\) was used. The total loss function is composed of a combination of reconstruction loss, vector quantization loss, and commitment loss as follows:
+
+where z e is the continuous encoder output, z q is the quantized latent obtained by replacing \({z}_{e}\) with its nearest codebook vector, and e represents the learnable codebook embeddings that define the discrete latent space. Here, sg denotes the stop-gradient operation, and a β value of 1.0 was used for training. An initial learning rate of \({10}^{-4}\) was set, with a scheduler that reduced the learning rate by a factor of 0.6 after 100 epochs of patience. Early stopping with a patience of 300 epochs was applied. A more detailed explanation of the VQ-VAE architecture can be found in its original paper 28 .
+
+Diffusion process of chargeDIFF
+
+In ChargeDIFF, each structure is represented by four components: atom type ( \(A\in {{\mathbb{A}}}^{{{{\rm{n}}}}}\) ), atomic coordinate ( \(X\in {[{{\mathrm{0,1}}})}^{3\times n}\) ), lattice parameter ( \(L\in {{\mathbb{R}}}^{3\times 3}\) ), and charge density ( \(C\in {{\mathbb{R}}}^{32\times 32\times 32}\) ). Here, \({M}_{t}\) denotes the intermediate state of the material during the diffusion process at timestep t , which interpolates between the original material data ( \({M}_{0}\) ) and prior distribution ( \({M}_{T}\) ):
+
+where T = 1000 was used for ChargeDIFF. The diffusion process in ChargeDIFF is defined by two Markov processes: the forward (noising) process, \(q\left({M}_{t}|{M}_{t-1}\right)\) , which is formulated independently for each component to gradually add noise to the original data, and the backward (denoising) process, \({p}_{\theta }\left({M}_{t-1}|{M}_{t}\right)\) , iteratively removes the added noise to recover the original samples. The overall diffusion process is inspired by the formulation proposed in DiffCSP, with targeted modifications and improvements introduced in ChargeDIFF to accommodate its distinctive features, such as the inclusion of charge density. A more detailed formulation of the diffusion process for each component is provided in the subsequent sections.
+
+Diffusion process of atom types (A)
+
+Among the four components that constitute a material in ChargeDIFF, atom type is the only discrete component, and its diffusion process is modeled using D3PM 31 , a discrete variant of DDPM 32 , to account for this discrete nature. The forward process can be represented as:
+
+where a \({Q}_{t}\) is an absorbing transition matrix, \({\bar{Q}}_{t}={Q}_{1}{Q}_{2}\ldots {Q}_{t}\) , and \({{{\rm{Cat}}}}(x;p)\) is a categorical probability distribution with probabilities given by p . Specifically, the absorbing transition matrix is defined as:
+
+where a cosine scheduler with the smoothing factor of 0.008 was used to schedule the \({\beta }_{t}\) values. This design ensures that \({A}_{t}\) gradually transitions to a dummy atom with an atomic number of 0 as t becomes sufficiently large. To optimize the denoising process with regard to original distribution \(q\left({A}_{0}\right)\) , a variational upper bound (VLB) on the negative log-likelihood is employed
+
+The total loss used for training is prepared by combining this VLB with an auxiliary cross-entropy loss:
+
+where \({\gamma }_{{ce}}\) is the weight of the cross-entropy loss, set to 0.01 following common practice. Further details on D3PM algorithm can be found in the original paper 31 .
+
+Diffusion process of atom types (X)
+
+Due to the periodicity of the crystal structure, the fractional coordinates of atoms are continuous variables bounded within \({[{{\mathrm{0,1}}})}^{3\times n}\) , where n represents the number of atoms within the unit cell. Unlike other continuous parameters described later, the bounded nature of atomic coordinates motivates modeling their diffusion process using a Score-Matching (SM) 55 with a Wrapped Normal (WN) distribution 33 . The forward process of atomic coordinate is modeled as:
+
+where \({{{{\mathcal{N}}}}}_{\omega }\) is a WN distribution with the values of standard deviation, \({\sigma }_{t}\) , assigned by an exponential scheduler within the range (0.005, 0.5). In practice, a sample from this distribution is efficiently obtained using a truncated wrapping function:
+
+where \(\omega (\cdot )\) maps coordinates back into \([{{\mathrm{0,1}}})\) . During the training phase, a denoising network predicts the score of the forward noising distribution, and the training objective is given by:
+
+where \({\gamma }_{t}={E}_{q\left({X}_{t}|{X}_{0}\right)}^{-1}\left[{||{\nabla }_{{X}_{t}}\log q\left({X}_{t}|{X}_{0}\right)||}_{2}^{2}\right]\) is approximated through Monte-Carlo sampling 22 .
+
+Diffusion process of atom types (L)
+
+The lattice parameter is an \({{\mathbb{R}}}^{3\times 3}\) matrix encoding the unit cell geometry. Since the lattice parameter is a continuous variable, DDPM was applied for its diffusion process, which has been widely adopted in generative modeling of various classes of materials 56 , 57 , 58 . The forward process progressively perturbs a clean lattice parameter \({L}_{0}\) towards the standard Gaussian prior \({L}_{T} \sim {{{\mathcal{N}}}}\left(0,{{{\boldsymbol{I}}}}\right)\) as:
+
+where \({\beta }_{t}\) is a hyperparameter for the variance scheduling, and \({\bar{\alpha }}_{t}={\prod }_{s=1}^{t}{\alpha }_{s}={\prod }_{s=1}^{t}(1-{\beta }_{s})\) . Here, \({\beta }_{t}\) values are assigned following a linear scheduler within the range of (0.0001, 0.02). Using the reparameterization trick 32 , lattice parameter at any given timestep t can be sampled as
+
+The backward process is defined as a parameterized Gaussian transition:
+
+where \({\mu }_{\theta }\left({M}_{t}\right)=\frac{1}{\sqrt{{\alpha }_{t}}}\left({M}_{t}-\frac{{\beta }_{t}}{\sqrt{1-{\bar{\alpha }}_{t}}}{\hat{\epsilon }}_{L}\left({M}_{t},t\right)\right),\) and \({\sigma }_{t}^{2}={\beta }_{t}\frac{1-{\bar{\alpha }}_{t-1}}{1-{\bar{\alpha }}_{t}}\) . \({\hat{\epsilon }}_{L}\left({M}_{t},t\right)\) denotes the noise predicted by the denoising model. The network is trained by minimizing the following mean squared error loss
+
+Diffusion process of atom types (C)
+
+Although the charge density in the MP-20-Charge dataset is available at a resolution of 32×32×32, the diffusion process operates on a compressed 8×8×8 voxel representation obtained via a pre-trained VQ-VAE encoder. This process occurs on the continuous latent embedding before quantization. Accordingly, similar to the lattice parameters, the diffusion process for charge density is formulated using a DDPM. The forward process is defined as:
+
+where \({\bar{\alpha }}_{t}={\prod }_{s=1}^{t}{\alpha }_{s}={\prod }_{s=1}^{t}(1-{\beta }_{s})\) . Here, \({\beta }_{t}\) values are assigned following a linear scheduler ranging from 0.0001 to 0.02 over 1000 time steps, as in the case of lattice parameter diffusion. (Adopting a more customized noise schedule, similar to MatterGen 23 , constitutes a promising avenue for future research.) The backward process is parameterized as:
+
+with \({\mu }_{\theta }\left({M}_{t}\right)=\frac{1}{\sqrt{{\alpha }_{t}}}\left({M}_{t}-\frac{{\beta }_{t}}{\sqrt{1-{\bar{\alpha }}_{t}}}{\hat{\epsilon }}_{C}\left({M}_{t},t\right)\right),\) and \({\sigma }_{t}^{2}={\beta }_{t}\frac{1-{\bar{\alpha }}_{t-1}}{1-{\bar{\alpha }}_{t}}\) . Here, \({\hat{\epsilon }}_{C}\left({M}_{t},t\right)\) denotes the predicted noise by the denoising network, and the training objective is given by:
+
+Denoising network
+
+The denoising network represents atoms and charge density probes as distinct types of nodes, and applies equivariant graph-based message passing 59 to atom-centered and cross-modal interactions. As explained in the main text, charge probe nodes act differently during the denoising process, with their coordinates remaining fixed at the grid points while only their features are updated. In contrast, atom nodes are updated both in terms of their coordinates and features during the denoising process. This architecture is inspired by previous works that predicted charge density of a given structure at specific spatial query locations 34 , 35 . To satisfy the periodic translational invariance defined in DiffCSP 22 , the Fourier transformations are applied to encode inter-node distances during the message passing process. By leveraging the periodic nature of the trigonometric functions used in the expansion, the model ensures that periodic invariance is preserved throughout the generation process.
+
+The overall training loss of the denoising network is defined as a combination of the losses previously defined for each component in the diffusion processes described in the preceding sections:
+
+where \({\omega }_{A}=10.0\) , \({\omega }_{X}=1.0\) , \({\omega }_{L}=1.0\) , and \({\omega }_{C}=1.0\) were used for the training. (Empirically, the model’s performance was not highly sensitive to subtle changes in these parameters.) The network was trained with an initial learning rate of \(5\times {10}^{-4}\) , which was reduced by a factor of 0.6 using a scheduler with a patience of 100 epochs. Early stopping was applied with a patience of 300 epochs. A more detailed description of the denoising network architecture, along with several architectural features for more efficient generation, is provided Supplementary Note 2 - 3 .
+
+Self-consistency assessment of charge density
+
+To verify the self-consistency between the generated charge densities and atomic structures, DFT calculations were performed to obtain the charge density for structures generated by ChargeDIFF, and the deviations from the generated charge densities were evaluated. The mean square deviation was defined as follows and used for the evaluation:
+
+where c Generated is the charge density generated by ChargeDIFF, and c DFT is the charge density obtained from DFT. This metric was also used to analyze the results of the ablation study on the VQ-VAE.
+
+Computational simulations
+
+All DFT calculations were performed using the Vienna ab initio simulation package (VASP) 30 within the projector augmented-wave formalism 60 , employing the automated workflow of Atomate2 61 . The calculation settings, including the use of the PBE functional 62 and the implementation of the Hubbard U correction, were kept consistent with the MP. For the structure optimization process, a pre-relaxation was first performed using MatterSim 63 , followed by the DFT relaxation using the MPGGADoubleRelaxMaker workflow. For the static calculations used to obtain charge densities of the structures and various chemical properties, the MPGGAStaticMaker workflow was used.
+
+To calculate the Li-ion migration barrier, the climbing image nudged elastic band (CI-NEB) 64 calculations were performed. Specifically, a single Li vacancy diffusion to a neighboring vacancy site was simulated, and the 10 nearest symmetrically unique hops for each material within a maximum distance of 4 Å were considered. The host crystal structure was expanded to a near-cubic supercell with a cell length of at least 10 Å to minimize interactions between periodic images. Seven intermediate images were used in the CI-NEB calculations, for which the image-dependent pair potential (IDPP) 65 method was employed for the initial guess.
+
+MD simulations were conducted to obtain the explicit migration pathway for the selected materials. The simulations were performed for the crystal structure with one Li vacancy, and the NVT ensemble was used with a Nosé–Hoover thermostat 66 , 67 . Both CI-NEB calculations and MD simulations were performed using the atomic simulation environment (ASE) 68 , employing MatterSim as a surrogate potential.
+
+Data availability
+
+The datasets used for the training ChargeDIFF is available at https://figshare.com/ndownloader/files/58973161 . Source data are provided with this paper.
+
+Code availability
+
+A GitHub repository containing the source code and demos for the materials generation is available at https://github.com/parkjunkil/ChargeDIFF .
+
+References
+
+Zunger, A. Inverse design in search of materials with target functionalities. Nat. Rev. Chem. 2 , 0121 (2018). Article ADS Google Scholar
+
+Noh, J., Gu, G. H., Kim, S. & Jung, Y. Machine-enabled inverse design of inorganic solid materials: promises and challenges. Chem. Sci. 11 , 4871–4881 (2020). Article PubMed PubMed Central Google Scholar
+
+Wang, J., Wang, Y. & Chen, Y. Inverse design of materials by machine learning. Materials 15 , 1811 (2022). Article PubMed PubMed Central ADS Google Scholar
+
+Balaraman, A. A. & Dutta, S. Inorganic dielectric materials for energy storage applications: a review. J. Phys. D Appl. Phys. 55 , 183002 (2022). Article ADS Google Scholar
+
+Murdock, B. E., Toghill, K. E. & Tapia-Ruiz, N. A perspective on the sustainability of cathode materials used in lithium-ion batteries. Adv. Energy Mater. 11 , 2102028 (2021). Article Google Scholar
+
+Xiang, Y. et al. Application of inorganic materials as heterogeneous cocatalyst in Fenton/Fenton-like processes for wastewater treatment. Sep. Purif. Technol. 295 , 121293 (2022). Article Google Scholar
+
+Zhong, M. et al. Accelerated discovery of CO2 electrocatalysts using active machine learning. Nature 581 , 178–183 (2020). Article PubMed ADS Google Scholar
+
+Wang, S., Sun, M. & Hung, N. T. Vol. 12 81 (MDPI, 2024).
+
+Kim, K. S. et al. The future of two-dimensional semiconductors beyond Moore’s law. Nat. Nanotechnol. 19 , 895–906 (2024). Article PubMed ADS Google Scholar
+
+Lamberti, F. et al. Design of experiment: a rational and still unexplored approach to inorganic materials’ synthesis. Sustain. Chem. 3 , 114–130 (2022). Article Google Scholar
+
+Luo, S., Li, T., Wang, X., Faizan, M. & Zhang, L. High-throughput computational materials screening and discovery of optoelectronic semiconductors. Wiley Interdiscip. Rev. Comput Mol. Sci. 11 , e1489 (2021). Article Google Scholar
+
+Ahmed, A. et al. Exceptional hydrogen storage achieved by screening nearly half a million metal-organic frameworks. Nat. Commun. 10 , 1568 (2019). Article PubMed PubMed Central ADS Google Scholar
+
+Merchant, A. et al. Scaling deep learning for materials discovery. Nature 624 , 80–85 (2023). Article PubMed PubMed Central ADS Google Scholar
+
+Davies, D. W. et al. Computational screening of all stoichiometric inorganic materials. Chem 1 , 617–627 (2016). Article PubMed PubMed Central Google Scholar
+
+Li, Z. et al. Materials generation in the era of artificial intelligence: a comprehensive survey. arXiv preprint arXiv:2505.16379 (2025).
+
+Park, H., Li, Z. & Walsh, A. Has generative artificial intelligence solved inverse materials design? Matter 7 , 2355–2367 (2024). Article Google Scholar
+
+Noh, J. et al. Inverse design of solid-state materials via a continuous representation. Matter 1 , 1370–1384 (2019). Article Google Scholar
+
+Ren, Z. et al. An invertible crystallographic representation for general inverse design of inorganic crystals with targeted properties. Matter 5 , 314–335 (2022). Article Google Scholar
+
+Nouira, A., Sokolovska, N. & Crivello, J.-C. Crystalgan: learning to discover crystallographic structures with generative adversarial networks. arXiv preprint arXiv:1810.11203 (2018).
+
+Kim, S., Noh, J., Gu, G. H., Aspuru-Guzik, A. & Jung, Y. Generative adversarial networks for crystal structure prediction. ACS Cent. Sci. 6 , 1412–1420 (2020). Article PubMed PubMed Central Google Scholar
+
+Xie, T., Fu, X., Ganea, O.-E., Barzilay, R. & Jaakkola, T. Crystal diffusion variational autoencoder for periodic material generation. In Proc. International Conference on Learning Representations (ICLR, 2022).
+
+Jiao, R. et al. Crystal structure prediction by joint equivariant diffusion. Adv. Neural Inf. Process. Syst. 36 , 17464–17497 (2023). Article Google Scholar
+
+Zeni, C. et al. A generative model for inorganic materials design. Nature 639 , 624–632 (2025).
+
+Yang, S. et al. Scalable diffusion for materials generation. In Proc. International Conference on Learning Representations (ICLR, 2024).
+
+Joshi, C. K. et al. All-atom Diffusion Transformers: Unified Generative Modelling Of Molecules And Materials. Arxiv Preprint , (2025). arXiv:2503.03965 .
+
+Dong, R., Fu, N., Siriwardane, E. M. & Hu, J. Generative design of inorganic compounds using deep diffusion language models. J. Phys. Chem. A 128 , 5980–5989 (2024). Article PubMed Google Scholar
+
+Park, H., Onwuli, A. & Walsh, A. Exploration of crystal chemical space using text-guided generative artificial intelligence. Nat. Commun. 16 , 4379 (2025). Article PubMed PubMed Central ADS Google Scholar
+
+Van Den Oord, A. & Vinyals, O. Neural discrete representation learning. Advances in Neural Information Processing Systems 30 , 6309–6318 (2017).
+
+Avrahami, O., Lischinski, D. & Fried, O. in Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition . 18208–18218.
+
+Kresse, G. & Furthmüller, J. Efficiency of ab-initio total energy calculations for metals and semiconductors using a plane-wave basis set. Comput. Mater. Sci. 6 , 15–50 (1996). Article Google Scholar
+
+Austin, J., Johnson, D. D., Ho, J., Tarlow, D. & Van Den Berg, R. Structured denoising diffusion models in discrete state-spaces. Adv. Neural Inf. Process. Syst. 34 , 17981–17993 (2021). Google Scholar
+
+Ho, J., Jain, A. & Abbeel, P. Denoising diffusion probabilistic models. Adv. Neural Inf. Process. Syst. 33 , 6840–6851 (2020). Google Scholar
+
+Jing, B., Corso, G., Chang, J., Barzilay, R. & Jaakkola, T. Torsional diffusion for molecular conformer generation. Adv. Neural Inf. Process. Syst. 35 , 24240–24253 (2022). Article Google Scholar
+
+Jørgensen, P. B. & Bhowmik, A. DeepDFT: neural message passing network for accurate charge density prediction. arXiv preprint arXiv:2011.03346 (2020).
+
+Koker, T., Quigley, K., Taw, E., Tibbetts, K. & Li, L. Higher-order equivariant neural networks for charge density prediction in materials. npj Comput. Mater. 10 , 161 (2024). Article Google Scholar
+
+Rombach, R., Blattmann, A., Lorenz, D., Esser, P. & Ommer, B. In Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition . 10684–10695.
+
+Podell, D. et al. Sdxl: Improving latent diffusion models for high-resolution image synthesis. In Proc. International Conference on Learning Representations (ICLR, 2024).
+
+van der Maaten, L. & Hinton, G. Visualizing data using t-SNE. J. Mach. Learn. Res. 9 , 2579–2605 (2008). Google Scholar
+
+Antunes, L. M., Butler, K. T. & Grau-Crespo, R. Crystal structure generation with autoregressive large language modeling. Nat. Commun. 15 , 1–16 (2024). Article Google Scholar
+
+De Breuck, P.-P., Piracha, H. A., Rignanese, G.-M. & Marques, M. A. A generative material transformer using Wyckoff representation. npj Comput. Mater. 12 , 60 (2026).
+
+Park, H. & Walsh, A. Guiding generative models to uncover diverse and novel crystals via reinforcement learning. arXiv preprint arXiv:2511.07158 (2025).
+
+Jain, A. et al. Commentary: the materials project: a materials genome approach to accelerating materials innovation. APL Mater. 1 , 011002 (2013).
+
+Lugmayr, A. et al. in Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition . 11461-11471.
+
+Chen, T., Li, M. & Bae, J. Recent advances in lithium iron phosphate battery technology: a comprehensive review. Batteries 10 , 424 (2024). Article Google Scholar
+
+Hoang, K. & Johannes, M. Tailoring native defects in LiFePO4: insights from first-principles calculations. Chem. Mater. 23 , 3003–3013 (2011). Article Google Scholar
+
+Wang, L., Chen, B., Ma, J., Cui, G. & Chen, L. Reviving lithium cobalt oxide-based lithium secondary batteries-toward a higher energy density. Chem. Soc. Rev. 47 , 6505–6602 (2018). Article PubMed Google Scholar
+
+Liu, T. et al. Correlation between manganese dissolution and dynamic phase stability in spinel-based lithium-ion battery. Nat. Commun. 10 , 4721 (2019). Article PubMed PubMed Central ADS Google Scholar
+
+Liu, Y., Jiang, X., Zhao, J. & Hu, M. Electronic charge density as a fast approach for predicting Li-ion migration pathways in superionic conductors with first-principles level precision. Comput. Mater. Sci. 192 , 110380 (2021). Article Google Scholar
+
+Rong, Z., Kitchaev, D., Canepa, P., Huang, W. & Ceder, G. An efficient algorithm for finding the minimum energy path for cation migration in ionic materials. J. Chem. Phys. 145 , 074112 (2016).
+
+Shen, J.-X., Horton, M. & Persson, K. A. A charge-density-based general cation insertion algorithm for generating new Li-ion cathode materials. npj Comput. Mater. 6 , 161 (2020). Article Google Scholar
+
+Kim, D. et al. 2D metal-oxide nanosheets as a homogeneous Li-ion flux regulator for high-performance anodeless lithium metal batteries. ACS Nano 18 , 23277–23288 (2024). Article PubMed Google Scholar
+
+Liu, S. et al. Reviving the lithium-manganese-based layered oxide cathodes for lithium-ion batteries. Matter 4 , 1511–1527 (2021). Article Google Scholar
+
+Ruiz, E., Cirera, J. & Alvarez, S. Spin density distribution in transition metal complexes. Coord. Chem. Rev. 249 , 2649–2660 (2005). Article Google Scholar
+
+Shen, J.-X. et al. A representation-independent electronic charge density database for crystalline materials. Sci. Data 9 , 661 (2022). Article PubMed PubMed Central Google Scholar
+
+Song, Y. et al. Score-based generative modeling through stochastic differential equations. In Proc. International Conference on Learning Representations (ICLR, 2021).
+
+Hoogeboom, E., Satorras, V. G., Vignac, C. & Welling, M. in International Conference on Machine Learning . 8867-8887 (PMLR).
+
+Park, J., Gill, A. P. S., Moosavi, S. M. & Kim, J. Inverse design of porous materials: a diffusion model approach. J. Mater. Chem. A 12 , 6507–6514 (2024). Article Google Scholar
+
+Park, J., Lee, Y. & Kim, J. Multi-modal conditional diffusion model using signed distance functions for metal-organic frameworks generation. Nat. Commun. 16 , 34 (2025). Article PubMed PubMed Central ADS Google Scholar
+
+Satorras, V. G., Hoogeboom, E. & Welling, M. in International Conference on Machine Learning . 9323-9332 (PMLR).
+
+Blöchl, P. E. Projector augmented-wave method. Phys. Rev. B 50 , 17953 (1994). Article ADS Google Scholar
+
+Ganose, A. et al. Atomate2. (2024). https://zenodo.org/records/10677081
+
+Perdew, J. P., Burke, K. & Ernzerhof, M. Perdew, Burke, and Ernzerhof reply. Phys. Rev. Lett. 80 , 891 (1998). Article ADS Google Scholar
+
+Yang, H. et al. Mattersim: a deep learning atomistic model across elements, temperatures and pressures. arXiv preprint arXiv:2405.04967 (2024).
+
+Henkelman, G., Uberuaga, B. P. & Jónsson, H. A climbing image nudged elastic band method for finding saddle points and minimum energy paths. J. Chem. Phys. 113 , 9901–9904 (2000). Article ADS Google Scholar
+
+Smidstrup, S., Pedersen, A., Stokbro, K. & Jónsson, H. Improved initial guess for minimum energy path calculations. J. Chem. Phys. 140 , 214106 (2014).
+
+Nosé, S. A unified formulation of the constant temperature molecular dynamics methods. J. Chem. Phys. 81 , 511–519 (1984). Article ADS Google Scholar
+
+Hoover, W. G. Canonical dynamics: equilibrium phase-space distributions. Phys. Rev. A 31 , 1695 (1985). Article ADS Google Scholar
+
+Larsen, A. H. et al. The atomic simulation environment—a Python library for working with atoms. J. Phys. Condens. Matter 29 , 273002 (2017). Article Google Scholar
+
+Gebauer, N., Gastegger, M. & Schütt, K. Symmetry-adapted generation of 3D point sets for the targeted discovery of molecules. Adv. Neural Inf. Process. Syst. 32 , 957 (2019).
+
+Download references
+
+Acknowledgements
+
+This work was supported by the National Research Foundation of Korea (NRF) and the Institute of Information & Communications Technology Planning & Evaluation (IITP), funded by the Korean government (Nos. RS-2024-00464386, RS-2025-00514706, and IITP-RS-2021-II211343).
+
+Funding
+
+This work was supported by the National Research Foundation of Korea (NRF) and the Institute of Information & Communications Technology Planning & Evaluation (IITP), funded by the Korean government (Nos. RS-2024-00464386, RS-2025-00514706, and IITP-RS-2021-II211343).
+
+Author information
+
+Authors and Affiliations
+
+Department of Chemical and Biological Engineering, Seoul National University, Seoul, South Korea Junkil Park, Junyoung Choi & Yousung Jung
+
+Institute of Engineering Research, Seoul National University, Seoul, South Korea Junkil Park & Yousung Jung
+
+Institute of Chemical Processes, Seoul National University, Seoul, South Korea Yousung Jung
+
+Junkil Park View author publications Search author on: PubMed Google Scholar
+
+Junyoung Choi View author publications Search author on: PubMed Google Scholar
+
+Yousung Jung View author publications Search author on: PubMed Google Scholar
+
+Contributions
+
+J.P. conceptualized the project, developed the code, and carried out the analysis. J.C. carried out the NEB calculations and MD simulations. Y.J. supervised the project. The manuscript was written with contributions from all authors.
+
+Corresponding author
+
+Correspondence to Yousung Jung .
+
+Ethics declarations
+
+Competing interests
+
+The authors declare no competing interests.
+
+Peer review
+
+Peer review information
+
+Nature Communications thanks Hyunsoo Park, and the other, anonymous, reviewer(s) for their contribution to the peer review of this work. A peer review file is available.
+
+Additional information
+
+Publisher’s note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.
+
+Supplementary information
+
+Supplementary Information (download PDF )
+
+Transparent Peer Review file (download PDF )
+
+Source data
+
+Source Data (download XLSX )
+
+Rights and permissions
+
+Open Access This article is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License, which permits any non-commercial use, sharing, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if you modified the licensed material. You do not have permission under this licence to share adapted material derived from this article or parts of it. The images or other third party material in this article are included in the article’s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article’s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http://creativecommons.org/licenses/by-nc-nd/4.0/ .
+
+Reprints and permissions
+
+About this article
+
+Cite this article
+
+Park, J., Choi, J. & Jung, Y. Generative modelling of inorganic materials with explicit electronic structure. Nat Commun 17 , 7070 (2026). https://doi.org/10.1038/s41467-026-73985-2
+
+Download citation
+
+Received : 15 December 2025
+
+Accepted : 25 May 2026
+
+Published : 02 June 2026
+
+Version of record : 23 July 2026
+
+DOI : https://doi.org/10.1038/s41467-026-73985-2
+
+Share this article
+
+Anyone you share the following link with will be able to read this content:
+
+Sorry, a shareable link is not currently available for this article.
+
+Provided by the Springer Nature SharedIt content-sharing initiative

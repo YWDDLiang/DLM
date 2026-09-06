@@ -1,0 +1,26 @@
+{
+  "purpose": "Full byte-preserving snapshots before refreshing exactly three historical execution entrypoints on 2026-09-06",
+  "files": [
+    {
+      "source": "docs/periodic_self_repair_v1/CHECKLIST.md",
+      "source_sha256": "4126c7ecc54cfb68014535d07a8b899314872a0ff49b65881678c4d98ea37027",
+      "bytes": 3293,
+      "snapshot": "docs/v3_scientific_audit_20260906/historical/current_entrypoints_before_status_refresh/CHECKLIST__sha256_4126c7ecc54cfb68014535d07a8b899314872a0ff49b65881678c4d98ea37027.md",
+      "snapshot_sha256": "4126c7ecc54cfb68014535d07a8b899314872a0ff49b65881678c4d98ea37027"
+    },
+    {
+      "source": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "source_sha256": "fbb1c86fe4546be08c3925b8ecf14e6b19040c0240739dde3b0513f29ceb8248",
+      "bytes": 4949,
+      "snapshot": "docs/v3_scientific_audit_20260906/historical/current_entrypoints_before_status_refresh/V2_EXECUTION_PACKAGE_20260906__sha256_fbb1c86fe4546be08c3925b8ecf14e6b19040c0240739dde3b0513f29ceb8248.md",
+      "snapshot_sha256": "fbb1c86fe4546be08c3925b8ecf14e6b19040c0240739dde3b0513f29ceb8248"
+    },
+    {
+      "source": "docs/periodic_self_repair_v1/RAW_LLADA_DESIGN.md",
+      "source_sha256": "d847fd930f9ce047511e8b2895e6834efd350265dbe8adad7208b471a9129d94",
+      "bytes": 3246,
+      "snapshot": "docs/v3_scientific_audit_20260906/historical/current_entrypoints_before_status_refresh/RAW_LLADA_DESIGN__sha256_d847fd930f9ce047511e8b2895e6834efd350265dbe8adad7208b471a9129d94.md",
+      "snapshot_sha256": "d847fd930f9ce047511e8b2895e6834efd350265dbe8adad7208b471a9129d94"
+    }
+  ]
+}
