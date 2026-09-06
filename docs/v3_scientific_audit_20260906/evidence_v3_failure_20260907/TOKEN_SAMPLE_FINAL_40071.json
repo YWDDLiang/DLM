@@ -1,0 +1,2807 @@
+{
+  "method": "mixed_token_construction",
+  "training_method": "mixed_geometry_h_p33",
+  "deployment": "token_construction_only",
+  "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+  "condition_start": 0,
+  "condition_stop": 256,
+  "seed": 20260905,
+  "collection_round": 0,
+  "temperature": 0.7,
+  "logical_batch_cap": 4,
+  "sampling_layout_world_size": 2,
+  "max_length": 382,
+  "execution_world_size": 6,
+  "requested": 256,
+  "successful": 256,
+  "failed": 0,
+  "candidates": 1,
+  "path_mode": "construction_only",
+  "primary": "native_token_construction",
+  "outcome_selection": false,
+  "failures_retained": true,
+  "inference_mlip": false,
+  "failure_reasons": {},
+  "model_forward_calls": 5409,
+  "model_row_evaluations": 9375,
+  "live_row_model_evaluations": 9375,
+  "failed_row_padding_evaluations": 0,
+  "geometry_forward_calls": 0,
+  "rank_statistics": [
+    {
+      "method": "mixed_token_construction",
+      "training_method": "mixed_geometry_h_p33",
+      "deployment": "token_construction_only",
+      "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+      "condition_start": 0,
+      "condition_stop": 256,
+      "seed": 20260905,
+      "collection_round": 0,
+      "temperature": 0.7,
+      "logical_batch_cap": 4,
+      "sampling_layout_world_size": 2,
+      "max_length": 382,
+      "execution_world_size": 6,
+      "rank": 0,
+      "requested": 36,
+      "successful": 36,
+      "model_forward_calls": 924,
+      "model_row_evaluations": 1269,
+      "live_row_model_evaluations": 1269,
+      "failed_row_padding_evaluations": 0,
+      "geometry_forward_calls": 0,
+      "logical_batches": [
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            12
+          ],
+          "sample_indices": [
+            12
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 12,
+          "model_row_evaluations": 12,
+          "live_row_model_evaluations": 12,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            60
+          ],
+          "sample_indices": [
+            60
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 18,
+          "live_row_model_evaluations": 18,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            50,
+            226
+          ],
+          "sample_indices": [
+            50,
+            226
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 21,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            166,
+            202
+          ],
+          "sample_indices": [
+            166,
+            202
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 27,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            68,
+            194
+          ],
+          "sample_indices": [
+            68,
+            194
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            134,
+            164,
+            210
+          ],
+          "sample_indices": [
+            134,
+            164,
+            210
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 108,
+          "live_row_model_evaluations": 108,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            110,
+            212
+          ],
+          "sample_indices": [
+            110,
+            212
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 84,
+          "live_row_model_evaluations": 84,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            32,
+            188
+          ],
+          "sample_indices": [
+            32,
+            188
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 84,
+          "live_row_model_evaluations": 84,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            52
+          ],
+          "sample_indices": [
+            52
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            64
+          ],
+          "sample_indices": [
+            64
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            162
+          ],
+          "sample_indices": [
+            162
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            92
+          ],
+          "sample_indices": [
+            92
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 66,
+          "live_row_model_evaluations": 66,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            77
+          ],
+          "sample_indices": [
+            77
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 15,
+          "model_row_evaluations": 15,
+          "live_row_model_evaluations": 15,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            155,
+            157,
+            159,
+            167
+          ],
+          "sample_indices": [
+            155,
+            157,
+            159,
+            167
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            35,
+            171
+          ],
+          "sample_indices": [
+            35,
+            171
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 21,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            211
+          ],
+          "sample_indices": [
+            211
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 24,
+          "live_row_model_evaluations": 24,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            165
+          ],
+          "sample_indices": [
+            165
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            113,
+            221
+          ],
+          "sample_indices": [
+            113,
+            221
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            43
+          ],
+          "sample_indices": [
+            43
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            103
+          ],
+          "sample_indices": [
+            103
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            251
+          ],
+          "sample_indices": [
+            251
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            191
+          ],
+          "sample_indices": [
+            191
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            169
+          ],
+          "sample_indices": [
+            169
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            229
+          ],
+          "sample_indices": [
+            229
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 66,
+          "live_row_model_evaluations": 66,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        }
+      ],
+      "elapsed_seconds": 180.89747587777674
+    },
+    {
+      "method": "mixed_token_construction",
+      "training_method": "mixed_geometry_h_p33",
+      "deployment": "token_construction_only",
+      "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+      "condition_start": 0,
+      "condition_stop": 256,
+      "seed": 20260905,
+      "collection_round": 0,
+      "temperature": 0.7,
+      "logical_batch_cap": 4,
+      "sampling_layout_world_size": 2,
+      "max_length": 382,
+      "execution_world_size": 6,
+      "rank": 1,
+      "requested": 41,
+      "successful": 41,
+      "model_forward_calls": 936,
+      "model_row_evaluations": 1524,
+      "live_row_model_evaluations": 1524,
+      "failed_row_padding_evaluations": 0,
+      "geometry_forward_calls": 0,
+      "logical_batches": [
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            70
+          ],
+          "sample_indices": [
+            70
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 12,
+          "model_row_evaluations": 12,
+          "live_row_model_evaluations": 12,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            80,
+            88,
+            96,
+            108
+          ],
+          "sample_indices": [
+            80,
+            88,
+            96,
+            108
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            58
+          ],
+          "sample_indices": [
+            58
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 24,
+          "live_row_model_evaluations": 24,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            2
+          ],
+          "sample_indices": [
+            2
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 27,
+          "model_row_evaluations": 27,
+          "live_row_model_evaluations": 27,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            122
+          ],
+          "sample_indices": [
+            122
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            26,
+            40,
+            172,
+            230
+          ],
+          "sample_indices": [
+            26,
+            40,
+            172,
+            230
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 144,
+          "live_row_model_evaluations": 144,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            8,
+            120,
+            196
+          ],
+          "sample_indices": [
+            8,
+            120,
+            196
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 126,
+          "live_row_model_evaluations": 126,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            224
+          ],
+          "sample_indices": [
+            224
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 45,
+          "model_row_evaluations": 45,
+          "live_row_model_evaluations": 45,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            48,
+            100
+          ],
+          "sample_indices": [
+            48,
+            100
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 96,
+          "live_row_model_evaluations": 96,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            76
+          ],
+          "sample_indices": [
+            76
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            184
+          ],
+          "sample_indices": [
+            184
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            124
+          ],
+          "sample_indices": [
+            124
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 66,
+          "live_row_model_evaluations": 66,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            71
+          ],
+          "sample_indices": [
+            71
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 15,
+          "model_row_evaluations": 15,
+          "live_row_model_evaluations": 15,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            173,
+            215,
+            235
+          ],
+          "sample_indices": [
+            173,
+            215,
+            235
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            39
+          ],
+          "sample_indices": [
+            39
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 21,
+          "model_row_evaluations": 21,
+          "live_row_model_evaluations": 21,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            105,
+            183
+          ],
+          "sample_indices": [
+            105,
+            183
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            45,
+            193
+          ],
+          "sample_indices": [
+            45,
+            193
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            47,
+            101,
+            107
+          ],
+          "sample_indices": [
+            47,
+            101,
+            107
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 108,
+          "live_row_model_evaluations": 108,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            91
+          ],
+          "sample_indices": [
+            91
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            29
+          ],
+          "sample_indices": [
+            29
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            53
+          ],
+          "sample_indices": [
+            53
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            247
+          ],
+          "sample_indices": [
+            247
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            89,
+            149
+          ],
+          "sample_indices": [
+            89,
+            149
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 120,
+          "live_row_model_evaluations": 120,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            87,
+            227
+          ],
+          "sample_indices": [
+            87,
+            227
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 132,
+          "live_row_model_evaluations": 132,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        }
+      ],
+      "elapsed_seconds": 190.6395839843899
+    },
+    {
+      "method": "mixed_token_construction",
+      "training_method": "mixed_geometry_h_p33",
+      "deployment": "token_construction_only",
+      "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+      "condition_start": 0,
+      "condition_stop": 256,
+      "seed": 20260905,
+      "collection_round": 0,
+      "temperature": 0.7,
+      "logical_batch_cap": 4,
+      "sampling_layout_world_size": 2,
+      "max_length": 382,
+      "execution_world_size": 6,
+      "rank": 2,
+      "requested": 43,
+      "successful": 43,
+      "model_forward_calls": 900,
+      "model_row_evaluations": 1461,
+      "live_row_model_evaluations": 1461,
+      "failed_row_padding_evaluations": 0,
+      "geometry_forward_calls": 0,
+      "logical_batches": [
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            74
+          ],
+          "sample_indices": [
+            74
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 15,
+          "model_row_evaluations": 15,
+          "live_row_model_evaluations": 15,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            144,
+            148,
+            152,
+            168
+          ],
+          "sample_indices": [
+            144,
+            148,
+            152,
+            168
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            10,
+            66,
+            180
+          ],
+          "sample_indices": [
+            10,
+            66,
+            180
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            46,
+            98,
+            102,
+            154
+          ],
+          "sample_indices": [
+            46,
+            98,
+            102,
+            154
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 120,
+          "live_row_model_evaluations": 120,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            44
+          ],
+          "sample_indices": [
+            44
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            84,
+            94,
+            174,
+            190
+          ],
+          "sample_indices": [
+            84,
+            94,
+            174,
+            190
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 144,
+          "live_row_model_evaluations": 144,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            114
+          ],
+          "sample_indices": [
+            114
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            246
+          ],
+          "sample_indices": [
+            246
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 45,
+          "model_row_evaluations": 45,
+          "live_row_model_evaluations": 45,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            146
+          ],
+          "sample_indices": [
+            146
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            244
+          ],
+          "sample_indices": [
+            244
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 57,
+          "model_row_evaluations": 57,
+          "live_row_model_evaluations": 57,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            140
+          ],
+          "sample_indices": [
+            140
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            28
+          ],
+          "sample_indices": [
+            28
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 66,
+          "live_row_model_evaluations": 66,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            31,
+            85
+          ],
+          "sample_indices": [
+            31,
+            85
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 15,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            33,
+            147,
+            161,
+            187
+          ],
+          "sample_indices": [
+            33,
+            147,
+            161,
+            187
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            203,
+            225
+          ],
+          "sample_indices": [
+            203,
+            225
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            115,
+            245
+          ],
+          "sample_indices": [
+            115,
+            245
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            15
+          ],
+          "sample_indices": [
+            15
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 33,
+          "model_row_evaluations": 33,
+          "live_row_model_evaluations": 33,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            145
+          ],
+          "sample_indices": [
+            145
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            55,
+            133,
+            237
+          ],
+          "sample_indices": [
+            55,
+            133,
+            237
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 126,
+          "live_row_model_evaluations": 126,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            135
+          ],
+          "sample_indices": [
+            135
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            27,
+            67
+          ],
+          "sample_indices": [
+            27,
+            67
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 108,
+          "live_row_model_evaluations": 108,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            81
+          ],
+          "sample_indices": [
+            81
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            99
+          ],
+          "sample_indices": [
+            99
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 63,
+          "model_row_evaluations": 63,
+          "live_row_model_evaluations": 63,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        }
+      ],
+      "elapsed_seconds": 180.2627753391862
+    },
+    {
+      "method": "mixed_token_construction",
+      "training_method": "mixed_geometry_h_p33",
+      "deployment": "token_construction_only",
+      "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+      "condition_start": 0,
+      "condition_stop": 256,
+      "seed": 20260905,
+      "collection_round": 0,
+      "temperature": 0.7,
+      "logical_batch_cap": 4,
+      "sampling_layout_world_size": 2,
+      "max_length": 382,
+      "execution_world_size": 6,
+      "rank": 3,
+      "requested": 47,
+      "successful": 47,
+      "model_forward_calls": 870,
+      "model_row_evaluations": 1704,
+      "live_row_model_evaluations": 1704,
+      "failed_row_padding_evaluations": 0,
+      "geometry_forward_calls": 0,
+      "logical_batches": [
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            34,
+            112,
+            150,
+            156
+          ],
+          "sample_indices": [
+            34,
+            112,
+            150,
+            156
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            170,
+            240,
+            252
+          ],
+          "sample_indices": [
+            170,
+            240,
+            252
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            42
+          ],
+          "sample_indices": [
+            42
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 24,
+          "live_row_model_evaluations": 24,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            228,
+            234,
+            250
+          ],
+          "sample_indices": [
+            228,
+            234,
+            250
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 90,
+          "live_row_model_evaluations": 90,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            6,
+            136,
+            232,
+            238
+          ],
+          "sample_indices": [
+            6,
+            136,
+            232,
+            238
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 33,
+          "model_row_evaluations": 132,
+          "live_row_model_evaluations": 132,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            192
+          ],
+          "sample_indices": [
+            192
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            14,
+            54,
+            86
+          ],
+          "sample_indices": [
+            14,
+            54,
+            86
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 126,
+          "live_row_model_evaluations": 126,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            16
+          ],
+          "sample_indices": [
+            16
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            178
+          ],
+          "sample_indices": [
+            178
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            206
+          ],
+          "sample_indices": [
+            206
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            0
+          ],
+          "sample_indices": [
+            0
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 66,
+          "live_row_model_evaluations": 66,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            175
+          ],
+          "sample_indices": [
+            175
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 12,
+          "model_row_evaluations": 12,
+          "live_row_model_evaluations": 12,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            109,
+            201,
+            223
+          ],
+          "sample_indices": [
+            109,
+            201,
+            223
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            233,
+            253
+          ],
+          "sample_indices": [
+            233,
+            253
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            65,
+            179,
+            189
+          ],
+          "sample_indices": [
+            65,
+            179,
+            189
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            143
+          ],
+          "sample_indices": [
+            143
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            41,
+            163
+          ],
+          "sample_indices": [
+            41,
+            163
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 33,
+          "model_row_evaluations": 66,
+          "live_row_model_evaluations": 66,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            231
+          ],
+          "sample_indices": [
+            231
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            17
+          ],
+          "sample_indices": [
+            17
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            127
+          ],
+          "sample_indices": [
+            127
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            5,
+            181,
+            219
+          ],
+          "sample_indices": [
+            5,
+            181,
+            219
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 162,
+          "live_row_model_evaluations": 162,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            19,
+            59
+          ],
+          "sample_indices": [
+            19,
+            59
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 120,
+          "live_row_model_evaluations": 120,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            23,
+            69,
+            123,
+            209
+          ],
+          "sample_indices": [
+            23,
+            69,
+            123,
+            209
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 264,
+          "live_row_model_evaluations": 264,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        }
+      ],
+      "elapsed_seconds": 182.6429369430989
+    },
+    {
+      "method": "mixed_token_construction",
+      "training_method": "mixed_geometry_h_p33",
+      "deployment": "token_construction_only",
+      "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+      "condition_start": 0,
+      "condition_stop": 256,
+      "seed": 20260905,
+      "collection_round": 0,
+      "temperature": 0.7,
+      "logical_batch_cap": 4,
+      "sampling_layout_world_size": 2,
+      "max_length": 382,
+      "execution_world_size": 6,
+      "rank": 4,
+      "requested": 38,
+      "successful": 38,
+      "model_forward_calls": 882,
+      "model_row_evaluations": 1443,
+      "live_row_model_evaluations": 1443,
+      "failed_row_padding_evaluations": 0,
+      "geometry_forward_calls": 0,
+      "logical_batches": [
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            158,
+            160,
+            204
+          ],
+          "sample_indices": [
+            158,
+            160,
+            204
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            116,
+            218
+          ],
+          "sample_indices": [
+            116,
+            218
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            90,
+            138,
+            214
+          ],
+          "sample_indices": [
+            90,
+            138,
+            214
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            128
+          ],
+          "sample_indices": [
+            128
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            236
+          ],
+          "sample_indices": [
+            236
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 33,
+          "model_row_evaluations": 33,
+          "live_row_model_evaluations": 33,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            20
+          ],
+          "sample_indices": [
+            20
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            106,
+            126
+          ],
+          "sample_indices": [
+            106,
+            126
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 84,
+          "live_row_model_evaluations": 84,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            24,
+            62,
+            200,
+            248
+          ],
+          "sample_indices": [
+            24,
+            62,
+            200,
+            248
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 192,
+          "live_row_model_evaluations": 192,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            118
+          ],
+          "sample_indices": [
+            118
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            30
+          ],
+          "sample_indices": [
+            30
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            182,
+            198
+          ],
+          "sample_indices": [
+            182,
+            198
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 132,
+          "live_row_model_evaluations": 132,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            1
+          ],
+          "sample_indices": [
+            1
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 12,
+          "model_row_evaluations": 12,
+          "live_row_model_evaluations": 12,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            21,
+            97
+          ],
+          "sample_indices": [
+            21,
+            97
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            75,
+            121
+          ],
+          "sample_indices": [
+            75,
+            121
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 21,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            49
+          ],
+          "sample_indices": [
+            49
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 24,
+          "live_row_model_evaluations": 24,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            197
+          ],
+          "sample_indices": [
+            197
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            95,
+            177
+          ],
+          "sample_indices": [
+            95,
+            177
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            83
+          ],
+          "sample_indices": [
+            83
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 39,
+          "model_row_evaluations": 39,
+          "live_row_model_evaluations": 39,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            25
+          ],
+          "sample_indices": [
+            25
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 45,
+          "model_row_evaluations": 45,
+          "live_row_model_evaluations": 45,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            119
+          ],
+          "sample_indices": [
+            119
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            249
+          ],
+          "sample_indices": [
+            249
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 54,
+          "live_row_model_evaluations": 54,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            63
+          ],
+          "sample_indices": [
+            63
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            79,
+            117,
+            131
+          ],
+          "sample_indices": [
+            79,
+            117,
+            131
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 198,
+          "live_row_model_evaluations": 198,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        }
+      ],
+      "elapsed_seconds": 182.86320396140218
+    },
+    {
+      "method": "mixed_token_construction",
+      "training_method": "mixed_geometry_h_p33",
+      "deployment": "token_construction_only",
+      "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+      "condition_start": 0,
+      "condition_stop": 256,
+      "seed": 20260905,
+      "collection_round": 0,
+      "temperature": 0.7,
+      "logical_batch_cap": 4,
+      "sampling_layout_world_size": 2,
+      "max_length": 382,
+      "execution_world_size": 6,
+      "rank": 5,
+      "requested": 51,
+      "successful": 51,
+      "model_forward_calls": 897,
+      "model_row_evaluations": 1974,
+      "live_row_model_evaluations": 1974,
+      "failed_row_padding_evaluations": 0,
+      "geometry_forward_calls": 0,
+      "logical_batches": [
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            82
+          ],
+          "sample_indices": [
+            82
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 18,
+          "live_row_model_evaluations": 18,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            22,
+            220
+          ],
+          "sample_indices": [
+            22,
+            220
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            18,
+            186
+          ],
+          "sample_indices": [
+            18,
+            186
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 48,
+          "live_row_model_evaluations": 48,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            72
+          ],
+          "sample_indices": [
+            72
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 30,
+          "live_row_model_evaluations": 30,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            130
+          ],
+          "sample_indices": [
+            130
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 36,
+          "live_row_model_evaluations": 36,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            38,
+            242
+          ],
+          "sample_indices": [
+            38,
+            242
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 84,
+          "live_row_model_evaluations": 84,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            36
+          ],
+          "sample_indices": [
+            36
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            56,
+            208
+          ],
+          "sample_indices": [
+            56,
+            208
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 48,
+          "model_row_evaluations": 96,
+          "live_row_model_evaluations": 96,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            4,
+            142,
+            216,
+            222
+          ],
+          "sample_indices": [
+            4,
+            142,
+            216,
+            222
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 216,
+          "live_row_model_evaluations": 216,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            78,
+            104,
+            132
+          ],
+          "sample_indices": [
+            78,
+            104,
+            132
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 180,
+          "live_row_model_evaluations": 180,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            176,
+            254
+          ],
+          "sample_indices": [
+            176,
+            254
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 132,
+          "live_row_model_evaluations": 132,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            13
+          ],
+          "sample_indices": [
+            13
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 12,
+          "model_row_evaluations": 12,
+          "live_row_model_evaluations": 12,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            93,
+            139,
+            141,
+            153
+          ],
+          "sample_indices": [
+            93,
+            139,
+            141,
+            153
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 18,
+          "model_row_evaluations": 72,
+          "live_row_model_evaluations": 72,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            151,
+            185,
+            217
+          ],
+          "sample_indices": [
+            151,
+            185,
+            217
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 21,
+          "model_row_evaluations": 63,
+          "live_row_model_evaluations": 63,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            11,
+            137,
+            195,
+            241
+          ],
+          "sample_indices": [
+            11,
+            137,
+            195,
+            241
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 24,
+          "model_row_evaluations": 96,
+          "live_row_model_evaluations": 96,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            37,
+            61,
+            73,
+            213
+          ],
+          "sample_indices": [
+            37,
+            61,
+            73,
+            213
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 30,
+          "model_row_evaluations": 120,
+          "live_row_model_evaluations": 120,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 4,
+          "condition_ordinals": [
+            51,
+            129,
+            243,
+            255
+          ],
+          "sample_indices": [
+            51,
+            129,
+            243,
+            255
+          ],
+          "requested": 4,
+          "successful": 4,
+          "model_forward_calls": 36,
+          "model_row_evaluations": 144,
+          "live_row_model_evaluations": 144,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            239
+          ],
+          "sample_indices": [
+            239
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 42,
+          "model_row_evaluations": 42,
+          "live_row_model_evaluations": 42,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            3,
+            207
+          ],
+          "sample_indices": [
+            3,
+            207
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 45,
+          "model_row_evaluations": 90,
+          "live_row_model_evaluations": 90,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            9
+          ],
+          "sample_indices": [
+            9
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 51,
+          "model_row_evaluations": 51,
+          "live_row_model_evaluations": 51,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 2,
+          "condition_ordinals": [
+            7,
+            199
+          ],
+          "sample_indices": [
+            7,
+            199
+          ],
+          "requested": 2,
+          "successful": 2,
+          "model_forward_calls": 54,
+          "model_row_evaluations": 108,
+          "live_row_model_evaluations": 108,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 1,
+          "condition_ordinals": [
+            111
+          ],
+          "sample_indices": [
+            111
+          ],
+          "requested": 1,
+          "successful": 1,
+          "model_forward_calls": 60,
+          "model_row_evaluations": 60,
+          "live_row_model_evaluations": 60,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        },
+        {
+          "logical_batch_size": 3,
+          "condition_ordinals": [
+            57,
+            125,
+            205
+          ],
+          "sample_indices": [
+            57,
+            125,
+            205
+          ],
+          "requested": 3,
+          "successful": 3,
+          "model_forward_calls": 66,
+          "model_row_evaluations": 198,
+          "live_row_model_evaluations": 198,
+          "failed_row_padding_evaluations": 0,
+          "geometry_forward_calls": 0,
+          "failures_by_stage": {}
+        }
+      ],
+      "elapsed_seconds": 191.02411227673292
+    }
+  ]
+}

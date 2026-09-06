@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "scope": "local CPU behavioral checks; real trained K4/K8 prefix/GPU probe and biased-path replay are performed by the root launcher",
+  "tests_command": "python -B -m pytest tests/test_short_contact_sampling.py tests/test_mixed_token_sampling.py -q",
+  "passed_tests": 21,
+  "elapsed_seconds": 2.24,
+  "source_sha256": {
+    "src/crystal_dlm/short_contact_sampling.py": "40766a0fa8789ba4ccb79485cf82e92bc902baa126a0bf00ed7265656fb8f4b1",
+    "src/scripts/sample_state_programmed_paths.py": "ba84de80872ced03b836d361eaf7bcb98c2a7a937e41528be879d7505053121d",
+    "src/scripts/sample_short_contact_paths.py": "afdd38d477cb11f60424960f36bbdd9bddcf8a3304082afcf4abb79d8796c089",
+    "src/scripts/probe_short_contact_prefixes.py": "9987b0222d814acd8210fad718052ea8718a1da7cc67ef6ec93df46fc56d72ff",
+    "tests/test_short_contact_sampling.py": "ec6cf213e471afd3956ef5e1441e528829579a52737044728d49c6e438f06c8f"
+  },
+  "spec_sha256": "5789ed98a16627dbc0ad052f18bbd5c992604b339a006d2475e8231b6d8d9336",
+  "radii_sha256": "74bf9289545246bead1fa2b2a70bd5cbd73498ae3cef74f5d7ec24007c78bec7",
+  "checks": [
+    "post-hard/alias raw logit minus T*b in BF16/FP32/FP64; FP64 preserved",
+    "old hard sentinels and aliases unchanged, legal mask captured before cast",
+    "only current Z/XY/cell/full other-site geometry; no old imputation",
+    "all-zero penalty returns original tensor object",
+    "pure probe reproduces original construct/cooperative/closure actions and probabilities",
+    "same-seed original zero-penalty winners preserved",
+    "missing element radius fails before model call",
+    "default-off shared factory retains all13 T behavior checks",
+    "exact constant positive barrier cancels analytically and preserves original tensor, no rounding-only change"
+  ],
+  "cli_help": "both PASS",
+  "python_ast": "PASS",
+  "trailing_whitespace": "none",
+  "wrapper_review": "operations/short_contact/evaluate_k4_k8.sbatch parameters and output paths match; baseline full-batch probe precedes biased4/fresh replay and complete256",
+  "real_model_forwards_by_this_agent": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0,
+  "SSH_or_GPU_submissions": 0,
+  "git_commits_created": 0,
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "torch": "2.8.0+cpu",
+  "platform": "Windows-11-10.0.26200-SP0"
+}

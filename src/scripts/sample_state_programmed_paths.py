@@ -43,6 +43,8 @@ def parse_args():
     p.add_argument("--replay-tolerance", type=float, default=1e-6)
     p.add_argument("--repair-roots-jsonl", type=Path, nargs="+")
     p.add_argument("--full-cell-repair", action="store_true")
+    p.add_argument("--short-contact-spec", type=Path)
+    p.add_argument("--legacy-layout-world-size", type=int)
     return p.parse_args()
 
 
@@ -94,6 +96,11 @@ def merge(args):
               "reference_closure": args.reference_closure,
               "full_cell_repair": args.full_cell_repair,
               "outcome_selection": False, "failures_retained": True}
+    if getattr(args, "short_contact_spec", None):
+        from crystal_dlm.short_contact_sampling import ContactSpec
+        report.update(short_contact_policy=ContactSpec.load(args.short_contact_spec).metadata(),
+                      legacy_layout_world_size=args.legacy_layout_world_size,
+                      effective_sampling_layout_world_size=args.sampling_layout_world_size or args.legacy_layout_world_size)
     if getattr(args, "repair_roots_jsonl", None):
         report.update(path_mode="self_repair_support_check", diagnostic_only=True,
                       repair_roots_jsonl=[str(p) for p in args.repair_roots_jsonl],
@@ -104,16 +111,22 @@ def merge(args):
     print(json.dumps(report), flush=True)
 
 
-def make_sampler(model, tokenizer, constraints, compiled, seeds, temperature):
+def make_sampler(model, tokenizer, constraints, compiled, seeds, temperature, contact_spec=None,
+                 *, probe_only=False, collect_vectors=False):
     from crystal_dlm.fixed_slot import MASK_TOKEN_ID
     from crystal_dlm.programmed_path_runtime import ProgrammedPathSampler
     from crystal_dlm.r5_dynamic_length import exact_dynamic_schema_constraints
     first = compiled[0]
-    return ProgrammedPathSampler(
+    sampler_type, extra = ProgrammedPathSampler, {}
+    if contact_spec is not None:
+        from crystal_dlm.short_contact_sampling import ShortContactProgrammedPathSampler
+        sampler_type = ShortContactProgrammedPathSampler
+        extra = dict(contact_spec=contact_spec, probe_only=probe_only, collect_vectors=collect_vectors)
+    return sampler_type(
         model, prompt_length=len(first["prompt_token_ids"]), gen_length=len(first["initial_body"]),
         mask_id=MASK_TOKEN_ID, programs=[c["program"] for c in compiled],
         allowed_token_ids=exact_dynamic_schema_constraints(tokenizer, first["program"].num_atoms),
-        atom_count_grammar=None, constraints=constraints, temperature=temperature, sampling_seeds=seeds,
+        atom_count_grammar=None, constraints=constraints, temperature=temperature, sampling_seeds=seeds, **extra,
     )
 
 
@@ -128,7 +141,11 @@ def replay(args, model, tokenizer, constraints, device):
         prefix = compiled["prompt_token_ids"]
         if prefix != record["prompt_token_ids"]:
             raise ValueError("fresh tokenizer changed the native prompt")
-        sampler = make_sampler(model, tokenizer, constraints, [compiled], [record["sampling_seed"]], record["trace"]["temperature"])
+        contact_spec = getattr(args, "_contact_settings", None)
+        if contact_spec is not None and record["trace"].get("short_contact_policy", {}).get("spec_sha256") != contact_spec.spec_sha256:
+            raise ValueError("replay record differs from the frozen short-contact specification")
+        sampler = make_sampler(model, tokenizer, constraints, [compiled], [record["sampling_seed"]],
+                               record["trace"]["temperature"], contact_spec)
         for state in replay_scalar_states(record["trace"]):
             x = torch.tensor([prefix + state["input_body"]], device=device)
             old = torch.tensor([prefix + state["old_body"]], device=device)
@@ -165,6 +182,14 @@ def replay(args, model, tokenizer, constraints, device):
 
 def main():
     args = parse_args()
+    if args.legacy_layout_world_size is not None and (args.legacy_layout_world_size < 1 or args.sampling_layout_world_size is not None):
+        raise ValueError("choose one positive explicit or legacy logical layout")
+    if args.short_contact_spec:
+        if args.purpose != "evaluation" or args.reference_closure or args.repair_roots_jsonl:
+            raise ValueError("short-contact deployment is an evaluation-only legacy K4/K8 candidate")
+        from crystal_dlm.short_contact_sampling import ContactSpec, validate_legacy_contact_policy
+        args._contact_settings = ContactSpec.load(args.short_contact_spec)
+        validate_legacy_contact_policy(args.checkpoint_path)
     if args.full_cell_repair and args.reference_closure:
         raise ValueError("full-cell repair is not part of the historical reference policy")
     if (Path(args.checkpoint_path) / "periodic_repair_config.json").is_file() and not args.full_cell_repair:
@@ -205,8 +230,9 @@ def main():
         replay(args, model, tokenizer, constraints, device)
         return
     scheduled_items = []
+    effective_layout = args.sampling_layout_world_size or args.legacy_layout_world_size
     for ordinal, row in conditions_for_run(args):
-        if args.sampling_layout_world_size is None and ordinal % args.world_size != rank:
+        if effective_layout is None and ordinal % args.world_size != rank:
             continue
         c = compile_condition(row, tokenizer, mask_id=MASK_TOKEN_ID, purpose=args.purpose)
         if repair_only:
@@ -219,11 +245,12 @@ def main():
     with (args.output_dir / f"records.rank{rank}.jsonl").open("x", encoding="utf-8") as handle:
         for batch in sampling_batches(scheduled_items, batch_size=args.batch_size, rank=rank,
                                       world_size=args.world_size,
-                                      layout_world_size=args.sampling_layout_world_size):
+                                      layout_world_size=effective_layout):
             compiled = [c for _, _, c in batch]
             seeds = [path_seed(args.seed, c["record"]["group_id"], args.collection_round, j) for _, j, c in batch]
             x = torch.tensor([c["prompt_token_ids"] + c["initial_body"] for c in compiled], device=device)
-            sampler = make_sampler(model, tokenizer, constraints, compiled, seeds, args.temperature)
+            sampler = make_sampler(model, tokenizer, constraints, compiled, seeds, args.temperature,
+                                   getattr(args, "_contact_settings", None))
             with torch.autocast("cuda", dtype=torch.bfloat16):
                 if repair_only and not compiled[0]["record"]["repair_parent_success"]:
                     if any(c["record"]["repair_parent_success"] for c in compiled):
@@ -270,6 +297,10 @@ def main():
                     record.update(path_mode="self_repair_support_check", diagnostic_only=True,
                                   trace_scope="full_attempted_self_repair",
                                   **repair_net_change(trace["initial_body"], body_ids))
+                if args.short_contact_spec:
+                    record.update(short_contact_policy=args._contact_settings.metadata(),
+                                  legacy_layout_world_size=args.legacy_layout_world_size,
+                                  effective_sampling_layout_world_size=effective_layout)
                 handle.write(json.dumps(record, ensure_ascii=False) + "\n")
                 completed += 1
                 successful += int(trace["success"])

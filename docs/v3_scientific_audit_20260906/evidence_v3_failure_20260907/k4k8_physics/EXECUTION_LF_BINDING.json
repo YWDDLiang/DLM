@@ -1,0 +1,32 @@
+{
+  "created_at_utc": "2026-09-06T18:15:35.430094+00:00",
+  "status": "PASS",
+  "scope": "Line-ending-only canonicalization after CPU checks, Python AST identical; no additional behavior or method change",
+  "files": {
+    "src/crystal_dlm/short_contact_sampling.py": {
+      "tested_source_sha256": "40766a0fa8789ba4ccb79485cf82e92bc902baa126a0bf00ed7265656fb8f4b1",
+      "execution_lf_sha256": "40766a0fa8789ba4ccb79485cf82e92bc902baa126a0bf00ed7265656fb8f4b1",
+      "python_AST_unchanged": true
+    },
+    "src/scripts/sample_state_programmed_paths.py": {
+      "tested_source_sha256": "ba84de80872ced03b836d361eaf7bcb98c2a7a937e41528be879d7505053121d",
+      "execution_lf_sha256": "530c14c7da68a501abe483d5af91aeeed6e294a3a15ea684cf04eef591718a8c",
+      "python_AST_unchanged": true
+    },
+    "src/scripts/sample_short_contact_paths.py": {
+      "tested_source_sha256": "afdd38d477cb11f60424960f36bbdd9bddcf8a3304082afcf4abb79d8796c089",
+      "execution_lf_sha256": "afdd38d477cb11f60424960f36bbdd9bddcf8a3304082afcf4abb79d8796c089",
+      "python_AST_unchanged": true
+    },
+    "src/scripts/probe_short_contact_prefixes.py": {
+      "tested_source_sha256": "9987b0222d814acd8210fad718052ea8718a1da7cc67ef6ec93df46fc56d72ff",
+      "execution_lf_sha256": "9987b0222d814acd8210fad718052ea8718a1da7cc67ef6ec93df46fc56d72ff",
+      "python_AST_unchanged": true
+    },
+    "tests/test_short_contact_sampling.py": {
+      "tested_source_sha256": "ec6cf213e471afd3956ef5e1441e528829579a52737044728d49c6e438f06c8f",
+      "execution_lf_sha256": "ec6cf213e471afd3956ef5e1441e528829579a52737044728d49c6e438f06c8f",
+      "python_AST_unchanged": true
+    }
+  }
+}

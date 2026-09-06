@@ -1,0 +1,10 @@
+{
+  "units": "angstrom",
+  "entries": 96,
+  "table": "pymatgen CovalentRadius.radius, exactly as serialized; not a universal non-overlap theorem",
+  "source_doi": "10.1039/B801115J",
+  "library_source_path": "D:\\codex_work\\ai4s\\DLM_llama_programmed_basin_closure\\.venv\\Lib\\site-packages\\pymatgen\\core\\molecule_structure_comparator.py",
+  "library_source_sha256": "003f53e28c21c670461a72d08f4bc194c8cbc407dea9946a3edfb78fa90bff69",
+  "radii_json_sha256": "74bf9289545246bead1fa2b2a70bd5cbd73498ae3cef74f5d7ec24007c78bec7",
+  "serialization": "sorted keys, compact separators, UTF-8, trailing LF"
+}

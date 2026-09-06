@@ -1,0 +1,90 @@
+{
+  "method": "mixed_token_construction",
+  "training_method": "mixed_geometry_h_p33",
+  "deployment": "token_construction_only",
+  "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+  "condition_start": 0,
+  "condition_stop": 4,
+  "seed": 20260905,
+  "collection_round": 0,
+  "temperature": 0.7,
+  "logical_batch_cap": 4,
+  "sampling_layout_world_size": 2,
+  "max_length": 382,
+  "execution_world_size": 1,
+  "kind": "fresh_process_T_full_logical_batch_scalar_replay",
+  "status": "PASS",
+  "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/token_eval_40071/pilot/sample/native/paths.jsonl",
+  "source_sha256": "01bdfb325a90dc72aeaa97bb72e7c3887ee0ea620cd3f7ba0aa4e9044d9c24cb",
+  "tolerance": 1e-06,
+  "requests": 4,
+  "maximum_logp_error": 0.0,
+  "checked_draws": 150,
+  "checked_no_support": 0,
+  "seeded_token_matches": 150,
+  "model_forward_calls": 150,
+  "model_row_evaluations": 150,
+  "geometry_forward_calls": 0,
+  "batches": [
+    {
+      "requests": 1,
+      "checked_draws": 27,
+      "checked_no_support": 0,
+      "maximum_logp_error": 0.0,
+      "seeded_token_matches": 27,
+      "model_forward_calls": 27,
+      "model_row_evaluations": 27,
+      "logical_batch_ordinals": [
+        2
+      ],
+      "terminal_reconstruction_pass": true,
+      "geometry_forward_calls": 0
+    },
+    {
+      "requests": 1,
+      "checked_draws": 66,
+      "checked_no_support": 0,
+      "maximum_logp_error": 0.0,
+      "seeded_token_matches": 66,
+      "model_forward_calls": 66,
+      "model_row_evaluations": 66,
+      "logical_batch_ordinals": [
+        0
+      ],
+      "terminal_reconstruction_pass": true,
+      "geometry_forward_calls": 0
+    },
+    {
+      "requests": 1,
+      "checked_draws": 12,
+      "checked_no_support": 0,
+      "maximum_logp_error": 0.0,
+      "seeded_token_matches": 12,
+      "model_forward_calls": 12,
+      "model_row_evaluations": 12,
+      "logical_batch_ordinals": [
+        1
+      ],
+      "terminal_reconstruction_pass": true,
+      "geometry_forward_calls": 0
+    },
+    {
+      "requests": 1,
+      "checked_draws": 45,
+      "checked_no_support": 0,
+      "maximum_logp_error": 0.0,
+      "seeded_token_matches": 45,
+      "model_forward_calls": 45,
+      "model_row_evaluations": 45,
+      "logical_batch_ordinals": [
+        3
+      ],
+      "terminal_reconstruction_pass": true,
+      "geometry_forward_calls": 0
+    }
+  ],
+  "physics_or_SUN_evaluation": false,
+  "optimizer_steps": 0,
+  "elapsed_seconds": 26.564300974830985
+}
