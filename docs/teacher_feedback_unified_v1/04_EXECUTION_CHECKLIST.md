@@ -2,6 +2,8 @@
 
 Current status: **2026-09-06 09:14 Asia/Shanghai: K8 labels complete8192 requests,1843verified paths across662 conditions. Unconstrained teacher was rejected for training because one Gd2 condition supplied89.24% of positive B gain through an unresolved -83.857eV/atom terminal. Explicit conservative teacher fixes only group13087 at its verified-candidate uniform reference, retains all paths/status/energies, and gives mean deltaA=deltaB=-0.0347304eV/atom, KL0.0090712, ESS1177.46. Final four-GPU continuation job39938 is submitted from original step1020 optimizer state. Separate raw-LLaDA periodic model job39937 runs on two GPUs and reads no K4/K8 input. Incorrect warm-start39934 was cancelled/invalidated.**
 
+09:45 one-time ETA:39938 reached global update4850 (path3880/CE970) after1781.67s of this continuation. Current throughput projects training completion near10:10 and the fixed native/tau800 results near11:30–12:00. This is a throughput estimate, not a result guarantee; avoid repeated polling while healthy.
+
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
 Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md).
