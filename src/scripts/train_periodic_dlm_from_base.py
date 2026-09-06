@@ -31,9 +31,11 @@ def main():
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--seed", type=int, default=82017)
     p.add_argument("--data-seed", type=int, default=20260515)
+    p.add_argument("--microbatch", type=int, default=2)
     args = p.parse_args()
     world, local = int(os.environ.get("WORLD_SIZE", 1)), int(os.environ.get("LOCAL_RANK", 0))
-    if world != 2 or "SLURM_JOB_ID" not in os.environ:
+    if (world != 2 or "SLURM_JOB_ID" not in os.environ
+            or args.microbatch < 1 or 16 % (world * args.microbatch)):
         raise RuntimeError("raw periodic DLM training requires its two-A800 allocation")
     torch.cuda.set_device(local)
     torch.set_num_threads(2)
@@ -50,14 +52,20 @@ def main():
     val = PeriodicBaseTrainingDataset(args.val_jsonl, tokenizer, constraints, seed=args.data_seed,
                                       expected_rows=9047, expected_split="val")
     sampler = DistributedSampler(data, num_replicas=world, rank=rank, shuffle=True, seed=args.data_seed)
-    loader = DataLoader(data, batch_size=1, sampler=sampler, num_workers=1, collate_fn=list)
+    loader = DataLoader(
+        data, batch_size=args.microbatch, sampler=sampler,
+        num_workers=1, collate_fn=list,
+    )
     val_indices = list(range(rank, 200, world))
-    val_loader = DataLoader(Subset(val, val_indices), batch_size=1, num_workers=0, collate_fn=list)
+    val_loader = DataLoader(
+        Subset(val, val_indices), batch_size=args.microbatch,
+        num_workers=0, collate_fn=list,
+    )
     wrapped = DistributedDataParallel(model, device_ids=[local])
     objective = PeriodicBaseObjective(tokenizer, constraints, device)
     parameters = [parameter for parameter in model.parameters() if parameter.requires_grad]
     optimizer = torch.optim.AdamW(parameters, lr=5e-5, weight_decay=0.)
-    accumulation = 8  # two ranks * microbatch1 * accumulation8 = 16 states
+    accumulation = 16 // (world * args.microbatch)
     epoch_updates = len(data) // 16
     updates = 2 * epoch_updates
     if updates != 6784 or data.real_length != 54272 or len(data) != data.real_length:
@@ -69,7 +77,8 @@ def main():
         args.output_dir.mkdir(parents=True, exist_ok=False)
         config = {
             **vars(args), "initialization": model.raw_initialization, "trainable": trainable,
-            "world_size": 2, "batch_size": 1, "gradient_accumulation": 8, "effective_batch": 16,
+            "world_size": 2, "batch_size": args.microbatch,
+            "gradient_accumulation": accumulation, "effective_batch": 16,
             "epochs": 2, "updates": updates, "epoch_updates": epoch_updates,
             "lr_stage1": 5e-5, "lr_stage2": 1e-5, "warmup_per_stage": 100,
             "weight_decay": 0., "data_protocol": BASE_TRAINING_DATA_PROTOCOL,
@@ -101,8 +110,10 @@ def main():
                 with torch.no_grad(), torch.autocast("cuda", dtype=torch.bfloat16):
                     expected = model.base_model(
                         input_ids=batch["input_ids"], attention_mask=batch["attention_mask"],
-                        attention_bias=torch.zeros(1, 1, batch["input_ids"].shape[1],
-                                                   batch["input_ids"].shape[1], device=device)).logits
+                        attention_bias=torch.zeros(
+                            len(examples), 1, batch["input_ids"].shape[1],
+                            batch["input_ids"].shape[1], device=device,
+                        )).logits
                     actual = model(batch["input_ids"], attention_mask=batch["attention_mask"],
                                    geometry_context=batch["geometry_context"]).logits
                     difference = (expected - actual).abs().max().detach().float()
@@ -181,6 +192,29 @@ def main():
         if rank == 0:
             print(json.dumps({"event": "validation_monitor", "step": step, "states": int(val_sum[1]),
                               "sources": 100, "loss": float(val_sum[0] / val_sum[1])}), flush=True)
+        checkpoint_coverage = coverage.to(device).clone()
+        dist.all_reduce(checkpoint_coverage)
+        dist.barrier()
+        if rank == 0 and epoch + 1 < 2:
+            checkpoint_dir = args.output_dir / "checkpoints" / f"step-{step}"
+            model.save_pretrained(checkpoint_dir)
+            tokenizer.save_pretrained(checkpoint_dir)
+            torch.save({
+                "optimizer": optimizer.state_dict(),
+                "scheduler": scheduler.state_dict(),
+                "completed_step": step,
+                "completed_epochs": epoch + 1,
+                "source_view_epoch_coverage": checkpoint_coverage.detach().cpu(),
+                "eligible_policy": False,
+                "reason": "recoverable epoch boundary, not the registered final endpoint",
+            }, checkpoint_dir / "BASE_TRAIN_STATE.pt")
+            (checkpoint_dir / "CHECKPOINT_FINAL.json").write_text(json.dumps({
+                "schema": "raw_periodic_base_epoch_checkpoint_v1",
+                "completed_step": step, "completed_epochs": epoch + 1,
+                "eligible_policy": False, "resume_boundary": True,
+                "microbatch": args.microbatch, "effective_batch": 16,
+            }, indent=2) + "\n", encoding="utf-8")
+        dist.barrier()
     all_coverage = coverage.to(device)
     dist.all_reduce(all_coverage)
     if step != updates or not bool((all_coverage == 2).all()):

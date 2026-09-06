@@ -6,7 +6,7 @@
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:NVIDIAA800-SXM4-80GB:2
 #SBATCH --mem=180G
-#SBATCH --time=06:00:00
+#SBATCH --time=07:00:00
 #SBATCH --output=periodic-base-dlm-%j.out
 #SBATCH --error=periodic-base-dlm-%j.err
 set -Eeuo pipefail
@@ -27,7 +27,7 @@ export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1
   --model-path /public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct \
   --train-jsonl "$ROOT/data/spad_basin_closure_sft_v1_20260904/train.jsonl" \
   --val-jsonl "$ROOT/data/spad_basin_closure_sft_v1_20260904/val.jsonl" \
-  --output-dir "$RUN/train" --seed 82017 --data-seed 20260515 \
+  --output-dir "$RUN/train" --seed 82017 --data-seed 20260515 --microbatch 2 \
   >"$RUN/train.out" 2>"$RUN/train.err"
 test -f "$RUN/train/_SUCCESS"
 cp "$RUN/train/POLICY_PATH" "$RUN/POLICY_PATH"
