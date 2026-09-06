@@ -1,0 +1,13 @@
+{
+  "files": {
+    "scripts/audit_legacy_phase_geometry.py": {
+      "reviewed_sha256": "7369fd359a16798ece1454b6be18e5e3db5a23e4e3459b4cacca7216b97e41a9",
+      "execution_lf_sha256": "7369fd359a16798ece1454b6be18e5e3db5a23e4e3459b4cacca7216b97e41a9"
+    },
+    "tests/test_legacy_phase_geometry.py": {
+      "reviewed_sha256": "cf83d5f3b17f514bd920505ecb298539dd88dfe0dbcb3931dba82c8f7f734396",
+      "execution_lf_sha256": "cf83d5f3b17f514bd920505ecb298539dd88dfe0dbcb3931dba82c8f7f734396"
+    }
+  },
+  "operation": "CRLF to LF only; exact post-normalization test is run before commit"
+}

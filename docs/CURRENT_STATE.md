@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**V2/V3、40074软约束及40076等权混合均已完整结束，未达同端10%/50%。40083正在评估K4/K8构造阶段。** 40076 raw10/51→tau18/118；40074 K4 raw6/56→tau20/122、K8 raw11/68→tau15/123，均256且没有1000资格。下一候选统一取每条轨迹的构造终点，省去后续修订，复用原256完整前缀，不按结果或case挑阶段。上海Sep7 07:00交付最新和最好实测SUN，06:31为6小时实验窗口末端。
+**V2/V3、40074软约束及40076等权混合均已完整结束，未达同端10%/50%。40083正在评估K4/K8构造阶段。** 40076 raw10/51→tau18/118；40074 K4 raw6/56→tau20/122、K8 raw11/68→tau15/123，均256且没有1000资格。该候选统一取每条轨迹的构造终点，省去后续修订，复用原256完整前缀，不按结果或case挑阶段。上海Sep7 07:00交付最新和最好实测SUN，06:31为6小时实验窗口末端。
 
 统一目录：[全链路审计](v3_scientific_audit_20260906/README.md)。
 
@@ -35,6 +35,7 @@ V2 训练作业 **39993** 已完成，Slurm `COMPLETED 0:0`，用时 01:11:28；
 | K4短接触软约束 / 同开发 256 | 6 / 56 | 20 / 122 |
 | K8短接触软约束 / 同开发 256 | 11 / 68 | 15 / 123 |
 | K4/K8等权概率混合 / 同开发 256 | 10 / 51 | 18 / 118 |
+| K4构造终点 / 同开发 256 | 5 / 48 | 15 / 126 |
 | 旧 K8 / 独立条件 1000 | 39 / 244 | 65 / 484 |
 | 旧 K8 / 对应全部 1200 请求 | 47 / 285 | 79 / 570 |
 
@@ -72,7 +73,7 @@ CPU诊断 **40069** 已`COMPLETED 0:0`，8CPU、12秒、无模型/能量调用�
 
 **40076**已COMPLETED 0:0，用时00:36:46，6A800/24CPU，执行5b95512b21acc7d83775400fa0c07943816b053a。固定K4/K8同态等权概率混合，T=.7、每动作2NN、无contact/MLIP/权重搜索。真实8前缀16NN和4轨迹369动作fresh双模型重放均PASS，正式256请求255生成成功，两模型各13563次forward；原生SUN10/51、tau800为18/118，verified3/29→8/50。均未达26/128，不触发混合1000，不继续扫权重。[完整结果](v3_scientific_audit_20260906/evidence_v3_failure_20260907/MIXTURE_EVAL_FINAL_40076.json)、[原始报告及hash](v3_scientific_audit_20260906/evidence_v3_failure_20260907/MIXTURE_FINAL_RECEIPTS_40076.json)、[方法审查](v3_scientific_audit_20260906/K4_K8_EQUAL_MIXTURE_BOUNDED_REVIEW.md)。
 
-**40083**已提交RUNNING，6A800/24CPU/440G/2h，执行f2f57d44c5221172bfabd866b2fa573244e93859。原K4/K8各256条全轨迹统一截到首个construct END，原动作、C/S/P、64bit seed和所有请求保留；后阶段状态不反向影响构造失败，支持重放异常立即停止。40项CPU测试通过，运行源码与测试字节一致。K4真实全量提取已完成：254成功、2原construct_empty_support，0新DLM采样，正在native/固定tau800评估；随后同规则K8。没有新SUN或1000资格。[提交](v3_scientific_audit_20260906/evidence_v3_failure_20260907/CONSTRUCTION_EVAL_SUBMISSION.json)、[冻结清单](v3_scientific_audit_20260906/evidence_v3_failure_20260907/CONSTRUCTION_EVAL_LAUNCH_MANIFEST.json)、[K4真实提取](v3_scientific_audit_20260906/evidence_v3_failure_20260907/K4_CONSTRUCTION_EXTRACTION_40083.json)。
+**40083**已提交RUNNING，6A800/24CPU/440G/2h，执行f2f57d44c5221172bfabd866b2fa573244e93859。原K4/K8各256条全轨迹统一截到首个construct END，原动作、C/S/P、64bit seed和所有请求保留；后阶段状态不反向影响构造失败，支持重放异常立即停止。40项CPU测试通过，运行源码与测试字节一致。K4真实完整评估已完成：254构造成功、2原construct_empty_support，0新DLM采样；raw5/48→tau80015/126（verified2/20→6/49），均256。相比原K4 tau19/126，Strict少4、Meta持平；Strict配对有13共同、完整循环独有6、构造独有2，无1000资格。K8同规则继续。[K4真实终点和原始hash](v3_scientific_audit_20260906/evidence_v3_failure_20260907/CONSTRUCTION_K4_FINAL_RECEIPTS_40083.json)。[提交](v3_scientific_audit_20260906/evidence_v3_failure_20260907/CONSTRUCTION_EVAL_SUBMISSION.json)、[冻结清单](v3_scientific_audit_20260906/evidence_v3_failure_20260907/CONSTRUCTION_EVAL_LAUNCH_MANIFEST.json)、[K4真实提取](v3_scientific_audit_20260906/evidence_v3_failure_20260907/K4_CONSTRUCTION_EXTRACTION_40083.json)。
 
 重复性诊断已收束：各171个相同有效native结构，实际refiner输入张量与逐图seed全部相同；4次运行共1011有效tau结果也通过rank合并/样本/原子映射，坐标误差0。N=2各5例精确复现，N≥3各166例不精确；归约顺序是有形状证据支持的候选原因，未确认首个分叉算子。有限平移/同元素对应残差只是达到的上界。原生R标签自己也有小幅重复差异，因此小幅SUN变化不能全部归因contact或refiner。[收束结论](v3_scientific_audit_20260906/REFINER_REPEATABILITY_DIAGNOSIS.md)。
 

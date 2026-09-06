@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "scope": "CPU-only fixture validation; root performs actual frozen-source run",
+  "tests": 4,
+  "elapsed_seconds": 1.64,
+  "source_sha256": {
+    "scripts/audit_legacy_phase_geometry.py": "7369fd359a16798ece1454b6be18e5e3db5a23e4e3459b4cacca7216b97e41a9",
+    "tests/test_legacy_phase_geometry.py": "cf83d5f3b17f514bd920505ecb298539dd88dfe0dbcb3931dba82c8f7f734396"
+  },
+  "checks": [
+    "three exact END states with phase-local rollback snapshot",
+    "failed constructor leaves later phases explicitly not executed",
+    "missing metadata fails audit and retains request with unknown stages",
+    "full PBC includes shortest nonzero self image outside original125 image shell"
+  ],
+  "model_forwards": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0,
+  "new_GPU_candidates": 0,
+  "source_files_modified": false,
+  "line_endings": "Source normalized to LF before final CPU check and git archive"
+}
