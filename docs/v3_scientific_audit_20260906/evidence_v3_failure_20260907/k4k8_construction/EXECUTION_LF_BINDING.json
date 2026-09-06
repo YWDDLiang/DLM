@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "files": {
+    "scripts/extract_legacy_construction_endpoint.py": {
+      "cpu_test_worktree_sha256": "01fa0665a978562f26baf6a5aa656bb2a7866aeb486ba2b7f9177b4500b3c17d",
+      "execution_lf_sha256": "01fa0665a978562f26baf6a5aa656bb2a7866aeb486ba2b7f9177b4500b3c17d",
+      "ast_equal": true
+    },
+    "src/scripts/sample_state_programmed_paths.py": {
+      "cpu_test_worktree_sha256": "0d19ce4dec1838430e179848138064247a91e1e8ee2b99a9b473eec9e3a6d371",
+      "execution_lf_sha256": "0d19ce4dec1838430e179848138064247a91e1e8ee2b99a9b473eec9e3a6d371",
+      "ast_equal": true
+    },
+    "src/scripts/sample_legacy_construction_paths.py": {
+      "cpu_test_worktree_sha256": "3c936a13bd360c13ff8e9364e73c3b98e6f04e023d572758a18bc80e308e9d45",
+      "execution_lf_sha256": "3c936a13bd360c13ff8e9364e73c3b98e6f04e023d572758a18bc80e308e9d45",
+      "ast_equal": true
+    },
+    "tests/test_legacy_construction_extraction.py": {
+      "cpu_test_worktree_sha256": "868681aaba424fef3006089cec8b47250d1c861b2383daf88bd2585237e89e66",
+      "execution_lf_sha256": "868681aaba424fef3006089cec8b47250d1c861b2383daf88bd2585237e89e66",
+      "ast_equal": true
+    }
+  },
+  "pytest_passed": 40,
+  "pytest_elapsed_seconds": 4.03,
+  "pytest_files": [
+    "tests/test_legacy_construction_extraction.py",
+    "tests/test_probability_mixture_sampling.py",
+    "tests/test_short_contact_sampling.py",
+    "tests/test_mixed_token_sampling.py",
+    "tests/test_state_programmed_runtime.py"
+  ],
+  "bash_syntax": [
+    "operations/construction_only/evaluate_k4_k8.sbatch",
+    "operations/construction_only/evaluate_supplement.sbatch"
+  ],
+  "real_full_ledger_extraction_tested": false,
+  "new_DLM_samples": 0,
+  "created_at_utc": "2026-09-06T20:13:01.492337+00:00"
+}

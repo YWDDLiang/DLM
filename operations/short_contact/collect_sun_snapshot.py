@@ -56,6 +56,8 @@ def main():
     p.add_argument("--contact-run", type=Path, action="append", default=[])
     p.add_argument("--mixture-run", type=Path, action="append", default=[])
     p.add_argument("--mixture-supplement", type=Path, action="append", default=[])
+    p.add_argument("--construction-run", type=Path, action="append", default=[])
+    p.add_argument("--construction-supplement", type=Path, action="append", default=[])
     p.add_argument("--output-dir", type=Path, required=True)
     args = p.parse_args()
     root = args.candidate_root
@@ -78,6 +80,10 @@ def main():
     for run in args.mixture_run:
         entries.append(("K4/K8 equal probability mixture ("+run.name+")",
                         run/"native-evaluation", run/"tau800-evaluation", True))
+    for run in args.construction_run:
+        for method in ("k4", "k8"):
+            entries.append((method.upper()+" construction only ("+run.name+")",
+                            run/method/"native-evaluation", run/method/"tau800-evaluation", True))
     rows, common = [], None
     for method, native, refined, candidate in entries:
         row = {"method": method, "candidate": candidate,
@@ -102,6 +108,14 @@ def main():
             mixture_supplements.append({"method": "K4/K8 equal probability mixture ("+run.name+")", "requests": n,
                 "raw": measure(run/"native-evaluation", n, "native", conditional=n == 1000),
                 "tau800": measure(run/"tau800-evaluation", n, "tau800", conditional=n == 1000)})
+    construction_supplements = []
+    for run in args.construction_supplement:
+        lock_path = run/"METHOD_LOCK.json"
+        method = json.loads(lock_path.read_text())["method"] if lock_path.is_file() else run.name
+        for n in (1000, 1200):
+            construction_supplements.append({"method": method, "requests": n,
+                "raw": measure(run/"native-evaluation", n, "native", conditional=n == 1000),
+                "tau800": measure(run/"tau800-evaluation", n, "tau800", conditional=n == 1000)})
     completed = [row for row in rows if row["complete"] and row["candidate"]]
     report = {"created_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
               "development_requests_per_method": 256, "development": rows,
@@ -111,6 +125,7 @@ def main():
                   for row in rows if row["complete"] for name in ("raw", "tau800") if row[name]["joint_target_met"]],
               "independent_original_k8": independent, "combined_best_metrics_across_methods": False,
               "independent_mixture": mixture_supplements,
+              "independent_construction": construction_supplements,
               "score_or_selection_mutations": 0}
     args.output_dir.mkdir(parents=True, exist_ok=False)
     (args.output_dir/"SUN_SNAPSHOT.json").write_text(json.dumps(report, indent=2)+"\n")
@@ -129,6 +144,10 @@ def main():
         lines += ["", "Frozen mixture on the same independent cohort:", "",
                   "| Method | Requests | Raw | Tau800 |", "|---|---:|---:|---:|"]
         lines.extend(f"| {row['method']} | {row['requests']} | {cell(row['raw'])} | {cell(row['tau800'])} |" for row in mixture_supplements)
+    if construction_supplements:
+        lines += ["", "Frozen construction-only policies on the same independent cohort:", "",
+                  "| Method | Requests | Raw | Tau800 |", "|---|---:|---:|---:|"]
+        lines.extend(f"| {row['method']} | {row['requests']} | {cell(row['raw'])} | {cell(row['tau800'])} |" for row in construction_supplements)
     lines += ["", "Source paths, original report hashes, verified counts, incomplete endpoints and target checks are in SUN_SNAPSHOT.json.",
               "No metric from one method is combined with another method. No evaluation file or selection is changed.", ""]
     (args.output_dir/"SUN_SNAPSHOT.md").write_text("\n".join(lines))

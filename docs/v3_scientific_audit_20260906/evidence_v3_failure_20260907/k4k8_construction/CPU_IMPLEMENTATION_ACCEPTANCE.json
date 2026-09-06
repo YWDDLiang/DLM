@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "scope": "CPU-only deterministic extraction and tiny fixture verification of optional future live construction/replay; no original full ledger or real DLM sampling run by this agent",
+  "test_command": "python -B -m pytest tests/test_legacy_construction_extraction.py tests/test_probability_mixture_sampling.py tests/test_short_contact_sampling.py tests/test_mixed_token_sampling.py -q",
+  "passed_tests": 34,
+  "new_construction_tests": 5,
+  "elapsed_seconds": 2.98,
+  "source_sha256": {
+    "scripts/extract_legacy_construction_endpoint.py": "01fa0665a978562f26baf6a5aa656bb2a7866aeb486ba2b7f9177b4500b3c17d",
+    "src/scripts/sample_state_programmed_paths.py": "0d19ce4dec1838430e179848138064247a91e1e8ee2b99a9b473eec9e3a6d371",
+    "src/scripts/sample_legacy_construction_paths.py": "3c936a13bd360c13ff8e9364e73c3b98e6f04e023d572758a18bc80e308e9d45",
+    "tests/test_legacy_construction_extraction.py": "868681aaba424fef3006089cec8b47250d1c861b2383daf88bd2585237e89e66"
+  },
+  "method_ids": [
+    "k4_construction_only_v1",
+    "k8_construction_only_v1"
+  ],
+  "checks": [
+    "truncate at the first construct END, retaining exact draw events and original C/S/P/prompt/seed/ordinal",
+    "constructor status independently recomputed using no_support, original strict schema and complete_geometry_supported on CPU",
+    "later rollback or full-cycle failure cannot invalidate successful construction",
+    "failed masked or unsupported complete construction not repaired or reaccepted",
+    "all256 requests and 64-bit seeds preserved with source object unchanged",
+    "source SHA and completed original policy/method/record checkpoint binding",
+    "CLI expected1200 and explicit source SHA supported",
+    "optional live construction flag defaults off and excludes contact/mixture; fresh replay does not require cooperative residual",
+    "shared sampler default-off regressions unchanged",
+    "support function exceptions fail the entire extraction rather than fabricating sample failure",
+    "original entry into cooperative/closure witnesses constructor support; contradictory CPU support replay stops extraction",
+    "live and extracted construction-only v1 reject temperature other than .7"
+  ],
+  "cli_help": "extractor and live thin entry PASS",
+  "python_ast": "PASS",
+  "trailing_whitespace": "none",
+  "wrapper_review": "operations/construction_only/evaluate_k4_k8.sbatch matches extraction arguments and sample/paths.jsonl output; compares original full-cycle raw/tau",
+  "extraction_model_forwards": 0,
+  "new_trained_model_forwards_by_agent": 0,
+  "optimizer_steps": 0,
+  "energy_evaluations": 0,
+  "SSH_or_GPU_jobs_submitted": 0,
+  "git_commits_created": 0,
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "torch": "2.8.0+cpu",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "verification_update": "all34 tests rerun after fail-fast/support-witness/temperature corrections; see latest tool execution"
+}

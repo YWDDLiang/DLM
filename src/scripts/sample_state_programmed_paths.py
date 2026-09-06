@@ -46,6 +46,7 @@ def parse_args():
     p.add_argument("--short-contact-spec", type=Path)
     p.add_argument("--legacy-layout-world-size", type=int)
     p.add_argument("--mixture-peer-checkpoint", type=Path)
+    p.add_argument("--construction-only", action="store_true")
     return p.parse_args()
 
 
@@ -108,6 +109,8 @@ def merge(args):
                       "temperature":.7,"same_state":True,"contact":False},
                       effective_sampling_layout_world_size=args.sampling_layout_world_size or args.legacy_layout_world_size,
                       component_model_forward_calls=[sum(row.get("mixture_counted_forward_calls",[0,0])[i] for row in records) for i in range(2)])
+    if getattr(args,"construction_only",False):
+        report.update(method=args._construction_method,path_mode="construction_only",construction_only=True)
     if getattr(args, "repair_roots_jsonl", None):
         report.update(path_mode="self_repair_support_check", diagnostic_only=True,
                       repair_roots_jsonl=[str(p) for p in args.repair_roots_jsonl],
@@ -151,6 +154,9 @@ def replay(args, model, tokenizer, constraints, device):
     mixture_calls=[0,0]
     rows = read_jsonl(args.replay_jsonl)
     for record in rows:
+        if getattr(args,"construction_only",False):
+            if record.get("method")!=args._construction_method or any(e.get("phase")!="construct" for e in record["trace"]["events"]):
+                raise ValueError("construction-only replay received another method or phase")
         compiled = compile_condition(record, tokenizer, mask_id=MASK_TOKEN_ID, purpose=args.purpose)
         prefix = compiled["prompt_token_ids"]
         if prefix != record["prompt_token_ids"]:
@@ -192,12 +198,15 @@ def replay(args, model, tokenizer, constraints, device):
             raise RuntimeError("trace replay does not reconstruct the deployed endpoint")
         if getattr(args,"mixture_peer_checkpoint",None):
             mixture_calls=[a+b for a,b in zip(mixture_calls,sampler.component_forward_calls)]
-    if total == 0 or state_effect == 0:
+    if total == 0 or (state_effect == 0 and not getattr(args,"construction_only",False)):
         raise RuntimeError("probe did not exercise the trained periodic state input")
     report = {"kind": "fresh_process_base_lora_conditioner_replay", "paths": len(rows),
               "all_recorded_decisions_checked": total, "maximum_logp_error": maximum,
               "trained_state_residual_l1": state_effect, "checkpoint": args.checkpoint_path,
               "scope": "all decisions of the recorded engineering probe paths"}
+    if getattr(args,"construction_only",False):
+        report.update(method=args._construction_method,path_mode="construction_only",
+                      state_residual_check="cooperative residual is not required for construction-only replay")
     if getattr(args,"mixture_peer_checkpoint",None):
         report.update(component_model_forward_calls=mixture_calls,
                       probability_mixture={"schema":"k4k8_equal_same_state_probability_mixture_v1","weights":[.5,.5],
@@ -210,6 +219,13 @@ def replay(args, model, tokenizer, constraints, device):
 
 def main():
     args = parse_args()
+    if args.construction_only:
+        if args.purpose!="evaluation" or args.reference_closure or args.repair_roots_jsonl or args.full_cell_repair or args.short_contact_spec or args.mixture_peer_checkpoint or args.temperature!=.7:
+            raise ValueError("construction-only stage ablation uses an original legacy K4/K8 evaluation policy")
+        from crystal_dlm.short_contact_sampling import validate_legacy_contact_policy
+        source=validate_legacy_contact_policy(args.checkpoint_path)
+        if source.get("collection_round") not in (0,1):raise ValueError("unknown original legacy policy round")
+        args._construction_method={0:"k4_construction_only_v1",1:"k8_construction_only_v1"}[source["collection_round"]]
     if args.legacy_layout_world_size is not None and (args.legacy_layout_world_size < 1 or args.sampling_layout_world_size is not None):
         raise ValueError("choose one positive explicit or legacy logical layout")
     if args.mixture_peer_checkpoint:
@@ -305,8 +321,8 @@ def main():
                               for c in compiled]
                 else:
                     result, traces = sampler.run(x, torch.ones_like(x), construct=not repair_only,
-                                                 cooperative=not args.reference_closure and not hasattr(model, "raw_initialization"),
-                                                 closure=not args.reference_closure and not hasattr(model, "raw_initialization"),
+                                                 cooperative=not args.reference_closure and not hasattr(model, "raw_initialization") and not args.construction_only,
+                                                 closure=not args.reference_closure and not hasattr(model, "raw_initialization") and not args.construction_only,
                                                  full_cell_repair=args.full_cell_repair)
                 reference_logs = [None] * len(batch)
                 if args.reference_closure:
@@ -349,6 +365,10 @@ def main():
                         "temperature":.7,"same_state":True,"contact":False},
                         effective_sampling_layout_world_size=effective_layout,
                         mixture_counted_forward_calls=list(sampler.component_forward_calls) if row_index==0 else [0,0])
+                if args.construction_only:
+                    record.update(method=args._construction_method,path_mode="construction_only",construction_only=True,
+                                  trace_scope="construction_only_attempt",parseable=bool(trace["success"]),
+                                  native_execution_success=bool(trace["success"]))
                 handle.write(json.dumps(record, ensure_ascii=False) + "\n")
                 completed += 1
                 successful += int(trace["success"])
