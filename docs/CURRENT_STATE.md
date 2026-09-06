@@ -52,7 +52,7 @@ V2 构造终点原生 SUN 为 12/44，一次 full-cell repair 后为 8/50；Stri
 
 正式配置6A800/24CPU、micro2/acc2/global24，完整27136来源各1T+1G/epoch，新增2epoch共4524更新/108544真实状态。新训练保持fresh optimizer和事先种子。6小时上限按6卡实测保守外推4.07小时加初始化/验证与余量推导，非完成时长保证。冻结采样器11项CPU测试通过，主float raw/refined、同256 secondary Q raw均已实现；尚无新SUN。
 
-**40064**已于2026-09-06 22:29（上海）提交，代码`0bf8e8870f96c54e86cbd080e64c527f55fb6943`，运行归档保持不变；23:03快照为第1epoch/1470更新、无失败，稳态约1.1秒/更新。[冻结启动清单](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_LAUNCH_MANIFEST.json)、[提交记录](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_SUBMISSION.json)。
+**40064**已于2026-09-06 22:29（上海）提交，代码`0bf8e8870f96c54e86cbd080e64c527f55fb6943`，运行归档保持不变；23:38快照为第2epoch/3380更新、无失败，第一轮训练/验证已完成，稳态约1.1秒/更新。中间2262 checkpoint不具正式采样资格。[冻结启动清单](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_LAUNCH_MANIFEST.json)、[提交记录](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_SUBMISSION.json)。
 
 原CIF全量身份 **40009** 已 `COMPLETED 0:0`，8CPU、1分40秒、无GPU。27136/9047全部通过唯一完整Q结构匹配，与原CSV一一对应；0解析/编码错误、0重复Q歧义、0未核验或丢行。精确site permutation后原连续几何重新编码全部等于source_answer，primary original_cif的来源阻断已关闭。[全量身份与parser证据](v3_scientific_audit_20260906/evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json)。
 
@@ -69,3 +69,5 @@ V2 构造终点原生 SUN 为 12/44，一次 full-cell repair 后为 8/50；Stri
 自动任务 `llm-dlm-sun-24h` 每十分钟汇报当前阶段或 SUN 结果。等待阶段只做轻量检查；最终用户主汇报只列 raw/refined Strict、Meta SUN。详细研究与物理诊断保存在审计目录。
 
 论文安排以用户最新方向为准：效果优先且保持LLM+DLM主线。V3若有效，围绕一个科学问题的what/why/how组织2–3项互补贡献；若不足，回到既有有效路径做稳定性改进。P、语言预训练、离散扩散的独立价值没有对应证据时缩小主张，不硬凑贡献。
+
+主任务明确为**de novo组成与结构联合生成**。固定C/S/P用于机制诊断，不能把给定组成CSP改写为论文主问题。本次科学问题与写法研究只用已核ICLR/ICML/NeurIPS主会论文：[顶会de novo写法](v3_scientific_audit_20260906/TOPCONF_DE_NOVO_WRITING_REVIEW.md)。
