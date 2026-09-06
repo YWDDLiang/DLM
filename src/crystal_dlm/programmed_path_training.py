@@ -60,15 +60,16 @@ def sample_path_decisions(path, *, seed, pass_index, budget=6):
     unused slots move deterministically to phases with remaining decisions. If
     T<budget all decisions are returned once with pi=1 (no false multiplicity).
     """
+    phase_order = ("construct", "cooperative", "closure", "full_cell_repair")
     if budget < 3:
-        raise ValueError("budget must cover all three possible phases")
+        raise ValueError("budget must cover the registered deployed phases")
     states = list(replay_scalar_states(path["trace"]))
     strata = defaultdict(list)
     for state in states:
-        if state["phase"] not in ("construct", "cooperative", "closure"):
+        if state["phase"] not in phase_order:
             raise ValueError("unknown deployed phase")
         strata[state["phase"]].append(state)
-    phases = [p for p in ("construct", "cooperative", "closure") if strata[p]]
+    phases = [p for p in phase_order if strata[p]]
     allocation = {p: 0 for p in phases}
     for _ in range(min(budget, len(states))):
         available = [p for p in phases if allocation[p] < len(strata[p])]

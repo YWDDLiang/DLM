@@ -13,6 +13,7 @@ set -Eeuo pipefail
 ROOT="${H1A2_CANDIDATE_ROOT:?}"
 SOURCE="${PERIODIC_REPAIR_SOURCE:?}"
 NATIVE="${PERIODIC_RAW_NATIVE_RUN:?}"
+RAW_STAGE="${PERIODIC_RAW_STAGE:-base}"
 PY=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 CONFIG="$PROJECT/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/CONFIG.json"
@@ -54,10 +55,12 @@ PAYLOAD="$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))["output
   --comparison-purpose final >"$RUN/compare.out" 2>"$RUN/compare.err"
 test -f "$RUN/evaluation/_SUCCESS"
 test -f "$RUN/comparison/_SUCCESS"
-"$PY" "$CODE/scripts/check_periodic_raw_posttrain_admission.py" \
-  --new-native-eval-dir "$NATIVE/evaluation" \
-  --new-tau-eval-dir "$RUN/evaluation" \
-  --current-k4-native-eval-dir "$ROOT/runs/spad_state_eval_method_39910/evaluation" \
-  --current-k4-tau-eval-dir "$ROOT/runs/spad_state_tau800_39910/evaluation" \
-  --output-dir "$RUN/posttrain-admission" >"$RUN/admission.out" 2>"$RUN/admission.err"
+if [[ "$RAW_STAGE" == base ]]; then
+  "$PY" "$CODE/scripts/check_periodic_raw_posttrain_admission.py" \
+    --new-native-eval-dir "$NATIVE/evaluation" \
+    --new-tau-eval-dir "$RUN/evaluation" \
+    --current-k4-native-eval-dir "$ROOT/runs/spad_state_eval_method_39910/evaluation" \
+    --current-k4-tau-eval-dir "$ROOT/runs/spad_state_tau800_39910/evaluation" \
+    --output-dir "$RUN/posttrain-admission" >"$RUN/admission.out" 2>"$RUN/admission.err"
+fi
 touch "$RUN/_SUCCESS"

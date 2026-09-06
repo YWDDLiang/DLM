@@ -13,6 +13,7 @@ set -Eeuo pipefail
 ROOT="${H1A2_CANDIDATE_ROOT:?}"
 SOURCE="${PERIODIC_REPAIR_SOURCE:?}"
 TRAIN_RUN="${PERIODIC_RAW_TRAIN_RUN:?}"
+RAW_STAGE="${PERIODIC_RAW_STAGE:-base}"
 PY=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
 CONFIG="$PROJECT/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/CONFIG.json"
@@ -20,16 +21,25 @@ CRYS=/public/home/jiaosz/hengzhang/Code/crysllmgen-main
 EXPERIMENT="$ROOT/experiments/periodic_self_repair_20260906/from_original_llada_v1"
 test -f "$TRAIN_RUN/_SUCCESS"
 POLICY="$(<"$TRAIN_RUN/POLICY_PATH")"
-"$PY" - "$TRAIN_RUN/train/TRAIN_FINAL.json" "$POLICY" <<'PY'
+"$PY" - "$TRAIN_RUN/train/TRAIN_FINAL.json" "$POLICY" "$RAW_STAGE" <<'PY'
 import json, pathlib, sys
 report=json.load(open(sys.argv[1]))
 policy=pathlib.Path(sys.argv[2]).resolve()
-assert report["method"] == "periodic_dlm_from_original_llada_v1"
+stage=sys.argv[3]
 assert report["eligible_policy"] is True
 assert pathlib.Path(report["policy_path"]).resolve() == policy
-assert report["old_dlm_weights_loaded"] is False
-assert report["K4_K8_data_read"] is False
 assert (policy/"raw_periodic_initialization.json").is_file()
+if stage == "base":
+    assert report["method"] == "periodic_dlm_from_original_llada_v1"
+    assert report["old_dlm_weights_loaded"] is False
+    assert report["K4_K8_data_read"] is False
+elif stage in ("k4", "k8"):
+    assert report["method"] == "periodic_raw_k4_k8_path_posttraining_v1"
+    assert report["raw_periodic_posttraining"] is True
+    assert report["legacy_K4_K8_paths_read"] is False
+    assert report["collection_round"] == {"k4": 0, "k8": 1}[stage]
+else:
+    raise AssertionError(stage)
 PY
 RUN="$EXPERIMENT/runs/eval_native_${SLURM_JOB_ID}"
 mkdir "$RUN" "$RUN/code"

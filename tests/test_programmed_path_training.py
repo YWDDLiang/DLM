@@ -23,6 +23,16 @@ def example_path(counts):
 
 
 class PathTrainingTest(unittest.TestCase):
+    def test_raw_periodic_construct_and_full_cell_phases_are_stratified(self):
+        path = example_path((2, 0, 0))
+        path["trace"]["events"] += [
+            {"op": "begin", "phase": "full_cell_repair", "kind": "full_cell_repair", "positions": [1]},
+            {"op": "draw", "phase": "full_cell_repair", "position": 1, "token": 2, "log_probability": -1.0},
+            {"op": "end", "phase": "full_cell_repair"},
+        ]
+        selected = sample_path_decisions(path, seed=7, pass_index=0, budget=3)
+        self.assertEqual({row["phase"] for row in selected}, {"construct", "full_cell_repair"})
+
     def test_dense_refresh_sampling_preserves_ht_and_the_registered_budget(self):
         self.assertEqual(training_decision_budget(0, 972), 6)
         for paths, expected in ((2000, 24), (4096, 12), (8192, 6)):

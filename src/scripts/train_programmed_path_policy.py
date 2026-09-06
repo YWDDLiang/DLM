@@ -86,7 +86,18 @@ def main():
     rank = dist.get_rank() if world > 1 else 0
     torch.manual_seed(args.seed)
     model, tokenizer = load_path_model(args.model_path, args.checkpoint_path, device, trainable=True)
-    counts = set_state_lora_trainable(model)
+    raw_periodic = hasattr(model, "raw_initialization")
+    if raw_periodic:
+        from crystal_dlm.periodic_repair_initialization import set_fresh_repair_trainable
+        counts = set_fresh_repair_trainable(model)
+        # Full-path probabilities must replay the deterministic collection
+        # policy. The saved LoRA config keeps its base-training dropout value;
+        # evaluation uses model.eval(), while path fitting disables it here.
+        for module in model.modules():
+            if isinstance(module, torch.nn.Dropout):
+                module.p = 0.0
+    else:
+        counts = set_state_lora_trainable(model)
     checkpoint_modules = enable_native_checkpointing(model.base_model)
     if not checkpoint_modules:
         raise RuntimeError("native activation checkpointing was not enabled")
@@ -97,9 +108,19 @@ def main():
         canonicalize_periodic_alias=True, pbc_min_distance_mask=True, pbc_min_distance_A=.5, pbc_image_radius=2,
     )
     scorer = PathLogProbability(tokenizer, constraints)
-    anchors = RevisionDataset(args.ce_data_jsonl, tokenizer, constraints, args.seed)
-    if len(anchors) != 27136:
-        raise ValueError("CE anchors must come from retained full MP20 train")
+    if raw_periodic:
+        from crystal_dlm.periodic_base_training_data import PeriodicBaseTrainingDataset
+        from crystal_dlm.periodic_base_objective import PeriodicBaseObjective
+        anchors = PeriodicBaseTrainingDataset(
+            args.ce_data_jsonl, tokenizer, constraints, seed=20260515,
+            expected_rows=27136, expected_split="train", effective_batch=16,
+        )
+        anchor_objective = PeriodicBaseObjective(tokenizer, constraints, device)
+    else:
+        anchors = RevisionDataset(args.ce_data_jsonl, tokenizer, constraints, args.seed)
+        if len(anchors) != 27136:
+            raise ValueError("CE anchors must come from retained full MP20 train")
+        anchor_objective = None
     anchors.epoch = collection_round
     anchor_order = np.random.default_rng(args.seed).permutation(len(anchors))
     parameters = [p for p in model.parameters() if p.requires_grad]
@@ -132,6 +153,9 @@ def main():
                   "positive_teacher_paths": positive_paths, "decisions_per_path_per_pass": decision_budget,
                   "refresh_real_scalar_state_budget": 98304,
                   "likelihood_dropout": 0., "ce_every_path_updates": 4,
+                  "raw_periodic_posttraining": raw_periodic,
+                  "ce_anchor": ("original_MP20_periodic_base_views"
+                                if raw_periodic else "original_MP20_state_revision"),
                   "objective": "HT full-deployment path NLL, condition mean"}
         (args.output_dir / "training_config.json").write_text(json.dumps(config, indent=2, default=str) + "\n", encoding="utf-8")
     if world > 1:
@@ -158,9 +182,19 @@ def main():
                                                     device=device, dtype=torch.float64)
                             initial_replay_errors.extend((logp.detach().double() - recorded).abs().cpu().tolist())
                         loss = minibatch_path_loss(logp, chunk, dataset_size=padded_size, validated_groups=groups)
-                    else:
+                    elif not raw_periodic:
                         selected = logits[torch.arange(len(chunk), device=device), batch["positions"]].float()
                         loss = torch.nn.functional.cross_entropy(selected, batch["targets"])
+                    else:
+                        loss, _anchor_metrics, anchor_conflicts = anchor_objective(
+                            logits, batch, sigma_bins=.25,
+                        )
+                        if anchor_conflicts:
+                            with (args.output_dir / f"anchor_support_conflicts.rank{rank}.jsonl").open(
+                                "a", encoding="utf-8"
+                            ) as handle:
+                                for conflict in anchor_conflicts:
+                                    handle.write(json.dumps(conflict) + "\n")
                 if not bool(torch.isfinite(loss)):
                     raise FloatingPointError(f"nonfinite {kind} likelihood")
                 (loss / accumulation).backward()
@@ -240,6 +274,10 @@ def main():
                   "path_updates": path_updates, "ce_updates": ce_updates, "passes": pass_reports,
                   "positive_teacher_paths": positive_paths, "decisions_per_path_per_pass": decision_budget,
                   "teacher_summary": summary, "trainable": counts, "elapsed_seconds": time.monotonic() - started}
+        report["raw_periodic_posttraining"] = raw_periodic
+        if raw_periodic:
+            report["method"] = "periodic_raw_k4_k8_path_posttraining_v1"
+            report["legacy_K4_K8_paths_read"] = False
         report["initial_minibatch_replay"] = replay_reports
         report["rank0_peak_allocated_GiB"] = torch.cuda.max_memory_allocated(device) / 2**30
         (args.output_dir / "TRAIN_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

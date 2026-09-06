@@ -22,6 +22,7 @@ Authoritative direction: original LLaDA initialization and original MP20 base tr
 - [ ] If the raw native result passes and original K8 job39938 is complete, collect this new model's own K4 paths and train two passes.
 - [ ] From that new K4 policy, collect its own K8 paths and train two continuation passes.
 - [ ] Do not substitute the previous DLM's K4/K8 paths for either new-model collection.
+- [x] Prepare generic two-GPU K4/K8 collection245 and path-training246 entries, with own-policy checkpoints and original-MP20 anchors.
 - [ ] Keep original K4/K8 monitoring active without mixing its data into this model.
 - [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.
 
