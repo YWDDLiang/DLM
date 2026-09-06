@@ -7,7 +7,7 @@
 - [x] 原 K8 train39938、native39945、tau80039948 完成，两个 matched comparison 完成。
 - [x] 记录混合结果：native SUN11/66；tau SUN17/123，低于 K4 的19/126；共同 verified A 未改善。
 - [x] 按预登记最终 K8 step7977 冻结方法；独立1200 Planner39949 已提交，种子27。
-- [ ] 39949 完成后接续233：raw39942仍占2卡时用4卡/16CPU，全部空闲则6卡/24CPU；写 K8_MAIN_EVALUATION_JOB 指针。
+- [x] 39949 完成；已提交233作业39951，4卡/16CPU，K8_MAIN_EVALUATION_JOB已写39951。
 - [ ] 原 raw-v1 39942 自然完成6784updates，不恢复错误39934/39937。
 - [ ] raw-v1 顺序运行241 native、242 tau800；分别写 RAW_BASE_NATIVE_EVAL_JOB 和 RAW_BASE_TAU800_EVAL_JOB。
 - [ ] 完成原独立主评测：源序 parser-only first1000、1200总分母、raw/tau同索引；失败不补样本。
@@ -22,8 +22,8 @@ V2 本地准备：
 - [x] 六卡global24/4524updates、完整view覆盖、padding校正、正确validation计数、梯度与state audit。
 - [x] 249训练、250 native/tau及同trace construction→repair诊断入口。
 - [x] 冻结原两worker采样批次后分派六worker，保持配对membership。
-- [x] 已完成88项集成CPU回归检查及两个Slurm入口bash语法检查；真实六卡DDP尚未运行。
-- [ ] 完成固定代码包、尾部分析报告和最后manifest审查，标记ready并发布。
+- [x] 已完成102项不同的相关CPU检查及两个Slurm入口本地/远端bash语法检查；真实六卡DDP尚未运行。
+- [x] 实现固定为2e904c260bafb6750c9a5dbb0d920c4ff8c3a868，两个旧K8端点已实际运行完整回归分析；manifest已标ready。
 - [ ] 所有八项前置阶段正式完成、项目额度六卡全部释放后，queue helper一次性提交249。
 - [ ] 249完整成功后同版本提交250；native/tau、原参考/raw-v1/repair净作用分开报告。
 - [ ] 任一效果低于预期，完成支持/状态/梯度/物理/尾部/N-U/终态验证分析，再考虑必要修改。

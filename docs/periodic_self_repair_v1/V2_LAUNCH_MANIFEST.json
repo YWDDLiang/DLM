@@ -1,7 +1,7 @@
 {
   "schema": "periodic_dlm_v2_launch_manifest_v1",
-  "ready": false,
-  "implementation_commit": "",
+  "ready": true,
+  "implementation_commit": "2e904c260bafb6750c9a5dbb0d920c4ff8c3a868",
   "authorization": "User 2026-09-06: execute new DLM training and inference after every current predecessor completes and all six project A800 quota are free; no new K4/K8.",
   "resources": {
     "gpus": 6,
@@ -35,7 +35,9 @@
     "tau800": true,
     "frozen_refiner": "model_494",
     "reference": "registered_reference_39893_and_raw_v1_final",
-    "new_K4_K8": false
+    "new_K4_K8": false,
+    "construction_diagnostic": "same_attempt_prefix_before_full_cell_repair_no_extra_DLM_sampling",
+    "regression_analysis": "full_denominator_transitions_verified_and_finite_intersections_tails_and_geometry_for_each_comparison"
   },
   "prerequisites": [
     {
@@ -124,7 +126,8 @@
       "success_markers": [
         "_SUCCESS",
         "evaluation/_SUCCESS",
-        "comparison/_SUCCESS"
+        "comparison/_SUCCESS",
+        "regression-analysis/_SUCCESS"
       ],
       "reports": [
         {
@@ -144,7 +147,8 @@
       "success_markers": [
         "_SUCCESS",
         "evaluation/_SUCCESS",
-        "comparison/_SUCCESS"
+        "comparison/_SUCCESS",
+        "regression-analysis/_SUCCESS"
       ],
       "reports": [
         {
@@ -210,13 +214,36 @@
     }
   ],
   "validation": {
-    "status": "implementation_and_review_in_progress",
-    "gpu_preflight": "runs_only_inside_future_registered_six_GPU_allocation"
+    "status": "ready_for_queued_execution_after_complete_predecessors",
+    "related_CPU_tests_passed": 102,
+    "actual_v2_six_GPU_DDP_run": false,
+    "actual_original_backbone_head_and_checkpoint_routing_read": true,
+    "bash_syntax_checks": "249_and_250_passed_locally_and_on_A800_login",
+    "existing_K8_native_and_tau800_regression_analysis": "completed_successfully_using_this_implementation_commit",
+    "source_manifest_vocab_files_and_frozen_typed_config": "present_and_schema_checked_on_A800",
+    "gpu_preflight": "only_inside_future_six_A800_allocation_initial_logits_and_first64_global_module_gradient_checks",
+    "review": "docs/periodic_self_repair_v1/V2_IMPLEMENTATION_REVIEW_20260906.md",
+    "limitations": [
+      "no_resume_entrypoint_in_this_version",
+      "finite_125_image_geometry_shell",
+      "explicit_teacher_soft_fallback_for_unavailable_typed_sources",
+      "physical_benefit_unmeasured_before_new_evaluation"
+    ]
   },
   "notes": [
     "No source filtering on energies or deployment support.",
     "Unknown/missing/failed predecessor phases block submission even if squeue is empty.",
     "The claim file prevents duplicate training submission; uncertain scheduler responses require inspection.",
     "Underperformance requires matched full-denominator physical, support, state, gradient, novelty and tail analysis before further changes."
-  ]
+  ],
+  "deployment": {
+    "source_checkout": "/public/home/jiaosz/ywliang/ai4s/.sscd_periodic_self_repair_20260906_v1",
+    "experiment_relative_to_ROOT": "experiments/periodic_self_repair_20260906/v2_from_original_llada",
+    "immutable_manifest_filename": "LAUNCH_MANIFEST.json",
+    "train_submission_entry": "scripts/check_periodic_v2_queue.py --root ROOT --source SOURCE --experiment EXPERIMENT --manifest EXPERIMENT/LAUNCH_MANIFEST.json --submit",
+    "train_job_pointer": "EXPERIMENT/V2_TRAIN_JOB",
+    "eval_job_pointer": "EXPERIMENT/V2_EVAL_JOB",
+    "code_selection": "This full implementation commit is the executable snapshot. The later documentation commit supplies this manifest as a separate immutable file; do not use the draft manifest in the executable snapshot.",
+    "post_train_entry": "slurm/250_evaluate_periodic_dlm_v2.sbatch with PERIODIC_V2_TRAIN_RUN=EXPERIMENT/runs/train_JOB_ID and the identical implementation checkout"
+  }
 }

@@ -1,0 +1,65 @@
+# V2 六卡自动接续执行包
+
+新版实现已冻结，训练尚未提交。它进入当前任务的自动接续队列；完成全部前置阶段并释放项目六张A800额度后才向Slurm提交。
+
+- 执行代码：2e904c260bafb6750c9a5dbb0d920c4ff8c3a868。
+- 正式manifest：[V2_LAUNCH_MANIFEST.json](V2_LAUNCH_MANIFEST.json)。
+- 设计：[完整论证](LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md)。
+- 验证：[实现验收](V2_IMPLEMENTATION_REVIEW_20260906.md)。
+- 旧K8：[结果与退化分析](K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)。
+
+## 部署布局
+
+ROOT为本项目既有grounding目录。SOURCE固定为：
+
+/public/home/jiaosz/ywliang/ai4s/.sscd_periodic_self_repair_20260906_v1
+
+EXPERIMENT为：
+
+ROOT/experiments/periodic_self_repair_20260906/v2_from_original_llada
+
+正式LAUNCH_MANIFEST.json单独保存在EXPERIMENT。它由后续文档提交提供，指向上述不可变执行代码；执行commit内的同名文档仍是当时ready=false的草稿，不得拿该草稿当正式启动文件。这种分离避免让manifest中的commit指向自身。
+
+远端SOURCE必须checkout上述完整SHA。只从本地push代码，远端fetch明确分支/版本；当前raw39942与主评测39951都使用各自run内的代码归档，更新这个checkout不会替换它们的运行代码。
+
+## 完整前置检查及一次性提交
+
+使用现有外层starteam5090→tmux ssha800:1.0通道。确认pane与shell prompt后，调用：
+
+    "$PY" "$SOURCE/scripts/check_periodic_v2_queue.py" \
+      --root "$ROOT" --source "$SOURCE" --experiment "$EXPERIMENT" \
+      --manifest "$EXPERIMENT/LAUNCH_MANIFEST.json"
+
+返回码2及ready=false表示前置未完成，不是模型训练失败。报告分别列出raw-v1 train/native/tau、旧K8 train/native/tau、独立Planner和独立主评测八个阶段。缺失job pointer、报告分母不对、没有_SUCCESS或仍有项目job都拒绝提交。不能仅因squeue暂时为空放行。
+
+上述检查全部通过后，在同一参数上加 --submit。工具使用独占V2_TRAIN_SUBMISSION.json文件防止重复提交，成功后写V2_TRAIN_JOB。若返回不确定，先核对Slurm与已有run，不删除claim后盲目重试。
+
+249分配6×A800、24CPU，先生成全部原MP20的frozen Planner条件，再执行新DLM两epoch/4524updates。实际GPU零增量与前64步全模块梯度检查在这个allocation内完成。只有最终TRAIN_FINAL、_SUCCESS及正式policy一致后才进入评测。
+
+## 训练后推理
+
+检查V2_EVAL_JOB及现有Slurm/run后，按训练时相同SOURCE SHA提交250，环境变量为：
+
+    H1A2_CANDIDATE_ROOT="$ROOT"
+    PERIODIC_REPAIR_SOURCE="$SOURCE"
+    PERIODIC_V2_ROOT="$EXPERIMENT"
+    PERIODIC_V2_TRAIN_RUN="$EXPERIMENT/runs/train_<V2_TRAIN_JOB>"
+
+将成功返回的job id写入EXPERIMENT/V2_EVAL_JOB。250同样使用六A800/24CPU：
+
+1. 固定开发256条件，保留原两worker批次layout，在六worker执行construction→full-cell repair。
+2. native共同物理评测；固定model494、800步、同graph seed的tau800共同评测。
+3. 各自与原参考及raw-v1 final严格配对比较和完整回归诊断。
+4. 从同次trace提取construction endpoint，保留失败，只增加共同物理评估；比较repair净作用。
+
+没有新增K4/K8、重新选择条件或追加独立候选。两套已完成旧K8回归报告已实际验证该诊断入口适配原有产物。
+
+## 当前原流程状态与指针
+
+- raw-v1 39942正在运行，epoch1 checkpoint已保存；正式终点6784。之后241/242分别写ROOT/runs/RAW_BASE_NATIVE_EVAL_JOB及RAW_BASE_TAU800_EVAL_JOB。
+- 原K8 native39945、tau80039948和对应comparison/regression-analysis均已成功。
+- 独立Planner39949完成，ROOT/runs/K8_MAIN_PLANS_JOB=39949。
+- 独立主评测39951已运行4A800/16CPU，ROOT/runs/K8_MAIN_EVALUATION_JOB=39951；raw仍占2A800/8CPU。
+- 自动任务llm-dlm-sun-24h每10分钟接续检查；无变化保持安静，完成、失败、重要分析或需用户行动时通知。
+
+若新结果不佳，优先读取250生成的各*-analysis报告，再核对train的support_conflicts、state_audit、target_coverage、EARLY_GRADIENT_CHECK、条件fallback与annotation agreement等记录。按全请求与明确配对分母解释变化，之后才决定必要修复。本版本没有resume入口，不能把保存optimizer状态误当作已实现自动断点恢复。
