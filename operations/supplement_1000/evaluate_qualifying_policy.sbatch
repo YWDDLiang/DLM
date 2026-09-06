@@ -19,6 +19,7 @@ SUPPLEMENT="${SUPPLEMENT_ROOT:?}"
 VARIANT="${SUPPLEMENT_VARIANT:?}"
 [[ "$VARIANT" =~ ^[a-z0-9_]+$ ]]
 LOCK="${SUPPLEMENT_METHOD_LOCK:?}"
+OFFICIAL_CACHE="${SUPPLEMENT_OFFICIAL_CACHE:?prepare the official cache for this cohort}"
 test "$(cd "$SOURCE" && git rev-parse HEAD)" = 2e904c260bafb6750c9a5dbb0d920c4ff8c3a868
 PY=/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python
 PROJECT=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion
@@ -49,6 +50,8 @@ cp "$LOCK" "$RUN/METHOD_LOCK.json"
 cp "${BASH_SOURCE[0]}" "$RUN/OPERATIONS_ENTRY.sbatch"
 export PYTHONPATH="$CODE/src" TOKENIZERS_PARALLELISM=false OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1
 CONDITIONS="$COHORT_RUN/cohort/plans_for_dlm.jsonl"
+"$PY" "$SUPPLEMENT/operations/check_hull_coverage.py" --plans "$CONDITIONS" --cache "$OFFICIAL_CACHE" \
+  >"$RUN/HULL_COVERAGE_BEFORE_SAMPLING.json"
 STOP=$("$PY" -c 'import sys; print(sum(bool(l.strip()) for l in open(sys.argv[1])))' "$CONDITIONS")
 extra=()
 if test -f "$POLICY/raw_periodic_initialization.json"; then extra+=(--full-cell-repair); fi
@@ -75,7 +78,7 @@ for pid in "${pids[@]}"; do wait "$pid"; done
   >"$RUN/native-label.out" 2>"$RUN/native-label.err"
 "$PY" "$CODE/scripts/evaluate_programmed_paths.py" --paths-jsonl "$RUN/native/paths.jsonl" \
   --labels-jsonl "$RUN/native-labels/labels.jsonl" --frozen-config "$CONFIG" \
-  --official-cache "$ROOT/runs/spad_basin_closure_official_20260904_v1/official_mp_cache" \
+  --official-cache "$OFFICIAL_CACHE" \
   --selection-json "$RUN/selection/SELECTION_FINAL.json" --output-dir "$RUN/native-evaluation" \
   --expected-requests 1200 --endpoint native --cohort-role independent_main --policy-stage final >"$RUN/native-evaluate.out" 2>"$RUN/native-evaluate.err"
 "$PY" -m torch.distributed.run --standalone --nproc_per_node="$WORLD" "$CODE/src/scripts/refine_dlm_with_crysllmgen.py" \
@@ -90,7 +93,7 @@ PAYLOAD=$("$PY" -c 'import json,sys; print(json.load(open(sys.argv[1]))["output_
   >"$RUN/tau800-label.out" 2>"$RUN/tau800-label.err"
 "$PY" "$CODE/scripts/evaluate_programmed_paths.py" --paths-jsonl "$RUN/tau800/paths.jsonl" \
   --labels-jsonl "$RUN/tau800-labels/labels.jsonl" --frozen-config "$CONFIG" \
-  --official-cache "$ROOT/runs/spad_basin_closure_official_20260904_v1/official_mp_cache" \
+  --official-cache "$OFFICIAL_CACHE" \
   --selection-json "$RUN/selection/SELECTION_FINAL.json" --output-dir "$RUN/tau800-evaluation" \
   --expected-requests 1200 --endpoint tau800 --cohort-role independent_main --policy-stage final >"$RUN/tau800-evaluate.out" 2>"$RUN/tau800-evaluate.err"
 test -f "$RUN/native-evaluation/_SUCCESS"
