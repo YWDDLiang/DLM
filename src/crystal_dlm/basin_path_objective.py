@@ -16,7 +16,7 @@ from scipy.special import logsumexp, xlogy
 class _EmpiricalPool:
     """Padded, vectorized labels; padding always has zero probability."""
 
-    def __init__(self, labels: list[np.ndarray]) -> None:
+    def __init__(self, labels: list[np.ndarray], uniform_reference_rows=None) -> None:
         counts = np.array([len(row) for row in labels])
         self.mask = np.arange(int(counts.max()))[None, :] < counts[:, None]
         self.log_counts = np.log(counts)[:, None]
@@ -28,6 +28,18 @@ class _EmpiricalPool:
             self.r[i, :len(row)] = offsets - offsets.mean(axis=0)
         if not np.isfinite(self.r).all():
             raise ValueError("energy differences must be finite")
+        self.label_r = self.r.copy()
+        self.uniform_reference_rows = np.zeros(len(labels), dtype=bool)
+        if uniform_reference_rows is not None:
+            fixed = np.asarray(uniform_reference_rows, dtype=bool)
+            if fixed.shape != (len(labels),):
+                raise ValueError("one reference-constraint flag is required per labeled group")
+            self.uniform_reference_rows = fixed.copy()
+            # Under the equality q_c=u_c, both centered energy changes and KL
+            # are zero. Zero *optimization coefficients* implement that equality
+            # in every tilt, including eta=0, without altering the saved labels.
+            # Exclude these coefficients before choosing the common scale too.
+            self.r[fixed] = 0.0
         # A single common rescaling improves conditioning, not the objective.
         # It is NOT a per-group/axis normalization or a MAD transformation.
         self.scale = float(np.abs(self.r).max()) or 1.0
@@ -47,6 +59,14 @@ class _EmpiricalPool:
 
     def delta(self, weights: np.ndarray) -> np.ndarray:
         return np.einsum("cj,cjk->k", weights, self.z) / len(weights)
+
+    def actual_group_deltas(self, weights: np.ndarray) -> np.ndarray:
+        """Recompute signed changes from the original, unmodified labels."""
+        return np.einsum("cj,cjk->ck", weights - self.uniform, self.label_r)
+
+    def fixed_reference_residual(self, weights: np.ndarray) -> float:
+        fixed = self.uniform_reference_rows
+        return float(np.abs(weights[fixed] - self.uniform[fixed]).max()) if fixed.any() else 0.0
 
     def kl(self, weights: np.ndarray) -> float:
         terms = xlogy(weights, weights) + weights * self.log_counts
@@ -158,6 +178,8 @@ def solve_basin_path_teacher(
     kappa: float = 0.2,
     energy_scale: float = 0.1,
     retained_fraction: float = 0.5,
+    *,
+    uniform_reference_groups: dict[str, str] | None = None,
 ) -> dict:
     """Return copied ``groups``/``candidates`` with occurrence-level ``weight``.
 
@@ -178,6 +200,12 @@ def solve_basin_path_teacher(
     A non-``optimal`` numerical status must not be interpreted as a certified
     minimum-KL teacher. These are empirical-pool guarantees, not student or SUN
     guarantees. No paths/conditions are resampled and no coefficient grid is used.
+
+    Optional ``uniform_reference_groups`` maps explicit group IDs to nonempty
+    uncertainty reasons. Such groups keep their original verified/finite
+    reference support, but are constrained to q=u throughout both solves. They
+    remain in the group denominator and in path supervision. This is a declared
+    conservative credibility variant, not a physical disproof or label filter.
     """
 
     kappa, energy_scale, retained_fraction = map(
@@ -190,7 +218,21 @@ def solve_basin_path_teacher(
     if not np.isfinite(retained_fraction) or not 0.0 <= retained_fraction <= 1.0:
         raise ValueError("retained_fraction must be between zero and one")
 
-    output, labels, locations = [], [], []
+    fixed_reasons = {}
+    for group_id, reason in (uniform_reference_groups or {}).items():
+        key = str(group_id)
+        if not key or key in fixed_reasons:
+            raise ValueError("uniform reference group IDs must be nonempty and unique")
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError("every uniform reference group requires an uncertainty reason")
+        fixed_reasons[key] = reason.strip()
+    if fixed_reasons:
+        for group_id in fixed_reasons:
+            matches = sum(str(group.get("group_id")) == group_id for group in groups)
+            if matches != 1:
+                raise ValueError(f"uniform reference group {group_id} must identify exactly one input group")
+
+    output, labels, locations, fixed_rows = [], [], [], []
     for group in groups:
         candidates = [dict(candidate, weight=0.0) for candidate in group["candidates"]]
         output.append(dict(group, candidates=candidates))
@@ -212,6 +254,9 @@ def solve_basin_path_teacher(
         if row:
             labels.append(np.asarray(row, dtype=np.float64))
             locations.append((len(output) - 1, indices))
+            fixed_rows.append(str(group.get("group_id")) in fixed_reasons)
+        elif str(group.get("group_id")) in fixed_reasons:
+            raise ValueError(f"uniform reference group {group['group_id']} has no verified finite support")
 
     summary = {
         "rho_max": 0.0, "rho_dual_upper_bound": 0.0, "rho_duality_gap": 0.0,
@@ -225,15 +270,32 @@ def solve_basin_path_teacher(
     if not labels:
         return {"groups": output, "summary": summary}
 
-    pool = _EmpiricalPool(labels)
+    pool = _EmpiricalPool(labels, fixed_rows if fixed_reasons else None)
     weights = pool.uniform.copy()
     target = 0.0
     if not np.any(pool.r):
-        status = "uniform_constant_labels"
+        status = ("uniform_all_groups_reference_constrained" if all(fixed_rows)
+                  else "uniform_constant_unfixed_labels") if fixed_reasons else "uniform_constant_labels"
     elif kappa == 0.0:
         status = "uniform_zero_kl_budget"
     else:
         witness, gain, bound = _max_common_gain(pool, kappa)
+        if fixed_reasons:
+            actual_witness_delta = pool.actual_group_deltas(witness).mean(axis=0)
+            actual_gain = max(0.0, float(-actual_witness_delta.max()) / pool.scale)
+            coefficient_residual = float(np.abs(
+                actual_witness_delta - pool.delta(witness) * pool.scale
+            ).max()) / energy_scale
+            fixed_residual = pool.fixed_reference_residual(witness)
+            if fixed_residual > 1e-12 or coefficient_residual > 1e-9:
+                raise RuntimeError("reference-constrained witness disagrees with original labels")
+            gain, bound = actual_gain, max(actual_gain, bound)
+            summary.update(
+                max_common_mean_delta_gap=float(actual_witness_delta[0]),
+                max_common_mean_delta_terminal=float(actual_witness_delta[1]),
+                max_common_fixed_reference_residual=fixed_residual,
+                max_common_actual_label_residual=coefficient_residual,
+            )
         conversion = pool.scale / energy_scale
         summary.update(
             rho_max=gain * conversion,
@@ -256,11 +318,13 @@ def solve_basin_path_teacher(
             elif projection_gap is None or projection_gap > 1e-7:
                 status = "feasible_projection_not_converged"
 
-    delta = pool.delta(weights) * pool.scale
+    delta = (pool.actual_group_deltas(weights).mean(axis=0) if fixed_reasons
+             else pool.delta(weights) * pool.scale)
     target_gain = target * pool.scale
     residual = max(
         0.0, float((delta + target_gain).max()) / energy_scale,
         float(np.abs(weights.sum(axis=1) - 1.0).max()), float(-weights.min()),
+        pool.fixed_reference_residual(weights),
     )
     summary.update(
         target_gain=target_gain, mean_delta_gap=float(delta[0]),
@@ -273,6 +337,33 @@ def solve_basin_path_teacher(
             output[group_index]["candidates"][candidate_index]["weight"] = float(
                 weights[row_index, column]
             )
+    if fixed_reasons:
+        group_deltas = pool.actual_group_deltas(weights)
+        fixed_reports = []
+        for row_index, (group_index, indices) in enumerate(locations):
+            if not fixed_rows[row_index]:
+                continue
+            group_id = str(output[group_index]["group_id"])
+            row_weights = weights[row_index, :len(indices)]
+            fixed_reports.append({
+                "group_id": group_id, "reason": fixed_reasons[group_id],
+                "verified_finite_candidates": len(indices),
+                "mean_delta_gap": float(group_deltas[row_index, 0]),
+                "mean_delta_terminal": float(group_deltas[row_index, 1]),
+                "kl": max(0.0, float((xlogy(row_weights, row_weights)
+                                      + row_weights * np.log(len(indices))).sum())),
+                "weight_residual": float(np.abs(row_weights - 1.0 / len(indices)).max()),
+            })
+        summary.update(
+            uniform_reference_group_ids=[row["group_id"] for row in fixed_reports],
+            uniform_reference_groups=len(fixed_reports),
+            optimizable_groups=len(labels) - len(fixed_reports),
+            fixed_reference_residual=pool.fixed_reference_residual(weights),
+            fixed_reference_groups=fixed_reports,
+            credibility_treatment="explicit_uncertainty_reference_constraint",
+            physical_disproof_claimed=False,
+            fixed_groups_retain_path_supervision=True,
+        )
     return {"groups": output, "summary": summary}
 
 
