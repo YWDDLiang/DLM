@@ -1,0 +1,108 @@
+{
+  "schema": "mixed_geometry_training_launch_v1",
+  "code_commit": "0bf8e8870f96c54e86cbd080e64c527f55fb6943",
+  "created_at_utc": "2026-09-06T14:25:25.167211+00:00",
+  "model_path": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+  "v2_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/train/checkpoints/step-4524",
+  "inputs": {
+    "train_data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/train.jsonl",
+    "val_data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/train_39993/plans/val.jsonl",
+    "train_identity": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/train/source_identity.jsonl",
+    "val_identity": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/val/source_identity.jsonl",
+    "normalizer": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/geometry_numerics_40013/normalizer.json"
+  },
+  "input_sha256": {
+    "train_data": "1a3fdea6c710d7b2dd397b6de332918ed239c6a0f46b6aab8b662bf4011e6b04",
+    "val_data": "7e598846dcfea5673dc16d67f887658a6bf34ad0df00d097d7c7053ff9b637d2",
+    "train_identity": "5603f3bdb97b474bb33459ef6e55a6b943f9d83af444e64769067e6f3374e321",
+    "val_identity": "30ededa3854f6fcbde209fed709df86c00a9a6ad6ab0994c9bc9121e8ee4adb3",
+    "normalizer": "4fa0cf6943f89b268e9a780aa95c176138c644cf17171bd90d174bb2ff383f8d"
+  },
+  "completed_gates": [
+    {
+      "name": "source_train",
+      "summary_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/train/SUMMARY.json",
+      "summary_sha256": "adac763f9cdbb91e53eb9ae5c25162128044bd710b36a7aee8b55d5ca654339e",
+      "success_marker": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/_SUCCESS"
+    },
+    {
+      "name": "source_val",
+      "summary_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/val/SUMMARY.json",
+      "summary_sha256": "856a8e2c8c001bf2ac7fd740f66c73e1b7f9efbe32c105bc81288a664a33919c",
+      "success_marker": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/source_identity_40009/_SUCCESS"
+    },
+    {
+      "name": "numerics",
+      "summary_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/geometry_numerics_40013/SUMMARY.json",
+      "summary_sha256": "1e477c51bb560668b7995de00d0572ba6acf5218d74bbcb308db769a9375666c",
+      "success_marker": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/scientific_audit_20260906/runs/geometry_numerics_40013/_SUCCESS"
+    },
+    {
+      "name": "four_gpu",
+      "summary_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/preflight_40045/preflight/SUMMARY.json",
+      "summary_sha256": "d4c0fe7de5272d6a3758b4ebf6471f6593ea508c4f80e8ae4d3e2591e125f6a2",
+      "success_marker": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/preflight_40045/_SUCCESS"
+    },
+    {
+      "name": "six_gpu_micro2",
+      "summary_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/preflight_40060/preflight/SUMMARY.json",
+      "summary_sha256": "a84cfdf79be7b1e8d24c648dabd099b8448f352ae49432f1f4e4a8abdeffe92f",
+      "success_marker": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/preflight_40060/_SUCCESS"
+    },
+    {
+      "name": "continuous_graphs",
+      "summary_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/continuous_graphs_40058/verification/SUMMARY.json",
+      "summary_sha256": "6dc07b85be194678f34282857658c53f359ce957b1e572f79c5974c49a144bec",
+      "success_marker": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/continuous_graphs_40058/_SUCCESS"
+    }
+  ],
+  "verified_training_core_sha256": {
+    "src/crystal_dlm/llada_hidden.py": "1cf99fbb5e2260012426ba75fdfea6f491cac388b31adaa51b27a9466cbc79ca",
+    "src/crystal_dlm/mixed_geometry_model.py": "f003c151c1e141c005c1c6da3c5f86bd3a2a545706d1c3a8661f2d8c9d00ad31",
+    "src/crystal_dlm/mixed_geometry_diffusion.py": "24ebd6d8c9def0205289b295691eb7a4074d23b58cbdfa4977f37996f0ac86dc",
+    "src/crystal_dlm/mixed_geometry_training_data.py": "f9379c74bfece42068da2e141f355e4f65074c0d4a333bc9cb94f6caa3db6de1",
+    "src/crystal_dlm/periodic_v2_initialization.py": "0764c177fe38ff23a5dfff8824f940ad71968f0a8385cf2124d85de19ede8363",
+    "src/crystal_dlm/periodic_v2_objective.py": "d12a28e0348ad9e27f4b5286efd9795a8f939aa73e27f27f69e9e3b58e2b9b04",
+    "src/crystal_dlm/periodic_v2_training_data.py": "1159d8af6bd60ba1ba7012a282695c0b8d09ebe71b580aaf16a7186c2875d21e",
+    "src/crystal_dlm/state_training.py": "e43ec89336283bdfd26bb2bf61b400609730da34408f7e244f69675c85f5c7fe",
+    "src/scripts/train_mixed_geometry_dlm.py": "1aaa8937aeee1bf00e62c625a0741039a4394411c78fb516715cb39cf5ef0473"
+  },
+  "resources": {
+    "gpus": 6,
+    "cpus": 24,
+    "memory": "440G",
+    "walltime": "06:00:00"
+  },
+  "training": {
+    "seed": 82018,
+    "data_seed": 202609062,
+    "validation_seed": 202609063,
+    "validation_sources": 100,
+    "expected_train_sources": 27136,
+    "expected_val_sources": 9047,
+    "epochs": 2,
+    "microbatch": 2,
+    "effective_batch": 24,
+    "max_length": 382,
+    "accumulation": 2,
+    "updates": 4524,
+    "real_states": 108544,
+    "optimizer": "fresh AdamW, declared two-stage schedule, clip1, weight_decay0",
+    "policy_selection": "final completed two epochs only"
+  },
+  "walltime_basis": {
+    "pilot_job": "40060",
+    "pilot_steady_seconds_per_update": 3.238211585940527,
+    "rule": "ceil hours of 4524*pilot_step_seconds*1.25 + 1800s setup/validation",
+    "pilot_subset_is_not_full_training_eta": true
+  },
+  "inference_protocol": {
+    "primary": "float native and fixed model494 tau800",
+    "secondary": "same256 Q raw, no outcome selection",
+    "base_seed": 20260905,
+    "logical_batch_cap": 4,
+    "layout_world_size": 2,
+    "neural_nfe": 33
+  },
+  "supplement_rule": "same primary endpoint strict_sun>=26 AND meta_sun>=128 out of256"
+}

@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-**V3两轮独立攻击、实现和真实4/6卡验收已通过，正在冻结并启动H-P33正式新增两轮训练。** V2 训练、完整评测和冻结权重诊断均已完成。全链路审计和晶体 diffusion、DLM、GNN对照已有整合裁决；后续使用 SUN 判断改动是否有效。
+**H-P33正式新增两轮训练40064运行中。** 两轮独立攻击、实现、真实4/6卡及图回环验收已通过。它仍是连续几何扩展实验，是否契合原“LLM程序→离散DLM执行”故事与SUN分开判断，[当前边界](v3_scientific_audit_20260906/V3_STORY_FIT.md)已明确。V2完整训练、评测与冻结诊断保持既有结论。
 
 统一目录：[全链路审计](v3_scientific_audit_20260906/README.md)。
 
@@ -52,6 +52,8 @@ V2 构造终点原生 SUN 为 12/44，一次 full-cell repair 后为 8/50；Stri
 
 正式配置6A800/24CPU、micro2/acc2/global24，完整27136来源各1T+1G/epoch，新增2epoch共4524更新/108544真实状态。新训练保持fresh optimizer和事先种子。6小时上限按6卡实测保守外推4.07小时加初始化/验证与余量推导，非完成时长保证。冻结采样器11项CPU测试通过，主float raw/refined、同256 secondary Q raw均已实现；尚无新SUN。
 
+**40064**已于2026-09-06 22:29（上海）提交，代码`0bf8e8870f96c54e86cbd080e64c527f55fb6943`，运行归档保持不变；23:03快照为第1epoch/1470更新、无失败，稳态约1.1秒/更新。[冻结启动清单](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_LAUNCH_MANIFEST.json)、[提交记录](v3_scientific_audit_20260906/evidence/MIXED_TRAIN_SUBMISSION.json)。
+
 原CIF全量身份 **40009** 已 `COMPLETED 0:0`，8CPU、1分40秒、无GPU。27136/9047全部通过唯一完整Q结构匹配，与原CSV一一对应；0解析/编码错误、0重复Q歧义、0未核验或丢行。精确site permutation后原连续几何重新编码全部等于source_answer，primary original_cif的来源阻断已关闭。[全量身份与parser证据](v3_scientific_audit_20260906/evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json)。
 
 数值 **40013** 已`COMPLETED 0:0`，19项CPU检查通过，train-only normalizer使用全部27136来源且无std floor命中；val只应用这个normalizer。[数值与normalizer证据](v3_scientific_audit_20260906/evidence/GEOMETRY_NUMERICS_40013.json)。
@@ -61,7 +63,9 @@ V2 构造终点原生 SUN 为 12/44，一次 full-cell repair 后为 8/50；Stri
 1. V2 完整终点的固定256 raw/refined及construction→repair评测已完成，保留为对照，不重复提交。
 2. 任一端同时达到 Strict SUN ≥10% 和 Meta SUN ≥50%（256 中至少 26/128），追加同索引 1000 raw/refined，并另报所有 1200 请求。
 3. 当前先完成全面大审计、竞争解释和攻击性复核。证据支持的小改动可进行受控尝试；必要 V3 在反复审查、实现验证和登记后训练 1–2 epoch，再采样算 SUN。
-4. 后续新实验按可用资源使用 4–6 A800；本项目总上限仍为 6 A800、24 CPU、两个作业。旧新 K4/K8、自生成能量 teacher 与旧连续联合路线保持暂停。
+4. 后续新实验按可用资源使用4–6 A800；本项目总上限仍为6 A800、24 CPU、两个作业，并遵守实际QoS提交限制。用户已授权：若V3 raw/refined缺乏可信改善，回到K4/K8或之前有效方法，选择稳定性trick并实际验证；当前先准备候选，待V3结果后触发。旧自生成能量teacher等其他暂停路线不自动恢复。
 5. 根目录入口与142份历史/组件文件迁移、6份完全重复文档去重已完成；唯一历史证据与hash/迁移映射保留。当前收尾新稿引用、状态入口和提交，不再把历史计划当成运行状态。
 
 自动任务 `llm-dlm-sun-24h` 每十分钟汇报当前阶段或 SUN 结果。等待阶段只做轻量检查；最终用户主汇报只列 raw/refined Strict、Meta SUN。详细研究与物理诊断保存在审计目录。
+
+论文安排以用户最新方向为准：效果优先且保持LLM+DLM主线。V3若有效，围绕一个科学问题的what/why/how组织2–3项互补贡献；若不足，回到既有有效路径做稳定性改进。P、语言预训练、离散扩散的独立价值没有对应证据时缩小主张，不硬凑贡献。

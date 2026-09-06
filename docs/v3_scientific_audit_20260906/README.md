@@ -1,6 +1,6 @@
 # 全链路科学审计与 V3 研究
 
-2026-09-06。**全链路与V3两轮独立审查、H-P33实现、真实4/6卡及float图回环验收已通过，正在冻结并启动正式新增两轮训练。** V2完整评测及冻结模型诊断已经关闭。
+2026-09-06。**H-P33正式两轮训练40064运行中；全链路与V3两轮审查、真实4/6卡及float图回环验收已通过。** V2完整评测及冻结模型诊断已经关闭。用户最新方向为效果优先、论文主线约束选择；V3不足则回到K4/K8/既有方法做稳定性改进，有效则收敛统一科学问题及2–3方法贡献。
 
 本目录覆盖完整C³FD/Llama/soft/P→DLM→repair/refiner→物理/N-U/hull/统计、近期变更、历史成功失败、外部晶体生成机制及文档清理。先读 [整合报告](FINAL_AUDIT_REPORT.md) 和 [当前状态](../CURRENT_STATE.md)。
 
@@ -33,6 +33,9 @@
 - [V3第二轮物理](V3_REVIEW_R2_PHYSICS.md)
 - [模型CPU实现验收](MIXED_GEOMETRY_MODEL_CPU_ACCEPTANCE.md)
 - [独立来源/调度实现审查](IMPLEMENTATION_DATA_SCHEDULE_REVIEW.md)
+- [V3故事契合边界](V3_STORY_FIT.md)：H-G与程序驱动离散生成的区别、采用所需证据。
+- [同权重T部署可行性](V3_TOKEN_DEPLOYMENT_FEASIBILITY.md)：仅接口与对照分析，尚未注册新增采样。
+- [科学问题与贡献框架](PAPER_PROBLEM_AND_CONTRIBUTION_FRAMEWORK.md)：统一what/why/how、两项互补候选贡献及结果分支的证据边界。
 
 两份R2均允许进入有界实现验收。模型核心冻结`1111739`，后续`e1439cb`加入六卡微批与图回环检查；40045、40060和40058均已实际PASS，见[实施验收](MIXED_IMPLEMENTATION_ACCEPTANCE.md)。CPU数学/模型/数据41项和采样器11项通过；它们支持启动完整实证，不是SUN收益保证。
 
