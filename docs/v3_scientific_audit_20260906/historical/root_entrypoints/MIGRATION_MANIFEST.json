@@ -1,0 +1,44 @@
+[
+  {
+    "original": "README.md",
+    "archive": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\root_entrypoints\\README.md",
+    "sha256": "188B90C7FED37705CE2EF1ACA9B967C12BEA135327003587507FF15AC6D8B1BA",
+    "byte_identical": true,
+    "action": "historical snapshot before replacing obsolete entrypoint"
+  },
+  {
+    "original": "EXPERIMENT.md",
+    "archive": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\root_entrypoints\\EXPERIMENT.md",
+    "sha256": "E7C1B1C9AA123145E78FC664151CD273BC9C7D8F0286AE6272D2CAC8C9119143",
+    "byte_identical": true,
+    "action": "historical snapshot before replacing obsolete entrypoint"
+  },
+  {
+    "original": "WORKFLOW.md",
+    "archive": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\root_entrypoints\\WORKFLOW.md",
+    "sha256": "B2388617DCAD2C2B07C50BB0A662DDE11EBC2723628740BA1FCCBAD8F844D20C",
+    "byte_identical": true,
+    "action": "historical snapshot before replacing obsolete entrypoint"
+  },
+  {
+    "original": "PAPER_PIPELINE.md",
+    "archive": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\root_entrypoints\\PAPER_PIPELINE.md",
+    "sha256": "E5D3F9168000D4FDD2D990FBD77DE80A99F3DDB6847FB43CD567BF5DC3BAFAF4",
+    "byte_identical": true,
+    "action": "historical snapshot before replacing obsolete entrypoint"
+  },
+  {
+    "original": "REPRODUCTION.md",
+    "archive": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\root_entrypoints\\REPRODUCTION.md",
+    "sha256": "CCE04C9BDC30017806A51AC7B5B196F8119FFE32EBF6258507D5513D855B4783",
+    "byte_identical": true,
+    "action": "historical snapshot before replacing obsolete entrypoint"
+  },
+  {
+    "original": "allinone.md",
+    "archive": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\historical\\root_entrypoints\\allinone.md",
+    "sha256": "1B458DCC6157132D551CF7F5C73A9B05E812D4E4FCFBE6D9AB1FB65277ACBB09",
+    "byte_identical": true,
+    "action": "historical snapshot before replacing obsolete entrypoint"
+  }
+]

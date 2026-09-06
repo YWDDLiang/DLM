@@ -1,0 +1,3389 @@
+{
+  "metadata": {
+    "created_at_utc": "2026-09-06T08:12:25.071253+00:00",
+    "worktree": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair",
+    "head": "6175134d37e1ab575bef4c88290ddae29610d2ef",
+    "since": "2026-08-26",
+    "status": "inventory_only_manual_adjudication_required",
+    "tracked_markdown_count": 209,
+    "recent_first_parent_commits": 739,
+    "duplicate_groups": 11,
+    "failure_text_signals": 559,
+    "all_failures_adjudicated": false,
+    "document_prefix_counts": {
+      "EXPERIMENT.md": 1,
+      "PAPER_PIPELINE.md": 1,
+      "README.md": 1,
+      "REPRODUCTION.md": 1,
+      "THIRD_PARTY_NOTICES.md": 1,
+      "WORKFLOW.md": 1,
+      "allinone.md": 1,
+      "archives": 15,
+      "checkpoints": 3,
+      "data": 2,
+      "docs": 136,
+      "environment": 1,
+      "eval_runtime": 1,
+      "operations": 1,
+      "results": 40,
+      "runs": 1,
+      "src": 2
+    }
+  },
+  "signals": [
+    {
+      "path": "README.md",
+      "line": 58,
+      "text": "negative, the fallback is the already demonstrated SPAD system with an open",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "README.md",
+      "line": 60,
+      "text": "Potential-Closure pilot is retained as negative evidence and is not the active",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 95,
+      "text": "sources; OpenReview and DBLP failed as documented. Ten additional primary",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 119,
+      "text": "   retain both positive and negative labels, then train a conditional denoiser",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 124,
+      "text": "4. **Non-RL preference learning:** pair preferred and rejected generations and",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 172,
+      "text": "4. **CrysVCD:** most direct blueprint for non-RL generated-negative feedback and",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 190,
+      "text": "It never supplies an unstable geometry as the rejected answer and never uses",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 192,
+      "text": "thermodynamic preference. Its failure to improve stability is mechanistically",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 244,
+      "text": "6. Unknown hull remains missing and never becomes a negative label.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 273,
+      "text": "same corruption mask, define a denoising score as negative masked CE and use a",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 339,
+      "text": "800-step model494 diagnostics. Only if 800 is null/negative will the frozen",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "allinone.md",
+      "line": 390,
+      "text": "- Formula-only H1-B already failed as a stability route: it made execution easy",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/C3FD_V21_CORRECTION_CONTRACT.md",
+      "line": 29,
+      "text": "Not every difference from P0 is a regression.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/C3FD_V21_CORRECTION_CONTRACT.md",
+      "line": 113,
+      "text": "### Step 2 — model regression tests",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/C3FD_V22_JOINT_REACHABILITY_CONTRACT.md",
+      "line": 8,
+      "text": "## Confirmed v2.1 failure mechanism",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/C3FD_V22_JOINT_REACHABILITY_CONTRACT.md",
+      "line": 60,
+      "text": "- retrain the unchanged v2.1 model because failed checkpoints were cleaned;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/C3FD_V22_JOINT_REACHABILITY_CONTRACT.md",
+      "line": 62,
+      "text": "- keep every failed request in the denominator.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 22,
+      "text": "by the internal assignment but rejected independently, the main reasons were",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 23,
+      "text": "charge-neutrality failure, Pauling rejection and unavailable oxidation states.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 54,
+      "text": "| failure | filtered composition | one request, one trajectory; dead ends remain failures |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 164,
+      "text": "specific failure must be isolated. The primary question is simply whether the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/c3fd_v2_5/results/remote_screens/CCFD_V2_PAIR_PRIOR_AUDIT.md",
+      "line": 7,
+      "text": "| Split | Records | Positive pairs | Known nodes | Seen edges | AUC | Positive mean | Negative mean |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/MANIFEST.md",
+      "line": 5,
+      "text": "does **not** archive the failed CTV Q head as a scientific contribution.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/MANIFEST.md",
+      "line": 18,
+      "text": "subsequent single-token value method failed and remains documented separately",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 41,
+      "text": "## Closed negative evidence",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 45,
+      "text": "- global XYZ-joint commitment caused duplicate-coordinate and Direct failure;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 49,
+      "text": "  failed its frozen 96/24 gate;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 88,
+      "text": "setting: two memory-failed attempts left asymmetric partial cells and no",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 141,
+      "text": "eight legal tokens remains a protocol failure; repeated actions and adaptive",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 172,
+      "text": "  disk bytes and all failure reasons;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 307,
+      "text": "Failure does not return immediately to an unrelated Planner or MatterSim",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 311,
+      "text": "   failure, execute the same 256 branch ledger in smaller sequential",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 325,
+      "text": "   non-RL routes fail and only with valid diffusion likelihood accounting.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "archives/successful_contributions_20260828/ctv_feature_extraction_v1/docs/CTV_Q_HEAD_CONTRACT_V1.md",
+      "line": 56,
+      "text": "silently assigned 1.0. Any failed estimable hard gate or non-estimable required",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ADR_C3FD_LLAMA_COMPACT_V2_MAINLINE_20260831.md",
+      "line": 58,
+      "text": "   every failed Planner attempt without filling a field.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ADR_C3FD_LLAMA_COMPACT_V2_MAINLINE_20260831.md",
+      "line": 82,
+      "text": "- The old-rich F/M result remains a disclosed negative/ablation and is never",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ADR_C3FD_LLAMA_FUSED_TYPED_PLANNER_20260831.md",
+      "line": 100,
+      "text": "- requested-denominator composition validity must be at least 95%; all failed",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 44,
+      "text": "工程谱系：`34700`训练后导入失败、`34710`环境预检失败、`34719`因冻结V3只接受",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 45,
+      "text": "1000/1200分母而在科学评价前失败；它们均被最小恢复，成功阶段未重跑。fixed-256",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 58,
+      "text": "  Meta S.U.N.；Strict差`-3/1000`、Meta差`-20/1000`，完整贡献门失败；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 60,
+      "text": "  `82.68%→82.07%`），主要退化来自stable本身（Strict `109→106`，Meta",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 76,
+      "text": "- 但单一text Planner的生成端失败：P0/countfields/countvalence pooled parse为",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 104,
+      "text": "- 失败权重已清理：删除total3 duplicate final、step1392/2088/2392、四个判负",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 106,
+      "text": "  total2 `step-696`，合计约释放`30.7 GB`。本轮失败路线不保留任何模型权重；日志、",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 115,
+      "text": "  supervision，但其首个冻结256-Plan/8-stream pair-yield门也已失败，当前不得训练或",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 126,
+      "text": "  本轮joint arm重现旧mixed-axis D2 duplicate失败，未启动的atom-major job35556已在",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 138,
+      "text": "- CCFD只解决composition correctness，不宣称稳定性；F0/F1已按正式分母完成并失败，",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 146,
+      "text": "  Strict下降且seed/retention门失败，因此继续选full-axis。mixed-joint两臂继续因body/Direct",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 147,
+      "text": "  大幅下降而失败；证据见",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 165,
+      "text": "  无法生成metadata；一次二进制scikit-learn恢复后仍同样失败。未运行MatterSim、未训练",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 175,
+      "text": "- N分布TVD=`0.064>0.05`，且两seed正向与CI门失败；formal `phase1_pass=false`。因此",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 216,
+      "text": "  dataclass注册错误在写输出前失败，commit `b11c2c7`参数不变修复后成功；没有重复",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 237,
+      "text": "  development evidence。若native SFT恢复execution但仍未达到10/50，只允许从冻结SFT",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 252,
+      "text": "  simulation全部通过，并分别保留首次失败、最小修复和MD/JSON记录；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 272,
+      "text": "  comp-valid、零失败，采样耗时`31.6/32.0s`，才自动扩至requested256；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 289,
+      "text": "- v2.2--v2.4只保留为工程演化记录，均在GPU前因穷举runtime门停止；没有将失败请求删除或",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 320,
+      "text": "  不是本轮稳定性失败的原因；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 353,
+      "text": "  个物理等价体，零parse失败，避免把refiner随机走运当DLM监督；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 365,
+      "text": "  API失败，已保留`_FAILED.json`与独立root-cause；commit `6546a1b`只把该非科学内存",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 389,
+      "text": "  fail-closed held-out模式供未来实验；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 390,
+      "text": "- job38668因把MP20标准split误当chemsys-held-out而pre-science失败；full-source job38673",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 391,
+      "text": "  又因把Planner内部composition certificate误设为DLM数据hard gate而在6秒内失败。两者均",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 416,
+      "text": "  在run/model前因环境名失败，0 science并negative归档。唯一恢复job38703当前用",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 465,
+      "text": "  `-2.772/-2.614 eV/atom`且CI完全小于0。结论不是SFT失败：V2接口/body execution已恢复，",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/BUILD_STATUS.md",
+      "line": 490,
+      "text": "  negative；均未产生checkpoint、未读outcome。参数不变恢复job38933当前用",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_FULL_RICH_PLANNER_SUN_CHECKLIST_DRAFT_V5.md",
+      "line": 28,
+      "text": "scientific rich field. Missing/invalid output is one failed attempt with no",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_FULL_RICH_PLANNER_SUN_CHECKLIST_DRAFT_V5.md",
+      "line": 136,
+      "text": "- Preserve every failed Plan/body/refinement row on the fixed denominator.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 61,
+      "text": "  outcomes; retain failed requests and do not top up.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 94,
+      "text": "- [ ] Update BUILD_STATUS, PAPER_STORY, negative archive, tests, commits, and",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 145,
+      "text": "Sampling job39086 is an engineering negative (all rows hit one CPU/GPU mask",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 154,
+      "text": "Job39092 is a seven-second pre-science engineering negative caused by a stale",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 184,
+      "text": "  compute. Do not delete the arm or reinterpret the negative result.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 201,
+      "text": "pass `106`. Thus every parsed Direct structural failure is a periodic atomic",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 206,
+      "text": "quantization is not the current failure source and no vocabulary change is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_SUN_CHECKLIST_V6.md",
+      "line": 257,
+      "text": "- [ ] If the complete DLM structural-learning route remains raw-negative,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_TWO_ROUTE_METHOD_V1.md",
+      "line": 42,
+      "text": "failed attempts; no repair, default insertion, retry, replacement, survivor",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_LLAMA_DLM_TWO_ROUTE_METHOD_V1.md",
+      "line": 110,
+      "text": "prospective cohort. Preserve every failed row on the fixed denominator.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 20,
+      "text": "reported as a negative or partial result and does not authorize seed,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 115,
+      "text": "- preserve every raw-invalid and failed attempt;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 162,
+      "text": "handled by one predeclared fail-closed rule. The current energy-only wrapper is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 193,
+      "text": "1. **Faithful H0/R0S diagnosis** explains the historical regression and runtime",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 205,
+      "text": "6. **Two training seeds disagree:** report unstable/negative; no seed choice.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 257,
+      "text": "- [x] Rich prompt null-schema bug reproduced and regression-tested.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 277,
+      "text": "  complete; first pre-run environment failure job38701 is negative-archived.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 291,
+      "text": "- [x] Raw-first/refined offline wrapper and regression tests are ready; the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_DLM_SUN50_CHECKLIST_36H_V3.md",
+      "line": 306,
+      "text": "- [ ] Positive and negative archives, resource accounting, BUILD_STATUS,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_NATIVE_TEACHER_SFT_FINAL_20260831.md",
+      "line": 15,
+      "text": "pre-run environment failure in job38701.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_RICH_FIELD_SEMANTICS_AUDIT_V2.md",
+      "line": 74,
+      "text": "   regression proving that adding it does not perturb the previously frozen",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_RICH_INTERFACE_V1_CONTRACT.md",
+      "line": 52,
+      "text": "secondary. Rich is promoted if body/Direct do not materially regress and at",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_V21_CORRECTION_CONTRACT.md",
+      "line": 29,
+      "text": "Not every difference from P0 is a regression.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_V21_CORRECTION_CONTRACT.md",
+      "line": 113,
+      "text": "### Step 2 — model regression tests",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_V22_JOINT_REACHABILITY_CONTRACT.md",
+      "line": 8,
+      "text": "## Confirmed v2.1 failure mechanism",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_V22_JOINT_REACHABILITY_CONTRACT.md",
+      "line": 60,
+      "text": "- retrain the unchanged v2.1 model because failed checkpoints were cleaned;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/C3FD_V22_JOINT_REACHABILITY_CONTRACT.md",
+      "line": 62,
+      "text": "- keep every failed request in the denominator.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 22,
+      "text": "by the internal assignment but rejected independently, the main reasons were",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 23,
+      "text": "charge-neutrality failure, Pauling rejection and unavailable oxidation states.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 54,
+      "text": "| failure | filtered composition | one request, one trajectory; dead ends remain failures |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CCFD_V2_SEMANTIC_COMPILER.md",
+      "line": 164,
+      "text": "specific failure must be isolated. The primary question is simply whether the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_CONTRIBUTION_STACK_V1.md",
+      "line": 72,
+      "text": "trajectory is stability-aware. If they fail, Layers 1--3 remain intact and CTV",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_CONTRIBUTION_STACK_V1.md",
+      "line": 73,
+      "text": "is reported as a negative registered extension.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_DECISION_LOG_V1.md",
+      "line": 20,
+      "text": "| Decision | Rejected alternative | Rationale |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_DECISION_LOG_V1.md",
+      "line": 57,
+      "text": "- success-conditioned Q does not estimate failure-inclusive cost;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_DECISION_LOG_V1.md",
+      "line": 95,
+      "text": "minimal prompt, symmetry transforms and MatterSim failure rules were not fully",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_DECISION_LOG_V1.md",
+      "line": 107,
+      "text": "No reviewer objection was silently rejected. The only rejected “fatal” claim",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_IMPLEMENTATION_STATUS_V1.md",
+      "line": 33,
+      "text": "certificate. It therefore rejected certified rows under a stale validator.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 41,
+      "text": "## Closed negative evidence",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 45,
+      "text": "- global XYZ-joint commitment caused duplicate-coordinate and Direct failure;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 49,
+      "text": "  failed its frozen 96/24 gate;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 88,
+      "text": "setting: two memory-failed attempts left asymmetric partial cells and no",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 141,
+      "text": "eight legal tokens remains a protocol failure; repeated actions and adaptive",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 172,
+      "text": "  disk bytes and all failure reasons;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 307,
+      "text": "Failure does not return immediately to an unrelated Planner or MatterSim",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 311,
+      "text": "   failure, execute the same 256 branch ledger in smaller sequential",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_STABILITY_CONTRACT_V1.md",
+      "line": 325,
+      "text": "   non-RL routes fail and only with valid diffusion likelihood accounting.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 16,
+      "text": "  remained a separate diagnostic and unknown energy was never a negative.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 38,
+      "text": "| Spearman 95% interval | [-0.0563, 0.1234] | fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 39,
+      "text": "| Within-state action pairwise AUC | 0.5053 / 1319 comparisons | >0.60; fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 40,
+      "text": "| Raw two-continuation sign agreement | 0.4915 / 1060 | >0.60; fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 42,
+      "text": "| Guided-state coverage | 0.0781 | >=0.60; fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 43,
+      "text": "| Projected fallback | 0.9219 | <=0.40; fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 44,
+      "text": "| Oxide pairwise AUC | 0.4914 | direction fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 45,
+      "text": "| N=13--20 pairwise AUC | 0.4708 | direction fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 47,
+      "text": "Validation Direct had no negative class, so feasibility AUROC was correctly",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_DLM_V1_FINAL_NO_GO.md",
+      "line": 49,
+      "text": "was not run after the earlier hard gates failed.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/CTV_Q_HEAD_CONTRACT_V1.md",
+      "line": 56,
+      "text": "silently assigned 1.0. Any failed estimable hard gate or non-estimable required",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 6,
+      "text": "This contract replaces rank-conditioned scalar regression in the earlier RRC",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 73,
+      "text": "   negative report remains archived, but L7 cannot subsequently be called a",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 119,
+      "text": "Before optimizer step 1, fail closed unless policy/reference produce zero",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 140,
+      "text": "machine-readable manifests, and a terminal success or failure marker. Successes",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 141,
+      "text": "are archived as positive evidence; failures retain the failed run and receive a",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 164,
+      "text": "  unchanged. The superseded v1 execution serialization and failed job38034",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 186,
+      "text": "additional samples, or parameter changes follow a negative result.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 190,
+      "text": "- both independent D3PO training seeds show negative candidate-minus-base",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 202,
+      "text": "training-objective negative. If raw improves but refinement erases it, stop and",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_256_MIN_CONTRACT_V1.md",
+      "line": 221,
+      "text": "failure. Data/hash mismatch, composition mismatch, adapter inequality, NaN/Inf,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_37966_ENGINEERING_FAILURE.md",
+      "line": 1,
+      "text": "# D3PO job 37966 engineering failure",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_37966_ENGINEERING_FAILURE.md",
+      "line": 8,
+      "text": "- Failure occurred while loading seed `81017`, before the step-0 equality",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_37966_ENGINEERING_FAILURE.md",
+      "line": 20,
+      "text": "failure.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_38034_ENGINEERING_FAILURE.md",
+      "line": 1,
+      "text": "# D3PO generation job 38034 engineering failure",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_38233_ENGINEERING_FAILURE.md",
+      "line": 1,
+      "text": "# D3PO sealed late-guidance job 38233 engineering failure",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_38233_ENGINEERING_FAILURE.md",
+      "line": 4,
+      "text": "Scientific classification: **none; failure before model loading or sampling**",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_38233_ENGINEERING_FAILURE.md",
+      "line": 13,
+      "text": "- Every worker failed while expanding an empty Bash array under `set -u`:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_38233_ENGINEERING_FAILURE.md",
+      "line": 18,
+      "text": "- The failure was reported at the parent `wait` because the six workers ran in",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_38233_ENGINEERING_FAILURE.md",
+      "line": 34,
+      "text": "Although the failure was pre-science, the sealed cohort's conservative burn",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_38233_ENGINEERING_FAILURE.md",
+      "line": 36,
+      "text": "fallback launch after that marker.  Job `38233` is therefore a terminal negative",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_FALLBACK_DECISION_TREE_V1.md",
+      "line": 64,
+      "text": "| N: objective negative | Validation preference may improve, but neither seed yields a raw paired-energy left shift | D3PO did not alter free generation | Do not amplify with guidance; use Fallback A |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_FALLBACK_DECISION_TREE_V1.md",
+      "line": 65,
+      "text": "| E: engineering | Failure before scientific updates/samples | No scientific inference | Preserve run/root-cause; one identical recovery only when explicitly authorized |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_FALLBACK_DECISION_TREE_V1.md",
+      "line": 208,
+      "text": "   step348 hashes, validation and failure ledgers.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_FALLBACK_DECISION_TREE_V1.md",
+      "line": 219,
+      "text": "7. **Archive:** copy positive or negative terminal package, update",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/D3PO_FALLBACK_DECISION_TREE_V1.md",
+      "line": 232,
+      "text": "3. For objective-negative N/U: listwise continuous-energy alignment.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_CAPABILITY_REGRESSION_36H.md",
+      "line": 1,
+      "text": "# DLM capability-regression audit for the 36-hour sprint",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_CAPABILITY_REGRESSION_36H.md",
+      "line": 8,
+      "text": "The current failure is not evidence that masked-SFT is intrinsically unable to",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_CAPABILITY_REGRESSION_36H.md",
+      "line": 11,
+      "text": "Plan.  The large regression occurred after the interface was reduced to exact",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_CAPABILITY_REGRESSION_36H.md",
+      "line": 16,
+      "text": "validity.  What regressed is the raw DLM geometry manifold and its conversion to",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_CAPABILITY_REGRESSION_36H.md",
+      "line": 27,
+      "text": "| H1-A2 exact replay | rich-Plan lineage, all requested attempts | requested1200 | 8.58% | 46.08% | Seed/process change reduces the high point but does not explain the full current regression. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_CAPABILITY_REGRESSION_36H.md",
+      "line": 44,
+      "text": "1. **Rich-to-minimal conditioning regression (highest confidence).**  H1-A2 and",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_CAPABILITY_REGRESSION_36H.md",
+      "line": 79,
+      "text": "The route is rejected before prospective test generation if an oracle intent",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_DIRECT_STABILITY_DECISION_20260902.md",
+      "line": 23,
+      "text": "## 1. Why rollout CE was rejected before training",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_DIRECT_STABILITY_DECISION_20260902.md",
+      "line": 39,
+      "text": "`43/128`. The later-stage failure is therefore not just a serialization issue:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_DIRECT_STABILITY_DECISION_20260902.md",
+      "line": 43,
+      "text": "This is the exact failure mode that a result-first pilot would have hidden.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_DIRECT_STABILITY_DECISION_20260902.md",
+      "line": 115,
+      "text": "- exact chemistry cannot regress because N/elements remain hard-prefilled;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_DIRECT_STABILITY_DECISION_20260902.md",
+      "line": 159,
+      "text": "weights `0.1/0.1/0.2/0.05`. The failed detached uncertainty gate remains off.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_DIRECT_STABILITY_DECISION_20260902.md",
+      "line": 229,
+      "text": "- strict-stable row filtering/oversampling (SGTC terminal negative);",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 7,
+      "text": "L7 in isolation or repeating an earlier failure under a new name.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 23,
+      "text": "| Counterfactual grounding | Mechanism positive, endpoint negative | Four repeats gave only `+2/1024` Strict and reduced Meta; fresh requested1000 changed Strict `89→86`, Meta `487→467`. Intermediate checkpoint effects were non-monotonic. | A changed NLL/margin is insufficient. No checkpoint selection, and final evidence must be paired energy/hull plus S.U.N. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 24,
+      "text": "| Sufficient CE training | Formal negative | Epoch2→3 improved body `985→992`, while Strict `81→79` and Meta `489→477`. | No more ordinary-CE epochs or checkpoint sweeps. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 25,
+      "text": "| Conditioning/schedule factorial | Formal negative with legality lesson | Hard-axis did not improve stability; joint XYZ caused large body/Direct losses from duplicate coordinates. | Keep exact/full-axis legality. Do not reopen joint/mixed/atom-major schedules. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 27,
+      "text": "| tau sweep | Formal short-tau negative | tau0/200/500/800 Strict `10/29/39/48`, Meta `66/171/222/230`; tau900 added only three Strict in a partial run, tau1000 was incomplete/OOM. | Freeze tau800. No tau search; tau900 is at most a later sensitivity. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 29,
+      "text": "| Noisy critic assets | Data success, critic not run | 1752 eligible outcomes over 222 Plans; MatterSim dependency failure was engineering-only. | Reuse these raw body texts and post-refiner CHGNet labels. Do not reopen MatterSim or train a separate critic first. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 30,
+      "text": "| CTV token Q | Formal scientific negative | Centered Spearman `0.0353`, pair AUC `0.5053`, continuation agreement `0.4915`, coverage `0.0781`. | Single-token value guidance is closed. Preference must act on complete body sequences with common corruption. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 31,
+      "text": "| SGTC L6/L7 | Formal scientific negative | L7 base/G0/G1 Strict `60/55/53`, Meta `412/421/417`; G1 energy/hull moved slightly in the adverse direction. | Positive-only strict-stable continuation does not learn a fixed-composition energy boundary. Reference is the minimal base, never G1. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 32,
+      "text": "| CCFD | Internal mechanism positive, external endpoint negative | Assignment rose to 99.15%, independent comp-valid was essentially unchanged and seed directions disagreed. | Internal preference accuracy cannot be the endpoint; independent Direct/energy/hull evaluation is mandatory. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 54,
+      "text": "  checks, and fail-closed success markers before scientific execution.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_EXPERIMENT_LINEAGE_FOR_D3PO_V1.md",
+      "line": 83,
+      "text": "Same-Plan preference idea, while respecting every formal negative above.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_NOISY_STATE_ENERGY_CRITIC_V1.md",
+      "line": 12,
+      "text": "is implemented, but the official `mattersim==1.2.5` full install failed after",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_NOISY_STATE_ENERGY_CRITIC_V1.md",
+      "line": 24,
+      "text": "The failed eight-stream DPO pilot is not the data gate for this method. That",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_NOISY_STATE_ENERGY_CRITIC_V1.md",
+      "line": 36,
+      "text": "- Generate fixed independent sample-index streams; no replacement on failure.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_NOISY_STATE_ENERGY_CRITIC_V1.md",
+      "line": 59,
+      "text": "The primary regression target is `z_i`; `r_i` is an auxiliary ordinal target.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_NOISY_STATE_ENERGY_CRITIC_V1.md",
+      "line": 132,
+      "text": "Failure stops the critic route before generator training or guided sampling.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_NOISY_STATE_ENERGY_CRITIC_V1.md",
+      "line": 191,
+      "text": "If both critic guidance and winner distillation fail after refiner calibration,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 8,
+      "text": "本文件只把逐 attempt JSONL、冻结 manifest、机器可读终态 JSON/CSV、成功/失败标记和对应源码视为原始证据。总结文档只能作为定位器或 secondary_only 数字来源，不能补造 numerator、seed、process independence 或因果解释。机器可读同源台账见 DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.json。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 41,
+      "text": "- 失败原因：原始 run manifest、logs、sample metrics、proposal graphs、refined outputs、attempt ledger 均 missing；该视图也不是干净 de-novo S.U.N.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 56,
+      "text": "- 失败原因：secondary 几何统计指向模板塌缩，但原始行和分母缺失，百分比不能独立复算。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 58,
+      "text": "- 禁止 claim：不得把四个百分比升级成 primary artifact；不得宣称 seed-robust 因果塌缩率或“所有 formula-only 方法都失败”。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 72,
+      "text": "- 失败原因：没有 frozen1000 attempt ledger、input/evaluator manifest 或 outcome rows；也不能从该 view 重建独立 public 105/488。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 84,
+      "text": "- 失败原因：attempt labels、generation failures、manifest 和 evaluator cache 均 missing。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 86,
+      "text": "- 禁止 claim：不得称为独立 training-seed replication；不得说它完全解释历史到当前的 regression；不得把 curated count 叫原始 artifact。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 96,
+      "text": "- 失败原因：终态 JSON/CSV、per-repeat rows、numerators、cache manifest、process ledger 均 missing。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 117,
+      "text": "- 失败原因：Meta 减少27；Plan cohort 非独立；continuous refiner 有 process sensitivity；完整四 repeat attempt rows 未复制。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 132,
+      "text": "- 失败原因：仅 evaluation replay，未重跑 generation/refinement；repeats 共用 cohort；clean 与 old count 不同。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 144,
+      "text": "- 失败原因：没有 original terminal、numerators、attempt rows、cache manifest 或 seed ledger。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 163,
+      "text": "- 失败原因：Strict -2、Meta -12；frozen epoch3 gate 的 strict/meta noninferior 均 false，最终 selected_epoch=2。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 185,
+      "text": "- 失败原因：checkpoint direction 非单调、repeat4 Meta 下降、fresh fixed1000 Strict/Meta 都下降；contribution_pass=false。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 197,
+      "text": "- 失败原因：distribution drift 和 unique-noninferiority gate 失败，c3fd_v2_pass=false。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 217,
+      "text": "- 失败原因：v2.1 parse/all-metal gate 失败；v2.2-v2.4 超时，均显式 scientific_result=false、gpu_authorized=false。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 218,
+      "text": "- 可支持 claim：该 lineage 区分 scientific pilot failure 与 engineering failure；teacher witness existence 在 v2.5 前已完整。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 237,
+      "text": "- 失败原因：仅 composition evidence，无 structure/energy/hull/Direct/S.U.N.；claim_boundary 字符串的 requested256 是 stale 文本。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 253,
+      "text": "- 失败原因：factorial joint schedule 平均 body -27.4414pp、Direct -24.3164pp；所有 candidate promotion 都 ineligible。源码标签表明 full_axis 是 full_plan_state，不能擅自改成纯 minimal。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 268,
+      "text": "- 失败原因：stable-to-N/U conversion 低，Strict60/1000、Meta412/1000，低于 preregistered100/500。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 287,
+      "text": "- 失败原因：预声明 G1 Strict 60→53、Meta仅417，mean energy/hull 轻微上升；absolute 与 G1-vs-G0 gates 均失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 303,
+      "text": "- 失败原因：所有 metric-bearing D3PO terminal missing；secondary raw energy 不利/不复制，refined CI 跨0，official pending。37966、38034、38233 分别在 update、sampling、model load 前工程失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 307,
+      "text": "- Missing：D3PO_TRAIN_FINAL、D3PO_GENERATION_FINAL、D3PO_FIXED256_OFFICIAL_FINAL、raw/refined attempt rows，以及三个 failed job 的原始 _FAILED.json/ENGINEERING_FAILURE.tsv 副本。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_ORIGINAL_ARTIFACT_EVIDENCE_LEDGER_36H_V1.md",
+      "line": 327,
+      "text": "- 失败原因：refinement 降低 novelty/retention，可能洗掉 DLM 差异，是 attribution confound；tau900/1000 不完整，不能改变选择。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 36,
+      "text": "- A Plan failure remains a failure for every arm; never top up or replace it.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 78,
+      "text": "arm as a raw-stage negative, and do not spend GPU time on G1 model494, CHGNet,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 87,
+      "text": "A negative G1 neither blocks nor changes G2.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 214,
+      "text": "### G0. Failure taxonomy and quantization sufficiency audit",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 219,
+      "text": "- body parse/schema failure;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 223,
+      "text": "- CrystalNN/graph construction failure after the above pass;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 468,
+      "text": "reported as a controlled negative/ablation. It must not be silently substituted",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 492,
+      "text": "  failure taxonomy; G0 found 142 collision failures, 8 parse failures, and zero",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_POST_FM_STRUCTURAL_LEARNING_AND_REFINER_FEEDBACK_PLAN_V2.md",
+      "line": 518,
+      "text": "- [ ] If the DLM route remains raw-negative, implement the matched",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 24,
+      "text": "| Use full-sequence same-composition continuous-energy alignment plus raw safety | ordinary CE/SGTC; D3PO post-refiner only; token critic; RL | ordinary CE and token critic failed; D3PO supplied weak refined signal but damaged raw geometry; the revised objective targets both facts | proposed |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 56,
+      "text": "| Frozen-ledger and Stable-DLM code paths are unproven | Added fail-closed code preflight. No GPU starts until ledger support, parser, wrapper, hashes, and tests are demonstrated. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 67,
+      "text": "| Six-GPU/two-job limits are not executable | Added wrapper allowlist, <=6 GPU, 4--8 CPU/GPU and active+pending <=2 fail-closed guards. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 106,
+      "text": "seed/ordinal; a byte-level regression test must prove that condition.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 112,
+      "text": "regression; and `R0-RCF` is limited to alignment of the three soft fields, not",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 118,
+      "text": "zero-GPU regression must archive code/contract/test hashes before any canary.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 125,
+      "text": "through the frozen zero-GPU RNG/serialization regression before any canary.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_DECISION_LOG_V2.md",
+      "line": 144,
+      "text": "Each objection must be accepted, rejected with original evidence, or converted",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 29,
+      "text": "  lattice, SG and volume, subject to sampling/RNG regression tests and downstream",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 114,
+      "text": "| `spacegroup_bucket` | target symmetry range from metadata; old sampler compiled it from metric lattice | target H(SG\\|metric lattice)=0.881 nats; separately supervised head top-1 accuracy 60.6% versus compiler 26.8--27.5% | sampled-distribution regression, RNG preservation and matched prompt effect | test sampling the existing SG head after volume; soft only, never hard-enforce a one-to-one metric/SG map |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 152,
+      "text": "  an existing active, completed or failed contract cannot be silently reused;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 157,
+      "text": "  SUCCESS or FAILED marker.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 188,
+      "text": "Do not reduce this to pass/fail or claim that 256 development compositions prove",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 203,
+      "text": "- if both rich arms regress, archive the package result and use the already",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 236,
+      "text": "An `R0` failure does not prove that oracle structural intent is useless; it only",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 265,
+      "text": "- **Unstable/negative:** seed directions conflict or both raw and refined",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 266,
+      "text": "  endpoints fail to improve.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 316,
+      "text": "- [ ] Positive and negative runs archived with root cause and resource usage",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLANNER_STABLE_DLM_CHECKLIST_36H_V2.md",
+      "line": 331,
+      "text": "development negative rather than the final Stable-DLM initializer. The next",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 5,
+      "text": "Status: terminal negative; Phase B pair-yield gate failed and all derived candidate/base weights were cleaned after preserving metrics and lineage.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 167,
+      "text": "- the positive has lower energy than the negative by at least",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 178,
+      "text": "negative mean geometry-token denoising CE:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 284,
+      "text": "Preserve every failure in the 1,000-attempt denominator and run fresh official",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 307,
+      "text": "- official unknown remains excluded from known denominators and failed in the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 321,
+      "text": "- Do not launch Planner retraining to compensate for a DLM failure.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 327,
+      "text": "2. Extend `src/scripts/llada_sft.py` collators with positive/negative sequences,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 336,
+      "text": "7. Add unit tests for Plan identity, shared corruption masks, no-negative-CE,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 350,
+      "text": "- [x] Build conservative energy pairs and publish pair-yield diagnostics (gate failed: 95/27 versus 96/24).",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_RICH_PLAN_STABILITY_TRAINING_PLAN_V1.md",
+      "line": 366,
+      "text": "Failed and duplicate model weights are removed only after the corresponding",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_LITERATURE_DECISION_20260830.md",
+      "line": 39,
+      "text": "  negative; it precedes online RL or an invasive representation change.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_LITERATURE_DECISION_20260830.md",
+      "line": 54,
+      "text": "If both D3PO training seeds fail to shift raw energy left, the unique first",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_LITERATURE_DECISION_20260830.md",
+      "line": 92,
+      "text": "- Negative interpretations are predeclared: validation-only improvement,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_OPTION_CHECKLIST_36H_V1.md",
+      "line": 75,
+      "text": "- CI crossing zero is replicated suggestive, not failure deletion;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_OPTION_CHECKLIST_36H_V1.md",
+      "line": 93,
+      "text": "Reuse the successful C3FD design pattern, not the failed text-rich Planner:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_OPTION_CHECKLIST_36H_V1.md",
+      "line": 202,
+      "text": "  Interface-only, Negative/Unstable, or Engineering.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_OPTION_CHECKLIST_36H_V1.md",
+      "line": 203,
+      "text": "- [ ] Archive positive and negative runs separately with contracts, hashes,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 8,
+      "text": "The stability regression is not caused by one bad checkpoint or by the new",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 41,
+      "text": "that supply fell. This is the central regression seam.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 45,
+      "text": "| Period | Intervention / contract | What worked | What failed | Causal conclusion |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 64,
+      "text": "| SGTC | all-MP20 versus strict-stable positive-only continuation | body/Direct/NU retained | G1 Strict/Meta 53/417; official and CHGNet moved adversely | Positive-only stable subset CE has no same-composition negative boundary. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 131,
+      "text": "base, so a genuine interface/task capability regression remains after removing",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 151,
+      "text": "   lattice coupling. Joint XYZ's failure shows that merely committing more",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 181,
+      "text": "official direction) while correcting its demonstrated raw failure.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_STABILITY_PROGRAM_AUDIT_20260830.md",
+      "line": 219,
+      "text": "refined energy moves, the current token representation/objective is a negative",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 11,
+      "text": "Do not treat the current negative preference-pair pilot as the end of the DLM",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 12,
+      "text": "route. It only rejected one sparse, one-pair-per-Plan DPO-style dataset under",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 125,
+      "text": "| charge-fail | 5.4% | 47.3% | 0.104 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 162,
+      "text": "  `95/27` train/validation pairs and failed its frozen `96/24` gate. That rejects",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 166,
+      "text": "  guidance to geometry. Our count-valence text Planner arm failed because a",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 202,
+      "text": "pool failed graph validity before any stability label was observed:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 216,
+      "text": "Historical source review shows this joint arm reproduces the already rejected",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 221,
+      "text": "the same fail-closed invariant. No additional coordinate-order experiment is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 246,
+      "text": "If model494 is null or negative for Strict/Meta conversion, freeze the selected",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 262,
+      "text": "not reopen the failed sparse-pair gate.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 282,
+      "text": "DPO dataset failed because it retained at most one extreme pair per Plan and",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DLM_SUN_STABILITY_MECHANISM_DEEP_DIVE_V2.md",
+      "line": 340,
+      "text": "relaxed-winner distillation all fail, the evidence points to the representation",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_CANDIDATE_PROGRAM_INTERNAL.md",
+      "line": 34,
+      "text": "  negative.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_CANDIDATE_PROGRAM_INTERNAL.md",
+      "line": 51,
+      "text": "candidate completes confirmation.  Failed candidate results remain internal.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md",
+      "line": 27,
+      "text": "  - relaxed-winner distillation only after critic failure;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md",
+      "line": 66,
+      "text": "one trajectory; dead ends remain failed.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md",
+      "line": 111,
+      "text": "- the already-complete mixed-joint negative cells for disclosure only.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md",
+      "line": 196,
+      "text": "- [x] Run F0/F1 two-seed requested1000 and evaluate correctness plus distribution drift: formal gate failed.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md",
+      "line": 216,
+      "text": "- Track A pass + Track B fail: composition contribution stands; public H1-A2",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md",
+      "line": 218,
+      "text": "- Track A fail + Track B pass: stability method/effect stands; no composition",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/DUAL_TRACK_COMPOSITION_STABILITY_PLAN_V1.md",
+      "line": 220,
+      "text": "- Both fail: retain H1-A2 public result and negative mechanism evidence; do not",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/EXPERIMENT_PRIORITIES_INTERNAL.md",
+      "line": 376,
+      "text": "7. Appendix：完整joint strata、element maps、common-support、R5-C、negative strata。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FAILED_METHODS.md",
+      "line": 1,
+      "text": "# Failed methods",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FAILED_METHODS.md",
+      "line": 13,
+      "text": "| BTRD-tau200 | Train only the G2 residual for 512 updates on 6,038 model494 tau200 endpoint targets plus 2,154 MP20 anchors. | BASE body/Direct/Strict/Meta `254/111/11/44`; BTRD `251/115/5/45`. Paired CHGNet delta `+1.187 eV/atom`, 95% CI `[-0.318,+3.977]`. | **Failed.** Direct improved by 4, but Strict fell by 6 and stability did not improve. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FAILED_METHODS.md",
+      "line": 14,
+      "text": "| BTRD-800T | Repeat with 6,038 tau800 endpoint targets and the registered collision-tail loss, again for 512 residual-only updates. | BASE `254/111/9/42`; BTRD-800T `253/117/5/46`. Paired CHGNet delta `+0.931 eV/atom`, 95% CI `[-0.570,+3.699]`. | **Failed.** Direct improved by 6 and Meta by 4, but Strict fell by 4 and the energy direction remained adverse/uncertain. |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FAILED_METHODS.md",
+      "line": 17,
+      "text": "### Failure reason",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FAILED_METHODS.md",
+      "line": 30,
+      "text": "training updates but its wrapper failed a post-training log assertion; the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FAILED_METHODS.md",
+      "line": 39,
+      "text": "2026-09-02. Logs, the frozen data audit and the failure reason remain.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FAILED_METHODS.md",
+      "line": 46,
+      "text": "step1696 checkpoint was therefore classified as failed and its 6 GiB checkpoint",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FORCE_SCORE_DLM_CHECKLIST_V1.md",
+      "line": 18,
+      "text": "## Current-method failure audit",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FORCE_SCORE_DLM_CHECKLIST_V1.md",
+      "line": 64,
+      "text": "and caused only one valid→invalid transition. It nevertheless failed as an",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/FORCE_SCORE_DLM_CHECKLIST_V1.md",
+      "line": 141,
+      "text": "  audited current-method failure distribution;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/G2_FULL_EPOCH_AB_CHECKLIST_V1.md",
+      "line": 38,
+      "text": "- [x] Preserve pre-science import failure job39149 as a 0-GPU engineering",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/G2_FULL_EPOCH_AB_CHECKLIST_V1.md",
+      "line": 39,
+      "text": "  negative.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/G2_FULL_EPOCH_AB_CHECKLIST_V1.md",
+      "line": 83,
+      "text": "  sample, Plan, seed, checkpoint, or failed-row selection.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/G2_FULL_EPOCH_AB_FINAL_20260901.md",
+      "line": 10,
+      "text": "CHGNet and hash gates passed. No sample, Plan, body, failed row, seed,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 49,
+      "text": "## 2. The scientific target and the actual failure",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 316,
+      "text": "| G0 representation audit | fused fixed256 | parse 8, composition 0, lattice 0, PBC collision 142, pass 106; exact roundtrip | token quantization was not the Direct failure source |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 317,
+      "text": "| G1 geometry loss | job39103, one seed, 348 updates | body 245/256, Direct 115/256 vs base 248/106 | Direct +9 but body floor failed; downstream stopped |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 330,
+      "text": "| PCTP reward proposal | design only | recognized as generic reward/value distillation with prior-art and attribution problems | rejected before implementation |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 331,
+      "text": "| PMTR | current branch, design and preflight only | data certificate succeeded; all training attempts failed before first update | hypothesis remains untested; implementation currently nonfunctional |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 335,
+      "text": "- [capability regression audit](DLM_CAPABILITY_REGRESSION_36H.md);",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 404,
+      "text": "| 39825 | 4 A800, 2:09 | FAILED before update | bfloat16 frozen hidden state entered float32 LayerNorm before casting |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 405,
+      "text": "| 39826 | 4 A800, 1:11 | FAILED before update | float32 head Cartesian delta and bfloat16 lattice violated geometry dtype contract |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 406,
+      "text": "| 39827 | 4 A800, 1:34 | FAILED before update | first gradient probe produced non-finite PMTR parameter gradient on all ranks |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 417,
+      "text": "were patched. Job39827 is more consequential: the failure occurred in the first",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 442,
+      "text": "PMTR is therefore not a scientific negative yet. It is an untested hypothesis",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/GPT6_AUDIT_HANDOFF_20260905.md",
+      "line": 645,
+      "text": "certificate construction and three failed pre-update training jobs. This",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 81,
+      "text": "- 本轮外层持久连接曾使用工具 session 8297；这类编号不保证跨 session 可用。`Unknown process id` 不表示 A800 作业失败。重新建立**外层** starteam5090 连接后，仍 attach 既有 tmux。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 82,
+      "text": "- 若出现 `open terminal failed: terminal does not support clear`，使用上面的 `TERM=xterm-256color`。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 83,
+      "text": "- tmux 屏幕可能保留旧 PMTR traceback，不能把屏幕残留当作当前失败；以 job ID、sacct、对应 run 的日志/marker 为准。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 108,
+      "text": "- 远端环境没有 pytest，但有 unittest；不要因此误判模型失败或盲目升级整个Conda环境。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 110,
+      "text": "- `run` 不覆盖；工程恢复使用新job/run，并保留旧失败记录。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 150,
+      "text": "| 39850 | 第一次真实模型预检 | 2GPU/8CPU | FAILED 1:0 | 00:01:50 | 五步梯度已有限；采样约束漏传必填参数，工程失败 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 173,
+      "text": "- 初始化：已完成的 `spad_basin_closure_ce_39700`，不是失败PMTR。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 274,
+      "text": "- `tests/test_label_programmed_paths.py`：对应测试，**目前collection失败，未通过测试**。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 324,
+      "text": "3. 实现完整路径采样入口，正确加载39853；复用39857的1024冻结条件，每条件4条独立路径，原始失败和重数全部保留。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 329,
+      "text": "8. 方法锁定后才做独立1000有效CIF；按源顺序、仅根据可解析性补取，披露总请求和失败，不能按能量/稳定性挑补。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/HANDOFF_STATE_PROGRAMMED_SPAD_20260905.md",
+      "line": 349,
+      "text": "- [GPT6审计交接](GPT6_AUDIT_HANDOFF_20260905.md)：完整历史迭代/失败原因；其中“PMTR待训练”等状态已经过期。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ICLR_REVIEW_STRATEGY.md",
+      "line": 36,
+      "text": "- 可守住的说法是“在历史最佳点上保持约89%的高N∩U，同时取得非退化的",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ICLR_REVIEW_STRATEGY.md",
+      "line": 54,
+      "text": "hull unknown仍按lower-bound失败处理。这些行不能用于论文中的直接排名。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ICLR_REVIEW_STRATEGY.md",
+      "line": 105,
+      "text": "| 失败机制 | 设计选择 | 证据边界 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 21,
+      "text": "- Candidate A在body、Direct joint、novelty和Strict方向上没有退化，pooled Strict",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 51,
+      "text": "  为Strict `89→86`、Meta `487→467`，因此Strict和Meta方向门均失败；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 237,
+      "text": "当最小面板每Plan仅一个body seed时，`average_repeat`退化为单一paired block，只估计",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 409,
+      "text": "若最终稿只保留两个主贡献，采用以下合并，不再寻找或包装失败的训练trick：",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 444,
+      "text": "`10.46%/10.63%`，Meta known为`47.92%/46.56%`。由于Meta非劣失败，它不进入",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 450,
+      "text": "仍因冻结mechanism gate失败和统计不显著而不进入论文正向结果。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 539,
+      "text": "CCFD formal Phase1现已终态失败：虽然内部assignment达到`1983/2000=99.15%`，独立",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 555,
+      "text": "ionic-only增益不是all-metal shortcut；然而proposal-mix门失败。以完整训练分布重新定义并",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 616,
+      "text": "learning，而不是在线token reward；若失败，前两层贡献仍独立成立。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PAPER_STORY_INTERNAL.md",
+      "line": 654,
+      "text": "teaches stable conditional generation. SGTC L7 is the controlled negative that",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PLANNER_CRYSVCD_PHYSICS_EMBEDDING_FEASIBILITY_V1.md",
+      "line": 24,
+      "text": "failure handling.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PLANNER_CRYSVCD_PHYSICS_EMBEDDING_FEASIBILITY_V1.md",
+      "line": 41,
+      "text": "- parser and validator failure retained in the raw denominator.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PLANNER_CRYSVCD_PHYSICS_EMBEDDING_FEASIBILITY_V1.md",
+      "line": 234,
+      "text": "It must not be used to rescue a failed DLM candidate or to replace the frozen",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/PLANNER_CRYSVCD_PHYSICS_EMBEDDING_FEASIBILITY_V1.md",
+      "line": 239,
+      "text": "The compact text-prefix pilot is terminally negative. Although deterministic",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RICH_DLM_EXECUTION_GAP_AUDIT_V1.md",
+      "line": 177,
+      "text": "  six-cell/hash/seed/failure-marker orchestration skeleton, but it is bound to",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RICH_DLM_EXECUTION_GAP_AUDIT_V1.md",
+      "line": 233,
+      "text": "  failed/final output and no-holdout flags are at `:293-356`.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RICH_DLM_EXECUTION_GAP_AUDIT_V1.md",
+      "line": 279,
+      "text": "- 0 failed.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RICH_DLM_EXECUTION_GAP_AUDIT_V1.md",
+      "line": 306,
+      "text": "   failure marker, and one ledger SHA. The D3PO six-cell wrapper is reusable",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RICH_RECOVERY_CANARY_OFFLINE_FINAL_20260830.md",
+      "line": 8,
+      "text": "failed body rows by sample index.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RICH_RECOVERY_CANARY_OFFLINE_FINAL_20260830.md",
+      "line": 43,
+      "text": "finalizer invocation failed before output because a dynamically imported",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RICH_RECOVERY_CANARY_OFFLINE_FINAL_20260830.md",
+      "line": 58,
+      "text": "This is a negative result for restoring the historical rich package as the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 27,
+      "text": "  mismatches. Job 39280 failed before step0 because it referenced the stale",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 38,
+      "text": "- Failed checkpoint cleanup removed canonical-G2 step1696 and projected-force",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 60,
+      "text": "- G0: every parsed structural failure was a PBC collision; token round-trip",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 63,
+      "text": "- B3 synthetic safe-axis corruption: terminal negative; do not repeat.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 64,
+      "text": "- BTRD and synthetic Force residual: terminal negative; do not extend.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 111,
+      "text": "- [x] Closed without training after P1.5 failed the causal necessary condition.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 114,
+      "text": "- [x] Do not reinterpret the negative realizability result as a hyperparameter,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 162,
+      "text": "- [x] Job39335 failed in 28 seconds before sampling because Bash `set -u`",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 163,
+      "text": "  rejected an empty optional relation-argument array for the no-G2 arm. It is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 164,
+      "text": "  an engineering negative with no body output.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 170,
+      "text": "  reducer failed only because the cached old evaluator rows use `attempt_id`",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 187,
+      "text": "  retain this interaction as a negative rather than forcing the residual.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/ROLLOUT_MATCHED_DLM_24H_CHECKLIST_V1.md",
+      "line": 212,
+      "text": "  raw Direct, unrecoverable failure or SSH loss.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/RRC_DLM_V1_PROPOSED_CONTRACT.md",
+      "line": 48,
+      "text": "  hard-negative augmentation;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 38,
+      "text": "- graph validity stayed high, so this was not a parser failure.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 115,
+      "text": "- Mixed XYZ is closed negative evidence, not a contribution.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 161,
+      "text": "   refiner, with explicit parse/duplicate/Direct failure penalties;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 164,
+      "text": "   ESS, ratio and clip fail-closed gates;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 194,
+      "text": "Train failure decomposition:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 198,
+      "text": "| charge-neutrality fail | 1,377 | 5.07% | 53.41% |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 199,
+      "text": "| Pauling/ratio rejected | 918 | 3.38% | 35.61% |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 204,
+      "text": "known on-hull entries fail the heuristic. Therefore 100% legacy validity is not",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 339,
+      "text": "- formula-only already failed;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 344,
+      "text": "- old pair route failed a data gate, not the preference algorithm itself.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SECOND_CONTRIBUTION_CCFD_DLM_REVIEW_V1.md",
+      "line": 379,
+      "text": "No reviewer objection was rejected on its merits.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SGTC_DLM_V1_CONTRACT.md",
+      "line": 5,
+      "text": "Status: frozen after CTV-v1 failed its state-centered value gate and before",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SI_LWA_V1_CONTRACT.md",
+      "line": 64,
+      "text": "Every parse/CrystalNN failure remains a labelled missing row in the audit and is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SI_LWA_V1_CONTRACT.md",
+      "line": 67,
+      "text": "coverage, failure reasons, source identities, code hashes, output hashes, and",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/SI_LWA_V1_CONTRACT.md",
+      "line": 187,
+      "text": "- **Negative/unstable:** seed directions disagree or no replicated raw/refined",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/EXPERIMENT_MATRIX.md",
+      "line": 59,
+      "text": "| G2-PBC-RU (B) | 254 | 130 | +2 Direct but no energy advantage; rejected |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/LEGACY_TO_MAINLINE_MAP.md",
+      "line": 36,
+      "text": "- D3PO, SGTC, CTV, AR and basin-distillation branches: historical negative or",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/METHOD_AT_A_GLANCE.md",
+      "line": 3,
+      "text": "## The failure mode",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/METHOD_AT_A_GLANCE.md",
+      "line": 13,
+      "text": "can see every token, yet the few relationships that decide failure compete",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/PAPER_STORY.md",
+      "line": 58,
+      "text": "   solve the three failure modes in one probabilistic flow.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/PIPELINE_INVENTORY.md",
+      "line": 34,
+      "text": "| One-trajectory realization | Applies the same frozen Plan/noise with no retry, replacement, reranking or best-of-N | `src/scripts/sample_sgtc_l6.py`, `scripts/assemble_raw_body_repeat.py` | headline Slurm126; full-epoch ablation Slurm130 | `tests/test_slurm126_g2_final_generation.py`, exact fast-Direct regression | prospective BASE/G2 raw Direct `118/121`; full-epoch A/B `128/130` on fixed256 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/PSTR_METHOD_CONTRACT.md",
+      "line": 9,
+      "text": "G0 found that every parsed raw Direct failure was a periodic atomic collision.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/PSTR_METHOD_CONTRACT.md",
+      "line": 59,
+      "text": "- no retry, replacement, top-up, reranking or failed-row filtering.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/PSTR_METHOD_CONTRACT.md",
+      "line": 61,
+      "text": "Failure stops PSTR before model494, CHGNet, N/U or hull. Success runs the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/README.md",
+      "line": 6,
+      "text": "negative methods are summarized once in [`FAILED_METHODS.md`](../FAILED_METHODS.md).",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/paper/SCIENTIFIC_QUESTION_AND_CONTRIBUTIONS.md",
+      "line": 126,
+      "text": "the uncertainty-gated alternative does not improve energy and is rejected. On",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/CHECKLIST.md",
+      "line": 13,
+      "text": "- [ ] 完成原独立主评测：源序 parser-only first1000、1200总分母、raw/tau同索引；失败不补样本。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/CHECKLIST.md",
+      "line": 31,
+      "text": "调度最多6张A800、24CPU、2个项目jobs。新版按 [V2_LAUNCH_MANIFEST.json](V2_LAUNCH_MANIFEST.json) 校验阶段完整性与实现版本，不仅看squeue是否为空。正常运行只查完成/失败/正式checkpoint，不反复读取普通loss。旧18:49/19:19节点不撤销新增排队授权，也不擅自延长已运行作业walltime。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/DESIGN_AND_AUDIT.md",
+      "line": 100,
+      "text": "Unfiltered validation parent paths are exported separately from admitted validation targets. Fixed-start repair evaluation retains failed, unverified and unchanged outcomes and reports native energy, force/stress distributions and tails, generation validity, and paired A/B only where both endpoints are verified. Admitted-target CE is an auxiliary diagnostic, never the repair-effect denominator.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md",
+      "line": 24,
+      "text": "共同 hull 已知244例，另外8例在两边均 unresolved；3例新增生成失败导致原本已知的 hull 无法对该输入记账。没有把 unknown 填为0。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md",
+      "line": 50,
+      "text": "| 生成失败，无终态 | 1 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md",
+      "line": 54,
+      "text": "Strict SUN 的4个丢失可以具体分解：sample0生成失败；55、164、224的终态能量跨过严格 hull 阈值，仍然属于Meta且保持N/U。新增的是68、155。Meta丢失的15个中，1个生成失败、4个失去novelty、10个越过Meta能量阈值；17个新增抵消了一部分损失。N/U的下降也不是同一种原因：8个丢失中2个生成失败、6个失去novelty，新增1个。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md",
+      "line": 78,
+      "text": "- 远端native：runs/spad_state_eval_method_39945/comparison 与 regression-analysis。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md",
+      "line": 79,
+      "text": "- 远端tau800：runs/spad_state_tau800_39948/comparison 与 regression-analysis。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+      "line": 174,
+      "text": "每次先回到原 native codec，再检查运行时完整支持；最多尝试 8 个 proposal，失败回退 clean 并明确记录。量化未变、边界/支持拒绝、fallback 均单列；正定连续 G 不保证量化后仍合法。同一 old/target 始终保持相同基与站点身份，不分别做 Niggli 或原子重排。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+      "line": 203,
+      "text": "评测使用原冻结 256 条 Planner 条件、相同采样种子和支持。六卡执行前先重建原两 worker 的固定 batch layout，再分配完整 batch，以保留配对所需的实际 batch membership。分别比较 native 与固定 model494 tau800，对照原参考与 raw-v1 final。额外从同一次 trace 提取 construction endpoint，只增加共同物理评估，不额外采样，用来分析 full-cell repair 的净作用。每项均保留 256 次请求和失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/LOSS_GEOMETRY_AND_V2_PROPOSAL_20260906.md",
+      "line": 216,
+      "text": "4. 共同 verified、全部有限交集、全部请求三种分母；均值、中位数、尾部贡献、生成失败、终态验证丢失以及 N/U/hull 缺失。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "line": 11,
+      "text": "- 旧K8：[结果与退化分析](K8_RESULTS_AND_REGRESSION_ANALYSIS_20260906.md)。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "line": 35,
+      "text": "返回码2及ready=false表示前置未完成，不是模型训练失败。报告分别列出raw-v1 train/native/tau、旧K8 train/native/tau、独立Planner和独立主评测八个阶段。缺失job pointer、报告分母不对、没有_SUCCESS或仍有项目job都拒绝提交。不能仅因squeue暂时为空放行。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "line": 55,
+      "text": "4. 从同次trace提取construction endpoint，保留失败，只增加共同物理评估；比较repair净作用。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "line": 62,
+      "text": "- 原K8 native39945、tau80039948和对应comparison/regression-analysis均已成功。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_EXECUTION_PACKAGE_20260906.md",
+      "line": 65,
+      "text": "- 自动任务llm-dlm-sun-24h每10分钟接续检查；无变化保持安静，完成、失败、重要分析或需用户行动时通知。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/V2_IMPLEMENTATION_REVIEW_20260906.md",
+      "line": 19,
+      "text": "- 同一attempt的construction诊断保留生成失败，不再采样，不读取能量作选择。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 5,
+      "text": "审查结论：支持继续保留化学 Planner、精确组成、canonical `7+4N`、实际合法支持和可回滚的非因果修订。历史失败较一致地指向「模型见到什么状态、目标是否能从该状态实现、监督是否包含近平衡/低能支持、学生是否学到部署分布」；没有证据支持仅凭 loss 分三类或样本/权重改为 `2:1` 就断言下一版合理，也没有证据要求再从头重训一遍整个系统。若本次终态仍缺少真实自身错误上的修复能力，下一次参数训练应明确补那个能力；其数据与目标改变需要训练，但是否从当前 raw 模型续训，须由本次终态诊断决定。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 27,
+      "text": "| 现有架构审计中 C3FD 只管化学 ledger/支持和 coarse Plan，DLM 负责六晶格与 XYZ，CHGNet 只离线标注/共同比较，model494 单列。[19:23–33](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/docs/teacher_feedback_unified_v1/19_RESUMED_ARCHITECTURE_AND_EXECUTION.md#L23) | 保持可解释职责边界；下一版评估冻结 Planner 分布，才能把改进归因于几何执行。 | 把 Planner 称为 fine-geometry logits 模型，或用换组成分布掩盖几何失败。 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 29,
+      "text": "合法集合的归纳证明应只声称保持所声明的有限支持：精确组成、数值 token 类型、非退化晶格及规定周期像集合下的距离条件。它不证明低能、近平衡，亦不自动证明任意 unreduced 晶格的全局最近周期像；当前新设计也明确保留该边界。[新设计的支持声明](../DESIGN_AND_AUDIT.md#L43)、[有限周期像边界](../RAW_LLADA_DESIGN.md#L17)",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 31,
+      "text": "## 3. 失败更像目标/状态错配，不能简化为 LR 或分辨率",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 51,
+      "text": "### 3.4 分辨率不是当前全部失败的解释，局部量化损失仍真实存在",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 63,
+      "text": "K10 full-data probe 的 scaled posterior norm `32.55`、clean norm `39.37`、median cosine `0.034`。追加一遍同目标训练后，另一个新 prospective stream 的 raw Strict/Meta SUN 为 `5/49`、tau800 为 `14/123`，未达到登记目标；与上一 stream 不同队列，不能把跨 stream 数值差当严格配对训练效应，但足以说明「梯度健康 + 再一遍」尚未建立稳定原生提升。[K10 probe:59–74](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md#L59)、[末轮:88–112](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md#L88)",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 65,
+      "text": "PMTR 的非有限梯度发生在第一个 optimizer update 之前，它是实现失败，不是物理机制的学生负结果。[工程失败边界:416–443](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/docs/GPT6_AUDIT_HANDOFF_20260905.md#L416) 下一版仍应检查数值和梯度，但不能把「有梯度」或「观察了 norm」写成权重校准成功。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 69,
+      "text": "全部比例以 `256` 请求为分母，失败保留。native 参考/方法 Strict SUN `6→7`，Meta SUN `55→57`；共同终态完整验证只有 `37` 对，平均 `ΔA=+0.125768`、`ΔB=-0.055748 eV/atom`、实际弛豫步数 `+12.594595`。tau800 Strict `19→19`、Meta `121→126`；`63` 个验证交集的 `ΔA=+0.00626629`、`ΔB=+0.0254841`，均上升。[25:13–58](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/docs/teacher_feedback_unified_v1/25_ROUND0_MATCHED_EVALUATION.md#L13)、[tau800:64–76](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/docs/teacher_feedback_unified_v1/25_ROUND0_MATCHED_EVALUATION.md#L64)",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 101,
+      "text": "| raw 基础训练是否真的学到了当前表征/任务 | 全 source/view 覆盖；按 length/angle/coordinate、construction/repair 分的 heldout schema/实际合法 CE；support conflict 与置零率；输入/输出新行、LoRA、数值模块、geometry bias 的梯度及 reload/replay 一致性。 | 若失败在表征行、mask/alias/target mapping 或 loss 归一化，先修实现；不能据此宣告需要新物理架构。 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 102,
+      "text": "| 合成恢复能否迁移到模型自身错误 | 同一个自身生成起点的 repair 前后对比，保留失败、unchanged、rollbacks；分构造终点、修订终点报告体积/最小距离/能量/force/stress。不能只用 admitted-target 或 clean-prefix CE 作分母。 | 若合成 heldout 很好而自身错误 repair 无效/恶化，优先定义与真实输入匹配的训练目标；不能只增加同类 synthetic epoch。 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/EVIDENCE_REVIEW_AGENT.md",
+      "line": 105,
+      "text": "| 集合有效与 SUN 是否保住 | 全请求分母的构造/完整验证/Stable/N/U/Strict SUN/Meta SUN、全部标签状态、未知 hull；同一队列配对命中变化。新队列只作独立结果，不与旧 stream 直接构成因果差值。 | 如果原生指标和目标均可靠达到，没有仅为三类 loss 而立即重训的理由；若未达，按上述定位选择最小必要目标改变。 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/K8_NATIVE_REGRESSION_ANALYSIS.md",
+      "line": 1,
+      "text": "# Programmed-path regression analysis: native",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/K8_TAU800_REGRESSION_ANALYSIS.md",
+      "line": 1,
+      "text": "# Programmed-path regression analysis: tau800",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/LOSS_REVIEW_AGENT.md",
+      "line": 10,
+      "text": "4. 下文中 family 权重、覆盖率、温度冲突、几何分支屏蔽是可证明事实；它们造成多大性能损失仍需有限的针对性比较，不能把设计取舍全部写成已确认训练失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/LOSS_REVIEW_AGENT.md",
+      "line": 56,
+      "text": "每个源每 epoch 只有一个 repair scalar，两 epoch 总共两个。按采样分布，源的两个 repair 样本都没有 coord family 的概率为4/9；N=20的任意指定 coord 两次都未被选中的概率为 `(179/180)^2=0.9889198`。dense construction 每 epoch 平均 mask 55%的数值位置，但这不能等同于获得同样多的 old-error-conditioned repair 监督。覆盖率事实不等于共享模型不能泛化，不能直接据此宣告训练失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/LOSS_REVIEW_AGENT.md",
+      "line": 90,
+      "text": "data `:165-223` 的扰动是三个离散level的一次bounded perturbation；不合支持/编码裁剪时回退clean，未产生量化token变化时noise=0。runtime `:276-280` 先丢弃不满足complete support的construction结果，只有alive进入repair。因此当前repair根本不会尝试拯救未通过构造支持检查的结果。即使支持可行，0.5 Å距离阈值也不是低能/低力判据。需要分别报告construction失败、repair回滚、改变大小与最终结构质量，不能将rollback通过视作修复成功。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/LOSS_REVIEW_AGENT.md",
+      "line": 144,
+      "text": "去掉soft target后，单个确定标签的T=1与T=.7 CE都能在无穷logit margin处趋近0，所以前述每样本soft target的正熵最小值冲突消失；但对具有多个真实可能target的相同condition，期望exact CE依旧要求拟合非退化条件分布，不同temperature的双重目标仍不是同一个校准风险。不能据此保留温度混合而声称问题全部自动消失。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/OLD_LLM_DLM_ORDER_TRACE.md",
+      "line": 44,
+      "text": "| Species closure | 旧 [spad_program.py:236](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/src/crystal_dlm/spad_program.py:236) `reverse_species_block_revision_slots`；旧 [programmed_path_runtime.py:270](D:/codex_work/ai4s/DLM_llama_programmed_basin_closure/src/crystal_dlm/programmed_path_runtime.py:270) | 物种按 `reversed(program.entries)`；物种内部先 reversed remaining slots，再 anchor。原先最早 anchor 得到更多未来可见上下文。 | 每个 block 整体 MASK；逐 site、逐 XYZ 条件采样。单 site 空支持先恢复该 site，末态验证失败恢复整个 species block。 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/V2_MATH_DESIGN_REVIEW.md",
+      "line": 30,
+      "text": "只有Z=1时才计算NLL。若某个早期teacher动作非法，却被teacher forcing写入，后续target即使合法，该prefix仍不是实际策略可到达的prefix。当前源码保留schema-valid但不满足deployment support的source；corruption失败回退clean也不能自动保证repair旧状态合格。可缓存同一source/program的teacher-prefix可达性，避免每个样本重复完整检查。不可达source保留在数据/typed辅助及ledger，不能伪造legal动作或声称已拟合它的完整legal似然。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/V2_MATH_DESIGN_REVIEW.md",
+      "line": 108,
+      "text": "于是shape perturbation的Frobenius RMS为`sqrt(5)*sigma_s`，单原子Cartesian RMS为`sqrt(3)*sigma_F`，volume ratio恰为`exp(sigma_v*eta_v)`。这些量不能互称为同一个“noise level”。范围仍按train-only诊断冻结，失败处理和admission按第1项声明；不需要增添新的corruption方法。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/V2_MATH_DESIGN_REVIEW.md",
+      "line": 121,
+      "text": "## 5. GEM迁移必须有identity路径、逐层路由和非退化cell↔site定义",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/periodic_self_repair_v1/review_notes/V2_MATH_DESIGN_REVIEW.md",
+      "line": 153,
+      "text": "support coverage应按全source/state分母报告，并用共同eligible集合比较action NLL；否则不同corruption admission率会让gated loss变低而非模型更好。原生修复、unchanged、rollback、入场失败继续用全请求分母，方案217行方向正确。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md",
+      "line": 227,
+      "text": "  while endpoint distillation and a force microstudent failed.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/00_UNIFIED_METHOD_PLAN.md",
+      "line": 236,
+      "text": "SPAD-E is the accepted stability extension.  It does not regress a model494",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 13,
+      "text": "User explicitly rejected extra MP20 construction CE. The local attempt was fully",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 31,
+      "text": "111verified/205not-converged/193invalid-terminal/3generation-failure. On the65",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 38,
+      "text": "and1 input failed reconstruction.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 40,
+      "text": "14generation-failure, with no recorded software errors. The K4/K8 amendment is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 47,
+      "text": "1007not-converged,1049invalid-terminal,17generation-failure,1energy-increased.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 101,
+      "text": "- 39850 preflight FAILED 1:0 / 00:01:50 (missing required constructor argument).",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 160,
+      "text": "  retain source order and disclose all requested/failed attempts.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 187,
+      "text": "- Preflight job39850 used 2A800/8CPU and failed after 00:01:50. Both ranks completed",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 188,
+      "text": "  five finite-gradient steps (~0.30s/step); failure was a missing required",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 191,
+      "text": "- Fix pins the retained `min_lattice_rad=1e-4`; an AST contract regression test",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 208,
+      "text": "both fail. Do not launch paper1000 or any additional method iteration.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 222,
+      "text": "- [x] Define the remaining failure correctly: exact composition and Direct",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 272,
+      "text": "  failure rows and terminal marker.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 337,
+      "text": "  128/128 geometry assertion failed after science completion; retain the invalid",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 338,
+      "text": "  endpoint as a negative example and do not rerun generation.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 351,
+      "text": "  with all provisional-state EFSM calls known and no group failure.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 353,
+      "text": "  Job 39750 failed before any CHGNet call because the validator rejected the",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 383,
+      "text": "restores the trainable policy explicitly and adds a regression test. No data,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 388,
+      "text": "backward regression; remote scoring and trainer tests pass. Job 39758 remains a",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 389,
+      "text": "negative engineering run and contributes no selected checkpoint.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 390,
+      "text": "Job 39759 completed all 512 finite updates but failed before checkpoint save",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 393,
+      "text": "the trained objective or schedule. The failed process produced no checkpoint,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 472,
+      "text": "  final checkpoint only. Job 39797 reached 64 finite updates but failed before",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 480,
+      "text": "  rank on physical GPU0. Both 39797 and 39798 are negative engineering runs;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 537,
+      "text": "  raw geometry/energy and raw-to-tau800 retention. Classify the failure as",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 538,
+      "text": "  exactly one of `UNDERTRAINED`, `LOCAL_CONTROL_INSUFFICIENT`,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 540,
+      "text": "- [x] Classify stream19 as `UNDERTRAINED`: coverage is 4,104/4,104, the K10",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 549,
+      "text": "  raw gain. Cache-coverage failure changes reporting only, not the model. The",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 561,
+      "text": "  near gates fail; no paper1000 run is authorized.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/04_EXECUTION_CHECKLIST.md",
+      "line": 581,
+      "text": "The earlier K10 closeout remains final for that failed method. The user later",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/05_DECISION_LOG.md",
+      "line": 7,
+      "text": "| Decision | Rejected alternative | Rationale |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/05_DECISION_LOG.md",
+      "line": 139,
+      "text": "  small/negative results reduce or remove the SPAD-E claim.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/05_DECISION_LOG.md",
+      "line": 143,
+      "text": "those results.  If SPAD-E is negative, retain the demonstrated SPAD",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/05_DECISION_LOG.md",
+      "line": 227,
+      "text": "Potential-Closure pilot is negative for native stability. The active extension",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/05_DECISION_LOG.md",
+      "line": 241,
+      "text": "Rejected alternatives:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/05_DECISION_LOG.md",
+      "line": 254,
+      "text": "negative DLM result.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/07_BASIN_POSTERIOR_ALIGNMENT.md",
+      "line": 322,
+      "text": "## 12. What is new relative to failed attempts",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/07_BASIN_POSTERIOR_ALIGNMENT.md",
+      "line": 324,
+      "text": "| Retired attempt | Why it failed | Energy-shaped SPAD change |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/07_BASIN_POSTERIOR_ALIGNMENT.md",
+      "line": 383,
+      "text": "### Skeptic review — revision 0 rejected",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/07_BASIN_POSTERIOR_ALIGNMENT.md",
+      "line": 397,
+      "text": "### Constraint review — revision 1 rejected as unbounded",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/08_DLM_NATIVE_STABILITY_AND_DIFFUSION_FALLBACK.md",
+      "line": 175,
+      "text": "Adding a new regression head would introduce a new output contract, losses,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/08_DLM_NATIVE_STABILITY_AND_DIFFUSION_FALLBACK.md",
+      "line": 564,
+      "text": "was quantization-sensitive and failed to improve the realized student. They are",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/08_DLM_NATIVE_STABILITY_AND_DIFFUSION_FALLBACK.md",
+      "line": 767,
+      "text": "## 10. Expected improvements and failure interpretation",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/08_DLM_NATIVE_STABILITY_AND_DIFFUSION_FALLBACK.md",
+      "line": 811,
+      "text": "nearly correct, yet fail when several parts of a generated structure are wrong.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/08_DLM_NATIVE_STABILITY_AND_DIFFUSION_FALLBACK.md",
+      "line": 928,
+      "text": "| Preserve C3FD, Pointer, SPAD and tau800 | rebuild the pipeline | rejected; established assets remain fixed |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/08_DLM_NATIVE_STABILITY_AND_DIFFUSION_FALLBACK.md",
+      "line": 929,
+      "text": "| Train complete lattice/XYZ actions | single-token Q or force target | accepted; prior local-credit routes were negative |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/09_EFFICIENCY_FIRST_POTENTIAL_CLOSURE_PLAN.md",
+      "line": 47,
+      "text": "then failed before model/data/science because an intervening SSH reconnect had",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/09_EFFICIENCY_FIRST_POTENTIAL_CLOSURE_PLAN.md",
+      "line": 53,
+      "text": "Dependent label job `39600` failed before loading CHGNet because the wrapper",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/09_EFFICIENCY_FIRST_POTENTIAL_CLOSURE_PLAN.md",
+      "line": 68,
+      "text": "the tiny categorical loss in float64, and its 12-test remote regression suite",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/09_EFFICIENCY_FIRST_POTENTIAL_CLOSURE_PLAN.md",
+      "line": 71,
+      "text": "job then exited failed because the original potential process was already",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/09_EFFICIENCY_FIRST_POTENTIAL_CLOSURE_PLAN.md",
+      "line": 201,
+      "text": "failed probe diagnoses an implementation/data error and blocks training.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/10_FULL_MP20_BASIN_ACTION_VALUE_PLAN.md",
+      "line": 252,
+      "text": "85% token-change target; a pooled average cannot hide a failed lattice or site",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/10_FULL_MP20_BASIN_ACTION_VALUE_PLAN.md",
+      "line": 287,
+      "text": "scientific objective-conflict failure, not an invitation to add PCGrad or tune",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/10_FULL_MP20_BASIN_ACTION_VALUE_PLAN.md",
+      "line": 319,
+      "text": "independent DFT. MatterSim failure does not block this experiment; an eventual",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "line": 337,
+      "text": "These failures did not change scientific parameters or erase negative evidence:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "line": 339,
+      "text": "| Failure | Root cause | Resolution |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "line": 342,
+      "text": "| first tau800 summary rejected BS pairing | reused BS refinement belonged to another cohort | refine the matching fixed256 BS once; preserve control/potential outputs |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "line": 343,
+      "text": "| full S.U.N. wrapper ended failed after four cells completed | final summary expected `report.json`, actual artifact was `summary.json` | reuse all completed cells and perform CPU-only finalization |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "line": 516,
+      "text": "8. all 27,136 sources remain in accounting, including failed body/action rows;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "line": 641,
+      "text": "### Negative outcome",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/11_LATEST_RESULTS_WORKLOG_AND_NEXT_STEPS.md",
+      "line": 647,
+      "text": "control final basin identity. The negative result is retained; it does not",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/12_LLAMA_PROGRAMMED_BASIN_CLOSURE.md",
+      "line": 138,
+      "text": "This replaces the rejected instantaneous label `-E(T(s,a))`. Candidate support",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md",
+      "line": 5,
+      "text": "Stream19 does not authorize paper1000. The failure is classified primarily as",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md",
+      "line": 6,
+      "text": "`UNDERTRAINED`, with local transaction scope retained as a secondary limitation.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md",
+      "line": 19,
+      "text": "The complete C3FD -> Planner-Llama -> SPAD DLM interface is not the failure:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md",
+      "line": 83,
+      "text": "The wrapper failure remains recorded; the recovered science result is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/13_STREAM19_DIAGNOSIS_AND_FINAL_ITERATION.md",
+      "line": 107,
+      "text": "`UNDERTRAINED` diagnosis: one extra full exposure increases refined Meta S.U.N.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/14_PCTP_SCIENTIFIC_ALIGNMENT_AND_EXECUTION.md",
+      "line": 3,
+      "text": "Status: **rejected before implementation; no GPU job or checkpoint exists**",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/14_PCTP_SCIENTIFIC_ALIGNMENT_AND_EXECUTION.md",
+      "line": 14,
+      "text": "## Why it was rejected",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/14_PCTP_SCIENTIFIC_ALIGNMENT_AND_EXECUTION.md",
+      "line": 32,
+      "text": "PCTP remains a useful negative design record. The approved successor is",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 13,
+      "text": "the superseded reward-based PCTP proposal and does not extend the failed K10,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 92,
+      "text": "Composition and structural execution are already saturated. Raw failure is an",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 115,
+      "text": "with clean MP20 suffix targets; it failed because later clean Y/Z coordinates",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 241,
+      "text": "It is also not the failed rollout splice: every visible value belongs to one",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 360,
+      "text": "the failed K10 warm-start policy.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 408,
+      "text": "| Prior failure or mismatch | PMTR correction |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 515,
+      "text": "## 18. Expected result and failure interpretation",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 538,
+      "text": "Failure diagnosis is simple:",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 546,
+      "text": "- validity declines: renderer/support implementation failure;",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 643,
+      "text": "| Decision | Rejected alternative | Reason |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 647,
+      "text": "| Use one same-polymorph corruption/retraction path | Generated-prefix plus clean-suffix splice | Historical Y/Z realizability failure |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/15_PMTR_SCIENTIFIC_METHOD_AND_EXECUTION.md",
+      "line": 649,
+      "text": "| Certify force consistency offline | Put force/stress in loss | Avoids conflict with the real MP20 target and old Force-Score failure |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/16_PMTR_CODE_GROUNDED_ARCHITECTURE_AUDIT.md",
+      "line": 19,
+      "text": "2. **Write decisions here.** New architecture decisions, rejected alternatives,",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/16_PMTR_CODE_GROUNDED_ARCHITECTURE_AUDIT.md",
+      "line": 550,
+      "text": "Historical R03, G2, BTRD, Force-Score, D3PO, K10, and rejected PCTP results stay",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 53,
+      "text": "| 大池训练后的独立流 | stream19 raw `12/61`、tau800 `14/107`；下一遍 stream21 raw `5/49`、tau800 `14/123`，各分母 256 | 未形成稳定过线证据；**不同 stream 不能直接证明第二遍训练退化** |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 54,
+      "text": "| 最近 PMTR | 39825/39826 类型错误、39827 首次更新前非有限梯度；无训练后模型结果 | 是工程失败与设计风险，不是 PMTR 已被实测证明无效 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 112,
+      "text": "只降低 A 可通过抬高弛豫终点制造假改善；直接等权最小化 `A+B` 又退化为只优化原生能量。我们因此采用**固定条件分布下，两项平均收益分别为正的经验路径教师**，而非固定混合 loss。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 168,
+      "text": "实现限定为一个显式、逐次调用的状态包装器：优先通过模型支持的 embedding 输入传递；否则使用局部 embedding 包装，不能依赖一次 forward 后就清掉、而 backward 重计算仍会读取的可变全局 hook 状态。不得把 conditioner 输出 `detach`；旧几何本身可以作为非可微输入。零投影初始步上游 encoder 梯度为零是正常现象，检查后续短步是否能训练，而不是据此误报失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 180,
+      "text": "N≥3 时该规模保留部分未改坐标作为可见上下文；N=1/2 的联合步骤可能没有剩余原子，单列为小胞退化情况，不宣称每个联合步骤都存在未改 suffix。后续闭合仍使用已生成的完整上下文。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 186,
+      "text": "3. 全程保留 exact composition、字段类型、非退化晶格等已能确定的支持检查。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 188,
+      "text": "5. 完整联合动作结束后作整胞支持检查；合法一次性提交，失败整体回滚，不额外候选重试。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 193,
+      "text": "回滚范围包括六个 cell token、全部活动 XYZ、lattice version 和派生几何缓存；非活动 token、组成和 program 不变。只有旧状态本来合法时，回滚才保合法，不能借回滚抹掉原构造失败。现有 cell validator 的 N=1 分支未覆盖自身周期像；需要共同 validator 对参考与新输出检查这类小胞，作为一致性修正单列，不归功于稳定性学习，也不静默改写旧 99.8% 的定义。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 336,
+      "text": "**回滚。** 多个被拒绝的尝试都可能落到同一个 committed no-op。只取旧 token 的 log-prob 不等于 no-op 的总概率。本稿采用记录实际 attempted trace 的方式，把确定性回滚视作状态映射；需要保留 rejected attempt 和失败分支记录，不重新猜测合并概率。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 359,
+      "text": "2. **协同可执行**：构造单独改 cell/单独移原子会失败、联合改变合法的例子；最终事务必须能提交，同时非法终点仍回滚。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 367,
+      "text": "用固定、同组成、同 program、同随机流的参考与新模型做一次 256 配对生成；保存全部请求与失败。主要输出：",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 424,
+      "text": "| 希望改善的量 | 本方案的直接作用 | 仍可能失败的原因 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/17_STATE_CONDITIONED_TERMINAL_BASIN_PLAN.md",
+      "line": 481,
+      "text": "- [ ] 模型确定后独立 1000 有效采样；保存源顺序、请求分母及失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/18_DUAL_OBJECTIVE_REVIEW_AND_DECISIONS.md",
+      "line": 82,
+      "text": "- 整体回滚包括 cell/活动XYZ/cache/lattice-version，非活动 token 和组成不变；旧态非法仍报失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/18_DUAL_OBJECTIVE_REVIEW_AND_DECISIONS.md",
+      "line": 90,
+      "text": "- 旧日志丢失 rejected X/Y、旧 scorer 将 rejected cell 置负无穷，不能直接复用为完整路径。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/19_RESUMED_ARCHITECTURE_AND_EXECUTION.md",
+      "line": 70,
+      "text": "  decision全部误差0，非零state residual；label端将非法终态误分类导致总job失败。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/19_RESUMED_ARCHITECTURE_AND_EXECUTION.md",
+      "line": 82,
+      "text": "39872已完成：512请求、509成功、3失败，9分21秒。39873正在标注全部512条。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/19_RESUMED_ARCHITECTURE_AND_EXECUTION.md",
+      "line": 121,
+      "text": "23失败。与39872合计1024条件、4096请求、4070成功、26失败。39885用六卡",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/19_RESUMED_ARCHITECTURE_AND_EXECUTION.md",
+      "line": 138,
+      "text": "注册评估，状态无变化时安静，仅阶段终态、失败或需要处理时通知；不恢复旧任务。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md",
+      "line": 28,
+      "text": "与目标的差值和失败必须如实报告；目标不是可以预先保证的结果。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md",
+      "line": 36,
+      "text": "| 首轮完整路径 | 4096请求、4070生成成功、26失败 | 生成成功不等于物理验证通过 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md",
+      "line": 116,
+      "text": "独立前1000可解析CIF及完整1200请求口径、失败和未知hull计数。若只有tau800系统",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/23_CONTINUOUS_DIFFUSION_MATHEMATICAL_FEASIBILITY.md",
+      "line": 55,
+      "text": "| t=1的三项随机噪声被强制置零 | 最后一步是参数相关的确定性映射，不能当非退化Gaussian打分 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/23_CONTINUOUS_DIFFUSION_MATHEMATICAL_FEASIBILITY.md",
+      "line": 131,
+      "text": "**必须限定保证范围：**这是可验证候选的经验分布。验证覆盖率、空组和失败另报；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/23_CONTINUOUS_DIFFUSION_MATHEMATICAL_FEASIBILITY.md",
+      "line": 148,
+      "text": "对非退化Markov子步骤，令终端权重为W(y)，",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/23_CONTINUOUS_DIFFUSION_MATHEMATICAL_FEASIBILITY.md",
+      "line": 197,
+      "text": "是真鞅、控制能量可积，则Girsanov给出相对路径测度；非退化情形下",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/23_CONTINUOUS_DIFFUSION_MATHEMATICAL_FEASIBILITY.md",
+      "line": 205,
+      "text": "改变协方差可因二次变差不同使路径测度互相奇异，退化/确定性末步也不能",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/23_CONTINUOUS_DIFFUSION_MATHEMATICAL_FEASIBILITY.md",
+      "line": 381,
+      "text": "更直接的不可行/失败情形：",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md",
+      "line": 223,
+      "text": "验证覆盖率、空组和失败请求必须保持可见。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md",
+      "line": 245,
+      "text": "显示的等式采用可识别的噪声坐标；对非退化 \\(\\Sigma\\)，",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/24_CONTINUOUS_DIFFUSION_TRAINING_AND_SDE_AUDIT.md",
+      "line": 247,
+      "text": "若有退化噪声，漂移改变必须位于噪声可作用的方向，伪逆写法还需相应的测度条件。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/25_ROUND0_MATCHED_EVALUATION.md",
+      "line": 10,
+      "text": "所有比例分母均为256请求，失败不替换。这里的原生SUN仍包含共同CHGNet评价弛豫，",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/25_ROUND0_MATCHED_EVALUATION.md",
+      "line": 75,
+      "text": "系统结果距离10%/50%分别差2.578125和0.78125个百分点，尚未达到两个目标。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md",
+      "line": 66,
+      "text": "现有推理验收要求组成、token类型、非退化晶格及0.5Å等几何底线，不读取能量。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/26_ROUND0_GAP_INCREASE_DIAGNOSIS.md",
+      "line": 90,
+      "text": "按已登记方案续训；这些开发诊断不用于换组、筛失败或挑checkpoint。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/28_FINAL_SPRINT_AND_SELF_REPAIR_CHECK.md",
+      "line": 31,
+      "text": "- 起点不按能量挑选，candidate0失败则保留4次失败，不换candidate。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/28_FINAL_SPRINT_AND_SELF_REPAIR_CHECK.md",
+      "line": 63,
+      "text": "默认K4/K8/评估采样行为不变，未增加MP20监督。17项本地测试通过，包括固定失败",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/29_PERIODIC_SELF_REPAIR_12H.md",
+      "line": 13,
+      "text": "1. Reuse complete K4 and K8 train-generated paths and their saved verified `final_structure`. Preserve atom identity, fixed composition, program, failed requests, and coverage. A continuous verified terminal does **not** imply its quantized representation is verified; audit encoding, support, and fresh physical values separately before using targets. Split repair validation by composition before checking outcomes. No evaluation terminal becomes a training target.",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "docs/teacher_feedback_unified_v1/README.md",
+      "line": 58,
+      "text": "| G2-PBC-R | rejected as a standalone paper contribution; historical ablation only, never the current fallback |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "operations/supplement_1000/README.md",
+      "line": 7,
+      "text": "原K4/K8目前未达到10%/50%目标，因此不因旧低门槛新增K4补评。原K8的39951属于此前已安排的独立主评测，继续并复用。raw-v1训练39942已经完成，native256作业39975已接续，随后tau800再检查是否触发1000。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "operations/supplement_1000/README.md",
+      "line": 22,
+      "text": "该检查按当前规则重新计算达标，不信任手写“未达标”状态；所有before_v2候选的256结果必须齐全，达标者必须完成原policy的两端1000、同一selection与1200总分母。返回2表示有待办，不能先开V2。V2自己达标后的1000在V2固定256评测后进行，不形成自依赖。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "operations/supplement_1000/README.md",
+      "line": 38,
+      "text": "脚本复用233的原始1200请求/first1000流程，保持同一Planner条件与种子；以逻辑4-worker layout固定批次，再分配实际worker。它依据checkpoint原始初始化marker启用raw-v1/V2的full-cell repair，旧K4/K8继续旧cooperative/closure。按raw CIF源序冻结前1000，refined只处理对应来源；失败不替换，同时报告完整1200。model494、800步、逐graph seed、N/U/hull/终态协议不变。",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/C3FD_V22_AUDIT_V1_ENGINEERING_FAILURE.md",
+      "line": 1,
+      "text": "# C³FD-v2.2 CPU audit v1 — engineering failure",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/CCFD_PHASE1_DIAGNOSTIC.md",
+      "line": 3,
+      "text": "| Arm | Both valid | Assignment only | Legacy only | Neither | Formula fail |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/CCFD_V2_PAIR_PRIOR_AUDIT.md",
+      "line": 7,
+      "text": "| Split | Records | Positive pairs | Known nodes | Seen edges | AUC | Positive mean | Negative mean |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/DLM_STABILITY_PAIR_DATA_4STREAM_FINAL.md",
+      "line": 8,
+      "text": "- Failure reasons: `{'fewer_than_two_eligible_streams': 34, 'gap_below_threshold': 128, 'identical_extreme_body_text': 5}`",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/DLM_STABILITY_PAIR_DATA_8STREAM_FINAL.md",
+      "line": 8,
+      "text": "- Failure reasons: `{'fewer_than_two_eligible_streams': 34, 'gap_below_threshold': 97, 'identical_extreme_body_text': 3}`",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.md",
+      "line": 33,
+      "text": "| `34700` | FAILED after training | control/candidate训练均完成；后续缺少`scripts`包入口，checkpoint冻结复用 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.md",
+      "line": 34,
+      "text": "| `34710` | FAILED pre-science | 未传conda环境名，2秒退出 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.md",
+      "line": 37,
+      "text": "| `34719` | FAILED pre-eval | V3 protocol仅接受1000/1200分母；8份generation已组装，无评价科学结果 |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.md",
+      "line": 129,
+      "text": "| Meta pooled ≥ -1.0 pp且不能3/4为负 | `-1.360 pp`；2/4为负 | **FAIL** |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.md",
+      "line": 134,
+      "text": "| Overall | 一项关键门失败 | **FAIL** |",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/GROUNDING_FINAL_REPEAT4.md",
+      "line": 141,
+      "text": "- body、Direct joint、novelty和Strict方向一致地没有退化；",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/PLANNER_DIFFICULTY_PILOT.md",
+      "line": 9,
+      "text": "- Frozen downstream was not run because the Plan-only screen failed",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    },
+    {
+      "path": "results/remote_screens/SI_LWA_INTENT_DATA_FINAL.md",
+      "line": 12,
+      "text": "No CIF or CrystalNN failure occurred. Train VPA class counts are exactly",
+      "interpretation": "discovery_signal_not_adjudicated_failure"
+    }
+  ]
+}
