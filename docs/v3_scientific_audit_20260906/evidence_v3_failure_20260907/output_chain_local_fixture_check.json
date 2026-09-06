@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "scope": "local CPU fixture; torch_geometric Data replaced by simple attribute container; real remote graph audit not run",
+  "checks": [
+    "two real pymatgen CIF/Niggli/graph-array cases preserve geometry",
+    "equal-volume single-atom graph shape corruption rejected",
+    "refiner-seed corruption rejected"
+  ],
+  "fixture_model_forwards": 0,
+  "fixture_optimizer_steps": 0,
+  "script_sha256": "778bcbb0769a072f6d30f1fd9b2b5d2857990329f96e6f6c203c351cb8b926ed"
+}
