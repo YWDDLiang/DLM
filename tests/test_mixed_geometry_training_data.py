@@ -101,6 +101,19 @@ class ScheduleTests(unittest.TestCase):
             self.assertEqual(manifest["effective_states"], 108544)
             self.assertEqual(manifest["padding_per_epoch"], 16)
 
+    def test_larger_microbatch_retains_identical_global_windows_and_padding(self):
+        def windows(world, microbatch):
+            schedule = MixedBatchSchedule(27, world, microbatch)
+            result = {}
+            for rank in range(world):
+                for window, microstep, mode, slots in schedule.rank_batches(rank=rank, seed=7, epoch=1):
+                    for offset, slot in enumerate(slots):
+                        order = (microstep // 2 * world + rank) * microbatch + offset
+                        result.setdefault((window, mode), []).append((order, slot))
+            return {key: [slot for _, slot in sorted(values)] for key, values in result.items()}
+        self.assertEqual(windows(4, 1), windows(6, 2))
+        self.assertEqual(MixedBatchSchedule(27136, 6, 2).accumulation, 2)
+
 
 class SourceTests(unittest.TestCase):
     def test_continuous_values_survive_and_never_enter_token_scaffold(self):

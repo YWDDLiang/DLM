@@ -122,6 +122,11 @@ def batch_for(data, tokenizer, device, index, mode, *, epoch=0, padding=False, f
     return materialize_mixed_batch([example], tokenizer, device=device, max_sites=data.max_sites)
 
 
+def batch_for_slots(data, tokenizer, device, slots, mode, *, epoch=0):
+    examples = [data.example(index, mode=mode, epoch=epoch, is_padding=padding) for index, padding in slots]
+    return materialize_mixed_batch(examples, tokenizer, device=device, max_sites=data.max_sites)
+
+
 def scalar_backward(model, batch, objective, coefficient=1.):
     with autocast_for(batch["input_ids"].device):
         output = forward_mixed(model, batch)
@@ -170,6 +175,7 @@ def main():
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--seed", type=int, default=82018)
     parser.add_argument("--benchmark-updates", type=int, default=32)
+    parser.add_argument("--microbatch", type=int, default=1)
     args = parser.parse_args()
     local = int(os.environ.get("LOCAL_RANK", 0))
     torch.cuda.set_device(local)
@@ -255,7 +261,7 @@ def main():
 
     # Independent reference: eight real states in the 16-source tail window,
     # normalized by all 24 states. Padding contributes exactly zero.
-    schedule = MixedBatchSchedule(len(data), world)
+    schedule = MixedBatchSchedule(len(data), world, args.microbatch)
     tail = schedule.updates_per_epoch - 1
     reference = None
     if rank == 0:
@@ -264,11 +270,10 @@ def main():
             for window, _, mode, slots in schedule.rank_batches(rank=source_rank, seed=31, epoch=0):
                 if window != tail:
                     continue
-                for index, padding in slots:
-                    if not padding:
-                        scalar_backward(model, batch_for(data, tokenizer, device, index, mode), objective,
-                                        schedule.epoch_normalization / schedule.effective_batch)
-                        reference_states += 1
+                if any(not padding for _, padding in slots):
+                    scalar_backward(model, batch_for_slots(data, tokenizer, device, slots, mode), objective,
+                                    schedule.epoch_normalization * len(slots) / schedule.effective_batch)
+                    reference_states += sum(not padding for _, padding in slots)
         reference = gradients(model)
         report["reference_tail_real_states"] = reference_states
     model.zero_grad(set_to_none=True)
@@ -276,8 +281,7 @@ def main():
     wrapped = DistributedDataParallel(model, device_ids=[local], find_unused_parameters=True)
     for window, _, mode, slots in schedule.rank_batches(rank=rank, seed=31, epoch=0):
         if window == tail:
-            index, padding = slots[0]
-            scalar_backward(wrapped, batch_for(data, tokenizer, device, index, mode, padding=padding), objective,
+            scalar_backward(wrapped, batch_for_slots(data, tokenizer, device, slots, mode), objective,
                             schedule.epoch_normalization / schedule.accumulation)
     parity_ok = torch.tensor(1, device=device)
     if rank == 0:
@@ -294,8 +298,7 @@ def main():
     benchmark_start = time.monotonic()
     while step < args.benchmark_updates:
         for _, microstep, mode, slots in schedule.rank_batches(rank=rank, seed=37, epoch=epoch):
-            index, padding = slots[0]
-            batch = batch_for(data, tokenizer, device, index, mode, epoch=epoch, padding=padding)
+            batch = batch_for_slots(data, tokenizer, device, slots, mode, epoch=epoch)
             before_g = gradients(model) if step == 0 and microstep == 1 else None
             scalar_backward(wrapped, batch, objective, schedule.epoch_normalization / schedule.accumulation)
             if before_g is not None:
@@ -304,7 +307,12 @@ def main():
                 if any(increments.get(name, 0) <= 0 for name in
                        ("v_head", "u_head", "lora", "conditioner", "geometry_attention", "input_delta", "geometry_time")):
                     raise RuntimeError(f"shared geometry gradient is disconnected: {increments}")
-                if increments.get("token_only", 0) > 1e-7:
+                prior_token_l1 = sum(float(value.abs().sum()) for name, value in before_g.items()
+                                     if value is not None and parameter_group(name) == "token_only")
+                prior_token_l1 = global_counter({"token_only": prior_token_l1}, device)["token_only"]
+                token_roundoff_tolerance = max(1e-7, 1e-6 * prior_token_l1)
+                report["token_only_G_increment_roundoff_tolerance"] = token_roundoff_tolerance
+                if increments.get("token_only", 0) > token_roundoff_tolerance:
                     raise RuntimeError("geometry backward changed token-only accumulated gradients")
                 del before_g
             if microstep + 1 == schedule.accumulation:
@@ -326,7 +334,7 @@ def main():
                            "steady_seconds_per_update": ((time.monotonic() - timed_start) / (step - 4)
                                                          if timed_start is not None and step > 4 else None),
                            "peak_memory_GiB": torch.cuda.max_memory_allocated() / 2**30,
-                           "accumulation": schedule.accumulation, "microbatch": 1, "effective_batch": 24,
+                           "accumulation": schedule.accumulation, "microbatch": args.microbatch, "effective_batch": 24,
                            "subset_has_padding": True, "formal_all_sources_may_have_different_length_distribution": True}
     digest = hashlib.sha256()
     for name, parameter in model.named_parameters():

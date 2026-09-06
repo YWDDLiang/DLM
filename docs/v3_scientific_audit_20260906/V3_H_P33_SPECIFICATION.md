@@ -18,7 +18,7 @@ A 的真实软标签改善 frozen 风险，是存在条件信号的线索；原�
 
 用 V2 完整 prepared train27136、val9047；不重新采样 C/S/P，保留预测／显式fallback及其来源标记。source_split/source_row_idx、prompt、plan_state、species_program 和 canonical source_answer 均逐条携带。训练 C/S/P 在给定 C 后可能与实际 G 独立；新几何损失不解决这个可识别性限制。
 
-原始 CSV 只取 cif 列，**不取 cif.conv**。已核路径和 SHA 见 [输入证据](evidence/CONTINUOUS_SOURCE_INPUT_PATHS.json)。当前基数与完整 CSV 相同，但计数相同本身不是行身份证明。逐源 audit 必须保存：
+原始 CSV 只取 cif 列，**不取 cif.conv**。已核路径和 SHA 见 [输入证据](evidence/CONTINUOUS_SOURCE_INPUT_PATHS.json)。实际40009全量核验已完成：27136/9047全部唯一完整Q匹配原CSV、一一对应，0解析/编码错误、0重复Q歧义、0未核验或丢行；精确site permutation后Q全部等于source_answer，[来源门已通过](evidence/CONTINUOUS_SOURCE_IDENTITY_40009.json)。计数相同本身不作为行身份证明。逐源audit保存：
 
 - split、CSV SHA、CSV ordinal 和 material_id、原 CIF SHA、pymatgen 版本；
 - 原 row lattice／fractional／species、只做 species-stable 排列的精确 permutation；
@@ -94,13 +94,13 @@ G应直接返回几何输出并跳过旧 numeric_adapter/output_delta 和词表�
 
 新模块577673参数（H=4096）；旧V2总可训练库存36993232；T+G optimizer并集37570905。G路径整tensor上界26720601，不是每一步有效自由度。G不更新的旧output_delta10162176、numeric_adapter651264、task_projection36864由T更新；input table只统计实际索引行的直接梯度。
 
-正式默认6A800、24CPU、global batch24；每rank microbatch1，accumulation4。若只有4卡则microbatch1×accumulation6，保持同一effective batch和数据序列，实际资源写launch manifest，不在模型内硬编码GPU数。max_length沿用382，padding/尾batch用真实source/view权重，不能drop_last丢源。
+正式默认6A800、24CPU、global batch24。40045真实4卡microbatch1×accumulation6验收已经通过，峰值显存16.12GiB；据此在正式训练前追加一次6卡microbatch2×accumulation2的吞吐/累计验收，若通过则使用该配置。它保持相同12-source T/G全局窗口、噪声和损失系数，减少同步与forward启动开销；不承诺不同微批的浮点优化轨迹逐bit相同。6卡microbatch1×accumulation4、4卡microbatch1×accumulation6保留为容量配置，不按SUN选择。实际资源和预检结果写launch manifest，不在模型内硬编码GPU数。max_length沿用382，padding/尾batch用真实source/view权重，不能drop_last丢源。
 
 每个优化窗口把T和G在所有rank上同步安排，各占半数；单个microbatch同模式，避免一次forward两套输出/多余loss。保留DDP find_unused_parameters=True；不用static graph或0×unused参数伪loss。正式implementation需验证梯度累计策略；没有证明no_sync对交替未用参数正确前，用每microbatch同步的明确路径。
 
 AdamW（betas .9/.999，eps1e-8，weight_decay0），clip_norm1；fresh optimizer。沿V2两阶段LR：第一新增epoch基准5e-5、warmup100、cosine最低ratio.2；第二新增epoch基准1e-5、warmup100、cosine最低ratio.1。阶段长度根据source数/global batch推导，当前每epoch2262、总4524更新。初始化seed82018，数据seed202609062；t/噪声独立由source/view/epoch决定，与rank/批次无关。
 
-每epoch保存checkpoint；两epoch final是唯一正式policy，不按validation／SUN挑中间点。验证用事先hash选的100 val sources，T/G分报及t∈[.002,.01),[.01,.05),[.05,.2),[.2,.5),[.5,.9),[.9,1]固定风险；这是诊断，不是早停或选policy。
+每epoch保存checkpoint；两epoch final是唯一正式policy，不按validation／SUN挑中间点。验证用事先hash选的100 val sources，selection、T掩码和G噪声的validation seed均为202609063；每源固定1份T和6份G，G时间分别取t∈[.002,.01),[.01,.05),[.05,.2),[.2,.5),[.5,.9),[.9,1]各区间几何均值。各G噪声由source与band独立固定，共700个monitor states/epoch，T/G及各band分报；这是诊断，不是早停或选policy。此处只落实原定验证分层，不改变训练时每源每epoch各1份T/G及LogUniform时间测度。
 
 ## 7. 唯一主采样器 H-P33：先验、积分、显式末端读出
 
@@ -123,7 +123,7 @@ F_out=wrap(F_ε+ε u_hat_ε)。
 
 整体模型是33次可测离散映射对初始分布的pushforward；非有限、解码失败和后续不可重建都进入⊥。实际conditioner含finite-shell／mask分段，不能无条件援引全局光滑ODE唯一流定理；连续probability-flow只说明目标，实施对象是此有限算法。
 
-primary endpoint固定为float native。对每个相同样本另外做一次原Q roundtrip，作为secondary输出精度诊断；不据结果选float或Q。Q会产生alias、越界或量化后不可用cell，明确记录且保留分母。float输出改了系统表示，未来成绩不能归为纯离散DLM收益。
+primary endpoint固定为float native。对每个相同样本另外做一次原Q roundtrip，作为secondary输出精度诊断；不据结果选float或Q。若原EncodeDiagnostics的length_clips或angle_clips非零，secondary Q统一记失败并保留请求，不把内部clip的投影结构当成功Q；coords先wrap到[0,1)，periodic100→0 alias合法，非预期coord_clips也记失败。量化后不可用cell同样失败，不clip后挑结果。float输出改了系统表示，未来成绩不能归为纯离散DLM收益。
 
 ## 8. 实现验收与停止条件
 
@@ -139,13 +139,17 @@ primary endpoint固定为float native。对每个相同样本另外做一次原Q
 
 ## 9. SUN验证、对照与费用
 
-完成两epoch后，沿用同开发256化学条件、Planner outputs、request顺序与DLM per-request seed20260906。输入几何噪声由request seed派生，与worker调度无关。primary float native和固定model494 tau800两个端点均用原共同评估、N/U/hull版本与全256分母；secondary Q raw对同样256额外评估。三端全部报告，不择优，不按SUN／能量过滤输入。
+完成两epoch后，沿用同开发256化学条件、Planner outputs和request顺序。实际V2开发运行的base seed是20260905，collection_round=0/candidate=0，per-request seed由现有path_seed(base_seed,group_id,round,candidate)产生；不是先前稿中误写的独立cohort种子20260906。[实际运行证据](evidence/V2_ACTUAL_EVALUATION_SEEDS.json)保留原64位整数。H复用相同per-request seed、batch cap4和原layout_world_size2的分组/顺序，记录实际batch size；执行worker数可改变。几何噪声由request seed派生，与worker调度无关。refiner继续使用现有export默认base20260905加原sample_idx并模2³²，不另改seed。
+
+primary float native和固定model494 tau800两个端点均用原共同评估、N/U/hull版本与全256分母；secondary Q raw对同样256额外评估。三端全部报告，不择优，不按SUN／能量过滤输入。
+
+导出器必须有显式native geometry source：旧body路径保持默认，H使用structure路径。不能让旧export_programmed_path_artifacts重新parse body覆盖float结构，也不走graph_from_arrays的0.01-bin重复坐标guard。H直接将同一continuous CIF交给原process_one(cif,True,False,'crystalnn',False,.01)，保留相同refiner图预处理及精确composition检查，不在此前Q；这不改变共同物理0.5Å验收规则。tau记录保留真实native_structure，regression的上游几何读取它，不能把Q诊断body冒充float上游。label/evaluate原有structure优先入口可以复用。需要一次实际CIF/graph/endpoint数值回环验证，不能仅凭配置名称声明保留连续精度。
 
 既有参照：V2 construction raw12/44、repair raw8/50、repair→tau16/113；原参考raw6/55、tau19/121；raw-v1 raw3/45、tau16/113。未测construction→tau，不能假设其等于其他refined分数。H-P33 warm-start和额外两epoch、连续监督、loss、表示/solver共同改变，首轮只判断完整系统是否改善，不声称单因素因果。
 
 NFE只计几何LLaDA时为33／请求；N=1/10/20的V2 construction+repair为18/72/132（不含失败/重试），H对小N可能更贵。实际记录forward和walltime；Planner、物理评估和refiner另记，不能用NFE代替全部成本。Q不新增DLM forward。
 
-primary同一端达到Strict≥26/256、Meta≥128/256才按已授权规则追加独立1200条件、固定源序1000 raw/refined，并另报1200。未达目标仍完整记录实际得失，不靠改共同R、hull筛选或换分母提点。现开发集已用于设计；若未来独立1000用于选择也不得继续称未见确认。
+primary同一端达到Strict≥26/256、Meta≥128/256才按已授权规则追加独立1200条件、固定源序1000 raw/refined，并另报1200。触发器从整数counts和登记阈值判断；不直接复用legacy strictly_exceeds_10_and_50布尔（其严格>50%会在Meta=128时为false），也不改写原评测字段含义。未达目标仍完整记录实际得失，不靠改共同R、hull筛选或换分母提点。现开发集已用于设计；若未来独立1000用于选择也不得继续称未见确认。
 
 ## 10. 第二轮需要回答的具体问题
 

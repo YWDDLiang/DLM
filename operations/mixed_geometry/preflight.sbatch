@@ -25,7 +25,7 @@ export OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_TH
   "$RUN/code/src/scripts/preflight_mixed_geometry_dlm.py" --model-path "${MIXED_MODEL_PATH:?}" \
   --v2-checkpoint "${MIXED_V2_CHECKPOINT:?}" --val-data "${MIXED_VAL_DATA:?}" \
   --val-identity "${MIXED_VAL_IDENTITY:?}" --normalizer "${MIXED_NORMALIZER:?}" \
-  --output-dir "$RUN/preflight" --benchmark-updates 32 \
+  --output-dir "$RUN/preflight" --benchmark-updates 32 --microbatch "${MIXED_MICROBATCH:-1}" \
   >"$RUN/preflight.out" 2>"$RUN/preflight.err"
 test -f "$RUN/preflight/_SUCCESS"
 touch "$RUN/_SUCCESS"
