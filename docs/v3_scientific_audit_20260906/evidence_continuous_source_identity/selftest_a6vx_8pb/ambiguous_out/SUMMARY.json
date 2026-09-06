@@ -1,0 +1,93 @@
+{
+  "schema": "continuous_source_identity_audit_v1",
+  "status": "issues",
+  "audit_complete": true,
+  "original_cif_identity_gate_passed": false,
+  "split": "train",
+  "counts": {
+    "training_records": 1,
+    "unique_training_sources": 1,
+    "expected_training_sources": null,
+    "source_count_matches_expected": true,
+    "blank_jsonl_lines": 0,
+    "csv_rows": 3,
+    "csv_parse_or_encode_errors": 0,
+    "verified_training_records": 0,
+    "unverified_training_records": 1,
+    "unique_matched_csv_rows": 0,
+    "csv_full_answer_duplicate_groups": 1,
+    "r5_records": 0,
+    "r5_errors": 0
+  },
+  "statuses": {
+    "ambiguous_complete_quantized_answer": 1
+  },
+  "identity_methods": {},
+  "csv_columns": [
+    "material_id",
+    "cif",
+    "cif.conv"
+  ],
+  "blank_line_numbers": [],
+  "input_receipts": {
+    "source_csv": {
+      "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_continuous_source_identity\\selftest_a6vx_8pb\\source.csv",
+      "sha256": "f6af87d3c7077c90ff74529daf7847a00305319e4c388884ff4e84b14a9ff051",
+      "selected_cif_column": "cif",
+      "id_column": "material_id",
+      "cif_hash_definition": "SHA256 of UTF-8 decoded selected CSV CIF field before parser"
+    },
+    "training_jsonl": {
+      "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_continuous_source_identity\\selftest_a6vx_8pb\\ambiguous.jsonl",
+      "sha256": "d1e78674f5f7715a726c167a744e0ba9ec9916708ac57cc4da8c030330f2c4d7",
+      "target_field": "source_answer"
+    },
+    "r5_jsonl": null,
+    "parser": {
+      "call": "pymatgen.core.Structure.from_str(cif, fmt='cif')",
+      "signature": "(input_string: 'str', fmt: 'FileFormats', primitive: 'bool' = False, sort: 'bool' = False, merge_tol: 'float' = 0.0, **kwargs) -> 'Structure | Self'",
+      "pymatgen": "2026.5.4",
+      "pandas": "3.0.1",
+      "numpy": "2.3.5",
+      "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+    },
+    "project_root": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair",
+    "project_source_sha256": {
+      "src/crystal_dlm/dynamic_crystal.py": "f2b038b1a42fa8d314b1d86d3dcecd444b331651f5f7ffc3ac0b938475780e22",
+      "src/crystal_dlm/fixed_slot.py": "aa06e8c240a47c3f3696239bcf07adbcf73c95cab1b3f0d7be07ba560a6476eb",
+      "src/crystal_dlm/canonical_site_order.py": "104c5163b79d4e27ca9b376d532afbd22dc4c50011f3108d09f7a8ec7ec49b59",
+      "src/scripts/build_r5_exact_length_sft_data.py": "3d4431607d6e78e8915254ef9063ac14ff2923c61a37be364bf205f7bada5e0e",
+      "scripts/build_c3fd_native_sft_data.py": "e8a50593dc3ca8d7e5b21c97a6008d497f04355b9572f8ef2a5c2dda0d2c1f5b",
+      "scripts/canonicalize_c3fd_native_teacher_sft.py": "0f1a8fa11046aabc8b92d17bb6d08d64874cb0b1d1aad25eb503f1e24324304d"
+    },
+    "native_codec": {
+      "max_atoms": 20,
+      "length_step": 0.1,
+      "length_min_bin": 0,
+      "length_max_bin": 500,
+      "angle_min_bin": 1,
+      "angle_max_bin": 179,
+      "coord_min_bin": 0,
+      "coord_max_bin": 100,
+      "max_atomic_number": 94
+    },
+    "audit_tool_sha256": "9a39a2912723a24120f023df15f1f41d7428329047c9e780a1ae6a3fa4f10c42",
+    "no_formula_matching": true,
+    "decoded_target_fallback": false,
+    "bare_source_index_is_not_csv_proof": true
+  },
+  "all_input_source_records_reported": true,
+  "site_permutation_direction": "aligned training slot -> parsed original CIF site index",
+  "signature_definition": "Complete native Q answer, periodic 100->0 alias canonicalized, stable alphabetical element grouping only; includes every lattice and coordinate token.",
+  "r5_identity_rule": "Only explicit source index or matching complete-answer evidence plus consistent stable material ID. Bare intermediate file ordinal is not original CSV proof.",
+  "remaining_csv_rows_not_assigned": [
+    0,
+    1,
+    2
+  ],
+  "model_calls": 0,
+  "GPU_calls": 0,
+  "formula_matching": false,
+  "decoded_targets_used": false,
+  "scope": "Identity and numerical data alignment only; no energy/force/stability certificate and no filtered training dataset."
+}

@@ -343,7 +343,8 @@ def load_r5(path: Path | None, split: str | None):
 
 
 def choose_identity(training: dict, csv_rows: list[dict], by_hash: dict, by_id: dict,
-                    csv_sha: str, r5_by_hash: dict, r5_by_index: dict) -> dict:
+                    csv_sha: str, r5_by_hash: dict, r5_by_index: dict,
+                    csv_index_complete: bool = True, r5_index_complete: bool = True) -> dict:
     """Identity decision is independent of geometry verification performed later."""
     fingerprint = training["signature_sha256"]
     same_answer = [r for r in by_hash.get(fingerprint, []) if r["signature_answer"] == training["signature_answer"]]
@@ -374,12 +375,15 @@ def choose_identity(training: dict, csv_rows: list[dict], by_hash: dict, by_id: 
     r5_matches = indexed_r5 if indexed_r5 else r5_by_hash.get(fingerprint, [])
     r5_matches = [r for r in r5_matches if r["signature_sha256"] == fingerprint and r["signature_answer"] == training["signature_answer"]]
     info["r5_matching_lines"] = [r["line"] for r in r5_matches]
+    info["r5_explicit_source_index_conflicts_with_target"] = bool(indexed_r5 and not r5_matches)
     r5_ids = {value for r in r5_matches for value in r["stable_ids"].values()}
-    if len(r5_ids) == 1:
+    if len(r5_ids) == 1 and r5_index_complete:
         candidates = by_id.get(next(iter(r5_ids)), [])
         if len(candidates) == 1:
             return {**info, "status": "candidate", "identity_method": "r5_explicit_source_index_and_stable_id" if indexed_r5 else "r5_full_answer_and_consistent_stable_id", "selected": candidates[0]}
     if len(same_answer) == 1:
+        if not csv_index_complete:
+            return {**info, "status": "unique_hash_requires_complete_csv_index"}
         return {**info, "status": "candidate", "identity_method": "unique_complete_quantized_answer", "selected": same_answer[0]}
     return {**info, "status": "ambiguous_complete_quantized_answer" if same_answer else "complete_quantized_answer_not_found"}
 
@@ -452,6 +456,7 @@ def audit(args, output: Path) -> dict:
         if row["csv_material_id"]:
             by_id[row["csv_material_id"]].append(row)
     r5_records, r5_hash, r5_index, r5_errors = load_r5(r5_path, split)
+    csv_index_complete = all(row["parse_status"] == "ok" for row in csv_rows)
     if r5_path:
         with (output / "r5_index.jsonl").open("w", encoding="utf-8") as handle:
             for row in r5_records + r5_errors:
@@ -468,7 +473,8 @@ def audit(args, output: Path) -> dict:
         if item["status"] != "pending":
             results.append(result)
             continue
-        decision = choose_identity(item, csv_rows, by_hash, by_id, source_sha, r5_hash, r5_index)
+        decision = choose_identity(item, csv_rows, by_hash, by_id, source_sha, r5_hash, r5_index,
+                                   csv_index_complete=csv_index_complete, r5_index_complete=not r5_errors)
         selected = decision.pop("selected", None)
         result.update(decision)
         hint = integer(item.get("source_row_idx"))
@@ -525,6 +531,7 @@ def audit(args, output: Path) -> dict:
                "counts": counts, "statuses": dict(Counter(row["status"] for row in results)),
                "identity_methods": dict(Counter(row.get("identity_method") for row in results if row["identity_verified"])),
                "csv_columns": columns, "blank_line_numbers": blanks, "input_receipts": receipt,
+               "complete_csv_quantized_answer_index": csv_index_complete,
                "all_input_source_records_reported": len(results) == len(training),
                "site_permutation_direction": "aligned training slot -> parsed original CIF site index",
                "signature_definition": "Complete native Q answer, periodic 100->0 alias canonicalized, stable alphabetical element grouping only; includes every lattice and coordinate token.",

@@ -1,0 +1,17 @@
+[
+  {
+    "signature_sha256": "77c15d62734ebc392f0702031c118fc3b21c95194504c5cd58ea2ef660de4220",
+    "csv_rows": [
+      {
+        "row_idx": 0,
+        "material_id": "A",
+        "cif_sha256_utf8": "016ba07077e8c1451c2d691683c4e4e35a075d4d190cdebb89384781bdacb9c9"
+      },
+      {
+        "row_idx": 2,
+        "material_id": "C",
+        "cif_sha256_utf8": "3af9c8fb34b34a5375dbbc6889d33a87980157ae2add03b1f410247e104e75ec"
+      }
+    ]
+  }
+]

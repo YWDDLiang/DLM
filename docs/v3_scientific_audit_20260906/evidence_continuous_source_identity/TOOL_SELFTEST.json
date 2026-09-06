@@ -1,0 +1,14 @@
+{
+  "schema": "continuous_source_identity_tool_selftest_v1",
+  "fixture_root": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_continuous_source_identity\\selftest_a6vx_8pb",
+  "cases_passed": [
+    "good_worker2_and_source_answer",
+    "duplicate_full_answer_remains_ambiguous_despite_ordinal_hint",
+    "stable_id_mismatch_not_replaced_by_hash_candidate",
+    "invalid_json_row_preserved",
+    "optional_r5_explicit_index_stable_id_bridge"
+  ],
+  "actual_pymatgen_parser_used": true,
+  "model_calls": 0,
+  "GPU_calls": 0
+}
