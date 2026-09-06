@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Adapt the same final K8 DLM using its own errors and verified terminal targets."""
+"""Two declared repair stages: completed K4 now, then full K4+K8 feedback."""
 from __future__ import annotations
 
 import argparse
@@ -67,6 +67,8 @@ def arguments():
     p = argparse.ArgumentParser()
     p.add_argument("--model-path", required=True)
     p.add_argument("--checkpoint-path", type=Path, required=True)
+    p.add_argument("--reference-checkpoint-path", type=Path, required=True)
+    p.add_argument("--repair-round", type=int, choices=(0, 1), required=True)
     p.add_argument("--data-jsonl", type=Path, required=True)
     p.add_argument("--ce-data-jsonl", type=Path, required=True)
     p.add_argument("--output-dir", type=Path, required=True)
@@ -90,13 +92,25 @@ def main():
         raise ValueError("registered repair training uses exactly two GPUs and global batch 16")
     base_report_path = args.checkpoint_path.parent.parent / "TRAIN_FINAL.json"
     if not base_report_path.is_file():
-        raise ValueError("final K8 training report is required before repair training")
+        raise ValueError("the preceding completed training report is required")
     base_report = json.loads(base_report_path.read_text())
-    if base_report.get("eligible_policy") is not True or base_report.get("collection_round") != 1:
-        raise ValueError("the repair branch must start from the completed final K8 policy")
+    if base_report.get("eligible_policy") is not True:
+        raise ValueError("engineering checkpoints cannot initialize scientific repair training")
+    if args.repair_round == 0 and (base_report.get("collection_round") != 0
+                                   or (args.checkpoint_path / "periodic_repair_config.json").is_file()):
+        raise ValueError("first repair round starts from the completed original K4 policy")
+    if args.repair_round == 1 and (base_report.get("method") != "periodic_discrete_self_repair_v1"
+                                   or base_report.get("repair_collection_round") != 0):
+        raise ValueError("second repair round continues the completed first repair model")
+    reference_report = json.loads((args.reference_checkpoint_path.parent.parent / "TRAIN_FINAL.json").read_text())
+    if (reference_report.get("eligible_policy") is not True
+            or reference_report.get("collection_round") != args.repair_round):
+        raise ValueError("reference must be original K4 for round0 and final K8 for round1")
     data_report = json.loads((args.data_jsonl.parent / "DATA_FINAL.json").read_text())
     if not (args.data_jsonl.parent / "_SUCCESS").is_file() or data_report["target_admission"] != TARGET_ADMISSION:
         raise ValueError("target data is incomplete or its frozen admission changed")
+    if data_report["parent_requests"] != (4096 if args.repair_round == 0 else 12288):
+        raise ValueError("the repair round does not match its complete source denominator")
     torch.cuda.set_device(local)
     device = torch.device("cuda", local)
     dist.init_process_group("nccl")
@@ -106,7 +120,7 @@ def main():
     model, tokenizer = load_repair_model(args.model_path, args.checkpoint_path, device, trainable=True)
     counts = set_repair_trainable(model)
     checkpointing = enable_native_checkpointing(model.base_model)
-    reference, _ = load_path_model(args.model_path, args.checkpoint_path, device)
+    reference, _ = load_path_model(args.model_path, args.reference_checkpoint_path, device)
     reference.eval().requires_grad_(False)
     constraints = build_dynamic_lightweight_constraints(
         tokenizer, duplicate_coordinate_mask=True, lattice_volume_mask=True, min_lattice_rad=1e-4,
@@ -204,7 +218,7 @@ def main():
                     reference_batch["input_ids"], attention_mask=reference_batch["attention_mask"],
                     geometry_context=reference_batch["geometry_context"],
                 ).logits
-                if zero_delta is None:
+                if zero_delta is None and args.repair_round == 0:
                     delta = (actual_logits - old_logits).abs().max().detach().float()
                     dist.all_reduce(delta, op=dist.ReduceOp.MAX)
                     zero_delta = float(delta)
@@ -268,7 +282,9 @@ def main():
         tokenizer.save_pretrained(checkpoint_dir)
         report = {
             "method": "periodic_discrete_self_repair_v1", "stage": "geometry_repair",
-            "base_final_k8_policy": str(args.checkpoint_path), "policy_path": str(checkpoint_dir),
+            "initial_policy": str(args.checkpoint_path),
+            "reference_policy": str(args.reference_checkpoint_path),
+            "repair_collection_round": args.repair_round, "policy_path": str(checkpoint_dir),
             "eligible_policy": not bool(args.engineering_updates),
             "complete_updates": completed, "repair_updates": repair_completed, "ce_updates": ce_completed,
             "zero_increment_max_logit_delta": zero_delta,
@@ -277,6 +293,7 @@ def main():
             "elapsed_seconds": time.monotonic() - started,
             "inference_mlip": False, "new_mp20_construction_supervision": False,
             "native_full_cell_repair_required": True,
+            "stage_optimizer_restart": True,
         }
         (args.output_dir / "TRAIN_FINAL.json").write_text(json.dumps(report, indent=2) + "\n")
         (args.output_dir / "POLICY_PATH").write_text(str(checkpoint_dir) + "\n")

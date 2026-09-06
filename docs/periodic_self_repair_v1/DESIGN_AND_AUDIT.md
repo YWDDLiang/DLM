@@ -2,13 +2,15 @@
 
 Registered 2026-09-06, updated after the user's clarification that the DLM architecture is the priority. Budget is two A800 / eight CPU within the already allocated 06:49–18:49 window. The user subsequently authorized using currently free cards for immediate engineering work and a multi-agent mathematical audit.
 
+**07:58 execution amendment:** the user requested immediate two-GPU launch. The completed K4 data and model now initialize scientific repair round0 immediately. Round1 continues that repair model using the complete K4+K8 target pool; its frozen conditional-policy reference is the completed original K8 model. Both stages use four declared passes with a fresh stage optimizer/schedule. This changes execution order, without changing the family-balanced objective, target admission, legal support, or original K8 training recipe.
+
 ## What the paper's core retains
 
 The C³FD / typed Llama Planner, composition support, species program, exact atom counts and species, and native 7+4N canvas remain the chemical and program interface. The legal-set construction and its conditional sampling semantics remain the validity mechanism. The structure is still sampled from the same bidirectional DLM's discrete token probabilities.
 
 Other implementation details may be adapted or removed when incompatible. In this first implementation, the previous construction, cooperative region, and closure remain usable; an additional full-cell repair is appended. This is a concrete initial implementation, not a claim that every old phase must be retained forever. No continuous coordinate generator is introduced. Frozen model494 results remain separate.
 
-The existing learned LoRA and periodic state conditioner are loaded from the **completed final K8 checkpoint** for formal adaptation. The original embedding/output tables remain frozen. The new numeric and attention increments are zero-initialized. The three-step engineering check uses 39892 only because it is already available, discards its temporary weights, and cannot become the new scientific checkpoint.
+The existing learned LoRA and periodic state conditioner initially come from completed original K4 policy39892. The original embedding/output tables remain frozen. The new numeric and attention increments are zero-initialized in repair round0. Round1 preserves the trained repair modules and LoRA, while updating the frozen policy reference to final K8. The separate three-step engineering check discarded its temporary weights and cannot become a scientific checkpoint.
 
 ## Internal model
 
@@ -81,13 +83,15 @@ Three quarters of the scheduled repair examples use actual ancestor-model errors
 
 Registered (strain operator bound, Cartesian component displacement bound) levels are (.01,.05 Å), (.03,.15 Å), and (.06,.30 Å). A single infeasible corruption falls back to that occurrence's actual parent error with an explicit counter; it is not repeatedly resampled until an attractive example appears.
 
-On actual recorded ancestor-path states, the frozen **final K8** policy supplies
+On actual recorded ancestor-path states, the frozen original K4 policy in round0 and original final K8 policy in round1 supply
 
-    0.01 * KL(pi_K8(.|s) || pi_new(.|s)).
+    0.01 * KL(pi_reference(.|s) || pi_new(.|s)).
 
 Both policies use the same actual legal support, alias transform, and T=0.7. The original raw logits dtype is retained through alias merging; normalization for training is FP32. The term regularizes observed conditional policies, not the whole new trajectory distribution, and it does not cover every new repair state.
 
 The original MP20 revision CE anchors remain at one update per four repair updates. No new MP20 construction supervision is introduced. Optimizer settings for this separate experiment are global batch 16 on two ranks, LoRA/conditioner LR 1e-5, new modules LR 1e-4, 50 warmup updates, cosine decay. The final registered endpoint is evaluated; intermediate development scores do not select a checkpoint.
+
+Round0 is an explicitly identified intermediate repair model; its diagnostic scores cannot substitute for round1. The original mainline K8 optimizer still follows its unchanged continuation protocol.
 
 ## Evaluation and limits
 
@@ -110,6 +114,8 @@ Three explicitly user-authorized read-only agents reviewed mathematics/objective
 - Insufficient body hashes, per-condition occurrence checks, and physics-version checks.
 
 36 relevant local CPU tests passed after these corrections. Separate CPU objective probes verified BF16 and FP32 legal vectors and gradients exactly against the full deployment transform, same-policy KL=0, positive perturbed KL, alias gradients, and <=1.18e-7 CE difference from the sampler's FP64 log recording. A real two-GPU test will check actual LLaDA initialization, gradients, memory, full-cell sampling and path replay before scientific training.
+
+Job39930 completed the real two-GPU check: both ranks had zero initial logit difference and zero full-cell replay difference, with approximately34.73GiB peak memory per GPU. All new modules and the retained conditioner received finite gradients. Its full K4 target preparation retained4096 requests,972 encodable verified-parent targets and3124 unavailable targets; fresh quantized-target labels were695 verified and277 not converged. These695 are before the separately registered raw-target admission filters.
 
 The local mathematical bounds remain conditional: near a verified local minimum with bounded Hessian, smaller geometric error bounds local excess energy. This does not cover arbitrary severe collisions or imply that training reaches that neighborhood. A subsequent energy-tilted finite-basin teacher can increase stable-set teacher mass on fixed support, but student fitting, novelty, uniqueness and SUN remain empirical questions.
 

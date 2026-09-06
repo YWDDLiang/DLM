@@ -6,7 +6,7 @@ User authorization: 2026-09-06 06:49 Asia/Shanghai, following the supplied GPT-6
 
 The intervention is offline physical-feedback-assisted self-improvement: `self-generated x -> Q(R(x))`, using the same frozen, consistently verified relaxation protocol. No additional MP20 construction CE is introduced. Existing CE anchors remain separately identified. All outputs remain discrete DLM tokens; no continuous generator or MLIP is added to native inference.
 
-Original K8 checkpoints/results retain their recipe and identity. Formal new-model training starts from the completed final K8 policy. Round0 39892 is only for an engineering check whose temporary weights are discarded. Source branch: codex/periodic-self-repair; local worktree: D:/codex_work/ai4s/DLM_periodic_self_repair.
+Original K8 checkpoints/results retain their recipe and identity. The user's07:58 immediate-launch amendment starts formal repair round0 from completed39892 and complete K4 feedback, then continues repair round1 with complete K4+K8 targets and final K8 as the frozen policy reference. Earlier engineering weights are discarded. Source branch: codex/periodic-self-repair; local worktree: D:/codex_work/ai4s/DLM_periodic_self_repair.
 
 ## Execution order
 
@@ -24,6 +24,8 @@ Original K8 checkpoints/results retain their recipe and identity. Formal new-mod
 - [Self-Generated Error Training](https://arxiv.org/abs/2606.17175): own-model corruptions for token editing; crystal physical feedback is our proposed transfer, not a published performance guarantee.
 
 ## Live status
+
+07:58: 39930 COMPLETED6m50s. Real DLM zero-increment and replay errors both0, peak34.73GiB/GPU; K4 target labels complete4096 requests,695 verified,277 not converged,3124 unavailable. Script239 is prepared for immediate two-GPU round0 training after the final target admission. See the dedicated [checklist](../periodic_self_repair_v1/CHECKLIST.md). Original K8 B39916 last2560/2730; A complete5462. A separate force-resid job39932 belongs to another project and is not managed here; the two-job/six-GPU limit applies to the two workstreams in this experiment.
 
 07:45: design/code eec542f committed and pushed. Remote isolated source installed; shell syntax and both entry-point CLI imports passed. **Job39930 submitted** for two A800/eight CPU, script238 round0, first a real architecture check then complete K4 target preparation/physics. Artifacts: grounding/experiments/periodic_self_repair_20260906/runs/prepare_0_39930/. At submission the only other job was K8 label39916 on two GPUs. No scientific repair model has been trained yet.
 

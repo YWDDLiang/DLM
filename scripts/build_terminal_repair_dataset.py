@@ -160,8 +160,9 @@ def finalize(args):
         raise ValueError("prepared collections differ in protocol or condition pool")
     labels, protocol = checked_labels(args.labels)
     expected = [row for path in prepared_paths for row in read_jsonl(path / "target_paths.jsonl")]
-    if len(expected) != 12288 or len({row["trajectory_id"] for row in expected}) != len(expected):
-        raise ValueError("final repair source must include complete unique K4+K8 requests")
+    if (args.expected_requests not in (4096, 12288) or len(expected) != args.expected_requests
+            or len({row["trajectory_id"] for row in expected}) != len(expected)):
+        raise ValueError("repair source must be complete unique K4 or complete K4+K8 requests")
     if set(labels) != {row["trajectory_id"] for row in expected}:
         raise ValueError("quantized target labels lost requests")
     if protocol != initial["terminal_protocol"]:

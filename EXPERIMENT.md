@@ -9,4 +9,4 @@ This is the separate implementation workspace for the user's 2026-09-06 DLM arch
 - Separate remote source: /public/home/jiaosz/ywliang/ai4s/.sscd_periodic_self_repair_20260906_v1
 - Separate experiment outputs: grounding/experiments/periodic_self_repair_20260906/
 
-The original K8 experiment retains its own source, recipe, checkpoints, and evaluation. This method's formal training starts from the completed final K8 policy. Earlier checkpoints may be used only for explicitly ineligible engineering checks, with all temporary updated weights discarded.
+The original K8 experiment retains its own source, recipe, checkpoints, and evaluation. Following the user's 07:58 instruction to start the new two-GPU training immediately, repair round0 starts from completed original K4 policy39892 using complete K4 feedback. Repair round1 continues that new model on complete K4+K8 feedback, with final K8 as the frozen reference policy. Engineering weights from job39930 were discarded. This two-stage amendment supersedes the earlier plan to wait for K8 before any scientific repair training.
