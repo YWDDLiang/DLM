@@ -1,0 +1,147 @@
+{
+  "status": "PASS",
+  "scope": "local repository source comparison only; executed external CRYS bytes not assumed",
+  "files": {
+    "src/scripts/refine_dlm_with_crysllmgen.py": {
+      "current_sha256": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        }
+      }
+    },
+    "scripts/export_programmed_path_artifacts.py": {
+      "current_sha256": "ec2fe1942e66f8029d9a85110dd7f89cd8310e1414ef3e57022e3f52a9e18cd6",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "4dd9c2f021ca227b37bfc7cc866b7e1f028cede5c19d7e0420142e744df10e62",
+          "bytes_equal_to_current": false,
+          "newline_normalized_equal_to_current": false
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "4dd9c2f021ca227b37bfc7cc866b7e1f028cede5c19d7e0420142e744df10e62",
+          "bytes_equal_to_current": false,
+          "newline_normalized_equal_to_current": false
+        }
+      }
+    },
+    "src/scripts/sample_llada_dynamic_crystals.py": {
+      "current_sha256": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        }
+      }
+    },
+    "scripts/assemble_grounding_repeat.py": {
+      "current_sha256": "7406d088e983435e92b360f128aae757deef5b0cc4f89da158de4e2e6814ef54",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "7406d088e983435e92b360f128aae757deef5b0cc4f89da158de4e2e6814ef54",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "7406d088e983435e92b360f128aae757deef5b0cc4f89da158de4e2e6814ef54",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        }
+      }
+    },
+    "src/vendor/crysllmgen/models_ddpm/diffusion.py": {
+      "current_sha256": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        }
+      }
+    },
+    "src/vendor/crysllmgen/models_ddpm/diff_utils.py": {
+      "current_sha256": "91dd347d9f20932f6505269fa247ad4ada1276f7ad51610eac0efe373143ff2e",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "91dd347d9f20932f6505269fa247ad4ada1276f7ad51610eac0efe373143ff2e",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "91dd347d9f20932f6505269fa247ad4ada1276f7ad51610eac0efe373143ff2e",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        }
+      }
+    },
+    "src/vendor/crysllmgen/models_ddpm/cspnet.py": {
+      "current_sha256": "e4dd1f6b53ba255f27e09d86d7cf85fbdc45a6cb023d919be55fb1093ff5a022",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "e4dd1f6b53ba255f27e09d86d7cf85fbdc45a6cb023d919be55fb1093ff5a022",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "e4dd1f6b53ba255f27e09d86d7cf85fbdc45a6cb023d919be55fb1093ff5a022",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        }
+      }
+    },
+    "src/vendor/crysllmgen/data_utils.py": {
+      "current_sha256": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+      "historical": {
+        "old_k4_tau": {
+          "git_ref": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+          "sha256": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        },
+        "old_k8_tau": {
+          "git_ref": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+          "sha256": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+          "bytes_equal_to_current": true,
+          "newline_normalized_equal_to_current": true
+        }
+      }
+    }
+  },
+  "torch_scatter_primary_documentation": "https://pytorch-scatter.readthedocs.io/en/latest/functions/scatter.html",
+  "source_read_utc": "2026-09-06 19:32 UTC",
+  "model_forwards": 0,
+  "energy_evaluations": 0,
+  "CUDA_calls": 0
+}

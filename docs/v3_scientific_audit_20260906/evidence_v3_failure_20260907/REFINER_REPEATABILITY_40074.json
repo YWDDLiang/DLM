@@ -1,0 +1,721 @@
+{
+  "status": "PASS",
+  "scope": "saved-data and provenance comparison only",
+  "methods": {
+    "k4": {
+      "old": {
+        "run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910",
+        "run_config": {
+          "batch_size": 1,
+          "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "crysllmgen_dir": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "diff_steps": 800,
+          "distributed": true,
+          "max_proposals": 256,
+          "num_evals": 1,
+          "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/refine",
+          "proposal_graphs": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/native/proposal_graphs.pt",
+          "run_type": "train",
+          "seed": 27017,
+          "seed_by_sample_index": false,
+          "seed_from_graph_field": "refiner_seed",
+          "timesteps": 1000,
+          "world_size": 2
+        },
+        "metrics": {
+          "assigned_proposals": 254,
+          "diff_steps": 800,
+          "distributed": true,
+          "num_evals": 1,
+          "num_proposals": 254,
+          "output_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/refine/dlm_refined_mp_254.pt",
+          "time_sec": 1028.4036569595337,
+          "world_size": 2
+        },
+        "frozen_code_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/code",
+        "recorded_code_commit": "e70e14b82c24c5e1d71ec2427528ccab92372816",
+        "frozen_source_sha256": {
+          "src/scripts/refine_dlm_with_crysllmgen.py": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498",
+          "scripts/export_programmed_path_artifacts.py": "4dd9c2f021ca227b37bfc7cc866b7e1f028cede5c19d7e0420142e744df10e62",
+          "src/scripts/sample_llada_dynamic_crystals.py": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123",
+          "scripts/assemble_grounding_repeat.py": "7406d088e983435e92b360f128aae757deef5b0cc4f89da158de4e2e6814ef54"
+        },
+        "external_dependencies": {
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/config.py": {
+            "exists_now": true,
+            "sha256_observed_now": "4c7d8817dd0da31d64101e099ab7cbaf7e1190cf48442da83991178d2c89f4fd",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diffusion.py": {
+            "exists_now": true,
+            "sha256_observed_now": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/cspnet.py": {
+            "exists_now": true,
+            "sha256_observed_now": "e4dd1f6b53ba255f27e09d86d7cf85fbdc45a6cb023d919be55fb1093ff5a022",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diff_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "91dd347d9f20932f6505269fa247ad4ada1276f7ad51610eac0efe373143ff2e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "a50e2341473858b47fd4a53265ea069b3130b81f2531674c0f2f6a00a75d0276",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt": {
+            "exists_now": true,
+            "sha256_observed_now": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          }
+        },
+        "external_hash_limit": "Current mutable CRYS paths cannot establish old executed bytes. Historical hashes are reported only when explicitly present in that run's manifest; a vendored copy is not proof it was imported."
+      },
+      "new": {
+        "run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4",
+        "run_config": {
+          "batch_size": 1,
+          "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "crysllmgen_dir": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "diff_steps": 800,
+          "distributed": true,
+          "max_proposals": 256,
+          "num_evals": 1,
+          "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/refine",
+          "proposal_graphs": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/native/proposal_graphs.pt",
+          "run_type": "train",
+          "seed": 27017,
+          "seed_by_sample_index": false,
+          "seed_from_graph_field": "refiner_seed",
+          "timesteps": 1000,
+          "world_size": 6
+        },
+        "metrics": {
+          "assigned_proposals": 253,
+          "diff_steps": 800,
+          "distributed": true,
+          "num_evals": 1,
+          "num_proposals": 253,
+          "output_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/refine/dlm_refined_mp_253.pt",
+          "time_sec": 341.059091091156,
+          "world_size": 6
+        },
+        "frozen_code_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/code",
+        "recorded_code_commit": "fa4bd808b0fb9e379875b80635ed0a314bd52964",
+        "frozen_source_sha256": {
+          "src/scripts/refine_dlm_with_crysllmgen.py": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498",
+          "scripts/export_programmed_path_artifacts.py": "ec2fe1942e66f8029d9a85110dd7f89cd8310e1414ef3e57022e3f52a9e18cd6",
+          "src/scripts/sample_llada_dynamic_crystals.py": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123",
+          "scripts/assemble_grounding_repeat.py": "7406d088e983435e92b360f128aae757deef5b0cc4f89da158de4e2e6814ef54"
+        },
+        "external_dependencies": {
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/config.py": {
+            "exists_now": true,
+            "sha256_observed_now": "4c7d8817dd0da31d64101e099ab7cbaf7e1190cf48442da83991178d2c89f4fd",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diffusion.py": {
+            "exists_now": true,
+            "sha256_observed_now": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/cspnet.py": {
+            "exists_now": true,
+            "sha256_observed_now": "e4dd1f6b53ba255f27e09d86d7cf85fbdc45a6cb023d919be55fb1093ff5a022",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diff_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "91dd347d9f20932f6505269fa247ad4ada1276f7ad51610eac0efe373143ff2e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "a50e2341473858b47fd4a53265ea069b3130b81f2531674c0f2f6a00a75d0276",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt": {
+            "exists_now": true,
+            "sha256_observed_now": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          }
+        },
+        "external_hash_limit": "Current mutable CRYS paths cannot establish old executed bytes. Historical hashes are reported only when explicitly present in that run's manifest; a vendored copy is not proof it was imported."
+      },
+      "summary": {
+        "same_native_body_requests": 171,
+        "native_exact_valid_dict_same": 171,
+        "tau_exact_valid_dict_same": 5,
+        "tau_both_missing": 0,
+        "tau_both_valid_dicts": 171,
+        "both_graphs_present": 171,
+        "effective_inputs_identical": 171,
+        "effective_eval0_seed_equal": 171,
+        "effective_inputs_and_seed_identical": 171,
+        "assigned_rank_changed": 126
+      },
+      "configuration_comparison": {
+        "timesteps": {
+          "old": 1000,
+          "new": 1000,
+          "equal": true
+        },
+        "run_type": {
+          "old": "train",
+          "new": "train",
+          "equal": true
+        },
+        "diff_steps": {
+          "old": 800,
+          "new": 800,
+          "equal": true
+        },
+        "num_evals": {
+          "old": 1,
+          "new": 1,
+          "equal": true
+        },
+        "batch_size": {
+          "old": 1,
+          "new": 1,
+          "equal": true
+        },
+        "seed": {
+          "old": 27017,
+          "new": 27017,
+          "equal": true
+        },
+        "seed_from_graph_field": {
+          "old": "refiner_seed",
+          "new": "refiner_seed",
+          "equal": true
+        },
+        "seed_by_sample_index": {
+          "old": false,
+          "new": false,
+          "equal": true
+        },
+        "checkpoint": {
+          "old": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "new": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "equal": true
+        },
+        "crysllmgen_dir": {
+          "old": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "new": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "equal": true
+        },
+        "world_size": {
+          "old": 2,
+          "new": 6,
+          "equal": false
+        }
+      },
+      "difference_groups": {
+        "all_same_native_body": {
+          "requests": 171,
+          "tau_same_index_differences": {
+            "lattice_max_abs_A": {
+              "coverage": 171,
+              "median": 0.02484893798828125,
+              "p90": 1.9738559350409708,
+              "max": 5.277308464050293
+            },
+            "lattice_relative_frobenius": {
+              "coverage": 171,
+              "median": 0.0040055126163361454,
+              "p90": 0.21118366899365199,
+              "max": 0.7908726828319469
+            },
+            "gram_max_abs_A2": {
+              "coverage": 171,
+              "median": 0.3017707092913007,
+              "p90": 20.909046221653842,
+              "max": 137.8039020038159
+            },
+            "frac_periodic_max_abs": {
+              "coverage": 171,
+              "median": 0.4782903790473938,
+              "p90": 0.4977126717567444,
+              "max": 0.4999738931655884
+            },
+            "frac_periodic_rms": {
+              "coverage": 171,
+              "median": 0.2806863907242204,
+              "p90": 0.32578101006303156,
+              "max": 0.3749744260633706
+            },
+            "periodic_displacement_in_old_cell_max_A": {
+              "coverage": 171,
+              "median": 3.707081402397712,
+              "p90": 5.959030898992162,
+              "max": 8.790605467605804
+            }
+          }
+        },
+        "same_effective_model_inputs_and_seed": {
+          "requests": 171,
+          "tau_same_index_differences": {
+            "lattice_max_abs_A": {
+              "coverage": 171,
+              "median": 0.02484893798828125,
+              "p90": 1.9738559350409708,
+              "max": 5.277308464050293
+            },
+            "lattice_relative_frobenius": {
+              "coverage": 171,
+              "median": 0.0040055126163361454,
+              "p90": 0.21118366899365199,
+              "max": 0.7908726828319469
+            },
+            "gram_max_abs_A2": {
+              "coverage": 171,
+              "median": 0.3017707092913007,
+              "p90": 20.909046221653842,
+              "max": 137.8039020038159
+            },
+            "frac_periodic_max_abs": {
+              "coverage": 171,
+              "median": 0.4782903790473938,
+              "p90": 0.4977126717567444,
+              "max": 0.4999738931655884
+            },
+            "frac_periodic_rms": {
+              "coverage": 171,
+              "median": 0.2806863907242204,
+              "p90": 0.32578101006303156,
+              "max": 0.3749744260633706
+            },
+            "periodic_displacement_in_old_cell_max_A": {
+              "coverage": 171,
+              "median": 3.707081402397712,
+              "p90": 5.959030898992162,
+              "max": 8.790605467605804
+            }
+          }
+        }
+      }
+    },
+    "k8": {
+      "old": {
+        "run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948",
+        "run_config": {
+          "batch_size": 1,
+          "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "crysllmgen_dir": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "diff_steps": 800,
+          "distributed": true,
+          "max_proposals": 256,
+          "num_evals": 1,
+          "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/refine",
+          "proposal_graphs": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/native/proposal_graphs.pt",
+          "run_type": "train",
+          "seed": 27017,
+          "seed_by_sample_index": false,
+          "seed_from_graph_field": "refiner_seed",
+          "timesteps": 1000,
+          "world_size": 4
+        },
+        "metrics": {
+          "assigned_proposals": 252,
+          "diff_steps": 800,
+          "distributed": true,
+          "num_evals": 1,
+          "num_proposals": 252,
+          "output_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/refine/dlm_refined_mp_252.pt",
+          "time_sec": 510.502277135849,
+          "world_size": 4
+        },
+        "frozen_code_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/code",
+        "recorded_code_commit": "d865897a9549d97aa1978f27e08958bce0c7fbd2",
+        "frozen_source_sha256": {
+          "src/scripts/refine_dlm_with_crysllmgen.py": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498",
+          "scripts/export_programmed_path_artifacts.py": "4dd9c2f021ca227b37bfc7cc866b7e1f028cede5c19d7e0420142e744df10e62",
+          "src/scripts/sample_llada_dynamic_crystals.py": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123",
+          "scripts/assemble_grounding_repeat.py": "7406d088e983435e92b360f128aae757deef5b0cc4f89da158de4e2e6814ef54"
+        },
+        "external_dependencies": {
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/config.py": {
+            "exists_now": true,
+            "sha256_observed_now": "4c7d8817dd0da31d64101e099ab7cbaf7e1190cf48442da83991178d2c89f4fd",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diffusion.py": {
+            "exists_now": true,
+            "sha256_observed_now": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/cspnet.py": {
+            "exists_now": true,
+            "sha256_observed_now": "e4dd1f6b53ba255f27e09d86d7cf85fbdc45a6cb023d919be55fb1093ff5a022",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diff_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "91dd347d9f20932f6505269fa247ad4ada1276f7ad51610eac0efe373143ff2e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "a50e2341473858b47fd4a53265ea069b3130b81f2531674c0f2f6a00a75d0276",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt": {
+            "exists_now": true,
+            "sha256_observed_now": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          }
+        },
+        "external_hash_limit": "Current mutable CRYS paths cannot establish old executed bytes. Historical hashes are reported only when explicitly present in that run's manifest; a vendored copy is not proof it was imported."
+      },
+      "new": {
+        "run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8",
+        "run_config": {
+          "batch_size": 1,
+          "checkpoint": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "crysllmgen_dir": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "diff_steps": 800,
+          "distributed": true,
+          "max_proposals": 256,
+          "num_evals": 1,
+          "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/refine",
+          "proposal_graphs": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native/proposal_graphs.pt",
+          "run_type": "train",
+          "seed": 27017,
+          "seed_by_sample_index": false,
+          "seed_from_graph_field": "refiner_seed",
+          "timesteps": 1000,
+          "world_size": 6
+        },
+        "metrics": {
+          "assigned_proposals": 252,
+          "diff_steps": 800,
+          "distributed": true,
+          "num_evals": 1,
+          "num_proposals": 252,
+          "output_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/refine/dlm_refined_mp_252.pt",
+          "time_sec": 341.682377576828,
+          "world_size": 6
+        },
+        "frozen_code_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/code",
+        "recorded_code_commit": "fa4bd808b0fb9e379875b80635ed0a314bd52964",
+        "frozen_source_sha256": {
+          "src/scripts/refine_dlm_with_crysllmgen.py": "c509d1a631fee084247b17a16197ce2445ae7b76f614c2bdcbd3cea2535e3498",
+          "scripts/export_programmed_path_artifacts.py": "ec2fe1942e66f8029d9a85110dd7f89cd8310e1414ef3e57022e3f52a9e18cd6",
+          "src/scripts/sample_llada_dynamic_crystals.py": "53f60af1d426053e6db93cf15192e523217a57701e0b160154e9b8dc93f13123",
+          "scripts/assemble_grounding_repeat.py": "7406d088e983435e92b360f128aae757deef5b0cc4f89da158de4e2e6814ef54"
+        },
+        "external_dependencies": {
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/config.py": {
+            "exists_now": true,
+            "sha256_observed_now": "4c7d8817dd0da31d64101e099ab7cbaf7e1190cf48442da83991178d2c89f4fd",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "76f1fe865f50a8f6f4382081670bd530dc04c2156bcdff80c8561570994e90ab",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diffusion.py": {
+            "exists_now": true,
+            "sha256_observed_now": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/cspnet.py": {
+            "exists_now": true,
+            "sha256_observed_now": "e4dd1f6b53ba255f27e09d86d7cf85fbdc45a6cb023d919be55fb1093ff5a022",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diff_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "91dd347d9f20932f6505269fa247ad4ada1276f7ad51610eac0efe373143ff2e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/data_utils.py": {
+            "exists_now": true,
+            "sha256_observed_now": "a50e2341473858b47fd4a53265ea069b3130b81f2531674c0f2f6a00a75d0276",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          },
+          "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt": {
+            "exists_now": true,
+            "sha256_observed_now": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+            "historical_manifest_sha256": [],
+            "historical_execution_bytes_proven": false,
+            "current_matches_recorded_manifest": false
+          }
+        },
+        "external_hash_limit": "Current mutable CRYS paths cannot establish old executed bytes. Historical hashes are reported only when explicitly present in that run's manifest; a vendored copy is not proof it was imported."
+      },
+      "summary": {
+        "same_native_body_requests": 171,
+        "native_exact_valid_dict_same": 171,
+        "tau_exact_valid_dict_same": 5,
+        "tau_both_missing": 0,
+        "tau_both_valid_dicts": 171,
+        "both_graphs_present": 171,
+        "effective_inputs_identical": 171,
+        "effective_eval0_seed_equal": 171,
+        "effective_inputs_and_seed_identical": 171,
+        "assigned_rank_changed": 113
+      },
+      "configuration_comparison": {
+        "timesteps": {
+          "old": 1000,
+          "new": 1000,
+          "equal": true
+        },
+        "run_type": {
+          "old": "train",
+          "new": "train",
+          "equal": true
+        },
+        "diff_steps": {
+          "old": 800,
+          "new": 800,
+          "equal": true
+        },
+        "num_evals": {
+          "old": 1,
+          "new": 1,
+          "equal": true
+        },
+        "batch_size": {
+          "old": 1,
+          "new": 1,
+          "equal": true
+        },
+        "seed": {
+          "old": 27017,
+          "new": 27017,
+          "equal": true
+        },
+        "seed_from_graph_field": {
+          "old": "refiner_seed",
+          "new": "refiner_seed",
+          "equal": true
+        },
+        "seed_by_sample_index": {
+          "old": false,
+          "new": false,
+          "equal": true
+        },
+        "checkpoint": {
+          "old": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "new": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+          "equal": true
+        },
+        "crysllmgen_dir": {
+          "old": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "new": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+          "equal": true
+        },
+        "world_size": {
+          "old": 4,
+          "new": 6,
+          "equal": false
+        }
+      },
+      "difference_groups": {
+        "all_same_native_body": {
+          "requests": 171,
+          "tau_same_index_differences": {
+            "lattice_max_abs_A": {
+              "coverage": 171,
+              "median": 0.012349605560302734,
+              "p90": 2.3396185545347667,
+              "max": 4.892105575854964
+            },
+            "lattice_relative_frobenius": {
+              "coverage": 171,
+              "median": 0.0017187197389177799,
+              "p90": 0.26718834339810055,
+              "max": 0.5577224696683035
+            },
+            "gram_max_abs_A2": {
+              "coverage": 171,
+              "median": 0.14793211589676147,
+              "p90": 23.97640984224201,
+              "max": 103.23438321264621
+            },
+            "frac_periodic_max_abs": {
+              "coverage": 171,
+              "median": 0.4779976010322571,
+              "p90": 0.49620577692985535,
+              "max": 0.4996638782322407
+            },
+            "frac_periodic_rms": {
+              "coverage": 171,
+              "median": 0.28282359911987426,
+              "p90": 0.337557273703839,
+              "max": 0.41111494408132754
+            },
+            "periodic_displacement_in_old_cell_max_A": {
+              "coverage": 171,
+              "median": 3.9188069222457464,
+              "p90": 6.023864903102038,
+              "max": 10.252545158261936
+            }
+          }
+        },
+        "same_effective_model_inputs_and_seed": {
+          "requests": 171,
+          "tau_same_index_differences": {
+            "lattice_max_abs_A": {
+              "coverage": 171,
+              "median": 0.012349605560302734,
+              "p90": 2.3396185545347667,
+              "max": 4.892105575854964
+            },
+            "lattice_relative_frobenius": {
+              "coverage": 171,
+              "median": 0.0017187197389177799,
+              "p90": 0.26718834339810055,
+              "max": 0.5577224696683035
+            },
+            "gram_max_abs_A2": {
+              "coverage": 171,
+              "median": 0.14793211589676147,
+              "p90": 23.97640984224201,
+              "max": 103.23438321264621
+            },
+            "frac_periodic_max_abs": {
+              "coverage": 171,
+              "median": 0.4779976010322571,
+              "p90": 0.49620577692985535,
+              "max": 0.4996638782322407
+            },
+            "frac_periodic_rms": {
+              "coverage": 171,
+              "median": 0.28282359911987426,
+              "p90": 0.337557273703839,
+              "max": 0.41111494408132754
+            },
+            "periodic_displacement_in_old_cell_max_A": {
+              "coverage": 171,
+              "median": 3.9188069222457464,
+              "p90": 6.023864903102038,
+              "max": 10.252545158261936
+            }
+          }
+        }
+      }
+    }
+  },
+  "source_sha256": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/native/paths.jsonl": "bfef8af01340c10f937216ec60b9441e766896cefeea6fc0b918d4a20cb3303e",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/native/paths.jsonl": "06ab2e67f7e50558f1093d7ca38ca0a7af494c0ed40928b0ca5f2480e862b9a8",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/tau800/paths.jsonl": "82c47843c03b8eb2027c39128c2b4ad89acc6650d7477385aa14f083d05ef9db",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/tau800/paths.jsonl": "8b432203733d2489b22aa87872d196fa0d42ef817c33d7a47679ec4c2d83ba34",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/native/proposal_graphs.pt": "bae19f7d41b21db497970d03381a942f865d143c44027e8cedc61945fd21c948",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/native/proposal_graphs.pt": "e8ea03eeca4dd592fda9143b8c567aa940e75220c6035bba0b262684016f7f31",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/refine/run_config.json": "820aaaac72abab3882fd9c74285d5f00afdda0dec88e46d7678ed1e59f852018",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/refine/refinement_metrics.json": "4d5c473c42796a650e1d77594738599cf9dca8d6e643c7e700fd814493017751",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/CODE_COMMIT": "f0e966bfd97c12b81f9d6f25c7055331313e518d125cf2a55b376ef23822ec55",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/refine/run_config.json": "a39d2e153cd20f6bb3bbcae781b74bab4265d02eb3d0cd84a16fe577ea625f5b",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/refine/refinement_metrics.json": "6f88978da660109004c9a4eca476cac7ce047e977b9365661990e3f9f0af8be1",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/CODE_COMMIT": "2b8b9375a16da6bbaa40a3b86d2c8ba85bd36abd7ec697c8bdd13d709c5ebd9c",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/LAUNCH_MANIFEST.json": "22ccc6ab1da1e1403657adf63eeb270a3e699b63227041e317ac58f917205c15",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/native/paths.jsonl": "203105ccbe2dc4efefaaaf930f97b89397697dbeee1d8e8c8ed8491fd6c000e5",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native/paths.jsonl": "c48b6146e4c9f2d07bb277930aeedcff79045324778c1561390ba37f872866a8",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/tau800/paths.jsonl": "d3483e064d828c16716ec685aceb6a8b394596c728759a4aaaad0ccbdba1ebf1",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/tau800/paths.jsonl": "431eaf2305dba43f049c560217167ca285c5b94bf070537dc04fdebd45e4252a",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/native/proposal_graphs.pt": "87c610540fd23eb0785d98939f911ba201dbca35290c87d7e425df46db574f3e",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native/proposal_graphs.pt": "39461d5255d6ee1ab6aea0b057746a9f95b67fd208cfa77eeb71177fabf76ce8",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/refine/run_config.json": "a06c54c84c651cc18e38939b1e4e5a7d418a1d49997298debdb249b054147e24",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/refine/refinement_metrics.json": "6fc79bcdb0d8e49428608237db8304f2dbd6abff774b69ed9b2705b893bb9ed7",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/CODE_COMMIT": "24773e198bdc106a93489d5f8c6777c947e734bd8afd68ce1fb3bdc42d5cc23a",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/refine/run_config.json": "145887665f6a0cfb44160936bfb96c8e352cb2d2586cd42fa12c01e0d4ef9148",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/refine/refinement_metrics.json": "fee09443465ca00daf547806c67edfcc62ff346ff02f85d4defd4e670805651e"
+  },
+  "diagnostic_script_sha256": "4786881e4e7ac0130cde54edca1ec2260ffc976d4a2b2d520a4eaba44c810102",
+  "runtime_observed_now_only": {
+    "python": "3.10.18 (main, Jun  5 2025, 13:14:17) [GCC 11.2.0]",
+    "platform": "Linux-3.10.0-1160.el7.x86_64-x86_64-with-glibc2.17",
+    "torch": "2.4.0+cu121",
+    "numpy": "1.26.4",
+    "packages": {
+      "torch-geometric": "1.7.2",
+      "torch-scatter": "2.1.2+pt24cu121",
+      "pymatgen": "2025.6.14",
+      "spglib": "2.6.0"
+    }
+  },
+  "model_forwards": 0,
+  "CUDA_calls": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0,
+  "structural_comparison_limit": "Stored site order and cell basis only; not a structure matcher or optimal periodic site assignment.",
+  "causal_limit": "Equal seed does not certify identical numerical execution. This inspection reports actual inputs/configurations and endpoint differences, without declaring a cause absent execution evidence."
+}

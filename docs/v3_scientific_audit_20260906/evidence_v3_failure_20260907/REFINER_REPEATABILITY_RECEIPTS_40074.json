@@ -1,0 +1,18 @@
+{
+  "CONTACT_ATTRIBUTION_V2_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/read_only_diagnostic_a8a8ec6/attribution_v2/ATTRIBUTION.json",
+    "sha256": "510db63a70f6ae0058de39c4f385db1d1678e7580c4f08ab438b552029f75ad8"
+  },
+  "CONTACT_ATTRIBUTION_CASES_V2_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/read_only_diagnostic_a8a8ec6/attribution_v2/CASES.json",
+    "sha256": "aef1c8ff86a926b0907de404faf5e7b25e99b217f69ce2cbd03a2b1166e8d37d"
+  },
+  "REFINER_REPEATABILITY_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/read_only_diagnostic_a8a8ec6/refiner_repeatability/REPEATABILITY.json",
+    "sha256": "0d2dc550fa1953589a8cf2690539f4a87e1a278bc9b62f660e74c2bb5027b97b"
+  },
+  "REFINER_REPEATABILITY_CASES_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/read_only_diagnostic_a8a8ec6/refiner_repeatability/CASES.json",
+    "sha256": "7b53150117abb544402c0c7e7c50136f0e9c6c08deb8af1064705f839ccd3d7f"
+  }
+}

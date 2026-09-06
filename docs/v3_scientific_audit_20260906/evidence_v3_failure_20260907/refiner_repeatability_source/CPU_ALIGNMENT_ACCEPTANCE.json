@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "checks": [
+    "pure translation and equal-species permutation removed",
+    "internal displacement retained",
+    "missing endpoint incomparable",
+    "three-rank stride mapped to all256 varying-N graphs",
+    "all merged arrays exact rank concatenation",
+    "all256 stored tau objects match their indexed payload",
+    "perturbed identity order differs"
+  ],
+  "gauge_residual_A": 3.8758552044962204e-16,
+  "actual_internal_residual_A": 0.028284271247461995,
+  "alignment": {
+    "rank_input_binding_PASS": true,
+    "merged_exact_rank_cat_PASS": true,
+    "stored_valid_tau_matches_payload_PASS": true,
+    "payload_atom_offset_exhausted": true,
+    "maximum_tau_payload_fractional_error": 0.0,
+    "maximum_tau_payload_lattice_error": 0.0
+  },
+  "script_sha256": "1306d937f1a37b59572db913301d97cc7bbda1804f2df5ba27b5a4cc62d4c78b",
+  "model_forwards": 0,
+  "CUDA_calls": 0
+}
