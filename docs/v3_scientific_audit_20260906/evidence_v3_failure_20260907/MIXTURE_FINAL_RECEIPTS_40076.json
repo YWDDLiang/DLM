@@ -1,0 +1,46 @@
+{
+  "MIXTURE_EVAL_FINAL_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/EVAL_FINAL.json",
+    "sha256": "04bbafdde9e963a3a31eafea4798710df5387c72ee681a18aca406b1e1c16eda"
+  },
+  "MIXTURE_NATIVE_EVALUATION_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/native-evaluation/EVALUATION_FINAL.json",
+    "sha256": "5931850b6611032b7f803683144095ecdd25e7aefe008d4b3081c6742b0b0a49"
+  },
+  "MIXTURE_TAU800_EVALUATION_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/tau800-evaluation/EVALUATION_FINAL.json",
+    "sha256": "4e92dfe5f5ca4bf5ecbc88447791d81512fe82e8885f5649468ddabaf08ac892"
+  },
+  "MIXTURE_PILOT_REPLAY_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/pilot/replay/REPLAY.json",
+    "sha256": "f8846726f8f9f5ca856bae90f8b91b0c3633fbe87779164d7de60780d8f8ad72"
+  },
+  "MIXTURE_SAMPLE_FINAL_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/sample/SAMPLE_FINAL.json",
+    "sha256": "09db9dbfc8d5fd3f208c5a182f6613d1fa75914e4b1acf42f4f5f19de382746c"
+  },
+  "SUN_SNAPSHOT_AFTER_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/snapshots/20260906T195443Z/SUN_SNAPSHOT.json",
+    "sha256": "73edf29c41835fd4a83ce5d3db72f4e61fa80004c047526a0c25be8504ad12f7"
+  },
+  "SUN_SNAPSHOT_AFTER_40076.md": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/snapshots/20260906T195443Z/SUN_SNAPSHOT.md",
+    "sha256": "36f1d2ba8c8cc8f8d66f8dff3c467a67e7880a79c6bfa261d2fa4a502d313491"
+  },
+  "MIXTURE_NATIVE_VS_K4_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/native-vs-k4/COMPARISON_FINAL.json",
+    "sha256": "b1a0a8a2fe157bd74a68f6f7d9dbff1654c705594e5eb4488a7ba2ed80a1b7ea"
+  },
+  "MIXTURE_TAU800_VS_K4_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/tau800-vs-k4/COMPARISON_FINAL.json",
+    "sha256": "58482f997efe65bb853c317c44561f07ca96ab89ba01802b6be1784c5379bbaa"
+  },
+  "MIXTURE_NATIVE_VS_K8_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/native-vs-k8/COMPARISON_FINAL.json",
+    "sha256": "ead45a2937a3235d48274383757980aba592506ab5be507653c5014d93f443ac"
+  },
+  "MIXTURE_TAU800_VS_K8_40076.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/tau800-vs-k8/COMPARISON_FINAL.json",
+    "sha256": "c6f179d1f58134d3e1ef20c1f69c038d9a23edf3aa726b543ad1d181a41deaa4"
+  }
+}

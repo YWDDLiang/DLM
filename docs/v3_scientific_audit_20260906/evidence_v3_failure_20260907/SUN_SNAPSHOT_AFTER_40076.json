@@ -1,0 +1,1401 @@
+{
+  "created_at_utc": "2026-09-06T19:54:43.332449+00:00",
+  "development_requests_per_method": 256,
+  "development": [
+    {
+      "method": "Reference",
+      "candidate": false,
+      "raw": {
+        "counts": {
+          "reconstructed": 255,
+          "native_execution_success": 255,
+          "endpoint_execution_success": 255,
+          "novel": 254,
+          "unique_representative": 254,
+          "novel_unique": 253,
+          "terminal_verified": 63,
+          "strict_stable": 7,
+          "meta_stable": 56,
+          "strict_sun": 6,
+          "meta_sun": 55,
+          "verified_strict_stable": 1,
+          "verified_meta_stable": 26,
+          "verified_strict_sun": 1,
+          "verified_meta_sun": 26,
+          "requests": 256
+        },
+        "strict_percent": 2.34375,
+        "meta_percent": 21.484375,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_reference_verification_39893/native-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "8924305a59c0564485dd32100da9f9a852994e5560dcc8d1a8b6c41ce45a7c47",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 255,
+          "native_execution_success": 255,
+          "endpoint_execution_success": 255,
+          "novel": 221,
+          "unique_representative": 253,
+          "novel_unique": 221,
+          "terminal_verified": 99,
+          "strict_stable": 26,
+          "meta_stable": 152,
+          "strict_sun": 19,
+          "meta_sun": 121,
+          "verified_strict_stable": 13,
+          "verified_meta_stable": 64,
+          "verified_strict_sun": 10,
+          "verified_meta_sun": 49,
+          "requests": 256
+        },
+        "strict_percent": 7.421875,
+        "meta_percent": 47.265625,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_reference_verification_39893/tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "b082a214fbf1bd9600b4665a78376742db394ec1f5a42d89d430f929810eb3db",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "K4",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 254,
+          "native_execution_success": 254,
+          "endpoint_execution_success": 254,
+          "novel": 253,
+          "unique_representative": 253,
+          "novel_unique": 252,
+          "terminal_verified": 61,
+          "strict_stable": 8,
+          "meta_stable": 58,
+          "strict_sun": 7,
+          "meta_sun": 57,
+          "verified_strict_stable": 3,
+          "verified_meta_stable": 30,
+          "verified_strict_sun": 3,
+          "verified_meta_sun": 30,
+          "requests": 256
+        },
+        "strict_percent": 2.734375,
+        "meta_percent": 22.265625,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "7313ea95313c098dd705b7549bc974567250666c44167b817686a47b371d1644",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 254,
+          "native_execution_success": 254,
+          "endpoint_execution_success": 254,
+          "novel": 217,
+          "unique_representative": 252,
+          "novel_unique": 217,
+          "terminal_verified": 100,
+          "strict_stable": 28,
+          "meta_stable": 160,
+          "strict_sun": 19,
+          "meta_sun": 126,
+          "verified_strict_stable": 11,
+          "verified_meta_stable": 68,
+          "verified_strict_sun": 9,
+          "verified_meta_sun": 53,
+          "requests": 256
+        },
+        "strict_percent": 7.421875,
+        "meta_percent": 49.21875,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "6f6ff26fd9ec18156cb42211387f8b761f70a25d575bdc6052cec609fe14ace0",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "K8",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 252,
+          "native_execution_success": 252,
+          "endpoint_execution_success": 252,
+          "novel": 251,
+          "unique_representative": 251,
+          "novel_unique": 250,
+          "terminal_verified": 76,
+          "strict_stable": 12,
+          "meta_stable": 67,
+          "strict_sun": 11,
+          "meta_sun": 66,
+          "verified_strict_stable": 4,
+          "verified_meta_stable": 30,
+          "verified_strict_sun": 4,
+          "verified_meta_sun": 30,
+          "requests": 256
+        },
+        "strict_percent": 4.296875,
+        "meta_percent": 25.78125,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "e636b39923a4c723ccf55758fd9bcb324342c5917fb7ccc085985ad0419fde45",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 252,
+          "native_execution_success": 252,
+          "endpoint_execution_success": 252,
+          "novel": 214,
+          "unique_representative": 250,
+          "novel_unique": 214,
+          "terminal_verified": 82,
+          "strict_stable": 24,
+          "meta_stable": 157,
+          "strict_sun": 17,
+          "meta_sun": 123,
+          "verified_strict_stable": 10,
+          "verified_meta_stable": 59,
+          "verified_strict_sun": 8,
+          "verified_meta_sun": 47,
+          "requests": 256
+        },
+        "strict_percent": 6.640625,
+        "meta_percent": 48.046875,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "778fc1715a352a516ca601c63b308e7193dd82e1fb4cc995c1ec1d4960af84f1",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "V2 repair",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 251,
+          "unique_representative": 255,
+          "novel_unique": 251,
+          "terminal_verified": 70,
+          "strict_stable": 11,
+          "meta_stable": 54,
+          "strict_sun": 8,
+          "meta_sun": 50,
+          "verified_strict_stable": 5,
+          "verified_meta_stable": 21,
+          "verified_strict_sun": 2,
+          "verified_meta_sun": 18,
+          "requests": 256
+        },
+        "strict_percent": 3.125,
+        "meta_percent": 19.53125,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/native-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "8523f4d74297837760ea0b6e11576f1ceb0fa21e3728d6b8808f08c2fa9ef1f5",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 217,
+          "unique_representative": 254,
+          "novel_unique": 217,
+          "terminal_verified": 109,
+          "strict_stable": 25,
+          "meta_stable": 148,
+          "strict_sun": 16,
+          "meta_sun": 113,
+          "verified_strict_stable": 12,
+          "verified_meta_stable": 63,
+          "verified_strict_sun": 9,
+          "verified_meta_sun": 47,
+          "requests": 256
+        },
+        "strict_percent": 6.25,
+        "meta_percent": 44.140625,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "98b07335350b54d8468c7992761cf7abd1e629e7c3c1e756ba7ec45a2970e702",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "V3 G",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 256,
+          "unique_representative": 256,
+          "novel_unique": 256,
+          "terminal_verified": 60,
+          "strict_stable": 9,
+          "meta_stable": 61,
+          "strict_sun": 9,
+          "meta_sun": 61,
+          "verified_strict_stable": 6,
+          "verified_meta_stable": 28,
+          "verified_strict_sun": 6,
+          "verified_meta_sun": 28,
+          "requests": 256
+        },
+        "strict_percent": 3.515625,
+        "meta_percent": 23.828125,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/native-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "b91089b065cbba6f436a073bef41da936a6b423fd73b85d25d2a3fa434eaacdc",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 224,
+          "unique_representative": 253,
+          "novel_unique": 224,
+          "terminal_verified": 95,
+          "strict_stable": 20,
+          "meta_stable": 143,
+          "strict_sun": 13,
+          "meta_sun": 116,
+          "verified_strict_stable": 9,
+          "verified_meta_stable": 58,
+          "verified_strict_sun": 6,
+          "verified_meta_sun": 47,
+          "requests": 256
+        },
+        "strict_percent": 5.078125,
+        "meta_percent": 45.3125,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "3028ebb46971970e8a9adefbf217a3005ccfa044faecf05e1761d0ae3216915f",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "V2 construction",
+      "candidate": false,
+      "raw": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 251,
+          "unique_representative": 256,
+          "novel_unique": 251,
+          "terminal_verified": 68,
+          "strict_stable": 14,
+          "meta_stable": 48,
+          "strict_sun": 12,
+          "meta_sun": 44,
+          "verified_strict_stable": 5,
+          "verified_meta_stable": 24,
+          "verified_strict_sun": 4,
+          "verified_meta_sun": 21,
+          "requests": 256
+        },
+        "strict_percent": 4.6875,
+        "meta_percent": 17.1875,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "b73a15cf55109d95e872894f263bc55aa64a115469a433f220e1ae92733a7928",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 222,
+          "unique_representative": 254,
+          "novel_unique": 222,
+          "terminal_verified": 93,
+          "strict_stable": 25,
+          "meta_stable": 151,
+          "strict_sun": 17,
+          "meta_sun": 120,
+          "verified_strict_stable": 8,
+          "verified_meta_stable": 55,
+          "verified_strict_sun": 5,
+          "verified_meta_sun": 41,
+          "requests": 256
+        },
+        "strict_percent": 6.640625,
+        "meta_percent": 46.875,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/token_eval_40071/v2-construction-tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "fb8dd3813b7ea9680fa784328d91489365796ad0443e769d792bf3f89589429d",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "V3 T construction",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 250,
+          "unique_representative": 255,
+          "novel_unique": 250,
+          "terminal_verified": 72,
+          "strict_stable": 16,
+          "meta_stable": 58,
+          "strict_sun": 13,
+          "meta_sun": 53,
+          "verified_strict_stable": 8,
+          "verified_meta_stable": 28,
+          "verified_strict_sun": 6,
+          "verified_meta_sun": 25,
+          "requests": 256
+        },
+        "strict_percent": 5.078125,
+        "meta_percent": 20.703125,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/token_eval_40071/native-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "195962d053a47885ba3da1716aefd67a5f822cd3695937be0c1f9bf06d62aeea",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 256,
+          "native_execution_success": 256,
+          "endpoint_execution_success": 256,
+          "novel": 219,
+          "unique_representative": 254,
+          "novel_unique": 219,
+          "terminal_verified": 93,
+          "strict_stable": 26,
+          "meta_stable": 144,
+          "strict_sun": 17,
+          "meta_sun": 111,
+          "verified_strict_stable": 13,
+          "verified_meta_stable": 62,
+          "verified_strict_sun": 9,
+          "verified_meta_sun": 45,
+          "requests": 256
+        },
+        "strict_percent": 6.640625,
+        "meta_percent": 43.359375,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/token_eval_40071/tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "118de9cf3e46ca18ed0eace17fda1548a11cd72bf471b4860bea72109cdbaedb",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "K4 short-contact v1 (eval_40074)",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 253,
+          "native_execution_success": 253,
+          "endpoint_execution_success": 253,
+          "novel": 252,
+          "unique_representative": 252,
+          "novel_unique": 251,
+          "terminal_verified": 60,
+          "strict_stable": 7,
+          "meta_stable": 57,
+          "strict_sun": 6,
+          "meta_sun": 56,
+          "verified_strict_stable": 2,
+          "verified_meta_stable": 29,
+          "verified_strict_sun": 2,
+          "verified_meta_sun": 29,
+          "requests": 256
+        },
+        "strict_percent": 2.34375,
+        "meta_percent": 21.875,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/native-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "f508945c2a91e45748c130861076dc10f7762fc009212a07dda1129bdbb87d43",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 253,
+          "native_execution_success": 253,
+          "endpoint_execution_success": 253,
+          "novel": 216,
+          "unique_representative": 251,
+          "novel_unique": 216,
+          "terminal_verified": 90,
+          "strict_stable": 28,
+          "meta_stable": 155,
+          "strict_sun": 20,
+          "meta_sun": 122,
+          "verified_strict_stable": 11,
+          "verified_meta_stable": 59,
+          "verified_strict_sun": 9,
+          "verified_meta_sun": 49,
+          "requests": 256
+        },
+        "strict_percent": 7.8125,
+        "meta_percent": 47.65625,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k4/tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "e5014349b5442155a2bf359d838ef5fa5d9687fd4a0832f593d5e648096776e0",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "K8 short-contact v1 (eval_40074)",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 252,
+          "native_execution_success": 252,
+          "endpoint_execution_success": 252,
+          "novel": 251,
+          "unique_representative": 251,
+          "novel_unique": 250,
+          "terminal_verified": 72,
+          "strict_stable": 12,
+          "meta_stable": 69,
+          "strict_sun": 11,
+          "meta_sun": 68,
+          "verified_strict_stable": 4,
+          "verified_meta_stable": 34,
+          "verified_strict_sun": 4,
+          "verified_meta_sun": 34,
+          "requests": 256
+        },
+        "strict_percent": 4.296875,
+        "meta_percent": 26.5625,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/native-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "0ad938bfd94c6c02805e6177b52495afa0800b31e130c4041153f658f565778d",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 252,
+          "native_execution_success": 252,
+          "endpoint_execution_success": 252,
+          "novel": 215,
+          "unique_representative": 250,
+          "novel_unique": 215,
+          "terminal_verified": 95,
+          "strict_stable": 22,
+          "meta_stable": 157,
+          "strict_sun": 15,
+          "meta_sun": 123,
+          "verified_strict_stable": 12,
+          "verified_meta_stable": 64,
+          "verified_strict_sun": 10,
+          "verified_meta_sun": 50,
+          "requests": 256
+        },
+        "strict_percent": 5.859375,
+        "meta_percent": 48.046875,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/short_contact_k4k8_20260907/runs/eval_40074/k8/tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "5944495f2c753f997fd5970ba07dfb1b1703c5150725a20ecb6749b663765bc1",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    },
+    {
+      "method": "K4/K8 equal probability mixture (eval_40076)",
+      "candidate": true,
+      "raw": {
+        "counts": {
+          "reconstructed": 255,
+          "native_execution_success": 255,
+          "endpoint_execution_success": 255,
+          "novel": 254,
+          "unique_representative": 254,
+          "novel_unique": 253,
+          "terminal_verified": 67,
+          "strict_stable": 11,
+          "meta_stable": 52,
+          "strict_sun": 10,
+          "meta_sun": 51,
+          "verified_strict_stable": 3,
+          "verified_meta_stable": 29,
+          "verified_strict_sun": 3,
+          "verified_meta_sun": 29,
+          "requests": 256
+        },
+        "strict_percent": 3.90625,
+        "meta_percent": 19.921875,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/native-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "5931850b6611032b7f803683144095ecdd25e7aefe008d4b3081c6742b0b0a49",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 255,
+          "native_execution_success": 255,
+          "endpoint_execution_success": 255,
+          "novel": 218,
+          "unique_representative": 252,
+          "novel_unique": 218,
+          "terminal_verified": 100,
+          "strict_stable": 26,
+          "meta_stable": 151,
+          "strict_sun": 18,
+          "meta_sun": 118,
+          "verified_strict_stable": 12,
+          "verified_meta_stable": 65,
+          "verified_strict_sun": 8,
+          "verified_meta_sun": 50,
+          "requests": 256
+        },
+        "strict_percent": 7.03125,
+        "meta_percent": 46.09375,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/runs/eval_40076/tau800-evaluation/EVALUATION_FINAL.json",
+        "source_sha256": "4e92dfe5f5ca4bf5ecbc88447791d81512fe82e8885f5649468ddabaf08ac892",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "complete": true
+    }
+  ],
+  "latest_complete_registered_candidate": "K4/K8 equal probability mixture (eval_40076)",
+  "development_pareto_by_endpoint": {
+    "raw": [
+      "V3 T construction",
+      "K8 short-contact v1 (eval_40074)"
+    ],
+    "tau800": [
+      "K4",
+      "K4 short-contact v1 (eval_40074)"
+    ]
+  },
+  "qualified_complete_endpoints": [],
+  "independent_original_k8": [
+    {
+      "method": "K8 original",
+      "requests": 1000,
+      "raw": {
+        "counts": {
+          "reconstructed": 1000,
+          "native_execution_success": 1000,
+          "endpoint_execution_success": 1000,
+          "novel": 997,
+          "unique_representative": 999,
+          "novel_unique": 996,
+          "terminal_verified": 250,
+          "strict_stable": 39,
+          "meta_stable": 247,
+          "strict_sun": 39,
+          "meta_sun": 244,
+          "verified_strict_stable": 17,
+          "verified_meta_stable": 121,
+          "verified_strict_sun": 17,
+          "verified_meta_sun": 121,
+          "requests": 1000
+        },
+        "strict_percent": 3.9,
+        "meta_percent": 24.4,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/native-evaluation-hull-complete/EVALUATION_FINAL.json",
+        "source_sha256": "d0e1038e08f916a354d4a74ac1ba720fd99b3445418aca603f2fb1f3bfec507a",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": true
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 1000,
+          "native_execution_success": 1000,
+          "endpoint_execution_success": 1000,
+          "novel": 865,
+          "unique_representative": 994,
+          "novel_unique": 863,
+          "terminal_verified": 369,
+          "strict_stable": 91,
+          "meta_stable": 615,
+          "strict_sun": 65,
+          "meta_sun": 484,
+          "verified_strict_stable": 43,
+          "verified_meta_stable": 253,
+          "verified_strict_sun": 33,
+          "verified_meta_sun": 201,
+          "requests": 1000
+        },
+        "strict_percent": 6.5,
+        "meta_percent": 48.4,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/tau800-evaluation-hull-complete/EVALUATION_FINAL.json",
+        "source_sha256": "5dad80093cf249969613188a9c88f022de162075190d5f77dda6deb1cab07cd4",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": true
+      }
+    },
+    {
+      "method": "K8 original",
+      "requests": 1200,
+      "raw": {
+        "counts": {
+          "reconstructed": 1192,
+          "native_execution_success": 1192,
+          "endpoint_execution_success": 1192,
+          "novel": 1189,
+          "unique_representative": 1191,
+          "novel_unique": 1188,
+          "terminal_verified": 294,
+          "strict_stable": 47,
+          "meta_stable": 288,
+          "strict_sun": 47,
+          "meta_sun": 285,
+          "verified_strict_stable": 19,
+          "verified_meta_stable": 136,
+          "verified_strict_sun": 19,
+          "verified_meta_sun": 136,
+          "requests": 1200
+        },
+        "strict_percent": 3.9166666666666665,
+        "meta_percent": 23.75,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/native-evaluation-hull-complete/EVALUATION_FINAL.json",
+        "source_sha256": "d0e1038e08f916a354d4a74ac1ba720fd99b3445418aca603f2fb1f3bfec507a",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      },
+      "tau800": {
+        "counts": {
+          "reconstructed": 1192,
+          "native_execution_success": 1192,
+          "endpoint_execution_success": 1192,
+          "novel": 1028,
+          "unique_representative": 1185,
+          "novel_unique": 1025,
+          "terminal_verified": 428,
+          "strict_stable": 113,
+          "meta_stable": 731,
+          "strict_sun": 79,
+          "meta_sun": 570,
+          "verified_strict_stable": 50,
+          "verified_meta_stable": 290,
+          "verified_strict_sun": 36,
+          "verified_meta_sun": 224,
+          "requests": 1200
+        },
+        "strict_percent": 6.583333333333333,
+        "meta_percent": 47.5,
+        "joint_target_met": false,
+        "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/tau800-evaluation-hull-complete/EVALUATION_FINAL.json",
+        "source_sha256": "5dad80093cf249969613188a9c88f022de162075190d5f77dda6deb1cab07cd4",
+        "protocol": {
+          "terminal_protocol": {
+            "model": "CHGNet-0.3.0",
+            "optimizer": "FIRE",
+            "relax_cell": true,
+            "ase_filter": "FrechetCellFilter",
+            "fmax": 0.1,
+            "scalar_pressure": 0.0,
+            "constant_volume": false,
+            "hydrostatic_strain": false,
+            "cell_mask": "all_six",
+            "fire_dt": 0.1,
+            "fire_maxstep": 0.2,
+            "stress_tolerance_GPa": 0.5,
+            "max_steps": 500
+          },
+          "verification_protocol": {
+            "fresh_terminal_energy": true,
+            "periodic_coordinate_wrap": true,
+            "rigid_fractional_shift": [
+              0.137,
+              0.271,
+              0.419
+            ],
+            "energy_tolerance_eV_atom": 0.001
+          },
+          "novelty_uniqueness_endpoint": "input_structure_before_common_CHGNet_relaxation",
+          "frozen_nu_source_sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+        },
+        "conditional_parser_prefix": false
+      }
+    }
+  ],
+  "combined_best_metrics_across_methods": false,
+  "independent_mixture": [],
+  "score_or_selection_mutations": 0
+}

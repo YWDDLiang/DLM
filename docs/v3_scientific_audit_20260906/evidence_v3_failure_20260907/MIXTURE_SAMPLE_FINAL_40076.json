@@ -1,0 +1,38 @@
+{
+  "requested": 256,
+  "successful": 255,
+  "conditions": 256,
+  "candidates": 1,
+  "condition_start": 0,
+  "condition_stop": 256,
+  "collection_round": 0,
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+  "seed": 20260905,
+  "purpose": "evaluation",
+  "inference_mlip": false,
+  "execution_world_size": 6,
+  "sampling_layout_world_size": null,
+  "reference_closure": false,
+  "full_cell_repair": false,
+  "outcome_selection": false,
+  "failures_retained": true,
+  "probability_mixture": {
+    "schema": "k4k8_equal_same_state_probability_mixture_v1",
+    "checkpoints": [
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977"
+    ],
+    "weights": [
+      0.5,
+      0.5
+    ],
+    "temperature": 0.7,
+    "same_state": true,
+    "contact": false
+  },
+  "effective_sampling_layout_world_size": 2,
+  "component_model_forward_calls": [
+    13563,
+    13563
+  ]
+}

@@ -1,6 +1,6 @@
 # 全链路科学审计与 V3 研究
 
-2026-09-07（上海）更新。**V2/V3本轮均未达目标；40074软约束已完整结束，40076在评估固定K4/K8等权概率混合。** 40074的K4 raw6/56→τ20/122、K8 raw11/68→τ15/123，均256，未达同端26/128。40076真实8前缀/16NN已PASS，尚无混合SUN。上海07:00交付最新与最好实测结果。[K4/K8专门诊断](K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)、[软约束完整结果](evidence_v3_failure_20260907/CONTACT_EVAL_FINAL_40074.json)、[当前全部方法快照](evidence_v3_failure_20260907/SUN_SNAPSHOT_AFTER_40074.md)、[等权混合审查](K4_K8_EQUAL_MIXTURE_BOUNDED_REVIEW.md)。
+2026-09-07（上海）更新。**40076混合已完整结束：raw10/51→tau18/118，均256且未达同端26/128。** 40074固定软约束K4为6/56→20/122、K8为11/68→15/123；V2/V3本轮也均未达标。当前准备K4/K8统一构造终点的完整评估，上海07:00交付最新与最好实测结果。[当前完整快照](evidence_v3_failure_20260907/SUN_SNAPSHOT_AFTER_40076.md)、[K4/K8稳定与失败结构](K4_K8_STABILITY_AND_CONTACT_DIAGNOSIS.md)、[混合最终结果](evidence_v3_failure_20260907/MIXTURE_EVAL_FINAL_40076.json)、[细化重复性诊断](REFINER_REPEATABILITY_DIAGNOSIS.md)。
 
 本目录覆盖完整C³FD/Llama/soft/P→DLM→repair/refiner→物理/N-U/hull/统计、近期变更、历史成功失败、外部晶体生成机制及文档清理。先读 [整合报告](FINAL_AUDIT_REPORT.md) 和 [当前状态](../CURRENT_STATE.md)。
 

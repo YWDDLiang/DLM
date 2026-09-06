@@ -1,0 +1,14 @@
+{
+  "REFINER_OUTPUT_ALIGNMENT_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/read_only_diagnostic_a8a8ec6/output_alignment/OUTPUT_ALIGNMENT.json",
+    "sha256": "4fae85d62e5f80db7d1cf282d077b9f69876eebd376f94d945fcc2be3c8d1b10"
+  },
+  "REFINER_PAYLOAD_BINDINGS_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/read_only_diagnostic_a8a8ec6/output_alignment/PAYLOAD_BINDINGS.json",
+    "sha256": "f60b9bca4b68fa2ebba05ae9a2ff4a3fc9ed79025eb0a6b0adeca48870b857f0"
+  },
+  "REFINER_SITE_GAUGE_CASES_40074.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/equal_probability_mixture_k4k8_20260907/read_only_diagnostic_a8a8ec6/output_alignment/SITE_GAUGE_CASES.json",
+    "sha256": "3ca79a3b01c022ec7b37e68a5da61041197f1751d595a19474135ed5ea982ee2"
+  }
+}
