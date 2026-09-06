@@ -47,11 +47,17 @@ def main():
                     if baseline[key].get(name) != changed[key].get(name):
                         raise ValueError(f"paired conditioning changed: {key}/{name}")
                 same_body = baseline[key].get("body") == changed[key].get("body")
-                same_structure = a[key].get("structure") == b[key].get("structure")
+                old_structure, new_structure = a[key].get("structure"), b[key].get("structure")
+                old_present = isinstance(old_structure, dict) and isinstance(old_structure.get("lattice"), dict) and isinstance(old_structure.get("sites"), list) and bool(old_structure["sites"])
+                new_present = isinstance(new_structure, dict) and isinstance(new_structure.get("lattice"), dict) and isinstance(new_structure.get("sites"), list) and bool(new_structure["sites"])
+                same_structure = old_present and new_present and old_structure == new_structure
+                both_missing = old_structure is None and new_structure is None
                 group = "native_body_same" if same_body else "native_body_changed"
                 count = groups[group]
                 count["requests"] += 1
                 count["exact_endpoint_structure_same"] += int(same_structure)
+                count["both_endpoint_structures_missing"] += int(both_missing)
+                count["both_endpoint_structures_present"] += int(old_present and new_present)
                 flips = {}
                 for field in fields:
                     left, right = bool(ae[key][field]), bool(be[key][field])
@@ -62,7 +68,8 @@ def main():
                     if left != right:
                         flips[field] = [left,right]
                 cases.append({"method":method,"endpoint":stage,"trajectory_id":key,"sample_idx":a[key]["sample_idx"],
-                    "native_body_same":same_body,"exact_endpoint_structure_same":same_structure,"flips":flips,
+                    "native_body_same":same_body,"exact_endpoint_structure_same":same_structure,
+                    "both_endpoint_structures_missing":both_missing,"flips":flips,
                     "old_terminal_status":ae[key]["terminal_status"],"new_terminal_status":be[key]["terminal_status"]})
             summary[method+"_"+stage] = {key:dict(value) for key,value in groups.items()}
     args.output_dir.mkdir(parents=True, exist_ok=False)
