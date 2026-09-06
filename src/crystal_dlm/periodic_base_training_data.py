@@ -278,10 +278,12 @@ def make_periodic_base_training_example(
     if noise_metadata_dropped:
         noise_level = -1.
     targets = [clean[p] for p in positions]
-    if view == 0:
+    if view == 0 and positions:
         probe_family = int(rng.integers(3))
         probe_pool = [p for p in positions if _family(p) == probe_family]
         legal_probe_position = int(rng.choice(probe_pool)) if probe_pool else None
+    elif view == 0:
+        legal_probe_position = None
     else:
         legal_probe_position = positions[0]
     singular_position = positions[0] if positions else all_positions[0]
