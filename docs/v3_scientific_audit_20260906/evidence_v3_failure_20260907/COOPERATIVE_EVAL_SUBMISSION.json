@@ -1,0 +1,20 @@
+{
+  "status": "submitted",
+  "created_at_utc": "2026-09-06T21:03:06.686105+00:00",
+  "code_commit": "5d0904d842aa6ca5886632bb534a38b569792b49",
+  "manifest_sha256": "cd449725c6358d7cef7742eb06ea149fc69be73c449b1abbf3de0a5d258fad76",
+  "resources": {
+    "gpus": 6,
+    "cpus": 24,
+    "memory": "440G",
+    "walltime": "02:00:00"
+  },
+  "method_order": [
+    "k4",
+    "k8"
+  ],
+  "requests_per_method": 256,
+  "new_DLM_samples": 0,
+  "job_id": "40088",
+  "run_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/runs/eval_40088"
+}

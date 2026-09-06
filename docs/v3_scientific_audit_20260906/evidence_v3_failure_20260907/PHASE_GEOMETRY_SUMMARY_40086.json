@@ -1,0 +1,334 @@
+{
+  "methods": {
+    "k4": {
+      "status": "PASS",
+      "requests": 256,
+      "metadata_errors": 0,
+      "stages": {
+        "construct": {
+          "known_requests": 256,
+          "executed": 256,
+          "valid": 254,
+          "failed": 2,
+          "not_executed": 0,
+          "unknown_due_metadata_error": 0,
+          "rollback_events": 0,
+          "requests_with_rollback": 0,
+          "transactions_with_rollback": 0,
+          "minimum_distance_A": {
+            "n": 254,
+            "mean": 1.0980259292743462,
+            "median": 0.926,
+            "p10": 0.5525567823796069,
+            "p90": 1.7999999999999998,
+            "min": 0.5021729952194637,
+            "max": 3.061045573002793
+          },
+          "volume_per_atom_A3": {
+            "n": 254,
+            "mean": 14.808152125650183,
+            "median": 14.253,
+            "p10": 6.957802263542235,
+            "p90": 23.38034429857696,
+            "min": 1.0236579762221398,
+            "max": 43.46538243501629
+          },
+          "below_0p5_A": 0
+        },
+        "cooperative": {
+          "known_requests": 256,
+          "executed": 254,
+          "valid": 254,
+          "failed": 0,
+          "not_executed": 2,
+          "unknown_due_metadata_error": 0,
+          "rollback_events": 10,
+          "requests_with_rollback": 10,
+          "transactions_with_rollback": 10,
+          "minimum_distance_A": {
+            "n": 254,
+            "mean": 1.1398362599571559,
+            "median": 0.9704999999999999,
+            "p10": 0.5599999999999996,
+            "p90": 1.85,
+            "min": 0.5,
+            "max": 3.3700890195957736
+          },
+          "volume_per_atom_A3": {
+            "n": 254,
+            "mean": 15.481320885575844,
+            "median": 14.27297250238302,
+            "p10": 7.311895785422207,
+            "p90": 24.26859987815712,
+            "min": 2.338567527554097,
+            "max": 45.8618851675877
+          },
+          "below_0p5_A": 0
+        },
+        "closure": {
+          "known_requests": 256,
+          "executed": 254,
+          "valid": 254,
+          "failed": 0,
+          "not_executed": 2,
+          "unknown_due_metadata_error": 0,
+          "rollback_events": 11,
+          "requests_with_rollback": 6,
+          "transactions_with_rollback": 7,
+          "minimum_distance_A": {
+            "n": 254,
+            "mean": 1.1476576326501204,
+            "median": 0.972,
+            "p10": 0.5544000000000002,
+            "p90": 1.8499999999999999,
+            "min": 0.504,
+            "max": 3.3700890195957736
+          },
+          "volume_per_atom_A3": {
+            "n": 254,
+            "mean": 15.481320885575844,
+            "median": 14.27297250238302,
+            "p10": 7.311895785422207,
+            "p90": 24.26859987815712,
+            "min": 2.338567527554097,
+            "max": 45.8618851675877
+          },
+          "below_0p5_A": 0
+        }
+      },
+      "transitions": {
+        "construct_to_cooperative": {
+          "pairs": 254,
+          "exact_tokens_unchanged": 10,
+          "minimum_distance_delta_A": {
+            "n": 254,
+            "mean": 0.04181033068280991,
+            "median": 0.023042449910825435,
+            "p10": -0.4486610775347714,
+            "p90": 0.5208369836529195,
+            "min": -1.3265119254754487,
+            "max": 1.6500000000000001
+          },
+          "distance_decreased": 112,
+          "distance_increased": 131,
+          "volume_per_atom_ratio": {
+            "n": 254,
+            "mean": 1.243649055138493,
+            "median": 1.0098445814235288,
+            "p10": 0.5519266091735776,
+            "p90": 1.9397716467929236,
+            "min": 0.13721519204263435,
+            "max": 15.177492952281328
+          },
+          "introduced_below_0p5": 0,
+          "removed_below_0p5": 0
+        },
+        "cooperative_to_closure": {
+          "pairs": 254,
+          "exact_tokens_unchanged": 1,
+          "minimum_distance_delta_A": {
+            "n": 254,
+            "mean": 0.007821372692964351,
+            "median": 0.0,
+            "p10": -0.5078405092997313,
+            "p90": 0.6065557435414448,
+            "min": -1.3009838574570685,
+            "max": 1.4060000000000006
+          },
+          "distance_decreased": 110,
+          "distance_increased": 102,
+          "volume_per_atom_ratio": {
+            "n": 254,
+            "mean": 1.0,
+            "median": 1.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1.0,
+            "max": 1.0
+          },
+          "introduced_below_0p5": 0,
+          "removed_below_0p5": 0
+        }
+      },
+      "model_forwards": 0,
+      "energy_evaluations": 0,
+      "optimizer_steps": 0,
+      "SUN_claim": false,
+      "per_case_stage_selection": false,
+      "distance_comparison_tolerance_A": 1e-08,
+      "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/sample/paths.jsonl",
+      "source_sha256": "bc8c6d32b15ed18adc3f4be133f156c0f615c2203b25cd7cb5425d07f0dbca13",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+      "method": "k4",
+      "distance_protocol": "pymatgen full pair MIC plus nonzero translation sphere bounded by shortest LLL basis vector"
+    },
+    "k8": {
+      "status": "PASS",
+      "requests": 256,
+      "metadata_errors": 0,
+      "stages": {
+        "construct": {
+          "known_requests": 256,
+          "executed": 256,
+          "valid": 252,
+          "failed": 4,
+          "not_executed": 0,
+          "unknown_due_metadata_error": 0,
+          "rollback_events": 0,
+          "requests_with_rollback": 0,
+          "transactions_with_rollback": 0,
+          "minimum_distance_A": {
+            "n": 252,
+            "mean": 1.1499683738901065,
+            "median": 0.9495748096981134,
+            "p10": 0.5581912381491698,
+            "p90": 1.8323806775036793,
+            "min": 0.501362798071031,
+            "max": 3.3000000000000003
+          },
+          "volume_per_atom_A3": {
+            "n": 252,
+            "mean": 15.474499497260926,
+            "median": 14.923959790917287,
+            "p10": 7.324626358857841,
+            "p90": 23.366698414187727,
+            "min": 1.8440676307193782,
+            "max": 65.49772940929817
+          },
+          "below_0p5_A": 0
+        },
+        "cooperative": {
+          "known_requests": 256,
+          "executed": 252,
+          "valid": 252,
+          "failed": 0,
+          "not_executed": 4,
+          "unknown_due_metadata_error": 0,
+          "rollback_events": 10,
+          "requests_with_rollback": 10,
+          "transactions_with_rollback": 10,
+          "minimum_distance_A": {
+            "n": 252,
+            "mean": 1.1826346578628646,
+            "median": 1.0336803496767513,
+            "p10": 0.5581448938767712,
+            "p90": 1.9844231849901393,
+            "min": 0.504,
+            "max": 3.3700890195957736
+          },
+          "volume_per_atom_A3": {
+            "n": 252,
+            "mean": 16.77957572319531,
+            "median": 15.571133479544482,
+            "p10": 8.85914706325951,
+            "p90": 25.48666015289877,
+            "min": 1.7034751035835316,
+            "max": 42.68057247531935
+          },
+          "below_0p5_A": 0
+        },
+        "closure": {
+          "known_requests": 256,
+          "executed": 252,
+          "valid": 252,
+          "failed": 0,
+          "not_executed": 4,
+          "unknown_due_metadata_error": 0,
+          "rollback_events": 2,
+          "requests_with_rollback": 2,
+          "transactions_with_rollback": 2,
+          "minimum_distance_A": {
+            "n": 252,
+            "mean": 1.2345003182673648,
+            "median": 1.1349654856714704,
+            "p10": 0.564256508893506,
+            "p90": 2.0,
+            "min": 0.5039999999999998,
+            "max": 3.3700890195957736
+          },
+          "volume_per_atom_A3": {
+            "n": 252,
+            "mean": 16.77957572319531,
+            "median": 15.571133479544482,
+            "p10": 8.85914706325951,
+            "p90": 25.48666015289877,
+            "min": 1.7034751035835316,
+            "max": 42.68057247531935
+          },
+          "below_0p5_A": 0
+        }
+      },
+      "transitions": {
+        "construct_to_cooperative": {
+          "pairs": 252,
+          "exact_tokens_unchanged": 10,
+          "minimum_distance_delta_A": {
+            "n": 252,
+            "mean": 0.032666283972757976,
+            "median": 0.0,
+            "p10": -0.42350000000000004,
+            "p90": 0.44569845995424534,
+            "min": -1.2250000000000003,
+            "max": 1.519410921449234
+          },
+          "distance_decreased": 121,
+          "distance_increased": 121,
+          "volume_per_atom_ratio": {
+            "n": 252,
+            "mean": 1.2802353701555544,
+            "median": 1.0545549921314916,
+            "p10": 0.5935041785309164,
+            "p90": 2.0276676640014633,
+            "min": 0.10452421879232744,
+            "max": 8.425158308102409
+          },
+          "introduced_below_0p5": 0,
+          "removed_below_0p5": 0
+        },
+        "cooperative_to_closure": {
+          "pairs": 252,
+          "exact_tokens_unchanged": 6,
+          "minimum_distance_delta_A": {
+            "n": 252,
+            "mean": 0.05186566040450029,
+            "median": 1.1102230246251565e-16,
+            "p10": -0.5957000000000001,
+            "p90": 0.7789352322617575,
+            "min": -1.551,
+            "max": 1.4899999999999993
+          },
+          "distance_decreased": 92,
+          "distance_increased": 116,
+          "volume_per_atom_ratio": {
+            "n": 252,
+            "mean": 1.0,
+            "median": 1.0,
+            "p10": 1.0,
+            "p90": 1.0,
+            "min": 1.0,
+            "max": 1.0
+          },
+          "introduced_below_0p5": 0,
+          "removed_below_0p5": 0
+        }
+      },
+      "model_forwards": 0,
+      "energy_evaluations": 0,
+      "optimizer_steps": 0,
+      "SUN_claim": false,
+      "per_case_stage_selection": false,
+      "distance_comparison_tolerance_A": 1e-08,
+      "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/sample/paths.jsonl",
+      "source_sha256": "a0cf3e319fc815e9d1d0eb38dfec643afbb3bc8bdae750d76273aaf5fd3750d0",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977",
+      "method": "k8",
+      "distance_protocol": "pymatgen full pair MIC plus nonzero translation sphere bounded by shortest LLL basis vector"
+    }
+  },
+  "code_commit": "2d0dfd96d7f9c9e7f4cef67cfd1742c0348625e6",
+  "source_manifest_sha256": "1f0a0355000ff1bcf9473c5924de231653bc20a4239e88b89a510844508820ab",
+  "model_forwards": 0,
+  "energy_evaluations": 0,
+  "optimizer_steps": 0,
+  "per_case_stage_selection": false
+}

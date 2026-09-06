@@ -1,0 +1,50 @@
+{
+  "CONSTRUCTION_EVAL_FINAL_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/EVAL_FINAL.json",
+    "sha256": "46ca3a4c274f4efc15466acf9640d559fa13b2f609fafb4128c2e98b030cb171"
+  },
+  "K8_CONSTRUCTION_EXTRACTION_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/sample/CONSTRUCTION_EXTRACTION.json",
+    "sha256": "a14f77815505d5ef2e9b6959d557b415d6c809c096dc2d4dfb15cf373d0695eb"
+  },
+  "K8_CONSTRUCTION_EVAL_FINAL_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/EVAL_FINAL.json",
+    "sha256": "55561e73c1ad602f4d8819376c629f8758bbd5204fc658400c7e2aae7f2d7b55"
+  },
+  "K8_CONSTRUCTION_NATIVE_EVALUATION_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/native-evaluation/EVALUATION_FINAL.json",
+    "sha256": "efe3ce5ba43f632ad8c09c2c73b1213be50c72eb426ba0b25599ac09f61232d3"
+  },
+  "K8_CONSTRUCTION_NATIVE_VS_ORIGINAL_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/native-vs-original/COMPARISON_FINAL.json",
+    "sha256": "b0c48c6267ee655a67f303f5fba3382846af977c288b9f7b61ba8c678c92d9d0"
+  },
+  "K8_CONSTRUCTION_TAU800_EVALUATION_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/tau800-evaluation/EVALUATION_FINAL.json",
+    "sha256": "117b41f77162abbbfc4a3cd8fe1fcf2d9ce5136789a239a8f9b434e57f4d167e"
+  },
+  "K8_CONSTRUCTION_TAU800_VS_ORIGINAL_40083.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/runs/eval_40083/k8/tau800-vs-original/COMPARISON_FINAL.json",
+    "sha256": "2ff37b5411cc0172aad689d8343df615a5efc98e21e9da9f8d2462752c4cf84d"
+  },
+  "PHASE_GEOMETRY_LAUNCH_MANIFEST.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/phase_geometry_20260907/LAUNCH_MANIFEST.json",
+    "sha256": "fd4a0a609fcae9b527e81fdf8d614993ab2f2d63cc53e0b0553a8569ae58702a"
+  },
+  "PHASE_GEOMETRY_SUBMISSION.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/phase_geometry_20260907/SUBMISSION.json",
+    "sha256": "5f03b6501e2763acf6502bc366b5e8e085fd0aae99b6f083b825ebcbbc362834"
+  },
+  "PHASE_GEOMETRY_SUMMARY_40086.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/phase_geometry_20260907/run_40086/SUMMARY.json",
+    "sha256": "592283033a5edd9a1cb46c2c07380254c65d306f90e8b391d807dada93c50320"
+  },
+  "COOPERATIVE_EVAL_LAUNCH_MANIFEST.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/LAUNCH_MANIFEST.json",
+    "sha256": "cd449725c6358d7cef7742eb06ea149fc69be73c449b1abbf3de0a5d258fad76"
+  },
+  "COOPERATIVE_EVAL_SUBMISSION.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/cooperative_endpoint_k4k8_20260907/SUBMISSION.json",
+    "sha256": "cdf95c0f2fb7c4d6239bc9ee0425ddedf7f630b66c81cdbc5bb6301bc17d747c"
+  }
+}

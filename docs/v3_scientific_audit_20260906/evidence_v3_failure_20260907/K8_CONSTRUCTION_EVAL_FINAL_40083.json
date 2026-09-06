@@ -1,0 +1,52 @@
+{
+  "method": "k8_construction_only_v1",
+  "policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39938/train/checkpoints/step-7977",
+  "requests": 256,
+  "spec_sha256": "cd9bf3120b9774d80883450d66761b0b8e33f36fe87ea738cdc1c32df1cf8e70",
+  "counts": {
+    "native": {
+      "reconstructed": 252,
+      "native_execution_success": 252,
+      "endpoint_execution_success": 252,
+      "novel": 251,
+      "unique_representative": 252,
+      "novel_unique": 251,
+      "terminal_verified": 68,
+      "strict_stable": 6,
+      "meta_stable": 55,
+      "strict_sun": 5,
+      "meta_sun": 54,
+      "verified_strict_stable": 3,
+      "verified_meta_stable": 25,
+      "verified_strict_sun": 2,
+      "verified_meta_sun": 24,
+      "requests": 256
+    },
+    "tau800": {
+      "reconstructed": 252,
+      "native_execution_success": 252,
+      "endpoint_execution_success": 252,
+      "novel": 213,
+      "unique_representative": 250,
+      "novel_unique": 213,
+      "terminal_verified": 97,
+      "strict_stable": 23,
+      "meta_stable": 153,
+      "strict_sun": 16,
+      "meta_sun": 119,
+      "verified_strict_stable": 12,
+      "verified_meta_stable": 65,
+      "verified_strict_sun": 9,
+      "verified_meta_sun": 48,
+      "requests": 256
+    }
+  },
+  "qualified_endpoints": [],
+  "supplement_1000_required": false,
+  "qualification_rule": "same endpoint strict_sun>=26 AND meta_sun>=128; all256",
+  "outcome_selection": false,
+  "inference_mlip": false,
+  "new_optimizer_steps": 0,
+  "new_model_forwards": 0,
+  "endpoint_selection": "same construct end for every request"
+}

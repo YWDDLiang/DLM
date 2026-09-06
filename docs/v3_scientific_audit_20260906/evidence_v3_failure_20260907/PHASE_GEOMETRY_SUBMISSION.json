@@ -1,0 +1,19 @@
+{
+  "status": "submitted",
+  "created_at_utc": "2026-09-06T20:49:01.968299+00:00",
+  "code_commit": "2d0dfd96d7f9c9e7f4cef67cfd1742c0348625e6",
+  "entry_sha256": "868565be3387a27da5e2586e2590b35cd704ad0463bd064dc8c795fdb5685631",
+  "source_manifest": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/LAUNCH_MANIFEST.json",
+  "source_manifest_sha256": "1f0a0355000ff1bcf9473c5924de231653bc20a4239e88b89a510844508820ab",
+  "resources": {
+    "gpus": 0,
+    "cpus": 2,
+    "memory": "16G",
+    "walltime": "00:05:00"
+  },
+  "model_forwards": 0,
+  "energy_evaluations": 0,
+  "manifest_sha256": "fd4a0a609fcae9b527e81fdf8d614993ab2f2d63cc53e0b0553a8569ae58702a",
+  "job_id": "40086",
+  "run_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/construction_only_k4k8_20260907/phase_geometry_20260907/run_40086"
+}
