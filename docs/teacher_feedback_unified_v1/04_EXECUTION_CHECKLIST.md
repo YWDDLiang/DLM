@@ -4,6 +4,8 @@ Current status: **2026-09-06 09:14 Asia/Shanghai: K8 labels complete8192 request
 
 09:45 one-time ETA:39938 reached global update4850 (path3880/CE970) after1781.67s of this continuation. Current throughput projects training completion near10:10 and the fixed native/tau800 results near11:30–12:00. This is a throughput estimate, not a result guarantee; avoid repeated polling while healthy.
 
+10:14 phase completion:39938 SUCCESS at step7977 after3205.57s, with6957 continuation updates, path/CE totals6382/1595, two complete44133-real-scalar passes, maximum initial replay error5.27e-7 and peak19.27GiB. Policy is runs/spad_state_path_train_39938/train/checkpoints/step-7977. Submission39944 carried an empty policy because the parent POLICY_PATH file was absent; it was immediately cancelled and retained as an invalid pointer. Correct fixed256 native evaluation39945 reads the policy from TRAIN_FINAL and is submitted.
+
 Latest new-task entry: [19 Architecture and execution](19_RESUMED_ARCHITECTURE_AND_EXECUTION.md).
 Latest user amendment: [20 Data sufficiency and delivery](20_DATA_SUFFICIENCY_AND_DELIVERY_20260906.md).
 Latest audit and release: [21 Terminal reproducibility](21_TERMINAL_REPRODUCIBILITY_AUDIT_20260906.md).
