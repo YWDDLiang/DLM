@@ -1,0 +1,29 @@
+{
+  "rule": "first complete layout2/cap4 batch N<=6 and N>=16",
+  "outcomes_used_for_selection": false,
+  "native_paths_sha256": "cb3c1c168501fc4409a221b3a6c39206bcba3cb74d3136c19b563f331a257be4",
+  "batches": {
+    "first_N_le_6": {
+      "logical_serial": 0,
+      "N": 2,
+      "trajectory_ids": [
+        "eval:12:0:0"
+      ],
+      "sample_indices": [
+        12
+      ],
+      "original_batch_size": 1
+    },
+    "first_N_ge_16": {
+      "logical_serial": 50,
+      "N": 16,
+      "trajectory_ids": [
+        "eval:146:0:0"
+      ],
+      "sample_indices": [
+        146
+      ],
+      "original_batch_size": 1
+    }
+  }
+}

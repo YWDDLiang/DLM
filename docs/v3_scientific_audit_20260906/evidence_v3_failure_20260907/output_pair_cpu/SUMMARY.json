@@ -1,0 +1,601 @@
+{
+  "casepack_sha256": "4c7ef1d35943fb331c38a039e1833519f83b90ce77130849f1818b235913d84b",
+  "source_files_sha256": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/native/paths.jsonl": "3e07be7592d6d47669ad014106c0d6f8be97c019bf6723f4e01813d47a1ba494",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/native-evaluation/attempt_results.jsonl": "ca226fdef0d42b025a325ca6377a44a8ee21bf4d5d620d9201b0f3eea9405938",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/native-labels/labels.jsonl": "8e921aab92416547585e9e9650a51e3454051affc19a8d32127bbc780f0530c5",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/native-evaluation/EVALUATION_FINAL.json": "b91089b065cbba6f436a073bef41da936a6b423fd73b85d25d2a3fa434eaacdc",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/tau800/paths.jsonl": "b9d24e7a7cf700ebb4aa6c3a56f3319eb27b2bca774c289000479abaaedd1537",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/tau800-evaluation/attempt_results.jsonl": "9e4ef7e5fee688e95fb5d61ca9be22f761cc3e07242d036ff8f188b481b9a8ba",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/tau800-labels/labels.jsonl": "9bc5ef9072047cd5762c3f27184eb30db41b0e161140d595ad83f1ba042af3d0",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/tau800-evaluation/EVALUATION_FINAL.json": "3028ebb46971970e8a9adefbf217a3005ccfa044faecf05e1761d0ae3216915f",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/quantized/paths.jsonl": "6b50e9d122bb845fd302e3e48e3155cc0ba7052d67825f86a64240acbfb58f24",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/quantized-evaluation/attempt_results.jsonl": "84aa032b39ab6bb3dc23579fe67b4f97e6314866d48d75c36096b8a4c1d5a3f4",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/quantized-labels/labels.jsonl": "81c7fe884a2fea89ad88bde6c9dc31bcccffe1d66b94fd21a247f07e41e8e040",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/eval_40066/quantized-evaluation/EVALUATION_FINAL.json": "9905daedae11a664fae8a810249f96102ef431fb9d75fab201a3d6753a0d61bc"
+  },
+  "requests": 256,
+  "endpoints": {
+    "native": {
+      "counts": {
+        "reconstructed": 256,
+        "native_execution_success": 256,
+        "endpoint_execution_success": 256,
+        "novel": 256,
+        "unique_representative": 256,
+        "novel_unique": 256,
+        "terminal_verified": 60,
+        "strict_stable": 9,
+        "meta_stable": 61,
+        "strict_sun": 9,
+        "meta_sun": 61,
+        "verified_strict_stable": 6,
+        "verified_meta_stable": 28,
+        "verified_strict_sun": 6,
+        "verified_meta_sun": 28,
+        "requests": 256
+      },
+      "statuses": {
+        "invalid_terminal": 64,
+        "verified": 60,
+        "not_converged": 92,
+        "invalid_raw": 40
+      },
+      "headline_by_status": {
+        "invalid_raw": {
+          "strict_sun": 0,
+          "meta_sun": 0
+        },
+        "invalid_terminal": {
+          "strict_sun": 1,
+          "meta_sun": 4
+        },
+        "not_converged": {
+          "strict_sun": 2,
+          "meta_sun": 29
+        },
+        "verified": {
+          "strict_sun": 6,
+          "meta_sun": 28
+        }
+      },
+      "raw_energy_eV_atom": {
+        "n": 216,
+        "missing_or_nonfinite": 40,
+        "mean": 2.8915470576396696,
+        "median": 3.294109344482422,
+        "p10": -2.10826313495636,
+        "p90": 7.179565906524658,
+        "min": -7.292238235473633,
+        "max": 12.031577110290527
+      },
+      "raw_force_max_eV_A": {
+        "n": 216,
+        "missing_or_nonfinite": 40,
+        "mean": 62.90642468344795,
+        "median": 47.15655615287964,
+        "p10": 15.221182312950187,
+        "p90": 125.11019569046064,
+        "min": 0.21926977095598865,
+        "max": 383.9666181009584
+      },
+      "raw_stress_max_GPa": {
+        "n": 216,
+        "missing_or_nonfinite": 40,
+        "mean": 76.46994187655272,
+        "median": 63.86136817932129,
+        "p10": 18.723027229309082,
+        "p90": 146.76339721679688,
+        "min": 2.443363904953003,
+        "max": 501.5872802734375
+      },
+      "gap_eV_atom": {
+        "n": 216,
+        "missing_or_nonfinite": 40,
+        "mean": 7.155964161786768,
+        "median": 7.378173828125,
+        "p10": 2.893023371696472,
+        "p90": 11.319133162498474,
+        "min": 0.1123042106628418,
+        "max": 14.198418140411377
+      }
+    },
+    "tau800": {
+      "counts": {
+        "reconstructed": 256,
+        "native_execution_success": 256,
+        "endpoint_execution_success": 256,
+        "novel": 224,
+        "unique_representative": 253,
+        "novel_unique": 224,
+        "terminal_verified": 95,
+        "strict_stable": 20,
+        "meta_stable": 143,
+        "strict_sun": 13,
+        "meta_sun": 116,
+        "verified_strict_stable": 9,
+        "verified_meta_stable": 58,
+        "verified_strict_sun": 6,
+        "verified_meta_sun": 47,
+        "requests": 256
+      },
+      "statuses": {
+        "not_converged": 161,
+        "verified": 95
+      },
+      "headline_by_status": {
+        "not_converged": {
+          "strict_sun": 7,
+          "meta_sun": 69
+        },
+        "verified": {
+          "strict_sun": 6,
+          "meta_sun": 47
+        }
+      },
+      "raw_energy_eV_atom": {
+        "n": 256,
+        "missing_or_nonfinite": 0,
+        "mean": -5.408403150271624,
+        "median": -5.432062149047852,
+        "p10": -7.652074575424194,
+        "p90": -2.922192692756653,
+        "min": -11.986916542053223,
+        "max": -1.6177140474319458
+      },
+      "raw_force_max_eV_A": {
+        "n": 256,
+        "missing_or_nonfinite": 0,
+        "mean": 1.1996091755280531,
+        "median": 0.4458840143619951,
+        "p10": 0.015392166806384805,
+        "p90": 3.0524756013253835,
+        "min": 0.0003649416386337532,
+        "max": 16.607290918614424
+      },
+      "raw_stress_max_GPa": {
+        "n": 256,
+        "missing_or_nonfinite": 0,
+        "mean": 4.960606888518669,
+        "median": 3.30446457862854,
+        "p10": 1.0485790967941284,
+        "p90": 10.504786968231201,
+        "min": 0.10408151149749756,
+        "max": 79.00353240966797
+      },
+      "gap_eV_atom": {
+        "n": 256,
+        "missing_or_nonfinite": 0,
+        "mean": 0.09257023548707366,
+        "median": 0.0250089168548584,
+        "p10": 0.0015964508056640625,
+        "p90": 0.2333230972290039,
+        "min": 0.0,
+        "max": 1.9718365669250488
+      }
+    },
+    "quantized": {
+      "counts": {
+        "reconstructed": 256,
+        "native_execution_success": 256,
+        "endpoint_execution_success": 256,
+        "novel": 256,
+        "unique_representative": 256,
+        "novel_unique": 256,
+        "terminal_verified": 54,
+        "strict_stable": 6,
+        "meta_stable": 58,
+        "strict_sun": 6,
+        "meta_sun": 58,
+        "verified_strict_stable": 2,
+        "verified_meta_stable": 26,
+        "verified_strict_sun": 2,
+        "verified_meta_sun": 26,
+        "requests": 256
+      },
+      "statuses": {
+        "invalid_terminal": 64,
+        "verified": 54,
+        "not_converged": 99,
+        "invalid_raw": 38,
+        "optimizer_stop_unverified": 1
+      },
+      "headline_by_status": {
+        "invalid_raw": {
+          "strict_sun": 0,
+          "meta_sun": 0
+        },
+        "invalid_terminal": {
+          "strict_sun": 2,
+          "meta_sun": 4
+        },
+        "not_converged": {
+          "strict_sun": 2,
+          "meta_sun": 28
+        },
+        "optimizer_stop_unverified": {
+          "strict_sun": 0,
+          "meta_sun": 0
+        },
+        "verified": {
+          "strict_sun": 2,
+          "meta_sun": 26
+        }
+      },
+      "raw_energy_eV_atom": {
+        "n": 218,
+        "missing_or_nonfinite": 38,
+        "mean": 2.9186582721154624,
+        "median": 3.516387462615967,
+        "p10": -2.0561557054519652,
+        "p90": 7.2009968757629395,
+        "min": -7.425709247589111,
+        "max": 12.041848182678223
+      },
+      "raw_force_max_eV_A": {
+        "n": 218,
+        "missing_or_nonfinite": 38,
+        "mean": 66.58232675981724,
+        "median": 49.15471261272289,
+        "p10": 16.066665208883702,
+        "p90": 140.77580713860578,
+        "min": 0.20982860899185654,
+        "max": 383.038291514207
+      },
+      "raw_stress_max_GPa": {
+        "n": 218,
+        "missing_or_nonfinite": 38,
+        "mean": 78.08266725562035,
+        "median": 63.61356163024902,
+        "p10": 19.409917259216307,
+        "p90": 145.19206390380862,
+        "min": 2.6493546962738037,
+        "max": 393.3963928222656
+      },
+      "gap_eV_atom": {
+        "n": 218,
+        "missing_or_nonfinite": 38,
+        "mean": 7.083105234104559,
+        "median": 7.404065370559692,
+        "p10": 2.700298690795899,
+        "p90": 10.868609046936035,
+        "min": 0.11105489730834961,
+        "max": 14.093472003936768
+      }
+    }
+  },
+  "quantized_matches_fixed_codec_count": 256,
+  "native_vs_q_binary": {
+    "strict_sun": {
+      "reference": 9,
+      "method": 6,
+      "both": 4,
+      "reference_only": 5,
+      "method_only": 2,
+      "neither": 245
+    },
+    "meta_sun": {
+      "reference": 61,
+      "method": 58,
+      "both": 49,
+      "reference_only": 12,
+      "method_only": 9,
+      "neither": 186
+    },
+    "terminal_verified": {
+      "reference": 60,
+      "method": 54,
+      "both": 33,
+      "reference_only": 27,
+      "method_only": 21,
+      "neither": 175
+    }
+  },
+  "native_vs_tau_binary": {
+    "strict_sun": {
+      "reference": 9,
+      "method": 13,
+      "both": 2,
+      "reference_only": 7,
+      "method_only": 11,
+      "neither": 236
+    },
+    "meta_sun": {
+      "reference": 61,
+      "method": 116,
+      "both": 36,
+      "reference_only": 25,
+      "method_only": 80,
+      "neither": 115
+    },
+    "terminal_verified": {
+      "reference": 60,
+      "method": 95,
+      "both": 33,
+      "reference_only": 27,
+      "method_only": 62,
+      "neither": 134
+    },
+    "novel_unique": {
+      "reference": 256,
+      "method": 224,
+      "both": 224,
+      "reference_only": 32,
+      "method_only": 0,
+      "neither": 0
+    }
+  },
+  "geometry": {
+    "q_expected_gram_relative_error": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 4.241853399748043e-17,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.619736077273184e-16,
+      "min": 0.0,
+      "max": 3.5721051065216186e-16
+    },
+    "q_expected_coordinate_error": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "periodic_aliases": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.12109375,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 1.0,
+      "min": 0.0,
+      "max": 2.0
+    },
+    "q_fractional_component_max_change": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.004759166061383691,
+      "median": 0.004866938275399975,
+      "p10": 0.004452824888520255,
+      "p90": 0.004980927534694146,
+      "min": 0.0032712588700105905,
+      "max": 0.004999658082617042
+    },
+    "q_fractional_rms_change": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.0028678871160390564,
+      "median": 0.0028738750307589723,
+      "p10": 0.002554865924648314,
+      "p90": 0.0031893140709401743,
+      "min": 0.001980067675244182,
+      "max": 0.003580643203797964
+    },
+    "q_relative_gram_change": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.008572653396862577,
+      "median": 0.007858394199064362,
+      "p10": 0.004626669998840045,
+      "p90": 0.01356813048708317,
+      "min": 0.0018616393467990335,
+      "max": 0.02265808165064981
+    },
+    "q_relative_volume_change": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.00010505661870684494,
+      "median": -0.0004547828240245577,
+      "p10": -0.014879813136992381,
+      "p90": 0.01535713827241103,
+      "min": -0.04395757638581255,
+      "max": 0.059039580698458494
+    },
+    "native_volume_per_atom_A3": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 21.0610834522207,
+      "median": 19.09926213310854,
+      "p10": 9.82431825685373,
+      "p90": 36.00828515167839,
+      "min": 4.693760701693033,
+      "max": 62.7455995687329
+    },
+    "prior_volume_per_atom_A3": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 20.111055541870194,
+      "median": 18.962789828971047,
+      "p10": 11.498920371194991,
+      "p90": 29.726795206733165,
+      "min": 6.476147270942122,
+      "max": 62.65615706979722
+    },
+    "native_over_prior_volume": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 1.052309575414325,
+      "median": 0.9989137948700699,
+      "p10": 0.6699670801864077,
+      "p90": 1.5471209670992279,
+      "min": 0.48397272006249964,
+      "max": 2.101780435623949
+    },
+    "native_min_distance_A": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.9971194723606556,
+      "median": 0.9117631040590233,
+      "p10": 0.4235971229246873,
+      "p90": 1.6405824063684138,
+      "min": 0.17938952663791874,
+      "max": 2.665477577442269
+    },
+    "q_min_distance_A": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.9957449809422488,
+      "median": 0.9125554933691724,
+      "p10": 0.42242751365461967,
+      "p90": 1.6523354278828086,
+      "min": 0.1691460549041601,
+      "max": 2.6704512837104883
+    },
+    "prior_min_distance_A": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.9884292461672926,
+      "median": 0.9463226396857272,
+      "p10": 0.45505533379344193,
+      "p90": 1.6250815029965802,
+      "min": 0.19668296869562793,
+      "max": 2.292092887764808
+    },
+    "native_vs_recorded_min_distance_error_A": {
+      "n": 216,
+      "missing_or_nonfinite": 40,
+      "mean": 0.0,
+      "median": 0.0,
+      "p10": 0.0,
+      "p90": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "native_lattice_condition_number": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 2.9894822521504048,
+      "median": 2.737354688833369,
+      "p10": 1.6769109118481342,
+      "p90": 4.644577806765523,
+      "min": 1.36309081187935,
+      "max": 8.180781749828233
+    },
+    "native_min_lattice_singular_value_A": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 3.475374371988677,
+      "median": 3.3393858274702204,
+      "p10": 2.2561783927693493,
+      "p90": 4.886252194160582,
+      "min": 1.2797742595414108,
+      "max": 7.4315229419297095
+    },
+    "net_fractional_rms_from_prior": {
+      "n": 256,
+      "missing_or_nonfinite": 0,
+      "mean": 0.013119356489391158,
+      "median": 0.011918319204256775,
+      "p10": 0.007574220960022573,
+      "p90": 0.02063342732649264,
+      "min": 0.004902260519666417,
+      "max": 0.03335975644401653
+    },
+    "raw_energy_eV_atom": {
+      "n": 216,
+      "missing_or_nonfinite": 40,
+      "mean": 2.8915470576396696,
+      "median": 3.294109344482422,
+      "p10": -2.10826313495636,
+      "p90": 7.179565906524658,
+      "min": -7.292238235473633,
+      "max": 12.031577110290527
+    },
+    "raw_force_max_eV_A": {
+      "n": 216,
+      "missing_or_nonfinite": 40,
+      "mean": 62.90642468344795,
+      "median": 47.15655615287964,
+      "p10": 15.221182312950187,
+      "p90": 125.11019569046064,
+      "min": 0.21926977095598865,
+      "max": 383.9666181009584
+    },
+    "raw_stress_max_GPa": {
+      "n": 216,
+      "missing_or_nonfinite": 40,
+      "mean": 76.46994187655272,
+      "median": 63.86136817932129,
+      "p10": 18.723027229309082,
+      "p90": 146.76339721679688,
+      "min": 2.443363904953003,
+      "max": 501.5872802734375
+    }
+  },
+  "support_counts": {
+    "prior_min_distance_A": 35,
+    "native_min_distance_A": 40,
+    "q_min_distance_A": 38
+  },
+  "native_by_N": {
+    "1-5": {
+      "requests": 66,
+      "strict_sun": 8,
+      "meta_sun": 33,
+      "force": {
+        "n": 63,
+        "missing_or_nonfinite": 3,
+        "mean": 40.7895182506548,
+        "median": 31.71477043335499,
+        "p10": 7.175599176629037,
+        "p90": 78.61213927877782,
+        "min": 0.21926977095598865,
+        "max": 191.04533724986882
+      }
+    },
+    "6-10": {
+      "requests": 85,
+      "strict_sun": 1,
+      "meta_sun": 26,
+      "force": {
+        "n": 74,
+        "missing_or_nonfinite": 11,
+        "mean": 56.75650477040526,
+        "median": 42.809678660707476,
+        "p10": 16.25940798761257,
+        "p90": 91.30530739952373,
+        "min": 4.925470270871904,
+        "max": 383.9666181009584
+      }
+    },
+    "11-15": {
+      "requests": 45,
+      "strict_sun": 0,
+      "meta_sun": 2,
+      "force": {
+        "n": 38,
+        "missing_or_nonfinite": 7,
+        "mean": 86.47880776120925,
+        "median": 65.33474671919691,
+        "p10": 27.347349671094655,
+        "p90": 191.89279908464377,
+        "min": 12.237860951448525,
+        "max": 320.43849431979555
+      }
+    },
+    "16-20": {
+      "requests": 60,
+      "strict_sun": 0,
+      "meta_sun": 0,
+      "force": {
+        "n": 41,
+        "missing_or_nonfinite": 19,
+        "mean": 86.14322033896495,
+        "median": 66.15236411061088,
+        "p10": 36.070229445923125,
+        "p90": 154.56955310870597,
+        "min": 24.77066277282955,
+        "max": 200.03955385961842
+      }
+    }
+  },
+  "limits": "casepack has no sample-before-export structure, actual CIF files, saved graph or intermediate field; these checks do not certify that chain or assign solver causality",
+  "model_forwards": 0,
+  "optimizer_steps": 0,
+  "new_energy_evaluations": 0
+}

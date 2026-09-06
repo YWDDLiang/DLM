@@ -1,38 +1,46 @@
 {
-  "created_at_utc": "2026-09-06T16:10:22.097976+00:00",
+  "created_at_utc": "2026-09-06T17:52:32.435600+00:00",
   "scope": "Current root and top-level audit reports; prior retained-contract check preserved below; excludes immutable snapshots and inline math",
-  "documents": 34,
-  "local_links": 426,
+  "documents": 37,
+  "local_links": 450,
   "missing_count": 0,
   "missing": [],
   "previous_check": {
-    "created_at_utc": "2026-09-06T15:54:40.616081+00:00",
+    "created_at_utc": "2026-09-06T16:10:22.097976+00:00",
     "scope": "Current root and top-level audit reports; prior retained-contract check preserved below; excludes immutable snapshots and inline math",
     "documents": 34,
-    "local_links": 420,
+    "local_links": 426,
     "missing_count": 0,
     "missing": [],
     "previous_check": {
-      "created_at_utc": "2026-09-06T15:41:37.569562+00:00",
+      "created_at_utc": "2026-09-06T15:54:40.616081+00:00",
       "scope": "Current root and top-level audit reports; prior retained-contract check preserved below; excludes immutable snapshots and inline math",
-      "documents": 33,
-      "local_links": 411,
+      "documents": 34,
+      "local_links": 420,
       "missing_count": 0,
       "missing": [],
       "previous_check": {
-        "created_at_utc": "2026-09-06T14:14:47.510212+00:00",
+        "created_at_utc": "2026-09-06T15:41:37.569562+00:00",
         "scope": "Current root and top-level audit reports; prior retained-contract check preserved below; excludes immutable snapshots and inline math",
-        "documents": 27,
-        "local_links": 373,
+        "documents": 33,
+        "local_links": 411,
         "missing_count": 0,
         "missing": [],
         "previous_check": {
-          "created_at_utc": "2026-09-06T11:38:40.263637+00:00",
-          "documents": 35,
-          "local_links": 358,
+          "created_at_utc": "2026-09-06T14:14:47.510212+00:00",
+          "scope": "Current root and top-level audit reports; prior retained-contract check preserved below; excludes immutable snapshots and inline math",
+          "documents": 27,
+          "local_links": 373,
           "missing_count": 0,
           "missing": [],
-          "scope": "Current entrypoints, retained contracts and top-level audit reports. Historical snapshots and third-party citations are not rewritten."
+          "previous_check": {
+            "created_at_utc": "2026-09-06T11:38:40.263637+00:00",
+            "documents": 35,
+            "local_links": 358,
+            "missing_count": 0,
+            "missing": [],
+            "scope": "Current entrypoints, retained contracts and top-level audit reports. Historical snapshots and third-party citations are not rewritten."
+          }
         }
       }
     }

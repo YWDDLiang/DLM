@@ -2,7 +2,7 @@
 
 C³FD 提供化学动作支持，Typed Llama 生成组成、软计划与物种程序，周期 DLM 生成和修订晶体几何；固定 model494 refiner 单独报告。
 
-最近完成SUN评测的版本为 **Periodic DLM V2**：raw Strict/Meta SUN 为 **8/50**，固定 tau800 后为 **16/113**（256请求），未达到目标。全链路审计与V3两轮独立复核已完成；[H-P33](docs/v3_scientific_audit_20260906/V3_H_P33_SPECIFICATION.md)通过真实4/6卡与图回环验收，正式新增两轮训练40064已完整完成，评测40066运行中。它是连续几何扩展实验，尚未采用为论文主线；[与原故事的契合边界](docs/v3_scientific_audit_20260906/V3_STORY_FIT.md)须与SUN分开判断。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
+最近完成的 **V3 H-P33 G** 评测40066：raw Strict/Meta SUN为 **9/61**，固定tau800后为 **13/116**（全部256请求），未达到目标且未改善旧K4/K8。真实输出链检查40069全256无错配，坐标去噪验证基本没有优于零预测；[实际失败诊断](docs/v3_scientific_audit_20260906/V3_FAILURE_CROSS_STRATEGY_PHYSICS.md)记录逐结构证据。40071正在测试同40064权重的T construction-only及匹配V2 constructor→tau800；后续重点分析K4/K8哪些稳定、哪些失败，若V2/V3最终无效则采用K4或K8。具体状态以[当前记录](docs/CURRENT_STATE.md)为准。
 
 ## 项目入口
 

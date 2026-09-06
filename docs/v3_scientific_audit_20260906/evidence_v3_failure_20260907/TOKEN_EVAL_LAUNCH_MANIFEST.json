@@ -1,0 +1,91 @@
+{
+  "schema": "mixed_token_construction_evaluation_v1",
+  "created_at_utc": "2026-09-06T17:37:29.014863+00:00",
+  "code_commit": "b3efa789fab1a70529251c9c364d5e9ae027e193",
+  "policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+  "policy_files_sha256": {
+    "CHECKPOINT_FINAL.json": "07d673360c482ac76d745b09bda0e39eb816b5c34e8533f839bd096f29dbbe3b",
+    "README.md": "994978b0352fcdadef1d24a249cd7ff663b07334b3a13d6a8a54997f1003f973",
+    "adapter_config.json": "ff8bef3f3b68360649e1d006a263d8fb0ad8f7d0f99d7d8d418c2cce2a82bc4c",
+    "adapter_model.safetensors": "0399b954d3121fff744204cba3b556b9bd205634a15df2d7ed3d9c328f5c1624",
+    "chat_template.jinja": "b48c47f6443892716176eb200bf4ef108f64e06ca26ed0fa8ebc0a4b3992fcb2",
+    "mixed_geometry_config.json": "bbfcc07ebc31cf4ac85b7c1593d4a22346cdf9295c2ad89354c39ad76bfe1388",
+    "mixed_geometry_heads.pt": "2e3231dfa417171e1c3bc1bbb8433bf32fc12b4048ce031ec271c220d1b02814",
+    "mixed_geometry_normalizer.json": "4fa0cf6943f89b268e9a780aa95c176138c644cf17171bd90d174bb2ff383f8d",
+    "periodic_repair.pt": "0138f2bdbc535a0c55b93b63e798f493b11d198533288b4df95475c7e82b1f5d",
+    "periodic_repair_config.json": "62d2f55343e8c37eb4ebcd374e6d54741e36526583313d807b32ec4adf933928",
+    "periodic_state.pt": "da210b49cf27b0b90ff3b3d7fd3acb1a39f4b312cd4bbd736b45eb714eb1021d",
+    "periodic_state_config.json": "d79d4a18dcb8970fc53ecd011dae3615efeff3a8993de3a8955fb1350ab8caf7",
+    "periodic_v2_config.json": "b5025465d70fe6f71880e98a7e1e02e200048199f6bc5bdf88d8278600211904",
+    "raw_periodic_initialization.json": "c3b6ac5b00f8a852bbaf552e4fe21936fef7fd3958e57380791b27c6ad9aa5b5",
+    "special_tokens_map.json": "95c306b5886d915f970629a0fe34e30e20fb8805a31f694846d01ea4487e8790",
+    "tokenizer.json": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "tokenizer_config.json": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2"
+  },
+  "conditions": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/spad_prospective_seed23_256_v1_20260903/plans_for_dlm.jsonl",
+  "conditions_sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68",
+  "entry_sha256": "7b7b48aa730627518778fd26118a9340f3db1da7bbb94c5d1e39e160e53ae344",
+  "frozen_inputs": {
+    "EVAL_LAUNCH_MANIFEST.json": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/EVAL_LAUNCH_MANIFEST.json",
+      "sha256": "420f1a978e142eaf581138ab89fad0de1a9870853474c003fc89453cc3168c04"
+    },
+    "CONFIG.json1": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/CONFIG.json",
+      "sha256": "a79a574209b9ebc4432778dc89ca65b5c18d337d7d7f20408a607f4ab25004ab"
+    },
+    "plans_for_dlm.jsonl2": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/cohorts/spad_prospective_seed23_256_v1_20260903/plans_for_dlm.jsonl",
+      "sha256": "f1bbc29891bd3e42bcc452ff3ea1585f038ef83f0c7ba9327239192d67a65f68"
+    },
+    "runs/train_40064/train/TRAIN_FINAL.json": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/TRAIN_FINAL.json",
+      "sha256": "bf79ccb8fb304b28f36bd88ad63e9ac324beb64de1cb2569518b2754d3723aa6"
+    },
+    "paths.jsonl4": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction-traces/paths.jsonl",
+      "sha256": "a81b61871d258410b487ff713bcd0918b92cd282a9860181e78d84be32dd27dd"
+    },
+    "paths.jsonl5": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction/paths.jsonl",
+      "sha256": "1fde9b2fba9255bcae3dedecae25694e78ad5df10b95537ed5e2bf4612b1a682"
+    },
+    "labels.jsonl6": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction-labels/labels.jsonl",
+      "sha256": "f844a23d4e31623dc34e33bf9c82cbb9989dd15d2a7f6f7bf107712809740eba"
+    },
+    "EVALUATION_FINAL.json7": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/periodic_self_repair_20260906/v2_from_original_llada/runs/eval_39998/construction-evaluation/EVALUATION_FINAL.json",
+      "sha256": "b73a15cf55109d95e872894f263bc55aa64a115469a433f220e1ae92733a7928"
+    }
+  },
+  "requests": 256,
+  "method": "mixed_token_construction",
+  "training_method": "mixed_geometry_h_p33",
+  "primary": [
+    "native",
+    "tau800"
+  ],
+  "paired_baseline": "V2 same original constructor then same model494 tau800",
+  "base_seed": 20260905,
+  "round": 0,
+  "logical_cap": 4,
+  "logical_world": 2,
+  "temperature": 0.7,
+  "pilot_requests": 4,
+  "pilot_fresh_replay_required": true,
+  "pilot_quality_selection": false,
+  "geometry_forward_calls_in_T": 0,
+  "G_diagnostic_max_NFE": 66,
+  "G_diagnostic_time_limit_seconds": 600,
+  "common_R_changed": false,
+  "outcome_selection": false,
+  "inference_mlip": false,
+  "resources": {
+    "gpus": 6,
+    "cpus": 24,
+    "memory": "440G",
+    "walltime": "02:00:00"
+  },
+  "qualification_rule": "same endpoint >=26 strict SUN and >=128 meta SUN in all256"
+}

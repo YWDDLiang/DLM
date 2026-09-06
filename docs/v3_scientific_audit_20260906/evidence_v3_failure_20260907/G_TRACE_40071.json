@@ -1,0 +1,194 @@
+{
+  "status": "PASS",
+  "training": false,
+  "MLIP_calls": 0,
+  "new_candidate_selection": false,
+  "source_commit": "0bf8e8870f96c54e86cbd080e64c527f55fb6943",
+  "total_neural_forward_calls": 66,
+  "source_hashes": {
+    "src/crystal_dlm/mixed_geometry_diffusion.py": "24ebd6d8c9def0205289b295691eb7a4074d23b58cbdfa4977f37996f0ac86dc",
+    "src/crystal_dlm/mixed_geometry_model.py": "f003c151c1e141c005c1c6da3c5f86bd3a2a545706d1c3a8661f2d8c9d00ad31",
+    "src/crystal_dlm/mixed_geometry_sampling.py": "06242755a029b818256b02ceb24b7bd6ad01818296bf0deb787d9b433c7e67eb"
+  },
+  "checkpoint_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/mixed_geometry_h_p33_20260906/runs/train_40064/train/checkpoints/step-4524",
+  "checkpoint_hashes": {
+    "mixed_geometry_config.json": "bbfcc07ebc31cf4ac85b7c1593d4a22346cdf9295c2ad89354c39ad76bfe1388",
+    "mixed_geometry_heads.pt": "2e3231dfa417171e1c3bc1bbb8433bf32fc12b4048ce031ec271c220d1b02814",
+    "mixed_geometry_normalizer.json": "4fa0cf6943f89b268e9a780aa95c176138c644cf17171bd90d174bb2ff383f8d",
+    "CHECKPOINT_FINAL.json": "07d673360c482ac76d745b09bda0e39eb816b5c34e8533f839bd096f29dbbe3b"
+  },
+  "torch": "2.4.0+cu121",
+  "device": "cuda:0",
+  "native_paths_sha256": "cb3c1c168501fc4409a221b3a6c39206bcba3cb74d3136c19b563f331a257be4",
+  "all_original_outputs_reproduced": true,
+  "batches": {
+    "first_N_le_6": {
+      "selection": {
+        "logical_serial": 0,
+        "N": 2,
+        "trajectory_ids": [
+          "eval:12:0:0"
+        ],
+        "sample_indices": [
+          12
+        ],
+        "original_batch_size": 1
+      },
+      "statistics": {
+        "attempted_field_callbacks": 33,
+        "model_forward_calls": 33,
+        "model_row_evaluations": 33,
+        "live_row_model_evaluations": 33,
+        "failed_row_padding_evaluations": 0
+      },
+      "per_row_neural_nfe": [
+        33
+      ],
+      "failed_row_padding_nfe": [
+        0
+      ],
+      "recorded_model_calls": 33,
+      "extra_neural_calls_for_numeric_reconstruction": 0,
+      "network_input_reconstruction_max_error": 0.0,
+      "numerical_reconstruction_exact": true,
+      "centroid_definition": "equal-site fractional translation, not mass-weighted COM",
+      "array_file": "first_N_le_6.npz",
+      "array_sha256": "96733a3040acc1b0278749361c0e303918f9ea45fa03b995341073f5d080b6fa",
+      "rows": [
+        {
+          "trajectory_id": "eval:12:0:0",
+          "sample_idx": 12,
+          "N": 2,
+          "Euler_cumulative_internal_RMS_sum_fractional": 0.008140054102871256,
+          "Euler_cumulative_total_RMS_sum_fractional": 0.01884834395115248,
+          "Euler_cumulative_internal_RMS_sum_A_changing_cell": 0.06039699367344103,
+          "Euler_net_movement": {
+            "RMS_fractional": 0.011247235608933585,
+            "internal_RMS_fractional": 0.006262602094131098,
+            "centroid_displacement": [
+              -0.010160966595388538,
+              0.01256127520822009,
+              -0.000899719151234879
+            ],
+            "translation_squared_fraction": 0.689959768887728,
+            "max_abs_component": 0.01728161624198321
+          },
+          "final_net_movement": {
+            "RMS_fractional": 0.011272526380845173,
+            "internal_RMS_fractional": 0.006274726373491059,
+            "centroid_displacement": [
+              -0.010186115446254196,
+              0.01259079862836765,
+              -0.0008987891017782079
+            ],
+            "translation_squared_fraction": 0.6901531657571417,
+            "max_abs_component": 0.017310834766677607
+          },
+          "Euler_cumulative_internal_to_net_ratio": 1.2997878486483412,
+          "Euler_translation_fraction_of_sum_step_squares": 0.7674479005878079,
+          "readout_movement": {
+            "RMS_fractional": 2.7728409021325483e-05,
+            "internal_RMS_fractional": 1.6346579371997585e-05,
+            "centroid_displacement": [
+              -2.5148850865662098e-05,
+              2.9523420147597792e-05,
+              9.30049456655979e-07
+            ],
+            "translation_squared_fraction": 0.6524607402517252,
+            "max_abs_component": 2.982831560075283e-05
+          },
+          "readout_z_RMS": 7.167403758416514e-05,
+          "original_final_fractional_max_error": 0.0,
+          "original_final_Gram_relative_error": 0.0,
+          "original_output_reproduced": true
+        }
+      ]
+    },
+    "first_N_ge_16": {
+      "selection": {
+        "logical_serial": 50,
+        "N": 16,
+        "trajectory_ids": [
+          "eval:146:0:0"
+        ],
+        "sample_indices": [
+          146
+        ],
+        "original_batch_size": 1
+      },
+      "statistics": {
+        "attempted_field_callbacks": 33,
+        "model_forward_calls": 33,
+        "model_row_evaluations": 33,
+        "live_row_model_evaluations": 33,
+        "failed_row_padding_evaluations": 0
+      },
+      "per_row_neural_nfe": [
+        33
+      ],
+      "failed_row_padding_nfe": [
+        0
+      ],
+      "recorded_model_calls": 33,
+      "extra_neural_calls_for_numeric_reconstruction": 0,
+      "network_input_reconstruction_max_error": 0.0,
+      "numerical_reconstruction_exact": true,
+      "centroid_definition": "equal-site fractional translation, not mass-weighted COM",
+      "array_file": "first_N_ge_16.npz",
+      "array_sha256": "efa001944ba5f921eb1c035343902de93eb2a0ecce9927198146dcd5e5d8d50b",
+      "rows": [
+        {
+          "trajectory_id": "eval:146:0:0",
+          "sample_idx": 146,
+          "N": 16,
+          "Euler_cumulative_internal_RMS_sum_fractional": 0.008325488967586798,
+          "Euler_cumulative_total_RMS_sum_fractional": 0.011777238647458372,
+          "Euler_cumulative_internal_RMS_sum_A_changing_cell": 0.10768377363698757,
+          "Euler_net_movement": {
+            "RMS_fractional": 0.006811840442336794,
+            "internal_RMS_fractional": 0.00526938141577982,
+            "centroid_displacement": [
+              -0.0024455019724412344,
+              0.0034542346790357864,
+              0.006163777413696957
+            ],
+            "translation_squared_fraction": 0.40160171870252426,
+            "max_abs_component": 0.013693225682481325
+          },
+          "final_net_movement": {
+            "RMS_fractional": 0.006816968777851177,
+            "internal_RMS_fractional": 0.0052662238589235065,
+            "centroid_displacement": [
+              -0.0024442345466525496,
+              0.0034796679724049297,
+              0.006175068990746366
+            ],
+            "translation_squared_fraction": 0.40321757773433453,
+            "max_abs_component": 0.013716978977202476
+          },
+          "Euler_cumulative_internal_to_net_ratio": 1.579974632820293,
+          "Euler_translation_fraction_of_sum_step_squares": 0.40690930486906096,
+          "readout_movement": {
+            "RMS_fractional": 2.2389805603215486e-05,
+            "internal_RMS_fractional": 1.557724508009972e-05,
+            "centroid_displacement": [
+              1.2674257886828852e-06,
+              2.5433293369133028e-05,
+              1.1291577049405532e-05
+            ],
+            "translation_squared_fraction": 0.5159606602907617,
+            "max_abs_component": 6.227878481149673e-05
+          },
+          "readout_z_RMS": 8.130209445500152e-05,
+          "original_final_fractional_max_error": 0.0,
+          "original_final_Gram_relative_error": 0.0,
+          "original_output_reproduced": true
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Two outcome-blind original logical batches do not estimate cohort-wide SUN.",
+    "Cumulative RMS sums diagnose motion/cancellation, not an energy descent guarantee."
+  ]
+}
