@@ -12,7 +12,7 @@ Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 
 - [x] Implement two full epochs/two views,6784 updates, final checkpoint, fixed validation monitor.
 - [x] Keep full-source schema CE and separately gated legal CE with conflict ledger.
 - [x] Cancel and invalidate incorrect K4 warm-start39934; do not resume239.
-- [ ] Submit raw training240 on two A800 and record job ID.
+- [x] Submit raw training240 on two A800: job39937, started from original LLaDA with original MP20 only.
 - [ ] Check initialization, first ten updates, gradients, throughput and coverage during training.
 - [ ] Finish declared endpoint and evaluate fixed256 native generation.
 - [ ] Evaluate same inputs with frozen model494 tau800 separately.
@@ -20,3 +20,5 @@ Authoritative direction: original LLaDA initialization, original MP20, no K4/K8 
 - [ ] Report new-model completed results and gaps by18:49; original mainline deadline19:19.
 
 Design: RAW_LLADA_DESIGN.md. Older warm-start documents are historical and superseded by this checklist.
+
+Latest observed healthy startup: steps1–3 losses5.8872/6.0712/5.9611, finite clipped gradients, peak memory16.03GiB/GPU. Per user instruction, let39937 run naturally and check again only for failure, stage completion, or before consuming its checkpoint.
