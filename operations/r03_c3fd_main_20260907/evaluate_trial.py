@@ -390,6 +390,12 @@ def wilson95_percent(successes, count):
             100. if successes == count else 100 * min(1., center + radius)]
 
 
+def parse_recorded_time(value):
+    # PowerShell emits seven fractional digits; Python 3.10 accepts at most six.
+    # Keep the original receipt intact and normalize only for the comparison.
+    return datetime.fromisoformat(re.sub(r'(\.\d{6})\d+', r'\1', value).replace('Z', '+00:00'))
+
+
 def summarize_evaluation(directory, cell, method, trial):
     require_success(directory)
     report = read_json(directory / "EVALUATION_FINAL.json")
@@ -507,8 +513,8 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
     if trial["method_freeze"]:
         frozen = read_json(trial["method_freeze"])
         if (frozen.get("schema") != "r03_method_freeze_v1" or frozen.get("selected_role") not in ("G", "P")
-                or datetime.fromisoformat(frozen["recorded_utc"].replace("Z", "+00:00"))
-                > datetime.fromisoformat(frozen["freeze_deadline_utc"].replace("Z", "+00:00"))):
+                or parse_recorded_time(frozen["recorded_utc"])
+                > parse_recorded_time(frozen["freeze_deadline_utc"])):
             raise ValueError("invalid or late method freeze receipt")
         source_pins.append(file_identity(trial["method_freeze"]))
         if trial['scope'] == 'formal' and trial['selected_role'] != frozen['selected_role']:
