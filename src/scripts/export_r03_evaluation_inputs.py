@@ -432,10 +432,17 @@ def export_legacy_panel(manifest, *, endpoint, expected_requests, method_id):
                     or recorded.get('refiner_complete') != row['body_graph_complete']):
                 raise ValueError('legacy refinement occurrences/noise differ from the frozen ledger')
         payload = torch.load(tensor_path, map_location='cpu', weights_only=False)
+        if 'sample_idx' not in payload or 'sample_indices' in payload:
+            raise ValueError('frozen h1_r03e tensor must carry its original unambiguous sample_idx ledger')
+        # The historical producer saves sample_idx; the current shared parser
+        # calls the same global-index tensor sample_indices. No values move.
+        payload = {**payload,'sample_indices':payload['sample_idx']}
         indices = validate_refined_shapes(payload)
         if metrics.get('refiner_complete') != len(indices):
             raise ValueError('legacy refiner tensor count differs from its completion receipt')
-        refinement = {'refined_run_config': config, 'refined_metrics': metrics}
+        refinement = {'refined_run_config': config, 'refined_metrics': metrics,
+                      'legacy_refiner_index_field':'sample_idx','parser_refiner_index_field':'sample_indices',
+                      'refined_tensor_values_changed':False}
     result, report = export_records(adapted, endpoint=endpoint, expected_requests=expected_requests,
                                     method_id=method_id, refined_payload=payload, source_schema=LEGACY_SOURCE_SCHEMA)
     for output, ledger in zip(result, seeds):

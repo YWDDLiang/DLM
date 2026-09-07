@@ -479,7 +479,8 @@ def legacy_panel_fixture(base, *, endpoint="native", arm="control"):
     if endpoint == "tau800":
         graphs = pin("proposal_graphs", [{"sample_idx": i} for i in (0, 2)], binary=True)
         payload = refined_payload()
-        payload["sample_indices"] = torch.tensor([2, 0], dtype=torch.long)
+        payload.pop('sample_indices')
+        payload["sample_idx"] = torch.tensor([2, 0], dtype=torch.long)
         tensor = pin("refined_pt", payload, binary=True)
         common = {"arm": arm, "diff_steps": 800, "num_evals": 1, "effective_batch_size": 1,
                   "filter": False, "repair": False, "replacement": False, "rerank": False,
