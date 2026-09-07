@@ -131,6 +131,9 @@ def load_path_model(model_path, checkpoint_path, device, *, trainable=False):
     for marker in (root.parent.parent / "TRAIN_FINAL.json", root.parent / "PREFLIGHT.json"):
         if marker.is_file() and json.loads(marker.read_text()).get("eligible_policy") is False:
             raise ValueError(f"engineering checkpoint is not an eligible collection policy: {root}")
+    if any((root / name).exists() for name in ('expert_edit_config.json', 'expert_edit_modules.pt', 'EXPERT_EDITOR.json')):
+        from crystal_dlm.expert_edit import load_editor_model
+        return load_editor_model(model_path, root, device, trainable=trainable)
     if (root / "periodic_v2_config.json").is_file():
         from crystal_dlm.periodic_v2_initialization import load_periodic_v2_model
         return load_periodic_v2_model(model_path, root, device, trainable=trainable)

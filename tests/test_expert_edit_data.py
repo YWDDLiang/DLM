@@ -237,6 +237,23 @@ class ExpertEvidenceContracts(unittest.TestCase):
             self.assertTrue(all('target_body' not in row for row in compiled if row.get('state_only')))
             reverse = [row for row in compiled if row['label_reason'] == 'reverse_verified_degradation']
             self.assertTrue(all(row['old_physics_id'].startswith('expert-target:') for row in reverse))
+            # A recovered training run may exclude the entire unresolved source;
+            # the default contract must still reject that same engineering run.
+            failed_group = labels[0]['group_id']
+            labels[0].update(status='worker_error', verified=False, versions=None)
+            (labels_dir / 'labels.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in labels))
+            summary = json.loads((labels_dir / 'LABEL_FINAL.json').read_text())
+            summary['statuses'] = {'verified': 4, 'worker_error': 1}
+            (labels_dir / 'LABEL_FINAL.json').write_text(json.dumps(summary))
+            (labels_dir / '_SUCCESS').unlink()
+            (labels_dir / '_ENGINEERING_FAILED').touch()
+            with self.assertRaisesRegex(ValueError, 'engineering failures'):
+                compile_collection(prepared, labels_dir, root / 'not_recovered')
+            recovered = compile_collection(prepared, labels_dir, root / 'recovered', exclude_worker_errors=True)
+            self.assertEqual(recovered['excluded_engineering_ancestors'], [failed_group])
+            remaining = [json.loads(line) for split in ('train','dev')
+                         for line in (root / f'recovered/{split}.jsonl').read_text().splitlines()]
+            self.assertTrue(all(row['ancestor_id'] != failed_group for row in remaining))
             (prepared / 'pairs_pending.jsonl').write_text('{}\n')
             with self.assertRaisesRegex(ValueError, 'pairs or physics inputs changed'):
                 compile_collection(prepared, labels_dir, root / 'wrong')

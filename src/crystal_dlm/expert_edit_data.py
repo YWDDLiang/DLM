@@ -386,7 +386,7 @@ def endpoint_fingerprint(record):
     return hashlib.sha256(value.encode()).hexdigest()
 
 
-def bound_labels(input_path, directory):
+def bound_labels(input_path, directory, *, exclude_worker_errors=False):
     directory = Path(directory)
     report = json.loads((directory / 'LABEL_FINAL.json').read_text())
     if report.get('purpose') != 'expert_edit':
@@ -394,7 +394,9 @@ def bound_labels(input_path, directory):
     if (report.get('protocol') != COMMON_RELAXATION_PROTOCOL
             or report.get('verification_protocol') != TERMINAL_VERIFICATION_PROTOCOL):
         raise ValueError('physics protocol differs from the frozen common relaxation')
-    if not (directory / '_SUCCESS').is_file() or report['statuses'].get('worker_error', 0):
+    recovered = (exclude_worker_errors and report['statuses'].get('worker_error', 0)
+                 and (directory / '_ENGINEERING_FAILED').is_file())
+    if (not (directory / '_SUCCESS').is_file() or report['statuses'].get('worker_error', 0)) and not recovered:
         raise ValueError('physics labels are incomplete or contain engineering failures')
     if report.get('input_sha256') != sha256(input_path) or len(report.get('runtime_identities', [])) != 1:
         raise ValueError('physics input/runtime identity is not fully established')
@@ -408,7 +410,8 @@ def bound_labels(input_path, directory):
     for key, record in inputs.items():
         label = labels[key]
         if (label.get('endpoint_cache_key') != endpoint_fingerprint(record)
-                or label.get('versions') != report['runtime_identities'][0]
+                or (label.get('versions') != report['runtime_identities'][0]
+                    and not (recovered and label['status'] == 'worker_error'))
                 or any(label.get(field) != record.get(field) for field in ('group_id', 'source_row_idx', 'source_split', 'endpoint'))):
             raise ValueError('physics label is bound to a different input geometry or occurrence')
     return labels, report
@@ -477,7 +480,7 @@ def derive_pair_supervision(pair, old_label, target_label, *, margin=.01):
     return result
 
 
-def compile_collection(prepared, labels_dir, output, *, margin=.01):
+def compile_collection(prepared, labels_dir, output, *, margin=.01, exclude_worker_errors=False):
     prepared, output = Path(prepared), Path(output)
     if not (prepared / '_SUCCESS').is_file():
         raise ValueError('expert input compilation is incomplete')
@@ -486,15 +489,21 @@ def compile_collection(prepared, labels_dir, output, *, margin=.01):
         if Path(name).name != name or sha256(prepared / name) != expected:
             raise ValueError('prepared editing pairs or physics inputs changed')
     inputs = prepared / 'all_inputs.jsonl'
-    labels, label_report = bound_labels(inputs, labels_dir)
+    labels, label_report = bound_labels(inputs, labels_dir, exclude_worker_errors=exclude_worker_errors)
     pending = read_rows(prepared / 'pairs_pending.jsonl')
     output.mkdir(parents=True, exist_ok=False)
     records, outcomes, counts = [], [], Counter()
     positive_groups = {'train': set(), 'dev': set()}
     comparable_groups = set()
+    excluded_engineering = []
     for pair in pending:
         old = labels[pair['old_physics_id']]
         target = labels.get(pair['target_physics_id'])
+        if any(label is not None and label.get('status') == 'worker_error' for label in (old, target)):
+            excluded_engineering.append(pair['ancestor_id'])
+            outcomes.append({'ancestor_id': pair['ancestor_id'], 'source_row_idx': pair['source_row_idx'],
+                             'source_split': pair['source_split'], 'status': 'engineering_unknown_excluded'})
+            continue
         supervision = derive_pair_supervision(pair, old, target, margin=margin)
         if pair['old_geometry'].get('valid') is not None or supervision['old_reliable'] is not None:
             old_only = {key: pair[key] for key in (
@@ -544,7 +553,9 @@ def compile_collection(prepared, labels_dir, output, *, margin=.01):
               'S_margin_eV_atom': margin, 'labels_protocol': label_report['protocol'],
               'labels_runtime': label_report['runtime_identities'], 'labels_sha256': sha256(Path(labels_dir) / 'labels.jsonl'),
               'preparation_sha256': sha256(prepared / 'PREPARATION_FINAL.json'),
+              'excluded_engineering_ancestors': excluded_engineering,
               'unknown_is_negative': False, 'identity_teaches_S_stop': False}
+    report['output_sha256'] = {name: sha256(output/name) for name in ('train.jsonl','dev.jsonl','outcomes.jsonl')}
     report['headroom_budget_gate'] = (len(comparable_groups) >= 32
                                       and sum(map(len, positive_groups.values())) >= 16)
     write_json(output / 'DATA_FINAL.json', report)
@@ -563,11 +574,14 @@ def main(argv=None):
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--limit', type=int)
     parser.add_argument('--min-index', type=int, default=0)
+    parser.add_argument('--exclude-worker-errors', action='store_true',
+                        help='Training only: exclude entire unresolved ancestors from a fully accounted label run')
     args = parser.parse_args(argv)
     if args.mode == 'compile':
         if args.prepared_dir is None or args.labels_dir is None:
             parser.error('compile requires prepared-dir and labels-dir')
-        print(json.dumps(compile_collection(args.prepared_dir, args.labels_dir, args.output_dir)), flush=True)
+        print(json.dumps(compile_collection(args.prepared_dir, args.labels_dir, args.output_dir,
+                                            exclude_worker_errors=args.exclude_worker_errors)), flush=True)
         return
     if args.collection_manifest is None or args.heldout_cohort is None or args.b0_checkpoint is None:
         parser.error('prepare requires collection-manifest, heldout-cohort and b0-checkpoint')

@@ -342,6 +342,12 @@ def train(args, prepared, b0_identity):
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if '--task' in argv:
+        i = argv.index('--task')
+        if i + 1 >= len(argv) or argv[i + 1] != 'expert-edit':
+            raise ValueError('the registered alternate task is expert-edit')
+        return expert_main(argv[:i] + argv[i + 2:])
     args = parse_args(argv)
     b0_identity = verify_b0(args.b0_checkpoint)
     if args.prepare_only:
@@ -358,6 +364,390 @@ def main(argv=None):
                                                       "eligible_policy": False})
         (args.output_dir / "_FAILED").touch()
         raise
+
+
+def expert_args(argv):
+    parser = argparse.ArgumentParser(description='Train and validate an offline-supervised autonomous crystal editor')
+    parser.add_argument('--mode', choices=('train', 'verify', 'sample'), default='train')
+    parser.add_argument('--b0-checkpoint', type=Path, required=True)
+    parser.add_argument('--model-path', type=Path, required=True)
+    parser.add_argument('--checkpoint', type=Path)
+    parser.add_argument('--data-dirs', type=Path, nargs='+', required=True)
+    parser.add_argument('--output-dir', type=Path, required=True)
+    parser.add_argument('--updates', type=int, default=160)
+    parser.add_argument('--microbatch', type=int, default=2)
+    parser.add_argument('--accumulation', type=int, default=2)
+    parser.add_argument('--learning-rate', type=float, default=5e-5)
+    parser.add_argument('--module-learning-rate', type=float, default=1e-4)
+    parser.add_argument('--weight-decay', type=float, default=.01)
+    parser.add_argument('--seed', type=int, default=2026090807)
+    parser.add_argument('--max-length', type=int, default=1024)
+    parser.add_argument('--smoke-sources', type=int, default=0)
+    parser.add_argument('--eval-every', type=int, default=40)
+    parser.add_argument('--eval-batches', type=int, default=12)
+    parser.add_argument('--time-budget-hours', type=float, default=1.)
+    parser.add_argument('--training-seconds-already-used', type=float, default=0.)
+    parser.add_argument('--diagnostic-sources', type=int, default=32)
+    parser.add_argument('--split', choices=('train', 'dev'), default='dev')
+    parser.add_argument('--block-size', type=int, choices=(1, 4, 8), default=1)
+    parser.add_argument('--force-mode', choices=('local_xyz', 'all_xyz', 'full_cell'))
+    parser.add_argument('--accept-threshold', type=float, default=.5)
+    args = parser.parse_args(argv)
+    if min(args.updates, args.microbatch, args.accumulation, args.eval_every, args.eval_batches) < 1:
+        parser.error('positive training and evaluation sizes required')
+    if not 0 < args.time_budget_hours <= 16 or args.training_seconds_already_used < 0:
+        parser.error('training must obey the cumulative sixteen-hour cap')
+    if args.training_seconds_already_used + 3600 * args.time_budget_hours > 16 * 3600:
+        parser.error('requested training exceeds the remaining cumulative training cap')
+    if args.mode != 'train' and args.checkpoint is None:
+        parser.error('verification and sampling require an actual editor checkpoint')
+    return args
+
+
+def verify_saved_tables(model, checkpoint):
+    """Compare effective tables with saved trained tables, not a second loader."""
+    import torch
+    from safetensors import safe_open
+    report = {}
+    with safe_open(str(Path(checkpoint) / 'adapter_model.safetensors'), framework='pt', device='cpu') as saved:
+        for name, table in (('wte', model.get_input_embeddings().weight),
+                            ('ff_out', model.get_output_embeddings().weight)):
+            preferred = [key for key in saved.keys() if key.endswith(f'.{name}.modules_to_save.weight')]
+            alternatives = [key for key in saved.keys() if key.endswith(f'.{name}.weight')]
+            keys = preferred or alternatives
+            if len(keys) != 1:
+                raise ValueError(f'no unambiguous trained B0 table for {name}: {keys}')
+            tensor = saved.get_slice(keys[0])
+            if list(tensor.get_shape()) != list(table.shape):
+                raise ValueError(f'saved {name} shape differs from the effective table')
+            for start in range(0, table.shape[0], 2048):
+                actual = table[start:start+2048].detach().cpu()
+                expected = tensor[start:start+2048]
+                if preferred and alternatives:
+                    if len(alternatives) != 1 or not torch.equal(expected, saved.get_slice(alternatives[0])[start:start+2048]):
+                        raise ValueError(f'ambiguous original trained table aliases for {name}')
+                if actual.dtype != expected.dtype or not torch.equal(actual, expected):
+                    raise ValueError(f'effective {name} differs from saved trained table at row {start}')
+            report[name] = {'key': keys[0], 'shape': list(table.shape), 'dtype': str(table.dtype), 'exact': True}
+    return report
+
+
+def verify_saved_lora(model, checkpoint):
+    import torch
+    from safetensors import safe_open
+    count, keys_seen = 0, set()
+    with safe_open(str(Path(checkpoint)/'adapter_model.safetensors'), framework='pt', device='cpu') as saved:
+        keys = {name for name in saved.keys() if '.lora_A.' in name or '.lora_B.' in name}
+        for name, parameter in model.base_model.named_parameters():
+            if '.lora_A.' not in name and '.lora_B.' not in name:
+                continue
+            key = name.replace('.default.', '.')
+            if key not in keys or not torch.equal(parameter.detach().cpu(), saved.get_tensor(key)):
+                raise ValueError(f'effective LoRA differs from the registered checkpoint: {name}')
+            count += parameter.numel()
+            keys_seen.add(key)
+        if keys_seen != keys or count != 14_680_064:
+            raise ValueError(f'incomplete B0 LoRA partition: {count} parameters, {len(keys_seen)}/{len(keys)} tensors')
+    return {'parameters': count, 'tensors': len(keys_seen), 'all_exact': True}
+
+
+def editor_gradient_audit(model, tokenizer, dataset, objective, device):
+    import torch
+    from crystal_dlm.expert_edit import make_edit_view, materialize_edit_batch
+    selected = [(name, p) for name, p in model.named_parameters() if p.requires_grad]
+    initial = {name: p.detach().cpu().clone() for name, p in selected}
+    audits = {}
+    for task in ('G', 'S'):
+        if not dataset.content[task]:
+            continue
+        with torch.no_grad():
+            for name, p in selected:
+                p.copy_(initial[name])
+        temporary = torch.optim.AdamW([p for _, p in selected], lr=1e-4, weight_decay=0.)
+        row = dataset.content[task][0]
+        groups = {}
+        for step in range(2):
+            view = make_edit_view(row, 'content', random.Random(123+step), dataset.prefixes[row['prompt']])
+            batch = materialize_edit_batch([view], tokenizer, device)
+            temporary.zero_grad(set_to_none=True)
+            result = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+            loss, _ = objective(result, batch)  # content view has no decision labels
+            loss.backward()
+            groups = {'lora': sum(float(p.grad.detach().float().square().sum()) for name, p in selected
+                                  if 'lora_' in name and p.grad is not None)}
+            for name, module in model.content_modules().items():
+                groups[name] = sum(float(p.grad.detach().float().square().sum()) for p in module.parameters()
+                                   if p.grad is not None)
+            if not all(math.isfinite(value) for value in groups.values()):
+                raise ValueError(f'nonfinite {task} content gradients')
+            temporary.step()
+        if not all(value > 0 for value in groups.values()):
+            raise ValueError(f'{task} content does not train every required conditioning path: {groups}')
+        audits[task] = groups
+        del temporary
+    with torch.no_grad():
+        for name, p in selected:
+            p.copy_(initial[name])
+    model.zero_grad(set_to_none=True)
+    return audits
+
+
+def editor_eval(model, tokenizer, dataset, objective, device, args, rank, world):
+    import torch
+    import torch.distributed as dist
+    from crystal_dlm.expert_edit import materialize_edit_batch
+    model.eval()
+    aggregate = Counter()
+    with torch.no_grad():
+        for i in range(args.eval_batches):
+            rows = [dataset[(i*world+rank)*args.microbatch+j] for j in range(args.microbatch)]
+            batch = materialize_edit_batch(rows, tokenizer, device, max_length=args.max_length)
+            output = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+            _, metrics = objective(output, batch)
+            aggregate.update(metrics)
+    keys = sorted(aggregate)
+    vector = torch.tensor([aggregate[key] for key in keys], dtype=torch.float64, device=device)
+    if world > 1:
+        dist.all_reduce(vector)
+    result = dict(zip(keys, vector.cpu().tolist()))
+    for key in ('loss', 'content_ce', 'mode_ce', 'site_bce', 'quality_bce'):
+        result[key] /= args.eval_batches * world
+    for task in ('G', 'S'):
+        result[task+'_content_ce'] = (result[task+'_content_ce_sum']/result[task+'_content_views']
+                                      if result[task+'_content_views'] else None)
+    return result
+
+
+def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, world):
+    from crystal_dlm.expert_edit import edit_structure
+    from crystal_dlm.expert_edit_data import canonical_body, decode_body, certify_geometry, physics_input
+    inverse = {int(value): key for key, value in tokenizer.get_vocab().items()}
+    selected, seen = [], set()
+    # Balanced same-family positives, with independent source groups per split.
+    pools = {task: dataset.content[task] for task in ('G', 'S')}
+    for i in range(max(map(len, pools.values()))):
+        for task in ('G', 'S'):
+            if i >= len(pools[task]):
+                continue
+            row = pools[task][i]
+            key = (row['ancestor_id'], task)
+            if key in seen or (args.force_mode and row['action']['mode'] != args.force_mode):
+                continue
+            seen.add(key)
+            selected.append(row)
+        if len(selected) >= args.diagnostic_sources:
+            break
+    selected = selected[:args.diagnostic_sources]
+    results, physics = [], []
+    for index, row in enumerate(selected):
+        if index % world != rank:
+            continue
+        output = edit_structure(model, tokenizer, prompt=row['prompt'], body=row['old_body'],
+                                num_sites=row['num_atoms'], allowed_modes=dataset.allowed_modes,
+                                tasks=(row['task'],), seed=args.seed+index, block_size=args.block_size,
+                                force_mode=args.force_mode, accept_threshold=args.accept_threshold)
+        proposal = output['trace'][-1]['proposal_body'] if output['trace'] else row['old_body']
+        arrays = decode_body(proposal, inverse)
+        certificate = certify_geometry(arrays)  # evaluation only, never influences the proposal/gate
+        result = {'record_id': row['record_id'], 'ancestor_id': row['ancestor_id'], 'task': row['task'],
+                  'num_atoms': row['num_atoms'], 'prompt': row['prompt'], 'old_body': row['old_body'],
+                  'source_split': row['source_split'], 'source_row_idx': row['source_row_idx'],
+                  'target_body': row['target_body'], 'old_physics_id': row.get('old_physics_id'),
+                  'target_physics_id': row.get('target_physics_id'), 'proposal_geometry': certificate,
+                  'old_geometry': row['old_geometry'], 'output': output}
+        results.append(result)
+        pid = f'expert-student:{args.output_dir.name}:{index}:{row["task"]}'
+        text = ''.join(inverse[token] for token in proposal)
+        physics.append(physics_input(pid, row['ancestor_id'], row['source_row_idx'], row['source_split'],
+                                     'expert_quantized', arrays, text))
+    write_jsonl(args.output_dir/f'samples.rank{rank}.jsonl', results)
+    write_jsonl(args.output_dir/f'physics.rank{rank}.jsonl', physics)
+    return len(selected)
+
+
+def expert_main(argv):
+    args = expert_args(argv)
+    import datetime
+    import torch
+    import torch.distributed as dist
+    from torch.nn.parallel import DistributedDataParallel
+    from crystal_dlm.expert_edit import (EDITOR_SCHEMA, ExpertEditDataset, ExpertEditObjective,
+                                        load_editor_model, materialize_edit_batch)
+    from crystal_dlm.state_training import enable_native_checkpointing
+    rank, world, local_rank = (int(os.environ.get(key, default)) for key, default in
+                                (('RANK', '0'), ('WORLD_SIZE', '1'), ('LOCAL_RANK', '0')))
+    if not torch.cuda.is_available() or not 1 <= world <= 6:
+        raise RuntimeError('expert training/validation requires 1..6 assigned CUDA devices')
+    torch.cuda.set_device(local_rank)
+    device = torch.device('cuda', local_rank)
+    if world > 1:
+        dist.init_process_group('nccl', timeout=datetime.timedelta(minutes=20))
+    if rank == 0:
+        args.output_dir.mkdir(parents=True, exist_ok=False)
+    if world > 1:
+        dist.barrier()
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
+    b0_identity = verify_b0(args.b0_checkpoint) if rank == 0 else None
+    if world > 1:
+        shared = [b0_identity]
+        dist.broadcast_object_list(shared, src=0)
+        b0_identity = shared[0]
+    model, tokenizer = load_editor_model(args.model_path, args.checkpoint or args.b0_checkpoint,
+                                         device, trainable=args.mode == 'train')
+    train_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed, split='train',
+                                  smoke_sources=args.smoke_sources)
+    dev_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed+10000, split='dev')
+    train_comps = {row['composition_key'] for row in train_data.records}
+    dev_comps = {row['composition_key'] for row in dev_data.records}
+    if train_comps & dev_comps:
+        raise ValueError('training and development composition groups overlap')
+    tables = verify_saved_tables(model, args.b0_checkpoint)
+    lora_identity = verify_saved_lora(model, args.checkpoint or args.b0_checkpoint)
+    objective = ExpertEditObjective(tokenizer, device)
+    if args.mode == 'sample':
+        model.eval()
+        dataset = train_data if args.split == 'train' else dev_data
+        # Scope capability is determined by the actual training partition.
+        dataset.allowed_modes = train_data.allowed_modes
+        requested = sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, world)
+        if world > 1:
+            dist.barrier()
+        if rank == 0:
+            for name in ('samples', 'physics'):
+                rows = []
+                for worker in range(world):
+                    rows.extend(read_jsonl(args.output_dir/f'{name}.rank{worker}.jsonl'))
+                if len(rows) != requested:
+                    raise ValueError('diagnostic sampling lost a requested source')
+                write_jsonl(args.output_dir/(name+'.jsonl'), rows)
+            write_json(args.output_dir/'SAMPLE_FINAL.json', {'schema': EDITOR_SCHEMA, 'requested': requested,
+                       'split': args.split, 'force_mode': args.force_mode, 'block_size': args.block_size,
+                       'checkpoint': str(args.checkpoint), 'source_files': dataset.provenance})
+            (args.output_dir/'_SUCCESS').touch()
+        if world > 1:
+            dist.destroy_process_group()
+        return
+    if args.mode == 'verify':
+        expected = torch.load(args.checkpoint/'roundtrip_probe.pt', map_location='cpu', weights_only=False)
+        batch = materialize_edit_batch(expected['examples'], tokenizer, device)
+        with torch.no_grad():
+            output = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+        equality = {name: bool(torch.equal(getattr(output, name).cpu(), expected[name])) for name in
+                     ('logits', 'mode_logits', 'site_logits', 'count_logits', 'quality_logits')}
+        if not all(equality.values()):
+            raise ValueError(f'fresh-process editor roundtrip differs: {equality}')
+        if rank == 0:
+            write_json(args.output_dir/'VERIFY_FINAL.json', {'tables': tables, 'roundtrip_exact': equality})
+            (args.output_dir/'_SUCCESS').touch()
+        if world > 1:
+            dist.destroy_process_group()
+        return
+    checkpoint_modules = enable_native_checkpointing(model.base_model)
+    if not checkpoint_modules:
+        raise ValueError('native LLaDA activation checkpointing is required')
+    model.base_model.enable_input_require_grads()
+    probe_examples = [train_data[0]]
+    probe = materialize_edit_batch(probe_examples, tokenizer, device)
+    with torch.no_grad():
+        initial = model(probe['input_ids'], attention_mask=probe['attention_mask'], edit_context=probe['edit_context'])
+        if args.checkpoint is None:
+            reference = model.base_model(probe['input_ids'], attention_mask=probe['attention_mask']).logits
+            if not torch.equal(initial.logits, reference):
+                raise ValueError('zero-initialized editor does not exactly preserve actual B0 logits')
+            del reference
+    del initial
+    model.train()
+    audit_started = time.monotonic()
+    gradients = editor_gradient_audit(model, tokenizer, train_data, objective, device)
+    audit_seconds = time.monotonic() - audit_started
+    selected = [(name, p) for name, p in model.named_parameters() if p.requires_grad]
+    partitions = {'lora': [(n,p) for n,p in selected if 'lora_' in n],
+                  'editor': [(n,p) for n,p in selected if 'lora_' not in n]}
+    if not all(partitions.values()) or len({id(p) for _,p in selected}) != len(selected):
+        raise ValueError('optimizer parameter partition is empty or duplicated')
+    optimizer = torch.optim.AdamW([
+        {'params': [p for _, p in partitions['lora']], 'lr': args.learning_rate},
+        {'params': [p for _, p in partitions['editor']], 'lr': args.module_learning_rate}], weight_decay=args.weight_decay)
+    learner = DistributedDataParallel(model, device_ids=[local_rank], broadcast_buffers=False,
+                                      static_graph=True) if world > 1 else model
+    config = {'schema': EDITOR_SCHEMA, 'world_size': world, 'microbatch': args.microbatch,
+              'accumulation': args.accumulation, 'effective_batch': world*args.microbatch*args.accumulation,
+              'parameters': {key: sum(p.numel() for _,p in value) for key,value in partitions.items()},
+              'total_parameters': sum(p.numel() for p in model.parameters()), 'saved_tables': tables,
+              'b0_identity': b0_identity, 'loaded_lora': lora_identity,
+              'content_gradient_audit': gradients, 'checkpoint_modules': checkpoint_modules,
+              'train_sources': len({row['ancestor_id'] for row in train_data.records}),
+              'dev_sources': len({row['ancestor_id'] for row in dev_data.records}),
+              'positive_edits': {task: len(rows) for task, rows in train_data.content.items()},
+              'allowed_modes': train_data.allowed_modes, 'train_files': train_data.provenance,
+              'dev_files': dev_data.provenance, 'args': {key: str(value) if isinstance(value, Path) else
+              [str(x) for x in value] if key == 'data_dirs' else value for key,value in vars(args).items()}}
+    if rank == 0:
+        write_json(args.output_dir/'TRAIN_CONFIG.json', config)
+        print(json.dumps(config), flush=True)
+    started = time.monotonic()
+    history, completed = [], 0
+    for step in range(args.updates):
+        stop = torch.tensor(int(time.monotonic()-started+audit_seconds >= args.time_budget_hours*3600), device=device)
+        if world > 1:
+            dist.all_reduce(stop, op=dist.ReduceOp.MAX)
+        if int(stop):
+            break
+        if step == 0 or step % args.eval_every == 0:
+            metrics = {split: editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
+                       for split, dataset in (('train', train_data), ('dev', dev_data))}
+            metrics.update(step=step, seconds=time.monotonic()-started)
+            history.append(metrics)
+            if rank == 0:
+                with (args.output_dir/'curves.jsonl').open('a') as stream:
+                    stream.write(json.dumps(metrics)+'\n')
+                print(json.dumps(metrics), flush=True)
+        learner.train()
+        optimizer.zero_grad(set_to_none=True)
+        warmup = min(1., (step+1)/max(5, min(50, args.updates//10)))
+        decay = .1+.9*.5*(1+math.cos(math.pi*step/args.updates))
+        for group, base_lr in zip(optimizer.param_groups, (args.learning_rate, args.module_learning_rate)):
+            group['lr'] = base_lr*warmup*decay
+        total_loss = 0.
+        for micro in range(args.accumulation):
+            offset = ((step*args.accumulation+micro)*world+rank)*args.microbatch
+            examples = [train_data[offset+i] for i in range(args.microbatch)]
+            batch = materialize_edit_batch(examples, tokenizer, device, max_length=args.max_length)
+            output = learner(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+            loss, _ = objective(output, batch)
+            (loss/args.accumulation).backward()
+            total_loss += float(loss.detach())/args.accumulation
+        norm = torch.nn.utils.clip_grad_norm_([p for _,p in selected], 1., error_if_nonfinite=True)
+        optimizer.step()
+        completed = step+1
+        if rank == 0 and (completed % 10 == 0 or completed == 1):
+            print(json.dumps({'step': completed, 'loss': total_loss, 'gradient_norm': float(norm),
+                              'seconds': time.monotonic()-started}), flush=True)
+    final_metrics = {split: editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
+                     for split, dataset in (('train', train_data), ('dev', dev_data))}
+    elapsed = time.monotonic()-started+audit_seconds
+    if rank == 0:
+        if completed < 1:
+            raise ValueError('training budget ended before any optimizer update')
+        checkpoint = args.output_dir/'checkpoint'
+        model.save_pretrained(checkpoint, safe_serialization=True, save_embedding_layers=False)
+        tokenizer.save_pretrained(checkpoint)
+        with torch.no_grad():
+            output = model(probe['input_ids'], attention_mask=probe['attention_mask'], edit_context=probe['edit_context'])
+        torch.save({'examples': probe_examples, **{name: getattr(output,name).cpu() for name in
+                    ('logits', 'mode_logits', 'site_logits', 'count_logits', 'quality_logits')}}, checkpoint/'roundtrip_probe.pt')
+        final = {'schema': EDITOR_SCHEMA, 'status': 'complete', 'updates': completed, 'eligible_policy': True,
+                 'checkpoint': str(checkpoint), 'train_seconds': elapsed,
+                 'cumulative_train_seconds': elapsed+args.training_seconds_already_used,
+                 'parameters': config['parameters'], 'metrics': final_metrics,
+                 'roundtrip_verified': False, 'free_running_validated': False}
+        write_json(args.output_dir/'TRAIN_FINAL.json', final)
+        (args.output_dir/'_SUCCESS').touch()
+        print(json.dumps(final), flush=True)
+    if world > 1:
+        dist.barrier()
+        dist.destroy_process_group()
 
 
 if __name__ == "__main__":
