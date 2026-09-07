@@ -90,14 +90,27 @@ def validate_structure_geometry(structure):
         if not np.isfinite(transform).all() or np.max(np.abs(rounded))>1_000_000_000 or not np.allclose(transform,rounded,rtol=0,atol=1e-7):
             raise GeometryCertificationUnavailable('LLL basis change is not certified integral')
         a,b,c,d,e,f,g,h,i = map(int,rounded.reshape(-1))
-        if abs(a*(e*i-f*h)-b*(d*i-f*g)+c*(d*h-e*g)) != 1:
+        determinant = a*(e*i-f*h)-b*(d*i-f*g)+c*(d*h-e*g)
+        if abs(determinant) != 1:
             raise GeometryCertificationUnavailable('LLL basis change is not unimodular')
+        # Use the original represented crystal and the certified integer map,
+        # never the approximately returned LLL vectors as a replacement cell.
+        reduced = rounded@lattice
+        integer_inverse = np.asarray([[e*i-f*h,c*h-b*i,b*f-c*e],
+                                      [f*g-d*i,a*i-c*g,c*d-a*f],
+                                      [d*h-e*g,b*g-a*h,a*e-b*d]],dtype=float)*determinant
+        numeric_bound = max(float(np.max(np.abs(rounded)@np.abs(lattice))),
+                            float(np.max(np.abs(integer_inverse)))*float(np.linalg.norm(reduced,axis=-1).max()))
+        if numeric_bound*np.finfo(float).eps*32 > 1e-9:
+            raise GeometryCertificationUnavailable('integer basis transformation exceeds the numerical error budget')
         inverse = np.linalg.inv(reduced)
-        reduced_coords = (np.mod(coords,1.)@lattice)@inverse
+        reduced_coords = np.mod(coords,1.)@integer_inverse
         radii_float = np.ceil(.5+.5*np.linalg.norm(inverse,axis=0)+1e-12)
         if not np.isfinite(radii_float).all() or np.max(radii_float)>1_000_000:
             raise GeometryCertificationUnavailable('periodic contact bound is not numerically established')
-    except (ValueError,np.linalg.LinAlgError,ArithmeticError) as error:
+    except GeometryCertificationUnavailable:
+        raise
+    except Exception as error:
         raise GeometryCertificationUnavailable('periodic contact reduction could not be certified') from error
     minimum = float(np.linalg.norm(reduced,axis=-1).min())
     if minimum < .5-1e-8:

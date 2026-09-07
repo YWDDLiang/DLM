@@ -18,6 +18,7 @@ LABEL_GEOMETRY_PROTOCOL = {
     'minimum_periodic_distance_A': .5, 'distance_tolerance_A': 1e-8,
     'minimum_volume_A3': 1e-10, 'lattice_basis': 'LLL_unimodular',
     'contact_enumeration': 'complete_reciprocal_bound', 'max_pair_images': 4_000_000,
+    'unimodular_rebuild_from_original': True, 'numeric_error_budget_A': 1e-9,
 }
 
 

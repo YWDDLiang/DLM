@@ -56,6 +56,39 @@ class PeriodicGeometryProtocolTests(unittest.TestCase):
         self.assertEqual(result['status'],'worker_error')
         self.assertIsNone(result['terminal_energy'])
 
+    def test_lll_runtime_or_memory_failure_is_unknown_at_raw_and_terminal_stages(self):
+        from pymatgen.core import Lattice
+        for terminal in (False, True):
+            for error_type in (RuntimeError, MemoryError):
+                with self.subTest(terminal=terminal, error_type=error_type.__name__):
+                    failures = ([Lattice.cubic(3), error_type('reduction could not finish')] if terminal else
+                                error_type('reduction could not finish'))
+                    with patch.object(Lattice, 'get_lll_reduced_lattice', side_effect=failures):
+                        result = MODULE.label_record({'success': True}, model=Model(), optimizer=Optimizer(),
+                                                     structure_factory=lambda _: Structure())
+                    self.assertEqual(result['status'], 'worker_error')
+                    self.assertFalse(result['verified'])
+
+    def test_near_integral_lll_error_cannot_change_original_threshold_classification(self):
+        from pymatgen.core import Lattice, Structure
+        cases = ((.50000001, .49999998, False), (.49999997, .5, True))
+        for original_length, returned_length, truly_short in cases:
+            with self.subTest(original_length=original_length, returned_length=returned_length):
+                original = Structure(Lattice(np.diag([original_length, 4., 4.])), ['Na'], [[0., 0., 0.]])
+                returned = Lattice(np.diag([returned_length, 4., 4.]))
+                before = original.as_dict()
+                with patch.object(Lattice, 'get_lll_reduced_lattice', return_value=returned):
+                    try:
+                        minimum = MODULE.validate_structure_geometry(original)
+                    except MODULE.GeometryCertificationUnavailable:
+                        pass  # Numerical uncertainty is a valid engineering outcome.
+                    except ValueError:
+                        self.assertTrue(truly_short, 'approximate LLL output fabricated a short contact')
+                    else:
+                        self.assertFalse(truly_short, 'approximate LLL output hid an original short contact')
+                        self.assertGreaterEqual(minimum, .5 - 1e-8)
+                self.assertEqual(original.as_dict(), before)
+
 
 class Structure:
     num_sites = 2
