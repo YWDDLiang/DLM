@@ -12,7 +12,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--source", type=Path, required=True)
-    parser.add_argument("--stage", choices=["canary", "physics"], required=True)
+    parser.add_argument("--stage", choices=["canary", "canary_v2", "physics"], required=True)
     args = parser.parse_args()
     receipt = args.run_root / (args.stage.upper() + "_SUBMISSION.json")
     if receipt.exists():
@@ -20,7 +20,7 @@ def main():
         return
     assert (args.source / "_CODE_READY").is_file()
     assert (args.run_root / "pointer_40395" / "_SUCCESS").is_file()
-    gpus, minutes, memory, script = ((2, 80, "200G", "canary.sbatch") if args.stage == "canary"
+    gpus, minutes, memory, script = ((2, 80, "200G", "canary.sbatch") if args.stage.startswith("canary")
                                    else (1, 150, "120G", "train_physics.sbatch"))
     now = dt.datetime.now(dt.timezone.utc)
     assert now + dt.timedelta(minutes=minutes + 5) < dt.datetime(2026, 9, 7, 15, 35, 26, tzinfo=dt.timezone.utc)

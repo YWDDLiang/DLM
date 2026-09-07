@@ -58,6 +58,17 @@ def read_input_structure(record):
     return arrays_to_structure(parse_dynamic_answer(record["body"], strict=True))
 
 
+def positive_request_count(value):
+    """Allow a declared cohort size without changing all-request accounting."""
+    try:
+        count = int(value)
+    except (TypeError, ValueError) as error:
+        raise argparse.ArgumentTypeError("expected-requests must be a positive integer") from error
+    if count <= 0:
+        raise argparse.ArgumentTypeError("expected-requests must be a positive integer")
+    return count
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--paths-jsonl", type=Path, required=True)
@@ -65,7 +76,7 @@ def main():
     p.add_argument("--frozen-config", type=Path, required=True)
     p.add_argument("--official-cache", type=Path, required=True)
     p.add_argument("--output-dir", type=Path, required=True)
-    p.add_argument("--expected-requests", type=int, choices=(256, 1000, 1200), required=True)
+    p.add_argument("--expected-requests", type=positive_request_count, required=True)
     p.add_argument("--selection-json", type=Path)
     p.add_argument("--endpoint", choices=("native", "tau800"), required=True)
     p.add_argument("--cohort-role", choices=("fixed_development", "independent_main"), required=True)

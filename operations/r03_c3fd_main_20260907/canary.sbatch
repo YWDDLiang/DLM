@@ -25,14 +25,14 @@ run_arm() (
  export CUDA_VISIBLE_DEVICES="$2"
  exec >"$RUN/$role.out" 2>"$RUN/$role.err"
  trap 'rc=$?; printf "exit_code=%s line=%s\n" "$rc" "$LINENO" >"$RUN/$role.FAILURE.txt"; exit "$rc"' ERR
- extra=()
- if [[ "$role" == I ]]; then extra=(--c3fd-domain "$ASSETS/C3FD_DOMAIN.json"); fi
+ extra=(--batch-size 4)
+ if [[ "$role" == I ]]; then extra+=(--c3fd-domain "$ASSETS/C3FD_DOMAIN.json"); fi
  "$PY" "$SOURCE/src/scripts/sample_r03_h1a2_plans.py" \
   --model-path /public/home/jiaosz/ywliang/models/Meta-Llama-3-8B \
   --checkpoint-path "$PROJECT/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final" \
   --native-prompt-file "$ASSETS/P0_NATIVE_PROMPT.txt" \
   --output-dir "$RUN/$role/planner" --num-samples 16 --seed 202609070 \
-  --sample-index-offset 0 --batch-size 4 "${extra[@]}"
+  --sample-index-offset 0 "${extra[@]}"
  "$PY" "$SOURCE/src/scripts/run_r03_integrated_body.py" \
   --frozen-runtime-root "$PROJECT/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1" \
   --base-model /public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct \

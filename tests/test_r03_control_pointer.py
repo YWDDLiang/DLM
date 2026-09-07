@@ -251,6 +251,51 @@ class PointerCPUFixtureTest(unittest.TestCase):
         for original, exported in zip(rows, output):
             self.assertTrue(all(exported[key] == value for key, value in original.items()))
 
+    def test_native_sampler_ledger_connects_through_export_to_original_body_contract(self):
+        if __package__:
+            from .test_sample_r03_h1a2_plans import FixtureTokenizer as NativeTokenizer, tiny_oracle
+            from .test_run_r03_integrated_body import OLD_ROOT, load_schedule_fixture
+        else:
+            from test_sample_r03_h1a2_plans import FixtureTokenizer as NativeTokenizer, tiny_oracle
+            from test_run_r03_integrated_body import OLD_ROOT, load_schedule_fixture
+        from scripts.sample_r03_h1a2_plans import decode_record
+        from scripts.run_r03_integrated_body import native_revision_slots, prepare_tasks
+
+        if not OLD_ROOT.exists():
+            self.skipTest("archived R03 PlanGraph fixture is unavailable")
+        native_tokenizer = NativeTokenizer()
+        # Success, missing rich field, and failed chemistry with a parseable
+        # plan_state are all actual native-sampler record shapes.
+        rows = [decode_record(tokenizer=native_tokenizer, prompt_ids=[1, 1], generated_ids=[token, 0],
+                              sample_idx=500 + index, local_idx=index, seed=29, oracle=tiny_oracle())
+                for index, token in enumerate((10, 11, 12))]
+        original = copy.deepcopy(rows)
+        exported, report = export_rows(
+            rows, model=FixtureP0(), tokenizer=FixtureTokenizer(), pointer=self.head,
+            feature_spec=SPEC, pointer_sha256="fixture", batch_size=16, exact_prompt_text="NATIVE\n",
+        )
+        self.assertEqual(report["successful_programs"], 1)
+        self.assertEqual(report["upstream_failures_preserved"], 2)
+        self.assertEqual([row["sample_idx"] for row in exported], [500, 501, 502])
+        self.assertEqual(rows, original)
+        for before, after in zip(original, exported):
+            self.assertTrue(all(after[key] == value for key, value in before.items()))
+        tasks = prepare_tasks(exported, load_schedule_fixture(), seed=17)
+        self.assertEqual([task["eligible"] for task in tasks], [True, False, False])
+        self.assertEqual(tasks[0]["body_prompt"], original[0]["body_prompt"])
+        self.assertEqual(tasks[0]["plan_state"], original[0]["plan_state"])
+        plan = tasks[0]["plan_state"]
+        vocab = {f"<E_{symbol}>": index + 100 for index, symbol in enumerate(plan["elements"])}
+        body = [0] * (7 + 4 * plan["N"])
+        slot = 0
+        for symbol, count in zip(plan["elements"], plan["counts"]):
+            for _ in range(count):
+                body[7 + 4 * slot] = vocab[f"<E_{symbol}>"]
+                slot += 1
+        body_tokenizer = type("BodyTokenFixture", (), {"get_vocab": lambda _self: vocab})()
+        self.assertEqual(native_revision_slots(tasks[0], body, body_tokenizer),
+                         exported[0]["r03_control"]["revision_slots"])
+
 
 if __name__ == "__main__":
     unittest.main()
