@@ -251,7 +251,9 @@ def physics_input(record_id, group, source_idx, split, endpoint, arrays=None, bo
             'success': arrays is not None or bool(body), 'structure': structure, 'body': body}
 
 
-def prepare_collection(manifest_path, heldout_cohort, tokenizer, output, *, limit=None):
+def prepare_collection(manifest_path, heldout_cohort, tokenizer, output, *, limit=None, min_index=0):
+    if min_index < 0 or (limit is not None and limit <= min_index):
+        raise ValueError('invalid disjoint request interval')
     manifest = json.loads(Path(manifest_path).read_text())
     if manifest['purpose'] != 'train':
         raise ValueError('expert collection must be registered as training before generation')
@@ -270,7 +272,8 @@ def prepare_collection(manifest_path, heldout_cohort, tokenizer, output, *, limi
     inverse = {int(v): k for k, v in vocabulary.items()}
     root, output = Path(manifest['run_root']), Path(output)
     selected_components = [c for c in manifest['components']
-                           if limit is None or c['sample_index_offset'] < limit]
+                           if c['sample_index_offset'] + c['requests'] > min_index
+                           and (limit is None or c['sample_index_offset'] < limit)]
     if not selected_components or any(not (root / c['output_dir'] / '_SUCCESS').is_file() for c in selected_components):
         raise ValueError('required collection components have not completed')
     output.mkdir(parents=True, exist_ok=False)
@@ -298,7 +301,7 @@ def prepare_collection(manifest_path, heldout_cohort, tokenizer, output, *, limi
                            'refined_sha256': sha256(refinement['output_file'])})
         for parent in parents:
             index = int(parent['sample_idx'])
-            if limit is not None and index >= limit:
+            if index < min_index or (limit is not None and index >= limit):
                 continue
             attempted += 1
             plan = plans[index]
@@ -360,6 +363,7 @@ def prepare_collection(manifest_path, heldout_cohort, tokenizer, output, *, limi
     write_rows(output / 'all_inputs.jsonl', old_inputs + target_inputs)
     write_rows(output / 'rejected.jsonl', rejected)
     report = {'schema': SCHEMA, 'requested_scope': limit, 'attempted_requests': attempted,
+              'min_source_index': min_index,
               'admitted_old': len(old_inputs), 'quantized_teacher_targets': len(target_inputs),
               'rejections': dict(Counter(row['reason'] for row in rejected)), 'geometry_protocol': GEOMETRY_PROTOCOL,
               'heldout_cohort_sha256': sha256(heldout_cohort), 'manifest_sha256': sha256(manifest_path),
@@ -558,6 +562,7 @@ def main(argv=None):
     parser.add_argument('--labels-dir', type=Path)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--limit', type=int)
+    parser.add_argument('--min-index', type=int, default=0)
     args = parser.parse_args(argv)
     if args.mode == 'compile':
         if args.prepared_dir is None or args.labels_dir is None:
@@ -569,7 +574,7 @@ def main(argv=None):
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint, trust_remote_code=True, local_files_only=True)
     print(json.dumps(prepare_collection(args.collection_manifest, args.heldout_cohort, tokenizer,
-                                        args.output_dir, limit=args.limit)), flush=True)
+                                        args.output_dir, limit=args.limit, min_index=args.min_index)), flush=True)
 
 
 if __name__ == '__main__':
