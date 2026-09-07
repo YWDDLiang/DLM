@@ -557,7 +557,15 @@ def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, wor
     if args.source_kind == 'all_old_states':
         # Includes healthy, teacher-unavailable and physics-unknown states.
         # Hash order is fixed before inspecting any teacher or student outcome.
-        states = {row['ancestor_id']: row for row in dataset.states}
+        states = {}
+        for row in dataset.states:
+            if row.get('source_kind') != 'current_B0_full_rich':
+                continue
+            if row['ancestor_id'] in states:
+                raise ValueError('autonomous diagnosis has duplicate original B0 states')
+            states[row['ancestor_id']] = row
+        if not states:
+            raise ValueError('autonomous diagnosis has no registered original B0 states')
         selected = sorted(states.values(), key=lambda row: hashlib.sha256(
                           f'{args.seed}:{row["ancestor_id"]}'.encode()).hexdigest())
     else:

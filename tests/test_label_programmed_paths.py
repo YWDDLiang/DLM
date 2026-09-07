@@ -28,6 +28,25 @@ class PurposeContractTests(unittest.TestCase):
 
 
 class PeriodicGeometryProtocolTests(unittest.TestCase):
+    def test_early_integer_witness_uses_original_nonzero_image_even_without_certified_basis(self):
+        from pymatgen.core import Lattice, Structure
+        # A spurious tiny LLL vector rounds to the zero image: it cannot reject
+        # a safe original crystal before the basis certification fails.
+        safe = Structure(Lattice.cubic(4), ['Na'], [[0., 0., 0.]])
+        with patch.object(Lattice, 'get_lll_reduced_lattice',
+                          return_value=Lattice(np.diag([.04, 4., 4.]))):
+            with self.assertRaises(MODULE.GeometryCertificationUnavailable):
+                MODULE.validate_structure_geometry(safe)
+        # Conversely, a nonzero integer image of the ORIGINAL lattice really
+        # is short, even though the returned basis fails integrality itself.
+        short = Structure(Lattice(np.diag([.25, 4., 4.])), ['Na'], [[0., 0., 0.]])
+        before = short.as_dict()
+        with patch.object(Lattice, 'get_lll_reduced_lattice',
+                          return_value=Lattice(np.diag([.3, 4., 4.]))):
+            with self.assertRaises(MODULE.InvalidPeriodicGeometry):
+                MODULE.validate_structure_geometry(short)
+        self.assertEqual(short.as_dict(), before)
+
     def test_skew_cell_contact_outside_legacy_image_shell_is_rejected(self):
         from pymatgen.core import Lattice, Structure
         lattice = Lattice.from_parameters(1.,3.1,5.,90.,90.,2.)

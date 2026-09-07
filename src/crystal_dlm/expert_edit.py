@@ -322,6 +322,7 @@ class ExpertEditDataset(Dataset):
         self.content = {task: [row for row in records if row['task'] == task and row.get('content_supervision')]
                         for task in ('G', 'S')}
         self.positive = [row for row in records if row.get('content_supervision')]
+        self.acceptance_positive = [row for row in records if row.get('accept_label') is True]
         self.states = [row for row in records if row.get('state_only')]
         self.negative = [row for row in records if row.get('accept_label') is False]
         self.negative += [reverse_geometry_example(row) for row in self.content['G']
@@ -375,7 +376,8 @@ class ExpertEditDataset(Dataset):
                 # quality labels here, never a fabricated NONE/stop target.
                 row = dict(row, task='S')
         else:
-            row = self._draw(self.negative, rng) if self.negative and rng.random() < .5 else self._draw(self.positive, rng)
+            pool = self.negative if self.negative and rng.random() < .5 else self.acceptance_positive
+            row = self._draw(pool or self.negative, rng)
             view = 'judge'
         return make_edit_view(row, view, rng, self.prefixes[row['prompt']])
 
