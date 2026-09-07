@@ -66,7 +66,7 @@ try:
         if result.returncode:
             raise RuntimeError('official query failed; errors preserved and no scientific unknown substituted')
     execute(execution, 'finalize', 'operations/r03_c3fd_main_20260907/prepare_hull_union.py', ['finalize', '--run-root', hull])
-    write_json(execution / 'STAGE_FINAL.json', {'phase': args.phase, 'requests_per_arm': count,
+    write_json(execution / 'STAGE_FINAL.json', {'phase': args.phase, 'requests_per_arm': 2 * count if args.phase == 'formal' else count,
                'cache': str(hull / 'official_mp_cache'), 'actual_endpoint_verification_still_required': True})
     (execution / '_SUCCESS').touch()
 except BaseException as error:

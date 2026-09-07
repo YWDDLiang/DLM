@@ -114,18 +114,23 @@ def main():
         if formal:
             selected = frozen['selected_role']
             repair = physical_checkpoint(run_root, dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=1)) if selected == 'P' else None
-            def formal_arm(role, gpu):
-                destination = root / role
-                destination.mkdir(exist_ok=False)
+            for role in ('R', selected):
+                (root / role).mkdir(exist_ok=False)
+            # Cross the second seed's arms so each GPU executes one R and one
+            # candidate component. Global request IDs and seeds stay fixed.
+            schedules = [[('R', 0), (selected, 1)], [(selected, 0), ('R', 1)]]
+            write_json(lane / 'GPU_SCHEDULE.json', {'lanes': schedules, 'selection_uses_scores': False})
+            def formal_lane(schedule, gpu):
                 records = []
-                for index, planner_seed in enumerate(args.planner_seeds):
-                    records.append(component(run_root, destination / f'seed_{planner_seed}', role, gpu,
+                for role, index in schedule:
+                    planner_seed = args.planner_seeds[index]
+                    records.append(component(run_root, root / role / f'seed_{planner_seed}', role, gpu,
                                              count=count, seed=planner_seed, offset=index * count,
                                              repair=repair if role == 'P' else None,
                                              construction_geometry=role != 'R'))
                 return {'requests': 2 * count, 'components': records}
-            functions = {'R': lambda: formal_arm('R', gpus[0]),
-                         selected: lambda: formal_arm(selected, gpus[1])}
+            functions = {'lane_0': lambda: formal_lane(schedules[0], gpus[0]),
+                         'lane_1': lambda: formal_lane(schedules[1], gpus[1])}
         elif args.stage == 'canary_geometry':
             # Replay the same actual 16 Plans, pointer outputs and paired seeds.
             plans = run_root / 'canary_repair_40403/shared_I/plans_with_programs.jsonl'
