@@ -1,0 +1,165 @@
+{
+  "schema": "r03_c3fd_rich_execution_plan_v3_existing_physics",
+  "status": "APPROVED_EXECUTION_ACTIVE",
+  "execution_started": true,
+  "created_date": "2026-09-07",
+  "plan_file": "EXECUTION_PLAN_PENDING_APPROVAL.md",
+  "time_budget_hours": 12,
+  "absolute_deadline": "2026-09-07T15:35:26Z",
+  "resource_ceiling": {
+    "gpus": 4,
+    "gpu_model": "A800",
+    "cpus_per_gpu": 4,
+    "concurrent_jobs": 2,
+    "gpu_hours": 48,
+    "availability_checked_live": false
+  },
+  "protected_assets": {
+    "planner": {
+      "name": "H1A2_epoch2_P0",
+      "adapter_sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+      "trainable": false
+    },
+    "body": {
+      "name": "R5C_B0",
+      "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+      "construction_weights_trainable": false
+    },
+    "refiner": {
+      "name": "model494",
+      "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+      "tau": 800,
+      "trainable": false
+    },
+    "identity_scope": "recorded historical identities; remote files not reloaded during planning"
+  },
+  "upstream": {
+    "composition_stage": "historical H1A2 P0 next-token scores constrained by latest C3FD viability through a formula-only text/semantic bridge",
+    "rich_stage": "same frozen P0 resumes unchanged after formula newline; original prompt, tokenizer, weights and seven-line ABI",
+    "use_independent_typed_llama_composer": false,
+    "use_rich_expander": false,
+    "formula_sampled_by": "H1A2_P0",
+    "formula_constraints_active_only_before_newline": true,
+    "raw_typed_and_bpe_logits_added": false,
+    "externally_sample_N_family_arity": false,
+    "force_canonical_formula_text_order": false,
+    "full_output_distribution_claimed_unchanged": false,
+    "fill_missing_scientific_fields": false,
+    "repeat_historical_c3fd_validity_verification": false
+  },
+  "program": {
+    "head_initialization": "train on frozen original H1A2 formula-completion hidden state; do not transplant Typed Planner pointer weights",
+    "teacher": "MP20-train periodic contact-derived species permutation",
+    "controls_initial_r03_axis_order": false,
+    "controls_revision_species_and_order": true,
+    "max_revision_anchors": 2,
+    "revision_sweeps": 1,
+    "online_llama_replanning": false,
+    "feature_source": "deterministic_formula_prefix_replay_with_original_frozen_P0; control query only, does not alter rich generation"
+  },
+  "training": {
+    "rich": {
+      "enabled": false,
+      "reason": "user requested C3FD only inside original H1A2 composition generation; preserve all other rich generation"
+    },
+    "pointer": {
+      "llama_frozen": true,
+      "maximum_passes": 1,
+      "lr": 0.001
+    },
+    "physical_revision": {
+      "required_for_core_delivery": false,
+      "data_source": "existing accepted K8 teacher/paths/labels plus K4 consistent-v2 coverage supplement",
+      "new_training_composition_generation": false,
+      "new_training_structure_sampling": false,
+      "new_training_mlip_or_relaxation_labels": false,
+      "new_training_model494_labels": false,
+      "existing_reported_verified_candidates": {
+        "K4": 972,
+        "K8": 1843
+      },
+      "independent_candidate_counts_can_be_summed": false,
+      "objective": "offline physical-quality-weighted masked revision adaptation, not original on-policy full-path continuation",
+      "reuse_original_teacher_weights_and_validity_status": true,
+      "preserve_physical_structure_identity": true,
+      "shared_revision_condition_view_for_G_and_P": true,
+      "directly_use_old_training_command_with_B0": false,
+      "value_includes_model494_tau800": false,
+      "evaluation_labels_used_for_training": false,
+      "checkpoint_weight_merging": false,
+      "maximum_updates": 256,
+      "lr": 1e-06,
+      "used_during_initial_construction": false
+    }
+  },
+  "development": {
+    "requests": 128,
+    "separate_from_main": true,
+    "roles": [
+      "I_interface_control",
+      "G_geometry_and_program",
+      "P_optional_physical_revision"
+    ],
+    "P_adoption": "Direct and both SUN counts not lower than G, at least one SUN count higher, before method freeze; otherwise retain G",
+    "selection_is_confirmatory_evidence": false
+  },
+  "main": {
+    "task": "de_novo_composition_and_structure_generation",
+    "arms": [
+      "R_original_R03_system",
+      "M_frozen_new_system"
+    ],
+    "requests_per_arm_target": 1000,
+    "independent_planner_seeds": 2,
+    "requests_per_seed_target": 500,
+    "fallback_requests_per_arm": 512,
+    "fallback_requests_per_seed": 256,
+    "fallback_allowed_only_before_main_sampling_starts": true,
+    "fallback_requires_explicit_status_notice": true,
+    "body_temperature": 0.7,
+    "body_cfg": 0,
+    "body_remasking": "low_confidence",
+    "maximum_body_batch": 8,
+    "endpoints": [
+      "final_native",
+      "model494_tau800"
+    ],
+    "failed_and_unknown_in_denominator": true,
+    "all_attempts_tracked": true,
+    "best_of_k_at_inference": false,
+    "failure_replacement": false,
+    "main_result_driven_model_selection": false,
+    "historical_h1a2_reference": {
+      "strict_rate": 0.094,
+      "meta_rate": 0.474,
+      "old_protocol_and_cohort": true,
+      "guaranteed_new_outcome": false
+    }
+  },
+  "milestones_hours": {
+    "asset_and_interface_readiness": 0.75,
+    "direct_formula_bridge_budget_end": 2.5,
+    "core_method_and_throughput_decision": 3.75,
+    "hard_method_freeze": 5.5,
+    "main_evaluation_budget_end": 10.75,
+    "delivery_and_stop": 12
+  },
+  "excluded": [
+    "fresh_DLM_pretraining_or_reinitialization",
+    "replace_H1A2_composition_scoring_with_Typed_Llama",
+    "rich_expander_training_or_soft_prefix_projection",
+    "new_physical_training_pool_sampling_or_labeling",
+    "reuse_evaluation_outcomes_as_training_labels",
+    "replace_R5C_B0_with_K4_K8_or_V3",
+    "automatic_G2_revival",
+    "mixed_XYZ_initial_reveal",
+    "new_full_AR_FIM_or_continuous_comparator_training",
+    "repeat_seed_or_hyperparameter_search",
+    "reactivate_deleted_automation",
+    "extend_deadline_without_user_instruction"
+  ],
+  "start_utc": "2026-09-07T03:35:26Z",
+  "approved_spec_sha256": "f543f3e0925aca0e133687b9c4ea14b905c07b091c323afd7a3c2ef2eb9a3f4e",
+  "branch": "codex/r03-c3fd-rich-main",
+  "approval": "User authorized execution and proactive progress updates; routine work continues without repeated confirmation."
+}
