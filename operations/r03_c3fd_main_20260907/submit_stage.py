@@ -19,8 +19,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--source", type=Path, required=True)
+    parser.add_argument("--afterok", help="Queue pilot_GP after its recorded pilot_RI job succeeds")
     parser.add_argument("--stage", choices=["canary", "canary_v2", "physics", "canary_repair", "canary_geometry", "pilot_RI", "pilot_GP", "canary_hull", "pilot_hull", "canary_evaluate", "pilot_evaluate"], required=True)
     args = parser.parse_args()
+    if args.afterok:
+        parent = json.loads((args.run_root / 'PILOT_RI_SUBMISSION.json').read_text())
+        if args.stage != 'pilot_GP' or args.afterok != parent['job_id'] or str(args.source) != parent['source']:
+            raise ValueError('--afterok must name this source version\'s recorded pilot_RI job')
     receipt = args.run_root / (args.stage.upper() + "_SUBMISSION.json")
     if receipt.exists():
         print(receipt.read_text())
@@ -56,10 +61,10 @@ def main():
         assert (args.run_root / 'pilot_256/shared_I/_SUCCESS').is_file()
     if args.stage == 'canary_evaluate':
         assert (args.run_root / 'GEOMETRY_CANARY_COMPLETE.json').is_file()
-        assert (args.run_root / 'hull_execution_canary/_SUCCESS').is_file()
+        assert (args.run_root / 'hull_canary/official_mp_cache/completion_SUCCESS').is_file()
     if args.stage == 'pilot_evaluate':
         assert all((args.run_root / 'pilot_256' / role / '_SUCCESS').is_file() for role in ('R', 'I', 'G', 'P'))
-        assert (args.run_root / 'hull_execution_pilot256/_SUCCESS').is_file()
+        assert (args.run_root / 'hull_pilot256/official_mp_cache/completion_SUCCESS').is_file()
     now = dt.datetime.now(dt.timezone.utc)
     assert now + dt.timedelta(minutes=minutes + 5) < dt.datetime(2026, 9, 7, 15, 35, 26, tzinfo=dt.timezone.utc)
     jobs = sp.check_output(["squeue", "-h", "-u", os.environ["USER"], "-o", "%i"], text=True).split()
@@ -80,8 +85,9 @@ def main():
     # actual work/command/output paths and retained in the queue receipt.
     owned = [row for row in resources if row['owned_by_this_run']]
     assert len(owned) < 2, owned
-    assert sum(row["gpus"] for row in owned) + gpus <= 2, owned
-    assert sum(row['cpus'] for row in owned) + cpus <= 8, owned
+    overlapping = [row for row in owned if row['job_id'] != args.afterok]
+    assert sum(row["gpus"] for row in overlapping) + gpus <= 2, overlapping
+    assert sum(row['cpus'] for row in overlapping) + cpus <= 8, overlapping
     env = dict(os.environ, R03_SOURCE_ROOT=str(args.source), R03_RUN_ROOT=str(args.run_root), R03_STAGE=args.stage)
     if not gpus:
         for name in tuple(env):
@@ -94,6 +100,8 @@ def main():
                "--output=" + str(args.run_root / "logs" / (args.stage + "_%j.out")),
                "--error=" + str(args.run_root / "logs" / (args.stage + "_%j.err")),
                str(args.source / "operations/r03_c3fd_main_20260907" / script)]
+    if args.afterok:
+        command.insert(1, '--dependency=afterok:' + args.afterok)
     result = sp.run(command, env=env, check=False, capture_output=True, text=True)
     if result.returncode:
         print(json.dumps({'stage': args.stage, 'submitted': False, 'returncode': result.returncode,
@@ -104,6 +112,7 @@ def main():
     record = {"job_id": job, "source": str(args.source), "stage": args.stage, "gpus": gpus,
               "cpus": cpus, "submitted_utc": now.isoformat(), "queue_before": resources,
               "resource_scope": "this_registered_run", "task_resource_ceiling": {"A800": 2, "CPUs": 8, "Slurm_jobs": 2},
+              "afterok": args.afterok,
               "command": command, "physics_updates_fixed_before_evaluation": 128 if args.stage == "physics" else None}
     with receipt.open("x") as handle:
         json.dump(record, handle, indent=2)

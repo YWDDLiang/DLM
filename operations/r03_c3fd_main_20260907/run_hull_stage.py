@@ -14,8 +14,11 @@ BASE_CACHE = PROJECT / 'workstreams/proposal_realization_candidates_20260826/gro
 parser = argparse.ArgumentParser()
 parser.add_argument('--run-root', type=Path, required=True)
 parser.add_argument('--phase', choices=['canary', 'pilot256'], required=True)
+parser.add_argument('--login-node-query', action='store_true', help='Run official HTTP queries from the existing login session')
 args = parser.parse_args()
-if not os.environ.get('SLURM_JOB_ID'):
+if args.login_node_query and os.environ.get('SLURM_JOB_ID'):
+    raise RuntimeError('official queries must run on the login node, not an offline compute node')
+if not args.login_node_query and not os.environ.get('SLURM_JOB_ID'):
     raise RuntimeError('official hull preparation requires its allocated CPUs')
 root = args.run_root
 count, seed = (16, 202609070) if args.phase == 'canary' else (256, 202609071)
@@ -41,6 +44,8 @@ try:
     execute(execution, 'prepare', 'operations/r03_c3fd_main_20260907/prepare_hull_union.py', arguments)
     query = json.loads((hull / 'QUERY_COMMAND.json').read_text())
     if query['needed']:
+        if not args.login_node_query:
+            raise RuntimeError('missing official references require --login-node-query; compute nodes are offline')
         command = [query['argv_without_credential'][0],
                    str(SOURCE / 'operations/r03_c3fd_main_20260907/run_hull_query.py'), '--hull-root', str(hull)]
         began = time.monotonic()
