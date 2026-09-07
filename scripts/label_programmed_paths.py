@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 from functools import partial
 import gzip
 import hashlib
@@ -22,7 +23,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 import numpy as np
-from crystal_dlm.terminal_energy_consistency import LABEL_GEOMETRY_PROTOCOL, TERMINAL_VERIFICATION_PROTOCOL, check_terminal_energy
+from crystal_dlm.terminal_energy_consistency import COMMON_RELAXATION_PROTOCOL, LABEL_GEOMETRY_PROTOCOL, TERMINAL_VERIFICATION_PROTOCOL, check_terminal_energy
 
 EV_A3_TO_GPA = 160.21766208
 _MODEL = None
@@ -284,13 +285,21 @@ def worker_init(gpu_index):
     _MODEL.eval()
     _OPTIMIZER = PinnedOptimizer(model=_MODEL, optimizer_class=RecordedFIRE, use_device=device,
                                 stress_weight=1 / EV_A3_TO_GPA)
-    _VERSIONS = {"model": "CHGNet-0.3.0", "chgnet_package": importlib.metadata.version("chgnet"),
+    _VERSIONS = runtime_identity()
+
+
+def runtime_identity():
+    import importlib
+    import importlib.metadata
+    import torch
+    versions = {"model": "CHGNet-0.3.0", "chgnet_package": importlib.metadata.version("chgnet"),
                  "ase_package": importlib.metadata.version("ase"), "torch_package": torch.__version__,
                  "pymatgen_package": importlib.metadata.version("pymatgen")}
     package_root = Path(importlib.import_module('chgnet').__file__).resolve().parent
     checkpoint = package_root / 'pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar'
-    _VERSIONS['model_checkpoint_sha256'] = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
-    _VERSIONS['labeler_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    versions['model_checkpoint_sha256'] = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
+    versions['labeler_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    return versions
 
 
 def worker_label(record, fmax, stress_tolerance, max_steps):
@@ -351,10 +360,53 @@ def bounded_labels(by_endpoint, args, *, worker_target=_isolated_worker):
         yield key, by_endpoint[key], result
 
 
+def reusable_labels(directory, by_endpoint, *, input_sha256, purpose, protocol, runtime):
+    directory = Path(directory)
+    report_path, labels_path = directory/'LABEL_FINAL.json', directory/'labels.jsonl'
+    report = json.loads(report_path.read_text())
+    rows = [json.loads(line) for line in labels_path.read_text().splitlines() if line.strip()]
+    expected = {row['trajectory_id']:(key,row) for key,records in by_endpoint.items() for row in records}
+    if (report.get('input_sha256') != input_sha256 or report.get('purpose') != purpose
+            or report.get('protocol') != protocol or report.get('verification_protocol') != TERMINAL_VERIFICATION_PROTOCOL
+            or report.get('geometry_validation_protocol') != LABEL_GEOMETRY_PROTOCOL
+            or report.get('completed') != len(expected) or report.get('requested') != len(expected)
+            or len(rows) != len(expected) or {row['trajectory_id'] for row in rows} != set(expected)):
+        raise ValueError('reused physics requires the same complete input ledger and full protocols')
+    actual_versions = {json.dumps(row['versions'],sort_keys=True) for row in rows if row.get('versions')}
+    reported_versions = [json.dumps(value,sort_keys=True) for value in report.get('runtime_identities',[])]
+    if (report.get('statuses') != dict(Counter(row['status'] for row in rows))
+            or set(reported_versions) != actual_versions or len(reported_versions) != len(actual_versions)):
+        raise ValueError('reused physics report contradicts its row statuses or runtime identities')
+    cached = {}
+    for row in rows:
+        key,record = expected[row['trajectory_id']]
+        if (row.get('endpoint_cache_key') != key or any(row.get(field) != record.get(field) for field in
+                ('group_id','source_row_idx','source_split','endpoint'))):
+            raise ValueError('reused physics is not bound to the current endpoint occurrence')
+        if row.get('status') == 'worker_error':
+            continue
+        if record.get('success') is False and (row.get('status') != 'generation_failure'
+                or row.get('verified') is not False or any(row.get(field) is not None for field in
+                    ('raw_energy','terminal_energy','gap','raw','terminal','final_structure'))):
+            raise ValueError('a failed generation acquired physical labels in the reused ledger')
+        if row.get('versions') != runtime:
+            raise ValueError('reused physics model/package/source identity changed')
+        result = {name:value for name,value in row.items() if name not in
+                  ('trajectory_id','group_id','source_row_idx','source_split','endpoint')}
+        if key in cached and cached[key] != result:
+            raise ValueError('duplicate old physics endpoints have inconsistent results')
+        cached[key] = result
+    return cached, {'directory':str(directory.resolve()),'labels_sha256':hashlib.sha256(labels_path.read_bytes()).hexdigest(),
+                    'report_sha256':hashlib.sha256(report_path.read_bytes()).hexdigest(),
+                    'reused_endpoints':len(cached),'worker_errors_reused':False}
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--input-jsonl", type=Path, required=True)
     p.add_argument("--output-dir", type=Path, required=True)
+    p.add_argument('--reuse-labels', type=Path,
+                   help='Verified complete prior ledger; retry only engineering-unknown endpoints into a new directory')
     p.add_argument("--gpu-count", type=int, default=2)
     p.add_argument("--workers-per-gpu", type=int, default=2)
     p.add_argument("--purpose", choices=("train", "evaluation", "expert_edit"), default="train")
@@ -402,13 +454,24 @@ def main():
         geometry = json.dumps(record["structure"], sort_keys=True) if record.get("structure") is not None else str(record["body"])
         key = hashlib.sha256(geometry.encode()).hexdigest() if record["success"] else record["trajectory_id"]
         by_endpoint.setdefault(key, []).append(record)
+    protocol = {**COMMON_RELAXATION_PROTOCOL,'fmax':args.fmax,
+                'stress_tolerance_GPa':args.stress_tolerance,'max_steps':args.max_steps}
+    input_sha256 = hashlib.sha256(args.input_jsonl.read_bytes()).hexdigest()
+    cached, reuse = ({},None) if args.reuse_labels is None else reusable_labels(args.reuse_labels,by_endpoint,
+        input_sha256=input_sha256,purpose=args.purpose,protocol=protocol,runtime=runtime_identity())
+    pending = {key:value for key,value in by_endpoint.items() if key not in cached}
+    def results():
+        for key,result in cached.items():
+            yield key,by_endpoint[key],dict(result)
+        if pending:
+            yield from bounded_labels(pending,args)
     (args.output_dir / "trajectories").mkdir()
     started = time.monotonic()
     counts = {}
     completed = 0
     versions_seen = {}
     with (args.output_dir / "labels.jsonl").open("x", encoding="utf-8") as handle:
-        for key, occurrences, result in bounded_labels(by_endpoint, args):
+        for key, occurrences, result in results():
             trajectory = result.pop("relaxation_trajectory", None)
             if result.get('versions'):
                 versions_seen[json.dumps(result['versions'], sort_keys=True)] = result['versions']
@@ -431,11 +494,7 @@ def main():
     report = {"requested": len(records), "completed": completed, "statuses": counts,
               "verification_protocol": TERMINAL_VERIFICATION_PROTOCOL,
               "distinct_endpoint_evaluations": len(by_endpoint),
-              "protocol": {"model": "CHGNet-0.3.0", "optimizer": "FIRE", "relax_cell": True,
-                           "ase_filter": "FrechetCellFilter", "fmax": args.fmax,
-                           "scalar_pressure": 0., "constant_volume": False, "hydrostatic_strain": False,
-                           "cell_mask": "all_six", "fire_dt": .1, "fire_maxstep": .2,
-                           "stress_tolerance_GPa": args.stress_tolerance, "max_steps": args.max_steps},
+              "protocol": protocol, 'reused_label_source':reuse,'new_endpoint_evaluations':len(pending),
               "gpu_count": args.gpu_count, "workers_per_gpu": args.workers_per_gpu,
               "shard_count": args.shard_count, "shard_ranks": shard_ranks,
               "elapsed_seconds": time.monotonic() - started, "purpose": args.purpose}
@@ -443,7 +502,7 @@ def main():
                                        'worker_startup_timeout_seconds': args.worker_startup_timeout,
                                        'timeout_is_physical_failure': False}
     report['runtime_identities'] = list(versions_seen.values())
-    report['input_sha256'] = hashlib.sha256(args.input_jsonl.read_bytes()).hexdigest()
+    report['input_sha256'] = input_sha256
     report['input_file'] = str(args.input_jsonl.resolve())
     report['geometry_validation_protocol'] = LABEL_GEOMETRY_PROTOCOL
     (args.output_dir / "LABEL_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

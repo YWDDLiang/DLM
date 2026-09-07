@@ -27,6 +27,7 @@ if str(PROJECT_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 SCHEMA = "r03_integrated_body_v1"
+EDITOR_PANEL_SCHEMA = "r03_autonomous_editor_body_v1"
 FROZEN_RUNNER_SHA256 = "9da1379fbe33dc9c0b76fdcfb2497f24fc973847c366adefb3753e9b647038ca"
 SAFE_AXIS_SHA256 = "754487d39ababb95cfb4e2cecc20cad5fac0a90b0fc150306b8316e789f44df9"
 RUNTIME_MANIFEST_SHA256 = "ed2223e2a931fbc13b16113bbc7a1b28bcb2deceea310652a33db215623d9675"
@@ -576,6 +577,10 @@ def write_endpoint(
     ordered_graphs = [graphs[index] for index in sorted(graphs)]
     arrays = [records[index]["arrays"] for index in sorted(graphs)]
     metrics = summarize(ordered, elapsed=elapsed)
+    if ordered and ordered[0]['schema'] == EDITOR_PANEL_SCHEMA:
+        metrics.update(schema=EDITOR_PANEL_SCHEMA, generation_policy='frozen_B0_D2_then_autonomous_editor',
+                       editor_attempts=sum(row.get('editor_attempted') is True for row in ordered),
+                       editor_changed=sum(bool(row.get('expert_trace',{}).get('changed_numeric_tokens')) for row in ordered))
     repairs = [record["repair_trace"] for record in ordered if "repair_trace" in record]
     if repairs:
         metrics["repair"] = {
@@ -600,7 +605,257 @@ def write_endpoint(
     return metrics
 
 
+def editor_panel_tasks(source_rows, cohort, ledger, *, seed):
+    """Preserve every frozen request, including complete bodies with failed graphs."""
+    tasks = []
+    if len(source_rows) != len(cohort) or len(source_rows) != len(ledger):
+        raise ValueError('editor source, Plan and seed ledgers differ in length')
+    for index, (body, plan, noise) in enumerate(zip(source_rows, cohort, ledger)):
+        if (body['sample_idx'] != index or body['ordinal'] != index
+                or plan['cohort_ordinal'] != index or noise['sample_idx'] != index
+                or body['attempt_id'] != plan['planner_attempt_id']
+                or body['body_noise_seed'] != noise['body_noise_seed']):
+            raise ValueError('editor source identity or original request order changed')
+        complete = bool(plan.get('body_eligible') and body.get('body_generation_complete')
+                        and body.get('body_plan_match'))
+        original = body.get('raw_body_token_ids')
+        if complete and (not isinstance(original,list) or len(original) != 7+4*int(plan['plan_state']['N'])):
+            raise ValueError('completed frozen body lacks its exact original token sequence')
+        editor_seed = int.from_bytes(hashlib.sha256(
+            f'{seed}:{index}:{noise["body_noise_seed"]}'.encode()).digest()[:8], 'big')
+        tasks.append({'ordinal': index, 'sample_idx': index, 'attempt_id': body['attempt_id'],
+                      'body_noise_seed': body['body_noise_seed'], 'editor_seed': editor_seed,
+                      'refiner_noise_seed': noise['refiner_noise_seed'], 'eligible': complete,
+                      'reason': None if complete else body.get('reason','original_body_unavailable'),
+                      'source_row': dict(plan, seed=plan.get('planner_sampling_seed')),
+                      'plan_state': plan.get('plan_state'), 'body_prompt': plan.get('body_prompt'),
+                      'body_prompt_sha256': plan.get('body_prompt_sha256'), 'original_body': original,
+                      'schedule_sha256': None})
+    return tasks
+
+
+def skipped_editor_record(task, original):
+    record = dict(original)
+    record.update(schema=EDITOR_PANEL_SCHEMA,original_source_schema=original['schema'],
+        purpose='evaluation',editor_attempted=False,editor_eligible=False,
+        editor_skip_reason='original_body_incomplete_or_plan_mismatch',
+        plan_state=task['plan_state'],body_prompt=task['body_prompt'],planner_record=task['source_row'],
+        parsed=original.get('body_plan_match') is True,
+        attempt_status='planner_failure' if not original.get('body_eligible') else 'body_failure',
+        refiner_noise_seed=task['refiner_noise_seed'])
+    return record
+
+
+def registered_checkpoint_initializer(checkpoint, contract):
+    if 'initialization' in contract:
+        return contract['initialization'], None
+    # The first deployed full-data stage predates the initializer receipt. Its
+    # immutable completed stage still binds TRAIN_CONFIG and the actual argv.
+    config_path = next((parent/'TRAIN_CONFIG.json' for parent in checkpoint.parents
+                        if (parent/'TRAIN_CONFIG.json').is_file()), None)
+    if config_path is None:
+        raise ValueError('older editor checkpoint lacks its registered initializer provenance')
+    config = json.loads(config_path.read_text())
+    expected = file_sha256(config_path)
+    matches = []
+    for path in config_path.parent.parent.glob('*.stage.json'):
+        stage = json.loads(path.read_text())
+        if stage.get('returncode') == 0 and any(Path(pin['path']).resolve() == config_path.resolve()
+                and pin.get('sha256') == expected for pin in stage.get('outputs',[])):
+            matches.append((path,stage))
+    if (len(matches) != 1 or config.get('train_files') != contract['train_files']
+            or config.get('dev_files') != contract['dev_files']
+            or config.get('b0_identity',{}).get('adapter_sha256') != B0_ADAPTER_SHA256):
+        raise ValueError('older editor initializer is not bound to a completed training stage')
+    path, stage = matches[0]
+    parent = config['args'].get('checkpoint')
+    if parent is None:
+        if (config.get('initialization_kind') != 'original_B0'
+                or '--checkpoint' in stage['command'] or '--resume-state' in stage['command']):
+            raise ValueError('older training stage did not start from the original B0')
+        initializer = {'kind':'original_B0','adapter_sha256':B0_ADAPTER_SHA256}
+    else:
+        if ('--checkpoint' not in stage['command']
+                or stage['command'][stage['command'].index('--checkpoint')+1] != parent):
+            raise ValueError('older warmstart checkpoint differs from the registered command')
+        initializer = {'kind':'editor_checkpoint','path':parent,
+                       'receipt_sha256':file_sha256(Path(parent)/'CHECKPOINT_FINAL.json')}
+    return initializer, {'training_config_sha256':expected,'stage_receipt':str(path),'stage_sha256':file_sha256(path)}
+
+
+def validate_editor_panel_holdout(checkpoint, cohort):
+    from crystal_dlm.expert_edit_data import composition_key
+    forbidden = {composition_key(row['plan_state']) for row in cohort if row.get('body_eligible')}
+    examined, lineage, seen_checkpoints, seen_files = [], [], set(), set()
+    while checkpoint is not None:
+        checkpoint = checkpoint.resolve()
+        if checkpoint in seen_checkpoints:
+            raise ValueError('editor initializer provenance contains a cycle')
+        seen_checkpoints.add(checkpoint)
+        receipt = checkpoint/'CHECKPOINT_FINAL.json'
+        if not (checkpoint/'_CHECKPOINT_SUCCESS').is_file() or not receipt.is_file():
+            raise ValueError('formal editor requires complete ancestor training checkpoints')
+        checkpoint_receipt = json.loads(receipt.read_text())
+        model_files = checkpoint_receipt.get('model_files_sha256',{})
+        required = {'adapter_model.safetensors','adapter_config.json','expert_edit_modules.pt',
+                    'expert_edit_config.json','periodic_state.pt','periodic_state_config.json',
+                    'EXPERT_EDITOR.json','roundtrip_probe.pt'}
+        if not required.issubset(model_files):
+            raise ValueError('editor receipt does not bind all actual model and probe files')
+        for name,digest in model_files.items():
+            if Path(name).name != name:
+                raise ValueError('editor model file identity escaped its checkpoint')
+            require_file_hash(checkpoint/name,digest)
+        contract = checkpoint_receipt['contract']
+        for split in ('train','dev'):
+            for pin in contract[split+'_files']:
+                key = (split,pin['path'],pin['sha256'])
+                if key in seen_files:
+                    continue
+                seen_files.add(key)
+                path = Path(pin['path'])
+                require_file_hash(path,pin['sha256'])
+                require_file_hash(path.parent/'DATA_FINAL.json',pin['report_sha256'])
+                rows = read_rows(path) if path.stat().st_size else []
+                if any(row['source_split'] != split or row['composition_key'] in forbidden for row in rows):
+                    raise ValueError('formal cohort composition was used for editor training or model selection')
+                examined.append({'split':split,'rows':len(rows),**pin})
+        initializer, legacy_binding = registered_checkpoint_initializer(checkpoint,contract)
+        lineage.append({'checkpoint':str(checkpoint),'receipt_sha256':file_sha256(receipt),
+                        'initialization':initializer,'older_stage_binding':legacy_binding})
+        if initializer.get('kind') == 'original_B0' and initializer.get('adapter_sha256') == B0_ADAPTER_SHA256:
+            checkpoint = None
+        elif initializer.get('kind') == 'editor_checkpoint':
+            checkpoint = Path(initializer['path'])
+            require_file_hash(checkpoint/'CHECKPOINT_FINAL.json',initializer['receipt_sha256'])
+        else:
+            raise ValueError('editor initializer provenance does not terminate at the original B0')
+    return {'lineage':lineage,'files':examined,'evaluation_compositions_absent_from_train_and_dev':True,
+            'scope':'all_editing_stages_and_their_development_sets; original_B0_pretraining_is_preexisting'}
+
+
+def run_editor_panel(argv):
+    """Apply the trained autonomous editor to an explicitly pinned legacy panel."""
+    import os
+    import torch
+    import torch.distributed as dist
+    from crystal_dlm.expert_edit import load_editor_model, edit_structures
+    from scripts.export_r03_evaluation_inputs import export_legacy_panel
+    parser = argparse.ArgumentParser(description=run_editor_panel.__doc__)
+    parser.add_argument('--editor-source-manifest', type=Path, required=True)
+    parser.add_argument('--editor-source-sha256', required=True)
+    parser.add_argument('--editor-checkpoint', type=Path, required=True)
+    parser.add_argument('--frozen-runtime-root', type=Path, required=True)
+    parser.add_argument('--base-model', type=Path, required=True)
+    parser.add_argument('--b0-checkpoint', type=Path, required=True)
+    parser.add_argument('--crysllmgen-dir', type=Path, required=True)
+    parser.add_argument('--output-dir', type=Path, required=True)
+    parser.add_argument('--expected-requests', type=int, required=True)
+    parser.add_argument('--seed', type=int, required=True)
+    parser.add_argument('--batch-size', type=int, default=8)
+    parser.add_argument('--max-calls', type=int, default=160)
+    parser.add_argument('--block-size', type=int, choices=(1,4,8), default=1)
+    parser.add_argument('--accept-threshold', type=float, default=.5)
+    args = parser.parse_args(argv)
+    rank, world, local_rank = (int(os.environ.get(name, default)) for name, default in
+                              (('RANK','0'),('WORLD_SIZE','1'),('LOCAL_RANK','0')))
+    if not torch.cuda.is_available() or not 1 <= world <= 6 or not 1 <= args.batch_size <= 8:
+        raise ValueError('editor panel requires 1..6 GPUs and batches in 1..8')
+    require_file_hash(args.editor_source_manifest, args.editor_source_sha256)
+    manifest = json.loads(args.editor_source_manifest.read_text())
+    if manifest.get('arm') != 'candidate' or manifest.get('endpoint') != 'native':
+        raise ValueError('editor input must be the frozen original B0 D2 native panel')
+    # The explicit legacy adapter checks all original schemas, rich prompts,
+    # complete input hashes and ordinals. Its geometry results never gate editing.
+    _, source_validation = export_legacy_panel(manifest, endpoint='native',
+        expected_requests=args.expected_requests, method_id=manifest['method_id'])
+    source_rows = read_rows(Path(manifest['files']['body']['path']))
+    cohort = read_rows(Path(manifest['files']['cohort']['path']))
+    ledger = read_rows(Path(manifest['files']['seed_ledger']['path']))
+    tasks = editor_panel_tasks(source_rows, cohort, ledger, seed=args.seed)
+    torch.cuda.set_device(local_rank)
+    if world > 1:
+        dist.init_process_group('nccl')
+    if rank == 0:
+        args.output_dir.mkdir(parents=True, exist_ok=False)
+        holdout = validate_editor_panel_holdout(args.editor_checkpoint, cohort)
+        write_json(args.output_dir/'run_config.json', {'schema':EDITOR_PANEL_SCHEMA,
+            'expected_requests':args.expected_requests, 'purpose':'evaluation',
+            'source_manifest':str(args.editor_source_manifest), 'source_manifest_sha256':args.editor_source_sha256,
+            'source_validation':source_validation, 'b0':validate_b0_checkpoint(args.b0_checkpoint),
+            'editor_checkpoint':str(args.editor_checkpoint), 'holdout_validation':holdout,
+            'seed':args.seed, 'max_calls':args.max_calls, 'block_size':args.block_size,
+            'sampling_batch_size':args.batch_size, 'accept_threshold':args.accept_threshold,
+            'tasks':['G','S'], 'scope_policy':'learned', 'accept_all':False,
+            'online_physics_calls':0, 'external_geometry_gate':False, 'world_size':world})
+        write_rows(args.output_dir/'attempt_ledger.jsonl', ledger)
+    if world > 1:
+        dist.barrier()
+    device = torch.device('cuda',local_rank)
+    model, tokenizer = load_editor_model(args.base_model,args.editor_checkpoint,device,trainable=False)
+    model.eval()
+    runtime = load_frozen_runtime(args.frozen_runtime_root)
+    with frozen_imports(runtime):
+        process_one = runtime.module.import_process_one(args.crysllmgen_dir)
+        runtime.module.assert_body_tokenizer_identity(tokenizer,expected_vocab_sha256=B0_VOCAB_SHA256)
+    local = [task for task in tasks if task['ordinal'] % world == rank]
+    eligible = [task for task in local if task['eligible']]
+    requests = [{'prompt':task['body_prompt'], 'body':task['original_body'],
+                 'num_sites':task['plan_state']['N'], 'tasks':('G','S'), 'seed':task['editor_seed']}
+                for task in eligible]
+    def progress(completed,total,batches):
+        if completed % 8 == 0 or completed == total:
+            print(json.dumps({'rank':rank,'completed':completed,'requested':total,'forward_batches':batches}),flush=True)
+    started = time.monotonic()
+    sampled = edit_structures(model,tokenizer,requests,allowed_modes=model.training_modes,
+        max_calls=args.max_calls,block_size=args.block_size,batch_size=args.batch_size,
+        accept_threshold=args.accept_threshold,progress=progress)
+    records, graphs = {}, {}
+    for task in local:
+        if not task['eligible']:
+            record = skipped_editor_record(task,source_rows[task['ordinal']])
+            records[task['ordinal']] = record
+    for task, output in zip(eligible,sampled['results']):
+        with frozen_imports(runtime):
+            record, graph = materialize_record(task,output['body'],runtime=runtime,tokenizer=tokenizer,process_one=process_one)
+        record.update(schema=EDITOR_PANEL_SCHEMA,purpose='evaluation',editor_attempted=True,
+            generation_policy='frozen_B0_D2_then_autonomous_editor',editor_seed=task['editor_seed'],
+            original_body_token_ids=task['original_body'],expert_trace=output,repair_used=True,
+            refiner_noise_seed=task['refiner_noise_seed'])
+        records[task['ordinal']] = record
+        if graph is not None:
+            graph['refiner_noise_seed'] = task['refiner_noise_seed']
+            graphs[task['ordinal']] = graph
+    write_rows(args.output_dir/f'editor_records.rank{rank}.jsonl',[records[i] for i in sorted(records)])
+    torch.save(graphs,args.output_dir/f'editor_graphs.rank{rank}.pt')
+    write_json(args.output_dir/f'editor_metrics.rank{rank}.json',{'forward_batches':sampled['forward_batches'],
+               'forward_rows':sampled['forward_rows'],'seconds':time.monotonic()-started,'requests':len(local)})
+    if world > 1:
+        dist.barrier()
+    if rank == 0:
+        all_records, all_graphs = {}, {}
+        for worker in range(world):
+            for row in read_rows(args.output_dir/f'editor_records.rank{worker}.jsonl'):
+                if row['ordinal'] in all_records:
+                    raise ValueError('editor worker produced a duplicate global request')
+                all_records[row['ordinal']] = row
+            worker_graphs = torch.load(args.output_dir/f'editor_graphs.rank{worker}.pt',map_location='cpu',weights_only=False)
+            if set(all_graphs) & set(worker_graphs):
+                raise ValueError('editor worker duplicated a proposal graph')
+            all_graphs.update(worker_graphs)
+        if set(all_records) != set(range(args.expected_requests)):
+            raise ValueError('editor failed to preserve the entire original request ledger')
+        metrics = write_endpoint(args.output_dir,tasks,all_records,all_graphs,runtime=runtime,elapsed=time.monotonic()-started)
+        write_json(args.output_dir/'EDITOR_FINAL.json',metrics)
+        (args.output_dir/'_SUCCESS').touch()
+    if world > 1:
+        dist.barrier()
+        dist.destroy_process_group()
+
+
 def main() -> None:
+    if '--editor-source-manifest' in sys.argv[1:]:
+        return run_editor_panel(sys.argv[1:])
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--frozen-runtime-root", type=Path, required=True)
     parser.add_argument("--base-model", type=Path, required=True)

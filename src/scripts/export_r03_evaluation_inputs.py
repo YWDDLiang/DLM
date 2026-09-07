@@ -26,6 +26,7 @@ from crystal_dlm.fixed_slot import SYMBOL_TO_Z
 
 SCHEMA = "r03_common_evaluation_input_v1"
 SOURCE_SCHEMA = "r03_integrated_body_v1"
+EDITOR_SOURCE_SCHEMA = "r03_autonomous_editor_body_v1"
 COMPONENTS_SCHEMA = "r03_evaluation_components_v1"
 LEGACY_PANEL_SCHEMA = "h1a2_frozen_legacy_evaluation_v1"
 LEGACY_SOURCE_SCHEMA = "h1_body_safeaxis256_attempt_v1"
@@ -141,7 +142,7 @@ def validate_ledger(rows: Sequence[Mapping[str, Any]], expected_requests: int, *
         raise ValueError("duplicate global request sample_idx")
     if any(not isinstance(value, str) or not value for value in attempts) or len(set(attempts)) != len(attempts):
         raise ValueError("original attempt IDs must be present, nonempty and unique")
-    if source_schema not in (SOURCE_SCHEMA, LEGACY_SOURCE_SCHEMA) or any(row.get("schema") != source_schema for row in rows):
+    if source_schema not in (SOURCE_SCHEMA, LEGACY_SOURCE_SCHEMA, EDITOR_SOURCE_SCHEMA) or any(row.get("schema") != source_schema for row in rows):
         raise ValueError("this adapter accepts only explicit R03 integrated-body artifacts")
     if any(row.get("purpose") == "train" or row.get("artifact_role") == "training" for row in rows):
         raise ValueError("a training artifact cannot be relabelled as a generated evaluation run")
@@ -281,7 +282,8 @@ def export_records(rows: Sequence[Mapping[str, Any]], *, endpoint: str,
             "artifact_error": None, "neural_trace_available": False,
             "trace_scope": "endpoint_artifact_only_no_sampling_likelihood_trace",
             "native_source": "saved_final_body", "body_noise_seed": row.get("body_noise_seed"),
-            "repair_trace": row.get("repair_trace"), "site_order_mapping_verified": endpoint == "native",
+            "repair_trace": row.get("repair_trace"), "expert_trace": row.get("expert_trace"),
+            "site_order_mapping_verified": endpoint == "native",
         }
         try:
             native, text, arrays = native_structure(row)
@@ -454,9 +456,12 @@ def load_body_directory(body_dir: Path, expected_requests: int):
     rows = read_rows(primary)
     if raw.is_file() and primary != raw and sha256_file(raw) != sha256_file(primary):
         raise ValueError("body_attempts and raw_generations disagree")
-    validate_ledger(rows, expected_requests)
+    source_schema = rows[0].get('schema') if rows else None
+    if source_schema not in (SOURCE_SCHEMA, EDITOR_SOURCE_SCHEMA):
+        raise ValueError('body directory requires an explicit integrated or autonomous editor schema')
+    validate_ledger(rows, expected_requests, source_schema=source_schema)
     metrics = read_json(body_dir / "sample_metrics.json")
-    if metrics.get("schema") != SOURCE_SCHEMA or metrics.get("requested_samples") != expected_requests or metrics.get("denominator") != expected_requests:
+    if metrics.get("schema") != source_schema or metrics.get("requested_samples") != expected_requests or metrics.get("denominator") != expected_requests:
         raise ValueError("source metrics and request ledger have different denominators")
     expected_counts = {"decoded_samples": sum(row.get("body_generation_complete") is True for row in rows),
                        "parse_success": sum(row.get("body_plan_match") is True for row in rows),
@@ -465,8 +470,10 @@ def load_body_directory(body_dir: Path, expected_requests: int):
         raise ValueError("source success counts disagree with the actual all-request ledger")
     if (body_dir / "run_config.json").is_file():
         config = read_json(body_dir / "run_config.json")
-        if config.get("schema") != SOURCE_SCHEMA or config.get("expected_requests") != expected_requests:
+        if config.get("schema") != source_schema or config.get("expected_requests") != expected_requests:
             raise ValueError("source run configuration differs from the exported request denominator")
+    elif source_schema == EDITOR_SOURCE_SCHEMA:
+        raise ValueError('autonomous editor body lacks its formal run configuration')
     pins = {str(primary): sha256_file(primary), str(body_dir / "sample_metrics.json"): sha256_file(body_dir / "sample_metrics.json")}
     for name in ("run_config.json", "attempt_ledger.jsonl", "proposal_graphs.pt"):
         if (body_dir / name).is_file():
@@ -486,6 +493,26 @@ def load_tau800(path: Path, *, body_dir: Path):
         raise ValueError("refiner input graphs do not belong to this R03 body directory")
     if Path(metrics.get("output_file", "")).resolve() != path.resolve():
         raise ValueError("refined tensor is not the output named by its terminal metrics")
+    body_config = read_json(body_dir/'run_config.json') if (body_dir/'run_config.json').is_file() else {}
+    if body_config.get('schema') == EDITOR_SOURCE_SCHEMA:
+        required = {'frozen_single_request_seeding':True,'seed_mode':'frozen_h1_ordinal_refiner_noise_seed',
+            'seed_before_dataloader':True,'seed_from_graph_field':'refiner_noise_seed','seed_by_sample_index':False,
+            'batch_size':1,'effective_batch_size':1,'timesteps':1000,'checkpoint_sha256':MODEL494_SHA256}
+        if any(config.get(key) != value for key,value in required.items()):
+            raise ValueError('editor tau800 does not use the exact frozen request-seeding/model494 protocol')
+        for target,key in ((body_dir/'proposal_graphs.pt','proposal_graphs_sha256'),
+                           (body_dir/'attempt_ledger.jsonl','frozen_seed_ledger_sha256'),
+                           (Path(config['checkpoint']),'checkpoint_sha256')):
+            if not valid_sha(config.get(key)) or sha256_file(target) != config[key]:
+                raise ValueError('editor tau800 input/seed/model identity changed')
+        seed_rows = read_rows(body_dir/'attempt_ledger.jsonl')
+        if [row.get('sample_idx') for row in seed_rows] != list(range(len(seed_rows))):
+            raise ValueError('editor tau800 original seed ledger was reordered')
+        graphs = torch.load(body_dir/'proposal_graphs.pt',map_location='cpu',weights_only=False)
+        graph_ids = [int(graph['sample_idx']) for graph in graphs]
+        if (len(set(graph_ids)) != len(graph_ids) or any(not 0 <= index < len(seed_rows) for index in graph_ids)
+                or any(graph.get('refiner_noise_seed') != seed_rows[int(graph['sample_idx'])]['refiner_noise_seed'] for graph in graphs)):
+            raise ValueError('editor tau800 graph seeds differ from the frozen original request seeds')
     payload = torch.load(path, map_location="cpu", weights_only=False)
     sample_ids = validate_refined_shapes(payload)
     if metrics.get("assigned_proposals") != len(sample_ids):
@@ -624,7 +651,7 @@ def main(argv=None):
         rows, source_report = load_body_directory(args.body_dir, args.expected_requests)
         payload, refinement = (None, {}) if args.refined_pt is None else load_tau800(args.refined_pt, body_dir=args.body_dir)
         output, report = export_records(rows, endpoint=args.endpoint, expected_requests=args.expected_requests,
-                                        method_id=args.method_id, refined_payload=payload)
+                                        method_id=args.method_id, refined_payload=payload, source_schema=rows[0]['schema'])
         report.update(**source_report, **refinement, body_directory=str(args.body_dir.resolve()))
     report.update(
                   authoritative_parser_sha256=sha256_file(ROOT / "scripts" / "assemble_grounding_repeat.py"),

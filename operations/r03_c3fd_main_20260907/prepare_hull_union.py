@@ -229,8 +229,8 @@ def collect_inputs(manifest_path: Path) -> tuple[list[dict[str, Any]], dict[str,
         if not isinstance(cell_id, str) or not cell_id or cell_id in seen_cells:
             raise HullUnionError("each input source needs a unique nonempty cell_id")
         seen_cells.add(cell_id)
-        if spec.get("arm") not in ("R", "M", "I", "G", "P") or "seed" not in spec:
-            raise HullUnionError("input must declare its R/M/I/G/P arm and seed")
+        if not isinstance(spec.get('arm'),str) or not re.fullmatch(r'[A-Za-z0-9_.:-]{1,128}',spec['arm']) or 'seed' not in spec:
+            raise HullUnionError('input must declare its stable arm identity and seed')
         kind = str(spec.get("type"))
         path = Path(spec["path"])
         path = path.resolve() if path.is_absolute() else (manifest_path.parent / path).resolve()
@@ -420,6 +420,67 @@ def choose_known(caches: Sequence[Mapping[str, Any]], wanted: set[str]) -> tuple
     return resolved, unknown, provenance, errors
 
 
+def load_legacy_resolved_supplement(cache: Path, wanted: set[str]) -> dict[str, Any]:
+    """Read only missing resolved systems from the explicit August 13 schema.
+
+    The original full-file and per-entry digests remain bound to the original
+    audit. Phase diagrams are revalidated locally; no query or compatibility
+    processing takes place, and legacy unknown rows are never imported.
+    """
+    from pymatgen.analysis.phase_diagram import PhaseDiagram, PDEntry
+    from pymatgen.core import Composition
+    cache = cache.resolve()
+    manifest_path = cache/'completion_manifest.json'
+    manifest = read_json(manifest_path)
+    if (not (cache/'completion_SUCCESS').is_file()
+            or manifest.get('schema') != 'h1_r03_best_fresh_official_mp_query_v1'
+            or manifest.get('query_method') != 'MPRester.get_entries_in_chemsys'
+            or manifest.get('compatible_only') is not True or manifest.get('thermo_type') != 'GGA_GGA+U'
+            or manifest.get('additional_criteria') != {'thermo_types':['GGA_GGA+U']}
+            or manifest.get('fresh_empty_cache') is not True
+            or not isinstance(manifest.get('database_version'),str) or not manifest['database_version']):
+        raise HullUnionError('legacy resolved supplement lacks its original official query contract')
+    names = {'resolved':'official_slim_cache.jsonl','unresolved':'unresolved_chemsys.jsonl','query_audit':'query_audit.jsonl'}
+    pins = {key:verify_identity(cache/name,manifest.get('cache_identities',{}).get(key,{})) for key,name in names.items()}
+    resolved = index_chemsys(read_jsonl(cache/names['resolved']),'legacy resolved')
+    unknown = index_chemsys(read_jsonl(cache/names['unresolved']),'legacy unresolved')
+    audits = index_chemsys(read_jsonl(cache/names['query_audit']),'legacy audit')
+    if (set(resolved)&set(unknown) or set(audits) != set(resolved)|set(unknown)
+            or manifest.get('wanted_chemsys') != len(audits)
+            or manifest.get('resolved_chemsys') != len(resolved) or manifest.get('unresolved_chemsys') != len(unknown)
+            or sorted(row.get('query_index') for row in audits.values()) != list(range(len(audits)))):
+        raise HullUnionError('legacy cache full-file accounting is incomplete')
+    selected, adapted = {}, {}
+    for name in sorted(wanted & set(resolved)):
+        row, audit = resolved[name], audits[name]
+        entries = row.get('entries')
+        validate_entries(entries,name)
+        original_sha = hashlib.sha256(json.dumps(entries,ensure_ascii=False,sort_keys=True,
+            separators=(',',':'),allow_nan=False).encode()).hexdigest()
+        if (audit.get('query_status') != 'resolved' or audit.get('error') is not None
+                or audit.get('query_method') != 'MPRester.get_entries_in_chemsys'
+                or audit.get('compatible_only') is not True or audit.get('thermo_type') != 'GGA_GGA+U'
+                or audit.get('elements') != name.split('-') or audit.get('entry_count') != len(entries)
+                or audit.get('entries_sha256') != original_sha):
+            raise HullUnionError('legacy resolved entries differ from their recorded official query')
+        diagram = PhaseDiagram([PDEntry(Composition(entry['composition']),entry['energy']) for entry in entries])
+        if {element.symbol for element in diagram.elements} != set(name.split('-')):
+            raise HullUnionError('legacy supplement phase diagram changed its element set')
+        selected[name] = row
+        adapted[name] = {**audit,**THERMO,'query_total':len(audits),
+            'slim_entries_sha256':canonical_sha256(entries),'phase_diagram_constructed':True,
+            'unary_reference_elements':name.split('-'),'legacy_original_query_audit':audit,
+            'legacy_original_query_audit_sha256':canonical_sha256(audit),
+            'validation_origin':'local_revalidation_of_unchanged_official_cached_entries', 'new_query':False}
+    return {'resolved':selected,'official_unresolved':{},'query_errors':{},'audits':adapted,
+        'original_record_sha256':{name:canonical_sha256(row) for name,row in selected.items()},
+        'identity':{'directory':str(cache),'completion_manifest':identity(manifest_path),
+            'completion_marker':identity(cache/'completion_SUCCESS'),'outputs_verified':pins,
+            'database_version':manifest['database_version'],'package_versions':manifest.get('package_versions'),
+            'schema':manifest['schema'],'selected_missing_resolved_systems':sorted(selected),
+            'legacy_unknowns_imported':False}, 'manifest':manifest}
+
+
 def write_source_manifest(directory: Path, names: Sequence[str]) -> str:
     with (directory / "SOURCE_SHA256.txt").open("x", encoding="utf-8", newline="\n") as handle:
         for name in sorted(names):
@@ -430,13 +491,19 @@ def write_source_manifest(directory: Path, names: Sequence[str]) -> str:
 
 
 def prepare(*, inputs_manifest: Path, known_caches: Sequence[Path], query_config: Path,
-            query_source: Path, run_root: Path) -> dict[str, Any]:
+            query_source: Path, run_root: Path, legacy_resolved_caches: Sequence[Path] = ()) -> dict[str, Any]:
     if run_root.exists():
         raise FileExistsError(run_root)
     wanted_rows, inputs_report = collect_inputs(inputs_manifest)
     wanted = {row["chemsys"] for row in wanted_rows}
     loaded = [load_cache(path) for path in known_caches]
     resolved, unknown, provenance, excluded = choose_known(loaded, wanted)
+    for path in legacy_resolved_caches:
+        supplement = load_legacy_resolved_supplement(path,wanted-set(resolved)-set(unknown))
+        new_resolved, _, new_provenance, _ = choose_known([supplement],wanted)
+        resolved.update(new_resolved)
+        provenance.update(new_provenance)
+        loaded.append(supplement)
     reused_versions = {source["cache"]["database_version"] for source in provenance.values()}
     if len(reused_versions) > 1:
         raise HullUnionError("known rows span MP database versions; choose one version before querying the union")
@@ -657,6 +724,8 @@ def main() -> None:
     prep = commands.add_parser("prepare")
     prep.add_argument("--inputs-manifest", type=Path, required=True)
     prep.add_argument("--known-cache", type=Path, action="append", default=[])
+    prep.add_argument('--legacy-resolved-cache', type=Path, action='append', default=[],
+                      help='Explicit old official schema used only for missing resolved systems')
     prep.add_argument("--query-config", type=Path, required=True)
     prep.add_argument("--query-source-dir", type=Path, required=True)
     prep.add_argument("--run-root", type=Path, required=True)
@@ -671,7 +740,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.command == "prepare":
         report = prepare(inputs_manifest=args.inputs_manifest, known_caches=args.known_cache,
-                         query_config=args.query_config, query_source=args.query_source_dir, run_root=args.run_root)
+                         query_config=args.query_config, query_source=args.query_source_dir, run_root=args.run_root,
+                         legacy_resolved_caches=args.legacy_resolved_cache)
         print(canonical_json({"status": report["status"], "wanted_chemsys": report["wanted_chemsys"],
                               "known_resolved": report["known_resolved"], "known_official_unresolved": report["known_official_unresolved"],
                               "missing_chemsys": report["missing_chemsys"], "query_command": report["query_command"]}))

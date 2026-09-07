@@ -582,7 +582,7 @@ def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, wor
             if len(selected) >= args.diagnostic_sources:
                 break
     selected = selected[:args.diagnostic_sources]
-    results, physics = [], []
+    results, physics, old_physics = [], [], []
     local_rows = [(index,row) for index,row in enumerate(selected) if index % world == rank]
     requests = [{'prompt': row['prompt'], 'body': row['old_body'], 'num_sites': row['num_atoms'],
                  'tasks': ('G','S') if args.source_kind == 'all_old_states' else (row['task'],),
@@ -613,8 +613,13 @@ def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, wor
         text = ''.join(inverse[token] for token in proposal)
         physics.append(physics_input(pid, row['ancestor_id'], row['source_row_idx'], row['source_split'],
                                      'expert_quantized', arrays, text))
+        old_arrays = decode_body(row['old_body'],inverse)
+        old_text = ''.join(inverse[token] for token in row['old_body'])
+        old_physics.append(physics_input(f'expert-initial:{args.output_dir.name}:{index}:{row["task"]}',
+            row['ancestor_id'],row['source_row_idx'],row['source_split'],'native',old_arrays,old_text))
     write_jsonl(args.output_dir/f'samples.rank{rank}.jsonl', results)
     write_jsonl(args.output_dir/f'physics.rank{rank}.jsonl', physics)
+    write_jsonl(args.output_dir/f'old_physics.rank{rank}.jsonl', old_physics)
     write_json(args.output_dir/f'sampling.rank{rank}.json', {'forward_batches': sampled['forward_batches'],
                'forward_rows': sampled['forward_rows'], 'requests': len(local_rows)})
     return len(selected)
@@ -750,7 +755,7 @@ def expert_main(argv):
         if world > 1:
             dist.barrier()
         if rank == 0:
-            for name in ('samples', 'physics'):
+            for name in ('samples', 'physics', 'old_physics'):
                 rows = []
                 for worker in range(world):
                     rows.extend(read_jsonl(args.output_dir/f'{name}.rank{worker}.jsonl'))
@@ -823,7 +828,15 @@ def expert_main(argv):
         {'params': [p for _, p in partitions['lora']], 'lr': args.learning_rate},
         {'params': [p for _, p in partitions['editor']], 'lr': args.module_learning_rate}], weight_decay=args.weight_decay)
     model.training_modes = train_data.allowed_modes
+    initialization = {'kind':'original_B0','adapter_sha256':B0_ADAPTER_SHA256}
+    if args.checkpoint is not None and args.resume_state is None:
+        parent_receipt = args.checkpoint/'CHECKPOINT_FINAL.json'
+        if not parent_receipt.is_file() or not (args.checkpoint/'_CHECKPOINT_SUCCESS').is_file():
+            raise ValueError('a new editor stage requires the complete initializer checkpoint receipt')
+        initialization = {'kind':'editor_checkpoint','path':str(args.checkpoint.resolve()),
+                          'receipt_sha256':file_sha256(parent_receipt)}
     contract = {'train_files': train_data.provenance, 'dev_files': dev_data.provenance,
+                'initialization': initialization,
                 'smoke_sources': args.smoke_sources,
                 'train_record_ids_sha256': hashlib.sha256(json.dumps(sorted(row['record_id'] for row in train_data.records)).encode()).hexdigest(),
                 'dev_record_ids_sha256': hashlib.sha256(json.dumps(sorted(row['record_id'] for row in dev_data.records)).encode()).hexdigest(),
@@ -841,6 +854,7 @@ def expert_main(argv):
     if args.resume_state is not None:
         import numpy as np
         restored = torch.load(args.resume_state, map_location='cpu', weights_only=False)
+        contract['initialization'] = restored['contract']['initialization']
         validate_editor_resume(restored, contract, args.checkpoint, verify_files=rank==0)
         if world > 1:
             dist.barrier()

@@ -4,8 +4,10 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import random
 import sys
 import time
 from pathlib import Path
@@ -116,6 +118,31 @@ def write_json(path: Path, payload) -> None:
         handle.write("\n")
 
 
+def file_digest(path):
+    digest = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for chunk in iter(lambda: stream.read(4*1024*1024),b''):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def frozen_seeded_batches(graphs, Data, DataLoader, seed_field):
+    """Match the frozen H1 request loop, including DataLoader RNG consumption."""
+    for graph in graphs:
+        seed = graph.get(seed_field)
+        if type(seed) is not int or not 0 <= seed < 2**63:
+            raise ValueError('frozen refiner request lacks its original integer noise seed')
+        random.seed(seed)
+        np.random.seed(seed % (2**32))
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+        # The historical runner creates this iterator after reseeding. Moving
+        # reseeding after fetching a batch would change the diffusion noise.
+        dataset = ProposalDataset([graph], Data, seed_from_graph_field=seed_field)
+        yield next(iter(DataLoader(dataset, batch_size=1, shuffle=False)))
+
+
 def empty_payload(num_evals: int) -> Dict[str, torch.Tensor | float]:
     return {
         "frac_coords": torch.empty((num_evals, 0, 3), dtype=torch.float32),
@@ -190,12 +217,25 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=27017)
     parser.add_argument("--seed-by-sample-index", action="store_true")
     parser.add_argument("--seed-from-graph-field", default=None)
+    parser.add_argument('--frozen-single-request-seeding', action='store_true',
+                        help='Use the original H1 per-request seed-before-DataLoader protocol')
     parser.add_argument("--timesteps", type=int, default=1000)
     parser.add_argument("--diff-steps", type=int, default=800)
     parser.add_argument("--num-evals", type=int, default=1)
     parser.add_argument("--run-type", default="train")
     parser.add_argument("--max-proposals", type=int, default=1000)
     args = parser.parse_args()
+
+    if args.frozen_single_request_seeding:
+        if (not args.seed_from_graph_field or args.seed_by_sample_index or args.batch_size != 1
+                or args.num_evals != 1 or args.diff_steps != 800 or args.timesteps != 1000):
+            raise ValueError('frozen refinement requires original graph seeds, batch=1, one draw, and 800/1000 steps')
+        digest = hashlib.sha256()
+        with args.checkpoint.open('rb') as stream:
+            for chunk in iter(lambda: stream.read(4*1024*1024), b''):
+                digest.update(chunk)
+        if digest.hexdigest() != '573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e':
+            raise ValueError('frozen refinement model494 checkpoint identity changed')
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     dist_info = init_distributed()
@@ -207,6 +247,11 @@ def main() -> None:
         run_config = {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}
         run_config["distributed"] = distributed
         run_config["world_size"] = world_size
+        if args.frozen_single_request_seeding:
+            run_config.update(seed_mode='frozen_h1_ordinal_refiner_noise_seed',effective_batch_size=1,
+                seed_before_dataloader=True,checkpoint_sha256=digest.hexdigest(),runner_sha256=file_digest(__file__),
+                proposal_graphs_sha256=file_digest(args.proposal_graphs),
+                frozen_seed_ledger_sha256=file_digest(args.proposal_graphs.parent/'attempt_ledger.jsonl'))
         write_json(args.output_dir / "run_config.json", run_config)
         with (args.output_dir / "training_log.jsonl").open("w", encoding="utf-8") as handle:
             handle.write(
@@ -225,6 +270,17 @@ def main() -> None:
     device = dist_info["device"]
 
     proposal_graphs = torch.load(args.proposal_graphs, map_location="cpu")
+    if args.frozen_single_request_seeding:
+        ledger = [json.loads(line) for line in (args.proposal_graphs.parent/'attempt_ledger.jsonl').read_text().splitlines()]
+        if [row.get('sample_idx') for row in ledger] != list(range(len(ledger))):
+            raise ValueError('frozen main refiner seed ledger is not in complete original order')
+        graph_ids = [int(graph['sample_idx']) for graph in proposal_graphs]
+        if (len(set(graph_ids)) != len(graph_ids) or any(not 0 <= index < len(ledger) for index in graph_ids)
+                or any(graph.get(args.seed_from_graph_field) != ledger[int(graph['sample_idx'])]['refiner_noise_seed']
+                       for graph in proposal_graphs)):
+            raise ValueError('frozen main refiner graph seeds differ from the original request ledger')
+    if args.frozen_single_request_seeding and args.max_proposals and len(proposal_graphs) > args.max_proposals:
+        raise ValueError('frozen main refinement cannot truncate its original request graphs')
     if args.max_proposals:
         proposal_graphs = proposal_graphs[: args.max_proposals]
     total_proposals = len(proposal_graphs)
@@ -254,7 +310,10 @@ def main() -> None:
     frac_coords_all, num_atoms_all, atom_types_all, lattices_all, sample_indices_all = [], [], [], [], []
     start = time.time()
     with torch.no_grad():
-        for batch in tqdm(dataloader, desc=f"CrysLLMGen refinement rank{rank}", disable=distributed and not is_main):
+        batches = (frozen_seeded_batches(rank_graphs,Data,DataLoader,args.seed_from_graph_field)
+                   if args.frozen_single_request_seeding else dataloader)
+        for batch in tqdm(batches, total=len(rank_graphs) if args.frozen_single_request_seeding else len(dataloader),
+                          desc=f"CrysLLMGen refinement rank{rank}", disable=distributed and not is_main):
             batch = batch.to(device)
             if (
                 args.seed_by_sample_index or args.seed_from_graph_field
@@ -263,7 +322,7 @@ def main() -> None:
             batch_frac, batch_num, batch_atom, batch_lat = [], [], [], []
             sample_idx = int(batch.sample_idx.view(-1)[0].item())
             for eval_idx in range(args.num_evals):
-                if args.seed_from_graph_field:
+                if args.seed_from_graph_field and not args.frozen_single_request_seeding:
                     sample_seed = int(batch.refiner_seed.view(-1)[0].item()) + eval_idx
                     np.random.seed(sample_seed)
                     torch.manual_seed(sample_seed)
