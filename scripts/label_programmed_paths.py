@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from collections import deque
 from functools import partial
 import gzip
 import hashlib
@@ -12,6 +12,7 @@ import importlib
 import json
 import math
 import multiprocessing as mp
+from multiprocessing.connection import wait as wait_connections
 import os
 from pathlib import Path
 import sys
@@ -248,6 +249,111 @@ def json_default(value):
     raise TypeError(type(value).__name__)
 
 
+def _isolated_worker(connection, gpu_index, options):
+    """Persistent single-record worker; a parent can kill a stuck C++ call."""
+    worker_init(gpu_index)
+    connection.send({'ready': True})
+    while True:
+        record = connection.recv()
+        if record is None:
+            return
+        result = worker_label(record, *options)
+        connection.send({'result': result})
+        if result['status'] == 'worker_error':
+            return  # Never reuse a potentially damaged CUDA context.
+
+
+def bounded_labels(by_endpoint, args, *, worker_target=_isolated_worker):
+    """Yield every endpoint exactly once, with engineering timeouts as unknown.
+
+    The timer starts when a ready process receives its one active record, so
+    queued records never use another record's time budget. Physical parameters
+    and the underlying label function are unchanged.
+    """
+    context = mp.get_context('spawn')
+    pending = deque(by_endpoint.items())
+    slots = []
+    def stop(slot):
+        process = slot['process']
+        if process.is_alive():
+            process.terminate()
+        process.join(timeout=2)
+        if process.is_alive():
+            process.kill()
+            process.join(timeout=2)
+        slot['connection'].close()
+    def start(gpu):
+        parent, child = context.Pipe()
+        process = context.Process(target=worker_target,
+            args=(child, gpu, (args.fmax, args.stress_tolerance, args.max_steps)))
+        process.start()
+        child.close()
+        return {'gpu': gpu, 'process': process, 'connection': parent, 'ready': False,
+                'active': None, 'started': time.monotonic()}
+    def failure(message):
+        return {'status': 'worker_error', 'error': message, 'verified': False,
+                'raw_energy': None, 'terminal_energy': None, 'gap': None,
+                'raw': None, 'terminal': None, 'actual_steps': None,
+                'optimizer_converged': None, 'final_structure': None}
+    try:
+        for gpu in range(args.gpu_count):
+            for _ in range(args.workers_per_gpu):
+                if len(slots) < len(by_endpoint):
+                    slots.append(start(gpu))
+        while pending or any(slot['active'] is not None for slot in slots):
+            ready_connections = set(wait_connections([slot['connection'] for slot in slots], timeout=.1))
+            replacements = []
+            for index, slot in enumerate(slots):
+                restart, completed = False, None
+                if slot['connection'] in ready_connections:
+                    try:
+                        message = slot['connection'].recv()
+                        if message.get('ready'):
+                            slot['ready'] = True
+                        elif 'result' in message and slot['active'] is not None:
+                            completed = message['result']
+                            restart = completed['status'] == 'worker_error'
+                    except (EOFError, OSError):
+                        if slot['active'] is None:
+                            raise RuntimeError('physics worker failed during initialization')
+                        completed = failure('physics worker exited before producing its active result')
+                        restart = True
+                if completed is None:
+                    elapsed = time.monotonic()-slot['started']
+                    if not slot['ready'] and elapsed > args.worker_startup_timeout:
+                        raise RuntimeError('physics worker initialization timed out')
+                    if slot['active'] is not None and elapsed > args.record_timeout:
+                        completed = failure(f'physics worker exceeded {args.record_timeout:g}s for its active record')
+                        restart = True
+                    elif not slot['process'].is_alive():
+                        if slot['active'] is None:
+                            raise RuntimeError('physics worker exited while idle')
+                        completed = failure('physics worker process terminated unexpectedly')
+                        restart = True
+                if completed is not None:
+                    key, occurrences = slot['active']
+                    slot['active'] = None
+                    yield key, occurrences, completed
+                if restart:
+                    stop(slot)
+                    if pending:
+                        replacements.append((index, start(slot['gpu'])))
+                    else:
+                        replacements.append((index, None))
+                elif slot['ready'] and slot['active'] is None and pending:
+                    slot['active'] = pending.popleft()
+                    slot['connection'].send(slot['active'][1][0])
+                    slot['started'] = time.monotonic()
+            for index, replacement in reversed(replacements):
+                if replacement is None:
+                    slots.pop(index)
+                else:
+                    slots[index] = replacement
+    finally:
+        for slot in slots:
+            stop(slot)
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--input-jsonl", type=Path, required=True)
@@ -258,6 +364,9 @@ def main():
     p.add_argument("--fmax", type=float, default=.1)
     p.add_argument("--stress-tolerance", type=float, default=.5)
     p.add_argument("--max-steps", type=int, default=500)
+    p.add_argument('--record-timeout', type=float, default=180.,
+                   help='Hard wall limit per active structure; timeouts are engineering unknowns')
+    p.add_argument('--worker-startup-timeout', type=float, default=120.)
     p.add_argument("--shard-rank", type=int, default=0)
     p.add_argument("--shard-ranks", type=int, nargs="+")
     p.add_argument("--shard-count", type=int, default=1)
@@ -269,6 +378,9 @@ def main():
         raise ValueError("invalid disjoint label shard ranks")
     if not 1 <= args.gpu_count <= 6 or not 1 <= args.workers_per_gpu <= 4:
         raise ValueError("respect six GPUs and four CPUs per GPU")
+    if (not math.isfinite(args.record_timeout) or args.record_timeout <= 0
+            or not math.isfinite(args.worker_startup_timeout) or args.worker_startup_timeout <= 0):
+        raise ValueError('finite positive worker deadlines are required')
     if "SLURM_JOB_ID" not in os.environ or not os.environ.get("CUDA_VISIBLE_DEVICES"):
         raise RuntimeError("labeling requires its declared GPU allocation")
     if args.gpu_count > len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")):
@@ -294,27 +406,12 @@ def main():
         key = hashlib.sha256(geometry.encode()).hexdigest() if record["success"] else record["trajectory_id"]
         by_endpoint.setdefault(key, []).append(record)
     (args.output_dir / "trajectories").mkdir()
-    pools = [ProcessPoolExecutor(max_workers=args.workers_per_gpu, mp_context=mp.get_context("spawn"),
-                                 initializer=worker_init, initargs=(gpu,)) for gpu in range(args.gpu_count)]
-    futures = {}
     started = time.monotonic()
     counts = {}
     completed = 0
     versions_seen = {}
-    try:
-        for index, (key, occurrences) in enumerate(by_endpoint.items()):
-            future = pools[index % args.gpu_count].submit(worker_label, occurrences[0], args.fmax, args.stress_tolerance, args.max_steps)
-            futures[future] = (key, occurrences)
-        with (args.output_dir / "labels.jsonl").open("x", encoding="utf-8") as handle:
-            for future in as_completed(futures):
-                key, occurrences = futures[future]
-                source = occurrences[0]
-                try:
-                    result = future.result()
-                except Exception as error:
-                    result = {key: source.get(key) for key in ("trajectory_id", "group_id", "source_row_idx", "source_split")}
-                    result.update(raw_energy=None, terminal_energy=None, gap=None, verified=False,
-                                  status="worker_error", error=f"{type(error).__name__}: {error}")
+    with (args.output_dir / "labels.jsonl").open("x", encoding="utf-8") as handle:
+            for key, occurrences, result in bounded_labels(by_endpoint, args):
                 trajectory = result.pop("relaxation_trajectory", None)
                 if result.get('versions'):
                     versions_seen[json.dumps(result['versions'], sort_keys=True)] = result['versions']
@@ -334,9 +431,6 @@ def main():
                 if completed % 64 == 0:
                     print(json.dumps({"completed": completed, "requested": len(records), "statuses": counts,
                                       "seconds": time.monotonic() - started}), flush=True)
-    finally:
-        for pool in pools:
-            pool.shutdown(wait=True)
     report = {"requested": len(records), "completed": completed, "statuses": counts,
               "verification_protocol": TERMINAL_VERIFICATION_PROTOCOL,
               "distinct_endpoint_evaluations": len(by_endpoint),
@@ -348,6 +442,9 @@ def main():
               "gpu_count": args.gpu_count, "workers_per_gpu": args.workers_per_gpu,
               "shard_count": args.shard_count, "shard_ranks": shard_ranks,
               "elapsed_seconds": time.monotonic() - started, "purpose": args.purpose}
+    report['engineering_deadlines'] = {'record_timeout_seconds': args.record_timeout,
+                                       'worker_startup_timeout_seconds': args.worker_startup_timeout,
+                                       'timeout_is_physical_failure': False}
     report['runtime_identities'] = list(versions_seen.values())
     report['input_sha256'] = hashlib.sha256(args.input_jsonl.read_bytes()).hexdigest()
     (args.output_dir / "LABEL_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

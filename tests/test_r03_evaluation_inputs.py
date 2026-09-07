@@ -19,7 +19,8 @@ from pymatgen.core import Structure
 from crystal_dlm.dynamic_crystal import parse_dynamic_answer
 from scripts.export_r03_evaluation_inputs import (
     MODEL494_SHA256, P0_ADAPTER_SHA256,
-    export_components, export_records, load_body_directory, load_tau800, main, validate_refined_shapes,
+    export_components, export_legacy_panel, export_records, load_body_directory, load_tau800, main,
+    validate_refined_shapes,
 )
 
 
@@ -404,6 +405,217 @@ class R03ComponentPoolingTests(unittest.TestCase):
             path.write_text(json.dumps(config))
             with self.assertRaisesRegex(ValueError, "identities conflict"):
                 export_components(self.manifest([first, second]), endpoint="native", expected_requests=2, method_id="R03-R")
+
+
+def legacy_panel_fixture(base, *, endpoint="native", arm="control"):
+    """Four historical occurrences: two graphs, a Planner failure, a graph failure."""
+    cohort, body, seeds, refinement_attempts = [], [], [], []
+    policy = "d1" if arm == "control" else "d2_safe_axis"
+    for index in range(4):
+        eligible, graph_complete = index != 1, index in (0, 2)
+        row = request(index, index, ("Na", "Cl") if index == 2 else ("O", "Li"), failure=not eligible)
+        plan_state = copy.deepcopy(row["plan_state"]) if eligible else None
+        if plan_state is not None:
+            plan_state.update(lattice_system="orthorhombic", spacegroup_bucket="sg_016_074",
+                              volume_per_atom_bin="volpa_020_024")
+        state_text = json.dumps(plan_state, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        state_sha = hashlib.sha256(state_text.encode()).hexdigest()
+        prompt = "recorded original rich prompt\nplan_state: " + state_text + "\n" if eligible else None
+        prompt_sha = hashlib.sha256(prompt.encode()).hexdigest() if eligible else None
+        cohort.append({
+            "schema": "h1a2_epoch2_exactplan_paired_cohort_v1", "cohort_ordinal": index,
+            "global_raw_ordinal": index, "planner_attempt_id": row["attempt_id"],
+            "planner_rank": 0, "planner_sampling_seed": 17, "repeat": 0,
+            "plan_state": plan_state, "plan_state_sha256": state_sha,
+            "body_prompt": prompt, "body_prompt_sha256": prompt_sha,
+            "body_eligible": eligible, "retry_or_replacement_used": False,
+        })
+        row.pop("raw_body_text")
+        row.pop("parsed")
+        row.pop("attempt_status")
+        row.pop("planner_record")
+        row.pop("plan_state")
+        row.pop("body_prompt")
+        row.update(schema="h1_body_safeaxis256_attempt_v1", generation_policy=policy,
+                   planner_arm="P0", body_checkpoint_arm="B0",
+                   schedule_arm="D1" if arm == "control" else "D2_SAFE_AXIS",
+                   evaluation_order=index, body_prompt_sha256=prompt_sha, plan_state_sha256=state_sha,
+                   filter_used=False, repair_used=False, replacement_used=False, rerank_used=False,
+                   retry_used=False, body_graph_complete=graph_complete,
+                   status="succeeded" if graph_complete else "failed",
+                   earliest_failure_stage=None if graph_complete else "body_graph" if eligible else "planner")
+        row["raw_body_text_sha256"] = hashlib.sha256(row["text"].encode()).hexdigest() if eligible else None
+        if not eligible:
+            row.update(text=None, arrays=None)
+        body.append(row)
+        seeds.append({
+            "schema": "h1a2_epoch2_exactplan1200_paired_seed_ledger_v1",
+            "ordinal": index, "raw_ordinal": index, "sample_idx": index, "seed_derivation_ordinal": index,
+            "repeat": 0, "paired_across_arms": True, "sampling_seed_root": 17029,
+            "body_noise_seed": row["body_noise_seed"], "refiner_noise_seed": 9001 + index,
+        })
+        refinement_attempts.append({
+            "schema": "h1_r03e_refinement_attempt_v1", "ordinal": index, "repeat": 0,
+            "attempt_id": row["attempt_id"], "sample_idx": index, "body_noise_seed": row["body_noise_seed"],
+            "body_graph_complete": graph_complete, "refiner_complete": graph_complete,
+            "refiner_sampling_seed": seeds[-1]["refiner_noise_seed"],
+        })
+    manifest = {"schema": "h1a2_frozen_legacy_evaluation_v1", "method_id": "historical-" + arm,
+                "endpoint": endpoint, "expected_requests": 4, "arm": arm, "files": {}}
+
+    def pin(name, value, *, jsonl=False, binary=False):
+        path = base / (name + (".pt" if binary else ".jsonl" if jsonl else ".json"))
+        if binary:
+            torch.save(value, path)
+        else:
+            content = "".join(json.dumps(row) + "\n" for row in value) if jsonl else json.dumps(value)
+            path.write_text(content, encoding="utf-8")
+        manifest["files"][name] = {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+        return path
+
+    pin("cohort", cohort, jsonl=True)
+    body_path = pin("body", body, jsonl=True)
+    seed_path = pin("seed_ledger", seeds, jsonl=True)
+    if endpoint == "tau800":
+        graphs = pin("proposal_graphs", [{"sample_idx": i} for i in (0, 2)], binary=True)
+        payload = refined_payload()
+        payload["sample_indices"] = torch.tensor([2, 0], dtype=torch.long)
+        tensor = pin("refined_pt", payload, binary=True)
+        common = {"arm": arm, "diff_steps": 800, "num_evals": 1, "effective_batch_size": 1,
+                  "filter": False, "repair": False, "replacement": False, "rerank": False,
+                  "retry": False, "new_scientific_seed_per_repeat": False, "repeat": 0}
+        pin("refiner_config", dict(common, schema="h1_r03e_refiner_run_v1", num_samples=4,
+            timesteps=1000, seed_mode="frozen_h1_ordinal_refiner_noise_seed",
+            checkpoint_sha256_recorded=MODEL494_SHA256, proposal_graphs=str(graphs),
+            body_attempts=str(body_path), attempt_ledger=str(seed_path)))
+        pin("refiner_metrics", dict(common, schema="h1_r03e_refiner_metrics_v1", all_attempt_denominator=4,
+            status="complete", output_file=str(tensor), refiner_complete=2, body_complete=2))
+        pin("refinement_attempts", refinement_attempts, jsonl=True)
+    return manifest
+
+
+class R03LegacyPanelTests(unittest.TestCase):
+    def run_export(self, manifest):
+        return export_legacy_panel(manifest, endpoint=manifest["endpoint"],
+                                   expected_requests=4, method_id=manifest["method_id"])
+
+    def mutate_and_repin(self, manifest, name, mutate):
+        path = Path(manifest["files"][name]["path"])
+        if path.suffix == ".jsonl":
+            value = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+            mutate(value)
+            text = "".join(json.dumps(row) + "\n" for row in value)
+        else:
+            value = json.loads(path.read_text(encoding="utf-8"))
+            mutate(value)
+            text = json.dumps(value)
+        path.write_text(text, encoding="utf-8")
+        manifest["files"][name]["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+
+    def test_legacy_native_retains_planner_and_graph_failures_without_schema_rewrite(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory))
+            rows, report = self.run_export(manifest)
+            self.assertEqual([r["sample_idx"] for r in rows], [0, 1, 2, 3])
+            self.assertEqual([r["evaluation_ordinal"] for r in rows], [0, 1, 2, 3])
+            self.assertEqual(report["requests"], 4)
+            self.assertFalse(report["source_schema_rewritten"])
+            self.assertTrue(report["retrospective_frozen_panel"])
+            self.assertTrue(all(r["source_artifact_schema"] == "h1_body_safeaxis256_attempt_v1" for r in rows))
+            self.assertFalse(rows[1]["success"])
+            self.assertIsNone(rows[1]["structure"])
+            self.assertTrue(rows[3]["success"])
+            self.assertFalse(rows[3]["native_execution_success"])
+            self.assertEqual(rows[1]["refiner_noise_seed"], 9002)
+            self.assertTrue(all(not r["trainable_teacher"] for r in rows))
+
+    def test_legacy_refined_tensor_joins_by_global_index_and_retains_all_failures(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory), endpoint="tau800", arm="candidate")
+            rows, report = self.run_export(manifest)
+            self.assertEqual(report["successful"], 2)
+            self.assertEqual([r["success"] for r in rows], [True, False, True, False])
+            self.assertEqual([r["sample_idx"] for r in rows], [0, 1, 2, 3])
+            self.assertEqual(list(Structure.from_dict(rows[0]["structure"]).atomic_numbers), [3, 8])
+            self.assertEqual(list(Structure.from_dict(rows[2]["structure"]).atomic_numbers), [17, 11])
+            self.assertTrue(all(r["body"] is None for r in rows))
+            self.assertEqual([r["refiner_noise_seed"] for r in rows], [9001, 9002, 9003, 9004])
+
+    def test_legacy_unrepinned_file_mutation_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory))
+            path = Path(manifest["files"]["body"]["path"])
+            path.write_text(path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "hash differs"):
+                self.run_export(manifest)
+
+    def test_legacy_repin_cannot_hide_wrong_policy_or_body_seed(self):
+        for field, value in (("generation_policy", "d2_safe_axis"), ("body_noise_seed", 999999)):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
+                manifest = legacy_panel_fixture(Path(directory))
+                self.mutate_and_repin(manifest, "body", lambda rows: rows[0].update({field: value}))
+                with self.assertRaises(ValueError):
+                    self.run_export(manifest)
+
+    def test_legacy_repin_cannot_hide_rich_plan_content_change(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory))
+            self.mutate_and_repin(manifest, "cohort", lambda rows: rows[0]["plan_state"].update(lattice_system="triclinic"))
+            with self.assertRaises(ValueError):
+                self.run_export(manifest)
+
+    def test_legacy_seed_derivation_and_repeat_identity_cannot_drift(self):
+        mutations = (("raw_ordinal", 99), ("seed_derivation_ordinal", 99), ("repeat", 1),
+                     ("sampling_seed_root", 17030), ("paired_across_arms", False))
+        for field, value in mutations:
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
+                manifest = legacy_panel_fixture(Path(directory))
+                self.mutate_and_repin(manifest, "seed_ledger", lambda rows: rows[0].update({field: value}))
+                with self.assertRaises(ValueError):
+                    self.run_export(manifest)
+
+    def test_legacy_matching_raw_ordinals_must_still_bind_the_request_ordinal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory))
+            self.mutate_and_repin(manifest, "cohort", lambda rows: rows[0].update(global_raw_ordinal=99))
+            self.mutate_and_repin(manifest, "seed_ledger", lambda rows: rows[0].update(raw_ordinal=99, seed_derivation_ordinal=99))
+            with self.assertRaises(ValueError):
+                self.run_export(manifest)
+
+    def test_legacy_refiner_noise_on_failed_request_is_still_bound(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory), endpoint="tau800")
+            self.mutate_and_repin(manifest, "refinement_attempts", lambda rows: rows[1].update(refiner_sampling_seed=99))
+            with self.assertRaises(ValueError):
+                self.run_export(manifest)
+
+    def test_legacy_refiner_protocol_cannot_gain_repeat_or_batch(self):
+        for field, value in (("effective_batch_size", 2), ("num_evals", 2), ("diff_steps", 200), ("repeat", 1)):
+            with self.subTest(field=field), tempfile.TemporaryDirectory() as directory:
+                manifest = legacy_panel_fixture(Path(directory), endpoint="tau800")
+                self.mutate_and_repin(manifest, "refiner_config", lambda cfg: cfg.update({field: value}))
+                with self.assertRaises(ValueError):
+                    self.run_export(manifest)
+
+    def test_legacy_cohort_reordering_or_lost_failure_cannot_change_denominator(self):
+        for name in ("cohort", "body", "seed_ledger"):
+            with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:
+                manifest = legacy_panel_fixture(Path(directory))
+                self.mutate_and_repin(manifest, name, lambda rows: rows.reverse())
+                with self.assertRaises(ValueError):
+                    self.run_export(manifest)
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory), endpoint="tau800")
+            self.mutate_and_repin(manifest, "refinement_attempts", lambda rows: rows.pop(1))
+            with self.assertRaises(ValueError):
+                self.run_export(manifest)
+
+    def test_legacy_graph_success_cannot_contradict_original_generation_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = legacy_panel_fixture(Path(directory))
+            self.mutate_and_repin(manifest, "body", lambda rows: rows[0].update(status="failed", earliest_failure_stage="body"))
+            with self.assertRaises(ValueError):
+                self.run_export(manifest)
 
 
 if __name__ == "__main__":

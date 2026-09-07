@@ -81,7 +81,8 @@ def model_class_for(config):
     return AutoModelForCausalLM if getattr(config, "model_type", None) == "llada2_moe" else AutoModel
 
 
-def load_model_and_tokenizer(base_model_path: str, checkpoint_path: Optional[str], device: torch.device):
+def load_model_and_tokenizer(base_model_path: str, checkpoint_path: Optional[str], device: torch.device,
+                             *, mean_resizing=True):
     tokenizer_source = checkpoint_path if checkpoint_path and Path(checkpoint_path).exists() else base_model_path
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_source, trust_remote_code=True)
     if tokenizer.pad_token_id is None:
@@ -100,7 +101,7 @@ def load_model_and_tokenizer(base_model_path: str, checkpoint_path: Optional[str
             trust_remote_code=True,
             torch_dtype=torch.bfloat16 if torch.cuda.is_available() else torch.float32,
         )
-        model.resize_token_embeddings(len(tokenizer))
+        model.resize_token_embeddings(len(tokenizer), mean_resizing=mean_resizing)
         ensure_llada_vocab_size(model, len(tokenizer))
         model = PeftModel.from_pretrained(model, checkpoint_path)
     elif checkpoint_path:

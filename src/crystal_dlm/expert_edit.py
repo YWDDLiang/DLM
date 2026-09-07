@@ -226,7 +226,9 @@ def set_editor_trainable(model):
 def load_editor_model(model_path, checkpoint, device, *, trainable=False):
     from scripts.sample_llada_dynamic_crystals import load_model_and_tokenizer
     root = Path(checkpoint)
-    base, tokenizer = load_model_and_tokenizer(str(model_path), str(root), device)
+    # The entire trained wte/head tables are restored and verified afterwards;
+    # computing a covariance initialization for soon-overwritten rows is wasted.
+    base, tokenizer = load_model_and_tokenizer(str(model_path), str(root), device, mean_resizing=False)
     marker = root / 'expert_edit_config.json'
     config = (ExpertEditConfig(**json.loads(marker.read_text())) if marker.exists()
               else ExpertEditConfig(hidden_size=base.get_input_embeddings().weight.shape[1]))

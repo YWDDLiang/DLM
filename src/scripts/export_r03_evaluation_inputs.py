@@ -27,6 +27,8 @@ from crystal_dlm.fixed_slot import SYMBOL_TO_Z
 SCHEMA = "r03_common_evaluation_input_v1"
 SOURCE_SCHEMA = "r03_integrated_body_v1"
 COMPONENTS_SCHEMA = "r03_evaluation_components_v1"
+LEGACY_PANEL_SCHEMA = "h1a2_frozen_legacy_evaluation_v1"
+LEGACY_SOURCE_SCHEMA = "h1_body_safeaxis256_attempt_v1"
 P0_ADAPTER_SHA256 = "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a"
 MODEL494_SHA256 = "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e"
 
@@ -128,7 +130,7 @@ def exact_index(value: Any, name: str) -> int:
     return value
 
 
-def validate_ledger(rows: Sequence[Mapping[str, Any]], expected_requests: int) -> None:
+def validate_ledger(rows: Sequence[Mapping[str, Any]], expected_requests: int, *, source_schema=SOURCE_SCHEMA) -> None:
     if expected_requests < 1 or len(rows) != expected_requests:
         raise ValueError("all-request source denominator changed")
     if [exact_index(row.get("ordinal"), "ordinal") for row in rows] != list(range(expected_requests)):
@@ -139,7 +141,7 @@ def validate_ledger(rows: Sequence[Mapping[str, Any]], expected_requests: int) -
         raise ValueError("duplicate global request sample_idx")
     if any(not isinstance(value, str) or not value for value in attempts) or len(set(attempts)) != len(attempts):
         raise ValueError("original attempt IDs must be present, nonempty and unique")
-    if any(row.get("schema") != SOURCE_SCHEMA for row in rows):
+    if source_schema not in (SOURCE_SCHEMA, LEGACY_SOURCE_SCHEMA) or any(row.get("schema") != source_schema for row in rows):
         raise ValueError("this adapter accepts only explicit R03 integrated-body artifacts")
     if any(row.get("purpose") == "train" or row.get("artifact_role") == "training" for row in rows):
         raise ValueError("a training artifact cannot be relabelled as a generated evaluation run")
@@ -240,12 +242,12 @@ def refined_structures(payload: Mapping[str, Any]):
 
 
 def export_records(rows: Sequence[Mapping[str, Any]], *, endpoint: str,
-                   expected_requests: int, method_id: str, refined_payload=None):
+                   expected_requests: int, method_id: str, refined_payload=None, source_schema=SOURCE_SCHEMA):
     if endpoint not in ("native", "tau800") or not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", method_id):
         raise ValueError("explicit native/tau800 endpoint and a stable method ID are required")
     if (endpoint == "tau800") != (refined_payload is not None):
         raise ValueError("tau800 needs its real refined tensor; native must not read a refined tensor")
-    validate_ledger(rows, expected_requests)
+    validate_ledger(rows, expected_requests, source_schema=source_schema)
     refined, malformed = ({}, {}) if refined_payload is None else refined_structures(refined_payload)
     known_ids = {row["sample_idx"] for row in rows}
     if not set(refined).union(malformed) <= known_ids:
@@ -262,6 +264,7 @@ def export_records(rows: Sequence[Mapping[str, Any]], *, endpoint: str,
         group_id = row.get("group_id", planner.get("group_id", f"eval:{sample_idx}"))
         result = {
             "schema": SCHEMA, "method_id": method_id, "purpose": "evaluation", "artifact_role": "evaluation",
+            "source_artifact_schema": source_schema,
             "source_split": "evaluation", "trainable_teacher": False,
             "trajectory_id": f"r03-eval:{method_id}:{endpoint}:{sample_idx}",
             "attempt_id": attempt_id, "source_attempt_id": attempt_id,
@@ -319,6 +322,126 @@ def export_records(rows: Sequence[Mapping[str, Any]], *, endpoint: str,
                      "neural_trace_synthesized": False, "site_order_mapping_assumed_for_refinement": False,
                      "new_model_calls": 0, "new_physics_calls": 0, "new_labels": 0,
                      "training_use_allowed": False, "continuous_refined_geometry_preserved": endpoint == "tau800"}
+
+
+def export_legacy_panel(manifest, *, endpoint, expected_requests, method_id):
+    """Explicitly adapt the frozen H1A2/D1/D2 ledger without rewriting its schema."""
+    if (manifest.get('schema') != LEGACY_PANEL_SCHEMA or manifest.get('method_id') != method_id
+            or manifest.get('endpoint') != endpoint or manifest.get('expected_requests') != expected_requests
+            or manifest.get('arm') not in ('control', 'candidate')):
+        raise ValueError('legacy panel manifest identity differs from requested evaluation')
+    pins = {}
+    def pinned(name, jsonl=False, binary=False):
+        item = manifest['files'][name]
+        path = Path(item['path'])
+        if not valid_sha(item.get('sha256')) or sha256_file(path) != item['sha256']:
+            raise ValueError(f'frozen legacy {name} hash differs')
+        pins[str(path.resolve())] = item['sha256']
+        return path if binary else read_rows(path) if jsonl else read_json(path)
+    cohort = pinned('cohort', jsonl=True)
+    rows = pinned('body', jsonl=True)
+    seeds = pinned('seed_ledger', jsonl=True)
+    validate_ledger(rows, expected_requests, source_schema=LEGACY_SOURCE_SCHEMA)
+    if (len(cohort) != expected_requests or len(seeds) != expected_requests
+            or [row.get('cohort_ordinal') for row in cohort] != list(range(expected_requests))
+            or [row.get('ordinal') for row in seeds] != list(range(expected_requests))):
+        raise ValueError('frozen cohort or random-seed ledger is incomplete/reordered')
+    adapted = []
+    policy = 'd1' if manifest['arm'] == 'control' else 'd2_safe_axis'
+    for index, (row, plan, ledger) in enumerate(zip(rows, cohort, seeds)):
+        ordinal_fields = [row.get('ordinal'), row.get('sample_idx'), plan.get('cohort_ordinal'),
+                          plan.get('global_raw_ordinal'), ledger.get('ordinal'), ledger.get('sample_idx'),
+                          ledger.get('raw_ordinal'), ledger.get('seed_derivation_ordinal')]
+        if any(type(value) is not int or value != index for value in ordinal_fields):
+            raise ValueError('legacy complete-panel request ordinals or seed derivation were shifted')
+        if (plan.get('schema') != 'h1a2_epoch2_exactplan_paired_cohort_v1'
+                or ledger.get('schema') != 'h1a2_epoch2_exactplan1200_paired_seed_ledger_v1'
+                or row['attempt_id'] != plan.get('planner_attempt_id')
+                or row['sample_idx'] != ledger.get('sample_idx')
+                or ledger.get('raw_ordinal') != plan.get('global_raw_ordinal')
+                or ledger.get('seed_derivation_ordinal') != plan.get('global_raw_ordinal')
+                or ledger.get('paired_across_arms') is not True
+                or ledger.get('sampling_seed_root') != 17029
+                or any(value.get('repeat') != 0 for value in (plan,ledger))
+                or row.get('body_noise_seed') != ledger.get('body_noise_seed')
+                or row.get('body_prompt_sha256') != plan.get('body_prompt_sha256')
+                or row.get('plan_state_sha256') != plan.get('plan_state_sha256')
+                or row.get('generation_policy') != policy):
+            raise ValueError('legacy body, Plan, arm or noise identity differs')
+        if (row.get('body_eligible') != plan.get('body_eligible')
+                or any(row.get(name) is not False for name in ('filter_used','repair_used','replacement_used','rerank_used','retry_used'))
+                or plan.get('retry_or_replacement_used') is not False):
+            raise ValueError('legacy panel contains selection/replacement or changed eligibility')
+        if plan.get('body_eligible'):
+            if hashlib.sha256(plan['body_prompt'].encode()).hexdigest() != plan['body_prompt_sha256']:
+                raise ValueError('legacy rich prompt text differs from its recorded identity')
+            actual_plan = hashlib.sha256(json.dumps(plan['plan_state'], sort_keys=True,
+                                                   separators=(',', ':'), ensure_ascii=False).encode()).hexdigest()
+            if actual_plan != plan['plan_state_sha256']:
+                raise ValueError('legacy Plan contents differ from their recorded identity')
+        if (row.get('body_graph_complete') and (not row.get('body_generation_complete') or not row.get('body_plan_match'))
+                or row.get('body_generation_complete') and not row.get('body_eligible')
+                or row.get('status') not in ('succeeded', 'failed')
+                or (row.get('status') == 'succeeded') != bool(row.get('body_graph_complete'))
+                or row.get('body_graph_complete') and row.get('earliest_failure_stage') is not None):
+            raise ValueError('legacy failure/completion flags contradict the endpoint provenance')
+        if row.get('body_generation_complete'):
+            if hashlib.sha256(row['text'].encode()).hexdigest() != row['raw_body_text_sha256']:
+                raise ValueError('legacy native endpoint text changed')
+        # These are explicit adapter fields; the original source schema and all
+        # original row fields are retained and the cohort itself is pinned.
+        adapted.append(dict(row, plan_state=plan.get('plan_state'), body_prompt=plan.get('body_prompt'),
+                            planner_record=dict(plan, seed=plan.get('planner_sampling_seed')),
+                            parsed=row.get('body_plan_match') is True,
+                            attempt_status='planner_failure' if not row['body_eligible'] else
+                                'complete' if row.get('body_graph_complete') else 'body_failure'))
+    payload, refinement = None, {}
+    if endpoint == 'tau800':
+        import torch
+        config, metrics = pinned('refiner_config'), pinned('refiner_metrics')
+        attempts = pinned('refinement_attempts', jsonl=True)
+        graphs, tensor_path = pinned('proposal_graphs', binary=True), pinned('refined_pt', binary=True)
+        if (config.get('schema') != 'h1_r03e_refiner_run_v1' or metrics.get('schema') != 'h1_r03e_refiner_metrics_v1'
+                or config.get('arm') != manifest['arm'] or metrics.get('arm') != manifest['arm']
+                or config.get('num_samples') != expected_requests or metrics.get('all_attempt_denominator') != expected_requests
+                or metrics.get('status') != 'complete' or config.get('timesteps') != 1000
+                or config.get('seed_mode') != 'frozen_h1_ordinal_refiner_noise_seed'
+                or config.get('checkpoint_sha256_recorded') != MODEL494_SHA256
+                or Path(config['proposal_graphs']).resolve() != graphs.resolve()
+                or Path(config['body_attempts']).resolve() != Path(manifest['files']['body']['path']).resolve()
+                or Path(config['attempt_ledger']).resolve() != Path(manifest['files']['seed_ledger']['path']).resolve()
+                or Path(metrics['output_file']).resolve() != tensor_path.resolve()):
+            raise ValueError('frozen legacy refinement input/model/protocol differs')
+        for value in (config, metrics):
+            if (value.get('diff_steps') != 800 or value.get('num_evals') != 1 or value.get('effective_batch_size') != 1
+                    or value.get('repeat') != 0
+                    or any(value.get(name) is not False for name in ('filter','repair','replacement','rerank','retry',
+                                                                     'new_scientific_seed_per_repeat'))):
+                raise ValueError('legacy refinement is not the exact frozen single-draw protocol')
+        if len(attempts) != expected_requests:
+            raise ValueError('legacy refiner lost failed requests')
+        for row, recorded, ledger in zip(rows, attempts, seeds):
+            if (recorded.get('schema') != 'h1_r03e_refinement_attempt_v1'
+                    or recorded.get('ordinal') != row['ordinal'] or recorded.get('attempt_id') != row['attempt_id']
+                    or recorded.get('sample_idx') != row['sample_idx'] or recorded.get('body_noise_seed') != row['body_noise_seed']
+                    or recorded.get('body_graph_complete') != row['body_graph_complete']
+                    or recorded.get('refiner_sampling_seed') != ledger['refiner_noise_seed']
+                    or recorded.get('repeat') != ledger['repeat']
+                    or recorded.get('refiner_complete') != row['body_graph_complete']):
+                raise ValueError('legacy refinement occurrences/noise differ from the frozen ledger')
+        payload = torch.load(tensor_path, map_location='cpu', weights_only=False)
+        indices = validate_refined_shapes(payload)
+        if metrics.get('refiner_complete') != len(indices):
+            raise ValueError('legacy refiner tensor count differs from its completion receipt')
+        refinement = {'refined_run_config': config, 'refined_metrics': metrics}
+    result, report = export_records(adapted, endpoint=endpoint, expected_requests=expected_requests,
+                                    method_id=method_id, refined_payload=payload, source_schema=LEGACY_SOURCE_SCHEMA)
+    for output, ledger in zip(result, seeds):
+        output['refiner_noise_seed'] = ledger['refiner_noise_seed']
+        output['legacy_arm'] = manifest['arm']
+    report.update(source_files_sha256=pins, legacy_source_schema=LEGACY_SOURCE_SCHEMA,
+                   source_schema_rewritten=False, retrospective_frozen_panel=True, **refinement)
+    return result, report
 
 
 def load_body_directory(body_dir: Path, expected_requests: int):
@@ -492,8 +615,10 @@ def main(argv=None):
     if args.body_dir is not None and (args.endpoint == "tau800") != (args.refined_pt is not None):
         parser.error("--refined-pt is required exactly for --endpoint tau800")
     if args.input_manifest is not None:
-        output, report = export_components(read_json(args.input_manifest), endpoint=args.endpoint,
-                                            expected_requests=args.expected_requests, method_id=args.method_id)
+        manifest = read_json(args.input_manifest)
+        exporter = export_legacy_panel if manifest.get('schema') == LEGACY_PANEL_SCHEMA else export_components
+        output, report = exporter(manifest, endpoint=args.endpoint,
+                                 expected_requests=args.expected_requests, method_id=args.method_id)
         report.update(input_manifest=str(args.input_manifest.resolve()), input_manifest_sha256=sha256_file(args.input_manifest))
     else:
         rows, source_report = load_body_directory(args.body_dir, args.expected_requests)

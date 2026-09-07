@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+import hashlib
 import json
 import math
 import os
@@ -389,6 +390,7 @@ def expert_args(argv):
     parser.add_argument('--training-seconds-already-used', type=float, default=0.)
     parser.add_argument('--diagnostic-sources', type=int, default=32)
     parser.add_argument('--split', choices=('train', 'dev'), default='dev')
+    parser.add_argument('--source-kind', choices=('positive_edit', 'all_old_states'), default='positive_edit')
     parser.add_argument('--block-size', type=int, choices=(1, 4, 8), default=1)
     parser.add_argument('--force-mode', choices=('local_xyz', 'all_xyz', 'full_cell'))
     parser.add_argument('--accept-threshold', type=float, default=.5)
@@ -401,6 +403,8 @@ def expert_args(argv):
         parser.error('requested training exceeds the remaining cumulative training cap')
     if args.mode != 'train' and args.checkpoint is None:
         parser.error('verification and sampling require an actual editor checkpoint')
+    if args.source_kind == 'all_old_states' and args.force_mode is not None:
+        parser.error('autonomous old-state evaluation cannot receive a forced teacher scope')
     return args
 
 
@@ -525,36 +529,46 @@ def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, wor
     selected, seen = [], set()
     # Balanced same-family positives, with independent source groups per split.
     pools = {task: dataset.content[task] for task in ('G', 'S')}
-    for i in range(max(map(len, pools.values()))):
-        for task in ('G', 'S'):
-            if i >= len(pools[task]):
-                continue
-            row = pools[task][i]
-            key = (row['ancestor_id'], task)
-            if key in seen or (args.force_mode and row['action']['mode'] != args.force_mode):
-                continue
-            seen.add(key)
-            selected.append(row)
-        if len(selected) >= args.diagnostic_sources:
-            break
+    if args.source_kind == 'all_old_states':
+        # Includes healthy, teacher-unavailable and physics-unknown states.
+        # Hash order is fixed before inspecting any teacher or student outcome.
+        states = {row['ancestor_id']: row for row in dataset.states}
+        selected = sorted(states.values(), key=lambda row: hashlib.sha256(
+                          f'{args.seed}:{row["ancestor_id"]}'.encode()).hexdigest())
+    else:
+        for i in range(max(map(len, pools.values()))):
+            for task in ('G', 'S'):
+                if i >= len(pools[task]):
+                    continue
+                row = pools[task][i]
+                key = (row['ancestor_id'], task)
+                if key in seen or (args.force_mode and row['action']['mode'] != args.force_mode):
+                    continue
+                seen.add(key)
+                selected.append(row)
+            if len(selected) >= args.diagnostic_sources:
+                break
     selected = selected[:args.diagnostic_sources]
     results, physics = [], []
     for index, row in enumerate(selected):
         if index % world != rank:
             continue
+        tasks = ('G', 'S') if args.source_kind == 'all_old_states' else (row['task'],)
         output = edit_structure(model, tokenizer, prompt=row['prompt'], body=row['old_body'],
                                 num_sites=row['num_atoms'], allowed_modes=dataset.allowed_modes,
-                                tasks=(row['task'],), seed=args.seed+index, block_size=args.block_size,
+                                tasks=tasks, seed=args.seed+index, block_size=args.block_size,
                                 force_mode=args.force_mode, accept_threshold=args.accept_threshold)
-        proposal = output['trace'][-1]['proposal_body'] if output['trace'] else row['old_body']
+        proposal = (output['canonical_body'] if args.source_kind == 'all_old_states' else
+                    output['trace'][-1]['proposal_body'] if output['trace'] else row['old_body'])
         arrays = decode_body(proposal, inverse)
         certificate = certify_geometry(arrays)  # evaluation only, never influences the proposal/gate
-        result = {'record_id': row['record_id'], 'ancestor_id': row['ancestor_id'], 'task': row['task'],
+        result = {'record_id': row['record_id'], 'ancestor_id': row['ancestor_id'], 'task': ''.join(tasks),
                   'num_atoms': row['num_atoms'], 'prompt': row['prompt'], 'old_body': row['old_body'],
                   'source_split': row['source_split'], 'source_row_idx': row['source_row_idx'],
-                  'target_body': row['target_body'], 'old_physics_id': row.get('old_physics_id'),
+                  'target_body': row.get('target_body'), 'old_physics_id': row.get('old_physics_id'),
                   'target_physics_id': row.get('target_physics_id'), 'proposal_geometry': certificate,
-                  'old_geometry': row['old_geometry'], 'output': output}
+                  'old_geometry': row['old_geometry'], 'output': output, 'selection_basis': args.source_kind,
+                  'input_domain': 'declared_compiled_old_states_with_original_failed_ancestors_reported_separately'}
         results.append(result)
         pid = f'expert-student:{args.output_dir.name}:{index}:{row["task"]}'
         text = ''.join(inverse[token] for token in proposal)
@@ -623,6 +637,7 @@ def expert_main(argv):
                 write_jsonl(args.output_dir/(name+'.jsonl'), rows)
             write_json(args.output_dir/'SAMPLE_FINAL.json', {'schema': EDITOR_SCHEMA, 'requested': requested,
                        'split': args.split, 'force_mode': args.force_mode, 'block_size': args.block_size,
+                       'source_kind': args.source_kind,
                        'checkpoint': str(args.checkpoint), 'source_files': dataset.provenance})
             (args.output_dir/'_SUCCESS').touch()
         if world > 1:
