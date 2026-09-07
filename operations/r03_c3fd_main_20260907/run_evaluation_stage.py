@@ -11,7 +11,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--run-root', type=Path, required=True)
 parser.add_argument('--phase', choices=['canary', 'pilot256', 'formal'], required=True)
 parser.add_argument('--preview-roles', nargs='+', choices=['R', 'I', 'G', 'P'])
+parser.add_argument('--preview-endpoints', nargs='+', choices=['native', 'tau800'])
 args = parser.parse_args()
+if args.preview_endpoints and not args.preview_roles:
+    parser.error('endpoint subsets require explicit preview roles')
 if args.preview_roles and args.phase != 'pilot256':
     parser.error('preview roles apply only to the pilot')
 if not os.environ.get('SLURM_JOB_ID'):
@@ -44,11 +47,18 @@ if args.preview_roles:
     manifest['preview_roles'] = args.preview_roles
     manifest['methods'] = [item for item in manifest['methods'] if item['role'] in args.preview_roles]
     output_name += '_preview_' + '_'.join(args.preview_roles)
+    if args.preview_endpoints:
+        manifest['score_endpoints'] = args.preview_endpoints
+        output_name += '_' + '_'.join(args.preview_endpoints)
     manifest['phase'] = output_name
 elif args.phase == 'pilot256':
     preview = root / 'evaluation_pilot256_preview_R_I/TRIAL_EVALUATION_FINAL.json'
     if (preview.parent / '_SUCCESS').is_file():
         manifest['reuse_report'] = str(preview)
+    else:
+        preview = root / 'evaluation_pilot256_preview_R_I_tau800/TRIAL_EVALUATION_FINAL.json'
+        if (preview.parent / '_SUCCESS').is_file():
+            manifest['reuse_report'] = str(preview)
 manifest_path = root / ('EVALUATION_INPUTS_' + output_name + '.json')
 if args.phase == 'pilot256':
     manifest['method_freeze'] = str(root / 'METHOD_FREEZE.json')

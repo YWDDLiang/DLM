@@ -82,6 +82,10 @@ def validate_manifest(manifest, manifest_path):
     formal = manifest.get("cohort_role") == "independent_main"
     preview_roles = manifest.get('preview_roles')
     preview = preview_roles is not None
+    score_endpoints = manifest.get('score_endpoints', list(ENDPOINTS))
+    if (not isinstance(score_endpoints, list) or not score_endpoints or len(set(score_endpoints)) != len(score_endpoints)
+            or not set(score_endpoints).issubset(ENDPOINTS) or (not preview and set(score_endpoints) != set(ENDPOINTS))):
+        raise ValueError('endpoint subsets are explicit previews only')
     if preview and (formal or count != 256 or not isinstance(preview_roles, list)
                     or not 0 < len(preview_roles) < 4 or len(set(preview_roles)) != len(preview_roles)
                     or not set(preview_roles).issubset(ROLE_ORDER)):
@@ -128,6 +132,7 @@ def validate_manifest(manifest, manifest_path):
             "cohort_role": "independent_main" if formal else "fixed_development",
             "selected_role": manifest.get("selected_role"),
             "hull_phase": manifest.get('hull_phase', manifest['phase']),
+            "score_endpoints": score_endpoints,
             "expected_requests": count, "methods": normalized,
             "include_matched_interface_reference": matched_interface,
             "registered_construction_geometry": construction_geometry,
@@ -550,9 +555,12 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
             raise ValueError("actual endpoint hull coverage is not completely accounted; no scores may be produced")
         summaries = []
         for item in components:
-            parent = output_dir / "evaluations" / item["role"]
-            parent.mkdir(parents=True, exist_ok=False)
-            for endpoint in ENDPOINTS:
+            (output_dir / 'evaluations' / item['role']).mkdir(parents=True, exist_ok=False)
+        for endpoint in ('tau800', 'native'):
+            if endpoint not in trial['score_endpoints']:
+                continue
+            for item in components:
+                parent = output_dir / "evaluations" / item["role"]
                 cell, destination = item["cells"][endpoint], parent / endpoint
                 prior_cell = reusable.get((item['role'], endpoint))
                 if prior_cell is not None:
@@ -580,6 +588,7 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                   "labels_created": False, "new_official_query": False, "GPU_calls": 0,
                   "selection_json_used": False, "cross_method_NU_pooling": False,
                   "complete_four_arm_trial": trial['scope'] == 'pilot',
+                  "score_endpoints": trial['score_endpoints'],
                   "reused_cells": [f'{role}:{endpoint}' for role, endpoint in reusable],
                   "registered_construction_geometry": trial["registered_construction_geometry"],
                   "include_matched_interface_reference": trial["include_matched_interface_reference"],
