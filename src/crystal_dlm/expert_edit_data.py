@@ -695,9 +695,232 @@ def build_geometry_auxiliary(source_path, source_sha256, heldout_cohort, heldout
     return report
 
 
+def feedback_decision(task, old_body, target_body, old_geometry, target_geometry, old_label, target_label, *, margin=.01):
+    """Observed structural decisions; an unlabelled R endpoint stays unknown."""
+    old_r = reliable_terminal(old_label) if old_label is not None else None
+    new_r = reliable_terminal(target_label) if target_label is not None else None
+    gain, accept, reason = None, None, 'unobserved_physical_outcome'
+    old_g, new_g = old_geometry.get('valid'), target_geometry.get('valid')
+    if old_body == target_body:
+        gain, accept, reason = 0., False, 'observed_identity_zero_action'
+    elif new_g is False:
+        accept, reason = False, 'observed_invalid_proposal'
+    elif task == 'G':
+        if old_g is False and new_g is True:
+            accept, reason = True, 'observed_raw_geometry_recovery'
+        elif old_g is True and new_g is True and old_r is not None and new_r is not None:
+            accept = old_r is False and new_r is True
+            reason = 'observed_reliability_recovery' if accept else 'observed_no_G_recovery'
+    elif task == 'S':
+        if old_g is True and new_g is True and old_r is True and new_r is True:
+            values = [old_label.get('terminal_energy'), target_label.get('terminal_energy')]
+            if all(value is not None and math.isfinite(float(value)) for value in values):
+                gain = float(values[0])-float(values[1])
+                accept, reason = gain >= margin, 'observed_comparable_stability'
+        elif old_r is True and new_r is False:
+            accept, reason = False, 'observed_reliability_loss'
+    return {'accept_label': accept, 'gain_eV_atom': gain, 'label_reason': reason,
+            'old_reliable': old_r, 'target_reliable': new_r}
+
+
+def replay_feedback_trace(output, initial_body, num_atoms):
+    """Bind complete proposal supervision to the recorded autonomous commit chain."""
+    if (output.get('scope_policy') != 'learned' or output.get('accept_all') is not False
+            or output.get('S_admission_policy') != 'learned'):
+        raise ValueError('feedback trace must use autonomous learned scope and acceptance')
+    current, complete = list(initial_body), []
+    for index, trace in enumerate(output['trace']):
+        if trace.get('old_body') != current or trace.get('task') not in ('G', 'S'):
+            raise ValueError('feedback trace does not follow its actual retained state')
+        candidate = trace.get('proposal_body')
+        if not fixed_composition(current, candidate, num_atoms):
+            raise ValueError('feedback trace changed protected composition tokens')
+        accepted = trace.get('accepted')
+        applied = trace.get('applied', accepted)
+        if type(accepted) is not bool or type(applied) is not bool or accepted != applied:
+            raise ValueError('feedback trace acceptance differs from the applied action')
+        if trace.get('mode') == 'none' or trace.get('reason') == 'insufficient_complete_proposal_budget':
+            if candidate != current or applied:
+                raise ValueError('a trace without a complete proposal changed the retained state')
+            continue
+        sites, positions = trace.get('sites'), trace.get('positions')
+        if (trace.get('mode') not in ('local_xyz', 'all_xyz', 'full_cell')
+                or not isinstance(sites, list) or not isinstance(positions, list)
+                or any(type(site) is not int or not 0 <= site < num_atoms for site in sites)
+                or len(set(sites)) != len(sites)):
+            raise ValueError('feedback trace lacks its complete registered action scope')
+        expected = ([1, 2, 3, 4, 5, 6] if trace['mode'] == 'full_cell' else []) + [
+            8+4*site+axis for site in sites for axis in range(3)]
+        if (positions != expected or not positions
+                or (trace['mode'] != 'local_xyz' and sites != list(range(num_atoms)))
+                or not {i for i, (a,b) in enumerate(zip(current,candidate)) if a != b}.issubset(positions)):
+            raise ValueError('feedback trace action does not cover its actual edited fields')
+        complete.append((index, trace))
+        if applied:
+            current = list(candidate)
+    if current != output.get('canonical_body'):
+        raise ValueError('feedback trace final state differs from its labelled endpoint')
+    return complete
+
+
+def compile_student_feedback(samples_directory, labels_directory, reference_prepared, reference_labels,
+                             tokenizer, output, *, margin=.01):
+    """Include every recorded training proposal, with masks for unobserved R.
+
+    Actual intermediate/rejected proposals remain present even when only the
+    final committed endpoint was labelled. Validated offline targets can teach
+    a new correction from a complete student state; no bad partial prefix is
+    paired with an assumed-valid teacher continuation.
+    """
+    samples_directory, labels_directory, output = map(Path,(samples_directory,labels_directory,output))
+    summary = json.loads((samples_directory/'SAMPLE_FINAL.json').read_text())
+    if (not (samples_directory/'_SUCCESS').is_file() or summary.get('split') != 'train'
+            or summary.get('source_kind') != 'all_old_states' or summary.get('frozen_B0_control') is True):
+        raise ValueError('feedback requires a completed training-only autonomous student sample')
+    samples = read_rows(samples_directory/'samples.jsonl')
+    inputs = read_rows(samples_directory/'physics.jsonl')
+    if (len(samples) != summary['requested'] or len(inputs) != len(samples)
+            or len({row['ancestor_id'] for row in samples}) != len(samples)
+            or any(row.get('source_split') != 'train' for row in samples+inputs)):
+        raise ValueError('student feedback lost/duplicated sources or contains development data')
+    current, label_report = bound_labels(samples_directory/'physics.jsonl',labels_directory,exclude_worker_errors=True)
+    by_group = {row['group_id']: row for row in inputs}
+    references, pairs, provenance, heldout_identities = {}, {}, [], set()
+    if not reference_prepared or len(reference_prepared) != len(reference_labels):
+        raise ValueError('each reference label set requires its exact prepared input directory')
+    scientific_keys = ('model','model_checkpoint_sha256','chgnet_package','ase_package','torch_package','pymatgen_package')
+    for prepared, directory in zip(map(Path,reference_prepared),map(Path,reference_labels)):
+        original, report = bound_labels(prepared/'all_inputs.jsonl',directory,exclude_worker_errors=True)
+        if any(report['runtime_identities'][0].get(key) != label_report['runtime_identities'][0].get(key) for key in scientific_keys):
+            raise ValueError('feedback physical weights/runtime differ from the reference R labels')
+        preparation = json.loads((prepared/'PREPARATION_FINAL.json').read_text())
+        heldout_identity = preparation.get('heldout_cohort_sha256')
+        if not isinstance(heldout_identity,str) or len(heldout_identity) != 64:
+            raise ValueError('feedback reference lacks its excluded evaluation-cohort identity')
+        heldout_identities.add(heldout_identity)
+        if len(heldout_identities) != 1:
+            raise ValueError('feedback reference sources excluded different evaluation cohorts')
+        if sha256(prepared/'pairs_pending.jsonl') != preparation['files_sha256']['pairs_pending.jsonl']:
+            raise ValueError('offline teacher targets changed after physics input registration')
+        for pair in read_rows(prepared/'pairs_pending.jsonl'):
+            if pair['source_split'] != 'train':
+                continue
+            if pair['ancestor_id'] in pairs:
+                raise ValueError('reference source intervals overlap')
+            pairs[pair['ancestor_id']] = pair
+        if set(references)&set(original):
+            raise ValueError('reference physics IDs overlap')
+        references.update(original)
+        provenance.append({'prepared': str(prepared), 'pairs_sha256': sha256(prepared/'pairs_pending.jsonl'),
+                           'labels_sha256': sha256(directory/'labels.jsonl'), 'runtime': report['runtime_identities'][0]})
+    inverse = {int(value): key for key,value in tokenizer.get_vocab().items()}
+    records, outcomes, ids, skipped = [], [], set(), []
+    def emit(row):
+        if row['record_id'] not in ids:
+            ids.add(row['record_id'])
+            records.append(row)
+    for sample in samples:
+        ancestor = sample['ancestor_id']
+        if ancestor not in pairs or ancestor not in by_group:
+            raise ValueError('feedback source does not belong to the registered training ancestors')
+        pair, record = pairs[ancestor], by_group[ancestor]
+        if (sample['old_body'] != pair['old_body'] or sample['prompt'] != pair['prompt']
+                or sample['num_atoms'] != pair['num_atoms'] or sample['source_row_idx'] != pair['source_row_idx']):
+            raise ValueError('student old-state/condition differs from its actual original source')
+        complete_proposals = replay_feedback_trace(sample['output'], pair['old_body'], pair['num_atoms'])
+        final_label = current[record['trajectory_id']]
+        initial_label = references[pair['old_physics_id']]
+        teacher_label = references.get(pair.get('target_physics_id'))
+        if any(label is not None and label.get('status') == 'worker_error'
+               for label in (initial_label, teacher_label, final_label)):
+            skipped.append(ancestor)
+            continue
+        final_body = sample['output']['canonical_body']
+        final_arrays = decode_body(final_body,inverse)
+        rebound = physics_input(record['trajectory_id'],ancestor,pair['source_row_idx'],'train','expert_quantized',
+                                final_arrays,''.join(inverse[token] for token in final_body))
+        if endpoint_fingerprint(rebound) != endpoint_fingerprint(record):
+            raise ValueError('labelled final geometry differs from the recorded student output')
+        known = {tuple(pair['old_body']): initial_label, tuple(final_body): final_label}
+        if pair.get('teacher_available'):
+            known.setdefault(tuple(pair['target_body']),teacher_label)
+        geometries = {}
+        def geometry(body):
+            key = tuple(body)
+            if key not in geometries:
+                geometries[key] = certify_geometry(decode_body(body,inverse))
+            return geometries[key]
+        shared = {key: pair[key] for key in ('ancestor_id','source_split','source_row_idx','composition_key',
+                                           'plan_state','prompt','num_atoms')}
+        shared.update(schema=SCHEMA,source_kind='student_proposal_feedback')
+        def decision(old, candidate, task, action, tag, *, allow_content=False):
+            if not fixed_composition(old,candidate,pair['num_atoms']):
+                raise ValueError('student feedback changed protected composition tokens')
+            changed = {i for i,(a,b) in enumerate(zip(old,candidate)) if a!=b}
+            if not changed.issubset(action['positions']):
+                raise ValueError('feedback action does not cover the actual proposal changes')
+            old_label, target_label = known.get(tuple(old)),known.get(tuple(candidate))
+            judgement = feedback_decision(task,old,candidate,geometry(old),geometry(candidate),old_label,target_label,margin=margin)
+            rid = f'feedback:{samples_directory.name}:{ancestor}:{tag}:{task}'
+            row = {**shared, **judgement, 'record_id': rid, 'task': task,
+                   'old_body': list(old), 'target_body': list(candidate), 'action': action,
+                   'old_geometry': geometry(old), 'target_geometry': geometry(candidate),
+                   'old_physics_id': old_label.get('trajectory_id') if old_label else None,
+                   'target_physics_id': target_label.get('trajectory_id') if target_label else None,
+                   'content_supervision': allow_content and judgement['accept_label'] is True,
+                   'original_teacher_reference': tag.startswith('teacher_from_student')}
+            emit(row)
+            outcomes.append({'record_id': rid, 'ancestor_id': ancestor, 'task': task, **judgement,
+                             'gain_label_known': judgement['gain_eV_atom'] is not None,
+                             'identity_zero_override': old == candidate})
+        candidates = {}
+        for index, trace in complete_proposals:
+            old,candidate = trace['old_body'],trace['proposal_body']
+            action = {key: trace[key] for key in ('mode','sites','positions')}
+            decision(old,candidate,trace['task'],action,f'proposal_{index}')
+            candidates[tuple(candidate)] = candidate
+        # A value head can score an observed old/final pair regardless of how
+        # many neural edits generated the final structure. It is not credited
+        # to a particular intermediate action without that action's R labels.
+        for task in ('G','S'):
+            decision(pair['old_body'],final_body,task,full_action(pair['old_body'],final_body,pair['num_atoms']),
+                     'observed_complete_transaction',allow_content=True)
+        candidates[tuple(final_body)] = final_body
+        for candidate in candidates.values():
+            key = hashlib.sha256(json.dumps(candidate).encode()).hexdigest()[:20]
+            label = known.get(tuple(candidate))
+            emit({**shared,'record_id':f'feedback-state:{samples_directory.name}:{ancestor}:{key}',
+                  'task':'G','state_only':True,'old_body':list(candidate),'old_geometry':geometry(candidate),
+                  'old_reliable':reliable_terminal(label) if label is not None else None,
+                  'content_supervision':False,'accept_label':None,'gain_eV_atom':None,
+                  'label_reason':'observed_student_state'})
+            if pair.get('teacher_available') and geometry(pair['target_body'])['valid'] is True:
+                for task in ('G','S'):
+                    decision(candidate,pair['target_body'],task,full_action(candidate,pair['target_body'],pair['num_atoms']),
+                             'teacher_from_student_'+key,allow_content=True)
+    output.mkdir(parents=True,exist_ok=False)
+    write_rows(output/'train.jsonl',records)
+    write_rows(output/'dev.jsonl',[])
+    write_rows(output/'outcomes.jsonl',outcomes)
+    report = {'schema':SCHEMA,'records':len(records),'requested_sources':len(samples),
+              'admitted_sources':len(samples)-len(skipped),'excluded_engineering_ancestors':skipped,
+              'counts':dict(Counter(f'{row["task"]}:{row.get("accept_label")}' for row in records if not row.get('state_only'))),
+              'content_positive_sources': {task:len({row['ancestor_id'] for row in records if row['task']==task and row.get('content_supervision')}) for task in ('G','S')},
+              'sample_sha256':sha256(samples_directory/'samples.jsonl'),
+              'student_labels_sha256':sha256(labels_directory/'labels.jsonl'),
+              'reference_inputs':provenance,'label_runtime':label_report['runtime_identities'],
+              'heldout_cohort_sha256':next(iter(heldout_identities)),
+              'unknown_is_negative':False,'development_records_used_for_training':False,
+              'partial_student_prefix_is_assumed_valid':False,
+              'output_sha256':{name:sha256(output/name) for name in ('train.jsonl','dev.jsonl','outcomes.jsonl')}}
+    write_json(output/'DATA_FINAL.json',report)
+    (output/'_SUCCESS').touch()
+    return report
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', choices=('prepare', 'compile', 'geometry-auxiliary'), default='prepare')
+    parser.add_argument('--mode', choices=('prepare', 'compile', 'geometry-auxiliary', 'student-feedback'), default='prepare')
     parser.add_argument('--collection-manifest', type=Path)
     parser.add_argument('--heldout-cohort', type=Path)
     parser.add_argument('--b0-checkpoint', type=Path)
@@ -711,9 +934,20 @@ def main(argv=None):
     parser.add_argument('--heldout-cohort-sha256')
     parser.add_argument('--source-limit', type=int, default=2048)
     parser.add_argument('--seed', type=int, default=20260908)
+    parser.add_argument('--samples-dir', type=Path)
+    parser.add_argument('--reference-prepared', type=Path,nargs='+')
+    parser.add_argument('--reference-labels', type=Path,nargs='+')
     parser.add_argument('--exclude-worker-errors', action='store_true',
                         help='Training only: exclude entire unresolved ancestors from a fully accounted label run')
     args = parser.parse_args(argv)
+    if args.mode == 'student-feedback':
+        if None in (args.samples_dir,args.labels_dir,args.reference_prepared,args.reference_labels,args.b0_checkpoint):
+            parser.error('student feedback needs samples, labels, matching reference inputs/labels and B0 tokenizer')
+        from transformers import AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint,trust_remote_code=True,local_files_only=True)
+        print(json.dumps(compile_student_feedback(args.samples_dir,args.labels_dir,args.reference_prepared,
+                         args.reference_labels,tokenizer,args.output_dir)),flush=True)
+        return
     if args.mode == 'geometry-auxiliary':
         if None in (args.source_path,args.source_sha256,args.heldout_cohort,args.heldout_cohort_sha256,args.b0_checkpoint):
             parser.error('geometry auxiliary needs pinned clean source, heldout cohort, and the B0 tokenizer')

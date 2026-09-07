@@ -350,10 +350,16 @@ class ExpertEditDataset(Dataset):
         if key not in self._source_pools:
             auxiliary = [row for row in rows if row.get('source_kind') == 'mp20_geometry_auxiliary']
             real = [row for row in rows if row.get('source_kind') != 'mp20_geometry_auxiliary']
-            self._source_pools[key] = real, auxiliary
+            def groups(values):
+                result = {}
+                for row in values:
+                    result.setdefault(row['ancestor_id'],[]).append(row)
+                return list(result.values())
+            self._source_pools[key] = groups(real), groups(auxiliary)
         real, auxiliary = self._source_pools[key]
         pool = auxiliary if real and auxiliary and rng.random() < self.geometry_aux_fraction else real
-        return rng.choice(pool or auxiliary)
+        group = rng.choice(pool or auxiliary)
+        return rng.choice(group)
 
     def __getitem__(self, index):
         value = hashlib.sha256(f'{self.seed}:{self.epoch}:{index}'.encode()).digest()[:8]

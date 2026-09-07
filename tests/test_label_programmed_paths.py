@@ -89,6 +89,24 @@ class PeriodicGeometryProtocolTests(unittest.TestCase):
                         self.assertGreaterEqual(minimum, .5 - 1e-8)
                 self.assertEqual(original.as_dict(), before)
 
+    def test_enumeration_failure_or_nonfinite_distance_is_engineering_unknown(self):
+        original_norm = np.linalg.norm
+
+        def nonfinite_pair_norm(value, *args, **kwargs):
+            result = original_norm(value, *args, **kwargs)
+            return np.full_like(result, np.nan) if np.asarray(value).ndim == 4 else result
+
+        failures = (patch.object(MODULE.itertools, 'islice', side_effect=MemoryError('enumeration allocation failed')),
+                    patch.object(MODULE.np.linalg, 'norm', side_effect=nonfinite_pair_norm))
+        for failure in failures:
+            with self.subTest(failure=failure):
+                with failure:
+                    result = MODULE.label_record({'success': True}, model=Model(), optimizer=Optimizer(),
+                                                 structure_factory=lambda _: Structure(),
+                                                 terminal_energy_checker=lambda *args: {'status': 'consistent'})
+                self.assertEqual(result['status'], 'worker_error')
+                self.assertFalse(result['verified'])
+
 
 class Structure:
     num_sites = 2

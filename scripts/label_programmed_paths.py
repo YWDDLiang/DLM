@@ -91,6 +91,14 @@ def _validate_structure_geometry(structure):
         reduced = np.asarray(Lattice(lattice).get_lll_reduced_lattice().matrix)
         transform = reduced@np.linalg.inv(lattice)
         rounded = np.rint(transform)
+        # Any nonzero integer image is already a valid short-contact witness;
+        # it does not require the full coordinate change to be well conditioned.
+        if np.isfinite(rounded).all() and np.max(np.abs(rounded)) <= 1_000_000_000:
+            images_from_original = rounded@lattice
+            component_error = (np.abs(rounded)@np.abs(lattice))*np.finfo(float).eps*16
+            upper_lengths = np.linalg.norm(images_from_original,axis=-1)*(1+4*np.finfo(float).eps)+np.linalg.norm(component_error,axis=-1)
+            if bool(((upper_lengths < .5-1e-8)&np.any(rounded!=0,axis=-1)).any()):
+                raise InvalidPeriodicGeometry('periodic geometry violates the common 0.5 Angstrom support')
         if not np.isfinite(transform).all() or np.max(np.abs(rounded))>1_000_000_000 or not np.allclose(transform,rounded,rtol=0,atol=1e-7):
             raise GeometryCertificationUnavailable('LLL basis change is not certified integral')
         a,b,c,d,e,f,g,h,i = map(int,rounded.reshape(-1))
@@ -112,7 +120,7 @@ def _validate_structure_geometry(structure):
         radii_float = np.ceil(.5+.5*np.linalg.norm(inverse,axis=0)+1e-12)
         if not np.isfinite(radii_float).all() or np.max(radii_float)>1_000_000:
             raise GeometryCertificationUnavailable('periodic contact bound is not numerically established')
-    except GeometryCertificationUnavailable:
+    except (GeometryCertificationUnavailable,InvalidPeriodicGeometry):
         raise
     except Exception as error:
         raise GeometryCertificationUnavailable('periodic contact reduction could not be certified') from error

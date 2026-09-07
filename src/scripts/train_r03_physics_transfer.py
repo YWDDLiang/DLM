@@ -880,6 +880,7 @@ def expert_main(argv):
               'train_sources': len({row['ancestor_id'] for row in train_data.records}),
               'dev_sources': len({row['ancestor_id'] for row in dev_data.records}),
               'positive_edits': {task: len(rows) for task, rows in train_data.content.items()},
+              'independent_positive_sources': {task: len({row['ancestor_id'] for row in rows}) for task, rows in train_data.content.items()},
               'initialization_kind': 'complete_state_resume' if args.resume_state else 'new_stage_warmstart' if args.checkpoint else 'original_B0',
               'start_step': start_step, 'start_example_cursor': example_cursor,
               'grouping': grouping, 'previous_grouping': previous_grouping, 'resume_exact_grouping': resume_exact_grouping,
