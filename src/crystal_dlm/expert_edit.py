@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import hashlib
 import random
+import re
 from typing import NamedTuple
 
 import torch
@@ -285,12 +286,20 @@ def reverse_geometry_example(record):
 class ExpertEditDataset(Dataset):
     """Explicit sampling of content, scope/state and complete-proposal decisions."""
     def __init__(self, data_dirs, tokenizer, *, seed=20260908, size=10000, split='train', smoke_sources=0,
-                 geometry_aux_fraction=.2):
+                 geometry_aux_fraction=.2, content_fraction=.65, inspect_fraction=.17,
+                 student_feedback_fraction=0., healthy_state_fraction=0.):
         from crystal_dlm.expert_edit_data import SCHEMA, read_rows, sha256
         self.seed, self.size, self.epoch, self.tokenizer = int(seed), int(size), 0, tokenizer
         if not 0 <= geometry_aux_fraction <= 1:
             raise ValueError('invalid auxiliary data fraction')
         self.geometry_aux_fraction, self._source_pools = geometry_aux_fraction, {}
+        if (not 0 < content_fraction < 1 or not 0 <= inspect_fraction < 1
+                or content_fraction+inspect_fraction >= 1 or not 0 <= student_feedback_fraction <= 1
+                or not 0 <= healthy_state_fraction <= 1):
+            raise ValueError('invalid editor curriculum view fractions')
+        self.content_fraction, self.inspect_fraction = content_fraction, inspect_fraction
+        self.student_feedback_fraction = student_feedback_fraction
+        self.healthy_state_fraction = healthy_state_fraction
         records, provenance = [], []
         for directory in map(Path, data_dirs):
             if not (directory / '_SUCCESS').is_file():
@@ -324,6 +333,12 @@ class ExpertEditDataset(Dataset):
         self.positive = [row for row in records if row.get('content_supervision')]
         self.acceptance_positive = [row for row in records if row.get('accept_label') is True]
         self.states = [row for row in records if row.get('state_only')]
+        self.healthy_states = [row for row in self.states if row['old_geometry'].get('valid') is True
+                               and row.get('old_reliable') is True]
+        self.student_states = [row for row in self.states if row.get('source_kind') == 'student_proposal_feedback']
+        self.student_judgements = [row for row in records if row.get('source_kind') == 'student_proposal_feedback'
+            and re.search(r':proposal_\d+:[GS]$',row['record_id']) and type(row.get('accept_label')) is bool
+            and not row.get('state_only') and row.get('original_teacher_reference') is False]
         self.negative = [row for row in records if row.get('accept_label') is False]
         self.negative += [reverse_geometry_example(row) for row in self.content['G']
                           if row.get('accept_label') is True and row['old_body'] != row['target_body']]
@@ -366,18 +381,27 @@ class ExpertEditDataset(Dataset):
         value = hashlib.sha256(f'{self.seed}:{self.epoch}:{index}'.encode()).digest()[:8]
         rng = random.Random(int.from_bytes(value, 'big'))
         choice = rng.random()
-        if choice < .65:
+        if choice < self.content_fraction:
             row, view = self._choose_content(rng), 'content'
-        elif choice < .82:
-            row = self._draw(self.states, rng) if self.states and rng.random() < .35 else self._draw(self.positive, rng)
+        elif choice < self.content_fraction+self.inspect_fraction:
+            healthy = bool(self.healthy_state_fraction and self.healthy_states and rng.random() < self.healthy_state_fraction)
+            if healthy:
+                row = dict(self._draw(self.healthy_states,rng),task='G')
+            elif self.student_feedback_fraction and self.student_states and rng.random() < self.student_feedback_fraction:
+                row = self._draw(self.student_states,rng)
+            else:
+                row = self._draw(self.states, rng) if self.states and rng.random() < .35 else self._draw(self.positive, rng)
             view = 'inspect'
-            if row.get('state_only') and rng.random() < .5:
+            if row.get('state_only') and not healthy and rng.random() < .5:
                 # Old-only bad/unknown states train S admission too. S receives
                 # quality labels here, never a fabricated NONE/stop target.
                 row = dict(row, task='S')
         else:
-            pool = self.negative if self.negative and rng.random() < .5 else self.acceptance_positive
-            row = self._draw(pool or self.negative, rng)
+            if self.student_feedback_fraction and self.student_judgements and rng.random() < self.student_feedback_fraction:
+                row = self._draw(self.student_judgements,rng)
+            else:
+                pool = self.negative if self.negative and rng.random() < .5 else self.acceptance_positive
+                row = self._draw(pool or self.negative, rng)
             view = 'judge'
         return make_edit_view(row, view, rng, self.prefixes[row['prompt']])
 

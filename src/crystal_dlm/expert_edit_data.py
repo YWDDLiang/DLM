@@ -763,8 +763,57 @@ def replay_feedback_trace(output, initial_body, num_atoms):
     return complete
 
 
+def student_proposal_inputs(samples, tokenizer):
+    inverse = {int(value):key for key,value in tokenizer.get_vocab().items()}
+    inputs, mapping, seen_ancestors = [], [], set()
+    for sample in samples:
+        ancestor = sample['ancestor_id']
+        if sample.get('source_split') != 'train' or ancestor in seen_ancestors:
+            raise ValueError('proposal refresh requires distinct training-only ancestors')
+        seen_ancestors.add(ancestor)
+        known = {tuple(sample['old_body']),tuple(sample['output']['canonical_body'])}
+        pending = {}
+        for index,trace in replay_feedback_trace(sample['output'],sample['old_body'],sample['num_atoms']):
+            body = tuple(trace['proposal_body'])
+            if body in known:
+                continue
+            pending.setdefault(body,[]).append(index)
+        for body,indices in pending.items():
+            digest = hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
+            pid = 'expert-proposal:'+ancestor+':'+digest
+            arrays = decode_body(body,inverse)
+            record = physics_input(pid,ancestor,sample['source_row_idx'],'train','expert_quantized',
+                                   arrays,''.join(inverse[token] for token in body))
+            inputs.append(record)
+            mapping.append({'trajectory_id':pid,'ancestor_id':ancestor,'body':list(body),'trace_indices':indices,
+                            'source_row_idx':sample['source_row_idx']})
+    return inputs,mapping
+
+
+def prepare_student_proposals(samples_directory, tokenizer, output):
+    samples_directory, output = Path(samples_directory),Path(output)
+    summary = json.loads((samples_directory/'SAMPLE_FINAL.json').read_text())
+    samples = read_rows(samples_directory/'samples.jsonl')
+    if (not (samples_directory/'_SUCCESS').is_file() or summary.get('split') != 'train'
+            or summary.get('source_kind') != 'all_old_states' or summary.get('frozen_B0_control') is True
+            or summary.get('requested') != len(samples)):
+        raise ValueError('proposal refresh requires a completed autonomous training sample')
+    inputs,mapping = student_proposal_inputs(samples,tokenizer)
+    output.mkdir(parents=True,exist_ok=False)
+    write_rows(output/'inputs.jsonl',inputs)
+    write_rows(output/'proposal_map.jsonl',mapping)
+    report = {'schema':'student_proposal_physics_v1','sample_sha256':sha256(samples_directory/'samples.jsonl'),
+              'requested_sources':len(samples),'additional_endpoints':len(inputs),
+              'selection':'every_complete_proposal_except_already_labelled_initial_or_final_body',
+              'rejected_proposals_included':True,'input_energy_used_for_selection':False,
+              'files_sha256':{name:sha256(output/name) for name in ('inputs.jsonl','proposal_map.jsonl')}}
+    write_json(output/'PROPOSALS_FINAL.json',report)
+    (output/'_SUCCESS').touch()
+    return report
+
+
 def compile_student_feedback(samples_directory, labels_directory, reference_prepared, reference_labels,
-                             tokenizer, output, *, margin=.01):
+                             tokenizer, output, *, margin=.01, proposal_prepared=None, proposal_labels=None):
     """Include every recorded training proposal, with masks for unobserved R.
 
     Actual intermediate/rejected proposals remain present even when only the
@@ -814,6 +863,29 @@ def compile_student_feedback(samples_directory, labels_directory, reference_prep
         provenance.append({'prepared': str(prepared), 'pairs_sha256': sha256(prepared/'pairs_pending.jsonl'),
                            'labels_sha256': sha256(directory/'labels.jsonl'), 'runtime': report['runtime_identities'][0]})
     inverse = {int(value): key for key,value in tokenizer.get_vocab().items()}
+    additional, proposal_provenance = defaultdict(list), None
+    if (proposal_prepared is None) != (proposal_labels is None):
+        raise ValueError('additional proposal physics needs both its prepared inputs and label directory')
+    if proposal_prepared is not None:
+        prepared, directory = Path(proposal_prepared),Path(proposal_labels)
+        preparation = json.loads((prepared/'PROPOSALS_FINAL.json').read_text())
+        if (not (prepared/'_SUCCESS').is_file() or preparation.get('schema') != 'student_proposal_physics_v1'
+                or preparation.get('sample_sha256') != sha256(samples_directory/'samples.jsonl')):
+            raise ValueError('additional proposal physics belongs to a different student sample')
+        for name in ('inputs.jsonl','proposal_map.jsonl'):
+            if preparation['files_sha256'].get(name) != sha256(prepared/name):
+                raise ValueError('registered proposal physics inputs changed')
+        expected_inputs, expected_mapping = student_proposal_inputs(samples,tokenizer)
+        if read_rows(prepared/'inputs.jsonl') != expected_inputs or read_rows(prepared/'proposal_map.jsonl') != expected_mapping:
+            raise ValueError('additional physics does not cover exactly the actual unlabelled complete proposals')
+        extra_labels, extra_report = bound_labels(prepared/'inputs.jsonl',directory,exclude_worker_errors=True)
+        if any(extra_report['runtime_identities'][0].get(key) != label_report['runtime_identities'][0].get(key) for key in scientific_keys):
+            raise ValueError('additional proposal physical weights/runtime differ from final endpoint R')
+        for row in expected_mapping:
+            additional[row['ancestor_id']].append((tuple(row['body']),extra_labels[row['trajectory_id']]))
+        proposal_provenance = {'prepared':str(prepared),'preparation_sha256':sha256(prepared/'PROPOSALS_FINAL.json'),
+            'labels_sha256':sha256(directory/'labels.jsonl'),'label_report_sha256':sha256(directory/'LABEL_FINAL.json'),
+            'additional_endpoints':len(expected_inputs),'runtime':extra_report['runtime_identities']}
     records, outcomes, ids, skipped = [], [], set(), []
     def emit(row):
         if row['record_id'] not in ids:
@@ -832,7 +904,7 @@ def compile_student_feedback(samples_directory, labels_directory, reference_prep
         initial_label = references[pair['old_physics_id']]
         teacher_label = references.get(pair.get('target_physics_id'))
         if any(label is not None and label.get('status') == 'worker_error'
-               for label in (initial_label, teacher_label, final_label)):
+               for label in (initial_label, teacher_label, final_label, *(label for _,label in additional[ancestor]))):
             skipped.append(ancestor)
             continue
         final_body = sample['output']['canonical_body']
@@ -842,6 +914,8 @@ def compile_student_feedback(samples_directory, labels_directory, reference_prep
         if endpoint_fingerprint(rebound) != endpoint_fingerprint(record):
             raise ValueError('labelled final geometry differs from the recorded student output')
         known = {tuple(pair['old_body']): initial_label, tuple(final_body): final_label}
+        for body,label in additional[ancestor]:
+            known.setdefault(body,label)
         if pair.get('teacher_available'):
             known.setdefault(tuple(pair['target_body']),teacher_label)
         geometries = {}
@@ -909,6 +983,7 @@ def compile_student_feedback(samples_directory, labels_directory, reference_prep
               'sample_sha256':sha256(samples_directory/'samples.jsonl'),
               'student_labels_sha256':sha256(labels_directory/'labels.jsonl'),
               'reference_inputs':provenance,'label_runtime':label_report['runtime_identities'],
+              'additional_proposal_physics':proposal_provenance,
               'heldout_cohort_sha256':next(iter(heldout_identities)),
               'unknown_is_negative':False,'development_records_used_for_training':False,
               'partial_student_prefix_is_assumed_valid':False,
@@ -920,7 +995,7 @@ def compile_student_feedback(samples_directory, labels_directory, reference_prep
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', choices=('prepare', 'compile', 'geometry-auxiliary', 'student-feedback'), default='prepare')
+    parser.add_argument('--mode', choices=('prepare', 'compile', 'geometry-auxiliary', 'student-feedback', 'student-proposals'), default='prepare')
     parser.add_argument('--collection-manifest', type=Path)
     parser.add_argument('--heldout-cohort', type=Path)
     parser.add_argument('--b0-checkpoint', type=Path)
@@ -937,16 +1012,26 @@ def main(argv=None):
     parser.add_argument('--samples-dir', type=Path)
     parser.add_argument('--reference-prepared', type=Path,nargs='+')
     parser.add_argument('--reference-labels', type=Path,nargs='+')
+    parser.add_argument('--proposal-prepared', type=Path)
+    parser.add_argument('--proposal-labels', type=Path)
     parser.add_argument('--exclude-worker-errors', action='store_true',
                         help='Training only: exclude entire unresolved ancestors from a fully accounted label run')
     args = parser.parse_args(argv)
+    if args.mode == 'student-proposals':
+        if None in (args.samples_dir,args.b0_checkpoint):
+            parser.error('student proposal refresh requires samples and the B0 tokenizer')
+        from transformers import AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint,trust_remote_code=True,local_files_only=True)
+        print(json.dumps(prepare_student_proposals(args.samples_dir,tokenizer,args.output_dir)),flush=True)
+        return
     if args.mode == 'student-feedback':
         if None in (args.samples_dir,args.labels_dir,args.reference_prepared,args.reference_labels,args.b0_checkpoint):
             parser.error('student feedback needs samples, labels, matching reference inputs/labels and B0 tokenizer')
         from transformers import AutoTokenizer
         tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint,trust_remote_code=True,local_files_only=True)
         print(json.dumps(compile_student_feedback(args.samples_dir,args.labels_dir,args.reference_prepared,
-                         args.reference_labels,tokenizer,args.output_dir)),flush=True)
+                         args.reference_labels,tokenizer,args.output_dir,proposal_prepared=args.proposal_prepared,
+                         proposal_labels=args.proposal_labels)),flush=True)
         return
     if args.mode == 'geometry-auxiliary':
         if None in (args.source_path,args.source_sha256,args.heldout_cohort,args.heldout_cohort_sha256,args.b0_checkpoint):

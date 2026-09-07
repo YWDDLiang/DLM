@@ -390,6 +390,10 @@ def expert_args(argv):
     parser.add_argument('--module-learning-rate', type=float, default=1e-4)
     parser.add_argument('--weight-decay', type=float, default=.01)
     parser.add_argument('--geometry-aux-fraction', type=float, default=.2)
+    parser.add_argument('--content-fraction', type=float, default=.65)
+    parser.add_argument('--inspect-fraction', type=float, default=.17)
+    parser.add_argument('--student-feedback-fraction', type=float, default=0.)
+    parser.add_argument('--healthy-state-fraction', type=float, default=0.)
     parser.add_argument('--seed', type=int, default=2026090807)
     parser.add_argument('--max-length', type=int, default=1024)
     parser.add_argument('--smoke-sources', type=int, default=0)
@@ -736,7 +740,9 @@ def expert_main(argv):
     model, tokenizer = load_editor_model(args.model_path, args.checkpoint or args.b0_checkpoint,
                                          device, trainable=args.mode == 'train')
     train_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed, split='train',
-                                  smoke_sources=args.smoke_sources, geometry_aux_fraction=args.geometry_aux_fraction)
+                                  smoke_sources=args.smoke_sources, geometry_aux_fraction=args.geometry_aux_fraction,
+                                  content_fraction=args.content_fraction,inspect_fraction=args.inspect_fraction,
+                                  student_feedback_fraction=args.student_feedback_fraction,healthy_state_fraction=args.healthy_state_fraction)
     dev_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed+10000, split='dev',
                                  geometry_aux_fraction=args.geometry_aux_fraction)
     train_comps = {row['composition_key'] for row in train_data.records}
@@ -845,6 +851,9 @@ def expert_main(argv):
                 'seed': args.seed, 'updates': args.updates, 'max_length': args.max_length,
                 'learning_rate': args.learning_rate, 'module_learning_rate': args.module_learning_rate,
                 'weight_decay': args.weight_decay, 'geometry_aux_fraction': args.geometry_aux_fraction,
+                'content_fraction':args.content_fraction,'inspect_fraction':args.inspect_fraction,
+                'student_feedback_fraction':args.student_feedback_fraction,
+                'healthy_state_fraction':args.healthy_state_fraction,
                 'eval_examples': args.eval_examples,
                 'parameter_names': [name for name,_ in selected]}
     start_step, example_cursor = 0, 0
