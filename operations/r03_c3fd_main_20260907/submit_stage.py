@@ -9,6 +9,12 @@ import subprocess as sp
 from trial_preflight import require_geometry_canary_acceptance
 
 
+def job_belongs_to_run(job_fields, run_root):
+    run_root = Path(run_root).resolve()
+    paths = [Path(job_fields[key]) for key in ('Command', 'WorkDir', 'StdOut') if job_fields.get(key)]
+    return any(path == run_root or run_root in path.parents for path in paths)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
@@ -49,7 +55,6 @@ def main():
     now = dt.datetime.now(dt.timezone.utc)
     assert now + dt.timedelta(minutes=minutes + 5) < dt.datetime(2026, 9, 7, 15, 35, 26, tzinfo=dt.timezone.utc)
     jobs = sp.check_output(["squeue", "-h", "-u", os.environ["USER"], "-o", "%i"], text=True).split()
-    assert len(jobs) < 2, jobs
     resources = []
     for job in jobs:
         line = sp.check_output(["scontrol", "show", "job", "-o", job], text=True)
@@ -57,9 +62,18 @@ def main():
         match = re.search(r"(?:^|\s)TRES=([^\s]+)", line)
         assert match, line
         fields = dict(piece.split("=", 1) for piece in match.group(1).split(",") if "=" in piece)
-        resources.append({"job_id": job, "gpus": int(fields.get("gres/gpu", "0")), "cpus": int(fields['cpu']), "tres": fields})
-    assert sum(row["gpus"] for row in resources) + gpus <= 4, resources
-    assert sum(row['cpus'] for row in resources) + cpus <= 16, resources
+        job_fields = dict(piece.split('=', 1) for piece in line.split() if '=' in piece)
+        owned_by_run = job_belongs_to_run(job_fields, args.run_root)
+        resources.append({"job_id": job, "gpus": int(fields.get("gres/gpu", "0")), "cpus": int(fields['cpu']),
+                          "tres": fields, "owned_by_this_run": owned_by_run,
+                          "job_name": job_fields.get('JobName'), "work_dir": job_fields.get('WorkDir')})
+    # Latest user instruction: this task uses two A800s. This shared account
+    # also carries an unrelated experiment, identified by its
+    # actual work/command/output paths and retained in the queue receipt.
+    owned = [row for row in resources if row['owned_by_this_run']]
+    assert len(owned) < 2, owned
+    assert sum(row["gpus"] for row in owned) + gpus <= 2, owned
+    assert sum(row['cpus'] for row in owned) + cpus <= 8, owned
     env = dict(os.environ, R03_SOURCE_ROOT=str(args.source), R03_RUN_ROOT=str(args.run_root), R03_STAGE=args.stage)
     command = ["sbatch", "--parsable", "--job-name=r03" + args.stage + "033526", "--partition=gpu",
                "--nodes=1", "--ntasks=1", "--cpus-per-task=" + str(cpus),
@@ -73,6 +87,7 @@ def main():
     assert job.isdigit(), result.stdout
     record = {"job_id": job, "source": str(args.source), "stage": args.stage, "gpus": gpus,
               "cpus": cpus, "submitted_utc": now.isoformat(), "queue_before": resources,
+              "resource_scope": "this_registered_run", "task_resource_ceiling": {"A800": 2, "CPUs": 8, "Slurm_jobs": 2},
               "command": command, "physics_updates_fixed_before_evaluation": 128 if args.stage == "physics" else None}
     with receipt.open("x") as handle:
         json.dump(record, handle, indent=2)

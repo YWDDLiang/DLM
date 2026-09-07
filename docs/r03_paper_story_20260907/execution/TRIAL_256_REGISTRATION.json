@@ -39,6 +39,7 @@
   "selection_is_confirmatory_evidence": false,
   "formal_1000_started": false,
   "training_evaluation_separation": "No trial structures, relaxation outcomes, official hull or SUN labels can enter pointer/physical training.",
-  "resource_ceiling": {"A800": 4, "CPUs_per_GPU": 4, "concurrent_Slurm_jobs": 2},
+  "resource_ceiling": {"A800": 2, "CPUs_per_GPU": 4, "total_CPUs": 8, "concurrent_Slurm_jobs": 2, "scope": "this_task"},
+  "resource_amendment": {"user_instruction": "你先按照2卡进行吧", "previous_task_A800_ceiling": 4, "current_task_A800_ceiling": 2, "recorded_before_256_sampling": true, "unrelated_shared_account_experiments_not_owned_by_this_task": true},
   "original_absolute_deadline_utc": "2026-09-07T15:35:26Z"
 }
