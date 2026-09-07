@@ -1,0 +1,515 @@
+{
+  "absolute_targets": {
+    "both_met": false,
+    "meta_at_least_50pct": false,
+    "strict_at_least_10pct": false
+  },
+  "cell_reports": {
+    "epoch2": {
+      "cell_id": "epoch2",
+      "counts": {
+        "chgnet_energy_known": 985,
+        "generation_succeeded": 985,
+        "hull_known_novel_unique": 858,
+        "hull_known_reconstructed": 958,
+        "hull_unknown_reconstructed": 27,
+        "meta_stable_all_hull_known": 587,
+        "meta_sun": 489,
+        "novel": 885,
+        "novel_unique": 883,
+        "raw_attempts": 1000,
+        "reconstructed": 985,
+        "strict_stable_all_hull_known": 102,
+        "strict_sun": 81,
+        "unique_representatives": 982
+      },
+      "direct": {
+        "composition_valid": 871,
+        "joint_valid": 871,
+        "metrics": {
+          "comp_valid": 87.1,
+          "cov_precision": 98.1,
+          "cov_recall": 95.2023,
+          "struct_valid": 98.5,
+          "valid": 87.1,
+          "wdist_density": 0.7395,
+          "wdist_num_elems": 0.0676
+        },
+        "structure_valid": 985
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.5699300699300699,
+        "meta_sun_all_attempts": 0.489,
+        "meta_sun_hull_known_reconstructed": 0.5104384133611691,
+        "strict_among_hull_known_novel_unique": 0.0944055944055944,
+        "strict_sun_all_attempts": 0.081,
+        "strict_sun_hull_known_reconstructed": 0.08455114822546973
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 958,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    },
+    "epoch3": {
+      "cell_id": "epoch3",
+      "counts": {
+        "chgnet_energy_known": 992,
+        "generation_succeeded": 992,
+        "hull_known_novel_unique": 861,
+        "hull_known_reconstructed": 965,
+        "hull_unknown_reconstructed": 27,
+        "meta_stable_all_hull_known": 578,
+        "meta_sun": 477,
+        "novel": 889,
+        "novel_unique": 886,
+        "raw_attempts": 1000,
+        "reconstructed": 992,
+        "strict_stable_all_hull_known": 100,
+        "strict_sun": 79,
+        "unique_representatives": 987
+      },
+      "direct": {
+        "composition_valid": 879,
+        "joint_valid": 878,
+        "metrics": {
+          "comp_valid": 87.9,
+          "cov_precision": 98.7,
+          "cov_recall": 95.2686,
+          "struct_valid": 99.2,
+          "valid": 87.8,
+          "wdist_density": 0.7565,
+          "wdist_num_elems": 0.0684
+        },
+        "structure_valid": 992
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.554006968641115,
+        "meta_sun_all_attempts": 0.477,
+        "meta_sun_hull_known_reconstructed": 0.49430051813471504,
+        "strict_among_hull_known_novel_unique": 0.09175377468060394,
+        "strict_sun_all_attempts": 0.079,
+        "strict_sun_hull_known_reconstructed": 0.08186528497409326
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 965,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    }
+  },
+  "design": {
+    "checkpoints": {
+      "epoch2": "step696",
+      "epoch3": "step2392"
+    },
+    "plans": "frozen raw1000 split into first/last valid500 with global ordinals",
+    "rerank": false,
+    "rl": false,
+    "same_seed_stream": true,
+    "stability_condition": null
+  },
+  "epoch3_minus_epoch2": {
+    "body_rate": 0.007000000000000006,
+    "direct_joint_rate": 0.007000000000000006,
+    "meta_attempt_rate": -0.01200000000000001,
+    "meta_known_rate": -0.01613789522645409,
+    "meta_stable_to_sun_retention": -0.007789888176936266,
+    "novel_rate": -0.0023078025216964893,
+    "reconstructed_rate": 0.007000000000000006,
+    "strict_attempt_rate": -0.0020000000000000018,
+    "strict_known_rate": -0.002685863251376472,
+    "strict_stable_to_sun_retention": -0.004117647058823448,
+    "unique_rate": -0.001994637301457325
+  },
+  "epoch3_selection_gate": {
+    "body_noninferior_1pp": true,
+    "direct_noninferior_1pp": true,
+    "meta_noninferior": false,
+    "meta_retention_noninferior_1pp": true,
+    "novel_noninferior_1pp": true,
+    "select_epoch3": false,
+    "strict_noninferior": false,
+    "strict_retention_noninferior_1pp": true,
+    "unique_noninferior_1pp": true
+  },
+  "known_both": 956,
+  "meta_mcnemar": {
+    "candidate_only": 81,
+    "control_only": 96,
+    "discordant": 177,
+    "two_sided_exact_p": 0.2926371081880298
+  },
+  "pooled": [
+    {
+      "body": 985,
+      "body_rate": 0.985,
+      "direct_comp": 871,
+      "direct_joint": 871,
+      "direct_joint_rate": 0.871,
+      "direct_struct": 985,
+      "e_hull_quantiles": {
+        "q10": 0.002913456280762451,
+        "q25": 0.03771102137995053,
+        "q50": 0.08588114723917739,
+        "q75": 0.15355226358344676,
+        "q90": 0.251516713518258
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 81,
+        "le_0p01": 107,
+        "le_0p05": 265,
+        "le_0p10": 489
+      },
+      "epoch": 2,
+      "hull_known": 958,
+      "hull_unknown": 27,
+      "meta_attempt_rate": 0.489,
+      "meta_known_rate": 0.5104384133611691,
+      "meta_stable": 587,
+      "meta_stable_to_sun_retention": 0.8330494037478705,
+      "meta_sun": 489,
+      "novel": 885,
+      "novel_rate": 0.8984771573604061,
+      "novel_unique": 883,
+      "reconstructed": 985,
+      "reconstructed_rate": 0.985,
+      "refined": 985,
+      "requested": 1000,
+      "scope": "pooled1000",
+      "strict_attempt_rate": 0.081,
+      "strict_known_rate": 0.08455114822546973,
+      "strict_stable": 102,
+      "strict_stable_to_sun_retention": 0.7941176470588235,
+      "strict_sun": 81,
+      "unique": 982,
+      "unique_rate": 0.9969543147208122
+    },
+    {
+      "body": 992,
+      "body_rate": 0.992,
+      "direct_comp": 879,
+      "direct_joint": 878,
+      "direct_joint_rate": 0.878,
+      "direct_struct": 992,
+      "e_hull_quantiles": {
+        "q10": 0.002974922059325813,
+        "q25": 0.03758418803792196,
+        "q50": 0.08866133826611389,
+        "q75": 0.15937037925676023,
+        "q90": 0.2641204011981202
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 79,
+        "le_0p01": 110,
+        "le_0p05": 266,
+        "le_0p10": 477
+      },
+      "epoch": 3,
+      "hull_known": 965,
+      "hull_unknown": 27,
+      "meta_attempt_rate": 0.477,
+      "meta_known_rate": 0.49430051813471504,
+      "meta_stable": 578,
+      "meta_stable_to_sun_retention": 0.8252595155709342,
+      "meta_sun": 477,
+      "novel": 889,
+      "novel_rate": 0.8961693548387096,
+      "novel_unique": 886,
+      "reconstructed": 992,
+      "reconstructed_rate": 0.992,
+      "refined": 992,
+      "requested": 1000,
+      "scope": "pooled1000",
+      "strict_attempt_rate": 0.079,
+      "strict_known_rate": 0.08186528497409326,
+      "strict_stable": 100,
+      "strict_stable_to_sun_retention": 0.79,
+      "strict_sun": 79,
+      "unique": 987,
+      "unique_rate": 0.9949596774193549
+    }
+  ],
+  "rounds": [
+    {
+      "body": 497,
+      "body_rate": 0.994,
+      "direct_comp": 437,
+      "direct_joint": 437,
+      "direct_joint_rate": 0.874,
+      "direct_struct": 497,
+      "e_hull_quantiles": {
+        "q10": 0.0035445348569558277,
+        "q25": 0.043043367666301346,
+        "q50": 0.08940161991283535,
+        "q75": 0.15913175704338878,
+        "q90": 0.23798605080322233
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 41,
+        "le_0p01": 52,
+        "le_0p05": 122,
+        "le_0p10": 240
+      },
+      "epoch": 2,
+      "global_ordinals": [
+        0,
+        500
+      ],
+      "hull_known": 482,
+      "hull_unknown": 15,
+      "meta_attempt_rate": 0.48,
+      "meta_known_rate": 0.4979253112033195,
+      "meta_stable": 289,
+      "meta_stable_to_sun_retention": 0.8304498269896193,
+      "meta_sun": 240,
+      "novel": 446,
+      "novel_rate": 0.89738430583501,
+      "novel_unique": 445,
+      "reconstructed": 497,
+      "reconstructed_rate": 0.994,
+      "refined": 497,
+      "requested": 500,
+      "scope": "round1",
+      "strict_attempt_rate": 0.082,
+      "strict_known_rate": 0.08506224066390042,
+      "strict_stable": 53,
+      "strict_stable_to_sun_retention": 0.7735849056603774,
+      "strict_sun": 41,
+      "unique": 496,
+      "unique_rate": 0.9979879275653923,
+      "uniqueness_semantics": "pooled1000 representative labels restricted to this global-ordinal half"
+    },
+    {
+      "body": 488,
+      "body_rate": 0.976,
+      "direct_comp": 434,
+      "direct_joint": 434,
+      "direct_joint_rate": 0.868,
+      "direct_struct": 488,
+      "e_hull_quantiles": {
+        "q10": 0.0022431440659250526,
+        "q25": 0.03544086995422335,
+        "q50": 0.08211784748033324,
+        "q75": 0.15158592225587064,
+        "q90": 0.25719271407628475
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 40,
+        "le_0p01": 55,
+        "le_0p05": 143,
+        "le_0p10": 249
+      },
+      "epoch": 2,
+      "global_ordinals": [
+        500,
+        1000
+      ],
+      "hull_known": 476,
+      "hull_unknown": 12,
+      "meta_attempt_rate": 0.498,
+      "meta_known_rate": 0.523109243697479,
+      "meta_stable": 298,
+      "meta_stable_to_sun_retention": 0.8355704697986577,
+      "meta_sun": 249,
+      "novel": 439,
+      "novel_rate": 0.8995901639344263,
+      "novel_unique": 438,
+      "reconstructed": 488,
+      "reconstructed_rate": 0.976,
+      "refined": 488,
+      "requested": 500,
+      "scope": "round2",
+      "strict_attempt_rate": 0.08,
+      "strict_known_rate": 0.08403361344537816,
+      "strict_stable": 49,
+      "strict_stable_to_sun_retention": 0.8163265306122449,
+      "strict_sun": 40,
+      "unique": 486,
+      "unique_rate": 0.9959016393442623,
+      "uniqueness_semantics": "pooled1000 representative labels restricted to this global-ordinal half"
+    },
+    {
+      "body": 498,
+      "body_rate": 0.996,
+      "direct_comp": 438,
+      "direct_joint": 437,
+      "direct_joint_rate": 0.874,
+      "direct_struct": 498,
+      "e_hull_quantiles": {
+        "q10": 0.008392199645197886,
+        "q25": 0.04588102499267688,
+        "q50": 0.09388979988414459,
+        "q75": 0.16404539727417067,
+        "q90": 0.2538833768958005
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 34,
+        "le_0p01": 45,
+        "le_0p05": 115,
+        "le_0p10": 230
+      },
+      "epoch": 3,
+      "global_ordinals": [
+        0,
+        500
+      ],
+      "hull_known": 483,
+      "hull_unknown": 15,
+      "meta_attempt_rate": 0.46,
+      "meta_known_rate": 0.47619047619047616,
+      "meta_stable": 282,
+      "meta_stable_to_sun_retention": 0.8156028368794326,
+      "meta_sun": 230,
+      "novel": 444,
+      "novel_rate": 0.891566265060241,
+      "novel_unique": 443,
+      "reconstructed": 498,
+      "reconstructed_rate": 0.996,
+      "refined": 498,
+      "requested": 500,
+      "scope": "round1",
+      "strict_attempt_rate": 0.068,
+      "strict_known_rate": 0.07039337474120083,
+      "strict_stable": 45,
+      "strict_stable_to_sun_retention": 0.7555555555555555,
+      "strict_sun": 34,
+      "unique": 497,
+      "unique_rate": 0.9979919678714859,
+      "uniqueness_semantics": "pooled1000 representative labels restricted to this global-ordinal half"
+    },
+    {
+      "body": 494,
+      "body_rate": 0.988,
+      "direct_comp": 441,
+      "direct_joint": 441,
+      "direct_joint_rate": 0.882,
+      "direct_struct": 494,
+      "e_hull_quantiles": {
+        "q10": -0.0003202127036139755,
+        "q25": 0.030916167524313254,
+        "q50": 0.08383858664164201,
+        "q75": 0.1550518111540251,
+        "q90": 0.2684735565723103
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 45,
+        "le_0p01": 65,
+        "le_0p05": 151,
+        "le_0p10": 247
+      },
+      "epoch": 3,
+      "global_ordinals": [
+        500,
+        1000
+      ],
+      "hull_known": 482,
+      "hull_unknown": 12,
+      "meta_attempt_rate": 0.494,
+      "meta_known_rate": 0.5124481327800829,
+      "meta_stable": 296,
+      "meta_stable_to_sun_retention": 0.8344594594594594,
+      "meta_sun": 247,
+      "novel": 445,
+      "novel_rate": 0.9008097165991903,
+      "novel_unique": 443,
+      "reconstructed": 494,
+      "reconstructed_rate": 0.988,
+      "refined": 494,
+      "requested": 500,
+      "scope": "round2",
+      "strict_attempt_rate": 0.09,
+      "strict_known_rate": 0.09336099585062241,
+      "strict_stable": 55,
+      "strict_stable_to_sun_retention": 0.8181818181818182,
+      "strict_sun": 45,
+      "unique": 490,
+      "unique_rate": 0.9919028340080972,
+      "uniqueness_semantics": "pooled1000 representative labels restricted to this global-ordinal half"
+    }
+  ],
+  "schema": "h1a2_dlm_sufficient_raw1000_final_v1",
+  "selected_epoch": 2,
+  "selected_metrics": {
+    "body": 985,
+    "body_rate": 0.985,
+    "direct_comp": 871,
+    "direct_joint": 871,
+    "direct_joint_rate": 0.871,
+    "direct_struct": 985,
+    "e_hull_quantiles": {
+      "q10": 0.002913456280762451,
+      "q25": 0.03771102137995053,
+      "q50": 0.08588114723917739,
+      "q75": 0.15355226358344676,
+      "q90": 0.251516713518258
+    },
+    "e_hull_threshold_counts": {
+      "eq_0": 81,
+      "le_0p01": 107,
+      "le_0p05": 265,
+      "le_0p10": 489
+    },
+    "epoch": 2,
+    "hull_known": 958,
+    "hull_unknown": 27,
+    "meta_attempt_rate": 0.489,
+    "meta_known_rate": 0.5104384133611691,
+    "meta_stable": 587,
+    "meta_stable_to_sun_retention": 0.8330494037478705,
+    "meta_sun": 489,
+    "novel": 885,
+    "novel_rate": 0.8984771573604061,
+    "novel_unique": 883,
+    "reconstructed": 985,
+    "reconstructed_rate": 0.985,
+    "refined": 985,
+    "requested": 1000,
+    "scope": "pooled1000",
+    "strict_attempt_rate": 0.081,
+    "strict_known_rate": 0.08455114822546973,
+    "strict_stable": 102,
+    "strict_stable_to_sun_retention": 0.7941176470588235,
+    "strict_sun": 81,
+    "unique": 982,
+    "unique_rate": 0.9969543147208122
+  },
+  "strict_mcnemar": {
+    "candidate_only": 19,
+    "control_only": 21,
+    "discordant": 40,
+    "two_sided_exact_p": 0.8746293123804207
+  },
+  "training": {
+    "checkpoint_total_epoch2_step": 696,
+    "checkpoint_total_epoch3_step": 2392,
+    "evaluations": [
+      {
+        "step": 500,
+        "val_nll": 1.4543025861366186
+      },
+      {
+        "step": 1000,
+        "val_nll": 1.463432464961661
+      },
+      {
+        "step": 1500,
+        "val_nll": 1.4286528471170459
+      },
+      {
+        "step": 2000,
+        "val_nll": 1.2909783472819254
+      }
+    ],
+    "note": "the training curve is reported in full; checkpoint choice is made by downstream Pareto gates, not minimum CE alone"
+  },
+  "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+}

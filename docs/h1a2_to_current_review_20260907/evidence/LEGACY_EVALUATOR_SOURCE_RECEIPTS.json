@@ -1,0 +1,15 @@
+{
+  "legacy_eval_sun.py.txt": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun.py",
+    "sha256": "564b4490f01464012277653951f8a55b5c1575bc78091f5a06db25ca9339852b"
+  },
+  "legacy_eval_sun_resumable.py.txt": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/a100_eval_sun/eval_sun_resumable.py",
+    "sha256": "44c7d9adf01de29d5bdd0eb6a0e6e5d77f1b47b47f0e4bcd9b35cd6c51e19baa"
+  },
+  "legacy_train_csv_schema.json": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+    "sha256": "d7ca4bf0cf98cc481fdb2082470d6d3eb0f8c1cd8801b87671554ef03b6e0c86",
+    "role": "derived_schema_only"
+  }
+}

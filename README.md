@@ -1,5 +1,7 @@
 # LLM＋DLM 晶体生成研究
 
+历史复盘已完成：[H1-A2到当前的结果、训练谱系与下一步对照](docs/h1a2_to_current_review_20260907/README.md)。旧R03归档256的10.94%/50.00%已逐行核验；历史强点、条件上界、聚合headline和最近开发集分别登记。下方07:00报告中的最佳值只指当时的固定开发cohort。
+
 C³FD 提供化学动作支持，Typed Llama 生成组成、软计划与物种程序，周期 DLM 生成和修订晶体几何；固定 model494 refiner 单独报告。
 
 本轮实测没有达到同端 Strict SUN≥10%、Meta SUN≥50%。最后的40088已完整结束：K4合作终点 raw8/48→tau18/114、K8 raw10/57→tau15/122，均256。保留原K4完整循环：tau **19/126（7.42%/49.22%）**；Strict最高的K4软约束为 **20/122（7.81%/47.66%）**，不能拼接最优值。[最终结果与稳定/失败病例](docs/v3_scientific_audit_20260906/FINAL_SUN_RESULT_20260907.md)、[全部14组完整对照](docs/v3_scientific_audit_20260906/evidence_v3_failure_20260907/SUN_SNAPSHOT_AFTER_40088.md)、[当前状态](docs/CURRENT_STATE.md)。按约定上海07:00交付最终结果。

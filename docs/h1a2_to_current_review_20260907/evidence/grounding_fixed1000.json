@@ -1,0 +1,272 @@
+{
+  "cell_reports": {
+    "candidate": {
+      "cell_id": "candidate",
+      "counts": {
+        "chgnet_energy_known": 990,
+        "generation_succeeded": 990,
+        "hull_known_novel_unique": 859,
+        "hull_known_reconstructed": 962,
+        "hull_unknown_reconstructed": 28,
+        "meta_stable_all_hull_known": 569,
+        "meta_sun": 467,
+        "novel": 887,
+        "novel_unique": 885,
+        "raw_attempts": 1000,
+        "reconstructed": 990,
+        "strict_stable_all_hull_known": 106,
+        "strict_sun": 86,
+        "unique_representatives": 987
+      },
+      "direct": {
+        "composition_valid": 876,
+        "joint_valid": 874,
+        "metrics": {
+          "comp_valid": 87.6,
+          "cov_precision": 98.4,
+          "cov_recall": 95.4455,
+          "struct_valid": 98.9,
+          "valid": 87.4,
+          "wdist_density": 0.7184,
+          "wdist_num_elems": 0.0629
+        },
+        "structure_valid": 989
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.5436554132712457,
+        "meta_sun_all_attempts": 0.467,
+        "meta_sun_hull_known_reconstructed": 0.48544698544698545,
+        "strict_among_hull_known_novel_unique": 0.10011641443538999,
+        "strict_sun_all_attempts": 0.086,
+        "strict_sun_hull_known_reconstructed": 0.0893970893970894
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 962,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    },
+    "control": {
+      "cell_id": "control",
+      "counts": {
+        "chgnet_energy_known": 994,
+        "generation_succeeded": 994,
+        "hull_known_novel_unique": 863,
+        "hull_known_reconstructed": 966,
+        "hull_unknown_reconstructed": 28,
+        "meta_stable_all_hull_known": 589,
+        "meta_sun": 487,
+        "novel": 892,
+        "novel_unique": 890,
+        "raw_attempts": 1000,
+        "reconstructed": 994,
+        "strict_stable_all_hull_known": 109,
+        "strict_sun": 89,
+        "unique_representatives": 991
+      },
+      "direct": {
+        "composition_valid": 880,
+        "joint_valid": 877,
+        "metrics": {
+          "comp_valid": 88.0,
+          "cov_precision": 98.7,
+          "cov_recall": 95.0586,
+          "struct_valid": 99.4,
+          "valid": 87.7,
+          "wdist_density": 0.7009,
+          "wdist_num_elems": 0.065
+        },
+        "structure_valid": 994
+      },
+      "rates": {
+        "meta_among_hull_known_novel_unique": 0.5643105446118193,
+        "meta_sun_all_attempts": 0.487,
+        "meta_sun_hull_known_reconstructed": 0.5041407867494824,
+        "strict_among_hull_known_novel_unique": 0.10312862108922363,
+        "strict_sun_all_attempts": 0.089,
+        "strict_sun_hull_known_reconstructed": 0.09213250517598344
+      },
+      "schema": "h1a2_epoch2_exactplan_official_cell_report_v1",
+      "target": {
+        "met": false,
+        "name": "hull_known_reconstructed",
+        "observed": 966,
+        "target_is_nonblocking": true,
+        "value": 1000
+      },
+      "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+    }
+  },
+  "cells": [
+    {
+      "arm": "control",
+      "body": 994,
+      "body_rate": 0.994,
+      "direct_comp": 880,
+      "direct_joint": 877,
+      "direct_joint_rate": 0.877,
+      "direct_struct": 994,
+      "hull_known": 966,
+      "hull_unknown": 28,
+      "meta": 487,
+      "meta_attempt_rate": 0.487,
+      "meta_known_rate": 0.5041407867494824,
+      "meta_stable": 589,
+      "meta_stable_to_sun_retention": 0.8268251273344652,
+      "novel": 892,
+      "novel_rate": 0.89738430583501,
+      "novel_unique": 890,
+      "parsed": 1000,
+      "reconstructed": 994,
+      "refined": 994,
+      "requested": 1000,
+      "strict": 89,
+      "strict_attempt_rate": 0.089,
+      "strict_known_rate": 0.09213250517598344,
+      "strict_stable": 109,
+      "strict_stable_to_sun_retention": 0.8165137614678899,
+      "unique": 991,
+      "unique_rate": 0.9969818913480886
+    },
+    {
+      "arm": "candidate",
+      "body": 990,
+      "body_rate": 0.99,
+      "direct_comp": 876,
+      "direct_joint": 874,
+      "direct_joint_rate": 0.874,
+      "direct_struct": 989,
+      "hull_known": 962,
+      "hull_unknown": 28,
+      "meta": 467,
+      "meta_attempt_rate": 0.467,
+      "meta_known_rate": 0.48544698544698545,
+      "meta_stable": 569,
+      "meta_stable_to_sun_retention": 0.820738137082601,
+      "novel": 887,
+      "novel_rate": 0.895959595959596,
+      "novel_unique": 885,
+      "parsed": 1000,
+      "reconstructed": 990,
+      "refined": 990,
+      "requested": 1000,
+      "strict": 86,
+      "strict_attempt_rate": 0.086,
+      "strict_known_rate": 0.0893970893970894,
+      "strict_stable": 106,
+      "strict_stable_to_sun_retention": 0.8113207547169812,
+      "unique": 987,
+      "unique_rate": 0.996969696969697
+    }
+  ],
+  "criteria": {
+    "body_noninferiority_1pp": true,
+    "contribution_candidate_pass": false,
+    "direct_joint_noninferiority_1pp": true,
+    "mechanism": true,
+    "meta_direction": false,
+    "meta_retention_noninferiority_1pp": true,
+    "novelty_noninferiority_1pp": true,
+    "strict_direction": false,
+    "strict_retention_noninferiority_1pp": true
+  },
+  "deltas": {
+    "body_rate": -0.0040000000000000036,
+    "direct_joint_rate": -0.0030000000000000027,
+    "meta_attempt_rate": -0.019999999999999962,
+    "meta_known_rate": -0.018693801302496926,
+    "meta_stable_to_sun_retention": -0.0060869902518642105,
+    "novel_rate": -0.0014247098754140985,
+    "strict_attempt_rate": -0.0030000000000000027,
+    "strict_known_rate": -0.0027354157788940375,
+    "strict_stable_to_sun_retention": -0.005193006750908724,
+    "unique_rate": -1.2194378391616745e-05
+  },
+  "design": {
+    "attempts": 1000,
+    "checkpoint": "full-epoch grounding_34700 control/candidate final",
+    "cohort": "first 1000 parsed epoch-2 Plans; no survivor filtering",
+    "pairing": "same Plans and seed-by-sample-index DLM/refiner streams",
+    "public_headline_separation": "this requested-1000 cohort does not replace or redefine 105/488"
+  },
+  "energy": {
+    "candidate": {
+      "e_hull_quantiles": {
+        "q10": 0.0003880513811370974,
+        "q25": 0.03908498056544696,
+        "q50": 0.09042965439013528,
+        "q75": 0.1629778037517129,
+        "q90": 0.2592463364114214
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 86,
+        "le_0p01": 107,
+        "le_0p05": 267,
+        "le_0p10": 467
+      },
+      "hull_known_novel_unique": 859,
+      "meta_stable": 569,
+      "meta_stable_to_sun_retention": 0.820738137082601,
+      "meta_sun": 467,
+      "reconstructed": 990,
+      "strict_stable": 106,
+      "strict_stable_to_sun_retention": 0.8113207547169812,
+      "strict_sun": 86
+    },
+    "control": {
+      "e_hull_quantiles": {
+        "q10": -0.00028010526705735117,
+        "q25": 0.03618748918110981,
+        "q50": 0.08604244220764112,
+        "q75": 0.14957732692685344,
+        "q90": 0.25511926288180975
+      },
+      "e_hull_threshold_counts": {
+        "eq_0": 89,
+        "le_0p01": 109,
+        "le_0p05": 270,
+        "le_0p10": 487
+      },
+      "hull_known_novel_unique": 863,
+      "meta_stable": 589,
+      "meta_stable_to_sun_retention": 0.8268251273344652,
+      "meta_sun": 487,
+      "reconstructed": 994,
+      "strict_stable": 109,
+      "strict_stable_to_sun_retention": 0.8165137614678899,
+      "strict_sun": 89
+    }
+  },
+  "known_both": 959,
+  "meta_mcnemar": {
+    "candidate_only": 78,
+    "control_only": 95,
+    "discordant": 173,
+    "two_sided_exact_p": 0.22370496818590446
+  },
+  "schema": "h1a2_grounding_fixed_requested1000_final_v1",
+  "strict_mcnemar": {
+    "candidate_only": 13,
+    "control_only": 15,
+    "discordant": 28,
+    "two_sided_exact_p": 0.8505540192127228
+  },
+  "training": {
+    "candidate": {
+      "grounding_samples": 165,
+      "true_vs_counterfactual_margin": 0.7591561057350852,
+      "val_loss": 1.2885579356201924,
+      "validation_step": 1500
+    },
+    "candidate_minus_control": -0.00044595509301870173,
+    "control": {
+      "val_loss": 1.289003890713211,
+      "validation_step": 1500
+    }
+  },
+  "unknown_policy": "excluded from hull-known denominators; never mapped to unstable"
+}

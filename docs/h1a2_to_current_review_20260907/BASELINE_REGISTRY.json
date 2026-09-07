@@ -1,0 +1,101 @@
+{
+  "created_at_utc": "2026-09-07T01:27:25.496113+00:00",
+  "status": "comparison_registry_only; no checkpoint substitution or new run",
+  "overall_champion_declared": false,
+  "current_branch_incumbent_changed": false,
+  "controls": [
+    {
+      "name": "H1-A2 P0 + R5-C B0 + D1",
+      "role": "historical protected reproduction control",
+      "weight_identity": {
+        "source_manifest": "D:\\codex_work\\ai4s\\diffsion_language_model_meets_diffusion\\workstreams\\final_method_development_20260808\\main_experiment_freeze_20260815_v1\\training\\provenance\\dlm_golden_repro_manifest_20260812.json",
+        "source_sha256": "2de04880c0d5ca1488c85d7853b80394547f9cdf1dc0888288380e6ff2f36db8",
+        "assets": [
+          {
+            "name": "P0 H1-A2 epoch-2 Planner adapter",
+            "kind": "file",
+            "path": "${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final/adapter_model.safetensors",
+            "sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+            "fallback_search_dir": "${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
+          },
+          {
+            "name": "B0 R5-C adapter",
+            "kind": "file",
+            "path": "${PROJECT_ROOT}/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final/adapter_model.safetensors",
+            "sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+            "bytes": 6391016776
+          }
+        ],
+        "verification_scope": "Recorded historical identities; weights not rehashed or loaded in this review"
+      },
+      "refiner": "fixed model494/tau800",
+      "result_identity": "historical1000 and exact1200 are separate views"
+    },
+    {
+      "name": "H1-A2 P0 + R5-C B0 + R03 D2",
+      "role": "historical schedule control",
+      "weight_identity": {
+        "source_manifest": "D:\\codex_work\\ai4s\\diffsion_language_model_meets_diffusion\\workstreams\\final_method_development_20260808\\main_experiment_freeze_20260815_v1\\training\\provenance\\dlm_golden_repro_manifest_20260812.json",
+        "source_sha256": "2de04880c0d5ca1488c85d7853b80394547f9cdf1dc0888288380e6ff2f36db8",
+        "assets": [
+          {
+            "name": "P0 H1-A2 epoch-2 Planner adapter",
+            "kind": "file",
+            "path": "${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final/adapter_model.safetensors",
+            "sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+            "fallback_search_dir": "${PROJECT_ROOT}/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final"
+          },
+          {
+            "name": "B0 R5-C adapter",
+            "kind": "file",
+            "path": "${PROJECT_ROOT}/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final/adapter_model.safetensors",
+            "sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+            "bytes": 6391016776
+          }
+        ],
+        "verification_scope": "Recorded historical identities; weights not rehashed or loaded in this review"
+      },
+      "change_from_D1": "safe-axis body reveal order only; no trained Shared-Plan residual",
+      "result_identity": "archived256 point28/128; paired exact1200 did not show persistent dominance"
+    },
+    {
+      "name": "Potential-Closure stream17",
+      "role": "promising unconfirmed physical-training branch",
+      "training_job_ids": [
+        "39603",
+        "39604"
+      ],
+      "weight_identity": null,
+      "missing": "actual final checkpoint/hash must be recovered before loading",
+      "reported_tau800": [
+        20,
+        125
+      ],
+      "requests": 256,
+      "source_file": "evidence/potential_closure_report.md",
+      "not_promoted": true
+    },
+    {
+      "name": "Original K4 full cycle",
+      "role": "current fixed-development branch incumbent",
+      "weight_identity": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+        "files_sha256": {
+          "README.md": "994978b0352fcdadef1d24a249cd7ff663b07334b3a13d6a8a54997f1003f973",
+          "adapter_model.safetensors": "84f2ee269617dc2c820cc57513f166a5738d4d7a8bf115afb2057ca1b8cea5a6",
+          "adapter_config.json": "26dbbb718e27827bf476143272da58f6999be1351cad38ff92a194c99f495f71",
+          "periodic_state_config.json": "d79d4a18dcb8970fc53ecd011dae3615efeff3a8993de3a8955fb1350ab8caf7",
+          "periodic_state.pt": "ac215460707bb419841a827ef157aa62418e4eb553aac5b8502cbe72bb0eca71",
+          "chat_template.jinja": "b48c47f6443892716176eb200bf4ef108f64e06ca26ed0fa8ebc0a4b3992fcb2",
+          "tokenizer_config.json": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2",
+          "special_tokens_map.json": "ab123ae27cd63c425c706a51bde5a34090f8f5fbf3b3533e5423fd80a17e5979",
+          "tokenizer.json": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+        }
+      },
+      "result_source": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_v3_failure_20260907\\FINAL_BASELINE_DECISION_20260907.json",
+      "result_source_sha256": "5dfe11e4a3cbd467f23db2767f4f582e73fb04fd97db0bc62300aa8ae9cd5c05",
+      "joint_target_met": false
+    }
+  ],
+  "first_required_bridge": "NEXT_REPLAY_SPEC.md; same stored structures across legacy/current R before cross-generation attribution"
+}

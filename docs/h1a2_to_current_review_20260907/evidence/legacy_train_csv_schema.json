@@ -1,0 +1,29 @@
+{
+  "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen/data/mp_20/train.csv",
+  "columns": [
+    "",
+    "Unnamed: 0",
+    "material_id",
+    "formation_energy_per_atom",
+    "band_gap",
+    "pretty_formula",
+    "e_above_hull",
+    "elements",
+    "cif",
+    "spacegroup.number",
+    "spacegroup.number.conv",
+    "cif.conv"
+  ],
+  "first_non_cif_fields": {
+    "": "0",
+    "Unnamed: 0": "37228",
+    "material_id": "mp-1221227",
+    "formation_energy_per_atom": "-1.637460082715517",
+    "band_gap": "0.2132999999999998",
+    "pretty_formula": "Na3MnCoNiO6",
+    "e_above_hull": "0.0430011104166663",
+    "elements": "['Co', 'Mn', 'Na', 'Ni', 'O']",
+    "spacegroup.number": "8",
+    "spacegroup.number.conv": "8"
+  }
+}

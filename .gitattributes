@@ -6,3 +6,4 @@ data/**/*.pt filter=lfs diff=lfs merge=lfs -text
 *.sbatch text eol=lf
 # Preserve audit source receipts and historical byte hashes across platforms.
 docs/v3_scientific_audit_20260906/** -text whitespace=cr-at-eol
+docs/h1a2_to_current_review_20260907/** -text whitespace=cr-at-eol
