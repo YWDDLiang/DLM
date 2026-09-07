@@ -19,7 +19,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--source", type=Path, required=True)
-    parser.add_argument("--stage", choices=["canary", "canary_v2", "physics", "canary_repair", "canary_geometry", "pilot_RI", "pilot_GP", "canary_hull", "pilot_hull"], required=True)
+    parser.add_argument("--stage", choices=["canary", "canary_v2", "physics", "canary_repair", "canary_geometry", "pilot_RI", "pilot_GP", "canary_hull", "pilot_hull", "canary_evaluate", "pilot_evaluate"], required=True)
     args = parser.parse_args()
     receipt = args.run_root / (args.stage.upper() + "_SUBMISSION.json")
     if receipt.exists():
@@ -35,9 +35,11 @@ def main():
                    "pilot_RI": (2, 270, "200G", "trial.sbatch"),
                    "pilot_GP": (2, 270, "200G", "trial.sbatch"),
                    "canary_hull": (0, 70, "24G", "hull.sbatch"),
-                   "pilot_hull": (0, 70, "24G", "hull.sbatch")}
+                   "pilot_hull": (0, 70, "24G", "hull.sbatch"),
+                   "canary_evaluate": (0, 45, "32G", "evaluate.sbatch"),
+                   "pilot_evaluate": (0, 80, "32G", "evaluate.sbatch")}
     gpus, minutes, memory, script = stage_specs[args.stage]
-    cpus = 6 if args.stage.endswith('_hull') else gpus * 4
+    cpus = 6 if args.stage.endswith(('_hull', '_evaluate')) else gpus * 4
     if args.stage == "canary_repair":
         assert (args.run_root / "canary_40400/_SUCCESS").is_file(), 'original/interface canary incomplete'
     if args.stage == "canary_geometry":
@@ -52,6 +54,12 @@ def main():
     if args.stage == 'pilot_hull':
         assert (args.run_root / 'pilot_256/R/planner/_SUCCESS').is_file()
         assert (args.run_root / 'pilot_256/shared_I/_SUCCESS').is_file()
+    if args.stage == 'canary_evaluate':
+        assert (args.run_root / 'GEOMETRY_CANARY_COMPLETE.json').is_file()
+        assert (args.run_root / 'hull_execution_canary/_SUCCESS').is_file()
+    if args.stage == 'pilot_evaluate':
+        assert all((args.run_root / 'pilot_256' / role / '_SUCCESS').is_file() for role in ('R', 'I', 'G', 'P'))
+        assert (args.run_root / 'hull_execution_pilot256/_SUCCESS').is_file()
     now = dt.datetime.now(dt.timezone.utc)
     assert now + dt.timedelta(minutes=minutes + 5) < dt.datetime(2026, 9, 7, 15, 35, 26, tzinfo=dt.timezone.utc)
     jobs = sp.check_output(["squeue", "-h", "-u", os.environ["USER"], "-o", "%i"], text=True).split()
