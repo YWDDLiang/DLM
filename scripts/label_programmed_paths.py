@@ -74,14 +74,18 @@ class GeometryCertificationUnavailable(RuntimeError):
     pass
 
 
-def validate_structure_geometry(structure):
+class InvalidPeriodicGeometry(ValueError):
+    pass
+
+
+def _validate_structure_geometry(structure):
     lattice, coords = array(structure.lattice.matrix), array(structure.frac_coords)
     if lattice.shape != (3, 3) or coords.shape != (int(structure.num_sites), 3):
-        raise ValueError("invalid periodic geometry dimensions")
+        raise InvalidPeriodicGeometry("invalid periodic geometry dimensions")
     volume = float(abs(np.linalg.det(lattice)))
     if (not np.isfinite(lattice).all() or not np.isfinite(coords).all()
             or not math.isfinite(volume) or volume <= 1e-10):
-        raise ValueError("nonfinite or degenerate periodic structure")
+        raise InvalidPeriodicGeometry("nonfinite or degenerate periodic structure")
     from pymatgen.core import Lattice
     try:
         reduced = np.asarray(Lattice(lattice).get_lll_reduced_lattice().matrix)
@@ -114,7 +118,7 @@ def validate_structure_geometry(structure):
         raise GeometryCertificationUnavailable('periodic contact reduction could not be certified') from error
     minimum = float(np.linalg.norm(reduced,axis=-1).min())
     if minimum < .5-1e-8:
-        raise ValueError('periodic geometry violates the common 0.5 Angstrom support')
+        raise InvalidPeriodicGeometry('periodic geometry violates the common 0.5 Angstrom support')
     radii = radii_float.astype(int)
     images = math.prod(2*int(radius)+1 for radius in radii)
     if len(coords)**2*images > LABEL_GEOMETRY_PROTOCOL['max_pair_images']:
@@ -128,13 +132,24 @@ def validate_structure_geometry(structure):
             break
         offsets = np.asarray(chunk,dtype=float)
         distances = np.linalg.norm((delta[:,:,None,:]+offsets)@reduced,axis=-1)
+        if not np.isfinite(distances).all():
+            raise GeometryCertificationUnavailable('periodic distance computation is nonfinite')
         zero = np.flatnonzero((offsets==0).all(-1))
         if len(zero):
             distances[np.arange(len(coords)),np.arange(len(coords)),int(zero[0])] = np.inf
         minimum = min(minimum,float(distances.min()))
         if minimum < .5-1e-8:
-            raise ValueError('periodic geometry violates the common 0.5 Angstrom support')
+            raise InvalidPeriodicGeometry('periodic geometry violates the common 0.5 Angstrom support')
     return minimum
+
+
+def validate_structure_geometry(structure):
+    try:
+        return _validate_structure_geometry(structure)
+    except (InvalidPeriodicGeometry,GeometryCertificationUnavailable):
+        raise
+    except Exception as error:
+        raise GeometryCertificationUnavailable('periodic certification could not complete') from error
 
 
 def label_record(record, *, model, optimizer, structure_factory=structure_from_record,
