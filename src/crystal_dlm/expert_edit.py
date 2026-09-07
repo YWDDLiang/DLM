@@ -559,6 +559,16 @@ def edit_structure(model, tokenizer, *, prompt, body, num_sites, allowed_modes,
             continue
         old = current.copy()
         inspection = forward(old, old, task_id)
+        admission = inspection.quality_logits[0].sigmoid().float().tolist()
+        # S was taught only where the old geometry and old terminal were both
+        # credible. Enforce that learned admission in autonomous G->S use.
+        # A single-task forced-scope HOW diagnostic records the bypass explicitly.
+        diagnostic = force_mode is not None and len(tasks) == 1
+        if task == 'S' and not diagnostic and (admission[0] < .5 or admission[1] < .5):
+            trace.append({'task': task, 'mode': 'none', 'old_body': old, 'proposal_body': old,
+                          'accepted': False, 'reason': 'learned_S_admission_reject', 'quality': admission,
+                          'calls': 1})
+            continue
         if force_mode is None:
             choices = inspection.mode_logits[0, modes]
             mode = modes[int(choices.argmax())]
@@ -620,4 +630,6 @@ def edit_structure(model, tokenizer, *, prompt, body, num_sites, allowed_modes,
         raise RuntimeError('editor changed a protected compositional token')
     return {'body': final, 'canonical_body': current, 'trace': trace, 'forward_calls': used,
             'changed_numeric_tokens': sum(a != b for a, b in zip(canonical_original, current)),
-            'block_size': block_size, 'scope_policy': force_mode or 'learned', 'accept_all': accept_all}
+            'block_size': block_size, 'scope_policy': force_mode or 'learned', 'accept_all': accept_all,
+            'S_admission_policy': 'bypassed_for_single_task_forced_scope_diagnostic'
+                                  if force_mode is not None and len(tasks) == 1 else 'learned'}
