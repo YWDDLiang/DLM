@@ -2,6 +2,7 @@ from types import SimpleNamespace
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 import numpy as np
 
 SPEC = importlib.util.spec_from_file_location(
@@ -24,6 +25,36 @@ class PurposeContractTests(unittest.TestCase):
             MODULE.validate_record_purpose({'source_split': 'train', 'endpoint': 'expert_quantized'}, 'expert_edit')
         with self.assertRaises(ValueError):
             MODULE.validate_record_purpose({'source_split': 'train', 'endpoint': 'expert_quantized'}, 'train')
+
+
+class PeriodicGeometryProtocolTests(unittest.TestCase):
+    def test_skew_cell_contact_outside_legacy_image_shell_is_rejected(self):
+        from pymatgen.core import Lattice, Structure
+        lattice = Lattice.from_parameters(1.,3.1,5.,90.,90.,2.)
+        crystal = Structure(lattice,['Na'],[[0.,0.,0.]])
+        shifts = np.stack(np.meshgrid(*([np.arange(-2,3)]*3), indexing='ij'),axis=-1).reshape(-1,3)
+        self.assertGreaterEqual(float(np.linalg.norm(shifts[np.any(shifts!=0,axis=1)]@lattice.matrix,axis=-1).min()),.5)
+        self.assertLess(float(np.linalg.norm(np.array([-3,1,0])@lattice.matrix)),.5)
+        with self.assertRaisesRegex(ValueError, '0.5 Angstrom'):
+            MODULE.validate_structure_geometry(crystal)
+
+    def test_basis_and_periodic_translation_preserve_certified_support(self):
+        from pymatgen.core import Lattice, Structure
+        lattice = np.eye(3)*4
+        unimodular = np.array([[1,0,0],[10,1,0],[3,2,1]])
+        coordinates = np.array([[0.,0.,0.],[.5,.5,.5]])
+        changed = unimodular@lattice
+        transformed = coordinates@np.linalg.inv(unimodular)+np.array([3.,-2.,4.])
+        for matrix,coords in ((lattice,coordinates),(changed,transformed)):
+            self.assertGreaterEqual(MODULE.validate_structure_geometry(Structure(Lattice(matrix),['Na','Cl'],coords)),.5)
+
+    def test_contact_work_budget_is_engineering_unknown_not_invalid_geometry(self):
+        from pymatgen.core import Lattice, Structure
+        crystal = Structure(Lattice.cubic(4),['Na'],[[0.,0.,0.]])
+        with patch.dict(MODULE.LABEL_GEOMETRY_PROTOCOL, {'max_pair_images':0}):
+            result = MODULE.label_record({'success':True}, model=None, optimizer=None, structure_factory=lambda _:crystal)
+        self.assertEqual(result['status'],'worker_error')
+        self.assertIsNone(result['terminal_energy'])
 
 
 class Structure:

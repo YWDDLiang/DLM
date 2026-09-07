@@ -45,6 +45,13 @@ def write_json(path, value):
                                     allow_nan=False) + "\n", encoding="utf-8")
 
 
+def atomic_json(path, value):
+    path = Path(path)
+    temporary = path.with_name(path.name+f'.{os.getpid()}.tmp')
+    write_json(temporary, value)
+    os.replace(temporary, path)
+
+
 def write_jsonl(path, rows):
     with Path(path).open("x", encoding="utf-8") as stream:
         for row in rows:
@@ -369,10 +376,11 @@ def main(argv=None):
 
 def expert_args(argv):
     parser = argparse.ArgumentParser(description='Train and validate an offline-supervised autonomous crystal editor')
-    parser.add_argument('--mode', choices=('train', 'verify', 'sample'), default='train')
+    parser.add_argument('--mode', choices=('train', 'verify', 'sample', 'sample-base'), default='train')
     parser.add_argument('--b0-checkpoint', type=Path, required=True)
     parser.add_argument('--model-path', type=Path, required=True)
     parser.add_argument('--checkpoint', type=Path)
+    parser.add_argument('--resume-state', type=Path, help='Explicit optimizer/RNG/data-cursor recovery; otherwise checkpoint is a new-stage warmstart')
     parser.add_argument('--data-dirs', type=Path, nargs='+', required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--updates', type=int, default=160)
@@ -381,17 +389,23 @@ def expert_args(argv):
     parser.add_argument('--learning-rate', type=float, default=5e-5)
     parser.add_argument('--module-learning-rate', type=float, default=1e-4)
     parser.add_argument('--weight-decay', type=float, default=.01)
+    parser.add_argument('--geometry-aux-fraction', type=float, default=.2)
     parser.add_argument('--seed', type=int, default=2026090807)
     parser.add_argument('--max-length', type=int, default=1024)
     parser.add_argument('--smoke-sources', type=int, default=0)
     parser.add_argument('--eval-every', type=int, default=40)
     parser.add_argument('--eval-batches', type=int, default=12)
+    parser.add_argument('--eval-examples', type=int, default=192,
+                        help='Fixed global validation views, independent of GPU count and minibatching')
+    parser.add_argument('--checkpoint-every', type=int, default=400)
+    parser.add_argument('--early-stopping-patience', type=int, default=0)
     parser.add_argument('--time-budget-hours', type=float, default=1.)
     parser.add_argument('--training-seconds-already-used', type=float, default=0.)
     parser.add_argument('--diagnostic-sources', type=int, default=32)
     parser.add_argument('--split', choices=('train', 'dev'), default='dev')
     parser.add_argument('--source-kind', choices=('positive_edit', 'all_old_states'), default='positive_edit')
     parser.add_argument('--block-size', type=int, choices=(1, 4, 8), default=1)
+    parser.add_argument('--sampling-batch-size', type=int, default=8)
     parser.add_argument('--force-mode', choices=('local_xyz', 'all_xyz', 'full_cell'))
     parser.add_argument('--accept-threshold', type=float, default=.5)
     args = parser.parse_args(argv)
@@ -401,8 +415,15 @@ def expert_args(argv):
         parser.error('training must obey the cumulative sixteen-hour cap')
     if args.training_seconds_already_used + 3600 * args.time_budget_hours > 16 * 3600:
         parser.error('requested training exceeds the remaining cumulative training cap')
-    if args.mode != 'train' and args.checkpoint is None:
+    if args.mode in ('verify', 'sample') and args.checkpoint is None:
         parser.error('verification and sampling require an actual editor checkpoint')
+    if args.resume_state is not None and (args.mode != 'train' or args.checkpoint is None):
+        parser.error('complete-state recovery requires training and its associated checkpoint')
+    if args.checkpoint_every < 1 or args.early_stopping_patience < 0 or args.eval_examples < 6:
+        parser.error('invalid checkpoint or early-stopping interval')
+    if args.mode == 'sample-base' and (args.checkpoint is not None or args.force_mode not in ('all_xyz','full_cell')
+                                      or args.source_kind != 'positive_edit'):
+        parser.error('matched B0 controls require the original B0 and a fixed all_xyz/full_cell single-task diagnostic')
     if args.source_kind == 'all_old_states' and args.force_mode is not None:
         parser.error('autonomous old-state evaluation cannot receive a forced teacher scope')
     return args
@@ -502,28 +523,32 @@ def editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
     from crystal_dlm.expert_edit import materialize_edit_batch
     model.eval()
     aggregate = Counter()
+    local_indices = list(range(rank,args.eval_examples,world))
+    mean_fields = ('loss','content_ce','mode_ce','site_bce','quality_bce')
     with torch.no_grad():
-        for i in range(args.eval_batches):
-            rows = [dataset[(i*world+rank)*args.microbatch+j] for j in range(args.microbatch)]
+        for begin in range(0,len(local_indices),args.microbatch):
+            rows = [dataset[index] for index in local_indices[begin:begin+args.microbatch]]
             batch = materialize_edit_batch(rows, tokenizer, device, max_length=args.max_length)
             output = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
             _, metrics = objective(output, batch)
+            for key in mean_fields:
+                metrics[key] *= len(rows)
             aggregate.update(metrics)
     keys = sorted(aggregate)
     vector = torch.tensor([aggregate[key] for key in keys], dtype=torch.float64, device=device)
     if world > 1:
         dist.all_reduce(vector)
     result = dict(zip(keys, vector.cpu().tolist()))
-    for key in ('loss', 'content_ce', 'mode_ce', 'site_bce', 'quality_bce'):
-        result[key] /= args.eval_batches * world
-    for task in ('G', 'S'):
+    for key in mean_fields:
+        result[key] /= args.eval_examples
+    for task in ('G', 'S', 'G_real', 'G_aux', 'S_real', 'S_aux'):
         result[task+'_content_ce'] = (result[task+'_content_ce_sum']/result[task+'_content_views']
                                       if result[task+'_content_views'] else None)
     return result
 
 
 def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, world):
-    from crystal_dlm.expert_edit import edit_structure
+    from crystal_dlm.expert_edit import edit_structures
     from crystal_dlm.expert_edit_data import canonical_body, decode_body, certify_geometry, physics_input
     inverse = {int(value): key for key, value in tokenizer.get_vocab().items()}
     selected, seen = [], set()
@@ -550,14 +575,20 @@ def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, wor
                 break
     selected = selected[:args.diagnostic_sources]
     results, physics = [], []
-    for index, row in enumerate(selected):
-        if index % world != rank:
-            continue
+    local_rows = [(index,row) for index,row in enumerate(selected) if index % world == rank]
+    requests = [{'prompt': row['prompt'], 'body': row['old_body'], 'num_sites': row['num_atoms'],
+                 'tasks': ('G','S') if args.source_kind == 'all_old_states' else (row['task'],),
+                 'seed': args.seed+index} for index,row in local_rows]
+    def progress(completed, total, batches):
+        if completed % 8 == 0 or completed == total:
+            print(json.dumps({'sample_rank': rank, 'completed': completed, 'requested': total,
+                              'forward_batches': batches}), flush=True)
+    sampled = edit_structures(model, tokenizer, requests, allowed_modes=dataset.allowed_modes,
+                               block_size=args.block_size, force_mode=args.force_mode,
+                               accept_threshold=args.accept_threshold, batch_size=args.sampling_batch_size,
+                               progress=progress)
+    for (index, row), output in zip(local_rows, sampled['results']):
         tasks = ('G', 'S') if args.source_kind == 'all_old_states' else (row['task'],)
-        output = edit_structure(model, tokenizer, prompt=row['prompt'], body=row['old_body'],
-                                num_sites=row['num_atoms'], allowed_modes=dataset.allowed_modes,
-                                tasks=tasks, seed=args.seed+index, block_size=args.block_size,
-                                force_mode=args.force_mode, accept_threshold=args.accept_threshold)
         proposal = (output['canonical_body'] if args.source_kind == 'all_old_states' else
                     output['trace'][-1]['proposal_body'] if output['trace'] else row['old_body'])
         arrays = decode_body(proposal, inverse)
@@ -576,7 +607,89 @@ def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, wor
                                      'expert_quantized', arrays, text))
     write_jsonl(args.output_dir/f'samples.rank{rank}.jsonl', results)
     write_jsonl(args.output_dir/f'physics.rank{rank}.jsonl', physics)
+    write_json(args.output_dir/f'sampling.rank{rank}.json', {'forward_batches': sampled['forward_batches'],
+               'forward_rows': sampled['forward_rows'], 'requests': len(local_rows)})
     return len(selected)
+
+
+def cpu_state(value):
+    import torch
+    if isinstance(value, torch.Tensor):
+        return value.detach().cpu()
+    if isinstance(value, dict):
+        return {key: cpu_state(item) for key,item in value.items()}
+    if isinstance(value, list):
+        return [cpu_state(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(cpu_state(item) for item in value)
+    return value
+
+
+def save_editor_training_checkpoint(model, tokenizer, optimizer, path, probe_examples, *, device, rank, world,
+                                    step, example_cursor, cumulative_seconds, contract, best_state, progress_file, grouping):
+    import torch
+    import torch.distributed as dist
+    import numpy as np
+    from crystal_dlm.expert_edit import materialize_edit_batch
+    local_rng = {'python': random.getstate(), 'numpy': np.random.get_state(),
+                 'torch': torch.get_rng_state(), 'cuda': torch.cuda.get_rng_state(device)}
+    rngs = [None]*world
+    if world > 1:
+        dist.all_gather_object(rngs, local_rng)
+    else:
+        rngs[0] = local_rng
+    if rank == 0:
+        path.mkdir(parents=True, exist_ok=False)
+        model.eval()
+        model.save_pretrained(path, safe_serialization=True, save_embedding_layers=False)
+        tokenizer.save_pretrained(path)
+        batch = materialize_edit_batch(probe_examples, tokenizer, device)
+        with torch.no_grad():
+            output = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+        torch.save({'examples': probe_examples, **{name: getattr(output,name).cpu() for name in
+                    ('logits','mode_logits','site_logits','count_logits','quality_logits')}}, path/'roundtrip_probe.pt')
+        files = {file.name: file_sha256(file) for file in path.iterdir() if file.is_file() and
+                 file.suffix in ('.json','.pt','.safetensors')}
+        state = {'schema': 'expert_training_state_v1', 'global_step': step, 'example_cursor': example_cursor,
+                 'cumulative_train_seconds': cumulative_seconds, 'world_size': world, 'contract': contract,
+                 'grouping': grouping,
+                 'model_files_sha256': files, 'optimizer': cpu_state(optimizer.state_dict()), 'rng_states': rngs,
+                 'best_state': best_state, 'progress_file': str(progress_file)}
+        torch.save(state, path/'training_state.pt')
+        write_json(path/'CHECKPOINT_FINAL.json', {key: value for key,value in state.items()
+                   if key not in ('optimizer','rng_states')})
+        (path/'_CHECKPOINT_SUCCESS').touch()
+    if world > 1:
+        dist.barrier()
+
+
+def validate_editor_resume(state, contract, checkpoint, *, verify_files=True):
+    if state.get('schema') != 'expert_training_state_v1' or state.get('contract') != contract:
+        raise ValueError('resume data, optimizer parameter names or learning schedule changed; use an explicit new-stage warmstart')
+    if (type(state.get('global_step')) is not int or state['global_step'] < 0
+            or type(state.get('example_cursor')) is not int or state['example_cursor'] < 0
+            or not 0 <= state.get('cumulative_train_seconds', -1) <= 16*3600):
+        raise ValueError('invalid saved training cursor or cumulative budget')
+    if (not isinstance(state.get('grouping'),dict) or set(state['grouping']) != {'world_size','microbatch','accumulation'}
+            or any(type(value) is not int or value < 1 for value in state['grouping'].values())):
+        raise ValueError('saved optimizer step grouping is incomplete')
+    if verify_files:
+        if not (checkpoint/'_CHECKPOINT_SUCCESS').is_file():
+            raise ValueError('cannot resume an incomplete model/optimizer checkpoint')
+        for name, expected in state['model_files_sha256'].items():
+            if Path(name).name != name or file_sha256(checkpoint/name) != expected:
+                raise ValueError('optimizer state does not belong to the actual saved model files')
+
+
+def editor_selection_score(metrics):
+    dev = metrics.get('dev', metrics)
+    values = [dev.get(key) for key in ('G_real_content_ce','S_real_content_ce')]
+    values = [value for value in values if value is not None]
+    if not values:
+        values = [dev.get(key) for key in ('G_content_ce','S_content_ce') if dev.get(key) is not None]
+    if not values or not all(math.isfinite(value) for value in values):
+        raise ValueError('no finite development content metric for checkpoint selection')
+    return sum(values)/len(values)
 
 
 def expert_main(argv):
@@ -610,8 +723,9 @@ def expert_main(argv):
     model, tokenizer = load_editor_model(args.model_path, args.checkpoint or args.b0_checkpoint,
                                          device, trainable=args.mode == 'train')
     train_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed, split='train',
-                                  smoke_sources=args.smoke_sources)
-    dev_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed+10000, split='dev')
+                                  smoke_sources=args.smoke_sources, geometry_aux_fraction=args.geometry_aux_fraction)
+    dev_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed+10000, split='dev',
+                                 geometry_aux_fraction=args.geometry_aux_fraction)
     train_comps = {row['composition_key'] for row in train_data.records}
     dev_comps = {row['composition_key'] for row in dev_data.records}
     if train_comps & dev_comps:
@@ -619,11 +733,11 @@ def expert_main(argv):
     tables = verify_saved_tables(model, args.b0_checkpoint)
     lora_identity = verify_saved_lora(model, args.checkpoint or args.b0_checkpoint)
     objective = ExpertEditObjective(tokenizer, device)
-    if args.mode == 'sample':
+    if args.mode in ('sample', 'sample-base'):
         model.eval()
         dataset = train_data if args.split == 'train' else dev_data
         # Scope capability is determined by the actual training partition.
-        dataset.allowed_modes = train_data.allowed_modes
+        dataset.allowed_modes = (model.training_modes if args.mode == 'sample' else train_data.allowed_modes)
         requested = sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, world)
         if world > 1:
             dist.barrier()
@@ -637,8 +751,11 @@ def expert_main(argv):
                 write_jsonl(args.output_dir/(name+'.jsonl'), rows)
             write_json(args.output_dir/'SAMPLE_FINAL.json', {'schema': EDITOR_SCHEMA, 'requested': requested,
                        'split': args.split, 'force_mode': args.force_mode, 'block_size': args.block_size,
+                       'sampling_batch_size': args.sampling_batch_size,
+                       'sampling_workers': [read_json(args.output_dir/f'sampling.rank{worker}.json') for worker in range(world)],
                        'source_kind': args.source_kind,
-                       'checkpoint': str(args.checkpoint), 'source_files': dataset.provenance})
+                       'checkpoint': str(args.checkpoint or args.b0_checkpoint),
+                       'frozen_B0_control': args.mode == 'sample-base', 'source_files': dataset.provenance})
             (args.output_dir/'_SUCCESS').touch()
         if world > 1:
             dist.destroy_process_group()
@@ -697,6 +814,60 @@ def expert_main(argv):
     optimizer = torch.optim.AdamW([
         {'params': [p for _, p in partitions['lora']], 'lr': args.learning_rate},
         {'params': [p for _, p in partitions['editor']], 'lr': args.module_learning_rate}], weight_decay=args.weight_decay)
+    model.training_modes = train_data.allowed_modes
+    contract = {'train_files': train_data.provenance, 'dev_files': dev_data.provenance,
+                'smoke_sources': args.smoke_sources,
+                'train_record_ids_sha256': hashlib.sha256(json.dumps(sorted(row['record_id'] for row in train_data.records)).encode()).hexdigest(),
+                'dev_record_ids_sha256': hashlib.sha256(json.dumps(sorted(row['record_id'] for row in dev_data.records)).encode()).hexdigest(),
+                'trainer_source_sha256': file_sha256(Path(__file__)),
+                'editor_source_sha256': file_sha256(Path(sys.modules['crystal_dlm.expert_edit'].__file__)),
+                'seed': args.seed, 'updates': args.updates, 'max_length': args.max_length,
+                'learning_rate': args.learning_rate, 'module_learning_rate': args.module_learning_rate,
+                'weight_decay': args.weight_decay, 'geometry_aux_fraction': args.geometry_aux_fraction,
+                'eval_examples': args.eval_examples,
+                'parameter_names': [name for name,_ in selected]}
+    start_step, example_cursor = 0, 0
+    grouping = {'world_size': world, 'microbatch': args.microbatch, 'accumulation': args.accumulation}
+    previous_grouping, resume_exact_grouping = None, None
+    best_state = {'observed_score': None, 'saved_score': None, 'saved_checkpoint': None, 'bad_evaluations': 0}
+    if args.resume_state is not None:
+        import numpy as np
+        restored = torch.load(args.resume_state, map_location='cpu', weights_only=False)
+        validate_editor_resume(restored, contract, args.checkpoint, verify_files=rank==0)
+        if world > 1:
+            dist.barrier()
+        optimizer.load_state_dict(restored['optimizer'])
+        start_step, example_cursor, best_state = restored['global_step'], restored['example_cursor'], restored['best_state']
+        explicit_used = args.training_seconds_already_used
+        args.training_seconds_already_used = max(explicit_used, restored['cumulative_train_seconds'])
+        progress_path = Path(restored.get('progress_file',''))
+        if progress_path.is_file():
+            try:
+                previous = read_json(progress_path)
+                previous_used = float(previous['cumulative_train_seconds'])
+                if not math.isfinite(previous_used) or previous_used < 0:
+                    raise ValueError('nonfinite or negative training progress')
+                args.training_seconds_already_used = max(args.training_seconds_already_used, previous_used)
+            except (json.JSONDecodeError,KeyError,ValueError,TypeError) as error:
+                if explicit_used <= restored['cumulative_train_seconds']:
+                    raise ValueError('damaged legacy progress requires an audited conservative training-seconds-already-used override') from error
+        previous_grouping = restored['grouping']
+        resume_exact_grouping = previous_grouping == grouping
+        if resume_exact_grouping:
+            rng = restored['rng_states'][rank]
+            random.setstate(rng['python'])
+            np.random.set_state(rng['numpy'])
+            torch.set_rng_state(rng['torch'])
+            torch.cuda.set_rng_state(rng['cuda'],device)
+        else:
+            # The data cursor remains global and exact. A changed allocation is
+            # recorded as a new grouping of the remaining examples, not bitwise replay.
+            random.seed(args.seed+example_cursor+rank)
+            np.random.seed((args.seed+example_cursor+rank)%(2**32))
+            torch.manual_seed(args.seed+example_cursor+rank)
+        del restored
+    if args.training_seconds_already_used+3600*args.time_budget_hours > 16*3600:
+        raise ValueError('recovered usage leaves less than the requested training budget')
     learner = DistributedDataParallel(model, device_ids=[local_rank], broadcast_buffers=False,
                                       static_graph=True) if world > 1 else model
     config = {'schema': EDITOR_SCHEMA, 'world_size': world, 'microbatch': args.microbatch,
@@ -709,6 +880,10 @@ def expert_main(argv):
               'train_sources': len({row['ancestor_id'] for row in train_data.records}),
               'dev_sources': len({row['ancestor_id'] for row in dev_data.records}),
               'positive_edits': {task: len(rows) for task, rows in train_data.content.items()},
+              'initialization_kind': 'complete_state_resume' if args.resume_state else 'new_stage_warmstart' if args.checkpoint else 'original_B0',
+              'start_step': start_step, 'start_example_cursor': example_cursor,
+              'grouping': grouping, 'previous_grouping': previous_grouping, 'resume_exact_grouping': resume_exact_grouping,
+              'checkpoint_selection': 'best_saved_mean_real_G_S_development_content_CE',
               'allowed_modes': train_data.allowed_modes, 'train_files': train_data.provenance,
               'dev_files': dev_data.provenance, 'args': {key: str(value) if isinstance(value, Path) else
               [str(x) for x in value] if key == 'data_dirs' else value for key,value in vars(args).items()}}
@@ -716,22 +891,41 @@ def expert_main(argv):
         write_json(args.output_dir/'TRAIN_CONFIG.json', config)
         print(json.dumps(config), flush=True)
     started = time.monotonic()
-    history, completed = [], 0
-    for step in range(args.updates):
-        stop = torch.tensor(int(time.monotonic()-started+audit_seconds >= args.time_budget_hours*3600), device=device)
+    history, completed = [], start_step
+    reserve_seconds = min(120.,max(5.,args.time_budget_hours*180))
+    frozen_versions = {name:parameter._version for name,parameter in model.named_parameters() if not parameter.requires_grad}
+    progress_file = args.output_dir/'TRAINING_PROGRESS.json'
+    for step in range(start_step,args.updates):
+        stop = torch.tensor(int(time.monotonic()-started+audit_seconds >= args.time_budget_hours*3600-reserve_seconds), device=device)
         if world > 1:
             dist.all_reduce(stop, op=dist.ReduceOp.MAX)
         if int(stop):
             break
-        if step == 0 or step % args.eval_every == 0:
+        if step == start_step or step % args.eval_every == 0 or step % args.checkpoint_every == 0:
             metrics = {split: editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
                        for split, dataset in (('train', train_data), ('dev', dev_data))}
             metrics.update(step=step, seconds=time.monotonic()-started)
             history.append(metrics)
+            score = editor_selection_score(metrics)
+            improved = best_state['observed_score'] is None or score < best_state['observed_score']-1e-4
+            if not (args.resume_state is not None and step == start_step):
+                best_state['bad_evaluations'] = 0 if improved else best_state['bad_evaluations']+1
+            if improved:
+                best_state['observed_score'] = score
+            if step > start_step and step % args.checkpoint_every == 0:
+                checkpoint = args.output_dir/'checkpoints'/f'step-{step:06d}'
+                if best_state['saved_score'] is None or score < best_state['saved_score']:
+                    best_state.update(saved_score=score,saved_checkpoint=str(checkpoint))
+                save_editor_training_checkpoint(model,tokenizer,optimizer,checkpoint,probe_examples,
+                    device=device,rank=rank,world=world,step=step,example_cursor=example_cursor,
+                    cumulative_seconds=args.training_seconds_already_used+time.monotonic()-started+audit_seconds,
+                    contract=contract,best_state=best_state,progress_file=progress_file,grouping=grouping)
             if rank == 0:
                 with (args.output_dir/'curves.jsonl').open('a') as stream:
                     stream.write(json.dumps(metrics)+'\n')
                 print(json.dumps(metrics), flush=True)
+            if args.early_stopping_patience and best_state['bad_evaluations'] >= args.early_stopping_patience:
+                break
         learner.train()
         optimizer.zero_grad(set_to_none=True)
         warmup = min(1., (step+1)/max(5, min(50, args.updates//10)))
@@ -740,7 +934,7 @@ def expert_main(argv):
             group['lr'] = base_lr*warmup*decay
         total_loss = 0.
         for micro in range(args.accumulation):
-            offset = ((step*args.accumulation+micro)*world+rank)*args.microbatch
+            offset = example_cursor+(micro*world+rank)*args.microbatch
             examples = [train_data[offset+i] for i in range(args.microbatch)]
             batch = materialize_edit_batch(examples, tokenizer, device, max_length=args.max_length)
             output = learner(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
@@ -750,28 +944,40 @@ def expert_main(argv):
         norm = torch.nn.utils.clip_grad_norm_([p for _,p in selected], 1., error_if_nonfinite=True)
         optimizer.step()
         completed = step+1
+        example_cursor += args.accumulation*world*args.microbatch
         if rank == 0 and (completed % 10 == 0 or completed == 1):
             print(json.dumps({'step': completed, 'loss': total_loss, 'gradient_norm': float(norm),
                               'seconds': time.monotonic()-started}), flush=True)
+            atomic_json(progress_file, {'global_step': completed, 'example_cursor': example_cursor,
+                       'cumulative_train_seconds': args.training_seconds_already_used+time.monotonic()-started+audit_seconds})
     final_metrics = {split: editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
                      for split, dataset in (('train', train_data), ('dev', dev_data))}
+    if completed <= start_step:
+        raise ValueError('training ended before a new optimizer update')
+    for name,parameter in model.named_parameters():
+        if name in frozen_versions and parameter._version != frozen_versions[name]:
+            raise ValueError('a frozen B0 parameter changed during training')
+    checkpoint = args.output_dir/'checkpoint'
+    score = editor_selection_score(final_metrics)
+    if best_state['saved_score'] is None or score < best_state['saved_score']:
+        best_state.update(saved_score=score,saved_checkpoint=str(checkpoint))
+    save_editor_training_checkpoint(model,tokenizer,optimizer,checkpoint,probe_examples,
+        device=device,rank=rank,world=world,step=completed,example_cursor=example_cursor,
+        cumulative_seconds=args.training_seconds_already_used+time.monotonic()-started+audit_seconds,
+        contract=contract,best_state=best_state,progress_file=progress_file,grouping=grouping)
     elapsed = time.monotonic()-started+audit_seconds
     if rank == 0:
-        if completed < 1:
-            raise ValueError('training budget ended before any optimizer update')
-        checkpoint = args.output_dir/'checkpoint'
-        model.save_pretrained(checkpoint, safe_serialization=True, save_embedding_layers=False)
-        tokenizer.save_pretrained(checkpoint)
-        with torch.no_grad():
-            output = model(probe['input_ids'], attention_mask=probe['attention_mask'], edit_context=probe['edit_context'])
-        torch.save({'examples': probe_examples, **{name: getattr(output,name).cpu() for name in
-                    ('logits', 'mode_logits', 'site_logits', 'count_logits', 'quality_logits')}}, checkpoint/'roundtrip_probe.pt')
         final = {'schema': EDITOR_SCHEMA, 'status': 'complete', 'updates': completed, 'eligible_policy': True,
                  'checkpoint': str(checkpoint), 'train_seconds': elapsed,
+                 'selected_checkpoint': best_state['saved_checkpoint'], 'best_saved_dev_score': best_state['saved_score'],
+                 'new_updates': completed-start_step, 'example_cursor': example_cursor,
                  'cumulative_train_seconds': elapsed+args.training_seconds_already_used,
                  'parameters': config['parameters'], 'metrics': final_metrics,
-                 'roundtrip_verified': False, 'free_running_validated': False}
+                 'roundtrip_verified': False, 'mandatory_roundtrip_on_every_load': True, 'free_running_validated': False}
         write_json(args.output_dir/'TRAIN_FINAL.json', final)
+        atomic_json(progress_file, {'global_step': completed, 'example_cursor': example_cursor,
+                   'cumulative_train_seconds': args.training_seconds_already_used+elapsed})
+        (args.output_dir/'POLICY_PATH').write_text(best_state['saved_checkpoint']+'\n')
         (args.output_dir/'_SUCCESS').touch()
         print(json.dumps(final), flush=True)
     if world > 1:

@@ -8,6 +8,17 @@ TERMINAL_VERIFICATION_PROTOCOL = {
     "fresh_terminal_energy": True, "periodic_coordinate_wrap": True,
     "rigid_fractional_shift": [.137, .271, .419], "energy_tolerance_eV_atom": .001,
 }
+COMMON_RELAXATION_PROTOCOL = {
+    'model': 'CHGNet-0.3.0', 'optimizer': 'FIRE', 'relax_cell': True,
+    'ase_filter': 'FrechetCellFilter', 'fmax': .1, 'scalar_pressure': 0.,
+    'constant_volume': False, 'hydrostatic_strain': False, 'cell_mask': 'all_six',
+    'fire_dt': .1, 'fire_maxstep': .2, 'stress_tolerance_GPa': .5, 'max_steps': 500,
+}
+LABEL_GEOMETRY_PROTOCOL = {
+    'minimum_periodic_distance_A': .5, 'distance_tolerance_A': 1e-8,
+    'minimum_volume_A3': 1e-10, 'lattice_basis': 'LLL_unimodular',
+    'contact_enumeration': 'complete_reciprocal_bound', 'max_pair_images': 4_000_000,
+}
 
 
 def compare_energies(stored, fresh, *, tolerance=.001):

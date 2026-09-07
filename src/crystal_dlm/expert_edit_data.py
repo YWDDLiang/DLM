@@ -13,6 +13,8 @@ import hashlib
 import itertools
 import json
 import math
+import copy
+import random
 from pathlib import Path
 from typing import Mapping
 
@@ -20,19 +22,13 @@ import numpy as np
 
 from crystal_dlm.dynamic_crystal import arrays_to_dynamic_tokens, parse_dynamic_answer, arrays_to_structure
 from crystal_dlm.fixed_slot import FixedSlotConfig, Z_TO_SYMBOL
-from crystal_dlm.terminal_energy_consistency import TERMINAL_VERIFICATION_PROTOCOL
+from crystal_dlm.terminal_energy_consistency import COMMON_RELAXATION_PROTOCOL, TERMINAL_VERIFICATION_PROTOCOL
 
 
 SCHEMA = 'expert_crystal_edit_v1'
 GEOMETRY_PROTOCOL = {'minimum_distance_A': .5, 'minimum_volume_A3': .1,
                      'image_bound': 'reciprocal_column_norm_complete_for_contact_cutoff',
                      'max_pair_images': 4_000_000, 'tolerance_A': 1e-8}
-COMMON_RELAXATION_PROTOCOL = {
-    'model': 'CHGNet-0.3.0', 'optimizer': 'FIRE', 'relax_cell': True,
-    'ase_filter': 'FrechetCellFilter', 'fmax': .1, 'scalar_pressure': 0.,
-    'constant_volume': False, 'hydrostatic_strain': False, 'cell_mask': 'all_six',
-    'fire_dt': .1, 'fire_maxstep': .2, 'stress_tolerance_GPa': .5, 'max_steps': 500,
-}
 
 
 def read_rows(path):
@@ -563,9 +559,145 @@ def compile_collection(prepared, labels_dir, output, *, margin=.01, exclude_work
     return report
 
 
+def geometry_auxiliary_examples(clean, vocabulary, rng):
+    """Local, cooperative, all-coordinate and lattice-coupled witnessed repairs."""
+    target, target_arrays, _ = quantize_arrays(clean, vocabulary)
+    target_geometry = certify_geometry(target_arrays)
+    if target_geometry['valid'] is not True or not target_geometry['certified']:
+        return []
+    n, examples = len(clean['species']), []
+    inverse_lattice = np.linalg.inv(lattice_from_parameters(target_arrays['lengths'], target_arrays['angles']))
+    def near(point):
+        if rng.random() < .3:
+            return list(point)
+        direction = np.asarray([rng.uniform(-1,1) for _ in range(3)])
+        direction /= max(float(np.linalg.norm(direction)), 1e-12)
+        delta = (direction*rng.uniform(.03,.13))@inverse_lattice
+        return np.mod(np.asarray(point)+delta,1.).tolist()
+    buckets = ('single_site','cooperative_sites','all_xyz','lattice_coupled') if n > 1 else ('lattice_coupled',)
+    for bucket in buckets:
+        damaged = copy.deepcopy(target_arrays)
+        sites = []
+        if bucket == 'single_site':
+            selected, anchor = rng.sample(range(n),2)
+            sites = [selected]
+            damaged['frac_coords'][selected] = near(target_arrays['frac_coords'][anchor])
+            mode = 'local_xyz'
+        elif bucket in ('cooperative_sites','all_xyz'):
+            choices = [k for k in (2,4,8) if k <= n]
+            sites = sorted(rng.sample(range(n), rng.choice(choices))) if bucket == 'cooperative_sites' else list(range(n))
+            point = rng.choice(target_arrays['frac_coords'])
+            for site in sites:
+                damaged['frac_coords'][site] = near(point)
+            mode = 'all_xyz' if len(sites) == n else 'local_xyz'
+        else:
+            # Two different failures prevent the geometry branch from learning
+            # only one artificial token signature. Nonselected coordinates are
+            # exact copy targets, so the old state is useful for reconstruction.
+            if rng.random() < .5:
+                damaged['lengths'][rng.randrange(3)] = rng.choice((.1,.2,.3,.4))
+            else:
+                alpha, beta = rng.randint(30,80), rng.randint(30,80)
+                damaged['angles'] = [float(alpha),float(beta),float(alpha+beta+rng.randint(1,8))]
+            if n > 1:
+                sites = sorted(rng.sample(range(n),2))
+                damaged['frac_coords'][sites[0]] = near(target_arrays['frac_coords'][sites[1]])
+            mode = 'full_cell'
+        old, old_arrays, _ = quantize_arrays(damaged, vocabulary)
+        old_geometry = certify_geometry(old_arrays)
+        if old_geometry['valid'] is not False or not old_geometry['certified']:
+            continue
+        positions = ([1,2,3,4,5,6] if mode == 'full_cell' else [])
+        active_sites = list(range(n)) if mode in ('full_cell','all_xyz') else sites
+        positions += [8+4*site+axis for site in active_sites for axis in range(3)]
+        changed = [i for i,(a,b) in enumerate(zip(old,target)) if a != b]
+        if not changed or not set(changed).issubset(positions):
+            raise ValueError('quantized auxiliary corruption escaped its declared correction scope')
+        if mode == 'local_xyz' and len(sites) not in (1,2,4,8):
+            raise ValueError('unregistered cooperative repair size')
+        examples.append({'bucket': bucket, 'old_body': old, 'target_body': target,
+                         'old_geometry': old_geometry, 'target_geometry': target_geometry,
+                         'action': {'mode': mode, 'sites': active_sites, 'positions': positions,
+                                    'changed_positions': changed, 'changed_sites': sorted({(i-8)//4 for i in changed if i>=8})}})
+    return examples
+
+
+def build_geometry_auxiliary(source_path, source_sha256, heldout_cohort, heldout_sha256, tokenizer,
+                             output, *, source_limit=2048, seed=20260908):
+    """Use only clean MP20 TRAIN token bodies; discard all GT-derived soft hints."""
+    if source_limit < 1:
+        raise ValueError('a positive independent auxiliary source count is required')
+    if sha256(source_path) != source_sha256 or sha256(heldout_cohort) != heldout_sha256:
+        raise ValueError('MP20 training source or excluded evaluation cohort changed')
+    from crystal_dlm.r5_plan_state import build_hard_anchor_body_prompt
+    forbidden = {composition_key(row['plan_state']) for row in read_rows(heldout_cohort) if row.get('plan_state')}
+    candidates = read_rows(source_path)
+    ids = [row['source_row_idx'] for row in candidates]
+    if len(set(ids)) != len(ids) or any(row.get('source_split') != 'train' or
+                  row.get('closure',{}).get('source_answer_is_clean_teacher') is not True for row in candidates):
+        raise ValueError('auxiliary sources must be distinct declared clean training examples')
+    candidates.sort(key=lambda row: hashlib.sha256(f'{seed}:{row["source_row_idx"]}'.encode()).hexdigest())
+    vocabulary = tokenizer.get_vocab()
+    records, exclusions, sources, splits = [], Counter(), 0, Counter()
+    for row in candidates:
+        if sources >= source_limit:
+            break
+        try:
+            clean = parse_dynamic_answer(row['source_answer'], strict=True)
+            key = composition_key(clean['species'])
+            if key in forbidden:
+                exclusions['evaluation_composition'] += 1
+                continue
+            seed_value = int(hashlib.sha256(f'{seed}:{row["source_row_idx"]}:corruption'.encode()).hexdigest()[:16],16)
+            examples = geometry_auxiliary_examples(clean, vocabulary, random.Random(seed_value))
+            if not examples:
+                exclusions['no_certified_target_and_recovery'] += 1
+                continue
+        except (ValueError,KeyError,TypeError,IndexError) as error:
+            exclusions[type(error).__name__] += 1
+            continue
+        counts = Counter(clean['species'])
+        plan = {'N': len(clean['species']), 'elements': list(counts), 'counts': list(counts.values()),
+                'formula': ''.join(symbol+(str(count) if count != 1 else '') for symbol,count in counts.items())}
+        split = 'dev' if int(hashlib.sha256(key.encode()).hexdigest()[:8],16)%8 == 0 else 'train'
+        ancestor = f'mp20-geometry:{source_sha256[:16]}:{row["source_row_idx"]}'
+        shared = {'schema': SCHEMA, 'ancestor_id': ancestor, 'source_kind': 'mp20_geometry_auxiliary',
+                  'source_split': split, 'source_row_idx': row['source_row_idx'], 'composition_key': key,
+                  'plan_state': plan, 'prompt': build_hard_anchor_body_prompt(plan).rstrip()+'\n',
+                  'num_atoms': plan['N'], 'task': 'G', 'old_reliable': None, 'target_reliable': None,
+                  'old_physics_id': None, 'target_physics_id': None, 'gain_eV_atom': None,
+                  'GT_soft_hints_used': False, 'source_clean_body_sha256': hashlib.sha256(row['source_answer'].encode()).hexdigest()}
+        for example in examples:
+            records.append({**shared, **example, 'record_id': 'G:'+example['bucket']+':'+ancestor,
+                            'content_supervision': True, 'accept_label': True,
+                            'label_reason': 'certified_local_geometry_recovery', 'teacher_available': True})
+        clean_body, clean_geometry = examples[0]['target_body'], examples[0]['target_geometry']
+        records.append({**shared, 'record_id': 'state:'+ancestor, 'state_only': True,
+                        'old_body': clean_body, 'old_geometry': clean_geometry,
+                        'content_supervision': False, 'accept_label': None, 'label_reason': 'geometry_only_clean_state'})
+        sources += 1
+        splits[split] += 1
+    if sources < source_limit:
+        raise ValueError(f'only {sources}/{source_limit} independent certified auxiliary sources are available')
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=False)
+    for split in ('train','dev'):
+        write_rows(output/(split+'.jsonl'), [row for row in records if row['source_split']==split])
+    write_rows(output/'outcomes.jsonl', [])
+    report = {'schema': SCHEMA, 'records': len(records), 'admitted_sources': sources, 'splits': dict(splits),
+              'counts': dict(Counter(row.get('bucket','state') for row in records)), 'exclusions': dict(exclusions),
+              'source_sha256': source_sha256, 'heldout_sha256': heldout_sha256, 'seed': seed,
+              'geometry_protocol': GEOMETRY_PROTOCOL, 'content_task': 'G_only', 'physical_energy_supervision': False,
+              'GT_soft_hints_used': False, 'identity_teaches_S_stop': False,
+              'output_sha256': {name: sha256(output/name) for name in ('train.jsonl','dev.jsonl','outcomes.jsonl')}}
+    write_json(output/'DATA_FINAL.json', report)
+    (output/'_SUCCESS').touch()
+    return report
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', choices=('prepare', 'compile'), default='prepare')
+    parser.add_argument('--mode', choices=('prepare', 'compile', 'geometry-auxiliary'), default='prepare')
     parser.add_argument('--collection-manifest', type=Path)
     parser.add_argument('--heldout-cohort', type=Path)
     parser.add_argument('--b0-checkpoint', type=Path)
@@ -574,9 +706,23 @@ def main(argv=None):
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--limit', type=int)
     parser.add_argument('--min-index', type=int, default=0)
+    parser.add_argument('--source-path', type=Path)
+    parser.add_argument('--source-sha256')
+    parser.add_argument('--heldout-cohort-sha256')
+    parser.add_argument('--source-limit', type=int, default=2048)
+    parser.add_argument('--seed', type=int, default=20260908)
     parser.add_argument('--exclude-worker-errors', action='store_true',
                         help='Training only: exclude entire unresolved ancestors from a fully accounted label run')
     args = parser.parse_args(argv)
+    if args.mode == 'geometry-auxiliary':
+        if None in (args.source_path,args.source_sha256,args.heldout_cohort,args.heldout_cohort_sha256,args.b0_checkpoint):
+            parser.error('geometry auxiliary needs pinned clean source, heldout cohort, and the B0 tokenizer')
+        from transformers import AutoTokenizer
+        tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint, trust_remote_code=True, local_files_only=True)
+        print(json.dumps(build_geometry_auxiliary(args.source_path,args.source_sha256,args.heldout_cohort,
+                         args.heldout_cohort_sha256,tokenizer,args.output_dir,
+                         source_limit=args.source_limit,seed=args.seed)), flush=True)
+        return
     if args.mode == 'compile':
         if args.prepared_dir is None or args.labels_dir is None:
             parser.error('compile requires prepared-dir and labels-dir')

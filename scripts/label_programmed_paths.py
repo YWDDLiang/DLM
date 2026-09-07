@@ -3,16 +3,14 @@
 from __future__ import annotations
 
 import argparse
-from collections import deque
 from functools import partial
 import gzip
 import hashlib
 import importlib.metadata
 import importlib
+import itertools
 import json
 import math
-import multiprocessing as mp
-from multiprocessing.connection import wait as wait_connections
 import os
 from pathlib import Path
 import sys
@@ -24,7 +22,7 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 import numpy as np
-from crystal_dlm.terminal_energy_consistency import TERMINAL_VERIFICATION_PROTOCOL, check_terminal_energy
+from crystal_dlm.terminal_energy_consistency import LABEL_GEOMETRY_PROTOCOL, TERMINAL_VERIFICATION_PROTOCOL, check_terminal_energy
 
 EV_A3_TO_GPA = 160.21766208
 _MODEL = None
@@ -72,23 +70,57 @@ def structure_from_record(record):
     return arrays_to_structure(parse_dynamic_answer(record["body"], strict=True))
 
 
+class GeometryCertificationUnavailable(RuntimeError):
+    pass
+
+
 def validate_structure_geometry(structure):
     lattice, coords = array(structure.lattice.matrix), array(structure.frac_coords)
     if lattice.shape != (3, 3) or coords.shape != (int(structure.num_sites), 3):
         raise ValueError("invalid periodic geometry dimensions")
-    if not np.isfinite(lattice).all() or not np.isfinite(coords).all() or abs(np.linalg.det(lattice)) <= 1e-10:
+    volume = float(abs(np.linalg.det(lattice)))
+    if (not np.isfinite(lattice).all() or not np.isfinite(coords).all()
+            or not math.isfinite(volume) or volume <= 1e-10):
         raise ValueError("nonfinite or degenerate periodic structure")
-    shifts = np.stack(np.meshgrid(*([np.arange(-2, 3)] * 3), indexing="ij"), axis=-1).reshape(-1, 3)
-    self_images = shifts[np.any(shifts != 0, axis=1)] @ lattice
-    minimum = float(np.linalg.norm(self_images, axis=-1).min())
-    if len(coords) > 1:
-        delta = coords[:, None, :] - coords[None, :, :]
-        delta -= np.round(delta)
-        distances = np.linalg.norm((delta[:, :, None, :] + shifts) @ lattice, axis=-1).min(axis=-1)
-        np.fill_diagonal(distances, np.inf)
-        minimum = min(minimum, float(distances.min()))
-    if minimum < .5 - 1e-8:
-        raise ValueError("periodic geometry violates the common 0.5 Angstrom support")
+    from pymatgen.core import Lattice
+    try:
+        reduced = np.asarray(Lattice(lattice).get_lll_reduced_lattice().matrix)
+        transform = reduced@np.linalg.inv(lattice)
+        rounded = np.rint(transform)
+        if not np.isfinite(transform).all() or np.max(np.abs(rounded))>1_000_000_000 or not np.allclose(transform,rounded,rtol=0,atol=1e-7):
+            raise GeometryCertificationUnavailable('LLL basis change is not certified integral')
+        a,b,c,d,e,f,g,h,i = map(int,rounded.reshape(-1))
+        if abs(a*(e*i-f*h)-b*(d*i-f*g)+c*(d*h-e*g)) != 1:
+            raise GeometryCertificationUnavailable('LLL basis change is not unimodular')
+        inverse = np.linalg.inv(reduced)
+        reduced_coords = (np.mod(coords,1.)@lattice)@inverse
+        radii_float = np.ceil(.5+.5*np.linalg.norm(inverse,axis=0)+1e-12)
+        if not np.isfinite(radii_float).all() or np.max(radii_float)>1_000_000:
+            raise GeometryCertificationUnavailable('periodic contact bound is not numerically established')
+    except (ValueError,np.linalg.LinAlgError,ArithmeticError) as error:
+        raise GeometryCertificationUnavailable('periodic contact reduction could not be certified') from error
+    minimum = float(np.linalg.norm(reduced,axis=-1).min())
+    if minimum < .5-1e-8:
+        raise ValueError('periodic geometry violates the common 0.5 Angstrom support')
+    radii = radii_float.astype(int)
+    images = math.prod(2*int(radius)+1 for radius in radii)
+    if len(coords)**2*images > LABEL_GEOMETRY_PROTOCOL['max_pair_images']:
+        raise GeometryCertificationUnavailable('periodic contact certification exceeded its explicit work budget')
+    delta = reduced_coords[:,None]-reduced_coords[None,:]
+    delta -= np.round(delta)
+    shifts = itertools.product(*(range(-int(radius),int(radius)+1) for radius in radii))
+    while True:
+        chunk = list(itertools.islice(shifts,256))
+        if not chunk:
+            break
+        offsets = np.asarray(chunk,dtype=float)
+        distances = np.linalg.norm((delta[:,:,None,:]+offsets)@reduced,axis=-1)
+        zero = np.flatnonzero((offsets==0).all(-1))
+        if len(zero):
+            distances[np.arange(len(coords)),np.arange(len(coords)),int(zero[0])] = np.inf
+        minimum = min(minimum,float(distances.min()))
+        if minimum < .5-1e-8:
+            raise ValueError('periodic geometry violates the common 0.5 Angstrom support')
     return minimum
 
 
@@ -109,6 +141,9 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
         if count < 1:
             raise ValueError("empty structure")
         result["raw_min_distance_A"] = validate_structure_geometry(structure)
+    except GeometryCertificationUnavailable as error:
+        result.update(status='worker_error', error=f'{type(error).__name__}: {error}')
+        return result
     except Exception as error:
         result.update(status="invalid_raw", error=f"{type(error).__name__}: {error}")
         return result
@@ -176,6 +211,8 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
             result["status"] = "terminal_consistency_unverified"
         else:
             result["status"] = "verified"
+    except GeometryCertificationUnavailable as error:
+        result.update(status='worker_error', verified=False, error=f'{type(error).__name__}: {error}')
     except Exception as error:
         result.update(status="evaluation_error", verified=False, error=f"{type(error).__name__}: {error}")
     return result
@@ -264,94 +301,18 @@ def _isolated_worker(connection, gpu_index, options):
 
 
 def bounded_labels(by_endpoint, args, *, worker_target=_isolated_worker):
-    """Yield every endpoint exactly once, with engineering timeouts as unknown.
-
-    The timer starts when a ready process receives its one active record, so
-    queued records never use another record's time budget. Physical parameters
-    and the underlying label function are unchanged.
-    """
-    context = mp.get_context('spawn')
-    pending = deque(by_endpoint.items())
-    slots = []
-    def stop(slot):
-        process = slot['process']
-        if process.is_alive():
-            process.terminate()
-        process.join(timeout=2)
-        if process.is_alive():
-            process.kill()
-            process.join(timeout=2)
-        slot['connection'].close()
-    def start(gpu):
-        parent, child = context.Pipe()
-        process = context.Process(target=worker_target,
-            args=(child, gpu, (args.fmax, args.stress_tolerance, args.max_steps)))
-        process.start()
-        child.close()
-        return {'gpu': gpu, 'process': process, 'connection': parent, 'ready': False,
-                'active': None, 'started': time.monotonic()}
-    def failure(message):
-        return {'status': 'worker_error', 'error': message, 'verified': False,
-                'raw_energy': None, 'terminal_energy': None, 'gap': None,
-                'raw': None, 'terminal': None, 'actual_steps': None,
-                'optimizer_converged': None, 'final_structure': None}
-    try:
-        for gpu in range(args.gpu_count):
-            for _ in range(args.workers_per_gpu):
-                if len(slots) < len(by_endpoint):
-                    slots.append(start(gpu))
-        while pending or any(slot['active'] is not None for slot in slots):
-            ready_connections = set(wait_connections([slot['connection'] for slot in slots], timeout=.1))
-            replacements = []
-            for index, slot in enumerate(slots):
-                restart, completed = False, None
-                if slot['connection'] in ready_connections:
-                    try:
-                        message = slot['connection'].recv()
-                        if message.get('ready'):
-                            slot['ready'] = True
-                        elif 'result' in message and slot['active'] is not None:
-                            completed = message['result']
-                            restart = completed['status'] == 'worker_error'
-                    except (EOFError, OSError):
-                        if slot['active'] is None:
-                            raise RuntimeError('physics worker failed during initialization')
-                        completed = failure('physics worker exited before producing its active result')
-                        restart = True
-                if completed is None:
-                    elapsed = time.monotonic()-slot['started']
-                    if not slot['ready'] and elapsed > args.worker_startup_timeout:
-                        raise RuntimeError('physics worker initialization timed out')
-                    if slot['active'] is not None and elapsed > args.record_timeout:
-                        completed = failure(f'physics worker exceeded {args.record_timeout:g}s for its active record')
-                        restart = True
-                    elif not slot['process'].is_alive():
-                        if slot['active'] is None:
-                            raise RuntimeError('physics worker exited while idle')
-                        completed = failure('physics worker process terminated unexpectedly')
-                        restart = True
-                if completed is not None:
-                    key, occurrences = slot['active']
-                    slot['active'] = None
-                    yield key, occurrences, completed
-                if restart:
-                    stop(slot)
-                    if pending:
-                        replacements.append((index, start(slot['gpu'])))
-                    else:
-                        replacements.append((index, None))
-                elif slot['ready'] and slot['active'] is None and pending:
-                    slot['active'] = pending.popleft()
-                    slot['connection'].send(slot['active'][1][0])
-                    slot['started'] = time.monotonic()
-            for index, replacement in reversed(replacements):
-                if replacement is None:
-                    slots.pop(index)
-                else:
-                    slots[index] = replacement
-    finally:
-        for slot in slots:
-            stop(slot)
+    from crystal_dlm.isolated_workers import isolated_results
+    options = (args.fmax, args.stress_tolerance, args.max_steps)
+    arguments = [(gpu, options) for gpu in range(args.gpu_count) for _ in range(args.workers_per_gpu)]
+    tasks = [(key, occurrences[0]) for key, occurrences in by_endpoint.items()]
+    for key, _, result in isolated_results(tasks, worker_target=worker_target, worker_arguments=arguments,
+                                           task_timeout=args.record_timeout,
+                                           startup_timeout=args.worker_startup_timeout):
+        if result.get('status') == 'worker_error':
+            result = {'raw_energy': None, 'terminal_energy': None, 'gap': None, 'verified': False,
+                      'raw': None, 'terminal': None, 'actual_steps': None, 'optimizer_converged': None,
+                      'final_structure': None, **result}
+        yield key, by_endpoint[key], result
 
 
 def main():
@@ -411,26 +372,26 @@ def main():
     completed = 0
     versions_seen = {}
     with (args.output_dir / "labels.jsonl").open("x", encoding="utf-8") as handle:
-            for key, occurrences, result in bounded_labels(by_endpoint, args):
-                trajectory = result.pop("relaxation_trajectory", None)
-                if result.get('versions'):
-                    versions_seen[json.dumps(result['versions'], sort_keys=True)] = result['versions']
-                if trajectory is not None:
-                    destination = args.output_dir / "trajectories" / f"{key}.json.gz"
-                    with gzip.open(destination, "wt", encoding="utf-8") as stream:
-                        json.dump(trajectory, stream)
-                    result["trajectory_file"] = str(destination)
-                for occurrence in occurrences:
-                    labelled = dict(result, **{name: occurrence.get(name) for name in
-                                    ("trajectory_id", "group_id", "source_row_idx", "source_split", "endpoint")})
-                    labelled["endpoint_cache_key"] = key
-                    handle.write(json.dumps(labelled, default=json_default) + "\n")
-                    counts[result["status"]] = counts.get(result["status"], 0) + 1
-                    completed += 1
-                handle.flush()
-                if completed % 64 == 0:
-                    print(json.dumps({"completed": completed, "requested": len(records), "statuses": counts,
-                                      "seconds": time.monotonic() - started}), flush=True)
+        for key, occurrences, result in bounded_labels(by_endpoint, args):
+            trajectory = result.pop("relaxation_trajectory", None)
+            if result.get('versions'):
+                versions_seen[json.dumps(result['versions'], sort_keys=True)] = result['versions']
+            if trajectory is not None:
+                destination = args.output_dir / "trajectories" / f"{key}.json.gz"
+                with gzip.open(destination, "wt", encoding="utf-8") as stream:
+                    json.dump(trajectory, stream)
+                result["trajectory_file"] = str(destination)
+            for occurrence in occurrences:
+                labelled = dict(result, **{name: occurrence.get(name) for name in
+                                ("trajectory_id", "group_id", "source_row_idx", "source_split", "endpoint")})
+                labelled["endpoint_cache_key"] = key
+                handle.write(json.dumps(labelled, default=json_default) + "\n")
+                counts[result["status"]] = counts.get(result["status"], 0) + 1
+                completed += 1
+            handle.flush()
+            if completed % 64 == 0:
+                print(json.dumps({"completed": completed, "requested": len(records), "statuses": counts,
+                                  "seconds": time.monotonic() - started}), flush=True)
     report = {"requested": len(records), "completed": completed, "statuses": counts,
               "verification_protocol": TERMINAL_VERIFICATION_PROTOCOL,
               "distinct_endpoint_evaluations": len(by_endpoint),
@@ -447,6 +408,8 @@ def main():
                                        'timeout_is_physical_failure': False}
     report['runtime_identities'] = list(versions_seen.values())
     report['input_sha256'] = hashlib.sha256(args.input_jsonl.read_bytes()).hexdigest()
+    report['input_file'] = str(args.input_jsonl.resolve())
+    report['geometry_validation_protocol'] = LABEL_GEOMETRY_PROTOCOL
     (args.output_dir / "LABEL_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     if counts.get('worker_error', 0):
         (args.output_dir / '_ENGINEERING_FAILED').touch()

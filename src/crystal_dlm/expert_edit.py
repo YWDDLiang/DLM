@@ -193,7 +193,8 @@ class ExpertEditDLM(StateConditionedDLM):
     def save_pretrained(self, output_dir, **kwargs):
         super().save_pretrained(output_dir, **kwargs)
         root = Path(output_dir)
-        (root / 'EXPERT_EDITOR.json').write_text(json.dumps({'schema': EDITOR_SCHEMA}) + '\n')
+        (root / 'EXPERT_EDITOR.json').write_text(json.dumps({'schema': EDITOR_SCHEMA,
+                         'allowed_modes': getattr(self, 'training_modes', None)}) + '\n')
         (root / 'expert_edit_config.json').write_text(json.dumps(asdict(self.editor_config), indent=2) + '\n')
         torch.save({name: module.state_dict() for name, module in self.extra_modules().items()},
                    root / 'expert_edit_modules.pt')
@@ -242,12 +243,34 @@ def load_editor_model(model_path, checkpoint, device, *, trainable=False):
     else:
         model.requires_grad_(False)
     model.eval()
+    if marker.exists():
+        capability = json.loads((root/'EXPERT_EDITOR.json').read_text()).get('allowed_modes')
+        if capability is None:
+            for parent in (root.parent, root.parent.parent):
+                config_path = parent/'TRAIN_CONFIG.json'
+                if config_path.is_file():
+                    capability = json.loads(config_path.read_text()).get('allowed_modes')
+                    break
+        if (not isinstance(capability, dict) or set(capability) != {'G','S'} or
+                any(type(mode) is not int or not 0 <= mode < len(MODE_NAMES) for modes in capability.values() for mode in modes)):
+            raise ValueError('trained editor action capabilities are missing or invalid')
+        model.training_modes = capability
+        probe_path = root/'roundtrip_probe.pt'
+        if not probe_path.is_file():
+            raise ValueError('editor checkpoint lacks its required reload verification probe')
+        probe = torch.load(probe_path, map_location='cpu', weights_only=False)
+        batch = materialize_edit_batch(probe['examples'], tokenizer, device)
+        with torch.no_grad():
+            actual = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+        if any(not torch.equal(getattr(actual,name).cpu(), probe[name]) for name in
+               ('logits','mode_logits','site_logits','count_logits','quality_logits')):
+            raise ValueError('loaded editor differs from its recorded content/decision probe')
+        model.reload_verified = True
     return model, tokenizer
 
 
 def reverse_geometry_example(record):
     """A witnessed G recovery supplies its reverse rejection without new physics."""
-    from crystal_dlm.expert_edit_data import full_action
     row = dict(record)
     row.update(record_id='reverse:' + record['record_id'], old_body=record['target_body'],
                target_body=record['old_body'], old_geometry=record['target_geometry'],
@@ -255,15 +278,19 @@ def reverse_geometry_example(record):
                target_reliable=record.get('old_reliable'), old_physics_id=record.get('target_physics_id'),
                target_physics_id=record.get('old_physics_id'), content_supervision=False,
                accept_label=False, label_reason='reverse_witnessed_G_recovery', gain_eV_atom=None)
-    row['action'] = full_action(row['old_body'], row['target_body'], row['num_atoms'])
+    row['action'] = {key: list(value) if isinstance(value,list) else value for key,value in record['action'].items()}
     return row
 
 
 class ExpertEditDataset(Dataset):
     """Explicit sampling of content, scope/state and complete-proposal decisions."""
-    def __init__(self, data_dirs, tokenizer, *, seed=20260908, size=10000, split='train', smoke_sources=0):
+    def __init__(self, data_dirs, tokenizer, *, seed=20260908, size=10000, split='train', smoke_sources=0,
+                 geometry_aux_fraction=.2):
         from crystal_dlm.expert_edit_data import SCHEMA, read_rows, sha256
         self.seed, self.size, self.epoch, self.tokenizer = int(seed), int(size), 0, tokenizer
+        if not 0 <= geometry_aux_fraction <= 1:
+            raise ValueError('invalid auxiliary data fraction')
+        self.geometry_aux_fraction, self._source_pools = geometry_aux_fraction, {}
         records, provenance = [], []
         for directory in map(Path, data_dirs):
             if not (directory / '_SUCCESS').is_file():
@@ -316,7 +343,17 @@ class ExpertEditDataset(Dataset):
 
     def _choose_content(self, rng):
         task = 'S' if self.content['S'] and rng.random() < .3 else 'G'
-        return rng.choice(self.content[task] or self.positive)
+        return self._draw(self.content[task] or self.positive, rng)
+
+    def _draw(self, rows, rng):
+        key = id(rows)
+        if key not in self._source_pools:
+            auxiliary = [row for row in rows if row.get('source_kind') == 'mp20_geometry_auxiliary']
+            real = [row for row in rows if row.get('source_kind') != 'mp20_geometry_auxiliary']
+            self._source_pools[key] = real, auxiliary
+        real, auxiliary = self._source_pools[key]
+        pool = auxiliary if real and auxiliary and rng.random() < self.geometry_aux_fraction else real
+        return rng.choice(pool or auxiliary)
 
     def __getitem__(self, index):
         value = hashlib.sha256(f'{self.seed}:{self.epoch}:{index}'.encode()).digest()[:8]
@@ -325,14 +362,14 @@ class ExpertEditDataset(Dataset):
         if choice < .65:
             row, view = self._choose_content(rng), 'content'
         elif choice < .82:
-            row = rng.choice(self.states) if self.states and rng.random() < .35 else rng.choice(self.positive)
+            row = self._draw(self.states, rng) if self.states and rng.random() < .35 else self._draw(self.positive, rng)
             view = 'inspect'
             if row.get('state_only') and rng.random() < .5:
                 # Old-only bad/unknown states train S admission too. S receives
                 # quality labels here, never a fabricated NONE/stop target.
                 row = dict(row, task='S')
         else:
-            row = rng.choice(self.negative) if self.negative and rng.random() < .5 else rng.choice(self.positive)
+            row = self._draw(self.negative, rng) if self.negative and rng.random() < .5 else self._draw(self.positive, rng)
             view = 'judge'
         return make_edit_view(row, view, rng, self.prefixes[row['prompt']])
 
@@ -394,6 +431,7 @@ def make_edit_view(record, kind, rng, prefix):
     else:
         raise ValueError('unknown editor view')
     return {'record_id': record['record_id'], 'ancestor_id': record['ancestor_id'], 'kind': kind,
+            'source_kind': record.get('source_kind'),
             'prefix': list(prefix), 'old_body': old, 'input_body': current, 'targets': targets,
             'active': active, 'num_sites': n, 'task': task, 'remaining': remaining, 'reveal': reveal,
             'mode_target': mode, 'site_targets': sites, 'count_target': count, 'quality_targets': quality}
@@ -508,6 +546,13 @@ class ExpertEditObjective:
             selected = (context.task_ids == task_id) & (counts > 0)
             stats[name + '_content_views'] = int(selected.sum())
             stats[name + '_content_ce_sum'] = float((sums[selected] / counts[selected]).sum().detach())
+            auxiliary = torch.tensor([row.get('source_kind') == 'mp20_geometry_auxiliary'
+                                      for row in batch.get('examples', [{}]*len(targets))],
+                                     device=counts.device, dtype=torch.bool)
+            for origin, choose in (('real', ~auxiliary), ('aux', auxiliary)):
+                subset = selected & choose
+                stats[name+'_'+origin+'_content_views'] = int(subset.sum())
+                stats[name+'_'+origin+'_content_ce_sum'] = float((sums[subset]/counts[subset]).sum().detach())
         return loss, stats
 
 
@@ -524,118 +569,167 @@ def inference_view(prefix, old, current, n, task, active=(), *, remaining=160, r
 def edit_structure(model, tokenizer, *, prompt, body, num_sites, allowed_modes,
                    tasks=('G', 'S'), seed=0, block_size=1, max_calls=160,
                    temperature=.7, accept_threshold=.5, force_mode=None, accept_all=False):
-    """Learned scope, conditional refill and learned acceptance, without an oracle.
+    """One-request form of the same batched conditional sampler."""
+    request = {'prompt': prompt, 'body': body, 'num_sites': num_sites, 'tasks': tasks, 'seed': seed}
+    return edit_structures(model, tokenizer, [request], allowed_modes=allowed_modes, block_size=block_size,
+                           max_calls=max_calls, temperature=temperature, accept_threshold=accept_threshold,
+                           force_mode=force_mode, accept_all=accept_all, batch_size=1)['results'][0]
 
-    The trace stores proposals even when rejected so accept-all and all-keep can
-    be evaluated on identical candidates. A forced scope is a labelled diagnostic
-    for a trained action family; normal deployment leaves it unset.
+
+@torch.no_grad()
+def edit_structures(model, tokenizer, requests, *, allowed_modes, block_size=1, max_calls=160,
+                    temperature=.7, accept_threshold=.5, force_mode=None, accept_all=False,
+                    batch_size=8, progress=None):
+    """Batch independent structures while retaining conditional scalar reveals.
+
+    Every request has its own random generator, old/current state, task cursor,
+    and forward budget. Finished requests release their slot immediately.
     """
     from crystal_dlm.expert_edit_data import canonical_body, numeric_positions
-    if block_size not in (1, 4, 8) or max_calls < 1 or not 0 <= accept_threshold <= 1:
-        raise ValueError('invalid editor sampling budget or acceptance threshold')
+    if (block_size not in (1,4,8) or max_calls < 1 or not 1 <= batch_size <= 64
+            or not 0 <= accept_threshold <= 1):
+        raise ValueError('invalid editor sampling limits')
     device = next(model.parameters()).device
-    vocabulary = tokenizer.get_vocab()
-    inverse = {int(value): key for key, value in vocabulary.items()}
-    original = list(map(int, body))
-    current = canonical_body(original, vocabulary, inverse)
-    if len(current) != 7 + 4 * num_sites:
-        raise ValueError('the editor cannot change stoichiometry or site count')
-    prefix = tokenizer(prompt, add_special_tokens=False)['input_ids']
-    support = ExpertEditObjective(tokenizer, device, temperature=temperature)
-    generator = torch.Generator(device=device).manual_seed(int(seed))
-    trace, used = [], 0
-    start_calls = model.forward_calls
-    def forward(old, candidate, task_id, active=(), reveal=0., remaining=None):
-        nonlocal used
-        if used >= max_calls:
-            raise RuntimeError('editor exhausted its actual forward-call budget')
-        view = inference_view(prefix, old, candidate, num_sites, task_id, active,
-                              remaining=min(max_calls-used, 8+3*num_sites) if remaining is None else remaining,
-                              reveal=reveal)
-        batch = materialize_edit_batch([view], tokenizer, device)
-        result = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
-        used += 1
-        return result
-    for task in tasks:
-        if task not in ('G', 'S'):
-            raise ValueError('unknown edit task')
-        task_id = int(task == 'S')
-        modes = sorted(set(allowed_modes.get(task, ())))
-        if not modes or used + 3 > max_calls:
+    key = (id(tokenizer), str(device), float(temperature))
+    cached = getattr(model, '_sampling_support_cache', {})
+    if key not in cached:
+        vocabulary = tokenizer.get_vocab()
+        cached[key] = (vocabulary, {int(value): name for name,value in vocabulary.items()},
+                       ExpertEditObjective(tokenizer, device, temperature=temperature))
+        model._sampling_support_cache = cached
+    vocabulary, inverse, support = cached[key]
+    states = []
+    for request in requests:
+        original = list(map(int, request['body']))
+        n = int(request['num_sites'])
+        current = canonical_body(original, vocabulary, inverse)
+        tasks = tuple(request.get('tasks', ('G','S')))
+        if len(current) != 7+4*n or not 1 <= n <= 20 or any(task not in ('G','S') for task in tasks):
+            raise ValueError('invalid fixed-composition editor request')
+        states.append({'original': original, 'initial': current.copy(), 'current': current,
+                       'n': n, 'tasks': tasks, 'task_cursor': 0, 'stage': 'inspect', 'used': 0,
+                       'prefix': tokenizer(request['prompt'], add_special_tokens=False)['input_ids'],
+                       'generator': torch.Generator(device=device).manual_seed(int(request.get('seed',0))),
+                       'trace': []})
+    results, active, next_index, completed = [None]*len(states), [], 0, 0
+    batches, forward_rows, started_calls = 0, 0, model.forward_calls
+    def finish(index):
+        nonlocal completed
+        state = states[index]
+        original, initial, current = state['original'], state['initial'], state['current']
+        final = [original[i] if token == initial[i] else token for i,token in enumerate(current)]
+        fixed = set(range(len(final)))-set(numeric_positions(state['n']))
+        if any(final[i] != original[i] for i in fixed) or state['used'] > max_calls:
+            raise RuntimeError('editor changed composition or exceeded its actual per-request budget')
+        results[index] = {'body': final, 'canonical_body': current, 'trace': state['trace'],
+                          'forward_calls': state['used'], 'changed_numeric_tokens': sum(a != b for a,b in zip(initial,current)),
+                          'block_size': block_size, 'scope_policy': force_mode or 'learned', 'accept_all': accept_all,
+                          'S_admission_policy': 'bypassed_for_single_task_forced_scope_diagnostic'
+                              if force_mode is not None and len(state['tasks']) == 1 else 'learned'}
+        completed += 1
+        if progress is not None:
+            progress(completed, len(states), batches)
+    def next_task(state):
+        state['task_cursor'] += 1
+        state['stage'] = 'inspect'
+    while next_index < len(states) or active:
+        while next_index < len(states) and len(active) < batch_size:
+            active.append(next_index)
+            next_index += 1
+        indices, views = [], []
+        for index in active:
+            state = states[index]
+            if state['stage'] == 'inspect':
+                while state['task_cursor'] < len(state['tasks']):
+                    task = state['tasks'][state['task_cursor']]
+                    if allowed_modes.get(task) and state['used']+3 <= max_calls:
+                        break
+                    state['task_cursor'] += 1
+                if state['task_cursor'] >= len(state['tasks']):
+                    finish(index)
+                    continue
+                state['old'] = state['current'].copy()
+                current, positions, reveal = state['old'], [], 0.
+                remaining = min(max_calls-state['used'], 8+3*state['n'])
+            else:
+                current, positions = state['candidate'], state['positions']
+                reveal = state['offset']/len(positions) if state['stage'] == 'fill' else 1.
+                remaining = len(positions)-state['offset']+1 if state['stage'] == 'fill' else len(positions)+2
+            task = state['tasks'][state['task_cursor']]
+            indices.append(index)
+            views.append(inference_view(state['prefix'], state['old'], current, state['n'], int(task=='S'),
+                                        positions, remaining=remaining, reveal=reveal))
+        active = indices
+        if not active:
             continue
-        old = current.copy()
-        inspection = forward(old, old, task_id)
-        admission = inspection.quality_logits[0].sigmoid().float().tolist()
-        # S was taught only where the old geometry and old terminal were both
-        # credible. Enforce that learned admission in autonomous G->S use.
-        # A single-task forced-scope HOW diagnostic records the bypass explicitly.
-        diagnostic = force_mode is not None and len(tasks) == 1
-        if task == 'S' and not diagnostic and (admission[0] < .5 or admission[1] < .5):
-            trace.append({'task': task, 'mode': 'none', 'old_body': old, 'proposal_body': old,
-                          'accepted': False, 'reason': 'learned_S_admission_reject', 'quality': admission,
-                          'calls': 1})
-            continue
-        if force_mode is None:
-            choices = inspection.mode_logits[0, modes]
-            mode = modes[int(choices.argmax())]
-        else:
-            mode = MODE_NAMES.index(force_mode)
-            if mode not in modes:
-                raise ValueError('cannot test an action family absent from training')
-        if mode == 0:
-            trace.append({'task': task, 'mode': 'none', 'old_body': old, 'proposal_body': old,
-                          'accepted': False, 'reason': 'learned_none', 'calls': 1})
-            continue
-        sites = list(range(num_sites))
-        if mode == 1:
-            count_options = [i for i, value in enumerate(LOCAL_COUNTS) if value <= num_sites]
-            choice = count_options[int(inspection.count_logits[0, count_options].argmax())]
-            sites = sorted(inspection.site_logits[0, :num_sites].topk(LOCAL_COUNTS[choice]).indices.tolist())
-        positions = ([1, 2, 3, 4, 5, 6] if mode == 3 else [])
-        positions += [8 + 4 * site + axis for site in sites for axis in range(3)]
-        needed = (len(positions) + block_size - 1) // block_size + 1
-        if used + needed > max_calls:
-            trace.append({'task': task, 'mode': MODE_NAMES[mode], 'old_body': old,
-                          'proposal_body': old, 'accepted': False, 'reason': 'insufficient_complete_proposal_budget'})
-            continue
-        candidate = old.copy()
-        for pos in positions:
-            candidate[pos] = MASK_TOKEN_ID
-        for offset in range(0, len(positions), block_size):
-            output = forward(old, candidate, task_id, positions, offset/len(positions), len(positions)-offset+1)
-            for pos in positions[offset:offset+block_size]:
-                if pos < 4:
-                    family, axis = 'length', 'ABC'[pos-1]
-                elif pos < 7:
-                    family, axis = 'angle', 'ABG'[pos-4]
-                else:
-                    family, axis = 'coord', 'XYZ'[(pos-8) % 4]
-                logits, ids = support.typed_vector(output.logits, torch.tensor([0], device=device),
-                                                   torch.tensor([len(prefix)+pos], device=device), family, axis)
-                probabilities = logits[0].softmax(-1)
-                candidate[pos] = int(ids[torch.multinomial(probabilities, 1, generator=generator)])
-        decision = forward(old, candidate, task_id, positions, 1., len(positions)+2)
-        quality = decision.quality_logits[0].sigmoid().float().tolist()
-        accepted = quality[3] >= accept_threshold
-        if candidate == old:
-            accepted = False
-        trace.append({'task': task, 'mode': MODE_NAMES[mode], 'sites': sites, 'positions': positions,
-                      'old_body': old, 'proposal_body': candidate, 'quality': quality,
-                      'accepted': accepted, 'applied': bool(accepted or accept_all),
-                      'calls': needed + 1, 'reason': 'learned_accept' if accepted else 'learned_reject'})
-        if accepted or accept_all:
-            current = candidate
-    # Preserve the input spelling of periodic aliases when the physical value
-    # did not change; representation-only edits never receive repair credit.
-    canonical_original = canonical_body(original, vocabulary, inverse)
-    final = [original[i] if token == canonical_original[i] else token for i, token in enumerate(current)]
-    if used != model.forward_calls - start_calls:
-        raise RuntimeError('reported forward calls differ from actual B0 evaluations')
-    fixed = set(range(len(current))) - set(numeric_positions(num_sites))
-    if any(final[i] != original[i] for i in fixed):
-        raise RuntimeError('editor changed a protected compositional token')
-    return {'body': final, 'canonical_body': current, 'trace': trace, 'forward_calls': used,
-            'changed_numeric_tokens': sum(a != b for a, b in zip(canonical_original, current)),
-            'block_size': block_size, 'scope_policy': force_mode or 'learned', 'accept_all': accept_all,
-            'S_admission_policy': 'bypassed_for_single_task_forced_scope_diagnostic'
-                                  if force_mode is not None and len(tasks) == 1 else 'learned'}
+        batch = materialize_edit_batch(views, tokenizer, device)
+        output = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+        batches += 1
+        forward_rows += len(active)
+        for row_index, index in enumerate(active):
+            state = states[index]
+            state['used'] += 1
+            task = state['tasks'][state['task_cursor']]
+            if state['stage'] == 'inspect':
+                modes = sorted(set(allowed_modes[task]))
+                admission = output.quality_logits[row_index].sigmoid().float().tolist()
+                diagnostic = force_mode is not None and len(state['tasks']) == 1
+                reason = 'learned_S_admission_reject' if task=='S' and not diagnostic and (
+                          admission[0] < .5 or admission[1] < .5) else None
+                mode = (modes[int(output.mode_logits[row_index,modes].argmax())] if force_mode is None
+                        else MODE_NAMES.index(force_mode))
+                if mode not in modes:
+                    raise ValueError('cannot test an action family absent from training')
+                if reason or mode == 0:
+                    state['trace'].append({'task': task, 'mode': 'none', 'old_body': state['old'],
+                        'proposal_body': state['old'], 'accepted': False, 'quality': admission,
+                        'reason': reason or 'learned_none', 'calls': 1})
+                    next_task(state)
+                    continue
+                sites = list(range(state['n']))
+                if mode == 1:
+                    counts = [i for i,value in enumerate(LOCAL_COUNTS) if value <= state['n']]
+                    count = LOCAL_COUNTS[counts[int(output.count_logits[row_index,counts].argmax())]]
+                    sites = sorted(output.site_logits[row_index,:state['n']].topk(count).indices.tolist())
+                positions = ([1,2,3,4,5,6] if mode == 3 else [])+[8+4*site+axis for site in sites for axis in range(3)]
+                needed = (len(positions)+block_size-1)//block_size+1
+                if state['used']+needed > max_calls:
+                    state['trace'].append({'task': task, 'mode': MODE_NAMES[mode], 'old_body': state['old'],
+                        'proposal_body': state['old'], 'accepted': False, 'calls': 1,
+                        'reason': 'insufficient_complete_proposal_budget'})
+                    next_task(state)
+                    continue
+                candidate = state['old'].copy()
+                for position in positions:
+                    candidate[position] = MASK_TOKEN_ID
+                state.update(stage='fill', mode=mode, sites=sites, positions=positions, candidate=candidate,
+                             offset=0, proposal_calls=needed+1)
+            elif state['stage'] == 'fill':
+                for position in state['positions'][state['offset']:state['offset']+block_size]:
+                    if position < 4:
+                        family, axis = 'length', 'ABC'[position-1]
+                    elif position < 7:
+                        family, axis = 'angle', 'ABG'[position-4]
+                    else:
+                        family, axis = 'coord', 'XYZ'[(position-8)%4]
+                    logits, ids = support.typed_vector(output.logits, torch.tensor([row_index],device=device),
+                         torch.tensor([len(state['prefix'])+position],device=device), family, axis)
+                    selected = torch.multinomial(logits[0].softmax(-1), 1, generator=state['generator'])
+                    state['candidate'][position] = int(ids[selected])
+                state['offset'] = min(len(state['positions']),state['offset']+block_size)
+                if state['offset'] == len(state['positions']):
+                    state['stage'] = 'judge'
+            else:
+                quality = output.quality_logits[row_index].sigmoid().float().tolist()
+                accepted = quality[3] >= accept_threshold and state['candidate'] != state['old']
+                state['trace'].append({'task': task, 'mode': MODE_NAMES[state['mode']], 'sites': state['sites'],
+                    'positions': state['positions'], 'old_body': state['old'], 'proposal_body': state['candidate'],
+                    'quality': quality, 'accepted': accepted, 'applied': bool(accepted or accept_all),
+                    'calls': state['proposal_calls'], 'reason': 'learned_accept' if accepted else 'learned_reject'})
+                if accepted or accept_all:
+                    state['current'] = state['candidate']
+                next_task(state)
+        del output
+    if model.forward_calls-started_calls != batches or sum(row['forward_calls'] for row in results) != forward_rows:
+        raise RuntimeError('actual model batches or per-request forward evaluations were miscounted')
+    return {'results': results, 'forward_batches': batches, 'forward_rows': forward_rows}

@@ -4,7 +4,7 @@ import unittest
 import torch
 from torch import nn
 
-from crystal_dlm.expert_edit import EditOutput, edit_structure
+from crystal_dlm.expert_edit import EditOutput, edit_structure, edit_structures
 from crystal_dlm.expert_edit_data import quantize_arrays
 from crystal_dlm.fixed_slot import build_special_tokens, MASK_TOKEN_ID
 
@@ -77,6 +77,42 @@ class EditorSamplingTests(unittest.TestCase):
         result = self.run_sample(ConditionalEditor(self.tokenizer, target, True))
         self.assertEqual(result['body'], self.old)
         self.assertEqual(result['changed_numeric_tokens'], 0)
+
+    def test_batched_structures_preserve_per_request_rng_and_conditional_paths(self):
+        tokenizer = self.tokenizer
+        class BatchedModel(nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.anchor = nn.Parameter(torch.zeros(()))
+                self.forward_calls = 0
+            def forward(self, input_ids, attention_mask=None, edit_context=None):
+                self.forward_calls += 1
+                b,length = input_ids.shape
+                logits = torch.full((b,length,len(tokenizer.vocab)), -100.)
+                for row in range(b):
+                    prefix = int(edit_context.prompt_lengths[row])
+                    n = int(edit_context.num_sites[row])
+                    body = edit_context.old_token_ids[row,prefix:prefix+7+4*n].tolist()
+                    body[1] = tokenizer.vocab['<LA_042>']
+                    for pos, token in enumerate(body):
+                        logits[row,prefix+pos,token] = 100.
+                    # A real random draw per site tests independent RNG streams.
+                    logits[row,prefix+8,tokenizer.vocab['<X_050>']] = 100.
+                return EditOutput(logits, torch.tensor([[-10.,-10.,-10.,10.]]).repeat(b,1),
+                                  torch.zeros(b,20), torch.zeros(b,4), torch.full((b,4),10.))
+        small, _, _ = quantize_arrays({'lengths':[4.]*3,'angles':[90.]*3,'species':['Na'],
+                                      'frac_coords':[[0.,0.,0.]]}, tokenizer.vocab)
+        requests = [{'prompt':'fixture','body':body,'num_sites':n,'tasks':tasks,'seed':seed}
+                    for body,n,tasks,seed in ((self.old,2,('G',),2),(small,1,('S',),3),
+                                              (self.old,2,('G','S'),4))]
+        expected = [edit_structure(BatchedModel(), tokenizer, **request,
+                                    allowed_modes={'G':[0,3],'S':[3]}) for request in requests]
+        model = BatchedModel()
+        actual = edit_structures(model, tokenizer, requests, allowed_modes={'G':[0,3],'S':[3]}, batch_size=2)
+        self.assertEqual(actual['results'], expected)
+        self.assertEqual(actual['forward_rows'], sum(row['forward_calls'] for row in expected))
+        self.assertEqual(actual['forward_batches'], model.forward_calls)
+        self.assertLess(actual['forward_batches'], actual['forward_rows'])
 
 
 if __name__ == '__main__':
