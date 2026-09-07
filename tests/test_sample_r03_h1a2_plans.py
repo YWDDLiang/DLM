@@ -141,7 +141,8 @@ if torch is not None:
 
         def generate(self, **kwargs):
             self.kwargs = kwargs
-            continuation = torch.tensor([[10, 0], [11, 0]])[:kwargs["input_ids"].shape[0]]
+            size = kwargs["input_ids"].shape[0]
+            continuation = torch.tensor([[10, 0], [11, 0]]).repeat((size + 1) // 2, 1)[:size]
             return torch.cat((kwargs["input_ids"], continuation), dim=1)
 
 
@@ -185,6 +186,17 @@ class NativeSamplingCallTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "boundary"):
             generation_arguments(self.tokenizer, torch.ones(1, 3), torch.ones(1, 3),
                                  processor=processor, containers=self.containers)
+
+    def test_explicit_training_batch_keeps_all_64_success_and_failure_rows(self):
+        model = FixturePlanner()
+        kwargs = dict(native_prompt='NATIVE', global_ids=list(range(100, 164)),
+                      local_ids=list(range(64)), seed=71, oracle=None, containers=self.containers)
+        with self.assertRaisesRegex(ValueError, 'at most 4 rows'):
+            sample_batch(model, self.tokenizer, **kwargs)
+        rows = sample_batch(model, self.tokenizer, max_batch_size=64, **kwargs)
+        self.assertEqual([row['sample_idx'] for row in rows], list(range(100, 164)))
+        self.assertEqual(sum(row['parsed'] for row in rows), 32)
+        self.assertEqual(len(rows), 64)
 
 
 if __name__ == "__main__":

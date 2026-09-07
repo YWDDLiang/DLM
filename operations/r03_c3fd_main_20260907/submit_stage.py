@@ -122,6 +122,9 @@ def _configured_dispatch_locked(argv=None):
                       'cpus': int(tres.get('cpu', 0)), 'state': fields.get('JobState')})
     if sum(row['gpus'] for row in owned) + gpus * parallel > gpu_limit:
         raise ValueError(f'GPU resource budget is occupied: {owned}')
+    requested_jobs = 1 if single_allocation else len(indices)
+    if len(owned) + requested_jobs > int(budget.get('max_submitted_slurm_jobs', 3)):
+        raise ValueError('running and queued Slurm job count exceeds the declared limit')
     if sum(row['cpus'] for row in owned) + cpus * parallel > 6 * gpu_limit:
         raise ValueError('CPU resource budget is occupied')
     (root / 'logs').mkdir(exist_ok=True)

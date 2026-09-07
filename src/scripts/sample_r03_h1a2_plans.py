@@ -188,11 +188,12 @@ def decode_record(
 def sample_batch(
     model: Any, tokenizer: Any, *, native_prompt: str, global_ids: Sequence[int],
     local_ids: Sequence[int], seed: int, oracle: C3FDFormulaOracle | None,
-    processor: Any = None, containers: Any = None,
+    processor: Any = None, containers: Any = None, max_batch_size: int = 4,
 ) -> list[dict[str, Any]]:
     import torch
-    if len(global_ids) != len(local_ids) or not 1 <= len(global_ids) <= 4:
-        raise ValueError("native Planner batch needs aligned IDs and at most four rows")
+    if (not 1 <= max_batch_size <= 64 or len(global_ids) != len(local_ids)
+            or not 1 <= len(global_ids) <= max_batch_size):
+        raise ValueError(f"Planner batch needs aligned IDs and at most {max_batch_size} rows")
     encoded = tokenizer([native_prompt] * len(global_ids), padding=True,
                         add_special_tokens=False, return_tensors="pt")
     device = next(model.parameters()).device
@@ -309,6 +310,7 @@ def main() -> None:
                     model, tokenizer, native_prompt=native_prompt, global_ids=ids,
                     local_ids=list(range(begin, begin + len(ids))), seed=args.seed,
                     oracle=oracle, processor=processor,
+                    max_batch_size=maximum_batch,
                 )
                 for row in batch_rows:
                     row.update(purpose=args.purpose, source_split=args.purpose)

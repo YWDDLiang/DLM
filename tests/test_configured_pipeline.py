@@ -41,7 +41,8 @@ class PipelineContracts(unittest.TestCase):
             'purpose': 'train', 'python': sys.executable,
             'resources': {'extra_gpu_until_utc': (now + dt.timedelta(hours=4)).isoformat(),
                           'deadline_utc': (now + dt.timedelta(hours=10)).isoformat(),
-                          'gpus_before_extra_window': 7, 'gpus_after_extra_window': 6},
+                          'gpus_before_extra_window': 7, 'gpus_after_extra_window': 6,
+                          'max_submitted_slurm_jobs': 8},
             'environment': {'OMP_NUM_THREADS': '1'},
             'components': [{'id': 'shard0', 'output_dir': 'shard0', 'gpus': 1,
                             'stages': [{'name': 'task', 'script': 'src/task.py', 'args': [],
@@ -141,6 +142,15 @@ class PipelineContracts(unittest.TestCase):
         self.spec['jobs']['collect']['component_indices'] = [0, 1]
         self.save()
         with self.assertRaisesRegex(ValueError, 'must not overlap'):
+            self.dispatch()
+
+    def test_job_limit_rejects_four_pending_array_elements(self):
+        self.spec['resources']['max_submitted_slurm_jobs'] = 3
+        self.spec['components'] = [dict(self.spec['components'][0], id=f'shard{i}',
+                                       output_dir=f'shard{i}') for i in range(4)]
+        self.spec['jobs']['collect'].update(component_indices=list(range(4)), parallel_tasks=4)
+        self.save()
+        with self.assertRaisesRegex(ValueError, 'Slurm job count'):
             self.dispatch()
 
     def run_component(self, *, execute=True):
