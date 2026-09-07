@@ -6,6 +6,7 @@ pooled novelty/uniqueness and hull scoring are a later shared stage.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import datetime as dt
 import hashlib
 import json
@@ -13,6 +14,8 @@ import os
 from pathlib import Path
 import subprocess as sp
 import sys
+import queue
+import threading
 import time
 
 SOURCE = Path(__file__).resolve().parents[2]
@@ -207,6 +210,64 @@ def configured_component(argv=None):
     (output / '_SUCCESS').touch()
 
 
+def configured_group(argv=None):
+    """Shard a single Slurm allocation without creating extra Slurm jobs."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=Path, required=True)
+    parser.add_argument('--config-sha256', required=True)
+    parser.add_argument('--component-indices', type=int, nargs='+', required=True)
+    parser.add_argument('--parallel-components', type=int, required=True)
+    args = parser.parse_args(argv)
+    if file_identity(args.config)['sha256'] != args.config_sha256:
+        raise ValueError('submitted group manifest changed')
+    spec = json.loads(args.config.read_text())
+    indices = args.component_indices
+    if len(indices) != len(set(indices)) or any(not 0 <= i < len(spec['components']) for i in indices):
+        raise ValueError('group component indices must be distinct and in bounds')
+    width = int(spec['job_runtime']['gpus_per_component'])
+    devices = [x for x in os.environ.get('CUDA_VISIBLE_DEVICES', '').split(',') if x]
+    if (not os.environ.get('SLURM_JOB_ID') or width < 1
+            or len(devices) != width * args.parallel_components
+            or int(os.environ.get('SLURM_CPUS_PER_TASK', 0)) != spec['job_runtime']['cpus_per_task']):
+        raise ValueError('group allocation differs from its frozen manifest')
+    root = Path(spec['run_root'])
+    waiting = queue.Queue()
+    for index in indices:
+        if int(spec['components'][index]['gpus']) != width:
+            raise ValueError('component GPU width differs from the worker partition')
+        waiting.put(index)
+    stop = threading.Event()
+    def worker(worker_index):
+        environment = dict(os.environ)
+        environment['CUDA_VISIBLE_DEVICES'] = ','.join(devices[worker_index * width:(worker_index + 1) * width])
+        results = []
+        while not stop.is_set():
+            try:
+                index = waiting.get_nowait()
+            except queue.Empty:
+                break
+            command = [sys.executable, str(Path(__file__).resolve()), '--config', str(args.config.resolve()),
+                       '--config-sha256', args.config_sha256, '--component-index', str(index)]
+            path = root / 'logs' / f"{spec['job_runtime']['job']}_component_{index}.out"
+            with path.open('a') as stream:
+                result = sp.run(command, env=environment, stdout=stream, stderr=sp.STDOUT)
+            results.append({'component_index': index, 'returncode': result.returncode,
+                            'worker': worker_index, 'devices': environment['CUDA_VISIBLE_DEVICES']})
+            if result.returncode:
+                stop.set()
+        return results
+    with ThreadPoolExecutor(max_workers=args.parallel_components) as pool:
+        futures = [pool.submit(worker, i) for i in range(args.parallel_components)]
+        results = [row for future in futures for row in future.result()]
+    complete = len(results) == len(indices) and all(row['returncode'] == 0 for row in results)
+    record = {'job': spec['job_runtime']['job'], 'results': results, 'complete': complete,
+              'unstarted_components': waiting.qsize(), 'unstarted_are_scientific_failures': False}
+    write_json(root / 'submissions' / (spec['job_runtime']['job'] + '.completion.json'), record)
+    print(json.dumps(record), flush=True)
+    if not complete:
+        raise RuntimeError('one or more group components failed; successful outputs remain reusable')
+
+
 def sample_plans(output, assets, *, count, seed, offset, constrained):
     arguments = ['--model-path', LLAMA, '--checkpoint-path', P0,
                  '--native-prompt-file', assets / 'P0_NATIVE_PROMPT.txt',
@@ -345,6 +406,9 @@ def main():
 
 if __name__ == '__main__':
     if '--config' in sys.argv:
-        configured_component()
+        if '--component-indices' in sys.argv:
+            configured_group()
+        else:
+            configured_component()
     else:
         main()

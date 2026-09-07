@@ -10,6 +10,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import threading
 import unittest
 from unittest.mock import patch
 
@@ -89,6 +90,35 @@ class PipelineContracts(unittest.TestCase):
         self.save()
         with self.assertRaisesRegex(ValueError, 'different frozen configuration'):
             self.dispatch()
+
+    def test_single_allocation_uses_one_job_and_disjoint_gpu_workers(self):
+        self.spec['components'] = [dict(self.spec['components'][0], id=f'shard{i}',
+                                       output_dir=f'shard{i}') for i in range(7)]
+        self.spec['jobs']['collect'].update(component_indices=list(range(7)), parallel_tasks=7,
+                                            allocation_mode='single', memory='672G')
+        self.save()
+        _, call = self.dispatch()
+        command = call.call_args.args[0]
+        self.assertIn('--gres=gpu:NVIDIAA800-SXM4-80GB:7', command)
+        self.assertIn('--cpus-per-task=42', command)
+        self.assertFalse(any(arg.startswith('--array=') for arg in command))
+        receipt = json.loads((self.root / 'submissions/collect.json').read_text())
+        snapshot = Path(receipt['manifest'])
+        self.assertEqual(json.loads(snapshot.read_text())['job_runtime']['cpus_per_task'], 42)
+        observed = []
+        barrier = threading.Barrier(7, timeout=5)
+        def child(command, *, env, **kwargs):
+            observed.append(env['CUDA_VISIBLE_DEVICES'])
+            self.assertEqual(env['SLURM_CPUS_PER_TASK'], '42')
+            barrier.wait()
+            return subprocess.CompletedProcess(command, 0)
+        with patch.dict(os.environ, {'SLURM_JOB_ID': '12345', 'SLURM_CPUS_PER_TASK': '42',
+                                     'CUDA_VISIBLE_DEVICES': '0,1,2,3,4,5,6'}), \
+                patch.object(runner.sp, 'run', side_effect=child), redirect_stdout(io.StringIO()):
+            runner.configured_group(['--config', str(snapshot), '--config-sha256', receipt['manifest_sha256'],
+                                     '--component-indices', *map(str, range(7)), '--parallel-components', '7'])
+        self.assertEqual(sorted(observed), list(map(str, range(7))))
+        self.assertTrue(json.loads((self.root / 'submissions/collect.completion.json').read_text())['complete'])
 
     def test_global_dispatch_and_uncertain_reservations_block_new_jobs(self):
         guard = self.root / '.dispatch_guard.lock'

@@ -44,7 +44,7 @@ def deploy(repository, run_root, commit, *, remote=None, ref=None, bundle=None):
         destination.mkdir(exist_ok=False)
         archive = sp.Popen(['git', 'archive', commit], cwd=repository, stdout=sp.PIPE)
         try:
-            result = sp.run(['tar', '-xf', '-', '-C', str(destination)], stdin=archive.stdout)
+            result = sp.run(['tar', '--warning=no-timestamp', '-xf', '-', '-C', str(destination)], stdin=archive.stdout)
         finally:
             archive.stdout.close()
         if archive.wait() or result.returncode:

@@ -91,6 +91,7 @@ def _configured_dispatch_locked(argv=None):
         raise ValueError('uncertain dispatch reservations require reconciliation before further submissions')
     gpus, cpus = int(job['gpus_per_task']), int(job['cpus_per_task'])
     parallel = min(len(indices), int(job.get('parallel_tasks', 1)))
+    single_allocation = job.get('allocation_mode') == 'single'
     minutes = int(job['wall_minutes'])
     if (gpus < 0 or min(cpus, parallel, minutes) < 1 or (gpus and cpus > 6 * gpus)
             or any(int(row['gpus']) != gpus for row in components)):
@@ -124,7 +125,11 @@ def _configured_dispatch_locked(argv=None):
     if sum(row['cpus'] for row in owned) + cpus * parallel > 6 * gpu_limit:
         raise ValueError('CPU resource budget is occupied')
     (root / 'logs').mkdir(exist_ok=True)
-    frozen = dict(spec, job_runtime={'hard_stop_utc': hard_stop.isoformat(), 'cpus_per_task': cpus,
+    allocated_gpus = gpus * parallel if single_allocation else gpus
+    allocated_cpus = cpus * parallel if single_allocation else cpus
+    allocation_minutes = minutes * ((len(indices) + parallel - 1) // parallel) if single_allocation else minutes
+    frozen = dict(spec, job_runtime={'hard_stop_utc': hard_stop.isoformat(), 'cpus_per_task': allocated_cpus,
+                                    'worker_cpus': cpus, 'gpus_per_component': gpus,
                                     'job': args.job, 'fingerprint': fingerprint})
     encoded = (json.dumps(frozen, sort_keys=True, indent=2) + '\n').encode()
     manifest_digest = hashlib.sha256(encoded).hexdigest()
@@ -144,16 +149,18 @@ def _configured_dispatch_locked(argv=None):
                + 'exec timeout --signal=TERM --kill-after=30s "${seconds}s" ' + shlex.quote(spec['python'])
                + ' ' + shlex.quote(str(source / 'operations/r03_c3fd_main_20260907/run_component.py'))
                + ' --config ' + shlex.quote(str(snapshot)) + ' --config-sha256 ' + manifest_digest
-               + ' --component-index "${SLURM_ARRAY_TASK_ID:-' + str(indices[0]) + '}"\n')
+               + (' --component-indices ' + ' '.join(map(str, indices))
+                  + ' --parallel-components ' + str(parallel) + '\n' if single_allocation else
+                  ' --component-index "${SLURM_ARRAY_TASK_ID:-' + str(indices[0]) + '}"\n'))
     script.write_text(content, encoding='utf-8')
     command = ['sbatch', '--parsable', '--no-requeue', '--partition=' + job.get('partition', 'gpu'),
-               '--job-name=' + args.job, '--nodes=1', '--ntasks=1', f'--cpus-per-task={cpus}',
-               *([f'--gres=gpu:NVIDIAA800-SXM4-80GB:{gpus}'] if gpus else []),
+               '--job-name=' + args.job, '--nodes=1', '--ntasks=1', f'--cpus-per-task={allocated_cpus}',
+               *([f'--gres=gpu:NVIDIAA800-SXM4-80GB:{allocated_gpus}'] if allocated_gpus else []),
                '--mem=' + str(job.get('memory', '96G')),
-               f'--time={minutes}', '--chdir=' + str(source),
+               f'--time={allocation_minutes}', '--chdir=' + str(source),
                '--output=' + str(root / 'logs' / (args.job + '_%A_%a.out')),
                '--error=' + str(root / 'logs' / (args.job + '_%A_%a.err'))]
-    if len(indices) > 1:
+    if len(indices) > 1 and not single_allocation:
         command.append('--array=' + ','.join(map(str, indices)) + '%' + str(parallel))
     command.append(str(script))
     with lock.open('x') as handle:
@@ -172,6 +179,9 @@ def _configured_dispatch_locked(argv=None):
     record = {'job_id': job_id, 'job': args.job, 'command': command, 'manifest': str(snapshot),
               'manifest_sha256': manifest_digest, 'fingerprint': fingerprint,
               'submitted_utc': now.isoformat(), 'max_parallel_tasks': parallel,
+              'allocation_mode': 'single' if single_allocation else 'array',
+              'gpus_per_allocation': allocated_gpus, 'cpus_per_allocation': allocated_cpus,
+              'allocation_wall_minutes': allocation_minutes,
               'gpus_per_task': gpus, 'cpus_per_task': cpus, 'queue_before': owned,
               'gpu_budget_applied': gpu_limit, 'worst_end_utc': worst_end.isoformat(),
               'absolute_stop_utc': hard_stop.isoformat(), 'runtime_cutoff_enforced': True}
