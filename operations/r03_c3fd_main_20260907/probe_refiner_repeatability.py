@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import importlib.util
+from importlib.metadata import PackageNotFoundError, version
 import json
 import os
 from pathlib import Path
@@ -72,7 +73,7 @@ def main():
     model.eval()
     output = args.output_dir / f'rank{rank}'
     output.mkdir(parents=True, exist_ok=False)
-    results, inputs, rngs = {}, {}, {}
+    results, inputs, input_metadata, rngs = {}, {}, {}, {}
     fields = ('num_atoms', 'lengths', 'angles', 'frac_coords', 'atom_types',
               'edge_index', 'to_jimages', 'batch', 'ptr')
 
@@ -88,6 +89,12 @@ def main():
             dataset = (ProposalDataset([graph], Data, seed_from_graph_field='refiner_noise_seed')
                        if name == 'current' else frozen.ProposalDataset([graph], Data))
             batch = next(iter(DataLoader(dataset, batch_size=1, shuffle=False))).to(device)
+            input_metadata[name] = {'num_nodes': int(batch.num_nodes), 'num_graphs': int(batch.num_graphs),
+                'tensors': {key: {'dtype': str(getattr(batch, key).dtype),
+                                  'device': str(getattr(batch, key).device),
+                                  'stride': list(getattr(batch, key).stride()),
+                                  'contiguous': getattr(batch, key).is_contiguous()}
+                            for key in fields}}
             inputs[name] = {key: getattr(batch, key).detach().cpu().clone() for key in fields}
             rngs[name] = {'cpu_before_sample': rng_hash(torch.get_rng_state()),
                           'cuda_before_sample': rng_hash(torch.cuda.get_rng_state(device))}
@@ -103,7 +110,8 @@ def main():
         result = {}
         for key in sorted(set(left) & set(right)):
             a, b = left[key], right[key]
-            item = {'shape_equal': a.shape == b.shape, 'exact': torch.equal(a, b)}
+            item = {'shape_equal': a.shape == b.shape, 'dtype_equal': a.dtype == b.dtype,
+                    'exact': torch.equal(a, b)}
             if a.shape == b.shape and a.numel():
                 delta = (a.to(torch.float64) - b.to(torch.float64)).abs()
                 item.update(max_abs=float(delta.max()), mean_abs=float(delta.mean()))
@@ -120,14 +128,27 @@ def main():
             path = Path(file).resolve()
             if args.crysllmgen_dir.resolve() in path.parents:
                 source_files[str(path)] = digest(path)
+    packages = {}
+    for name in ('torch-scatter', 'torch-geometric'):
+        try:
+            packages[name] = version(name)
+        except PackageNotFoundError:
+            packages[name] = None
+    extensions = {str(path): digest(path) for path in torch.ops.loaded_libraries
+                  if 'torch_scatter' in str(path) and Path(path).is_file()}
     report = {'sample_idx': args.sample_index, 'seed': seed, 'rank': rank,
               'device': str(device), 'gpu_name': torch.cuda.get_device_name(device),
+              'current_device': torch.cuda.current_device(), 'cudnn_version': torch.backends.cudnn.version(),
+              'parameter_devices': sorted({str(x.device) for x in model.parameters()}),
+              'buffer_devices': sorted({str(x.device) for x in model.buffers()}),
+              'packages': packages, 'scatter_extension_sha256': extensions,
               'torch_version': torch.__version__, 'cuda_version': torch.version.cuda,
               'tf32_matmul': torch.backends.cuda.matmul.allow_tf32,
               'tf32_cudnn': torch.backends.cudnn.allow_tf32,
               'cudnn_benchmark': torch.backends.cudnn.benchmark,
               'deterministic_algorithms': torch.are_deterministic_algorithms_enabled(),
               'input_comparison': compare(inputs['frozen_first'], inputs['current']),
+              'input_metadata': input_metadata,
               'frozen_vs_current': compare(results['frozen_first'], results['current']),
               'frozen_self_repeat': compare(results['frozen_first'], results['frozen_repeat']),
               'rngs': rngs, 'crysllmgen_source_files_sha256': source_files,
