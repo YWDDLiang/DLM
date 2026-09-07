@@ -49,8 +49,43 @@ replacement for the production scientific vocabulary or independent endpoint.
 | Empty token support | Explicit failed request / documented EOS sentinel, no replacement | Silent backoff, invalid unmasked continuation or retry |
 | Mixed batch: formula row + rich row | Mask only the first row and preserve legal values exactly | Batch-wide state or score mutation |
 
-The first 11 reference-sanity tests passed locally on 2026-09-07. This initial
-check validates the reference itself. Production equivalence results will be
-recorded after the new bridge interface is connected. The local Python runtime
-has no torch, so tensor equality either requires an available CPU torch runtime
-or remains an explicitly skipped local check until the integration test.
+All **36 tests passed in 2.021 seconds** on 2026-09-07: 11 independent-reference
+sanity tests, 12 production semantic equivalence tests, and 13 native token / CPU
+tensor tests. There were no skipped tests. The command was:
+
+```powershell
+& 'C:/Users/admin/miniconda3/envs/exp1/python.exe' -m unittest discover -s tests -p test_r03_formula_bridge_contract.py -v
+```
+
+The checked bridge file had SHA256
+`b728fb192485a15db8f5c32d205e1595bd24764b2cd196bf9b3f1d2c59086cc1`.
+The local `exp1` environment is Python 3.10.19 with torch. No model, GPU,
+network, physics evaluation or new training data was used.
+
+Two initial test expectations were corrected after reading the native rich
+parser: it permits padding around field values, and a `None` token mask can
+also denote an unchanged seek phase with no invalid crossing candidates.
+Internal formula whitespace still cannot discard a chemical suffix, and a
+dedicated test checks this boundary. Neither correction changed the reference
+chemical language or relaxed the substantive viability checks.
+
+The small exhaustive domain has 44 accepted compositions, 240 terminal text
+spellings and 391 viable text prefixes. The production tests also check each
+prefix with single-character mutations, giving both recall and precision
+checks instead of testing only hand-picked successful paths. Optional synthetic
+fixed-stratum tests use `(N, arity, family)` to test joint viability; the
+production experiment retains the latent target union.
+
+The unordered charge-bitset review found the following consistent with the
+declared witness language: every completed element is excluded from the future
+element set, charge support has an adequate exact integer range, atom/arity
+budgets close jointly, and family-required hits propagate in the same suffix
+state. Production-vocabulary timing and memory are a separate outstanding
+integration check; tiny-domain correctness does not establish its throughput.
+
+An additional pointer review found that export must honor explicit
+`attempt_status` failures even when a row carries a parseable `plan_state`.
+The pointer agent added that check and a regression fixture. Its deterministic
+canonical formula replay is explicitly control-only; original sampled Plan
+fields stay unchanged, and both CLIs require the native rich prompt with no
+sample ID.

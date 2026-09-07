@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 from pathlib import Path
 import shlex
@@ -94,6 +95,13 @@ def main() -> int:
     except (ValueError, IndexError):
         report = {"status": "transport_error", "returncode": result.returncode, "stderr": result.stderr[-3000:], "stdout": result.stdout[-1000:]}
     report["nonce"] = nonce
+    receipts = Path(__file__).resolve().parents[2] / "docs/r03_paper_story_20260907/execution/remote_receipts"
+    receipts.mkdir(parents=True, exist_ok=True)
+    receipt = receipts / f"{time.time_ns()}_{nonce}.json"
+    report["recorded_unix"] = time.time()
+    if args.command:
+        report["command_sha256"] = hashlib.sha256(args.command.encode()).hexdigest()
+    receipt.write_text(json.dumps(report, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     if report.get("status") == "completed":
         STATE.write_text(json.dumps({"nonce": nonce, "status": "completed", "returncode": report["returncode"]})+"\n")
     print(json.dumps(report, ensure_ascii=False))
