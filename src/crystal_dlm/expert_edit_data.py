@@ -763,13 +763,15 @@ def replay_feedback_trace(output, initial_body, num_atoms):
     return complete
 
 
-def student_proposal_inputs(samples, tokenizer):
+def _proposal_inputs_for_split(samples, tokenizer, split):
+    if split not in ('train', 'dev'):
+        raise ValueError('unknown proposal source split')
     inverse = {int(value):key for key,value in tokenizer.get_vocab().items()}
     inputs, mapping, seen_ancestors = [], [], set()
     for sample in samples:
         ancestor = sample['ancestor_id']
-        if sample.get('source_split') != 'train' or ancestor in seen_ancestors:
-            raise ValueError('proposal refresh requires distinct training-only ancestors')
+        if sample.get('source_split') != split or ancestor in seen_ancestors:
+            raise ValueError('proposal refresh requires distinct ' + ('training' if split == 'train' else 'development') + '-only ancestors')
         seen_ancestors.add(ancestor)
         known = {tuple(sample['old_body']),tuple(sample['output']['canonical_body'])}
         pending = {}
@@ -782,7 +784,7 @@ def student_proposal_inputs(samples, tokenizer):
             digest = hashlib.sha256(json.dumps(body,separators=(',',':')).encode()).hexdigest()
             pid = 'expert-proposal:'+ancestor+':'+digest
             arrays = decode_body(body,inverse)
-            record = physics_input(pid,ancestor,sample['source_row_idx'],'train','expert_quantized',
+            record = physics_input(pid,ancestor,sample['source_row_idx'],split,'expert_quantized',
                                    arrays,''.join(inverse[token] for token in body))
             inputs.append(record)
             mapping.append({'trajectory_id':pid,'ancestor_id':ancestor,'body':list(body),'trace_indices':indices,
@@ -790,19 +792,25 @@ def student_proposal_inputs(samples, tokenizer):
     return inputs,mapping
 
 
-def prepare_student_proposals(samples_directory, tokenizer, output):
+def student_proposal_inputs(samples, tokenizer):
+    return _proposal_inputs_for_split(samples, tokenizer, 'train')
+
+
+def _prepare_proposal_physics(samples_directory, tokenizer, output, split):
     samples_directory, output = Path(samples_directory),Path(output)
     summary = json.loads((samples_directory/'SAMPLE_FINAL.json').read_text())
     samples = read_rows(samples_directory/'samples.jsonl')
-    if (not (samples_directory/'_SUCCESS').is_file() or summary.get('split') != 'train'
+    if (not (samples_directory/'_SUCCESS').is_file() or summary.get('split') != split
             or summary.get('source_kind') != 'all_old_states' or summary.get('frozen_B0_control') is True
             or summary.get('requested') != len(samples)):
-        raise ValueError('proposal refresh requires a completed autonomous training sample')
-    inputs,mapping = student_proposal_inputs(samples,tokenizer)
+        raise ValueError('proposal physics requires a completed autonomous ' + ('training' if split == 'train' else 'development') + ' sample')
+    inputs,mapping = _proposal_inputs_for_split(samples,tokenizer,split)
     output.mkdir(parents=True,exist_ok=False)
     write_rows(output/'inputs.jsonl',inputs)
     write_rows(output/'proposal_map.jsonl',mapping)
-    report = {'schema':'student_proposal_physics_v1','sample_sha256':sha256(samples_directory/'samples.jsonl'),
+    report = {'schema':'student_proposal_physics_v1' if split == 'train' else 'development_proposal_physics_v1',
+              'source_split':split,'training_use_allowed':split == 'train',
+              'sample_sha256':sha256(samples_directory/'samples.jsonl'),
               'requested_sources':len(samples),'additional_endpoints':len(inputs),
               'selection':'every_complete_proposal_except_already_labelled_initial_or_final_body',
               'rejected_proposals_included':True,'input_energy_used_for_selection':False,
@@ -810,6 +818,15 @@ def prepare_student_proposals(samples_directory, tokenizer, output):
     write_json(output/'PROPOSALS_FINAL.json',report)
     (output/'_SUCCESS').touch()
     return report
+
+
+def prepare_student_proposals(samples_directory, tokenizer, output):
+    return _prepare_proposal_physics(samples_directory, tokenizer, output, 'train')
+
+
+def prepare_development_proposals(samples_directory, tokenizer, output):
+    """Label all fixed development proposals for analysis, never training feedback."""
+    return _prepare_proposal_physics(samples_directory, tokenizer, output, 'dev')
 
 
 def compile_student_feedback(samples_directory, labels_directory, reference_prepared, reference_labels,
@@ -999,7 +1016,7 @@ def compile_student_feedback(samples_directory, labels_directory, reference_prep
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', choices=('prepare', 'compile', 'geometry-auxiliary', 'student-feedback', 'student-proposals'), default='prepare')
+    parser.add_argument('--mode', choices=('prepare', 'compile', 'geometry-auxiliary', 'student-feedback', 'student-proposals', 'development-proposals'), default='prepare')
     parser.add_argument('--collection-manifest', type=Path)
     parser.add_argument('--heldout-cohort', type=Path)
     parser.add_argument('--b0-checkpoint', type=Path)
@@ -1021,12 +1038,13 @@ def main(argv=None):
     parser.add_argument('--exclude-worker-errors', action='store_true',
                         help='Training only: exclude entire unresolved ancestors from a fully accounted label run')
     args = parser.parse_args(argv)
-    if args.mode == 'student-proposals':
+    if args.mode in ('student-proposals', 'development-proposals'):
         if None in (args.samples_dir,args.b0_checkpoint):
             parser.error('student proposal refresh requires samples and the B0 tokenizer')
         from transformers import AutoTokenizer
         tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint,trust_remote_code=True,local_files_only=True)
-        print(json.dumps(prepare_student_proposals(args.samples_dir,tokenizer,args.output_dir)),flush=True)
+        prepare = prepare_student_proposals if args.mode == 'student-proposals' else prepare_development_proposals
+        print(json.dumps(prepare(args.samples_dir,tokenizer,args.output_dir)),flush=True)
         return
     if args.mode == 'student-feedback':
         if None in (args.samples_dir,args.labels_dir,args.reference_prepared,args.reference_labels,args.b0_checkpoint):

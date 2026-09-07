@@ -446,6 +446,29 @@ class StudentFeedbackAttributionAudit(unittest.TestCase):
                 with patch.object(data, 'physics_input', side_effect=endpoint), self.assertRaisesRegex(ValueError, 'training-only'):
                     data.student_proposal_inputs(rows, self.tokenizer)
 
+    def test_development_proposals_preserve_split_and_use_an_untrainable_schema(self):
+        fixture = self.fixture()
+        samples = fixture[3]
+        rows = data.read_rows(samples / 'samples.jsonl')
+        rows[0]['source_split'] = 'dev'
+        write_rows(samples / 'samples.jsonl', rows)
+        summary = json.loads((samples / 'SAMPLE_FINAL.json').read_text())
+        summary['split'] = 'dev'
+        (samples / 'SAMPLE_FINAL.json').write_text(json.dumps(summary))
+        output = fixture[0] / 'development-physics'
+        report = data.prepare_development_proposals(samples, self.tokenizer, output)
+        self.assertEqual(report['schema'], 'development_proposal_physics_v1')
+        self.assertFalse(report['training_use_allowed'])
+        self.assertEqual(report['additional_endpoints'], 1)
+        self.assertEqual({x['source_split'] for x in data.read_rows(output / 'inputs.jsonl')}, {'dev'})
+        with self.assertRaisesRegex(ValueError, 'training-only'):
+            data.student_proposal_inputs(rows, self.tokenizer)
+
+    def test_development_preparation_cannot_rename_training_samples(self):
+        fixture = self.fixture()
+        with self.assertRaisesRegex(ValueError, 'autonomous development sample'):
+            data.prepare_development_proposals(fixture[3], self.tokenizer, fixture[0] / 'wrong-split')
+
     def test_additional_worker_error_excludes_all_supervision_for_ancestor(self):
         fixture = self.fixture()
         report, rows = self.compile_with_additional(fixture, self.additional_labels(fixture, worker_error=True))
