@@ -876,7 +876,11 @@ def compile_student_feedback(samples_directory, labels_directory, reference_prep
             if preparation['files_sha256'].get(name) != sha256(prepared/name):
                 raise ValueError('registered proposal physics inputs changed')
         expected_inputs, expected_mapping = student_proposal_inputs(samples,tokenizer)
-        if read_rows(prepared/'inputs.jsonl') != expected_inputs or read_rows(prepared/'proposal_map.jsonl') != expected_mapping:
+        # MSON contains tuples (e.g. lattice.pbc), which JSON restores as lists;
+        # invalid raw cells may also contain NaN, which is not equal to itself.
+        # Compare the exact serialized values without rounding or replacing them.
+        if (json.dumps(read_rows(prepared/'inputs.jsonl'),sort_keys=True) != json.dumps(expected_inputs,sort_keys=True)
+                or json.dumps(read_rows(prepared/'proposal_map.jsonl'),sort_keys=True) != json.dumps(expected_mapping,sort_keys=True)):
             raise ValueError('additional physics does not cover exactly the actual unlabelled complete proposals')
         extra_labels, extra_report = bound_labels(prepared/'inputs.jsonl',directory,exclude_worker_errors=True)
         if any(extra_report['runtime_identities'][0].get(key) != label_report['runtime_identities'][0].get(key) for key in scientific_keys):
