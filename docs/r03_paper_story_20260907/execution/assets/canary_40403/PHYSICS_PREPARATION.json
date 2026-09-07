@@ -1,0 +1,350 @@
+{
+  "b0": {
+    "adapter_config": {
+      "alpha_pattern": {},
+      "auto_mapping": {
+        "base_model_class": "LLaDAModelLM",
+        "parent_library": "transformers_modules.modeling_llada"
+      },
+      "base_model_name_or_path": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct/",
+      "bias": "none",
+      "corda_config": null,
+      "eva_config": null,
+      "exclude_modules": null,
+      "fan_in_fan_out": false,
+      "inference_mode": true,
+      "init_lora_weights": true,
+      "layer_replication": null,
+      "layers_pattern": null,
+      "layers_to_transform": null,
+      "loftq_config": {},
+      "lora_alpha": 32,
+      "lora_bias": false,
+      "lora_dropout": 0.05,
+      "megatron_config": null,
+      "megatron_core": "megatron.core",
+      "modules_to_save": [
+        "model.transformer.wte",
+        "model.transformer.ff_out"
+      ],
+      "peft_type": "LORA",
+      "qalora_group_size": 16,
+      "r": 8,
+      "rank_pattern": {},
+      "revision": null,
+      "target_modules": [
+        "up_proj",
+        "k_proj",
+        "ff_proj",
+        "v_proj",
+        "q_proj"
+      ],
+      "task_type": null,
+      "trainable_token_indices": null,
+      "use_dora": false,
+      "use_qalora": false,
+      "use_rslora": false
+    },
+    "adapter_config_sha256": "2b69a62cc62fdb89ecc8178a6a6fdd6bc03cac702d7bcef2dd282ea7a0bca868",
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+  },
+  "energy_objective": "offline quality-weighted ordinary XYZ-block conditionals; not original full-path or same-state counterfactual",
+  "k4": {
+    "compatible_conditions": 526,
+    "compatible_occurrences": 972,
+    "data_revision": "consistent_v2",
+    "original_conditions": 1024,
+    "original_positive_occurrences": 972,
+    "positive_incompatible_occurrences": 0,
+    "rejected_reasons": {
+      "original_teacher_zero_weight": 3124
+    },
+    "requested_occurrences": 4096,
+    "source_file_pins": {
+      "labels": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_state_labels_round0_consistent_20260906_v2/labels.jsonl",
+          "sha256": "bd9bea45f0c803c08bb43d69bbb63027dd5e8e3514a86909f16eacf5261bf14a"
+        }
+      ],
+      "paths": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_paths_39872/sample/paths.jsonl",
+          "sha256": "c96d94fa3f0abe5908e497524724cb0ad0873f6de1e9dfd2040499e925c07721"
+        },
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_paths_39878/sample/paths.jsonl",
+          "sha256": "c2e97aa9bc393af996b06ba0fd1f9248081ed902a19bf2c3c187fd0af3401a49"
+        }
+      ]
+    },
+    "source_reference_verified": true,
+    "source_role": "k4",
+    "teacher_json": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_state_teacher_round0_consistent_20260906_v2/teacher.json",
+    "teacher_sha256": "f309ba147d5782b20c56bd106cf0751f1196bfa0011b3f4864d3ffefb74e0d3f",
+    "teacher_summary": {
+      "ESS": 752.0959594499699,
+      "conditions_with_multiple_verified_paths": 273,
+      "cooperative_accepted_paths": 3897,
+      "cooperative_attempted_paths": 4070,
+      "cooperative_changed_paths": 3897,
+      "data_budget_amendment": "20260906_K4_then_K8",
+      "diagnostic_only": false,
+      "label_statuses": {
+        "generation_failure": 26,
+        "invalid_terminal": 1565,
+        "not_converged": 1531,
+        "relaxation_energy_increased": 1,
+        "terminal_consistency_unverified": 1,
+        "verified": 972
+      },
+      "max_common_mean_kl": 0.19999999999999993,
+      "mean_delta_gap": -0.02247216088594768,
+      "mean_delta_terminal": -0.022472160889013697,
+      "mean_kl": 0.009753322664379102,
+      "mean_within_condition_terminal_span_eV_atom": 0.1986602267502865,
+      "primal_residual": 2.220446049250313e-16,
+      "projection_duality_gap": 4.4823728062581836e-12,
+      "requested_candidates_per_condition": 4,
+      "rho_dual_upper_bound": 0.4494432177185046,
+      "rho_duality_gap": 2.326838238839746e-16,
+      "rho_max": 0.4494432177185044,
+      "solver_status": "optimal",
+      "successful_paths": 4070,
+      "target_gain": 0.022472160885925217,
+      "total_candidates": 4096,
+      "total_groups": 1024,
+      "trainable_teacher": true,
+      "validated_candidates": 972,
+      "validated_groups": 526,
+      "verified_per_condition": {
+        "0": 498,
+        "1": 253,
+        "2": 143,
+        "3": 87,
+        "4": 43
+      }
+    },
+    "uniform_reference_group_ids": [],
+    "uniform_reference_weights_preserved": true
+  },
+  "k8": {
+    "compatible_conditions": 662,
+    "compatible_occurrences": 1843,
+    "data_revision": null,
+    "original_conditions": 1024,
+    "original_positive_occurrences": 1843,
+    "positive_incompatible_occurrences": 0,
+    "rejected_reasons": {
+      "original_teacher_zero_weight": 6349
+    },
+    "requested_occurrences": 8192,
+    "source_file_pins": {
+      "labels": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_labels_39911/labels/labels.jsonl",
+          "sha256": "513afeef92143b7871a27ad2ae8e943eb459d9d71b9bab83349785b45f0dca99"
+        },
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_labels_39916/labels/labels.jsonl",
+          "sha256": "a6b6215f610e016a9775629c4d98560f0143dc95fa67d8683f7a75c2fecea584"
+        }
+      ],
+      "paths": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_paths_39896/sample/paths.jsonl",
+          "sha256": "c5bbbab0dceb80230fc310456b3d8b8fae51092432ed448cd28df06578e1162f"
+        }
+      ]
+    },
+    "source_reference_verified": true,
+    "source_role": "k8",
+    "teacher_json": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_state_teacher_round1_uniform_gd2_20260906_v1/teacher.json",
+    "teacher_sha256": "9328bd42918a73a0e131cfed77ece64924434306edb64f0321a29c42555f6bbe",
+    "teacher_summary": {
+      "ESS": 1177.4587959383127,
+      "conditions_with_multiple_verified_paths": 431,
+      "cooperative_accepted_paths": 7762,
+      "cooperative_attempted_paths": 8093,
+      "cooperative_changed_paths": 7761,
+      "credibility_treatment": "explicit_uncertainty_reference_constraint",
+      "data_budget_amendment": "20260906_K4_then_K8",
+      "diagnostic_only": false,
+      "fixed_groups_retain_path_supervision": true,
+      "fixed_reference_groups": [
+        {
+          "group_id": "13087",
+          "kl": 3.3306690738754696e-16,
+          "mean_delta_gap": 1.9721522630525295e-31,
+          "mean_delta_terminal": 1.9721522630525295e-31,
+          "reason": "Unresolved train-label energy-scale uncertainty; retain protocol verification and all occurrences; q=u is not physical disproof.",
+          "verified_finite_candidates": 6,
+          "weight_residual": 5.551115123125783e-17
+        }
+      ],
+      "fixed_reference_residual": 5.551115123125783e-17,
+      "label_statuses": {
+        "generation_failure": 99,
+        "invalid_terminal": 3083,
+        "not_converged": 3159,
+        "optimizer_stop_unverified": 3,
+        "relaxation_energy_increased": 5,
+        "verified": 1843
+      },
+      "max_common_actual_label_residual": 1.2490009027033011e-15,
+      "max_common_fixed_reference_residual": 2.7755575615628914e-17,
+      "max_common_mean_delta_gap": -0.06946089498402891,
+      "max_common_mean_delta_terminal": -0.0694608949840289,
+      "max_common_mean_kl": 0.19999999999999987,
+      "mean_delta_gap": -0.03473044788901819,
+      "mean_delta_terminal": -0.03473044749204911,
+      "mean_kl": 0.009071155559631122,
+      "mean_within_condition_terminal_span_eV_atom": 0.4726257578679414,
+      "optimizable_groups": 661,
+      "physical_disproof_claimed": false,
+      "primal_residual": 4.440892098500626e-16,
+      "projection_duality_gap": 7.418210143383952e-12,
+      "requested_candidates_per_condition": 8,
+      "rho_dual_upper_bound": 0.694608949840289,
+      "rho_duality_gap": 0.0,
+      "rho_max": 0.694608949840289,
+      "solver_status": "optimal",
+      "successful_paths": 8093,
+      "target_gain": 0.03473044749201445,
+      "total_candidates": 8192,
+      "total_groups": 1024,
+      "trainable_teacher": true,
+      "uniform_reference_group_ids": [
+        "13087"
+      ],
+      "uniform_reference_groups": 1,
+      "validated_candidates": 1843,
+      "validated_groups": 662,
+      "verified_per_condition": {
+        "0": 362,
+        "1": 231,
+        "2": 119,
+        "3": 120,
+        "4": 72,
+        "5": 48,
+        "6": 35,
+        "7": 20,
+        "8": 17
+      }
+    },
+    "uniform_reference_group_ids": [
+      "13087"
+    ],
+    "uniform_reference_weights_preserved": true
+  },
+  "mp20_retention": {
+    "available": true,
+    "compatible_sources": 27136,
+    "rejected_reasons": {},
+    "rich_scientific_fields_synthesized": false,
+    "source_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_basin_closure_sft_v1_20260904/train.jsonl",
+    "source_sha256": "232f7e1e6f0d4a634db8a9cfd01c0e3fd61f31f154adf142b5cc11af57c61a1c",
+    "sources": 27136
+  },
+  "new_model_calls": 0,
+  "new_physics_calls": 0,
+  "new_training_structures": 0,
+  "normalization": {
+    "compatible_occurrences": 1942,
+    "composition_mass_max": 0.0013513513513513516,
+    "composition_mass_min": 0.001351351351351351,
+    "conditions_with_dropped_positive_mass": 0,
+    "exact_compositions": 740,
+    "new_same_state_counterfactual_claimed": false,
+    "normalization": "equal exact-composition mass; equal separate original-condition mass; renormalized original q",
+    "old_dual_objective_guarantee_transferred": false,
+    "retained_original_teacher_mass": {
+      "max": 1.0000000000000002,
+      "mean": 1.0,
+      "min": 0.9999999999999998
+    },
+    "single_occurrence_conditions": 291,
+    "source_conditions": 740
+  },
+  "physical_targets": "unchanged saved native geometry; original IDs mapped by token strings; periodic 100=0 aliases only",
+  "prepared_files_sha256": {
+    "mp20_retention.jsonl": "aacf9ca1e17927f0effab994d476b64ec8909ebbcd02cc5b5f7535d037614d61",
+    "records.jsonl": "47d8e666269e79d58cc555c4e47106a3151902dbd589baad922c067cd3474011",
+    "rejected.jsonl": "69b537fdec5622d01b0c2a5bdd8aeca07249aa0001d7ad358daf293910d58022"
+  },
+  "repair_view_schema": "r03_composition_current_canvas_xyz_v1",
+  "schema": "r03_existing_native_physics_transfer_v1",
+  "source_manifest": {
+    "k4": {
+      "data_revision": "consistent_v2",
+      "labels": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_state_labels_round0_consistent_20260906_v2/labels.jsonl",
+          "sha256": "bd9bea45f0c803c08bb43d69bbb63027dd5e8e3514a86909f16eacf5261bf14a"
+        }
+      ],
+      "paths": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_paths_39872/sample/paths.jsonl",
+          "sha256": "c96d94fa3f0abe5908e497524724cb0ad0873f6de1e9dfd2040499e925c07721"
+        },
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_paths_39878/sample/paths.jsonl",
+          "sha256": "c2e97aa9bc393af996b06ba0fd1f9248081ed902a19bf2c3c187fd0af3401a49"
+        }
+      ],
+      "source_tokenizer_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_warmup_39853/train/checkpoints/step-1696",
+      "teacher": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_state_teacher_round0_consistent_20260906_v2/teacher.json",
+        "sha256": "f309ba147d5782b20c56bd106cf0751f1196bfa0011b3f4864d3ffefb74e0d3f"
+      },
+      "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+    },
+    "k8": {
+      "labels": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_labels_39911/labels/labels.jsonl",
+          "sha256": "513afeef92143b7871a27ad2ae8e943eb459d9d71b9bab83349785b45f0dca99"
+        },
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_labels_39916/labels/labels.jsonl",
+          "sha256": "a6b6215f610e016a9775629c4d98560f0143dc95fa67d8683f7a75c2fecea584"
+        }
+      ],
+      "paths": [
+        {
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_paths_39896/sample/paths.jsonl",
+          "sha256": "c5bbbab0dceb80230fc310456b3d8b8fae51092432ed448cd28df06578e1162f"
+        }
+      ],
+      "source_tokenizer_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_path_train_39892/train/checkpoints/step-1020",
+      "teacher": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_state_teacher_round1_uniform_gd2_20260906_v1/teacher.json",
+        "sha256": "9328bd42918a73a0e131cfed77ece64924434306edb64f0321a29c42555f6bbe"
+      },
+      "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+    },
+    "mp20": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_basin_closure_sft_v1_20260904/train.jsonl",
+      "sha256": "232f7e1e6f0d4a634db8a9cfd01c0e3fd61f31f154adf142b5cc11af57c61a1c",
+      "source_split": "train"
+    },
+    "schema": "r03_physics_transfer_sources_v1"
+  },
+  "sources_manifest_sha256": "070f1e0fafa704b0198595953891beafcd839dada822da1bd8d9b7c325052854",
+  "status": "complete",
+  "support_protocol": {
+    "canonicalize_periodic_alias": true,
+    "coord_period": 100,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "max_atoms": 20,
+    "min_lattice_rad": 0.0001,
+    "pbc_image_radius": 2,
+    "pbc_min_distance_A": 0.5,
+    "pbc_min_distance_mask": true,
+    "representation": "dynamic_v1"
+  }
+}

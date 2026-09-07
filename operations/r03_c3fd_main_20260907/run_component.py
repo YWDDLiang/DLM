@@ -132,11 +132,17 @@ def main():
     parser.add_argument('--plans-jsonl', type=Path)
     parser.add_argument('--plans-include-programs', action='store_true')
     parser.add_argument('--repair-checkpoint', type=Path)
+    parser.add_argument('--body-batch-size', type=int, default=8)
+    parser.add_argument('--construction-geometry', action='store_true')
     args = parser.parse_args()
     if not os.environ.get('SLURM_JOB_ID') or len(os.environ.get('CUDA_VISIBLE_DEVICES', '').split(',')) != 1:
         raise ValueError('one assigned Slurm GPU is required for each component')
     if args.requests < 1 or args.sample_index_offset < 0 or (args.role == 'P') != (args.repair_checkpoint is not None):
         raise ValueError('invalid registered component or repair checkpoint role')
+    if not 1 <= args.body_batch_size <= 8 or (args.construction_geometry and args.body_batch_size != 1):
+        raise ValueError('invalid body batch size for construction constraint accounting')
+    if args.construction_geometry and args.role not in ('G', 'P'):
+        raise ValueError('registered R/I controls do not enable the new construction geometry')
     output = args.output_dir
     output.mkdir(parents=True, exist_ok=False)
     write_json(output / 'COMPONENT_CONFIG.json', {key: str(value) if isinstance(value, Path) else value
@@ -156,7 +162,9 @@ def main():
             plans = export_programs(output, assets, args.run_root / 'pointer_40395/train/r03_control_pointer.pt', plans)
         arguments = ['--frozen-runtime-root', FROZEN, '--base-model', LLADA, '--b0-checkpoint', B0,
                      '--plans-jsonl', plans, '--output-dir', output / 'body', '--expected-requests', args.requests,
-                     '--seed', args.body_seed, '--batch-size', 8, '--crysllmgen-dir', PROJECT / 'reference/crysllmgen']
+                     '--seed', args.body_seed, '--batch-size', args.body_batch_size, '--crysllmgen-dir', PROJECT / 'reference/crysllmgen']
+        if args.construction_geometry:
+            arguments.append('--construction-geometry')
         if args.role in ('G', 'P'):
             arguments.extend(['--repair', '--geometry-support'])
         if args.repair_checkpoint:
@@ -177,6 +185,7 @@ def main():
                   'refiner_seed': args.refiner_seed, 'seconds': time.monotonic() - started,
                   'sample_index_offset': args.sample_index_offset, 'body_dir': str(output / 'body'),
                   'repair_checkpoint': str(args.repair_checkpoint) if args.repair_checkpoint else None,
+                  'construction_geometry': args.construction_geometry, 'body_batch_size': args.body_batch_size,
                   'refined_pt': refinement['output_file'], 'plans_jsonl': str(plans),
                   'labels_purpose': 'evaluation', 'pooled_NU_scored_here': False})
         (output / '_SUCCESS').touch()

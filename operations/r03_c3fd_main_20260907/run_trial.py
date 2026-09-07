@@ -12,13 +12,18 @@ import sys
 import time
 
 from run_component import SOURCE, execute, export_programs, sample_plans, write_json
+from trial_preflight import require_geometry_canary_acceptance
 
 
-def component(run_root, directory, role, gpu, *, count, seed, plans=None, programs=False, repair=None):
+def component(run_root, directory, role, gpu, *, count, seed, plans=None, programs=False, repair=None,
+              construction_geometry=False, body_batch_size=1):
     command = [sys.executable, str(SOURCE / 'operations/r03_c3fd_main_20260907/run_component.py'),
                '--run-root', str(run_root), '--output-dir', str(directory), '--role', role,
                '--method-id', 'R03_' + role, '--requests', str(count), '--planner-seed', str(seed),
-               '--body-seed', str(seed + 100), '--refiner-seed', str(seed + 200)]
+               '--body-seed', str(seed + 100), '--refiner-seed', str(seed + 200),
+               '--body-batch-size', str(body_batch_size)]
+    if construction_geometry:
+        command.append('--construction-geometry')
     if plans:
         command.extend(['--plans-jsonl', str(plans)])
     if programs:
@@ -50,7 +55,7 @@ def physical_checkpoint(run_root, deadline):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--run-root', type=Path, required=True)
-    parser.add_argument('--stage', choices=['canary_repair', 'pilot_RI', 'pilot_GP'], required=True)
+    parser.add_argument('--stage', choices=['canary_repair', 'canary_geometry', 'pilot_RI', 'pilot_GP'], required=True)
     args = parser.parse_args()
     if not os.environ.get('SLURM_JOB_ID'):
         raise ValueError('an existing Slurm allocation is required')
@@ -60,20 +65,44 @@ def main():
     run_root = args.run_root
     assets = run_root / 'pointer_40395/assets'
     pointer = run_root / 'pointer_40395/train/r03_control_pointer.pt'
-    seed, count = (202609070, 16) if args.stage == 'canary_repair' else (202609071, 256)
-    root = (run_root / ('canary_repair_' + os.environ['SLURM_JOB_ID']) if args.stage == 'canary_repair'
+    is_canary = args.stage.startswith('canary_')
+    seed, count = (202609070, 16) if is_canary else (202609071, 256)
+    if not is_canary:
+        require_geometry_canary_acceptance(run_root, SOURCE)
+    root = (run_root / (args.stage + '_' + os.environ['SLURM_JOB_ID']) if is_canary
             else run_root / 'pilot_256')
-    root.mkdir(parents=True, exist_ok=args.stage != 'canary_repair')
+    root.mkdir(parents=True, exist_ok=not is_canary)
     lane = root / ('LANE_' + args.stage)
     lane.mkdir(exist_ok=False)
     write_json(lane / 'REGISTERED.json', {'stage': args.stage, 'requests_per_arm': count, 'planner_seed': seed,
                'body_seed': seed + 100, 'refiner_seed': seed + 200, 'source': str(SOURCE),
                'job_id': os.environ['SLURM_JOB_ID'], 'role': 'engineering_canary' if count == 16 else 'user_requested_fixed_development',
-               'formal_1000_started': False, 'same_generated_plans_for_I_G_P': True})
+               'formal_1000_started': False, 'same_generated_plans_for_I_G_P': True,
+               'construction_geometry_roles': ['G', 'P'] if args.stage != 'canary_repair' else [],
+               'body_batch_size': 1, 'failed_or_empty_support_requests_retained': True})
     results, failures = {}, {}
     started = time.monotonic()
     try:
-        if args.stage == 'canary_repair':
+        if args.stage == 'canary_geometry':
+            # Replay the same actual 16 Plans, pointer outputs and paired seeds.
+            plans = run_root / 'canary_repair_40403/shared_I/plans_with_programs.jsonl'
+            if not plans.is_file():
+                raise RuntimeError('previous 16-condition pointer ledger is missing')
+            repair = physical_checkpoint(run_root, dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=1))
+            def geometric_with_matched_reference():
+                result = component(run_root, root / 'G', 'G', gpus[0], count=count, seed=seed,
+                                   plans=plans, programs=True, construction_geometry=True)
+                # Replay the original interface at the same batch size as G/P.
+                # This is a complete, separate 16-request canary control, never
+                # a replacement of unsuccessful requests in another method.
+                reference = component(run_root, root / 'I_batch1_reference', 'I', gpus[0], count=count, seed=seed,
+                                      plans=plans, programs=True)
+                write_json(root / 'MATCHED_INTERFACE_REFERENCE.json', reference)
+                return result
+            functions = {'G': geometric_with_matched_reference,
+                         'P': lambda: component(run_root, root / 'P', 'P', gpus[1], count=count, seed=seed,
+                                                plans=plans, programs=True, repair=repair, construction_geometry=True)}
+        elif args.stage == 'canary_repair':
             source_plans = run_root / 'canary_40400/I/planner/plans_for_dlm.jsonl'
             shared = root / 'shared_I'
             shared.mkdir()
@@ -111,9 +140,9 @@ def main():
             repair = physical_checkpoint(run_root, dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=1))
             plans = shared / 'plans_with_programs.jsonl'
             functions = {'G': lambda: component(run_root, root / 'G', 'G', gpus[0], count=count, seed=seed,
-                                                plans=plans, programs=True),
+                                                plans=plans, programs=True, construction_geometry=True),
                          'P': lambda: component(run_root, root / 'P', 'P', gpus[1], count=count, seed=seed,
-                                                plans=plans, programs=True, repair=repair)}
+                                                plans=plans, programs=True, repair=repair, construction_geometry=True)}
         with ThreadPoolExecutor(max_workers=2) as pool:
             futures = {name: pool.submit(function) for name, function in functions.items()}
             for name, future in futures.items():
@@ -126,11 +155,14 @@ def main():
         if failures:
             raise RuntimeError('one or more registered components need engineering attention')
         (lane / '_SUCCESS').touch()
-        if args.stage == 'canary_repair':
+        if is_canary:
             (root / '_SUCCESS').touch()
-            write_json(run_root / 'REPAIR_CANARY_COMPLETE.json', {'directory': str(root), 'source': str(SOURCE),
+            marker = 'GEOMETRY_CANARY_COMPLETE.json' if args.stage == 'canary_geometry' else 'REPAIR_CANARY_COMPLETE.json'
+            write_json(run_root / marker, {'directory': str(root), 'source': str(SOURCE),
                        'job_id': os.environ['SLURM_JOB_ID'], 'requests_per_arm': count,
-                       'physics_checkpoint': results['P'].get('repair_checkpoint'), 'roles': sorted(results)})
+                       'physics_checkpoint': results['P'].get('repair_checkpoint'), 'roles': sorted(results),
+                       'matched_interface_reference': str(root / 'I_batch1_reference') if args.stage == 'canary_geometry' else None,
+                       'scientific_acceptance_is_separate': True})
     except BaseException as error:
         write_json(lane / 'FAILURE.json', {'type': type(error).__name__, 'message': str(error)})
         (lane / '_FAILED').touch()

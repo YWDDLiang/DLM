@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass, field
 import hashlib
 import importlib.util
@@ -239,8 +239,11 @@ def make_batches(tasks: Sequence[Mapping[str, Any]], *, batch_size: int) -> list
     return batches
 
 
-def construct_batch(model: Any, tokenizer: Any, batch: Sequence[Mapping[str, Any]], runtime: Any, *, constraints: Any) -> Any:
-    """The original frozen constructor call, with no scientific substitutions."""
+def construct_batch(
+    model: Any, tokenizer: Any, batch: Sequence[Mapping[str, Any]], runtime: Any,
+    *, constraints: Any, geometry_api: Any = None,
+) -> Any:
+    """Call the frozen constructor, optionally adding the registered geometry hook."""
     api = runtime.module
     schedule = batch[0]["schedule"]
     if any(task["schedule"] != schedule for task in batch):
@@ -255,22 +258,34 @@ def construct_batch(model: Any, tokenizer: Any, batch: Sequence[Mapping[str, Any
         api.count_prefill_for_batch(tokenizer, n, len(batch)),
         api.element_prefill_for_batch(tokenizer, [task["plan_state"] for task in batch]),
     )
-    generated = api.generate_paired_exact_plan(
-        model, input_ids, base_seeds=[task["body_noise_seed"] for task in batch],
-        attention_mask=attention_mask, gen_length=api.exact_body_token_count(n),
-        temperature=0.7, cfg_scale=0.0, remasking="low_confidence", mask_id=api.MASK_TOKEN_ID,
-        allowed_token_ids_by_generation_pos=api.exact_dynamic_schema_constraints(tokenizer, n),
-        prefill_token_ids_by_generation_pos=prefill, generation_position_groups=schedule,
-        lightweight_decoding_constraints=constraints,
-    )
+    if geometry_api is not None and len(batch) != 1:
+        raise ValueError("construction geometry requires singleton requests for exact failure accounting")
+    bridge = (geometry_api.construction_geometry_bridge(
+        runtime.modules["paired_llada"], tokenizer=tokenizer,
+        generation_position_groups=schedule, native_constraints=constraints,
+        enabled=True, mask_id=api.MASK_TOKEN_ID,
+    ) if geometry_api is not None else nullcontext(None))
+    with bridge as monitor:
+        generated = api.generate_paired_exact_plan(
+            model, input_ids, base_seeds=[task["body_noise_seed"] for task in batch],
+            attention_mask=attention_mask, gen_length=api.exact_body_token_count(n),
+            temperature=0.7, cfg_scale=0.0, remasking="low_confidence", mask_id=api.MASK_TOKEN_ID,
+            allowed_token_ids_by_generation_pos=api.exact_dynamic_schema_constraints(tokenizer, n),
+            prefill_token_ids_by_generation_pos=prefill, generation_position_groups=schedule,
+            lightweight_decoding_constraints=constraints,
+        )
+        geometry_report = monitor.report() if monitor is not None else None
     suffix = generated[:, input_ids.shape[1]:]
     if suffix.shape[1] != 7 + 4 * n:
         raise RuntimeError("native R03 constructor changed its exact-length answer ABI")
     for position, values in prefill.items():
         if suffix[:, position].detach().cpu().tolist() != list(values):
             raise RuntimeError("native R03 constructor changed a prefilled count/element")
-    return suffix.detach().cpu(), {"prompt_token_lengths": attention_mask.sum(dim=1).cpu().tolist(),
-                                  "prefill": {str(key): values for key, values in prefill.items()}}
+    metadata = {"prompt_token_lengths": attention_mask.sum(dim=1).cpu().tolist(),
+                "prefill": {str(key): values for key, values in prefill.items()}}
+    if geometry_report is not None:
+        metadata["construction_geometry"] = geometry_report
+    return suffix.detach().cpu(), metadata
 
 
 def base_record(task: Mapping[str, Any]) -> dict[str, Any]:
@@ -290,6 +305,19 @@ def base_record(task: Mapping[str, Any]) -> dict[str, Any]:
         "retry_used": False, "replacement_used": False, "filter_used": False, "rerank_used": False,
         "repair_used": False,
     }
+
+
+def construction_failure_record(task: Mapping[str, Any], failure: Mapping[str, Any]) -> dict[str, Any]:
+    """Keep one infeasible construction attempt without retry or partial repair."""
+    record = base_record(task)
+    record.update(
+        attempt_status="construction_constraint_failure", reason="construction_geometry_no_legal_support",
+        message=str(failure.get("reason", "no legal coordinate support")),
+        earliest_failure_stage="body_construction_geometry",
+        construction_geometry={"enabled": True, "status": "no_legal_support", "failure": dict(failure)},
+        repair_skip_reason="construction_incomplete",
+    )
+    return record
 
 
 def materialize_record(task: Mapping[str, Any], body_ids: Sequence[int], *, runtime: Any, tokenizer: Any, process_one: Any) -> tuple[dict[str, Any], dict[str, Any] | None]:
@@ -325,7 +353,8 @@ def summarize(records: Sequence[Mapping[str, Any]], *, elapsed: float) -> dict[s
               "decoded_samples": sum(bool(row.get("body_generation_complete")) for row in records),
               "parse_success": sum(bool(row.get("body_plan_match")) for row in records),
               "graph_success": sum(bool(row.get("body_graph_complete")) for row in records),
-              "planner_failures": sum(not row["body_eligible"] for row in records)}
+              "planner_failures": sum(not row["body_eligible"] for row in records),
+              "construction_constraint_failures": sum(row.get("attempt_status") == "construction_constraint_failure" for row in records)}
     counts.update(schema=SCHEMA, time_sec=elapsed, denominator=requested,
                   pymatgen_success=counts["graph_success"], valid_array_count=counts["graph_success"],
                   parse_rate=counts["parse_success"] / max(1, requested),
@@ -583,8 +612,9 @@ def main() -> None:
     parser.add_argument("--expected-requests", type=int, required=True)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--device", default="cuda")
-    parser.add_argument("--repair", action="store_true", help="Execute the exported Llama anchor program after the untouched R03 constructor")
+    parser.add_argument("--repair", action="store_true", help="Execute the exported Llama anchor program after R03 construction")
     parser.add_argument("--geometry-support", action="store_true", help="Use the shared fixed support in post-construction XYZ repairs only")
+    parser.add_argument("--construction-geometry", action="store_true", help="Apply periodic alias aggregation and 0.5 A PBC support during the frozen constructor")
     parser.add_argument("--repair-checkpoint", type=Path, help="Accepted repair-only P adapter; omission uses unadapted original B0 for G")
     args = parser.parse_args()
     if args.output_dir.exists():
@@ -593,6 +623,8 @@ def main() -> None:
         raise ValueError("batch size must be in 1..8 and request denominator must be positive")
     if bool(args.repair) != bool(args.geometry_support) or (args.repair_checkpoint and not args.repair):
         raise ValueError("candidate requires both --repair and --geometry-support; a repair checkpoint cannot alter construction")
+    if args.construction_geometry and args.batch_size != 1:
+        raise ValueError("--construction-geometry requires --batch-size 1; no-support attempts are retained individually")
     rows = read_rows(args.plans_jsonl)
     if len(rows) != args.expected_requests:
         raise ValueError("input request ledger does not match the frozen denominator")
@@ -608,7 +640,9 @@ def main() -> None:
         "plans_sha256": file_sha256(args.plans_jsonl), "expected_requests": args.expected_requests,
         "seed": args.seed, "max_batch_size": args.batch_size,
         "temperature": 0.7, "cfg_scale": 0.0, "remasking": "low_confidence",
-        "geometry_support_scope": "post_construction_repair_only" if args.repair else "original_constructor_masks_only",
+        "geometry_support_scope": ("construction_and_repair" if args.repair else "construction") if args.construction_geometry
+                                  else ("post_construction_repair_only" if args.repair else "original_constructor_masks_only"),
+        "construction_geometry_enabled": bool(args.construction_geometry),
         "post_construction_repair": bool(args.repair),
         "repair_checkpoint": str(args.repair_checkpoint.resolve()) if args.repair_checkpoint else None,
     })
@@ -616,6 +650,11 @@ def main() -> None:
     write_json(args.output_dir / "batch_partition.json", [[task["sample_idx"] for task in batch] for batch in batches])
 
     import torch
+    geometry_api = None
+    if args.construction_geometry:
+        # Bind current support helpers before historical package names are installed.
+        from crystal_dlm import r03_geometry_bridge as geometry_api
+    no_support_error = geometry_api.GeometryNoLegalSupport if geometry_api is not None else ()
 
     with frozen_imports(runtime):
         api = runtime.module
@@ -637,17 +676,29 @@ def main() -> None:
     graphs = {}
     progress_path = args.output_dir / "body_progress.jsonl"
     for batch_index, batch in enumerate(batches):
-        with frozen_imports(runtime):
-            suffix, batch_meta = construct_batch(model, tokenizer, batch, runtime, constraints=constraints)
-            for row_index, (task, body_ids) in enumerate(zip(batch, suffix.tolist())):
-                record, graph = materialize_record(task, body_ids, runtime=runtime, tokenizer=tokenizer, process_one=process_one)
-                record["prefill_token_ids"] = {position: values[row_index] for position, values in batch_meta["prefill"].items()}
-                record["body_prompt_token_count"] = batch_meta["prompt_token_lengths"][row_index]
-                records[task["ordinal"]] = record
-                if graph is not None:
-                    graphs[task["ordinal"]] = graph
-                with progress_path.open("a", encoding="utf-8") as handle:
-                    handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+        try:
+            with frozen_imports(runtime):
+                suffix, batch_meta = construct_batch(model, tokenizer, batch, runtime,
+                                                     constraints=constraints, geometry_api=geometry_api)
+                for row_index, (task, body_ids) in enumerate(zip(batch, suffix.tolist())):
+                    record, graph = materialize_record(task, body_ids, runtime=runtime, tokenizer=tokenizer, process_one=process_one)
+                    record["prefill_token_ids"] = {position: values[row_index] for position, values in batch_meta["prefill"].items()}
+                    record["body_prompt_token_count"] = batch_meta["prompt_token_lengths"][row_index]
+                    if "construction_geometry" in batch_meta:
+                        record["construction_geometry"] = batch_meta["construction_geometry"]
+                    records[task["ordinal"]] = record
+                    if graph is not None:
+                        graphs[task["ordinal"]] = graph
+                    with progress_path.open("a", encoding="utf-8") as handle:
+                        handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+        except no_support_error as error:
+            if len(batch) != 1:
+                raise RuntimeError("construction no-support failure is not a singleton") from error
+            task = batch[0]
+            record = construction_failure_record(task, error.to_dict())
+            records[task["ordinal"]] = record
+            with progress_path.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(record, ensure_ascii=False) + "\n")
         progress = {"event": "r03_body_progress", "batches_completed": batch_index + 1,
                     "total_batches": len(batches), "requests_completed": len(records),
                     "expected_requests": len(tasks), "elapsed_seconds": round(time.monotonic() - started, 2)}
@@ -679,6 +730,9 @@ def main() -> None:
                 torch.cuda.empty_cache()
             write_json(args.output_dir / "repair_checkpoint_identity.json", receipt)
         for batch_index, batch in enumerate(batches):
+            batch = [task for task in batch if records[task["ordinal"]].get("body_generation_complete")]
+            if not batch:
+                continue
             bodies = [records[task["ordinal"]]["raw_body_token_ids"] for task in batch]
             revised, traces = repair_batch(
                 model, tokenizer, batch, bodies, constraints=repair_constraints,
@@ -706,6 +760,8 @@ def main() -> None:
                               prefill_token_ids=original["prefill_token_ids"],
                               body_prompt_token_count=original["body_prompt_token_count"],
                               repair_checkpoint=str(args.repair_checkpoint or args.b0_checkpoint))
+                if "construction_geometry" in original:
+                    record["construction_geometry"] = original["construction_geometry"]
                 records[ordinal] = record
                 with (args.output_dir / "repair_progress.jsonl").open("a", encoding="utf-8") as handle:
                     handle.write(json.dumps(record, ensure_ascii=False) + "\n")

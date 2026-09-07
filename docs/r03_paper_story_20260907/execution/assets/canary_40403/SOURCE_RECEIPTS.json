@@ -1,0 +1,44 @@
+[
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_40400/I/body/raw_generations.jsonl",
+    "bytes": 251965,
+    "sha256": "ef034a8ba602830bb85c6ab028995db8051aaa7f1769c46cc6530a0ab215713e",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_40403\\I_body.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_40400/R/body/raw_generations.jsonl",
+    "bytes": 252624,
+    "sha256": "f4f3f07b2e635ec2ce00148a72714aa91c2d4137fa2fd01ea0b33f3e9235bae1",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_40403\\R_body.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_repair_40403/G/body/raw_generations.jsonl",
+    "bytes": 316272,
+    "sha256": "26dc5583dfaccad28131ae84fc7acb7b2c894463459a228f981237650b79f3d4",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_40403\\G_body.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_repair_40403/P/body/raw_generations.jsonl",
+    "bytes": 317775,
+    "sha256": "90109dbe4a157ff42f3ccae793555f93cfe45ba23b05ab5296873129c9ebd8c1",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_40403\\P_body.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/physics_40399/train/TRAIN_FINAL.json",
+    "bytes": 4089,
+    "sha256": "ee5ee7420b1c0a4c6de8d39bfd0ffa5dc6cfaebb746d4677cae25cc3bf150532",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_40403\\PHYSICS_FINAL.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/physics_40399/data/PREPARATION_FINAL.json",
+    "bytes": 15811,
+    "sha256": "234e2a737ce739cfeac369714cd908a8daab484eeff9a5221ab24a3db4037e3e",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_40403\\PHYSICS_PREPARATION.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/pointer_40395/train/results.json",
+    "bytes": 937,
+    "sha256": "db82ce1432e7b4968b57f763cdcf9bfc525142f2b9167bb014234c674dc0b11d",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_40403\\POINTER_RESULTS.json"
+  }
+]

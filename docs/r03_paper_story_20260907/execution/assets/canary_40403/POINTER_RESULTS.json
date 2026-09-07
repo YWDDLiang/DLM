@@ -1,0 +1,29 @@
+{
+  "checkpoint_sha256": "bc62f0606c21dcd74911358ba451b464016f2f97363d5a3f7e0be0eceb945266",
+  "train": {
+    "checkpoint_selection": "final_one_pass_only",
+    "epochs": 1,
+    "pointer_nll_per_active_step": 0.33700539498086823,
+    "rows_seen": 27136,
+    "source_visit_order_sha256": "548bb2e0f580cad10a8b543361cfb80e7446374876acc3b7f173949391982f45",
+    "updates": 212
+  },
+  "validation": {
+    "canonical_exact_permutation_accuracy": 0.13783574665635018,
+    "counts": {
+      "canonical_exact": 1247,
+      "exact": 6419,
+      "noncanonical": 7942,
+      "pair_correct": 24076,
+      "pairs": 29641,
+      "root": 7142,
+      "rows": 9047
+    },
+    "exact_permutation_accuracy": 0.7095169669503703,
+    "noncanonical_program_fraction": 0.8778600641096496,
+    "pairwise_order_accuracy": 0.8122532977969704,
+    "pointer_nll_per_active_step": 0.24819928755558232,
+    "root_accuracy": 0.7894329612026086,
+    "rows": 9047
+  }
+}

@@ -1,10 +1,14 @@
 """CPU call-contract fixtures; no original B0 model or GPU is loaded."""
 import copy
 import importlib
+import importlib.util
+import json
 from pathlib import Path
 import sys
+import tempfile
 from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 from scripts.run_r03_integrated_body import (
     FrozenRuntime, construct_batch, frozen_imports, make_batches,
@@ -142,6 +146,136 @@ class DenominatorTest(unittest.TestCase):
 
     def test_explicit_failed_status_takes_precedence_over_parseable_plan(self):
         self.assertIsNotNone(upstream_failure({"attempt_status": "failed", "plan_state": sample_plan()}))
+
+
+@unittest.skipIf(torch is None or not OLD_ROOT.exists(), "CPU torch and archived schedule fixture required")
+class ConstructionGeometryMainAccountingTest(unittest.TestCase):
+    def test_real_main_keeps_no_support_request_and_repairs_only_completed_body(self):
+        from scripts import run_r03_integrated_body as entry
+        from crystal_dlm.r03_geometry_bridge import GeometryNoLegalSupport
+
+        runtime = load_schedule_fixture()
+        model = torch.nn.Linear(1, 1)
+        tokenizer = RepairTokenizer()
+        runtime.module.load_model_and_tokenizer = lambda *args: (model, tokenizer)
+        runtime.module.assert_body_tokenizer_identity = lambda *args, **kwargs: {"vocab_size": 128830}
+        runtime.module.import_process_one = lambda *args: None
+        runtime.module.build_dynamic_lightweight_constraints = lambda *args, **kwargs: {"native": True}
+        rows = [{"sample_idx": index, "plan_state": sample_plan(), "attempt_status": "complete"} for index in range(2)]
+        construct_visits, repair_visits, endpoint_records = [], [], []
+
+        def construct(_model, _tokenizer, batch, _runtime, *, constraints, geometry_api):
+            self.assertIsNotNone(geometry_api)
+            self.assertEqual(len(batch), 1)
+            task = batch[0]
+            construct_visits.append(task["sample_idx"])
+            if task["sample_idx"] == 0:
+                raise GeometryNoLegalSupport({"reason": "pbc_no_legal_completion"},
+                    torch.full((1, 21), 126336, dtype=torch.long), 2)
+            return torch.ones(1, 19, dtype=torch.long), {"prefill": {"0": [3]}, "prompt_token_lengths": [2],
+                                                       "construction_geometry": {"enabled": True, "failed": False}}
+
+        def materialize(task, body_ids, **kwargs):
+            record = entry.base_record(task)
+            record.update(body_generation_complete=True, body_plan_match=True, body_graph_complete=True,
+                          status="succeeded", parsed=True, attempt_status="complete", raw_body_token_ids=body_ids,
+                          arrays={"fixture": True})
+            return record, {"sample_idx": task["sample_idx"]}
+
+        def repair(_model, _tokenizer, tasks, bodies, **kwargs):
+            repair_visits.extend(task["sample_idx"] for task in tasks)
+            self.assertEqual([task["sample_idx"] for task in tasks], [1])
+            return bodies, [{"status": "ok", "transactions": [], "attempted_anchors": 0,
+                             "committed_anchors": 0, "rolled_back_anchors": 0, "geometry_after": {"supported": True}}]
+
+        def write_endpoint(_directory, tasks, records, graphs, *, runtime, elapsed, prefix=""):
+            ordered = [copy.deepcopy(records[index]) for index in range(len(tasks))]
+            endpoint_records.append((prefix, ordered, sorted(graphs)))
+            return entry.summarize(ordered, elapsed=elapsed)
+
+        with tempfile.TemporaryDirectory() as folder:
+            temporary = Path(folder)
+            inputs = temporary / "plans.jsonl"
+            inputs.write_text("".join(json.dumps(row) + "\n" for row in rows), encoding="utf-8")
+            output = temporary / "out"
+            argv = ["run_r03_integrated_body.py", "--frozen-runtime-root", str(OLD_ROOT),
+                    "--base-model", str(temporary / "base"), "--b0-checkpoint", str(temporary / "B0"),
+                    "--plans-jsonl", str(inputs), "--output-dir", str(output), "--crysllmgen-dir", str(temporary),
+                    "--seed", "17", "--expected-requests", "2", "--batch-size", "1", "--device", "cpu",
+                    "--construction-geometry", "--repair", "--geometry-support"]
+            with patch.object(sys, "argv", argv), patch.object(entry, "load_frozen_runtime", return_value=runtime), \
+                    patch.object(entry, "validate_b0_checkpoint", return_value={"fixture": True}), \
+                    patch.object(entry, "construct_batch", side_effect=construct), \
+                    patch.object(entry, "materialize_record", side_effect=materialize), \
+                    patch.object(entry, "repair_batch", side_effect=repair), \
+                    patch.object(entry, "write_endpoint", side_effect=write_endpoint):
+                entry.main()
+            self.assertTrue((output / "_SUCCESS").is_file())
+            progress_rows = [json.loads(line) for line in (output / "body_progress.jsonl").read_text().splitlines()]
+        self.assertEqual(construct_visits, [0, 1])
+        self.assertEqual(repair_visits, [1])
+        self.assertEqual(len(progress_rows), 2)
+        final_rows = endpoint_records[-1][1]
+        self.assertEqual([row["sample_idx"] for row in final_rows], [0, 1])
+        failure = final_rows[0]
+        self.assertEqual(failure["attempt_status"], "construction_constraint_failure")
+        self.assertFalse(failure["body_generation_complete"])
+        self.assertFalse(failure["repair_used"])
+        self.assertNotIn("repair_trace", failure)
+        self.assertNotIn("raw_body_token_ids", failure)
+        self.assertEqual(failure["repair_skip_reason"], "construction_incomplete")
+        self.assertIn("partial_body_token_ids", failure["construction_geometry"]["failure"])
+        metrics = entry.summarize(final_rows, elapsed=1)
+        self.assertEqual(metrics["requested_samples"], 2)
+        self.assertEqual(metrics["decoded_samples"], 1)
+        self.assertEqual(metrics["construction_constraint_failures"], 1)
+        self.assertEqual(metrics["graph_acceptance_rate"], 0.5)
+
+    def test_geometry_on_refuses_non_singleton_before_model_loading(self):
+        from scripts import run_r03_integrated_body as entry
+        with tempfile.TemporaryDirectory() as folder:
+            temporary = Path(folder)
+            argv = ["run_r03_integrated_body.py", "--frozen-runtime-root", str(OLD_ROOT),
+                    "--base-model", "fixture", "--b0-checkpoint", "fixture", "--plans-jsonl", "fixture",
+                    "--output-dir", str(temporary / "out"), "--crysllmgen-dir", "fixture", "--seed", "17",
+                    "--expected-requests", "2", "--batch-size", "2", "--construction-geometry"]
+            with patch.object(sys, "argv", argv), patch.object(entry, "load_frozen_runtime") as loader:
+                with self.assertRaisesRegex(ValueError, "batch-size 1"):
+                    entry.main()
+                loader.assert_not_called()
+
+
+class TrialComponentDispatchContractTest(unittest.TestCase):
+    def test_all_trial_arms_default_to_singletons_and_GP_share_plans_and_noise(self):
+        location = Path(__file__).parents[1] / "operations/r03_c3fd_main_20260907/run_trial.py"
+        before = list(sys.path)
+        sys.path.insert(0, str(location.parent))
+        try:
+            spec = importlib.util.spec_from_file_location("r03_trial_dispatch_cpu_fixture", location)
+            trial = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(trial)
+        finally:
+            sys.path[:] = before
+        commands = {}
+        with tempfile.TemporaryDirectory() as folder:
+            temporary = Path(folder)
+            for role in "RIGP":
+                directory = temporary / role
+                directory.mkdir()
+                (directory / "COMPONENT_FINAL.json").write_text(json.dumps({"role": role}), encoding="utf-8")
+                with patch.object(trial.sp, "run", return_value=SimpleNamespace(returncode=0)) as run:
+                    trial.component(temporary, directory, role, "0", count=256, seed=202609071,
+                                    plans=temporary / "shared_plans.jsonl" if role in "GP" else None,
+                                    programs=role in "GP", repair=temporary / "P" if role == "P" else None,
+                                    construction_geometry=role in "GP")
+                    commands[role] = run.call_args.args[0]
+        for role, command in commands.items():
+            self.assertEqual(command[command.index("--body-batch-size") + 1], "1")
+            self.assertEqual("--construction-geometry" in command, role in "GP")
+        for name in ("--plans-jsonl", "--body-seed", "--planner-seed", "--refiner-seed"):
+            self.assertEqual(commands["G"][commands["G"].index(name) + 1], commands["P"][commands["P"].index(name) + 1])
+        self.assertNotIn("--repair-checkpoint", commands["G"])
+        self.assertIn("--repair-checkpoint", commands["P"])
 
 
 if torch is not None:

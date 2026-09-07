@@ -1,0 +1,116 @@
+{
+  "adapter_sha256": "dc141600309a6f4e00ee71ffca23fcd4119f98a9cd351c2e6b6eba9bf37abfe1",
+  "construction_checkpoint": {
+    "adapter_config": {
+      "alpha_pattern": {},
+      "auto_mapping": {
+        "base_model_class": "LLaDAModelLM",
+        "parent_library": "transformers_modules.modeling_llada"
+      },
+      "base_model_name_or_path": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct/",
+      "bias": "none",
+      "corda_config": null,
+      "eva_config": null,
+      "exclude_modules": null,
+      "fan_in_fan_out": false,
+      "inference_mode": true,
+      "init_lora_weights": true,
+      "layer_replication": null,
+      "layers_pattern": null,
+      "layers_to_transform": null,
+      "loftq_config": {},
+      "lora_alpha": 32,
+      "lora_bias": false,
+      "lora_dropout": 0.05,
+      "megatron_config": null,
+      "megatron_core": "megatron.core",
+      "modules_to_save": [
+        "model.transformer.wte",
+        "model.transformer.ff_out"
+      ],
+      "peft_type": "LORA",
+      "qalora_group_size": 16,
+      "r": 8,
+      "rank_pattern": {},
+      "revision": null,
+      "target_modules": [
+        "up_proj",
+        "k_proj",
+        "ff_proj",
+        "v_proj",
+        "q_proj"
+      ],
+      "task_type": null,
+      "trainable_token_indices": null,
+      "use_dora": false,
+      "use_qalora": false,
+      "use_rslora": false
+    },
+    "adapter_config_sha256": "2b69a62cc62fdb89ecc8178a6a6fdd6bc03cac702d7bcef2dd282ea7a0bca868",
+    "adapter_sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+    "tokenizer_json_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509"
+  },
+  "elapsed_seconds": 1264.8073910921812,
+  "eligible_policy": true,
+  "final_tables_equal_to_B0": {
+    "embedding": true,
+    "head": true
+  },
+  "fresh_optimizer": true,
+  "frozen_parameter_version_changes": [],
+  "initial_supported_logit_delta": 0.0,
+  "learning_rate": 1e-06,
+  "method": "r03_existing_native_physics_transfer_v1",
+  "new_physics_labels": false,
+  "new_process_reload_verified": false,
+  "new_sampling": false,
+  "old_teacher_guarantee_transferred": false,
+  "physical_benefit": "unmeasured_until_registered_G_vs_P_development_and_final_SUN",
+  "physical_source_summary": {
+    "compatible_occurrences": 1942,
+    "composition_mass_max": 0.0013513513513513516,
+    "composition_mass_min": 0.001351351351351351,
+    "conditions_with_dropped_positive_mass": 0,
+    "exact_compositions": 740,
+    "new_same_state_counterfactual_claimed": false,
+    "normalization": "equal exact-composition mass; equal separate original-condition mass; renormalized original q",
+    "old_dual_objective_guarantee_transferred": false,
+    "retained_original_teacher_mass": {
+      "max": 1.0000000000000002,
+      "mean": 1.0,
+      "min": 0.9999999999999998
+    },
+    "single_occurrence_conditions": 291,
+    "source_conditions": 740
+  },
+  "policy_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/physics_40399/train/checkpoints/step-128",
+  "repair_view_schema": "r03_composition_current_canvas_xyz_v1",
+  "role": "repair_only",
+  "saved_table_keys": {
+    "ff_out": [
+      "base_model.model.model.transformer.ff_out.weight"
+    ],
+    "wte": [
+      "base_model.model.model.transformer.wte.weight"
+    ]
+  },
+  "support_protocol": {
+    "canonicalize_periodic_alias": true,
+    "coord_period": 100,
+    "duplicate_coordinate_mask": true,
+    "lattice_volume_mask": true,
+    "max_atoms": 20,
+    "min_lattice_rad": 0.0001,
+    "pbc_image_radius": 2,
+    "pbc_min_distance_A": 0.5,
+    "pbc_min_distance_mask": true,
+    "representation": "dynamic_v1"
+  },
+  "training_states": {
+    "MP20_scalar_states": 2048,
+    "physics_scalar_states": 2048,
+    "reference_scalar_states": 2048
+  },
+  "updates": 128
+}
