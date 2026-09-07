@@ -1,5 +1,6 @@
 """Adversarial feedback attribution checks without a live MLIP or GPU."""
 from collections import Counter
+from contextlib import nullcontext
 from copy import deepcopy
 import hashlib
 import json
@@ -136,10 +137,10 @@ class StudentFeedbackAttributionAudit(unittest.TestCase):
                                                    self.tokenizer, root / 'compiled')
         return report, data.read_rows(root / 'compiled/train.jsonl')
 
-    def additional_labels(self, fixture, *, mid_energy=-1.15, worker_error=False):
+    def additional_labels(self, fixture, *, mid_energy=-1.15, worker_error=False, real_mson=False):
         root, _, _, samples, _, _ = fixture
         prepared, labels = root / 'additional-prepared', root / 'additional-labels'
-        with patch.object(data, 'physics_input', side_effect=endpoint):
+        with nullcontext() if real_mson else patch.object(data, 'physics_input', side_effect=endpoint):
             data.prepare_student_proposals(samples, self.tokenizer, prepared)
         inputs = data.read_rows(prepared / 'inputs.jsonl')
         labels.mkdir()
@@ -163,9 +164,9 @@ class StudentFeedbackAttributionAudit(unittest.TestCase):
         (labels / ('_ENGINEERING_FAILED' if worker_error else '_SUCCESS')).touch()
         return prepared, labels
 
-    def compile_with_additional(self, fixture, additional):
+    def compile_with_additional(self, fixture, additional, *, real_mson=False):
         root, prepared, reference, samples, labels, _ = fixture
-        with patch.object(data, 'physics_input', side_effect=endpoint):
+        with nullcontext() if real_mson else patch.object(data, 'physics_input', side_effect=endpoint):
             report = data.compile_student_feedback(samples, labels, [prepared], [reference], self.tokenizer,
                                                    root / 'compiled-additional', proposal_prepared=additional[0],
                                                    proposal_labels=additional[1])
@@ -330,6 +331,49 @@ class StudentFeedbackAttributionAudit(unittest.TestCase):
                 transaction = next(row for row in rows if ':observed_complete_transaction:S' in row['record_id'])
                 self.assertAlmostEqual(transaction['gain_eV_atom'], .2)
                 self.assertTrue(transaction['accept_label'])
+
+    def test_real_mson_json_roundtrip_preserves_full_proposal_binding(self):
+        fixture = self.fixture()
+        _, prepared, reference, samples, labels, bodies = fixture
+        # Replace the lightweight geometry fixtures with actual pymatgen MSON
+        # for every endpoint. All subsequent preparation/rebinding is real.
+        for input_path, label_dir in ((prepared / 'all_inputs.jsonl', reference),
+                                      (samples / 'physics.jsonl', labels)):
+            updated = []
+            for record in data.read_rows(input_path):
+                body = bodies[record['trajectory_id']]
+                updated.append(data.physics_input(record['trajectory_id'], record['group_id'],
+                    record['source_row_idx'], record['source_split'], record['endpoint'],
+                    data.decode_body(body, self.inverse), ''.join(self.inverse[token] for token in body)))
+            write_rows(input_path, updated)
+            by_id = {row['trajectory_id']: row for row in updated}
+            label_rows = data.read_rows(label_dir / 'labels.jsonl')
+            for row in label_rows:
+                source = by_id[row['trajectory_id']]
+                row['final_structure'] = source['structure']
+                row['endpoint_cache_key'] = data.endpoint_fingerprint(source)
+            write_rows(label_dir / 'labels.jsonl', label_rows)
+            report_path = label_dir / 'LABEL_FINAL.json'
+            report = json.loads(report_path.read_text())
+            report['input_sha256'] = data.sha256(input_path)
+            report_path.write_text(json.dumps(report), encoding='utf-8')
+        preparation_path = prepared / 'PREPARATION_FINAL.json'
+        preparation = json.loads(preparation_path.read_text())
+        preparation['files_sha256']['all_inputs.jsonl'] = data.sha256(prepared / 'all_inputs.jsonl')
+        preparation_path.write_text(json.dumps(preparation), encoding='utf-8')
+
+        additional = self.additional_labels(fixture, real_mson=True)
+        expected, expected_map = data.student_proposal_inputs(data.read_rows(samples / 'samples.jsonl'), self.tokenizer)
+        persisted = data.read_rows(additional[0] / 'inputs.jsonl')
+        self.assertIsInstance(expected[0]['structure']['lattice']['pbc'], tuple)
+        self.assertIsInstance(persisted[0]['structure']['lattice']['pbc'], list)
+        self.assertNotEqual(expected, persisted)
+        self.assertEqual(json.dumps(expected, sort_keys=True), json.dumps(persisted, sort_keys=True))
+        self.assertEqual(expected_map, data.read_rows(additional[0] / 'proposal_map.jsonl'))
+        _, rows = self.compile_with_additional(fixture, additional, real_mson=True)
+        action = next(row for row in rows if ':proposal_1:S' in row['record_id'])
+        self.assertAlmostEqual(action['gain_eV_atom'], .05)
+        self.assertTrue(action['old_physics_id'].startswith('expert-proposal:'))
 
     def test_rejected_complete_proposals_are_included_once_without_quality_selection(self):
         fixture = self.fixture()
