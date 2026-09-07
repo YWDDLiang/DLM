@@ -646,6 +646,19 @@ def expert_main(argv):
     checkpoint_modules = enable_native_checkpointing(model.base_model)
     if not checkpoint_modules:
         raise ValueError('native LLaDA activation checkpointing is required')
+    import inspect
+    implementation = {}
+    checkpoint_options = {}
+    for name, module in model.base_model.named_modules():
+        callback = getattr(module, '_activation_checkpoint_fn', None)
+        if callback is not None:
+            checkpoint_options[name] = {key: str(value) if not isinstance(value, (bool, int, float, str, type(None)))
+                                         else value for key, value in getattr(callback, 'keywords', {}).items()}
+            path = inspect.getsourcefile(type(module))
+            if path:
+                implementation[str(path)] = file_sha256(path)
+    if not checkpoint_options or any(options.get('use_reentrant') is not False for options in checkpoint_options.values()):
+        raise ValueError('actual LLaDA checkpoint implementation must establish use_reentrant=False')
     model.base_model.enable_input_require_grads()
     probe_examples = [train_data[0]]
     probe = materialize_edit_batch(probe_examples, tokenizer, device)
@@ -677,6 +690,7 @@ def expert_main(argv):
               'total_parameters': sum(p.numel() for p in model.parameters()), 'saved_tables': tables,
               'b0_identity': b0_identity, 'loaded_lora': lora_identity,
               'content_gradient_audit': gradients, 'checkpoint_modules': checkpoint_modules,
+              'checkpoint_options': checkpoint_options, 'modeling_source_sha256': implementation,
               'train_sources': len({row['ancestor_id'] for row in train_data.records}),
               'dev_sources': len({row['ancestor_id'] for row in dev_data.records}),
               'positive_edits': {task: len(rows) for task, rows in train_data.content.items()},

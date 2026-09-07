@@ -5,7 +5,10 @@ encoder. Tied token embeddings isolate numeric conditioning from ordinary token
 identity, so the current-state tests cannot pass through the base embedding alone.
 """
 from dataclasses import dataclass
+import datetime
 import math
+from pathlib import Path
+import tempfile
 from types import SimpleNamespace
 import unittest
 
@@ -17,6 +20,7 @@ from crystal_dlm.expert_edit import (
     EditContext,
     ExpertEditConfig,
     ExpertEditDLM,
+    ExpertEditObjective,
     set_editor_trainable,
 )
 from crystal_dlm.fixed_slot import build_special_tokens
@@ -58,6 +62,7 @@ class AuditBase(nn.Module):
         nn.init.normal_(self.lora_B["default"].weight, std=0.04)
         self.config = SimpleNamespace(hidden_size=hidden_size, d_model=hidden_size)
         self.recompute = True
+        self.encoder_invocations = 0
 
     def get_input_embeddings(self):
         return self.embedding
@@ -75,6 +80,7 @@ class AuditBase(nn.Module):
             attention_mask = torch.ones(values.shape[:2], device=values.device)
 
         def encode(tensor, present):
+            self.encoder_invocations += 1
             tensor = tensor + self.lora_B["default"](self.lora_A["default"](tensor))
             scores = tensor @ tensor.transpose(-1, -2) / math.sqrt(tensor.shape[-1])
             scores = scores.masked_fill(
@@ -418,6 +424,93 @@ def _check_decision_shapes_and_padding_are_isolated_across_mixed_length_rows():
         torch.testing.assert_close(getattr(output, name), getattr(changed, name), atol=0, rtol=0)
 
 
+def _ddp_audit_worker(rank, rendezvous):
+    """Exercise different label availability on two ranks, without any GPU."""
+    import torch.distributed as dist
+    from torch.nn.parallel import DistributedDataParallel
+
+    torch.set_num_threads(1)
+    dist.init_process_group(
+        "gloo", init_method=rendezvous, rank=rank, world_size=2,
+        timeout=datetime.timedelta(seconds=45),
+    )
+    try:
+        case = _case(mixed=True)
+        set_editor_trainable(case.model)
+        learner = DistributedDataParallel(
+            case.model, broadcast_buffers=False, static_graph=True
+        ).train()
+        context = EditContext(**{
+            name: getattr(case.context, name)[rank:rank + 1]
+            for name in case.context.__dataclass_fields__
+        })
+        context = _context(context, task_ids=torch.tensor([rank]))
+        attention = case.attention[rank:rank + 1]
+        parameters = [parameter for parameter in case.model.parameters() if parameter.requires_grad]
+        optimizer = torch.optim.SGD(parameters, lr=0.003)
+        objective = ExpertEditObjective(case.tokenizer, torch.device("cpu"))
+        count = int(context.num_sites[0])
+        prompt = int(context.prompt_lengths[0])
+        for step in range(3):
+            optimizer.zero_grad(set_to_none=True)
+            for micro in range(2):
+                kind = (step + rank + micro) % 3  # content, inspect, judge
+                current = (
+                    case.current[rank:rank + 1] if kind == 0
+                    else context.old_token_ids
+                )
+                active = (
+                    torch.zeros_like(context.active_token_mask) if kind == 1
+                    else context.active_token_mask
+                )
+                view_context = _context(
+                    context, active_token_mask=active,
+                    reveal_fraction=torch.tensor([float(kind != 0)]),
+                )
+                targets = torch.full_like(current, -100)
+                mode_targets = torch.tensor([-100])
+                count_targets = torch.tensor([-100])
+                site_targets = torch.full((1, 20), -1.0)
+                quality_targets = torch.zeros(1, 4)
+                quality_mask = torch.zeros(1, 4, dtype=torch.bool)
+                if kind == 0:
+                    positions = [prompt + pos for pos in _numeric_positions(count)]
+                    targets[0, positions] = context.old_token_ids[0, positions]
+                    targets[0, prompt + 8] = case.tokenizer.vocab["<X_065>"]
+                elif kind == 1:
+                    mode_targets[0], count_targets[0] = 1, 0
+                    site_targets[0, :count] = 0
+                    site_targets[0, 0] = 1
+                    quality_targets[0, 0], quality_mask[0, 0] = 1, True
+                else:
+                    quality_targets[0, 3] = float(rank == 0)
+                    quality_mask[0, 3] = True
+                batch = {
+                    "targets": targets, "edit_context": view_context,
+                    "mode_targets": mode_targets, "count_targets": count_targets,
+                    "site_targets": site_targets, "quality_targets": quality_targets,
+                    "quality_mask": quality_mask,
+                }
+                output = learner(current, attention_mask=attention, edit_context=view_context)
+                loss, _ = objective(output, batch)
+                assert torch.isfinite(loss)
+                (loss / 2).backward()
+            assert all(
+                parameter.grad is not None and torch.isfinite(parameter.grad).all()
+                for parameter in parameters
+            )
+            optimizer.step()
+        assert case.model.base_model.encoder_invocations > case.model.forward_calls
+        # All-reduced gradients must leave the two replicas identical despite
+        # different atom counts and different available labels on each rank.
+        for parameter in parameters:
+            expected = parameter.detach().clone()
+            dist.broadcast(expected, src=0)
+            torch.testing.assert_close(parameter, expected, atol=0, rtol=0)
+    finally:
+        dist.destroy_process_group()
+
+
 class TestExpertEditModel(unittest.TestCase):
     def test_zero_residuals_preserve_masked_b0_logits(self):
         _check_zero_residuals_preserve_b0_logits(inspection=False)
@@ -472,6 +565,16 @@ class TestExpertEditModel(unittest.TestCase):
         for name in ("mode_logits", "site_logits", "count_logits", "quality_logits"):
             value = getattr(output, name)
             assert value.dtype == torch.float32 and torch.isfinite(value).all()
+
+    def test_static_graph_ddp_with_checkpointing_and_mixed_label_availability(self):
+        import torch.distributed as dist
+        import torch.multiprocessing as mp
+
+        if not dist.is_available() or not dist.is_gloo_available():
+            self.skipTest("CPU Gloo backend is unavailable")
+        with tempfile.TemporaryDirectory(prefix="expert_edit_ddp_") as directory:
+            rendezvous = (Path(directory) / "rendezvous").resolve().as_uri()
+            mp.spawn(_ddp_audit_worker, args=(rendezvous,), nprocs=2, join=True)
 
 
 if __name__ == "__main__":

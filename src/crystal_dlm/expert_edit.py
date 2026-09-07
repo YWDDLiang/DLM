@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import hashlib
 import random
+from typing import NamedTuple
 
 import torch
 from torch import nn
@@ -50,8 +51,7 @@ class EditContext:
     reveal_fraction: torch.Tensor
 
 
-@dataclass
-class EditOutput:
+class EditOutput(NamedTuple):
     logits: torch.Tensor
     mode_logits: torch.Tensor
     site_logits: torch.Tensor
