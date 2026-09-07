@@ -80,6 +80,12 @@ def validate_manifest(manifest, manifest_path):
         raise ValueError("explicit trial schema and phase are required")
     count = manifest.get("expected_requests")
     formal = manifest.get("cohort_role") == "independent_main"
+    preview_roles = manifest.get('preview_roles')
+    preview = preview_roles is not None
+    if preview and (formal or count != 256 or not isinstance(preview_roles, list)
+                    or not 0 < len(preview_roles) < 4 or len(set(preview_roles)) != len(preview_roles)
+                    or not set(preview_roles).issubset(ROLE_ORDER)):
+        raise ValueError('preview must declare a subset of completed 256-request pilot methods')
     if type(count) is not int or count not in ((256, 500) if formal else (16, 256)):
         raise ValueError("registered trial counts are 16 canary or 256 pilot requests per method")
     if formal and (manifest.get("selected_role") not in ("G", "P") or not manifest.get("method_freeze")):
@@ -101,6 +107,8 @@ def validate_manifest(manifest, manifest_path):
     expected_roles = ({"I", "G", "P"} if matched_interface else {"G", "P"}) if count == 16 else set(ROLE_ORDER)
     if formal:
         expected_roles = {"R", manifest['selected_role']}
+    elif preview:
+        expected_roles = set(preview_roles)
     roles = [item.get("role") for item in methods]
     ids = [item.get("method_id") for item in methods]
     if len(roles) != len(expected_roles) or set(roles) != expected_roles or len(set(ids)) != len(ids):
@@ -116,7 +124,7 @@ def validate_manifest(manifest, manifest_path):
         normalized.append({**item, "component_dir": resolved(item.get("component_dir"), base)})
     if len({item["component_dir"] for item in normalized}) != len(normalized):
         raise ValueError("one component cannot be counted as two methods")
-    return {"phase": manifest["phase"], "scope": "formal" if formal else ("canary" if count == 16 else "pilot"),
+    return {"phase": manifest["phase"], "scope": "formal" if formal else ('preview' if preview else ("canary" if count == 16 else "pilot")),
             "cohort_role": "independent_main" if formal else "fixed_development",
             "selected_role": manifest.get("selected_role"),
             "expected_requests": count, "methods": normalized,
@@ -124,6 +132,7 @@ def validate_manifest(manifest, manifest_path):
             "registered_construction_geometry": construction_geometry,
             "validity_artifact": validity_artifact,
             "method_freeze": resolved(manifest["method_freeze"], base) if manifest.get("method_freeze") else None,
+            "reuse_report": resolved(manifest['reuse_report'], base) if manifest.get('reuse_report') else None,
             "frozen_config": resolved(manifest.get("frozen_config"), base),
             "hull_run_root": resolved(manifest.get("hull_run_root"), base)}
 
@@ -331,10 +340,12 @@ def preflight_components(trial):
         if set(candidate) != {trial["selected_role"]}:
             raise ValueError("formal components differ from the declared frozen candidate")
         return verified
-    if trial["registered_construction_geometry"]:
+    if trial["registered_construction_geometry"] and {'G', 'P'}.issubset(candidate):
         if candidate["G"]["construction_evidence"]["snapshots"] != candidate["P"]["construction_evidence"]["snapshots"]:
             raise ValueError("G/P actual construction outputs or common no-support failures differ")
-    anchor = candidate["G"]["cells"]["native"]["rows"]
+    if not candidate:
+        return verified
+    anchor = candidate.get('G', next(iter(candidate.values())))["cells"]["native"]["rows"]
     for role, item in candidate.items():
         for a, b in zip(anchor, item["cells"]["native"]["rows"]):
             for field in ("sample_idx", "attempt_id", "plan_state", "prompt", "body_noise_seed"):
@@ -426,6 +437,8 @@ def summarize_evaluation(directory, cell, method, trial):
 
 
 def adoption_rule(scope, summaries, frozen=None):
+    if scope == 'preview':
+        return {'enabled': False, 'selected_role': None, 'reason': 'Completed pilot methods only; full four-arm trial is pending.'}
     if scope == "canary":
         return {"enabled": False, "selected_role": None, "reason": "engineering canary only; no policy selection from 16 requests"}
     if scope == "formal":
@@ -473,6 +486,8 @@ def render_summary(report):
             lines.append(f"The late development counts satisfy the rule for **{report['adoption']['late_development_rule_role']}**; this does not revise the timed freeze.")
         else:
             lines.append("Independent confirmation; no selection from formal scores.")
+    elif report['scope'] == 'preview':
+        lines.append('Completed pilot methods only; full four-arm comparison is pending. No method selection is made.')
     else:
         lines.append("Engineering canary only: no P/G selection is made.")
     return "\n".join(lines) + "\n"
@@ -502,6 +517,20 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
         source_pins.extend(item["source_files"])
         for cell in item["cells"].values():
             source_pins.extend(cell["source_files"])
+    reusable = {}
+    if trial['reuse_report']:
+        prior = read_json(trial['reuse_report'])
+        if (trial['scope'] != 'pilot' or prior.get('scope') != 'preview'
+                or prior['expected_requests'] != trial['expected_requests']
+                or prior['scoring_source']['sha256'] != file_identity(SOURCE / 'scripts/evaluate_programmed_paths.py')['sha256']):
+            raise ValueError('only matching completed pilot preview scores can be reused')
+        require_success(trial['reuse_report'].parent)
+        prior_pins = prior['source_files'] + [pin for row in prior['methods'] for pin in row['evaluation_source_files']]
+        for pin in prior_pins:
+            if file_identity(pin['path'])['sha256'] != pin['sha256']:
+                raise ValueError('a completed preview source or score changed')
+        source_pins.extend(prior_pins + [file_identity(trial['reuse_report'])])
+        reusable = {(row['role'], row['endpoint']): row for row in prior['methods']}
     try:
         actual = output_dir / "ACTUAL_HULL_INPUTS.json"
         write_json(actual, actual_hull_manifest(trial, components))
@@ -518,12 +547,20 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
             parent.mkdir(parents=True, exist_ok=False)
             for endpoint in ENDPOINTS:
                 cell, destination = item["cells"][endpoint], parent / endpoint
-                command_runner([sys.executable, str(SOURCE / "scripts/evaluate_programmed_paths.py"),
+                prior_cell = reusable.get((item['role'], endpoint))
+                if prior_cell is not None:
+                    current_pins = {pin['path']: pin['sha256'] for pin in cell['source_files']}
+                    earlier_pins = {pin['path']: pin['sha256'] for pin in prior['source_files']}
+                    if any(earlier_pins.get(path) != digest for path, digest in current_pins.items()):
+                        raise ValueError('preview inputs differ from the current completed method')
+                    destination = Path(prior_cell['evaluation_directory'])
+                else:
+                    command_runner([sys.executable, str(SOURCE / "scripts/evaluate_programmed_paths.py"),
                                 "--paths-jsonl", str(cell["paths"]), "--labels-jsonl", str(cell["labels"]),
                                 "--frozen-config", str(trial["frozen_config"]), "--official-cache", str(trial["hull_run_root"] / "official_mp_cache"),
                                 "--output-dir", str(destination), "--expected-requests", str(trial["expected_requests"]),
                                 "--endpoint", endpoint, "--cohort-role", trial['cohort_role'], "--policy-stage",
-                                "reference" if item["role"] == "R" else "final"], f"{item['role']}_{endpoint}", output_dir)
+                                    "reference" if item["role"] == "R" else "final"], f"{item['role']}_{endpoint}", output_dir)
                 summaries.append(summarize_evaluation(destination, cell, item, trial))
         for pin in source_pins:
             if file_identity(pin["path"])["sha256"] != pin["sha256"]:
@@ -535,6 +572,8 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                   "adoption": adoption_rule(trial["scope"], summaries, frozen),
                   "labels_created": False, "new_official_query": False, "GPU_calls": 0,
                   "selection_json_used": False, "cross_method_NU_pooling": False,
+                  "complete_four_arm_trial": trial['scope'] == 'pilot',
+                  "reused_cells": [f'{role}:{endpoint}' for role, endpoint in reusable],
                   "registered_construction_geometry": trial["registered_construction_geometry"],
                   "include_matched_interface_reference": trial["include_matched_interface_reference"],
                   "construction_checks": [{"role": item["role"], "geometry_enabled": item["construction_evidence"]["geometry_enabled"],
@@ -542,7 +581,7 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                                             "new_construction_checked": item["construction_evidence"]["new_construction_checked"],
                                             "states": dict(Counter(row["state"] for row in item["construction_evidence"].get("snapshots", [])))}
                                            for item in components],
-                  "G_P_construction_exact_match_checked": trial["registered_construction_geometry"] and trial['scope'] != 'formal',
+                  "G_P_construction_exact_match_checked": trial["registered_construction_geometry"] and {'G', 'P'}.issubset(item['role'] for item in components),
                   "completed_utc": datetime.now(timezone.utc).isoformat()}
         write_json(output_dir / "TRIAL_EVALUATION_FINAL.json", report)
         (output_dir / "summary.md").write_text(render_summary(report), encoding="utf-8")
