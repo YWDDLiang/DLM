@@ -14,4 +14,8 @@ export PYTHONPATH="$SOURCE/src" CUDA_VISIBLE_DEVICES="" TOKENIZERS_PARALLELISM=f
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
 phase=canary
 if [[ "${R03_STAGE:?}" == pilot_evaluate ]]; then phase=pilot256; fi
+if [[ "$R03_STAGE" == formal_evaluate ]]; then phase=formal; fi
 "$PY" "$SOURCE/operations/r03_c3fd_main_20260907/run_evaluation_stage.py" --run-root "$RUNROOT" --phase "$phase"
+if [[ "$R03_STAGE" == pilot_evaluate && ! -f "$RUNROOT/evaluation_canary/_SUCCESS" ]]; then
+  "$PY" "$SOURCE/operations/r03_c3fd_main_20260907/run_evaluation_stage.py" --run-root "$RUNROOT" --phase canary
+fi

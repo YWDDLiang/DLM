@@ -1,4 +1,4 @@
-"""Two-GPU coordinator for the complete repair canary and user-requested 256 trial."""
+"""Two-GPU coordinator for registered canaries, pilot, and independent formal seeds."""
 from __future__ import annotations
 
 import argparse
@@ -16,12 +16,12 @@ from trial_preflight import require_geometry_canary_acceptance
 
 
 def component(run_root, directory, role, gpu, *, count, seed, plans=None, programs=False, repair=None,
-              construction_geometry=False, body_batch_size=1):
+              construction_geometry=False, body_batch_size=1, offset=0):
     command = [sys.executable, str(SOURCE / 'operations/r03_c3fd_main_20260907/run_component.py'),
                '--run-root', str(run_root), '--output-dir', str(directory), '--role', role,
                '--method-id', 'R03_' + role, '--requests', str(count), '--planner-seed', str(seed),
                '--body-seed', str(seed + 100), '--refiner-seed', str(seed + 200),
-               '--body-batch-size', str(body_batch_size)]
+               '--body-batch-size', str(body_batch_size), '--sample-index-offset', str(offset)]
     if construction_geometry:
         command.append('--construction-geometry')
     if plans:
@@ -53,10 +53,23 @@ def physical_checkpoint(run_root, deadline):
 
 
 def main():
+    global SOURCE
     parser = argparse.ArgumentParser()
     parser.add_argument('--run-root', type=Path, required=True)
-    parser.add_argument('--stage', choices=['canary_repair', 'canary_geometry', 'pilot_RI', 'pilot_GP'], required=True)
+    parser.add_argument('--stage', choices=['canary_repair', 'canary_geometry', 'pilot_RI', 'pilot_GP', 'formal'], required=True)
+    parser.add_argument('--requests-per-seed', type=int, choices=[256, 500])
+    parser.add_argument('--planner-seeds', type=int, nargs=2)
+    parser.add_argument('--producer-source', type=Path, help='Use the already frozen component implementation for formal sampling')
     args = parser.parse_args()
+    formal = args.stage == 'formal'
+    if formal:
+        if not args.requests_per_seed or not args.planner_seeds or not args.producer_source:
+            parser.error('formal requires its predeclared count, two seeds, and immutable producer source')
+        if len(set(args.planner_seeds)) != 2 or any(s < 0 or s in (202609070, 202609071) for s in args.planner_seeds):
+            parser.error('formal seeds must be distinct from each other and from canary/pilot seeds')
+        SOURCE = args.producer_source.resolve()
+    elif args.requests_per_seed or args.planner_seeds or args.producer_source:
+        parser.error('formal overrides cannot change an already registered canary or pilot')
     if not os.environ.get('SLURM_JOB_ID'):
         raise ValueError('an existing Slurm allocation is required')
     gpus = os.environ.get('CUDA_VISIBLE_DEVICES', '').split(',')
@@ -66,24 +79,54 @@ def main():
     assets = run_root / 'pointer_40395/assets'
     pointer = run_root / 'pointer_40395/train/r03_control_pointer.pt'
     is_canary = args.stage.startswith('canary_')
-    seed, count = (202609070, 16) if is_canary else (202609071, 256)
+    seed, count = ((args.planner_seeds[0], args.requests_per_seed) if formal else
+                   ((202609070, 16) if is_canary else (202609071, 256)))
     if not is_canary:
         require_geometry_canary_acceptance(run_root, SOURCE)
     root = (run_root / (args.stage + '_' + os.environ['SLURM_JOB_ID']) if is_canary
-            else run_root / 'pilot_256')
+            else run_root / (f'formal_{2 * count}' if formal else 'pilot_256'))
+    if formal:
+        frozen = json.loads((run_root / 'METHOD_FREEZE.json').read_text())
+        registration = json.loads((run_root / 'FORMAL_REGISTRATION.json').read_text())
+        if (frozen['selected_role'] not in ('G', 'P') or frozen['producer_commit'] != SOURCE.name
+                or registration['selected_role'] != frozen['selected_role']
+                or registration['producer_source'] != str(SOURCE)
+                or registration['planner_seeds'] != args.planner_seeds
+                or registration['requests_per_seed'] != count):
+            raise ValueError('formal CLI differs from the frozen method or pre-submission registration')
+        if not (run_root / 'evaluation_pilot256/_SUCCESS').is_file():
+            raise ValueError('the user-requested 256 trial must finish before formal sampling')
     root.mkdir(parents=True, exist_ok=not is_canary)
     lane = root / ('LANE_' + args.stage)
     lane.mkdir(exist_ok=False)
-    write_json(lane / 'REGISTERED.json', {'stage': args.stage, 'requests_per_arm': count, 'planner_seed': seed,
+    write_json(lane / 'REGISTERED.json', {'stage': args.stage, 'requests_per_arm': 2 * count if formal else count, 'planner_seed': seed,
                'body_seed': seed + 100, 'refiner_seed': seed + 200, 'source': str(SOURCE),
-               'job_id': os.environ['SLURM_JOB_ID'], 'role': 'engineering_canary' if count == 16 else 'user_requested_fixed_development',
-               'formal_1000_started': False, 'same_generated_plans_for_I_G_P': True,
-               'construction_geometry_roles': ['G', 'P'] if args.stage != 'canary_repair' else [],
+               'job_id': os.environ['SLURM_JOB_ID'], 'role': 'formal_confirmation' if formal else ('engineering_canary' if count == 16 else 'user_requested_fixed_development'),
+               'formal_1000_started': formal and count == 500, 'formal_sampling_started': formal,
+               'planner_seeds': args.planner_seeds if formal else [seed],
+               'driver_source': str(Path(__file__).resolve().parents[2]),
+               'same_generated_plans_for_I_G_P': not formal,
+               'construction_geometry_roles': [frozen['selected_role']] if formal else (['G', 'P'] if args.stage != 'canary_repair' else []),
                'body_batch_size': 1, 'failed_or_empty_support_requests_retained': True})
     results, failures = {}, {}
     started = time.monotonic()
     try:
-        if args.stage == 'canary_geometry':
+        if formal:
+            selected = frozen['selected_role']
+            repair = physical_checkpoint(run_root, dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=1)) if selected == 'P' else None
+            def formal_arm(role, gpu):
+                destination = root / role
+                destination.mkdir(exist_ok=False)
+                records = []
+                for index, planner_seed in enumerate(args.planner_seeds):
+                    records.append(component(run_root, destination / f'seed_{planner_seed}', role, gpu,
+                                             count=count, seed=planner_seed, offset=index * count,
+                                             repair=repair if role == 'P' else None,
+                                             construction_geometry=role != 'R'))
+                return {'requests': 2 * count, 'components': records}
+            functions = {'R': lambda: formal_arm('R', gpus[0]),
+                         selected: lambda: formal_arm(selected, gpus[1])}
+        elif args.stage == 'canary_geometry':
             # Replay the same actual 16 Plans, pointer outputs and paired seeds.
             plans = run_root / 'canary_repair_40403/shared_I/plans_with_programs.jsonl'
             if not plans.is_file():
@@ -150,11 +193,13 @@ def main():
                     results[name] = future.result()
                 except BaseException as error:
                     failures[name] = {'type': type(error).__name__, 'message': str(error)}
-        write_json(lane / 'STAGE_FINAL.json', {'stage': args.stage, 'requests_per_arm': count, 'results': results,
+        write_json(lane / 'STAGE_FINAL.json', {'stage': args.stage, 'requests_per_arm': 2 * count if formal else count, 'results': results,
                    'failures': failures, 'seconds': time.monotonic() - started, 'pooled_NU_scored_here': False})
         if failures:
             raise RuntimeError('one or more registered components need engineering attention')
         (lane / '_SUCCESS').touch()
+        if formal:
+            (root / '_SUCCESS').touch()
         if is_canary:
             (root / '_SUCCESS').touch()
             marker = 'GEOMETRY_CANARY_COMPLETE.json' if args.stage == 'canary_geometry' else 'REPAIR_CANARY_COMPLETE.json'

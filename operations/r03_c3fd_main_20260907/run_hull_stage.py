@@ -13,7 +13,7 @@ BASE_CACHE = PROJECT / 'workstreams/proposal_realization_candidates_20260826/gro
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--run-root', type=Path, required=True)
-parser.add_argument('--phase', choices=['canary', 'pilot256'], required=True)
+parser.add_argument('--phase', choices=['canary', 'pilot256', 'formal'], required=True)
 parser.add_argument('--login-node-query', action='store_true', help='Run official HTTP queries from the existing login session')
 args = parser.parse_args()
 if args.login_node_query and os.environ.get('SLURM_JOB_ID'):
@@ -28,18 +28,28 @@ hull = root / ('hull_' + args.phase)
 if args.phase == 'canary':
     planners = [('R', root / 'canary_40400/R/planner/plans_for_dlm.jsonl'),
                 ('I', root / 'canary_40400/I/planner/plans_for_dlm.jsonl')]
-else:
+elif args.phase == 'pilot256':
     planners = [('R', root / 'pilot_256/R/planner/plans_for_dlm.jsonl'),
                 ('I', root / 'pilot_256/shared_I/planner/plans_for_dlm.jsonl')]
+else:
+    registration = json.loads((root / 'FORMAL_REGISTRATION.json').read_text())
+    count = registration['requests_per_seed']
+    formal_root = root / f'formal_{2 * count}'
+    planners = [(role, formal_root / role / f'seed_{planner_seed}' / 'planner/plans_for_dlm.jsonl')
+                for role in ('R', registration['selected_role']) for planner_seed in registration['planner_seeds']]
 inputs = {'schema': 'r03_hull_union_inputs_v1', 'purpose': 'evaluation', 'phase': args.phase,
-          'inputs': [{'cell_id': role + '_planner', 'arm': role, 'seed': seed, 'type': 'planner',
-                      'path': str(path), 'expected_requests': count} for role, path in planners]}
+          'inputs': [{'cell_id': role + '_planner_' + str(index), 'arm': role,
+                      'seed': registration['planner_seeds'][index % 2] if args.phase == 'formal' else seed, 'type': 'planner',
+                      'path': str(path), 'expected_requests': count} for index, (role, path) in enumerate(planners)]}
 write_json(execution / 'INPUTS.json', inputs)
 arguments = ['prepare', '--inputs-manifest', execution / 'INPUTS.json', '--known-cache', BASE_CACHE,
              '--query-config', CONFIG, '--query-source-dir', SOURCE / 'eval_runtime', '--run-root', hull]
 canary_fresh = root / 'hull_canary/missing_query/official_mp_cache'
-if args.phase == 'pilot256' and (canary_fresh / 'completion_SUCCESS').is_file():
+if args.phase in ('pilot256', 'formal') and (canary_fresh / 'completion_SUCCESS').is_file():
     arguments += ['--known-cache', canary_fresh]
+pilot_fresh = root / 'hull_pilot256/missing_query/official_mp_cache'
+if args.phase == 'formal' and (pilot_fresh / 'completion_SUCCESS').is_file():
+    arguments += ['--known-cache', pilot_fresh]
 try:
     execute(execution, 'prepare', 'operations/r03_c3fd_main_20260907/prepare_hull_union.py', arguments)
     query = json.loads((hull / 'QUERY_COMMAND.json').read_text())

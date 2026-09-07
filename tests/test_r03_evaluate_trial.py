@@ -181,10 +181,12 @@ class FakeScorer:
             rows.append({"trajectory_id": row["trajectory_id"], "sample_idx": row["sample_idx"], "group_id": row["group_id"],
                          "strict_sun": i < strict, "meta_sun": i < meta, "verified_strict_sun": i < strict,
                          "verified_meta_sun": i < meta, "terminal_verified": True, "reconstructed": True,
+                         "novel": True, "unique_representative": True, "novel_unique": True,
                          "official_hull_status": "known", "terminal_energy_eV_atom": 0.0,
                          "e_above_hull_eV_atom": 0.0})
-        keys = ("strict_sun", "meta_sun", "verified_strict_sun", "verified_meta_sun", "terminal_verified", "reconstructed")
-        report = {"endpoint": argument("--endpoint"), "cohort_role": "fixed_development", "policy_stage": argument("--policy-stage"),
+        keys = ("strict_sun", "meta_sun", "verified_strict_sun", "verified_meta_sun", "terminal_verified", "reconstructed",
+                "novel", "unique_representative", "novel_unique")
+        report = {"endpoint": argument("--endpoint"), "cohort_role": argument("--cohort-role"), "policy_stage": argument("--policy-stage"),
                   "counts": {"requests": len(rows), **{key: sum(row[key] for row in rows) for key in keys}},
                   "frozen_nu_source_sha256": "f" * 64, "terminal_protocol": labels["protocol"],
                   "verification_protocol": labels["verification_protocol"], "official_cache": argument("--official-cache")}

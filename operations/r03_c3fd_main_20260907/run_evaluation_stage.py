@@ -4,16 +4,19 @@ import json
 import os
 from pathlib import Path
 
-from evaluate_trial import evaluate_trial
+from evaluate_trial import evaluate_trial, evaluate_formal
 from run_component import PROJECT
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--run-root', type=Path, required=True)
-parser.add_argument('--phase', choices=['canary', 'pilot256'], required=True)
+parser.add_argument('--phase', choices=['canary', 'pilot256', 'formal'], required=True)
 args = parser.parse_args()
 if not os.environ.get('SLURM_JOB_ID'):
     raise RuntimeError('evaluation requires the registered CPU allocation')
 root = args.run_root.resolve()
+if args.phase == 'formal':
+    print(json.dumps(evaluate_formal(root), sort_keys=True), flush=True)
+    raise SystemExit(0)
 if args.phase == 'canary':
     marker = json.loads((root / 'GEOMETRY_CANARY_COMPLETE.json').read_text())
     components = Path(marker['directory'])

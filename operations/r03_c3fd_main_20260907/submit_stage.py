@@ -20,7 +20,9 @@ def main():
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--afterok", help="Queue pilot_GP after its recorded pilot_RI job succeeds")
-    parser.add_argument("--stage", choices=["canary", "canary_v2", "physics", "canary_repair", "canary_geometry", "pilot_RI", "pilot_GP", "canary_hull", "pilot_hull", "canary_evaluate", "pilot_evaluate"], required=True)
+    parser.add_argument("--stage", choices=["canary", "canary_v2", "physics", "canary_repair", "canary_geometry", "pilot_RI", "pilot_GP", "canary_hull", "pilot_hull", "canary_evaluate", "pilot_evaluate", "formal", "formal_evaluate"], required=True)
+    parser.add_argument("--producer-source", type=Path)
+    parser.add_argument("--wall-minutes", type=int)
     args = parser.parse_args()
     if args.afterok:
         parent = json.loads((args.run_root / 'PILOT_RI_SUBMISSION.json').read_text())
@@ -43,7 +45,34 @@ def main():
                    "pilot_hull": (0, 70, "24G", "hull.sbatch"),
                    "canary_evaluate": (0, 45, "32G", "evaluate.sbatch"),
                    "pilot_evaluate": (0, 80, "32G", "evaluate.sbatch")}
+    stage_specs['formal'] = (2, 270, '200G', 'trial.sbatch')
+    stage_specs['formal_evaluate'] = (0, 20, '32G', 'evaluate.sbatch')
     gpus, minutes, memory, script = stage_specs[args.stage]
+    if args.stage == 'formal':
+        if not args.producer_source or not args.wall_minutes or not 1 <= args.wall_minutes <= 270:
+            parser.error('formal requires its immutable producer source and a wall limit within the remaining budget')
+        minutes = args.wall_minutes
+        registration = json.loads((args.run_root / 'FORMAL_REGISTRATION.json').read_text())
+        frozen = json.loads((args.run_root / 'METHOD_FREEZE.json').read_text())
+        assert registration['producer_source'] == str(args.producer_source)
+        assert registration['wall_minutes'] == minutes
+        assert registration['selected_role'] == frozen['selected_role']
+        assert args.producer_source.name == frozen['producer_commit']
+        assert registration['requests_per_seed'] in (256, 500)
+        assert len(set(registration['planner_seeds'])) == 2
+        assert (args.run_root / 'evaluation_pilot256/_SUCCESS').is_file()
+        assert (args.producer_source / '_CODE_READY').is_file()
+        require_geometry_canary_acceptance(args.run_root, args.producer_source)
+    elif args.stage == 'formal_evaluate':
+        if args.producer_source or (args.wall_minutes is not None and not 1 <= args.wall_minutes <= 80):
+            parser.error('formal evaluation accepts only a CPU wall limit from 1 to 80 minutes')
+        if args.wall_minutes:
+            minutes = args.wall_minutes
+        registration = json.loads((args.run_root / 'FORMAL_REGISTRATION.json').read_text())
+        assert (args.run_root / f"formal_{2 * registration['requests_per_seed']}" / '_SUCCESS').is_file()
+        assert (args.run_root / 'hull_formal/official_mp_cache/completion_SUCCESS').is_file()
+    elif args.producer_source or args.wall_minutes:
+        parser.error('producer and wall overrides apply only to formal sampling')
     cpus = 6 if args.stage.endswith(('_hull', '_evaluate')) else gpus * 4
     if args.stage == "canary_repair":
         assert (args.run_root / "canary_40400/_SUCCESS").is_file(), 'original/interface canary incomplete'
@@ -89,6 +118,11 @@ def main():
     assert sum(row["gpus"] for row in overlapping) + gpus <= 2, overlapping
     assert sum(row['cpus'] for row in overlapping) + cpus <= 8, overlapping
     env = dict(os.environ, R03_SOURCE_ROOT=str(args.source), R03_RUN_ROOT=str(args.run_root), R03_STAGE=args.stage)
+    if args.stage == 'formal':
+        env.update(R03_PRODUCER_SOURCE=str(args.producer_source),
+                   R03_REQUESTS_PER_SEED=str(registration['requests_per_seed']),
+                   R03_FORMAL_SEED_0=str(registration['planner_seeds'][0]),
+                   R03_FORMAL_SEED_1=str(registration['planner_seeds'][1]))
     if not gpus:
         for name in tuple(env):
             if name.startswith(('SBATCH_GRES', 'SBATCH_GPUS', 'SBATCH_TRES', 'SBATCH_CPUS_PER_GPU')):
@@ -113,6 +147,7 @@ def main():
               "cpus": cpus, "submitted_utc": now.isoformat(), "queue_before": resources,
               "resource_scope": "this_registered_run", "task_resource_ceiling": {"A800": 2, "CPUs": 8, "Slurm_jobs": 2},
               "afterok": args.afterok,
+              "formal_registration": registration if args.stage == 'formal' else None,
               "command": command, "physics_updates_fixed_before_evaluation": 128 if args.stage == "physics" else None}
     with receipt.open("x") as handle:
         json.dump(record, handle, indent=2)

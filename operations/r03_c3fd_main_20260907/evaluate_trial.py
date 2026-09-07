@@ -79,23 +79,28 @@ def validate_manifest(manifest, manifest_path):
     if manifest.get("schema") != SCHEMA or not isinstance(manifest.get("phase"), str) or not manifest["phase"]:
         raise ValueError("explicit trial schema and phase are required")
     count = manifest.get("expected_requests")
-    if type(count) is not int or count not in (16, 256):
+    formal = manifest.get("cohort_role") == "independent_main"
+    if type(count) is not int or count not in ((256, 500) if formal else (16, 256)):
         raise ValueError("registered trial counts are 16 canary or 256 pilot requests per method")
+    if formal and (manifest.get("selected_role") not in ("G", "P") or not manifest.get("method_freeze")):
+        raise ValueError("formal components require an explicit frozen candidate")
     matched_interface = manifest.get("include_matched_interface_reference", False)
     if type(matched_interface) is not bool or (count != 16 and matched_interface):
         raise ValueError("include_matched_interface_reference is an optional canary-only boolean")
-    construction_geometry = manifest.get("registered_construction_geometry", count == 256)
-    if type(construction_geometry) is not bool or (count == 256 and not construction_geometry):
+    construction_geometry = manifest.get("registered_construction_geometry", count == 256 or formal)
+    if type(construction_geometry) is not bool or ((count == 256 or formal) and not construction_geometry):
         raise ValueError("the registered pilot requires the new G/P construction geometry")
     validity_artifact = manifest.get("validity_artifact", "legacy_existing_direct_read_only")
     if validity_artifact not in ("legacy_existing_direct_read_only", "basic_comp_struct_only"):
         raise ValueError("validity artifact must be the registered existing or comp/struct-only form")
-    if count == 256 and validity_artifact != "basic_comp_struct_only":
+    if (count == 256 or formal) and validity_artifact != "basic_comp_struct_only":
         raise ValueError("the 256 pilot reports only comp_valid and struct_valid")
     methods = manifest.get("methods")
     if not isinstance(methods, list) or any(not isinstance(item, dict) for item in methods):
         raise ValueError("declare the complete method set")
     expected_roles = ({"I", "G", "P"} if matched_interface else {"G", "P"}) if count == 16 else set(ROLE_ORDER)
+    if formal:
+        expected_roles = {"R", manifest['selected_role']}
     roles = [item.get("role") for item in methods]
     ids = [item.get("method_id") for item in methods]
     if len(roles) != len(expected_roles) or set(roles) != expected_roles or len(set(ids)) != len(ids):
@@ -111,7 +116,9 @@ def validate_manifest(manifest, manifest_path):
         normalized.append({**item, "component_dir": resolved(item.get("component_dir"), base)})
     if len({item["component_dir"] for item in normalized}) != len(normalized):
         raise ValueError("one component cannot be counted as two methods")
-    return {"phase": manifest["phase"], "scope": "canary" if count == 16 else "pilot",
+    return {"phase": manifest["phase"], "scope": "formal" if formal else ("canary" if count == 16 else "pilot"),
+            "cohort_role": "independent_main" if formal else "fixed_development",
+            "selected_role": manifest.get("selected_role"),
             "expected_requests": count, "methods": normalized,
             "include_matched_interface_reference": matched_interface,
             "registered_construction_geometry": construction_geometry,
@@ -320,6 +327,10 @@ def preflight_components(trial):
     if len(offsets) != 1 or len(body_seeds) != 1 or len(refiner_seeds) != 1 or None in body_seeds or None in refiner_seeds:
         raise ValueError("trial methods changed registered global offsets or common body/refiner seeds")
     candidate = {item["role"]: item for item in verified if item["role"] != "R"}
+    if trial.get("scope") == "formal":
+        if set(candidate) != {trial["selected_role"]}:
+            raise ValueError("formal components differ from the declared frozen candidate")
+        return verified
     if trial["registered_construction_geometry"]:
         if candidate["G"]["construction_evidence"]["snapshots"] != candidate["P"]["construction_evidence"]["snapshots"]:
             raise ValueError("G/P actual construction outputs or common no-support failures differ")
@@ -359,13 +370,22 @@ def finite(value):
     return isinstance(value, (float, int)) and not isinstance(value, bool) and math.isfinite(float(value))
 
 
+def wilson95_percent(successes, count):
+    z = 1.959963984540054
+    fraction, correction = successes / count, z * z / count
+    center = (fraction + correction / 2) / (1 + correction)
+    radius = z * math.sqrt(fraction * (1 - fraction) / count + z * z / (4 * count * count)) / (1 + correction)
+    return [0. if successes == 0 else 100 * max(0., center - radius),
+            100. if successes == count else 100 * min(1., center + radius)]
+
+
 def summarize_evaluation(directory, cell, method, trial):
     require_success(directory)
     report = read_json(directory / "EVALUATION_FINAL.json")
     rows = read_rows(directory / "attempt_results.jsonl")
     count, endpoint = trial["expected_requests"], cell["endpoint"]
     if (report.get("counts", {}).get("requests") != count or len(rows) != count or report.get("endpoint") != endpoint
-            or report.get("cohort_role") != "fixed_development"
+            or report.get("cohort_role") != trial.get("cohort_role", "fixed_development")
             or report.get("policy_stage") != ("reference" if method["role"] == "R" else "final")
             or "conditional_1000" in report):
         raise ValueError("scorer changed the registered trial endpoint/denominator/selection")
@@ -386,10 +406,14 @@ def summarize_evaluation(directory, cell, method, trial):
     if statuses.get("official_cache_not_covered", 0):
         raise ValueError("scorer found an uncovered hull system after mandatory coverage verification")
     return {"method_id": method["method_id"], "role": method["role"], "endpoint": endpoint, "denominator": count,
+            "novelty_uniqueness": {key: report['counts'][key] for key in ('novel', 'unique_representative', 'novel_unique')},
             "validity": {key: cell["validity"][key] for key in ("comp_valid_count", "struct_valid_count")},
             "headline": {"strict_sun": report["counts"]["strict_sun"], "meta_sun": report["counts"]["meta_sun"],
                          "strict_percent": 100 * report["counts"]["strict_sun"] / count,
-                         "meta_percent": 100 * report["counts"]["meta_sun"] / count},
+                         "meta_percent": 100 * report["counts"]["meta_sun"] / count,
+                         "strict_wilson95_percent": wilson95_percent(report['counts']['strict_sun'], count),
+                         "meta_wilson95_percent": wilson95_percent(report['counts']['meta_sun'], count),
+                         "interval_scope": "descriptive binomial approximation; pooled uniqueness dependence is not modeled"},
             "verified": {"terminals": report["counts"]["terminal_verified"], "strict_sun": report["counts"]["verified_strict_sun"],
                          "meta_sun": report["counts"]["verified_meta_sun"]},
             "unknown": {"hull_statuses": dict(statuses),
@@ -404,6 +428,11 @@ def summarize_evaluation(directory, cell, method, trial):
 def adoption_rule(scope, summaries, frozen=None):
     if scope == "canary":
         return {"enabled": False, "selected_role": None, "reason": "engineering canary only; no policy selection from 16 requests"}
+    if scope == "formal":
+        if frozen is None:
+            raise ValueError("formal scoring requires the existing method freeze")
+        return {"enabled": False, "selected_role": frozen['selected_role'], "method_freeze": frozen,
+                "reason": "Independent confirmation; no selection from formal scores."}
     lookup = {(row["role"], row["endpoint"]): row for row in summaries}
     g_tau, p_tau = lookup["G", "tau800"], lookup["P", "tau800"]
     gates = {"tau800_strict_sun_nondecreasing": p_tau["headline"]["strict_sun"] >= g_tau["headline"]["strict_sun"],
@@ -425,12 +454,13 @@ def adoption_rule(scope, summaries, frozen=None):
 
 def render_summary(report):
     lines = [f"# R03 {report['phase']} evaluation", "", f"{report['expected_requests']} requests per method and endpoint.", "",
-             "| Method | Endpoint | Requests | comp_valid/struct_valid | Strict/Meta SUN | Verified Strict/Meta | Official unresolved | Missing terminal energy |",
-             "|---|---|---:|---|---|---|---:|---:|"]
+             "| Method | Endpoint | Requests | comp_valid/struct_valid | N/U | Strict/Meta SUN | Verified Strict/Meta | Official unresolved | Missing terminal energy |",
+             "|---|---|---:|---|---|---|---|---:|---:|"]
     for row in report["methods"]:
         validity, headline, verified, unknown = row["validity"], row["headline"], row["verified"], row["unknown"]
         lines.append(f"| {row['method_id']} | {row['endpoint']} | {row['denominator']} | "
                      f"{validity['comp_valid_count']}/{validity['struct_valid_count']} | "
+                     f"{row['novelty_uniqueness']['novel']}/{row['novelty_uniqueness']['unique_representative']} | "
                      f"{headline['strict_sun']}/{headline['meta_sun']} | {verified['strict_sun']}/{verified['meta_sun']} | "
                      f"{unknown['official_unresolved']} | {unknown['terminal_energy_missing']} |")
     lines += ["", "All requests remain in each denominator; verified results are reported separately.", ""]
@@ -438,8 +468,11 @@ def render_summary(report):
         lines += [f"Development rule selects **{report['adoption']['selected_role']}**.",
                   report["adoption"]["rule"] + ".", "This is development selection, not evidence of statistical significance."]
     elif report["adoption"].get("method_freeze"):
-        lines += [f"Frozen candidate remains **{report['adoption']['selected_role']}**.",
-                  f"The late development counts satisfy the rule for **{report['adoption']['late_development_rule_role']}**; this does not revise the timed freeze."]
+        lines.append(f"Frozen candidate remains **{report['adoption']['selected_role']}**.")
+        if 'late_development_rule_role' in report['adoption']:
+            lines.append(f"The late development counts satisfy the rule for **{report['adoption']['late_development_rule_role']}**; this does not revise the timed freeze.")
+        else:
+            lines.append("Independent confirmation; no selection from formal scores.")
     else:
         lines.append("Engineering canary only: no P/G selection is made.")
     return "\n".join(lines) + "\n"
@@ -463,6 +496,8 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                 > datetime.fromisoformat(frozen["freeze_deadline_utc"].replace("Z", "+00:00"))):
             raise ValueError("invalid or late method freeze receipt")
         source_pins.append(file_identity(trial["method_freeze"]))
+        if trial['scope'] == 'formal' and trial['selected_role'] != frozen['selected_role']:
+            raise ValueError('formal candidate differs from the timed method freeze')
     for item in components:
         source_pins.extend(item["source_files"])
         for cell in item["cells"].values():
@@ -487,7 +522,7 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                                 "--paths-jsonl", str(cell["paths"]), "--labels-jsonl", str(cell["labels"]),
                                 "--frozen-config", str(trial["frozen_config"]), "--official-cache", str(trial["hull_run_root"] / "official_mp_cache"),
                                 "--output-dir", str(destination), "--expected-requests", str(trial["expected_requests"]),
-                                "--endpoint", endpoint, "--cohort-role", "fixed_development", "--policy-stage",
+                                "--endpoint", endpoint, "--cohort-role", trial['cohort_role'], "--policy-stage",
                                 "reference" if item["role"] == "R" else "final"], f"{item['role']}_{endpoint}", output_dir)
                 summaries.append(summarize_evaluation(destination, cell, item, trial))
         for pin in source_pins:
@@ -507,7 +542,7 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                                             "new_construction_checked": item["construction_evidence"]["new_construction_checked"],
                                             "states": dict(Counter(row["state"] for row in item["construction_evidence"].get("snapshots", [])))}
                                            for item in components],
-                  "G_P_construction_exact_match_checked": trial["registered_construction_geometry"],
+                  "G_P_construction_exact_match_checked": trial["registered_construction_geometry"] and trial['scope'] != 'formal',
                   "completed_utc": datetime.now(timezone.utc).isoformat()}
         write_json(output_dir / "TRIAL_EVALUATION_FINAL.json", report)
         (output_dir / "summary.md").write_text(render_summary(report), encoding="utf-8")
@@ -517,6 +552,120 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
         write_json(output_dir / "FAILURE.json", {"type": type(error).__name__, "message": str(error),
                                                 "partial_scores_are_a_complete_trial": False})
         (output_dir / "_FAILED").touch()
+        raise
+
+
+def evaluate_formal(run_root):
+    """Reuse seed verification/scoring, then export and score each whole arm once."""
+    root = Path(run_root).resolve()
+    registration_path, freeze_path = root / 'FORMAL_REGISTRATION.json', root / 'METHOD_FREEZE.json'
+    registration, frozen = read_json(registration_path), read_json(freeze_path)
+    count, seeds, selected = registration['requests_per_seed'], registration['planner_seeds'], frozen['selected_role']
+    producer = Path(registration['producer_source'])
+    if (count not in (256, 500) or len(set(seeds)) != 2 or selected != registration['selected_role']
+            or producer.name != frozen['producer_commit']):
+        raise ValueError('formal registration differs from the frozen candidate')
+    total, formal_root = 2 * count, root / f'formal_{2 * count}'
+    require_success(formal_root)
+    destination = root / 'evaluation_formal'
+    destination.mkdir(exist_ok=False)
+    pins = [file_identity(registration_path), file_identity(freeze_path)]
+    config = root / 'evaluation_pilot256' / 'TRIAL_EVALUATION_FINAL.json'
+    pilot = read_json(config)
+    config_pin = next(pin for pin in pilot['source_files'] if Path(pin['path']).name == 'CONFIG.json')
+    pins.extend([file_identity(config), config_pin])
+    common = {'schema': SCHEMA, 'expected_requests': count, 'registered_construction_geometry': True,
+              'validity_artifact': 'basic_comp_struct_only', 'cohort_role': 'independent_main',
+              'selected_role': selected, 'method_freeze': str(freeze_path),
+              'frozen_config': config_pin['path'], 'hull_run_root': str(root / 'hull_formal')}
+    try:
+        seed_reports = []
+        for seed in seeds:
+            manifest = {**common, 'phase': f'formal_seed_{seed}',
+                        'methods': [{'method_id': 'R03_' + role, 'role': role, 'planner_seed': seed,
+                                     'component_dir': str(formal_root / role / f'seed_{seed}')} for role in ('R', selected)]}
+            path = destination / f'INPUTS_seed_{seed}.json'
+            write_json(path, manifest)
+            report = evaluate_trial(path, destination / f'seed_{seed}')
+            seed_reports.append(report)
+            pins.extend(report['source_files'])
+        cells, hull_inputs = [], []
+        for role in ('R', selected):
+            method = {'role': role, 'method_id': 'R03_' + role}
+            for endpoint in ENDPOINTS:
+                target = destination / 'pooled' / role / endpoint
+                target.mkdir(parents=True, exist_ok=False)
+                descriptors, label_paths, validity = [], [], Counter()
+                for index, seed in enumerate(seeds):
+                    component = formal_root / role / f'seed_{seed}'
+                    final = read_json(component / 'COMPONENT_FINAL.json')
+                    if final['sample_index_offset'] != index * count:
+                        raise ValueError('formal global request indices differ from the registration')
+                    descriptor = {'component_id': f'seed_{seed}', 'method_id': method['method_id'],
+                                  'expected_requests': count, 'sample_idx_start': index * count, 'planner_seed': seed,
+                                  'body_dir': str(component / 'body'),
+                                  'planner_run_config': file_identity(component / 'planner/run_config.json')}
+                    if endpoint == 'tau800':
+                        descriptor.update(refined_pt=final['refined_pt'],
+                                          refiner_identity=file_identity(component / 'REFINER_IDENTITY.json'))
+                    descriptors.append(descriptor)
+                    label_paths.append(component / (endpoint + '_labels') / 'labels.jsonl')
+                    validity.update(next(row['validity'] for row in seed_reports[index]['methods']
+                                         if row['role'] == role and row['endpoint'] == endpoint))
+                merged = {'schema': 'r03_evaluation_components_v1', 'method_id': method['method_id'],
+                          'endpoint': endpoint, 'expected_requests': total, 'components': descriptors}
+                manifest_path = target / 'COMPONENTS.json'
+                write_json(manifest_path, merged)
+                run_command([sys.executable, str(producer / 'src/scripts/export_r03_evaluation_inputs.py'),
+                             '--input-manifest', str(manifest_path), '--endpoint', endpoint,
+                             '--expected-requests', str(total), '--method-id', method['method_id'],
+                             '--output-dir', str(target / 'inputs')], 'export', target)
+                paths = target / 'inputs/paths.jsonl'
+                cell = {'endpoint': endpoint, 'paths': paths, 'rows': read_rows(paths),
+                        'label_paths': label_paths, 'label_report': read_json(label_paths[0].parent / 'LABEL_FINAL.json'),
+                        'validity': dict(validity), 'destination': target}
+                cells.append((method, cell))
+                pins.extend([file_identity(manifest_path), file_identity(paths)])
+                hull_inputs.append({'cell_id': role + '_' + endpoint, 'arm': role, 'seed': seeds,
+                                    'type': 'eval_paths', 'endpoint': endpoint, 'path': str(paths),
+                                    'sha256': file_identity(paths)['sha256'], 'expected_requests': total})
+        hull_manifest = destination / 'ACTUAL_POOLED_HULL_INPUTS.json'
+        write_json(hull_manifest, {'schema': 'r03_hull_union_inputs_v1', 'purpose': 'evaluation',
+                                  'phase': 'formal_pooled', 'inputs': hull_inputs})
+        coverage_path = destination / 'HULL_ENDPOINT_COVERAGE.json'
+        run_command([sys.executable, str(SOURCE / 'operations/r03_c3fd_main_20260907/prepare_hull_union.py'),
+                     'verify-endpoints', '--run-root', str(root / 'hull_formal'),
+                     '--inputs-manifest', str(hull_manifest), '--output-report', str(coverage_path)], 'coverage', destination)
+        coverage = read_json(coverage_path)
+        if coverage.get('coverage_accounted') is not True or coverage.get('not_covered') != 0 or coverage.get('is_subset') is not True:
+            raise ValueError('formal pooled endpoint coverage is incomplete')
+        summaries = []
+        for method, cell in cells:
+            target = cell['destination']
+            run_command([sys.executable, str(SOURCE / 'scripts/evaluate_programmed_paths.py'),
+                         '--paths-jsonl', str(cell['paths']), '--labels-jsonl', *map(str, cell['label_paths']),
+                         '--frozen-config', common['frozen_config'], '--official-cache', str(root / 'hull_formal/official_mp_cache'),
+                         '--output-dir', str(target / 'scores'), '--expected-requests', str(total),
+                         '--endpoint', cell['endpoint'], '--cohort-role', 'independent_main',
+                         '--policy-stage', 'reference' if method['role'] == 'R' else 'final'], 'score', target)
+            summaries.append(summarize_evaluation(target / 'scores', cell, method, {**common, 'expected_requests': total,
+                                  'frozen_config': Path(common['frozen_config']), 'hull_run_root': root / 'hull_formal'}))
+        for pin in pins:
+            if file_identity(pin['path'])['sha256'] != pin['sha256']:
+                raise ValueError('a formal source changed during pooled evaluation')
+        report = {'schema': 'r03_formal_evaluation_final_v1', 'phase': 'formal', 'scope': 'formal',
+                  'expected_requests': total, 'planner_seeds': seeds, 'methods': summaries,
+                  'per_seed': seed_reports, 'adoption': adoption_rule('formal', summaries, frozen),
+                  'coverage': coverage, 'source_files': pins, 'per_seed_unique_counts_summed': False,
+                  'new_labels': False, 'new_official_query': False,
+                  'completed_utc': datetime.now(timezone.utc).isoformat()}
+        write_json(destination / 'FORMAL_EVALUATION_FINAL.json', report)
+        (destination / 'summary.md').write_text(render_summary(report), encoding='utf-8')
+        (destination / '_SUCCESS').touch()
+        return report
+    except BaseException as error:
+        write_json(destination / 'FAILURE.json', {'type': type(error).__name__, 'message': str(error)})
+        (destination / '_FAILED').touch()
         raise
 
 
