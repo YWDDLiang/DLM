@@ -8,6 +8,7 @@ from functools import partial
 import gzip
 import hashlib
 import importlib.metadata
+import importlib
 import json
 import math
 import multiprocessing as mp
@@ -210,7 +211,12 @@ def worker_init(gpu_index):
     _OPTIMIZER = PinnedOptimizer(model=_MODEL, optimizer_class=RecordedFIRE, use_device=device,
                                 stress_weight=1 / EV_A3_TO_GPA)
     _VERSIONS = {"model": "CHGNet-0.3.0", "chgnet_package": importlib.metadata.version("chgnet"),
-                 "ase_package": importlib.metadata.version("ase")}
+                 "ase_package": importlib.metadata.version("ase"), "torch_package": torch.__version__,
+                 "pymatgen_package": importlib.metadata.version("pymatgen")}
+    package_root = Path(importlib.import_module('chgnet').__file__).resolve().parent
+    checkpoint = package_root / 'pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar'
+    _VERSIONS['model_checkpoint_sha256'] = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
+    _VERSIONS['labeler_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
 def worker_label(record, fmax, stress_tolerance, max_steps):
@@ -218,7 +224,22 @@ def worker_label(record, fmax, stress_tolerance, max_steps):
                           stress_tolerance=stress_tolerance, max_steps=max_steps,
                           optimizer_status=_OPT_STATUS)
     result["versions"] = _VERSIONS
+    error = str(result.get('error') or '').lower()
+    if any(token in error for token in ('out of memory', 'cuda error', 'brokenprocesspool', 'modulenotfounderror')):
+        result['status'] = 'worker_error'
     return result
+
+
+def validate_record_purpose(record, purpose):
+    if purpose == 'train':
+        if record.get('source_split') != 'train':
+            raise ValueError('training labels cannot read heldout conditions')
+        if record.get('endpoint') not in (None, 'native'):
+            raise ValueError('native path teachers cannot use model494 endpoints')
+    elif purpose == 'expert_edit':
+        if (record.get('source_split') not in ('train', 'dev') or record.get('purpose') != 'expert_edit'
+                or record.get('endpoint') not in ('native', 'expert_quantized')):
+            raise ValueError('expert labels require explicit train/development editing provenance')
 
 
 def json_default(value):
@@ -233,7 +254,7 @@ def main():
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--gpu-count", type=int, default=2)
     p.add_argument("--workers-per-gpu", type=int, default=2)
-    p.add_argument("--purpose", choices=("train", "evaluation"), default="train")
+    p.add_argument("--purpose", choices=("train", "evaluation", "expert_edit"), default="train")
     p.add_argument("--fmax", type=float, default=.1)
     p.add_argument("--stress-tolerance", type=float, default=.5)
     p.add_argument("--max-steps", type=int, default=500)
@@ -259,10 +280,7 @@ def main():
             if not line.strip() or index % args.shard_count not in shard_ranks:
                 continue
             record = json.loads(line)
-            if args.purpose == "train" and record.get("source_split") != "train":
-                raise ValueError("training labels cannot read heldout conditions")
-            if args.purpose == "train" and record.get("endpoint") not in (None, "native"):
-                raise ValueError("native path teachers cannot use model494 endpoints")
+            validate_record_purpose(record, args.purpose)
             # Do not ship the complete token trace to each physics worker.
             records.append({key: record.get(key) for key in
                             ("trajectory_id", "group_id", "source_row_idx", "source_split", "success", "body", "structure", "endpoint")})
@@ -282,6 +300,7 @@ def main():
     started = time.monotonic()
     counts = {}
     completed = 0
+    versions_seen = {}
     try:
         for index, (key, occurrences) in enumerate(by_endpoint.items()):
             future = pools[index % args.gpu_count].submit(worker_label, occurrences[0], args.fmax, args.stress_tolerance, args.max_steps)
@@ -297,6 +316,8 @@ def main():
                     result.update(raw_energy=None, terminal_energy=None, gap=None, verified=False,
                                   status="worker_error", error=f"{type(error).__name__}: {error}")
                 trajectory = result.pop("relaxation_trajectory", None)
+                if result.get('versions'):
+                    versions_seen[json.dumps(result['versions'], sort_keys=True)] = result['versions']
                 if trajectory is not None:
                     destination = args.output_dir / "trajectories" / f"{key}.json.gz"
                     with gzip.open(destination, "wt", encoding="utf-8") as stream:
@@ -327,7 +348,13 @@ def main():
               "gpu_count": args.gpu_count, "workers_per_gpu": args.workers_per_gpu,
               "shard_count": args.shard_count, "shard_ranks": shard_ranks,
               "elapsed_seconds": time.monotonic() - started, "purpose": args.purpose}
+    report['runtime_identities'] = list(versions_seen.values())
+    report['input_sha256'] = hashlib.sha256(args.input_jsonl.read_bytes()).hexdigest()
     (args.output_dir / "LABEL_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    if counts.get('worker_error', 0):
+        (args.output_dir / '_ENGINEERING_FAILED').touch()
+        print(json.dumps(report), flush=True)
+        raise SystemExit(2)
     (args.output_dir / "_SUCCESS").touch()  # Complete accounting, not universal convergence.
     print(json.dumps(report), flush=True)
 

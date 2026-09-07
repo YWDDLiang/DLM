@@ -12,6 +12,20 @@ SPEC.loader.exec_module(MODULE)
 label_record, EV_A3_TO_GPA = MODULE.label_record, MODULE.EV_A3_TO_GPA
 
 
+class PurposeContractTests(unittest.TestCase):
+    def test_expert_edit_has_explicit_training_or_development_provenance(self):
+        for split in ('train', 'dev'):
+            MODULE.validate_record_purpose({'source_split': split, 'purpose': 'expert_edit',
+                                            'endpoint': 'expert_quantized'}, 'expert_edit')
+        with self.assertRaises(ValueError):
+            MODULE.validate_record_purpose({'source_split': 'evaluation', 'purpose': 'expert_edit',
+                                            'endpoint': 'expert_quantized'}, 'expert_edit')
+        with self.assertRaises(ValueError):
+            MODULE.validate_record_purpose({'source_split': 'train', 'endpoint': 'expert_quantized'}, 'expert_edit')
+        with self.assertRaises(ValueError):
+            MODULE.validate_record_purpose({'source_split': 'train', 'endpoint': 'expert_quantized'}, 'train')
+
+
 class Structure:
     num_sites = 2
     composition = "H2"
