@@ -325,6 +325,10 @@ class ExpertEditDataset(Dataset):
         elif choice < .82:
             row = rng.choice(self.states) if self.states and rng.random() < .35 else rng.choice(self.positive)
             view = 'inspect'
+            if row.get('state_only') and rng.random() < .5:
+                # Old-only bad/unknown states train S admission too. S receives
+                # quality labels here, never a fabricated NONE/stop target.
+                row = dict(row, task='S')
         else:
             row = rng.choice(self.negative) if self.negative and rng.random() < .5 else rng.choice(self.positive)
             view = 'judge'
