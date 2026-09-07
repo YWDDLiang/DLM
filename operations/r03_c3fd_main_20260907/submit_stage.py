@@ -12,7 +12,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--source", type=Path, required=True)
-    parser.add_argument("--stage", choices=["canary", "canary_v2", "physics"], required=True)
+    parser.add_argument("--stage", choices=["canary", "canary_v2", "physics", "canary_repair", "pilot_RI", "pilot_GP"], required=True)
     args = parser.parse_args()
     receipt = args.run_root / (args.stage.upper() + "_SUBMISSION.json")
     if receipt.exists():
@@ -20,8 +20,20 @@ def main():
         return
     assert (args.source / "_CODE_READY").is_file()
     assert (args.run_root / "pointer_40395" / "_SUCCESS").is_file()
-    gpus, minutes, memory, script = ((2, 80, "200G", "canary.sbatch") if args.stage.startswith("canary")
-                                   else (1, 150, "120G", "train_physics.sbatch"))
+    stage_specs = {"canary": (2, 80, "200G", "canary.sbatch"),
+                   "canary_v2": (2, 80, "200G", "canary.sbatch"),
+                   "physics": (1, 150, "120G", "train_physics.sbatch"),
+                   "canary_repair": (2, 80, "200G", "trial.sbatch"),
+                   "pilot_RI": (2, 270, "200G", "trial.sbatch"),
+                   "pilot_GP": (2, 270, "200G", "trial.sbatch")}
+    gpus, minutes, memory, script = stage_specs[args.stage]
+    if args.stage == "canary_repair":
+        assert (args.run_root / "canary_40400/_SUCCESS").is_file(), 'original/interface canary incomplete'
+    if args.stage.startswith("pilot_"):
+        assert (args.run_root / "REPAIR_CANARY_COMPLETE.json").is_file(), 'complete method preflight incomplete'
+    if args.stage == "pilot_GP":
+        assert (args.run_root / "pilot_256/shared_I/_SUCCESS").is_file(), 'shared trial Plans are not ready'
+        assert (args.run_root / "physics_40399/train/_SUCCESS").is_file(), 'physical adapter is not complete'
     now = dt.datetime.now(dt.timezone.utc)
     assert now + dt.timedelta(minutes=minutes + 5) < dt.datetime(2026, 9, 7, 15, 35, 26, tzinfo=dt.timezone.utc)
     jobs = sp.check_output(["squeue", "-h", "-u", os.environ["USER"], "-o", "%i"], text=True).split()
@@ -35,7 +47,7 @@ def main():
         fields = dict(piece.split("=", 1) for piece in match.group(1).split(",") if "=" in piece)
         resources.append({"job_id": job, "gpus": int(fields.get("gres/gpu", "0")), "tres": fields})
     assert sum(row["gpus"] for row in resources) + gpus <= 4, resources
-    env = dict(os.environ, R03_SOURCE_ROOT=str(args.source), R03_RUN_ROOT=str(args.run_root))
+    env = dict(os.environ, R03_SOURCE_ROOT=str(args.source), R03_RUN_ROOT=str(args.run_root), R03_STAGE=args.stage)
     command = ["sbatch", "--parsable", "--job-name=r03" + args.stage + "033526", "--partition=gpu",
                "--nodes=1", "--ntasks=1", "--cpus-per-task=" + str(gpus * 4),
                "--gres=gpu:NVIDIAA800-SXM4-80GB:" + str(gpus), "--mem=" + memory,

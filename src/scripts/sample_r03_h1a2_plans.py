@@ -293,6 +293,7 @@ def main() -> None:
             "planner_weights_changed": False, "tokenizer_resized": False,
             "formula_prefill_added": False, "external_formula_composer": False,
             "formula_bridge_source_sha256": sha256_file(PROJECT_ROOT / "src/crystal_dlm/r03_formula_bridge.py"),
+            "sampler_source_sha256": sha256_file(Path(__file__)),
         }
         write_json(args.output_dir / "run_config.json", run_config)
         with (args.output_dir / "raw_generations.jsonl").open("x", encoding="utf-8") as raw_handle, \
