@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=r03-registered-cpu-evaluation
-#SBATCH --partition=gpu
+#SBATCH --partition=normal
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=6
-#SBATCH --gres=none
 #SBATCH --mem=32G
 #SBATCH --time=01:20:00
 set -Eeuo pipefail

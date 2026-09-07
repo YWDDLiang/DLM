@@ -81,13 +81,16 @@ def validate_manifest(manifest, manifest_path):
     count = manifest.get("expected_requests")
     if type(count) is not int or count not in (16, 256):
         raise ValueError("registered trial counts are 16 canary or 256 pilot requests per method")
+    matched_interface = manifest.get("include_matched_interface_reference", False)
+    if type(matched_interface) is not bool or (count != 16 and matched_interface):
+        raise ValueError("include_matched_interface_reference is an optional canary-only boolean")
     construction_geometry = manifest.get("registered_construction_geometry", count == 256)
     if type(construction_geometry) is not bool or (count == 256 and not construction_geometry):
         raise ValueError("the registered pilot requires the new G/P construction geometry")
     methods = manifest.get("methods")
     if not isinstance(methods, list) or any(not isinstance(item, dict) for item in methods):
         raise ValueError("declare the complete method set")
-    expected_roles = {"G", "P"} if count == 16 else set(ROLE_ORDER)
+    expected_roles = ({"I", "G", "P"} if matched_interface else {"G", "P"}) if count == 16 else set(ROLE_ORDER)
     roles = [item.get("role") for item in methods]
     ids = [item.get("method_id") for item in methods]
     if len(roles) != len(expected_roles) or set(roles) != expected_roles or len(set(ids)) != len(ids):
@@ -105,6 +108,7 @@ def validate_manifest(manifest, manifest_path):
         raise ValueError("one component cannot be counted as two methods")
     return {"phase": manifest["phase"], "scope": "canary" if count == 16 else "pilot",
             "expected_requests": count, "methods": normalized,
+            "include_matched_interface_reference": matched_interface,
             "registered_construction_geometry": construction_geometry,
             "frozen_config": resolved(manifest.get("frozen_config"), base),
             "hull_run_root": resolved(manifest.get("hull_run_root"), base)}
@@ -465,6 +469,7 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                   "labels_created": False, "new_official_query": False, "GPU_calls": 0,
                   "selection_json_used": False, "cross_method_NU_pooling": False,
                   "registered_construction_geometry": trial["registered_construction_geometry"],
+                  "include_matched_interface_reference": trial["include_matched_interface_reference"],
                   "construction_checks": [{"role": item["role"], "geometry_enabled": item["construction_evidence"]["geometry_enabled"],
                                             "body_batch_size": item["construction_evidence"]["body_batch_size"],
                                             "new_construction_checked": item["construction_evidence"]["new_construction_checked"],

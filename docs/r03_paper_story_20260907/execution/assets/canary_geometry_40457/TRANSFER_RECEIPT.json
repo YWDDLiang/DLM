@@ -1,0 +1,23 @@
+{
+  "remote": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/TRANSFER_BUNDLE.zlib",
+    "bytes": 229402,
+    "sha256": "c1633dd604aa978be669e2f9ba8ef0842a31fcc2daecc4d23f16b913eceb94ce",
+    "plain_sha256": "ecd590cc882372e8a4414f4485b29ea8c94e46118bf4bc8b77c82dbc32858769",
+    "plain_bytes": 307461
+  },
+  "receipts": [
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767144101767000_6b20cb57ee8f.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767146425315300_1e2a981b8bc7.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767149087680600_01b29c0a6814.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767151285351000_32c4d58b4beb.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767153584071100_16832f1ead37.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767155774993200_34fb1d627286.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767157983949500_38525df6c37d.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767160212000300_09c0e377147f.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767162731244800_38f5a7de579e.json",
+    "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767164930878100_0ee7573e6e4f.json"
+  ],
+  "metadata_receipt": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\remote_receipts\\1788767110912979500_3cdac8c16ae7.json",
+  "exact_original_bytes_verified": true
+}

@@ -175,6 +175,39 @@ class FakeScorer:
 
 
 class TrialLedgerTests(unittest.TestCase):
+    def test_optional_matched_interface_canary_requires_exact_I_G_P_set(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            path, manifest = trial_fixture(base)
+            manifest["include_matched_interface_reference"] = True
+            with self.assertRaisesRegex(ValueError, "missing"):
+                trial_module.validate_manifest(manifest, path)
+            manifest["methods"].append(component_fixture(base, "I"))
+            normalized = trial_module.validate_manifest(manifest, path)
+            self.assertEqual([row["role"] for row in normalized["methods"]], ["I", "G", "P"])
+            del manifest["include_matched_interface_reference"]
+            with self.assertRaisesRegex(ValueError, "outside the registered trial"):
+                trial_module.validate_manifest(manifest, path)
+
+    def test_matched_interface_geometry_canary_scores_all_six_cells_without_selection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            path, manifest = trial_fixture(base)
+            manifest.update(include_matched_interface_reference=True, registered_construction_geometry=True)
+            manifest["methods"].append(component_fixture(base, "I"))
+            for method in manifest["methods"]:
+                geometry_evidence_fixture(method)
+            write_json(path, manifest)
+            fake = FakeScorer()
+            result = trial_module.evaluate_trial(path, base / "scores", command_runner=fake)
+            self.assertEqual(len(fake.commands), 7)  # Coverage once, I/G/P x native/tau800.
+            self.assertEqual([(r["role"], r["endpoint"]) for r in result["methods"]],
+                             [(role, endpoint) for role in ("I", "G", "P") for endpoint in ("native", "tau800")])
+            self.assertTrue(result["include_matched_interface_reference"])
+            self.assertTrue(result["G_P_construction_exact_match_checked"])
+            self.assertFalse(result["adoption"]["enabled"])
+            self.assertIsNone(result["adoption"]["selected_role"])
+
     def test_missing_methods_cannot_be_scored_as_a_complete_phase(self):
         with tempfile.TemporaryDirectory() as directory:
             path, manifest = trial_fixture(Path(directory))

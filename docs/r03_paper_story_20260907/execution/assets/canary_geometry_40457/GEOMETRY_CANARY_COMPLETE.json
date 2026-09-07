@@ -1,0 +1,13 @@
+{
+  "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457",
+  "job_id": "40457",
+  "matched_interface_reference": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/I_batch1_reference",
+  "physics_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/physics_40399/train/checkpoints/step-128",
+  "requests_per_arm": 16,
+  "roles": [
+    "G",
+    "P"
+  ],
+  "scientific_acceptance_is_separate": true,
+  "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/code/82050dd8a3f19297d4ae293399b02035c131933a"
+}

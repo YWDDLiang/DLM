@@ -42,8 +42,9 @@ while True:
  output=capture()
  match=re.search(r'^'+re.escape(end)+r' (\\d+)\\s*$',output,re.M)
  start=re.search(r'^'+re.escape(begin)+r'\\s*$',output,re.M)
- if match and start:
-  print(json.dumps({{'status':'completed','returncode':int(match.group(1)),'output':output[start.end():match.start()].strip()}},ensure_ascii=False),flush=True);break
+ if match:
+  captured=output[start.end():match.start()].strip() if start else output[:match.start()].strip()[-10000:]
+  print(json.dumps({{'status':'completed','returncode':int(match.group(1)),'output':captured,'output_prefix_lost':start is None}},ensure_ascii=False),flush=True);break
  if time.monotonic()>=deadline:
   text=output[start.end():] if start else ''
   print(json.dumps({{'status':'running' if start else 'delivery_unknown','output_tail':text[-10000:]}},ensure_ascii=False),flush=True);break
@@ -85,7 +86,7 @@ def main() -> int:
             parser.error("literal inner command must stay below 3000 characters")
         STATE.write_text(json.dumps({"nonce": nonce, "status": "delivery_unknown", "submitted_unix": time.time()})+"\n")
     remote = "python3 -u -c " + shlex.quote(outer_program(nonce, inner))
-    argv = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ServerAliveInterval=10", "-o", "ServerAliveCountMax=2", OUTER_HOST, remote]
+    argv = ["ssh", "-4", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ServerAliveInterval=10", "-o", "ServerAliveCountMax=2", OUTER_HOST, remote]
     try:
         result = subprocess.run(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8", errors="replace", timeout=55)
     except subprocess.TimeoutExpired:

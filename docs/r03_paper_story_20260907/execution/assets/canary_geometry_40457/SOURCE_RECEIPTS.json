@@ -1,0 +1,92 @@
+[
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/GEOMETRY_CANARY_COMPLETE.json",
+    "bytes": 1144,
+    "sha256": "c4e38a25b74dae1e22be248cc9e306ea756100b3003f143b127ea7b43701d0f9",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\GEOMETRY_CANARY_COMPLETE.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/G/body/raw_generations.jsonl",
+    "bytes": 488687,
+    "sha256": "553af063edebddd6303cef26659bebcf07499e1c9ca76a9868b1871e0e014e27",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\G_body.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/G/body/construction_raw_generations.jsonl",
+    "bytes": 443007,
+    "sha256": "377a8103f9c27a5955fa07b8c6646b3934068a697b065582cf0d0abb6c16834e",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\G_construction.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/G/native_direct/report.json",
+    "bytes": 432,
+    "sha256": "4eb369b0723d76ec59319cec9d4ce03efe11ae56a9da746139179f31339f7ac9",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\G_native_direct.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/G/tau800_direct/report.json",
+    "bytes": 432,
+    "sha256": "4eb369b0723d76ec59319cec9d4ce03efe11ae56a9da746139179f31339f7ac9",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\G_tau800_direct.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/G/COMPONENT_FINAL.json",
+    "bytes": 1126,
+    "sha256": "cbccf3dd76e5ecde011bcc25651b0d8bfdb3b97a8150af64b065870da7402b0f",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\G_component.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/P/body/raw_generations.jsonl",
+    "bytes": 490096,
+    "sha256": "d3e29b0dcb851b04d4ccea464e5ffe3b1dfc9c6b2625907390c5aa0e8e95766c",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\P_body.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/P/body/construction_raw_generations.jsonl",
+    "bytes": 443007,
+    "sha256": "377a8103f9c27a5955fa07b8c6646b3934068a697b065582cf0d0abb6c16834e",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\P_construction.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/P/native_direct/report.json",
+    "bytes": 432,
+    "sha256": "4eb369b0723d76ec59319cec9d4ce03efe11ae56a9da746139179f31339f7ac9",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\P_native_direct.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/P/tau800_direct/report.json",
+    "bytes": 432,
+    "sha256": "561d86f643df69f0b508303eaa0a1b09f7118d0399a56999ab2549515b072a04",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\P_tau800_direct.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/P/COMPONENT_FINAL.json",
+    "bytes": 1356,
+    "sha256": "9e59c1d886968b6e1c7ec1afc716b0ec4769fccfe6e64df831ffbbc56bae7809",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\P_component.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/I_batch1_reference/body/raw_generations.jsonl",
+    "bytes": 265606,
+    "sha256": "752af207ca4a758da65aef157ca6b421b740f6c8ce1be1fa37476193fe3a2ec8",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\I_batch1_reference_body.jsonl"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/I_batch1_reference/native_direct/report.json",
+    "bytes": 430,
+    "sha256": "16f4d392ef42cead581be7c28e4c82e255eac52642d4a0afe51e68536cc6aab9",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\I_batch1_reference_native_direct.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/I_batch1_reference/tau800_direct/report.json",
+    "bytes": 432,
+    "sha256": "bbfdde5d70943b67366482eef5110cb6e9ade2fe0b37261230b57da38eb406bc",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\I_batch1_reference_tau800_direct.json"
+  },
+  {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/I_batch1_reference/COMPONENT_FINAL.json",
+    "bytes": 1161,
+    "sha256": "74b1cfbb66f7da7dc3cd05078a4f33ccb777a28c21cb4cc0f82daf13514d9813",
+    "local": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\r03_paper_story_20260907\\execution\\assets\\canary_geometry_40457\\I_batch1_reference_component.json"
+  }
+]

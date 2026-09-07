@@ -1,0 +1,16 @@
+{
+  "attempts": 16,
+  "comp_valid_count": 16,
+  "generation_succeeded": 16,
+  "omitted_metrics": [
+    "density_wasserstein",
+    "num_elements_wasserstein",
+    "composition_fingerprint_coverage",
+    "CrystalNN_fingerprint_coverage"
+  ],
+  "retry_or_replacement_used": false,
+  "schema": "crysllmgen_direct_validity_fast_v1",
+  "struct_valid_count": 16,
+  "valid_count": 16,
+  "validity_functions": "frozen_upstream_eval_utils"
+}

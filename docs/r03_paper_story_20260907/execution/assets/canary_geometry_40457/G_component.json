@@ -1,0 +1,18 @@
+{
+  "body_batch_size": 1,
+  "body_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/G/body",
+  "body_seed": 202609170,
+  "construction_geometry": true,
+  "labels_purpose": "evaluation",
+  "method_id": "R03_G",
+  "planner_seed": 202609070,
+  "plans_jsonl": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_repair_40403/shared_I/plans_with_programs.jsonl",
+  "pooled_NU_scored_here": false,
+  "refined_pt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/canary_geometry_40457/G/refine/dlm_refined_mp_15.pt",
+  "refiner_seed": 202609270,
+  "repair_checkpoint": null,
+  "requests": 16,
+  "role": "G",
+  "sample_index_offset": 0,
+  "seconds": 605.4324780907482
+}

@@ -83,14 +83,22 @@ def main():
     assert sum(row["gpus"] for row in owned) + gpus <= 2, owned
     assert sum(row['cpus'] for row in owned) + cpus <= 8, owned
     env = dict(os.environ, R03_SOURCE_ROOT=str(args.source), R03_RUN_ROOT=str(args.run_root), R03_STAGE=args.stage)
-    command = ["sbatch", "--parsable", "--job-name=r03" + args.stage + "033526", "--partition=gpu",
+    if not gpus:
+        for name in tuple(env):
+            if name.startswith(('SBATCH_GRES', 'SBATCH_GPUS', 'SBATCH_TRES', 'SBATCH_CPUS_PER_GPU')):
+                env.pop(name)
+    command = ["sbatch", "--parsable", "--job-name=r03" + args.stage + "033526", "--partition=" + ('gpu' if gpus else 'normal'),
                "--nodes=1", "--ntasks=1", "--cpus-per-task=" + str(cpus),
-               ("--gres=gpu:NVIDIAA800-SXM4-80GB:" + str(gpus)) if gpus else '--gres=none', "--mem=" + memory,
+               *(["--gres=gpu:NVIDIAA800-SXM4-80GB:" + str(gpus)] if gpus else []), "--mem=" + memory,
                "--time=" + str(minutes), "--no-requeue", "--chdir=" + str(args.source),
                "--output=" + str(args.run_root / "logs" / (args.stage + "_%j.out")),
                "--error=" + str(args.run_root / "logs" / (args.stage + "_%j.err")),
                str(args.source / "operations/r03_c3fd_main_20260907" / script)]
-    result = sp.run(command, env=env, check=True, capture_output=True, text=True)
+    result = sp.run(command, env=env, check=False, capture_output=True, text=True)
+    if result.returncode:
+        print(json.dumps({'stage': args.stage, 'submitted': False, 'returncode': result.returncode,
+                          'stdout': result.stdout, 'stderr': result.stderr, 'command': command}))
+        raise SystemExit(result.returncode)
     job = result.stdout.strip().split(";")[0]
     assert job.isdigit(), result.stdout
     record = {"job_id": job, "source": str(args.source), "stage": args.stage, "gpus": gpus,

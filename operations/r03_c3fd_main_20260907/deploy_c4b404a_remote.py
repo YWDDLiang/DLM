@@ -11,9 +11,10 @@ s.run(['git','-c','http.lowSpeedLimit=1','-c','http.lowSpeedTime=20','fetch','ht
 assert s.check_output(['git','rev-parse',commit],cwd=repo,text=True).strip()==commit
 d=r/'code'/commit
 if not (d/'_CODE_READY').exists():
+ s.run(['tar','--warning=no-timestamp','--version'],stdout=s.DEVNULL,check=True)
  d.mkdir(parents=True,exist_ok=False)
  a=s.Popen(['git','archive',commit],cwd=repo,stdout=s.PIPE)
- b=s.run(['tar','-xf','-','-C',str(d)],stdin=a.stdout)
+ b=s.run(['tar','--warning=no-timestamp','-xf','-','-C',str(d)],stdin=a.stdout)
  a.stdout.close();assert a.wait()==0 and b.returncode==0
  (d/'_CODE_READY').write_text(commit+'\n')
 (r/'logs').mkdir(exist_ok=True)
