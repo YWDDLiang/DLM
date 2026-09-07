@@ -33,6 +33,8 @@ manifest = {
                  'planner_seed': seed} for role in roles],
 }
 manifest_path = root / ('EVALUATION_INPUTS_' + args.phase + '.json')
+if args.phase == 'pilot256':
+    manifest['method_freeze'] = str(root / 'METHOD_FREEZE.json')
 with manifest_path.open('x') as stream:
     json.dump(manifest, stream, indent=2)
     stream.write('\n')

@@ -41,6 +41,10 @@ deadline=time.monotonic()+24
 while True:
  output=capture()
  match=re.search(r'^'+re.escape(end)+r' (\\d+)\\s*$',output,re.M)
+ # Legacy tqdm carriage returns can leave zero digits and a timer after the
+ # printed zero exit status. Only recover this unambiguous zero case.
+ if not match:
+  match=re.search(r'^'+re.escape(end)+r' (0+)(?= \\[\\d{{2}}:\\d{{2}}<)',output,re.M)
  start=re.search(r'^'+re.escape(begin)+r'\\s*$',output,re.M)
  if match:
   captured=output[start.end():match.start()].strip() if start else output[:match.start()].strip()[-10000:]
@@ -79,7 +83,7 @@ def main() -> int:
             "import base64,subprocess;"
             f"print('R03_BEGIN_{nonce}',flush=True);"
             f"r=subprocess.run(base64.b64decode('{payload}').decode(),shell=True);"
-            f"print('R03_END_{nonce} '+str(r.returncode),flush=True)"
+            f"print('\\n\\x1b[2KR03_END_{nonce} '+str(r.returncode),flush=True)"
         )
         inner = f"{REMOTE_PYTHON} -c {shlex.quote(wrapped)}"
         if len(inner) >= 3000:

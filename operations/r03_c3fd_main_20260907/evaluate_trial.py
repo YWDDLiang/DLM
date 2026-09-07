@@ -116,6 +116,7 @@ def validate_manifest(manifest, manifest_path):
             "include_matched_interface_reference": matched_interface,
             "registered_construction_geometry": construction_geometry,
             "validity_artifact": validity_artifact,
+            "method_freeze": resolved(manifest["method_freeze"], base) if manifest.get("method_freeze") else None,
             "frozen_config": resolved(manifest.get("frozen_config"), base),
             "hull_run_root": resolved(manifest.get("hull_run_root"), base)}
 
@@ -400,7 +401,7 @@ def summarize_evaluation(directory, cell, method, trial):
                                                                                   for name in ("EVALUATION_FINAL.json", "attempt_results.jsonl")]}
 
 
-def adoption_rule(scope, summaries):
+def adoption_rule(scope, summaries, frozen=None):
     if scope == "canary":
         return {"enabled": False, "selected_role": None, "reason": "engineering canary only; no policy selection from 16 requests"}
     lookup = {(row["role"], row["endpoint"]): row for row in summaries}
@@ -410,6 +411,11 @@ def adoption_rule(scope, summaries):
              "at_least_one_tau800_sun_count_increases": any(p_tau["headline"][key] > g_tau["headline"][key]
                                                             for key in ("strict_sun", "meta_sun"))}
     selected = "P" if all(gates.values()) else "G"
+    if frozen is not None:
+        return {"enabled": False, "selected_role": frozen["selected_role"], "method_freeze": frozen,
+                "late_development_rule_role": selected, "gates": gates,
+                "reason": "Method already frozen; late pilot scores cannot revise that decision.",
+                "statistical_significance_claimed": False, "fresh_formal_requests_still_required": True}
     return {"enabled": True, "selected_role": selected, "gates": gates,
             "rule": "tau800 Strict and Meta SUN >= G; at least one tau800 SUN count increases",
             "diagnostics_not_additional_gates": ["native SUN", "comp_valid", "struct_valid", "verified SUN"],
@@ -431,6 +437,9 @@ def render_summary(report):
     if report["adoption"]["enabled"]:
         lines += [f"Development rule selects **{report['adoption']['selected_role']}**.",
                   report["adoption"]["rule"] + ".", "This is development selection, not evidence of statistical significance."]
+    elif report["adoption"].get("method_freeze"):
+        lines += [f"Frozen candidate remains **{report['adoption']['selected_role']}**.",
+                  f"The late development counts satisfy the rule for **{report['adoption']['late_development_rule_role']}**; this does not revise the timed freeze."]
     else:
         lines.append("Engineering canary only: no P/G selection is made.")
     return "\n".join(lines) + "\n"
@@ -446,6 +455,14 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
     config_pin = file_identity(trial["frozen_config"])
     output_dir.mkdir(parents=True, exist_ok=False)
     source_pins = [file_identity(manifest_path), config_pin]
+    frozen = None
+    if trial["method_freeze"]:
+        frozen = read_json(trial["method_freeze"])
+        if (frozen.get("schema") != "r03_method_freeze_v1" or frozen.get("selected_role") not in ("G", "P")
+                or datetime.fromisoformat(frozen["recorded_utc"].replace("Z", "+00:00"))
+                > datetime.fromisoformat(frozen["freeze_deadline_utc"].replace("Z", "+00:00"))):
+            raise ValueError("invalid or late method freeze receipt")
+        source_pins.append(file_identity(trial["method_freeze"]))
     for item in components:
         source_pins.extend(item["source_files"])
         for cell in item["cells"].values():
@@ -480,7 +497,7 @@ def evaluate_trial(manifest_path, output_dir, *, command_runner=run_command):
                   "expected_requests": trial["expected_requests"], "methods": summaries,
                   "coverage": coverage, "coverage_source": file_identity(coverage_path), "source_files": source_pins,
                   "scoring_source": file_identity(SOURCE / "scripts/evaluate_programmed_paths.py"),
-                  "adoption": adoption_rule(trial["scope"], summaries),
+                  "adoption": adoption_rule(trial["scope"], summaries, frozen),
                   "labels_created": False, "new_official_query": False, "GPU_calls": 0,
                   "selection_json_used": False, "cross_method_NU_pooling": False,
                   "registered_construction_geometry": trial["registered_construction_geometry"],
