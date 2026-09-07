@@ -244,10 +244,12 @@ def main() -> None:
     parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--sample-index-offset", type=int, default=0)
     parser.add_argument("--batch-size", type=int, default=4)
+    parser.add_argument("--purpose", choices=("train", "evaluation"), default="evaluation")
     parser.add_argument("--device", default="cuda")
     args = parser.parse_args()
-    if args.num_samples < 1 or args.sample_index_offset < 0 or not 1 <= args.batch_size <= 4:
-        raise ValueError("positive request count, nonnegative global offset and batch size in 1..4 required")
+    maximum_batch = 64 if args.purpose == "train" else 4
+    if args.num_samples < 1 or args.sample_index_offset < 0 or not 1 <= args.batch_size <= maximum_batch:
+        raise ValueError(f"positive request count, nonnegative global offset and batch size in 1..{maximum_batch} required")
     if int(os.environ.get("WORLD_SIZE", "1")) != 1:
         raise ValueError("native entry uses one process/GPU; caller registers separate seed/shard commands")
     if args.output_dir.exists():
@@ -261,7 +263,8 @@ def main() -> None:
     with (args.output_dir / "requested_attempts.jsonl").open("x", encoding="utf-8") as handle:
         for local_idx, sample_idx in enumerate(requested_ids):
             handle.write(json.dumps({"sample_idx": sample_idx, "local_sample_idx": local_idx,
-                                     "seed": args.seed, "attempt_status": "registered"}) + "\n")
+                                     "seed": args.seed, "purpose": args.purpose,
+                                     "source_split": args.purpose, "attempt_status": "registered"}) + "\n")
     import torch
 
     # Preserve native seeding order: seed once before loading P0, then let the
@@ -285,6 +288,7 @@ def main() -> None:
             "c3fd_domain": domain_identity, "sampling": dict(SAMPLING_DEFAULTS),
             "num_samples": args.num_samples, "sample_index_offset": args.sample_index_offset,
             "seed": args.seed, "batch_size": args.batch_size,
+            "purpose": args.purpose, "source_split": args.purpose,
             "seed_mode": "single_process_seed_once_before_P0_load_no_ordinal_reseed",
             "sample_index_offset_changes_prompt_or_rng": False,
             "prompt_style": H1_PLANNER_PROMPT_STYLE_RICH_PLAN, "include_sample_id": False,
@@ -307,6 +311,7 @@ def main() -> None:
                     oracle=oracle, processor=processor,
                 )
                 for row in batch_rows:
+                    row.update(purpose=args.purpose, source_split=args.purpose)
                     line = json.dumps(row, ensure_ascii=False) + "\n"
                     raw_handle.write(line)
                     plans_handle.write(line)

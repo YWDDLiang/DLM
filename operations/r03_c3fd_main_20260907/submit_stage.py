@@ -2,9 +2,11 @@
 import argparse
 import datetime as dt
 import json
+import hashlib
 import os
 from pathlib import Path
 import re
+import shlex
 import subprocess as sp
 from trial_preflight import require_geometry_canary_acceptance
 
@@ -13,6 +15,169 @@ def job_belongs_to_run(job_fields, run_root):
     run_root = Path(run_root).resolve()
     paths = [Path(job_fields[key]) for key in ('Command', 'WorkDir', 'StdOut') if job_fields.get(key)]
     return any(path == run_root or run_root in path.parents for path in paths)
+
+
+def configured_dispatch(argv=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=Path, required=True)
+    parser.add_argument('--job', required=True)
+    args = parser.parse_args(argv)
+    spec = json.loads(args.config.read_text())
+    root = Path(spec['run_root']).resolve()
+    root.mkdir(parents=True, exist_ok=True)
+    guard = root / '.dispatch_guard.lock'
+    with guard.open('x') as handle:
+        json.dump({'pid': os.getpid(), 'job': args.job,
+                   'created_utc': dt.datetime.now(dt.timezone.utc).isoformat()}, handle)
+    try:
+        return _configured_dispatch_locked(argv)
+    finally:
+        guard.unlink()
+
+
+def _configured_dispatch_locked(argv=None):
+    """Submit one manifest job with an explicit dated resource contract.
+
+    Generated sbatch files are run artifacts; the reusable execution logic
+    stays in run_component.py. A lock records uncertain dispatches instead of
+    allowing a retry to create a duplicate job.
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=Path, required=True)
+    parser.add_argument('--job', required=True)
+    args = parser.parse_args(argv)
+    spec = json.loads(args.config.read_text(encoding='utf-8'))
+    if spec.get('schema') != 'crystal_pipeline_run_v1':
+        raise ValueError('unknown pipeline manifest')
+    root, source = Path(spec['run_root']).resolve(), Path(spec['source_root']).resolve()
+    if not (source / '_CODE_READY').is_file():
+        raise ValueError('source has not completed immutable deployment')
+    from run_component import verify_deployed_source
+    if verify_deployed_source(source) != spec.get('source_identity'):
+        raise ValueError('source does not match the configured immutable deployment')
+    job = spec['jobs'][args.job]
+    indices = list(job['component_indices'])
+    if (not indices or len(set(indices)) != len(indices)
+            or any(type(i) is not int or not 0 <= i < len(spec['components']) for i in indices)):
+        raise ValueError('job must contain distinct component indices')
+    components = [spec['components'][i] for i in indices]
+    if (len({row['id'] for row in components}) != len(components)
+            or len({row['output_dir'] for row in components}) != len(components)):
+        raise ValueError('parallel component IDs and output directories must be distinct')
+    for component in components:
+        directory = (root / component['output_dir']).resolve()
+        names = [stage['name'] for stage in component['stages']]
+        if root not in directory.parents or len(names) != len(set(names)):
+            raise ValueError('invalid component directory or duplicate stage names')
+    directories = [(root / row['output_dir']).resolve() for row in components]
+    if any(a in b.parents or b in a.parents for i, a in enumerate(directories) for b in directories[i + 1:]):
+        raise ValueError('parallel component directories must not overlap')
+    records = root / 'submissions'
+    records.mkdir(parents=True, exist_ok=True)
+    receipt, lock = records / (args.job + '.json'), records / (args.job + '.lock')
+    fingerprint = hashlib.sha256(json.dumps(
+        {'job': job, 'components': components, 'purpose': spec['purpose'],
+         'source_root': str(source), 'source_identity': spec['source_identity'],
+         'environment': spec.get('environment', {}),
+         'resources': spec['resources'], 'python': spec['python']}, sort_keys=True).encode()).hexdigest()
+    if receipt.exists():
+        existing = json.loads(receipt.read_text())
+        if existing.get('fingerprint') != fingerprint:
+            raise ValueError('this job name already refers to a different frozen configuration')
+        print(json.dumps(existing))
+        return
+    unresolved = [path for path in records.glob('*.lock') if not path.with_suffix('.json').exists()]
+    if unresolved:
+        raise ValueError('uncertain dispatch reservations require reconciliation before further submissions')
+    gpus, cpus = int(job['gpus_per_task']), int(job['cpus_per_task'])
+    parallel = min(len(indices), int(job.get('parallel_tasks', 1)))
+    minutes = int(job['wall_minutes'])
+    if (gpus < 0 or min(cpus, parallel, minutes) < 1 or (gpus and cpus > 6 * gpus)
+            or any(int(row['gpus']) != gpus for row in components)):
+        raise ValueError('job resources differ from its components or CPU-per-GPU budget')
+    budget = spec['resources']
+    now = dt.datetime.now(dt.timezone.utc)
+    extra_until = dt.datetime.fromisoformat(budget['extra_gpu_until_utc'])
+    deadline = dt.datetime.fromisoformat(budget['deadline_utc'])
+    worst_end = now + dt.timedelta(minutes=minutes * ((len(indices) + parallel - 1) // parallel))
+    if worst_end >= deadline:
+        raise ValueError('job wall limit can run beyond the declared deadline')
+    gpu_limit = int(budget['gpus_after_extra_window'])
+    if worst_end <= extra_until:
+        gpu_limit = int(budget['gpus_before_extra_window'])
+    hard_stop = extra_until if gpus * parallel > int(budget['gpus_after_extra_window']) else deadline
+    queued = sp.check_output(['squeue', '-h', '-r', '-u', os.environ['USER'], '-o', '%i'], text=True).split()
+    owned = []
+    for job_id in queued:
+        line = sp.check_output(['scontrol', 'show', 'job', '-o', job_id], text=True)
+        fields = dict(piece.split('=', 1) for piece in line.split() if '=' in piece)
+        if not job_belongs_to_run(fields, root):
+            continue
+        match = re.search(r'(?:^|\s)TRES=([^\s]+)', line)
+        if not match:
+            raise ValueError('cannot establish resources of an existing task job')
+        tres = dict(piece.split('=', 1) for piece in match.group(1).split(',') if '=' in piece)
+        owned.append({'job_id': job_id, 'gpus': int(tres.get('gres/gpu', 0)),
+                      'cpus': int(tres.get('cpu', 0)), 'state': fields.get('JobState')})
+    if sum(row['gpus'] for row in owned) + gpus * parallel > gpu_limit:
+        raise ValueError(f'GPU resource budget is occupied: {owned}')
+    if sum(row['cpus'] for row in owned) + cpus * parallel > 6 * gpu_limit:
+        raise ValueError('CPU resource budget is occupied')
+    (root / 'logs').mkdir(exist_ok=True)
+    frozen = dict(spec, job_runtime={'hard_stop_utc': hard_stop.isoformat(), 'cpus_per_task': cpus,
+                                    'job': args.job, 'fingerprint': fingerprint})
+    encoded = (json.dumps(frozen, sort_keys=True, indent=2) + '\n').encode()
+    manifest_digest = hashlib.sha256(encoded).hexdigest()
+    snapshot = records / (args.job + '.' + manifest_digest[:16] + '.manifest.json')
+    if snapshot.exists():
+        if snapshot.read_bytes() != encoded:
+            raise ValueError('immutable manifest snapshot differs')
+    else:
+        with snapshot.open('xb') as handle:
+            handle.write(encoded)
+    script = records / (args.job + '.sbatch')
+    remaining_code = ('import datetime as d,sys; end=d.datetime.fromisoformat(sys.argv[1]);'
+                      'print(int((end-d.datetime.now(d.timezone.utc)).total_seconds())-40)')
+    content = ('#!/usr/bin/env bash\nset -Eeuo pipefail\nseconds="$(' + shlex.quote(spec['python'])
+               + ' -c ' + shlex.quote(remaining_code) + ' ' + shlex.quote(hard_stop.isoformat()) + ')"\n'
+               + 'if [ "$seconds" -le 0 ]; then exit 75; fi\n'
+               + 'exec timeout --signal=TERM --kill-after=30s "${seconds}s" ' + shlex.quote(spec['python'])
+               + ' ' + shlex.quote(str(source / 'operations/r03_c3fd_main_20260907/run_component.py'))
+               + ' --config ' + shlex.quote(str(snapshot)) + ' --config-sha256 ' + manifest_digest
+               + ' --component-index "${SLURM_ARRAY_TASK_ID:-' + str(indices[0]) + '}"\n')
+    script.write_text(content, encoding='utf-8')
+    command = ['sbatch', '--parsable', '--no-requeue', '--partition=' + job.get('partition', 'gpu'),
+               '--job-name=' + args.job, '--nodes=1', '--ntasks=1', f'--cpus-per-task={cpus}',
+               *([f'--gres=gpu:NVIDIAA800-SXM4-80GB:{gpus}'] if gpus else []),
+               '--mem=' + str(job.get('memory', '96G')),
+               f'--time={minutes}', '--chdir=' + str(source),
+               '--output=' + str(root / 'logs' / (args.job + '_%A_%a.out')),
+               '--error=' + str(root / 'logs' / (args.job + '_%A_%a.err'))]
+    if len(indices) > 1:
+        command.append('--array=' + ','.join(map(str, indices)) + '%' + str(parallel))
+    command.append(str(script))
+    with lock.open('x') as handle:
+        json.dump({'command': command, 'fingerprint': fingerprint, 'manifest_sha256': manifest_digest,
+                   'requested_utc': now.isoformat(), 'gpus_reserved': gpus * parallel}, handle)
+    result = sp.run(command, capture_output=True, text=True)
+    if result.returncode:
+        # A nonzero sbatch result is retained for explicit review; never infer
+        # that a dropped transport or wrapper error means no job was created.
+        print(json.dumps({'submitted': False, 'returncode': result.returncode,
+                          'stdout': result.stdout, 'stderr': result.stderr}))
+        raise SystemExit(result.returncode)
+    job_id = result.stdout.strip().split(';')[0]
+    if not job_id.isdigit():
+        raise ValueError('submission output does not establish a numeric job identity')
+    record = {'job_id': job_id, 'job': args.job, 'command': command, 'manifest': str(snapshot),
+              'manifest_sha256': manifest_digest, 'fingerprint': fingerprint,
+              'submitted_utc': now.isoformat(), 'max_parallel_tasks': parallel,
+              'gpus_per_task': gpus, 'cpus_per_task': cpus, 'queue_before': owned,
+              'gpu_budget_applied': gpu_limit, 'worst_end_utc': worst_end.isoformat(),
+              'absolute_stop_utc': hard_stop.isoformat(), 'runtime_cutoff_enforced': True}
+    with receipt.open('x') as handle:
+        json.dump(record, handle, indent=2)
+    print(json.dumps(record), flush=True)
 
 
 def main():
@@ -156,4 +321,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys
+    if '--config' in sys.argv:
+        configured_dispatch()
+    else:
+        main()
