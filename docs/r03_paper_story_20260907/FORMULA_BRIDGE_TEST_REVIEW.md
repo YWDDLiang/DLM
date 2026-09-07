@@ -49,8 +49,8 @@ replacement for the production scientific vocabulary or independent endpoint.
 | Empty token support | Explicit failed request / documented EOS sentinel, no replacement | Silent backoff, invalid unmasked continuation or retry |
 | Mixed batch: formula row + rich row | Mask only the first row and preserve legal values exactly | Batch-wide state or score mutation |
 
-All **36 tests passed in 2.021 seconds** on 2026-09-07: 11 independent-reference
-sanity tests, 12 production semantic equivalence tests, and 13 native token / CPU
+All **39 tests passed in 2.012 seconds** on 2026-09-07: 11 independent-reference
+sanity tests, 13 production semantic equivalence tests, and 15 native token / CPU
 tensor tests. There were no skipped tests. The command was:
 
 ```powershell
@@ -58,7 +58,7 @@ tensor tests. There were no skipped tests. The command was:
 ```
 
 The checked bridge file had SHA256
-`b728fb192485a15db8f5c32d205e1595bd24764b2cd196bf9b3f1d2c59086cc1`.
+`d92907b6a5343ff1b7141b63b9521aeacc2ccb3c39cb1857f1fb9823fa1daabe`.
 The local `exp1` environment is Python 3.10.19 with torch. No model, GPU,
 network, physics evaluation or new training data was used.
 
@@ -80,8 +80,58 @@ The unordered charge-bitset review found the following consistent with the
 declared witness language: every completed element is excluded from the future
 element set, charge support has an adequate exact integer range, atom/arity
 budgets close jointly, and family-required hits propagate in the same suffix
-state. Production-vocabulary timing and memory are a separate outstanding
-integration check; tiny-domain correctness does not establish its throughput.
+state. The pinned 88-element / 393-stratum domain was subsequently timed below;
+the actual P0 tokenizer and model still require an integration measurement.
+
+The wrapper now performs an exact coarse lexical filter before expensive
+semantic checks, then prunes first-character groups using prefix viability.
+It preserves one leading lower-case character for partial symbols, leading
+digits for count continuation, native field padding, and arbitrary text after
+the first formula newline. Seek-phase label crossings still use the complete
+token vocabulary. New tests compare its complete allowed set against the
+independent reference, including hostile word fragments and `Na1` to `Na10`.
+The exposed `stats()` reports vocabulary size, retained lexical fragments,
+first-character groups, cache hits and semantic-candidate work counts.
+
+An exact charge-envelope prune now rejects a requested suffix charge outside
+`remaining_atoms * [minimum_available_oxidation, maximum_available_oxidation]`.
+The bounds use compiled oxidation-value bitmasks. They are a necessary
+condition only; all surviving paths still undergo the original exact
+atom/arity/family/charge checks. Zero-slot complete states bypass the envelope
+and retain their existing terminal rule. A tight Na/Cl finite-language test
+checks both positive and negative remaining-charge directions.
+
+## Bounded timing on the actual domain
+
+The domain SHA256 was
+`a2b4a49eff72790cabaa75977414dba9eba45812ad02944d46e023a9b1d804a4`.
+The benchmark uses 410 distinct character prefixes from the first 64 distinct
+historical H1A2 formulas. Wrapper timing uses 28 prefixes from its first four
+formulas and the pinned B0 ByteLevel vocabulary as a workload proxy: 128,830
+IDs, 126,080 nonempty fragments, and 5,941 fragments retained by the lexical
+filter. This is **not the P0 tokenizer or an actual P0 BPE trajectory**. No
+neural model, GPU or physical evaluator was called. Each run had a 240-second
+watchdog and completed in under 20 seconds.
+
+| Measurement | Before envelope | Final compiled envelope |
+|---|---:|---:|
+| 410 cold semantic queries, total | 0.275 s | 0.121 s |
+| 28 cold wrapper queries, total | 17.142 s | 13.045 s |
+| Largest cold wrapper query | 6.007 s | 1.859 s |
+| Cold `Mn12` wrapper query | 6.007 s | 1.737 s |
+| 28 repeated wrapper queries, total | 0.213 ms | 0.202 ms |
+| Suffix-cache misses | 1,608,740 | 868,187 |
+
+The suffix cache reached its declared 250,000-entry cap in both runs. The new
+envelope cache contained 108,784 entries. These are cache-entry measurements,
+not a process-memory profile. All recorded semantic decisions and wrapper
+allowed-token counts matched before/after; complete allowed-set equivalence is
+also covered by the independent small-domain tests. The roughly 24% cold-time
+reduction does not establish server/P0 throughput.
+
+Before, intermediate, final timings and a machine-readable comparison are
+retained under `execution/FORMULA_BRIDGE_CPU_*.json`. The exact repeatable
+driver is `tests/benchmark_r03_formula_bridge_cpu.py`.
 
 An additional pointer review found that export must honor explicit
 `attempt_status` failures even when a row carries a parseable `plan_state`.
@@ -89,3 +139,29 @@ The pointer agent added that check and a regression fixture. Its deterministic
 canonical formula replay is explicitly control-only; original sampled Plan
 fields stay unchanged, and both CLIs require the native rich prompt with no
 sample ID.
+
+The integrated-body ABI was also checked using a full Fe2O3 rich Plan. The
+current and frozen parsers produced the same composition state and the same
+native body prompt (SHA256
+`df2e4ad7cbca175be63d0f12fbd20b6594f75af4a4c51b62243f641e16b0a9c3`).
+The runner retains upstream failures and verifies any supplied body prompt.
+Two-seed ledgers must keep unique request IDs, or run separately per seed.
+
+The physical-transfer and repair-execution source review found no blocking
+scientific or parameter-isolation defect. The trainer freezes all parameters
+before enabling only the existing B0 LoRA matrices; its optimizer receives
+only those matrices, with frozen parameter versions and full trained
+embedding/head equality checked afterward. The saved q values are carried
+into a declared offline weighted conditional-likelihood objective, not reused
+as rewards for newly sampled actions. Energy labels must be train-only and
+verified; there is no new-label path or fabricated rich-field input. Finite
+energy magnitude itself does not delete or reweight a uniform reference group.
+
+Repair execution uses the same prompt, support and temperature as training. It
+keeps construction artifacts, stages each complete XYZ transaction, preserves
+every nonactive original token, and rolls back on unavailable support. The P
+reload checks the frozen tokenizer and trained tables. Conservative global
+geometry support can reject a one-site change when another unchanged pair is
+invalid; this limits what local repair can accomplish and is not a guarantee of
+repairing every invalid initial structure. Real model memory, step throughput,
+and G/P generation behavior remain integration measurements.

@@ -64,6 +64,14 @@ class C3FDFormulaOracle:
             ) for b in self.boundaries
         )
         self.boundary_masks = tuple(sum(1 << i for i, qs in enumerate(row) if qs) for row in self.choices)
+        charge_value_masks = []
+        for row in self.choices:
+            masks: dict[int, int] = {}
+            for index, states in enumerate(row):
+                for oxidation in states:
+                    masks[oxidation] = masks.get(oxidation, 0) | (1 << index)
+            charge_value_masks.append(tuple(sorted(masks.items())))
+        self.charge_value_masks = tuple(charge_value_masks)
         self.zero_mask = sum(1 << i for i, qs in enumerate(self.states) if 0 in qs)
         self.metal_mask = sum(1 << i for i, s in enumerate(self.symbols) if s in self.metals)
         self.all_mask = (1 << len(self.symbols)) - 1
@@ -85,13 +93,14 @@ class C3FDFormulaOracle:
             self.strata = tuple(sorted(values))
         self.stratum_set = frozenset(self.strata)
         self._suffix_bits = lru_cache(maxsize=cache_size)(self._suffix_bits_impl)
+        self._charge_envelope = lru_cache(maxsize=cache_size)(self._charge_envelope_impl)
         self._can_complete_fixed = lru_cache(maxsize=cache_size)(self._can_complete_fixed_impl)
         self._prefix_cached = lru_cache(maxsize=cache_size)(self._prefix_impl)
         self._terminal_cached = lru_cache(maxsize=cache_size)(self._terminal_impl)
 
     def stats(self) -> dict[str, Any]:
         return {name: getattr(self, name).cache_info()._asdict()
-                for name in ("_suffix_bits", "_can_complete_fixed", "_prefix_cached", "_terminal_cached")}
+                for name in ("_suffix_bits", "_charge_envelope", "_can_complete_fixed", "_prefix_cached", "_terminal_cached")}
 
     def is_prefix_viable(self, text: str) -> bool:
         return self._prefix_cached(str(text))
@@ -199,6 +208,22 @@ class C3FDFormulaOracle:
             charges = {value + count * q for value in charges for q in states}
         return charges
 
+    def _charge_envelope_impl(self, boundary: int, available: int) -> tuple[int, int] | None:
+        """Per-atom charge bounds over the exact remaining element support.
+
+        Multiplication by a remaining atom budget is a necessary condition,
+        not a new acceptance rule. Family, exact arity, and charge bitsets still
+        decide every retained continuation.
+        """
+        # There are far fewer distinct oxidation values than elements. Each
+        # bitmask is the exact set carrying that value at this EN boundary.
+        values = self.charge_value_masks[boundary]
+        minimum = next((q for q, mask in values if available & mask), None)
+        if minimum is None:
+            return None
+        maximum = next(q for q, mask in reversed(values) if available & mask)
+        return minimum, maximum
+
     def _can_complete_fixed_impl(self, terms: tuple[tuple[str, int], ...]) -> bool:
         used = sum(1 << self.indices[s] for s, _ in terms)
         atoms, count = sum(n for _, n in terms), len(terms)
@@ -237,8 +262,22 @@ class C3FDFormulaOracle:
                 eligible = available & self.boundary_masks[boundary]
                 if eligible.bit_count() < slots or (need_required and not eligible & required):
                     continue
+                required_charges = charges
+                if slots > 0:
+                    # Every legal suffix uses exactly `remaining` atoms, each
+                    # with a charge inside this envelope. A missing interval
+                    # cannot exclude a complete state: zero-slot/zero-atom
+                    # states deliberately skip this check and use the exact
+                    # terminal bitset rule below.
+                    envelope = self._charge_envelope(boundary, eligible)
+                    if envelope is None:
+                        continue
+                    low, high = remaining * envelope[0], remaining * envelope[1]
+                    required_charges = {q for q in charges if low <= -q <= high}
+                    if not required_charges:
+                        continue
                 bits = self._suffix_bits(family, boundary, eligible, remaining, slots, need_required)
-                if any(((bits >> (self.offset - q)) & 1) for q in charges if -self.offset <= q <= self.offset):
+                if any(((bits >> (self.offset - q)) & 1) for q in required_charges if -self.offset <= q <= self.offset):
                     return True
         return False
 
@@ -301,18 +340,60 @@ class R03C3FDFormulaLogitsProcessor:
     replacement formula or fabricated scientific field.
     """
 
+    _fragment_shape = re.compile(r"[a-z]?[0-9]*(?:[A-Z][a-z]?[0-9]*)*")
+
+    @classmethod
+    def _lexical_fragment_possible(cls, fragment: str) -> bool:
+        """A coarse necessary shape, independent of the current chemistry.
+
+        A token may start with one lower-case character completing an element,
+        or digits completing a count. Field padding and anything after the
+        first newline remain allowed. This does not choose an element/count
+        interpretation: the full prefix oracle still decides every candidate.
+        """
+        if not fragment:
+            return False
+        formula_part = fragment.split("\n", 1)[0].strip(" \t\r")
+        return cls._fragment_shape.fullmatch(formula_part) is not None
+
     def __init__(self, tokenizer: Any, *, oracle: C3FDFormulaOracle, start_length: int, eos_token_id: int) -> None:
         self.tokenizer, self.oracle = tokenizer, oracle
         self.start_length, self.eos_token_id = int(start_length), int(eos_token_id)
         self.fragments = {i: str(tokenizer.decode([i], skip_special_tokens=True, clean_up_tokenization_spaces=False))
                           for i in range(len(tokenizer)) if i != self.eos_token_id}
+        self._nonempty_fragment_count = sum(bool(text) for text in self.fragments.values())
         self.active_ids = tuple(i for i, text in self.fragments.items()
-                                if text and text[0] in " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\t\r\n")
+                                if self._lexical_fragment_possible(text))
+        by_first: dict[str, list[int]] = {}
+        for token_id in self.active_ids:
+            by_first.setdefault(self.fragments[token_id][0], []).append(token_id)
+        self.active_by_first_character = {
+            character: tuple(token_ids) for character, token_ids in by_first.items()
+        }
+        # Seek-phase candidates come from the complete vocabulary. A token
+        # crossing the label is not a chemical fragment by itself.
         self.embedded_label_ids = tuple(i for i, text in self.fragments.items() if _LABEL in text.lower())
         self.crossing_ids = {k: tuple(i for i, text in self.fragments.items() if text.lower().startswith(_LABEL[k:]))
                              for k in range(1, len(_LABEL))}
         self.cache: dict[str, tuple[int, ...] | None] = {}
         self.failures: dict[str, str] = {}
+        self._query_counts = {
+            "allowed_token_queries": 0, "cache_hits": 0,
+            "first_character_checks": 0, "active_candidate_checks": 0,
+            "seek_candidate_checks": 0,
+        }
+
+    def stats(self) -> dict[str, int]:
+        return {
+            "vocab_size": len(self.tokenizer),
+            "nonempty_fragment_count": self._nonempty_fragment_count,
+            "active_prefilter_count": len(self.active_ids),
+            "active_first_character_groups": len(self.active_by_first_character),
+            "seek_embedded_label_count": len(self.embedded_label_ids),
+            "cached_prefixes": len(self.cache),
+            "failed_prefixes": len(self.failures),
+            **self._query_counts,
+        }
 
     def _candidate_valid(self, text: str) -> bool:
         phase, chemical = formula_phase(text, self.oracle)
@@ -325,9 +406,11 @@ class R03C3FDFormulaLogitsProcessor:
         return self.oracle.is_prefix_viable(chemical)
 
     def allowed_token_ids(self, generated_ids: Sequence[int]) -> tuple[int, ...] | None:
+        self._query_counts["allowed_token_queries"] += 1
         current = str(self.tokenizer.decode(list(map(int, generated_ids)), skip_special_tokens=True,
                                            clean_up_tokenization_spaces=False))
         if current in self.cache:
+            self._query_counts["cache_hits"] += 1
             return self.cache[current]
         phase, _ = formula_phase(current, self.oracle)
         if phase == "done":
@@ -341,10 +424,17 @@ class R03C3FDFormulaLogitsProcessor:
             for k in range(1, len(_LABEL)):
                 if lowered.endswith(_LABEL[:k]):
                     candidates.update(self.crossing_ids[k])
+            self._query_counts["seek_candidate_checks"] += len(candidates)
             invalid = {i for i in candidates if not self._candidate_valid(current + self.fragments[i])}
             allowed = None if not invalid else tuple(i for i in range(len(self.tokenizer)) if i not in invalid)
         else:
-            allowed = tuple(i for i in self.active_ids if self._candidate_valid(current + self.fragments[i]))
+            candidates = []
+            for character, token_ids in self.active_by_first_character.items():
+                self._query_counts["first_character_checks"] += 1
+                if self._candidate_valid(current + character):
+                    candidates.extend(token_ids)
+            self._query_counts["active_candidate_checks"] += len(candidates)
+            allowed = tuple(sorted(i for i in candidates if self._candidate_valid(current + self.fragments[i])))
             if not allowed:
                 self.failures[current] = "no_legal_formula_token"
                 allowed = (self.eos_token_id,)

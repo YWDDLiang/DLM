@@ -1,0 +1,4609 @@
+{
+  "schema": "r03_formula_bridge_cpu_timing_v1",
+  "status": "complete",
+  "pid": 39420,
+  "domain_sha256": "a2b4a49eff72790cabaa75977414dba9eba45812ad02944d46e023a9b1d804a4",
+  "elements": 88,
+  "strata": 393,
+  "source_sha256": "d92907b6a5343ff1b7141b63b9521aeacc2ccb3c39cb1857f1fb9823fa1daabe",
+  "corpus": "D:\\codex_work\\ai4s\\diffsion_language_model_meets_diffusion\\workstreams\\final_method_development_20260808\\main_experiment_freeze_20260815_v1\\inference\\frozen_inputs\\historical_planner\\raw_generations.jsonl",
+  "corpus_sha256": "bc59879e5ac122c68da84a767ac74d305befb8cd91d2c2096d755988c5886978",
+  "formula_count": 64,
+  "unique_prefix_count": 410,
+  "wrapper_tokenizer_scope": "legacy LLaDA ByteLevel vocabulary proxy; not P0 tokenizer or BPE trajectory",
+  "tokenizer_json": "D:\\codex_work\\ai4s\\diffsion_language_model_meets_diffusion\\archive\\20260710_pre_wyckoff\\legacy_runs\\20260601_004850-r5c-dn1-compplan\\outputs\\r5c_de_novo_sft\\final\\tokenizer.json",
+  "tokenizer_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+  "no_model_or_gpu_or_physics_calls": true,
+  "budget_seconds": 240,
+  "semantic_cold": [
+    {
+      "prefix": "",
+      "seconds": 1.5499972505494952e-05,
+      "result": true
+    },
+    {
+      "prefix": "S",
+      "seconds": 0.00029260001610964537,
+      "result": true
+    },
+    {
+      "prefix": "Sn",
+      "seconds": 0.00018820000695995986,
+      "result": true
+    },
+    {
+      "prefix": "M",
+      "seconds": 9.369998588226736e-05,
+      "result": true
+    },
+    {
+      "prefix": "Mn",
+      "seconds": 0.00016990001313388348,
+      "result": true
+    },
+    {
+      "prefix": "Mn1",
+      "seconds": 7.299997378140688e-06,
+      "result": true
+    },
+    {
+      "prefix": "Mn12",
+      "seconds": 2.61999957729131e-05,
+      "result": true
+    },
+    {
+      "prefix": "Mn12G",
+      "seconds": 3.6999990697950125e-05,
+      "result": true
+    },
+    {
+      "prefix": "Mn12Ge",
+      "seconds": 3.440000000409782e-05,
+      "result": true
+    },
+    {
+      "prefix": "Mn12Ge4",
+      "seconds": 0.0007996999775059521,
+      "result": true
+    },
+    {
+      "prefix": "C",
+      "seconds": 0.00015700000221841037,
+      "result": true
+    },
+    {
+      "prefix": "Cu",
+      "seconds": 7.670000195503235e-05,
+      "result": true
+    },
+    {
+      "prefix": "Cu2",
+      "seconds": 9.499985026195645e-06,
+      "result": true
+    },
+    {
+      "prefix": "Cu2G",
+      "seconds": 0.0002294000005349517,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge",
+      "seconds": 0.00021669999114237726,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4",
+      "seconds": 0.00020360000780783594,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4N",
+      "seconds": 0.000516800006153062,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4Nd",
+      "seconds": 0.00027400001999922097,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4Nd2",
+      "seconds": 0.00026660002185963094,
+      "result": true
+    },
+    {
+      "prefix": "T",
+      "seconds": 0.00013189998571760952,
+      "result": true
+    },
+    {
+      "prefix": "Ti",
+      "seconds": 9.970000246539712e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ti2",
+      "seconds": 8.99998121894896e-06,
+      "result": true
+    },
+    {
+      "prefix": "Ti2C",
+      "seconds": 0.0003617999900598079,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co",
+      "seconds": 0.00030949999927543104,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2",
+      "seconds": 0.0002592999953776598,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2A",
+      "seconds": 0.000304599991068244,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2As",
+      "seconds": 0.0006248000136110932,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2As4",
+      "seconds": 0.00045780002255924046,
+      "result": true
+    },
+    {
+      "prefix": "O",
+      "seconds": 4.230000195093453e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6",
+      "seconds": 9.690001024864614e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6T",
+      "seconds": 0.00025759998243302107,
+      "result": true
+    },
+    {
+      "prefix": "O6Ti",
+      "seconds": 0.00024580000899732113,
+      "result": true
+    },
+    {
+      "prefix": "O6TiS",
+      "seconds": 0.00020169999334029853,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr",
+      "seconds": 6.009999196976423e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr2",
+      "seconds": 5.460000829771161e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr2S",
+      "seconds": 8.219998562708497e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr2Sb",
+      "seconds": 8.949998300522566e-05,
+      "result": true
+    },
+    {
+      "prefix": "A",
+      "seconds": 0.00010590002057142556,
+      "result": true
+    },
+    {
+      "prefix": "Al",
+      "seconds": 7.590002496726811e-05,
+      "result": true
+    },
+    {
+      "prefix": "Al8",
+      "seconds": 1.850002445280552e-05,
+      "result": true
+    },
+    {
+      "prefix": "Al8L",
+      "seconds": 0.00022800001897849143,
+      "result": true
+    },
+    {
+      "prefix": "Al8La",
+      "seconds": 1.3599987141788006e-05,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8",
+      "seconds": 0.00021840000408701599,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8P",
+      "seconds": 0.005579599994234741,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8Pt",
+      "seconds": 0.00021150000975467265,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8Pt8",
+      "seconds": 1.1099997209385037e-05,
+      "result": false
+    },
+    {
+      "prefix": "O1",
+      "seconds": 5.600013537332416e-06,
+      "result": true
+    },
+    {
+      "prefix": "O10",
+      "seconds": 9.429999045096338e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10S",
+      "seconds": 0.0002735000161919743,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr",
+      "seconds": 0.0001241000136360526,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2",
+      "seconds": 0.00023629999486729503,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y",
+      "seconds": 6.329998723231256e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2",
+      "seconds": 5.229999078437686e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2B",
+      "seconds": 8.289999095723033e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba",
+      "seconds": 7.229999755509198e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2",
+      "seconds": 6.0399994254112244e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2B",
+      "seconds": 9.76000155787915e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2Bi",
+      "seconds": 8.38999985717237e-05,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2Bi2",
+      "seconds": 8.030000026337802e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8",
+      "seconds": 1.8400023691356182e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8N",
+      "seconds": 0.0005286000086925924,
+      "result": true
+    },
+    {
+      "prefix": "O8Na",
+      "seconds": 0.00022300001000985503,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY",
+      "seconds": 0.0002769000129774213,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY4",
+      "seconds": 0.000221800000872463,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY4T",
+      "seconds": 7.039998308755457e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY4Tl",
+      "seconds": 6.250001024454832e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ti3",
+      "seconds": 9.120002505369484e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ti3G",
+      "seconds": 0.00034359999699518085,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge",
+      "seconds": 0.0004068000125698745,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6",
+      "seconds": 0.0003381999849807471,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6T",
+      "seconds": 0.0008314999868161976,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6Tm",
+      "seconds": 0.0005800000217277557,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6Tm6",
+      "seconds": 0.00043590000132098794,
+      "result": true
+    },
+    {
+      "prefix": "As",
+      "seconds": 0.000149200001033023,
+      "result": true
+    },
+    {
+      "prefix": "As2",
+      "seconds": 8.700008038431406e-06,
+      "result": true
+    },
+    {
+      "prefix": "As2E",
+      "seconds": 0.00044339997111819685,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu",
+      "seconds": 0.0004329000075813383,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4",
+      "seconds": 0.000832799996715039,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4A",
+      "seconds": 0.0011636000126600266,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4Au",
+      "seconds": 0.0008981999999377877,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4Au2",
+      "seconds": 0.000467399979243055,
+      "result": true
+    },
+    {
+      "prefix": "H",
+      "seconds": 0.00011210000957362354,
+      "result": true
+    },
+    {
+      "prefix": "H1",
+      "seconds": 5.699985194951296e-06,
+      "result": true
+    },
+    {
+      "prefix": "H10",
+      "seconds": 0.0003972999984398484,
+      "result": true
+    },
+    {
+      "prefix": "H10A",
+      "seconds": 0.0011131000064779073,
+      "result": true
+    },
+    {
+      "prefix": "H10Al",
+      "seconds": 0.000674999988405034,
+      "result": true
+    },
+    {
+      "prefix": "H10Al4",
+      "seconds": 0.0004760999872814864,
+      "result": true
+    },
+    {
+      "prefix": "H10Al4K",
+      "seconds": 0.0003656999906525016,
+      "result": true
+    },
+    {
+      "prefix": "H10Al4K2",
+      "seconds": 0.0007691000064369291,
+      "result": true
+    },
+    {
+      "prefix": "K",
+      "seconds": 0.00011100000119768083,
+      "result": true
+    },
+    {
+      "prefix": "K2",
+      "seconds": 9.300012607127428e-06,
+      "result": true
+    },
+    {
+      "prefix": "K2A",
+      "seconds": 0.00023220002185553312,
+      "result": true
+    },
+    {
+      "prefix": "K2As",
+      "seconds": 0.0003394999948795885,
+      "result": true
+    },
+    {
+      "prefix": "K2As4",
+      "seconds": 0.0008264000061899424,
+      "result": true
+    },
+    {
+      "prefix": "K2As4A",
+      "seconds": 0.000675299990689382,
+      "result": true
+    },
+    {
+      "prefix": "K2As4Ag",
+      "seconds": 0.00023820000933483243,
+      "result": true
+    },
+    {
+      "prefix": "K2As4Ag6",
+      "seconds": 0.0002690000110305846,
+      "result": true
+    },
+    {
+      "prefix": "L",
+      "seconds": 0.00012909999350085855,
+      "result": true
+    },
+    {
+      "prefix": "Li",
+      "seconds": 9.630000567995012e-05,
+      "result": true
+    },
+    {
+      "prefix": "Li2",
+      "seconds": 8.299975888803601e-06,
+      "result": true
+    },
+    {
+      "prefix": "Li2O",
+      "seconds": 2.4100008886307478e-05,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4",
+      "seconds": 0.00015819998225197196,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F",
+      "seconds": 0.0002072000061161816,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F6",
+      "seconds": 0.0002860999957192689,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F6V",
+      "seconds": 0.0002688000095076859,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F6V2",
+      "seconds": 7.520001963712275e-05,
+      "result": true
+    },
+    {
+      "prefix": "P",
+      "seconds": 0.0003674000035971403,
+      "result": true
+    },
+    {
+      "prefix": "Pd",
+      "seconds": 6.10999995842576e-05,
+      "result": true
+    },
+    {
+      "prefix": "Pd2",
+      "seconds": 9.300012607127428e-06,
+      "result": true
+    },
+    {
+      "prefix": "Pd2A",
+      "seconds": 0.00011940000695176423,
+      "result": true
+    },
+    {
+      "prefix": "Pd2Ag",
+      "seconds": 0.00014429999282583594,
+      "result": true
+    },
+    {
+      "prefix": "Pd2Ag2",
+      "seconds": 0.00011799999629147351,
+      "result": true
+    },
+    {
+      "prefix": "O8Y",
+      "seconds": 0.00024560000747442245,
+      "result": true
+    },
+    {
+      "prefix": "O8YM",
+      "seconds": 0.00025099999038502574,
+      "result": true
+    },
+    {
+      "prefix": "O8YMo",
+      "seconds": 0.00018269999418407679,
+      "result": true
+    },
+    {
+      "prefix": "O8YMo2",
+      "seconds": 0.00017029998707585037,
+      "result": true
+    },
+    {
+      "prefix": "Cl",
+      "seconds": 0.0002714000002015382,
+      "result": true
+    },
+    {
+      "prefix": "Cl6",
+      "seconds": 0.00015350000467151403,
+      "result": true
+    },
+    {
+      "prefix": "Cl6R",
+      "seconds": 0.0004780999734066427,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb",
+      "seconds": 1.4699995517730713e-05,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb2",
+      "seconds": 0.0003386000171303749,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb2I",
+      "seconds": 0.0004947999841533601,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb2Ir",
+      "seconds": 0.00013780000153928995,
+      "result": true
+    },
+    {
+      "prefix": "O4",
+      "seconds": 1.2899981811642647e-05,
+      "result": true
+    },
+    {
+      "prefix": "O4S",
+      "seconds": 0.00016270001651719213,
+      "result": true
+    },
+    {
+      "prefix": "O4S4",
+      "seconds": 0.00014260000898502767,
+      "result": true
+    },
+    {
+      "prefix": "O4S4M",
+      "seconds": 0.00023430000874213874,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo",
+      "seconds": 0.0002154999820049852,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2",
+      "seconds": 0.00014970000484026968,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2T",
+      "seconds": 0.00021839997498318553,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2Te",
+      "seconds": 0.00026359999901615083,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2Te4",
+      "seconds": 0.00022350001381710172,
+      "result": true
+    },
+    {
+      "prefix": "Si",
+      "seconds": 0.00014379998901858926,
+      "result": true
+    },
+    {
+      "prefix": "Si3",
+      "seconds": 0.0001241999852936715,
+      "result": true
+    },
+    {
+      "prefix": "Si3C",
+      "seconds": 0.0025556000182405114,
+      "result": true
+    },
+    {
+      "prefix": "Si3Ca",
+      "seconds": 0.0012631999852601439,
+      "result": true
+    },
+    {
+      "prefix": "Si3CaA",
+      "seconds": 0.0006305999995674938,
+      "result": true
+    },
+    {
+      "prefix": "Si3CaAg",
+      "seconds": 0.0035545999999158084,
+      "result": true
+    },
+    {
+      "prefix": "G",
+      "seconds": 0.000132500019390136,
+      "result": true
+    },
+    {
+      "prefix": "Ge",
+      "seconds": 0.0001453999720979482,
+      "result": true
+    },
+    {
+      "prefix": "Ge2",
+      "seconds": 1.0400020983070135e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ge2R",
+      "seconds": 0.00036299999919719994,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh",
+      "seconds": 0.00038270000368356705,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4",
+      "seconds": 0.0003741999971680343,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4H",
+      "seconds": 0.0010668000031728297,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4Hf",
+      "seconds": 0.00041259999852627516,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4Hf4",
+      "seconds": 0.00046790001215413213,
+      "result": true
+    },
+    {
+      "prefix": "Sc",
+      "seconds": 0.00011289998656138778,
+      "result": true
+    },
+    {
+      "prefix": "Sc2",
+      "seconds": 9.400013368576765e-06,
+      "result": true
+    },
+    {
+      "prefix": "Sc2C",
+      "seconds": 0.0004720000142697245,
+      "result": true
+    },
+    {
+      "prefix": "Sc2Cd",
+      "seconds": 0.0002615000121295452,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CdP",
+      "seconds": 0.0005254999850876629,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CdPb",
+      "seconds": 0.00027489999774843454,
+      "result": true
+    },
+    {
+      "prefix": "Mg",
+      "seconds": 1.2399978004395962e-05,
+      "result": true
+    },
+    {
+      "prefix": "Mg6",
+      "seconds": 8.150000940077007e-05,
+      "result": true
+    },
+    {
+      "prefix": "Mg6A",
+      "seconds": 0.00019890000112354755,
+      "result": true
+    },
+    {
+      "prefix": "Mg6As",
+      "seconds": 0.0019218999950680882,
+      "result": true
+    },
+    {
+      "prefix": "Mg6As8",
+      "seconds": 0.0007528999994974583,
+      "result": true
+    },
+    {
+      "prefix": "O4Sb",
+      "seconds": 0.0004208000027574599,
+      "result": true
+    },
+    {
+      "prefix": "O4Sb2",
+      "seconds": 0.00029319999157451093,
+      "result": true
+    },
+    {
+      "prefix": "Ag",
+      "seconds": 9.330001194030046e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ag3",
+      "seconds": 6.839999696239829e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ag3I",
+      "seconds": 0.00022879999596625566,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In",
+      "seconds": 0.00021079997532069683,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3",
+      "seconds": 0.00015830001211725175,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3S",
+      "seconds": 0.00035539999953471124,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3Sm",
+      "seconds": 0.00019949997658841312,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3Sm3",
+      "seconds": 0.00019770002108998597,
+      "result": true
+    },
+    {
+      "prefix": "Z",
+      "seconds": 9.899999713525176e-05,
+      "result": true
+    },
+    {
+      "prefix": "Zn",
+      "seconds": 1.1500000255182385e-05,
+      "result": true
+    },
+    {
+      "prefix": "ZnR",
+      "seconds": 0.00018160001491196454,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh",
+      "seconds": 0.00024830002803355455,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh2",
+      "seconds": 0.00020670000230893493,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh2S",
+      "seconds": 0.00019069999689236283,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh2Sb",
+      "seconds": 0.00032419999479316175,
+      "result": true
+    },
+    {
+      "prefix": "CuP",
+      "seconds": 0.00024530000519007444,
+      "result": true
+    },
+    {
+      "prefix": "CuPd",
+      "seconds": 0.00012770001194439828,
+      "result": true
+    },
+    {
+      "prefix": "CuPdS",
+      "seconds": 0.0001109000004362315,
+      "result": true
+    },
+    {
+      "prefix": "CuPdSb",
+      "seconds": 0.00019859999883919954,
+      "result": true
+    },
+    {
+      "prefix": "Ga",
+      "seconds": 1.170000177808106e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ga6",
+      "seconds": 0.00012440001592040062,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Y",
+      "seconds": 0.00045429999590851367,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Yb",
+      "seconds": 0.000391399982618168,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Yb1",
+      "seconds": 8.300004992634058e-06,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Yb10",
+      "seconds": 0.00033400001120753586,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni",
+      "seconds": 0.00018660002388060093,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4",
+      "seconds": 4.610000178217888e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4R",
+      "seconds": 0.00020360000780783594,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4Rb",
+      "seconds": 1.5700003132224083e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4Rb4",
+      "seconds": 5.3499999921768904e-05,
+      "result": true
+    },
+    {
+      "prefix": "Al5",
+      "seconds": 0.0002108000044245273,
+      "result": true
+    },
+    {
+      "prefix": "Al5G",
+      "seconds": 0.00021520000882446766,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge",
+      "seconds": 0.0002128999913111329,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge5",
+      "seconds": 0.00019099999917671084,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge5H",
+      "seconds": 0.000673100003041327,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge5Ho",
+      "seconds": 0.00031060000765137374,
+      "result": true
+    },
+    {
+      "prefix": "Co",
+      "seconds": 0.0001221999991685152,
+      "result": true
+    },
+    {
+      "prefix": "CoZ",
+      "seconds": 0.00022690001060254872,
+      "result": true
+    },
+    {
+      "prefix": "CoZr",
+      "seconds": 0.00030910002533346415,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6",
+      "seconds": 0.00040660001104697585,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6T",
+      "seconds": 0.000758699985453859,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6Te",
+      "seconds": 0.0007478999905288219,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6Te8",
+      "seconds": 0.00014990000636316836,
+      "result": true
+    },
+    {
+      "prefix": "Cl4",
+      "seconds": 9.539999882690609e-05,
+      "result": true
+    },
+    {
+      "prefix": "Cl4P",
+      "seconds": 0.0002364999963901937,
+      "result": true
+    },
+    {
+      "prefix": "Cl4Pd",
+      "seconds": 9.479999425821006e-05,
+      "result": true
+    },
+    {
+      "prefix": "Cl4Pd4",
+      "seconds": 8.979998528957367e-05,
+      "result": true
+    },
+    {
+      "prefix": "Cu4",
+      "seconds": 0.0003266999847255647,
+      "result": true
+    },
+    {
+      "prefix": "Cu4G",
+      "seconds": 0.0003037999849766493,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge",
+      "seconds": 0.00023750000400468707,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6",
+      "seconds": 0.00023820000933483243,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6E",
+      "seconds": 0.0004569999873638153,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6Er",
+      "seconds": 1.71000137925148e-05,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6Er8",
+      "seconds": 0.0003934999986086041,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2",
+      "seconds": 2.2899999748915434e-05,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F",
+      "seconds": 0.0001587000151630491,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8",
+      "seconds": 0.00018500001169741154,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8M",
+      "seconds": 0.00020909999147988856,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8Mn",
+      "seconds": 0.00039030000334605575,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8Mn4",
+      "seconds": 9.280000813305378e-05,
+      "result": true
+    },
+    {
+      "prefix": "AlC",
+      "seconds": 0.00021810000180266798,
+      "result": true
+    },
+    {
+      "prefix": "AlCo",
+      "seconds": 0.00019580000662244856,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2",
+      "seconds": 0.0001720000000204891,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2S",
+      "seconds": 0.00017240000306628644,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2Sm",
+      "seconds": 0.0002803000097628683,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2Sm2",
+      "seconds": 0.00021959998412057757,
+      "result": true
+    },
+    {
+      "prefix": "O3",
+      "seconds": 8.140000863932073e-05,
+      "result": true
+    },
+    {
+      "prefix": "O3S",
+      "seconds": 0.00015259999781847,
+      "result": true
+    },
+    {
+      "prefix": "O3Sr",
+      "seconds": 0.00016949998098425567,
+      "result": true
+    },
+    {
+      "prefix": "O3SrT",
+      "seconds": 5.7600002037361264e-05,
+      "result": true
+    },
+    {
+      "prefix": "O3SrTa",
+      "seconds": 1.5300000086426735e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8S",
+      "seconds": 0.00023480001254938543,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr",
+      "seconds": 0.00033730000723153353,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4",
+      "seconds": 5.370000144466758e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4P",
+      "seconds": 0.00042559998109936714,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4Pt",
+      "seconds": 0.00023249999503605068,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4Pt4",
+      "seconds": 8.749999688006938e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8A",
+      "seconds": 0.00021510000806301832,
+      "result": true
+    },
+    {
+      "prefix": "O8Al",
+      "seconds": 0.00019649998284876347,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2",
+      "seconds": 0.00011379999341443181,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2N",
+      "seconds": 0.00021410000044852495,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2Ni",
+      "seconds": 5.77000027988106e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2Ni2",
+      "seconds": 5.219999002292752e-05,
+      "result": true
+    },
+    {
+      "prefix": "K4",
+      "seconds": 0.00021490000654011965,
+      "result": true
+    },
+    {
+      "prefix": "K4I",
+      "seconds": 0.0003555000002961606,
+      "result": true
+    },
+    {
+      "prefix": "K4I1",
+      "seconds": 8.600007276982069e-06,
+      "result": true
+    },
+    {
+      "prefix": "K4I12",
+      "seconds": 0.0005863999831490219,
+      "result": true
+    },
+    {
+      "prefix": "K4I12H",
+      "seconds": 0.0006199000054039061,
+      "result": true
+    },
+    {
+      "prefix": "K4I12Hg",
+      "seconds": 0.00027180000324733555,
+      "result": true
+    },
+    {
+      "prefix": "K4I12Hg4",
+      "seconds": 0.00012530002277344465,
+      "result": true
+    },
+    {
+      "prefix": "AgS",
+      "seconds": 0.00010140001541003585,
+      "result": true
+    },
+    {
+      "prefix": "AgSn",
+      "seconds": 0.00019200000679120421,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3",
+      "seconds": 0.00019420002354308963,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3P",
+      "seconds": 0.0006280000088736415,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3Pt",
+      "seconds": 0.00019260001135990024,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3Pt4",
+      "seconds": 0.00023850001161918044,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb",
+      "seconds": 0.00025969999842345715,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2",
+      "seconds": 3.850000211969018e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2L",
+      "seconds": 5.8399979025125504e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2Lu",
+      "seconds": 5.3800002206116915e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2Lu2",
+      "seconds": 4.73999825771898e-05,
+      "result": true
+    },
+    {
+      "prefix": "Pd4",
+      "seconds": 9.350001346319914e-05,
+      "result": true
+    },
+    {
+      "prefix": "Pd4S",
+      "seconds": 0.000152900000102818,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb",
+      "seconds": 0.00018429997726343572,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4",
+      "seconds": 0.000128800020320341,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4P",
+      "seconds": 0.0011081999982707202,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4Pr",
+      "seconds": 0.00025850001838989556,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4Pr4",
+      "seconds": 0.00016770002548582852,
+      "result": true
+    },
+    {
+      "prefix": "Zn2",
+      "seconds": 9.300012607127428e-06,
+      "result": true
+    },
+    {
+      "prefix": "Zn2S",
+      "seconds": 0.0003417999832890928,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se",
+      "seconds": 0.0003249000001233071,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8",
+      "seconds": 0.00026920001255348325,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8C",
+      "seconds": 0.0006104999920353293,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8Cs",
+      "seconds": 0.0003470999945420772,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8Cs4",
+      "seconds": 6.779999239370227e-05,
+      "result": true
+    },
+    {
+      "prefix": "C4",
+      "seconds": 0.00030949999927543104,
+      "result": true
+    },
+    {
+      "prefix": "C4O",
+      "seconds": 0.0003912000101990998,
+      "result": true
+    },
+    {
+      "prefix": "C4O1",
+      "seconds": 9.399984264746308e-06,
+      "result": true
+    },
+    {
+      "prefix": "C4O12",
+      "seconds": 0.00022390001686289907,
+      "result": true
+    },
+    {
+      "prefix": "C4O12S",
+      "seconds": 0.0003787999739870429,
+      "result": true
+    },
+    {
+      "prefix": "C4O12Sm",
+      "seconds": 0.000524200004292652,
+      "result": true
+    },
+    {
+      "prefix": "C4O12Sm4",
+      "seconds": 0.00027310001314617693,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh2",
+      "seconds": 0.0003414000093471259,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh2Y",
+      "seconds": 0.0005249000096227974,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh2Yb",
+      "seconds": 0.0005025000136811286,
+      "result": true
+    },
+    {
+      "prefix": "O6F",
+      "seconds": 0.00023859998327679932,
+      "result": true
+    },
+    {
+      "prefix": "O6Fe",
+      "seconds": 4.3100008042529225e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6FeB",
+      "seconds": 0.00011239998275414109,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa",
+      "seconds": 5.540001438930631e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa2",
+      "seconds": 5.09000092279166e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa2B",
+      "seconds": 8.289999095723033e-05,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa2Bi",
+      "seconds": 7.300000288523734e-05,
+      "result": true
+    },
+    {
+      "prefix": "F",
+      "seconds": 0.00028229999588802457,
+      "result": true
+    },
+    {
+      "prefix": "F1",
+      "seconds": 5.699985194951296e-06,
+      "result": true
+    },
+    {
+      "prefix": "F12",
+      "seconds": 0.00015639999764971435,
+      "result": true
+    },
+    {
+      "prefix": "F12C",
+      "seconds": 0.0005104000156279653,
+      "result": true
+    },
+    {
+      "prefix": "F12Ca",
+      "seconds": 0.0005364000098779798,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV",
+      "seconds": 0.0005949999904260039,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2",
+      "seconds": 0.0001863999932538718,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2Z",
+      "seconds": 0.0002544000162743032,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2Zn",
+      "seconds": 1.920000067912042e-05,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2Zn2",
+      "seconds": 0.0002212999970652163,
+      "result": true
+    },
+    {
+      "prefix": "O12",
+      "seconds": 6.160000339150429e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12W",
+      "seconds": 0.00011570000788196921,
+      "result": true
+    },
+    {
+      "prefix": "O12W4",
+      "seconds": 6.830002530477941e-05,
+      "result": true
+    },
+    {
+      "prefix": "Sc2Cu",
+      "seconds": 0.000285100017208606,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CuI",
+      "seconds": 0.0003806999884545803,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CuIr",
+      "seconds": 0.00022369998623616993,
+      "result": true
+    },
+    {
+      "prefix": "O8C",
+      "seconds": 0.00048519999836571515,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr",
+      "seconds": 0.0002978999982587993,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2",
+      "seconds": 4.149999585933983e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2B",
+      "seconds": 7.730000652372837e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba",
+      "seconds": 5.949998740106821e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba2",
+      "seconds": 5.299999611452222e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba2L",
+      "seconds": 6.44999963697046e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba2La",
+      "seconds": 1.6000005416572094e-05,
+      "result": true
+    },
+    {
+      "prefix": "S2",
+      "seconds": 0.0002193999825976789,
+      "result": true
+    },
+    {
+      "prefix": "S2S",
+      "seconds": 0.0003124999930150807,
+      "result": true
+    },
+    {
+      "prefix": "S2Se",
+      "seconds": 0.00026780000189319253,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4",
+      "seconds": 0.00025439998717047274,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4A",
+      "seconds": 0.0005370000144466758,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag",
+      "seconds": 0.0003434999962337315,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4",
+      "seconds": 0.00017120002303272486,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4I",
+      "seconds": 0.00029700002050958574,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4In",
+      "seconds": 0.000555099977646023,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4In2",
+      "seconds": 0.0003939000016544014,
+      "result": true
+    },
+    {
+      "prefix": "C2",
+      "seconds": 2.1799991372972727e-05,
+      "result": true
+    },
+    {
+      "prefix": "C2M",
+      "seconds": 0.0005467000009957701,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo",
+      "seconds": 0.0008359000203199685,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2",
+      "seconds": 0.00045190000673756003,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2H",
+      "seconds": 0.0010704000014811754,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2Hf",
+      "seconds": 0.0005834000185132027,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2Hf2",
+      "seconds": 0.00039870000910013914,
+      "result": true
+    },
+    {
+      "prefix": "O8P",
+      "seconds": 0.0004057000041939318,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd",
+      "seconds": 0.00018089998047798872,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2",
+      "seconds": 6.570000550709665e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2I",
+      "seconds": 0.00022039999021217227,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2In",
+      "seconds": 0.00010519998613744974,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2In4",
+      "seconds": 0.00010580001980997622,
+      "result": true
+    },
+    {
+      "prefix": "ZnI",
+      "seconds": 0.00027420002152211964,
+      "result": true
+    },
+    {
+      "prefix": "ZnIn",
+      "seconds": 0.000222400005441159,
+      "result": true
+    },
+    {
+      "prefix": "ZnInN",
+      "seconds": 0.0003144000074826181,
+      "result": true
+    },
+    {
+      "prefix": "ZnInNd",
+      "seconds": 0.0003239999932702631,
+      "result": true
+    },
+    {
+      "prefix": "ZnInNd2",
+      "seconds": 0.00030869999318383634,
+      "result": true
+    },
+    {
+      "prefix": "Ga7",
+      "seconds": 0.0003635000030044466,
+      "result": true
+    },
+    {
+      "prefix": "Ga7S",
+      "seconds": 0.0005774000019300729,
+      "result": true
+    },
+    {
+      "prefix": "Ga7Sm",
+      "seconds": 0.0003488000074867159,
+      "result": true
+    },
+    {
+      "prefix": "Ga7Sm1",
+      "seconds": 8.400005754083395e-06,
+      "result": true
+    },
+    {
+      "prefix": "Ga7Sm10",
+      "seconds": 3.6500015994533896e-05,
+      "result": true
+    },
+    {
+      "prefix": "TiM",
+      "seconds": 0.00021929998183622956,
+      "result": true
+    },
+    {
+      "prefix": "TiMn",
+      "seconds": 0.0007703000155743212,
+      "result": true
+    },
+    {
+      "prefix": "TiMn2",
+      "seconds": 0.0008107000030577183,
+      "result": true
+    },
+    {
+      "prefix": "TiMn2G",
+      "seconds": 0.0006003000016789883,
+      "result": true
+    },
+    {
+      "prefix": "TiMn2Ge",
+      "seconds": 0.000662000005831942,
+      "result": true
+    },
+    {
+      "prefix": "O3N",
+      "seconds": 0.0002545999886933714,
+      "result": true
+    },
+    {
+      "prefix": "O3Ni",
+      "seconds": 3.890000516548753e-05,
+      "result": true
+    },
+    {
+      "prefix": "O3NiB",
+      "seconds": 6.590000702999532e-05,
+      "result": true
+    },
+    {
+      "prefix": "O3NiBa",
+      "seconds": 5.299999611452222e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca",
+      "seconds": 0.00021670002024620771,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2",
+      "seconds": 0.00015770000754855573,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2B",
+      "seconds": 0.00031140001374296844,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba",
+      "seconds": 0.00021890000789426267,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2",
+      "seconds": 7.879998884163797e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2T",
+      "seconds": 0.0007796999998390675,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2Tb",
+      "seconds": 0.0003004999889526516,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2Tb2",
+      "seconds": 6.169997504912317e-05,
+      "result": true
+    },
+    {
+      "prefix": "O8F",
+      "seconds": 0.0032730000093579292,
+      "result": true
+    },
+    {
+      "prefix": "O8F4",
+      "seconds": 0.00024289998691529036,
+      "result": true
+    },
+    {
+      "prefix": "O8F4V",
+      "seconds": 0.0002724000078160316,
+      "result": true
+    },
+    {
+      "prefix": "O8F4V6",
+      "seconds": 7.310000364668667e-05,
+      "result": true
+    },
+    {
+      "prefix": "LiO",
+      "seconds": 2.6699999580159783e-05,
+      "result": true
+    },
+    {
+      "prefix": "LiO8",
+      "seconds": 0.00018809997709468007,
+      "result": true
+    },
+    {
+      "prefix": "LiO8V",
+      "seconds": 0.00025179999647662044,
+      "result": true
+    },
+    {
+      "prefix": "LiO8V7",
+      "seconds": 6.479999865405262e-05,
+      "result": true
+    },
+    {
+      "prefix": "H12",
+      "seconds": 2.6599998818710446e-05,
+      "result": true
+    },
+    {
+      "prefix": "H12B",
+      "seconds": 0.0010649999894667417,
+      "result": true
+    },
+    {
+      "prefix": "H12Ba",
+      "seconds": 0.0009190000128000975,
+      "result": true
+    },
+    {
+      "prefix": "H12Ba4",
+      "seconds": 0.0010621999972499907,
+      "result": true
+    },
+    {
+      "prefix": "O2",
+      "seconds": 1.4399993233382702e-05,
+      "result": true
+    },
+    {
+      "prefix": "O2S",
+      "seconds": 0.00014829999417997897,
+      "result": true
+    },
+    {
+      "prefix": "O2Sb",
+      "seconds": 0.00014089999604038894,
+      "result": true
+    },
+    {
+      "prefix": "O2SbG",
+      "seconds": 0.00014670001110062003,
+      "result": true
+    },
+    {
+      "prefix": "O2SbGd",
+      "seconds": 3.1899980967864394e-05,
+      "result": true
+    },
+    {
+      "prefix": "Zn2C",
+      "seconds": 0.0002631999959703535,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Ce",
+      "seconds": 0.00023249999503605068,
+      "result": true
+    },
+    {
+      "prefix": "Zn2CeT",
+      "seconds": 0.0003795000084210187,
+      "result": true
+    },
+    {
+      "prefix": "Zn2CeTb",
+      "seconds": 0.000314799981424585,
+      "result": true
+    },
+    {
+      "prefix": "Sn4",
+      "seconds": 0.00027180000324733555,
+      "result": true
+    },
+    {
+      "prefix": "Sn4L",
+      "seconds": 0.0007476999890059233,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu",
+      "seconds": 0.0005613999965135008,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4",
+      "seconds": 0.00034180001239292324,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4P",
+      "seconds": 0.0016197999939322472,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4Pt",
+      "seconds": 0.0002562999725341797,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4Pt4",
+      "seconds": 0.00017919999663718045,
+      "result": true
+    },
+    {
+      "prefix": "O12M",
+      "seconds": 0.00021659999038092792,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn",
+      "seconds": 0.0001680999994277954,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2",
+      "seconds": 0.00010040000779554248,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2C",
+      "seconds": 0.00017889999435283244,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu",
+      "seconds": 7.489998824894428e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2",
+      "seconds": 5.569998756982386e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2B",
+      "seconds": 8.689999231137335e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba",
+      "seconds": 8.53999808896333e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2",
+      "seconds": 7.609999738633633e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2P",
+      "seconds": 8.13000078778714e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2Pr",
+      "seconds": 7.839998579584062e-05,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2Pr2",
+      "seconds": 7.470001582987607e-05,
+      "result": true
+    },
+    {
+      "prefix": "Si4",
+      "seconds": 0.00033760000951588154,
+      "result": true
+    },
+    {
+      "prefix": "Si4L",
+      "seconds": 0.0006255999905988574,
+      "result": true
+    },
+    {
+      "prefix": "Si4La",
+      "seconds": 1.4599994756281376e-05,
+      "result": true
+    },
+    {
+      "prefix": "Si4La2",
+      "seconds": 0.0004602000117301941,
+      "result": true
+    }
+  ],
+  "semantic_warm": [
+    {
+      "prefix": "",
+      "seconds": 2.1999876480549574e-06,
+      "result": true
+    },
+    {
+      "prefix": "S",
+      "seconds": 4.00003045797348e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn",
+      "seconds": 7.00005330145359e-07,
+      "result": true
+    },
+    {
+      "prefix": "M",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mn",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mn1",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mn12",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mn12G",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mn12Ge",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mn12Ge4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "C",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu2G",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4N",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4Nd",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu2Ge4Nd2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "T",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti",
+      "seconds": 1.0399991879239678e-05,
+      "result": true
+    },
+    {
+      "prefix": "Ti2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti2C",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2A",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2As",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti2Co2As4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6T",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6Ti",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6TiS",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr2S",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6TiSr2Sb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "A",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al8",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al8L",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al8La",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8P",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8Pt",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al8La8Pt8",
+      "seconds": 2.00001522898674e-07,
+      "result": false
+    },
+    {
+      "prefix": "O1",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10S",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2B",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2B",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2Bi",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "O10Sr2Y2Ba2Bi2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8N",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Na",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY4T",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8NaY4Tl",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti3",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti3G",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge",
+      "seconds": 4.00003045797348e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6T",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6Tm",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ti3Ge6Tm6",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "As",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "As2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "As2E",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4A",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4Au",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "As2Eu4Au2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "H",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H1",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H10",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H10A",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "H10Al",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H10Al4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H10Al4K",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "H10Al4K2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "K2A",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "K2As",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K2As4",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "K2As4A",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K2As4Ag",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "K2As4Ag6",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "L",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F6",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F6V",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O4F6V2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "P",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd2A",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd2Ag",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd2Ag2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Y",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8YM",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8YMo",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8YMo2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl6",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl6R",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb2I",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl6Rb2Ir",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S4M",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2T",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2Te",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4S4Mo2Te4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si3",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si3C",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si3Ca",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si3CaA",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si3CaAg",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "G",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2R",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4H",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4Hf",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh4Hf4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2C",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2Cd",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CdP",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CdPb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mg",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mg6",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mg6A",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mg6As",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Mg6As8",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4Sb",
+      "seconds": 4.00003045797348e-07,
+      "result": true
+    },
+    {
+      "prefix": "O4Sb2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag3",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag3I",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3S",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3Sm",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ag3In3Sm3",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Z",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnR",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh2S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnRh2Sb",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "CuP",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "CuPd",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "CuPdS",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "CuPdSb",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga6",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Y",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Yb",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Yb1",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga6Yb10",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4R",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4Rb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ni4Rb4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al5",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al5G",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge5",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge5H",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Al5Ge5Ho",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Co",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "CoZ",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "CoZr",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6T",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6Te",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "CoZr6Te8",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl4P",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl4Pd",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cl4Pd4",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu4G",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6E",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6Er",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Cu4Ge6Er8",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8M",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8Mn",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Li2O2F8Mn4",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "AlC",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "AlCo",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2Sm",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "AlCo2Sm2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3Sr",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3SrT",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3SrTa",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4P",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4Pt",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Sr4Pt4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8A",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Al",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2N",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2Ni",
+      "seconds": 4.00003045797348e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Al2Ni2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "K4I",
+      "seconds": 3.999739419668913e-07,
+      "result": true
+    },
+    {
+      "prefix": "K4I1",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "K4I12",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K4I12H",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K4I12Hg",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "K4I12Hg4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "AgS",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "AgSn",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3P",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3Pt",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "AgSn3Pt4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2L",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2Lu",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Nb2Lu2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd4S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4P",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4Pr",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Pd4Sb4Pr4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8C",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8Cs",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Se8Cs4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "C4",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "C4O",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "C4O1",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C4O12",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C4O12S",
+      "seconds": 4.00003045797348e-07,
+      "result": true
+    },
+    {
+      "prefix": "C4O12Sm",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "C4O12Sm4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh2Y",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ge2Rh2Yb",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6F",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6Fe",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6FeB",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa2B",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O6FeBa2Bi",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "F",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "F1",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12C",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12Ca",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2Z",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2Zn",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "F12CaV2Zn2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12W",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12W4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2Cu",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CuI",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sc2CuIr",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8C",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2B",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba2L",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Cr2Ba2La",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2S",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4A",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4I",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4In",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "S2Se4Ag4In2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C2M",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2H",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2Hf",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "C2Mo2Hf2",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8P",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2I",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2In",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Pd2In4",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnI",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnIn",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnInN",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnInNd",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "ZnInNd2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga7",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga7S",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga7Sm",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga7Sm1",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Ga7Sm10",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "TiM",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "TiMn",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "TiMn2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "TiMn2G",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "TiMn2Ge",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3N",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3Ni",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3NiB",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O3NiBa",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2B",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2T",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2Tb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8Ca2Ba2Tb2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8F",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8F4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8F4V",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O8F4V6",
+      "seconds": 1.9997241906821728e-07,
+      "result": true
+    },
+    {
+      "prefix": "LiO",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "LiO8",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "LiO8V",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "LiO8V7",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H12",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H12B",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "H12Ba",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "H12Ba4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O2S",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O2Sb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O2SbG",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O2SbGd",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2C",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2Ce",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2CeT",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Zn2CeTb",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn4L",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4P",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4Pt",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Sn4Lu4Pt4",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12M",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2C",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2B",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2P",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2Pr",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "O12Mn2Cu2Ba2Pr2",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si4",
+      "seconds": 2.00001522898674e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si4L",
+      "seconds": 2.999731805175543e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si4La",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    },
+    {
+      "prefix": "Si4La2",
+      "seconds": 3.00002284348011e-07,
+      "result": true
+    }
+  ],
+  "wrapper_cold": [
+    {
+      "prefix": "formula: ",
+      "seconds": 0.24425580000388436,
+      "allowed_count": 1561
+    },
+    {
+      "prefix": "formula: S",
+      "seconds": 0.17379209998762235,
+      "allowed_count": 658
+    },
+    {
+      "prefix": "formula: Sn",
+      "seconds": 0.34181230000103824,
+      "allowed_count": 841
+    },
+    {
+      "prefix": "formula: M",
+      "seconds": 0.003836599993519485,
+      "allowed_count": 10
+    },
+    {
+      "prefix": "formula: Mn",
+      "seconds": 0.3519052999909036,
+      "allowed_count": 840
+    },
+    {
+      "prefix": "formula: Mn1",
+      "seconds": 0.03692399998544715,
+      "allowed_count": 841
+    },
+    {
+      "prefix": "formula: Mn12",
+      "seconds": 1.736975599982543,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Mn12G",
+      "seconds": 0.004833200015127659,
+      "allowed_count": 6
+    },
+    {
+      "prefix": "formula: Mn12Ge",
+      "seconds": 1.8589214999810793,
+      "allowed_count": 828
+    },
+    {
+      "prefix": "formula: Mn12Ge4",
+      "seconds": 1.3826531000086106,
+      "allowed_count": 773
+    },
+    {
+      "prefix": "formula: C",
+      "seconds": 0.35975999999209307,
+      "allowed_count": 753
+    },
+    {
+      "prefix": "formula: Cu",
+      "seconds": 0.32834550002007745,
+      "allowed_count": 840
+    },
+    {
+      "prefix": "formula: Cu2",
+      "seconds": 0.3449663999781478,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Cu2G",
+      "seconds": 0.0017456999921705574,
+      "allowed_count": 6
+    },
+    {
+      "prefix": "formula: Cu2Ge",
+      "seconds": 0.3164558999997098,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Cu2Ge4",
+      "seconds": 0.37231720000272617,
+      "allowed_count": 827
+    },
+    {
+      "prefix": "formula: Cu2Ge4N",
+      "seconds": 0.33025380002800375,
+      "allowed_count": 643
+    },
+    {
+      "prefix": "formula: Cu2Ge4Nd",
+      "seconds": 0.4552540000004228,
+      "allowed_count": 797
+    },
+    {
+      "prefix": "formula: Cu2Ge4Nd2",
+      "seconds": 0.5103961999993771,
+      "allowed_count": 788
+    },
+    {
+      "prefix": "formula: T",
+      "seconds": 0.003949599980842322,
+      "allowed_count": 16
+    },
+    {
+      "prefix": "formula: Ti",
+      "seconds": 0.4195248000032734,
+      "allowed_count": 840
+    },
+    {
+      "prefix": "formula: Ti2",
+      "seconds": 0.4350325999839697,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Ti2C",
+      "seconds": 0.45204399997601286,
+      "allowed_count": 746
+    },
+    {
+      "prefix": "formula: Ti2Co",
+      "seconds": 0.46236070001032203,
+      "allowed_count": 831
+    },
+    {
+      "prefix": "formula: Ti2Co2",
+      "seconds": 0.49580970001989044,
+      "allowed_count": 825
+    },
+    {
+      "prefix": "formula: Ti2Co2A",
+      "seconds": 0.000599899998633191,
+      "allowed_count": 6
+    },
+    {
+      "prefix": "formula: Ti2Co2As",
+      "seconds": 0.7988220000115689,
+      "allowed_count": 793
+    },
+    {
+      "prefix": "formula: Ti2Co2As4",
+      "seconds": 0.8215071999875363,
+      "allowed_count": 789
+    }
+  ],
+  "wrapper_warm": [
+    {
+      "prefix": "formula: ",
+      "seconds": 1.069999416358769e-05,
+      "allowed_count": 1561
+    },
+    {
+      "prefix": "formula: S",
+      "seconds": 6.999995093792677e-06,
+      "allowed_count": 658
+    },
+    {
+      "prefix": "formula: Sn",
+      "seconds": 6.500020390376449e-06,
+      "allowed_count": 841
+    },
+    {
+      "prefix": "formula: M",
+      "seconds": 5.399982910603285e-06,
+      "allowed_count": 10
+    },
+    {
+      "prefix": "formula: Mn",
+      "seconds": 5.399982910603285e-06,
+      "allowed_count": 840
+    },
+    {
+      "prefix": "formula: Mn1",
+      "seconds": 5.89998671784997e-06,
+      "allowed_count": 841
+    },
+    {
+      "prefix": "formula: Mn12",
+      "seconds": 6.299989763647318e-06,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Mn12G",
+      "seconds": 6.500020390376449e-06,
+      "allowed_count": 6
+    },
+    {
+      "prefix": "formula: Mn12Ge",
+      "seconds": 6.89999433234334e-06,
+      "allowed_count": 828
+    },
+    {
+      "prefix": "formula: Mn12Ge4",
+      "seconds": 6.799993570894003e-06,
+      "allowed_count": 773
+    },
+    {
+      "prefix": "formula: C",
+      "seconds": 5.700014298781753e-06,
+      "allowed_count": 753
+    },
+    {
+      "prefix": "formula: Cu",
+      "seconds": 5.599984433501959e-06,
+      "allowed_count": 840
+    },
+    {
+      "prefix": "formula: Cu2",
+      "seconds": 6.299989763647318e-06,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Cu2G",
+      "seconds": 6.200018106028438e-06,
+      "allowed_count": 6
+    },
+    {
+      "prefix": "formula: Cu2Ge",
+      "seconds": 6.399990525096655e-06,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Cu2Ge4",
+      "seconds": 6.80002267472446e-06,
+      "allowed_count": 827
+    },
+    {
+      "prefix": "formula: Cu2Ge4N",
+      "seconds": 2.0400009816512465e-05,
+      "allowed_count": 643
+    },
+    {
+      "prefix": "formula: Cu2Ge4Nd",
+      "seconds": 7.599999662488699e-06,
+      "allowed_count": 797
+    },
+    {
+      "prefix": "formula: Cu2Ge4Nd2",
+      "seconds": 7.499998901039362e-06,
+      "allowed_count": 788
+    },
+    {
+      "prefix": "formula: T",
+      "seconds": 5.4000120144337416e-06,
+      "allowed_count": 16
+    },
+    {
+      "prefix": "formula: Ti",
+      "seconds": 5.799985956400633e-06,
+      "allowed_count": 840
+    },
+    {
+      "prefix": "formula: Ti2",
+      "seconds": 5.999987479299307e-06,
+      "allowed_count": 832
+    },
+    {
+      "prefix": "formula: Ti2C",
+      "seconds": 6.300018867477775e-06,
+      "allowed_count": 746
+    },
+    {
+      "prefix": "formula: Ti2Co",
+      "seconds": 6.900023436173797e-06,
+      "allowed_count": 831
+    },
+    {
+      "prefix": "formula: Ti2Co2",
+      "seconds": 6.699992809444666e-06,
+      "allowed_count": 825
+    },
+    {
+      "prefix": "formula: Ti2Co2A",
+      "seconds": 9.300012607127428e-06,
+      "allowed_count": 6
+    },
+    {
+      "prefix": "formula: Ti2Co2As",
+      "seconds": 7.000024197623134e-06,
+      "allowed_count": 793
+    },
+    {
+      "prefix": "formula: Ti2Co2As4",
+      "seconds": 8.400005754083395e-06,
+      "allowed_count": 789
+    }
+  ],
+  "semantic_constructor_seconds": 0.008396099990932271,
+  "in_progress": null,
+  "semantic_cold_summary": {
+    "queries": 410,
+    "total_seconds": 0.12119700023322366,
+    "p50_seconds": 0.0002145000034943223,
+    "p95_seconds": 0.0008107000030577183,
+    "max_seconds": 0.005579599994234741
+  },
+  "semantic_cold_cache": {
+    "_suffix_bits": {
+      "hits": 7664,
+      "misses": 23693,
+      "maxsize": 250000,
+      "currsize": 23693
+    },
+    "_charge_envelope": {
+      "hits": 2301,
+      "misses": 4437,
+      "maxsize": 250000,
+      "currsize": 4437
+    },
+    "_can_complete_fixed": {
+      "hits": 19,
+      "misses": 394,
+      "maxsize": 250000,
+      "currsize": 394
+    },
+    "_prefix_cached": {
+      "hits": 0,
+      "misses": 410,
+      "maxsize": 250000,
+      "currsize": 410
+    },
+    "_terminal_cached": {
+      "hits": 0,
+      "misses": 0,
+      "maxsize": 250000,
+      "currsize": 0
+    }
+  },
+  "elapsed_seconds": 13.892135000001872,
+  "semantic_warm_summary": {
+    "queries": 410,
+    "total_seconds": 0.00011439991067163646,
+    "p50_seconds": 2.00001522898674e-07,
+    "p95_seconds": 3.00002284348011e-07,
+    "max_seconds": 1.0399991879239678e-05
+  },
+  "semantic_warm_cache": {
+    "_suffix_bits": {
+      "hits": 7664,
+      "misses": 23693,
+      "maxsize": 250000,
+      "currsize": 23693
+    },
+    "_charge_envelope": {
+      "hits": 2301,
+      "misses": 4437,
+      "maxsize": 250000,
+      "currsize": 4437
+    },
+    "_can_complete_fixed": {
+      "hits": 19,
+      "misses": 394,
+      "maxsize": 250000,
+      "currsize": 394
+    },
+    "_prefix_cached": {
+      "hits": 410,
+      "misses": 410,
+      "maxsize": 250000,
+      "currsize": 410
+    },
+    "_terminal_cached": {
+      "hits": 0,
+      "misses": 0,
+      "maxsize": 250000,
+      "currsize": 0
+    }
+  },
+  "proxy_decode_seconds": 0.2846614000154659,
+  "wrapper_constructor_seconds": 0.40110280000953935,
+  "wrapper_static_stats": {
+    "vocab_size": 128830,
+    "nonempty_fragment_count": 126080,
+    "active_prefilter_count": 5941,
+    "active_first_character_groups": 66,
+    "seek_embedded_label_count": 0,
+    "cached_prefixes": 0,
+    "failed_prefixes": 0,
+    "allowed_token_queries": 0,
+    "cache_hits": 0,
+    "first_character_checks": 0,
+    "active_candidate_checks": 0,
+    "seek_candidate_checks": 0
+  },
+  "wrapper_cold_summary": {
+    "queries": 28,
+    "total_seconds": 13.045054699934553,
+    "p50_seconds": 0.35583264999149833,
+    "p95_seconds": 1.736975599982543,
+    "max_seconds": 1.8589214999810793
+  },
+  "wrapper_cold_stats": {
+    "vocab_size": 128830,
+    "nonempty_fragment_count": 126080,
+    "active_prefilter_count": 5941,
+    "active_first_character_groups": 66,
+    "seek_embedded_label_count": 0,
+    "cached_prefixes": 28,
+    "failed_prefixes": 0,
+    "allowed_token_queries": 28,
+    "cache_hits": 0,
+    "first_character_checks": 1848,
+    "active_candidate_checks": 127859,
+    "seek_candidate_checks": 0
+  },
+  "wrapper_cold_cache": {
+    "_suffix_bits": {
+      "hits": 260533,
+      "misses": 868187,
+      "maxsize": 250000,
+      "currsize": 250000
+    },
+    "_charge_envelope": {
+      "hits": 80703,
+      "misses": 108784,
+      "maxsize": 250000,
+      "currsize": 108784
+    },
+    "_can_complete_fixed": {
+      "hits": 4652,
+      "misses": 22373,
+      "maxsize": 250000,
+      "currsize": 22373
+    },
+    "_prefix_cached": {
+      "hits": 3423,
+      "misses": 124333,
+      "maxsize": 250000,
+      "currsize": 124333
+    },
+    "_terminal_cached": {
+      "hits": 3803,
+      "misses": 28,
+      "maxsize": 250000,
+      "currsize": 28
+    }
+  },
+  "wrapper_warm_summary": {
+    "queries": 28,
+    "total_seconds": 0.00020170005154795945,
+    "p50_seconds": 6.500020390376449e-06,
+    "p95_seconds": 1.069999416358769e-05,
+    "max_seconds": 2.0400009816512465e-05
+  },
+  "wrapper_warm_stats": {
+    "vocab_size": 128830,
+    "nonempty_fragment_count": 126080,
+    "active_prefilter_count": 5941,
+    "active_first_character_groups": 66,
+    "seek_embedded_label_count": 0,
+    "cached_prefixes": 28,
+    "failed_prefixes": 0,
+    "allowed_token_queries": 56,
+    "cache_hits": 28,
+    "first_character_checks": 1848,
+    "active_candidate_checks": 127859,
+    "seek_candidate_checks": 0
+  },
+  "wrapper_warm_cache": {
+    "_suffix_bits": {
+      "hits": 260533,
+      "misses": 868187,
+      "maxsize": 250000,
+      "currsize": 250000
+    },
+    "_charge_envelope": {
+      "hits": 80703,
+      "misses": 108784,
+      "maxsize": 250000,
+      "currsize": 108784
+    },
+    "_can_complete_fixed": {
+      "hits": 4652,
+      "misses": 22373,
+      "maxsize": 250000,
+      "currsize": 22373
+    },
+    "_prefix_cached": {
+      "hits": 3423,
+      "misses": 124333,
+      "maxsize": 250000,
+      "currsize": 124333
+    },
+    "_terminal_cached": {
+      "hits": 3803,
+      "misses": 28,
+      "maxsize": 250000,
+      "currsize": 28
+    }
+  }
+}

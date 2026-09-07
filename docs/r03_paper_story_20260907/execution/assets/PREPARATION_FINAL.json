@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "domain_elements": 88,
+  "allowed_strata": 393,
+  "excluded_strata": [],
+  "prompt_sha256": "ec0aed374b537b0d4fbe2891baaca4702da95fed6fd220cf837a6ec08e7b4c3f",
+  "domain_sha256": "a2b4a49eff72790cabaa75977414dba9eba45812ad02944d46e023a9b1d804a4",
+  "physics_sources_sha256": "070f1e0fafa704b0198595953891beafcd839dada822da1bd8d9b7c325052854",
+  "new_training_structures": 0,
+  "new_physical_labels": 0,
+  "model_forward_calls": 0
+}

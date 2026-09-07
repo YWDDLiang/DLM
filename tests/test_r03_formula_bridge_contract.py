@@ -107,12 +107,7 @@ class BruteForceReferenceSanityTest(unittest.TestCase):
 
 def production_oracle(elements, *, max_atoms, max_species, allowed_strata=None):
     """One API adapter; the expected language never calls production helpers."""
-    try:
-        from crystal_dlm.r03_formula_bridge import C3FDFormulaOracle
-    except ModuleNotFoundError as exc:
-        if exc.name == "crystal_dlm.r03_formula_bridge":
-            raise unittest.SkipTest("new bridge prototype has not been written yet") from exc
-        raise
+    from crystal_dlm.r03_formula_bridge import C3FDFormulaOracle
     kwargs = {
         "nodes": {element.symbol: element.oxidation_states for element in elements},
         "electronegativities": {
@@ -169,6 +164,25 @@ class SemanticBridgeContractTest(unittest.TestCase):
             elements, max_atoms=20, max_species=2, allowed_strata=strata
         )
         for text in ("Na", "Na1", "Na10", "Na10Cl", "Na10Cl1", "Na10Cl10", "Na1Cl", "Na11", "Cl10Na10"):
+            with self.subTest(text=text):
+                self.assertEqual(oracle.is_prefix_viable(text), expected.is_prefix_viable(text))
+                self.assertEqual(oracle.is_terminal_valid(text), expected.is_terminal_valid(text))
+
+    def test_both_charge_directions_match_tight_count_domain(self):
+        elements = (
+            SyntheticElement("Na", 11, (1,), 0.93, True),
+            SyntheticElement("Cl", 17, (-1,), 3.16),
+        )
+        strata = frozenset({(20, 2, "halide")})
+        expected = BruteForceFormulaLanguage(
+            elements, max_atoms=20, max_species=2, allowed_strata=strata
+        )
+        oracle = production_oracle(
+            elements, max_atoms=20, max_species=2, allowed_strata=strata
+        )
+        queries = set(expected.prefixes)
+        queries.update(prefix + suffix for prefix in expected.prefixes for suffix in "NaCl0123456789")
+        for text in sorted(queries):
             with self.subTest(text=text):
                 self.assertEqual(oracle.is_prefix_viable(text), expected.is_prefix_viable(text))
                 self.assertEqual(oracle.is_terminal_valid(text), expected.is_terminal_valid(text))
@@ -242,12 +256,7 @@ class SemanticBridgeContractTest(unittest.TestCase):
 
 
 def production_processor(oracle, *, start_length=2, tokenizer=None):
-    try:
-        from crystal_dlm.r03_formula_bridge import R03C3FDFormulaLogitsProcessor
-    except ModuleNotFoundError as exc:
-        if exc.name == "crystal_dlm.r03_formula_bridge":
-            raise unittest.SkipTest("new bridge prototype has not been written yet") from exc
-        raise
+    from crystal_dlm.r03_formula_bridge import R03C3FDFormulaLogitsProcessor
     tokenizer = tokenizer or PieceTokenizer()
     return R03C3FDFormulaLogitsProcessor(
         tokenizer, oracle=oracle, start_length=start_length,
@@ -351,6 +360,58 @@ class NativeTokenBridgeContractTest(unittest.TestCase):
     def test_tokens_that_decode_to_no_text_do_not_become_chemical_actions(self):
         allowed = self.processor.allowed_token_ids(self.ids("formula", ":", " Fe"))
         self.assertNotIn(self.tokenizer.eos_token_id, allowed)
+
+    def test_lexical_prefilter_preserves_full_reference_candidate_set(self):
+        class FragmentTokenizer(PieceTokenizer):
+            pieces = PieceTokenizer.pieces + (
+                "information", " the", "Iron", " abc", "e2O3",
+                "e2O3\nanion: arbitrary", "e2O3 \t\r\nanion: arbitrary",
+                "  Fe2O3\t\r\nanion: arbitrary", " \t\r\nanion: arbitrary",
+                "Fe 2O3", "e2 O3", "e20", "2O3\t", "\t", "\r",
+            )
+        tokenizer = FragmentTokenizer()
+        processor = production_processor(self.oracle, tokenizer=tokenizer)
+        for value, fragments in (
+            (" F", ("formula", ":", " ", "F")),
+            (" Fe", ("formula", ":", " Fe")),
+            (" Li1", ("formula", ":", " Li1")),
+            (" ", ("formula", ":", " ")),
+        ):
+            ids = [tokenizer.token_id(piece) for piece in fragments]
+            observed = set(processor.allowed_token_ids(ids))
+            expected = {
+                token_id for token_id, piece in enumerate(tokenizer.pieces)
+                if token_id != tokenizer.eos_token_id
+                and self.language.native_field_fragment_legal(value, piece)
+            }
+            with self.subTest(value=value):
+                self.assertEqual(observed, expected)
+        for word in ("information", " the", "Iron", " abc", "Fe 2O3", "e2 O3"):
+            with self.subTest(word=word):
+                self.assertNotIn(tokenizer.token_id(word), processor.active_ids)
+        for fragment in ("e2O3", "e2O3\nanion: arbitrary", "2O3\t", "\t", "\r"):
+            with self.subTest(fragment=fragment):
+                self.assertIn(tokenizer.token_id(fragment), processor.active_ids)
+        stats = processor.stats()
+        self.assertEqual(stats["vocab_size"], len(tokenizer))
+        self.assertEqual(stats["active_prefilter_count"], len(processor.active_ids))
+        self.assertLess(stats["active_prefilter_count"], stats["nonempty_fragment_count"])
+        self.assertGreater(stats["first_character_checks"], 0)
+
+    def test_first_character_prune_does_not_drop_zero_continuation_of_count(self):
+        elements = (
+            SyntheticElement("Na", 11, (0, 1), 0.93, True),
+            SyntheticElement("Cl", 17, (-1, 0), 3.16),
+        )
+        oracle = production_oracle(
+            elements, max_atoms=20, max_species=2,
+            allowed_strata=frozenset({(20, 2, "halide")}),
+        )
+        processor = production_processor(oracle, tokenizer=self.tokenizer)
+        prefix = self.ids("formula", ":", " ", "Na", "1")
+        allowed = processor.allowed_token_ids(prefix)
+        self.assertIn(self.tokenizer.token_id("0"), allowed)
+        self.assertNotIn(self.tokenizer.token_id("\n"), allowed)
 
     def test_tensor_mask_preserves_input_and_unmasked_rows_exactly(self):
         try:

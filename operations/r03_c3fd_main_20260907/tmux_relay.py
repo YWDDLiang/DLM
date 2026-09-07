@@ -56,6 +56,7 @@ def main() -> int:
     parser.add_argument("--command")
     parser.add_argument("--python-code-file", type=Path)
     parser.add_argument("--status-only", action="store_true")
+    parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
     if args.python_code_file:
         if args.command or args.status_only:
@@ -104,7 +105,8 @@ def main() -> int:
     receipt.write_text(json.dumps(report, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     if report.get("status") == "completed":
         STATE.write_text(json.dumps({"nonce": nonce, "status": "completed", "returncode": report["returncode"]})+"\n")
-    print(json.dumps(report, ensure_ascii=False))
+    printable = {"status":report.get("status"),"returncode":report.get("returncode"),"nonce":nonce,"receipt":str(receipt)} if args.quiet else report
+    print(json.dumps(printable, ensure_ascii=False))
     return 0 if report.get("status") in ("completed", "running") else 3
 
 

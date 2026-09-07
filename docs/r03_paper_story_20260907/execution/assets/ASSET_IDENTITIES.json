@@ -1,0 +1,38 @@
+{
+  "P0": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260603_034533-h1a2-epoch2-3-fullmetrics/outputs/h1a2_epoch2_llama_rich_sft/final/adapter_model.safetensors",
+    "bytes": 167832240,
+    "sha256": "65766c7485bd5ad8e180f3f5d99b83bef0488c251acd9278cb8bc2ad2518aa3a",
+    "matches": true
+  },
+  "B0": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final/adapter_model.safetensors",
+    "bytes": 6391016776,
+    "sha256": "5c39976b6ab237cbab32cbfeb1c23a557571e1c7d2b60c1e60cbb450166ae76d",
+    "matches": true
+  },
+  "B0_tokenizer": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final/tokenizer.json",
+    "bytes": 10206308,
+    "sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+    "matches": true
+  },
+  "C3FD": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/c3fd_v25_online_canary_36608/train_seed17/checkpoint.pt",
+    "bytes": 11554530,
+    "sha256": "87c1673f709c14488848196e3f466b0f4797cc3511108a07b6d498ca96d17d53",
+    "matches": true
+  },
+  "C3FD_vocabulary": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/c3fd_semantic_v21_step1b_20260828/vocabulary.json",
+    "bytes": 2746234,
+    "sha256": "3268dccfb8562a2936f9a81d928f547b4f75c2471d4b383c2e36bebc7b41a6e3",
+    "matches": true
+  },
+  "model494": {
+    "path": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+    "bytes": 147645242,
+    "sha256": "573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e",
+    "matches": true
+  }
+}

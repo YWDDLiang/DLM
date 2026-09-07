@@ -1,0 +1,43 @@
+{
+  "schema": "r03_formula_bridge_cpu_comparison_v1",
+  "before": "FORMULA_BRIDGE_CPU_TIMING.json",
+  "after": "FORMULA_BRIDGE_CPU_TIMING_AFTER_ENVELOPE_BITMASK.json",
+  "before_source_sha256": "45d845c86ba5c2755636c6520dbf863295e43fe1fbfc78f826c91a8afc182019",
+  "after_source_sha256": "d92907b6a5343ff1b7141b63b9521aeacc2ccb3c39cb1857f1fb9823fa1daabe",
+  "same_domain_corpus_tokenizer": true,
+  "same_semantic_decisions": true,
+  "same_wrapper_allowed_counts": true,
+  "before_wrapper": {
+    "queries": 28,
+    "total_seconds": 17.1424127999926,
+    "p50_seconds": 0.33399009999993723,
+    "p95_seconds": 2.717327100021066,
+    "max_seconds": 6.006517900008475
+  },
+  "after_wrapper": {
+    "queries": 28,
+    "total_seconds": 13.045054699934553,
+    "p50_seconds": 0.35583264999149833,
+    "p95_seconds": 1.736975599982543,
+    "max_seconds": 1.8589214999810793
+  },
+  "before_suffix_cache": {
+    "hits": 286672,
+    "misses": 1608740,
+    "maxsize": 250000,
+    "currsize": 250000
+  },
+  "after_suffix_cache": {
+    "hits": 260533,
+    "misses": 868187,
+    "maxsize": 250000,
+    "currsize": 250000
+  },
+  "after_envelope_cache": {
+    "hits": 80703,
+    "misses": 108784,
+    "maxsize": 250000,
+    "currsize": 108784
+  },
+  "scope": "legacy LLaDA ByteLevel vocabulary proxy; not P0 tokenizer or BPE trajectory"
+}
