@@ -105,13 +105,14 @@ def export_and_label(output, *, count, method_id, endpoint, refined=None):
     if refined is not None:
         arguments.extend(['--refined-pt', refined])
     execute(output, endpoint + '_inputs', 'src/scripts/export_r03_evaluation_inputs.py', arguments)
-    execute(output, endpoint + '_direct_view', 'operations/r03_c3fd_main_20260907/export_direct_view.py', [
+    execute(output, endpoint + '_validity_view', 'operations/r03_c3fd_main_20260907/export_direct_view.py', [
         '--paths-jsonl', output / endpoint / 'paths.jsonl', '--expected-denominator', count,
-        '--snapshot-root', DIRECT_SNAPSHOT, '--output-dir', output / (endpoint + '_direct_view')])
-    execute(output, endpoint + '_direct', 'scripts/run_direct_validity_fast.py', [
-        '--generation-jsonl', output / (endpoint + '_direct_view') / 'generation.jsonl',
+        '--snapshot-root', DIRECT_SNAPSHOT, '--output-dir', output / (endpoint + '_validity_view')])
+    execute(output, endpoint + '_validity', 'scripts/run_direct_validity_fast.py', [
+        '--metrics', 'comp_struct',
+        '--generation-jsonl', output / (endpoint + '_validity_view') / 'generation.jsonl',
         '--snapshot-root', DIRECT_SNAPSHOT, '--expected-denominator', count,
-        '--output-dir', output / (endpoint + '_direct')])
+        '--output-dir', output / (endpoint + '_validity')])
     execute(output, endpoint + '_labels', 'scripts/label_programmed_paths.py', [
         '--input-jsonl', output / endpoint / 'paths.jsonl', '--output-dir', output / (endpoint + '_labels'),
         '--purpose', 'evaluation', '--gpu-count', 1, '--workers-per-gpu', 2])
@@ -186,6 +187,8 @@ def main():
                   'sample_index_offset': args.sample_index_offset, 'body_dir': str(output / 'body'),
                   'repair_checkpoint': str(args.repair_checkpoint) if args.repair_checkpoint else None,
                   'construction_geometry': args.construction_geometry, 'body_batch_size': args.body_batch_size,
+                  'validity_metrics': ['comp_valid', 'struct_valid'], 'joint_valid_reported': False,
+                  'direct_suite_run': False,
                   'refined_pt': refinement['output_file'], 'plans_jsonl': str(plans),
                   'labels_purpose': 'evaluation', 'pooled_NU_scored_here': False})
         (output / '_SUCCESS').touch()

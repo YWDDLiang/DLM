@@ -25,6 +25,7 @@ manifest = {
     'schema': 'r03_trial_evaluation_manifest_v1', 'phase': args.phase,
     'expected_requests': count, 'registered_construction_geometry': True,
     'include_matched_interface_reference': args.phase == 'canary',
+    'validity_artifact': 'legacy_existing_direct_read_only' if args.phase == 'canary' else 'basic_comp_struct_only',
     'frozen_config': str(PROJECT / 'workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/CONFIG.json'),
     'hull_run_root': str(root / ('hull_' + args.phase)),
     'methods': [{'method_id': 'R03_' + role, 'role': role,

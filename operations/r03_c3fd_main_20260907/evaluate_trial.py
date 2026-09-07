@@ -87,6 +87,11 @@ def validate_manifest(manifest, manifest_path):
     construction_geometry = manifest.get("registered_construction_geometry", count == 256)
     if type(construction_geometry) is not bool or (count == 256 and not construction_geometry):
         raise ValueError("the registered pilot requires the new G/P construction geometry")
+    validity_artifact = manifest.get("validity_artifact", "legacy_existing_direct_read_only")
+    if validity_artifact not in ("legacy_existing_direct_read_only", "basic_comp_struct_only"):
+        raise ValueError("validity artifact must be the registered existing or comp/struct-only form")
+    if count == 256 and validity_artifact != "basic_comp_struct_only":
+        raise ValueError("the 256 pilot reports only comp_valid and struct_valid")
     methods = manifest.get("methods")
     if not isinstance(methods, list) or any(not isinstance(item, dict) for item in methods):
         raise ValueError("declare the complete method set")
@@ -110,6 +115,7 @@ def validate_manifest(manifest, manifest_path):
             "expected_requests": count, "methods": normalized,
             "include_matched_interface_reference": matched_interface,
             "registered_construction_geometry": construction_geometry,
+            "validity_artifact": validity_artifact,
             "frozen_config": resolved(manifest.get("frozen_config"), base),
             "hull_run_root": resolved(manifest.get("hull_run_root"), base)}
 
@@ -200,10 +206,11 @@ def construction_evidence(component, method, final, trial, expected_ids):
     return evidence
 
 
-def validate_endpoint(component, method, endpoint, count, expected_ids):
+def validate_endpoint(component, method, endpoint, count, expected_ids, trial):
     directory, label_dir = component / endpoint, component / (endpoint + "_labels")
-    direct_dir = component / (endpoint + "_direct")
-    for path in (directory, label_dir, direct_dir):
+    legacy = trial["validity_artifact"] == "legacy_existing_direct_read_only"
+    validity_dir = component / (endpoint + ("_direct" if legacy else "_validity"))
+    for path in (directory, label_dir, validity_dir):
         require_success(path)
     paths_file, labels_file = directory / "paths.jsonl", label_dir / "labels.jsonl"
     rows, labels = read_rows(paths_file), read_rows(labels_file)
@@ -248,22 +255,27 @@ def validate_endpoint(component, method, endpoint, count, expected_ids):
             raise ValueError("label environment/OOM failure requires engineering recovery")
         if not row["success"] and (label.get("status") != "generation_failure" or label.get("verified") is not False):
             raise ValueError("a failed endpoint acquired a physical success label")
-    direct = read_json(direct_dir / "report.json")
-    direct_rows = read_rows(direct_dir / "attempt_metrics.jsonl")
-    if direct.get("attempts") != count or len(direct_rows) != count:
-        raise ValueError("Direct denominator differs from the actual request count")
-    if [(r.get("ordinal"), r.get("attempt_id")) for r in direct_rows] != list(enumerate(attempts)):
-        raise ValueError("Direct rows do not preserve the original request order/IDs")
-    if any(type(row.get("ordinal")) is not int for row in direct_rows):
-        raise ValueError("Direct ordinals must remain exact integers")
-    for field, key in (("comp_valid", "comp_valid_count"), ("struct_valid", "struct_valid_count"), ("valid", "valid_count")):
-        if direct.get(key) != sum(row.get(field) is True for row in direct_rows):
-            raise ValueError("Direct reported counts differ from its own attempt ledger")
-    if direct.get("generation_succeeded") != sum(row["success"] for row in rows):
-        raise ValueError("Direct source success count differs from actual endpoint availability")
-    files = [paths_file, labels_file, label_dir / "LABEL_FINAL.json", direct_dir / "report.json", direct_dir / "attempt_metrics.jsonl"]
+    validity = read_json(validity_dir / "report.json")
+    validity_rows = read_rows(validity_dir / "attempt_metrics.jsonl")
+    if validity.get("attempts") != count or len(validity_rows) != count:
+        raise ValueError("basic validity denominator differs from the actual request count")
+    if [(r.get("ordinal"), r.get("attempt_id")) for r in validity_rows] != list(enumerate(attempts)):
+        raise ValueError("basic validity rows do not preserve the original request order/IDs")
+    if any(type(row.get("ordinal")) is not int for row in validity_rows):
+        raise ValueError("basic validity ordinals must remain exact integers")
+    for field, key in (("comp_valid", "comp_valid_count"), ("struct_valid", "struct_valid_count")):
+        if validity.get(key) != sum(row.get(field) is True for row in validity_rows):
+            raise ValueError("basic validity counts differ from the attempt ledger")
+    if validity.get("generation_succeeded") != sum(row["success"] for row in rows):
+        raise ValueError("basic validity source success count differs from endpoint availability")
+    if not legacy and (validity.get("schema") != "crysllmgen_basic_validity_v1"
+                       or validity.get("reported_metrics") != ["comp_valid", "struct_valid"]
+                       or "joint_valid" not in validity.get("omitted_metrics", [])
+                       or any("valid" in row for row in validity_rows)):
+        raise ValueError("new pilot validity contains metrics beyond comp_valid and struct_valid")
+    files = [paths_file, labels_file, label_dir / "LABEL_FINAL.json", validity_dir / "report.json", validity_dir / "attempt_metrics.jsonl"]
     return {"endpoint": endpoint, "paths": paths_file, "labels": labels_file,
-            "rows": rows, "label_report": report, "direct": direct,
+            "rows": rows, "label_report": report, "validity": validity,
             "source_files": [file_identity(path) for path in files]}
 
 
@@ -278,13 +290,18 @@ def preflight_components(trial):
                                 ("planner_seed", method["planner_seed"]), ("labels_purpose", "evaluation"), ("pooled_NU_scored_here", False)):
             if final.get(field) != expected:
                 raise ValueError(f"component does not match its registered {field}")
+        if trial["validity_artifact"] == "basic_comp_struct_only" and (
+                final.get("validity_metrics") != ["comp_valid", "struct_valid"]
+                or final.get("joint_valid_reported") is not False
+                or final.get("direct_suite_run") is not False):
+            raise ValueError("pilot component did not preserve the comp/struct-only validity request")
         offset = final.get("sample_index_offset")
         if type(offset) is not int or offset < 0:
             raise ValueError("component global offset is not explicit")
         offsets.add(offset)
         body_seeds.add(final.get("body_seed"))
         refiner_seeds.add(final.get("refiner_seed"))
-        cells = {endpoint: validate_endpoint(component, method, endpoint, count, list(range(offset, offset + count)))
+        cells = {endpoint: validate_endpoint(component, method, endpoint, count, list(range(offset, offset + count)), trial)
                  for endpoint in ENDPOINTS}
         construction = construction_evidence(component, method, final, trial, list(range(offset, offset + count)))
         native, refined = cells["native"]["rows"], cells["tau800"]["rows"]
@@ -368,7 +385,7 @@ def summarize_evaluation(directory, cell, method, trial):
     if statuses.get("official_cache_not_covered", 0):
         raise ValueError("scorer found an uncovered hull system after mandatory coverage verification")
     return {"method_id": method["method_id"], "role": method["role"], "endpoint": endpoint, "denominator": count,
-            "direct": {key: cell["direct"][key] for key in ("comp_valid_count", "struct_valid_count", "valid_count")},
+            "validity": {key: cell["validity"][key] for key in ("comp_valid_count", "struct_valid_count")},
             "headline": {"strict_sun": report["counts"]["strict_sun"], "meta_sun": report["counts"]["meta_sun"],
                          "strict_percent": 100 * report["counts"]["strict_sun"] / count,
                          "meta_percent": 100 * report["counts"]["meta_sun"] / count},
@@ -387,29 +404,27 @@ def adoption_rule(scope, summaries):
     if scope == "canary":
         return {"enabled": False, "selected_role": None, "reason": "engineering canary only; no policy selection from 16 requests"}
     lookup = {(row["role"], row["endpoint"]): row for row in summaries}
-    g_native, p_native = lookup["G", "native"], lookup["P", "native"]
     g_tau, p_tau = lookup["G", "tau800"], lookup["P", "tau800"]
-    gates = {"native_direct_joint_nondecreasing": p_native["direct"]["valid_count"] >= g_native["direct"]["valid_count"],
-             "tau800_strict_sun_nondecreasing": p_tau["headline"]["strict_sun"] >= g_tau["headline"]["strict_sun"],
+    gates = {"tau800_strict_sun_nondecreasing": p_tau["headline"]["strict_sun"] >= g_tau["headline"]["strict_sun"],
              "tau800_meta_sun_nondecreasing": p_tau["headline"]["meta_sun"] >= g_tau["headline"]["meta_sun"],
              "at_least_one_tau800_sun_count_increases": any(p_tau["headline"][key] > g_tau["headline"][key]
                                                             for key in ("strict_sun", "meta_sun"))}
     selected = "P" if all(gates.values()) else "G"
     return {"enabled": True, "selected_role": selected, "gates": gates,
-            "rule": "native Direct joint >= G; tau800 Strict and Meta SUN >= G; at least one tau800 SUN count increases",
-            "diagnostics_not_additional_gates": ["native SUN", "tau800 Direct", "verified SUN"],
+            "rule": "tau800 Strict and Meta SUN >= G; at least one tau800 SUN count increases",
+            "diagnostics_not_additional_gates": ["native SUN", "comp_valid", "struct_valid", "verified SUN"],
             "development_selection_only": True, "statistical_significance_claimed": False,
             "fresh_formal_requests_still_required": True}
 
 
 def render_summary(report):
     lines = [f"# R03 {report['phase']} evaluation", "", f"{report['expected_requests']} requests per method and endpoint.", "",
-             "| Method | Endpoint | Requests | Direct C/S/J | Strict/Meta SUN | Verified Strict/Meta | Official unresolved | Missing terminal energy |",
+             "| Method | Endpoint | Requests | comp_valid/struct_valid | Strict/Meta SUN | Verified Strict/Meta | Official unresolved | Missing terminal energy |",
              "|---|---|---:|---|---|---|---:|---:|"]
     for row in report["methods"]:
-        direct, headline, verified, unknown = row["direct"], row["headline"], row["verified"], row["unknown"]
+        validity, headline, verified, unknown = row["validity"], row["headline"], row["verified"], row["unknown"]
         lines.append(f"| {row['method_id']} | {row['endpoint']} | {row['denominator']} | "
-                     f"{direct['comp_valid_count']}/{direct['struct_valid_count']}/{direct['valid_count']} | "
+                     f"{validity['comp_valid_count']}/{validity['struct_valid_count']} | "
                      f"{headline['strict_sun']}/{headline['meta_sun']} | {verified['strict_sun']}/{verified['meta_sun']} | "
                      f"{unknown['official_unresolved']} | {unknown['terminal_energy_missing']} |")
     lines += ["", "All requests remain in each denominator; verified results are reported separately.", ""]

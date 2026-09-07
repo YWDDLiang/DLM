@@ -23,6 +23,7 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--expected-report", type=Path)
     parser.add_argument("--expected-denominator", type=int, default=256)
+    parser.add_argument("--metrics", choices=["legacy", "comp_struct"], default="legacy")
     args = parser.parse_args()
     if not os.environ.get("SLURM_JOB_ID"):
         raise RuntimeError("registered fast Direct must run through Slurm")
@@ -88,6 +89,12 @@ def main() -> None:
         "validity_functions": "frozen_upstream_eval_utils",
         "retry_or_replacement_used": False,
     }
+    if args.metrics == "comp_struct":
+        for row in attempts:
+            row.pop("valid")
+        report.pop("valid_count")
+        report.update(schema="crysllmgen_basic_validity_v1", reported_metrics=["comp_valid", "struct_valid"])
+        report["omitted_metrics"].append("joint_valid")
     if args.expected_report is not None:
         expected = json.loads(args.expected_report.read_text())
         for key in (
@@ -97,7 +104,7 @@ def main() -> None:
             "struct_valid_count",
             "valid_count",
         ):
-            if int(report[key]) != int(expected[key]):
+            if key in report and int(report[key]) != int(expected[key]):
                 raise ValueError(f"fast Direct regression mismatch for {key}")
         report["expected_report_exact_count_match"] = True
     args.output_dir.mkdir(parents=True)

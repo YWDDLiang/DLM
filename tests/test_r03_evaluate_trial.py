@@ -127,6 +127,27 @@ def geometry_evidence_fixture(method, *, no_support_first=False):
     write_json(component / "body/batch_partition.json", [[row["sample_idx"]] for row in sources])
 
 
+def basic_validity_fixture(method):
+    component = Path(method["component_dir"])
+    final = trial_module.read_json(component / "COMPONENT_FINAL.json")
+    final.update(validity_metrics=["comp_valid", "struct_valid"], joint_valid_reported=False, direct_suite_run=False)
+    write_json(component / "COMPONENT_FINAL.json", final)
+    for endpoint in ("native", "tau800"):
+        legacy = component / (endpoint + "_direct")
+        target = component / (endpoint + "_validity")
+        target.mkdir()
+        (target / "_SUCCESS").touch()
+        rows = trial_module.read_rows(legacy / "attempt_metrics.jsonl")
+        for row in rows:
+            row.pop("valid", None)
+        write_rows(target / "attempt_metrics.jsonl", rows)
+        report = trial_module.read_json(legacy / "report.json")
+        report.pop("valid_count", None)
+        report.update(schema="crysllmgen_basic_validity_v1", reported_metrics=["comp_valid", "struct_valid"],
+                      omitted_metrics=["joint_valid"])
+        write_json(target / "report.json", report)
+
+
 def trial_fixture(base):
     methods = [component_fixture(base, role) for role in ("G", "P")]
     frozen = base / "frozen_config.json"
@@ -215,6 +236,7 @@ class TrialLedgerTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "missing"):
                 trial_module.validate_manifest(manifest, path)
             manifest["expected_requests"] = 256
+            manifest["validity_artifact"] = "basic_comp_struct_only"
             with self.assertRaisesRegex(ValueError, "missing"):
                 trial_module.validate_manifest(manifest, path)
 
@@ -331,8 +353,10 @@ class TrialLedgerTests(unittest.TestCase):
             methods = [component_fixture(base, role, count=256) for role in ("R", "I", "G", "P")]
             for method in methods:
                 geometry_evidence_fixture(method)
+                basic_validity_fixture(method)
             manifest = {"schema": trial_module.SCHEMA, "phase": "pilot256", "expected_requests": 256,
-                        "frozen_config": str(base / "config.json"), "hull_run_root": str(base / "hull"), "methods": methods}
+                        "validity_artifact": "basic_comp_struct_only", "frozen_config": str(base / "config.json"),
+                        "hull_run_root": str(base / "hull"), "methods": methods}
             trial = trial_module.validate_manifest(manifest, base / "manifest.json")
             self.assertTrue(trial["registered_construction_geometry"])
             checked = trial_module.preflight_components(trial)
@@ -347,20 +371,20 @@ class TrialLedgerTests(unittest.TestCase):
 
 class AdoptionRuleTests(unittest.TestCase):
     def summaries(self):
-        return [{"role": role, "endpoint": endpoint, "direct": {"valid_count": 200},
+        return [{"role": role, "endpoint": endpoint, "validity": {"comp_valid_count": 200, "struct_valid_count": 200},
                  "headline": {"strict_sun": 20, "meta_sun": 110}}
                 for role in ("G", "P") for endpoint in ("native", "tau800")]
 
-    def test_only_registered_native_direct_and_tau_sun_gate_selection(self):
+    def test_only_registered_tau_sun_gates_selection(self):
         rows = self.summaries()
         rows[2]["headline"] = {"strict_sun": 1, "meta_sun": 2}  # Native SUN is diagnostic, not a hidden veto.
-        rows[3]["direct"]["valid_count"] = 190  # Tau Direct is also fully reported, not an extra gate.
+        rows[3]["validity"]["struct_valid_count"] = 190  # Validity is reported, not a selection gate.
         rows[3]["headline"]["meta_sun"] = 111
         result = trial_module.adoption_rule("pilot", rows)
         self.assertEqual(result["selected_role"], "P")
         self.assertFalse(result["statistical_significance_claimed"])
-        rows[2]["direct"]["valid_count"] = 199
-        self.assertEqual(trial_module.adoption_rule("pilot", rows)["selected_role"], "G")
+        rows[2]["validity"]["struct_valid_count"] = 199
+        self.assertEqual(trial_module.adoption_rule("pilot", rows)["selected_role"], "P")
 
     def test_tie_or_tau_strict_decline_cannot_select_P(self):
         rows = self.summaries()
