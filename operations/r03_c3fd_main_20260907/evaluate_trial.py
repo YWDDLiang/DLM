@@ -127,6 +127,7 @@ def validate_manifest(manifest, manifest_path):
     return {"phase": manifest["phase"], "scope": "formal" if formal else ('preview' if preview else ("canary" if count == 16 else "pilot")),
             "cohort_role": "independent_main" if formal else "fixed_development",
             "selected_role": manifest.get("selected_role"),
+            "hull_phase": manifest.get('hull_phase', manifest['phase']),
             "expected_requests": count, "methods": normalized,
             "include_matched_interface_reference": matched_interface,
             "registered_construction_geometry": construction_geometry,
@@ -359,7 +360,7 @@ def preflight_components(trial):
 
 
 def actual_hull_manifest(trial, components):
-    return {"schema": "r03_hull_union_inputs_v1", "purpose": "evaluation", "phase": trial["phase"],
+    return {"schema": "r03_hull_union_inputs_v1", "purpose": "evaluation", "phase": trial["hull_phase"],
             "inputs": [{"cell_id": f"{item['method_id']}:{endpoint}", "arm": item["role"], "seed": item["planner_seed"],
                         "type": "eval_paths", "endpoint": endpoint, "path": str(item["cells"][endpoint]["paths"]),
                         "sha256": file_identity(item["cells"][endpoint]["paths"])["sha256"],
@@ -621,7 +622,7 @@ def evaluate_formal(run_root):
     pins.extend([file_identity(config), config_pin])
     common = {'schema': SCHEMA, 'expected_requests': count, 'registered_construction_geometry': True,
               'validity_artifact': 'basic_comp_struct_only', 'cohort_role': 'independent_main',
-              'selected_role': selected, 'method_freeze': str(freeze_path),
+              'selected_role': selected, 'method_freeze': str(freeze_path), 'hull_phase': 'formal',
               'frozen_config': config_pin['path'], 'hull_run_root': str(root / 'hull_formal')}
     try:
         seed_reports = []
@@ -676,7 +677,7 @@ def evaluate_formal(run_root):
                                     'sha256': file_identity(paths)['sha256'], 'expected_requests': total})
         hull_manifest = destination / 'ACTUAL_POOLED_HULL_INPUTS.json'
         write_json(hull_manifest, {'schema': 'r03_hull_union_inputs_v1', 'purpose': 'evaluation',
-                                  'phase': 'formal_pooled', 'inputs': hull_inputs})
+                                  'phase': 'formal', 'inputs': hull_inputs})
         coverage_path = destination / 'HULL_ENDPOINT_COVERAGE.json'
         run_command([sys.executable, str(SOURCE / 'operations/r03_c3fd_main_20260907/prepare_hull_union.py'),
                      'verify-endpoints', '--run-root', str(root / 'hull_formal'),
