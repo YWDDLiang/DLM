@@ -1,0 +1,17 @@
+{
+  "schema": "r03_method_freeze_v1",
+  "recorded_utc": "2026-09-07T09:05:16.9300069Z",
+  "freeze_deadline_utc": "2026-09-07T09:05:26Z",
+  "selected_role": "G",
+  "reason": "Complete registered pilot G/P SUN comparison unavailable before method freeze; apply preregistered default G.",
+  "producer_commit": "8167ae54f545936ac93005d336358d61b6e85d8d",
+  "requests_per_pilot_arm": 256,
+  "pilot_P_continues": true,
+  "pilot_SUN_available": false,
+  "formal_sampling_started": false,
+  "formal_sample_count_locked": false,
+  "post_freeze_changes": "Engineering fixes only; no model, temperature, or scientific parameter selection from late pilot results.",
+  "user_metric_update": "comp_valid and struct_valid only; full Direct suite removed; SUN retained",
+  "evidence": "GEOMETRY_CANARY_40457_COMPARISON.json",
+  "decision_scope": "Method candidate; does not assert completed formal validation or SUN improvement"
+}
