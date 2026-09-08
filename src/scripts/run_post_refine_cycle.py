@@ -55,6 +55,21 @@ def load_config(path):
     return spec
 
 
+def validate_rsi_checkpoint(checkpoint, branch):
+    root = Path(checkpoint)
+    receipt = json.loads((root/'RSI_TRAINING_DONE.json').read_text())
+    if (receipt.get('optimizer_steps', 0) < 1 or
+            not receipt.get('parameter_delta_squared', 0) > 0 or
+            receipt['contract']['branch'] != branch):
+        raise ValueError('checkpoint lacks an actual update for branch '+branch)
+    if not receipt.get('checkpoint_files'):
+        raise ValueError('updated checkpoint has no registered files')
+    for name, digest in receipt['checkpoint_files'].items():
+        if Path(name).name != name or file_hash(root/name) != digest:
+            raise ValueError('updated checkpoint changed: '+name)
+    return receipt
+
+
 def prepare(spec):
     root = Path(spec['run_root']) / 'cohort'
     if (root / '_SUCCESS').is_file():
@@ -198,13 +213,7 @@ def construct(spec, shard, shards):
     if checkpoint == spec['assets']['b0_checkpoint']:
         checkpoint_identity = native.validate_b0_checkpoint(Path(checkpoint))
     else:
-        marker = Path(checkpoint) / 'RSI_TRAINING_DONE.json'
-        checkpoint_identity = json.loads(marker.read_text())
-        if checkpoint_identity.get('optimizer_steps', 0) < 1:
-            raise ValueError('updated generator has no actual optimizer steps')
-        for name, digest in checkpoint_identity['checkpoint_files'].items():
-            if file_hash(Path(checkpoint) / name) != digest:
-                raise ValueError('updated generator checkpoint changed: ' + name)
+        checkpoint_identity = validate_rsi_checkpoint(checkpoint, 'G')
     with native.frozen_imports(runtime):
         tasks = native.prepare_tasks(plans, runtime, seed=17029)
         api = runtime.module

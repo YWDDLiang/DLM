@@ -220,6 +220,9 @@ def edit(spec,shard,shards):
     root=Path(spec['run_root']);plans=read_rows(root/'cohort/plans.jsonl')
     current=read_rows(root/'current/inputs.jsonl');quality=scores(root,'current')
     checkpoint=spec['assets'].get('editor_checkpoint',spec['assets']['editor_reference'])
+    if (Path(checkpoint)/'RSI_TRAINING_DONE.json').exists():
+        from scripts.run_post_refine_cycle import validate_rsi_checkpoint
+        validate_rsi_checkpoint(checkpoint,'E')
     model,tokenizer=load_editor_model(spec['assets']['base_model'],checkpoint,torch.device('cuda',rank))
     support=build_repair_constraints(tokenizer); inverse={int(v):k for k,v in tokenizer.get_vocab().items()}
     started=time.monotonic()
