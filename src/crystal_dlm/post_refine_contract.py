@@ -17,6 +17,21 @@ PAIR_SCHEMA = "sun_ranked_revision_pair_v1"
 QUALITY_ORDER = ("other", "meta_stable", "meta_sun", "stable", "sun")
 
 
+def recovery_canvas(body: Sequence[int], n: int, *, reset_cell: bool = False,
+                    mask_id: int = 126336) -> tuple[list[int], list[int]]:
+    """Reopen incomplete XYZ transactions; keep complete sites and identity."""
+    if type(n) is not int or not 1 <= n <= 20 or len(body) != 7 + 4 * n:
+        raise ValueError("recovery requires an exact fixed-composition canvas")
+    result = list(body)
+    sites = [i for i in range(n) if any(result[8 + 4 * i + a] == mask_id for a in range(3))]
+    if reset_cell or not sites:
+        sites = list(range(n))
+    positions = (list(range(1, 7)) if reset_cell else []) + [8 + 4 * i + a for i in sites for a in range(3)]
+    for position in positions:
+        result[position] = mask_id
+    return result, positions
+
+
 def fingerprint(value: Any) -> str:
     return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"),
                                      ensure_ascii=True, allow_nan=False).encode()).hexdigest()

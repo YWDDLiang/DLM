@@ -13,7 +13,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'src'))
-from crystal_dlm.post_refine_contract import SCHEMA, derived_seed, fingerprint
+from crystal_dlm.post_refine_contract import SCHEMA, derived_seed, fingerprint, recovery_canvas
 
 
 def read_rows(path):
@@ -168,6 +168,110 @@ def physics_record(plan, *, state_id, structure=None, body=None, reason=None):
             'reason': reason}
 
 
+def constructor_api():
+    name = '_post_refine_bound_constructor'
+    if name not in sys.modules:
+        binding = importlib.util.spec_from_file_location(name, ROOT / 'src/scripts/run_r03_integrated_body.py')
+        module = importlib.util.module_from_spec(binding)
+        sys.modules[name] = module
+        binding.loader.exec_module(module)
+    return sys.modules[name]
+
+
+def construct(spec, shard, shards):
+    import torch
+    from crystal_dlm import r03_geometry_bridge as bridge
+    from crystal_dlm.r03_physics_transfer import build_repair_constraints, geometry_support_report
+    if 'SLURM_JOB_ID' not in os.environ or not torch.cuda.is_available():
+        raise RuntimeError('DLM construction requires its Slurm GPU allocation')
+    local_rank = int(os.environ.get('LOCAL_RANK', '0'))
+    torch.cuda.set_device(local_rank)
+    torch.set_num_threads(1)
+    torch.use_deterministic_algorithms(True)
+    root, native = Path(spec['run_root']), constructor_api()
+    plans = read_rows(root / 'cohort/plans.jsonl')
+    runtime = native.load_frozen_runtime(Path(spec['assets']['frozen_runtime']))
+    checkpoint_identity = native.validate_b0_checkpoint(Path(spec['assets']['b0_checkpoint']))
+    with native.frozen_imports(runtime):
+        tasks = native.prepare_tasks(plans, runtime, seed=17029)
+        api = runtime.module
+        model, tokenizer = api.load_model_and_tokenizer(spec['assets']['base_model'],
+            spec['assets']['b0_checkpoint'], torch.device('cuda', local_rank))
+        tokenizer_identity = api.assert_body_tokenizer_identity(tokenizer, expected_vocab_sha256=native.B0_VOCAB_SHA256)
+        constraints = api.build_dynamic_lightweight_constraints(tokenizer, duplicate_coordinate_mask=True,
+            lattice_volume_mask=True, min_lattice_rad=1e-4)
+        process_one = api.import_process_one(Path(spec['assets']['crysllmgen']))
+    model.eval()
+    for parameter in model.parameters():
+        parameter.requires_grad_(False)
+    repair_constraints = build_repair_constraints(tokenizer)
+    complete_geometry = lambda body: geometry_support_report(body, constraints=repair_constraints)
+    source_signature = fingerprint({'constructor': file_hash(ROOT / 'src/scripts/run_r03_integrated_body.py'),
+        'geometry_bridge': file_hash(ROOT / 'src/crystal_dlm/r03_geometry_bridge.py'),
+        'support': file_hash(ROOT / 'src/crystal_dlm/r03_physics_transfer.py'),
+        'config': spec['_config_sha256'], 'tokenizer': tokenizer_identity, 'checkpoint': checkpoint_identity})
+    directory = root / 'construction'
+    directory.mkdir(parents=True, exist_ok=True)
+    write_json(directory / f'model_{shard}.json', {'source_signature': source_signature,
+        'checkpoint': checkpoint_identity, 'tokenizer': tokenizer_identity,
+        'runtime': runtime.provenance, 'current_source': str(ROOT), 'shard': shard, 'shards': shards})
+    forwards = {'count': 0}
+    def count_forward(_model, _inputs):
+        forwards['count'] += 1
+    hook = model.register_forward_pre_hook(count_forward)
+    started, completed = time.monotonic(), 0
+    for index in range(shard, len(plans), shards):
+        plan, task = plans[index], tasks[index]
+        original = plan['original_ordinal']
+        path = directory / 'records' / f'{original:04d}.json'
+        if path.is_file():
+            existing = json.loads(path.read_text())
+            if existing['source_signature'] != source_signature:
+                raise ValueError('construction resume has different source or configuration')
+            continue
+        before_calls = forwards['count']
+        graph = None
+        try:
+            with torch.no_grad(), native.frozen_imports(runtime):
+                suffix, metadata = native.construct_with_recovery(model, tokenizer, task, runtime,
+                    constraints=constraints, geometry_api=bridge, complete_geometry=complete_geometry,
+                    recovery_transform=recovery_canvas,
+                    recovery_seed=derived_seed(str(task['body_noise_seed']), 'construction_recovery', 1),
+                    max_recoveries=spec['policy']['construction_recoveries'])
+                ids = suffix[0].tolist()
+                generated, graph = native.materialize_record(task, ids, runtime=runtime,
+                                                            tokenizer=tokenizer, process_one=process_one)
+            body = generated['text']
+            record = physics_record(plan, state_id=f"{spec['run_id']}:raw0:{original}", body=body)
+            record['body_token_ids'] = ids
+            record['body_prompt'] = task['body_prompt']
+            trace = {'constructor': metadata, 'materialization_status': generated['status'],
+                     'materialization_reason': generated.get('reason')}
+        except bridge.GeometryNoLegalSupport as error:
+            record = physics_record(plan, state_id=f"{spec['run_id']}:raw0:{original}",
+                                    reason='construction_geometry_exhausted')
+            trace = {'construction_failure': error.to_dict()}
+        trace['DLM_forward_calls'] = forwards['count'] - before_calls
+        if graph is not None:
+            graph = dict(graph, sample_idx=original, refiner_noise_seed=plan['refiner_noise_seed'])
+            graph_path = directory / 'graphs' / f'{original:04d}.pt'
+            graph_path.parent.mkdir(parents=True, exist_ok=True)
+            temporary = graph_path.with_suffix('.tmp')
+            torch.save(graph, temporary)
+            temporary.replace(graph_path)
+        write_json(path, {'source_signature': source_signature, 'config_sha256': spec['_config_sha256'],
+                          'record': record, 'trace': trace, 'graph_available': graph is not None})
+        completed += 1
+        if completed % 5 == 0:
+            progress = {'shard': shard, 'new_records': completed, 'forward_calls': forwards['count'],
+                        'elapsed_seconds': time.monotonic() - started, 'latest_original_ordinal': original}
+            write_json(directory / f'progress_{shard}.json', progress)
+            print(json.dumps(progress), flush=True)
+    hook.remove()
+    write_json(directory / f'worker_{shard}_DONE.json', {'source_signature': source_signature,
+        'new_records': completed, 'forward_calls': forwards['count'], 'elapsed_seconds': time.monotonic() - started})
+
+
 def baselines(spec, shard, shards):
     import torch
     if 'SLURM_JOB_ID' not in os.environ or not torch.cuda.is_available():
@@ -217,7 +321,7 @@ def baselines(spec, shard, shards):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
-    parser.add_argument('--stage', choices=('prepare', 'baselines'), required=True)
+    parser.add_argument('--stage', choices=('prepare', 'baselines', 'construct'), required=True)
     parser.add_argument('--shard', type=int, default=None)
     parser.add_argument('--shards', type=int, default=None)
     args = parser.parse_args(argv)
@@ -229,8 +333,10 @@ def main(argv=None):
     spec = load_config(args.config)
     if args.stage == 'prepare':
         prepare(spec)
-    else:
+    elif args.stage == 'baselines':
         baselines(spec, args.shard, args.shards)
+    else:
+        construct(spec, args.shard, args.shards)
 
 
 if __name__ == '__main__':

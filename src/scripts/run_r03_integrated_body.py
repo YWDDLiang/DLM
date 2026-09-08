@@ -242,7 +242,8 @@ def make_batches(tasks: Sequence[Mapping[str, Any]], *, batch_size: int) -> list
 
 def construct_batch(
     model: Any, tokenizer: Any, batch: Sequence[Mapping[str, Any]], runtime: Any,
-    *, constraints: Any, geometry_api: Any = None,
+    *, constraints: Any, geometry_api: Any = None, initial_body: Sequence[int] | None = None,
+    noise_seed_override: int | None = None,
 ) -> Any:
     """Call the frozen constructor, optionally adding the registered geometry hook."""
     api = runtime.module
@@ -259,6 +260,18 @@ def construct_batch(
         api.count_prefill_for_batch(tokenizer, n, len(batch)),
         api.element_prefill_for_batch(tokenizer, [task["plan_state"] for task in batch]),
     )
+    if initial_body is not None:
+        if len(batch) != 1 or len(initial_body) != 7 + 4 * n:
+            raise ValueError('prefix recovery requires one exact fixed-composition canvas')
+        for position, values in prefill.items():
+            if int(initial_body[position]) != int(values[0]):
+                raise ValueError('prefix recovery changed Plan composition slots')
+        prefill = dict(prefill)
+        for position, value in enumerate(initial_body):
+            if int(value) != api.MASK_TOKEN_ID:
+                prefill[position] = [int(value)]
+    if noise_seed_override is not None and len(batch) != 1:
+        raise ValueError('recovery noise belongs to one original request')
     if geometry_api is not None and len(batch) != 1:
         raise ValueError("construction geometry requires singleton requests for exact failure accounting")
     bridge = (geometry_api.construction_geometry_bridge(
@@ -268,7 +281,8 @@ def construct_batch(
     ) if geometry_api is not None else nullcontext(None))
     with bridge as monitor:
         generated = api.generate_paired_exact_plan(
-            model, input_ids, base_seeds=[task["body_noise_seed"] for task in batch],
+            model, input_ids, base_seeds=([noise_seed_override] if noise_seed_override is not None else
+                                        [task["body_noise_seed"] for task in batch]),
             attention_mask=attention_mask, gen_length=api.exact_body_token_count(n),
             temperature=0.7, cfg_scale=0.0, remasking="low_confidence", mask_id=api.MASK_TOKEN_ID,
             allowed_token_ids_by_generation_pos=api.exact_dynamic_schema_constraints(tokenizer, n),
@@ -287,6 +301,48 @@ def construct_batch(
     if geometry_report is not None:
         metadata["construction_geometry"] = geometry_report
     return suffix.detach().cpu(), metadata
+
+
+def construct_with_recovery(model, tokenizer, task, runtime, *, constraints, geometry_api,
+                            complete_geometry, recovery_transform, recovery_seed, max_recoveries=1):
+    """Use the existing constructor with one bounded, explicitly logged recovery.
+
+    Helpers are bound before entering frozen_imports; no delayed import may
+    substitute a historical module for the registered current geometry check.
+    """
+    import torch
+    if max_recoveries not in (0, 1):
+        raise ValueError('construction permits at most one recovery episode')
+    initial, episodes = None, []
+    for attempt in range(max_recoveries + 1):
+        try:
+            body, metadata = construct_batch(model, tokenizer, [task], runtime, constraints=constraints,
+                geometry_api=geometry_api, initial_body=initial,
+                noise_seed_override=recovery_seed if attempt else None)
+            support = complete_geometry(body[0].tolist())
+            if support['supported']:
+                metadata['complete_geometry'] = support
+                metadata['construction_recovery'] = {'episodes': episodes, 'recoveries_used': attempt,
+                    'original_body_noise_seed': task['body_noise_seed'],
+                    'recovery_seed': recovery_seed if attempt else None,
+                    'Plan_replacement_or_resampling': False}
+                return body, metadata
+            prompt = tokenizer([task['body_prompt']], add_special_tokens=False, padding=True,
+                               return_tensors='pt')['input_ids'].cpu()
+            error = geometry_api.GeometryNoLegalSupport({'reason': support['reason'], 'complete_geometry': support},
+                                                       torch.cat((prompt, body), dim=1), prompt.shape[1])
+        except geometry_api.GeometryNoLegalSupport as caught:
+            error = caught
+        reason = error.details['reason']
+        partial = error.partial_canvas[0, error.prompt_length:].tolist()
+        if attempt == max_recoveries:
+            error.details['recovery_episodes'] = episodes
+            error.details['construction_recoveries_used'] = attempt
+            raise error
+        reset_cell = any(part in reason for part in ('lattice', 'self_image', 'cell'))
+        initial, opened = recovery_transform(partial, int(task['plan_state']['N']), reset_cell=reset_cell)
+        episodes.append({'failure': error.to_dict(), 'opened_positions': opened,
+                         'reset_cell': reset_cell, 'seed': recovery_seed})
 
 
 def base_record(task: Mapping[str, Any]) -> dict[str, Any]:

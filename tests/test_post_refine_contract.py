@@ -3,7 +3,7 @@ from pathlib import Path
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from crystal_dlm.post_refine_contract import Quality, make_gate, make_pair, preference, paired_change
+from crystal_dlm.post_refine_contract import Quality, make_gate, make_pair, preference, paired_change, recovery_canvas
 
 
 def score(index, *, sun=False, stable=False, meta=False, h=.2):
@@ -14,6 +14,16 @@ def score(index, *, sun=False, stable=False, meta=False, h=.2):
 
 
 class PostRefineContracts(unittest.TestCase):
+    def test_recovery_keeps_complete_sites_but_reopens_bad_xy_prefix(self):
+        body = [3, 41, 41, 41, 90, 90, 90, 14, 1, 2, 3, 14, 7, 8, 126336, 14, 9, 10, 126336]
+        recovered, opened = recovery_canvas(body, 3)
+        self.assertEqual(recovered[:11], body[:11])
+        self.assertEqual(opened, [12, 13, 14, 16, 17, 18])
+        self.assertEqual([recovered[p] for p in (0, 7, 11, 15)], [body[p] for p in (0, 7, 11, 15)])
+        cell, positions = recovery_canvas(body, 3, reset_cell=True)
+        self.assertEqual(positions[:6], list(range(1, 7)))
+        self.assertTrue(all(cell[p] == 126336 for p in positions))
+
     def test_only_strict_sun_bypasses_diffusion_including_unverified_sun(self):
         rows = [{'trajectory_id': f't{i}', 'sample_idx': i + 100, 'evaluation_ordinal': i,
                  'success': True} for i in range(3)]
