@@ -144,7 +144,7 @@ def refine(args):
     import numpy as np
     import torch
     from crystal_dlm.expert_edit_data import physics_input, write_rows
-    from scripts.refine_dlm_with_crysllmgen import setup_crysllmgen_imports, ProposalDataset, lattices_to_params_shape
+    from scripts.refine_dlm_with_crysllmgen import setup_crysllmgen_imports, ProposalDataset, lattices_to_params_shape, init_distributed
     from crystal_dlm.fixed_slot import Z_TO_SYMBOL
     prepared = args.prepared_dir
     study = json.loads((prepared / 'STUDY.json').read_text())
@@ -152,11 +152,17 @@ def refine(args):
         raise ValueError('paired probe input identity changed')
     if digest(args.checkpoint) != '573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e':
         raise ValueError('model494 identity changed')
-    if not torch.cuda.is_available() or torch.cuda.device_count() != 1:
-        raise ValueError('paired cases must run on the same single allocated GPU')
-    args.output_dir.mkdir(parents=True, exist_ok=False)
+    info = init_distributed()
+    rank, world, device = info['rank'], info['world_size'], info['device']
+    if not torch.cuda.is_available() or not 1 <= world <= 6:
+        raise ValueError('paired cases require one through six allocated GPUs')
+    if rank == 0:
+        args.output_dir.mkdir(parents=True, exist_ok=False)
+    if world > 1:
+        torch.distributed.barrier()
+    output = args.output_dir / f'rank{rank}'
+    output.mkdir()
     _, Model, Data, DataLoader = setup_crysllmgen_imports(args.crysllmgen_dir)
-    device = torch.device('cuda:0')
     model = Model(1000, 'train').to(device)
     model.device = device
     saved = torch.load(args.checkpoint, map_location=device, weights_only=False)
@@ -165,8 +171,9 @@ def refine(args):
     model.eval()
     graphs = torch.load(prepared / 'graphs.pt', map_location='cpu', weights_only=False)
     results, tensors = [], []
+    local_jobs = [job for job in study['schedule'] if job['case_idx'] % world == rank]
     with torch.no_grad():
-        for job in study['schedule']:
+        for job in local_jobs:
             case = study['cases'][job['case_idx']]
             key = f'{job["case_idx"]}:{job["variant"]}'
             graph = graphs[key]
@@ -185,21 +192,39 @@ def refine(args):
                 tensors.append({'job': job, 'output': value})
             pid = f'composition-refined:{job["technical_repeat"]}:{key}'
             row = physics_input(pid, case['ancestor_id'], case['source_row_idx'], 'dev', 'tau800', arrays)
-            row.update(probe_case=job['case_idx'], probe_variant=job['variant'], technical_repeat=job['technical_repeat'])
+            row.update(probe_case=job['case_idx'], probe_variant=job['variant'], technical_repeat=job['technical_repeat'],
+                       probe_job_index=job['sample_idx'], probe_gpu_rank=rank)
             results.append(row)
-            write_json(args.output_dir / 'PROGRESS.json', {'completed': len(results), 'planned': len(study['schedule'])})
-            print(json.dumps({'completed': len(results), 'planned': len(study['schedule'])}), flush=True)
+            write_json(output / 'PROGRESS.json', {'completed': len(results), 'planned': len(local_jobs)})
+            print(json.dumps({'rank': rank, 'completed': len(results), 'planned': len(local_jobs)}), flush=True)
+    write_rows(output / 'refined_inputs.jsonl', results)
+    torch.save(tensors, output / 'outputs.pt')
+    if world > 1:
+        torch.distributed.barrier()
+    if rank != 0:
+        torch.distributed.barrier()
+        torch.distributed.destroy_process_group()
+        return
+    from crystal_dlm.expert_edit_data import read_rows
+    results = sorted([row for worker in range(world)
+                      for row in read_rows(args.output_dir / f'rank{worker}/refined_inputs.jsonl')],
+                     key=lambda row: row['probe_job_index'])
+    if [row['probe_job_index'] for row in results] != list(range(len(study['schedule']))):
+        raise ValueError('paired probe lost or duplicated a scheduled observation')
     write_rows(args.output_dir / 'refined_inputs.jsonl', results)
     repeats = [x for x in results if x['technical_repeat'] == 0 and x['probe_case'] in study['R_repeat_cases']]
     for repeat in (1, 2):
         write_rows(args.output_dir / f'R_repeat_{repeat}.jsonl', [dict(x, trajectory_id=x['trajectory_id'] + f':R{repeat}') for x in repeats])
-    torch.save(tensors, args.output_dir / 'outputs.pt')
     write_json(args.output_dir / 'REFINE_FINAL.json', {'planned': len(results), 'input_study_sha256': digest(prepared / 'STUDY.json'),
         'same_seed_within_source_and_technical_repeats': True, 'balanced_variant_order': True,
+        'world_size': world, 'source_group_assigned_to_one_gpu': True,
         'forward_noise_added': False, 'diff_steps': 800, 'timesteps': 1000, 'source_sha256': digest(__file__),
         'model_source': inspect.getfile(Model), 'model_source_sha256': digest(inspect.getfile(Model)),
         'outputs_sha256': {p.name: digest(p) for p in args.output_dir.glob('*') if p.is_file()}})
     (args.output_dir / '_SUCCESS').touch()
+    if world > 1:
+        torch.distributed.barrier()
+        torch.distributed.destroy_process_group()
 
 
 if __name__ == '__main__':
