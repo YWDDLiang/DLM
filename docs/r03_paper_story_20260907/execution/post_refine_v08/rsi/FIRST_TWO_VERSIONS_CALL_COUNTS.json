@@ -1,0 +1,58 @@
+{
+  "snapshot_stage": "MAIN1 F/token scoring and FIT1 editing complete; MAIN1 editing pending",
+  "note": "MAIN1 editing pending. F800 counts are successful refiner outputs, each one 800-step invocation; generation failures and confirmed raw SUN bypasses are reported separately. E training cohorts generate counterfactual proposals even when deployment selects KEEP.",
+  "rows": [
+    {
+      "cohort": "MAIN0",
+      "raw_records": 256,
+      "raw_DLM_forwards": 10374,
+      "F_records": 256,
+      "actual_F800_results": 218,
+      "SUN_bypass": 5,
+      "E_records": 256,
+      "E_DLM_forwards": 8372,
+      "E_applied": 0,
+      "not_refined_requests": 38,
+      "upstream_generation_failures": 33
+    },
+    {
+      "cohort": "FIT0",
+      "raw_records": 256,
+      "raw_DLM_forwards": 9946,
+      "F_records": 256,
+      "actual_F800_results": 225,
+      "SUN_bypass": 4,
+      "E_records": 256,
+      "E_DLM_forwards": 8573,
+      "E_applied": 1,
+      "not_refined_requests": 31,
+      "upstream_generation_failures": 27
+    },
+    {
+      "cohort": "MAIN1",
+      "raw_records": 256,
+      "raw_DLM_forwards": 10172,
+      "F_records": 256,
+      "actual_F800_results": 250,
+      "SUN_bypass": 4,
+      "E_records": 0,
+      "E_DLM_forwards": 0,
+      "E_applied": 0,
+      "not_refined_requests": 6,
+      "upstream_generation_failures": 2
+    },
+    {
+      "cohort": "FIT1",
+      "raw_records": 256,
+      "raw_DLM_forwards": 9741,
+      "F_records": 256,
+      "actual_F800_results": 246,
+      "SUN_bypass": 7,
+      "E_records": 256,
+      "E_DLM_forwards": 10148,
+      "E_applied": 15,
+      "not_refined_requests": 10,
+      "upstream_generation_failures": 3
+    }
+  ]
+}
