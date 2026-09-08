@@ -214,6 +214,9 @@ def construct(spec, shard, shards):
         checkpoint_identity = native.validate_b0_checkpoint(Path(checkpoint))
     else:
         checkpoint_identity = validate_rsi_checkpoint(checkpoint, 'G')
+        expected=spec.get('updated_checkpoint_receipts',{}).get('G')
+        if expected and expected['receipt_sha256']!=file_hash(Path(checkpoint)/'RSI_TRAINING_DONE.json'):
+            raise ValueError('generator receipt differs from the registered weight version')
     with native.frozen_imports(runtime):
         tasks = native.prepare_tasks(plans, runtime, seed=17029)
         api = runtime.module

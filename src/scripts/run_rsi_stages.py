@@ -220,6 +220,10 @@ def edit(spec,shard,shards):
     root=Path(spec['run_root']);plans=read_rows(root/'cohort/plans.jsonl')
     current=read_rows(root/'current/inputs.jsonl');quality=scores(root,'current')
     checkpoint=spec['assets'].get('editor_checkpoint',spec['assets']['editor_reference'])
+    expected=spec.get('updated_checkpoint_receipts',{}).get('E')
+    if expected and (expected.get('pending_training_receipt') or
+            expected['receipt_sha256']!=file_hash(Path(checkpoint)/'RSI_TRAINING_DONE.json')):
+        raise ValueError('editor update is not finalized for this weight version')
     if (Path(checkpoint)/'RSI_TRAINING_DONE.json').exists():
         from scripts.run_post_refine_cycle import validate_rsi_checkpoint
         validate_rsi_checkpoint(checkpoint,'E')

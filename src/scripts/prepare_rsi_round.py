@@ -12,24 +12,41 @@ from scripts.run_post_refine_cycle import (file_hash, read_rows, write_json,
                                           validate_rsi_checkpoint)
 
 
-def prepare_round(root, index):
+def checkpoint_pin(path,branch):
+    receipt=validate_rsi_checkpoint(path,branch)
+    return {'path':str(path),'receipt_sha256':file_hash(path/'RSI_TRAINING_DONE.json'),
+            'optimizer_steps':receipt['optimizer_steps'],
+            'parameter_delta_squared':receipt['parameter_delta_squared']}
+
+
+def prepare_round(root, index, generation_only=False):
     root=Path(root).resolve()
     if index not in (1,2,3): raise ValueError('only the three registered updates are allowed')
     destination=root/'rounds'/f'round{index}'
     checkpoints={branch:root/'training'/f'round{index}'/branch/'result/checkpoint' for branch in ('G','E')}
-    receipts={branch:validate_rsi_checkpoint(path,branch) for branch,path in checkpoints.items()}
-    registration={'round_index':index,'checkpoints':{b:{'path':str(p),
-        'receipt_sha256':file_hash(p/'RSI_TRAINING_DONE.json'),
-        'optimizer_steps':receipts[b]['optimizer_steps'],
-        'parameter_delta_squared':receipts[b]['parameter_delta_squared']} for b,p in checkpoints.items()},
-        'cohorts':{},'same_plan_and_seed_bytes':True}
+    generator=checkpoint_pin(checkpoints['G'],'G')
+    editor=None if generation_only else checkpoint_pin(checkpoints['E'],'E')
+    registration={'round_index':index,'checkpoints':{'G':generator,
+        'E':{'path':str(checkpoints['E']),'pending_training_receipt':True}},
+        'cohorts':{},'same_plan_and_seed_bytes':True,'generation_ready':True,'editing_ready':False}
     if (destination/'ROUND_READY.json').exists():
         old=json.loads((destination/'ROUND_READY.json').read_text())
-        if old['checkpoints']!=registration['checkpoints']: raise ValueError('registered weight version changed')
+        if old['checkpoints']['G']!=generator or (editor is not None and old['checkpoints']['E']!=editor):
+            raise ValueError('registered weight version changed')
         for value in old['cohorts'].values():
             if file_hash(value['plans'])!=value['plans_sha256'] or file_hash(value['config'])!=value['config_sha256']:
                 raise ValueError('registered round files changed')
+            if file_hash(value['edit_config'])!=value['edit_config_sha256']:
+                raise ValueError('registered editing configuration changed')
         return old
+    generation=destination/'ROUND_GENERATION_READY.json'
+    if generation.exists():
+        registered=json.loads(generation.read_text())
+        if registered['checkpoints']['G']!=generator: raise ValueError('registered generator changed')
+        for value in registered['cohorts'].values():
+            if file_hash(value['plans'])!=value['plans_sha256'] or file_hash(value['config'])!=value['config_sha256']:
+                raise ValueError('registered generation files changed')
+        return registered if generation_only else finish_edit_registration(destination,registered,editor)
     if destination.exists(): raise ValueError('partial round registration requires inspection')
     for cohort,original,output in [('MAIN',root,destination),('FIT',root/'fit',destination/'fit')]:
         spec=copy.deepcopy(json.loads((original/'RUN_SPEC.json').read_text()))
@@ -55,8 +72,22 @@ def prepare_round(root, index):
         registration['cohorts'][cohort]={'plans':str(output/'cohort/plans.jsonl'),
             'plans_sha256':file_hash(plans),'config':str(output/'RUN_SPEC.json'),
             'config_sha256':file_hash(output/'RUN_SPEC.json')}
-    write_json(destination/'ROUND_READY.json',registration)
-    return registration
+    write_json(generation,registration)
+    return registration if generation_only else finish_edit_registration(destination,registration,editor)
+
+
+def finish_edit_registration(destination,registration,editor):
+    final=copy.deepcopy(registration);final['checkpoints']['E']=editor;final['editing_ready']=True
+    for value in final['cohorts'].values():
+        source=Path(value['config']);spec=json.loads(source.read_text())
+        spec['updated_checkpoint_receipts']=final['checkpoints']
+        target=source.with_name('EDIT_SPEC.json')
+        if target.exists():
+            if json.loads(target.read_text())!=spec: raise ValueError('editing configuration already differs')
+        else: write_json(target,spec)
+        value.update(edit_config=str(target),edit_config_sha256=file_hash(target))
+    write_json(destination/'ROUND_READY.json',final)
+    return final
 
 
 def prepare_training(root, index, branch):
@@ -88,6 +119,7 @@ if __name__=='__main__':
     parser.add_argument('--root',required=True,type=Path)
     parser.add_argument('--index',required=True,type=int)
     parser.add_argument('--training-branch',choices=['G','E'])
+    parser.add_argument('--generation-only',action='store_true')
     args=parser.parse_args()
     print(json.dumps(prepare_training(args.root,args.index,args.training_branch) if args.training_branch
-                     else prepare_round(args.root,args.index)))
+                     else prepare_round(args.root,args.index,args.generation_only)))

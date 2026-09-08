@@ -46,5 +46,21 @@ class RoundIdentity(unittest.TestCase):
             receipt['parameter_delta_squared']=0.;write_json(path,receipt)
             with self.assertRaisesRegex(ValueError,'actual update'): prepare_round(root,1)
 
+    def test_generation_can_start_before_editor_without_mutating_its_config(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);self.fixture(root)
+            receipt=root/'training/round1/E/result/checkpoint/RSI_TRAINING_DONE.json'
+            saved=receipt.read_bytes();receipt.unlink()
+            early=prepare_round(root,1,generation_only=True)
+            config=Path(early['cohorts']['MAIN']['config']);before=config.read_bytes()
+            self.assertFalse(early['editing_ready'])
+            self.assertFalse((root/'rounds/round1/ROUND_READY.json').exists())
+            with self.assertRaises(FileNotFoundError): prepare_round(root,1)
+            receipt.write_bytes(saved)
+            final=prepare_round(root,1)
+            self.assertTrue(final['editing_ready']);self.assertEqual(config.read_bytes(),before)
+            edit=json.loads(Path(final['cohorts']['MAIN']['edit_config']).read_text())
+            self.assertEqual(edit['updated_checkpoint_receipts']['E']['receipt_sha256'],file_hash(receipt))
+
 
 if __name__=='__main__': unittest.main()
