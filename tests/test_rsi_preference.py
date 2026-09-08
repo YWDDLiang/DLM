@@ -34,9 +34,11 @@ class PreferenceContracts(unittest.TestCase):
         self.assertTrue(report['available'])
         self.assertEqual(float(vector[self.tokenizer.vocab['<LA_000>']]),torch.finfo(vector.dtype).min)
         body,_=make_body(self.tokenizer)
+        body[4]=self.tokenizer.vocab['<AA_001>']
+        body[5]=self.tokenizer.vocab['<AB_179>']
         body[6]=MASK_TOKEN_ID
         vector,report=legal_vector(torch.zeros(self.width),body,2,6,self.support)
-        self.assertEqual(float(vector[self.tokenizer.vocab['<AG_000>']]),torch.finfo(vector.dtype).min)
+        self.assertEqual(float(vector[self.tokenizer.vocab['<AG_001>']]),torch.finfo(vector.dtype).min)
 
     def test_alias_gradient_and_periodic_contact_veto(self):
         body,_=make_body(self.tokenizer,coords=((0,0,0),(0,0,50)))

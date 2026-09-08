@@ -214,8 +214,8 @@ def extract_chemsys(row: Mapping[str, Any], input_type: str) -> tuple[str | None
 
 def collect_inputs(manifest_path: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     manifest = read_json(manifest_path)
-    if manifest.get("schema") != INPUT_SCHEMA or manifest.get("purpose") != "evaluation":
-        raise HullUnionError("an explicit evaluation r03_hull_union_inputs_v1 manifest is required")
+    if manifest.get("schema") != INPUT_SCHEMA or manifest.get("purpose") not in ("evaluation", "training_feedback"):
+        raise HullUnionError("an explicit evaluation/training_feedback hull input manifest is required")
     if not isinstance(manifest.get("phase"), str) or not manifest["phase"]:
         raise HullUnionError("declare the common experimental phase")
     inputs = manifest.get("inputs")
@@ -238,6 +238,8 @@ def collect_inputs(manifest_path: Path) -> tuple[list[dict[str, Any]], dict[str,
         if spec.get("sha256") is not None and spec["sha256"] != file_id["sha256"]:
             raise HullUnionError(f"declared input SHA changed for {cell_id}")
         rows = read_jsonl(path)
+        if manifest['purpose'] == 'training_feedback' and any(row.get('source_split') != 'train' for row in rows):
+            raise HullUnionError('training hull references require explicit TRAIN-only conditions')
         expected = positive_integer(spec.get("expected_requests"), "expected_requests")
         if len(rows) != expected:
             raise HullUnionError(f"all-request denominator changed for {cell_id}: {len(rows)} != {expected}")
@@ -264,11 +266,11 @@ def collect_inputs(manifest_path: Path) -> tuple[list[dict[str, Any]], dict[str,
         })
     wanted = [{"query_index": index, "chemsys": name, "elements": name.split("-")}
               for index, name in enumerate(sorted(systems))]
-    report = {"schema": INPUT_SCHEMA, "purpose": "evaluation", "phase": manifest["phase"],
+    report = {"schema": INPUT_SCHEMA, "purpose": manifest['purpose'], "phase": manifest["phase"],
               "manifest": identity(manifest_path), "cells": summaries,
               "wanted_chemsys_count": len(wanted), "wanted_chemsys_sha256": canonical_sha256(wanted),
               "chemsys_sources": systems, "planner_upper_bound_present": any(row["type"] == "planner" for row in summaries),
-              "generated_energy_or_SUN_used_for_selection": False, "training_use": False}
+              "generated_energy_or_SUN_used_for_selection": False, "training_use": manifest['purpose'] == 'training_feedback'}
     return wanted, report
 
 
@@ -556,7 +558,7 @@ def prepare(*, inputs_manifest: Path, known_caches: Sequence[Path], query_config
     write_json(run_root / "QUERY_COMMAND.json", command)
     frozen_files = {str(path.relative_to(run_root)): identity(path) for path in run_root.rglob("*") if path.is_file()}
     report = {
-        "schema": PREPARE_SCHEMA, "status": "prepared", "purpose": "evaluation", "phase": inputs_report["phase"],
+        "schema": PREPARE_SCHEMA, "status": "prepared", "purpose": inputs_report['purpose'], "phase": inputs_report["phase"],
         "input_sources": inputs_report, "wanted_chemsys": len(wanted), "known_resolved": len(resolved),
         "known_official_unresolved": len(unknown), "missing_chemsys": sorted(missing),
         "historical_query_error_records_excluded": len(excluded),
@@ -564,7 +566,7 @@ def prepare(*, inputs_manifest: Path, known_caches: Sequence[Path], query_config
         "reused_database_version": next(iter(reused_versions)) if reused_versions else None,
         "frozen_files": frozen_files, "query_command": command,
         "actual_endpoint_subset_check_required": inputs_report["planner_upper_bound_present"],
-        "new_api_calls": 0, "training_use": False,
+        "new_api_calls": 0, "training_use": inputs_report['training_use'],
     }
     write_json(run_root / "PREPARE_FINAL.json", report)
     (run_root / "PREPARE_SUCCESS").touch()
@@ -575,7 +577,7 @@ def verify_preparation(run_root: Path) -> dict[str, Any]:
     if not (run_root / "PREPARE_SUCCESS").is_file():
         raise HullUnionError("union preparation is not complete")
     report = read_json(run_root / "PREPARE_FINAL.json")
-    if report.get("schema") != PREPARE_SCHEMA or report.get("purpose") != "evaluation":
+    if report.get("schema") != PREPARE_SCHEMA or report.get("purpose") not in ("evaluation", "training_feedback"):
         raise HullUnionError("wrong union preparation schema/purpose")
     for relative, expected in report["frozen_files"].items():
         path = (run_root / relative).resolve()
