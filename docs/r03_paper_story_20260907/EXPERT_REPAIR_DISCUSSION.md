@@ -31,7 +31,7 @@
 
 已重新获准开始实现和作业。原04:00 UTC截止和最多6GPU／3个本轮Slurm任务的约束不变；只为就绪计算阶段申请GPU，不占卡做方案讨论。
 
-### 0.9.1 初始模型实测与首轮更新记录（2026-09-09 05:46北京时间）
+### 0.9.1 初始模型实测与首轮更新记录（2026-09-09 06:05北京时间）
 
 MAIN与TRAIN分别固定256个Plan。TRAIN来自已有训练池，排除原全量MAIN的1159种约分组成；两套Plan及种子的哈希已登记，后续模型更新继续使用同一套条件。训练相图缓存完成242个体系的核对，其中237个有可用官方参考、5个明确未解决。未解决项不填造稳定性奖励。
 
@@ -50,9 +50,11 @@ MAIN的5个SUN跳过F800，218个可用非SUN结构进入F800，33个构造失�
 
 初始MAIN编辑已完成256个请求：211个产生EDIT提案、12个选择KEEP、33个上游失败；接受头未提交任何提案，最终token全部与token-F相同。最终阶段完整N/U评分已确认SUN18、MSUN101，新增与损失均为0。见[θ0 MAIN完整四阶段与配对变化](execution/post_refine_v08/rsi/THETA0_COMPLETE_MAIN.json)。TRAIN反事实提案已完成评分，SUN7、MSUN36；这些提案用于训练比较，不作为部署输出。E训练清单含211个物理偏好对（179个偏好保留当前状态、32个偏好EDIT提案）及13条额外保留决策监督；26个已知SUN均给出KEEP监督。
 
-G的第一次真实训练已完成128个优化步，参数变化平方和0.0808741463，冻结输入／输出表哈希保持一致。训练数据为211个物理偏好对（181个偏好token-F、30个偏好raw）及4个健康锚；相同、平局与unknown未伪造偏好。更新后的G已完成两套相同Plan的256条重新生成。TRAIN raw已完成评分并进入F，MAIN raw仍在物理标注。见[首轮G训练回执及同Plan生成登记](execution/post_refine_v08/rsi/G1_FIRST_UPDATE.json)。
+G的第一次真实训练已完成128个优化步，参数变化平方和0.0808741463，冻结输入／输出表哈希保持一致。训练数据为211个物理偏好对（181个偏好token-F、30个偏好raw）及4个健康锚；相同、平局与unknown未伪造偏好。更新后的G已完成两套相同Plan的256条重新生成。MAIN与TRAIN raw均已完成评分并进入F。见[首轮G训练回执及同Plan生成登记](execution/post_refine_v08/rsi/G1_FIRST_UPDATE.json)。
 
-首份更新后结果仅来自固定TRAIN Plan：θ1 raw的comp_valid为201/256（78.52%）、Struct_valid为253/256（98.83%）、SUN为7/256（2.73%）、MSUN为32/256（12.50%）。相比θ0 raw，SUN新增4、损失1，MSUN新增19、损失23，均无unknown配对。这是SUN小幅增加、MSUN下降的混合结果，且属于训练条件重生成，不能据此宣称留出集自改进。MAIN及后续F、token、KEEP/EDIT阶段仍需完成。见[首次更新后TRAIN raw、完整初始阶段与配对来源](execution/post_refine_v08/rsi/FIRST_UPDATED_TRAIN_RAW.json)。
+θ1 TRAIN raw的comp_valid为201/256（78.52%）、Struct_valid为253/256（98.83%）、SUN为7/256（2.73%）、MSUN为32/256（12.50%）。相比θ0 raw，SUN新增4、损失1，MSUN新增19、损失23，均无unknown配对。这是SUN小幅增加、MSUN下降的混合结果，且属于训练条件重生成，不能据此宣称留出集自改进。见[首次更新后TRAIN raw、完整初始阶段与配对来源](execution/post_refine_v08/rsi/FIRST_UPDATED_TRAIN_RAW.json)。
+
+θ1 MAIN raw也已完成：comp_valid为224/256（87.50%，θ0为199）、Struct_valid为254/256（99.22%，θ0为223）、SUN为4/256（1.56%，θ0为5）、MSUN为33/256（12.89%，θ0为32）。同Plan配对SUN新增2、损失3，MSUN新增21、损失20，均无unknown配对。有效性提高，但MAIN raw的SUN没有提升；后续F、token和KEEP/EDIT尚在运行，不能用有效性替代完整链路的稳定性收益。见[首次更新后MAIN raw与配对来源](execution/post_refine_v08/rsi/FIRST_UPDATED_MAIN_RAW.json)。
 
 E的第一次真实训练按预先登记的1200秒优化预算在步边界收尾，实际优化1210秒、完成96步（128为目标上限，未将其写成实际步数），参数变化平方和2.0691473523，冻结输入／输出表哈希保持一致。当前完整G/E联合权重更新为1；第一轮完整评测仍待完成，因此尚无训练后SUN提升结论。MAIN与TRAIN的EDIT_SPEC已锁定实际E1检查点，已使用的生成配置保持原字节。见[首组G/E实际更新、数据哈希与编辑配置登记](execution/post_refine_v08/rsi/JOINT_UPDATE_1.json)。
 
