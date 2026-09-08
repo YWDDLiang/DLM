@@ -1,0 +1,209 @@
+{
+  "observed_utc": "2026-09-08T20:18:03.077431+00:00",
+  "phase": "theta0_before_weight_update",
+  "metrics": {
+    "construction": {
+      "Struct_valid": {
+        "count": 223,
+        "percent": 87.109375
+      },
+      "comp_valid": {
+        "count": 199,
+        "percent": 77.734375
+      },
+      "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+      "inputs_sha256": "189cef1d6dfd66669283fec57341f92cc6ddc4af84fae246cf0e18ecfe75ee09",
+      "metrics_sha256": "29cda77e840220e884e991003e7f8b36d39e1cd8d659515e448233003e89f4a9",
+      "requested": 256,
+      "score_sha256": "cb8c72fdeb536bfdba1a90d586b31e1a99011571964c2702f316629ac4968ae5",
+      "stability": {
+        "meta_stable": {
+          "bounds_percent": [
+            12.5,
+            12.5
+          ],
+          "confirmed": 32,
+          "count": 32,
+          "percent": 12.5,
+          "unknown": 0
+        },
+        "meta_sun": {
+          "bounds_percent": [
+            12.5,
+            12.5
+          ],
+          "confirmed": 32,
+          "count": 32,
+          "percent": 12.5,
+          "unknown": 0
+        },
+        "requested": 256,
+        "strict_stable": {
+          "bounds_percent": [
+            1.953125,
+            1.953125
+          ],
+          "confirmed": 5,
+          "count": 5,
+          "percent": 1.953125,
+          "unknown": 0
+        },
+        "strict_sun": {
+          "bounds_percent": [
+            1.953125,
+            1.953125
+          ],
+          "confirmed": 5,
+          "count": 5,
+          "percent": 1.953125,
+          "unknown": 0
+        }
+      },
+      "stage": "construction"
+    },
+    "refined": {
+      "Struct_valid": {
+        "count": 223,
+        "percent": 87.109375
+      },
+      "comp_valid": {
+        "count": 199,
+        "percent": 77.734375
+      },
+      "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+      "inputs_sha256": "ae4bf1ffb6472be19e3571b1f89321e9446488744d4ca395d4836515ef54b37d",
+      "metrics_sha256": "857c8e00604ff90a0fb1a0091f8f0155abd65e817bf022b11fec7d0db87a42fc",
+      "requested": 256,
+      "score_sha256": "d6e87170c5083e70dcbfb7c54013668eeefb174296bef56184f8f363e9e8945d",
+      "stability": {
+        "meta_stable": {
+          "bounds_percent": [
+            50,
+            50
+          ],
+          "confirmed": 128,
+          "count": 128,
+          "percent": 50,
+          "unknown": 0
+        },
+        "meta_sun": {
+          "bounds_percent": [
+            39.84375,
+            39.84375
+          ],
+          "confirmed": 102,
+          "count": 102,
+          "percent": 39.84375,
+          "unknown": 0
+        },
+        "requested": 256,
+        "strict_stable": {
+          "bounds_percent": [
+            8.59375,
+            8.59375
+          ],
+          "confirmed": 22,
+          "count": 22,
+          "percent": 8.59375,
+          "unknown": 0
+        },
+        "strict_sun": {
+          "bounds_percent": [
+            6.640625,
+            6.640625
+          ],
+          "confirmed": 17,
+          "count": 17,
+          "percent": 6.640625,
+          "unknown": 0
+        }
+      },
+      "stage": "refined"
+    },
+    "tokenized": {
+      "Struct_valid": {
+        "count": 223,
+        "percent": 87.109375
+      },
+      "comp_valid": {
+        "count": 199,
+        "percent": 77.734375
+      },
+      "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+      "inputs_sha256": "b741306ed82bfa904418e337eeb9c1b07e75ee250d210d5cbc69c51b56ddb9f8",
+      "metrics_sha256": "2cced58631d758f69846908413720aa8bdcfdfe45fed16f3310b509bc861623e",
+      "requested": 256,
+      "score_sha256": "6b78ca6b3ce4f1313d766774d91d096ede61f1255e082108ebef8fb3a08ab56b",
+      "stability": {
+        "meta_stable": {
+          "bounds_percent": [
+            49.609375,
+            49.609375
+          ],
+          "confirmed": 127,
+          "count": 127,
+          "percent": 49.609375,
+          "unknown": 0
+        },
+        "meta_sun": {
+          "bounds_percent": [
+            39.453125,
+            39.453125
+          ],
+          "confirmed": 101,
+          "count": 101,
+          "percent": 39.453125,
+          "unknown": 0
+        },
+        "requested": 256,
+        "strict_stable": {
+          "bounds_percent": [
+            8.984375,
+            8.984375
+          ],
+          "confirmed": 23,
+          "count": 23,
+          "percent": 8.984375,
+          "unknown": 0
+        },
+        "strict_sun": {
+          "bounds_percent": [
+            7.03125,
+            7.03125
+          ],
+          "confirmed": 18,
+          "count": 18,
+          "percent": 7.03125,
+          "unknown": 0
+        }
+      },
+      "stage": "tokenized"
+    }
+  },
+  "paired": {
+    "construction->refined": {
+      "strict_sun": {
+        "gained": 12,
+        "lost": 0,
+        "retained": 5
+      },
+      "meta_sun": {
+        "gained": 76,
+        "lost": 6,
+        "retained": 26
+      }
+    },
+    "refined->tokenized": {
+      "strict_sun": {
+        "gained": 1,
+        "lost": 0,
+        "retained": 17
+      },
+      "meta_sun": {
+        "gained": 0,
+        "lost": 1,
+        "retained": 101
+      }
+    }
+  }
+}
