@@ -601,7 +601,7 @@ def endpoint_subset_report(actual_inputs: Path, wanted: set[str]) -> dict[str, A
     outside = sorted(actual - wanted)
     return {"schema": "r03_hull_union_endpoint_subset_v1", "sources": sources,
             "actual_chemsys": len(actual), "outside_registered_union": outside,
-            "is_subset": not outside, "not_covered": len(outside), "training_use": False}
+            "is_subset": not outside, "not_covered": len(outside), "training_use": sources['training_use']}
 
 
 def finalize(*, run_root: Path, fresh_cache: Path | None = None, actual_inputs: Path | None = None) -> dict[str, Any]:
@@ -656,7 +656,7 @@ def finalize(*, run_root: Path, fresh_cache: Path | None = None, actual_inputs: 
                    "database_version_conflict": version_conflict,
                    "known_cache_sources": preparation["known_cache_sources"], "fresh_query_source": fresh_identity,
                    "transport_errors_promoted_to_official_unresolved": 0,
-                   "evaluation_cache_published": False, "training_use": False}
+                   "evaluation_cache_published": False, "training_use": preparation['training_use']}
         write_json(run_root / "FINALIZE_BLOCKED.json", blocked)
         return blocked
     if set(resolved) & set(unknown) or set(resolved) | set(unknown) != wanted:
@@ -697,7 +697,8 @@ def finalize(*, run_root: Path, fresh_cache: Path | None = None, actual_inputs: 
         "new_official_query_count": len(missing), "known_cache_sources": preparation["known_cache_sources"],
         "fresh_query_source": fresh_identity, "preparation": identity(run_root / "PREPARE_FINAL.json"),
         "all_resolved_phase_diagrams_constructed": True, "all_resolved_elemental_references_present": True,
-        "transport_errors_promoted_to_official_unresolved": 0, "training_use": False,
+        "transport_errors_promoted_to_official_unresolved": 0, "training_use": preparation['training_use'],
+        "purpose": preparation['purpose'],
         "completed_at_utc": datetime.now(timezone.utc).isoformat(),
         "actual_endpoint_check": endpoints,
         "actual_endpoint_subset_check_required": preparation["actual_endpoint_subset_check_required"] and endpoints is None,

@@ -89,7 +89,7 @@ def materialize(spec, stage):
 
 def gate(spec):
     root = Path(spec['run_root']) / 'construction'
-    score_dir = root/'scoring/result'
+    score_dir = score_directory(Path(spec['run_root']),'construction')
     reports = list(score_dir.glob('*REPORT.json')) + list(score_dir.glob('*FINAL.json'))
     if len(reports) != 1:
         raise ValueError('exactly one complete score report required: '+str(reports))
@@ -171,8 +171,16 @@ def refine(spec, shard, shards):
     write_json(root/'refined'/f'worker_{shard}_DONE.json',{'seconds':time.monotonic()-started})
 
 
+def score_directory(root,stage):
+    pointer=root/stage/'SCORING_DIRECTORY.json'
+    relative=json.loads(pointer.read_text())['directory'] if pointer.exists() else 'scoring'
+    directory=(root/stage/relative/'result').resolve()
+    if (root/stage).resolve() not in directory.parents: raise ValueError('score directory escaped stage')
+    return directory
+
+
 def scores(root, stage):
-    directory=root/stage/'scoring/result'
+    directory=score_directory(root,stage)
     report=next(directory.glob('*FINAL.json'))
     summary=json.loads(report.read_text())
     if summary['status']!='complete' or summary['input_sha256']!=file_hash(root/stage/'inputs.jsonl'):
@@ -278,14 +286,118 @@ def compile_pairs(spec):
         'source_config_sha256':spec['_config_sha256'],'plans_sha256':file_hash(root/'cohort/plans.jsonl'),
         'files_sha256':{name:file_hash(directory/name) for name in ['G.jsonl','E.jsonl','pair_audit.jsonl']},
         'stage_inputs':{stage:file_hash(root/stage/'inputs.jsonl') for stage in stages},
-        'stage_scores':{stage:file_hash(root/stage/'scoring/result/attempt_results.jsonl') for stage in stages},
+        'stage_scores':{stage:file_hash(score_directory(root,stage)/'attempt_results.jsonl') for stage in stages},
         'examples':{branch:len(rows) for branch,rows in result.items()},'DPO_training_performed':False})
+
+
+def rebind_labels(spec, stage):
+    """Reuse exactly identical physical endpoints, retaining the complete cohort.
+
+    Current is chosen from raw/token-F; edited is chosen from current/proposal.
+    This only copies proven identical physical labels. Every N/U stage is rerun.
+    """
+    from collections import Counter
+    import importlib.util
+    from crystal_dlm.sun_feedback_contract import validate_training_feedback
+    source_root=Path(__file__).resolve().parents[2]
+    binding=importlib.util.spec_from_file_location('_rsi_bound_evaluation',source_root/'scripts/evaluate_programmed_paths.py')
+    api=importlib.util.module_from_spec(binding);binding.loader.exec_module(api)
+    root=Path(spec['run_root']);training='training_parent_root' in spec
+    purpose='training_feedback' if training else 'evaluation'
+    sources={'current':['construction','tokenized'],'edited':['current','proposal']}
+    if stage not in sources: raise ValueError('this stage contains newly sampled endpoints')
+    known={};pins=[];runtime=None;protocol=None
+    def key(record):
+        return (record.get('group_id'),record.get('source_row_idx'),record['sample_idx'],
+                api.endpoint_cache_key(record) if record['success'] else 'explicit_generation_failure')
+    for parent in sources[stage]:
+        inputs=root/parent/'inputs.jsonl';records=read_rows(inputs)
+        scope=validate_training_feedback(records,inputs,root/parent/'FEEDBACK_MANIFEST.json') if training else None
+        directory=root/parent/'labeling/result'
+        labels,identities=api.load_bound_evaluation_labels(records,[directory/'labels.jsonl'],
+            paths_file=inputs,endpoint='native',purpose=purpose,feedback_scope=scope)
+        report=json.loads((directory/'LABEL_FINAL.json').read_text())
+        actual=report['runtime_identities'][0]
+        if actual['labeler_sha256']!=file_hash(source_root/'scripts/label_programmed_paths.py'):
+            raise ValueError('cached endpoint uses a different physical implementation')
+        if runtime is not None and runtime!=actual: raise ValueError('physical caches use different runtimes')
+        runtime=actual;protocol=report['protocol']
+        pins.extend(identities)
+        for record in records:
+            label=labels[record['trajectory_id']]
+            k=key(record)
+            if k in known:
+                # Proven duplicate endpoints must carry the same physical evidence.
+                for field in ['raw_energy','terminal_energy','status','verified']:
+                    if known[k][field]!=label[field]: raise ValueError('identical endpoints have contradictory cached labels')
+            known[k]=label
+    inputs=root/stage/'inputs.jsonl';records=read_rows(inputs)
+    scope=validate_training_feedback(records,inputs,root/stage/'FEEDBACK_MANIFEST.json') if training else None
+    labels=[]
+    for record in records:
+        if key(record) not in known: raise ValueError('new endpoint cannot inherit a previous physical label')
+        label=dict(known[key(record)])
+        origin=label['trajectory_id']
+        label.update({name:record.get(name) for name in ['trajectory_id','group_id','source_row_idx','source_split','endpoint']})
+        label.update(endpoint_cache_key=api.endpoint_cache_key(record),rebound_from_trajectory_id=origin)
+        labels.append(label)
+    directory=root/stage/'labeling/result';write_rows(directory/'labels.jsonl',labels)
+    report={'requested':len(labels),'completed':len(labels),'statuses':dict(Counter(r['status'] for r in labels)),
+            'purpose':purpose,'protocol':protocol,'verification_protocol':api.TERMINAL_VERIFICATION_PROTOCOL,
+            'geometry_validation_protocol':api.LABEL_GEOMETRY_PROTOCOL,'runtime_identities':[runtime],
+            'input_file':str(inputs),'input_sha256':file_hash(inputs),'training_feedback_scope':scope,
+            'distinct_endpoint_evaluations':0,'new_endpoint_evaluations':0,'physical_reuse_sources':pins,
+            'binding_implementation_sha256':file_hash(Path(__file__)),
+            'N_U_copied':False,'exact_endpoint_and_source_identity_checked':True}
+    write_json(directory/'LABEL_FINAL.json',report);(directory/'_SUCCESS').touch()
+    api.load_bound_evaluation_labels(records,[directory/'labels.jsonl'],paths_file=inputs,endpoint='native',
+                                    purpose=purpose,feedback_scope=scope)
+
+
+def validity(spec,stage):
+    from collections import Counter
+    import math
+    import importlib.util
+    from crystal_dlm.post_refine_contract import stage_summary
+    from crystal_dlm.dynamic_crystal import arrays_to_structure,parse_dynamic_answer
+    from pymatgen.core import Structure
+    if not os.environ.get('SLURM_JOB_ID'): raise RuntimeError('validity requires its CPU allocation')
+    project=Path(spec['assets']['b0_checkpoint']).parents[4]
+    snapshot=project/'runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream'
+    utility=snapshot/'eval_utils.py'
+    expected='68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6'
+    if file_hash(utility)!=expected: raise ValueError('frozen validity implementation changed')
+    sys.path.insert(0,str(snapshot))
+    binding=importlib.util.spec_from_file_location('_rsi_frozen_validity',utility)
+    api=importlib.util.module_from_spec(binding);binding.loader.exec_module(api)
+    root=Path(spec['run_root']);records=read_rows(root/stage/'inputs.jsonl')
+    measured=scores(root,stage);rows=[]
+    for record,score in zip(records,measured,strict=True):
+        comp=False;struct=False;reason=record.get('reason')
+        if record['success']:
+            try:
+                structure=Structure.from_dict(record['structure']) if record.get('structure') else arrays_to_structure(parse_dynamic_answer(record['body'],strict=True))
+                counts=Counter(int(v) for v in structure.atomic_numbers);elements=tuple(sorted(counts))
+                amounts=[counts[e] for e in elements];divisor=math.gcd(*amounts)
+                comp=bool(api.smact_validity(elements,tuple(v//divisor for v in amounts)))
+                struct=bool(api.structure_validity(structure))
+            except (ValueError,TypeError,KeyError) as error: reason=str(error)
+        rows.append({'sample_idx':record['sample_idx'],'trajectory_id':record['trajectory_id'],
+                     'comp_valid':comp,'Struct_valid':struct,'SUN':score['strict_sun'],'MSUN':score['meta_sun'],'reason':reason})
+    output=score_directory(root,stage)
+    write_rows(output/'four_metrics.jsonl',rows)
+    write_json(output/'BASIC_METRICS.json',{'requested':len(rows),'stage':stage,
+        'comp_valid':{'count':sum(r['comp_valid'] for r in rows),'percent':100*sum(r['comp_valid'] for r in rows)/len(rows)},
+        'Struct_valid':{'count':sum(r['Struct_valid'] for r in rows),'percent':100*sum(r['Struct_valid'] for r in rows)/len(rows)},
+        'stability':stage_summary(measured),'frozen_validity_sha256':expected,
+        'inputs_sha256':file_hash(root/stage/'inputs.jsonl'),'score_sha256':file_hash(output/'attempt_results.jsonl'),
+        'metrics_sha256':file_hash(output/'four_metrics.jsonl')})
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config',required=True)
-    parser.add_argument('--action',choices=['prepare-fit','materialize','gate','refine','select','edit','pairs'],required=True)
+    parser.add_argument('--action',choices=['prepare-fit','materialize','gate','refine','select','edit','pairs','rebind','validity'],required=True)
     parser.add_argument('--stage',default='construction')
     args=parser.parse_args()
     os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
@@ -295,6 +407,8 @@ def main():
     elif args.action=='gate': gate(spec)
     elif args.action=='select': select_current(spec)
     elif args.action=='pairs': compile_pairs(spec)
+    elif args.action=='rebind': rebind_labels(spec,args.stage)
+    elif args.action=='validity': validity(spec,args.stage)
     elif args.action=='edit': edit(spec,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
     else: refine(spec,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
 

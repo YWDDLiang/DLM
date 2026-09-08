@@ -17,6 +17,7 @@ def main():
     p.add_argument('--minutes',type=int,default=90)
     p.add_argument('--training-config',type=Path)
     p.add_argument('--cache',type=Path)
+    p.add_argument('--score-attempt',default='scoring')
     a=p.parse_args();root=a.root.resolve();cfg=json.loads(a.config.read_text())
     cohort=Path(cfg['run_root']);relative=cohort.relative_to(root)
     source=Path(__file__).resolve().parents[2]
@@ -44,13 +45,20 @@ def main():
             args+=['--feedback-manifest',str(feedback)];inputs+=[str(feedback)]
         outputs=['{output}/result/LABEL_FINAL.json','{output}/result/labels.jsonl']
     elif a.action=='score':
-        directory=relative/a.stage/'scoring';script='scripts/evaluate_programmed_paths.py'
+        if not a.score_attempt.replace('_','').isalnum(): p.error('invalid score attempt name')
+        directory=relative/a.stage/a.score_attempt;script='scripts/evaluate_programmed_paths.py'
+        pointer=cohort/a.stage/'SCORING_DIRECTORY.json'
+        if pointer.exists():
+            prior=json.loads(pointer.read_text())['directory']
+            if prior!=a.score_attempt and (cohort/a.stage/prior/'result/_SUCCESS').exists():
+                raise ValueError('cannot replace a completed score ledger')
+        pointer.write_text(json.dumps({'directory':a.score_attempt,'job':a.job})+'\n')
         input_file=cohort/a.stage/'inputs.jsonl';labels=cohort/a.stage/'labeling/result/labels.jsonl'
         args=['--paths-jsonl',str(input_file),'--labels-jsonl',str(labels),
             '--frozen-config',cfg['assets']['frozen_config'],'--official-cache',str(a.cache or cfg['assets']['official_cache']),
             '--output-dir','{output}/result','--expected-requests',str(cfg['requests']),
             '--endpoint','native','--cohort-role','training_feedback' if training else 'fixed_development',
-            '--policy-stage','round0_diagnostic','--sun-only','--nu-workers','8',
+            '--policy-stage','round0_diagnostic','--sun-only','--nu-workers','7',
             '--nu-cache',str(root/'nu_cache')]
         inputs+=[str(input_file),str(labels),str(labels.parent/'LABEL_FINAL.json')]
         if training:
@@ -72,7 +80,13 @@ def main():
         outputs=['{output}/result/TRAINING_FINAL.json','{output}/result/checkpoint/RSI_TRAINING_DONE.json'];distributed=True
     stage={'name':a.action,'script':script,'args':args,'inputs':inputs,'outputs':outputs}
     if distributed: stage['distributed_processes']=gpu
-    pipeline['components']=[{'id':a.job,'output_dir':str(directory),'gpus':gpu,'stages':[stage]}]
+    stages=[stage]
+    if a.action=='score':
+        stages.append({'name':'validity','script':'src/scripts/run_rsi_stages.py',
+            'args':['--config',str(a.config),'--action','validity','--stage',a.stage],
+            'inputs':[str(a.config),'{output}/result/attempt_results.jsonl'],
+            'outputs':['{output}/result/BASIC_METRICS.json','{output}/result/four_metrics.jsonl']})
+    pipeline['components']=[{'id':a.job,'output_dir':str(directory),'gpus':gpu,'stages':stages}]
     pipeline['jobs']={a.job:{'component_indices':[0],'gpus_per_task':gpu,'cpus_per_task':4*gpu if gpu else 8,
         'parallel_tasks':1,'wall_minutes':a.minutes,'memory':f'{96*gpu}G' if gpu else '64G',
         'partition':'gpu' if gpu else 'normal'}}
