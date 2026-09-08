@@ -1,0 +1,4721 @@
+{
+  "labels_refined": {
+    "sha256": "bae5908b3c3de3f6354446a4e2bc416789c1948e1aa0ba9a811fca1813521148",
+    "rows": [
+      {
+        "trajectory_id": "composition-refined:0:3:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:743",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -9.55363655090332,
+        "terminal_energy": -9.56959056854248,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:3:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:743",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -9.55363655090332,
+        "terminal_energy": -9.56959056854248,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:3:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:743",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -9.55363655090332,
+        "terminal_energy": -9.56959056854248,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:3:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:743",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -9.55363655090332,
+        "terminal_energy": -9.56959056854248,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:0:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:664",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -6.292899131774902,
+        "terminal_energy": -6.4053120613098145,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:0:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:664",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -6.292899131774902,
+        "terminal_energy": -6.4053120613098145,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:6:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_1:458",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.319727897644043,
+        "terminal_energy": -8.32179069519043,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:6:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_1:458",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.319727897644043,
+        "terminal_energy": -8.32179069519043,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:6:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_1:458",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.319727897644043,
+        "terminal_energy": -8.32179069519043,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:6:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_1:458",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.319727897644043,
+        "terminal_energy": -8.32179069519043,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:6:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_1:458",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.321057319641113,
+        "terminal_energy": -8.322325706481934,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:6:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_1:458",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.321057319641113,
+        "terminal_energy": -8.322325706481934,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:0:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:664",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -6.2866926193237305,
+        "terminal_energy": -6.416557312011719,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:0:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:664",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -6.2866926193237305,
+        "terminal_energy": -6.416557312011719,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:0:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:664",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -6.2832183837890625,
+        "terminal_energy": -6.416507720947266,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:0:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:664",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -6.2832183837890625,
+        "terminal_energy": -6.416507720947266,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:8:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_4:1186",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.210966110229492,
+        "terminal_energy": -8.216775894165039,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:8:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_4:1186",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.210966110229492,
+        "terminal_energy": -8.216775894165039,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:8:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_4:1186",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.210966110229492,
+        "terminal_energy": -8.216775894165039,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:8:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_4:1186",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.210966110229492,
+        "terminal_energy": -8.216775894165039,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:8:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_4:1186",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.21094799041748,
+        "terminal_energy": -8.216796875,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:8:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_4:1186",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -8.21094799041748,
+        "terminal_energy": -8.216796875,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:11:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:827",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -4.955841541290283,
+        "terminal_energy": -4.957357883453369,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:11:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:827",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -4.955841541290283,
+        "terminal_energy": -4.957357883453369,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:14:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_0:222",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -3.2960398197174072,
+        "terminal_energy": -3.2960398197174072,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:14:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_0:222",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -3.2960398197174072,
+        "terminal_energy": -3.2960398197174072,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:14:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_0:222",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -3.2960398197174072,
+        "terminal_energy": -3.2960398197174072,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:14:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_0:222",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -3.2960398197174072,
+        "terminal_energy": -3.2960398197174072,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:14:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_0:222",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -3.296032667160034,
+        "terminal_energy": -3.296032667160034,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:14:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_0:222",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -3.296032667160034,
+        "terminal_energy": -3.296032667160034,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:11:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:827",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -4.971133232116699,
+        "terminal_energy": -5.0248870849609375,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:11:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:827",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -4.971133232116699,
+        "terminal_energy": -5.0248870849609375,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:11:old",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:827",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -4.971133232116699,
+        "terminal_energy": -5.0248870849609375,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:11:student",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:827",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -4.971133232116699,
+        "terminal_energy": -5.0248870849609375,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:0:3:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:743",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -8.57362174987793,
+        "terminal_energy": -9.139166831970215,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "composition-refined:1:3:teacher",
+        "group_id": "fbb03b0cbf10c5397b8aa2172a854b0d39afdd9b:train_source_2:743",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -8.57362174987793,
+        "terminal_energy": -9.139166831970215,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      }
+    ]
+  },
+  "labels_S_audit": {
+    "sha256": "eba633c88bcc01eeb4adf4001b9440e94de7c1ccc24c081afe13fbe27761ab39",
+    "rows": [
+      {
+        "trajectory_id": "round-S-audit:0:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:1:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:2:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:3:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:2:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:4:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:5:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:6:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:7:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:4:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 5.0072221755981445,
+        "terminal_energy": -6.857194900512695,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:0:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.702416896820068,
+        "terminal_energy": -4.248833656311035,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:6:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -5.847549915313721,
+        "terminal_energy": -7.218368053436279,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:5:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -3.527249813079834,
+        "terminal_energy": -7.08627986907959,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:8:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.041950225830078,
+        "terminal_energy": -2.6047632694244385,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:9:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.041950225830078,
+        "terminal_energy": -2.6047632694244385,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:10:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.041950225830078,
+        "terminal_energy": -2.6047632694244385,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:11:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.041950225830078,
+        "terminal_energy": -2.6047632694244385,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:7:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 3.1178998947143555,
+        "terminal_energy": -7.030879974365234,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:9:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.216466903686523,
+        "terminal_energy": -2.5862553119659424,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:10:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:11:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.6120071411132812,
+        "terminal_energy": -2.2361490726470947,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:12:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 5.431432723999023,
+        "terminal_energy": -1.8551137447357178,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:13:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 5.431432723999023,
+        "terminal_energy": -1.8551137447357178,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:14:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 5.431432723999023,
+        "terminal_energy": -1.8551137447357178,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:15:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 5.431432723999023,
+        "terminal_energy": -1.8551137447357178,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:1:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 0.16391229629516602,
+        "terminal_energy": -3.2307088375091553,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:3:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 4.2346367835998535,
+        "terminal_energy": -2.883533477783203,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:14:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 5.098957061767578,
+        "terminal_energy": -1.9694137573242188,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:8:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 8.759961128234863,
+        "terminal_energy": -0.9249172210693359,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:12:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 9.69652271270752,
+        "terminal_energy": 6.922784805297852,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:13:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 8.91443920135498,
+        "terminal_energy": -1.5481746196746826,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:17:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 7.298059463500977,
+        "terminal_energy": -3.0737857818603516,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:16:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 8.7240629196167,
+        "terminal_energy": -3.071965217590332,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:15:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 9.394150733947754,
+        "terminal_energy": -1.5787971019744873,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:20:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 3.256591796875,
+        "terminal_energy": -5.974969387054443,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:21:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 3.256591796875,
+        "terminal_energy": -5.974969387054443,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:22:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 3.256591796875,
+        "terminal_energy": -5.974969387054443,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:23:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 3.256591796875,
+        "terminal_energy": -5.974969387054443,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:20:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:21:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:16:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 9.096354484558105,
+        "terminal_energy": 7.641044616699219,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:17:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 9.096354484558105,
+        "terminal_energy": 7.641044616699219,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:18:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 9.096354484558105,
+        "terminal_energy": 7.641044616699219,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:19:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 9.096354484558105,
+        "terminal_energy": 7.641044616699219,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:23:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 0.48142051696777344,
+        "terminal_energy": -5.845609188079834,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:22:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 5.439115524291992,
+        "terminal_energy": -5.750534534454346,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:24:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.7769789695739746,
+        "terminal_energy": -4.866919040679932,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:25:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.7769789695739746,
+        "terminal_energy": -4.866919040679932,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:26:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.7769789695739746,
+        "terminal_energy": -4.866919040679932,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:27:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.7769789695739746,
+        "terminal_energy": -4.866919040679932,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:25:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -1.7722959518432617,
+        "terminal_energy": -4.509147644042969,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:18:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 8.1625337600708,
+        "terminal_energy": -1.8931584358215332,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:19:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 8.323803901672363,
+        "terminal_energy": 4.956243515014648,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:27:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.441999912261963,
+        "terminal_energy": -4.563381195068359,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:28:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.6474385261535645,
+        "terminal_energy": -4.249754428863525,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:29:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.6474385261535645,
+        "terminal_energy": -4.249754428863525,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:30:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.6474385261535645,
+        "terminal_energy": -4.249754428863525,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:31:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 2.6474385261535645,
+        "terminal_energy": -4.249754428863525,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:28:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.981049060821533,
+        "terminal_energy": -4.147835731506348,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:26:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -2.6861956119537354,
+        "terminal_energy": -5.59751558303833,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:31:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:29:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 7.220953464508057,
+        "terminal_energy": -4.199885368347168,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:24:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 4.876131057739258,
+        "terminal_energy": -3.8953912258148193,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:30:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 7.676127910614014,
+        "terminal_energy": -4.190397262573242,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:32:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 7.287525177001953,
+        "terminal_energy": -4.012048244476318,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:33:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 7.287525177001953,
+        "terminal_energy": -4.012048244476318,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:34:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 7.287525177001953,
+        "terminal_energy": -4.012048244476318,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:35:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 7.287525177001953,
+        "terminal_energy": -4.012048244476318,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:34:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 3.0301759243011475,
+        "terminal_energy": -3.998413324356079,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:36:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:37:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:38:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:39:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:36:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -2.299245595932007,
+        "terminal_energy": -4.638993263244629,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:35:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.8820431232452393,
+        "terminal_energy": -3.268803596496582,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:38:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 0.5525403022766113,
+        "terminal_energy": -4.679030418395996,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:39:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:32:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 7.270908355712891,
+        "terminal_energy": 1.458622694015503,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:40:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:41:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:33:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 4.774075508117676,
+        "terminal_energy": -0.4601094722747803,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:40:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.67086124420166,
+        "terminal_energy": -2.8078930377960205,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:41:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.67086124420166,
+        "terminal_energy": -2.8078930377960205,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:42:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.67086124420166,
+        "terminal_energy": -2.8078930377960205,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:43:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.67086124420166,
+        "terminal_energy": -2.8078930377960205,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:44:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -4.431328296661377,
+        "terminal_energy": -5.76622200012207,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:45:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -4.431328296661377,
+        "terminal_energy": -5.76622200012207,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:46:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -4.431328296661377,
+        "terminal_energy": -5.76622200012207,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:47:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -4.431328296661377,
+        "terminal_energy": -5.76622200012207,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:44:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:42:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -1.8133964538574219,
+        "terminal_energy": -2.7718758583068848,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:43:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 3.397587537765503,
+        "terminal_energy": -2.5571093559265137,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:47:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:37:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 1.2578778266906738,
+        "terminal_energy": -3.499356985092163,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:48:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:49:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:48:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.272601127624512,
+        "terminal_energy": -3.307163715362549,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:49:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.272601127624512,
+        "terminal_energy": -3.307163715362549,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:50:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.272601127624512,
+        "terminal_energy": -3.307163715362549,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:51:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 6.272601127624512,
+        "terminal_energy": -3.307163715362549,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:45:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 4.603774547576904,
+        "terminal_energy": 3.261314868927002,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:52:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:53:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:54:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:55:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:46:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 6.7062764167785645,
+        "terminal_energy": 4.726227283477783,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:50:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 6.1324567794799805,
+        "terminal_energy": -1.204829216003418,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:54:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:51:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 9.37439250946045,
+        "terminal_energy": -3.22843337059021,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:55:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -1.6221284866333008,
+        "terminal_energy": -5.119786739349365,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:56:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 1.336845874786377,
+        "terminal_energy": -3.953829050064087,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:57:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 1.336845874786377,
+        "terminal_energy": -3.953829050064087,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:58:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 1.336845874786377,
+        "terminal_energy": -3.953829050064087,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:59:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 1.336845874786377,
+        "terminal_energy": -3.953829050064087,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:57:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:58:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -1.92067289352417,
+        "terminal_energy": -3.9037094116210938,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:53:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 3.847622871398926,
+        "terminal_energy": -5.031256675720215,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:52:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 2.3027806282043457,
+        "terminal_energy": -2.4532289505004883,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:60:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 3.633820056915283,
+        "terminal_energy": -3.0115997791290283,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:61:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 3.633820056915283,
+        "terminal_energy": -3.0115997791290283,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:62:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 3.633820056915283,
+        "terminal_energy": -3.0115997791290283,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:63:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 3.633820056915283,
+        "terminal_energy": -3.0115997791290283,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:60:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 9.142942428588867,
+        "terminal_energy": -2.9920616149902344,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:56:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 7.893011093139648,
+        "terminal_energy": 0.6141672134399414,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:63:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 6.39901876449585,
+        "terminal_energy": -2.9728331565856934,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:59:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 2.069593906402588,
+        "terminal_energy": -1.9131839275360107,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:64:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 1.7810063362121582,
+        "terminal_energy": -2.563514471054077,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:65:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 1.7810063362121582,
+        "terminal_energy": -2.563514471054077,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:66:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 1.7810063362121582,
+        "terminal_energy": -2.563514471054077,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:67:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 1.7810063362121582,
+        "terminal_energy": -2.563514471054077,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:61:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 10.648056030273438,
+        "terminal_energy": 7.660022258758545,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:65:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 7.800876140594482,
+        "terminal_energy": -2.57077693939209,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:67:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:68:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:69:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:70:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:71:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:62:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 10.619760513305664,
+        "terminal_energy": 4.839024543762207,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:66:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.79135274887085,
+        "terminal_energy": -2.5838980674743652,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:69:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 3.719991683959961,
+        "terminal_energy": -6.236571311950684,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:68:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.37773656845092773,
+        "terminal_energy": -6.262052536010742,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:71:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 1.6227807998657227,
+        "terminal_energy": -6.063298225402832,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:72:old",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2482",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": -2.473386287689209,
+        "terminal_energy": -2.976127862930298,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:72:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2482",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.5830972194671631,
+        "terminal_energy": -3.7064685821533203,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:64:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 0.8366336822509766,
+        "terminal_energy": -2.3766560554504395,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      },
+      {
+        "trajectory_id": "round-S-audit:70:proposal",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 5.756381988525391,
+        "terminal_energy": 1.8976349830627441,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+        }
+      }
+    ]
+  },
+  "refined/REFINE_FINAL.json": {
+    "balanced_variant_order": true,
+    "cublas_workspace_config": ":4096:8",
+    "deterministic_algorithms_enabled": true,
+    "deterministic_algorithms_requested": true,
+    "diff_steps": 800,
+    "forward_noise_added": false,
+    "input_study_sha256": "19e48f23fb7aa2b6c697d30bf75d43196895f0f3f17704d5dc91b9cdce1b441c",
+    "model_source": "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diffusion.py",
+    "model_source_sha256": "88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208",
+    "outputs_sha256": {
+      "FINGERPRINTS.json": "54c9104afe764a0bb00cd06d5f8f16f8c9e7c6187a488aadd5af5ae38a29f5e3",
+      "R_repeat_1.jsonl": "0003b1c3a24cc1d2e3cbc99ae57e619e5c4754aa416f57e5f5b773db67d33055",
+      "R_repeat_2.jsonl": "ca8346df7d5c27124a3a834330560f0d24b6ae8904bd911ce78fe1864413df47",
+      "refined_inputs.jsonl": "8f57c4a713d0d2a0a462fe395e1bcdce2b93490a6a5e9a70aee0c21aeeabb139"
+    },
+    "planned": 36,
+    "predeclared_R_repeat_case_subset": true,
+    "same_seed_within_source_and_technical_repeats": true,
+    "selected_case_indices": [
+      0,
+      3,
+      6,
+      8,
+      11,
+      14
+    ],
+    "source_group_assigned_to_one_gpu": true,
+    "source_sha256": "ad3d14c134efd3c100e755b411a7910df9fb910a5323eb67ad0d26812f1781c4",
+    "timesteps": 1000,
+    "world_size": 1
+  },
+  "refined/FINGERPRINTS.json": [
+    {
+      "case_idx": 0,
+      "cuda_rng_after": "f6536ff8e643613a928198fe884bc2a1cadad10732d466871b35f05a8979abc2",
+      "cuda_rng_before": "bf144eb37f7fc11e8cb03d4b90ec86abb028b9f51d73cfe824ed6b8b38e149d4",
+      "output_tensors": {
+        "atom_types": "39bf764d358d7aa4c7754081d2b0874f63fba7f0ea202b4e0d00bcf8d754ecfe",
+        "frac_coords": "406995081ddac08e1715165b551d1b8d40bc323cd4897868c5cb57f8f8e15191",
+        "lattices": "7f11e2a565758f07009abf132f7d67c9aaca2d413f6c01747081663ee9afd2c9",
+        "num_atoms": "0c27700c82d333aa295692f1814040a962d7bc530253af661d97635dd5ed7af9"
+      },
+      "repeat": 0,
+      "variant": "old"
+    },
+    {
+      "case_idx": 0,
+      "cuda_rng_after": "f6536ff8e643613a928198fe884bc2a1cadad10732d466871b35f05a8979abc2",
+      "cuda_rng_before": "bf144eb37f7fc11e8cb03d4b90ec86abb028b9f51d73cfe824ed6b8b38e149d4",
+      "output_tensors": {
+        "atom_types": "39bf764d358d7aa4c7754081d2b0874f63fba7f0ea202b4e0d00bcf8d754ecfe",
+        "frac_coords": "3aeda5f6884a71d4daccaa1b72f2251b73cf50d2d333f8f3088c05ddfcb991a8",
+        "lattices": "88d1ee617b7b9716dc471be915f356197234ffd993c249bce5532d289193442d",
+        "num_atoms": "0c27700c82d333aa295692f1814040a962d7bc530253af661d97635dd5ed7af9"
+      },
+      "repeat": 0,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 0,
+      "cuda_rng_after": "f6536ff8e643613a928198fe884bc2a1cadad10732d466871b35f05a8979abc2",
+      "cuda_rng_before": "bf144eb37f7fc11e8cb03d4b90ec86abb028b9f51d73cfe824ed6b8b38e149d4",
+      "output_tensors": {
+        "atom_types": "39bf764d358d7aa4c7754081d2b0874f63fba7f0ea202b4e0d00bcf8d754ecfe",
+        "frac_coords": "b452ec1e34e41cb0abc80b222d3bb772714871303ce75fa0edf26fd9d99b6d24",
+        "lattices": "ba8c97ce95108e1d98a30382424567a9b195cf3a824ca072972934b2ff8dd0cb",
+        "num_atoms": "0c27700c82d333aa295692f1814040a962d7bc530253af661d97635dd5ed7af9"
+      },
+      "repeat": 0,
+      "variant": "student"
+    },
+    {
+      "case_idx": 3,
+      "cuda_rng_after": "82473f652892456fb95f41b0f47be532fe0dca080f599d36bbdef4ea25e082e9",
+      "cuda_rng_before": "1e4a8cb6ee3c5321410560a1d25040a4667882e6296b6d4e8654969e70e008a2",
+      "output_tensors": {
+        "atom_types": "dc373459fc98ec2690a2f8f258fee7592dcc3c48d4c32d43d49ac61de2e4ed60",
+        "frac_coords": "5e6b21b97566df403b5dd177b3eb361c40d55313f29f616570a7e3e6115c2c80",
+        "lattices": "54ec1a129d878bda1678481a0f14a028d7a8821d798dfbb6adefec67446539f6",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 0,
+      "variant": "old"
+    },
+    {
+      "case_idx": 3,
+      "cuda_rng_after": "82473f652892456fb95f41b0f47be532fe0dca080f599d36bbdef4ea25e082e9",
+      "cuda_rng_before": "1e4a8cb6ee3c5321410560a1d25040a4667882e6296b6d4e8654969e70e008a2",
+      "output_tensors": {
+        "atom_types": "dc373459fc98ec2690a2f8f258fee7592dcc3c48d4c32d43d49ac61de2e4ed60",
+        "frac_coords": "20e2b0733a3c898e537f9f152cfe46fc829f65fab66dbb6a3322c0f65a2d59cf",
+        "lattices": "90a49773141f48933fb58688a348186c1f295208de7f157a4f0a6ef76791d33e",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 0,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 3,
+      "cuda_rng_after": "82473f652892456fb95f41b0f47be532fe0dca080f599d36bbdef4ea25e082e9",
+      "cuda_rng_before": "1e4a8cb6ee3c5321410560a1d25040a4667882e6296b6d4e8654969e70e008a2",
+      "output_tensors": {
+        "atom_types": "dc373459fc98ec2690a2f8f258fee7592dcc3c48d4c32d43d49ac61de2e4ed60",
+        "frac_coords": "5e6b21b97566df403b5dd177b3eb361c40d55313f29f616570a7e3e6115c2c80",
+        "lattices": "54ec1a129d878bda1678481a0f14a028d7a8821d798dfbb6adefec67446539f6",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 0,
+      "variant": "student"
+    },
+    {
+      "case_idx": 6,
+      "cuda_rng_after": "6afc65266cd9f23f6ab2c363bb073b5531759f13a19a60a4c28de281b42c1b6c",
+      "cuda_rng_before": "e19c36aa1887c5c2c83af0c17a7a95bb90a2e8955f511ae9085c4ff2b6bfa1fc",
+      "output_tensors": {
+        "atom_types": "c8d0a35b1e16c49935d69b7211b2e9b3521e23dbc54039f8d8432718ffbc9311",
+        "frac_coords": "fc49cd611cea5b5a398529b4d09aa3cc92f81889bf49cb8226e0d8d6ab8f21c2",
+        "lattices": "f4234a85622c6776eabe1534aa2910b36ed3abb436b957b08ba36867c847debc",
+        "num_atoms": "f13ee6ed54ea2aae9fc49a9faeb5da6e8ddef0e12ed5d30d35a624ae813e0485"
+      },
+      "repeat": 0,
+      "variant": "old"
+    },
+    {
+      "case_idx": 6,
+      "cuda_rng_after": "6afc65266cd9f23f6ab2c363bb073b5531759f13a19a60a4c28de281b42c1b6c",
+      "cuda_rng_before": "e19c36aa1887c5c2c83af0c17a7a95bb90a2e8955f511ae9085c4ff2b6bfa1fc",
+      "output_tensors": {
+        "atom_types": "c8d0a35b1e16c49935d69b7211b2e9b3521e23dbc54039f8d8432718ffbc9311",
+        "frac_coords": "2bb88bb7cd4b9f3041e437cfb38fa257da44f1ddd5705037d39eb172576988ae",
+        "lattices": "d2f5f66819bd0e815fc4eec197f165d2b7d5d23bfbb4d15ef4e4afc974294b69",
+        "num_atoms": "f13ee6ed54ea2aae9fc49a9faeb5da6e8ddef0e12ed5d30d35a624ae813e0485"
+      },
+      "repeat": 0,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 6,
+      "cuda_rng_after": "6afc65266cd9f23f6ab2c363bb073b5531759f13a19a60a4c28de281b42c1b6c",
+      "cuda_rng_before": "e19c36aa1887c5c2c83af0c17a7a95bb90a2e8955f511ae9085c4ff2b6bfa1fc",
+      "output_tensors": {
+        "atom_types": "c8d0a35b1e16c49935d69b7211b2e9b3521e23dbc54039f8d8432718ffbc9311",
+        "frac_coords": "fc49cd611cea5b5a398529b4d09aa3cc92f81889bf49cb8226e0d8d6ab8f21c2",
+        "lattices": "f4234a85622c6776eabe1534aa2910b36ed3abb436b957b08ba36867c847debc",
+        "num_atoms": "f13ee6ed54ea2aae9fc49a9faeb5da6e8ddef0e12ed5d30d35a624ae813e0485"
+      },
+      "repeat": 0,
+      "variant": "student"
+    },
+    {
+      "case_idx": 8,
+      "cuda_rng_after": "47d4a011c56b6d3cc098d60c2517f59ff9611064f5328cce8812bd4db3a123e5",
+      "cuda_rng_before": "89d1269bea3623d61c50db05e3cdc570505da852c4c9551eb02f3658d000b11a",
+      "output_tensors": {
+        "atom_types": "28cdf5a3d7214b5e4b14984e5d41e2965501dcdc26ade1112a3a3717959d701d",
+        "frac_coords": "d6bb493cc618339de8575172a20c59354a9f3284b3c357948a5f6eee9b00da49",
+        "lattices": "e10487b379cbe065d2fe54f1f9f136ad8f6532f76b1ecf3356bac77915c0ea16",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 0,
+      "variant": "student"
+    },
+    {
+      "case_idx": 8,
+      "cuda_rng_after": "47d4a011c56b6d3cc098d60c2517f59ff9611064f5328cce8812bd4db3a123e5",
+      "cuda_rng_before": "89d1269bea3623d61c50db05e3cdc570505da852c4c9551eb02f3658d000b11a",
+      "output_tensors": {
+        "atom_types": "28cdf5a3d7214b5e4b14984e5d41e2965501dcdc26ade1112a3a3717959d701d",
+        "frac_coords": "d6bb493cc618339de8575172a20c59354a9f3284b3c357948a5f6eee9b00da49",
+        "lattices": "e10487b379cbe065d2fe54f1f9f136ad8f6532f76b1ecf3356bac77915c0ea16",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 0,
+      "variant": "old"
+    },
+    {
+      "case_idx": 8,
+      "cuda_rng_after": "47d4a011c56b6d3cc098d60c2517f59ff9611064f5328cce8812bd4db3a123e5",
+      "cuda_rng_before": "89d1269bea3623d61c50db05e3cdc570505da852c4c9551eb02f3658d000b11a",
+      "output_tensors": {
+        "atom_types": "28cdf5a3d7214b5e4b14984e5d41e2965501dcdc26ade1112a3a3717959d701d",
+        "frac_coords": "f514b357dd989e9d0533d821628fddf4e8a1925556417c125ca83833874f44e4",
+        "lattices": "b243f72a1b8822ce1eb41d8a2d86109c9e3762bf39477f9f028f933292f1236c",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 0,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 11,
+      "cuda_rng_after": "efdbf91c336b7c98ac2d11069a5e305a9b92502db28428825ade910e61ebd606",
+      "cuda_rng_before": "5d4f3441eae4b7dc02841e4c277b1a2545453af1b9d97b9cd6b6e81b5af93900",
+      "output_tensors": {
+        "atom_types": "cee878aada330fc02618f870d04c40ecbb32b48febc1e8821191b47a1c7667e8",
+        "frac_coords": "fb49689f0093cc96cac6dc6aac6e9b69effccdd570c44a411cf3f025fe633742",
+        "lattices": "2248aabffb6bd5038979749222e7af7266a1dff606fc6bc5bbac6b5c96907777",
+        "num_atoms": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3"
+      },
+      "repeat": 0,
+      "variant": "student"
+    },
+    {
+      "case_idx": 11,
+      "cuda_rng_after": "efdbf91c336b7c98ac2d11069a5e305a9b92502db28428825ade910e61ebd606",
+      "cuda_rng_before": "5d4f3441eae4b7dc02841e4c277b1a2545453af1b9d97b9cd6b6e81b5af93900",
+      "output_tensors": {
+        "atom_types": "cee878aada330fc02618f870d04c40ecbb32b48febc1e8821191b47a1c7667e8",
+        "frac_coords": "fb49689f0093cc96cac6dc6aac6e9b69effccdd570c44a411cf3f025fe633742",
+        "lattices": "2248aabffb6bd5038979749222e7af7266a1dff606fc6bc5bbac6b5c96907777",
+        "num_atoms": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3"
+      },
+      "repeat": 0,
+      "variant": "old"
+    },
+    {
+      "case_idx": 11,
+      "cuda_rng_after": "efdbf91c336b7c98ac2d11069a5e305a9b92502db28428825ade910e61ebd606",
+      "cuda_rng_before": "5d4f3441eae4b7dc02841e4c277b1a2545453af1b9d97b9cd6b6e81b5af93900",
+      "output_tensors": {
+        "atom_types": "cee878aada330fc02618f870d04c40ecbb32b48febc1e8821191b47a1c7667e8",
+        "frac_coords": "3a91b7aa0b7e8f3735a148b461ece36964ec1b751ce78b06ee4c4b0aa83aa03c",
+        "lattices": "af3ef576e6678caca1510ee3fd1486dd169f848661d7688cd6f058d98e6c8e88",
+        "num_atoms": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3"
+      },
+      "repeat": 0,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 14,
+      "cuda_rng_after": "76df54eb282741a05482846942558c116e5596a1011566102505eb5027a054f5",
+      "cuda_rng_before": "7e6e743fd8f1322e10dc2343edb0043655f6043d4c4cf917286979c004775d1b",
+      "output_tensors": {
+        "atom_types": "f22e7da158e3bbea9bf677861605f4bdd10c1b0be4b8f528a78747fa840b2a50",
+        "frac_coords": "bde5cefe17c3279493de25cbbe65f540cdc71ea065cdccecb9b2a49299b6321a",
+        "lattices": "427a9700cd5eb7c564ee605aa1d4c83a22193499304eddaba99dfcbf63c2c95c",
+        "num_atoms": "f0a0278e4372459cca6159cd5e71cfee638302a7b9ca9b05c34181ac0a65ac5d"
+      },
+      "repeat": 0,
+      "variant": "student"
+    },
+    {
+      "case_idx": 14,
+      "cuda_rng_after": "76df54eb282741a05482846942558c116e5596a1011566102505eb5027a054f5",
+      "cuda_rng_before": "7e6e743fd8f1322e10dc2343edb0043655f6043d4c4cf917286979c004775d1b",
+      "output_tensors": {
+        "atom_types": "f22e7da158e3bbea9bf677861605f4bdd10c1b0be4b8f528a78747fa840b2a50",
+        "frac_coords": "bde5cefe17c3279493de25cbbe65f540cdc71ea065cdccecb9b2a49299b6321a",
+        "lattices": "427a9700cd5eb7c564ee605aa1d4c83a22193499304eddaba99dfcbf63c2c95c",
+        "num_atoms": "f0a0278e4372459cca6159cd5e71cfee638302a7b9ca9b05c34181ac0a65ac5d"
+      },
+      "repeat": 0,
+      "variant": "old"
+    },
+    {
+      "case_idx": 14,
+      "cuda_rng_after": "76df54eb282741a05482846942558c116e5596a1011566102505eb5027a054f5",
+      "cuda_rng_before": "7e6e743fd8f1322e10dc2343edb0043655f6043d4c4cf917286979c004775d1b",
+      "output_tensors": {
+        "atom_types": "f22e7da158e3bbea9bf677861605f4bdd10c1b0be4b8f528a78747fa840b2a50",
+        "frac_coords": "d4c8f36bf96b4aaddd3196e27396bb5196fb7241d13f079c711da8c475c6bf94",
+        "lattices": "9d9759855f4ae7841b23548f5547a486f49c9cbb487d8a39335ee83beaa3150c",
+        "num_atoms": "f0a0278e4372459cca6159cd5e71cfee638302a7b9ca9b05c34181ac0a65ac5d"
+      },
+      "repeat": 0,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 0,
+      "cuda_rng_after": "f6536ff8e643613a928198fe884bc2a1cadad10732d466871b35f05a8979abc2",
+      "cuda_rng_before": "bf144eb37f7fc11e8cb03d4b90ec86abb028b9f51d73cfe824ed6b8b38e149d4",
+      "output_tensors": {
+        "atom_types": "39bf764d358d7aa4c7754081d2b0874f63fba7f0ea202b4e0d00bcf8d754ecfe",
+        "frac_coords": "b452ec1e34e41cb0abc80b222d3bb772714871303ce75fa0edf26fd9d99b6d24",
+        "lattices": "ba8c97ce95108e1d98a30382424567a9b195cf3a824ca072972934b2ff8dd0cb",
+        "num_atoms": "0c27700c82d333aa295692f1814040a962d7bc530253af661d97635dd5ed7af9"
+      },
+      "repeat": 1,
+      "variant": "student"
+    },
+    {
+      "case_idx": 0,
+      "cuda_rng_after": "f6536ff8e643613a928198fe884bc2a1cadad10732d466871b35f05a8979abc2",
+      "cuda_rng_before": "bf144eb37f7fc11e8cb03d4b90ec86abb028b9f51d73cfe824ed6b8b38e149d4",
+      "output_tensors": {
+        "atom_types": "39bf764d358d7aa4c7754081d2b0874f63fba7f0ea202b4e0d00bcf8d754ecfe",
+        "frac_coords": "3aeda5f6884a71d4daccaa1b72f2251b73cf50d2d333f8f3088c05ddfcb991a8",
+        "lattices": "88d1ee617b7b9716dc471be915f356197234ffd993c249bce5532d289193442d",
+        "num_atoms": "0c27700c82d333aa295692f1814040a962d7bc530253af661d97635dd5ed7af9"
+      },
+      "repeat": 1,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 0,
+      "cuda_rng_after": "f6536ff8e643613a928198fe884bc2a1cadad10732d466871b35f05a8979abc2",
+      "cuda_rng_before": "bf144eb37f7fc11e8cb03d4b90ec86abb028b9f51d73cfe824ed6b8b38e149d4",
+      "output_tensors": {
+        "atom_types": "39bf764d358d7aa4c7754081d2b0874f63fba7f0ea202b4e0d00bcf8d754ecfe",
+        "frac_coords": "406995081ddac08e1715165b551d1b8d40bc323cd4897868c5cb57f8f8e15191",
+        "lattices": "7f11e2a565758f07009abf132f7d67c9aaca2d413f6c01747081663ee9afd2c9",
+        "num_atoms": "0c27700c82d333aa295692f1814040a962d7bc530253af661d97635dd5ed7af9"
+      },
+      "repeat": 1,
+      "variant": "old"
+    },
+    {
+      "case_idx": 3,
+      "cuda_rng_after": "82473f652892456fb95f41b0f47be532fe0dca080f599d36bbdef4ea25e082e9",
+      "cuda_rng_before": "1e4a8cb6ee3c5321410560a1d25040a4667882e6296b6d4e8654969e70e008a2",
+      "output_tensors": {
+        "atom_types": "dc373459fc98ec2690a2f8f258fee7592dcc3c48d4c32d43d49ac61de2e4ed60",
+        "frac_coords": "5e6b21b97566df403b5dd177b3eb361c40d55313f29f616570a7e3e6115c2c80",
+        "lattices": "54ec1a129d878bda1678481a0f14a028d7a8821d798dfbb6adefec67446539f6",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 1,
+      "variant": "student"
+    },
+    {
+      "case_idx": 3,
+      "cuda_rng_after": "82473f652892456fb95f41b0f47be532fe0dca080f599d36bbdef4ea25e082e9",
+      "cuda_rng_before": "1e4a8cb6ee3c5321410560a1d25040a4667882e6296b6d4e8654969e70e008a2",
+      "output_tensors": {
+        "atom_types": "dc373459fc98ec2690a2f8f258fee7592dcc3c48d4c32d43d49ac61de2e4ed60",
+        "frac_coords": "20e2b0733a3c898e537f9f152cfe46fc829f65fab66dbb6a3322c0f65a2d59cf",
+        "lattices": "90a49773141f48933fb58688a348186c1f295208de7f157a4f0a6ef76791d33e",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 1,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 3,
+      "cuda_rng_after": "82473f652892456fb95f41b0f47be532fe0dca080f599d36bbdef4ea25e082e9",
+      "cuda_rng_before": "1e4a8cb6ee3c5321410560a1d25040a4667882e6296b6d4e8654969e70e008a2",
+      "output_tensors": {
+        "atom_types": "dc373459fc98ec2690a2f8f258fee7592dcc3c48d4c32d43d49ac61de2e4ed60",
+        "frac_coords": "5e6b21b97566df403b5dd177b3eb361c40d55313f29f616570a7e3e6115c2c80",
+        "lattices": "54ec1a129d878bda1678481a0f14a028d7a8821d798dfbb6adefec67446539f6",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 1,
+      "variant": "old"
+    },
+    {
+      "case_idx": 6,
+      "cuda_rng_after": "6afc65266cd9f23f6ab2c363bb073b5531759f13a19a60a4c28de281b42c1b6c",
+      "cuda_rng_before": "e19c36aa1887c5c2c83af0c17a7a95bb90a2e8955f511ae9085c4ff2b6bfa1fc",
+      "output_tensors": {
+        "atom_types": "c8d0a35b1e16c49935d69b7211b2e9b3521e23dbc54039f8d8432718ffbc9311",
+        "frac_coords": "fc49cd611cea5b5a398529b4d09aa3cc92f81889bf49cb8226e0d8d6ab8f21c2",
+        "lattices": "f4234a85622c6776eabe1534aa2910b36ed3abb436b957b08ba36867c847debc",
+        "num_atoms": "f13ee6ed54ea2aae9fc49a9faeb5da6e8ddef0e12ed5d30d35a624ae813e0485"
+      },
+      "repeat": 1,
+      "variant": "student"
+    },
+    {
+      "case_idx": 6,
+      "cuda_rng_after": "6afc65266cd9f23f6ab2c363bb073b5531759f13a19a60a4c28de281b42c1b6c",
+      "cuda_rng_before": "e19c36aa1887c5c2c83af0c17a7a95bb90a2e8955f511ae9085c4ff2b6bfa1fc",
+      "output_tensors": {
+        "atom_types": "c8d0a35b1e16c49935d69b7211b2e9b3521e23dbc54039f8d8432718ffbc9311",
+        "frac_coords": "2bb88bb7cd4b9f3041e437cfb38fa257da44f1ddd5705037d39eb172576988ae",
+        "lattices": "d2f5f66819bd0e815fc4eec197f165d2b7d5d23bfbb4d15ef4e4afc974294b69",
+        "num_atoms": "f13ee6ed54ea2aae9fc49a9faeb5da6e8ddef0e12ed5d30d35a624ae813e0485"
+      },
+      "repeat": 1,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 6,
+      "cuda_rng_after": "6afc65266cd9f23f6ab2c363bb073b5531759f13a19a60a4c28de281b42c1b6c",
+      "cuda_rng_before": "e19c36aa1887c5c2c83af0c17a7a95bb90a2e8955f511ae9085c4ff2b6bfa1fc",
+      "output_tensors": {
+        "atom_types": "c8d0a35b1e16c49935d69b7211b2e9b3521e23dbc54039f8d8432718ffbc9311",
+        "frac_coords": "fc49cd611cea5b5a398529b4d09aa3cc92f81889bf49cb8226e0d8d6ab8f21c2",
+        "lattices": "f4234a85622c6776eabe1534aa2910b36ed3abb436b957b08ba36867c847debc",
+        "num_atoms": "f13ee6ed54ea2aae9fc49a9faeb5da6e8ddef0e12ed5d30d35a624ae813e0485"
+      },
+      "repeat": 1,
+      "variant": "old"
+    },
+    {
+      "case_idx": 8,
+      "cuda_rng_after": "47d4a011c56b6d3cc098d60c2517f59ff9611064f5328cce8812bd4db3a123e5",
+      "cuda_rng_before": "89d1269bea3623d61c50db05e3cdc570505da852c4c9551eb02f3658d000b11a",
+      "output_tensors": {
+        "atom_types": "28cdf5a3d7214b5e4b14984e5d41e2965501dcdc26ade1112a3a3717959d701d",
+        "frac_coords": "f514b357dd989e9d0533d821628fddf4e8a1925556417c125ca83833874f44e4",
+        "lattices": "b243f72a1b8822ce1eb41d8a2d86109c9e3762bf39477f9f028f933292f1236c",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 1,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 8,
+      "cuda_rng_after": "47d4a011c56b6d3cc098d60c2517f59ff9611064f5328cce8812bd4db3a123e5",
+      "cuda_rng_before": "89d1269bea3623d61c50db05e3cdc570505da852c4c9551eb02f3658d000b11a",
+      "output_tensors": {
+        "atom_types": "28cdf5a3d7214b5e4b14984e5d41e2965501dcdc26ade1112a3a3717959d701d",
+        "frac_coords": "d6bb493cc618339de8575172a20c59354a9f3284b3c357948a5f6eee9b00da49",
+        "lattices": "e10487b379cbe065d2fe54f1f9f136ad8f6532f76b1ecf3356bac77915c0ea16",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 1,
+      "variant": "old"
+    },
+    {
+      "case_idx": 8,
+      "cuda_rng_after": "47d4a011c56b6d3cc098d60c2517f59ff9611064f5328cce8812bd4db3a123e5",
+      "cuda_rng_before": "89d1269bea3623d61c50db05e3cdc570505da852c4c9551eb02f3658d000b11a",
+      "output_tensors": {
+        "atom_types": "28cdf5a3d7214b5e4b14984e5d41e2965501dcdc26ade1112a3a3717959d701d",
+        "frac_coords": "d6bb493cc618339de8575172a20c59354a9f3284b3c357948a5f6eee9b00da49",
+        "lattices": "e10487b379cbe065d2fe54f1f9f136ad8f6532f76b1ecf3356bac77915c0ea16",
+        "num_atoms": "a111f275cc2e7588000001d300a31e76336d15b9d314cd1a1d8f3d3556975eed"
+      },
+      "repeat": 1,
+      "variant": "student"
+    },
+    {
+      "case_idx": 11,
+      "cuda_rng_after": "efdbf91c336b7c98ac2d11069a5e305a9b92502db28428825ade910e61ebd606",
+      "cuda_rng_before": "5d4f3441eae4b7dc02841e4c277b1a2545453af1b9d97b9cd6b6e81b5af93900",
+      "output_tensors": {
+        "atom_types": "cee878aada330fc02618f870d04c40ecbb32b48febc1e8821191b47a1c7667e8",
+        "frac_coords": "3a91b7aa0b7e8f3735a148b461ece36964ec1b751ce78b06ee4c4b0aa83aa03c",
+        "lattices": "af3ef576e6678caca1510ee3fd1486dd169f848661d7688cd6f058d98e6c8e88",
+        "num_atoms": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3"
+      },
+      "repeat": 1,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 11,
+      "cuda_rng_after": "efdbf91c336b7c98ac2d11069a5e305a9b92502db28428825ade910e61ebd606",
+      "cuda_rng_before": "5d4f3441eae4b7dc02841e4c277b1a2545453af1b9d97b9cd6b6e81b5af93900",
+      "output_tensors": {
+        "atom_types": "cee878aada330fc02618f870d04c40ecbb32b48febc1e8821191b47a1c7667e8",
+        "frac_coords": "fb49689f0093cc96cac6dc6aac6e9b69effccdd570c44a411cf3f025fe633742",
+        "lattices": "2248aabffb6bd5038979749222e7af7266a1dff606fc6bc5bbac6b5c96907777",
+        "num_atoms": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3"
+      },
+      "repeat": 1,
+      "variant": "old"
+    },
+    {
+      "case_idx": 11,
+      "cuda_rng_after": "efdbf91c336b7c98ac2d11069a5e305a9b92502db28428825ade910e61ebd606",
+      "cuda_rng_before": "5d4f3441eae4b7dc02841e4c277b1a2545453af1b9d97b9cd6b6e81b5af93900",
+      "output_tensors": {
+        "atom_types": "cee878aada330fc02618f870d04c40ecbb32b48febc1e8821191b47a1c7667e8",
+        "frac_coords": "fb49689f0093cc96cac6dc6aac6e9b69effccdd570c44a411cf3f025fe633742",
+        "lattices": "2248aabffb6bd5038979749222e7af7266a1dff606fc6bc5bbac6b5c96907777",
+        "num_atoms": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3"
+      },
+      "repeat": 1,
+      "variant": "student"
+    },
+    {
+      "case_idx": 14,
+      "cuda_rng_after": "76df54eb282741a05482846942558c116e5596a1011566102505eb5027a054f5",
+      "cuda_rng_before": "7e6e743fd8f1322e10dc2343edb0043655f6043d4c4cf917286979c004775d1b",
+      "output_tensors": {
+        "atom_types": "f22e7da158e3bbea9bf677861605f4bdd10c1b0be4b8f528a78747fa840b2a50",
+        "frac_coords": "d4c8f36bf96b4aaddd3196e27396bb5196fb7241d13f079c711da8c475c6bf94",
+        "lattices": "9d9759855f4ae7841b23548f5547a486f49c9cbb487d8a39335ee83beaa3150c",
+        "num_atoms": "f0a0278e4372459cca6159cd5e71cfee638302a7b9ca9b05c34181ac0a65ac5d"
+      },
+      "repeat": 1,
+      "variant": "teacher"
+    },
+    {
+      "case_idx": 14,
+      "cuda_rng_after": "76df54eb282741a05482846942558c116e5596a1011566102505eb5027a054f5",
+      "cuda_rng_before": "7e6e743fd8f1322e10dc2343edb0043655f6043d4c4cf917286979c004775d1b",
+      "output_tensors": {
+        "atom_types": "f22e7da158e3bbea9bf677861605f4bdd10c1b0be4b8f528a78747fa840b2a50",
+        "frac_coords": "bde5cefe17c3279493de25cbbe65f540cdc71ea065cdccecb9b2a49299b6321a",
+        "lattices": "427a9700cd5eb7c564ee605aa1d4c83a22193499304eddaba99dfcbf63c2c95c",
+        "num_atoms": "f0a0278e4372459cca6159cd5e71cfee638302a7b9ca9b05c34181ac0a65ac5d"
+      },
+      "repeat": 1,
+      "variant": "old"
+    },
+    {
+      "case_idx": 14,
+      "cuda_rng_after": "76df54eb282741a05482846942558c116e5596a1011566102505eb5027a054f5",
+      "cuda_rng_before": "7e6e743fd8f1322e10dc2343edb0043655f6043d4c4cf917286979c004775d1b",
+      "output_tensors": {
+        "atom_types": "f22e7da158e3bbea9bf677861605f4bdd10c1b0be4b8f528a78747fa840b2a50",
+        "frac_coords": "bde5cefe17c3279493de25cbbe65f540cdc71ea065cdccecb9b2a49299b6321a",
+        "lattices": "427a9700cd5eb7c564ee605aa1d4c83a22193499304eddaba99dfcbf63c2c95c",
+        "num_atoms": "f0a0278e4372459cca6159cd5e71cfee638302a7b9ca9b05c34181ac0a65ac5d"
+      },
+      "repeat": 1,
+      "variant": "student"
+    }
+  ],
+  "S_audit_prepared/PREPARATION_FINAL.json": {
+    "purpose": "saved_proposal_gate_audit",
+    "source_split": "dev",
+    "decisions": 73,
+    "source_groups": 19,
+    "all_attempted_S_proposals_included": true,
+    "new_sampling": false,
+    "training_use_allowed": false,
+    "samples_sha256": "80d5bb097b793053f6e3fe60a0a8fce2e0674684100eb6fadb307d459d699550",
+    "receipt_sha256": "36ac757447b0e9af5efabef7a76d363b95f6bac4125748c3ad2403f882dd8b88",
+    "source_sha256": "3360db857b0120e6d0e7795054594740aa26a8019708f8942fb8507d71474fad",
+    "outputs_sha256": {
+      "physics.jsonl": "3a5871ee38248dc334412f9b550d8cd18e280e95dbff6f4f6d325aa4860313b1",
+      "decisions.jsonl": "cc56b109de8b3fc737ab9c2470dd1c008d1a009179e6121b52c93cc8e3d6c159"
+    }
+  },
+  "decisions": [
+    {
+      "decision_idx": 0,
+      "case_idx": 3,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9272607564926147,
+        0.31486886739730835,
+        0.4646447002887726,
+        0.11834250390529633
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 1,
+      "case_idx": 3,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9433819651603699,
+        0.3559771776199341,
+        0.576388418674469,
+        0.1527480036020279
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 2,
+      "case_idx": 3,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9594658613204956,
+        0.32244792580604553,
+        0.6193251013755798,
+        0.15608210861682892
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 3,
+      "case_idx": 3,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4461",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9288315176963806,
+        0.2290143519639969,
+        0.581502377986908,
+        0.15065376460552216
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 4,
+      "case_idx": 9,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9950729012489319,
+        0.39558956027030945,
+        0.7388073205947876,
+        0.19570308923721313
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 5,
+      "case_idx": 9,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9952712655067444,
+        0.41957709193229675,
+        0.7087864875793457,
+        0.15349765121936798
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 6,
+      "case_idx": 9,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9925651550292969,
+        0.35062968730926514,
+        0.7330048680305481,
+        0.19187745451927185
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 7,
+      "case_idx": 9,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3807",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9946841597557068,
+        0.3053930997848511,
+        0.7510505318641663,
+        0.22435931861400604
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 8,
+      "case_idx": 13,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9920444488525391,
+        0.22329925000667572,
+        0.6570921540260315,
+        0.2224431335926056
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 9,
+      "case_idx": 13,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.994425892829895,
+        0.2685272693634033,
+        0.6754649877548218,
+        0.16857317090034485
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 10,
+      "case_idx": 13,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.38239577412605286,
+        0.13410505652427673,
+        0.287990927696228,
+        0.09789405018091202
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 11,
+      "case_idx": 13,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2939",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9970118999481201,
+        0.33603665232658386,
+        0.7084738612174988,
+        0.2097800225019455
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 12,
+      "case_idx": 18,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.98713219165802,
+        0.334766149520874,
+        0.5712905526161194,
+        0.19958439469337463
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 13,
+      "case_idx": 18,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9845466017723083,
+        0.35728946328163147,
+        0.5278339385986328,
+        0.18017931282520294
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 14,
+      "case_idx": 18,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9868912100791931,
+        0.3610193431377411,
+        0.5722811222076416,
+        0.21422286331653595
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 15,
+      "case_idx": 18,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9869229197502136,
+        0.3605785667896271,
+        0.5718759298324585,
+        0.24059349298477173
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 16,
+      "case_idx": 21,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9145090579986572,
+        0.33689939975738525,
+        0.5222160220146179,
+        0.12222667038440704
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 17,
+      "case_idx": 21,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.8618564009666443,
+        0.37193623185157776,
+        0.46053245663642883,
+        0.14104288816452026
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 18,
+      "case_idx": 21,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9356368184089661,
+        0.3561261296272278,
+        0.4657413959503174,
+        0.15886558592319489
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 19,
+      "case_idx": 21,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6637",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9010232090950012,
+        0.34930893778800964,
+        0.4868629574775696,
+        0.13667073845863342
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 20,
+      "case_idx": 24,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9723842144012451,
+        0.13386297225952148,
+        0.5074164271354675,
+        0.07257510721683502
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 21,
+      "case_idx": 24,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.11819496750831604,
+        0.05992667004466057,
+        0.05987412482500076,
+        0.02969321236014366
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 22,
+      "case_idx": 24,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9543081521987915,
+        0.12385336309671402,
+        0.4089151918888092,
+        0.10319990664720535
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 23,
+      "case_idx": 24,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6599",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9768553972244263,
+        0.1552879959344864,
+        0.5544646382331848,
+        0.13161833584308624
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 24,
+      "case_idx": 29,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9976478219032288,
+        0.8217777013778687,
+        0.8520553112030029,
+        0.4040631651878357
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 25,
+      "case_idx": 29,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9885100722312927,
+        0.6851666569709778,
+        0.7410855293273926,
+        0.25821322202682495
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 26,
+      "case_idx": 29,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9830543398857117,
+        0.6279309988021851,
+        0.7451025247573853,
+        0.19511578977108002
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 27,
+      "case_idx": 29,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9859800934791565,
+        0.7364883422851562,
+        0.7751266956329346,
+        0.27322766184806824
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 28,
+      "case_idx": 30,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.8075764775276184,
+        0.46057504415512085,
+        0.46353793144226074,
+        0.26279428601264954
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 29,
+      "case_idx": 30,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.8619810342788696,
+        0.49823835492134094,
+        0.5383589267730713,
+        0.2871440052986145
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 30,
+      "case_idx": 30,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.8994545340538025,
+        0.5068299174308777,
+        0.5501073598861694,
+        0.30642396211624146
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 31,
+      "case_idx": 30,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4431",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.15658032894134521,
+        0.2814452052116394,
+        0.1407688707113266,
+        0.1397303342819214
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 32,
+      "case_idx": 35,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.7113813161849976,
+        0.16764327883720398,
+        0.3165581226348877,
+        0.12318817526102066
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 33,
+      "case_idx": 35,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.8599718809127808,
+        0.12103193253278732,
+        0.4878234565258026,
+        0.15516309440135956
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 34,
+      "case_idx": 35,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.7808533310890198,
+        0.18256951868534088,
+        0.3587333559989929,
+        0.12257211655378342
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 35,
+      "case_idx": 35,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4141",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.7568531632423401,
+        0.15264706313610077,
+        0.3323215842247009,
+        0.12445022165775299
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 36,
+      "case_idx": 45,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9966865181922913,
+        0.7365089654922485,
+        0.8469483256340027,
+        0.18759021162986755
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 37,
+      "case_idx": 45,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9972321391105652,
+        0.6993135213851929,
+        0.8430331349372864,
+        0.14733415842056274
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 38,
+      "case_idx": 45,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9969267249107361,
+        0.6903417706489563,
+        0.8572211265563965,
+        0.1761670708656311
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 39,
+      "case_idx": 45,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3993",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.5826354622840881,
+        0.28503865003585815,
+        0.5644767880439758,
+        0.07678472250699997
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 40,
+      "case_idx": 46,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9211608171463013,
+        0.19246210157871246,
+        0.5716767311096191,
+        0.19098275899887085
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 41,
+      "case_idx": 46,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9387323260307312,
+        0.3016359806060791,
+        0.6197322607040405,
+        0.1847321093082428
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 42,
+      "case_idx": 46,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9285401105880737,
+        0.3165837228298187,
+        0.5730870962142944,
+        0.1838511973619461
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 43,
+      "case_idx": 46,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2969",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9339476823806763,
+        0.2214609831571579,
+        0.5683077573776245,
+        0.21769538521766663
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 44,
+      "case_idx": 47,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.955508291721344,
+        0.07230662554502487,
+        0.5640535354614258,
+        0.09556230157613754
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 45,
+      "case_idx": 47,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9716606736183167,
+        0.08919185400009155,
+        0.5707067847251892,
+        0.08805977553129196
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 46,
+      "case_idx": 47,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9721365571022034,
+        0.0693049281835556,
+        0.5980079770088196,
+        0.075725257396698
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 47,
+      "case_idx": 47,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4519",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9438211917877197,
+        0.0867839977145195,
+        0.5300948619842529,
+        0.06058793514966965
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 48,
+      "case_idx": 51,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.2126232534646988,
+        0.05085032060742378,
+        0.18751205503940582,
+        0.11455465108156204
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 49,
+      "case_idx": 51,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9402567744255066,
+        0.11327651143074036,
+        0.5484955310821533,
+        0.16017356514930725
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 50,
+      "case_idx": 51,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9286984205245972,
+        0.1361304521560669,
+        0.5074008703231812,
+        0.1814669817686081
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 51,
+      "case_idx": 51,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7247",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.947335958480835,
+        0.14749515056610107,
+        0.5268121957778931,
+        0.17622904479503632
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 52,
+      "case_idx": 52,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9973908066749573,
+        0.7973911762237549,
+        0.8048738837242126,
+        0.24472342431545258
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 53,
+      "case_idx": 52,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9956681728363037,
+        0.7091724872589111,
+        0.8209587931632996,
+        0.30480527877807617
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 54,
+      "case_idx": 52,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.3676742613315582,
+        0.4066782593727112,
+        0.20972689986228943,
+        0.04223457723855972
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 55,
+      "case_idx": 52,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3738",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9942805767059326,
+        0.7590948343276978,
+        0.7551052570343018,
+        0.15897484123706818
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 56,
+      "case_idx": 54,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.917222797870636,
+        0.21477176249027252,
+        0.43798986077308655,
+        0.12252550572156906
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 57,
+      "case_idx": 54,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.7544243335723877,
+        0.12482916563749313,
+        0.36835187673568726,
+        0.13139009475708008
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 58,
+      "case_idx": 54,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9017252326011658,
+        0.1342761367559433,
+        0.3999486267566681,
+        0.14812082052230835
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 59,
+      "case_idx": 54,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7390",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9486402869224548,
+        0.1509285718202591,
+        0.52791428565979,
+        0.18287071585655212
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 60,
+      "case_idx": 55,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.8979677557945251,
+        0.5333475470542908,
+        0.42787301540374756,
+        0.13931278884410858
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 61,
+      "case_idx": 55,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9630929827690125,
+        0.5353890657424927,
+        0.6055960059165955,
+        0.197163924574852
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 62,
+      "case_idx": 55,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9719968438148499,
+        0.5547628402709961,
+        0.6561565399169922,
+        0.21630802750587463
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 63,
+      "case_idx": 55,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9759835600852966,
+        0.5992628931999207,
+        0.6038373112678528,
+        0.19671492278575897
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 64,
+      "case_idx": 57,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9419148564338684,
+        0.11019522696733475,
+        0.5265167355537415,
+        0.22036273777484894
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 65,
+      "case_idx": 57,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9683507084846497,
+        0.175163134932518,
+        0.5510313510894775,
+        0.2418108582496643
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 66,
+      "case_idx": 57,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9472573399543762,
+        0.1632193922996521,
+        0.5479519963264465,
+        0.21745191514492035
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 67,
+      "case_idx": 57,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3504",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.22990873456001282,
+        0.037252724170684814,
+        0.1310286968946457,
+        0.06810344755649567
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 68,
+      "case_idx": 58,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.932298481464386,
+        0.0895148441195488,
+        0.6037318110466003,
+        0.1301228255033493
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 69,
+      "case_idx": 58,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+      "round": 2,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9398067593574524,
+        0.09334641695022583,
+        0.6203454732894897,
+        0.16008399426937103
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 70,
+      "case_idx": 58,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+      "round": 3,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.8978177309036255,
+        0.06717266142368317,
+        0.5257803201675415,
+        0.13933083415031433
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 71,
+      "case_idx": 58,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2644",
+      "round": 4,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9496859312057495,
+        0.09532507508993149,
+        0.6125831007957458,
+        0.13180774450302124
+      ],
+      "reason": "learned_reject"
+    },
+    {
+      "decision_idx": 72,
+      "case_idx": 63,
+      "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2482",
+      "round": 1,
+      "mode": "full_cell",
+      "accepted": false,
+      "quality": [
+        0.9024068713188171,
+        0.06997989118099213,
+        0.5947703719139099,
+        0.18854746222496033
+      ],
+      "reason": "learned_reject"
+    }
+  ]
+}

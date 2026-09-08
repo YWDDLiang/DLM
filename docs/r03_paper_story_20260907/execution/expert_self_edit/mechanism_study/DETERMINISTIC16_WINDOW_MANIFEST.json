@@ -1,0 +1,158 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/660fa74e778694c76315d66ee44dbb1e121951a9",
+  "source_identity": {
+    "commit": "660fa74e778694c76315d66ee44dbb1e121951a9",
+    "manifest_sha256": "40e50afaa19448a0a1ba463befb0017b48e2a8c50ce0490188913a9045e84937"
+  },
+  "purpose": "evaluation",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-08T03:19:21+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "endpoints": {
+      "raw": "native",
+      "refined": "tau800"
+    },
+    "requests": 1200,
+    "panel": "retrospective_frozen_H1A2_rich",
+    "panel_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new",
+    "panel_files": {
+      "cohort/cohort.jsonl": {
+        "rows": 1200,
+        "sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722"
+      },
+      "body/control_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "967f0a0ccea66c5d615998fcd377be3deecb65ded879fd25bbacac6e7caede40"
+      },
+      "body/candidate_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "be83b792c339b34a4f2b34c3d84487089dd47a1b7990b5f1a81a371e29a7d77b"
+      }
+    },
+    "success": "either endpoint promising against same-protocol H1A2",
+    "physics_labels": "recompute unless exact complete protocol and endpoint identity match"
+  },
+  "data_contract": {
+    "experiment": "deterministic_F800_composition16",
+    "same_predeclared_16_cases": true,
+    "same_graphs_same_F_seeds_and_same_teachers": true,
+    "source_study": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/prepared/STUDY.json",
+    "variable": "deterministic CUDA execution setting",
+    "does_not_replace_original_frozen_F800_scores": true,
+    "training_use_allowed": false,
+    "wall_limit_revision": "25 minutes chosen before submission to fit remaining extra GPU window; unchanged scientific cases/seeds/outputs"
+  },
+  "components": [
+    {
+      "id": "mechanism_deterministic16",
+      "output_dir": "mechanism_deterministic16",
+      "gpus": 1,
+      "stages": [
+        {
+          "name": "refine",
+          "script": "operations/r03_c3fd_main_20260907/expert_composition_probe.py",
+          "args": [
+            "--mode",
+            "refine",
+            "--prepared-dir",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/prepared",
+            "--checkpoint",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+            "--crysllmgen-dir",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+            "--output-dir",
+            "{output}/refined",
+            "--deterministic"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/prepared/STUDY.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/prepared/graphs.pt"
+          ],
+          "outputs": [
+            "{output}/refined/REFINE_FINAL.json",
+            "{output}/refined/refined_inputs.jsonl",
+            "{output}/refined/R_repeat_1.jsonl",
+            "{output}/refined/R_repeat_2.jsonl",
+            "{output}/refined/_SUCCESS",
+            "{output}/refined/FINGERPRINTS.json"
+          ]
+        },
+        {
+          "name": "labels_refined",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined/refined_inputs.jsonl",
+            "--output-dir",
+            "{output}/labels_refined",
+            "--purpose",
+            "evaluation",
+            "--gpu-count",
+            "1",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "{output}/refined/refined_inputs.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_refined/LABEL_FINAL.json",
+            "{output}/labels_refined/labels.jsonl",
+            "{output}/labels_refined/_SUCCESS"
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "mechanism_deterministic16": {
+      "component_indices": [
+        0
+      ],
+      "gpus_per_task": 1,
+      "cpus_per_task": 6,
+      "parallel_tasks": 1,
+      "wall_minutes": 25,
+      "memory": "96G",
+      "partition": "gpu",
+      "allocation_mode": "single"
+    }
+  },
+  "allocation_observation": {
+    "available_gpus": 6,
+    "available_cpus": 52,
+    "selected_gpus": 6
+  }
+}

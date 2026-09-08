@@ -1,0 +1,548 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/82545094b20448015e8ab4ca34cb92d0119bdab6",
+  "source_identity": {
+    "commit": "82545094b20448015e8ab4ca34cb92d0119bdab6",
+    "manifest_sha256": "d39f489c286f0e3a1540d96ed41d0b51b50f975068e42951a2dbe304eb37992f"
+  },
+  "purpose": "train",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-09T04:00:00+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "endpoints": {
+      "raw": "native",
+      "refined": "tau800"
+    },
+    "requests": 1200,
+    "panel": "retrospective_frozen_H1A2_rich",
+    "panel_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new",
+    "panel_files": {
+      "cohort/cohort.jsonl": {
+        "rows": 1200,
+        "sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722"
+      },
+      "body/control_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "967f0a0ccea66c5d615998fcd377be3deecb65ded879fd25bbacac6e7caede40"
+      },
+      "body/candidate_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "be83b792c339b34a4f2b34c3d84487089dd47a1b7990b5f1a81a371e29a7d77b"
+      }
+    },
+    "success": "either endpoint promising against same-protocol H1A2",
+    "physics_labels": "recompute unless exact complete protocol and endpoint identity match"
+  },
+  "data_contract": {
+    "experiment": "controlled_source_count_at_equal_1600_updates",
+    "training_sources": [
+      64,
+      256
+    ],
+    "fixed_m2t_probability": 1,
+    "shared_content_target": "next_token",
+    "paired_how_development": 64,
+    "variable": "independent_training_ancestor_count",
+    "main_records_not_used_for_gradients": true,
+    "previous_small_proof": {
+      "same_64_dev_sources_repeated_4_seeds": true,
+      "raw_valid": [
+        182,
+        194
+      ],
+      "R_verified": [
+        52,
+        60
+      ]
+    },
+    "interpretation": "raw content learning study; does not establish downstream F800 compatibility"
+  },
+  "components": [
+    {
+      "id": "mechanism_data64_next1600",
+      "output_dir": "mechanism_data64_next1600",
+      "gpus": 3,
+      "stages": [
+        {
+          "name": "train",
+          "script": "src/scripts/train_r03_physics_transfer.py",
+          "distributed_processes": 3,
+          "args": [
+            "--task",
+            "expert-edit",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--model-path",
+            "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+            "--data-dirs",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled",
+            "--output-dir",
+            "{output}/train",
+            "--updates",
+            "1600",
+            "--smoke-sources",
+            "64",
+            "--microbatch",
+            "2",
+            "--accumulation",
+            "4",
+            "--learning-rate",
+            "5e-5",
+            "--module-learning-rate",
+            "1e-4",
+            "--seed",
+            "2026090813",
+            "--content-target-mode",
+            "next_token",
+            "--evaluation-content-target-mode",
+            "next_token",
+            "--m2t-probability",
+            "1",
+            "--time-budget-hours",
+            "1.25",
+            "--training-seconds-already-used",
+            "3678.791464943438",
+            "--eval-every",
+            "200",
+            "--checkpoint-every",
+            "1600",
+            "--eval-examples",
+            "384",
+            "--early-stopping-patience",
+            "0"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/DATA_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/train.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/dev.jsonl"
+          ],
+          "outputs": [
+            "{output}/train/TRAIN_FINAL.json",
+            "{output}/train/TRAIN_CONFIG.json",
+            "{output}/train/curves.jsonl",
+            "{output}/train/checkpoint/CHECKPOINT_FINAL.json",
+            "{output}/train/checkpoint/_CHECKPOINT_SUCCESS",
+            "{output}/train/_SUCCESS"
+          ]
+        },
+        {
+          "name": "how_train",
+          "script": "src/scripts/train_r03_physics_transfer.py",
+          "distributed_processes": 3,
+          "args": [
+            "--task",
+            "expert-edit",
+            "--mode",
+            "sample",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--model-path",
+            "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+            "--checkpoint",
+            "{output}/train/checkpoint",
+            "--data-dirs",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled",
+            "--output-dir",
+            "{output}/how_train",
+            "--source-kind",
+            "positive_edit",
+            "--split",
+            "train",
+            "--force-mode",
+            "full_cell",
+            "--smoke-sources",
+            "64",
+            "--diagnostic-sources",
+            "64",
+            "--sampling-batch-size",
+            "8",
+            "--seed",
+            "2026090813"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/DATA_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/train.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/dev.jsonl",
+            "{output}/train/TRAIN_FINAL.json",
+            "{output}/train/checkpoint/CHECKPOINT_FINAL.json"
+          ],
+          "outputs": [
+            "{output}/how_train/SAMPLE_FINAL.json",
+            "{output}/how_train/samples.jsonl",
+            "{output}/how_train/physics.jsonl",
+            "{output}/how_train/old_physics.jsonl",
+            "{output}/how_train/_SUCCESS"
+          ]
+        },
+        {
+          "name": "how_dev",
+          "script": "src/scripts/train_r03_physics_transfer.py",
+          "distributed_processes": 3,
+          "args": [
+            "--task",
+            "expert-edit",
+            "--mode",
+            "sample",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--model-path",
+            "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+            "--checkpoint",
+            "{output}/train/checkpoint",
+            "--data-dirs",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled",
+            "--output-dir",
+            "{output}/how_dev",
+            "--source-kind",
+            "positive_edit",
+            "--split",
+            "dev",
+            "--force-mode",
+            "full_cell",
+            "--smoke-sources",
+            "64",
+            "--diagnostic-sources",
+            "64",
+            "--sampling-batch-size",
+            "8",
+            "--seed",
+            "2026090813"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/DATA_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/train.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/dev.jsonl",
+            "{output}/train/TRAIN_FINAL.json",
+            "{output}/train/checkpoint/CHECKPOINT_FINAL.json"
+          ],
+          "outputs": [
+            "{output}/how_dev/SAMPLE_FINAL.json",
+            "{output}/how_dev/samples.jsonl",
+            "{output}/how_dev/physics.jsonl",
+            "{output}/how_dev/old_physics.jsonl",
+            "{output}/how_dev/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_train",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/how_train/physics.jsonl",
+            "--output-dir",
+            "{output}/labels_train",
+            "--purpose",
+            "expert_edit",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "{output}/how_train/physics.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_train/LABEL_FINAL.json",
+            "{output}/labels_train/labels.jsonl",
+            "{output}/labels_train/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_dev",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/how_dev/physics.jsonl",
+            "--output-dir",
+            "{output}/labels_dev",
+            "--purpose",
+            "expert_edit",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "{output}/how_dev/physics.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_dev/LABEL_FINAL.json",
+            "{output}/labels_dev/labels.jsonl",
+            "{output}/labels_dev/_SUCCESS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mechanism_data256_next1600",
+      "output_dir": "mechanism_data256_next1600",
+      "gpus": 3,
+      "stages": [
+        {
+          "name": "train",
+          "script": "src/scripts/train_r03_physics_transfer.py",
+          "distributed_processes": 3,
+          "args": [
+            "--task",
+            "expert-edit",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--model-path",
+            "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+            "--data-dirs",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled",
+            "--output-dir",
+            "{output}/train",
+            "--updates",
+            "1600",
+            "--smoke-sources",
+            "256",
+            "--microbatch",
+            "2",
+            "--accumulation",
+            "4",
+            "--learning-rate",
+            "5e-5",
+            "--module-learning-rate",
+            "1e-4",
+            "--seed",
+            "2026090813",
+            "--content-target-mode",
+            "next_token",
+            "--evaluation-content-target-mode",
+            "next_token",
+            "--m2t-probability",
+            "1",
+            "--time-budget-hours",
+            "1.25",
+            "--training-seconds-already-used",
+            "3678.791464943438",
+            "--eval-every",
+            "200",
+            "--checkpoint-every",
+            "1600",
+            "--eval-examples",
+            "384",
+            "--early-stopping-patience",
+            "0"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/DATA_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/train.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/dev.jsonl"
+          ],
+          "outputs": [
+            "{output}/train/TRAIN_FINAL.json",
+            "{output}/train/TRAIN_CONFIG.json",
+            "{output}/train/curves.jsonl",
+            "{output}/train/checkpoint/CHECKPOINT_FINAL.json",
+            "{output}/train/checkpoint/_CHECKPOINT_SUCCESS",
+            "{output}/train/_SUCCESS"
+          ]
+        },
+        {
+          "name": "how_train",
+          "script": "src/scripts/train_r03_physics_transfer.py",
+          "distributed_processes": 3,
+          "args": [
+            "--task",
+            "expert-edit",
+            "--mode",
+            "sample",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--model-path",
+            "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+            "--checkpoint",
+            "{output}/train/checkpoint",
+            "--data-dirs",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled",
+            "--output-dir",
+            "{output}/how_train",
+            "--source-kind",
+            "positive_edit",
+            "--split",
+            "train",
+            "--force-mode",
+            "full_cell",
+            "--smoke-sources",
+            "64",
+            "--diagnostic-sources",
+            "64",
+            "--sampling-batch-size",
+            "8",
+            "--seed",
+            "2026090813"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/DATA_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/train.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/dev.jsonl",
+            "{output}/train/TRAIN_FINAL.json",
+            "{output}/train/checkpoint/CHECKPOINT_FINAL.json"
+          ],
+          "outputs": [
+            "{output}/how_train/SAMPLE_FINAL.json",
+            "{output}/how_train/samples.jsonl",
+            "{output}/how_train/physics.jsonl",
+            "{output}/how_train/old_physics.jsonl",
+            "{output}/how_train/_SUCCESS"
+          ]
+        },
+        {
+          "name": "how_dev",
+          "script": "src/scripts/train_r03_physics_transfer.py",
+          "distributed_processes": 3,
+          "args": [
+            "--task",
+            "expert-edit",
+            "--mode",
+            "sample",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--model-path",
+            "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+            "--checkpoint",
+            "{output}/train/checkpoint",
+            "--data-dirs",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled",
+            "--output-dir",
+            "{output}/how_dev",
+            "--source-kind",
+            "positive_edit",
+            "--split",
+            "dev",
+            "--force-mode",
+            "full_cell",
+            "--smoke-sources",
+            "64",
+            "--diagnostic-sources",
+            "64",
+            "--sampling-batch-size",
+            "8",
+            "--seed",
+            "2026090813"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/DATA_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/train.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_probe/compiled/dev.jsonl",
+            "{output}/train/TRAIN_FINAL.json",
+            "{output}/train/checkpoint/CHECKPOINT_FINAL.json"
+          ],
+          "outputs": [
+            "{output}/how_dev/SAMPLE_FINAL.json",
+            "{output}/how_dev/samples.jsonl",
+            "{output}/how_dev/physics.jsonl",
+            "{output}/how_dev/old_physics.jsonl",
+            "{output}/how_dev/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_train",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/how_train/physics.jsonl",
+            "--output-dir",
+            "{output}/labels_train",
+            "--purpose",
+            "expert_edit",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "{output}/how_train/physics.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_train/LABEL_FINAL.json",
+            "{output}/labels_train/labels.jsonl",
+            "{output}/labels_train/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_dev",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/how_dev/physics.jsonl",
+            "--output-dir",
+            "{output}/labels_dev",
+            "--purpose",
+            "expert_edit",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "{output}/how_dev/physics.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_dev/LABEL_FINAL.json",
+            "{output}/labels_dev/labels.jsonl",
+            "{output}/labels_dev/_SUCCESS"
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "mechanism_datafactor": {
+      "component_indices": [
+        0,
+        1
+      ],
+      "gpus_per_task": 3,
+      "cpus_per_task": 18,
+      "parallel_tasks": 2,
+      "wall_minutes": 90,
+      "memory": "576G",
+      "partition": "gpu",
+      "allocation_mode": "single"
+    }
+  },
+  "allocation_observation": {
+    "available_gpus": 6,
+    "available_cpus": 52,
+    "selected_gpus": 6
+  }
+}

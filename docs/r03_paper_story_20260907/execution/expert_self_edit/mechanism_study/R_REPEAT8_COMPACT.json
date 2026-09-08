@@ -1,0 +1,966 @@
+{
+  "ordinary_R1": {
+    "report": {
+      "requested": 8,
+      "completed": 8,
+      "statuses": {
+        "invalid_raw": 2,
+        "not_converged": 4,
+        "verified": 1,
+        "invalid_terminal": 1
+      },
+      "verification_protocol": {
+        "fresh_terminal_energy": true,
+        "periodic_coordinate_wrap": true,
+        "rigid_fractional_shift": [
+          0.137,
+          0.271,
+          0.419
+        ],
+        "energy_tolerance_eV_atom": 0.001
+      },
+      "distinct_endpoint_evaluations": 8,
+      "protocol": {
+        "model": "CHGNet-0.3.0",
+        "optimizer": "FIRE",
+        "relax_cell": true,
+        "ase_filter": "FrechetCellFilter",
+        "fmax": 0.1,
+        "scalar_pressure": 0.0,
+        "constant_volume": false,
+        "hydrostatic_strain": false,
+        "cell_mask": "all_six",
+        "fire_dt": 0.1,
+        "fire_maxstep": 0.2,
+        "stress_tolerance_GPa": 0.5,
+        "max_steps": 500
+      },
+      "reused_label_source": null,
+      "new_endpoint_evaluations": 8,
+      "gpu_count": 1,
+      "workers_per_gpu": 4,
+      "shard_count": 1,
+      "shard_ranks": [
+        0
+      ],
+      "elapsed_seconds": 31.36400644481182,
+      "purpose": "expert_edit",
+      "engineering_deadlines": {
+        "record_timeout_seconds": 300.0,
+        "worker_startup_timeout_seconds": 120.0,
+        "timeout_is_physical_failure": false
+      },
+      "runtime_identities": [
+        {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        }
+      ],
+      "deterministic_algorithms_requested": false,
+      "input_sha256": "b695777ff72220c20a2841ee76008ffe27dc65f61aedd5763dad5df02a688274",
+      "input_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_R_repeat8_prepared/physics.jsonl",
+      "geometry_validation_protocol": {
+        "minimum_periodic_distance_A": 0.5,
+        "distance_tolerance_A": 1e-08,
+        "minimum_volume_A3": 1e-10,
+        "lattice_basis": "LLL_unimodular",
+        "contact_enumeration": "complete_reciprocal_bound",
+        "max_pair_images": 4000000,
+        "unimodular_rebuild_from_original": true,
+        "numeric_error_budget_A": 1e-09
+      }
+    },
+    "rows": [
+      {
+        "trajectory_id": "round-probe:3:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:11:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:8:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.37291479110717773,
+        "terminal_energy": -5.495501518249512,
+        "actual_steps": 88,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:29:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.776979923248291,
+        "terminal_energy": -4.734116077423096,
+        "actual_steps": 87,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:0:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -1.3623051643371582,
+        "terminal_energy": -8.649544715881348,
+        "actual_steps": 200,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:14:r2",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.190478324890137,
+        "terminal_energy": -4.887269020080566,
+        "actual_steps": 259,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:62:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": 1.3134918212890625,
+        "terminal_energy": -5.609070777893066,
+        "actual_steps": 216,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:6:r2",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": -1.5108556747436523,
+        "terminal_energy": -5.028627395629883,
+        "actual_steps": 500,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      }
+    ]
+  },
+  "ordinary_R2": {
+    "report": {
+      "requested": 8,
+      "completed": 8,
+      "statuses": {
+        "invalid_raw": 2,
+        "not_converged": 3,
+        "verified": 1,
+        "invalid_terminal": 2
+      },
+      "verification_protocol": {
+        "fresh_terminal_energy": true,
+        "periodic_coordinate_wrap": true,
+        "rigid_fractional_shift": [
+          0.137,
+          0.271,
+          0.419
+        ],
+        "energy_tolerance_eV_atom": 0.001
+      },
+      "distinct_endpoint_evaluations": 8,
+      "protocol": {
+        "model": "CHGNet-0.3.0",
+        "optimizer": "FIRE",
+        "relax_cell": true,
+        "ase_filter": "FrechetCellFilter",
+        "fmax": 0.1,
+        "scalar_pressure": 0.0,
+        "constant_volume": false,
+        "hydrostatic_strain": false,
+        "cell_mask": "all_six",
+        "fire_dt": 0.1,
+        "fire_maxstep": 0.2,
+        "stress_tolerance_GPa": 0.5,
+        "max_steps": 500
+      },
+      "reused_label_source": null,
+      "new_endpoint_evaluations": 8,
+      "gpu_count": 1,
+      "workers_per_gpu": 4,
+      "shard_count": 1,
+      "shard_ranks": [
+        0
+      ],
+      "elapsed_seconds": 40.62298675067723,
+      "purpose": "expert_edit",
+      "engineering_deadlines": {
+        "record_timeout_seconds": 300.0,
+        "worker_startup_timeout_seconds": 120.0,
+        "timeout_is_physical_failure": false
+      },
+      "runtime_identities": [
+        {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        }
+      ],
+      "deterministic_algorithms_requested": false,
+      "input_sha256": "b695777ff72220c20a2841ee76008ffe27dc65f61aedd5763dad5df02a688274",
+      "input_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_R_repeat8_prepared/physics.jsonl",
+      "geometry_validation_protocol": {
+        "minimum_periodic_distance_A": 0.5,
+        "distance_tolerance_A": 1e-08,
+        "minimum_volume_A3": 1e-10,
+        "lattice_basis": "LLL_unimodular",
+        "contact_enumeration": "complete_reciprocal_bound",
+        "max_pair_images": 4000000,
+        "unimodular_rebuild_from_original": true,
+        "numeric_error_budget_A": 1e-09
+      }
+    },
+    "rows": [
+      {
+        "trajectory_id": "round-probe:3:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:11:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:8:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.37291479110717773,
+        "terminal_energy": -5.495502948760986,
+        "actual_steps": 88,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:0:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -1.3623051643371582,
+        "terminal_energy": -8.649545669555664,
+        "actual_steps": 200,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:29:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.7769789695739746,
+        "terminal_energy": -4.868648052215576,
+        "actual_steps": 142,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:14:r2",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.190478324890137,
+        "terminal_energy": -4.881463527679443,
+        "actual_steps": 289,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:6:r2",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": -1.5108566284179688,
+        "terminal_energy": -4.905988693237305,
+        "actual_steps": 500,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:62:r2",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 1.3134918212890625,
+        "terminal_energy": -4.8458356857299805,
+        "actual_steps": 500,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": false,
+          "cublas_workspace_config": null
+        },
+        "error": null
+      }
+    ]
+  },
+  "deterministic_R1": {
+    "report": {
+      "requested": 8,
+      "completed": 8,
+      "statuses": {
+        "invalid_raw": 2,
+        "not_converged": 3,
+        "verified": 1,
+        "invalid_terminal": 2
+      },
+      "verification_protocol": {
+        "fresh_terminal_energy": true,
+        "periodic_coordinate_wrap": true,
+        "rigid_fractional_shift": [
+          0.137,
+          0.271,
+          0.419
+        ],
+        "energy_tolerance_eV_atom": 0.001
+      },
+      "distinct_endpoint_evaluations": 8,
+      "protocol": {
+        "model": "CHGNet-0.3.0",
+        "optimizer": "FIRE",
+        "relax_cell": true,
+        "ase_filter": "FrechetCellFilter",
+        "fmax": 0.1,
+        "scalar_pressure": 0.0,
+        "constant_volume": false,
+        "hydrostatic_strain": false,
+        "cell_mask": "all_six",
+        "fire_dt": 0.1,
+        "fire_maxstep": 0.2,
+        "stress_tolerance_GPa": 0.5,
+        "max_steps": 500
+      },
+      "reused_label_source": null,
+      "new_endpoint_evaluations": 8,
+      "gpu_count": 1,
+      "workers_per_gpu": 4,
+      "shard_count": 1,
+      "shard_ranks": [
+        0
+      ],
+      "elapsed_seconds": 73.99261267855763,
+      "purpose": "expert_edit",
+      "engineering_deadlines": {
+        "record_timeout_seconds": 300.0,
+        "worker_startup_timeout_seconds": 120.0,
+        "timeout_is_physical_failure": false
+      },
+      "runtime_identities": [
+        {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      ],
+      "deterministic_algorithms_requested": true,
+      "input_sha256": "b695777ff72220c20a2841ee76008ffe27dc65f61aedd5763dad5df02a688274",
+      "input_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_R_repeat8_prepared/physics.jsonl",
+      "geometry_validation_protocol": {
+        "minimum_periodic_distance_A": 0.5,
+        "distance_tolerance_A": 1e-08,
+        "minimum_volume_A3": 1e-10,
+        "lattice_basis": "LLL_unimodular",
+        "contact_enumeration": "complete_reciprocal_bound",
+        "max_pair_images": 4000000,
+        "unimodular_rebuild_from_original": true,
+        "numeric_error_budget_A": 1e-09
+      }
+    },
+    "rows": [
+      {
+        "trajectory_id": "round-probe:3:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:11:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:8:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.37291479110717773,
+        "terminal_energy": -5.495501518249512,
+        "actual_steps": 88,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:0:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -1.3623051643371582,
+        "terminal_energy": -8.649542808532715,
+        "actual_steps": 200,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:29:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.7769794464111328,
+        "terminal_energy": -4.743725776672363,
+        "actual_steps": 117,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:14:r2",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.190478324890137,
+        "terminal_energy": -4.885830879211426,
+        "actual_steps": 250,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:6:r2",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": -1.5108561515808105,
+        "terminal_energy": -4.905819416046143,
+        "actual_steps": 500,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:62:r2",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 1.313490867614746,
+        "terminal_energy": -4.684917449951172,
+        "actual_steps": 500,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      }
+    ]
+  },
+  "deterministic_R2": {
+    "report": {
+      "requested": 8,
+      "completed": 8,
+      "statuses": {
+        "invalid_raw": 2,
+        "not_converged": 3,
+        "verified": 1,
+        "invalid_terminal": 2
+      },
+      "verification_protocol": {
+        "fresh_terminal_energy": true,
+        "periodic_coordinate_wrap": true,
+        "rigid_fractional_shift": [
+          0.137,
+          0.271,
+          0.419
+        ],
+        "energy_tolerance_eV_atom": 0.001
+      },
+      "distinct_endpoint_evaluations": 8,
+      "protocol": {
+        "model": "CHGNet-0.3.0",
+        "optimizer": "FIRE",
+        "relax_cell": true,
+        "ase_filter": "FrechetCellFilter",
+        "fmax": 0.1,
+        "scalar_pressure": 0.0,
+        "constant_volume": false,
+        "hydrostatic_strain": false,
+        "cell_mask": "all_six",
+        "fire_dt": 0.1,
+        "fire_maxstep": 0.2,
+        "stress_tolerance_GPa": 0.5,
+        "max_steps": 500
+      },
+      "reused_label_source": null,
+      "new_endpoint_evaluations": 8,
+      "gpu_count": 1,
+      "workers_per_gpu": 4,
+      "shard_count": 1,
+      "shard_ranks": [
+        0
+      ],
+      "elapsed_seconds": 74.52135292813182,
+      "purpose": "expert_edit",
+      "engineering_deadlines": {
+        "record_timeout_seconds": 300.0,
+        "worker_startup_timeout_seconds": 120.0,
+        "timeout_is_physical_failure": false
+      },
+      "runtime_identities": [
+        {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      ],
+      "deterministic_algorithms_requested": true,
+      "input_sha256": "b695777ff72220c20a2841ee76008ffe27dc65f61aedd5763dad5df02a688274",
+      "input_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_R_repeat8_prepared/physics.jsonl",
+      "geometry_validation_protocol": {
+        "minimum_periodic_distance_A": 0.5,
+        "distance_tolerance_A": 1e-08,
+        "minimum_volume_A3": 1e-10,
+        "lattice_basis": "LLL_unimodular",
+        "contact_enumeration": "complete_reciprocal_bound",
+        "max_pair_images": 4000000,
+        "unimodular_rebuild_from_original": true,
+        "numeric_error_budget_A": 1e-09
+      }
+    },
+    "rows": [
+      {
+        "trajectory_id": "round-probe:3:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:11:r2",
+        "status": "invalid_raw",
+        "verified": false,
+        "raw_energy": null,
+        "terminal_energy": null,
+        "actual_steps": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": "InvalidPeriodicGeometry: periodic geometry violates the common 0.5 Angstrom support"
+      },
+      {
+        "trajectory_id": "round-probe:8:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.37291479110717773,
+        "terminal_energy": -5.495501518249512,
+        "actual_steps": 88,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:0:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -1.3623051643371582,
+        "terminal_energy": -8.649542808532715,
+        "actual_steps": 200,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:29:r2",
+        "status": "not_converged",
+        "verified": false,
+        "raw_energy": -0.7769794464111328,
+        "terminal_energy": -4.743725776672363,
+        "actual_steps": 117,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:14:r2",
+        "status": "verified",
+        "verified": true,
+        "raw_energy": 4.190478324890137,
+        "terminal_energy": -4.885830879211426,
+        "actual_steps": 250,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:6:r2",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": -1.5108561515808105,
+        "terminal_energy": -4.905819416046143,
+        "actual_steps": 500,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      },
+      {
+        "trajectory_id": "round-probe:62:r2",
+        "status": "invalid_terminal",
+        "verified": false,
+        "raw_energy": 1.313490867614746,
+        "terminal_energy": -4.684917449951172,
+        "actual_steps": 500,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        },
+        "error": null
+      }
+    ]
+  }
+}

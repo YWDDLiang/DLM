@@ -1,0 +1,176 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/2fbeb2b6040d27f08d056cade917eec26eaa6742",
+  "source_identity": {
+    "commit": "2fbeb2b6040d27f08d056cade917eec26eaa6742",
+    "manifest_sha256": "1de9d06716767ed8443be0e70360a8b94d1262e183a3318b38b1480537c5d268"
+  },
+  "purpose": "evaluation",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-08T03:19:21+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "endpoints": {
+      "raw": "native",
+      "refined": "tau800"
+    },
+    "requests": 1200,
+    "panel": "retrospective_frozen_H1A2_rich",
+    "panel_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new",
+    "panel_files": {
+      "cohort/cohort.jsonl": {
+        "rows": 1200,
+        "sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722"
+      },
+      "body/control_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "967f0a0ccea66c5d615998fcd377be3deecb65ded879fd25bbacac6e7caede40"
+      },
+      "body/candidate_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "be83b792c339b34a4f2b34c3d84487089dd47a1b7990b5f1a81a371e29a7d77b"
+      }
+    },
+    "success": "either endpoint promising against same-protocol H1A2",
+    "physics_labels": "recompute unless exact complete protocol and endpoint identity match"
+  },
+  "data_contract": {
+    "experiment": "composition16_label_stage_recovery",
+    "reason": "tau800 endpoints require evaluation label purpose; original F tensors and input JSONL preserved",
+    "no_new_F_sampling": true,
+    "training_use_allowed": false
+  },
+  "components": [
+    {
+      "id": "mechanism_composition16_labels",
+      "output_dir": "mechanism_composition16_labels",
+      "gpus": 1,
+      "stages": [
+        {
+          "name": "labels_refined",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/refined/refined_inputs.jsonl",
+            "--output-dir",
+            "{output}/labels_refined",
+            "--purpose",
+            "evaluation",
+            "--gpu-count",
+            "1",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/refined/refined_inputs.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_refined/LABEL_FINAL.json",
+            "{output}/labels_refined/labels.jsonl",
+            "{output}/labels_refined/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_R_repeat1",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/refined/R_repeat_1.jsonl",
+            "--output-dir",
+            "{output}/labels_R_repeat1",
+            "--purpose",
+            "evaluation",
+            "--gpu-count",
+            "1",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/refined/R_repeat_1.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_R_repeat1/LABEL_FINAL.json",
+            "{output}/labels_R_repeat1/labels.jsonl",
+            "{output}/labels_R_repeat1/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_R_repeat2",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/refined/R_repeat_2.jsonl",
+            "--output-dir",
+            "{output}/labels_R_repeat2",
+            "--purpose",
+            "evaluation",
+            "--gpu-count",
+            "1",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_composition16/refined/R_repeat_2.jsonl"
+          ],
+          "outputs": [
+            "{output}/labels_R_repeat2/LABEL_FINAL.json",
+            "{output}/labels_R_repeat2/labels.jsonl",
+            "{output}/labels_R_repeat2/_SUCCESS"
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "mechanism_composition16_labels": {
+      "component_indices": [
+        0
+      ],
+      "gpus_per_task": 1,
+      "cpus_per_task": 6,
+      "parallel_tasks": 1,
+      "wall_minutes": 20,
+      "memory": "96G",
+      "partition": "gpu",
+      "allocation_mode": "single"
+    }
+  },
+  "allocation_observation": {
+    "available_gpus": 6,
+    "available_cpus": 52,
+    "selected_gpus": 6
+  }
+}
