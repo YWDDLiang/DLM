@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import inspect
 import json
+import os
 from pathlib import Path
 import random
 import sys
@@ -141,6 +142,9 @@ def prepare(args):
 
 
 def refine(args):
+    if args.deterministic:
+        # Must precede CUDA context creation. This is an explicit diagnostic arm.
+        os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
     import numpy as np
     import torch
     from crystal_dlm.expert_edit_data import physics_input, write_rows
@@ -148,6 +152,10 @@ def refine(args):
     from crystal_dlm.fixed_slot import Z_TO_SYMBOL
     prepared = args.prepared_dir
     study = json.loads((prepared / 'STUDY.json').read_text())
+    if args.deterministic:
+        torch.use_deterministic_algorithms(True)
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
     if study['graphs_sha256'] != digest(prepared / 'graphs.pt') or study['training_use_allowed'] is not False:
         raise ValueError('paired probe input identity changed')
     if digest(args.checkpoint) != '573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e':
@@ -170,7 +178,7 @@ def refine(args):
     del saved
     model.eval()
     graphs = torch.load(prepared / 'graphs.pt', map_location='cpu', weights_only=False)
-    results, tensors = [], []
+    results, tensors, fingerprints = [], [], []
     local_jobs = [job for job in study['schedule'] if job['case_idx'] % world == rank]
     with torch.no_grad():
         for job in local_jobs:
@@ -183,6 +191,7 @@ def refine(args):
                 random.seed(seed); np.random.seed(seed % 2**32)
                 torch.manual_seed(seed); torch.cuda.manual_seed_all(seed)
                 batch = next(iter(DataLoader(ProposalDataset([graph], Data), batch_size=1, shuffle=False))).to(device)
+                before_rng = hashlib.sha256(torch.cuda.get_rng_state(device).cpu().numpy().tobytes()).hexdigest()
                 value, _ = model.sample(batch, diff_steps=800)
                 value = {k: v.detach().cpu() for k, v in value.items() if isinstance(v, torch.Tensor)}
                 lengths, angles = lattices_to_params_shape(value['lattices'])
@@ -190,6 +199,10 @@ def refine(args):
                           'species': [Z_TO_SYMBOL[int(z)] for z in value['atom_types'].reshape(-1)],
                           'frac_coords': value['frac_coords'].reshape(-1, 3).tolist()}
                 tensors.append({'job': job, 'output': value})
+                fingerprints.append({'case_idx': job['case_idx'], 'variant': job['variant'],
+                    'repeat': job['technical_repeat'], 'cuda_rng_before': before_rng,
+                    'cuda_rng_after': hashlib.sha256(torch.cuda.get_rng_state(device).cpu().numpy().tobytes()).hexdigest(),
+                    'output_tensors': {k: hashlib.sha256(v.contiguous().numpy().tobytes()).hexdigest() for k, v in value.items()}})
             pid = f'composition-refined:{job["technical_repeat"]}:{key}'
             row = physics_input(pid, case['ancestor_id'], case['source_row_idx'], 'dev', 'tau800', arrays)
             row.update(probe_case=job['case_idx'], probe_variant=job['variant'], technical_repeat=job['technical_repeat'],
@@ -199,6 +212,7 @@ def refine(args):
             print(json.dumps({'rank': rank, 'completed': len(results), 'planned': len(local_jobs)}), flush=True)
     write_rows(output / 'refined_inputs.jsonl', results)
     torch.save(tensors, output / 'outputs.pt')
+    write_json(output / 'FINGERPRINTS.json', fingerprints)
     if world > 1:
         torch.distributed.barrier()
     if rank != 0:
@@ -215,10 +229,16 @@ def refine(args):
     repeats = [x for x in results if x['technical_repeat'] == 0 and x['probe_case'] in study['R_repeat_cases']]
     for repeat in (1, 2):
         write_rows(args.output_dir / f'R_repeat_{repeat}.jsonl', [dict(x, trajectory_id=x['trajectory_id'] + f':R{repeat}') for x in repeats])
+    all_fingerprints = [row for worker in range(world)
+                        for row in json.loads((args.output_dir / f'rank{worker}/FINGERPRINTS.json').read_text())]
+    write_json(args.output_dir / 'FINGERPRINTS.json', all_fingerprints)
     write_json(args.output_dir / 'REFINE_FINAL.json', {'planned': len(results), 'input_study_sha256': digest(prepared / 'STUDY.json'),
         'same_seed_within_source_and_technical_repeats': True, 'balanced_variant_order': True,
         'world_size': world, 'source_group_assigned_to_one_gpu': True,
         'forward_noise_added': False, 'diff_steps': 800, 'timesteps': 1000, 'source_sha256': digest(__file__),
+        'deterministic_algorithms_requested': args.deterministic,
+        'deterministic_algorithms_enabled': torch.are_deterministic_algorithms_enabled(),
+        'cublas_workspace_config': os.environ.get('CUBLAS_WORKSPACE_CONFIG'),
         'model_source': inspect.getfile(Model), 'model_source_sha256': digest(inspect.getfile(Model)),
         'outputs_sha256': {p.name: digest(p) for p in args.output_dir.glob('*') if p.is_file()}})
     (args.output_dir / '_SUCCESS').touch()
@@ -234,5 +254,6 @@ if __name__ == '__main__':
         parser.add_argument('--' + name, type=Path)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--seed', type=int, default=2026090817)
+    parser.add_argument('--deterministic', action='store_true', help='Explicit deterministic-kernel diagnostic; not the frozen original F800 runtime')
     args = parser.parse_args()
     prepare(args) if args.mode == 'prepare' else refine(args)
