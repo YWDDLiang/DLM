@@ -18,6 +18,7 @@ def main():
     p.add_argument('--training-config',type=Path)
     p.add_argument('--cache',type=Path)
     p.add_argument('--score-attempt',default='scoring')
+    p.add_argument('--reuse-endpoints',type=Path,nargs='*',default=[])
     a=p.parse_args();root=a.root.resolve();cfg=json.loads(a.config.read_text())
     cohort=Path(cfg['run_root']);relative=cohort.relative_to(root)
     source=Path(__file__).resolve().parents[2]
@@ -43,6 +44,10 @@ def main():
         if training:
             feedback=cohort/a.stage/'FEEDBACK_MANIFEST.json'
             args+=['--feedback-manifest',str(feedback)];inputs+=[str(feedback)]
+        if a.reuse_endpoints:
+            script='scripts/label_rsi_cached_endpoints.py'
+            args+=['--reuse-endpoints',*[str(v) for v in a.reuse_endpoints]]
+            inputs+=[str(v/'LABEL_FINAL.json') for v in a.reuse_endpoints]
         outputs=['{output}/result/LABEL_FINAL.json','{output}/result/labels.jsonl']
     elif a.action=='score':
         if not a.score_attempt.replace('_','').isalnum(): p.error('invalid score attempt name')
@@ -88,7 +93,7 @@ def main():
             'outputs':['{output}/result/BASIC_METRICS.json','{output}/result/four_metrics.jsonl']})
     pipeline['components']=[{'id':a.job,'output_dir':str(directory),'gpus':gpu,'stages':stages}]
     pipeline['jobs']={a.job:{'component_indices':[0],'gpus_per_task':gpu,'cpus_per_task':4*gpu if gpu else 8,
-        'parallel_tasks':1,'wall_minutes':a.minutes,'memory':f'{96*gpu}G' if gpu else '64G',
+        'parallel_tasks':1,'wall_minutes':a.minutes,'memory':f'{(32 if a.action in ("label","refine") else 96)*gpu}G' if gpu else '64G',
         'partition':'gpu' if gpu else 'normal'}}
     manifest=root/(a.job+'_PIPELINE.json')
     if manifest.exists():
