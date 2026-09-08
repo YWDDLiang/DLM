@@ -1,0 +1,320 @@
+{
+  "schema": "k4_k8_saved_geometry_validity_recovery_v1",
+  "created_utc": "2026-09-08T02:24:27.525352+00:00",
+  "scope": "read-only saved-artifact analysis; no model, GPU, MLIP or new SUN evaluation",
+  "structure_evaluator": {
+    "path": "D:\\codex_work\\ai4s\\diffsion_language_model_meets_diffusion\\workstreams\\plangraph_dlm_iclr_20260731\\execution\\h1_body_safeaxis_refined_repeats4_v1\\runtime\\crystal_dlm\\wqcodiff\\crysllmgen\\upstream\\eval_utils.py",
+    "file_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+    "function": "structure_validity",
+    "function_source_sha256": "dd8f2fb7b6689cc4c69db129b63b353ef76c2d2c6315d087faa23750612a30b6",
+    "cutoff_A": 0.5,
+    "minimum_volume_A3": 0.1,
+    "source_function_executed_without_changes": true
+  },
+  "runtime": {
+    "python": "3.12.14",
+    "numpy": "1.26.4",
+    "pymatgen": "2025.6.14"
+  },
+  "metric_basis": {
+    "Struct_valid": "recomputed from saved exact lattice matrix and fractional coordinates using the frozen distance/volume-only function",
+    "SUN_and_MSUN": "copied from the source-bound historical SUN snapshot; not recomputed",
+    "comp_valid": "null: not present in these historical SUN reports; no SMACT evaluation performed"
+  },
+  "geometry_adapter": "Saved geometry excerpts omit some/all chemical identities. H placeholders supply only site count; the frozen structure_validity function reads only distance_matrix and volume. No geometry, atom order, rounding, filtering or species-dependent property is changed/read.",
+  "all_request_denominators_preserved": true,
+  "missing_are_not_replaced": true,
+  "source_files": {
+    "old_cases": {
+      "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_v3_failure_20260907\\old_cases.json",
+      "sha256": "f2f07653920cc2b1304a0e13f40f53ceeaae93ee0089701e2a2dc0ce86f98a82"
+    },
+    "sun_snapshot": {
+      "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\h1a2_to_current_review_20260907\\evidence\\september7_completed_snapshot.json",
+      "sha256": "6d208936ac51670cee43c4a41854f040161aeea6ea03d643dfe36a079b966dd1"
+    },
+    "k8_native_geometry": {
+      "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\physics_inputs\\k8_native.paths.jsonl",
+      "sha256": "d8e8f465f9e7926bbbb3467b3e0f0bbbc2ed77ff2a679f8369a7c315782dc11d"
+    },
+    "k8_tau800_geometry": {
+      "path": "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence\\physics_inputs\\k8_tau800.paths.jsonl",
+      "sha256": "eae22af4972824ab47fb802a1a45026fde3f816ef9fb57911967091c34da36be"
+    }
+  },
+  "cells": [
+    {
+      "method": "K4",
+      "cohort": "fixed_development256",
+      "endpoint": "raw",
+      "requests": 256,
+      "counts": {
+        "comp_valid": null,
+        "Struct_valid": 254,
+        "SUN": 7,
+        "MSUN": 57
+      },
+      "Struct_valid_percent": 99.21875,
+      "missing_structures": [
+        {
+          "sample_idx": 69,
+          "trajectory_id": "eval:69:0:0"
+        },
+        {
+          "sample_idx": 124,
+          "trajectory_id": "eval:124:0:0"
+        }
+      ],
+      "invalid_structures": [],
+      "geometry_source": "old_cases",
+      "geometry_json_pointer": "/endpoints/k4_native/rows",
+      "source_record_order_sha256": "acae898d56722bc866f8292fb5dd7db1da39de1c91f541efb8cc23f8418568eb",
+      "sun_source": "sun_snapshot",
+      "sun_json_pointer": "/development/1/raw/counts",
+      "original_sun_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39910/evaluation/EVALUATION_FINAL.json",
+      "original_sun_report_sha256": "7313ea95313c098dd705b7549bc974567250666c44167b817686a47b371d1644"
+    },
+    {
+      "method": "K4",
+      "cohort": "fixed_development256",
+      "endpoint": "refined",
+      "requests": 256,
+      "counts": {
+        "comp_valid": null,
+        "Struct_valid": 253,
+        "SUN": 19,
+        "MSUN": 126
+      },
+      "Struct_valid_percent": 98.828125,
+      "missing_structures": [
+        {
+          "sample_idx": 69,
+          "trajectory_id": "eval:69:0:0"
+        },
+        {
+          "sample_idx": 124,
+          "trajectory_id": "eval:124:0:0"
+        }
+      ],
+      "invalid_structures": [
+        {
+          "sample_idx": 23,
+          "trajectory_id": "eval:23:0:0"
+        }
+      ],
+      "geometry_source": "old_cases",
+      "geometry_json_pointer": "/endpoints/k4_tau/rows",
+      "source_record_order_sha256": "acae898d56722bc866f8292fb5dd7db1da39de1c91f541efb8cc23f8418568eb",
+      "sun_source": "sun_snapshot",
+      "sun_json_pointer": "/development/1/tau800/counts",
+      "original_sun_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39910/evaluation/EVALUATION_FINAL.json",
+      "original_sun_report_sha256": "6f6ff26fd9ec18156cb42211387f8b761f70a25d575bdc6052cec609fe14ace0"
+    },
+    {
+      "method": "K8",
+      "cohort": "fixed_development256",
+      "endpoint": "raw",
+      "requests": 256,
+      "counts": {
+        "comp_valid": null,
+        "Struct_valid": 252,
+        "SUN": 11,
+        "MSUN": 66
+      },
+      "Struct_valid_percent": 98.4375,
+      "missing_structures": [
+        {
+          "sample_idx": 0,
+          "trajectory_id": "eval:0:0:0"
+        },
+        {
+          "sample_idx": 69,
+          "trajectory_id": "eval:69:0:0"
+        },
+        {
+          "sample_idx": 136,
+          "trajectory_id": "eval:136:0:0"
+        },
+        {
+          "sample_idx": 206,
+          "trajectory_id": "eval:206:0:0"
+        }
+      ],
+      "invalid_structures": [],
+      "geometry_source": "old_cases",
+      "geometry_json_pointer": "/endpoints/k8_native/rows",
+      "source_record_order_sha256": "acae898d56722bc866f8292fb5dd7db1da39de1c91f541efb8cc23f8418568eb",
+      "sun_source": "sun_snapshot",
+      "sun_json_pointer": "/development/2/raw/counts",
+      "original_sun_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_eval_method_39945/evaluation/EVALUATION_FINAL.json",
+      "original_sun_report_sha256": "e636b39923a4c723ccf55758fd9bcb324342c5917fb7ccc085985ad0419fde45"
+    },
+    {
+      "method": "K8",
+      "cohort": "fixed_development256",
+      "endpoint": "refined",
+      "requests": 256,
+      "counts": {
+        "comp_valid": null,
+        "Struct_valid": 252,
+        "SUN": 17,
+        "MSUN": 123
+      },
+      "Struct_valid_percent": 98.4375,
+      "missing_structures": [
+        {
+          "sample_idx": 0,
+          "trajectory_id": "eval:0:0:0"
+        },
+        {
+          "sample_idx": 69,
+          "trajectory_id": "eval:69:0:0"
+        },
+        {
+          "sample_idx": 136,
+          "trajectory_id": "eval:136:0:0"
+        },
+        {
+          "sample_idx": 206,
+          "trajectory_id": "eval:206:0:0"
+        }
+      ],
+      "invalid_structures": [],
+      "geometry_source": "old_cases",
+      "geometry_json_pointer": "/endpoints/k8_tau/rows",
+      "source_record_order_sha256": "acae898d56722bc866f8292fb5dd7db1da39de1c91f541efb8cc23f8418568eb",
+      "sun_source": "sun_snapshot",
+      "sun_json_pointer": "/development/2/tau800/counts",
+      "original_sun_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_tau800_39948/evaluation/EVALUATION_FINAL.json",
+      "original_sun_report_sha256": "778fc1715a352a516ca601c63b308e7193dd82e1fb4cc995c1ec1d4960af84f1"
+    },
+    {
+      "method": "K8",
+      "cohort": "independent_full1200",
+      "endpoint": "raw",
+      "requests": 1200,
+      "counts": {
+        "comp_valid": null,
+        "Struct_valid": 1192,
+        "SUN": 47,
+        "MSUN": 285
+      },
+      "Struct_valid_percent": 99.33333333333333,
+      "missing_structures": [
+        {
+          "sample_idx": 2,
+          "trajectory_id": "eval:2:0:0"
+        },
+        {
+          "sample_idx": 283,
+          "trajectory_id": "eval:283:0:0"
+        },
+        {
+          "sample_idx": 303,
+          "trajectory_id": "eval:303:0:0"
+        },
+        {
+          "sample_idx": 549,
+          "trajectory_id": "eval:549:0:0"
+        },
+        {
+          "sample_idx": 630,
+          "trajectory_id": "eval:630:0:0"
+        },
+        {
+          "sample_idx": 658,
+          "trajectory_id": "eval:658:0:0"
+        },
+        {
+          "sample_idx": 1035,
+          "trajectory_id": "eval:1035:0:0"
+        },
+        {
+          "sample_idx": 1137,
+          "trajectory_id": "eval:1137:0:0"
+        }
+      ],
+      "invalid_structures": [],
+      "geometry_source": "k8_native_geometry",
+      "source_record_order_sha256": "68c7c5021d6798afc6856ddb476d6573a228693b286eb1dfc6d74b36878282f7",
+      "sun_source": "sun_snapshot",
+      "sun_json_pointer": "/independent_original_k8/1/raw/counts",
+      "original_sun_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/native-evaluation-hull-complete/EVALUATION_FINAL.json",
+      "original_sun_report_sha256": "d0e1038e08f916a354d4a74ac1ba720fd99b3445418aca603f2fb1f3bfec507a"
+    },
+    {
+      "method": "K8",
+      "cohort": "independent_full1200",
+      "endpoint": "refined",
+      "requests": 1200,
+      "counts": {
+        "comp_valid": null,
+        "Struct_valid": 1192,
+        "SUN": 79,
+        "MSUN": 570
+      },
+      "Struct_valid_percent": 99.33333333333333,
+      "missing_structures": [
+        {
+          "sample_idx": 2,
+          "trajectory_id": "eval:2:0:0"
+        },
+        {
+          "sample_idx": 283,
+          "trajectory_id": "eval:283:0:0"
+        },
+        {
+          "sample_idx": 303,
+          "trajectory_id": "eval:303:0:0"
+        },
+        {
+          "sample_idx": 549,
+          "trajectory_id": "eval:549:0:0"
+        },
+        {
+          "sample_idx": 630,
+          "trajectory_id": "eval:630:0:0"
+        },
+        {
+          "sample_idx": 658,
+          "trajectory_id": "eval:658:0:0"
+        },
+        {
+          "sample_idx": 1035,
+          "trajectory_id": "eval:1035:0:0"
+        },
+        {
+          "sample_idx": 1137,
+          "trajectory_id": "eval:1137:0:0"
+        }
+      ],
+      "invalid_structures": [],
+      "geometry_source": "k8_tau800_geometry",
+      "source_record_order_sha256": "fc5afcdc2aa0e6579a01dbbfe0c21fd2f8ee29e35bbdef0681a201175e6ab1db",
+      "sun_source": "sun_snapshot",
+      "sun_json_pointer": "/independent_original_k8/1/tau800/counts",
+      "original_sun_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/runs/spad_state_main_39951/tau800-evaluation-hull-complete/EVALUATION_FINAL.json",
+      "original_sun_report_sha256": "5dad80093cf249969613188a9c88f022de162075190d5f77dda6deb1cab07cd4"
+    }
+  ],
+  "independent_cohort_contract": {
+    "planner_seed": 27,
+    "dlm_seed": 20260906,
+    "source_request_ledger": "1200 ordinal-only records; no supplied formula or gold structure",
+    "planner": "C3FD-v2.5 plus fused Llama typed Planner and learned species pointer",
+    "minimum_comp_valid_target": 0.0,
+    "rate_target_is_nonblocking": true,
+    "one_body_candidate_per_valid_plan": true,
+    "invalid_planner_requests_reinserted_in_full_request_ledger": true,
+    "success_prefix1000_is_a_separate_parser_only_view": true,
+    "full1200_has_no_energy_or_stability_selection": true,
+    "basis": "read-only execution contract plus completed source-count evidence; actual main Planner manifest not available in this local capsule",
+    "evidence_paths": [
+      "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\slurm\\232_freeze_state_main_cohort.sbatch",
+      "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\slurm\\233_state_independent_main.sbatch",
+      "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\scripts\\freeze_spad_prospective_plans.py",
+      "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\scripts\\select_programmed_path_cohort.py",
+      "D:\\codex_work\\ai4s\\DLM_periodic_self_repair\\docs\\v3_scientific_audit_20260906\\evidence_v3_failure_20260907\\CONSTRUCTION_INDEPENDENT_K8_READINESS.json"
+    ]
+  }
+}
