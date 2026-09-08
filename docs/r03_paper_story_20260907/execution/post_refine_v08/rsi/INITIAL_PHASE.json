@@ -1,0 +1,142 @@
+{
+  "schema": "rsi_initial_phase_evidence_v1",
+  "observed_utc": "2026-09-08T19:40:22.337379+00:00",
+  "remote_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1",
+  "MAIN_raw0": {
+    "Struct_valid": {
+      "count": 223,
+      "percent": 87.109375
+    },
+    "comp_valid": {
+      "count": 199,
+      "percent": 77.734375
+    },
+    "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+    "inputs_sha256": "189cef1d6dfd66669283fec57341f92cc6ddc4af84fae246cf0e18ecfe75ee09",
+    "metrics_sha256": "29cda77e840220e884e991003e7f8b36d39e1cd8d659515e448233003e89f4a9",
+    "requested": 256,
+    "score_sha256": "cb8c72fdeb536bfdba1a90d586b31e1a99011571964c2702f316629ac4968ae5",
+    "stability": {
+      "meta_stable": {
+        "bounds_percent": [
+          12.5,
+          12.5
+        ],
+        "confirmed": 32,
+        "count": 32,
+        "percent": 12.5,
+        "unknown": 0
+      },
+      "meta_sun": {
+        "bounds_percent": [
+          12.5,
+          12.5
+        ],
+        "confirmed": 32,
+        "count": 32,
+        "percent": 12.5,
+        "unknown": 0
+      },
+      "requested": 256,
+      "strict_stable": {
+        "bounds_percent": [
+          1.953125,
+          1.953125
+        ],
+        "confirmed": 5,
+        "count": 5,
+        "percent": 1.953125,
+        "unknown": 0
+      },
+      "strict_sun": {
+        "bounds_percent": [
+          1.953125,
+          1.953125
+        ],
+        "confirmed": 5,
+        "count": 5,
+        "percent": 1.953125,
+        "unknown": 0
+      }
+    },
+    "stage": "construction"
+  },
+  "TRAIN_raw0": {
+    "Struct_valid": {
+      "count": 229,
+      "percent": 89.453125
+    },
+    "comp_valid": {
+      "count": 184,
+      "percent": 71.875
+    },
+    "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+    "inputs_sha256": "93e1ed41f619fd11b222c473506958319d4f22aed75a0d76db088f4eac27e9ee",
+    "metrics_sha256": "e46c9fdbaef5fc5af438f5f6b4a7a31b4beec2aad52ce403b93a9c58b504dce4",
+    "requested": 256,
+    "score_sha256": "1e329212315da40d9f577c7b0ede0c72a48202fbf5d03d99dffa05409ed36f16",
+    "stability": {
+      "meta_stable": {
+        "bounds_percent": [
+          14.0625,
+          14.0625
+        ],
+        "confirmed": 36,
+        "count": 36,
+        "percent": 14.0625,
+        "unknown": 0
+      },
+      "meta_sun": {
+        "bounds_percent": [
+          14.0625,
+          14.0625
+        ],
+        "confirmed": 36,
+        "count": 36,
+        "percent": 14.0625,
+        "unknown": 0
+      },
+      "requested": 256,
+      "strict_stable": {
+        "bounds_percent": [
+          1.5625,
+          1.5625
+        ],
+        "confirmed": 4,
+        "count": 4,
+        "percent": 1.5625,
+        "unknown": 0
+      },
+      "strict_sun": {
+        "bounds_percent": [
+          1.5625,
+          1.5625
+        ],
+        "confirmed": 4,
+        "count": 4,
+        "percent": 1.5625,
+        "unknown": 0
+      }
+    },
+    "stage": "construction"
+  },
+  "raw_SUN_gate": {
+    "draft_SUN_skip_count": 5,
+    "diffusion_count": 218,
+    "cohort_denominator": 256,
+    "draft_input_sha256": "189cef1d6dfd66669283fec57341f92cc6ddc4af84fae246cf0e18ecfe75ee09",
+    "score_identity": {
+      "report_sha256": "691dd1e8393dda8a8dfdac80de33589c9ddd7b62120c5dcdabbfd2beb7958986",
+      "scores_sha256": "cb8c72fdeb536bfdba1a90d586b31e1a99011571964c2702f316629ac4968ae5"
+    }
+  },
+  "training_reference_cache": {
+    "query_resolved": 237,
+    "query_unresolved": 5,
+    "database_version": "2026.04.13",
+    "training_use": true
+  },
+  "optimizer_updates_completed": 0,
+  "MAIN_plan_sha256": "71c910412e6230940277e9a9fd2b0adfb665759b9d52a9b880385d3f0f3f06a7",
+  "TRAIN_plan_sha256": "05e633ee4550d5acc539ce19e72acdbaddd827a666e54e363bb144d1c417c486"
+}

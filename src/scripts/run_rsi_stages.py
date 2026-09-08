@@ -398,11 +398,54 @@ def validity(spec,stage):
         'metrics_sha256':file_hash(output/'four_metrics.jsonl')})
 
 
+def baseline_chunk(spec,arm,chunk,chunks,shard,shards):
+    """Independent fixed-Plan baseline chunks; reuse only bound identical F800."""
+    import torch
+    if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available(): raise RuntimeError('Slurm GPU required')
+    rank=int(os.environ.get('LOCAL_RANK','0'));torch.cuda.set_device(rank);torch.set_num_threads(1)
+    root=Path(spec['run_root']);plans=read_rows(root/'cohort/plans.jsonl')
+    asset='control_graphs' if arm=='H1A2' else 'candidate_graphs'
+    if file_hash(spec['assets'][asset])!=spec['source_sha256'][asset]: raise ValueError('baseline graph archive changed')
+    entries=torch.load(spec['assets'][asset],map_location='cpu',weights_only=False)
+    graphs={int(row['ordinal']):row['graph'] for row in entries}
+    source=root.parent/'RUN_SPEC.json';old_spec=json.loads(source.read_text())
+    reusable=(old_spec['source_sha256'][asset]==spec['source_sha256'][asset]
+              and old_spec['assets']['model494']==spec['assets']['model494'])
+    model,Data,DataLoader=load_refiner(spec,torch.device('cuda',rank))
+    selected=plans[chunk::chunks][shard::shards];started=time.monotonic();copied=0;sampled=0
+    for plan in selected:
+        original=plan['original_ordinal'];output=root/'baselines'/arm/'records'/f'{original:04d}.json'
+        if output.exists(): raise ValueError('baseline chunk overlaps an already stored endpoint')
+        raw=None;reuse=None;reason=None
+        old=root.parent/'baselines'/arm/'records'/f'{original:04d}.json'
+        if reusable and old.exists():
+            previous=json.loads(old.read_text());candidate=previous.get('raw_refiner_output')
+            if (previous['config_sha256']==file_hash(source) and candidate is not None
+                    and candidate['seed']==plan['refiner_noise_seed'] and candidate['diffusion_steps']==800):
+                raw=candidate;reuse={'path':str(old),'sha256':file_hash(old),'config_sha256':file_hash(source),
+                    'matched_graph_archive_sha256':spec['source_sha256'][asset],'same_original_seed_and_F800':True};copied+=1
+        if raw is None and original in graphs:
+            try:
+                raw=refine_one(dict(graphs[original],sample_idx=original),model=model,Data=Data,DataLoader=DataLoader,
+                               seed=plan['refiner_noise_seed'],steps=800);sampled+=1
+            except (ValueError,FloatingPointError) as error: reason=str(error)
+        elif raw is None: reason='baseline_saved_graph_missing'
+        record=physics_record(plan,state_id=f"{spec['run_id']}:{arm}:F:{original}",
+                              structure=structure_from_refined(raw) if raw else None,reason=reason)
+        write_json(output,{'record':record,'raw_refiner_output':raw,'reused':reuse,'config_sha256':spec['_config_sha256']})
+        print(json.dumps({'arm':arm,'chunk':chunk,'shard':shard,'copied':copied,'sampled':sampled,'seconds':time.monotonic()-started}),flush=True)
+    write_json(root/'baselines'/arm/f'chunk{chunk}'/f'worker_{shard}_DONE.json',
+               {'copied':copied,'sampled':sampled,'requests':len(selected),'seconds':time.monotonic()-started})
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config',required=True)
-    parser.add_argument('--action',choices=['prepare-fit','materialize','gate','refine','select','edit','pairs','rebind','validity'],required=True)
+    parser.add_argument('--action',choices=['prepare-fit','materialize','gate','refine','select','edit','pairs','rebind','validity','baseline-chunk'],required=True)
     parser.add_argument('--stage',default='construction')
+    parser.add_argument('--arm',choices=['H1A2','R03'],default='H1A2')
+    parser.add_argument('--chunk',type=int,default=0)
+    parser.add_argument('--chunks',type=int,default=4)
     args=parser.parse_args()
     os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
     spec=load_config(args.config)
@@ -413,6 +456,9 @@ def main():
     elif args.action=='pairs': compile_pairs(spec)
     elif args.action=='rebind': rebind_labels(spec,args.stage)
     elif args.action=='validity': validity(spec,args.stage)
+    elif args.action=='baseline-chunk':
+        if not 0<=args.chunk<args.chunks: parser.error('invalid baseline chunk')
+        baseline_chunk(spec,args.arm,args.chunk,args.chunks,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
     elif args.action=='edit': edit(spec,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
     else: refine(spec,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
 

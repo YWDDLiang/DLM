@@ -46,6 +46,16 @@ def main():
     examples=read_rows(input_path)
     if not examples or any(r['source_split']!='train' for r in examples):
         raise ValueError('empty or contaminated training preferences')
+    replay=[];replay_pins=[]
+    for value in spec.get('replay_data',[]):
+        path=Path(value);report_path=path.with_name('PAIRS_FINAL.json')
+        report=json.loads(report_path.read_text())
+        if report['source_split']!='train' or report['files_sha256'][path.name]!=file_hash(path):
+            raise ValueError('historical replay preferences are not bound TRAIN data')
+        rows=read_rows(path)
+        if any(r['source_split']!='train' for r in rows): raise ValueError('heldout replay is forbidden')
+        replay.extend(rows);replay_pins.append({'path':str(path),'sha256':file_hash(path),
+                                             'manifest_sha256':file_hash(report_path),'examples':len(rows)})
     if branch=='G':
         model,tokenizer=load_model_and_tokenizer(spec['base_model'],spec['checkpoint'],device,mean_resizing=False)
         for name,param in model.named_parameters():
@@ -86,7 +96,8 @@ def main():
               'hard_support':'unchanged_K8_periodic_and_cell_support',
               'trainable_parameters':sum(p.numel() for _,p in selected),'world_size':world,
               'reference':'previous_round_trainable_state_on_identical_frozen_backbone',
-              'original_IO_sha256':original_tables}
+              'original_IO_sha256':original_tables,'historical_replay':replay_pins,
+              'replay_probability':.25 if replay else 0.}
     if rank==0: write_json(output/'TRAIN_CONFIG.json',contract)
     started=time.monotonic(); steps=0; total_pairs=0; total_heads=0; history=[]
     rng=random.Random(spec['seed']+rank)
@@ -94,7 +105,8 @@ def main():
         optimizer.zero_grad(set_to_none=True)
         losses=[]; margins=[]; pair_count=0; head_count=0
         for micro in range(spec['accumulation']):
-            example=examples[rng.randrange(len(examples))]
+            pool=replay if replay and rng.random()<.25 else examples
+            example=pool[rng.randrange(len(pool))]
             cut=rng.randrange(len(numeric_order(example['num_sites'],branch)))
             chosen=example.get('chosen_tokens'); rejected=example.get('rejected_tokens')
             if chosen is not None and rejected is not None:
