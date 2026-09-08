@@ -59,13 +59,13 @@ def main(directory):
     for n, g, v in zip(endpoints, geo, verified):
         ax.annotate(str(g), (n, g), xytext=(0, 7), textcoords='offset points', ha='center', color='#2967A6')
         ax.annotate(str(v), (n, v), xytext=(0, -16), textcoords='offset points', ha='center', color='#B86B2E')
-    ax.set(ylim=(0, 64), title='More rounds reach a plateau; S submits no edits', ylabel='Count among the same 64 development sources',
+    ax.set(ylim=(0, 64), title='Original stage2: more rounds reach a plateau', ylabel='Count among the same 64 development sources',
            xlabel='G/S rounds\n(mean cumulative forward calls)')
     ax.set_xticks(endpoints, [f'{n}\n({value:.1f})' for n, value in zip(endpoints, calls)])
     ax.grid(axis='y', alpha=.18)
     ax.legend(fontsize=8, frameon=False, loc='upper left')
     fig.suptitle('Mechanism checks: objective weighting, generalization and actual editing', fontsize=15, x=.5, y=.99)
-    fig.text(.5, .012, 'Development diagnostics only. Round 2→4 R-verified loss occurred with unchanged structure tokens; ordinary R can vary.',
+    fig.text(.5, .012, 'Development diagnostics only. Original stage2 submitted no S edits. Its round 2→4 R-verified loss occurred with unchanged tokens.',
              ha='center', fontsize=9, color='#596779')
     fig.tight_layout(rect=(0, .045, 1, .955), h_pad=2.4, w_pad=2.2)
     fig.savefig(directory/'MECHANISM_OVERVIEW.png', dpi=190)

@@ -10,7 +10,9 @@ import sys
 def main(directory):
     root = Path(directory)
     files = ['LOSS64_ANALYSIS.json', 'COMPOSITION16_ANALYSIS.json', 'ROUNDS64_COMPACT.json',
-             'DATAFACTOR_COMPACT.json', 'DETERMINISTIC6_SAUDIT_COMPACT.json', 'R_REPEAT8_COMPACT.json', 'GAUGE32_AUDIT.json']
+             'DATAFACTOR_COMPACT.json', 'DETERMINISTIC6_SAUDIT_COMPACT.json', 'R_REPEAT8_COMPACT.json', 'GAUGE32_AUDIT.json',
+             'GAUGE64_REPEATS_ANALYSIS.json', 'T2T64_ANALYSIS.json', 'TEACHER64_ANALYSIS.json',
+             'RECERTIFY128_REPEAT_CHECK.json', 'FIT8_ANALYSIS.json', 'FIT8_CONTENT_COVERAGE.json']
     source = {name: json.loads((root/name).read_text()) for name in files}
     report = {'schema': 'expert_mechanism_result_index_v1', 'primary_metrics_rerun': False,
         'source_capsule_sha256': {name: hashlib.sha256((root/name).read_bytes()).hexdigest() for name in files}}
@@ -76,8 +78,25 @@ def main(directory):
                                          for k in ['G_content_ce', 'S_content_ce', 'first_lattice_content_ce', 'coord_content_ce']}}
         report['data_factor_at_equal_1600_updates'][arm] = result
     report['cumulative_conservative_training_seconds_before_gauge64'] = 3678.791464943438 + sum(data[f'{a}:TRAIN_FINAL.json']['train_seconds'] for a in ['64', '256'])
+    for key, name in [('gauge_representation_control', 'GAUGE64_REPEATS_ANALYSIS.json'),
+                       ('proposal_input_control', 'T2T64_ANALYSIS.json')]:
+        value = source[name]
+        report[key] = {k: v for k, v in value.items() if k not in ['capsule_sha256', 'paired_effects']}
+        report[key]['paired_effects'] = {metric: {k: v for k, v in result.items() if k != 'paired_source_details'}
+                                       for metric, result in value['paired_effects'].items()}
+    report['teacher_reassessment'] = {split: {task: {k: v for k, v in result.items() if k != 'details'}
+        for task, result in tasks.items()} for split, tasks in source['TEACHER64_ANALYSIS.json']['splits'].items()}
+    report['deterministic_256_cross_job_repeat'] = source['RECERTIFY128_REPEAT_CHECK.json']
+    fit = source['FIT8_ANALYSIS.json']
+    report['tiny8_fitting'] = {split: {k: v for k, v in result.items() if k != 'details_by_seed'}
+                             for split, result in fit['splits'].items()}
+    report['tiny8_final_teacher_forced_metrics'] = fit['training_final']['metrics']
+    report['tiny8_content_coverage'] = source['FIT8_CONTENT_COVERAGE.json']['runs']['mechanism_fit8']
+    report['cumulative_conservative_training_seconds_after_fit8'] = fit['training_final']['cumulative_train_seconds']
     (root/'MECHANISM_RESULT_INDEX.json').write_text(json.dumps(report, indent=2)+'\n')
-    print(json.dumps({k: v for k, v in report.items() if k not in ['rejected_S_proposals', 'source_capsule_sha256']}, indent=2))
+    print(json.dumps({'path': str(root/'MECHANISM_RESULT_INDEX.json'), 'source_files': len(files),
+                      'primary_metrics_rerun': report['primary_metrics_rerun'],
+                      'cumulative_conservative_training_seconds_after_fit8': report['cumulative_conservative_training_seconds_after_fit8']}))
 
 
 if __name__ == '__main__':

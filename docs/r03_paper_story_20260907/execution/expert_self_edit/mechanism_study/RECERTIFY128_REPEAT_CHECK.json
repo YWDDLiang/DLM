@@ -1,0 +1,8 @@
+{
+  "schema": "deterministic_recertify_repeat_v1",
+  "endpoints": 256,
+  "reference_endpoints": 256,
+  "mismatches": [],
+  "all_inputs_previous_proof": "TEACHER64_COMMON_OLD_INPUT_MATCH.json",
+  "fresh_label_sha256": "a0648a373e4ba21f0eafa0b3e215b6cd25d0dff7db9b7cf82472d4a09121d825"
+}

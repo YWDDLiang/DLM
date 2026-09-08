@@ -1,0 +1,14 @@
+{
+  "schema": "teacher64_common_old_input_match_v1",
+  "original_input_sha256": "345b3528dcb7bc5de1a01229600e9272278973f3793ae4d0416f041d552dc700",
+  "splits": {
+    "train": {
+      "same_body_structure_metadata": 64,
+      "gauge_input_sha256": "08fb55233ce5d707e06e2054b9135162e4a520b46863057f48dc5d1295c4ff34"
+    },
+    "dev": {
+      "same_body_structure_metadata": 64,
+      "gauge_input_sha256": "6b97f56ddd5988f9da90148c17167e765267bcdecbd1ba5057fc47507cc6a2a7"
+    }
+  }
+}

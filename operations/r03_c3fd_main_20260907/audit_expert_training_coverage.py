@@ -1,17 +1,24 @@
 """Count actual deterministic content-view supervision on an existing training run."""
 from collections import Counter
+import argparse
 import hashlib
 import json
 from pathlib import Path
 import sys
-root, source = map(Path,sys.argv[1:3])
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('root', type=Path)
+parser.add_argument('source', type=Path)
+parser.add_argument('--runs', nargs='+', default=['mechanism_gauge64_control', 'mechanism_data64_next1600', 'mechanism_data256_next1600'])
+parser.add_argument('--output', default='CONTENT_COVERAGE.json')
+options = parser.parse_args()
+root, source = options.root, options.source
 sys.path.insert(0,str(source/'src'))
 from crystal_dlm.expert_edit import ExpertEditDataset
 class PrefixOnlyTokenizer:
     def __call__(self, text, **kwargs): return {'input_ids':[0]}
 output = {'schema':'expert_content_coverage_v1','prefix_stub_only':True,
           'sampling_RNG_source_task_cut_unchanged':True,'runs':{}}
-for name in ['mechanism_gauge64_control','mechanism_data64_next1600','mechanism_data256_next1600']:
+for name in options.runs:
     path = root/name/'train/TRAIN_CONFIG.json'
     config = json.loads(path.read_text())
     args = config['args']
@@ -44,6 +51,7 @@ for name in ['mechanism_gauge64_control','mechanism_data64_next1600','mechanism_
             'mean_supervisions_per_record_position':sum(exposure)/len(exposure),
             'histogram':dict(sorted(Counter(exposure).items()))}
     output['runs'][name] = result
-out = root/'CONTENT_COVERAGE.json'
+out = root/options.output
+assert not out.exists(), 'coverage audits must not overwrite prior evidence'
 out.write_text(json.dumps(output,indent=2)+'\n')
 print(json.dumps(output))

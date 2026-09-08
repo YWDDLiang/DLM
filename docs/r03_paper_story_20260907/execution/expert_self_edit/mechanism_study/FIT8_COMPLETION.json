@@ -1,0 +1,28 @@
+{
+  "schema": "expert_fit8_execution_completion_v1",
+  "job_id": 41102,
+  "slurm_query": "QUEUE \nFINAL_FILES ['COMPONENT_FINAL.json', '_SUCCESS']\n41102|COMPLETED|0:0|00:41:40|billing=36,cpu=36,gres/gpu=6,mem=576G,node=1\n41102.batch|COMPLETED|0:0|00:41:40|cpu=36,gres/gpu=6,mem=576G,node=1\n41102.extern|COMPLETED|0:0|00:41:41|billing=36,cpu=36,gres/gpu=6,mem=576G,node=1",
+  "component": {
+    "complete": true,
+    "component_id": "mechanism_fit8",
+    "purpose": "train",
+    "seconds": 2499.5986142121255,
+    "signature": "92729709d349374ca64539d35369bef3db64302bba12fdedac0720bdb9a83445",
+    "stages": [
+      "train",
+      "how_train_2026090813",
+      "labels_train_2026090813",
+      "how_train_2026090913",
+      "labels_train_2026090913",
+      "how_dev_2026090813",
+      "labels_dev_2026090813",
+      "how_dev_2026090913",
+      "labels_dev_2026090913",
+      "how_dev_2026091013",
+      "labels_dev_2026091013",
+      "how_dev_2026091113",
+      "labels_dev_2026091113"
+    ]
+  },
+  "recorded_unix": 1788846017.218
+}
