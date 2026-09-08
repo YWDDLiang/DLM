@@ -242,16 +242,18 @@ def edit(spec,shard,shards):
     write_json(root/'proposal'/f'worker_{shard}_DONE.json',{'seconds':time.monotonic()-started})
 
 
-def compile_pairs(spec):
+def compile_pairs(spec, requested_branch='both'):
     root=Path(spec['run_root']);plans=read_rows(root/'cohort/plans.jsonl')
     if any(p.get('source_split')!='train' for p in plans):
         raise ValueError('evaluation plans cannot enter preference training')
-    stages=['construction','tokenized','current','proposal']
+    comparisons=[('G','construction','tokenized'),('E','current','proposal')]
+    comparisons=[v for v in comparisons if requested_branch=='both' or v[0]==requested_branch]
+    stages=list(dict.fromkeys(stage for _,a,b in comparisons for stage in (a,b)))
     data={stage:read_rows(root/stage/'inputs.jsonl') for stage in stages}
     labels={stage:scores(root,stage) for stage in stages}
-    result={'G':[],'E':[]};audit=[]
+    result={branch:[] for branch,_,_ in comparisons};audit=[]
     for index,plan in enumerate(plans):
-        for branch,before_stage,after_stage in [('G','construction','tokenized'),('E','current','proposal')]:
+        for branch,before_stage,after_stage in comparisons:
             before=data[before_stage][index];after=data[after_stage][index]
             a=labels[before_stage][index];b=labels[after_stage][index]
             if not before.get('body_token_ids') or not after.get('body_token_ids'): continue
@@ -284,11 +286,13 @@ def compile_pairs(spec):
                 if example['mode_target'] is None and example['chosen_tokens'] is None: continue
             result[branch].append(example)
     directory=root/'pairs'
-    write_rows(directory/'pair_audit.jsonl',audit)
+    audit_name='pair_audit.jsonl' if requested_branch=='both' else f'pair_audit_{requested_branch}.jsonl'
+    manifest_name='PAIRS_FINAL.json' if requested_branch=='both' else f'PAIRS_{requested_branch}_FINAL.json'
+    write_rows(directory/audit_name,audit)
     for branch,rows in result.items(): write_rows(directory/f'{branch}.jsonl',rows)
-    write_json(directory/'PAIRS_FINAL.json',{'source_split':'train','round_index':spec.get('round_index',0),
+    write_json(directory/manifest_name,{'source_split':'train','round_index':spec.get('round_index',0),
         'source_config_sha256':spec['_config_sha256'],'plans_sha256':file_hash(root/'cohort/plans.jsonl'),
-        'files_sha256':{name:file_hash(directory/name) for name in ['G.jsonl','E.jsonl','pair_audit.jsonl']},
+        'files_sha256':{name:file_hash(directory/name) for name in [*[f'{branch}.jsonl' for branch in result],audit_name]},
         'stage_inputs':{stage:file_hash(root/stage/'inputs.jsonl') for stage in stages},
         'stage_scores':{stage:file_hash(score_directory(root,stage)/'attempt_results.jsonl') for stage in stages},
         'examples':{branch:len(rows) for branch,rows in result.items()},'DPO_training_performed':False})
@@ -448,6 +452,7 @@ def main():
     parser.add_argument('--arm',choices=['H1A2','R03'],default='H1A2')
     parser.add_argument('--chunk',type=int,default=0)
     parser.add_argument('--chunks',type=int,default=4)
+    parser.add_argument('--branch',choices=['G','E','both'],default='both')
     args=parser.parse_args()
     os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
     spec=load_config(args.config)
@@ -455,7 +460,7 @@ def main():
     elif args.action=='materialize': materialize(spec,args.stage)
     elif args.action=='gate': gate(spec)
     elif args.action=='select': select_current(spec)
-    elif args.action=='pairs': compile_pairs(spec)
+    elif args.action=='pairs': compile_pairs(spec,args.branch)
     elif args.action=='rebind': rebind_labels(spec,args.stage)
     elif args.action=='validity': validity(spec,args.stage)
     elif args.action=='baseline-chunk':

@@ -18,6 +18,11 @@ def tensor_hash(value):
     return hashlib.sha256(value.detach().cpu().contiguous().view(__import__('torch').uint8).numpy().tobytes()).hexdigest()
 
 
+def pair_manifest_path(data):
+    branch_file=data.with_name(f'PAIRS_{data.stem}_FINAL.json')
+    return branch_file if branch_file.exists() else data.with_name('PAIRS_FINAL.json')
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config',required=True,type=Path)
@@ -40,7 +45,8 @@ def main():
     torch.manual_seed(spec['seed']); random.seed(spec['seed'])
     branch=spec['branch']; output=Path(spec['output_dir'])
     input_path=Path(spec['data'])
-    manifest=json.loads(input_path.with_name('PAIRS_FINAL.json').read_text())
+    manifest_path=pair_manifest_path(input_path)
+    manifest=json.loads(manifest_path.read_text())
     if file_hash(input_path)!=manifest['files_sha256'][input_path.name] or manifest['source_split']!='train':
         raise ValueError('training preferences are not registered training-only data')
     examples=read_rows(input_path)
@@ -48,7 +54,7 @@ def main():
         raise ValueError('empty or contaminated training preferences')
     replay=[];replay_pins=[]
     for value in spec.get('replay_data',[]):
-        path=Path(value);report_path=path.with_name('PAIRS_FINAL.json')
+        path=Path(value);report_path=pair_manifest_path(path)
         report=json.loads(report_path.read_text())
         if report['source_split']!='train' or report['files_sha256'][path.name]!=file_hash(path):
             raise ValueError('historical replay preferences are not bound TRAIN data')
@@ -91,7 +97,8 @@ def main():
         {'params':[p for n,p in selected if 'lora_' not in n],'lr':spec['head_learning_rate']}],weight_decay=0.)
     if rank==0: output.mkdir(parents=True,exist_ok=False)
     if world>1: dist.barrier()
-    contract={**spec,'data_sha256':file_hash(input_path),'pair_manifest_sha256':file_hash(input_path.with_name('PAIRS_FINAL.json')),
+    contract={**spec,'data_sha256':file_hash(input_path),'pair_manifest_sha256':file_hash(manifest_path),
+              'pair_manifest_path':str(manifest_path),
               'objective':'one_shared_prefix_cut_conditional_DPO_surrogate',
               'hard_support':'unchanged_K8_periodic_and_cell_support',
               'trainable_parameters':sum(p.numel() for _,p in selected),'world_size':world,
