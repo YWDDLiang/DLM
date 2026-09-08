@@ -284,7 +284,7 @@ def main():
     output = []
     for ordinal, record in enumerate(records):
         label = labels[record["trajectory_id"]]
-        if str(label["group_id"]) != str(record["group_id"]):
+        if label.get("group_id") != record.get("group_id"):
             raise ValueError("label condition mismatch")
         if label.get("endpoint") not in (None, args.endpoint):
             raise ValueError("native and refined label endpoints were mixed")
@@ -296,7 +296,7 @@ def main():
         if index is not None:
             system, hull, hull_status = hulls[index]
         output.append({"trajectory_id": record["trajectory_id"], "ordinal": ordinal,
-                       "group_id": record["group_id"], "sample_idx": record["sample_idx"],
+                       "group_id": record.get("group_id"), "sample_idx": record["sample_idx"],
                        "reconstructed": index is not None, "parser_error": parser_errors.get(record["trajectory_id"]),
                        "endpoint_execution_success": record["success"],
                        "native_execution_success": record.get("native_execution_success", record["success"]), "novel": is_novel,
