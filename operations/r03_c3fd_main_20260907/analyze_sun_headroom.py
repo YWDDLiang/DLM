@@ -287,6 +287,7 @@ if __name__ == '__main__':
         path = Path(sys.argv[1])
         output = analyze(json.loads(path.read_text()))
         output['capsule_sha256'] = sha(path)
+        output['analysis_source_sha256'] = sha(__file__)
         target = path.with_name('SUN_TEACHER64_ANALYSIS.json')
         target.write_text(json.dumps(output,indent=2)+'\n')
         print(json.dumps({'path':str(target),'gate':output['gate'],'repeatable_source_wins':len(output['repeatable_wins']),

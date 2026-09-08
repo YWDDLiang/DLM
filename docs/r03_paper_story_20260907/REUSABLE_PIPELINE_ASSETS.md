@@ -4,6 +4,8 @@
 
 v0.5新增可复用边界：`sun_feedback_contract.py`核验训练来源与独立MAIN的组成隔离；原label和SUN CLI通过`training_feedback`用途接入，保留原物理和N/U算法。`generate_sun_feedback_candidates.py`负责有限教师候选、独立图构造及精修导出身份校验，原`expert_composition_probe.py`增加训练反馈模式。`analyze_sun_headroom.py`只汇总已完成候选及评分回执，检查跨噪声支持和未知标签，不执行物理筛选或部署推理。现阶段状态与清单见[教师候选空间执行记录](execution/expert_self_edit/sun_v05/EXECUTION_STATUS.json)；这些入口不表示SUN策略训练已经实现。
 
+用户已要求的收尾使用统一[归档与明确权重清理工具](../../operations/archive_experiment.py)：数据逐文件校验并压缩到实验树外，核验归档每个成员后才允许清理清单内的失败编辑权重；显式保留的参考checkpoint、生成数据、轨迹、标签和模型元数据保持可用。`archive`与`prune`为分开的动作，活跃/等待作业、归档变化或未归档数据都会阻止清理。
+
 **当前状态：2026-09-08用户已授权专家编辑实验。旧R03路线保持停止；新路线复用本表入口并通过manifest绑定独立源码和运行目录。2048条新请求构造已完成，短训准备中；正式1200请求主面板尚未运行编辑器。**
 
 目标是继续使用现有核心实现，把实验差异放进参数和配置。新任务可以产生新的配置、运行目录、结果和回执；不应因此产生一套新的采样、精修、评分、部署代码。

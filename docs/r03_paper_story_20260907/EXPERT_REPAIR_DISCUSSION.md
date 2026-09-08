@@ -20,6 +20,8 @@
 
 **当前执行：** [2来源工程canary](execution/expert_self_edit/sun_v05/CANARY_RESULT.json)已完成；64来源检查运行于3 GPU / 18 CPU，固定配置与状态见[执行记录](execution/expert_self_edit/sun_v05/EXECUTION_STATUS.json)。所选64个旧结构全部来自`current_B0_full_rich`训练请求，按原几何32有效/32无效分层并限制公开参考覆盖。62个来源获得非零教师动作，2个无法构造native-frame教师初态，仍保留全部分母；local4在5个小结构上实际为全XYZ动作，局部结论按真实范围计数。新SUN结果尚未齐全，新梯度训练未启动。
 
+**用户最新收尾要求（2026-09-08 10:46 UTC）：** 完成当前检验后，若效果仍一般，简要总结有用与未带来收益的做法，清理失败checkpoints，归档保留全部数据（包括本轮新生成数据），随后等待用户的新idea。清理范围为本轮实验权重；实际正式结果使用的`expert_full_stage2/train/checkpoints/step-000800`有raw SUN回溯增益，保留作对照。其余权重仅在完整数据归档及内容核验通过、相关作业结束后按明确清单移除，模型配置、tokenizer、验证数据和实验记录保留。
+
 用户本轮要求：以提升SUN为根本目标，提出能够支撑既有论文故事的新方法；raw或refine端有效均可。补充要求解释大量raw/refine差异、DLM为何没有学到稳定性以及内容loss偏大。用户已再次确认推理不调用MLIP或外部几何筛选，每请求只输出一个候选。以下是Codex的方法建议，不能当成已验证提升。
 
 **建议主线：把连续几何先验蒸馏成DLM可执行的短程修订，再用真实学生动作的最终SUN收益训练内容与决策。首轮优先优化固定F800后的SUN；raw作为单列副端点和后续直接生成方向。** 不继续以“降低teacher token CE”或“增加R verified”代替发现率，也不要求同一更新同时提高两个端点。
