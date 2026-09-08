@@ -70,17 +70,82 @@ def fixture(root, size=1200):
     return paths, labels_dir, cache, config_path, rows, labels, report
 
 
-def run_cli(paths, labels, cache, config, output):
+def run_cli(paths, labels, cache, config, output, *, size=1200, role='independent_main', feedback_manifest=None):
     argv = ['evaluate', '--paths-jsonl', str(paths), '--labels-jsonl', str(labels/'labels.jsonl'),
             '--official-cache', str(cache), '--frozen-config', str(config), '--output-dir', str(output),
-            '--expected-requests', '1200', '--endpoint', 'native', '--cohort-role', 'independent_main',
+            '--expected-requests', str(size), '--endpoint', 'native', '--cohort-role', role,
             '--sun-only', '--nu-workers', '1']
+    if feedback_manifest is not None:
+        argv += ['--feedback-manifest', str(feedback_manifest)]
     with patch.object(sys, 'argv', argv), patch.dict(os.environ, {'SLURM_JOB_ID':'test', 'SLURM_CPUS_PER_TASK':'2'}):
         with contextlib.redirect_stdout(io.StringIO()):
             EVAL.main()
 
 
 class SunOnlyEvaluationTests(unittest.TestCase):
+    def test_explicit_training_feedback_is_scored_without_publishing_evaluation(self):
+        from crystal_dlm.sun_feedback_contract import SCHEMA, validate_training_feedback
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths, labels_dir, cache, config, records, labels, report = fixture(root, size=4)
+            parents = []
+            for i, (record, label) in enumerate(zip(records, labels)):
+                symbol = 'Li' if i == 2 else 'Na'
+                record.update(source_split='train', purpose='training_feedback', declared_composition={symbol: 1})
+                label['source_split'] = 'train'
+                parents.append({'ancestor_id': record['group_id'], 'source_row_idx': i, 'source_split': 'train',
+                                'plan_state': {'N': 1, 'elements': [symbol], 'counts': [1]}})
+            write_rows(paths, records)
+            write_rows(root/'parents.jsonl', parents)
+            write_rows(root/'heldout.jsonl', [{'body_eligible': True, 'plan_state': {'N':1, 'elements':['K'], 'counts':[1]}}])
+            prepared = {'files_sha256': {'parents.jsonl': EVAL.sha256_file(root/'parents.jsonl')},
+                        'heldout_cohort_sha256': EVAL.sha256_file(root/'heldout.jsonl')}
+            (root/'PREPARATION_FINAL.json').write_text(json.dumps(prepared))
+            (root/'_SUCCESS').touch()
+            scope = {'schema': SCHEMA, 'purpose': 'training_feedback', 'expected_requests': 4, 'endpoint': 'native'}
+            for name, path in [('paths', paths), ('parent_pairs', root/'parents.jsonl'),
+                               ('parent_preparation', root/'PREPARATION_FINAL.json'), ('heldout_cohort', root/'heldout.jsonl')]:
+                scope[name] = {'path': str(path), 'sha256': EVAL.sha256_file(path)}
+            manifest = root/'scope.json'
+            manifest.write_text(json.dumps(scope))
+            report.update(purpose='training_feedback', input_sha256=EVAL.sha256_file(paths),
+                          training_feedback_scope=validate_training_feedback(records, paths, manifest))
+            write_rows(labels_dir/'labels.jsonl', labels)
+            (labels_dir/'LABEL_FINAL.json').write_text(json.dumps(report))
+            run_cli(paths, labels_dir, cache, config, root/'feedback', size=4, role='training_feedback', feedback_manifest=manifest)
+            value = json.loads((root/'feedback/FEEDBACK_FINAL.json').read_text())
+            self.assertEqual(value['purpose'], 'training_feedback')
+            self.assertEqual(value['counts']['requests'], 4)
+            self.assertFalse(value['independent_evaluation'])
+            self.assertFalse((root/'feedback/EVALUATION_FINAL.json').exists())
+
+    def test_deterministic_runtime_boolean_is_a_valid_identity_field(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths, labels_dir, _, _, records, labels, report = fixture(root)
+            runtime = report['runtime_identities'][0]
+            runtime.update(deterministic_algorithms_enabled=True, cublas_workspace_config=':4096:8')
+            write_rows(labels_dir/'labels.jsonl', labels)
+            (labels_dir/'LABEL_FINAL.json').write_text(json.dumps(report))
+            bound, _ = EVAL.load_bound_evaluation_labels(records, [labels_dir/'labels.jsonl'], paths_file=paths, endpoint='native')
+            self.assertEqual(len(bound), 1200)
+            runtime['deterministic_algorithms_enabled'] = 'true'
+            write_rows(labels_dir/'labels.jsonl', labels)
+            (labels_dir/'LABEL_FINAL.json').write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, 'numerical runtime'):
+                EVAL.load_bound_evaluation_labels(records, [labels_dir/'labels.jsonl'], paths_file=paths, endpoint='native')
+
+    def test_training_reward_labels_do_not_enter_default_evaluation(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            paths, labels_dir, _, _, records, labels, report = fixture(root)
+            report['purpose'] = 'training_feedback'
+            (labels_dir/'LABEL_FINAL.json').write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, 'purpose'):
+                EVAL.load_bound_evaluation_labels(records, [labels_dir/'labels.jsonl'], paths_file=paths, endpoint='native')
+            with self.assertRaisesRegex(ValueError, 'validated scope'):
+                EVAL.load_bound_evaluation_labels(records, [labels_dir/'labels.jsonl'], paths_file=paths, endpoint='native', purpose='training_feedback')
+
     def test_unverified_retained_energy_still_counts_in_main_sun(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)

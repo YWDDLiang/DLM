@@ -337,6 +337,10 @@ def validate_record_purpose(record, purpose):
         if (record.get('source_split') not in ('train', 'dev') or record.get('purpose') != 'expert_edit'
                 or record.get('endpoint') not in ('native', 'expert_quantized')):
             raise ValueError('expert labels require explicit train/development editing provenance')
+    elif purpose == 'training_feedback':
+        if (record.get('source_split') != 'train' or record.get('purpose') != 'training_feedback'
+                or record.get('endpoint') not in ('native', 'tau800')):
+            raise ValueError('SUN feedback labels require explicit training-only endpoint provenance')
 
 
 def json_default(value):
@@ -423,7 +427,8 @@ def main():
                    help='Verified complete prior ledger; retry only engineering-unknown endpoints into a new directory')
     p.add_argument("--gpu-count", type=int, default=2)
     p.add_argument("--workers-per-gpu", type=int, default=2)
-    p.add_argument("--purpose", choices=("train", "evaluation", "expert_edit"), default="train")
+    p.add_argument("--purpose", choices=("train", "evaluation", "expert_edit", "training_feedback"), default="train")
+    p.add_argument('--feedback-manifest', type=Path)
     p.add_argument('--deterministic', action='store_true',
                    help='Explicit deterministic CUDA diagnostic; does not replace frozen stochastic-runtime labels')
     p.add_argument("--fmax", type=float, default=.1)
@@ -452,6 +457,14 @@ def main():
         raise RuntimeError("labeling requires its declared GPU allocation")
     if args.gpu_count > len(os.environ["CUDA_VISIBLE_DEVICES"].split(",")):
         raise ValueError("requested workers exceed the GPUs actually allocated")
+    feedback_scope = None
+    if args.purpose == 'training_feedback':
+        if args.feedback_manifest is None or args.shard_count != 1:
+            raise ValueError('training feedback requires its bound manifest and a complete input ledger')
+        from crystal_dlm.sun_feedback_contract import validate_training_feedback, rows as feedback_rows
+        feedback_scope = validate_training_feedback(feedback_rows(args.input_jsonl), args.input_jsonl, args.feedback_manifest)
+    elif args.feedback_manifest is not None:
+        raise ValueError('feedback manifests cannot change another labeling purpose')
     args.output_dir.mkdir(parents=True, exist_ok=False)
     records = []
     with args.input_jsonl.open(encoding="utf-8") as handle:
@@ -516,6 +529,8 @@ def main():
               "gpu_count": args.gpu_count, "workers_per_gpu": args.workers_per_gpu,
               "shard_count": args.shard_count, "shard_ranks": shard_ranks,
               "elapsed_seconds": time.monotonic() - started, "purpose": args.purpose}
+    if feedback_scope is not None:
+        report['training_feedback_scope'] = feedback_scope
     report['engineering_deadlines'] = {'record_timeout_seconds': args.record_timeout,
                                        'worker_startup_timeout_seconds': args.worker_startup_timeout,
                                        'timeout_is_physical_failure': False}

@@ -79,7 +79,11 @@ def endpoint_cache_key(record):
     return hashlib.sha256(geometry.encode()).hexdigest()
 
 
-def load_bound_evaluation_labels(records, label_files, *, paths_file, endpoint, expected_model_sha256=None):
+def load_bound_evaluation_labels(records, label_files, *, paths_file, endpoint, expected_model_sha256=None,
+                                 purpose='evaluation', feedback_scope=None):
+    if purpose not in ('evaluation', 'training_feedback') or (purpose == 'training_feedback' and feedback_scope is None):
+        raise ValueError('explicit validated scope is required for training rewards')
+    expected_split = 'evaluation' if purpose == 'evaluation' else 'train'
     inputs = {record['trajectory_id']: record for record in records}
     if len(inputs) != len(records):
         raise ValueError('duplicate endpoint request identity')
@@ -91,13 +95,15 @@ def load_bound_evaluation_labels(records, label_files, *, paths_file, endpoint, 
             raise ValueError('physics accounting is incomplete or contains engineering failures')
         report = json.loads((directory/'LABEL_FINAL.json').read_text())
         rows = read_jsonl(path)
-        if (report.get('purpose') != 'evaluation' or report.get('protocol') != COMMON_RELAXATION_PROTOCOL
+        if (report.get('purpose') != purpose or report.get('protocol') != COMMON_RELAXATION_PROTOCOL
                 or report.get('geometry_validation_protocol') != LABEL_GEOMETRY_PROTOCOL
                 or report.get('verification_protocol') != TERMINAL_VERIFICATION_PROTOCOL
                 or report.get('requested') != len(rows) or report.get('completed') != len(rows)
                 or report.get('statuses') != dict(Counter(row['status'] for row in rows))
-                or any(row['status'] == 'worker_error' for row in rows)):
+                or any(row['status'] in ('worker_error', 'worker_timeout') for row in rows)):
             raise ValueError('label purpose, full physical protocol or completion receipt differs')
+        if purpose == 'training_feedback' and report.get('training_feedback_scope') != feedback_scope:
+            raise ValueError('training labels and reward inputs have different source/exclusion contracts')
         identities = report.get('runtime_identities')
         if (not isinstance(identities, list) or len(identities) != 1 or
                 not {'model','model_checkpoint_sha256','chgnet_package','ase_package','torch_package',
@@ -107,11 +113,17 @@ def load_bound_evaluation_labels(records, label_files, *, paths_file, endpoint, 
             raise ValueError('label shards use different physical/runtime implementations')
         runtime = identities[0]
         if (runtime['model'] != COMMON_RELAXATION_PROTOCOL['model']
-                or any(not isinstance(runtime.get(key), str) or not runtime[key] for key in runtime)
+                or any(not isinstance(runtime.get(key), str) or not runtime[key] for key in
+                       ('model', 'model_checkpoint_sha256', 'chgnet_package', 'ase_package',
+                        'torch_package', 'pymatgen_package', 'labeler_sha256'))
                 or any(len(runtime[key]) != 64 or any(c not in '0123456789abcdef' for c in runtime[key])
                        for key in ('model_checkpoint_sha256','labeler_sha256'))
                 or expected_model_sha256 is not None and runtime['model_checkpoint_sha256'] != expected_model_sha256):
             raise ValueError('label runtime does not identify the pinned physical model')
+        if ('deterministic_algorithms_enabled' in runtime and type(runtime['deterministic_algorithms_enabled']) is not bool
+                or runtime.get('cublas_workspace_config') is not None and not isinstance(runtime['cublas_workspace_config'], str)
+                or runtime.get('deterministic_algorithms_enabled') is True and runtime.get('cublas_workspace_config') not in (':4096:8', ':16:8')):
+            raise ValueError('invalid deterministic numerical runtime identity')
         if report.get('input_sha256') != expected_input_sha:
             source = Path(report.get('input_file') or '')
             if not source.is_file() or sha256_file(source) != report.get('input_sha256'):
@@ -128,7 +140,7 @@ def load_bound_evaluation_labels(records, label_files, *, paths_file, endpoint, 
                     or label.get('versions') != runtime
                     or any(label.get(field) != record.get(field) for field in
                            ('group_id','source_row_idx','source_split','endpoint'))
-                    or label.get('endpoint') != endpoint or label.get('source_split') != 'evaluation'):
+                    or label.get('endpoint') != endpoint or label.get('source_split') != expected_split):
                 raise ValueError('terminal label belongs to a different exact endpoint or occurrence')
             if not record['success'] and (label.get('status') != 'generation_failure' or label.get('verified') is not False):
                 raise ValueError('a failed input acquired a physical label')
@@ -154,7 +166,8 @@ def main():
     p.add_argument("--expected-requests", type=positive_request_count, required=True)
     p.add_argument("--selection-json", type=Path)
     p.add_argument("--endpoint", choices=("native", "tau800"), required=True)
-    p.add_argument("--cohort-role", choices=("fixed_development", "independent_main"), required=True)
+    p.add_argument("--cohort-role", choices=("fixed_development", "independent_main", "training_feedback"), required=True)
+    p.add_argument('--feedback-manifest', type=Path)
     p.add_argument("--policy-stage", choices=("reference", "round0_diagnostic", "final", "unspecified"), default="unspecified")
     p.add_argument('--sun-only', action='store_true', help='Evaluate only the exact N/U predicates needed for SUN/MSUN')
     p.add_argument('--nu-workers', type=int, default=4)
@@ -173,14 +186,22 @@ def main():
         raise ValueError("evaluation request denominator changed")
     if [int(r.get("evaluation_ordinal", r["sample_idx"])) for r in records] != list(range(len(records))):
         raise ValueError("evaluation source order changed")
-    if any(r.get("source_split") != "evaluation" for r in records):
-        raise ValueError("train paths cannot supply evaluation results")
+    feedback_scope = None
+    purpose = 'training_feedback' if args.cohort_role == 'training_feedback' else 'evaluation'
+    if purpose == 'training_feedback':
+        if args.feedback_manifest is None or args.selection_json is not None:
+            raise ValueError('training feedback requires its bound manifest and all requests')
+        from crystal_dlm.sun_feedback_contract import validate_training_feedback
+        feedback_scope = validate_training_feedback(records, args.paths_jsonl, args.feedback_manifest, endpoint=args.endpoint)
+    elif args.feedback_manifest is not None or any(r.get('source_split') != 'evaluation' for r in records):
+        raise ValueError('train paths cannot supply evaluation results')
     if any(r.get("endpoint", args.endpoint) != args.endpoint for r in records):
         raise ValueError("input evaluation endpoints were mixed")
     config = json.loads(args.frozen_config.read_text())
     model_sha = sha256_file(config['assets']['chgnet_runtime_checkpoint'])
     labels, label_bindings = load_bound_evaluation_labels(records, args.labels_jsonl,
-                             paths_file=args.paths_jsonl, endpoint=args.endpoint, expected_model_sha256=model_sha)
+                             paths_file=args.paths_jsonl, endpoint=args.endpoint, expected_model_sha256=model_sha,
+                             purpose=purpose, feedback_scope=feedback_scope)
     protocols = [COMMON_RELAXATION_PROTOCOL]
     evaluator_path = Path(config["assets"]["eval_sun_py"])
     evaluator_hash = sha256_file(evaluator_path)
@@ -296,6 +317,8 @@ def main():
     def percent(value, denominator=len(output)):
         return None if value is None else 100*value/denominator
     report = {"counts": counts, "endpoint": args.endpoint, "cohort_role": args.cohort_role,
+              'purpose': purpose, 'training_feedback_scope': feedback_scope,
+              'independent_evaluation': args.cohort_role == 'independent_main',
               "status": 'complete' if nu_complete else 'incomplete_required_NU',
               "sun_only": args.sun_only, "standalone_NU_complete": all(row['novel'] is not None and row['unique_representative'] is not None for row in output),
               "nu_evaluation": nu_report, "nu_pair_timeout_seconds": args.nu_pair_timeout if args.sun_only else None,
@@ -352,7 +375,8 @@ def main():
     with (args.output_dir / "attempt_results.jsonl").open("x", encoding="utf-8") as handle:
         for row in output:
             handle.write(json.dumps(row) + "\n")
-    (args.output_dir / "EVALUATION_FINAL.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    report_name = 'FEEDBACK_FINAL.json' if purpose == 'training_feedback' else 'EVALUATION_FINAL.json'
+    (args.output_dir / report_name).write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     if selected_output:
         with (args.output_dir / "conditional_1000_results.jsonl").open("x", encoding="utf-8") as handle:
             for row in selected_output:

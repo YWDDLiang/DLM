@@ -1,4 +1,4 @@
-"""Paired old/quantized-teacher/student F800 mechanism observations, never training."""
+"""Paired F800 mechanism observations and explicitly registered training feedback."""
 from __future__ import annotations
 
 import argparse
@@ -152,12 +152,21 @@ def refine(args):
     from crystal_dlm.fixed_slot import Z_TO_SYMBOL
     prepared = args.prepared_dir
     study = json.loads((prepared / 'STUDY.json').read_text())
+    feedback = getattr(args, 'mode', None) == 'refine-feedback'
     if args.deterministic:
         torch.use_deterministic_algorithms(True)
         torch.backends.cudnn.benchmark = False
         torch.backends.cudnn.deterministic = True
-    if study['graphs_sha256'] != digest(prepared / 'graphs.pt') or study['training_use_allowed'] is not False:
+    if study['graphs_sha256'] != digest(prepared / 'graphs.pt') or study['training_use_allowed'] is not feedback:
         raise ValueError('paired probe input identity changed')
+    if feedback:
+        if study.get('schema') != 'sun_teacher_headroom_v1' or not args.deterministic or args.repeat_case_subset:
+            raise ValueError('training headroom requires its explicit deterministic full-source protocol')
+        from crystal_dlm.sun_feedback_contract import validate_training_feedback, rows as feedback_rows
+        for path in study['native_feedback_manifests']:
+            manifest = json.loads(Path(path).read_text())
+            source_path = Path(manifest['paths']['path'])
+            validate_training_feedback(feedback_rows(source_path), source_path, path, endpoint='native')
     if digest(args.checkpoint) != '573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e':
         raise ValueError('model494 identity changed')
     info = init_distributed()
@@ -208,7 +217,11 @@ def refine(args):
                 # Keep completed GPU work recoverable if a resource window closes.
                 torch.save(tensors[-1], output / f'job-{job["sample_idx"]:04d}.pt')
             pid = f'composition-refined:{job["technical_repeat"]}:{key}'
-            row = physics_input(pid, case['ancestor_id'], case['source_row_idx'], 'dev', 'tau800', arrays)
+            row = physics_input(pid, case['ancestor_id'], case['source_row_idx'], 'train' if feedback else 'dev', 'tau800', arrays)
+            if feedback:
+                from crystal_dlm.sun_feedback_contract import composition_counts
+                row.update(purpose='training_feedback', declared_composition=composition_counts(case['plan_state']),
+                           refiner_noise_seed_index=job['technical_repeat'], refiner_seed=job['refiner_seed'])
             row.update(probe_case=job['case_idx'], probe_variant=job['variant'], technical_repeat=job['technical_repeat'],
                        probe_job_index=job['sample_idx'], probe_gpu_rank=rank)
             results.append(row)
@@ -238,7 +251,9 @@ def refine(args):
                         for row in json.loads((args.output_dir / f'rank{worker}/FINGERPRINTS.json').read_text())]
     write_json(args.output_dir / 'FINGERPRINTS.json', all_fingerprints)
     write_json(args.output_dir / 'REFINE_FINAL.json', {'planned': len(results), 'input_study_sha256': digest(prepared / 'STUDY.json'),
-        'same_seed_within_source_and_technical_repeats': True, 'balanced_variant_order': True,
+        'same_seed_within_source_and_technical_repeats': not feedback, 'balanced_variant_order': True,
+        'repeat_semantics': 'independent_refiner_noise_seeds' if feedback else 'technical_repeat_same_seed',
+        'training_use_allowed': feedback,
         'world_size': world, 'source_group_assigned_to_one_gpu': True,
         'selected_case_indices': sorted(selected_cases), 'predeclared_R_repeat_case_subset': args.repeat_case_subset,
         'forward_noise_added': False, 'diff_steps': 800, 'timesteps': 1000, 'source_sha256': digest(__file__),
@@ -255,7 +270,7 @@ def refine(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--mode', choices=('prepare', 'refine'), required=True)
+    parser.add_argument('--mode', choices=('prepare', 'refine', 'refine-feedback'), required=True)
     for name in ('run-root', 'prepared-dir', 'b0-checkpoint', 'frozen-runtime-root', 'crysllmgen-dir', 'checkpoint'):
         parser.add_argument('--' + name, type=Path)
     parser.add_argument('--output-dir', type=Path, required=True)
