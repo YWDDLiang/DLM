@@ -82,6 +82,13 @@ def cache_fixture(root, resolved=(), errors=None, *, database="2026.04.13", quer
 
 
 class HullUnionTest(unittest.TestCase):
+    def test_training_cache_purpose_preserves_split_boundaries(self):
+        row=dict(planner_row(0,['Na','Cl']),source_split='train')
+        with self.assertRaises(H.HullUnionError): H.extract_chemsys(row,'planner')
+        self.assertEqual(H.extract_chemsys(row,'planner',purpose='training_feedback'),('Cl-Na',None))
+        with self.assertRaises(H.HullUnionError):
+            H.extract_chemsys(dict(row,source_split='evaluation'),'planner',purpose='training_feedback')
+
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
