@@ -179,7 +179,9 @@ def refine(args):
     model.eval()
     graphs = torch.load(prepared / 'graphs.pt', map_location='cpu', weights_only=False)
     results, tensors, fingerprints = [], [], []
-    local_jobs = [job for job in study['schedule'] if job['case_idx'] % world == rank]
+    selected_cases = set(study['R_repeat_cases']) if args.repeat_case_subset else {case['case_idx'] for case in study['cases']}
+    selected_jobs = [job for job in study['schedule'] if job['case_idx'] in selected_cases]
+    local_jobs = [job for job in selected_jobs if job['case_idx'] % world == rank]
     with torch.no_grad():
         for job in local_jobs:
             case = study['cases'][job['case_idx']]
@@ -203,11 +205,14 @@ def refine(args):
                     'repeat': job['technical_repeat'], 'cuda_rng_before': before_rng,
                     'cuda_rng_after': hashlib.sha256(torch.cuda.get_rng_state(device).cpu().numpy().tobytes()).hexdigest(),
                     'output_tensors': {k: hashlib.sha256(v.contiguous().numpy().tobytes()).hexdigest() for k, v in value.items()}})
+                # Keep completed GPU work recoverable if a resource window closes.
+                torch.save(tensors[-1], output / f'job-{job["sample_idx"]:04d}.pt')
             pid = f'composition-refined:{job["technical_repeat"]}:{key}'
             row = physics_input(pid, case['ancestor_id'], case['source_row_idx'], 'dev', 'tau800', arrays)
             row.update(probe_case=job['case_idx'], probe_variant=job['variant'], technical_repeat=job['technical_repeat'],
                        probe_job_index=job['sample_idx'], probe_gpu_rank=rank)
             results.append(row)
+            write_json(output / 'PARTIAL_RESULTS.json', {'rows': results, 'fingerprints': fingerprints})
             write_json(output / 'PROGRESS.json', {'completed': len(results), 'planned': len(local_jobs)})
             print(json.dumps({'rank': rank, 'completed': len(results), 'planned': len(local_jobs)}), flush=True)
     write_rows(output / 'refined_inputs.jsonl', results)
@@ -223,7 +228,7 @@ def refine(args):
     results = sorted([row for worker in range(world)
                       for row in read_rows(args.output_dir / f'rank{worker}/refined_inputs.jsonl')],
                      key=lambda row: row['probe_job_index'])
-    if [row['probe_job_index'] for row in results] != list(range(len(study['schedule']))):
+    if [row['probe_job_index'] for row in results] != [job['sample_idx'] for job in selected_jobs]:
         raise ValueError('paired probe lost or duplicated a scheduled observation')
     write_rows(args.output_dir / 'refined_inputs.jsonl', results)
     repeats = [x for x in results if x['technical_repeat'] == 0 and x['probe_case'] in study['R_repeat_cases']]
@@ -235,6 +240,7 @@ def refine(args):
     write_json(args.output_dir / 'REFINE_FINAL.json', {'planned': len(results), 'input_study_sha256': digest(prepared / 'STUDY.json'),
         'same_seed_within_source_and_technical_repeats': True, 'balanced_variant_order': True,
         'world_size': world, 'source_group_assigned_to_one_gpu': True,
+        'selected_case_indices': sorted(selected_cases), 'predeclared_R_repeat_case_subset': args.repeat_case_subset,
         'forward_noise_added': False, 'diff_steps': 800, 'timesteps': 1000, 'source_sha256': digest(__file__),
         'deterministic_algorithms_requested': args.deterministic,
         'deterministic_algorithms_enabled': torch.are_deterministic_algorithms_enabled(),
@@ -255,5 +261,6 @@ if __name__ == '__main__':
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--seed', type=int, default=2026090817)
     parser.add_argument('--deterministic', action='store_true', help='Explicit deterministic-kernel diagnostic; not the frozen original F800 runtime')
+    parser.add_argument('--repeat-case-subset', action='store_true', help='Only the R-repeat source indices fixed when the study was prepared')
     args = parser.parse_args()
     prepare(args) if args.mode == 'prepare' else refine(args)
