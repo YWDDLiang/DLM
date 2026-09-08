@@ -130,6 +130,40 @@ def bootstrap_interval(values, strata):
     return [float(x) for x in np.quantile(sampled*100,[.025,.975])]
 
 
+def energy_above_hull(row):
+    values = [row.get(key) for key in ('terminal_energy_eV_atom', 'hull_energy_eV_atom')]
+    if any(value is None or not math.isfinite(value) for value in values):
+        return None
+    return values[0] - values[1]
+
+
+def summarize_arm(values):
+    energies = [energy_above_hull(row) for row in values]
+    finite = [value for value in energies if value is not None]
+    return {'sources':len(values),
+        **{key:sum(row[key] for row in values) for key in
+           ['strict_sun','meta_sun','reconstructed','terminal_verified']},
+        'terminal_statuses':dict(Counter(row['terminal_status'] for row in values)),
+        'hull_distance_eV_atom':{'known':len(finite),
+            'median':float(np.median(finite)) if finite else None,
+            'stable_at_most_zero':sum(value<=0 for value in finite),
+            'above_zero_to_0p05':sum(0<value<=.05 for value in finite),
+            'above_0p05_to_0p1':sum(.05<value<=.1 for value in finite),
+            'above_0p1':sum(value>.1 for value in finite)}}
+
+
+def paired_change(values, baseline):
+    previous = {row['group_id']:row for row in baseline}
+    delta = [int(row['strict_sun'])-int(previous[row['group_id']]['strict_sun']) for row in values]
+    energy_delta = []
+    for row in values:
+        a,b = energy_above_hull(row), energy_above_hull(previous[row['group_id']])
+        if a is not None and b is not None: energy_delta.append(a-b)
+    return {'SUN_gains':sum(x==1 for x in delta),'SUN_losses':sum(x==-1 for x in delta),'net_SUN':sum(delta),
+        'both_hull_distances_known':len(energy_delta),
+        'median_hull_distance_change_eV_atom':float(np.median(energy_delta)) if energy_delta else None}
+
+
 def analyze(capsule):
     study = capsule['study']
     cases, variants = study['cases'], study['variants']
@@ -153,12 +187,14 @@ def analyze(capsule):
         'actual_actions':{}, 'identical_body_inconsistencies':[],
         'execution_integrity_verified':capsule.get('execution_integrity_verified') is True}
     fingerprint_map = {(x['case_idx'],x['variant'],x['repeat']):x for x in capsule.get('fingerprints',[])}
+    geometry = {case['ancestor_id']:bool(case['old_geometry']['valid']) for case in cases}
     for name, arm in capsule['arms'].items():
         values = arm['rows']
         assert all(type(row['strict_sun']) is bool and type(row['meta_sun']) is bool for row in values)
-        output['arms'][name] = {'sources':len(values),
-            **{key:sum(row[key] for row in values) for key in ['strict_sun','meta_sun','reconstructed','terminal_verified']},
-            'terminal_statuses':dict(Counter(row['terminal_status'] for row in values))}
+        baseline = capsule['arms'][name.split('_',1)[0]+'_keep']['rows']
+        output['arms'][name] = {**summarize_arm(values),'vs_KEEP':paired_change(values,baseline),
+            'by_original_geometry':{str(valid).lower():summarize_arm([row for row in values if geometry[row['group_id']]==valid])
+                                    for valid in [False,True]}}
     for case in cases:
         gid = case['ancestor_id']
         unique = {tuple(c['body']) for c in case['candidates'].values() if c['body'] is not None}
@@ -209,7 +245,20 @@ def analyze(capsule):
         output['cross_noise'][f'{train_seed}_to_{test_seed}'] = {'net_SUN':sum(delta),
             'gains':sum(x==1 for x in delta),'losses':sum(x==-1 for x in delta),
             'delta_pp':100*sum(delta)/len(delta), 'stratified_source_bootstrap_95pct_pp':bootstrap_interval(delta,strata),
-            'selection_counts':dict(Counter(x['selected_variant'] for x in details)), 'details':details}
+            'selection_counts':dict(Counter(x['selected_variant'] for x in details)),
+            'selection_seed_oracle_SUN':sum(panels[train_seed][x['selected_variant']][x['group_id']]['strict_sun'] for x in details),
+            'evaluation_seed_selected_SUN':sum(x['selected_SUN'] for x in details),
+            'evaluation_seed_KEEP_SUN':sum(x['KEEP_SUN'] for x in details),
+            'by_original_geometry':{str(valid).lower():{
+                'sources':sum(x['original_geometry_valid']==valid for x in details),
+                'gains':sum(x['delta']==1 for x in details if x['original_geometry_valid']==valid),
+                'losses':sum(x['delta']==-1 for x in details if x['original_geometry_valid']==valid),
+                'net_SUN':sum(x['delta'] for x in details if x['original_geometry_valid']==valid)} for valid in [False,True]},
+            'details':details}
+    output['SUN_repeatability_by_variant'] = {v:{
+        'both_seeds':sum(panels[0][v][gid]['strict_sun'] and panels[1][v][gid]['strict_sun'] for gid in expected),
+        'exactly_one_seed':sum(panels[0][v][gid]['strict_sun'] != panels[1][v][gid]['strict_sun'] for gid in expected)}
+        for v in variants}
     preservation = []
     for case in cases:
         gid = case['ancestor_id']

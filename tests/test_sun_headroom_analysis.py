@@ -116,5 +116,18 @@ class HeadroomAnalysisTests(unittest.TestCase):
         self.assertEqual(direction['losses'], 1)
         self.assertEqual(direction['net_SUN'], 5)
 
+    def test_descriptive_breakdowns_separate_action_losses_and_oracle_selection(self):
+        report = analysis.analyze(fixture())
+        local = report['arms']['ref0_local1']
+        self.assertEqual(local['vs_KEEP']['SUN_gains'], 6)
+        self.assertEqual(local['vs_KEEP']['SUN_losses'], 1)
+        self.assertEqual(local['hull_distance_eV_atom']['stable_at_most_zero'], 6)
+        self.assertEqual(local['by_original_geometry']['false']['strict_sun'], 4)
+        cross = report['cross_noise']['0_to_1']
+        self.assertEqual(cross['selection_seed_oracle_SUN'], 8)
+        self.assertEqual(cross['evaluation_seed_selected_SUN'], 7)
+        self.assertEqual(cross['by_original_geometry']['true']['net_SUN'], 2)
+        self.assertEqual(report['SUN_repeatability_by_variant']['local4']['exactly_one_seed'], 1)
+
 
 if __name__ == '__main__': unittest.main()
