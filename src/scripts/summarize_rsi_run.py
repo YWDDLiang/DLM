@@ -27,7 +27,8 @@ def summarize(root):
             expected=root/('cohort/plans.jsonl' if name=='MAIN' else 'fit/cohort/plans.jsonl')
             if file_hash(plans)!=file_hash(expected): raise ValueError('Plan or seed bytes differ across weight versions')
             stages=['construction','refined','tokenized','edited']
-            if name=='MAIN' and index==0: stages+=['baselines/H1A2','baselines/R03']
+            if name=='MAIN' and index==0:
+                stages+=['baselines/H1A2_raw','baselines/H1A2','baselines/R03_raw','baselines/R03']
             local={}
             for stage in stages:
                 directory=score_directory(base,stage);summary=directory/'BASIC_METRICS.json'

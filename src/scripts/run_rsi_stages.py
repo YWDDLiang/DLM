@@ -407,6 +407,31 @@ def validity(spec,stage):
         'metrics_sha256':file_hash(output/'four_metrics.jsonl')})
 
 
+def baseline_raw(spec,arm):
+    """Select the registered baseline bodies under the identical frozen Plans."""
+    import hashlib
+    root=Path(spec['run_root']);plans=read_rows(root/'cohort/plans.jsonl')
+    asset='control_body' if arm=='H1A2' else 'candidate_body'
+    source=Path(spec['assets'][asset])
+    source_digest=file_hash(source)
+    if source_digest!=spec['source_sha256'][asset]: raise ValueError('saved baseline bodies changed')
+    records={row['ordinal']:row for row in read_rows(source)}
+    stage='baselines/'+arm+'_raw'
+    for plan in plans:
+        original=plan['original_ordinal'];saved=records[original]
+        if (saved['body_noise_seed']!=plan['body_noise_seed'] or
+                saved['body_prompt_sha256']!=hashlib.sha256(plan['body_prompt'].encode()).hexdigest()):
+            raise ValueError('saved baseline Plan prompt or generation seed differs')
+        success=saved['status']=='succeeded' and saved['body_generation_complete'] is True
+        record=physics_record(plan,state_id=f"{spec['run_id']}:{arm}:raw:{original}",
+                              body=saved['text'] if success else None,reason=None if success else saved.get('reason'))
+        if success: record['body_token_ids']=saved['raw_body_token_ids']
+        write_json(root/stage/'records'/f'{original:04d}.json',{'record':record,
+            'source_file':str(source),'source_sha256':source_digest,'original_ordinal':original,
+            'saved_generation_policy':saved['generation_policy'],'config_sha256':spec['_config_sha256']})
+    materialize(spec,stage)
+
+
 def baseline_chunk(spec,arm,chunk,chunks,shard,shards):
     """Independent fixed-Plan baseline chunks; reuse only bound identical F800."""
     import torch
@@ -450,7 +475,7 @@ def baseline_chunk(spec,arm,chunk,chunks,shard,shards):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config',required=True)
-    parser.add_argument('--action',choices=['prepare-fit','materialize','gate','refine','select','edit','pairs','rebind','validity','baseline-chunk'],required=True)
+    parser.add_argument('--action',choices=['prepare-fit','materialize','gate','refine','select','edit','pairs','rebind','validity','baseline-raw','baseline-chunk'],required=True)
     parser.add_argument('--stage',default='construction')
     parser.add_argument('--arm',choices=['H1A2','R03'],default='H1A2')
     parser.add_argument('--chunk',type=int,default=0)
@@ -466,6 +491,7 @@ def main():
     elif args.action=='pairs': compile_pairs(spec,args.branch)
     elif args.action=='rebind': rebind_labels(spec,args.stage)
     elif args.action=='validity': validity(spec,args.stage)
+    elif args.action=='baseline-raw': baseline_raw(spec,args.arm)
     elif args.action=='baseline-chunk':
         if not 0<=args.chunk<args.chunks: parser.error('invalid baseline chunk')
         baseline_chunk(spec,args.arm,args.chunk,args.chunks,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
