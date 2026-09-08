@@ -326,6 +326,10 @@ def rebind_labels(spec, stage):
         return (record.get('group_id'),record.get('source_row_idx'),record['sample_idx'],
                 api.endpoint_cache_key(record) if record['success'] else 'explicit_generation_failure')
     for parent in sources[stage]:
+        # Deployment may KEEP every current endpoint. In that case an unused
+        # proposal needs no physical call; unmatched targets still fail below.
+        if stage=='edited' and parent=='proposal' and not (root/parent/'labeling/result/_SUCCESS').exists():
+            continue
         inputs=root/parent/'inputs.jsonl';records=read_rows(inputs)
         scope=validate_training_feedback(records,inputs,root/parent/'FEEDBACK_MANIFEST.json') if training else None
         directory=root/parent/'labeling/result'
