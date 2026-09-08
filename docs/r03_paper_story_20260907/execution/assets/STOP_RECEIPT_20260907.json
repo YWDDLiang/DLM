@@ -1,0 +1,7 @@
+{
+  "status": "completed",
+  "returncode": 0,
+  "output": "{\"reason\": \"User explicitly stopped remaining experiments; no formal sampling is to be started.\", \"cancelled_jobs\": [], \"outputs_preserved\": true}",
+  "output_prefix_lost": false,
+  "nonce": "77ba410305cb"
+}

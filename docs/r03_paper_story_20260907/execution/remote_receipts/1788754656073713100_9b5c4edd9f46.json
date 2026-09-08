@@ -1,8 +1,0 @@
-{
-  "status": "completed",
-  "returncode": 0,
-  "output": "{\"K8teacher\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/data/spad_state_teacher_round1_uniform_gd2_20260906_v1/teacher.json\", \"K8teacher_exists\": true, \"vocabulary_keys\": [\"N_values\", \"count_values\", \"formula_bpe\", \"pair_prior\", \"physics\", \"schema\", \"soft_vocabulary\", \"species\", \"species_eos_id\"], \"family_values\": [\"chalcogenide\", \"halide\", \"nitride\", \"other\", \"oxide\", \"phosphide_or_phosphate\", \"sulfide\", \"<UNKNOWN>\"], \"first_species\": {\"atomic_number\": 1, \"id\": 0, \"label\": \"H-1\", \"oxidation_state\": -1}, \"legacy_runtime\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1\", \"legacy_exists\": true, \"object_repo_exists\": true}",
-  "nonce": "9b5c4edd9f46",
-  "recorded_unix": 1788754656.0737228,
-  "command_sha256": "e915b275ef07abca114d1e30783fe5c36a9b94b9a53d6fec9342f1637214a540"
-}

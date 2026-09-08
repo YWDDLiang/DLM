@@ -1,0 +1,23 @@
+{
+  "schema": "remote_experiment_closeout_v1",
+  "complete": true,
+  "checked_utc": "2026-09-08T12:12:26.426033+00:00",
+  "active_experiment_jobs": 0,
+  "all_deleted_weights_absent": true,
+  "retained_weights_present": true,
+  "removed_transport_fragments": 39,
+  "cleanup": {
+    "archive_sha256": "d3f3d365f7ef6c467cd18858a9f0db3676e8d0bc0ed57bf1187ff6067fcc0f2a",
+    "cleaned_checkpoints": 24,
+    "complete": true,
+    "completed_utc": "2026-09-08T11:57:27.179900+00:00",
+    "manifest_sha256": "d7667b74d988e0cf1478e7814f36cb97bfe54451e897b206b9aa2a14ea709bd0",
+    "removed_bytes": 56964189806,
+    "removed_weight_files": 95,
+    "retained_checkpoints": [
+      "expert_full_stage2/train/checkpoints/step-000800"
+    ],
+    "retained_data_files_verified": 91296,
+    "schema": "experiment_checkpoint_cleanup_v1"
+  }
+}

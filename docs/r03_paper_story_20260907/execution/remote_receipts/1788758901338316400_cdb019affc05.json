@@ -1,7 +1,0 @@
-{
-  "status": "completed",
-  "returncode": 0,
-  "output": "remote: Enumerating objects: 2099, done.\nremote: Counting objects: 100% (337/337), done.\nremote: Compressing objects: 100% (214/214), done.\nremote: Total 2099 (delta 169), reused 278 (delta 120), pack-reused 1762 (from 2)\nReceiving objects: 100% (2099/2099), 21.77 MiB | 2.61 MiB/s, done.\nResolving deltas: 100% (902/902), completed with 1 local objects.\nFrom https://github.com/YWDDLiang/DLM\n * branch            codex/r03-c3fd-rich-main -> FETCH_HEAD\n{\"run_root\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z\", \"source\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/code/5b5193c315f1c8045e92f1f902f60b11e6fe89f3\", \"commit\": \"5b5193c315f1c8045e92f1f902f60b11e6fe89f3\", \"ready\": true}",
-  "nonce": "cdb019affc05",
-  "recorded_unix": 1788758901.3383162
-}

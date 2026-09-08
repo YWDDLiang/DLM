@@ -1,0 +1,14 @@
+{
+  "schema": "local_closeout_verification_v1",
+  "complete": true,
+  "checked_utc": "2026-09-08T12:20:32.111851+00:00",
+  "capsule_sha256": "bcb416d85c798efd4e36c29aac39b64fb326b16034eb1c16275efd32b63e127f",
+  "analysis_source_sha256": "10f1b47a848032382dc9e17e7dc260845938d1b5bf99feee7cfb74419860b592",
+  "gzip_capsule_sha256": "f50cbe11403155e1472448bc136286247a1e79d1e4ee7a18e048c3d2faf86338",
+  "archive_sha256": "d3f3d365f7ef6c467cd18858a9f0db3676e8d0bc0ed57bf1187ff6067fcc0f2a",
+  "metadata_ledger_sha256": "54b1d1d9116e13fd140286c1b9ad0edcef99e7487e10399d0cc4a48f2b47a47f",
+  "removed_receipts": 1054,
+  "remaining_recent_receipts": 3,
+  "scientific_gate_passed": false,
+  "archive_and_checkpoint_cleanup_verified": true
+}

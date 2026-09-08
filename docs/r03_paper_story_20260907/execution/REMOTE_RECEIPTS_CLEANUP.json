@@ -1,0 +1,30 @@
+{
+  "schema": "obsolete_remote_receipts_cleanup_v1",
+  "complete": true,
+  "batches": [
+    {
+      "completed_utc": "2026-09-08T12:04:21.201850+00:00",
+      "removed_files": 1044,
+      "removed_bytes": 3825967
+    },
+    {
+      "completed_utc": "2026-09-08T12:15:05.933855+00:00",
+      "removed_files": 10,
+      "removed_bytes": 14439
+    }
+  ],
+  "removed_files": 1054,
+  "removed_bytes": 3840406,
+  "retained_current_receipts": [
+    "docs/r03_paper_story_20260907/execution/expert_self_edit/remote_receipts/1788869127131_69959081fa31.json",
+    "docs/r03_paper_story_20260907/execution/expert_self_edit/remote_receipts/1788869304877_371557290e96.json",
+    "docs/r03_paper_story_20260907/execution/expert_self_edit/remote_receipts/1788869620622_26cadfddaa1e.json"
+  ],
+  "current_session_nonce": "26cadfddaa1e",
+  "metadata_ledger": "docs/r03_paper_story_20260907/execution/REMOTE_RECEIPTS_DELETED.jsonl.gz",
+  "metadata_ledger_sha256": "54b1d1d9116e13fd140286c1b9ad0edcef99e7487e10399d0cc4a48f2b47a47f",
+  "referenced_transfer_receipts_archive": "docs/r03_paper_story_20260907/execution/assets/canary_geometry_40457/TRANSPORT_RECEIPTS_ARCHIVE.json.gz",
+  "referenced_transfer_archive_sha256": "9d5db146b66fbf035464c2e5f399aa1d9fd2c6f1fc97a686c9d818218f3e75b5",
+  "canonical_stop_receipt": "docs/r03_paper_story_20260907/execution/assets/STOP_RECEIPT_20260907.json",
+  "raw_transport_outputs_not_in_metadata_ledger": true
+}

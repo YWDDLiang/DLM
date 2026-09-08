@@ -74,7 +74,9 @@ OPS = operations/r03_c3fd_main_20260907
 - [执行过程记录](execution/CURRENT_EXECUTION.md)（包含较早的阶段状态，停止状态以本文件及停止回执为准）
 - [几何 canary 原始资产](execution/assets/canary_geometry_40457/SOURCE_RECEIPTS.json)
 - [R/I tau800 SUN 原始报告](execution/assets/ri_tau800_256/RI_tau800_SUN.json)、[可读表格](execution/assets/ri_tau800_256/RI_tau800_SUN.md)、[源文件哈希](execution/assets/ri_tau800_256/SOURCE_RECEIPTS.json)
-- [停止回执](execution/remote_receipts/persistent_1788781439428_77ba410305cb.json)
+- [停止回执](execution/assets/STOP_RECEIPT_20260907.json)
+
+过时的逐次远端传输回执已按用户要求清理。几何canary传输证明中原先引用的11份回执，按原始字节合并保存在[传输证明压缩归档](execution/assets/canary_geometry_40457/TRANSPORT_RECEIPTS_ARCHIVE.json.gz)；原TRANSFER_RECEIPT中的绝对路径保留作历史记录。最终数据、来源哈希和正式停止回执保留在资产目录，活动会话只保留少量最近传输记录。
 
 截至整理时，最新 R/I 结果、部分运维辅助文件和后期回执仍是本地未跟踪文件。**其他 checkout 或远端 Git 分支不一定包含它们。** 后续发布可复用包时应逐项纳入必要文件，不能把整个回执目录直接加入版本库；其中也有历史探测输出和临时 bundle。
 

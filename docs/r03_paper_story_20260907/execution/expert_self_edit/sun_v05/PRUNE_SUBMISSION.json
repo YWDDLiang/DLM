@@ -1,0 +1,26 @@
+{
+  "command": [
+    "sbatch",
+    "--parsable",
+    "--no-requeue",
+    "--partition=normal",
+    "--job-name=expert_checkpoint_cleanup",
+    "--nodes=1",
+    "--ntasks=1",
+    "--cpus-per-task=2",
+    "--mem=16G",
+    "--time=90",
+    "--chdir=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908",
+    "--output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908/prune_%j.out",
+    "--error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908/prune_%j.err",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908/prune_checkpoints.sbatch"
+  ],
+  "cpus": 2,
+  "expected_removed_bytes": 56964189806,
+  "expected_removed_files": 95,
+  "gpus": 0,
+  "job_id": "41154",
+  "memory": "16G",
+  "submitted_utc": "2026-09-08T11:54:36.231850+00:00",
+  "wall_minutes": 90
+}

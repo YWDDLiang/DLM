@@ -1,0 +1,205 @@
+{
+  "schema": "sun_v05_closeout_decision_v1",
+  "decision": "stop_without_new_gradient_training; archive all experiment data and clean selected unsuccessful weights",
+  "sources": 64,
+  "gate": {
+    "integrity": true,
+    "repeatable_source_wins_at_least_6": false,
+    "cross_noise_net_at_least_4_each_direction": false,
+    "proper_subset_local_winning_sources_at_least_2": false,
+    "criterion_type": "predeclared practical support for bounded pilot, not a success probability",
+    "global_content_pilot_supported": false,
+    "local_content_pilot_supported": false
+  },
+  "repeatable_source_wins": 0,
+  "cross_noise_net_SUN": [
+    0,
+    0
+  ],
+  "arms": {
+    "native_keep": {
+      "strict_sun": 2,
+      "meta_sun": 11,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 0,
+        "net_SUN": 0,
+        "both_hull_distances_known": 32,
+        "median_hull_distance_change_eV_atom": 0
+      }
+    },
+    "native_local1": {
+      "strict_sun": 1,
+      "meta_sun": 10,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 1,
+        "net_SUN": -1,
+        "both_hull_distances_known": 31,
+        "median_hull_distance_change_eV_atom": -0.0025022029876708984
+      }
+    },
+    "native_local4": {
+      "strict_sun": 1,
+      "meta_sun": 15,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 1,
+        "net_SUN": -1,
+        "both_hull_distances_known": 32,
+        "median_hull_distance_change_eV_atom": -0.1916358470916748
+      }
+    },
+    "native_all_xyz": {
+      "strict_sun": 3,
+      "meta_sun": 20,
+      "vs_KEEP": {
+        "SUN_gains": 1,
+        "SUN_losses": 0,
+        "net_SUN": 1,
+        "both_hull_distances_known": 32,
+        "median_hull_distance_change_eV_atom": -0.2062983512878418
+      }
+    },
+    "native_full_cell": {
+      "strict_sun": 3,
+      "meta_sun": 23,
+      "vs_KEEP": {
+        "SUN_gains": 1,
+        "SUN_losses": 0,
+        "net_SUN": 1,
+        "both_hull_distances_known": 32,
+        "median_hull_distance_change_eV_atom": -0.2076660394668579
+      }
+    },
+    "ref0_keep": {
+      "strict_sun": 5,
+      "meta_sun": 31,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 0,
+        "net_SUN": 0,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": 0
+      }
+    },
+    "ref0_local1": {
+      "strict_sun": 3,
+      "meta_sun": 29,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 2,
+        "net_SUN": -2,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": -0.000001430511474609375
+      }
+    },
+    "ref0_local4": {
+      "strict_sun": 4,
+      "meta_sun": 34,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 1,
+        "net_SUN": -1,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": -0.00004029273986816406
+      }
+    },
+    "ref0_all_xyz": {
+      "strict_sun": 3,
+      "meta_sun": 32,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 2,
+        "net_SUN": -2,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": -0.00014954805374145508
+      }
+    },
+    "ref0_full_cell": {
+      "strict_sun": 3,
+      "meta_sun": 30,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 2,
+        "net_SUN": -2,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": 0.000022649765014648438
+      }
+    },
+    "ref1_keep": {
+      "strict_sun": 5,
+      "meta_sun": 30,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 0,
+        "net_SUN": 0,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": 0
+      }
+    },
+    "ref1_local1": {
+      "strict_sun": 5,
+      "meta_sun": 31,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 0,
+        "net_SUN": 0,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": -0.0001087188720703125
+      }
+    },
+    "ref1_local4": {
+      "strict_sun": 3,
+      "meta_sun": 24,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 2,
+        "net_SUN": -2,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": -0.00004863739013671875
+      }
+    },
+    "ref1_all_xyz": {
+      "strict_sun": 4,
+      "meta_sun": 35,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 1,
+        "net_SUN": -1,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": -0.00010704994201660156
+      }
+    },
+    "ref1_full_cell": {
+      "strict_sun": 3,
+      "meta_sun": 29,
+      "vs_KEEP": {
+        "SUN_gains": 0,
+        "SUN_losses": 2,
+        "net_SUN": -2,
+        "both_hull_distances_known": 62,
+        "median_hull_distance_change_eV_atom": 0.0002167224884033203
+      }
+    }
+  },
+  "scope": "reference-covered, geometry-stratified current_B0_full_rich training headroom; not independent student evaluation",
+  "new_gradient_training_seconds": 0,
+  "prior_gradient_training_seconds": 11264.306058777496,
+  "physical_source_commit": "849326636d77414634d398edb3a3704198cc42d8",
+  "analysis_source_sha256": "10f1b47a848032382dc9e17e7dc260845938d1b5bf99feee7cfb74419860b592",
+  "capsule_sha256": "bcb416d85c798efd4e36c29aac39b64fb326b16034eb1c16275efd32b63e127f",
+  "user_closeout_instruction_utc": "2026-09-08T10:46:25Z",
+  "archive_output": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908",
+  "checkpoint_cleanup_scope": {
+    "checkpointDirs": 25,
+    "cleanedCheckpointDirs": 24,
+    "pruneFiles": 95,
+    "pruneBytes": 56964189806,
+    "pruneGiB": 53.052035911008716,
+    "protectedDir": "expert_full_stage2/train/checkpoints/step-000800",
+    "retainedWeights": 2381031737,
+    "totalWeights": 59345221543
+  },
+  "archive_utility_sha256": "5396b8733946bbb8096e515697a8f174dbdb9af4e97ed42f4e0a2fa8b5c74fff"
+}

@@ -1,8 +1,0 @@
-{
-  "status": "completed",
-  "returncode": 0,
-  "output": "{\"job_id\": \"40395\", \"source\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z/code/a2e8f80a26be43ef3a46039154d8c02e2185a5a8\", \"run_root\": \"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/r03_c3fd_rich_20260907/run_20260907T033526Z\", \"gpus\": 1, \"cpus\": 4, \"queue_before\": [], \"stage\": \"assets_and_frozen_P0_control_head\"}",
-  "nonce": "a2a5495b1466",
-  "recorded_unix": 1788755793.4741614,
-  "command_sha256": "7577745ae360be06df486c5e33b55b5bff458b5e0aef8e693cd00084aa2ffc08"
-}

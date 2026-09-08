@@ -1,0 +1,16 @@
+{
+  "archive_sha256": "d3f3d365f7ef6c467cd18858a9f0db3676e8d0bc0ed57bf1187ff6067fcc0f2a",
+  "command": [
+    "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "archive_experiment.py",
+    "prune",
+    "--output",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908"
+  ],
+  "expected_removed_bytes": 56964189806,
+  "expected_removed_files": 95,
+  "kept_checkpoint": "expert_full_stage2/train/checkpoints/step-000800",
+  "manifest_sha256": "d7667b74d988e0cf1478e7814f36cb97bfe54451e897b206b9aa2a14ea709bd0",
+  "script_sha256": "8c956393461f9800d992acbe021872ae15286667c32a2cea6f5ce841e5518111",
+  "source_sha256": "5396b8733946bbb8096e515697a8f174dbdb9af4e97ed42f4e0a2fa8b5c74fff"
+}

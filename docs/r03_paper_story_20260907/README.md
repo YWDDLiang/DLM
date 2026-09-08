@@ -1,6 +1,6 @@
 # 从化学有效性到物理稳定性：论文问题与贡献定稿建议
 
-**当前审计与执行（2026-09-08）：** 已完成专家编辑与根因受控实验；用户要求以SUN为根本目标，并再次确认推理无MLIP/外部几何筛选、每请求单候选。[方法修订v0.5](EXPERT_REPAIR_DISCUSSION.md#sun-v05)建议“连续短程去噪蒸馏＋实际学生轨迹的SUN终点学习”，首轮优先固定F800后的SUN。用户随后授权审计并按证据执行：2来源工程canary已完成，64来源、五种动作、两组F800噪声的教师候选空间检查正在运行，见[执行状态](execution/expert_self_edit/sun_v05/EXECUTION_STATUS.json)及[预先登记的进阶条件](EXPERT_REPAIR_PLAN_AUDIT.md)。新增梯度训练尚未启动。已完成证据见[根因实验总览](execution/expert_self_edit/mechanism_study/README.md)，[SUN目标审计](execution/expert_self_edit/sun_objective_audit_20260908/SUN_OBJECTIVE_AUDIT.json)保持原MAIN不变。以下较早的执行状态仅作历史记录。
+**当前结果与收尾（2026-09-08）：** 专家编辑、根因受控实验及[方法修订v0.5](EXPERT_REPAIR_DISCUSSION.md#sun-v05)的64来源教师候选检查已完成。[v0.5完整结果](execution/expert_self_edit/sun_v05/RESULT.md)显示：固定F800后没有非KEEP动作新增Strict SUN，重复来源胜例0、跨噪声净增0，未通过[预先登记的进阶条件](EXPERT_REPAIR_PLAN_AUDIT.md)。原生全局候选有小幅SUN和较明显MSUN改善，但没有新DLM学生性能证据，不进入新训练。已归档并核验91,296个本轮文件，清理24份checkpoint的95个权重/优化器文件（53.05 GiB），保留第800步正式参考权重；[数据归档索引](execution/expert_self_edit/sun_v05/DATA_ARCHIVE_INDEX.md)记录了位置和用途。当前等待用户新idea；最终状态见[执行状态](execution/expert_self_edit/sun_v05/EXECUTION_STATUS.json)。已完成旧证据见[根因实验总览](execution/expert_self_edit/mechanism_study/README.md)，[SUN目标审计](execution/expert_self_edit/sun_objective_audit_20260908/SUN_OBJECTIVE_AUDIT.json)保持原MAIN不变。以下较早的执行状态仅作历史记录。
 
 **当前逐条讨论：** GPT Pro 专家监督修订方案与本轮用户意见，单独记录于 [专家监督 DLM 修订讨论与决策](EXPERT_REPAIR_DISCUSSION.md)。已确认事项与待确认建议分别标记，后续持续更新同一文件。
 

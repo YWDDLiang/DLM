@@ -1,11 +1,11 @@
 {
   "schema": "sun_v05_execution_status_v1",
-  "phase": "teacher_action_SUN_scoring",
-  "active_job_id": 41151,
+  "phase": "complete_waiting_for_user",
+  "active_job_id": null,
   "allocation": {
     "GPUs": 0,
-    "CPUs": 18,
-    "memory_GB": 144
+    "CPUs": 0,
+    "memory_GB": 0
   },
   "cancelled_pending_jobs": [
     41121,
@@ -22,9 +22,9 @@
   "score_job_submitted": true,
   "new_gradient_updates": 0,
   "cumulative_prior_training_seconds": 11264.306058777496,
-  "scientific_promotion_not_yet_decided": true,
-  "latest_remote_status": "GPU 41142 completed all 20 stages; CPU score 41151 submitted with 0 GPUs and 18 CPUs",
-  "recorded_unix": 1788866337.421,
+  "scientific_promotion_not_yet_decided": false,
+  "latest_remote_status": "Archive and checkpoint cleanup completed and verified; no active experiment jobs; obsolete transport receipts cleaned; waiting for user new idea",
+  "recorded_unix": 1788869620.622,
   "connection_restored_by_user": true,
   "deadline_utc": "2026-09-09T04:00:00+00:00",
   "gpu_job_id": 41142,
@@ -34,5 +34,22 @@
   "failed_launch_jobs": [
     41150
   ],
-  "launch_correction": "CPU single component runner; the GPU-only group rejected job 41150 before scoring began"
+  "launch_correction": "CPU single component runner; the GPU-only group rejected job 41150 before scoring began",
+  "score_job_id": 41151,
+  "score_job_complete": true,
+  "scientific_decision": "no_training; preregistered SUN headroom gates failed",
+  "archive_output": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908",
+  "checkpoint_cleanup_pending": false,
+  "archive_job_id": 41153,
+  "archive_complete": true,
+  "cleanup_job_id": 41154,
+  "checkpoint_cleanup_complete": true,
+  "cleaned_checkpoints": 24,
+  "removed_weight_files": 95,
+  "removed_weight_bytes": 56964189806,
+  "retained_data_files": 91296,
+  "retained_checkpoint": "expert_full_stage2/train/checkpoints/step-000800",
+  "obsolete_remote_receipts_removed": 1054,
+  "retained_recent_receipts": 3,
+  "active_experiment_jobs": 0
 }

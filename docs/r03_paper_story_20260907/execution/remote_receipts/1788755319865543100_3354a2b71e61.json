@@ -1,8 +1,0 @@
-{
-  "status": "completed",
-  "returncode": 1,
-  "output": "fatal: Couldn't find remote ref codex/r03-c3fd-rich-main\nfatal: The remote end hung up unexpectedly\nTraceback (most recent call last):\n  File \"<string>\", line 7, in <module>\n  File \"/public/home/jiaosz/miniconda3/envs/diff_meets_diff/lib/python3.10/subprocess.py\", line 526, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', 'fetch', 'origin', 'codex/r03-c3fd-rich-main']' returned non-zero exit status 128.",
-  "nonce": "3354a2b71e61",
-  "recorded_unix": 1788755319.8655488,
-  "command_sha256": "ec1f30b958c4f34dca70a55a1997b54356b2a6f22503ea2d253692a0d77c137f"
-}

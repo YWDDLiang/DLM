@@ -1,0 +1,13 @@
+{
+  "archive_bytes": 3882030876,
+  "archive_sha256": "d3f3d365f7ef6c467cd18858a9f0db3676e8d0bc0ed57bf1187ff6067fcc0f2a",
+  "complete": true,
+  "excluded_weights": 99,
+  "manifest_sha256": "d7667b74d988e0cf1478e7814f36cb97bfe54451e897b206b9aa2a14ea709bd0",
+  "prunable_bytes": 56964189806,
+  "prunable_weights": 95,
+  "retained_data_bytes": 8585118776,
+  "retained_data_files": 91296,
+  "schema": "experiment_data_archive_verified_v1",
+  "verified_utc": "2026-09-08T11:49:08.653343+00:00"
+}

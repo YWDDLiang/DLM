@@ -1,0 +1,701 @@
+{
+  "archive_sha256": "d3f3d365f7ef6c467cd18858a9f0db3676e8d0bc0ed57bf1187ff6067fcc0f2a",
+  "created_utc": "2026-09-08T11:56:24.825523+00:00",
+  "manifest_sha256": "d7667b74d988e0cf1478e7814f36cb97bfe54451e897b206b9aa2a14ea709bd0",
+  "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "weights": [
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788811283822092742,
+      "path": "editor_smoke32/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "c4621dd9a3e949aa8440e8b5e991a3afd2190a2e789f9fa44b99fa17d2cb3529"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788811284091092749,
+      "path": "editor_smoke32/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "cc3a491ac03fc2b77c2c5ea299976cf1388b83c93e8ab69e8548363e40c0d18a"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788811284035092747,
+      "path": "editor_smoke32/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "965b6b44f934f2edb0271679279c0f1c1de7720777c76b8740f595ce80d0b1ae"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788818460681263852,
+      "path": "expanded_training_probe/probe/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "65cb7754884f17501119db3c5d26ccbd871f75ab3c9df0e667cdf52f0cec8511"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788818461066263861,
+      "path": "expanded_training_probe/probe/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "f79f2d505cc811d2834b6605977fd5dc8534060eacc4bcd66da5dd3c423b0649"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788818461016263860,
+      "path": "expanded_training_probe/probe/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "7ac85fab42d964503ed9fab92a3641cb94555f291159af5571f6687e3d19c964"
+    },
+    {
+      "bytes": 180290450,
+      "mtime_ns": 1788818464649263946,
+      "path": "expanded_training_probe/probe/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "6cac7b61025e39c71003daaf519363d1e0a8ca18acf80f7af903809308320e25"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788818448378263558,
+      "path": "expanded_training_probe/probe/checkpoints/step-000004/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "e04f6070cd2fed0bcd2d6b21a30b28e9d98be2a17bf09ebc7b3d8863e1dd1ca1"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788818448784263568,
+      "path": "expanded_training_probe/probe/checkpoints/step-000004/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "8ef8e39709770a84c2380ccd7b7a20af6befe04b53efbc6d95eda5b3b282d142"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788818448734263567,
+      "path": "expanded_training_probe/probe/checkpoints/step-000004/periodic_state.pt",
+      "retained": false,
+      "sha256": "0055d46e0de2129fabdb0afe7efedf913aba6597acbf1cfb7fdca6bbc3eccd67"
+    },
+    {
+      "bytes": 180290450,
+      "mtime_ns": 1788818452194263649,
+      "path": "expanded_training_probe/probe/checkpoints/step-000004/training_state.pt",
+      "retained": false,
+      "sha256": "8071a0ebb4e37d4efec54e9530b70f28f2cd008500ea54302f288ee5fdfa9377"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788818572659266522,
+      "path": "expanded_training_probe/resume/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "ec420e0923f5d684f86b3525307947b4cfef3e0c0d64f1c47f4114df3fdc6db2"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788818573069266531,
+      "path": "expanded_training_probe/resume/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "c345723d37e6583aa40a9a2795803264f58641c4c74e91677ec56d76ad117188"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788818573015266530,
+      "path": "expanded_training_probe/resume/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "e71a1aa630135c5699764a1ef8476f4e78c283d6b460a49822b6e15f2d78021b"
+    },
+    {
+      "bytes": 180290450,
+      "mtime_ns": 1788818576451266612,
+      "path": "expanded_training_probe/resume/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "6510fd04f561f664d56614dff1255faf835da81c422a04d942a7c5d514839e48"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788820072897302290,
+      "path": "expert_full_stage1/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "1fc2ccbc53f95abf2fc5e8f5c3eff9980118a8dfe050c7d19ee9dc63e7b30e1d"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788820073168302296,
+      "path": "expert_full_stage1/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "61ac2a68940e5b0b7fdb35dfb0a50aacef692da4d0908036a2155fe5a7ff7456"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788820073115302295,
+      "path": "expert_full_stage1/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "7e171cb3a9fb440a220c368ea1dbfb6864e14a38b6253fffe9337f308973f750"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788820076692302381,
+      "path": "expert_full_stage1/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "d05fbc9e62ca3b6a34570a8fe52b7261d4180f58d3f82067dcb2bfb462b69508"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788818998344276671,
+      "path": "expert_full_stage1/train/checkpoints/step-000200/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "a3ad191b55101fd279ff630b6458f0246f314574ceafc022f70d2ec5ca3b599e"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788818998750276680,
+      "path": "expert_full_stage1/train/checkpoints/step-000200/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "7b3466326bc5d4213ef1ccc9f23bac34742c6df136fa53b99a621eb9bf6c91f6"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788818998699276679,
+      "path": "expert_full_stage1/train/checkpoints/step-000200/periodic_state.pt",
+      "retained": false,
+      "sha256": "4200396fa36917e97b02b055c131bb18a7107f8a8799c28f6affe79c273cffee"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788819002164276762,
+      "path": "expert_full_stage1/train/checkpoints/step-000200/training_state.pt",
+      "retained": false,
+      "sha256": "7a5b00b916f3626de485318977995625c0fbd681c784236b8923295e377b0304"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788819174863280879,
+      "path": "expert_full_stage1/train/checkpoints/step-000400/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "dfc47a3ed6fa842c217b4202226bac9c73e99b41cf95adfa120f9c424006c812"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788819175262280889,
+      "path": "expert_full_stage1/train/checkpoints/step-000400/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "380a42be998a10dfe977413d20a55b6a9feda36f3bb8b4fc4c4c1cea914305c4"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788819175214280888,
+      "path": "expert_full_stage1/train/checkpoints/step-000400/periodic_state.pt",
+      "retained": false,
+      "sha256": "d26d2c658d752a7f3cadcab1b11809831d73dd3edd1e70438294fca61267c8b5"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788819178661280970,
+      "path": "expert_full_stage1/train/checkpoints/step-000400/training_state.pt",
+      "retained": false,
+      "sha256": "d1f7244ddae42037b43e3854953c867961b792b08558412e03ba3df829301cf2"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788819348639285022,
+      "path": "expert_full_stage1/train/checkpoints/step-000600/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "18df3bb36a479e5490a8b74fe3ce8935590dab650eb9c340c18cd71bc80c0588"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788819349044285032,
+      "path": "expert_full_stage1/train/checkpoints/step-000600/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "04a7d74c068fc02117ae17a8ca9643f0a972099f5a1609e06cbebe904f006227"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788819348993285031,
+      "path": "expert_full_stage1/train/checkpoints/step-000600/periodic_state.pt",
+      "retained": false,
+      "sha256": "64c6d56facd23e5308d3e61d3054653244945475129b21ef8dd02a525868d50a"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788819352487285114,
+      "path": "expert_full_stage1/train/checkpoints/step-000600/training_state.pt",
+      "retained": false,
+      "sha256": "b69b1e371adba4555830a6bc7226e59673bfe2ba3a1e95002a572f66670409ad"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788819524616289218,
+      "path": "expert_full_stage1/train/checkpoints/step-000800/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "fad47d34d009d3f48d1cc84acc6a77993553f686c73c014d65cbda9d3da34eb5"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788819525015289227,
+      "path": "expert_full_stage1/train/checkpoints/step-000800/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "5cd4a4f366f4a0f23d6f3100b90d0a72053fcc149db29108125e1f519d4e8ea8"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788819524969289226,
+      "path": "expert_full_stage1/train/checkpoints/step-000800/periodic_state.pt",
+      "retained": false,
+      "sha256": "1ad058d5888a6fbd9956aadeaca7f56e20ee28c07d424b0cd8764b66a592c598"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788819528421289309,
+      "path": "expert_full_stage1/train/checkpoints/step-000800/training_state.pt",
+      "retained": false,
+      "sha256": "eb7289fab5fc0dbed7fbe841553f449ed5a7985ce49443c7d7ac1038c29820c5"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788819702019293448,
+      "path": "expert_full_stage1/train/checkpoints/step-001000/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "22153238a4e4935d86b70cd20f0784fd8293e7cd3890cbe71b14e3ba18e681d0"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788819702422293457,
+      "path": "expert_full_stage1/train/checkpoints/step-001000/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "0f41dda307fbeb731bea0d8ba13c9b9efd7129daafe3b698ad6cf6d267015d9f"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788819702373293456,
+      "path": "expert_full_stage1/train/checkpoints/step-001000/periodic_state.pt",
+      "retained": false,
+      "sha256": "43cd2176ab12931417d134fca478de60a50f55f992f6360607f2c1d40d20290b"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788819705847293539,
+      "path": "expert_full_stage1/train/checkpoints/step-001000/training_state.pt",
+      "retained": false,
+      "sha256": "829cf83c2e5fb7ef2ea4b28168b3d8fd29a6eeca463b9f2bb0234a5bf6fc8931"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788819878518297656,
+      "path": "expert_full_stage1/train/checkpoints/step-001200/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "260c3d3d770ce517b4abe224d6cc0f382bd8aa13dbbb0437aa439fa10eb9e456"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788819878920297665,
+      "path": "expert_full_stage1/train/checkpoints/step-001200/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "eb54350d2b4a82359866d392ce9623cef214788181c6def013537e39a628b844"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788819878870297664,
+      "path": "expert_full_stage1/train/checkpoints/step-001200/periodic_state.pt",
+      "retained": false,
+      "sha256": "488cb86db2375835962b56d548627fbc7c9246f70257dc117cedc58d68eb7f8f"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788819882323297746,
+      "path": "expert_full_stage1/train/checkpoints/step-001200/training_state.pt",
+      "retained": false,
+      "sha256": "3d44248ef3197dbe5f8519d06793d54e4d27393315830fa270f8ffcda100ba3b"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788820061991302030,
+      "path": "expert_full_stage1/train/checkpoints/step-001400/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "1fc2ccbc53f95abf2fc5e8f5c3eff9980118a8dfe050c7d19ee9dc63e7b30e1d"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788820062282302037,
+      "path": "expert_full_stage1/train/checkpoints/step-001400/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "61ac2a68940e5b0b7fdb35dfb0a50aacef692da4d0908036a2155fe5a7ff7456"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788820062230302036,
+      "path": "expert_full_stage1/train/checkpoints/step-001400/periodic_state.pt",
+      "retained": false,
+      "sha256": "7e171cb3a9fb440a220c368ea1dbfb6864e14a38b6253fffe9337f308973f750"
+    },
+    {
+      "bytes": 180290386,
+      "mtime_ns": 1788820065885302123,
+      "path": "expert_full_stage1/train/checkpoints/step-001400/training_state.pt",
+      "retained": false,
+      "sha256": "ac9648462249fb145ab901cfdc0bc3dcfda5eb98de392d2bc10b40b04eddd331"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788823417542382033,
+      "path": "expert_full_stage2/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "bd28ea34ea1ea9b61ad235a794c216f57bc23672d5cc3fa79e5be100a79ef066"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788823417830382039,
+      "path": "expert_full_stage2/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "50048e9f11f80ea3dd5f24846ae429726e052eea472c703386ed9ee73ee96ccd"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788823417779382038,
+      "path": "expert_full_stage2/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "7c5f3c03e74ff9596c15d4ce86b6af962b1e3e89c4a40d3eb3011e2b9b862816"
+    },
+    {
+      "bytes": 180291858,
+      "mtime_ns": 1788823421376382124,
+      "path": "expert_full_stage2/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "0cd6f5c2cbf6a0774b0309efb3132d48ff70fc214e8468a480a48401560fafcd"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788822696431364840,
+      "path": "expert_full_stage2/train/checkpoints/step-000200/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "901e7f3218ffbefc7eac0542122b220137c96abebaf4e47b873cd0815529ba4c"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788822696696364846,
+      "path": "expert_full_stage2/train/checkpoints/step-000200/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "7ede9c8b7db9a2db884d312b3ce044e79f910da99b180bac176d71ce78cdd5b5"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788822696646364845,
+      "path": "expert_full_stage2/train/checkpoints/step-000200/periodic_state.pt",
+      "retained": false,
+      "sha256": "536f346b453547989053e1c07b01519aa101b7d6c0f1c07021edcf8ff4c871d8"
+    },
+    {
+      "bytes": 180291858,
+      "mtime_ns": 1788822700186364929,
+      "path": "expert_full_stage2/train/checkpoints/step-000200/training_state.pt",
+      "retained": false,
+      "sha256": "8574971de89a63196178960bf012ddb1337c1cd270df8dedcafe8cce5dee35db"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788822874619369088,
+      "path": "expert_full_stage2/train/checkpoints/step-000400/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "512b840808b6cbc2ce9dfb28c0d5a35430b5f7a248354092e32009aae3e61495"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788822874981369097,
+      "path": "expert_full_stage2/train/checkpoints/step-000400/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "92d804ecd2128cd0b8ae08cfd09da12cb3b7071a9f47a4e170f71e73ad954cc2"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788822874929369096,
+      "path": "expert_full_stage2/train/checkpoints/step-000400/periodic_state.pt",
+      "retained": false,
+      "sha256": "cb03ac5fbe767c89daa3c307943f36c36a70b6663bff7ef3b1d7dde28b42c716"
+    },
+    {
+      "bytes": 180291858,
+      "mtime_ns": 1788822878475369180,
+      "path": "expert_full_stage2/train/checkpoints/step-000400/training_state.pt",
+      "retained": false,
+      "sha256": "7520311f0d1343421fc93f2f17d2f85885beaf8ee82ed179d15ea3bead8842e7"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788823051519373306,
+      "path": "expert_full_stage2/train/checkpoints/step-000600/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "086ded024860198730d6b8e840762c56731bd71fdc02065dc1a85cf90294118e"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788823051807373313,
+      "path": "expert_full_stage2/train/checkpoints/step-000600/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "f075f6f6d2b5d548958b61f77a15a27c8e09b1df79b53c35c42dd9d27ae20e6c"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788823051752373311,
+      "path": "expert_full_stage2/train/checkpoints/step-000600/periodic_state.pt",
+      "retained": false,
+      "sha256": "ed8aabfe4081c86d15a9c392a59326a48494ff4b6b30464e00d15b33b4baffcb"
+    },
+    {
+      "bytes": 180291858,
+      "mtime_ns": 1788823055443373399,
+      "path": "expert_full_stage2/train/checkpoints/step-000600/training_state.pt",
+      "retained": false,
+      "sha256": "84ed2c007a60889fb30294b52651d1f3ae337a7c047f1df5dc1e73f99af21d5d"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788823228943377536,
+      "path": "expert_full_stage2/train/checkpoints/step-000800/adapter_model.safetensors",
+      "retained": true,
+      "sha256": "13950c37f5563a2e57eaa9ddb333dd721caf8b5e95d99677b94b199113f6ef93"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788823229231377543,
+      "path": "expert_full_stage2/train/checkpoints/step-000800/expert_edit_modules.pt",
+      "retained": true,
+      "sha256": "e38470a11ef8b1488d240ee6e50a73dbf2ee50ac49953d71b27a3c7a7b4d35ac"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788823229176377542,
+      "path": "expert_full_stage2/train/checkpoints/step-000800/periodic_state.pt",
+      "retained": true,
+      "sha256": "c668b6ae8a96c1ebc8e786b858056f2e6df6daedd63a9a0bf25f069233e0b6f0"
+    },
+    {
+      "bytes": 180291858,
+      "mtime_ns": 1788823232741377627,
+      "path": "expert_full_stage2/train/checkpoints/step-000800/training_state.pt",
+      "retained": true,
+      "sha256": "250b372c5d1a165bbecef2eaaac3a96cdbd7686a02dd525630e98df0c89c4831"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788823406581381771,
+      "path": "expert_full_stage2/train/checkpoints/step-001000/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "bd28ea34ea1ea9b61ad235a794c216f57bc23672d5cc3fa79e5be100a79ef066"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788823406855381778,
+      "path": "expert_full_stage2/train/checkpoints/step-001000/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "50048e9f11f80ea3dd5f24846ae429726e052eea472c703386ed9ee73ee96ccd"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788823406802381777,
+      "path": "expert_full_stage2/train/checkpoints/step-001000/periodic_state.pt",
+      "retained": false,
+      "sha256": "7c5f3c03e74ff9596c15d4ce86b6af962b1e3e89c4a40d3eb3011e2b9b862816"
+    },
+    {
+      "bytes": 180291858,
+      "mtime_ns": 1788823410388381862,
+      "path": "expert_full_stage2/train/checkpoints/step-001000/training_state.pt",
+      "retained": false,
+      "sha256": "9a07293386be6a788c257d25f670cac540e1827af4e1db6c80f6ea2810fc17db"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788836752262699957,
+      "path": "mechanism_data256_next1600/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "bd38d6e7fe32dc70b569bd01905e78405f8eb1eb28bc18c4744daf6401ba1256"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788836752533699964,
+      "path": "mechanism_data256_next1600/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "feb72b9d4f4b2f0d063757ce141336d6e25028339a20bdf8ffc0a70f4846221b"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788836752480699962,
+      "path": "mechanism_data256_next1600/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "cd56be0449eeef06e1278601f2c078c21a4ca9e43b7243be3ed6db9c0423a117"
+    },
+    {
+      "bytes": 180248238,
+      "mtime_ns": 1788836756052700047,
+      "path": "mechanism_data256_next1600/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "02a079eec482904b73dc0ebc5dee22f4b07ec7421c3d292fc7708f0855ef6dd9"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788836772773700446,
+      "path": "mechanism_data64_next1600/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "caf84bacdb5976ffa1b45fea15b3331b7dbae5d7cb4554326a884bd7ae938498"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788836773033700452,
+      "path": "mechanism_data64_next1600/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "47400af822034f9899fbb5a96e8b9f9cbcde2ad6e87b155fb76a1ef81610ea16"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788836772983700451,
+      "path": "mechanism_data64_next1600/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "db9e6643bc37fd3cceb468a5c8c8b70fd15d6dd4adb26c69ff71067887df8d88"
+    },
+    {
+      "bytes": 180248302,
+      "mtime_ns": 1788836776530700536,
+      "path": "mechanism_data64_next1600/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "623f099625fecb80e54d515d39959c55085182393edbc2b1bb9ee0d14cceefb8"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788844410265882538,
+      "path": "mechanism_fit8/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "1d8e60c6fa2d56fc223d633083bf9f2d2d6bf708f45d6efee1411369f82db68d"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788844410517882544,
+      "path": "mechanism_fit8/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "29ee197d9662933b5e8654c9f593096ea639a61fe3d158e72704bf4851a842f9"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788844410467882543,
+      "path": "mechanism_fit8/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "ebfe37ad4fd8fcb435d7ad4c52f360f79738b71886289c5cb511700919952523"
+    },
+    {
+      "bytes": 180288594,
+      "mtime_ns": 1788844413904882625,
+      "path": "mechanism_fit8/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "7828893fc067ef5ec07352504bd8dd571f6c32fe27083b2f81a64313ec9319db"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788838768513748028,
+      "path": "mechanism_gauge64_aligned/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "45f5b5b957aaa89f1f28dd5b8a3e61de42fde613caa6de9a70c8907093586df3"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788838768769748034,
+      "path": "mechanism_gauge64_aligned/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "30f93eb8019637d0b8bfed2eff08396ade29e039267fde0c856c38d3aa5b7363"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788838768719748033,
+      "path": "mechanism_gauge64_aligned/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "251affb5f5330d9115823ebabfda905660604ff1147e7f197b55ce86aa374646"
+    },
+    {
+      "bytes": 180248494,
+      "mtime_ns": 1788838772139748115,
+      "path": "mechanism_gauge64_aligned/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "942a8a78c89f32fa20912b45e18b9344524140ee84d1f0ac0f3e6ae6403fd279"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788838775639748198,
+      "path": "mechanism_gauge64_control/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "250e521d44ac85e7371f2e0b80e486df69e5ccb366e064510f4d261af2635120"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788838775899748204,
+      "path": "mechanism_gauge64_control/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "91e5cfbe50d8ff62956071fe7c60edd98dde5ced080660444847c1d26a6ee867"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788838775849748203,
+      "path": "mechanism_gauge64_control/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "7f0d862b1caec3a49849a92e448c18942ed36c5efcbd88dd67fd9776951474e7"
+    },
+    {
+      "bytes": 180248558,
+      "mtime_ns": 1788838779336748286,
+      "path": "mechanism_gauge64_control/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "63b29ede629a1e10af64d00d7e2ed2cc1bddee944769a937bb7066b460a0fd6c"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788830712305555953,
+      "path": "mechanism_loss64_next/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "b831dc9877a6662320a9cbb38bb92fe75b88e77e8350ecb6fb18af8575329db8"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788830712714555963,
+      "path": "mechanism_loss64_next/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "8e88598eba62b279c65f4f61c2dd01217366c50a48cd50fc0c428b27093f61f5"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788830712664555962,
+      "path": "mechanism_loss64_next/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "2419449eb05c7a69224e1b3731a84e46f5870fd3c3497aca3bcad4ec11823739"
+    },
+    {
+      "bytes": 180248366,
+      "mtime_ns": 1788830716189556046,
+      "path": "mechanism_loss64_next/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "af1a62d4f1cf58e06a867bdc3144a2ab941b26c14490690ab3da6d7703433a0b"
+    },
+    {
+      "bytes": 2169514760,
+      "mtime_ns": 1788830721231556166,
+      "path": "mechanism_loss64_suffix/train/checkpoint/adapter_model.safetensors",
+      "retained": false,
+      "sha256": "1a596a6b97fabae41e056d38271d7245f1af8afd6ff2140eb560337d034e96ea"
+    },
+    {
+      "bytes": 26146449,
+      "mtime_ns": 1788830721682556177,
+      "path": "mechanism_loss64_suffix/train/checkpoint/expert_edit_modules.pt",
+      "retained": false,
+      "sha256": "ba416c0f98671bd1357e23538106e48a94d6829bf0e94c0fdf9a0aefb467dd7a"
+    },
+    {
+      "bytes": 5078670,
+      "mtime_ns": 1788830721628556176,
+      "path": "mechanism_loss64_suffix/train/checkpoint/periodic_state.pt",
+      "retained": false,
+      "sha256": "fb0da92ea02305358a69c0465782cd39703075a2b730004459cfe0bbb7ac2fe7"
+    },
+    {
+      "bytes": 180248430,
+      "mtime_ns": 1788830725189556260,
+      "path": "mechanism_loss64_suffix/train/checkpoint/training_state.pt",
+      "retained": false,
+      "sha256": "cd7aabae63f2e91227de5638aac54f74a9694ebf86db3bc40b441317d357e057"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+    "archive_experiment.py",
+    "archive",
+    "--root",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+    "--output",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z_data_archive_20260908",
+    "--keep-checkpoint",
+    "expert_full_stage2/train/checkpoints/step-000800",
+    "--require-complete",
+    "sun_v05_teacher64",
+    "--require-complete",
+    "sun_v05_teacher64_scores"
+  ],
+  "cpus": 2,
+  "gpus": 0,
+  "memory": "16G",
+  "script_sha256": "319948bba9d223c6515f3aebc5d9f10c0474f35b7970022ec9c496098ebdcad8",
+  "source_commit": "8c21fce",
+  "source_sha256": "5396b8733946bbb8096e515697a8f174dbdb9af4e97ed42f4e0a2fa8b5c74fff",
+  "wall_minutes": 90
+}
