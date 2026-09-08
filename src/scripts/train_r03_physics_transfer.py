@@ -397,6 +397,8 @@ def expert_args(argv):
     parser.add_argument('--content-target-mode', choices=('all_pending','next_token'), default='all_pending')
     parser.add_argument('--evaluation-content-target-mode', choices=('same','all_pending','next_token'), default='same')
     parser.add_argument('--m2t-probability', type=float, default=.7)
+    parser.add_argument('--target-representative', choices=('none','old_aligned_grid'), default='none')
+    parser.add_argument('--evaluation-target-representative', choices=('same','none','old_aligned_grid'), default='same')
     parser.add_argument('--seed', type=int, default=2026090807)
     parser.add_argument('--max-length', type=int, default=1024)
     parser.add_argument('--smoke-sources', type=int, default=0)
@@ -751,14 +753,23 @@ def expert_main(argv):
                                   smoke_sources=args.smoke_sources, geometry_aux_fraction=args.geometry_aux_fraction,
                                   content_fraction=args.content_fraction,inspect_fraction=args.inspect_fraction,
                                   student_feedback_fraction=args.student_feedback_fraction,healthy_state_fraction=args.healthy_state_fraction,
-                                  content_target_mode=args.content_target_mode,m2t_probability=args.m2t_probability)
+                                  content_target_mode=args.content_target_mode,m2t_probability=args.m2t_probability,
+                                  target_representative=args.target_representative)
     eval_target_mode = args.content_target_mode if args.evaluation_content_target_mode == 'same' else args.evaluation_content_target_mode
+    eval_representative = args.target_representative if args.evaluation_target_representative == 'same' else args.evaluation_target_representative
     from copy import copy
     train_eval_data = copy(train_data)
+    if eval_representative != args.target_representative:
+        train_eval_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed, split='train',
+            smoke_sources=args.smoke_sources, geometry_aux_fraction=args.geometry_aux_fraction,
+            content_fraction=args.content_fraction, inspect_fraction=args.inspect_fraction,
+            student_feedback_fraction=args.student_feedback_fraction, healthy_state_fraction=args.healthy_state_fraction,
+            content_target_mode=eval_target_mode, m2t_probability=args.m2t_probability,
+            target_representative=eval_representative)
     train_eval_data.content_target_mode = eval_target_mode
     dev_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed+10000, split='dev',
                                  geometry_aux_fraction=args.geometry_aux_fraction,content_target_mode=eval_target_mode,
-                                 m2t_probability=args.m2t_probability)
+                                 m2t_probability=args.m2t_probability, target_representative=eval_representative)
     train_comps = {row['composition_key'] for row in train_data.records}
     dev_comps = {row['composition_key'] for row in dev_data.records}
     if train_comps & dev_comps:
@@ -768,7 +779,7 @@ def expert_main(argv):
     objective = ExpertEditObjective(tokenizer, device)
     if args.mode in ('sample', 'sample-base'):
         model.eval()
-        dataset = train_data if args.split == 'train' else dev_data
+        dataset = train_eval_data if args.split == 'train' else dev_data
         # Scope capability is determined by the actual training partition.
         dataset.allowed_modes = (model.training_modes if args.mode == 'sample' else train_data.allowed_modes)
         requested = sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, world)
@@ -870,6 +881,8 @@ def expert_main(argv):
                 'healthy_state_fraction':args.healthy_state_fraction,
                 'content_target_mode':args.content_target_mode, 'evaluation_content_target_mode':eval_target_mode,
                 'm2t_probability':args.m2t_probability,
+                'target_representative':args.target_representative, 'evaluation_target_representative':eval_representative,
+                'target_representative_source_sha256':file_sha256(Path(__file__).resolve().parents[1]/'crystal_dlm/expert_target_representative.py'),
                 'eval_examples': args.eval_examples,
                 'parameter_names': [name for name,_ in selected]}
     start_step, example_cursor = 0, 0
@@ -936,6 +949,18 @@ def expert_main(argv):
               'dev_files': dev_data.provenance, 'args': {key: str(value) if isinstance(value, Path) else
               [str(x) for x in value] if key == 'data_dirs' else value for key,value in vars(args).items()}}
     if rank == 0:
+        representative_fields = ('record_id','ancestor_id','old_body','target_body','training_target_body',
+                                 'training_target_certificate','training_representative_zero_edit')
+        representative_files = {}
+        for split, dataset in (('train', train_data), ('dev', dev_data)):
+            rows = [{k: row[k] for k in representative_fields} for row in dataset.records
+                    if 'training_target_certificate' in row]
+            if rows:
+                destination = args.output_dir / f'{split}_target_representatives.jsonl'
+                write_jsonl(destination, rows)
+                representative_files[split] = {'path': str(destination), 'sha256': file_sha256(destination),
+                    'records': len(rows), 'equivalent_zero_edits': sum(row['training_representative_zero_edit'] for row in rows)}
+        config['target_representatives'] = representative_files
         write_json(args.output_dir/'TRAIN_CONFIG.json', config)
         print(json.dumps(config), flush=True)
     started = time.monotonic()

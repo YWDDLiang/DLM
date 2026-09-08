@@ -288,7 +288,7 @@ class ExpertEditDataset(Dataset):
     def __init__(self, data_dirs, tokenizer, *, seed=20260908, size=10000, split='train', smoke_sources=0,
                  geometry_aux_fraction=.2, content_fraction=.65, inspect_fraction=.17,
                  student_feedback_fraction=0., healthy_state_fraction=0.,
-                 content_target_mode='all_pending', m2t_probability=.7):
+                 content_target_mode='all_pending', m2t_probability=.7, target_representative='none'):
         from crystal_dlm.expert_edit_data import SCHEMA, read_rows, sha256
         self.seed, self.size, self.epoch, self.tokenizer = int(seed), int(size), 0, tokenizer
         if not 0 <= geometry_aux_fraction <= 1:
@@ -304,6 +304,9 @@ class ExpertEditDataset(Dataset):
         if content_target_mode not in ('all_pending', 'next_token') or not 0 <= m2t_probability <= 1:
             raise ValueError('invalid content supervision or masked-view probability')
         self.content_target_mode, self.m2t_probability = content_target_mode, m2t_probability
+        if target_representative not in ('none', 'old_aligned_grid'):
+            raise ValueError('unknown target representative')
+        self.target_representative = target_representative
         records, provenance = [], []
         for directory in map(Path, data_dirs):
             if not (directory / '_SUCCESS').is_file():
@@ -322,6 +325,8 @@ class ExpertEditDataset(Dataset):
                                'report_sha256': sha256(directory / 'DATA_FINAL.json')})
         if len({row['record_id'] for row in records}) != len(records):
             raise ValueError('duplicate editor records would double-count source supervision')
+        if any('training_target_body' in row or 'training_target_certificate' in row for row in records):
+            raise ValueError('compiled physics records must retain original targets; derive representatives after loading')
         if smoke_sources:
             pools = {task: sorted({row['ancestor_id'] for row in records
                                   if row['task'] == task and row.get('content_supervision')}) for task in ('G', 'S')}
@@ -331,11 +336,17 @@ class ExpertEditDataset(Dataset):
             remaining = [x for x in pools['G'] + pools['S'] if x not in selected]
             selected.update(remaining[:max(0, smoke_sources - len(selected))])
             records = [row for row in records if row['ancestor_id'] in selected]
+        if target_representative == 'old_aligned_grid':
+            from crystal_dlm.expert_target_representative import training_representative
+            records = [training_representative(row, tokenizer) for row in records]
         self.records = records
-        self.content = {task: [row for row in records if row['task'] == task and row.get('content_supervision')]
+        # Equivalent zero edits provide no nonzero action supervision. Keep their
+        # original physical records and state observations, without inventing STOP.
+        actions = [row for row in records if not row.get('training_representative_zero_edit')]
+        self.content = {task: [row for row in actions if row['task'] == task and row.get('content_supervision')]
                         for task in ('G', 'S')}
-        self.positive = [row for row in records if row.get('content_supervision')]
-        self.acceptance_positive = [row for row in records if row.get('accept_label') is True]
+        self.positive = [row for row in actions if row.get('content_supervision')]
+        self.acceptance_positive = [row for row in actions if row.get('accept_label') is True]
         self.states = [row for row in records if row.get('state_only')]
         self.healthy_states = [row for row in self.states if row['old_geometry'].get('valid') is True
                                and row.get('old_reliable') is True]
@@ -427,7 +438,7 @@ def make_edit_view(record, kind, rng, prefix, *, content_target_mode='all_pendin
     reveal = 0.
     remaining = len(active) + 2
     if kind == 'content':
-        target = record['target_body']
+        target = record.get('training_target_body', record['target_body'])
         if not active:
             active = numeric_positions(n)
         cut = rng.randrange(len(active))
