@@ -23,8 +23,8 @@
   "new_gradient_updates": 0,
   "cumulative_prior_training_seconds": 11264.306058777496,
   "scientific_promotion_not_yet_decided": true,
-  "latest_remote_status": "41142 sun_v05_teacher64_g3 RUNNING 16:43 gpu:NVIDIAA800-SXM4-80GB:3,gpu:NVIDIAA800-SXM4-80GB:3\n\nrank0 {\n  \"completed\": 33,\n  \"planned\": 220\n}\nrank1 {\n  \"completed\": 33,\n  \"planned\": 210\n}\nrank2 {\n  \"completed\": 33,\n  \"planned\": 210\n}\nsources 64 initial_unavailable 2",
-  "recorded_unix": 1788861059.939,
+  "latest_remote_status": "refine 462 / 640\nRUNNING 1:01:13\n\nGPU_component_success False\ncompleted_label_arms 0",
+  "recorded_unix": 1788863725.615,
   "connection_restored_by_user": true,
   "deadline_utc": "2026-09-09T04:00:00+00:00"
 }

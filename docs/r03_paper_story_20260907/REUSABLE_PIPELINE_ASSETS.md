@@ -1,6 +1,8 @@
 # R03 链路可复用资产与参数化整理清单
 
-更新日期：2026-09-07。范围：刚执行的 P0 → C3FD/程序头 → B0 构造/修订 → model494 精修 → 物理标注 → 官方参考缓存 → SUN 链路。
+更新日期：2026-09-08。范围：P0 → C3FD/程序头 → B0 构造/修订 → model494 精修 → 物理标注 → 官方参考缓存 → SUN，以及显式训练反馈链路。
+
+v0.5新增可复用边界：`sun_feedback_contract.py`核验训练来源与独立MAIN的组成隔离；原label和SUN CLI通过`training_feedback`用途接入，保留原物理和N/U算法。`generate_sun_feedback_candidates.py`负责有限教师候选、独立图构造及精修导出身份校验，原`expert_composition_probe.py`增加训练反馈模式。`analyze_sun_headroom.py`只汇总已完成候选及评分回执，检查跨噪声支持和未知标签，不执行物理筛选或部署推理。现阶段状态与清单见[教师候选空间执行记录](execution/expert_self_edit/sun_v05/EXECUTION_STATUS.json)；这些入口不表示SUN策略训练已经实现。
 
 **当前状态：2026-09-08用户已授权专家编辑实验。旧R03路线保持停止；新路线复用本表入口并通过manifest绑定独立源码和运行目录。2048条新请求构造已完成，短训准备中；正式1200请求主面板尚未运行编辑器。**
 
