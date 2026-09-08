@@ -1,0 +1,751 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/849326636d77414634d398edb3a3704198cc42d8",
+  "source_identity": {
+    "commit": "849326636d77414634d398edb3a3704198cc42d8",
+    "manifest_sha256": "0adb92838967d3bfd02f73380ef8c58e051e1d289ca018fc1ac21f0380127ebf"
+  },
+  "purpose": "train",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-09T04:00:00+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "panel": "training_only_sparse_trajectory_headroom",
+    "requests": 64
+  },
+  "data_contract": {
+    "experiment": "sun_v05_teacher64_headroom",
+    "sources": 64,
+    "training_use_allowed": true,
+    "independent_evaluation": false,
+    "gradient_updates": 0,
+    "training_seconds_already_used": 11264.306058777496,
+    "teacher_steps": 200,
+    "teacher_frame": "native_OLD_float32_no_niggli",
+    "endpoint_graph_builder": "frozen_materializer_in_separate_process",
+    "refiner_steps": 800,
+    "refiner_noise_seeds": 2,
+    "variants": [
+      "keep",
+      "local1",
+      "local4",
+      "all_xyz",
+      "full_cell"
+    ],
+    "selection_seed": 2026090841,
+    "canary_results_cannot_promote_scientific_claims": true,
+    "engineering_canary_job": "41117",
+    "teacher_oracle_is_not_student_performance": true,
+    "previous_teacher_success_filter": false,
+    "geometry_strata": {
+      "invalid": 32,
+      "valid": 32
+    },
+    "unique_compositions": true,
+    "public_reference_coverage_restricted": true,
+    "progression_gate": {
+      "repeatable_source_wins_minimum": 6,
+      "cross_noise_selection_net_SUN_each_direction_minimum": 4,
+      "proper_subset_local_source_wins_minimum_for_local_claim": 2,
+      "selection_ties": [
+        "KEEP",
+        "fewer_changed_tokens",
+        "fixed_variant_order"
+      ],
+      "interpretation": "minimum support for a bounded training pilot, not probability or powered significance test"
+    },
+    "resource_adjustment": {
+      "cancelled_pending_jobs": [
+        41121,
+        41141
+      ],
+      "outputs_started": false,
+      "reason": "node now has 4 occupied GPUs; choose 3 GPUs with scheduling margin",
+      "gpus": 3,
+      "cpus": 18,
+      "scientific_parameters_unchanged": true
+    }
+  },
+  "components": [
+    {
+      "id": "sun_v05_teacher64",
+      "output_dir": "sun_v05_teacher64",
+      "gpus": 3,
+      "stages": [
+        {
+          "name": "prepare",
+          "script": "src/scripts/generate_sun_feedback_candidates.py",
+          "args": [
+            "--mode",
+            "prepare",
+            "--parent-prepared",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_data/prepared",
+            "--heldout-cohort",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new/cohort/cohort.jsonl",
+            "--official-cache",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines/hull/official_mp_cache",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--sources",
+            "64",
+            "--seed",
+            "2026090841",
+            "--output-dir",
+            "{output}/prepared"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_data/prepared/PREPARATION_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expanded_training_data/prepared/pairs_pending.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new/cohort/cohort.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines/hull/official_mp_cache/official_slim_cache.jsonl"
+          ],
+          "outputs": [
+            "{output}/prepared/STUDY.json",
+            "{output}/prepared/graphs.pt",
+            "{output}/prepared/_SUCCESS"
+          ]
+        },
+        {
+          "name": "generate",
+          "script": "src/scripts/generate_sun_feedback_candidates.py",
+          "args": [
+            "--mode",
+            "generate",
+            "--prepared-dir",
+            "{output}/prepared",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--crysllmgen-dir",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+            "--checkpoint",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+            "--output-dir",
+            "{output}/candidates"
+          ],
+          "inputs": [
+            "{output}/prepared/STUDY.json",
+            "{output}/prepared/graphs.pt",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diffusion.py"
+          ],
+          "outputs": [
+            "{output}/candidates/STUDY.json",
+            "{output}/candidates/_SUCCESS",
+            "{output}/candidates/native/keep/inputs.jsonl",
+            "{output}/candidates/native/keep/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/local1/inputs.jsonl",
+            "{output}/candidates/native/local1/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/local4/inputs.jsonl",
+            "{output}/candidates/native/local4/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/all_xyz/inputs.jsonl",
+            "{output}/candidates/native/all_xyz/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/full_cell/inputs.jsonl",
+            "{output}/candidates/native/full_cell/FEEDBACK_INPUTS.json"
+          ],
+          "distributed_processes": 3
+        },
+        {
+          "name": "materialize",
+          "script": "src/scripts/generate_sun_feedback_candidates.py",
+          "args": [
+            "--mode",
+            "materialize",
+            "--prepared-dir",
+            "{output}/candidates",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--frozen-runtime-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1",
+            "--crysllmgen-dir",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen",
+            "--output-dir",
+            "{output}/refinement_prepared"
+          ],
+          "inputs": [
+            "{output}/candidates/STUDY.json",
+            "{output}/candidates/native/keep/inputs.jsonl",
+            "{output}/candidates/native/keep/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/local1/inputs.jsonl",
+            "{output}/candidates/native/local1/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/local4/inputs.jsonl",
+            "{output}/candidates/native/local4/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/all_xyz/inputs.jsonl",
+            "{output}/candidates/native/all_xyz/FEEDBACK_INPUTS.json",
+            "{output}/candidates/native/full_cell/inputs.jsonl",
+            "{output}/candidates/native/full_cell/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/refinement_prepared/STUDY.json",
+            "{output}/refinement_prepared/graphs.pt",
+            "{output}/refinement_prepared/_SUCCESS"
+          ]
+        },
+        {
+          "name": "refine",
+          "script": "operations/r03_c3fd_main_20260907/expert_composition_probe.py",
+          "args": [
+            "--mode",
+            "refine-feedback",
+            "--prepared-dir",
+            "{output}/refinement_prepared",
+            "--crysllmgen-dir",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+            "--checkpoint",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+            "--deterministic",
+            "--output-dir",
+            "{output}/refined"
+          ],
+          "inputs": [
+            "{output}/refinement_prepared/STUDY.json",
+            "{output}/refinement_prepared/graphs.pt",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/models_ddpm/diffusion.py"
+          ],
+          "outputs": [
+            "{output}/refined/REFINE_FINAL.json",
+            "{output}/refined/refined_inputs.jsonl",
+            "{output}/refined/FINGERPRINTS.json",
+            "{output}/refined/_SUCCESS"
+          ],
+          "distributed_processes": 3
+        },
+        {
+          "name": "export",
+          "script": "src/scripts/generate_sun_feedback_candidates.py",
+          "args": [
+            "--mode",
+            "export-refined",
+            "--prepared-dir",
+            "{output}/refinement_prepared",
+            "--refined-dir",
+            "{output}/refined",
+            "--output-dir",
+            "{output}/refined_arms"
+          ],
+          "inputs": [
+            "{output}/refinement_prepared/STUDY.json",
+            "{output}/refined/REFINE_FINAL.json",
+            "{output}/refined/refined_inputs.jsonl"
+          ],
+          "outputs": [
+            "{output}/refined_arms/EXPORT_FINAL.json",
+            "{output}/refined_arms/_SUCCESS",
+            "{output}/refined_arms/seed0/keep/inputs.jsonl",
+            "{output}/refined_arms/seed0/keep/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed0/local1/inputs.jsonl",
+            "{output}/refined_arms/seed0/local1/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed0/local4/inputs.jsonl",
+            "{output}/refined_arms/seed0/local4/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed0/all_xyz/inputs.jsonl",
+            "{output}/refined_arms/seed0/all_xyz/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed0/full_cell/inputs.jsonl",
+            "{output}/refined_arms/seed0/full_cell/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed1/keep/inputs.jsonl",
+            "{output}/refined_arms/seed1/keep/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed1/local1/inputs.jsonl",
+            "{output}/refined_arms/seed1/local1/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed1/local4/inputs.jsonl",
+            "{output}/refined_arms/seed1/local4/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed1/all_xyz/inputs.jsonl",
+            "{output}/refined_arms/seed1/all_xyz/FEEDBACK_INPUTS.json",
+            "{output}/refined_arms/seed1/full_cell/inputs.jsonl",
+            "{output}/refined_arms/seed1/full_cell/FEEDBACK_INPUTS.json"
+          ]
+        },
+        {
+          "name": "labels_native_keep",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/candidates/native/keep/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/candidates/native/keep/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_native_keep"
+          ],
+          "inputs": [
+            "{output}/candidates/native/keep/inputs.jsonl",
+            "{output}/candidates/native/keep/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_native_keep/LABEL_FINAL.json",
+            "{output}/labels_native_keep/labels.jsonl",
+            "{output}/labels_native_keep/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_native_local1",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/candidates/native/local1/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/candidates/native/local1/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_native_local1"
+          ],
+          "inputs": [
+            "{output}/candidates/native/local1/inputs.jsonl",
+            "{output}/candidates/native/local1/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_native_local1/LABEL_FINAL.json",
+            "{output}/labels_native_local1/labels.jsonl",
+            "{output}/labels_native_local1/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_native_local4",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/candidates/native/local4/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/candidates/native/local4/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_native_local4"
+          ],
+          "inputs": [
+            "{output}/candidates/native/local4/inputs.jsonl",
+            "{output}/candidates/native/local4/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_native_local4/LABEL_FINAL.json",
+            "{output}/labels_native_local4/labels.jsonl",
+            "{output}/labels_native_local4/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_native_all_xyz",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/candidates/native/all_xyz/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/candidates/native/all_xyz/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_native_all_xyz"
+          ],
+          "inputs": [
+            "{output}/candidates/native/all_xyz/inputs.jsonl",
+            "{output}/candidates/native/all_xyz/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_native_all_xyz/LABEL_FINAL.json",
+            "{output}/labels_native_all_xyz/labels.jsonl",
+            "{output}/labels_native_all_xyz/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_native_full_cell",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/candidates/native/full_cell/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/candidates/native/full_cell/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_native_full_cell"
+          ],
+          "inputs": [
+            "{output}/candidates/native/full_cell/inputs.jsonl",
+            "{output}/candidates/native/full_cell/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_native_full_cell/LABEL_FINAL.json",
+            "{output}/labels_native_full_cell/labels.jsonl",
+            "{output}/labels_native_full_cell/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref0_keep",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed0/keep/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed0/keep/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref0_keep"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed0/keep/inputs.jsonl",
+            "{output}/refined_arms/seed0/keep/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref0_keep/LABEL_FINAL.json",
+            "{output}/labels_ref0_keep/labels.jsonl",
+            "{output}/labels_ref0_keep/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref0_local1",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed0/local1/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed0/local1/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref0_local1"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed0/local1/inputs.jsonl",
+            "{output}/refined_arms/seed0/local1/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref0_local1/LABEL_FINAL.json",
+            "{output}/labels_ref0_local1/labels.jsonl",
+            "{output}/labels_ref0_local1/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref0_local4",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed0/local4/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed0/local4/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref0_local4"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed0/local4/inputs.jsonl",
+            "{output}/refined_arms/seed0/local4/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref0_local4/LABEL_FINAL.json",
+            "{output}/labels_ref0_local4/labels.jsonl",
+            "{output}/labels_ref0_local4/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref0_all_xyz",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed0/all_xyz/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed0/all_xyz/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref0_all_xyz"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed0/all_xyz/inputs.jsonl",
+            "{output}/refined_arms/seed0/all_xyz/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref0_all_xyz/LABEL_FINAL.json",
+            "{output}/labels_ref0_all_xyz/labels.jsonl",
+            "{output}/labels_ref0_all_xyz/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref0_full_cell",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed0/full_cell/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed0/full_cell/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref0_full_cell"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed0/full_cell/inputs.jsonl",
+            "{output}/refined_arms/seed0/full_cell/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref0_full_cell/LABEL_FINAL.json",
+            "{output}/labels_ref0_full_cell/labels.jsonl",
+            "{output}/labels_ref0_full_cell/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref1_keep",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed1/keep/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed1/keep/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref1_keep"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed1/keep/inputs.jsonl",
+            "{output}/refined_arms/seed1/keep/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref1_keep/LABEL_FINAL.json",
+            "{output}/labels_ref1_keep/labels.jsonl",
+            "{output}/labels_ref1_keep/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref1_local1",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed1/local1/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed1/local1/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref1_local1"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed1/local1/inputs.jsonl",
+            "{output}/refined_arms/seed1/local1/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref1_local1/LABEL_FINAL.json",
+            "{output}/labels_ref1_local1/labels.jsonl",
+            "{output}/labels_ref1_local1/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref1_local4",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed1/local4/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed1/local4/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref1_local4"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed1/local4/inputs.jsonl",
+            "{output}/refined_arms/seed1/local4/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref1_local4/LABEL_FINAL.json",
+            "{output}/labels_ref1_local4/labels.jsonl",
+            "{output}/labels_ref1_local4/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref1_all_xyz",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed1/all_xyz/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed1/all_xyz/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref1_all_xyz"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed1/all_xyz/inputs.jsonl",
+            "{output}/refined_arms/seed1/all_xyz/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref1_all_xyz/LABEL_FINAL.json",
+            "{output}/labels_ref1_all_xyz/labels.jsonl",
+            "{output}/labels_ref1_all_xyz/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ref1_full_cell",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/refined_arms/seed1/full_cell/inputs.jsonl",
+            "--feedback-manifest",
+            "{output}/refined_arms/seed1/full_cell/FEEDBACK_INPUTS.json",
+            "--purpose",
+            "training_feedback",
+            "--deterministic",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/labels_ref1_full_cell"
+          ],
+          "inputs": [
+            "{output}/refined_arms/seed1/full_cell/inputs.jsonl",
+            "{output}/refined_arms/seed1/full_cell/FEEDBACK_INPUTS.json"
+          ],
+          "outputs": [
+            "{output}/labels_ref1_full_cell/LABEL_FINAL.json",
+            "{output}/labels_ref1_full_cell/labels.jsonl",
+            "{output}/labels_ref1_full_cell/_SUCCESS"
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "sun_v05_teacher64_g3": {
+      "component_indices": [
+        0
+      ],
+      "gpus_per_task": 3,
+      "cpus_per_task": 18,
+      "parallel_tasks": 1,
+      "wall_minutes": 180,
+      "memory": "288G",
+      "partition": "gpu",
+      "allocation_mode": "single"
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema": "sun_v05_engineering_canary_v1",
+  "job_id": 41117,
+  "complete": true,
+  "scientific_promotion_allowed": false,
+  "stages": [
+    {
+      "stage": "export",
+      "returncode": 0,
+      "seconds": 5.284121906384826
+    },
+    {
+      "stage": "generate",
+      "returncode": 0,
+      "seconds": 33.20534213073552
+    },
+    {
+      "stage": "labels_native_keep",
+      "returncode": 0,
+      "seconds": 16.68550704047084
+    },
+    {
+      "stage": "labels_refined_keep",
+      "returncode": 0,
+      "seconds": 16.077567346394062
+    },
+    {
+      "stage": "materialize",
+      "returncode": 0,
+      "seconds": 9.698369922116399
+    },
+    {
+      "stage": "prepare",
+      "returncode": 0,
+      "seconds": 6.0030040089040995
+    },
+    {
+      "stage": "refine",
+      "returncode": 0,
+      "seconds": 252.45821273699403
+    },
+    {
+      "stage": "score_native_keep",
+      "returncode": 0,
+      "seconds": 7.8384139481931925
+    },
+    {
+      "stage": "score_refined_keep",
+      "returncode": 0,
+      "seconds": 8.003756783902645
+    }
+  ],
+  "scores": {
+    "native_keep": {
+      "sha256": "d8d715185104428974bc5e32e2debe93d7689447864c50d90e1bc95b73f9c71e",
+      "purpose": "training_feedback",
+      "status": "complete",
+      "counts": {
+        "reconstructed": 2,
+        "native_execution_success": 2,
+        "endpoint_execution_success": 2,
+        "novel": null,
+        "unique_representative": null,
+        "novel_unique": null,
+        "terminal_verified": 0,
+        "strict_stable": 0,
+        "meta_stable": 0,
+        "strict_sun": 0,
+        "meta_sun": 0,
+        "verified_strict_stable": 0,
+        "verified_meta_stable": 0,
+        "verified_strict_sun": 0,
+        "verified_meta_sun": 0,
+        "requests": 2
+      },
+      "nu_exercised": false,
+      "independent_evaluation": false
+    },
+    "refined_keep": {
+      "sha256": "5b8d7ac6aa9f87a0b27a8f9d6eda39625a949ba8b15ea21c3ecb44238c74ef5c",
+      "purpose": "training_feedback",
+      "status": "complete",
+      "counts": {
+        "reconstructed": 2,
+        "native_execution_success": 2,
+        "endpoint_execution_success": 2,
+        "novel": null,
+        "unique_representative": null,
+        "novel_unique": null,
+        "terminal_verified": 0,
+        "strict_stable": 0,
+        "meta_stable": 1,
+        "strict_sun": 0,
+        "meta_sun": 1,
+        "verified_strict_stable": 0,
+        "verified_meta_stable": 0,
+        "verified_strict_sun": 0,
+        "verified_meta_sun": 0,
+        "requests": 2
+      },
+      "nu_exercised": true,
+      "independent_evaluation": false
+    }
+  }
+}

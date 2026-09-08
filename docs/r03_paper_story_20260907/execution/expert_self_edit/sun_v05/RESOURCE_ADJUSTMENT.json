@@ -1,0 +1,10 @@
+{
+  "old_job": 41121,
+  "old_state": "PENDING",
+  "new_state": "CANCELLED",
+  "reason": "only 5 GPUs currently available; no source work started",
+  "outputs_started": false,
+  "gpus": 5,
+  "cpus": 30,
+  "scientific_parameters_unchanged": true
+}

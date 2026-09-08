@@ -1,0 +1,30 @@
+{
+  "schema": "sun_v05_execution_status_v1",
+  "phase": "teacher_action_headroom",
+  "active_job_id": 41142,
+  "allocation": {
+    "GPUs": 3,
+    "CPUs": 18,
+    "memory_GB": 288
+  },
+  "cancelled_pending_jobs": [
+    41121,
+    41141
+  ],
+  "canary_job_id": 41117,
+  "canary_complete": true,
+  "source_identity": {
+    "commit": "849326636d77414634d398edb3a3704198cc42d8",
+    "manifest_sha256": "0adb92838967d3bfd02f73380ef8c58e051e1d289ca018fc1ac21f0380127ebf"
+  },
+  "gpu_manifest_sha256": "b05dbf679469ca25835d1d3923d04da4715622ae08d422a639d27d282b83a4b2",
+  "score_manifest_uploaded": true,
+  "score_job_submitted": false,
+  "new_gradient_updates": 0,
+  "cumulative_prior_training_seconds": 11264.306058777496,
+  "scientific_promotion_not_yet_decided": true,
+  "latest_remote_status": "41142 sun_v05_teacher64_g3 RUNNING 16:43 gpu:NVIDIAA800-SXM4-80GB:3,gpu:NVIDIAA800-SXM4-80GB:3\n\nrank0 {\n  \"completed\": 33,\n  \"planned\": 220\n}\nrank1 {\n  \"completed\": 33,\n  \"planned\": 210\n}\nrank2 {\n  \"completed\": 33,\n  \"planned\": 210\n}\nsources 64 initial_unavailable 2",
+  "recorded_unix": 1788861059.939,
+  "connection_restored_by_user": true,
+  "deadline_utc": "2026-09-09T04:00:00+00:00"
+}

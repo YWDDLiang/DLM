@@ -1,0 +1,25 @@
+{
+  "schema": "existing_relay_recovery_v1",
+  "previous": {
+    "nonce": "99404b4cbf8f",
+    "status": "delivery_unknown",
+    "submitted_unix": 1788858126.4293988
+  },
+  "resolution": "abandoned_read_only",
+  "reason": "Original inner SSH ended with Broken pipe; pending command only read squeue and stage logs. No mutation or submission was pending.",
+  "old_pane": "ssha800:1.0",
+  "new_existing_pane": "ssha800:2.0",
+  "new_connection_opened": false,
+  "recorded_unix": 1788858499.2075791,
+  "final_resolution": {
+    "expired_existing_panes": [
+      "ssha800:1.0",
+      "ssha800:2.0",
+      "ssha800_2:1.0"
+    ],
+    "reconnected_by_user": true,
+    "active_existing_pane": "ssha800:1.0",
+    "new_connection_opened_by_agent": false,
+    "only_read_only_queries_abandoned": true
+  }
+}

@@ -10,6 +10,7 @@ import base64
 import hashlib
 import json
 from pathlib import Path
+import re
 import shlex
 import subprocess
 import sys
@@ -23,8 +24,11 @@ REMOTE_PYTHON = "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python"
 STATE = Path(__file__).with_name(".relay_state.json")
 
 
-def outer_program(nonce: str, inner: str | None) -> str:
-    values = {"nonce": nonce, "inner": inner, "pane": PANE}
+def outer_program(nonce: str, inner: str | None, pane: str | None = None) -> str:
+    pane = pane or PANE
+    if not re.fullmatch(r'[A-Za-z0-9_-]+:\d+\.\d+', pane):
+        raise ValueError('an explicit existing tmux pane is required')
+    values = {"nonce": nonce, "inner": inner, "pane": pane}
     encoded = base64.b64encode(json.dumps(values).encode()).decode()
     return f'''import base64,json,re,subprocess,time
 v=json.loads(base64.b64decode({encoded!r}))
