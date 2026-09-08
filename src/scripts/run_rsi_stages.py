@@ -337,13 +337,15 @@ def rebind_labels(spec, stage):
             known[k]=label
     inputs=root/stage/'inputs.jsonl';records=read_rows(inputs)
     scope=validate_training_feedback(records,inputs,root/stage/'FEEDBACK_MANIFEST.json') if training else None
-    labels=[]
+    labels=[];occurrence_bindings=[]
     for record in records:
         if key(record) not in known: raise ValueError('new endpoint cannot inherit a previous physical label')
         label=dict(known[key(record)])
         origin=label['trajectory_id']
         label.update({name:record.get(name) for name in ['trajectory_id','group_id','source_row_idx','source_split','endpoint']})
-        label.update(endpoint_cache_key=api.endpoint_cache_key(record),rebound_from_trajectory_id=origin)
+        label.update(endpoint_cache_key=api.endpoint_cache_key(record))
+        occurrence_bindings.append({'trajectory_id':record['trajectory_id'],'rebound_from_trajectory_id':origin,
+                                    'endpoint_cache_key':label['endpoint_cache_key']})
         labels.append(label)
     directory=root/stage/'labeling/result';write_rows(directory/'labels.jsonl',labels)
     report={'requested':len(labels),'completed':len(labels),'statuses':dict(Counter(r['status'] for r in labels)),
@@ -351,7 +353,7 @@ def rebind_labels(spec, stage):
             'geometry_validation_protocol':api.LABEL_GEOMETRY_PROTOCOL,'runtime_identities':[runtime],
             'input_file':str(inputs),'input_sha256':file_hash(inputs),'training_feedback_scope':scope,
             'distinct_endpoint_evaluations':0,'new_endpoint_evaluations':0,'physical_reuse_sources':pins,
-            'binding_implementation_sha256':file_hash(Path(__file__)),
+            'binding_implementation_sha256':file_hash(Path(__file__)), 'occurrence_bindings':occurrence_bindings,
             'N_U_copied':False,'exact_endpoint_and_source_identity_checked':True}
     write_json(directory/'LABEL_FINAL.json',report);(directory/'_SUCCESS').touch()
     api.load_bound_evaluation_labels(records,[directory/'labels.jsonl'],paths_file=inputs,endpoint='native',
