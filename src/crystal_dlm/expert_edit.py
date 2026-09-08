@@ -630,18 +630,20 @@ def inference_view(prefix, old, current, n, task, active=(), *, remaining=160, r
 @torch.no_grad()
 def edit_structure(model, tokenizer, *, prompt, body, num_sites, allowed_modes,
                    tasks=('G', 'S'), seed=0, block_size=1, max_calls=160,
-                   temperature=.7, accept_threshold=.5, force_mode=None, accept_all=False):
+                   temperature=.7, accept_threshold=.5, force_mode=None, accept_all=False,
+                   proposal_input='masked'):
     """One-request form of the same batched conditional sampler."""
     request = {'prompt': prompt, 'body': body, 'num_sites': num_sites, 'tasks': tasks, 'seed': seed}
     return edit_structures(model, tokenizer, [request], allowed_modes=allowed_modes, block_size=block_size,
                            max_calls=max_calls, temperature=temperature, accept_threshold=accept_threshold,
-                           force_mode=force_mode, accept_all=accept_all, batch_size=1)['results'][0]
+                           force_mode=force_mode, accept_all=accept_all, proposal_input=proposal_input,
+                           batch_size=1)['results'][0]
 
 
 @torch.no_grad()
 def edit_structures(model, tokenizer, requests, *, allowed_modes, block_size=1, max_calls=160,
                     temperature=.7, accept_threshold=.5, force_mode=None, accept_all=False,
-                    batch_size=8, progress=None):
+                    batch_size=8, progress=None, proposal_input='masked'):
     """Batch independent structures while retaining conditional scalar reveals.
 
     Every request has its own random generator, old/current state, task cursor,
@@ -649,7 +651,7 @@ def edit_structures(model, tokenizer, requests, *, allowed_modes, block_size=1, 
     """
     from crystal_dlm.expert_edit_data import canonical_body, numeric_positions
     if (block_size not in (1,4,8) or max_calls < 1 or not 1 <= batch_size <= 64
-            or not 0 <= accept_threshold <= 1):
+            or not 0 <= accept_threshold <= 1 or proposal_input not in ('masked', 'old_values')):
         raise ValueError('invalid editor sampling limits')
     device = next(model.parameters()).device
     key = (id(tokenizer), str(device), float(temperature))
@@ -686,6 +688,7 @@ def edit_structures(model, tokenizer, requests, *, allowed_modes, block_size=1, 
         results[index] = {'body': final, 'canonical_body': current, 'trace': state['trace'],
                           'forward_calls': state['used'], 'changed_numeric_tokens': sum(a != b for a,b in zip(initial,current)),
                           'block_size': block_size, 'scope_policy': force_mode or 'learned', 'accept_all': accept_all,
+                          'proposal_input': proposal_input,
                           'S_admission_policy': 'bypassed_for_single_task_forced_scope_diagnostic'
                               if force_mode is not None and len(state['tasks']) == 1 else 'learned'}
         completed += 1
@@ -762,8 +765,11 @@ def edit_structures(model, tokenizer, requests, *, allowed_modes, block_size=1, 
                     next_task(state)
                     continue
                 candidate = state['old'].copy()
-                for position in positions:
-                    candidate[position] = MASK_TOKEN_ID
+                # The visible OLD canvas matches the existing T2T training view.
+                # Earlier sampled positions still replace OLD before later draws.
+                if proposal_input == 'masked':
+                    for position in positions:
+                        candidate[position] = MASK_TOKEN_ID
                 state.update(stage='fill', mode=mode, sites=sites, positions=positions, candidate=candidate,
                              offset=0, proposal_calls=needed+1)
             elif state['stage'] == 'fill':

@@ -416,6 +416,8 @@ def expert_args(argv):
     parser.add_argument('--block-size', type=int, choices=(1, 4, 8), default=1)
     parser.add_argument('--sampling-batch-size', type=int, default=8)
     parser.add_argument('--force-mode', choices=('local_xyz', 'all_xyz', 'full_cell'))
+    parser.add_argument('--proposal-input', choices=('masked', 'old_values'), default='masked',
+                        help='initial content canvas; old_values matches T2T training views')
     parser.add_argument('--accept-threshold', type=float, default=.5)
     args = parser.parse_args(argv)
     if min(args.updates, args.microbatch, args.accumulation, args.eval_every, args.eval_batches) < 1:
@@ -608,7 +610,7 @@ def sample_editor_diagnostics(model, tokenizer, dataset, args, device, rank, wor
     sampled = edit_structures(model, tokenizer, requests, allowed_modes=dataset.allowed_modes,
                                block_size=args.block_size, force_mode=args.force_mode,
                                accept_threshold=args.accept_threshold, batch_size=args.sampling_batch_size,
-                               progress=progress)
+                               progress=progress, proposal_input=args.proposal_input)
     for (index, row), output in zip(local_rows, sampled['results']):
         tasks = ('G', 'S') if args.source_kind == 'all_old_states' else (row['task'],)
         proposal = (output['canonical_body'] if args.source_kind == 'all_old_states' else
@@ -796,6 +798,7 @@ def expert_main(argv):
             write_json(args.output_dir/'SAMPLE_FINAL.json', {'schema': EDITOR_SCHEMA, 'requested': requested,
                        'split': args.split, 'force_mode': args.force_mode, 'block_size': args.block_size,
                        'sampling_batch_size': args.sampling_batch_size,
+                       'proposal_input': args.proposal_input,
                        'sampling_workers': [read_json(args.output_dir/f'sampling.rank{worker}.json') for worker in range(world)],
                        'source_kind': args.source_kind,
                        'checkpoint': str(args.checkpoint or args.b0_checkpoint),

@@ -62,6 +62,21 @@ class EditorSamplingTests(unittest.TestCase):
         self.assertEqual(rejected['trace'][0]['proposal_body'], all_accept['trace'][0]['proposal_body'])
         self.assertEqual(rejected['body'], self.old)
         self.assertEqual(all_accept['body'], self.target)
+
+    def test_visible_old_canvas_preserves_future_inputs_and_consumes_new_prefix(self):
+        model = ConditionalEditor(self.tokenizer, self.target, True)
+        result = self.run_sample(model, proposal_input='old_values')
+        self.assertEqual(model.canvases[1], self.old)
+        self.assertEqual(model.canvases[2][1], self.target[1])
+        self.assertEqual(model.canvases[2][2:], self.old[2:])
+        self.assertNotIn(MASK_TOKEN_ID, model.canvases[2])
+        self.assertEqual(result['body'], self.target)
+        self.assertEqual(result['forward_calls'], 14)
+        rejected = self.run_sample(ConditionalEditor(self.tokenizer, self.target, False),
+                                   proposal_input='old_values')
+        self.assertEqual(rejected['trace'][0]['proposal_body'], self.target)
+        self.assertEqual(rejected['body'], self.old)
+        self.assertEqual(rejected['proposal_input'], 'old_values')
     def test_insufficient_budget_never_commits_a_partial_structure(self):
         model = ConditionalEditor(self.tokenizer, self.target, True)
         result = self.run_sample(model, max_calls=6)
