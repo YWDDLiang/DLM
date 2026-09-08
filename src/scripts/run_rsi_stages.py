@@ -196,11 +196,15 @@ def select_current(spec):
         if not raw['sample_idx']==token['sample_idx']==a['sample_idx']==b['sample_idx']:
             raise ValueError('raw/F comparison source IDs differ')
         choice=preference(Quality.from_score(a),Quality.from_score(b))
-        source=raw if choice['chosen']=='before' else token
+        # A physical preference labels training; it does not rerank deployment.
+        # The editor's authoritative current state is always token-F. The only
+        # online physical branch is the previously measured raw-SUN F bypass.
+        source=token
         original=source['original_ordinal']
         record=dict(source,trajectory_id=f"{spec['run_id']}:current:{original}")
         write_json(root/'current/records'/f'{original:04d}.json',{'record':record,
-            'source_stage':'construction' if source is raw else 'tokenized','preference':choice})
+            'source_stage':'tokenized','preference_for_training_only':choice,
+            'physical_reranking_performed':False})
     materialize(spec,'current')
 
 
@@ -293,7 +297,7 @@ def compile_pairs(spec):
 def rebind_labels(spec, stage):
     """Reuse exactly identical physical endpoints, retaining the complete cohort.
 
-    Current is chosen from raw/token-F; edited is chosen from current/proposal.
+    Current is token-F; edited is chosen by the learned current/proposal decision.
     This only copies proven identical physical labels. Every N/U stage is rerun.
     """
     from collections import Counter
