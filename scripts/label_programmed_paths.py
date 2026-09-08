@@ -255,12 +255,24 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
     return result
 
 
+def configure_deterministic_execution(enabled):
+    """Opt-in numerical execution control; physical relaxation parameters are unchanged."""
+    if enabled:
+        os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
+    import torch
+    torch.use_deterministic_algorithms(bool(enabled))
+    if enabled:
+        torch.backends.cudnn.benchmark = False
+        torch.backends.cudnn.deterministic = True
+
+
 def worker_init(gpu_index):
     global _MODEL, _OPTIMIZER, _VERSIONS
     os.environ["OMP_NUM_THREADS"] = "1"
     os.environ["MKL_NUM_THREADS"] = "1"
     os.environ["OPENBLAS_NUM_THREADS"] = "1"
     import torch
+    configure_deterministic_execution(os.environ.get('R03_DETERMINISTIC_LABELING') == '1')
     from ase.optimize import FIRE
     from ase.filters import FrechetCellFilter
     from chgnet.model.model import CHGNet
@@ -299,6 +311,8 @@ def runtime_identity():
     checkpoint = package_root / 'pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar'
     versions['model_checkpoint_sha256'] = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
     versions['labeler_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    versions['deterministic_algorithms_enabled'] = torch.are_deterministic_algorithms_enabled()
+    versions['cublas_workspace_config'] = os.environ.get('CUBLAS_WORKSPACE_CONFIG')
     return versions
 
 
@@ -410,6 +424,8 @@ def main():
     p.add_argument("--gpu-count", type=int, default=2)
     p.add_argument("--workers-per-gpu", type=int, default=2)
     p.add_argument("--purpose", choices=("train", "evaluation", "expert_edit"), default="train")
+    p.add_argument('--deterministic', action='store_true',
+                   help='Explicit deterministic CUDA diagnostic; does not replace frozen stochastic-runtime labels')
     p.add_argument("--fmax", type=float, default=.1)
     p.add_argument("--stress-tolerance", type=float, default=.5)
     p.add_argument("--max-steps", type=int, default=500)
@@ -420,6 +436,8 @@ def main():
     p.add_argument("--shard-ranks", type=int, nargs="+")
     p.add_argument("--shard-count", type=int, default=1)
     args = p.parse_args()
+    os.environ['R03_DETERMINISTIC_LABELING'] = '1' if args.deterministic else '0'
+    configure_deterministic_execution(args.deterministic)
     if args.shard_count < 1 or not 0 <= args.shard_rank < args.shard_count:
         raise ValueError("invalid label shard")
     shard_ranks = args.shard_ranks if args.shard_ranks is not None else [args.shard_rank]
@@ -502,6 +520,7 @@ def main():
                                        'worker_startup_timeout_seconds': args.worker_startup_timeout,
                                        'timeout_is_physical_failure': False}
     report['runtime_identities'] = list(versions_seen.values())
+    report['deterministic_algorithms_requested'] = args.deterministic
     report['input_sha256'] = input_sha256
     report['input_file'] = str(args.input_jsonl.resolve())
     report['geometry_validation_protocol'] = LABEL_GEOMETRY_PROTOCOL

@@ -43,6 +43,7 @@ class LabelReuseTests(unittest.TestCase):
         with TemporaryDirectory() as directory:
             root=Path(directory);by=self.fixture(root)
             for kw in ({'input_sha256':'changed'},{'runtime':{'source':'changed'}},
+                       {'runtime':{'source':'same','deterministic_algorithms_enabled':True}},
                        {'protocol':COMMON_RELAXATION_PROTOCOL|{'fire_dt':.2}}):
                 with self.subTest(kw=kw),self.assertRaises(ValueError):self.load(root,by,**kw)
             changed=copy.deepcopy(by);changed['different']=changed.pop('key0')
