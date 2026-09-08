@@ -394,6 +394,9 @@ def expert_args(argv):
     parser.add_argument('--inspect-fraction', type=float, default=.17)
     parser.add_argument('--student-feedback-fraction', type=float, default=0.)
     parser.add_argument('--healthy-state-fraction', type=float, default=0.)
+    parser.add_argument('--content-target-mode', choices=('all_pending','next_token'), default='all_pending')
+    parser.add_argument('--evaluation-content-target-mode', choices=('same','all_pending','next_token'), default='same')
+    parser.add_argument('--m2t-probability', type=float, default=.7)
     parser.add_argument('--seed', type=int, default=2026090807)
     parser.add_argument('--max-length', type=int, default=1024)
     parser.add_argument('--smoke-sources', type=int, default=0)
@@ -496,7 +499,9 @@ def editor_gradient_audit(model, tokenizer, dataset, objective, device):
         row = dataset.content[task][0]
         groups = {}
         for step in range(2):
-            view = make_edit_view(row, 'content', random.Random(123+step), dataset.prefixes[row['prompt']])
+            view = make_edit_view(row, 'content', random.Random(123+step), dataset.prefixes[row['prompt']],
+                                  content_target_mode=dataset.content_target_mode,
+                                  m2t_probability=dataset.m2t_probability)
             batch = materialize_edit_batch([view], tokenizer, device)
             temporary.zero_grad(set_to_none=True)
             result = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
@@ -548,6 +553,9 @@ def editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
     for task in ('G', 'S', 'G_real', 'G_aux', 'S_real', 'S_aux'):
         result[task+'_content_ce'] = (result[task+'_content_ce_sum']/result[task+'_content_views']
                                       if result[task+'_content_views'] else None)
+    for field in ('length', 'angle', 'coord', 'first_lattice'):
+        count = result[field+'_content_tokens']
+        result[field+'_content_ce'] = result[field+'_content_ce_sum']/count if count else None
     return result
 
 
@@ -742,9 +750,15 @@ def expert_main(argv):
     train_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed, split='train',
                                   smoke_sources=args.smoke_sources, geometry_aux_fraction=args.geometry_aux_fraction,
                                   content_fraction=args.content_fraction,inspect_fraction=args.inspect_fraction,
-                                  student_feedback_fraction=args.student_feedback_fraction,healthy_state_fraction=args.healthy_state_fraction)
+                                  student_feedback_fraction=args.student_feedback_fraction,healthy_state_fraction=args.healthy_state_fraction,
+                                  content_target_mode=args.content_target_mode,m2t_probability=args.m2t_probability)
+    eval_target_mode = args.content_target_mode if args.evaluation_content_target_mode == 'same' else args.evaluation_content_target_mode
+    from copy import copy
+    train_eval_data = copy(train_data)
+    train_eval_data.content_target_mode = eval_target_mode
     dev_data = ExpertEditDataset(args.data_dirs, tokenizer, seed=args.seed+10000, split='dev',
-                                 geometry_aux_fraction=args.geometry_aux_fraction)
+                                 geometry_aux_fraction=args.geometry_aux_fraction,content_target_mode=eval_target_mode,
+                                 m2t_probability=args.m2t_probability)
     train_comps = {row['composition_key'] for row in train_data.records}
     dev_comps = {row['composition_key'] for row in dev_data.records}
     if train_comps & dev_comps:
@@ -854,6 +868,8 @@ def expert_main(argv):
                 'content_fraction':args.content_fraction,'inspect_fraction':args.inspect_fraction,
                 'student_feedback_fraction':args.student_feedback_fraction,
                 'healthy_state_fraction':args.healthy_state_fraction,
+                'content_target_mode':args.content_target_mode, 'evaluation_content_target_mode':eval_target_mode,
+                'm2t_probability':args.m2t_probability,
                 'eval_examples': args.eval_examples,
                 'parameter_names': [name for name,_ in selected]}
     start_step, example_cursor = 0, 0
@@ -935,7 +951,7 @@ def expert_main(argv):
             break
         if step == start_step or step % args.eval_every == 0 or step % args.checkpoint_every == 0:
             metrics = {split: editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
-                       for split, dataset in (('train', train_data), ('dev', dev_data))}
+                       for split, dataset in (('train', train_eval_data), ('dev', dev_data))}
             metrics.update(step=step, seconds=time.monotonic()-started)
             history.append(metrics)
             score = editor_selection_score(metrics)
@@ -983,7 +999,7 @@ def expert_main(argv):
             atomic_json(progress_file, {'global_step': completed, 'example_cursor': example_cursor,
                        'cumulative_train_seconds': args.training_seconds_already_used+time.monotonic()-started+audit_seconds})
     final_metrics = {split: editor_eval(model, tokenizer, dataset, objective, device, args, rank, world)
-                     for split, dataset in (('train', train_data), ('dev', dev_data))}
+                     for split, dataset in (('train', train_eval_data), ('dev', dev_data))}
     if completed <= start_step:
         raise ValueError('training ended before a new optimizer update')
     for name,parameter in model.named_parameters():

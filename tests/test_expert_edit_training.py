@@ -58,6 +58,35 @@ class ViewAndLossTests(unittest.TestCase):
         self.assertEqual(small['remaining'], positive['remaining'])
         self.assertEqual(state['active'], small['active'])
 
+    def test_next_token_supervision_matches_each_actual_scalar_decision(self):
+        active = self.record['action']['positions']
+        weights = {position: 0. for position in active}
+        for cut in range(len(active)):
+            rng = SimpleNamespace(randrange=lambda n: cut, random=lambda: 0.)
+            legacy = make_edit_view(self.record, 'content', rng, [0], m2t_probability=1.)
+            next_view = make_edit_view(self.record, 'content', rng, [0],
+                                       content_target_mode='next_token', m2t_probability=1.)
+            self.assertEqual(legacy['input_body'], next_view['input_body'])
+            self.assertEqual(legacy['active'], next_view['active'])
+            positions = [i for i, target in enumerate(next_view['targets']) if target != -100]
+            self.assertEqual(positions, [active[cut]])
+            self.assertTrue(all(next_view['input_body'][p] == MASK_TOKEN_ID for p in active[cut:]))
+            weights[positions[0]] += 1 / len(active)
+        self.assertEqual(len(set(weights.values())), 1)
+
+    def test_next_token_loss_does_not_train_unconsumed_suffix_logits(self):
+        rng = SimpleNamespace(randrange=lambda n: 0, random=lambda: 0.)
+        view = make_edit_view(self.record, 'content', rng, [0], content_target_mode='next_token', m2t_probability=1.)
+        batch = materialize_edit_batch([view], self.tokenizer, 'cpu')
+        length = batch['input_ids'].shape[1]
+        logits = torch.zeros(1, length, len(self.tokenizer.get_vocab()), requires_grad=True)
+        output = EditOutput(logits, torch.zeros(1,4,requires_grad=True), torch.zeros(1,20,requires_grad=True),
+                            torch.zeros(1,4,requires_grad=True), torch.zeros(1,4,requires_grad=True))
+        loss, _ = ExpertEditObjective(self.tokenizer, 'cpu')(output,batch)
+        loss.backward()
+        self.assertGreater(float(logits.grad[0,2].abs().sum()), 0.)
+        self.assertEqual(float(logits.grad[0,3:].abs().sum()), 0.)
+
     def test_typed_alias_loss_backpropagates_without_inplace_corruption(self):
         rng = SimpleNamespace(randrange=lambda n: 0, random=lambda: 0.)
         views = [make_edit_view(self.record, 'content', rng, [0]),

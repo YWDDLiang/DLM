@@ -287,7 +287,8 @@ class ExpertEditDataset(Dataset):
     """Explicit sampling of content, scope/state and complete-proposal decisions."""
     def __init__(self, data_dirs, tokenizer, *, seed=20260908, size=10000, split='train', smoke_sources=0,
                  geometry_aux_fraction=.2, content_fraction=.65, inspect_fraction=.17,
-                 student_feedback_fraction=0., healthy_state_fraction=0.):
+                 student_feedback_fraction=0., healthy_state_fraction=0.,
+                 content_target_mode='all_pending', m2t_probability=.7):
         from crystal_dlm.expert_edit_data import SCHEMA, read_rows, sha256
         self.seed, self.size, self.epoch, self.tokenizer = int(seed), int(size), 0, tokenizer
         if not 0 <= geometry_aux_fraction <= 1:
@@ -300,6 +301,9 @@ class ExpertEditDataset(Dataset):
         self.content_fraction, self.inspect_fraction = content_fraction, inspect_fraction
         self.student_feedback_fraction = student_feedback_fraction
         self.healthy_state_fraction = healthy_state_fraction
+        if content_target_mode not in ('all_pending', 'next_token') or not 0 <= m2t_probability <= 1:
+            raise ValueError('invalid content supervision or masked-view probability')
+        self.content_target_mode, self.m2t_probability = content_target_mode, m2t_probability
         records, provenance = [], []
         for directory in map(Path, data_dirs):
             if not (directory / '_SUCCESS').is_file():
@@ -403,11 +407,14 @@ class ExpertEditDataset(Dataset):
                 pool = self.negative if self.negative and rng.random() < .5 else self.acceptance_positive
                 row = self._draw(pool or self.negative, rng)
             view = 'judge'
-        return make_edit_view(row, view, rng, self.prefixes[row['prompt']])
+        return make_edit_view(row, view, rng, self.prefixes[row['prompt']],
+                              content_target_mode=self.content_target_mode, m2t_probability=self.m2t_probability)
 
 
-def make_edit_view(record, kind, rng, prefix):
+def make_edit_view(record, kind, rng, prefix, *, content_target_mode='all_pending', m2t_probability=.7):
     from crystal_dlm.expert_edit_data import numeric_positions
+    if content_target_mode not in ('all_pending', 'next_token') or not 0 <= m2t_probability <= 1:
+        raise ValueError('invalid content supervision or masked-view probability')
     old, n = list(record['old_body']), int(record['num_atoms'])
     task = 0 if record['task'] == 'G' else 1
     if record.get('state_only'):
@@ -426,13 +433,14 @@ def make_edit_view(record, kind, rng, prefix):
         cut = rng.randrange(len(active))
         prefix_positions = active[:cut]
         pending = active[cut:]
-        m2t = rng.random() < .7
+        m2t = rng.random() < m2t_probability
         for position in prefix_positions:
             current[position] = target[position]
         for position in pending:
             if m2t:
                 current[position] = MASK_TOKEN_ID
-            targets[position] = int(target[position])
+            if content_target_mode == 'all_pending' or position == pending[0]:
+                targets[position] = int(target[position])
         reveal = len(prefix_positions) / max(1, len(active))
         remaining = len(pending) + 1
     elif kind == 'inspect':
@@ -532,6 +540,9 @@ class ExpertEditObjective:
         counts = sums.clone()
         rows, positions = torch.nonzero(targets != -100, as_tuple=True)
         relative = positions - context.prompt_lengths[rows]
+        field_sums = {name: output.logits.new_zeros((), dtype=torch.float32)
+                      for name in ('length', 'angle', 'coord', 'first_lattice')}
+        field_counts = dict.fromkeys(field_sums, 0)
         for kind in range(9):
             if kind < 6:
                 select = relative == kind + 1
@@ -547,6 +558,11 @@ class ExpertEditObjective:
             if not bool(matches.any(-1).all()):
                 raise ValueError('corrected target is outside its typed B0 vocabulary')
             ce = nn.functional.cross_entropy(vector, matches.long().argmax(-1), reduction='none')
+            field_sums[family] += ce.detach().sum()
+            field_counts[family] += len(rr)
+            if kind == 0:
+                field_sums['first_lattice'] += ce.detach().sum()
+                field_counts['first_lattice'] += len(rr)
             sums = sums.scatter_add(0, rr, ce)
             counts = counts.scatter_add(0, rr, torch.ones_like(ce))
         content = (sums / counts.clamp_min(1)).mean()
@@ -574,6 +590,9 @@ class ExpertEditObjective:
         stats = {'content_ce': float(content.detach()), 'mode_ce': float(mode.detach()),
                       'site_bce': float(site.detach()), 'quality_bce': float(quality.detach()),
                       'supervised_tokens': int(counts.sum()), 'loss': float(loss.detach())}
+        for field in field_sums:
+            stats[field+'_content_ce_sum'] = float(field_sums[field])
+            stats[field+'_content_tokens'] = field_counts[field]
         for task_id, name in ((0, 'G'), (1, 'S')):
             selected = (context.task_ids == task_id) & (counts > 0)
             stats[name + '_content_views'] = int(selected.sum())
