@@ -172,9 +172,11 @@ def baselines(spec, shard, shards):
     import torch
     if 'SLURM_JOB_ID' not in os.environ or not torch.cuda.is_available():
         raise RuntimeError('refinement requires its Slurm GPU allocation')
+    local_rank = int(os.environ.get('LOCAL_RANK', '0'))
+    torch.cuda.set_device(local_rank)
     root = Path(spec['run_root'])
     plans = read_rows(root / 'cohort/plans.jsonl')
-    model, Data, DataLoader = load_refiner(spec, torch.device('cuda'))
+    model, Data, DataLoader = load_refiner(spec, torch.device('cuda', local_rank))
     started, count = time.monotonic(), 0
     for arm, asset in (('H1A2', 'control_graphs'), ('R03', 'candidate_graphs')):
         entries = torch.load(spec['assets'][asset], map_location='cpu', weights_only=False)
@@ -216,9 +218,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
     parser.add_argument('--stage', choices=('prepare', 'baselines'), required=True)
-    parser.add_argument('--shard', type=int, default=0)
-    parser.add_argument('--shards', type=int, default=1)
+    parser.add_argument('--shard', type=int, default=None)
+    parser.add_argument('--shards', type=int, default=None)
     args = parser.parse_args(argv)
+    args.shard = int(os.environ.get('RANK', '0')) if args.shard is None else args.shard
+    args.shards = int(os.environ.get('WORLD_SIZE', '1')) if args.shards is None else args.shards
     if not 0 <= args.shard < args.shards:
         parser.error('invalid disjoint worker shard')
     os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
