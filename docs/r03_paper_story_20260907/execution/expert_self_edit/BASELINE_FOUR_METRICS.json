@@ -1,0 +1,46 @@
+{
+  "H1A2_D1_native": {
+    "requests": 1200,
+    "comp_valid": 1042,
+    "Struct_valid": 497,
+    "SUN": 27,
+    "MSUN": 156,
+    "files": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/H1A2_D1_native_validity/report.json": "df2655c40ec6023dd058224c78b1456136a9f5dfea7fb4758eb8fff062487aa5",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/H1A2_D1_native_SUN/EVALUATION_FINAL.json": "baef31f8f2efa9b7a049a26f5c4ffed63d20810806b356bf056bc21dd20ed483"
+    }
+  },
+  "H1A2_D1_tau800": {
+    "requests": 1200,
+    "comp_valid": 1024,
+    "Struct_valid": 1163,
+    "SUN": 103,
+    "MSUN": 553,
+    "files": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/H1A2_D1_tau800_validity/report.json": "2a4efa9f5937f11bc4de30ad1bf812dc6853eb2480c942044cca0b55fca2cbc4",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/H1A2_D1_tau800_SUN/EVALUATION_FINAL.json": "76650cb01d4d852e8eac37f75a24b22f2de73e8e30f3768b53c2b78e7fb41993"
+    }
+  },
+  "B0_D2_native": {
+    "requests": 1200,
+    "comp_valid": 1036,
+    "Struct_valid": 547,
+    "SUN": 30,
+    "MSUN": 145,
+    "files": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/B0_D2_native_validity/report.json": "4a829562c003a0b1bfc89828bd7bade0cec7e394ca086dfa5a2f8cdf31611d92",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/B0_D2_native_SUN/EVALUATION_FINAL.json": "516058a98ca42af79e81209339b0bf46a1e3a3d7310d1f86d9a6ff46cbdb3fef"
+    }
+  },
+  "B0_D2_tau800": {
+    "requests": 1200,
+    "comp_valid": 1021,
+    "Struct_valid": 1159,
+    "SUN": 101,
+    "MSUN": 558,
+    "files": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/B0_D2_tau800_validity/report.json": "41843e4396fb90edb72ecdc0a4528b7672c80d3ea9492a4fe9873c768caf5b0e",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery2/B0_D2_tau800_SUN/EVALUATION_FINAL.json": "71f2662e77248dbad1a7033b2891fe09ef20c8f24223a32753042ed63e2bdd13"
+    }
+  }
+}

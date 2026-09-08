@@ -1,0 +1,43 @@
+{
+  "schema": "r03_hull_union_inputs_v1",
+  "purpose": "evaluation",
+  "phase": "frozen_main1200",
+  "inputs": [
+    {
+      "cell_id": "H1A2_D1_native",
+      "arm": "H1A2_D1",
+      "seed": 17,
+      "type": "eval_paths",
+      "endpoint": "native",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery1/H1A2_D1_native/paths.jsonl",
+      "expected_requests": 1200
+    },
+    {
+      "cell_id": "H1A2_D1_tau800",
+      "arm": "H1A2_D1",
+      "seed": 17,
+      "type": "eval_paths",
+      "endpoint": "tau800",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery1/H1A2_D1_tau800/paths.jsonl",
+      "expected_requests": 1200
+    },
+    {
+      "cell_id": "B0_D2_native",
+      "arm": "B0_D2",
+      "seed": 17,
+      "type": "eval_paths",
+      "endpoint": "native",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery1/B0_D2_native/paths.jsonl",
+      "expected_requests": 1200
+    },
+    {
+      "cell_id": "B0_D2_tau800",
+      "arm": "B0_D2",
+      "seed": 17,
+      "type": "eval_paths",
+      "endpoint": "tau800",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines_recovery1/B0_D2_tau800/paths.jsonl",
+      "expected_requests": 1200
+    }
+  ]
+}

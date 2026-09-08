@@ -1,0 +1,126 @@
+{
+  "BASELINE_FOUR_METRICS.json": {
+    "bytes": 3295,
+    "sha256": "16a68e5ac0a69978a37b6c78092bfa1413eed3b9655024ba201974ba79e4ada4"
+  },
+  "DEVELOPMENT_PROPOSAL_MANIFEST.json": {
+    "bytes": 5926,
+    "sha256": "50ef86e03eb56f13eaa0d2a20ade326845c88ea7301e0ccf873b8511412a7c1a"
+  },
+  "DEV_COMPARISON_FINAL.json": {
+    "bytes": 1937,
+    "sha256": "8764b4257123c8f39248c9f0f5f430d7fe919341513158298b95be7fe40a445a"
+  },
+  "ENDPOINT_PROTOCOL_MANIFEST.json": {
+    "bytes": 14698,
+    "sha256": "c0decf7ea79a3ef107e3a9e836522976bbdcc6cb285aae45f2825f992733f208"
+  },
+  "FORMAL_BASELINE_RETRY2_ACTUAL_INPUTS.json": {
+    "bytes": 1882,
+    "sha256": "d410bd031ebccc01b5c7b64e9b7a7430ff3cbc34b74b9c13541fc2b7a3e8b0bc"
+  },
+  "FORMAL_BASELINE_RETRY2_MANIFEST.json": {
+    "bytes": 31023,
+    "sha256": "601b94169baeeec8aa76bbfa38d3c6c3ba6479b3669706d255f01e2f8a97d225"
+  },
+  "FORMAL_EDITOR_MANIFEST.json": {
+    "bytes": 18069,
+    "sha256": "aeb2b6f658d2f1112eaefe02d9e66726ac497219fe4e9bffbec7ac83785cc915"
+  },
+  "FORMAL_EDITOR_RAW_HULL_INPUTS.json": {
+    "bytes": 560,
+    "sha256": "f2e663cfa45787462fee76f6576e20069cd78851bb5d342fead9710eade70a63"
+  },
+  "FORMAL_EDITOR_REFINED_HULL_INPUTS.json": {
+    "bytes": 572,
+    "sha256": "c558f2b082434c7ad3092a2e44a43f9623f99c51a2739001345656afb84c3990"
+  },
+  "FORMAL_REFINED_MANIFEST.json": {
+    "bytes": 14716,
+    "sha256": "d11938474640e9886e02ed5eef0828fa80e9c0c26e9c6d6f689e3bea998a7e6e"
+  },
+  "FULL_STAGE1_MANIFEST.json": {
+    "bytes": 9540,
+    "sha256": "8dc4a19e2e4c41b887d3c2d91f4d8255b8f4591e2cfd76ad1b756510cb9f4df5"
+  },
+  "FULL_STAGE2_MANIFEST.json": {
+    "bytes": 15513,
+    "sha256": "af80120beb3442be2528f5da4728cd17e57bf1b2ded96081037cab85ff0cff7e"
+  },
+  "JUDGEMENT_AUDIT_FINAL.json": {
+    "bytes": 3799,
+    "sha256": "9836a0ec204cf5081c74fa1035e1b508b868e972c91b0596646c7e6d33d88d02"
+  },
+  "LEARNING_CURVES.json": {
+    "bytes": 14643,
+    "sha256": "8651ed308b7131a6a6ff9e9af6191f193a5c3335a81195f4d0bdec31e1837044"
+  },
+  "MAIN_INFERENCE_SUMMARY.json": {
+    "bytes": 471,
+    "sha256": "7dc23e46ec699da94367618c0616644996e7acda061366aefeba75f01d5a2df3"
+  },
+  "METHOD_AND_EVIDENCE.md": {
+    "bytes": 10652,
+    "sha256": "2f55ad865414113771410c6ada7ca4c1b5d3f96e623ac997ba88e68a7c2a307a"
+  },
+  "RAW_PAIRED_ATTRIBUTION.json": {
+    "bytes": 664,
+    "sha256": "134128d2893cb443f06fe1715a9c3a624f6e7893cacd23b64f7d0199f90d9b4a"
+  },
+  "README.md": {
+    "bytes": 1413,
+    "sha256": "3d451a233fb19709bec441444281ce466d159b25fa3a87a650386ac5265ede35"
+  },
+  "REFINED_ISOLATED_ATOM_CHECK.json": {
+    "bytes": 1152,
+    "sha256": "c09f65944967e4f06fac93269841be89bea3b4deea931deb7f6377576fbb5efc"
+  },
+  "SELECTED_POLICY.json": {
+    "bytes": 1221,
+    "sha256": "2aca5849a9dc9cdbc0f2863ecb4e7404b8afac1b73a128fe9337e18f8f93c1d3"
+  },
+  "STAGE1_DIAGNOSTICS_MANIFEST.json": {
+    "bytes": 18583,
+    "sha256": "917e0df1304d553d388052ee6e9e8fe85b3d8dc15e7cd25b3a0e72b3589332c2"
+  },
+  "STAGE2_DIAGNOSTICS_MANIFEST.json": {
+    "bytes": 19085,
+    "sha256": "a429cd3da603222096a9f4413a3cb84a43caca1511ccec8828cb9f613bbfcb66"
+  },
+  "analyze_development_judgements.py": {
+    "bytes": 7364,
+    "sha256": "b167fd8e88b330ebcf20e752c01307e8176e46f1c8a908372be300f002d7bf87"
+  },
+  "development_reliability.png": {
+    "bytes": 123376,
+    "sha256": "cc0b3ec2e89fd4325d01e305c972ccfcf0427cfe0e78df3dde49c954ea68942b"
+  },
+  "development_reliability.svg": {
+    "bytes": 25186,
+    "sha256": "21ff622f4822c2114cdfd68f8072acf1454fe17257f174d74af55a4e59b807b0"
+  },
+  "export_final_evidence.py": {
+    "bytes": 4425,
+    "sha256": "c6412c796f8794559ddf673445cf5e9cec16e1a799b5f2e9fb63c1560b9a3dbb"
+  },
+  "final_results/RESULTS.json": {
+    "bytes": 10877,
+    "sha256": "793bd76d150ef1390a6425398cc4e618e0225dab440386008ce2819ee933c7bc"
+  },
+  "final_results/per_request_metrics.csv": {
+    "bytes": 657752,
+    "sha256": "10343ef6a12b32a4d59e8e849f2a59619db354d222a945937a7f6313465b84a1"
+  },
+  "plot_training_diagnostics.py": {
+    "bytes": 4976,
+    "sha256": "45de57f8ab3ac5524e10d60037acae77ff07a7c3818f02403a2e0efc28666f0a"
+  },
+  "training_curves.png": {
+    "bytes": 315766,
+    "sha256": "18a7ec4c41dc73ef8eb2aa61cad47fd445a9a710122d28f2fb76239ff0bd4bfd"
+  },
+  "training_curves.svg": {
+    "bytes": 50881,
+    "sha256": "fd6cf7cb03877a975b50dde0b6a77bf9f54327c99bad04396ad468b92c6b8ff3"
+  }
+}

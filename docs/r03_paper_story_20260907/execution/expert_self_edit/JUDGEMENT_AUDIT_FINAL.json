@@ -1,0 +1,55 @@
+{
+  "source_split": "dev",
+  "training_use_allowed": false,
+  "requests": 259,
+  "complete_transactions": 234,
+  "counts": {
+    "S:rejected:unknown": 43,
+    "G:rejected:not_helpful": 14,
+    "S:rejected:not_helpful": 40,
+    "G:accepted:helpful": 68,
+    "G:accepted:not_helpful": 62,
+    "S:accepted:helpful": 1,
+    "S:rejected:helpful": 3,
+    "G:rejected:helpful": 3
+  },
+  "by_transaction_input_reliability": {
+    "S:rejected:unknown:old_reliable=False": 43,
+    "G:rejected:not_helpful:old_reliable=False": 14,
+    "S:rejected:not_helpful:old_reliable=True": 34,
+    "G:accepted:helpful:old_reliable=False": 68,
+    "G:accepted:not_helpful:old_reliable=False": 60,
+    "S:accepted:helpful:old_reliable=True": 1,
+    "S:rejected:not_helpful:old_reliable=False": 6,
+    "S:rejected:helpful:old_reliable=True": 3,
+    "G:rejected:helpful:old_reliable=False": 3,
+    "G:accepted:not_helpful:old_reliable=True": 2
+  },
+  "R_observation_for_identical_tokens": "initial observation retained; final observation used only when tokens change",
+  "interpretation": "fixed saved single transactions; not an accept-all rollout or a deployed alternate policy",
+  "runtime_identities": [
+    {
+      "model": "CHGNet-0.3.0",
+      "chgnet_package": "0.4.2",
+      "ase_package": "3.28.0",
+      "torch_package": "2.4.0+cu121",
+      "pymatgen_package": "2025.6.14",
+      "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+      "labeler_sha256": "45699d9ea60569ecdec98ad94e087ed2ba05cf5dc98b57b86e185045c8835560"
+    }
+  ],
+  "reconstructed_MSON_roundoff_check": {
+    "float64_scaled_epsilon_limit": 128,
+    "maximum_absolute_difference": 2.2737367544323206e-13,
+    "different_float_leaves": 638
+  },
+  "source_files_sha256": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/autonomous_selected/samples.jsonl": "83ecd1e046abaeb8246fbf9e7034b876ca1e6a6c86b77618eae456cb8d464a10",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_proposal_audit/prepared/PROPOSALS_FINAL.json": "d7d5bf3d83382a214ed54c858a0a17ef0567f7bebe8d912efbff4d78eb8dc22f",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_proposal_audit/prepared/proposal_map.jsonl": "9d3f27b7da841060c18e4ef0421a25f17136849137e4a1fc7bbaa803abbd1699",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/labels_original/labels.jsonl": "6df1d9da47dc6f4db5c07cebcace31b0f3321c0dbd0dc80c507cee371fdf52e5",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/labels_selected/labels.jsonl": "3880e2831ee1e3e3a9cdfa41bdefe6bfcf317330bd1000f0bff7deb4ce1f1d8e",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_proposal_audit/labels/labels.jsonl": "dc9157e7b614a5db0fd943ace6bd8ceca2058c7cf0aea8c13286d05efc7cd7a9"
+  },
+  "analysis_source_sha256": "b167fd8e88b330ebcf20e752c01307e8176e46f1c8a908372be300f002d7bf87"
+}

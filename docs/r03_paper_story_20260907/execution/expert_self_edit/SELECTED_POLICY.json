@@ -1,0 +1,32 @@
+{
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/checkpoints/step-000800",
+  "checkpoint_receipt_sha256": "c0f45a91023cacc82d0c547cdd283f9bd703287ed71bec4c27cede1ca56cde09",
+  "step": 800,
+  "receipt_complete": true,
+  "method_id": "ExpertEdit_B0_D2",
+  "status": "raw_promising_refined_regressed",
+  "formal_runtime": {
+    "commit": "a1c597f435dc62972c7604eeea3d4651c9b7059f",
+    "manifest_sha256": "be3a08ae05a572db891b6ed4370281a094fda89b0a2998e53124d79bd55e014c"
+  },
+  "inference": {
+    "tasks": [
+      "G",
+      "S"
+    ],
+    "attempts_per_task": 1,
+    "max_forward_calls": 160,
+    "block_size": 1,
+    "batch_size_per_gpu": 8,
+    "accept_threshold": 0.5,
+    "editor_seed_root": 2026093801,
+    "external_physics_calls_during_edit": 0
+  },
+  "training": {
+    "cumulative_wall_seconds": 2337.0124003198,
+    "trainable_lora_parameters": 14680064,
+    "trainable_editor_parameters": 7798797
+  },
+  "selection": "Fixed development cohort before any main-panel result; stage2 step800",
+  "full_panel_requests": 1200
+}

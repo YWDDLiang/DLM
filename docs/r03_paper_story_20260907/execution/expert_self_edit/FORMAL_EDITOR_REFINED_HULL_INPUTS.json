@@ -1,0 +1,16 @@
+{
+  "schema": "r03_hull_union_inputs_v1",
+  "purpose": "evaluation",
+  "phase": "frozen_main1200",
+  "inputs": [
+    {
+      "cell_id": "ExpertEdit_B0_D2_tau800",
+      "arm": "ExpertEdit_B0_D2",
+      "seed": 17,
+      "type": "eval_paths",
+      "endpoint": "tau800",
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_editor_refined_eval/tau800/paths.jsonl",
+      "expected_requests": 1200
+    }
+  ]
+}

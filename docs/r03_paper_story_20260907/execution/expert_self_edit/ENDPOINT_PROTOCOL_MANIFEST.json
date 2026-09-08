@@ -1,0 +1,243 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/a1c597f435dc62972c7604eeea3d4651c9b7059f",
+  "source_identity": {
+    "commit": "a1c597f435dc62972c7604eeea3d4651c9b7059f",
+    "manifest_sha256": "be3a08ae05a572db891b6ed4370281a094fda89b0a2998e53124d79bd55e014c"
+  },
+  "purpose": "evaluation",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-09T04:00:00+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "endpoints": {
+      "raw": "native",
+      "refined": "tau800"
+    },
+    "requests": 1200,
+    "panel": "retrospective_frozen_H1A2_rich",
+    "panel_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new",
+    "panel_files": {
+      "cohort/cohort.jsonl": {
+        "rows": 1200,
+        "sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722"
+      },
+      "body/control_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "967f0a0ccea66c5d615998fcd377be3deecb65ded879fd25bbacac6e7caede40"
+      },
+      "body/candidate_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "be83b792c339b34a4f2b34c3d84487089dd47a1b7990b5f1a81a371e29a7d77b"
+      }
+    },
+    "success": "either endpoint promising against same-protocol H1A2",
+    "physics_labels": "recompute unless exact complete protocol and endpoint identity match"
+  },
+  "data_contract": {
+    "purpose": "observational_refiner_repeatability_and_fixed_development_validity",
+    "gradient_updates": 0,
+    "main_policy_selection_on_development_only": true
+  },
+  "components": [
+    {
+      "id": "endpoint_protocol_check",
+      "output_dir": "endpoint_protocol_check",
+      "gpus": 6,
+      "stages": [
+        {
+          "name": "refiner_repeatability",
+          "script": "operations/r03_c3fd_main_20260907/probe_refiner_repeatability.py",
+          "distributed_processes": 6,
+          "args": [
+            "--proposal-graphs",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/refiner_replay_probe/input/proposal_graphs.pt",
+            "--input-receipt",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/refiner_replay_probe/input/INPUT_FINAL.json",
+            "--frozen-refiner-module",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/scripts/refine_dlm_with_crysllmgen.py",
+            "--frozen-refiner-sha256",
+            "a0cb2c54c149aee0a4f36c147d93eca6799e3b17879f76c108721c934f087b2a",
+            "--checkpoint",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+            "--crysllmgen-dir",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+            "--sample-index",
+            "1",
+            "--output-dir",
+            "{output}/repeatability"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/refiner_replay_probe/input/proposal_graphs.pt",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/refiner_replay_probe/input/INPUT_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/scripts/refine_dlm_with_crysllmgen.py",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt"
+          ],
+          "outputs": [
+            "{output}/repeatability/rank0/PROBE_FINAL.json",
+            "{output}/repeatability/rank0/_SUCCESS",
+            "{output}/repeatability/rank1/PROBE_FINAL.json",
+            "{output}/repeatability/rank1/_SUCCESS",
+            "{output}/repeatability/rank2/PROBE_FINAL.json",
+            "{output}/repeatability/rank2/_SUCCESS",
+            "{output}/repeatability/rank3/PROBE_FINAL.json",
+            "{output}/repeatability/rank3/_SUCCESS",
+            "{output}/repeatability/rank4/PROBE_FINAL.json",
+            "{output}/repeatability/rank4/_SUCCESS",
+            "{output}/repeatability/rank5/PROBE_FINAL.json",
+            "{output}/repeatability/rank5/_SUCCESS"
+          ]
+        },
+        {
+          "name": "validity_original",
+          "script": "scripts/run_direct_validity_fast.py",
+          "args": [
+            "--generation-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/original.jsonl",
+            "--snapshot-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream",
+            "--expected-denominator",
+            "259",
+            "--metrics",
+            "comp_struct",
+            "--output-dir",
+            "{output}/validity_original"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/original.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/INPUT_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream/eval_utils.py"
+          ],
+          "outputs": [
+            "{output}/validity_original/report.json",
+            "{output}/validity_original/attempt_metrics.jsonl",
+            "{output}/validity_original/_SUCCESS"
+          ]
+        },
+        {
+          "name": "validity_selected",
+          "script": "scripts/run_direct_validity_fast.py",
+          "args": [
+            "--generation-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/selected.jsonl",
+            "--snapshot-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream",
+            "--expected-denominator",
+            "259",
+            "--metrics",
+            "comp_struct",
+            "--output-dir",
+            "{output}/validity_selected"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/selected.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/INPUT_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream/eval_utils.py"
+          ],
+          "outputs": [
+            "{output}/validity_selected/report.json",
+            "{output}/validity_selected/attempt_metrics.jsonl",
+            "{output}/validity_selected/_SUCCESS"
+          ]
+        },
+        {
+          "name": "validity_last",
+          "script": "scripts/run_direct_validity_fast.py",
+          "args": [
+            "--generation-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/last.jsonl",
+            "--snapshot-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream",
+            "--expected-denominator",
+            "259",
+            "--metrics",
+            "comp_struct",
+            "--output-dir",
+            "{output}/validity_last"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/last.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/INPUT_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream/eval_utils.py"
+          ],
+          "outputs": [
+            "{output}/validity_last/report.json",
+            "{output}/validity_last/attempt_metrics.jsonl",
+            "{output}/validity_last/_SUCCESS"
+          ]
+        },
+        {
+          "name": "validity_how",
+          "script": "scripts/run_direct_validity_fast.py",
+          "args": [
+            "--generation-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/how.jsonl",
+            "--snapshot-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream",
+            "--expected-denominator",
+            "32",
+            "--metrics",
+            "comp_struct",
+            "--output-dir",
+            "{output}/validity_how"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/how.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/development_validity_inputs/INPUT_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream/eval_utils.py"
+          ],
+          "outputs": [
+            "{output}/validity_how/report.json",
+            "{output}/validity_how/attempt_metrics.jsonl",
+            "{output}/validity_how/_SUCCESS"
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "endpoint_protocol_check": {
+      "component_indices": [
+        0
+      ],
+      "gpus_per_task": 6,
+      "cpus_per_task": 36,
+      "parallel_tasks": 1,
+      "wall_minutes": 15,
+      "memory": "576G",
+      "partition": "gpu"
+    }
+  },
+  "allocation_observation": {
+    "available_gpus": 6,
+    "available_cpus": 52,
+    "selected_gpus": 6
+  }
+}

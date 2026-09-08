@@ -1,0 +1,387 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/a1c597f435dc62972c7604eeea3d4651c9b7059f",
+  "source_identity": {
+    "commit": "a1c597f435dc62972c7604eeea3d4651c9b7059f",
+    "manifest_sha256": "be3a08ae05a572db891b6ed4370281a094fda89b0a2998e53124d79bd55e014c"
+  },
+  "purpose": "evaluation",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-09T04:00:00+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "endpoints": {
+      "raw": "native",
+      "refined": "tau800"
+    },
+    "requests": 1200,
+    "panel": "retrospective_frozen_H1A2_rich",
+    "panel_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new",
+    "panel_files": {
+      "cohort/cohort.jsonl": {
+        "rows": 1200,
+        "sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722"
+      },
+      "body/control_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "967f0a0ccea66c5d615998fcd377be3deecb65ded879fd25bbacac6e7caede40"
+      },
+      "body/candidate_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "be83b792c339b34a4f2b34c3d84487089dd47a1b7990b5f1a81a371e29a7d77b"
+      }
+    },
+    "success": "either endpoint promising against same-protocol H1A2",
+    "physics_labels": "recompute unless exact complete protocol and endpoint identity match"
+  },
+  "data_contract": {
+    "new_requests": 2048,
+    "train_seeds_distinct_from_evaluation": true,
+    "exclude_evaluation_reduced_compositions_at_compilation": true,
+    "teacher_refiner": "fixed494_tau800",
+    "teacher_seed_mode": "batched_rng_per_shard_recorded",
+    "teacher_batch_size": 64,
+    "first_headroom_requests": 256,
+    "S_energy_margin_eV_atom": 0.01,
+    "S_headroom_comparable_min": 32,
+    "S_headroom_distinct_positive_min": 16,
+    "unknown_not_negative": true,
+    "curriculum_stage": "acceptance_and_healthy_state_preservation_with_full_training_proposal_physics",
+    "main_policy_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/checkpoints/step-000800",
+    "main_policy_selection": "fixed_development_autonomous_editing_and_physical_preservation"
+  },
+  "components": [
+    {
+      "id": "formal_editor_run",
+      "output_dir": "formal_editor_run",
+      "gpus": 6,
+      "stages": [
+        {
+          "name": "main_editor",
+          "script": "src/scripts/run_r03_integrated_body.py",
+          "distributed_processes": 6,
+          "args": [
+            "--editor-source-manifest",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/evaluation_manifests/B0_D2_native.json",
+            "--editor-source-sha256",
+            "2c41c837daa2132df4705cb9076a3f7069d4921eab89c97c5b318a2042f538b7",
+            "--editor-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/checkpoints/step-000800",
+            "--frozen-runtime-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis256_v1",
+            "--base-model",
+            "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--crysllmgen-dir",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/reference/crysllmgen",
+            "--output-dir",
+            "{output}/body",
+            "--expected-requests",
+            "1200",
+            "--seed",
+            "2026093801",
+            "--batch-size",
+            "8",
+            "--max-calls",
+            "160",
+            "--block-size",
+            "1",
+            "--accept-threshold",
+            ".5"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/evaluation_manifests/B0_D2_native.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/checkpoints/step-000800/CHECKPOINT_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/checkpoints/step-000800/_CHECKPOINT_SUCCESS",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/labels_selected/LABEL_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/labels_original/LABEL_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/endpoint_protocol_check/validity_selected/report.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/endpoint_protocol_check/validity_original/report.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/endpoint_protocol_check/repeatability/rank0/PROBE_FINAL.json"
+          ],
+          "outputs": [
+            "{output}/body/EDITOR_FINAL.json",
+            "{output}/body/body_attempts.jsonl",
+            "{output}/body/proposal_graphs.pt",
+            "{output}/body/attempt_ledger.jsonl",
+            "{output}/body/run_config.json",
+            "{output}/body/_SUCCESS"
+          ]
+        },
+        {
+          "name": "export_raw",
+          "script": "src/scripts/export_r03_evaluation_inputs.py",
+          "args": [
+            "--body-dir",
+            "{output}/body",
+            "--endpoint",
+            "native",
+            "--method-id",
+            "ExpertEdit_B0_D2",
+            "--expected-requests",
+            "1200",
+            "--output-dir",
+            "{output}/raw"
+          ],
+          "inputs": [
+            "{output}/body/EDITOR_FINAL.json",
+            "{output}/body/body_attempts.jsonl",
+            "{output}/body/proposal_graphs.pt",
+            "{output}/body/attempt_ledger.jsonl",
+            "{output}/body/run_config.json",
+            "{output}/body/_SUCCESS"
+          ],
+          "outputs": [
+            "{output}/raw/EVALUATION_INPUTS_FINAL.json",
+            "{output}/raw/paths.jsonl",
+            "{output}/raw/_SUCCESS"
+          ]
+        },
+        {
+          "name": "hull_coverage",
+          "script": "operations/r03_c3fd_main_20260907/prepare_hull_union.py",
+          "args": [
+            "verify-endpoints",
+            "--run-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines/hull",
+            "--inputs-manifest",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/FORMAL_EDITOR_RAW_HULL_INPUTS.json",
+            "--output-report",
+            "{output}/HULL_ENDPOINT_COVERAGE.json"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/FORMAL_EDITOR_RAW_HULL_INPUTS.json",
+            "{output}/raw/paths.jsonl"
+          ],
+          "outputs": [
+            "{output}/HULL_ENDPOINT_COVERAGE.json"
+          ]
+        },
+        {
+          "name": "validity_view_ExpertEdit_B0_D2_native",
+          "script": "operations/r03_c3fd_main_20260907/export_direct_view.py",
+          "args": [
+            "--paths-jsonl",
+            "{output}/raw/paths.jsonl",
+            "--expected-denominator",
+            "1200",
+            "--snapshot-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream",
+            "--output-dir",
+            "{output}/ExpertEdit_B0_D2_native_validity_view"
+          ],
+          "inputs": [
+            "{output}/raw/paths.jsonl"
+          ],
+          "outputs": [
+            "{output}/ExpertEdit_B0_D2_native_validity_view/generation.jsonl",
+            "{output}/ExpertEdit_B0_D2_native_validity_view/_SUCCESS"
+          ]
+        },
+        {
+          "name": "validity_ExpertEdit_B0_D2_native",
+          "script": "scripts/run_direct_validity_fast.py",
+          "args": [
+            "--metrics",
+            "comp_struct",
+            "--generation-jsonl",
+            "{output}/ExpertEdit_B0_D2_native_validity_view/generation.jsonl",
+            "--snapshot-root",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/frozen/best/workstreams/plangraph_dlm_iclr_20260731/execution/h1_body_safeaxis_refined_repeats4_v1/runtime/crystal_dlm/wqcodiff/crysllmgen/upstream",
+            "--expected-denominator",
+            "1200",
+            "--output-dir",
+            "{output}/ExpertEdit_B0_D2_native_validity"
+          ],
+          "inputs": [
+            "{output}/ExpertEdit_B0_D2_native_validity_view/generation.jsonl"
+          ],
+          "outputs": [
+            "{output}/ExpertEdit_B0_D2_native_validity/report.json",
+            "{output}/ExpertEdit_B0_D2_native_validity/attempt_metrics.jsonl",
+            "{output}/ExpertEdit_B0_D2_native_validity/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels_ExpertEdit_B0_D2_native",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/raw/paths.jsonl",
+            "--purpose",
+            "evaluation",
+            "--gpu-count",
+            "6",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--output-dir",
+            "{output}/ExpertEdit_B0_D2_native_labels"
+          ],
+          "inputs": [
+            "{output}/raw/paths.jsonl"
+          ],
+          "outputs": [
+            "{output}/ExpertEdit_B0_D2_native_labels/LABEL_FINAL.json",
+            "{output}/ExpertEdit_B0_D2_native_labels/labels.jsonl",
+            "{output}/ExpertEdit_B0_D2_native_labels/_SUCCESS"
+          ]
+        },
+        {
+          "name": "SUN_ExpertEdit_B0_D2_native",
+          "script": "scripts/evaluate_programmed_paths.py",
+          "args": [
+            "--paths-jsonl",
+            "{output}/raw/paths.jsonl",
+            "--labels-jsonl",
+            "{output}/ExpertEdit_B0_D2_native_labels/labels.jsonl",
+            "--frozen-config",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/final_method_development_20260808/execution/h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/CONFIG.json",
+            "--official-cache",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines/hull/official_mp_cache",
+            "--endpoint",
+            "native",
+            "--expected-requests",
+            "1200",
+            "--cohort-role",
+            "independent_main",
+            "--policy-stage",
+            "final",
+            "--sun-only",
+            "--nu-workers",
+            "24",
+            "--nu-pair-timeout",
+            "30",
+            "--nu-cache",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/directed_nu_cache",
+            "--output-dir",
+            "{output}/ExpertEdit_B0_D2_native_SUN"
+          ],
+          "inputs": [
+            "{output}/raw/paths.jsonl",
+            "{output}/ExpertEdit_B0_D2_native_labels/labels.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines/hull/official_mp_cache/completion_manifest.json"
+          ],
+          "outputs": [
+            "{output}/ExpertEdit_B0_D2_native_SUN/EVALUATION_FINAL.json",
+            "{output}/ExpertEdit_B0_D2_native_SUN/_SUCCESS"
+          ]
+        },
+        {
+          "name": "main_refine",
+          "script": "src/scripts/refine_dlm_with_crysllmgen.py",
+          "args": [
+            "--proposal-graphs",
+            "{output}/body/proposal_graphs.pt",
+            "--checkpoint",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt",
+            "--crysllmgen-dir",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main",
+            "--output-dir",
+            "{output}/refined",
+            "--batch-size",
+            "1",
+            "--seed",
+            "2026094801",
+            "--diff-steps",
+            "800",
+            "--num-evals",
+            "1",
+            "--max-proposals",
+            "1200",
+            "--frozen-single-request-seeding",
+            "--seed-from-graph-field",
+            "refiner_noise_seed",
+            "--timesteps",
+            "1000"
+          ],
+          "inputs": [
+            "{output}/body/proposal_graphs.pt",
+            "{output}/body/attempt_ledger.jsonl",
+            "/public/home/jiaosz/hengzhang/Code/crysllmgen-main/out/mp_20/22042026/203930/model_494.pt"
+          ],
+          "outputs": [
+            "{output}/refined/run_config.json",
+            "{output}/refined/refinement_metrics.json"
+          ],
+          "distributed_processes": 6
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "formal_editor_run": {
+      "component_indices": [
+        0
+      ],
+      "gpus_per_task": 6,
+      "cpus_per_task": 36,
+      "parallel_tasks": 1,
+      "wall_minutes": 180,
+      "memory": "576G",
+      "partition": "gpu"
+    }
+  },
+  "allocation_observation": {
+    "available_gpus": 6,
+    "available_cpus": 52,
+    "selected_gpus": 6
+  },
+  "validation_choice": {
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/checkpoints/step-000800",
+    "policy_fixed_before_main": true,
+    "development_requests": 259,
+    "original": {
+      "comp_valid": 218,
+      "Struct_valid": 126,
+      "R_reliable": 42
+    },
+    "selected": {
+      "comp_valid": 218,
+      "Struct_valid": 187,
+      "R_reliable": 51,
+      "original_reliable_retained": 39,
+      "original_reliable_lost": 3,
+      "new_reliable": 12
+    },
+    "how_dev": {
+      "requests": 32,
+      "Struct_valid": 23,
+      "R_reliable": 6
+    },
+    "main_panel_not_used_for_policy_selection": true,
+    "accept_threshold": 0.5,
+    "block_size": 1,
+    "max_calls": 160,
+    "refiner_replay": "matching numerical inputs and CPU/CUDA RNG; frozen path itself is not bitwise repeatable on this GPU runtime"
+  }
+}

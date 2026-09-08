@@ -1,0 +1,28 @@
+{
+  "identical_input": {
+    "requests": 558,
+    "strict_stable_gain": 1,
+    "strict_stable_loss": 0,
+    "meta_stable_gain": 2,
+    "meta_stable_loss": 4,
+    "strict_sun_gain": 1,
+    "strict_sun_loss": 0,
+    "meta_sun_gain": 2,
+    "meta_sun_loss": 4,
+    "terminal_verified_gain": 10,
+    "terminal_verified_loss": 6
+  },
+  "different_or_failed": {
+    "requests": 642,
+    "strict_stable_gain": 9,
+    "strict_stable_loss": 2,
+    "meta_stable_gain": 35,
+    "meta_stable_loss": 7,
+    "strict_sun_gain": 9,
+    "strict_sun_loss": 2,
+    "meta_sun_gain": 35,
+    "meta_sun_loss": 7,
+    "terminal_verified_gain": 50,
+    "terminal_verified_loss": 16
+  }
+}

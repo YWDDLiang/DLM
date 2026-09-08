@@ -1,0 +1,20 @@
+{
+  "requests": 1200,
+  "edited_attempts": 1186,
+  "changed_bodies": 623,
+  "extra_forward_calls": {
+    "total": 46892,
+    "mean_per_eligible": 39.53794266441821,
+    "max": 112,
+    "min": 2
+  },
+  "decisions": {
+    "G:none:False": 492,
+    "S:none:False": 803,
+    "G:full_cell:True": 620,
+    "G:full_cell:False": 74,
+    "S:full_cell:False": 380,
+    "S:full_cell:True": 3
+  },
+  "body_sha256": "86e0f0534e7fd4517ab30a9c14dcc27259b25c412c2507771c07edcee5005bfd"
+}

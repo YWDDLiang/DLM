@@ -1,0 +1,149 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/0c95c278977e2af474c70bbee9efc430f1a84cc1",
+  "source_identity": {
+    "commit": "0c95c278977e2af474c70bbee9efc430f1a84cc1",
+    "manifest_sha256": "ef17cecaf955e24094ea755748ac77baed033ecaedbabca08d4b22e7c8a4be04"
+  },
+  "purpose": "evaluation",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-08T03:19:21+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "endpoints": {
+      "raw": "native",
+      "refined": "tau800"
+    },
+    "requests": 1200,
+    "panel": "retrospective_frozen_H1A2_rich",
+    "panel_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new",
+    "panel_files": {
+      "cohort/cohort.jsonl": {
+        "rows": 1200,
+        "sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722"
+      },
+      "body/control_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "967f0a0ccea66c5d615998fcd377be3deecb65ded879fd25bbacac6e7caede40"
+      },
+      "body/candidate_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "be83b792c339b34a4f2b34c3d84487089dd47a1b7990b5f1a81a371e29a7d77b"
+      }
+    },
+    "success": "either endpoint promising against same-protocol H1A2",
+    "physics_labels": "recompute unless exact complete protocol and endpoint identity match"
+  },
+  "data_contract": {
+    "purpose": "fixed_development_complete_proposal_diagnostics",
+    "source_split": "dev",
+    "training_use_allowed": false,
+    "main_policy_already_frozen": true
+  },
+  "components": [
+    {
+      "id": "development_proposal_audit",
+      "output_dir": "development_proposal_audit",
+      "gpus": 1,
+      "stages": [
+        {
+          "name": "prepare",
+          "script": "src/crystal_dlm/expert_edit_data.py",
+          "args": [
+            "--mode",
+            "development-proposals",
+            "--samples-dir",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/autonomous_selected",
+            "--b0-checkpoint",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+            "--output-dir",
+            "{output}/prepared"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/autonomous_selected/SAMPLE_FINAL.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/autonomous_selected/samples.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/stage2_diagnostics/autonomous_selected/_SUCCESS"
+          ],
+          "outputs": [
+            "{output}/prepared/PROPOSALS_FINAL.json",
+            "{output}/prepared/inputs.jsonl",
+            "{output}/prepared/proposal_map.jsonl",
+            "{output}/prepared/_SUCCESS"
+          ]
+        },
+        {
+          "name": "labels",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "{output}/prepared/inputs.jsonl",
+            "--output-dir",
+            "{output}/labels",
+            "--purpose",
+            "expert_edit",
+            "--gpu-count",
+            "1",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300"
+          ],
+          "inputs": [
+            "{output}/prepared/inputs.jsonl",
+            "{output}/prepared/PROPOSALS_FINAL.json"
+          ],
+          "outputs": [
+            "{output}/labels/LABEL_FINAL.json",
+            "{output}/labels/labels.jsonl",
+            "{output}/labels/_SUCCESS"
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "development_proposal_audit": {
+      "component_indices": [
+        0
+      ],
+      "gpus_per_task": 1,
+      "cpus_per_task": 6,
+      "parallel_tasks": 1,
+      "wall_minutes": 45,
+      "memory": "96G",
+      "partition": "gpu"
+    }
+  },
+  "allocation_observation": {
+    "available_gpus": 6,
+    "available_cpus": 52,
+    "selected_gpus": 6
+  }
+}
