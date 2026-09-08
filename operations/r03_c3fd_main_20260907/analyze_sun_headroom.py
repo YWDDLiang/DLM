@@ -2,6 +2,7 @@
 from collections import Counter
 import hashlib
 import json
+import math
 from pathlib import Path
 import sys
 import numpy as np
@@ -95,11 +96,28 @@ def changed_tokens(case, variant):
     return sum(a != b for a,b in zip(case['old_body'],body))
 
 
+def require_resolved_feedback(row):
+    """Formal zero accounting is not evidence that a missing energy is unstable."""
+    if type(row['strict_sun']) is not bool:
+        raise ValueError('an unresolved SUN predicate cannot create a training preference')
+    status = row.get('terminal_status')
+    if status in ('generation_failure', 'invalid_raw'):
+        if row['strict_sun']:
+            raise ValueError('an unusable endpoint cannot acquire positive SUN feedback')
+        return
+    resolved_statuses = {'verified', 'not_converged', 'optimizer_stop_unverified',
+                         'relaxation_energy_increased', 'invalid_terminal'}
+    values = [row.get(key) for key in ('terminal_energy_eV_atom', 'hull_energy_eV_atom')]
+    if status not in resolved_statuses or any(
+            not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value)
+            for value in values):
+        raise ValueError(f'unresolved physical feedback for {row.get("group_id")}: {status}')
+
+
 def select_from_one_seed(case, variants, panels, seed):
     gid = case['ancestor_id']
     for variant in variants:
-        if type(panels[seed][variant][gid]['strict_sun']) is not bool:
-            raise ValueError('an unresolved SUN predicate cannot create a training preference')
+        require_resolved_feedback(panels[seed][variant][gid])
     return min(variants, key=lambda variant:(-int(panels[seed][variant][gid]['strict_sun']),
         0 if variant == 'keep' else 1, changed_tokens(case,variant), variants.index(variant)))
 
@@ -126,6 +144,9 @@ def analyze(capsule):
         for variant in variants: changed_tokens(case,variant)
     panels = {seed:{v:{x['group_id']:x for x in capsule['arms'][f'ref{seed}_{v}']['rows']} for v in variants} for seed in range(2)}
     assert all(set(rows)==expected for group in panels.values() for rows in group.values())
+    for group in panels.values():
+        for rows in group.values():
+            for row in rows.values(): require_resolved_feedback(row)
     output = {'schema':'sun_teacher_headroom_analysis_v1', 'sources':len(cases), 'teacher_oracle_not_student':True,
         'scope':'unique-composition, reference-covered, geometry-stratified training headroom; not natural DEV',
         'within_cohort_uniqueness_is_trivial':True, 'arms':{}, 'repeatable_wins':[], 'cross_noise':{},

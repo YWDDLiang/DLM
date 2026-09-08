@@ -24,7 +24,7 @@ def fixture():
                 sun = (i<6 and v=='local1') or (i==6 and seed==0 and v=='local4') or (i==7 and v=='keep')
                 rows.append({'group_id':str(i),'strict_sun':sun,'meta_sun':sun,'reconstructed':True,
                              'terminal_verified':False,'terminal_status':'not_converged',
-                             'terminal_energy_eV_atom':-1. if sun else 1.})
+                             'terminal_energy_eV_atom':-1. if sun else 1., 'hull_energy_eV_atom':0.})
             arms[f'ref{seed}_{v}'] = {'rows':rows}
     return {'study':{'cases':cases,'variants':variants,'sources':8},'arms':arms,'execution_integrity_verified':True}
 
@@ -67,6 +67,28 @@ class HeadroomAnalysisTests(unittest.TestCase):
         report = analysis.analyze(capsule)
         self.assertEqual(len(report['identical_body_inconsistencies']), 2)
         self.assertFalse(report['gate']['global_content_pilot_supported'])
+
+    def test_formal_zero_with_unknown_physics_is_not_negative_feedback(self):
+        for status in ('evaluation_error', 'energy_protocol_mismatch', 'terminal_consistency_unverified'):
+            capsule = fixture()
+            capsule['arms']['ref0_keep']['rows'][0]['terminal_status'] = status
+            with self.subTest(status=status), self.assertRaisesRegex(ValueError, 'unresolved physical feedback'):
+                analysis.analyze(capsule)
+        capsule = fixture()
+        capsule['arms']['ref0_keep']['rows'][0]['terminal_energy_eV_atom'] = None
+        with self.assertRaisesRegex(ValueError, 'unresolved physical feedback'):
+            analysis.analyze(capsule)
+
+    def test_declared_unusable_endpoint_keeps_its_zero_denominator(self):
+        capsule = fixture()
+        for seed in range(2):
+            for variant in capsule['study']['variants']:
+                row = capsule['arms'][f'ref{seed}_{variant}']['rows'][6]
+                row.update(strict_sun=False, meta_sun=False, terminal_status='generation_failure',
+                           terminal_energy_eV_atom=None, hull_energy_eV_atom=None)
+        report = analysis.analyze(capsule)
+        self.assertEqual(report['sources'], 8)
+        self.assertEqual(report['cross_noise']['0_to_1']['net_SUN'], 6)
 
     def test_identical_non_KEEP_bodies_with_conflicting_outcomes_are_rejected(self):
         capsule = fixture()
