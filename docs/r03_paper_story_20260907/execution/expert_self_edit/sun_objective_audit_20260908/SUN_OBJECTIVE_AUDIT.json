@@ -1,0 +1,240 @@
+{
+  "schema": "frozen_sun_objective_audit_v1",
+  "primary_metrics_rescored": false,
+  "source_csv_sha256": "10343ef6a12b32a4d59e8e849f2a59619db354d222a945937a7f6313465b84a1",
+  "source_rows": 7200,
+  "cells": [
+    {
+      "method": "B0_D2",
+      "endpoint": "native",
+      "requests": 1200,
+      "primary_counts": {
+        "comp_valid": 1036,
+        "Struct_valid": 547,
+        "SUN": 30,
+        "MSUN": 145
+      },
+      "SUN_R_verified": 14,
+      "SUN_without_R_verified": 16,
+      "hull_bins": {
+        "unknown": 671,
+        "<=0": 30,
+        "(0,.025]": 20,
+        "(.025,.05]": 28,
+        "(.05,.1]": 68,
+        "(.1,.2]": 96,
+        ">.2": 287
+      },
+      "stable_not_SUN": 0,
+      "stable_to_SUN_retention": 1.0,
+      "near_hull_0_to_0.05": 48
+    },
+    {
+      "method": "B0_D2",
+      "endpoint": "tau800",
+      "requests": 1200,
+      "primary_counts": {
+        "comp_valid": 1021,
+        "Struct_valid": 1159,
+        "SUN": 101,
+        "MSUN": 558
+      },
+      "SUN_R_verified": 45,
+      "SUN_without_R_verified": 56,
+      "hull_bins": {
+        "unknown": 71,
+        "<=0": 126,
+        "(0,.025]": 132,
+        "(.025,.05]": 150,
+        "(.05,.1]": 266,
+        "(.1,.2]": 301,
+        ">.2": 154
+      },
+      "stable_not_SUN": 25,
+      "stable_to_SUN_retention": 0.8015873015873016,
+      "near_hull_0_to_0.05": 282
+    },
+    {
+      "method": "ExpertEdit_B0_D2",
+      "endpoint": "native",
+      "requests": 1200,
+      "primary_counts": {
+        "comp_valid": 1038,
+        "Struct_valid": 861,
+        "SUN": 38,
+        "MSUN": 171
+      },
+      "SUN_R_verified": 18,
+      "SUN_without_R_verified": 20,
+      "hull_bins": {
+        "unknown": 364,
+        "<=0": 38,
+        "(0,.025]": 19,
+        "(.025,.05]": 30,
+        "(.05,.1]": 85,
+        "(.1,.2]": 137,
+        ">.2": 527
+      },
+      "stable_not_SUN": 0,
+      "stable_to_SUN_retention": 1.0,
+      "near_hull_0_to_0.05": 49
+    },
+    {
+      "method": "ExpertEdit_B0_D2",
+      "endpoint": "tau800",
+      "requests": 1200,
+      "primary_counts": {
+        "comp_valid": 1028,
+        "Struct_valid": 1165,
+        "SUN": 92,
+        "MSUN": 487
+      },
+      "SUN_R_verified": 52,
+      "SUN_without_R_verified": 40,
+      "hull_bins": {
+        "unknown": 66,
+        "<=0": 113,
+        "(0,.025]": 116,
+        "(.025,.05]": 124,
+        "(.05,.1]": 233,
+        "(.1,.2]": 323,
+        ">.2": 225
+      },
+      "stable_not_SUN": 21,
+      "stable_to_SUN_retention": 0.8141592920353983,
+      "near_hull_0_to_0.05": 240
+    },
+    {
+      "method": "H1A2_D1",
+      "endpoint": "native",
+      "requests": 1200,
+      "primary_counts": {
+        "comp_valid": 1042,
+        "Struct_valid": 497,
+        "SUN": 27,
+        "MSUN": 156
+      },
+      "SUN_R_verified": 14,
+      "SUN_without_R_verified": 13,
+      "hull_bins": {
+        "unknown": 723,
+        "<=0": 27,
+        "(0,.025]": 26,
+        "(.025,.05]": 25,
+        "(.05,.1]": 78,
+        "(.1,.2]": 90,
+        ">.2": 231
+      },
+      "stable_not_SUN": 0,
+      "stable_to_SUN_retention": 1.0,
+      "near_hull_0_to_0.05": 51
+    },
+    {
+      "method": "H1A2_D1",
+      "endpoint": "tau800",
+      "requests": 1200,
+      "primary_counts": {
+        "comp_valid": 1024,
+        "Struct_valid": 1163,
+        "SUN": 103,
+        "MSUN": 553
+      },
+      "SUN_R_verified": 49,
+      "SUN_without_R_verified": 54,
+      "hull_bins": {
+        "unknown": 69,
+        "<=0": 129,
+        "(0,.025]": 124,
+        "(.025,.05]": 144,
+        "(.05,.1]": 273,
+        "(.1,.2]": 305,
+        ">.2": 156
+      },
+      "stable_not_SUN": 26,
+      "stable_to_SUN_retention": 0.7984496124031008,
+      "near_hull_0_to_0.05": 268
+    }
+  ],
+  "raw_to_refined": {
+    "B0_D2": {
+      "comp_valid": {
+        "retained": 1021,
+        "gained": 0,
+        "lost": 15
+      },
+      "Struct_valid": {
+        "retained": 547,
+        "gained": 612,
+        "lost": 0
+      },
+      "SUN": {
+        "retained": 16,
+        "gained": 85,
+        "lost": 14
+      },
+      "MSUN": {
+        "retained": 95,
+        "gained": 463,
+        "lost": 50
+      },
+      "finite_hull_pairs": 529,
+      "median_delta_hull_eV_atom": -0.13559484481811523,
+      "refined_SUN_with_invalid_raw_geometry": 41,
+      "refined_SUN_with_valid_raw_geometry": 60
+    },
+    "ExpertEdit_B0_D2": {
+      "comp_valid": {
+        "retained": 1028,
+        "gained": 0,
+        "lost": 10
+      },
+      "Struct_valid": {
+        "retained": 858,
+        "gained": 307,
+        "lost": 3
+      },
+      "SUN": {
+        "retained": 18,
+        "gained": 74,
+        "lost": 20
+      },
+      "MSUN": {
+        "retained": 110,
+        "gained": 377,
+        "lost": 61
+      },
+      "finite_hull_pairs": 833,
+      "median_delta_hull_eV_atom": -0.1776289939880371,
+      "refined_SUN_with_invalid_raw_geometry": 23,
+      "refined_SUN_with_valid_raw_geometry": 69
+    },
+    "H1A2_D1": {
+      "comp_valid": {
+        "retained": 1024,
+        "gained": 0,
+        "lost": 18
+      },
+      "Struct_valid": {
+        "retained": 497,
+        "gained": 666,
+        "lost": 0
+      },
+      "SUN": {
+        "retained": 17,
+        "gained": 86,
+        "lost": 10
+      },
+      "MSUN": {
+        "retained": 112,
+        "gained": 441,
+        "lost": 44
+      },
+      "finite_hull_pairs": 477,
+      "median_delta_hull_eV_atom": -0.1012427806854248,
+      "refined_SUN_with_invalid_raw_geometry": 38,
+      "refined_SUN_with_valid_raw_geometry": 65
+    }
+  },
+  "interpretation": "Retrospective descriptive analysis of an already examined MAIN panel; not a fresh validation set.",
+  "hull_threshold": "SUN uses stored E_terminal-E_hull <= 0 and frozen N/U; R verified is a separate diagnostic."
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "expert_loss_scale_audit_v1",
+  "tokenizer_sha256": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+  "support": {
+    "length_A": {
+      "bins": 501,
+      "effective_bins": 501,
+      "min": 0,
+      "max": 500,
+      "uniform_CE_nats": 6.2166061010848646
+    },
+    "angle_A": {
+      "bins": 179,
+      "effective_bins": 179,
+      "min": 1,
+      "max": 179,
+      "uniform_CE_nats": 5.187385805840755
+    },
+    "coordinate_X": {
+      "bins": 101,
+      "effective_bins": 100,
+      "min": 0,
+      "max": 100,
+      "uniform_CE_nats": 4.605170185988092
+    }
+  },
+  "source": "FIT8_ANALYSIS.json",
+  "metrics": {
+    "train": {
+      "G_content_ce": 0.0577396576994854,
+      "S_content_ce": 0.04806023703932711,
+      "coord_content_ce": 0.061334008609669075,
+      "content_ce": 0.03379609678252867,
+      "loss": 0.03380187068198618,
+      "quality_bce": 0.00001764477848216946,
+      "coordinate_geometric_mean_target_probability": 0.9405090491878495
+    },
+    "dev": {
+      "G_content_ce": 4.7228492173683625,
+      "S_content_ce": 5.107485830261394,
+      "coord_content_ce": 4.958479001437347,
+      "content_ce": 3.292197524686344,
+      "loss": 3.3603340075715096,
+      "quality_bce": 0.17919826114088977,
+      "coordinate_geometric_mean_target_probability": 0.00702360260183517
+    }
+  },
+  "notes": [
+    "CE uses typed token support and temperature 0.7; periodic coordinate aliases 0 and 1 are merged.",
+    "exp(-mean CE) is geometric mean target-token probability, not top-1 accuracy.",
+    "Overall content loss is averaged over all mixed batch rows, whereas task/field CE conditions on supervised content."
+  ]
+}

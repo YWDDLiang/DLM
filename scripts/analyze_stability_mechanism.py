@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import csv
 from collections import defaultdict
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -109,12 +111,85 @@ def summarize(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def audit_metrics_csv(path: Path, output: Path) -> None:
+    """Read frozen metric bits; add endpoint/threshold diagnostics without rescoring SUN."""
+    with path.open(encoding='utf-8', newline='') as handle:
+        rows = list(csv.DictReader(handle))
+    truth = lambda value: str(value).lower() in ('true', '1')
+    groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        item = dict(row, sample_idx=int(row['sample_idx']))
+        for name in ['comp_valid', 'Struct_valid', 'SUN', 'MSUN', 'terminal_verified']:
+            item[name] = truth(row[name])
+        raw_hull = row['energy_above_hull_eV_atom']
+        item['hull'] = float(raw_hull) if raw_hull else None
+        if item['hull'] is not None and not math.isfinite(item['hull']):
+            item['hull'] = None
+        groups[(row['method'], row['endpoint'])].append(item)
+    summary_path = path.parent/'RESULTS.json'
+    summary = json.loads(summary_path.read_text(encoding='utf-8'))
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == summary['csv_sha256']
+    assert len(rows) == summary['rows']
+    result = {'schema': 'frozen_sun_objective_audit_v1', 'primary_metrics_rescored': False,
+        'source_csv_sha256': summary['csv_sha256'], 'source_rows': len(rows), 'cells': [], 'raw_to_refined': {},
+        'interpretation': 'Retrospective descriptive analysis of an already examined MAIN panel; not a fresh validation set.',
+        'hull_threshold': 'SUN uses stored E_terminal-E_hull <= 0 and frozen N/U; R verified is a separate diagnostic.'}
+    bins_order = ['unknown', '<=0', '(0,.025]', '(.025,.05]', '(.05,.1]', '(.1,.2]', '>.2']
+    for key, values in sorted(groups.items()):
+        declared = next(x for x in summary['summary'] if (x['method'], x['endpoint']) == key)
+        assert len(values) == len({x['sample_idx'] for x in values}) == declared['requests']
+        counts = {name: sum(x[name] for x in values) for name in ['comp_valid', 'Struct_valid', 'SUN', 'MSUN']}
+        assert counts == declared['counts']
+        bins = dict.fromkeys(bins_order, 0)
+        for item in values:
+            h = item['hull']
+            bucket = 'unknown' if h is None else '<=0' if h <= 0 else '(0,.025]' if h <= .025 else '(.025,.05]' if h <= .05 else '(.05,.1]' if h <= .1 else '(.1,.2]' if h <= .2 else '>.2'
+            bins[bucket] += 1
+        stable = [x for x in values if x['hull'] is not None and x['hull'] <= 0]
+        assert all(not x['SUN'] or (x['hull'] is not None and x['hull'] <= 0) for x in values)
+        assert all(not x['MSUN'] or (x['hull'] is not None and x['hull'] <= .1) for x in values)
+        result['cells'].append({'method': key[0], 'endpoint': key[1], 'requests': len(values), 'primary_counts': counts,
+            'SUN_R_verified': sum(x['SUN'] and x['terminal_verified'] for x in values),
+            'SUN_without_R_verified': sum(x['SUN'] and not x['terminal_verified'] for x in values),
+            'hull_bins': bins, 'stable_not_SUN': sum(not x['SUN'] for x in stable),
+            'stable_to_SUN_retention': rate(sum(x['SUN'] for x in stable), len(stable)),
+            'near_hull_0_to_0.05': bins['(0,.025]']+bins['(.025,.05]']})
+    for method in sorted({k[0] for k in groups}):
+        old = {x['sample_idx']: x for x in groups[(method, 'native')]}
+        new = {x['sample_idx']: x for x in groups[(method, 'tau800')]}
+        assert set(old) == set(new)
+        pairs = [(old[k], new[k]) for k in sorted(old)]
+        change = {}
+        for metric in ['comp_valid', 'Struct_valid', 'SUN', 'MSUN']:
+            change[metric] = {'retained': sum(a[metric] and b[metric] for a,b in pairs),
+                'gained': sum(not a[metric] and b[metric] for a,b in pairs),
+                'lost': sum(a[metric] and not b[metric] for a,b in pairs)}
+        differences = [b['hull']-a['hull'] for a,b in pairs if a['hull'] is not None and b['hull'] is not None]
+        change['finite_hull_pairs'] = len(differences)
+        change['median_delta_hull_eV_atom'] = quantile(differences, .5)
+        change['refined_SUN_with_invalid_raw_geometry'] = sum(b['SUN'] and not a['Struct_valid'] for a,b in pairs)
+        change['refined_SUN_with_valid_raw_geometry'] = sum(b['SUN'] and a['Struct_valid'] for a,b in pairs)
+        result['raw_to_refined'][method] = change
+    output.mkdir(parents=True, exist_ok=False)
+    target = output/'SUN_OBJECTIVE_AUDIT.json'
+    target.write_text(json.dumps(result, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--attempt-results", type=Path, required=True)
-    parser.add_argument("--generation", type=Path, required=True)
+    parser.add_argument("--attempt-results", type=Path)
+    parser.add_argument("--generation", type=Path)
+    parser.add_argument("--metrics-csv", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
+    if args.metrics_csv is not None:
+        if args.attempt_results is not None or args.generation is not None:
+            parser.error('--metrics-csv cannot be combined with legacy input flags')
+        audit_metrics_csv(args.metrics_csv, args.output_dir)
+        return
+    if args.attempt_results is None or args.generation is None:
+        parser.error('--attempt-results and --generation are required without --metrics-csv')
 
     attempts = sorted(read_jsonl(args.attempt_results), key=lambda row: int(row["ordinal"]))
     generation = sorted(read_jsonl(args.generation), key=lambda row: int(row["ordinal"]))
