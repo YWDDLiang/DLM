@@ -1,11 +1,11 @@
 {
   "schema": "sun_v05_execution_status_v1",
-  "phase": "teacher_action_headroom",
-  "active_job_id": 41142,
+  "phase": "teacher_action_SUN_scoring",
+  "active_job_id": 41151,
   "allocation": {
-    "GPUs": 3,
+    "GPUs": 0,
     "CPUs": 18,
-    "memory_GB": 288
+    "memory_GB": 144
   },
   "cancelled_pending_jobs": [
     41121,
@@ -19,12 +19,20 @@
   },
   "gpu_manifest_sha256": "b05dbf679469ca25835d1d3923d04da4715622ae08d422a639d27d282b83a4b2",
   "score_manifest_uploaded": true,
-  "score_job_submitted": false,
+  "score_job_submitted": true,
   "new_gradient_updates": 0,
   "cumulative_prior_training_seconds": 11264.306058777496,
   "scientific_promotion_not_yet_decided": true,
-  "latest_remote_status": "refine 462 / 640\nRUNNING 1:01:13\n\nGPU_component_success False\ncompleted_label_arms 0",
-  "recorded_unix": 1788863725.615,
+  "latest_remote_status": "GPU 41142 completed all 20 stages; CPU score 41151 submitted with 0 GPUs and 18 CPUs",
+  "recorded_unix": 1788866337.421,
   "connection_restored_by_user": true,
-  "deadline_utc": "2026-09-09T04:00:00+00:00"
+  "deadline_utc": "2026-09-09T04:00:00+00:00",
+  "gpu_job_id": 41142,
+  "gpu_job_complete": true,
+  "gpu_stages_complete": 20,
+  "score_manifest_sha256": "df49e217174c766d6ce2426cf638301a37ff91fd2a699c14bd31b4f9fa52ee6d",
+  "failed_launch_jobs": [
+    41150
+  ],
+  "launch_correction": "CPU single component runner; the GPU-only group rejected job 41150 before scoring began"
 }
