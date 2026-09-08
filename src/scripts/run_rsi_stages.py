@@ -102,7 +102,61 @@ def gate(spec):
     write_json(root/'GATE.json', decision)
 
 
-def refine(spec, shard, shards):
+def register_refine_resume(spec, destination):
+    """Pin complete endpoint pairs before continuing an interrupted F800 job."""
+    root = Path(spec['run_root'])
+    plans = read_rows(root/'cohort/plans.jsonl')
+    decisions = json.loads((root/'construction/GATE.json').read_text())['decisions']
+    retained = {}
+    for plan, decision in zip(plans, decisions, strict=True):
+        original = plan['original_ordinal']
+        paths = [root/stage/'records'/f'{original:04d}.json' for stage in ('refined','tokenized')]
+        if not any(path.exists() for path in paths):
+            continue
+        if not all(path.exists() for path in paths):
+            raise ValueError('partial F/token pair requires explicit recovery before resume')
+        values = [json.loads(path.read_text()) for path in paths]
+        for value in values:
+            if value['config_sha256'] != spec['_config_sha256'] or value['gate'] != decision:
+                raise ValueError('retained refinement configuration or gate changed')
+            if value['record']['original_ordinal'] != original:
+                raise ValueError('retained refinement source differs')
+            raw = value['raw_refiner_output']
+            if raw is not None and (raw['seed'] != plan['refiner_noise_seed'] or raw['diffusion_steps'] != 800):
+                raise ValueError('retained refinement seed or F800 differs')
+        if (values[0]['raw_refiner_output'] != values[1]['raw_refiner_output'] or
+                values[0]['tokenization'] != values[1]['tokenization']):
+            raise ValueError('retained float/token pair does not share one refinement')
+        retained[str(original)] = {str(path.relative_to(root)):file_hash(path) for path in paths}
+    result = {'schema':'rsi_refinement_resume_v1','config_sha256':spec['_config_sha256'],
+        'plans_sha256':file_hash(root/'cohort/plans.jsonl'),
+        'gate_sha256':file_hash(root/'construction/GATE.json'), 'retained':retained,
+        'retained_requests':len(retained),'missing_requests':len(plans)-len(retained)}
+    destination = Path(destination)
+    if destination.exists():
+        if json.loads(destination.read_text()) != result:
+            raise ValueError('registered resume manifest changed')
+    else:
+        write_json(destination,result)
+    return result
+
+
+def validate_refine_resume(spec, manifest):
+    root = Path(spec['run_root'])
+    value = json.loads(Path(manifest).read_text())
+    if (value['config_sha256'] != spec['_config_sha256'] or
+            value['plans_sha256'] != file_hash(root/'cohort/plans.jsonl') or
+            value['gate_sha256'] != file_hash(root/'construction/GATE.json')):
+        raise ValueError('refinement resume inputs changed')
+    for paths in value['retained'].values():
+        for relative, expected in paths.items():
+            path = (root/relative).resolve()
+            if root.resolve() not in path.parents or file_hash(path) != expected:
+                raise ValueError('retained refinement endpoint changed')
+    return value
+
+
+def refine(spec, shard, shards, resume_manifest=None, completion_dir=None):
     import torch
     from transformers import AutoTokenizer
     from crystal_dlm.expert_edit_data import quantize_arrays, arrays_from_structure, certify_geometry
@@ -113,6 +167,7 @@ def refine(spec, shard, shards):
     torch.cuda.set_device(rank)
     torch.set_num_threads(1)
     root = Path(spec['run_root'])
+    resume = validate_refine_resume(spec,resume_manifest) if resume_manifest else None
     plans = read_rows(root/'cohort/plans.jsonl')
     raw = read_rows(root/'construction/inputs.jsonl')
     frozen_gate = json.loads((root/'construction/GATE.json').read_text())
@@ -129,6 +184,10 @@ def refine(spec, shard, shards):
         original = plan['original_ordinal']
         if decision['input_fingerprint'] != fingerprint(before):
             raise ValueError('raw gate occurrence changed')
+        if resume and str(original) in resume['retained']:
+            continue
+        if resume and any((root/stage/'records'/f'{original:04d}.json').exists() for stage in ('refined','tokenized')):
+            raise ValueError('unregistered refinement endpoint appeared during resume')
         result = None
         failure = None
         if decision['run_diffusion']:
@@ -168,7 +227,16 @@ def refine(spec, shard, shards):
                  'gate':decision,'config_sha256':spec['_config_sha256']})
         if index//shards % 5 == 0:
             print(json.dumps({'shard':shard,'index':index,'seconds':time.monotonic()-started}),flush=True)
-    write_json(root/'refined'/f'worker_{shard}_DONE.json',{'seconds':time.monotonic()-started})
+    done = root/'refined'/f'worker_{shard}_DONE.json'
+    if not resume or not done.exists():
+        write_json(done,{'seconds':time.monotonic()-started})
+    if completion_dir:
+        write_json(Path(completion_dir)/f'worker_{shard}_DONE.json', {
+            'resume_manifest_sha256':file_hash(resume_manifest) if resume_manifest else None,
+            'retained_requests':resume['retained_requests'] if resume else 0,
+            'outputs':{str((root/stage/'records'/f"{plans[i]['original_ordinal']:04d}.json").relative_to(root)):
+                       file_hash(root/stage/'records'/f"{plans[i]['original_ordinal']:04d}.json")
+                       for i in range(shard,len(plans),shards) for stage in ('refined','tokenized')}})
 
 
 def score_directory(root,stage):
@@ -489,6 +557,8 @@ def main():
     parser.add_argument('--chunk',type=int,default=0)
     parser.add_argument('--chunks',type=int,default=4)
     parser.add_argument('--branch',choices=['G','E','both'],default='both')
+    parser.add_argument('--resume-manifest')
+    parser.add_argument('--completion-dir')
     args=parser.parse_args()
     os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
     spec=load_config(args.config)
@@ -504,7 +574,8 @@ def main():
         if not 0<=args.chunk<args.chunks: parser.error('invalid baseline chunk')
         baseline_chunk(spec,args.arm,args.chunk,args.chunks,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
     elif args.action=='edit': edit(spec,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
-    else: refine(spec,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')))
+    else: refine(spec,int(os.environ.get('RANK','0')),int(os.environ.get('WORLD_SIZE','1')),
+                 args.resume_manifest,args.completion_dir)
 
 
 if __name__=='__main__': main()

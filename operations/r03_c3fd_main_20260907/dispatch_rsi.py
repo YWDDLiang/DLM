@@ -19,7 +19,9 @@ def main():
     p.add_argument('--cache',type=Path)
     p.add_argument('--score-attempt',default='scoring')
     p.add_argument('--reuse-endpoints',type=Path,nargs='*',default=[])
+    p.add_argument('--resume-manifest',type=Path)
     a=p.parse_args();root=a.root.resolve();cfg=json.loads(a.config.read_text())
+    if a.resume_manifest and a.action != 'refine': p.error('resume manifest requires refine')
     cohort=Path(cfg['run_root']);relative=cohort.relative_to(root)
     source=Path(__file__).resolve().parents[2]
     pipeline=json.loads((root/'RAW0_PIPELINE.json').read_text())
@@ -75,6 +77,10 @@ def main():
         args+=['--action',a.action];distributed=True
         inputs+=[str(cohort/'construction/GATE.json' if a.action=='refine' else cohort/'current/inputs.jsonl')]
         outputs=[f'{{output}}/worker_{i}_DONE.json' for i in range(gpu)]
+        if a.resume_manifest:
+            directory=directory/('resume_'+a.job)
+            args+=['--resume-manifest',str(a.resume_manifest),'--completion-dir','{output}']
+            inputs+=[str(a.resume_manifest)]
     else:
         if not a.training_config: p.error('train requires --training-config')
         script='src/scripts/train_rsi_preferences.py'
