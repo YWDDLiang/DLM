@@ -167,8 +167,12 @@ def structure_chemsys(structure: Mapping[str, Any]) -> str:
     return canonical_chemsys(elements)
 
 
-def extract_chemsys(row: Mapping[str, Any], input_type: str) -> tuple[str | None, str | None]:
-    if row.get("source_split") == "train":
+def extract_chemsys(row: Mapping[str, Any], input_type: str, *, purpose="evaluation") -> tuple[str | None, str | None]:
+    if purpose not in ('evaluation','training_feedback'):
+        raise HullUnionError('unknown reference-cache purpose')
+    if purpose == 'training_feedback' and row.get('source_split') != 'train':
+        raise HullUnionError('training hull references require explicit TRAIN-only conditions')
+    if purpose == 'evaluation' and row.get("source_split") == "train":
         raise HullUnionError("hull union inputs are evaluation-only; training rows are forbidden")
     if input_type == "planner":
         if type(row.get("body_eligible")) is not bool:
@@ -249,7 +253,7 @@ def collect_inputs(manifest_path: Path) -> tuple[list[dict[str, Any]], dict[str,
         counts = Counter()
         cell_systems = set()
         for row in rows:
-            name, reason = extract_chemsys(row, kind)
+            name, reason = extract_chemsys(row, kind, purpose=manifest['purpose'])
             if name is None:
                 counts[str(reason)] += 1
             else:
