@@ -168,7 +168,7 @@ class ExpertEditDLM(StateConditionedDLM):
         cell_delta = current['cell_embedding'] + self.raw_cell_adapter(cell_features)
         site_delta = (current['site_embeddings'] + self.raw_site_adapter(site_features)) * valid[..., None]
         residual = embeddings.new_zeros(batch, length, hidden)
-        residual[row, cell_positions] = cell_delta[:, None].to(embeddings.dtype)
+        residual[row, cell_positions] = cell_delta[:, None].to(embeddings.dtype).expand(-1, cell_positions.shape[1], -1).contiguous()
         for offset in range(4):
             positions = (edit_context.prompt_lengths[:, None] + 7 + 4 * slots + offset).clamp_max(length - 1)
             residual = residual.scatter_add(1, positions[..., None].expand(-1, -1, hidden),

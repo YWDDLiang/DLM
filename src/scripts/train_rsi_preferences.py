@@ -146,7 +146,9 @@ def main():
         history.append(event)
         if rank==0 and (steps%4==0 or steps==1):
             write_json(output/'PROGRESS.json',event);print(json.dumps(event),flush=True)
-        if time.monotonic()-started>spec['max_training_seconds']: break
+        stop=torch.tensor(int(time.monotonic()-started>spec['max_training_seconds']),device=device)
+        if world>1: dist.all_reduce(stop,op=dist.ReduceOp.MAX)
+        if bool(stop): break
     if world>1: dist.barrier()
     if rank==0:
         delta=sum(float((p.detach()-reference[n]).square().sum()) for n,p in selected)

@@ -168,7 +168,9 @@ class StateConditionedDLM(nn.Module):
         prompt = geometry_context.prompt_lengths.to(input_ids.device)
         cell_positions = prompt[:, None] + torch.arange(1, 7, device=input_ids.device)[None]
         cell_residual = encoded["cell_embedding"].to(embeddings.dtype)
-        residual[rows, cell_positions] = cell_residual[:, None, :]
+        # Explicit expansion avoids PyTorch 2.4's deterministic CUDA
+        # index_put broadcasting assertion; the assigned values are identical.
+        residual[rows, cell_positions] = cell_residual[:, None, :].expand(-1, cell_positions.shape[1], -1).contiguous()
         slots = torch.arange(self.state_config.max_sites, device=input_ids.device)[None]
         valid = slots < geometry_context.num_sites.to(input_ids.device)[:, None]
         site_residual = encoded["site_embeddings"].to(embeddings.dtype) * valid[..., None]
