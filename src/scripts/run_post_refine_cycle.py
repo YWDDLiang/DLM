@@ -65,7 +65,7 @@ def prepare(spec):
     ledger = read_rows(spec['assets']['seed_ledger'])
     if len(rows) != 1200 or len(ledger) != 1200:
         raise ValueError('saved Plan cohort or seed ledger cardinality changed')
-    for name in ('cohort', 'control_body', 'candidate_body'):
+    for name in ('cohort', 'seed_ledger', 'control_body', 'candidate_body', 'control_graphs', 'candidate_graphs'):
         if file_hash(spec['assets'][name]) != spec['source_sha256'][name]:
             raise ValueError('saved source changed: ' + name)
     valid, excluded = [], []
