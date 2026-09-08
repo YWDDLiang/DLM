@@ -31,7 +31,7 @@
 
 已重新获准开始实现和作业。原04:00 UTC截止和最多6GPU／3个本轮Slurm任务的约束不变；只为就绪计算阶段申请GPU，不占卡做方案讨论。
 
-### 0.9.1 初始模型实测与首轮更新记录（2026-09-09 07:00北京时间）
+### 0.9.1 初始模型实测与首轮完整更新结果（2026-09-09 07:40北京时间）
 
 MAIN与TRAIN分别固定256个Plan。TRAIN来自已有训练池，排除原全量MAIN的1159种约分组成；两套Plan及种子的哈希已登记，后续模型更新继续使用同一套条件。训练相图缓存完成242个体系的核对，其中237个有可用官方参考、5个明确未解决。未解决项不填造稳定性奖励。
 
@@ -56,17 +56,28 @@ G的第一次真实训练已完成128个优化步，参数变化平方和0.08087
 
 θ1 TRAIN token-F已完整评分：comp_valid 201/256（78.52%）、Struct_valid 253/256（98.83%）、SUN 31/256（12.11%）、MSUN 119/256（46.48%）。相对θ0同阶段，SUN新增8、损失3，MSUN新增33、损失20，均无unknown配对；这是训练条件上的改善，仍不作为MAIN泛化证据。由本轮raw/token-F构造的G2数据含234个物理偏好对（215个偏好token-F、19个偏好raw）及7个SUN健康锚；见[第二次G训练的数据、阶段指标和配对来源](execution/post_refine_v08/rsi/FIT1_G2_PREFERENCES_READY.json)。TRAIN浮点F也已独立评分，SUN29/256、MSUN120/256；量化回token后SUN新增2、损失0，MSUN新增0、损失1。
 
-G2已从G1继续训练并回放θ0数据，实际完成128个优化步，参数变化平方和0.0736000571，训练及保存耗时863秒，检查点与冻结输入／输出表校验通过。两套原Plan及seed已逐字节登记到θ2，MAIN与TRAIN重生成均已启动。E2尚待TRAIN编辑提案评分与训练，所以完整G/E联合更新仍计1次。见[第二次G更新回执、同Plan登记和首次MAIN token增益](execution/post_refine_v08/rsi/MAIN1_TOKEN_G2_UPDATE.json)。
+G2已从G1继续训练并回放θ0数据，实际完成128个优化步，参数变化平方和0.0736000571，训练及保存耗时863秒，检查点与冻结输入／输出表校验通过。两套原Plan及seed已逐字节登记到θ2，MAIN与TRAIN各256条重生成均已完成并进入物理评估。E2已启动训练，完成前完整G/E联合更新仍计1次。见[第二次G更新回执、同Plan登记和首次MAIN token增益](execution/post_refine_v08/rsi/MAIN1_TOKEN_G2_UPDATE.json)。
 
 本轮TRAIN F800原45分钟作业在246/256时触及时限。已登记并校验这246对float/token结果的配置、原seed与文件哈希，仅补跑剩余10个请求；补跑完成后512个输出文件全部校验通过，再构造完整256条评分输入。未重抽或筛选请求。见[精修续跑与完整输出回执](execution/post_refine_v08/rsi/FIT1_REFINEMENT_RESUME.json)。
 
 θ1 MAIN raw也已完成：comp_valid为224/256（87.50%，θ0为199）、Struct_valid为254/256（99.22%，θ0为223）、SUN为4/256（1.56%，θ0为5）、MSUN为33/256（12.89%，θ0为32）。同Plan配对SUN新增2、损失3，MSUN新增21、损失20，均无unknown配对。有效性提高，但MAIN raw的SUN没有提升。见[首次更新后MAIN raw与配对来源](execution/post_refine_v08/rsi/FIRST_UPDATED_MAIN_RAW.json)。
 
-θ1 MAIN token-F已完成完整256条评分：comp_valid224/256（87.50%）、Struct_valid254/256（99.22%）、SUN21/256（8.20%）、MSUN110/256（42.97%）。相对θ0同阶段的SUN18、MSUN101，SUN新增8、损失5，MSUN新增31、损失22，均无unknown配对。这是固定MAIN条件在精修并回token阶段观察到的小幅增益；浮点F独立评分与E1最终输出仍待完成，尚不能写成第一轮完整链路已验证提升。来源哈希及配对明细见[MAIN token阶段与G2更新证据](execution/post_refine_v08/rsi/MAIN1_TOKEN_G2_UPDATE.json)。
+θ1 MAIN已完成全部四阶段同协议评分，分母均为256；四阶段comp_valid均为224（87.50%）、Struct_valid均为254（99.22%）。
 
-调用量也随有效性变化：MAIN θ0→θ1的原始生成失败从33降至2，SUN直接跳过F从5变为4，因此实际执行F800的请求从218增至250；TRAIN对应从225增至246。每个进入F的请求仍使用相同800步，但不能将更多可用结构接受教师精修后的增益解释成raw稳定性已经提高。MAIN生成器前向调用为10374→10172，TRAIN为9946→9741。TRAIN E1实际提交15次编辑，31个已知SUN均选择KEEP；最终SUN/MSUN仍须以完整编辑后评分为准。见[调用量与实际修改计数](execution/post_refine_v08/rsi/FIRST_TWO_VERSIONS_CALL_COUNTS.json)。
+| θ1 MAIN阶段 | SUN | MSUN | 相对上一阶段SUN新增／损失 | 相对上一阶段MSUN新增／损失 |
+|---|---:|---:|---:|---:|
+| 原始生成 | 4（1.56%） | 33（12.89%） | — | — |
+| 浮点F800后 | 21（8.20%） | 112（43.75%） | 17／0 | 87／8 |
+| token-F后 | 21（8.20%） | 110（42.97%） | 0／0 | 2／4 |
+| KEEP／EDIT后 | 21（8.20%） | 110（42.97%） | 0／0 | 0／0 |
 
-E的第一次真实训练按预先登记的1200秒优化预算在步边界收尾，实际优化1210秒、完成96步（128为目标上限，未将其写成实际步数），参数变化平方和2.0691473523，冻结输入／输出表哈希保持一致。当前完整G/E联合权重更新为1；第一轮完整评测仍待完成，因此尚无训练后SUN提升结论。MAIN与TRAIN的EDIT_SPEC已锁定实际E1检查点，已使用的生成配置保持原字节。见[首组G/E实际更新、数据哈希与编辑配置登记](execution/post_refine_v08/rsi/JOINT_UPDATE_1.json)。
+E1在MAIN作出246次KEEP、8次EDIT决策，另有2个上游失败；实际提交5次修改，总计442次DLM前向调用，21个已知SUN均保留。编辑后重新计算完整N/U，五次修改未改变任一请求的SUN/MSUN判定。相对θ0最终输出的SUN18、MSUN101，θ1最终SUN新增8、损失5，MSUN新增31、损失22，均无unknown配对。此为固定MAIN上的小幅观测增益；探索性配对精确检验p分别为0.581、0.272，尚不足以确认稳定提升。见[θ1 MAIN完整四阶段、实际修改及配对证据](execution/post_refine_v08/rsi/THETA1_COMPLETE_MAIN.json)。
+
+调用量也随有效性变化：MAIN θ0→θ1的原始生成失败从33降至2，SUN直接跳过F从5变为4，因此实际执行F800的请求从218增至250；TRAIN对应从225增至246。每个进入F的请求仍使用相同800步，但不能将更多可用结构接受教师精修后的增益解释成raw稳定性已经提高。MAIN生成器前向调用为10374→10172，TRAIN为9946→9741。见[前两版本生成、精修与TRAIN修改计数](execution/post_refine_v08/rsi/FIRST_TWO_VERSIONS_CALL_COUNTS.json)。
+
+TRAIN E1实际提交15次编辑，31个已知SUN均选择KEEP。编辑后完整评分为comp_valid201/256、Struct_valid253/256、SUN32/256（12.50%）、MSUN121/256（47.27%）；相对token-F的SUN新增1、损失0，MSUN新增3、损失1。此为训练集上的编辑收益，不能作为MAIN编辑增益。E2本轮数据含248条样本，其中229个物理偏好对；决策监督222条KEEP、26条EDIT，并回放θ0数据。E2训练配置与数据哈希见[θ1 TRAIN完整阶段和第二次编辑训练登记](execution/post_refine_v08/rsi/THETA1_COMPLETE_TRAIN_E2_READY.json)。
+
+E的第一次真实训练按预先登记的1200秒优化预算在步边界收尾，实际优化1210秒、完成96步（128为目标上限，未将其写成实际步数），参数变化平方和2.0691473523，冻结输入／输出表哈希保持一致。当前完整G/E联合权重更新及其两套Plan四阶段评测均已完成1轮。MAIN与TRAIN的EDIT_SPEC锁定实际E1检查点，已使用的生成配置保持原字节。见[首组G/E实际更新、数据哈希与编辑配置登记](execution/post_refine_v08/rsi/JOINT_UPDATE_1.json)。
 
 编辑输入始终采用token-F；“raw优于refine”决定训练偏好方向，不在部署时另加逐条物理选优。已知SUN的KEEP先验与模式／接受头监督分开保存。完全相同端点可复用已核验的物理标签；结构发生变化后重新计算N/U。
 
