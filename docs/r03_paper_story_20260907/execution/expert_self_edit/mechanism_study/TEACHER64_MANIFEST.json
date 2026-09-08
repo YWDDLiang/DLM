@@ -1,0 +1,166 @@
+{
+  "schema": "crystal_pipeline_run_v1",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/code/9a64c3b76b9dda6a8c1cf7d68de72f96304582c9",
+  "source_identity": {
+    "commit": "9a64c3b76b9dda6a8c1cf7d68de72f96304582c9",
+    "manifest_sha256": "b805b0756ffc258f82cca8518c87e7d191dc68e9014d74739b4d4e979acbfefb"
+  },
+  "purpose": "evaluation",
+  "python": "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "TOKENIZERS_PARALLELISM": "false",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True"
+  },
+  "resources": {
+    "extra_gpu_until_utc": "2026-09-08T03:19:21+00:00",
+    "extra_gpu_available_until_utc": "2026-09-08T03:21:21+00:00",
+    "clock_cleanup_margin_seconds": 120,
+    "deadline_utc": "2026-09-09T04:00:00+00:00",
+    "gpus_before_extra_window": 7,
+    "gpus_after_extra_window": 6,
+    "training_gpu_hours_wall_max": 16,
+    "mp_max_query_batch": 24,
+    "mp_max_concurrency": 24,
+    "max_submitted_slurm_jobs": 3,
+    "final_goal_deadline_utc": "2026-09-09T04:00:00+00:00"
+  },
+  "evaluation": {
+    "metrics": [
+      "comp_valid",
+      "Struct_valid",
+      "SUN",
+      "MSUN"
+    ],
+    "direct_suite": false,
+    "endpoints": {
+      "raw": "native",
+      "refined": "tau800"
+    },
+    "requests": 1200,
+    "panel": "retrospective_frozen_H1A2_rich",
+    "panel_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260814_h1a2_epoch2_exactplan1200_h1a2_r03_refine800_fullsun1000_v3/new",
+    "panel_files": {
+      "cohort/cohort.jsonl": {
+        "rows": 1200,
+        "sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722"
+      },
+      "body/control_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "967f0a0ccea66c5d615998fcd377be3deecb65ded879fd25bbacac6e7caede40"
+      },
+      "body/candidate_body_attempts.jsonl": {
+        "rows": 1200,
+        "sha256": "be83b792c339b34a4f2b34c3d84487089dd47a1b7990b5f1a81a371e29a7d77b"
+      }
+    },
+    "success": "either endpoint promising against same-protocol H1A2",
+    "physics_labels": "recompute unless exact complete protocol and endpoint identity match"
+  },
+  "data_contract": {
+    "experiment": "exact_teacher_target_reliability_audit_on_existing_gauge64_panels",
+    "no_gradients": true,
+    "no_new_training_sources": true,
+    "main_used": false,
+    "common_R_deterministic": true,
+    "purpose_detail": "reassess originally certified targets without changing original labels; compare against exact common deterministic OLD ledger"
+  },
+  "components": [
+    {
+      "id": "mechanism_teacher64_train",
+      "output_dir": "mechanism_teacher64_train",
+      "gpus": 3,
+      "stages": [
+        {
+          "name": "labels",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_teacher64_inputs/train.jsonl",
+            "--output-dir",
+            "{output}/labels",
+            "--purpose",
+            "expert_edit",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--deterministic"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_teacher64_inputs/train.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_teacher64_inputs/INPUT_MANIFEST.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/prepare_expert_teacher64_audit.py"
+          ],
+          "outputs": [
+            "{output}/labels/LABEL_FINAL.json",
+            "{output}/labels/labels.jsonl",
+            "{output}/labels/_SUCCESS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mechanism_teacher64_dev",
+      "output_dir": "mechanism_teacher64_dev",
+      "gpus": 3,
+      "stages": [
+        {
+          "name": "labels",
+          "script": "scripts/label_programmed_paths.py",
+          "args": [
+            "--input-jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_teacher64_inputs/dev.jsonl",
+            "--output-dir",
+            "{output}/labels",
+            "--purpose",
+            "expert_edit",
+            "--gpu-count",
+            "3",
+            "--workers-per-gpu",
+            "4",
+            "--record-timeout",
+            "300",
+            "--deterministic"
+          ],
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_teacher64_inputs/dev.jsonl",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/mechanism_teacher64_inputs/INPUT_MANIFEST.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/prepare_expert_teacher64_audit.py"
+          ],
+          "outputs": [
+            "{output}/labels/LABEL_FINAL.json",
+            "{output}/labels/labels.jsonl",
+            "{output}/labels/_SUCCESS"
+          ]
+        }
+      ]
+    }
+  ],
+  "jobs": {
+    "mechanism_teacher64_audit": {
+      "component_indices": [
+        0,
+        1
+      ],
+      "gpus_per_task": 3,
+      "cpus_per_task": 18,
+      "parallel_tasks": 2,
+      "wall_minutes": 20,
+      "memory": "576G",
+      "partition": "gpu",
+      "allocation_mode": "single"
+    }
+  },
+  "allocation_observation": {
+    "available_gpus": 6,
+    "available_cpus": 52,
+    "selected_gpus": 6
+  }
+}

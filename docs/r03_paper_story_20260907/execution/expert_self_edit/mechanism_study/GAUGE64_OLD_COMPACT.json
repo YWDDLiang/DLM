@@ -1,0 +1,2316 @@
+{
+  "train": {
+    "sha256": "6e40eb58faac0418383b872cdf3ce660b57f7f0a30aa8fa3af978472e6cb55ca",
+    "rows": [
+      {
+        "trajectory_id": "expert-initial:how_train:0:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2048",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:6:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2051",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:12:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2055",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:18:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2062",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:24:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2065",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:30:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2068",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:42:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2078",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:48:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2086",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:21:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2174",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -1.3882331848144531,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:60:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2094",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:9:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2143",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.5402002334594727,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:36:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2072",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -2.2495787143707275,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:4:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2050",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:57:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2738",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -1.3424668312072754,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:10:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2054",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:33:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2346",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.009515762329102,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:16:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2061",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:15:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2149",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.4499735832214355,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:22:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2064",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:3:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2101",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.093035697937012,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:28:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2067",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:51:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2657",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -7.28743839263916,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:34:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2070",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:39:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2413",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.887938976287842,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:13:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2147",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.6588048934936523,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:63:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2756",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.9161736965179443,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:46:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2085",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:37:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2412",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.1475777626037598,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:52:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2089",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:1:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2071",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.818772315979004,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:58:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2093",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:45:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2511",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.165776491165161,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:2:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2049",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:43:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2486",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.0613577365875244,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:8:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2053",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:27:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2250",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.055840015411377,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:14:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2060",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:49:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2626",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.9346728324890137,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:20:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2063",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:19:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2158",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.348388433456421,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:26:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2066",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:25:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2244",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.173445224761963,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:32:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2069",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:31:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2330",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.359212398529053,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:38:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2073",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:17:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2150",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.5405116081237793,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:44:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2083",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:23:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2190",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -1.3388128280639648,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:11:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2146",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.791930675506592,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:35:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2398",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.518275499343872,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:56:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2091",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:54:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2090",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -6.189164638519287,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:62:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2095",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:47:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2522",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.824406862258911,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:55:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2705",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.578336715698242,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:5:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2103",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.669193983078003,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:59:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2740",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.644373893737793,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:61:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2741",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.328444957733154,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:53:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2659",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -5.443523406982422,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:41:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2473",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.757967472076416,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:29:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2254",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.301575660705566,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:7:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2123",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.6507816314697266,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:40:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2074",
+        "status": "invalid_terminal",
+        "verified": false,
+        "terminal_energy": -6.101125717163086,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_train:50:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2088",
+        "status": "invalid_terminal",
+        "verified": false,
+        "terminal_energy": -3.142528533935547,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      }
+    ]
+  },
+  "dev": {
+    "sha256": "822a8c52394a3428d28bf198b6e91c354328b74e988097f36bed16e8d6baf615",
+    "rows": [
+      {
+        "trajectory_id": "expert-initial:how_dev:0:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2057",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:6:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2096",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:12:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2131",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:18:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2166",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:24:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2219",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:30:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2263",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:42:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2338",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:48:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2418",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:54:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2452",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:60:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2478",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:3:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2322",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -1.0038325786590576,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:33:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:5096",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.6234521865844727,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:4:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2081",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:51:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6478",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.13389253616333,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:10:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2111",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:39:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5372",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -5.433958530426025,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:16:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2142",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:1:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2310",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.054229736328125,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:22:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2215",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:45:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6281",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.87716007232666,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:9:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2730",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.1753315925598145,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:63:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8101",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.011599540710449,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:34:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2278",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:57:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7524",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.6703689098358154,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:40:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2309",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:21:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3961",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.061539649963379,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:15:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2831",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -4.743725776672363,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:43:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6226",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -1.8551137447357178,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:52:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2432",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:37:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5185",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -5.110100269317627,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:13:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2824",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.173519134521484,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:7:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2693",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.0629048347473145,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:49:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6400",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.4313225746154785,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:25:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4526",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.90692663192749,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:8:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2098",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:27:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4879",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.784420967102051,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:14:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2138",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:19:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3244",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.679396390914917,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:20:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2170",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:31:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:5058",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -5.634930610656738,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:26:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2223",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:55:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7295",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -6.233081817626953,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:32:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2271",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:61:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7806",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.0076487064361572,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:17:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2954",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.6983883380889893,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:58:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2463",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -6.165687561035156,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:5:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2363",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.7386837005615234,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:41:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6215",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -1.0047829151153564,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:50:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2419",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:35:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5125",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.508368968963623,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:56:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2462",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:44:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2376",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -3.6965525150299072,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:62:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2480",
+        "status": "invalid_raw",
+        "verified": false,
+        "terminal_energy": null,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:38:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2307",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -4.317414283752441,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:23:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4278",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.401854515075684,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:59:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7535",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -2.8145222663879395,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:47:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6398",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -3.4119718074798584,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:29:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:5011",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -4.370804786682129,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:53:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:7005",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -8.607685089111328,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:11:S",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2760",
+        "status": "verified",
+        "verified": true,
+        "terminal_energy": -5.165624618530273,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:2:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2058",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -8.109682083129883,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:36:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2285",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": 1.8435499668121338,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:28:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2225",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": -1.6164312362670898,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      },
+      {
+        "trajectory_id": "expert-initial:how_dev:46:G",
+        "group_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2405",
+        "status": "not_converged",
+        "verified": false,
+        "terminal_energy": 6.721680641174316,
+        "versions": {
+          "model": "CHGNet-0.3.0",
+          "chgnet_package": "0.4.2",
+          "ase_package": "3.28.0",
+          "torch_package": "2.4.0+cu121",
+          "pymatgen_package": "2025.6.14",
+          "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+          "labeler_sha256": "d93b0466c76db9006cdd570fbf9413cd3b19da3cc821f54f4b484a79a43e2cb6",
+          "deterministic_algorithms_enabled": true,
+          "cublas_workspace_config": ":4096:8"
+        }
+      }
+    ]
+  }
+}

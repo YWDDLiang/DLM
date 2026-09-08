@@ -70,6 +70,8 @@ def main(directory):
     fig.tight_layout(rect=(0, .045, 1, .955), h_pad=2.4, w_pad=2.2)
     fig.savefig(directory/'MECHANISM_OVERVIEW.png', dpi=190)
     fig.savefig(directory/'MECHANISM_OVERVIEW.svg')
+    svg = directory/'MECHANISM_OVERVIEW.svg'
+    svg.write_text('\n'.join(line.rstrip() for line in svg.read_text(encoding='utf-8').splitlines())+'\n', encoding='utf-8')
     plt.close(fig)
     (directory/'MECHANISM_PLOT_DATA.json').write_text(json.dumps({'loss_curves': series,
         'position_coefficients_relative_to_uniform': suffix.tolist(),
