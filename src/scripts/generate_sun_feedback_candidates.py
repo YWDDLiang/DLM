@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import hashlib
+import inspect
 import json
 import os
 from pathlib import Path
@@ -14,6 +15,7 @@ from crystal_dlm.sun_feedback_contract import SCHEMA, composition_counts, reduce
 
 VARIANTS = ('keep', 'local1', 'local4', 'all_xyz', 'full_cell')
 MODEL_SHA = '573e9b10af64b266b7c6cde4d0f8bdd8a7388fa98d36e2e82db341af3e511e7e'
+MODEL_CODE_SHA = '88c38d3fc237001e163c01adeb6296c795497f15a54067a487a9527b3859d208'
 
 
 def write_json(path, value):
@@ -214,8 +216,9 @@ def generate(args):
     tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint, local_files_only=True, trust_remote_code=True)
     vocabulary = tokenizer.get_vocab()
     inverse = {int(v): k for k,v in vocabulary.items()}
-    convert = materializer(args, tokenizer)
     _, Model, Data, Loader = setup_crysllmgen_imports(args.crysllmgen_dir)
+    if sha256(inspect.getfile(Model)) != MODEL_CODE_SHA:
+        raise ValueError('teacher imported a different CrysLLMGen model implementation')
     model = Model(1000, 'train').to(device)
     model.device = device
     saved = torch.load(args.checkpoint, map_location=device, weights_only=False)
@@ -225,7 +228,7 @@ def generate(args):
     if model.decoder.edge_style != 'fc' or model.decoder.pred_type is not False:
         raise ValueError('native-frame teacher requires internally rebuilt FC edges and fixed atom types')
     graphs = torch.load(args.prepared_dir/'graphs.pt', map_location='cpu', weights_only=False)
-    output_cases, output_graphs, inputs = [], {}, []
+    output_cases, inputs = [], []
     for case in spec['cases']:
         if case['case_idx'] % world != rank:
             continue
@@ -278,14 +281,12 @@ def generate(args):
             value.update(purpose='training_feedback', sample_idx=case['case_idx'], evaluation_ordinal=case['case_idx'],
                          probe_case=case['case_idx'], probe_variant=variant, declared_composition=composition_counts(case['plan_state']))
             inputs.append(value)
-            generated_graph, status = convert(case, body) if body is not None else (None, {'reason': 'teacher_state_not_encodable'})
-            output_graphs[f'{case["case_idx"]}:{variant}'] = generated_graph
-            candidate['graph_status'] = status
-        output_cases.append({**case, 'candidates': candidates, 'teacher_quantization': diagnostics})
+        trace_path = worker/f'teacher-{case["case_idx"]:04d}.pt'
+        output_cases.append({**case, 'candidates': candidates, 'teacher_quantization': diagnostics,
+            'teacher_trace': {'path':str(trace_path.resolve()),'sha256':sha256(trace_path)} if trace_path.is_file() else None})
         write_json(worker/'PROGRESS.json', {'completed_sources': len(output_cases), 'rank': rank})
         print(json.dumps({'rank':rank, 'completed_sources':len(output_cases)}), flush=True)
     write_json(worker/'CASES.json', output_cases)
-    torch.save(output_graphs, worker/'graphs.pt')
     write_rows(worker/'inputs.jsonl', inputs)
     if world > 1:
         torch.distributed.barrier()
@@ -293,11 +294,9 @@ def generate(args):
         cases = sorted([c for i in range(world) for c in json.loads((args.output_dir/f'rank{i}/CASES.json').read_text())], key=lambda c:c['case_idx'])
         if [c['case_idx'] for c in cases] != list(range(spec['sources'])):
             raise ValueError('teacher proposal collection lost original sources')
-        all_graphs, all_inputs = {}, []
+        all_inputs = []
         for i in range(world):
-            all_graphs.update(torch.load(args.output_dir/f'rank{i}/graphs.pt', map_location='cpu', weights_only=False))
             all_inputs.extend(rows(args.output_dir/f'rank{i}/inputs.jsonl'))
-        torch.save(all_graphs, args.output_dir/'graphs.pt')
         manifests = []
         for variant in VARIANTS:
             arm = args.output_dir/'native'/variant
@@ -316,15 +315,52 @@ def generate(args):
                 for variant in order:
                     jobs.append({'sample_idx':len(jobs), 'case_idx':case['case_idx'], 'variant':variant,
                                  'technical_repeat':repeat, 'refiner_seed':case['refiner_seeds'][repeat]})
-        output = {**spec, 'schema':'sun_teacher_headroom_v1', 'cases':cases, 'schedule':jobs,
-                  'R_repeat_cases':[], 'graphs_sha256':sha256(args.output_dir/'graphs.pt'),
+        output = {**spec, 'schema':'sun_teacher_candidates_v1', 'cases':cases, 'schedule':jobs,
+                  'R_repeat_cases':[], 'candidate_graphs_ready':False,
                   'native_feedback_manifests':manifests, 'repeat_semantics':'independent_refiner_noise_seeds',
-                  'teacher_checkpoint_sha256':MODEL_SHA, 'source_sha256':sha256(__file__)}
+                  'teacher_checkpoint_sha256':MODEL_SHA, 'teacher_model_source_sha256':MODEL_CODE_SHA,
+                  'source_sha256':sha256(__file__)}
         write_json(args.output_dir/'STUDY.json', output)
         (args.output_dir/'_SUCCESS').touch()
     if world > 1:
         torch.distributed.barrier()
         torch.distributed.destroy_process_group()
+
+
+def materialize_candidates(args):
+    """Keep the frozen CIF/Niggli graph importer separate from teacher imports."""
+    import torch
+    from transformers import AutoTokenizer
+    spec_path = args.prepared_dir/'STUDY.json'
+    spec = json.loads(spec_path.read_text())
+    if spec['schema'] != 'sun_teacher_candidates_v1' or not (args.prepared_dir/'_SUCCESS').is_file():
+        raise ValueError('teacher candidate generation is incomplete')
+    input_rows = {}
+    for manifest_path in spec['native_feedback_manifests']:
+        manifest = json.loads(Path(manifest_path).read_text())
+        path = Path(manifest['paths']['path'])
+        values = rows(path)
+        validate_training_feedback(values, path, manifest_path, endpoint='native')
+        input_rows[path.parent.name] = {row['group_id']: row for row in values}
+    tokenizer = AutoTokenizer.from_pretrained(args.b0_checkpoint, local_files_only=True, trust_remote_code=True)
+    inverse = {int(value):token for token,value in tokenizer.get_vocab().items()}
+    convert = materializer(args, tokenizer)
+    graphs = {}
+    for case in spec['cases']:
+        for variant, candidate in case['candidates'].items():
+            text = ''.join(inverse[token] for token in candidate['body']) if candidate['body'] is not None else None
+            if text != input_rows[variant][case['ancestor_id']]['body']:
+                raise ValueError('candidate graph and native physical input refer to different token bodies')
+            graph, status = convert(case, candidate['body']) if candidate['body'] is not None else (None, {'reason':'teacher_state_not_encodable'})
+            graphs[f'{case["case_idx"]}:{variant}'] = graph
+            candidate['graph_status'] = status
+    args.output_dir.mkdir(parents=True, exist_ok=False)
+    torch.save(graphs, args.output_dir/'graphs.pt')
+    spec.update(schema='sun_teacher_headroom_v1', candidate_graphs_ready=True,
+                graphs_sha256=sha256(args.output_dir/'graphs.pt'), candidate_study_sha256=sha256(spec_path),
+                candidate_study_path=str(spec_path.resolve()), endpoint_graph_importer_root=str(args.crysllmgen_dir.resolve()))
+    write_json(args.output_dir/'STUDY.json', spec)
+    (args.output_dir/'_SUCCESS').touch()
 
 
 def validate_refinement_receipt(spec, study_path, refined_dir, values):
@@ -379,14 +415,14 @@ def export_refined(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--mode', choices=['prepare','generate','export-refined'], required=True)
+    parser.add_argument('--mode', choices=['prepare','generate','materialize','export-refined'], required=True)
     for name in ['parent-prepared','heldout-cohort','official-cache','prepared-dir','refined-dir','b0-checkpoint','frozen-runtime-root','crysllmgen-dir','checkpoint']:
         parser.add_argument('--'+name, type=Path)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--sources', type=int, default=64)
     parser.add_argument('--seed', type=int, default=2026090841)
     args = parser.parse_args()
-    {'prepare':prepare, 'generate':generate, 'export-refined':export_refined}[args.mode](args)
+    {'prepare':prepare, 'generate':generate, 'materialize':materialize_candidates, 'export-refined':export_refined}[args.mode](args)
 
 
 if __name__ == '__main__':
