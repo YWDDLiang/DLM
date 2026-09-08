@@ -160,10 +160,13 @@ def structure_from_refined(value):
 
 
 def physics_record(plan, *, state_id, structure=None, body=None, reason=None):
+    training = plan.get('source_split') == 'train'
     return {'trajectory_id': state_id, 'sample_idx': plan['original_ordinal'],
             'original_ordinal': plan['original_ordinal'], 'evaluation_ordinal': plan['evaluation_ordinal'],
             'success': structure is not None or bool(body), 'structure': structure, 'body': body,
-            'endpoint': 'native', 'source_split': 'evaluation', 'purpose': 'evaluation',
+            'endpoint': 'native', 'source_split': 'train' if training else 'evaluation',
+            'purpose': 'training_feedback' if training else 'evaluation',
+            'group_id': plan.get('ancestor_id'), 'source_row_idx': plan.get('source_row_idx'),
             'declared_composition': dict(zip(plan['plan_state']['elements'], plan['plan_state']['counts'])),
             'reason': reason}
 
@@ -191,12 +194,22 @@ def construct(spec, shard, shards):
     root, native = Path(spec['run_root']), constructor_api()
     plans = read_rows(root / 'cohort/plans.jsonl')
     runtime = native.load_frozen_runtime(Path(spec['assets']['frozen_runtime']))
-    checkpoint_identity = native.validate_b0_checkpoint(Path(spec['assets']['b0_checkpoint']))
+    checkpoint = spec['assets'].get('generator_checkpoint', spec['assets']['b0_checkpoint'])
+    if checkpoint == spec['assets']['b0_checkpoint']:
+        checkpoint_identity = native.validate_b0_checkpoint(Path(checkpoint))
+    else:
+        marker = Path(checkpoint) / 'RSI_TRAINING_DONE.json'
+        checkpoint_identity = json.loads(marker.read_text())
+        if checkpoint_identity.get('optimizer_steps', 0) < 1:
+            raise ValueError('updated generator has no actual optimizer steps')
+        for name, digest in checkpoint_identity['checkpoint_files'].items():
+            if file_hash(Path(checkpoint) / name) != digest:
+                raise ValueError('updated generator checkpoint changed: ' + name)
     with native.frozen_imports(runtime):
         tasks = native.prepare_tasks(plans, runtime, seed=17029)
         api = runtime.module
         model, tokenizer = api.load_model_and_tokenizer(spec['assets']['base_model'],
-            spec['assets']['b0_checkpoint'], torch.device('cuda', local_rank))
+            checkpoint, torch.device('cuda', local_rank))
         tokenizer_identity = api.assert_body_tokenizer_identity(tokenizer, expected_vocab_sha256=native.B0_VOCAB_SHA256)
         constraints = api.build_dynamic_lightweight_constraints(tokenizer, duplicate_coordinate_mask=True,
             lattice_volume_mask=True, min_lattice_rad=1e-4)
