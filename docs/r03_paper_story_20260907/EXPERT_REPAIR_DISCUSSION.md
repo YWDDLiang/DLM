@@ -31,7 +31,7 @@
 
 已重新获准开始实现和作业。原04:00 UTC截止和最多6GPU／3个本轮Slurm任务的约束不变；只为就绪计算阶段申请GPU，不占卡做方案讨论。
 
-### 0.9.1 初始模型实测与首轮更新记录（2026-09-09 06:24北京时间）
+### 0.9.1 初始模型实测与首轮更新记录（2026-09-09 06:41北京时间）
 
 MAIN与TRAIN分别固定256个Plan。TRAIN来自已有训练池，排除原全量MAIN的1159种约分组成；两套Plan及种子的哈希已登记，后续模型更新继续使用同一套条件。训练相图缓存完成242个体系的核对，其中237个有可用官方参考、5个明确未解决。未解决项不填造稳定性奖励。
 
@@ -53,6 +53,10 @@ MAIN的5个SUN跳过F800，218个可用非SUN结构进入F800，33个构造失�
 G的第一次真实训练已完成128个优化步，参数变化平方和0.0808741463，冻结输入／输出表哈希保持一致。训练数据为211个物理偏好对（181个偏好token-F、30个偏好raw）及4个健康锚；相同、平局与unknown未伪造偏好。更新后的G已完成两套相同Plan的256条重新生成。MAIN与TRAIN raw均已完成评分并进入F。见[首轮G训练回执及同Plan生成登记](execution/post_refine_v08/rsi/G1_FIRST_UPDATE.json)。
 
 θ1 TRAIN raw的comp_valid为201/256（78.52%）、Struct_valid为253/256（98.83%）、SUN为7/256（2.73%）、MSUN为32/256（12.50%）。相比θ0 raw，SUN新增4、损失1，MSUN新增19、损失23，均无unknown配对。这是SUN小幅增加、MSUN下降的混合结果，且属于训练条件重生成，不能据此宣称留出集自改进。见[首次更新后TRAIN raw、完整初始阶段与配对来源](execution/post_refine_v08/rsi/FIRST_UPDATED_TRAIN_RAW.json)。
+
+θ1 TRAIN token-F已完整评分：comp_valid 201/256（78.52%）、Struct_valid 253/256（98.83%）、SUN 31/256（12.11%）、MSUN 119/256（46.48%）。相对θ0同阶段，SUN新增8、损失3，MSUN新增33、损失20，均无unknown配对；这是训练条件上的改善，仍不作为MAIN泛化证据。由本轮raw/token-F构造的G2数据含234个物理偏好对（215个偏好token-F、19个偏好raw）及7个SUN健康锚；G2已从G1继续训练并回放θ0数据，尚未计为完成更新。见[第二次G训练的数据、阶段指标和配对来源](execution/post_refine_v08/rsi/FIT1_G2_PREFERENCES_READY.json)。
+
+本轮TRAIN F800原45分钟作业在246/256时触及时限。已登记并校验这246对float/token结果的配置、原seed与文件哈希，仅补跑剩余10个请求；补跑完成后512个输出文件全部校验通过，再构造完整256条评分输入。未重抽或筛选请求。见[精修续跑与完整输出回执](execution/post_refine_v08/rsi/FIT1_REFINEMENT_RESUME.json)。
 
 θ1 MAIN raw也已完成：comp_valid为224/256（87.50%，θ0为199）、Struct_valid为254/256（99.22%，θ0为223）、SUN为4/256（1.56%，θ0为5）、MSUN为33/256（12.89%，θ0为32）。同Plan配对SUN新增2、损失3，MSUN新增21、损失20，均无unknown配对。有效性提高，但MAIN raw的SUN没有提升；后续F、token和KEEP/EDIT尚在运行，不能用有效性替代完整链路的稳定性收益。见[首次更新后MAIN raw与配对来源](execution/post_refine_v08/rsi/FIRST_UPDATED_MAIN_RAW.json)。
 

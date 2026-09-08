@@ -1,0 +1,24 @@
+{
+  "original_job": "41217",
+  "original_state": "TIMEOUT",
+  "resume_job": "41230",
+  "resume_state": "COMPLETED",
+  "registered_manifest": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/REFINE_RESUME1.json",
+  "manifest_sha256": "b03562c997650d1da8d72df57000e352f57de728b061e513d354665a99a0f70b",
+  "retained_requests": 246,
+  "missing_requests": 10,
+  "completion_receipts": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/refined/resume_rsi_fit_refine1_resume/worker_0_DONE.json": "85d1992455d006aec5cb9246453f8a88a845dc3cb664107c57d097591bda1834",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/refined/resume_rsi_fit_refine1_resume/worker_1_DONE.json": "aaf7792a1d8e019019b80a1ace5ddc104c133cd2eda5a2dff9b7f509106c87c7"
+  },
+  "materialized": {
+    "refined": {
+      "inputs_sha256": "981791ca16f6c96bed0bccfe70fc4f7b65cd38bcc26ca55b6a93a503c5ac0259",
+      "requests": 256
+    },
+    "tokenized": {
+      "inputs_sha256": "9fd20ddfcccafe6efe211e8b8285b6a78a44e73e4e427cc2756aa3ef75b48076",
+      "requests": 256
+    }
+  }
+}
