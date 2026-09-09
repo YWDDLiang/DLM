@@ -68,7 +68,6 @@ def initialize(spec):
 def teachers(spec):
     """Quantize actual CHGNet terminals; their new endpoints must be rescored."""
     from transformers import AutoTokenizer
-    from pymatgen.core import Structure
     from crystal_dlm.expert_edit_data import quantize_arrays,arrays_from_structure,certify_geometry
     from crystal_dlm.r03_physics_transfer import build_repair_constraints,geometry_support_report
     root,plans=require_train(spec)
@@ -85,7 +84,7 @@ def teachers(spec):
         record=physics_record(plan,state_id=f"{spec['run_id']}:teacher:{ordinal}",reason='unavailable_physical_teacher')
         if label.get('final_structure') and old.get('body_token_ids'):
             try:
-                ids,decoded,diagnostic=quantize_arrays(arrays_from_structure(Structure.from_dict(label['final_structure'])),vocab)
+                ids,decoded,diagnostic=quantize_arrays(arrays_from_structure(label['final_structure']),vocab)
                 if not certify_geometry(decoded)['valid']: raise ValueError('invalid quantized teacher')
                 aligned,permutation=align_fixed_slots(ids,old['body_token_ids'])
                 if not geometry_support_report(aligned,constraints=support)['supported']:
@@ -201,7 +200,15 @@ def archive(spec):
         for path in sorted((root/stage/'records').glob('*.json')):
             all_records.append({'stage':stage,'record_file_sha256':file_hash(path),**json.loads(path.read_text())})
         label=root/stage/'labeling/result/labels.jsonl'
-        if label.exists(): all_labels.extend(dict(stage=stage,**row) for row in read_rows(label))
+        if label.exists():
+            for row in read_rows(label):
+                saved=dict(stage=stage,**row)
+                trajectory=row.get('trajectory_file')
+                if trajectory:
+                    path=Path(trajectory)
+                    saved['trajectory_sha256']=file_hash(path)
+                    with gzip.open(path,'rt') as stream: saved['relaxation_trajectory']=json.load(stream)
+                all_labels.append(saved)
     for name,rows in [('TRAJECTORIES.jsonl.gz',all_records),('PHYSICS_LABELS.jsonl.gz',all_labels)]:
         path=directory/name
         with gzip.GzipFile(filename=str(path),mode='wb',mtime=0) as stream:
