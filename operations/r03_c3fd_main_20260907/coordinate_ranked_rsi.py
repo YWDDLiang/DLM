@@ -65,6 +65,30 @@ def runtime_allocations(policy,maximum=6):
     return values
 
 
+def reference_cache_override(root):
+    """Resolve a recorded coverage extension without replacing old cache evidence."""
+    root=Path(root).resolve();path=root/'REFERENCE_CACHE_OVERRIDE.json'
+    if not path.exists(): return None
+    value=json.loads(path.read_text());directory=Path(value['directory'])
+    if (value.get('schema')!='ranked_reference_coverage_completion_v1' or not directory.is_absolute()
+            or root not in directory.resolve().parents):
+        raise ValueError('invalid reference coverage extension path or schema')
+    if (value.get('plans_sha256')!=file_hash(root/'fit/cohort/plans.jsonl') or
+            value.get('cache_manifest_sha256')!=file_hash(directory/'completion_manifest.json')):
+        raise ValueError('reference coverage extension identity changed')
+    if not isinstance(value.get('database_version'),str) or not value['database_version']:
+        raise ValueError('reference coverage extension lacks its fixed database version')
+    return value
+
+
+def score_reference_arguments(root,extra):
+    value=reference_cache_override(root)
+    if value is None: return tuple(extra)
+    if '--cache' in extra:
+        raise ValueError('score cannot override the registered reference coverage extension')
+    return (*extra,'--cache',value['directory'])
+
+
 def require_complete_reference_coverage(root):
     """Reject an old panel's incomplete reference cache before dispatching GPUs."""
     from prepare_hull_union import load_cache, plan_chemsys
@@ -77,7 +101,10 @@ def require_complete_reference_coverage(root):
             any(row.get('source_split')!='train' for row in plans)):
         raise ValueError('reference coverage requires the complete registered TRAIN panel')
     wanted={plan_chemsys(row['plan_state']) for row in plans}
-    cached=load_cache(Path(spec['assets']['official_cache']))
+    override=reference_cache_override(root)
+    cached=load_cache(Path(override['directory'] if override else spec['assets']['official_cache']))
+    if override and cached['manifest']['database_version']!=override['database_version']:
+        raise ValueError('reference coverage extension database version changed')
     resolved=wanted&set(cached['resolved'])
     unknown=wanted&set(cached['official_unresolved'])
     missing=sorted(wanted-resolved-unknown)
@@ -150,6 +177,7 @@ class Coordinator:
         self.local(name,'src/scripts/run_ranked_rsi.py',['--config',config,'--action',action,*extra])
 
     def job(self,name,config,action,stage='construction',gpus=4,minutes=90,extra=()):
+        if action=='score': extra=score_reference_arguments(self.root,extra)
         recovery=self.root/'JOB_RETRIES.json'
         if recovery.exists():
             name=json.loads(recovery.read_text()).get(name,name)

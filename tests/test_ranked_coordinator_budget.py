@@ -146,5 +146,37 @@ class ReferenceCoverageBeforeDispatchTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'coverage incomplete'):
             coordinator.require_complete_reference_coverage(self.root)
 
+    def write_extension(self):
+        target=reference_fixture.cache_fixture(self.root/'extended_references',['Fe-O','F-Li'])
+        value={'schema':'ranked_reference_coverage_completion_v1','directory':str(target),
+            'cache_manifest_sha256':coordinator.file_hash(target/'completion_manifest.json'),
+            'plans_sha256':coordinator.file_hash(self.root/'fit/cohort/plans.jsonl'),
+            'database_version':'2026.04.13'}
+        reference_fixture.write_json(self.root/'REFERENCE_CACHE_OVERRIDE.json',value)
+        return target,value
+
+    def test_extension_keeps_original_cache_and_routes_score_only(self):
+        reference_fixture.cache_fixture(self.cache,['Fe-O'])
+        old_hash=coordinator.file_hash(self.cache/'completion_manifest.json')
+        target,_=self.write_extension()
+        report=coordinator.require_complete_reference_coverage(self.root)
+        self.assertEqual(report['resolved_systems'],2)
+        self.assertEqual(coordinator.score_reference_arguments(self.root,()),('--cache',str(target)))
+        self.assertEqual(coordinator.file_hash(self.cache/'completion_manifest.json'),old_hash)
+        with self.assertRaisesRegex(ValueError,'cannot override'):
+            coordinator.score_reference_arguments(self.root,('--cache',str(self.cache)))
+
+    def test_extension_must_match_its_manifest_and_database_version(self):
+        target,value=self.write_extension()
+        value['cache_manifest_sha256']='0'*64
+        reference_fixture.write_json(self.root/'REFERENCE_CACHE_OVERRIDE.json',value)
+        with self.assertRaisesRegex(ValueError,'identity changed'):
+            coordinator.require_complete_reference_coverage(self.root)
+        value['cache_manifest_sha256']=coordinator.file_hash(target/'completion_manifest.json')
+        value['database_version']='different-version'
+        reference_fixture.write_json(self.root/'REFERENCE_CACHE_OVERRIDE.json',value)
+        with self.assertRaisesRegex(ValueError,'database version changed'):
+            coordinator.require_complete_reference_coverage(self.root)
+
 
 if __name__=='__main__':unittest.main()
