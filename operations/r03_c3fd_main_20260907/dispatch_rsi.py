@@ -112,7 +112,7 @@ def main():
             'inputs':[str(a.config),'{output}/result/attempt_results.jsonl'],
             'outputs':['{output}/result/BASIC_METRICS.json','{output}/result/four_metrics.jsonl']})
     pipeline['components']=[{'id':a.job,'output_dir':str(directory),'gpus':gpu,'stages':stages}]
-    cpu_per_gpu=max(4,2*workers,2*int(parallel.get('label_workers_per_gpu',2)) if a.action=='label' else 4)
+    cpu_per_gpu=min(6,max(4,2*workers,2*int(parallel.get('label_workers_per_gpu',2)) if a.action=='label' else 4))
     pipeline['jobs']={a.job:{'component_indices':[0],'gpus_per_task':gpu,'cpus_per_task':cpu_per_gpu*gpu if gpu else 8,
         'parallel_tasks':1,'wall_minutes':a.minutes,'memory':f'{(32 if a.action in ("label","refine") else 96)*gpu}G' if gpu else '64G',
         'partition':'gpu' if gpu else 'normal'}}
