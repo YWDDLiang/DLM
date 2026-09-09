@@ -41,12 +41,17 @@ def clone_bound_stage(source, destination):
     if marker.exists():
         prior = json.loads(marker.read_text())
         if prior['source_inputs_sha256'] != file_hash(original_inputs): raise ValueError('bound copy changed source')
-        return
+        if prior.get('source_inputs') == str(original_inputs) and prior.get('destination_inputs') == str(inputs):
+            scope = validate_training_feedback(records, inputs, destination/'FEEDBACK_MANIFEST.json')
+            api.load_bound_evaluation_labels(records, [destination/'labeling/result/labels.jsonl'], paths_file=inputs,
+                endpoint='native', purpose='training_feedback', feedback_scope=scope, expected_protocol=expected)
+            return
     manifest['paths'] = dict(path=str(inputs), sha256=file_hash(inputs))
     write_json(destination/'FEEDBACK_MANIFEST.json', manifest)
     scope = validate_training_feedback(records, inputs, destination/'FEEDBACK_MANIFEST.json')
     report = json.loads(original_report.read_text())
     pins = dict(source_inputs=str(original_inputs), source_inputs_sha256=file_hash(original_inputs),
+        destination_inputs=str(inputs),
         source_manifest=str(source/'FEEDBACK_MANIFEST.json'), source_manifest_sha256=file_hash(source/'FEEDBACK_MANIFEST.json'),
         source_report=str(original_report), source_report_sha256=file_hash(original_report),
         source_labels_sha256=file_hash(source/'labeling/result/labels.jsonl'),
