@@ -1,0 +1,44 @@
+{
+  "schema": "ranked_train_rsi_launch_v1",
+  "plan": "EXPERT_REPAIR_DISCUSSION.md#final-module-plan",
+  "approved": true,
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T072000Z",
+  "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T072000Z/code/d3ab952334573c6c237a83946cde1f404145d5b1",
+  "source_commit": "d3ab952334573c6c237a83946cde1f404145d5b1",
+  "source_split": "train",
+  "requests": 256,
+  "plans_sha256": "05e633ee4550d5acc539ce19e72acdbaddd827a666e54e363bb144d1c417c486",
+  "first_gpu_start_utc": "2026-09-09T07:31:10Z",
+  "deadline_utc": "2026-09-09T19:31:10.188531+00:00",
+  "timezone": "Asia/Shanghai",
+  "initial_jobs": [
+    {
+      "job_id": "41361",
+      "job": "S0_generate",
+      "GPUs": 4
+    },
+    {
+      "job_id": "41362",
+      "job": "twin_generate",
+      "GPUs": 2
+    }
+  ],
+  "initial_E_seed": 20260909,
+  "old_editor_weights_used": false,
+  "CPU_regression": {
+    "tests": 41,
+    "result": "passed",
+    "log": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T072000Z/CPU_TESTS_3.log"
+  },
+  "CPU_teacher_smoke": {
+    "retained": 256,
+    "quantized_targets": 229,
+    "enters_training": false,
+    "log": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T072000Z/CPU_TEACHER_SMOKE.log"
+  },
+  "planned_actual_updates": {
+    "G": 3,
+    "E": 3
+  },
+  "status": "running_not_result"
+}
