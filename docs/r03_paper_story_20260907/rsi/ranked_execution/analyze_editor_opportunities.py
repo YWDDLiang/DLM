@@ -106,6 +106,35 @@ def analyze(root, source, index):
     result['reliable_near_Stable_with_NU'] = [row['sample_idx'] for row in current
         if endpoint_quality(row)['reliable'] and 0 < row['e_above_hull_eV_atom'] <= .03
         and row.get('novel_unique') is True]
+    if index > 0:
+        input_path = cohort/'current/inputs.jsonl'
+        inputs = read_rows(input_path); hashes[str(input_path)] = digest(input_path)
+        plan_path = cohort/'cohort/plans.jsonl'
+        plans = read_rows(plan_path); hashes[str(plan_path)] = digest(plan_path)
+        targets = defaultdict(list)
+        history = [root/'fit', root/'bootstrap_comparator',
+                   *[root/'rounds'/f'round{i}'/'fit' for i in range(1, index)]]
+        for prior in history:
+            prior_scores = scores(prior, 'current')
+            prior_inputs = prior/'current/inputs.jsonl'
+            candidate_inputs = read_rows(prior_inputs)
+            hashes[str(prior_inputs)] = digest(prior_inputs)
+            prior_plans = prior/'cohort/plans.jsonl'
+            candidate_plans = read_rows(prior_plans)
+            hashes[str(prior_plans)] = digest(prior_plans)
+            for i, (plan, old_plan) in enumerate(zip(plans, candidate_plans, strict=True)):
+                if any(plan[k] != old_plan[k] for k in ('ancestor_id', 'body_prompt', 'plan_state')):
+                    raise ValueError('historical teacher Plan or ancestor differs')
+                a, b = endpoint_quality(current[i]), endpoint_quality(prior_scores[i])
+                if a['reliable'] and not stable(a) and stable(b) and inputs[i].get('body_token_ids') \
+                        and candidate_inputs[i].get('body_token_ids'):
+                    if inputs[i]['sample_idx'] != candidate_inputs[i]['sample_idx']:
+                        raise ValueError('historical teacher input ordering differs')
+                    targets[i].append(dict(source=str(prior), hull=b['hull'], SUN=b['SUN']))
+        result['historical_Stable_targets'] = dict(
+            current_states_with_targets=len(targets), targets=dict(targets),
+            note='Earlier same-Plan verified Stable endpoints available for reliable non-Stable inputs; '
+                 'not compiled targets, learned successes, or mixed-output scores.')
     collection = cohort/'editor_collection'
     if collection.exists():
         initial = scores(collection, 'current')
