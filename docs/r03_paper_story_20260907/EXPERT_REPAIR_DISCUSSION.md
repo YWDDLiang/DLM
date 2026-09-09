@@ -87,7 +87,9 @@ E的第一次真实训练按预先登记的1200秒优化预算在步边界收尾
 
 H1A2在同256个MAIN Plan、同seed和F800后的完整基线已完成同协议评分：comp_valid 223/256（87.11%）、Struct_valid 253/256（98.83%）、SUN 14/256（5.47%）、MSUN 114/256（44.53%）。与该基线相比，θ0浮点F的SUN新增8、损失5，MSUN新增23、损失35；θ0最终token输出的SUN新增9、损失5，MSUN新增23、损失36。因此θ0相比H1A2同样是SUN与MSUN方向不同的结果，不能写成全面超过基线。H1A2 raw也已完整评分：comp_valid 223/256（87.11%）、Struct_valid 107/256（41.80%）、SUN 3/256（1.17%）、MSUN 23/256（8.98%）；其raw→F800的完整配对记录见[H1A2两阶段完整结果](execution/post_refine_v08/rsi/H1A2_COMPLETE.json)。见[H1A2完整F800指标和配对来源](execution/post_refine_v08/rsi/H1A2_F800_COMPLETE.json)。
 
-R03在同256个MAIN Plan、同seed和F800后的对照也已完成：comp_valid222/256（86.72%）、Struct_valid252/256（98.44%）、SUN18/256（7.03%）、MSUN112/256（43.75%）。相对R03 F800，θ1浮点F的SUN新增8、损失5，MSUN新增23、损失23；θ1最终token输出的SUN新增8、损失5，MSUN新增23、损失25。因此θ1最终为SUN净增3、MSUN净减2，仍是混合结果。R03 raw的同协议物理评估已启动。见[R03 F800完整指标及两版配对比较](execution/post_refine_v08/rsi/R03_F800_COMPLETE.json)。
+R03在同256个MAIN Plan、同seed和F800后的对照也已完成：comp_valid222/256（86.72%）、Struct_valid252/256（98.44%）、SUN18/256（7.03%）、MSUN112/256（43.75%）。相对R03 F800，θ1浮点F的SUN新增8、损失5，MSUN新增23、损失23；θ1最终token输出的SUN新增8、损失5，MSUN新增23、损失25。因此θ1最终为SUN净增3、MSUN净减2，仍是混合结果。见[R03 F800完整指标及两版配对比较](execution/post_refine_v08/rsi/R03_F800_COMPLETE.json)。
+
+R03 raw也已完整评分：comp_valid222/256（86.72%）、Struct_valid115/256（44.92%）、SUN6/256（2.34%）、MSUN31/256（12.11%）。raw→固定F800的SUN新增16、损失4，MSUN新增90、损失9；因此该对照的精修并非总能保留原有SUN。本轮SUN门控链路与该固定F对照的比较同时包含流程差异，权重更新效应应另看θ0→θ1→θ2的同流程配对。见[R03两阶段完整结果及raw配对](execution/post_refine_v08/rsi/R03_COMPLETE.json)。
 
 可复核证据：[初始阶段四项指标、门控及来源哈希](execution/post_refine_v08/rsi/INITIAL_PHASE.json)、[θ0三阶段四项指标与配对变化](execution/post_refine_v08/rsi/THETA0_PREFIT_PHASE.json)。相关CPU行为检查已覆盖token分界、TRAIN隔离、硬支持梯度、编辑模型、SUN评分及轮次身份；新增3项中断续跑校验也已通过。真实G/E的CUDA反向检查均通过；它们与后续优化器更新分别记账，不计作训练轮次。下一轮登记要求真实优化步数、非零参数变化、完整checkpoint文件哈希，并逐字节保留原Plan及种子。
 
