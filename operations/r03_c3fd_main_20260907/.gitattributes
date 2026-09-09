@@ -1,0 +1,3 @@
+# Preserve the exact CPU diagnostic sources bound to the remote output receipts.
+analyze_rsi_mechanisms.py -text
+analyze_rsi_reward_validity.py -text

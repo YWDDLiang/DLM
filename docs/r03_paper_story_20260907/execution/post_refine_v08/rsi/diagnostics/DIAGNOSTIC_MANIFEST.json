@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "scope": "Read-only diagnosis after completed three-cycle RSI. No new GPU training, inference, relaxation, or cohort selection.",
+  "user_budget_decision": "Complete cause analysis before deciding next compute budget.",
+  "remote_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1",
+  "frozen_experiment_source": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/code/6228f95343049cbb89884944c1af68e75e31d770",
+    "commit": "6228f95343049cbb89884944c1af68e75e31d770",
+    "manifest_sha256": "16545e6efe9663330960985f1e4ef7f3184f5081f930b43a134eef2cdf5a31b8"
+  },
+  "artifacts": [
+    {
+      "path": "MECHANISM_DIAGNOSTICS.json",
+      "sha256": "2f46928e5d197e98963b671b14fa1f6ce9d6feed557214aea4f60f64e658089e",
+      "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/diagnostics/mechanisms_20260909/MECHANISM_DIAGNOSTICS_V2.json",
+      "source_path": "operations/r03_c3fd_main_20260907/analyze_rsi_mechanisms.py",
+      "source_sha256": "82acde83cb0f946ba9a431453c9b74ddc166caf174400e6c84e3125c2006a051",
+      "remote_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/diagnostics/mechanisms_20260909/source_82acde83cb0f.py"
+    },
+    {
+      "path": "REWARD_VALIDITY.json",
+      "sha256": "780cddc9a07fad932c702551f310e0f45e1c24e9211ad0a91ca15ea1fc08a7d9",
+      "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/diagnostics/mechanisms_20260909/REWARD_VALIDITY.json",
+      "source_path": "operations/r03_c3fd_main_20260907/analyze_rsi_reward_validity.py",
+      "source_sha256": "0ade8fe304647e940a9fffa478eb990744af0743292651667f73864046a354d1",
+      "remote_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/diagnostics/mechanisms_20260909/reward_source_0ade8fe30464.py"
+    }
+  ],
+  "checks": {
+    "stage_panels": 35,
+    "adjacent_comparisons": 24,
+    "editor_panels": 8,
+    "training_RNG_replays": 6,
+    "G_preference_pairs": 680,
+    "permutation_only_candidate_proofs": 1360,
+    "formal_result_metrics_unchanged": true
+  },
+  "limits": [
+    "Permutation proof preserves cell and exact element-coordinate token block multiset; full numeric hard-support and neural execution not revalidated.",
+    "Counterfactual TRAIN proposal choice diagnostics are not recomputed mixed-cohort SUN.",
+    "Formal SUN follows the historical energy-threshold protocol; invalid and unverified terminal findings are disclosed separately.",
+    "One fixed seed per Plan; magnitude of causal benefit requires subsequent controlled experiments."
+  ],
+  "CHGNet_reference": "https://github.com/CederGroupHub/chgnet/blob/main/chgnet/model/dynamics.py"
+}
