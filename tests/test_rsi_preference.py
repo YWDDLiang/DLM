@@ -99,6 +99,12 @@ class PreferenceContracts(unittest.TestCase):
         self.assertEqual(result['final_tokens'],body)
         self.assertEqual(result['proposal_tokens'][:12],body[:12])
         self.assertEqual(result['forward_calls'],5)
+        self.assertEqual([s['position'] for s in result['sampling_trace']],[12,13,14])
+        reconstructed=result['initial_masked_tokens'].copy()
+        for step in result['sampling_trace']:
+            reconstructed[step['position']]=step['token_id']
+            self.assertLessEqual(step['scalar_logp'],0.)
+        self.assertEqual(reconstructed,result['sampled_attempt_tokens'])
 
     def test_ranked_conditioned_target_cannot_change_cell_outside_action(self):
         policy=ScalarPolicy(self.width);body,_=make_body(self.tokenizer)

@@ -83,6 +83,9 @@ def propose_ranked_editor(model,tokenizer,*,prompt,body,n,support,seed,known_sun
     result=dict(current_tokens=before,proposal_tokens=before,final_tokens=before,
         known_sun=known_sun,learned_mode=selected,mode_logits=logits.tolist(),
         proposal_generated=False,forward_calls=1,applied=False,
+        sampling_seed=seed,sampling_temperature=.7,sampling_trace=[],
+        unshifted_mode_logits=inspect.mode_logits[0].float().tolist(),
+        scalar_logp_kind='actual_tempered_hard_support_token_sampling_conditional',
         origin='forced_training_proposal' if force_proposal else 'current_policy',
         counterfactual_training_proposal=bool(force_proposal and selected==0))
     if known_sun and selected==0 and not force_proposal:
@@ -97,15 +100,20 @@ def propose_ranked_editor(model,tokenizer,*,prompt,body,n,support,seed,known_sun
     result['action']=dict(mode=mode,name=MODES[mode],sites=sites,positions=order)
     candidate=before.copy()
     for position in order: candidate[position]=MASK_TOKEN_ID
+    result['initial_masked_tokens']=candidate.copy()
     generator=torch.Generator(device=next(model.parameters()).device).manual_seed(seed)
     for offset,position in enumerate(order):
         output,prefix=forward_view(model,tokenizer,prompt,before,candidate,n,'E',order,offset/len(order))
         result['forward_calls']+=1
         vector,report=legal_vector(output.logits[0,prefix+position].float(),candidate,n,position,support)
         if not report['available']:
-            result.update(proposal_failure='empty_hard_support',learned_decision='KEEP')
+            result.update(proposal_failure='empty_hard_support',learned_decision='KEEP',sampled_attempt_tokens=candidate.copy())
             return result
-        candidate[position]=int(torch.multinomial((vector/.7).softmax(-1),1,generator=generator))
+        probability=(vector/.7).softmax(-1)
+        candidate[position]=int(torch.multinomial(probability,1,generator=generator))
+        result['sampling_trace'].append({'position':position,'token_id':candidate[position],
+            'scalar_logp':float(probability[candidate[position]].log())})
+    result['sampled_attempt_tokens']=candidate.copy()
     report=geometry_support_report(candidate,constraints=support)
     if not report['supported']:
         result.update(proposal_failure=report,learned_decision='KEEP')

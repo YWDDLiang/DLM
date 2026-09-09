@@ -162,7 +162,7 @@ class Coordinator:
             other=pool.submit(self.body,'twin',twin/'RUN_SPEC.json',2)
             self.body('S0',initial,4)
             self.job('initialize_E0',initial,'initialize',gpus=1,minutes=30)
-            self.final_editor('S0',initial,2)
+            self.final_editor('S0',initial,4)
             other.result()
         write_json(self.root/'S0_COMPLETE.json',{'seconds':time.monotonic()-started,
             'config_sha256':file_hash(initial),'initial_E_seed':20260909})
