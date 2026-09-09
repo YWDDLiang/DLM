@@ -243,7 +243,7 @@ def make_batches(tasks: Sequence[Mapping[str, Any]], *, batch_size: int) -> list
 def construct_batch(
     model: Any, tokenizer: Any, batch: Sequence[Mapping[str, Any]], runtime: Any,
     *, constraints: Any, geometry_api: Any = None, initial_body: Sequence[int] | None = None,
-    noise_seed_override: int | None = None,
+    noise_seed_override: int | None = None, relax_final_z: bool = False,
 ) -> Any:
     """Call the frozen constructor, optionally adding the registered geometry hook."""
     api = runtime.module
@@ -277,7 +277,7 @@ def construct_batch(
     bridge = (geometry_api.construction_geometry_bridge(
         runtime.modules["paired_llada"], tokenizer=tokenizer,
         generation_position_groups=schedule, native_constraints=constraints,
-        enabled=True, mask_id=api.MASK_TOKEN_ID,
+        enabled=True, mask_id=api.MASK_TOKEN_ID, relax_final_z=relax_final_z,
     ) if geometry_api is not None else nullcontext(None))
     with bridge as monitor:
         generated = api.generate_paired_exact_plan(
@@ -287,7 +287,8 @@ def construct_batch(
             temperature=0.7, cfg_scale=0.0, remasking="low_confidence", mask_id=api.MASK_TOKEN_ID,
             allowed_token_ids_by_generation_pos=api.exact_dynamic_schema_constraints(tokenizer, n),
             prefill_token_ids_by_generation_pos=prefill, generation_position_groups=schedule,
-            lightweight_decoding_constraints=constraints,
+            lightweight_decoding_constraints=(dict(constraints, duplicate_coordinate_mask=False)
+                                             if relax_final_z else constraints),
         )
         geometry_report = monitor.report() if monitor is not None else None
     suffix = generated[:, input_ids.shape[1]:]

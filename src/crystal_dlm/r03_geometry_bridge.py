@@ -99,8 +99,10 @@ def _checked_groups(groups: Sequence[Sequence[int]]) -> tuple[tuple[int, ...], .
 
 class ConstructionGeometryMonitor:
     def __init__(self, *, enabled: bool, tokenizer: Any, generation_position_groups: Sequence[Sequence[int]],
-                 native_constraints: Mapping[str, Any] | None, mask_id: int = MASK_TOKEN_ID):
+                 native_constraints: Mapping[str, Any] | None, mask_id: int = MASK_TOKEN_ID,
+                 relax_final_z: bool = False):
         self.enabled = bool(enabled)
+        self.relax_final_z = bool(relax_final_z)
         self.mask_id = int(mask_id)
         self.events: list[dict[str, Any]] = []
         self.candidate_calls = 0
@@ -145,6 +147,7 @@ class ConstructionGeometryMonitor:
         return {
             "schema": SCHEMA, "enabled": self.enabled, "protocol": dict(PROTOCOL),
             "candidate_calls": self.candidate_calls, "active_alias_vectors": self.alias_vectors,
+            "final_Z_distance_support_relaxed": self.relax_final_z,
             "newly_masked_legal_tokens": self.masked_tokens, "failed": self.failed,
             "events": list(self.events), "source_receipts": self.source_receipts(),
             "weights_changed": False, "prompt_changed": False, "composition_changed": False,
@@ -210,8 +213,11 @@ class ConstructionGeometryMonitor:
         self.candidate_calls += 1
         if stage in "XYZ":
             self.alias_vectors += int(active.sum())
+            support = dict(self.constraints)
+            if stage == 'Z' and self.relax_final_z:
+                support['pbc_min_distance_mask'] = False
             report = _apply_lightweight_decoding_masks(logits, x, prompt_length, gen_length,
-                                                       self.constraints, active, self.mask_id)
+                                                       support, active, self.mask_id)
             empty_pbc = sorted(position for row, position in report["pbc_no_legal_completion"] if row == 0)
             if empty_pbc:
                 self._fail("pbc_no_legal_completion", x, prompt_length, semantic_group, step_in_group, active, positions=empty_pbc)
@@ -231,6 +237,7 @@ class ConstructionGeometryMonitor:
         self.events.append({
             "status": "supported", "semantic_group": int(semantic_group), "step_in_group": int(step_in_group),
             "stage": stage, "active_positions": active_positions,
+            "Z_distance_support_relaxed": stage == 'Z' and self.relax_final_z,
             "legal_tokens_before": legal_before.sum(dim=-1).tolist(),
             "legal_tokens_after": legal_after.sum(dim=-1).tolist(), "newly_masked_legal_tokens": removed,
         })
@@ -241,10 +248,12 @@ class ConstructionGeometryMonitor:
 def construction_geometry_bridge(paired_module: Any, *, tokenizer: Any,
                                  generation_position_groups: Sequence[Sequence[int]],
                                  native_constraints: Mapping[str, Any] | None,
-                                 enabled: bool = False, mask_id: int = MASK_TOKEN_ID):
+                                 enabled: bool = False, mask_id: int = MASK_TOKEN_ID,
+                                 relax_final_z: bool = False):
     """Install a serial, scoped hook; OFF never replaces a frozen function."""
     monitor = ConstructionGeometryMonitor(enabled=enabled, tokenizer=tokenizer,
-        generation_position_groups=generation_position_groups, native_constraints=native_constraints, mask_id=mask_id)
+        generation_position_groups=generation_position_groups, native_constraints=native_constraints,
+        mask_id=mask_id, relax_final_z=relax_final_z)
     if not enabled:
         yield monitor
         return

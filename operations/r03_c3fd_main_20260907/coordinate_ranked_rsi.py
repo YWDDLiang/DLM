@@ -146,7 +146,7 @@ class Coordinator:
             'rule':'TRAIN same-condition complete G+F SUN must not fall below S0; generation failures may rise by at most 8/256',
             'does_not_prove_heldout_generalization':True}
         write_json(self.root/f'G{index}_ADMISSION.json',report)
-        if not accepted:
+        if not accepted and not json.loads((self.root/'RUN_SPEC.json').read_text()).get('complete_flow_before_judgment'):
             raise RuntimeError('complete G+F regression: update rejected before downstream training')
 
     def training(self,index,branch,data,replay):
@@ -210,7 +210,8 @@ class Coordinator:
                 ['--root',self.root,'--index',index,'--generation-only'])
             current=self.root/'rounds'/f'round{index}'/'fit';config=current/'RUN_SPEC.json'
             self.body(f'S{index}',config,4)
-            self.check_update(index,current)
+            if not json.loads((self.root/'RUN_SPEC.json').read_text()).get('complete_flow_before_judgment'):
+                self.check_update(index,current)
             self.ranked(f'S{index}_compile_G',config,'compile',['--branch','G','--comparators',*history])
             g_data.append(current/'pairs/G.jsonl');history.append(current)
             previous=fit/'initialization/checkpoint' if index==1 else self.root/'training'/f'round{index-1}'/'E/result/checkpoint'
@@ -233,6 +234,13 @@ class Coordinator:
                 ['--root',self.root,'--index',index])
             edited=current/'EDIT_SPEC.json'
             self.final_editor(f'S{index}',edited,4)
+            if json.loads((self.root/'RUN_SPEC.json').read_text()).get('complete_flow_before_judgment'):
+                self.check_update(index,current)
+                write_json(self.root/f'S{index}_FULL_FLOW.json',{
+                    'round':index,'completed_draft_refine_token_edit_keep':True,
+                    'baseline':json.loads((fit/'edited/scoring/result/RANKED_METRICS.json').read_text()),
+                    'actual':json.loads((current/'edited/scoring/result/RANKED_METRICS.json').read_text()),
+                    'training_diagnostic_only':True,'G_plus_F_does_not_stop_full_flow':True})
             self.ranked(f'S{index}_archive',edited,'archive')
         reports=[]
         for index,current in enumerate([fit,*[self.root/'rounds'/f'round{i}'/'fit' for i in (1,2,3)]]):

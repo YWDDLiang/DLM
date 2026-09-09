@@ -230,6 +230,7 @@ def construct(spec, shard, shards):
     for parameter in model.parameters():
         parameter.requires_grad_(False)
     repair_constraints = build_repair_constraints(tokenizer)
+    from crystal_dlm.construction_recovery import construct_cascade
     complete_geometry = lambda body: geometry_support_report(body, constraints=repair_constraints)
     source_signature = fingerprint({'constructor': file_hash(ROOT / 'src/scripts/run_r03_integrated_body.py'),
         'geometry_bridge': file_hash(ROOT / 'src/crystal_dlm/r03_geometry_bridge.py'),
@@ -258,11 +259,16 @@ def construct(spec, shard, shards):
         graph = None
         try:
             with torch.no_grad(), native.frozen_imports(runtime):
-                suffix, metadata = native.construct_with_recovery(model, tokenizer, task, runtime,
-                    constraints=constraints, geometry_api=bridge, complete_geometry=complete_geometry,
-                    recovery_transform=recovery_canvas,
-                    recovery_seed=derived_seed(str(task['body_noise_seed']), 'construction_recovery', 1),
-                    max_recoveries=spec['policy']['construction_recoveries'])
+                if spec['policy'].get('construction_recovery') == 'three_stage_final_Z':
+                    suffix, metadata = construct_cascade(model, tokenizer, task, runtime,
+                        construct=native.construct_batch, constraints=constraints, repair_constraints=repair_constraints,
+                        geometry_api=bridge, complete_geometry=complete_geometry)
+                else:
+                    suffix, metadata = native.construct_with_recovery(model, tokenizer, task, runtime,
+                        constraints=constraints, geometry_api=bridge, complete_geometry=complete_geometry,
+                        recovery_transform=recovery_canvas,
+                        recovery_seed=derived_seed(str(task['body_noise_seed']), 'construction_recovery', 1),
+                        max_recoveries=spec['policy']['construction_recoveries'])
                 ids = suffix[0].tolist()
                 generated, graph = native.materialize_record(task, ids, runtime=runtime,
                                                             tokenizer=tokenizer, process_one=process_one)
