@@ -267,6 +267,13 @@ class FrozenSamplerHookTest(unittest.TestCase):
         self.assertGreater(monitor.report()["newly_masked_legal_tokens"], 1)
         for position in (0, 7, 11):
             self.assertEqual(int(result[position]), int(desired[position]))
+        with construction_geometry_bridge(paired, tokenizer=tokenizer, generation_position_groups=groups(2),
+                                          native_constraints=native, enabled=True, relax_final_z=True):
+            relaxed = paired.generate_paired_exact_plan(CrowdedLogitFixture(), torch.tensor([[1, 1]]), **args)[0, 2:]
+        bins = [z_ids.index(int(relaxed[position])) % 100 for position in (10, 14)]
+        separation = min(abs(bins[0]-bins[1]), 100-abs(bins[0]-bins[1])) / 100 * 4
+        self.assertGreater(separation, 0.)  # Refiner graph still preserves distinct sites.
+        self.assertLess(separation, .5)  # The added distance hard mask really was removed.
 
 
 if __name__ == "__main__":

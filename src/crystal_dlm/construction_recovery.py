@@ -80,7 +80,8 @@ def construct_cascade(model, tokenizer, task, runtime, *, construct, constraints
                 metadata.update(complete_geometry=support, construction_recovery={
                     'schema':'DLM_geometry_three_stage_v1','episodes':episodes,'recoveries_used':stage_index,
                     'final_Z_relaxed':relaxed,'Plan_replacement_or_resampling':False,
-                    'relaxed_generation_is_not_physical_validity':True,'neighbor_radius_A':2.0})
+                    'relaxed_generation_is_not_physical_validity':True,'neighbor_radius_A':2.0,
+                    'original_exact_duplicate_guard_retained_for_refiner_graph':True})
                 return body, metadata
             error = geometry_api.GeometryNoLegalSupport({'reason':support['reason'],'complete_geometry':support}, body, 0)
         except geometry_api.GeometryNoLegalSupport as caught:

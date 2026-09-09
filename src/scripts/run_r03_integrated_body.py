@@ -287,8 +287,7 @@ def construct_batch(
             temperature=0.7, cfg_scale=0.0, remasking="low_confidence", mask_id=api.MASK_TOKEN_ID,
             allowed_token_ids_by_generation_pos=api.exact_dynamic_schema_constraints(tokenizer, n),
             prefill_token_ids_by_generation_pos=prefill, generation_position_groups=schedule,
-            lightweight_decoding_constraints=(dict(constraints, duplicate_coordinate_mask=False)
-                                             if relax_final_z else constraints),
+            lightweight_decoding_constraints=constraints,
         )
         geometry_report = monitor.report() if monitor is not None else None
     suffix = generated[:, input_ids.shape[1]:]
