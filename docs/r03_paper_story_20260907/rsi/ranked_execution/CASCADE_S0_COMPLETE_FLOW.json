@@ -1,0 +1,402 @@
+{
+  "complete_scope": "new cascade S0 baseline only; subsequent training updates continue",
+  "S0_complete": true,
+  "requested": 256,
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow",
+  "scientific_source_commit": "d88e68a76007384173c76c0d4b94250618e0eeb8",
+  "stages": {
+    "construction": {
+      "exclusive_MetaStable": 32,
+      "input_sha256": "e94ef3bac8746022ecce1c0d1eab168cc381f031c5dfa588e328c766e00a724f",
+      "known_physical_failure": 124,
+      "reliable_SUN": 4,
+      "requested": 256,
+      "score_sha256": "21e161da44faad53a264c015961c4fb07f8b75791b3d00f74bd21b6e80b530c8",
+      "stage": "construction",
+      "strict_Stable": 4,
+      "unknown": 21,
+      "unstable": 75,
+      "comp_valid": {
+        "count": 203,
+        "percent": 79.296875
+      },
+      "Struct_valid": {
+        "count": 247,
+        "percent": 96.484375
+      }
+    },
+    "tokenized": {
+      "exclusive_MetaStable": 107,
+      "input_sha256": "1bd02e705c513790ef77cd8ef7ff9ebb3bd3e192aa45634da937dec128eff4e2",
+      "known_physical_failure": 0,
+      "reliable_SUN": 30,
+      "requested": 256,
+      "score_sha256": "f6005f5ee55fdd85f719d90641e59975cf29b3e8c10897966be3b1380ced7026",
+      "stage": "tokenized",
+      "strict_Stable": 34,
+      "unknown": 6,
+      "unstable": 109,
+      "comp_valid": {
+        "count": 203,
+        "percent": 79.296875
+      },
+      "Struct_valid": {
+        "count": 255,
+        "percent": 99.609375
+      }
+    },
+    "edited": {
+      "exclusive_MetaStable": 90,
+      "input_sha256": "5235697c08b89cfd0c22206a0d8f92265a1c67f9a7ca9835543a41c2ebd71602",
+      "known_physical_failure": 9,
+      "reliable_SUN": 30,
+      "requested": 256,
+      "score_sha256": "1fdb72522c20fcbc1a1255a7e967a58486ddeb6f7be7b3abcd1955f4a335df64",
+      "stage": "edited",
+      "strict_Stable": 32,
+      "unknown": 7,
+      "unstable": 118,
+      "comp_valid": {
+        "count": 203,
+        "percent": 79.296875
+      },
+      "Struct_valid": {
+        "count": 255,
+        "percent": 99.609375
+      }
+    }
+  },
+  "paired_F_effect": {
+    "stage": "F_then_token",
+    "scope": "paired S0 construction policy change; fixed base model and Plans",
+    "counts": {
+      "SUN_retained": 27,
+      "SUN_lost": 0,
+      "SUN_gained": 3,
+      "Stable_retained": 30,
+      "Stable_lost": 0,
+      "Stable_gained": 4
+    },
+    "changed": [
+      {
+        "ordinal": 49,
+        "recovery_stage": "final_Z_relaxed",
+        "before": {
+          "reliable": false,
+          "known_failure": false,
+          "status": "generation_failure",
+          "rank": null,
+          "level": null,
+          "hull": null,
+          "SUN": false
+        },
+        "after": {
+          "reliable": true,
+          "known_failure": false,
+          "status": "verified",
+          "rank": 4,
+          "level": "SUN",
+          "hull": -0.16859369202148455,
+          "SUN": true
+        }
+      },
+      {
+        "ordinal": 121,
+        "recovery_stage": "final_Z_relaxed",
+        "before": {
+          "reliable": false,
+          "known_failure": false,
+          "status": "generation_failure",
+          "rank": null,
+          "level": null,
+          "hull": null,
+          "SUN": false
+        },
+        "after": {
+          "reliable": true,
+          "known_failure": false,
+          "status": "verified",
+          "rank": 4,
+          "level": "SUN",
+          "hull": -0.030202253778861987,
+          "SUN": true
+        }
+      },
+      {
+        "ordinal": 136,
+        "recovery_stage": "all_numeric",
+        "before": {
+          "reliable": false,
+          "known_failure": false,
+          "status": "generation_failure",
+          "rank": null,
+          "level": null,
+          "hull": null,
+          "SUN": false
+        },
+        "after": {
+          "reliable": true,
+          "known_failure": false,
+          "status": "verified",
+          "rank": 3,
+          "level": "strict_stable",
+          "hull": -0.003623938131823934,
+          "SUN": false
+        }
+      },
+      {
+        "ordinal": 187,
+        "recovery_stage": "failed_XYZ",
+        "before": {
+          "reliable": false,
+          "known_failure": false,
+          "status": "generation_failure",
+          "rank": null,
+          "level": null,
+          "hull": null,
+          "SUN": false
+        },
+        "after": {
+          "reliable": true,
+          "known_failure": false,
+          "status": "verified",
+          "rank": 4,
+          "level": "SUN",
+          "hull": -0.006811565362820016,
+          "SUN": true
+        }
+      }
+    ]
+  },
+  "F_geometry": {
+    "counts": {
+      "requested": 256,
+      "token_body": 255,
+      "fallback_to_raw": 0,
+      "unchanged_raw": 220,
+      "exact_token_F": 220,
+      "explicit_postF_geometry_supported": 251,
+      "verified_raw_SUN_kept_without_F": 4,
+      "generation_failure": 1
+    },
+    "final_Z_group": [
+      {
+        "ordinal": 30,
+        "geometry": {
+          "minimum_distance_A": 1.9478827425691454,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      },
+      {
+        "ordinal": 43,
+        "geometry": {
+          "minimum_distance_A": 2.1132030191157685,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      },
+      {
+        "ordinal": 45,
+        "geometry": {
+          "minimum_distance_A": 1.9383892647705208,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      },
+      {
+        "ordinal": 49,
+        "geometry": {
+          "minimum_distance_A": 1.578955667522049,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      },
+      {
+        "ordinal": 65,
+        "geometry": {
+          "minimum_distance_A": 1.896,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      },
+      {
+        "ordinal": 67,
+        "geometry": {
+          "minimum_distance_A": 2.5167371457608425,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      },
+      {
+        "ordinal": 121,
+        "geometry": {
+          "minimum_distance_A": 1.9963028327385597,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      },
+      {
+        "ordinal": 231,
+        "geometry": {
+          "minimum_distance_A": 2.4411227363747723,
+          "reason": null,
+          "supported": true
+        },
+        "fallback_to_raw": false
+      }
+    ]
+  },
+  "editor": {
+    "decisions": {
+      "applied": 43,
+      "known_sun": 30,
+      "mode_0": 74,
+      "mode_1": 111,
+      "mode_2": 20,
+      "mode_3": 50,
+      "proposal_failure": 0,
+      "proposal_generated": 225,
+      "requested": 256,
+      "upstream_failure": 1
+    },
+    "acceptance": {
+      "beneficial": 34,
+      "harmful": 109,
+      "pairwise_AUROC": 0.46006475984889367,
+      "thresholds": [
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 4,
+          "accepted": 225,
+          "beneficial": 34,
+          "harmful": 109,
+          "threshold": 0.03
+        },
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 4,
+          "accepted": 225,
+          "beneficial": 34,
+          "harmful": 109,
+          "threshold": 0.04
+        },
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 4,
+          "accepted": 225,
+          "beneficial": 34,
+          "harmful": 109,
+          "threshold": 0.05
+        },
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 4,
+          "accepted": 225,
+          "beneficial": 34,
+          "harmful": 109,
+          "threshold": 0.06
+        },
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 4,
+          "accepted": 225,
+          "beneficial": 34,
+          "harmful": 109,
+          "threshold": 0.065
+        },
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 4,
+          "accepted": 225,
+          "beneficial": 34,
+          "harmful": 109,
+          "threshold": 0.07
+        },
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 4,
+          "accepted": 225,
+          "beneficial": 34,
+          "harmful": 109,
+          "threshold": 0.08
+        },
+        {
+          "Stable_gain": 0,
+          "Stable_loss": 2,
+          "accepted": 43,
+          "beneficial": 5,
+          "harmful": 28,
+          "threshold": 0.5
+        }
+      ]
+    },
+    "actual_transition": {
+      "changes": [
+        {
+          "after": {
+            "SUN": false,
+            "hull": null,
+            "known_failure": true,
+            "level": null,
+            "rank": null,
+            "reliable": false,
+            "status": "invalid_terminal"
+          },
+          "before": {
+            "SUN": false,
+            "hull": -0.009276779101890398,
+            "known_failure": false,
+            "level": "strict_stable",
+            "rank": 3,
+            "reliable": true,
+            "status": "verified"
+          },
+          "ordinal": 87,
+          "preference": "before"
+        },
+        {
+          "after": {
+            "SUN": false,
+            "hull": 0.08540442032764872,
+            "known_failure": false,
+            "level": "meta_stable",
+            "rank": 2,
+            "reliable": true,
+            "status": "verified"
+          },
+          "before": {
+            "SUN": false,
+            "hull": -0.003623938131823934,
+            "known_failure": false,
+            "level": "strict_stable",
+            "rank": 3,
+            "reliable": true,
+            "status": "verified"
+          },
+          "ordinal": 136,
+          "preference": "before"
+        }
+      ],
+      "counts": {
+        "SUN_gained": 0,
+        "SUN_lost": 0,
+        "SUN_retained": 30,
+        "Stable_gained": 0,
+        "Stable_lost": 2,
+        "Stable_lost_to_unverified": 1,
+        "Stable_retained": 32,
+        "preference_None": 223,
+        "preference_after": 5,
+        "preference_before": 28
+      }
+    }
+  }
+}

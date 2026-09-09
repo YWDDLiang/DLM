@@ -1,0 +1,21 @@
+{
+  "scope": "reconstruct actually updated first minibatch; no model calls",
+  "optimizer_steps": 1,
+  "dataset_examples": 401,
+  "updated_examples": 128,
+  "categories": {
+    "SUN|0": 20,
+    "ordinary_improvement|1": 7,
+    "meta_stable|0": 56,
+    "ordinary_improvement|0": 9,
+    "unstable|0": 28,
+    "meta_stable|3": 1,
+    "strict_stable|0": 2,
+    "decision|0": 1,
+    "ordinary_improvement|3": 3,
+    "meta_stable|1": 1
+  },
+  "positive_Stable_or_SUN": [],
+  "data_sha256": "eae286fcb6a19c130a6aac41321730b91ea798b6f5ab0118326f6a79b56022c1",
+  "receipt_sha256": "686b60e76ff6b273892e33af817620e2fcc1ee17ced930751ebd7adea80fb3bb"
+}
