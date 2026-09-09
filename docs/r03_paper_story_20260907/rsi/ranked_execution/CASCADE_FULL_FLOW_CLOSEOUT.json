@@ -1,0 +1,1070 @@
+{
+  "complete": true,
+  "completed_utc": "2026-09-09T18:28:25.134469+00:00",
+  "source_identity": {
+    "commit": "d88e68a76007384173c76c0d4b94250618e0eeb8",
+    "manifest_sha256": "1cae556863768c61ef0e6c8c907dd0469a993e8a20bcdac3f201a5499500129d"
+  },
+  "resource_accounting": {
+    "roots": [
+      {
+        "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T072000Z",
+        "jobs": 30,
+        "allocated_GPU_hours": 14.746666666666668
+      },
+      {
+        "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T112500Z_repaired",
+        "jobs": 46,
+        "allocated_GPU_hours": 7.415
+      },
+      {
+        "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow",
+        "jobs": 78,
+        "allocated_GPU_hours": 14.353333333333333
+      }
+    ],
+    "all_receipted_jobs": 154,
+    "total_allocated_GPU_hours": 36.514999999999986,
+    "maximum_simultaneous_allocated_GPUs": 6,
+    "job_states": {
+      "COMPLETED": 148,
+      "FAILED": 3,
+      "CANCELLED by 1034": 3
+    },
+    "completed_utc": "2026-09-09T18:28:25.134469+00:00",
+    "budget": {
+      "deadline_policy": "conservative_dispatch_plus_12h",
+      "deadline_utc": "2026-09-09T19:31:10.188531+00:00",
+      "dispatch_start_utc": "2026-09-09T07:31:10.188531+00:00",
+      "failed_parent_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T072000Z",
+      "first_GPU_start_utc": "2026-09-09T07:31:30.597776+00:00",
+      "first_observed_GPU_job": "41361",
+      "max_GPUs": 6,
+      "max_queued_and_running_jobs": 3,
+      "restart_does_not_extend_deadline": true,
+      "restart_utc": "2026-09-09T11:22:08.926124+00:00",
+      "start_time_precision": "first_running_observation; exact_sacct_time_recorded_in_final",
+      "wall_hours": 12,
+      "new_user_instruction": "Complete draft refine token edit/keep; DLM geometry three-stage recovery with final Z relaxation"
+    },
+    "current_run_no_active_jobs": true,
+    "definition": "Allocated GPU count times allocation elapsed seconds / 3600; not GPU busy time.",
+    "final_report_sha256": "956b3c44f8aada17d8bab2b805f12fe54ca15df1d6cfa4390c1026dcbbd23179"
+  },
+  "archive_verification": {
+    "plans_byte_identical": true,
+    "plans_sha256": "05e633ee4550d5acc539ce19e72acdbaddd827a666e54e363bb144d1c417c486",
+    "archive_count": 7,
+    "verified_bytes": 469432375
+  },
+  "rounds": [
+    {
+      "index": 0,
+      "stages": {
+        "construction": {
+          "exclusive_MetaStable": 32,
+          "input_sha256": "e94ef3bac8746022ecce1c0d1eab168cc381f031c5dfa588e328c766e00a724f",
+          "known_physical_failure": 124,
+          "reliable_SUN": 4,
+          "requested": 256,
+          "score_sha256": "21e161da44faad53a264c015961c4fb07f8b75791b3d00f74bd21b6e80b530c8",
+          "stage": "construction",
+          "strict_Stable": 4,
+          "unknown": 21,
+          "unstable": 75,
+          "comp_valid": {
+            "count": 203,
+            "percent": 79.296875
+          },
+          "Struct_valid": {
+            "count": 247,
+            "percent": 96.484375
+          }
+        },
+        "tokenized": {
+          "exclusive_MetaStable": 107,
+          "input_sha256": "1bd02e705c513790ef77cd8ef7ff9ebb3bd3e192aa45634da937dec128eff4e2",
+          "known_physical_failure": 0,
+          "reliable_SUN": 30,
+          "requested": 256,
+          "score_sha256": "f6005f5ee55fdd85f719d90641e59975cf29b3e8c10897966be3b1380ced7026",
+          "stage": "tokenized",
+          "strict_Stable": 34,
+          "unknown": 6,
+          "unstable": 109,
+          "comp_valid": {
+            "count": 203,
+            "percent": 79.296875
+          },
+          "Struct_valid": {
+            "count": 255,
+            "percent": 99.609375
+          }
+        },
+        "edited": {
+          "exclusive_MetaStable": 90,
+          "input_sha256": "5235697c08b89cfd0c22206a0d8f92265a1c67f9a7ca9835543a41c2ebd71602",
+          "known_physical_failure": 9,
+          "reliable_SUN": 30,
+          "requested": 256,
+          "score_sha256": "1fdb72522c20fcbc1a1255a7e967a58486ddeb6f7be7b3abcd1955f4a335df64",
+          "stage": "edited",
+          "strict_Stable": 32,
+          "unknown": 7,
+          "unstable": 118,
+          "comp_valid": {
+            "count": 203,
+            "percent": 79.296875
+          },
+          "Struct_valid": {
+            "count": 255,
+            "percent": 99.609375
+          }
+        }
+      },
+      "editor": {
+        "decisions": {
+          "applied": 43,
+          "known_sun": 30,
+          "mode_0": 74,
+          "mode_1": 111,
+          "mode_2": 20,
+          "mode_3": 50,
+          "proposal_failure": 0,
+          "proposal_generated": 225,
+          "requested": 256,
+          "upstream_failure": 1
+        },
+        "actual_counts": {
+          "SUN_gained": 0,
+          "SUN_lost": 0,
+          "SUN_retained": 30,
+          "Stable_gained": 0,
+          "Stable_lost": 2,
+          "Stable_lost_to_unverified": 1,
+          "Stable_retained": 32,
+          "preference_None": 223,
+          "preference_after": 5,
+          "preference_before": 28
+        },
+        "proposal_counts": {
+          "SUN_gained": 0,
+          "SUN_lost": 0,
+          "SUN_retained": 30,
+          "Stable_gained": 0,
+          "Stable_lost": 4,
+          "Stable_lost_to_unverified": 3,
+          "Stable_retained": 30,
+          "preference_None": 113,
+          "preference_after": 34,
+          "preference_before": 109
+        },
+        "acceptance_AUROC": 0.46006475984889367
+      },
+      "generation_stages": {
+        "draft": 220,
+        "final_Z_relaxed": 8,
+        "failed_XYZ": 11,
+        "neighbor_XYZ": 8,
+        "all_numeric": 8,
+        "failed": 1
+      }
+    },
+    {
+      "index": 1,
+      "stages": {
+        "construction": {
+          "exclusive_MetaStable": 28,
+          "input_sha256": "00328fd487ae66e28f1f19e370d8d9c24ff8aaaa874f9879ff4c5f2862970998",
+          "known_physical_failure": 122,
+          "reliable_SUN": 4,
+          "requested": 256,
+          "score_sha256": "daa6c9112bc656e75007fb8da593798bff2b9663ca7e91d0be09f44cc685241c",
+          "stage": "construction",
+          "strict_Stable": 4,
+          "unknown": 24,
+          "unstable": 78,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 244,
+            "percent": 95.3125
+          }
+        },
+        "tokenized": {
+          "exclusive_MetaStable": 113,
+          "input_sha256": "fa3d05da9d2e89f12b25f701e2101711f856742bf1cf82e6c901321d1d715ed6",
+          "known_physical_failure": 0,
+          "reliable_SUN": 29,
+          "requested": 256,
+          "score_sha256": "af7456472f3ebf49ef6e7cea8f0e54e43a65facb956e9d42e3342e76ec041393",
+          "stage": "tokenized",
+          "strict_Stable": 33,
+          "unknown": 5,
+          "unstable": 105,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 256,
+            "percent": 100
+          }
+        },
+        "edited": {
+          "exclusive_MetaStable": 113,
+          "input_sha256": "9f4047e47f9278465a6791bacbfdb15fc97305eb7edb8cac4cabc66325a72cfe",
+          "known_physical_failure": 0,
+          "reliable_SUN": 29,
+          "requested": 256,
+          "score_sha256": "63c3c66246dd286f2162c229822edc3b220c8de38b216b2bb3a81f9dfcf9028b",
+          "stage": "edited",
+          "strict_Stable": 33,
+          "unknown": 5,
+          "unstable": 105,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 256,
+            "percent": 100
+          }
+        }
+      },
+      "editor": {
+        "decisions": {
+          "applied": 0,
+          "known_sun": 29,
+          "mode_0": 256,
+          "proposal_failure": 0,
+          "proposal_generated": 227,
+          "requested": 256
+        },
+        "actual_counts": {
+          "SUN_gained": 0,
+          "SUN_lost": 0,
+          "SUN_retained": 29,
+          "Stable_gained": 0,
+          "Stable_lost": 0,
+          "Stable_lost_to_unverified": 0,
+          "Stable_retained": 33,
+          "preference_None": 256
+        },
+        "proposal_counts": {
+          "SUN_gained": 1,
+          "SUN_lost": 0,
+          "SUN_retained": 29,
+          "Stable_gained": 1,
+          "Stable_lost": 4,
+          "Stable_lost_to_unverified": 2,
+          "Stable_retained": 29,
+          "preference_None": 112,
+          "preference_after": 27,
+          "preference_before": 117
+        },
+        "acceptance_AUROC": 0.5327635327635327,
+        "training": {
+          "KL_stopped_ranks": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "actual_updated_exposure": {
+            "SUN_positive_visits": 0,
+            "Stable_promotion_pair_ids": [],
+            "Stable_promotion_visits": 0,
+            "dataset_examples": 460,
+            "edit_positive_visits": 10,
+            "note": "Reconstructed optimizer batches; excludes the next inspected batch that triggered KL stop.",
+            "unique_examples": 128,
+            "visits": 128
+          },
+          "optimizer_steps": 1,
+          "parameter_delta_squared": 0.0784734961145297,
+          "stop_KL_note": "Existing trainer records the stop flag, not the triggering KL value.",
+          "stop_KL_value": null,
+          "training_seconds": 38.707492366433144
+        },
+        "training_examples": {
+          "accept_positive": 38,
+          "count": 460,
+          "edit_positive": 38
+        },
+        "history_Stable_target_states": 14,
+        "mode_supervision": {
+          "differing_mode_conditions": 33,
+          "distinct_current_conditions": 251,
+          "keep_and_edit_conditions": 30,
+          "note": "Mode sees the current state; acceptance also sees the actual proposal. Differing candidate labels do not establish a causal effect on the trained model.",
+          "target_counts": {
+            "0": 422,
+            "1": 22,
+            "2": 1,
+            "3": 15
+          }
+        },
+        "teacher_counts": {
+          "SUN_gained": 0,
+          "SUN_lost": 2,
+          "SUN_retained": 27,
+          "Stable_gained": 0,
+          "Stable_lost": 0,
+          "Stable_lost_to_unverified": 0,
+          "Stable_retained": 33,
+          "preference_None": 247,
+          "preference_after": 7,
+          "preference_before": 2
+        }
+      },
+      "generation_stages": {
+        "draft": 216,
+        "final_Z_relaxed": 12,
+        "all_numeric": 9,
+        "neighbor_XYZ": 9,
+        "failed_XYZ": 10
+      }
+    },
+    {
+      "index": 2,
+      "stages": {
+        "construction": {
+          "exclusive_MetaStable": 24,
+          "input_sha256": "935fdc8d9a65edd6629c9cb09686a4c43b38a2d550686d257acafa820307fc4c",
+          "known_physical_failure": 131,
+          "reliable_SUN": 4,
+          "requested": 256,
+          "score_sha256": "92b84ba6f19fb8a377f7b82a64c96f4ba7e318b05328c919aa3bfce7cb4f0711",
+          "stage": "construction",
+          "strict_Stable": 4,
+          "unknown": 26,
+          "unstable": 71,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 232,
+            "percent": 90.625
+          }
+        },
+        "tokenized": {
+          "exclusive_MetaStable": 112,
+          "input_sha256": "e0a44ef96859bd345db010e65bbdf78bf553abfc9a9970116a5d97ee79aab6e6",
+          "known_physical_failure": 0,
+          "reliable_SUN": 28,
+          "requested": 256,
+          "score_sha256": "4a75990de204a9cf67ded2dc5a39bed03d80750ba4f18b0a9dda1c7b553bce85",
+          "stage": "tokenized",
+          "strict_Stable": 32,
+          "unknown": 6,
+          "unstable": 106,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 255,
+            "percent": 99.609375
+          }
+        },
+        "edited": {
+          "exclusive_MetaStable": 112,
+          "input_sha256": "d4dca6c3b5daba75e4820ba3df98437154fd749c9c8309bb40a602e233018457",
+          "known_physical_failure": 0,
+          "reliable_SUN": 28,
+          "requested": 256,
+          "score_sha256": "ae239b3eff10049277393bb6bea4207a2cc139fe99c73880fe88719dc4576374",
+          "stage": "edited",
+          "strict_Stable": 32,
+          "unknown": 6,
+          "unstable": 106,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 255,
+            "percent": 99.609375
+          }
+        }
+      },
+      "editor": {
+        "decisions": {
+          "applied": 0,
+          "known_sun": 28,
+          "mode_0": 255,
+          "proposal_failure": 0,
+          "proposal_generated": 227,
+          "requested": 256,
+          "upstream_failure": 1
+        },
+        "actual_counts": {
+          "SUN_gained": 0,
+          "SUN_lost": 0,
+          "SUN_retained": 28,
+          "Stable_gained": 0,
+          "Stable_lost": 0,
+          "Stable_lost_to_unverified": 0,
+          "Stable_retained": 32,
+          "preference_None": 256
+        },
+        "proposal_counts": {
+          "SUN_gained": 5,
+          "SUN_lost": 0,
+          "SUN_retained": 28,
+          "Stable_gained": 4,
+          "Stable_lost": 3,
+          "Stable_lost_to_unverified": 2,
+          "Stable_retained": 29,
+          "preference_None": 134,
+          "preference_after": 39,
+          "preference_before": 83
+        },
+        "acceptance_AUROC": 0.5928328699413037,
+        "training": {
+          "KL_stopped_ranks": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "actual_updated_exposure": {
+            "SUN_positive_visits": 1,
+            "Stable_promotion_pair_ids": [
+              "25d6c000e08b8275a337f310090d52d792c005af3e44eb95c316a3ed423e0975"
+            ],
+            "Stable_promotion_visits": 1,
+            "dataset_examples": 443,
+            "edit_positive_visits": 7,
+            "note": "Reconstructed optimizer batches; excludes the next inspected batch that triggered KL stop.",
+            "unique_examples": 128,
+            "visits": 128
+          },
+          "optimizer_steps": 1,
+          "parameter_delta_squared": 0.08181245856742514,
+          "stop_KL_note": "Existing trainer records the stop flag, not the triggering KL value.",
+          "stop_KL_value": null,
+          "training_seconds": 37.01572498306632
+        },
+        "training_examples": {
+          "accept_positive": 35,
+          "count": 443,
+          "edit_positive": 35
+        },
+        "history_Stable_target_states": 15,
+        "mode_supervision": {
+          "differing_mode_conditions": 29,
+          "distinct_current_conditions": 250,
+          "keep_and_edit_conditions": 27,
+          "note": "Mode sees the current state; acceptance also sees the actual proposal. Differing candidate labels do not establish a causal effect on the trained model.",
+          "target_counts": {
+            "0": 408,
+            "1": 18,
+            "2": 11,
+            "3": 6
+          }
+        },
+        "teacher_counts": {
+          "SUN_gained": 1,
+          "SUN_lost": 2,
+          "SUN_retained": 26,
+          "Stable_gained": 1,
+          "Stable_lost": 0,
+          "Stable_lost_to_unverified": 0,
+          "Stable_retained": 32,
+          "preference_None": 247,
+          "preference_after": 7,
+          "preference_before": 2
+        }
+      },
+      "generation_stages": {
+        "draft": 211,
+        "failed_XYZ": 8,
+        "neighbor_XYZ": 4,
+        "final_Z_relaxed": 23,
+        "all_numeric": 9,
+        "failed": 1
+      }
+    },
+    {
+      "index": 3,
+      "stages": {
+        "construction": {
+          "exclusive_MetaStable": 31,
+          "input_sha256": "3a30a2ec470d4885398177ee23bec629a669a85afc1e868fb7cdac8956904e52",
+          "known_physical_failure": 139,
+          "reliable_SUN": 3,
+          "requested": 256,
+          "score_sha256": "600a729bb6480b35ace2724df8c1cbe1ea3ac2060e10ddd3485c3a5cdc035a51",
+          "stage": "construction",
+          "strict_Stable": 3,
+          "unknown": 25,
+          "unstable": 58,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 235,
+            "percent": 91.796875
+          }
+        },
+        "tokenized": {
+          "exclusive_MetaStable": 120,
+          "input_sha256": "1ef2b29b0f24f4b15f931c35e19a38a8da5cdc53db1238fde7cb31e3572ac53d",
+          "known_physical_failure": 0,
+          "reliable_SUN": 28,
+          "requested": 256,
+          "score_sha256": "55f3c2beafd461326deefa29f7421bcb66dc0d76ba40f83d7605394c911f9602",
+          "stage": "tokenized",
+          "strict_Stable": 32,
+          "unknown": 5,
+          "unstable": 99,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 256,
+            "percent": 100
+          }
+        },
+        "edited": {
+          "exclusive_MetaStable": 98,
+          "input_sha256": "def24908af47344aa18c2afe7642a986e38f7428154c2298667114a59d4df411",
+          "known_physical_failure": 23,
+          "reliable_SUN": 32,
+          "requested": 256,
+          "score_sha256": "3b8c341c11358a5de0eb3009c33ff39e777ccccc0cc96576acde732d36aa5602",
+          "stage": "edited",
+          "strict_Stable": 33,
+          "unknown": 10,
+          "unstable": 92,
+          "comp_valid": {
+            "count": 204,
+            "percent": 79.6875
+          },
+          "Struct_valid": {
+            "count": 256,
+            "percent": 100
+          }
+        }
+      },
+      "editor": {
+        "decisions": {
+          "applied": 140,
+          "known_sun": 28,
+          "mode_0": 47,
+          "mode_1": 209,
+          "proposal_failure": 0,
+          "proposal_generated": 228,
+          "requested": 256
+        },
+        "actual_counts": {
+          "SUN_gained": 4,
+          "SUN_lost": 0,
+          "SUN_retained": 28,
+          "Stable_gained": 3,
+          "Stable_lost": 2,
+          "Stable_lost_to_unverified": 0,
+          "Stable_retained": 30,
+          "preference_None": 175,
+          "preference_after": 36,
+          "preference_before": 45
+        },
+        "proposal_counts": {
+          "SUN_gained": 4,
+          "SUN_lost": 0,
+          "SUN_retained": 28,
+          "Stable_gained": 3,
+          "Stable_lost": 3,
+          "Stable_lost_to_unverified": 1,
+          "Stable_retained": 29,
+          "preference_None": 130,
+          "preference_after": 47,
+          "preference_before": 79
+        },
+        "acceptance_AUROC": 0.5774306490708322,
+        "training": {
+          "KL_stopped_ranks": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "actual_updated_exposure": {
+            "SUN_positive_visits": 3,
+            "Stable_promotion_pair_ids": [
+              "7be838f1c8c0b073f2dada75f2b0438094248b8395ff4dd8ddb9fcecdd05227c"
+            ],
+            "Stable_promotion_visits": 1,
+            "dataset_examples": 478,
+            "edit_positive_visits": 16,
+            "note": "Reconstructed optimizer batches; excludes the next inspected batch that triggered KL stop.",
+            "unique_examples": 128,
+            "visits": 128
+          },
+          "optimizer_steps": 1,
+          "parameter_delta_squared": 0.08115254415868112,
+          "stop_KL_note": "Existing trainer records the stop flag, not the triggering KL value.",
+          "stop_KL_value": null,
+          "training_seconds": 36.32177713140845
+        },
+        "training_examples": {
+          "accept_positive": 53,
+          "count": 478,
+          "edit_positive": 53
+        },
+        "history_Stable_target_states": 15,
+        "mode_supervision": {
+          "differing_mode_conditions": 47,
+          "distinct_current_conditions": 251,
+          "keep_and_edit_conditions": 43,
+          "note": "Mode sees the current state; acceptance also sees the actual proposal. Differing candidate labels do not establish a causal effect on the trained model.",
+          "target_counts": {
+            "0": 425,
+            "1": 48,
+            "3": 5
+          }
+        },
+        "teacher_counts": {
+          "SUN_gained": 1,
+          "SUN_lost": 3,
+          "SUN_retained": 25,
+          "Stable_gained": 1,
+          "Stable_lost": 1,
+          "Stable_lost_to_unverified": 0,
+          "Stable_retained": 31,
+          "preference_None": 247,
+          "preference_after": 6,
+          "preference_before": 3
+        }
+      },
+      "generation_stages": {
+        "failed_XYZ": 4,
+        "draft": 205,
+        "final_Z_relaxed": 21,
+        "all_numeric": 15,
+        "neighbor_XYZ": 11
+      }
+    }
+  ],
+  "weight_updates": {
+    "E1": {
+      "local_decision_examples": 64,
+      "local_preference_examples": 32,
+      "optimizer_steps": 1,
+      "parameter_delta_squared": 0.0784734961145297,
+      "receipt_sha256": "43c5ec968604a433f17633ab10ecf7b2589c486ed40353fdccff88f64ce24c29",
+      "training_seconds": 38.707492366433144,
+      "actual_GPUs": 4,
+      "source_batch_per_GPU": 32
+    },
+    "E2": {
+      "local_decision_examples": 64,
+      "local_preference_examples": 22,
+      "optimizer_steps": 1,
+      "parameter_delta_squared": 0.08181245856742514,
+      "receipt_sha256": "bb85e23f33fc552f144b13922fb6fac827c58c22ec16d119fafaf415a603137f",
+      "training_seconds": 37.01572498306632,
+      "actual_GPUs": 4,
+      "source_batch_per_GPU": 32
+    },
+    "E3": {
+      "local_decision_examples": 64,
+      "local_preference_examples": 16,
+      "optimizer_steps": 1,
+      "parameter_delta_squared": 0.08115254415868112,
+      "receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+      "training_seconds": 36.32177713140845,
+      "actual_GPUs": 4,
+      "source_batch_per_GPU": 32
+    },
+    "G1": {
+      "local_decision_examples": 0,
+      "local_preference_examples": 356,
+      "optimizer_steps": 8,
+      "parameter_delta_squared": 0.003541452567333181,
+      "receipt_sha256": "d7a966b48c6f0188ec648b24bbf84186143afc83f973d9b637d983e30ddbf84d",
+      "training_seconds": 201.0464345663786,
+      "actual_GPUs": 3,
+      "source_batch_per_GPU": 43
+    },
+    "G2": {
+      "local_decision_examples": 0,
+      "local_preference_examples": 510,
+      "optimizer_steps": 16,
+      "parameter_delta_squared": 0.005760622963862261,
+      "receipt_sha256": "f86762ccef4fee2d35c752a9ac4d883c413430e33d6667a22732cbb6c2e14b86",
+      "training_seconds": 281.91661218367517,
+      "actual_GPUs": 4,
+      "source_batch_per_GPU": 32
+    },
+    "G3": {
+      "local_decision_examples": 0,
+      "local_preference_examples": 694,
+      "optimizer_steps": 20,
+      "parameter_delta_squared": 0.006232272468878364,
+      "receipt_sha256": "05d7210be7ab4dd2a3b38eefd7fc0ef7a610d0d3909c076dfa9e39116005e761",
+      "training_seconds": 400.8069358840585,
+      "actual_GPUs": 4,
+      "source_batch_per_GPU": 32
+    }
+  },
+  "final_relative_to_S0": {
+    "1": {
+      "Stable": {
+        "retained": {
+          "count": 29,
+          "ordinals": [
+            0,
+            20,
+            31,
+            37,
+            41,
+            42,
+            49,
+            50,
+            70,
+            92,
+            105,
+            118,
+            120,
+            121,
+            127,
+            128,
+            131,
+            166,
+            173,
+            175,
+            180,
+            187,
+            195,
+            219,
+            232,
+            236,
+            243,
+            244,
+            251
+          ]
+        },
+        "neither": {
+          "count": 220,
+          "ordinals": null
+        },
+        "gained": {
+          "count": 4,
+          "ordinals": [
+            28,
+            87,
+            136,
+            168
+          ]
+        },
+        "lost": {
+          "count": 3,
+          "ordinals": [
+            51,
+            125,
+            148
+          ]
+        }
+      },
+      "SUN": {
+        "retained": {
+          "count": 27,
+          "ordinals": [
+            0,
+            20,
+            31,
+            37,
+            41,
+            42,
+            49,
+            50,
+            70,
+            92,
+            105,
+            118,
+            120,
+            121,
+            127,
+            128,
+            131,
+            166,
+            173,
+            180,
+            187,
+            195,
+            219,
+            232,
+            236,
+            244,
+            251
+          ]
+        },
+        "neither": {
+          "count": 224,
+          "ordinals": null
+        },
+        "lost": {
+          "count": 3,
+          "ordinals": [
+            51,
+            125,
+            148
+          ]
+        },
+        "gained": {
+          "count": 2,
+          "ordinals": [
+            136,
+            168
+          ]
+        }
+      }
+    },
+    "2": {
+      "Stable": {
+        "retained": {
+          "count": 25,
+          "ordinals": [
+            0,
+            20,
+            31,
+            37,
+            41,
+            49,
+            50,
+            70,
+            92,
+            105,
+            118,
+            120,
+            121,
+            127,
+            128,
+            131,
+            166,
+            173,
+            175,
+            180,
+            187,
+            232,
+            236,
+            243,
+            244
+          ]
+        },
+        "neither": {
+          "count": 217,
+          "ordinals": null
+        },
+        "gained": {
+          "count": 7,
+          "ordinals": [
+            3,
+            18,
+            28,
+            87,
+            136,
+            146,
+            247
+          ]
+        },
+        "lost": {
+          "count": 7,
+          "ordinals": [
+            42,
+            51,
+            125,
+            148,
+            195,
+            219,
+            251
+          ]
+        }
+      },
+      "SUN": {
+        "retained": {
+          "count": 23,
+          "ordinals": [
+            0,
+            20,
+            31,
+            37,
+            41,
+            49,
+            50,
+            70,
+            92,
+            105,
+            118,
+            120,
+            121,
+            127,
+            128,
+            131,
+            166,
+            173,
+            180,
+            187,
+            232,
+            236,
+            244
+          ]
+        },
+        "neither": {
+          "count": 221,
+          "ordinals": null
+        },
+        "gained": {
+          "count": 5,
+          "ordinals": [
+            3,
+            18,
+            136,
+            146,
+            247
+          ]
+        },
+        "lost": {
+          "count": 7,
+          "ordinals": [
+            42,
+            51,
+            125,
+            148,
+            195,
+            219,
+            251
+          ]
+        }
+      }
+    },
+    "3": {
+      "Stable": {
+        "retained": {
+          "count": 27,
+          "ordinals": [
+            0,
+            20,
+            31,
+            37,
+            41,
+            42,
+            49,
+            50,
+            70,
+            92,
+            105,
+            118,
+            120,
+            121,
+            125,
+            128,
+            131,
+            166,
+            173,
+            175,
+            180,
+            187,
+            195,
+            232,
+            236,
+            244,
+            251
+          ]
+        },
+        "neither": {
+          "count": 218,
+          "ordinals": null
+        },
+        "gained": {
+          "count": 6,
+          "ordinals": [
+            18,
+            21,
+            85,
+            87,
+            157,
+            214
+          ]
+        },
+        "lost": {
+          "count": 5,
+          "ordinals": [
+            51,
+            127,
+            148,
+            219,
+            243
+          ]
+        }
+      },
+      "SUN": {
+        "retained": {
+          "count": 26,
+          "ordinals": [
+            0,
+            20,
+            31,
+            37,
+            41,
+            42,
+            49,
+            50,
+            70,
+            92,
+            105,
+            118,
+            120,
+            121,
+            125,
+            128,
+            131,
+            166,
+            173,
+            180,
+            187,
+            195,
+            232,
+            236,
+            244,
+            251
+          ]
+        },
+        "neither": {
+          "count": 220,
+          "ordinals": null
+        },
+        "gained": {
+          "count": 6,
+          "ordinals": [
+            18,
+            21,
+            85,
+            87,
+            157,
+            214
+          ]
+        },
+        "lost": {
+          "count": 4,
+          "ordinals": [
+            51,
+            127,
+            148,
+            219
+          ]
+        }
+      }
+    }
+  },
+  "actual_optimizer_compute_GPU_hours": 1.0506148538593616,
+  "wall_seconds_in_original_budget": 39434.945938
+}

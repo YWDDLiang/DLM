@@ -1,0 +1,47 @@
+{
+  "scope": "Actual accepted E3 edit; registered input N scores are retained",
+  "ordinal": 87,
+  "applied": true,
+  "accept_probability": 0.5861566662788391,
+  "input_N_before": false,
+  "input_N_after": true,
+  "terminal_match_before_to_after": true,
+  "terminal_match_after_to_before": true,
+  "normalized_terminal_RMS": [
+    0.004602462690094614,
+    0.006333309371053323
+  ],
+  "matcher": {
+    "settings": {
+      "version": "1.0",
+      "@module": "pymatgen.analysis.structure_matcher",
+      "@class": "StructureMatcher",
+      "comparator": {
+        "version": "1.0",
+        "@module": "pymatgen.analysis.structure_matcher",
+        "@class": "SpeciesComparator"
+      },
+      "stol": 0.3,
+      "ltol": 0.2,
+      "angle_tol": 5,
+      "primitive_cell": true,
+      "scale": true,
+      "attempt_supercell": false,
+      "allow_subset": false,
+      "supercell_size": "num_sites",
+      "ignored_species": []
+    },
+    "pymatgen_version": "2025.6.14",
+    "implementation": "pymatgen.analysis.structure_matcher.StructureMatcher",
+    "source_sha256": "b6a7cd674aaf579ca4eae594f2592cad3ead8dba3af7c6713de4e73f212ca809"
+  },
+  "source_files_sha256": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/current/inputs.jsonl": "9becac501c8d974a6a576b5a9a021ecd4a73b0430dd74618e27f207a861f1d98",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/current/labeling/result/labels.jsonl": "b54beaa0c1f730dbfc6ed084756bb327cd46e2d495676c4005b8b625288c4c56",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/current/scoring/result/attempt_results.jsonl": "6f8bb8a9436eae1cdd3b280720f87fed4499bd3f9dd00a73f86190cc070ef3f3",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/edited/inputs.jsonl": "def24908af47344aa18c2afe7642a986e38f7428154c2298667114a59d4df411",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/edited/labeling/result/labels.jsonl": "002a8b586cdf7239e03dd6e2de8aa22e743fea5e6ed79bc3eb62cebd0850cdf0",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/edited/scoring/result/attempt_results.jsonl": "3b8c341c11358a5de0eb3009c33ff39e777ccccc0cc96576acde732d36aa5602"
+  },
+  "interpretation": "Input N increased while relaxed terminals still match each other. Terminal N against the full training reference was not evaluated; no new stable polymorph claim follows."
+}
