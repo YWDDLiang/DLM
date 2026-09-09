@@ -92,7 +92,7 @@ def conditional_batch(model, tokenizer, views, branch, support):
     return torch.stack(values), distributions
 
 
-def editor_head_loss(model, tokenizer, examples, device):
+def editor_head_loss(model, tokenizer, examples, device, *, detach_content=False):
     from crystal_dlm.ranked_feedback import COUNTS
     chosen = [x for x in examples if has_head_supervision(x)]
     if not chosen: return None, 0
@@ -109,7 +109,8 @@ def editor_head_loss(model, tokenizer, examples, device):
                                         1, row.get('action_positions', []), remaining=80, reveal=1.))
         else: judges.append(None)
     batch = materialize_edit_batch(views, tokenizer, device)
-    out = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'])
+    kwargs = {'detach_head_features': True} if detach_content else {}
+    out = model(batch['input_ids'], attention_mask=batch['attention_mask'], edit_context=batch['edit_context'], **kwargs)
     losses = []
     for row, i, j in zip(chosen, modes, judges):
         weight = 2. if row.get('known_sun') else 1.

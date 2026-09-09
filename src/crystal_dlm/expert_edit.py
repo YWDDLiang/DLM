@@ -139,7 +139,8 @@ class ExpertEditDLM(StateConditionedDLM):
                 or bool(((context.reveal_fraction < 0) | (context.reveal_fraction > 1)).any())):
             raise ValueError('invalid edit budget or reveal fraction')
 
-    def forward(self, input_ids, attention_mask=None, *, edit_context: EditContext, **kwargs):
+    def forward(self, input_ids, attention_mask=None, *, edit_context: EditContext,
+                detach_head_features=False, **kwargs):
         self._validate(input_ids, edit_context)
         self.forward_calls += 1
         old_context = self._context(edit_context, edit_context.old_token_ids)
@@ -182,6 +183,8 @@ class ExpertEditDLM(StateConditionedDLM):
         if not output.hidden_states:
             raise RuntimeError('B0 must expose its final normalized hidden state')
         final = output.hidden_states[-1]
+        if detach_head_features:
+            final = final.detach()
         cell_hidden = final[row, cell_positions].float().mean(1)
         positions = (edit_context.prompt_lengths[:, None] + 7 + 4 * slots).clamp_max(length - 1)
         site_hidden = final[row, positions].float() * valid[..., None]

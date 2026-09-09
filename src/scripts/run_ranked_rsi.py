@@ -290,7 +290,7 @@ def compile_dataset(spec,branch,comparators=()):
                     audit[-1]['retained_supervision']='head_or_supported_anchor' if keep else 'archive_only'
                 if not keep: continue
             examples.append(item)
-    if branch=='E':
+    if branch=='E' and spec.get('training_policy',{}).get('one_mode_per_condition',True):
         assign_current_mode_targets(examples)
         examples = [r for r in examples if r.get('mode_target') is not None or
                     r.get('accept_target') is not None or r.get('chosen_tokens') is not None or
@@ -301,7 +301,8 @@ def compile_dataset(spec,branch,comparators=()):
         'source_config_sha256':spec['_config_sha256'],'plans_sha256':file_hash(root/'cohort/plans.jsonl'),
         'files_sha256':{p.name:file_hash(p) for p in (data,audit_file)},'stage_evidence':pins,
         'examples':len(examples),'round_index':spec.get('round_index',0),'DPO_training_performed':False,
-        'mode_supervision':'one_best_decision_per_current_condition' if branch=='E' else None,
+        'mode_supervision':('one_best_decision_per_current_condition' if spec.get('training_policy',{}).get('one_mode_per_condition',True)
+                            else 'legacy_per_candidate_decision') if branch=='E' else None,
         'mode_decisions':sum(r.get('mode_target') is not None for r in examples),
         'acceptance_labels':sum(r.get('accept_target') is not None for r in examples)})
 

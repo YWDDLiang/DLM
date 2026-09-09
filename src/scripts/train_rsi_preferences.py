@@ -93,9 +93,14 @@ def main():
     base.enable_input_require_grads()
     model.eval()
     support=build_repair_constraints(tokenizer)
-    optimizer=torch.optim.AdamW([
-        {'params':[p for n,p in selected if 'lora_' in n],'lr':spec['learning_rate']},
-        {'params':[p for n,p in selected if 'lora_' not in n],'lr':spec['head_learning_rate']}],weight_decay=0.)
+    if spec.get('editor_dense_t2t'):
+        from crystal_dlm.rsi_minibatch import decision_head_parameter
+        groups=[{'params':[p for n,p in selected if not decision_head_parameter(n)],'lr':spec['learning_rate']},
+                {'params':[p for n,p in selected if decision_head_parameter(n)],'lr':spec['head_learning_rate']}]
+    else:
+        groups=[{'params':[p for n,p in selected if 'lora_' in n],'lr':spec['learning_rate']},
+                {'params':[p for n,p in selected if 'lora_' not in n],'lr':spec['head_learning_rate']}]
+    optimizer=torch.optim.AdamW(groups,weight_decay=0.)
     if rank==0: output.mkdir(parents=True,exist_ok=False)
     if world>1: dist.barrier()
     contract={**spec,'data_sha256':file_hash(input_path),'pair_manifest_sha256':file_hash(manifest_path),
@@ -121,7 +126,16 @@ def main():
     if bounded:
         if replay:
             raise ValueError('bounded training requires replay merged and deduplicated before epoch construction')
-        from crystal_dlm.rsi_minibatch import train_bounded
+        if spec.get('editor_dense_t2t'):
+            from crystal_dlm.editor_t2t import train_t2t as train_bounded
+            contract.update(objective='dense_T2T_M2T_typed_periodic_CE_with_reference_KL',
+                hard_support='typed_periodic_training; complete_target_geometry_certified; unchanged_runtime_hard_masks',
+                sampling='complete_content_pass_accumulation_and_detached_minibatch_heads',
+                content_parameter_learning_rate=spec['learning_rate'],
+                decision_parameter_learning_rate=spec['head_learning_rate'])
+            if rank==0: write_json(output/'TRAIN_CONFIG.json',contract)
+        else:
+            from crystal_dlm.rsi_minibatch import train_bounded
         steps,total_pairs,total_heads,history,rng=train_bounded(model,tokenizer,examples,spec,
             selected,reference,optimizer,support,output,write_json)
     def draw_example(pool):
