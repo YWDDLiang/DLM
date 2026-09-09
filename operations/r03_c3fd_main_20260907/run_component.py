@@ -175,6 +175,8 @@ def configured_component(argv=None):
             if count != len(assigned) * independent:
                 raise ValueError('distributed process count differs from allocated GPUs')
             command += ['-m', 'torch.distributed.run', '--standalone', '--nnodes=1', f'--nproc_per_node={count}']
+            if independent > 1:
+                command += [str(source / 'src/scripts/run_independent_gpu_worker.py')]
         command += [str(script), *[render(x) for x in stage.get('args', [])]]
         inputs = [file_identity(render(x)) for x in stage.get('inputs', [])]
         outputs = [Path(render(x)).resolve() for x in stage.get('outputs', [])]

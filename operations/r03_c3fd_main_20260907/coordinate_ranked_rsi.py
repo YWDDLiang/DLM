@@ -64,6 +64,9 @@ class Coordinator:
         self.local(name,'src/scripts/run_ranked_rsi.py',['--config',config,'--action',action,*extra])
 
     def job(self,name,config,action,stage='construction',gpus=4,minutes=90,extra=()):
+        recovery=self.root/'JOB_RETRIES.json'
+        if recovery.exists():
+            name=json.loads(recovery.read_text()).get(name,name)
         args=[sys.executable,str(SOURCE/'operations/r03_c3fd_main_20260907/dispatch_rsi.py'),
               '--root',str(self.root),'--config',str(config),'--job',name,'--action',action,
               '--stage',stage,'--gpus',str(gpus),'--minutes',str(minutes),*map(str,extra)]

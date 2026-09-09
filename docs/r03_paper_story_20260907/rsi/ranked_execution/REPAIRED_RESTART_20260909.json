@@ -1,0 +1,26 @@
+{
+  "status": "restarted_not_completed",
+  "source_commit": "b2e5dbee523a353d9f3f0f7b7ebdba269a44d779",
+  "run_suffix": "run_20260909T112500Z_repaired",
+  "coordinator_pid": 10784,
+  "initial_jobs": {"S0_generate": 41457, "twin_generate": 41458},
+  "deadline_utc": "2026-09-09T19:31:10.188531+00:00",
+  "same_plan_and_seeds_as_failed_run": true,
+  "training_batch_per_gpu": 32,
+  "editor_inference_batch_per_gpu": 64,
+  "generate_workers_per_gpu": 3,
+  "refine_workers_per_gpu": 4,
+  "label_workers_per_gpu": 4,
+  "preflight": {
+    "G_batch32_peak_allocated_GB": 47.491629568,
+    "G_batch32_real_optimizer_update": true,
+    "F_parallel_exact_matches": "24/24",
+    "E_batch64_peak_allocated_GB": 28.889470976,
+    "E_batch64_records": 256,
+    "E_batch64_final_tokens_match_old_singleton": 238,
+    "E_batch64_known_SUN_selected_KEEP_preserved": "27/27",
+    "E_comparison_note": "Batch execution is not token-identical to singleton execution. All formal S0-S3 endpoints use the new fixed batch protocol. No claim of physical improvement is supported by preflight."
+  },
+  "admission": "Compare actual same-prompt G-to-F SUN and generation failure counts against fresh S0 before admitting downstream updates.",
+  "failed_checkpoint_cleanup": "Old failed G1 weights and optimizer removed after preserving metadata; 2298212239 bytes removed. Preflight weights never initialize the formal run."
+}
