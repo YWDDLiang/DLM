@@ -6,6 +6,7 @@ import sys
 import tempfile
 import unittest
 from concurrent.futures import Future
+from unittest.mock import Mock
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'operations/r03_c3fd_main_20260907'))
@@ -14,6 +15,10 @@ coordinator=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(coordinator)
 from dispatch_rsi import allocation_cpus_per_gpu, action_source
 from run_component import verify_deployed_source
+
+fixture_spec=importlib.util.spec_from_file_location('ranked_reference_fixture',ROOT/'tests/test_r03_hull_union.py')
+reference_fixture=importlib.util.module_from_spec(fixture_spec)
+fixture_spec.loader.exec_module(reference_fixture)
 
 
 class RankedCoordinatorBudgetTests(unittest.TestCase):
@@ -101,6 +106,45 @@ class PinnedTrialPhysicsTests(unittest.TestCase):
         self.pin.write_text(json.dumps(pin))
         with self.assertRaisesRegex(ValueError,'pinned physics source identity changed'):
             action_source(self.root,self.editor,'label',editor_trial=True)
+
+
+class ReferenceCoverageBeforeDispatchTests(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
+        self.root=Path(self.temp.name);self.cache=self.root/'references'
+        plans=[dict(reference_fixture.planner_row(i,elements),source_split='train')
+               for i,elements in enumerate([['Fe','O'],['F','Li']])]
+        reference_fixture.write_rows(self.root/'fit/cohort/plans.jsonl',plans)
+        reference_fixture.write_json(self.root/'fit/RUN_SPEC.json',
+            {'requests':2,'assets':{'official_cache':str(self.cache)}})
+
+    def test_old_complete_cache_cannot_launch_expanded_panel(self):
+        reference_fixture.cache_fixture(self.cache,['Fe-O'])
+        driver=coordinator.Coordinator.__new__(coordinator.Coordinator)
+        driver.root=self.root;driver.job=Mock()
+        with self.assertRaisesRegex(ValueError,'coverage incomplete for 1'):
+            driver.run()
+        driver.job.assert_not_called()
+        self.assertFalse((self.root/'REFERENCE_COVERAGE.json').exists())
+
+    def test_completed_reference_union_passes(self):
+        reference_fixture.cache_fixture(self.cache,['Fe-O','F-Li'])
+        report=coordinator.require_complete_reference_coverage(self.root)
+        self.assertTrue(report['coverage_accounted'])
+        self.assertEqual((report['requests'],report['chemical_systems'],report['resolved_systems']),(2,2,2))
+
+    def test_verified_official_absence_remains_accounted_unknown(self):
+        error={'type':'ContractError','http_status':None,'message':"missing unary references: ['Li']"}
+        reference_fixture.cache_fixture(self.cache,['Fe-O'],{'F-Li':error})
+        report=coordinator.require_complete_reference_coverage(self.root)
+        self.assertEqual(report['officially_unresolved_systems'],['F-Li'])
+        self.assertEqual(report['resolved_systems'],1)
+
+    def test_transport_failure_does_not_satisfy_coverage(self):
+        error={'type':'ReadTimeout','http_status':None,'message':'transport timed out'}
+        reference_fixture.cache_fixture(self.cache,['Fe-O'],{'F-Li':error})
+        with self.assertRaisesRegex(ValueError,'coverage incomplete'):
+            coordinator.require_complete_reference_coverage(self.root)
 
 
 if __name__=='__main__':unittest.main()

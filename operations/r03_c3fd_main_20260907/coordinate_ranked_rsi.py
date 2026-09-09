@@ -65,6 +65,31 @@ def runtime_allocations(policy,maximum=6):
     return values
 
 
+def require_complete_reference_coverage(root):
+    """Reject an old panel's incomplete reference cache before dispatching GPUs."""
+    from prepare_hull_union import load_cache, plan_chemsys
+    root=Path(root)
+    spec=json.loads((root/'fit/RUN_SPEC.json').read_text())
+    plan_path=root/'fit/cohort/plans.jsonl'
+    plans=[json.loads(line) for line in plan_path.read_text().splitlines() if line.strip()]
+    count=spec.get('requests')
+    if (type(count) is not int or count<1 or len(plans)!=count or
+            any(row.get('source_split')!='train' for row in plans)):
+        raise ValueError('reference coverage requires the complete registered TRAIN panel')
+    wanted={plan_chemsys(row['plan_state']) for row in plans}
+    cached=load_cache(Path(spec['assets']['official_cache']))
+    resolved=wanted&set(cached['resolved'])
+    unknown=wanted&set(cached['official_unresolved'])
+    missing=sorted(wanted-resolved-unknown)
+    if missing:
+        raise ValueError(f'official reference coverage incomplete for {len(missing)} fixed-Plan chemical systems; '
+                         'complete reference preparation before GPU dispatch: '+', '.join(missing[:12]))
+    return {'requests':count,'plans_sha256':file_hash(plan_path),'chemical_systems':len(wanted),
+        'resolved_systems':len(resolved),'officially_unresolved_systems':sorted(unknown),
+        'coverage_accounted':True,'transport_errors_counted_as_official_absence':False,
+        'cache_identity':cached['identity']}
+
+
 class Coordinator:
     def __init__(self,root):
         self.root=Path(root).resolve();self.lock=threading.Lock()
@@ -260,6 +285,12 @@ class Coordinator:
 
     def run(self):
         fit=self.root/'fit';initial=fit/'RUN_SPEC.json';twin=self.root/'bootstrap_comparator'
+        coverage=require_complete_reference_coverage(self.root)
+        coverage_marker=self.root/'REFERENCE_COVERAGE.json'
+        if coverage_marker.exists():
+            if json.loads(coverage_marker.read_text())!=coverage:
+                raise ValueError('reference coverage changed after registration')
+        else: write_json(coverage_marker,coverage)
         started=time.monotonic()
         # Four main GPUs and two throughput GPUs, always under the shared guard.
         with ThreadPoolExecutor(max_workers=2) as pool:

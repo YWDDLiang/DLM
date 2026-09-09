@@ -1,0 +1,30 @@
+{
+  "schema": "clean_1000_reporting_tool_registration_v1",
+  "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/analysis_helpers/report_clean_1000_round_043fee2.py",
+  "git_commit": "043fee2e690795befca471a476ad54ab6db5c73c",
+  "sha256": "315cba0e21d0c23ac81389c50af992f4c5b40ecc87709ab441cfafec2472f0bd",
+  "bytes": 8413,
+  "legacy_preparation_SOURCE_PATH": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/55025f609f39a259eb9e3b051713e215ae1e40c4",
+  "scientific_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+  "purpose": "read completed outputs and write only derived analysis",
+  "syntax_check_passed": true,
+  "incomplete_stage_canary": {
+    "round": 0,
+    "expected_nonzero_returncode": 1,
+    "rejected_with": "incomplete scoring component",
+    "no_complete_report_written": true,
+    "science_jobs_affected": false
+  },
+  "complete_round_checks_pending": true,
+  "formal_scientific_source_verified_in": [
+    "FROZEN_METHOD.json",
+    "FORMAL_DISPATCH.json",
+    "COORDINATOR_PID.json",
+    "RAW0_PIPELINE.json",
+    "S0_generate submission manifest",
+    "twin_generate submission manifest",
+    "S0_raw_label submission manifest",
+    "twin_raw_label submission manifest"
+  ],
+  "legacy_pointer_scope": "SOURCE_PATH was written during initial preparation and remains historical; formal execution uses explicit RANKED_EXECUTION_SOURCE and immutable manifests; analyzer uses FROZEN_METHOD.json"
+}
