@@ -102,6 +102,8 @@ E的第一次真实训练按预先登记的1200秒优化预算在步边界收尾
 
 编辑输入始终采用token-F；“raw优于refine”决定训练偏好方向，不在部署时另加逐条物理选优。已知SUN的KEEP先验与模式／接受头监督分开保存。完全相同端点可复用已核验的物理标签；结构发生变化后重新计算N/U。
 
+回执说明更正：第二、三次G/E训练配置与回执中的`source_round`、`update_index`两个描述字段继承了首轮的0、1。逐项核对确认，实际父检查点、训练数据、输出目录及其哈希均对应正确轮次，这两个字段未用于训练计算或轮次验证。已保留原配置和模型回执的全部字节，在运行目录及本地保存[独立更正记录](execution/post_refine_v08/rsi/ROUND_METADATA_ERRATUM.json)。后续配置生成已修复；旧注册配置只返回明确的有效轮次说明，不自动改写。6项轮次身份测试通过。本轮推理继续使用原冻结源码6228f95343049cbb89884944c1af68e75e31d770，修复提交acb99cd用于后续配置生成，不改变本轮实验。
+
 H1A2在同256个MAIN Plan、同seed和F800后的完整基线已完成同协议评分：comp_valid 223/256（87.11%）、Struct_valid 253/256（98.83%）、SUN 14/256（5.47%）、MSUN 114/256（44.53%）。与该基线相比，θ0浮点F的SUN新增8、损失5，MSUN新增23、损失35；θ0最终token输出的SUN新增9、损失5，MSUN新增23、损失36。因此θ0相比H1A2同样是SUN与MSUN方向不同的结果，不能写成全面超过基线。H1A2 raw也已完整评分：comp_valid 223/256（87.11%）、Struct_valid 107/256（41.80%）、SUN 3/256（1.17%）、MSUN 23/256（8.98%）；其raw→F800的完整配对记录见[H1A2两阶段完整结果](execution/post_refine_v08/rsi/H1A2_COMPLETE.json)。见[H1A2完整F800指标和配对来源](execution/post_refine_v08/rsi/H1A2_F800_COMPLETE.json)。
 
 R03在同256个MAIN Plan、同seed和F800后的对照也已完成：comp_valid222/256（86.72%）、Struct_valid252/256（98.44%）、SUN18/256（7.03%）、MSUN112/256（43.75%）。相对R03 F800，θ1浮点F的SUN新增8、损失5，MSUN新增23、损失23；θ1最终token输出的SUN新增8、损失5，MSUN新增23、损失25。因此θ1最终为SUN净增3、MSUN净减2，仍是混合结果。见[R03 F800完整指标及两版配对比较](execution/post_refine_v08/rsi/R03_F800_COMPLETE.json)。
