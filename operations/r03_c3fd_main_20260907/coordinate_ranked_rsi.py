@@ -140,15 +140,26 @@ class Coordinator:
             checkpoint=(fit['assets']['b0_checkpoint'] if branch=='G' else fit['assets']['editor_checkpoint']) if index==1 else str(
                 self.root/'training'/f'round{index-1}'/branch/'result/checkpoint')
             if index>1: validate_rsi_checkpoint(checkpoint,branch)
+            tuning=fit.get('training_policy',{})
+            bounded=tuning.get('bounded_minibatch_training',False)
+            if bounded:
+                # Current G data already includes comparisons to historical candidates.
+                # E trains on the present policy's current-state distribution.
+                seconds=min(seconds,int(tuning.get('max_training_seconds',1800)))
             spec={'ranked_training':True,'branch':branch,'base_model':fit['assets']['base_model'],
-                'checkpoint':checkpoint,'data':str(data),'replay_data':[str(p) for p in replay],
+                'checkpoint':checkpoint,'data':str(data),'replay_data':[] if bounded else [str(p) for p in replay],
                 'output_dir':str(self.root/'training'/f'round{index}'/branch/'result'),
-                'seed':20260909+100*index+(37 if branch=='E' else 0),'learning_rate':2e-5,
+                'seed':20260909+100*index+(37 if branch=='E' else 0),'learning_rate':tuning.get('G_learning_rate',5e-6) if bounded and branch=='G' else 2e-5,
                 'head_learning_rate':1e-4,'beta':.1,'anchor_weight':.2,'accumulation':2,
                 'steps':4096,'mask_cuts':2,'max_training_seconds':seconds,'update_index':index,
                 'source_round':index-1 if branch=='G' else index,
                 'time_allocation':{'remaining_seconds':self.remaining(),'reserved_panel_seconds':reserve,
                     'remaining_weight_updates':remaining_updates,'rule':'share_remaining_after_complete_panel_reserve'}}
+            if bounded:
+                spec.update(bounded_minibatch_training=True,batch_size=tuning.get('batch_size',8),
+                    accumulation=1,epochs=tuning.get(branch+'_epochs',4 if branch=='G' else 8),
+                    reference_kl_weight=tuning.get('reference_kl_weight',1.),
+                    max_reference_kl=tuning.get('max_reference_kl',.02))
             write_json(config,spec)
         training=json.loads(config.read_text())
         self.job(f'train_{branch}{index}',self.root/'fit/RUN_SPEC.json','train',gpus=4,

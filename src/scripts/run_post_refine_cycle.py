@@ -202,7 +202,7 @@ def construct(spec, shard, shards):
     from crystal_dlm.r03_physics_transfer import build_repair_constraints, geometry_support_report
     if 'SLURM_JOB_ID' not in os.environ or not torch.cuda.is_available():
         raise RuntimeError('DLM construction requires its Slurm GPU allocation')
-    local_rank = int(os.environ.get('LOCAL_RANK', '0'))
+    local_rank = int(os.environ.get('LOCAL_RANK', '0')) % torch.cuda.device_count()
     torch.cuda.set_device(local_rank)
     torch.set_num_threads(1)
     torch.use_deterministic_algorithms(True)

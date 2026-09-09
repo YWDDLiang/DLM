@@ -106,9 +106,22 @@ def main():
               'reference':'previous_round_trainable_state_on_identical_frozen_backbone',
               'original_IO_sha256':original_tables,'historical_replay':replay_pins,
               'replay_probability':.25 if replay else 0.}
+    if spec.get('bounded_minibatch_training'):
+        contract.update(objective='native_semantic_group_conditional_preference_with_reference_KL',
+            sampling='shuffled_complete_data_passes_without_priority_group_oversampling',
+            categorical_temperature=.7,
+            effective_source_batch=spec['batch_size']*world,
+            update_limit='epoch_cap_and_reference_KL_and_wall_time')
     if rank==0: write_json(output/'TRAIN_CONFIG.json',contract)
     started=time.monotonic(); steps=0; total_pairs=0; total_heads=0; history=[]
     rng=random.Random(spec['seed']+rank)
+    bounded=spec.get('bounded_minibatch_training') is True
+    if bounded:
+        if replay:
+            raise ValueError('bounded training requires replay merged and deduplicated before epoch construction')
+        from crystal_dlm.rsi_minibatch import train_bounded
+        steps,total_pairs,total_heads,history,rng=train_bounded(model,tokenizer,examples,spec,
+            selected,reference,optimizer,support,output,write_json)
     def draw_example(pool):
         if not ranked: return pool[rng.randrange(len(pool))]
         groups={}
@@ -117,7 +130,7 @@ def main():
         weights={'SUN':16.,'strict_stable':8.,'meta_stable':4.,'ordinary_improvement':1.,'decision':2.}
         name=rng.choices(names,weights=[weights.get(k,1.) for k in names],k=1)[0]
         return rng.choice(groups[name])
-    for step in range(spec['steps']):
+    for step in range(0 if bounded else spec['steps']):
         optimizer.zero_grad(set_to_none=True)
         losses=[]; margins=[]; pair_count=0; head_count=0
         for micro in range(spec['accumulation']):

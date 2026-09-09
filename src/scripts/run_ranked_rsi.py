@@ -147,7 +147,7 @@ def compile_dataset(spec,branch,comparators=()):
             if len({r['sample_idx'] for r in (a,b,qa,qb)})!=1: raise ValueError('pair source alignment failed')
             preference=ranked_preference(qa,qb)
             item={'source_id':plan['ancestor_id'],'source_split':'train','source_row_idx':plan['source_row_idx'],
-                  'prompt':plan['body_prompt'],'num_sites':plan['plan_state']['N'],
+                  'prompt':plan['body_prompt'],'plan_state':plan['plan_state'],'num_sites':plan['plan_state']['N'],
                   'known_sun':endpoint_quality(qa)['rank']==4,'objective_level':preference['objective_level'] or 'decision',
                   'priority':preference['priority'],'chosen_tokens':None,'rejected_tokens':None,
                   'origin':name,'source_round':spec.get('round_index',0),

@@ -168,7 +168,7 @@ def refine(spec, shard, shards, resume_manifest=None, completion_dir=None):
     from crystal_dlm.r03_physics_transfer import build_repair_constraints, geometry_support_report
     if 'SLURM_JOB_ID' not in os.environ or not torch.cuda.is_available():
         raise RuntimeError('refiner requires a Slurm GPU')
-    rank = int(os.environ.get('LOCAL_RANK', '0'))
+    rank = int(os.environ.get('LOCAL_RANK', '0')) % torch.cuda.device_count()
     torch.cuda.set_device(rank)
     torch.set_num_threads(1)
     root = Path(spec['run_root'])
@@ -306,13 +306,29 @@ def edit(spec,shard,shards):
     model,tokenizer=load_editor_model(spec['assets']['base_model'],checkpoint,torch.device('cuda',rank))
     support=build_repair_constraints(tokenizer); inverse={int(v):k for k,v in tokenizer.get_vocab().items()}
     started=time.monotonic()
+    batched={}
+    batch_size=spec.get('parallelism',{}).get('editor_batch_size',1)
+    if spec.get('ranked_training') and batch_size>1:
+        from crystal_dlm.rsi_minibatch import propose_ranked_batch
+        indices=[i for i in range(shard,len(plans),shards) if current[i]['success'] and current[i].get('body_token_ids')]
+        for offset in range(0,len(indices),batch_size):
+            selected=indices[offset:offset+batch_size]
+            requests=[dict(prompt=plans[i]['body_prompt'],body=current[i]['body_token_ids'],n=plans[i]['plan_state']['N'],
+                seed=derived_seed(str(plans[i]['body_noise_seed']),'E'),
+                known_sun=quality[i]['strict_sun'] is True and endpoint_quality(quality[i])['reliable'],
+                force_proposal=spec.get('collect_training_proposals',False)) for i in selected]
+            traces=propose_ranked_batch(model,tokenizer,requests,support=support,batch_size=batch_size,
+                                       keep_prior=spec['policy']['known_SUN_keep_prior'])
+            batched.update(zip(selected,traces))
+            print(json.dumps({'shard':shard,'batched_editor_requests':len(batched),'batch_size':batch_size,
+                              'peak_GPU_GB':torch.cuda.max_memory_allocated()/1e9,'seconds':time.monotonic()-started}),flush=True)
     for index in range(shard,len(plans),shards):
         plan,record,score=plans[index],current[index],quality[index]
         original=plan['original_ordinal'];trace={'upstream_failure':True}
         proposed=dict(record,trajectory_id=f"{spec['run_id']}:proposal:{original}")
         edited=dict(record,trajectory_id=f"{spec['run_id']}:edited:{original}")
         if record['success'] and record.get('body_token_ids'):
-            trace=propose_editor(model,tokenizer,prompt=plan['body_prompt'],body=record['body_token_ids'],
+            trace=batched[index] if index in batched else propose_editor(model,tokenizer,prompt=plan['body_prompt'],body=record['body_token_ids'],
                 n=plan['plan_state']['N'],support=support,seed=derived_seed(str(plan['body_noise_seed']),'E'),
                 known_sun=score['strict_sun'] is True and (not spec.get('ranked_training') or endpoint_quality(score)['reliable']),
                 force_proposal=spec.get('collect_training_proposals',False) if spec.get('ranked_training') else plan.get('source_split')=='train',

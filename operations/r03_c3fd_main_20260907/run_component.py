@@ -169,7 +169,10 @@ def configured_component(argv=None):
         command = [sys.executable]
         if stage.get('distributed_processes'):
             count = int(stage['distributed_processes'])
-            if count != len(assigned):
+            independent = int(stage.get('independent_workers_per_gpu', 1))
+            if independent != 1 and (name not in ('generate','refine') or not 1 <= independent <= 8):
+                raise ValueError('only independent generate/refine workers may share an allocated GPU')
+            if count != len(assigned) * independent:
                 raise ValueError('distributed process count differs from allocated GPUs')
             command += ['-m', 'torch.distributed.run', '--standalone', '--nnodes=1', f'--nproc_per_node={count}']
         command += [str(script), *[render(x) for x in stage.get('args', [])]]

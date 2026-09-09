@@ -31,19 +31,22 @@ def main():
     pipeline.update(source_root=str(source),source_identity=verify_deployed_source(source),
                     purpose='training_feedback' if training else 'evaluation')
     gpu=0 if a.action=='score' else a.gpus
+    parallel=cfg.get('parallelism',{})
+    workers=int(parallel.get(a.action+'_workers_per_gpu',1)) if a.action in ('generate','refine') else 1
+    if not 1<=workers<=8: raise ValueError('invalid independent workers per GPU')
     script='src/scripts/run_rsi_stages.py'
     args=['--config',str(a.config)];inputs=[str(a.config)];distributed=False
     if a.action=='generate':
         directory=relative/'construction';script='src/scripts/run_post_refine_cycle.py'
         args+=['--stage','construct'];distributed=True
         inputs+=[str(cohort/'cohort/MANIFEST.json')]
-        outputs=[f'{{output}}/worker_{i}_DONE.json' for i in range(gpu)]
+        outputs=[f'{{output}}/worker_{i}_DONE.json' for i in range(gpu*workers)]
     elif a.action=='label':
         directory=relative/a.stage/'labeling';script='scripts/label_programmed_paths.py'
         input_file=cohort/a.stage/'inputs.jsonl'
         args=['--input-jsonl',str(input_file),'--output-dir','{output}/result','--purpose',
               'training_feedback' if training else 'evaluation','--gpu-count',str(gpu),
-              '--workers-per-gpu','2','--record-timeout','600' if ranked else '300','--deterministic']
+              '--workers-per-gpu',str(parallel.get('label_workers_per_gpu',2)),'--record-timeout','600' if ranked else '300','--deterministic']
         inputs+=[str(input_file)]
         if training:
             feedback=cohort/a.stage/'FEEDBACK_MANIFEST.json'
@@ -85,7 +88,7 @@ def main():
         directory=relative/('refined' if a.action=='refine' else 'proposal')
         args+=['--action',a.action];distributed=True
         inputs+=[str(cohort/'construction/GATE.json' if a.action=='refine' else cohort/'current/inputs.jsonl')]
-        outputs=[f'{{output}}/worker_{i}_DONE.json' for i in range(gpu)]
+        outputs=[f'{{output}}/worker_{i}_DONE.json' for i in range(gpu*workers)]
         if a.resume_manifest:
             directory=directory/('resume_'+a.job)
             args+=['--resume-manifest',str(a.resume_manifest),'--completion-dir','{output}']
@@ -99,7 +102,9 @@ def main():
         args=['--config',str(a.training_config)];inputs+=[str(a.training_config),train['data']]
         outputs=['{output}/result/TRAINING_FINAL.json','{output}/result/checkpoint/RSI_TRAINING_DONE.json'];distributed=True
     stage={'name':a.action,'script':script,'args':args,'inputs':inputs,'outputs':outputs}
-    if distributed: stage['distributed_processes']=gpu
+    if distributed:
+        stage['distributed_processes']=gpu*workers
+        if workers>1: stage['independent_workers_per_gpu']=workers
     stages=[stage]
     if a.action=='score':
         stages.append({'name':'validity','script':'src/scripts/run_rsi_stages.py',
@@ -107,7 +112,8 @@ def main():
             'inputs':[str(a.config),'{output}/result/attempt_results.jsonl'],
             'outputs':['{output}/result/BASIC_METRICS.json','{output}/result/four_metrics.jsonl']})
     pipeline['components']=[{'id':a.job,'output_dir':str(directory),'gpus':gpu,'stages':stages}]
-    pipeline['jobs']={a.job:{'component_indices':[0],'gpus_per_task':gpu,'cpus_per_task':4*gpu if gpu else 8,
+    cpu_per_gpu=max(4,2*workers,2*int(parallel.get('label_workers_per_gpu',2)) if a.action=='label' else 4)
+    pipeline['jobs']={a.job:{'component_indices':[0],'gpus_per_task':gpu,'cpus_per_task':cpu_per_gpu*gpu if gpu else 8,
         'parallel_tasks':1,'wall_minutes':a.minutes,'memory':f'{(32 if a.action in ("label","refine") else 96)*gpu}G' if gpu else '64G',
         'partition':'gpu' if gpu else 'normal'}}
     manifest=root/(a.job+'_PIPELINE.json')
