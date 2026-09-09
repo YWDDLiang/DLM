@@ -4,6 +4,17 @@
   "run_suffix": "run_20260909T112500Z_repaired",
   "coordinator_pid": 10784,
   "initial_jobs": {"S0_generate": 41457, "twin_generate": 41458},
+  "loading_recovery": {
+    "failed_job": 41457,
+    "cause": "Adapter loading staged temporary tensors on default cuda:0 across 12 workers.",
+    "fix_commit": "db3e3621fd124d0bdd6b06543a8dd94ed23a49a7",
+    "fix": "Isolate CUDA_VISIBLE_DEVICES per independent worker before importing model libraries.",
+    "main_retry_job": 41459,
+    "coordinator_pid": 37932,
+    "failed_output_archived": "fit/construction_failed_loading_41457",
+    "retained_twin_job": 41458,
+    "verified_main_models_loaded": 12
+  },
   "deadline_utc": "2026-09-09T19:31:10.188531+00:00",
   "same_plan_and_seeds_as_failed_run": true,
   "training_batch_per_gpu": 32,
