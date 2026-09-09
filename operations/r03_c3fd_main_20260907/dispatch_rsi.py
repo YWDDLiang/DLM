@@ -1,9 +1,18 @@
 """Register one RSI stage under the common six-GPU and absolute-deadline cap."""
 import argparse
 import json
+import os
 from pathlib import Path
 from run_component import verify_deployed_source
 from submit_stage import configured_dispatch
+
+
+def allocation_cpus_per_gpu(action,workers,label_workers=2,cap=None):
+    cpus=min(6,max(4,2*workers,2*int(label_workers) if action=='label' else 4))
+    if cap is not None:
+        if type(cap) is not int or not 1<=cap<=6: raise ValueError('invalid CPU allocation cap')
+        cpus=min(cpus,cap)
+    return cpus
 
 
 def main():
@@ -23,7 +32,7 @@ def main():
     a=p.parse_args();root=a.root.resolve();cfg=json.loads(a.config.read_text())
     if a.resume_manifest and a.action != 'refine': p.error('resume manifest requires refine')
     cohort=Path(cfg['run_root']);relative=cohort.relative_to(root)
-    source=Path(__file__).resolve().parents[2]
+    source=Path(os.environ.get('RANKED_EXECUTION_SOURCE',str(Path(__file__).resolve().parents[2]))).resolve()
     pipeline=json.loads((root/'RAW0_PIPELINE.json').read_text())
     training='training_parent_root' in cfg
     ranked=cfg.get('ranked_training') is True
@@ -112,7 +121,9 @@ def main():
             'inputs':[str(a.config),'{output}/result/attempt_results.jsonl'],
             'outputs':['{output}/result/BASIC_METRICS.json','{output}/result/four_metrics.jsonl']})
     pipeline['components']=[{'id':a.job,'output_dir':str(directory),'gpus':gpu,'stages':stages}]
-    cpu_per_gpu=min(6,max(4,2*workers,2*int(parallel.get('label_workers_per_gpu',2)) if a.action=='label' else 4))
+    control=json.loads((root/'RUN_SPEC.json').read_text()).get('execution_policy',{})
+    cpu_per_gpu=allocation_cpus_per_gpu(a.action,workers,parallel.get('label_workers_per_gpu',2),
+                                       control.get('cpus_per_gpu'))
     pipeline['jobs']={a.job:{'component_indices':[0],'gpus_per_task':gpu,'cpus_per_task':cpu_per_gpu*gpu if gpu else 8,
         'parallel_tasks':1,'wall_minutes':a.minutes,'memory':f'{(32 if a.action in ("label","refine") else 96)*gpu}G' if gpu else '64G',
         'partition':'gpu' if gpu else 'normal'}}

@@ -8,6 +8,7 @@ sys.path.insert(0,str(ROOT/'operations/r03_c3fd_main_20260907'))
 spec=importlib.util.spec_from_file_location('ranked_coordinator_budget',ROOT/'operations/r03_c3fd_main_20260907/coordinate_ranked_rsi.py')
 coordinator=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(coordinator)
+from dispatch_rsi import allocation_cpus_per_gpu
 
 
 class RankedCoordinatorBudgetTests(unittest.TestCase):
@@ -38,6 +39,16 @@ class RankedCoordinatorBudgetTests(unittest.TestCase):
 
     def test_zero_gpu_stage_is_rejected(self):
         with self.assertRaises(ValueError):coordinator.runtime_allocations(dict(single_GPUs=0))
+
+    def test_three_generation_workers_fit_four_reserved_cpus(self):
+        self.assertEqual(allocation_cpus_per_gpu('generate',3,cap=4),4)
+        self.assertEqual(allocation_cpus_per_gpu('generate',3),6)
+
+    def test_label_cpu_cap_does_not_require_eight_cores_per_gpu(self):
+        self.assertEqual(allocation_cpus_per_gpu('label',1,label_workers=4,cap=4),4)
+
+    def test_zero_cpu_cap_is_rejected(self):
+        with self.assertRaises(ValueError):allocation_cpus_per_gpu('generate',3,cap=0)
 
 
 if __name__=='__main__':unittest.main()

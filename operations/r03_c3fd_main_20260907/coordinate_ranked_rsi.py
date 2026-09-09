@@ -114,7 +114,7 @@ class Coordinator:
         receipt=self.root/'submissions'/f'{name}.json'
         while not receipt.exists():
             actual_minutes=dispatch_minutes(minutes,self.remaining())
-            args=[sys.executable,str(SOURCE/'operations/r03_c3fd_main_20260907/dispatch_rsi.py'),
+            args=[sys.executable,str(ORCHESTRATOR_SOURCE/'operations/r03_c3fd_main_20260907/dispatch_rsi.py'),
                   '--root',str(self.root),'--config',str(config),'--job',name,'--action',action,
                   '--stage',stage,'--gpus',str(gpus),'--minutes',str(actual_minutes),*map(str,extra)]
             with self.lock:
