@@ -27,5 +27,17 @@ class RankedCoordinatorBudgetTests(unittest.TestCase):
         self.assertEqual(reserve,35*60)
         self.assertLess(reserve,coordinator.training_reserve_seconds(3,'G'))
 
+    def test_three_card_allocation_preserves_large_effective_batch(self):
+        values=coordinator.runtime_allocations(dict(single_GPUs=3,training_GPUs=3,
+            parallel_main_GPUs=2,parallel_other_GPUs=1,training_batch_size=43))
+        self.assertEqual(values['training_GPUs']*values['training_batch_size'],129)
+        self.assertEqual(values['parallel_main_GPUs']+values['parallel_other_GPUs'],3)
+
+    def test_parallel_resource_limit_is_enforced(self):
+        with self.assertRaises(ValueError):coordinator.runtime_allocations(dict(parallel_other_GPUs=3))
+
+    def test_zero_gpu_stage_is_rejected(self):
+        with self.assertRaises(ValueError):coordinator.runtime_allocations(dict(single_GPUs=0))
+
 
 if __name__=='__main__':unittest.main()

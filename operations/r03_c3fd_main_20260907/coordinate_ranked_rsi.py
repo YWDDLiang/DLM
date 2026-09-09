@@ -33,6 +33,21 @@ def training_reserve_seconds(index,branch):
     return ((4-index)*65+15)*60 if branch=='G' else ((3-index)*65+20+15)*60
 
 
+def runtime_allocations(policy,maximum=6):
+    values={key:policy.get(key,default) for key,default in {
+        'single_GPUs':4,'parallel_main_GPUs':4,'parallel_other_GPUs':2,'training_GPUs':4,
+        'training_batch_size':None}.items()}
+    for key in ('single_GPUs','parallel_main_GPUs','parallel_other_GPUs','training_GPUs'):
+        if type(values[key]) is not int or not 1<=values[key]<=maximum:
+            raise ValueError('invalid GPU allocation: '+key)
+    if values['parallel_main_GPUs']+values['parallel_other_GPUs']>maximum:
+        raise ValueError('parallel allocations exceed the shared GPU budget')
+    batch=values['training_batch_size']
+    if batch is not None and (type(batch) is not int or not 1<=batch<=64):
+        raise ValueError('invalid source batch size')
+    return values
+
+
 class Coordinator:
     def __init__(self,root):
         self.root=Path(root).resolve();self.lock=threading.Lock()
@@ -47,9 +62,7 @@ class Coordinator:
                 'max_queued_and_running_jobs':3,'deadline_policy':'conservative_dispatch_plus_12h'})
         self.budget=json.loads(budget.read_text())
         self.deadline=dt.datetime.fromisoformat(self.budget['deadline_utc'])
-        control=json.loads((self.root/'RUN_SPEC.json').read_text())
-        self.parallel_main_gpus=control.get('execution_policy',{}).get('parallel_main_GPUs',4)
-        if self.parallel_main_gpus not in (2,4): raise ValueError('parallel main allocation must use two or four GPUs')
+        self.allocations()
         path=self.root/'RAW0_PIPELINE.json'
         if not path.exists():
             pipeline=json.loads((self.root/'RAW0_PIPELINE_TEMPLATE.json').read_text())
@@ -58,6 +71,19 @@ class Coordinator:
             write_json(path,pipeline)
 
     def remaining(self): return (self.deadline-dt.datetime.now(dt.timezone.utc)).total_seconds()
+
+    def allocations(self):
+        control=json.loads((self.root/'RUN_SPEC.json').read_text())
+        return runtime_allocations(control.get('execution_policy',{}),self.budget.get('max_GPUs',6))
+
+    @property
+    def parallel_main_gpus(self): return self.allocations()['parallel_main_GPUs']
+
+    @property
+    def parallel_other_gpus(self): return self.allocations()['parallel_other_GPUs']
+
+    @property
+    def single_gpus(self): return self.allocations()['single_GPUs']
 
     def local(self,name,script,args):
         marker=self.events/(name+'_DONE.json')
@@ -168,9 +194,14 @@ class Coordinator:
             raise RuntimeError('complete G+F regression: update rejected before downstream training')
 
     def training(self,index,branch,data,replay):
-        config=self.root/'training_configs'/f'TRAIN_{branch}{index}.json'
+        overrides=self.root/'TRAINING_CONFIG_OVERRIDES.json'
+        names=json.loads(overrides.read_text()) if overrides.exists() else {}
+        name=names.get(f'{branch}{index}',f'TRAIN_{branch}{index}.json')
+        if Path(name).name!=name: raise ValueError('training override must be a filename')
+        config=self.root/'training_configs'/name
         fit=json.loads((self.root/'fit/RUN_SPEC.json').read_text())
         if not config.exists():
+            allocation=self.allocations()
             remaining_updates=8-2*index-(branch=='E')
             # Reserve complete inference, physical feedback and reporting for
             # every remaining round. Allocation changes with actual elapsed work.
@@ -192,17 +223,19 @@ class Coordinator:
                 'seed':20260909+100*index+(37 if branch=='E' else 0),'learning_rate':tuning.get('G_learning_rate',5e-6) if bounded and branch=='G' else 2e-5,
                 'head_learning_rate':1e-4,'beta':.1,'anchor_weight':.2,'accumulation':2,
                 'steps':4096,'mask_cuts':2,'max_training_seconds':seconds,'update_index':index,
+                'training_gpus':allocation['training_GPUs'],
                 'source_round':index-1 if branch=='G' else index,
                 'time_allocation':{'remaining_seconds':self.remaining(),'reserved_panel_seconds':reserve,
                     'remaining_weight_updates':remaining_updates,'rule':'share_remaining_after_complete_panel_reserve'}}
             if bounded:
-                spec.update(bounded_minibatch_training=True,batch_size=tuning.get('batch_size',8),
+                spec.update(bounded_minibatch_training=True,
+                    batch_size=allocation['training_batch_size'] or tuning.get('batch_size',8),
                     accumulation=1,epochs=tuning.get(branch+'_epochs',4 if branch=='G' else 8),
                     reference_kl_weight=tuning.get('reference_kl_weight',1.),
                     max_reference_kl=tuning.get('max_reference_kl',.02))
             write_json(config,spec)
         training=json.loads(config.read_text())
-        self.job(f'train_{branch}{index}',self.root/'fit/RUN_SPEC.json','train',gpus=4,
+        self.job(f'train_{branch}{index}',self.root/'fit/RUN_SPEC.json','train',gpus=training.get('training_gpus',4),
             minutes=math.ceil(training['max_training_seconds']/60)+15,extra=['--training-config',config])
 
     def run(self):
@@ -210,7 +243,7 @@ class Coordinator:
         started=time.monotonic()
         # Four main GPUs and two throughput GPUs, always under the shared guard.
         with ThreadPoolExecutor(max_workers=2) as pool:
-            other=pool.submit(self.body,'twin',twin/'RUN_SPEC.json',2)
+            other=pool.submit(self.body,'twin',twin/'RUN_SPEC.json',self.parallel_other_gpus)
             self.body('S0',initial,self.parallel_main_gpus)
             self.job('initialize_E0',initial,'initialize',gpus=1,minutes=30)
             self.final_editor('S0',initial,self.parallel_main_gpus)
@@ -226,7 +259,7 @@ class Coordinator:
             self.local(f'round{index}_generation_register','src/scripts/prepare_rsi_round.py',
                 ['--root',self.root,'--index',index,'--generation-only'])
             current=self.root/'rounds'/f'round{index}'/'fit';config=current/'RUN_SPEC.json'
-            self.body(f'S{index}',config,4)
+            self.body(f'S{index}',config,self.single_gpus)
             if not json.loads((self.root/'RUN_SPEC.json').read_text()).get('complete_flow_before_judgment'):
                 self.check_update(index,current)
             self.ranked(f'S{index}_compile_G',config,'compile',['--branch','G','--comparators',*history])
@@ -239,9 +272,9 @@ class Coordinator:
             with ThreadPoolExecutor(max_workers=2) as pool:
                 teacher=pool.submit(self.evaluate,f'S{index}_teacher',collect_config,'teacher',self.parallel_main_gpus,
                                     [current/'current/labeling/result'])
-                self.job(f'S{index}_collect',collect_config,'edit',gpus=2)
+                self.job(f'S{index}_collect',collect_config,'edit',gpus=self.parallel_other_gpus)
                 self.rsi(f'S{index}_collect_inputs',collect_config,'materialize','proposal')
-                self.evaluate(f'S{index}_collect',collect_config,'proposal',2,[current/'current/labeling/result'])
+                self.evaluate(f'S{index}_collect',collect_config,'proposal',self.parallel_other_gpus,[current/'current/labeling/result'])
                 teacher.result()
             self.ranked(f'S{index}_compile_E',collect_config,'compile',['--branch','E'])
             data=collection/'pairs/E.jsonl'
@@ -250,7 +283,7 @@ class Coordinator:
             self.local(f'round{index}_edit_register','src/scripts/prepare_rsi_round.py',
                 ['--root',self.root,'--index',index])
             edited=current/'EDIT_SPEC.json'
-            self.final_editor(f'S{index}',edited,4)
+            self.final_editor(f'S{index}',edited,self.single_gpus)
             if json.loads((self.root/'RUN_SPEC.json').read_text()).get('complete_flow_before_judgment'):
                 self.check_update(index,current)
                 write_json(self.root/f'S{index}_FULL_FLOW.json',{
