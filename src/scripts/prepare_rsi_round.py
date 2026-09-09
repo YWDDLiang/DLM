@@ -48,7 +48,9 @@ def prepare_round(root, index, generation_only=False):
                 raise ValueError('registered generation files changed')
         return registered if generation_only else finish_edit_registration(destination,registered,editor)
     if destination.exists(): raise ValueError('partial round registration requires inspection')
-    for cohort,original,output in [('MAIN',root,destination),('FIT',root/'fit',destination/'fit')]:
+    train_only=json.loads((root/'RUN_SPEC.json').read_text()).get('ranked_training') is True
+    cohorts=[('FIT',root/'fit',destination/'fit')] if train_only else [('MAIN',root,destination),('FIT',root/'fit',destination/'fit')]
+    for cohort,original,output in cohorts:
         spec=copy.deepcopy(json.loads((original/'RUN_SPEC.json').read_text()))
         spec.update(run_root=str(output),run_id=f"{spec['run_id']}:theta{index}",round_index=index)
         spec['policy']={k:v for k,v in spec['policy'].items() if k not in ('max_edited_sites','max_numeric_bin_delta')}

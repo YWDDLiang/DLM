@@ -11,7 +11,7 @@ def main():
     p.add_argument('--root',type=Path,required=True)
     p.add_argument('--config',type=Path,required=True)
     p.add_argument('--job',required=True)
-    p.add_argument('--action',choices=['generate','label','score','refine','edit','train'],required=True)
+    p.add_argument('--action',choices=['generate','label','score','refine','edit','train','initialize'],required=True)
     p.add_argument('--stage',default='construction')
     p.add_argument('--gpus',type=int,default=2)
     p.add_argument('--minutes',type=int,default=90)
@@ -26,6 +26,8 @@ def main():
     source=Path(__file__).resolve().parents[2]
     pipeline=json.loads((root/'RAW0_PIPELINE.json').read_text())
     training='training_parent_root' in cfg
+    ranked=cfg.get('ranked_training') is True
+    if ranked and not training: raise ValueError('ranked RSI cannot dispatch a MAIN stage')
     pipeline.update(source_root=str(source),source_identity=verify_deployed_source(source),
                     purpose='training_feedback' if training else 'evaluation')
     gpu=0 if a.action=='score' else a.gpus
@@ -41,7 +43,7 @@ def main():
         input_file=cohort/a.stage/'inputs.jsonl'
         args=['--input-jsonl',str(input_file),'--output-dir','{output}/result','--purpose',
               'training_feedback' if training else 'evaluation','--gpu-count',str(gpu),
-              '--workers-per-gpu','2','--record-timeout','300','--deterministic']
+              '--workers-per-gpu','2','--record-timeout','600' if ranked else '300','--deterministic']
         inputs+=[str(input_file)]
         if training:
             feedback=cohort/a.stage/'FEEDBACK_MANIFEST.json'
@@ -50,6 +52,7 @@ def main():
             script='scripts/label_rsi_cached_endpoints.py'
             args+=['--reuse-endpoints',*[str(v) for v in a.reuse_endpoints]]
             inputs+=[str(v/'LABEL_FINAL.json') for v in a.reuse_endpoints]
+        if ranked: args+=['--joint-physical-stop','--max-steps','1000']
         outputs=['{output}/result/LABEL_FINAL.json','{output}/result/labels.jsonl']
     elif a.action=='score':
         if not a.score_attempt.replace('_','').isalnum(): p.error('invalid score attempt name')
@@ -71,7 +74,13 @@ def main():
         if training:
             feedback=cohort/a.stage/'FEEDBACK_MANIFEST.json'
             args+=['--feedback-manifest',str(feedback)];inputs+=[str(feedback)]
+        if ranked: args+=['--joint-physical-stop']
         outputs=['{output}/result/_SUCCESS','{output}/result/attempt_results.jsonl']
+    elif a.action=='initialize':
+        if gpu!=1: raise ValueError('fixed initializer uses one GPU')
+        directory=relative/'initialization';script='src/scripts/run_ranked_rsi.py'
+        args+=['--action','initialize'];inputs+=[str(cohort/'construction/inputs.jsonl')]
+        outputs=[str(Path(cfg['assets']['editor_checkpoint'])/'INITIALIZATION_FINAL.json')]
     elif a.action in ('refine','edit'):
         directory=relative/('refined' if a.action=='refine' else 'proposal')
         args+=['--action',a.action];distributed=True

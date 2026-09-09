@@ -44,6 +44,7 @@ def main():
     if world>1: dist.init_process_group('nccl')
     torch.manual_seed(spec['seed']); random.seed(spec['seed'])
     branch=spec['branch']; output=Path(spec['output_dir'])
+    ranked=spec.get('ranked_training') is True
     input_path=Path(spec['data'])
     manifest_path=pair_manifest_path(input_path)
     manifest=json.loads(manifest_path.read_text())
@@ -68,7 +69,7 @@ def main():
             param.requires_grad_('.lora_A.' in name or '.lora_B.' in name)
     else:
         model,tokenizer=load_editor_model(spec['base_model'],spec['checkpoint'],device,trainable=True)
-        model.training_modes={**model.training_modes,'S':[0,3]}
+        model.training_modes={**model.training_modes,'S':[0,1,2,3] if ranked else [0,3]}
     for module in model.modules():
         if isinstance(module,torch.nn.Dropout): module.p=0.
     selected=[(name,param) for name,param in model.named_parameters() if param.requires_grad]
@@ -99,7 +100,7 @@ def main():
     if world>1: dist.barrier()
     contract={**spec,'data_sha256':file_hash(input_path),'pair_manifest_sha256':file_hash(manifest_path),
               'pair_manifest_path':str(manifest_path),
-              'objective':'one_shared_prefix_cut_conditional_DPO_surrogate',
+              'objective':'multiple_shared_action_mask_cuts_conditional_DPO_surrogate' if ranked else 'one_shared_prefix_cut_conditional_DPO_surrogate',
               'hard_support':'unchanged_K8_periodic_and_cell_support',
               'trainable_parameters':sum(p.numel() for _,p in selected),'world_size':world,
               'reference':'previous_round_trainable_state_on_identical_frozen_backbone',
@@ -108,15 +109,24 @@ def main():
     if rank==0: write_json(output/'TRAIN_CONFIG.json',contract)
     started=time.monotonic(); steps=0; total_pairs=0; total_heads=0; history=[]
     rng=random.Random(spec['seed']+rank)
+    def draw_example(pool):
+        if not ranked: return pool[rng.randrange(len(pool))]
+        groups={}
+        for row in pool: groups.setdefault(row.get('objective_level','decision'),[]).append(row)
+        names=list(groups)
+        weights={'SUN':16.,'strict_stable':8.,'meta_stable':4.,'ordinary_improvement':1.,'decision':2.}
+        name=rng.choices(names,weights=[weights.get(k,1.) for k in names],k=1)[0]
+        return rng.choice(groups[name])
     for step in range(spec['steps']):
         optimizer.zero_grad(set_to_none=True)
         losses=[]; margins=[]; pair_count=0; head_count=0
         for micro in range(spec['accumulation']):
             pool=replay if replay and rng.random()<.25 else examples
-            example=pool[rng.randrange(len(pool))]
-            cut=rng.randrange(len(numeric_order(example['num_sites'],branch)))
+            example=draw_example(pool)
+            order=example.get('action_positions',numeric_order(example['num_sites'],branch)) if branch=='E' else numeric_order(example['num_sites'],branch)
+            cuts=rng.sample(range(len(order)),min(spec.get('mask_cuts',2) if ranked else 1,len(order)))
             chosen=example.get('chosen_tokens'); rejected=example.get('rejected_tokens')
-            if chosen is not None and rejected is not None:
+            for cut in cuts if chosen is not None and rejected is not None else []:
                 live={name:param.detach().clone() for name,param in selected}
                 with torch.no_grad():
                     for name,param in selected: param.copy_(reference[name])
@@ -130,24 +140,33 @@ def main():
                 if step==0 and micro==0 and abs(float(margin.detach()))>1e-5:
                     raise ValueError('step-zero policy/reference are not identical')
                 loss=-torch.nn.functional.logsigmoid(spec['beta']*margin)-spec['anchor_weight']*win
-                (loss/spec['accumulation']).backward()
+                (loss/(spec['accumulation']*len(cuts))).backward()
                 losses.append(float(loss.detach())); margins.append(float(margin.detach())); pair_count+=1
-            elif branch=='G' and example.get('healthy_anchor_tokens') is not None:
-                win=conditional_logp(model,tokenizer,example,example['healthy_anchor_tokens'],cut,branch,support)
-                loss=-spec['anchor_weight']*win
-                (loss/spec['accumulation']).backward(); losses.append(float(loss.detach()))
+            anchor=example.get('healthy_anchor_tokens') if branch=='G' else example.get('content_target_tokens')
+            if chosen is None and anchor is not None:
+                for cut in cuts:
+                    win=conditional_logp(model,tokenizer,example,anchor,cut,branch,support)
+                    loss=-spec['anchor_weight']*win
+                    (loss/(spec['accumulation']*len(cuts))).backward(); losses.append(float(loss.detach()))
             if branch=='E' and example.get('mode_target') is not None:
                 current=example['current_tokens']; n=example['num_sites']
                 out,_=forward_view(model,tokenizer,example['prompt'],current,current,n,'E')
                 # Unshifted logits learn retention; the same explicit SUN prior
                 # is applied only to the runtime action decision.
                 target=torch.tensor([example['mode_target']],device=device)
-                mode=torch.nn.functional.cross_entropy(out.mode_logits[:,[0,3]],target)
+                mode=torch.nn.functional.cross_entropy(out.mode_logits if ranked else out.mode_logits[:,[0,3]],target)
                 weight=2. if example.get('known_sun') else 1.
                 loss=weight*mode
+                if ranked and example['mode_target']==1:
+                    from crystal_dlm.ranked_feedback import COUNTS
+                    sites=example['site_targets']
+                    site_target=torch.tensor(sites,device=device,dtype=torch.float32)
+                    loss=loss+torch.nn.functional.binary_cross_entropy_with_logits(out.site_logits[0,:n],site_target)
+                    count_target=torch.tensor([COUNTS.index(int(sum(sites)))],device=device)
+                    loss=loss+torch.nn.functional.cross_entropy(out.count_logits,count_target)
                 proposal=example.get('proposal_tokens')
                 if proposal is not None and example.get('accept_target') is not None:
-                    judge,_=forward_view(model,tokenizer,example['prompt'],current,proposal,n,'E',numeric_order(n,'E'),1.)
+                    judge,_=forward_view(model,tokenizer,example['prompt'],current,proposal,n,'E',order,1.)
                     loss=loss+weight*torch.nn.functional.binary_cross_entropy_with_logits(judge.quality_logits[0,3],
                                             torch.tensor(float(example['accept_target']),device=device))
                 (loss/spec['accumulation']).backward();losses.append(float(loss.detach()));head_count+=1
@@ -187,6 +206,10 @@ def main():
             torch.save({'examples':probe,**{name:getattr(actual,name).cpu() for name in
                         ('logits','mode_logits','site_logits','count_logits','quality_logits')}},checkpoint/'roundtrip_probe.pt')
         files={p.name:file_hash(p) for p in checkpoint.iterdir() if p.is_file()}
+        if ranked:
+            torch.save({'optimizer':optimizer.state_dict(),'python_rng':rng.getstate(),
+                        'torch_rng':torch.get_rng_state(),'cuda_rng':torch.cuda.get_rng_state_all(),
+                        'steps':steps,'rank':rank,'world_size':world},output/'optimizer_and_rng.pt')
         receipt={'optimizer_steps':steps,'parameter_delta_squared':delta,'local_preference_examples':total_pairs,
             'local_decision_examples':total_heads,'training_seconds':time.monotonic()-started,
             'checkpoint_files':files,'contract':contract,'loss_history':history}

@@ -80,7 +80,8 @@ def endpoint_cache_key(record):
 
 
 def load_bound_evaluation_labels(records, label_files, *, paths_file, endpoint, expected_model_sha256=None,
-                                 purpose='evaluation', feedback_scope=None):
+                                 purpose='evaluation', feedback_scope=None, expected_protocol=None):
+    expected_protocol = COMMON_RELAXATION_PROTOCOL if expected_protocol is None else expected_protocol
     if purpose not in ('evaluation', 'training_feedback') or (purpose == 'training_feedback' and feedback_scope is None):
         raise ValueError('explicit validated scope is required for training rewards')
     expected_split = 'evaluation' if purpose == 'evaluation' else 'train'
@@ -95,7 +96,7 @@ def load_bound_evaluation_labels(records, label_files, *, paths_file, endpoint, 
             raise ValueError('physics accounting is incomplete or contains engineering failures')
         report = json.loads((directory/'LABEL_FINAL.json').read_text())
         rows = read_jsonl(path)
-        if (report.get('purpose') != purpose or report.get('protocol') != COMMON_RELAXATION_PROTOCOL
+        if (report.get('purpose') != purpose or report.get('protocol') != expected_protocol
                 or report.get('geometry_validation_protocol') != LABEL_GEOMETRY_PROTOCOL
                 or report.get('verification_protocol') != TERMINAL_VERIFICATION_PROTOCOL
                 or report.get('requested') != len(rows) or report.get('completed') != len(rows)
@@ -170,6 +171,7 @@ def main():
     p.add_argument('--feedback-manifest', type=Path)
     p.add_argument("--policy-stage", choices=("reference", "round0_diagnostic", "final", "unspecified"), default="unspecified")
     p.add_argument('--sun-only', action='store_true', help='Evaluate only the exact N/U predicates needed for SUN/MSUN')
+    p.add_argument('--joint-physical-stop', action='store_true')
     p.add_argument('--nu-workers', type=int, default=4)
     p.add_argument('--nu-pair-timeout', type=float, default=30.)
     p.add_argument('--nu-cache', type=Path)
@@ -199,10 +201,15 @@ def main():
         raise ValueError("input evaluation endpoints were mixed")
     config = json.loads(args.frozen_config.read_text())
     model_sha = sha256_file(config['assets']['chgnet_runtime_checkpoint'])
+    protocol = COMMON_RELAXATION_PROTOCOL
+    if args.joint_physical_stop:
+        if purpose != 'training_feedback': raise ValueError('new physics is TRAIN-only')
+        from crystal_dlm.ranked_feedback import ranked_relaxation_protocol
+        protocol = ranked_relaxation_protocol(protocol)
     labels, label_bindings = load_bound_evaluation_labels(records, args.labels_jsonl,
                              paths_file=args.paths_jsonl, endpoint=args.endpoint, expected_model_sha256=model_sha,
-                             purpose=purpose, feedback_scope=feedback_scope)
-    protocols = [COMMON_RELAXATION_PROTOCOL]
+                             purpose=purpose, feedback_scope=feedback_scope, expected_protocol=protocol)
+    protocols = [protocol]
     evaluator_path = Path(config["assets"]["eval_sun_py"])
     evaluator_hash = sha256_file(evaluator_path)
     if evaluator_hash != config["frozen_code"]["eval_sun_sha256"]:

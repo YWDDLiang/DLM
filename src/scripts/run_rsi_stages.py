@@ -96,7 +96,12 @@ def gate(spec):
     report = json.loads(reports[0].read_text())
     if report['status'] != 'complete':
         raise ValueError('incomplete raw scoring cannot gate F')
-    decision = make_gate(read_rows(root/'inputs.jsonl'), read_rows(score_dir/'attempt_results.jsonl'),
+    gate_scores=read_rows(score_dir/'attempt_results.jsonl')
+    if spec.get('ranked_training'):
+        from crystal_dlm.ranked_feedback import endpoint_quality
+        gate_scores=[dict(row,strict_sun=row.get('strict_sun') is True and endpoint_quality(row)['reliable'])
+                     for row in gate_scores]
+    decision = make_gate(read_rows(root/'inputs.jsonl'), gate_scores,
         input_sha256=file_hash(root/'inputs.jsonl'), scored_input_sha256=report['input_sha256'],
         score_identity={'report_sha256':file_hash(reports[0]),'scores_sha256':file_hash(score_dir/'attempt_results.jsonl')})
     write_json(root/'GATE.json', decision)
@@ -281,6 +286,9 @@ def edit(spec,shard,shards):
     from crystal_dlm.expert_edit import load_editor_model
     from crystal_dlm.r03_physics_transfer import build_repair_constraints
     from crystal_dlm.rsi_preference import propose_editor
+    if spec.get('ranked_training'):
+        from crystal_dlm.rsi_preference import propose_ranked_editor as propose_editor
+    from crystal_dlm.ranked_feedback import endpoint_quality
     rank=int(os.environ.get('LOCAL_RANK','0'))
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():
         raise RuntimeError('editor requires a Slurm GPU')
@@ -306,7 +314,8 @@ def edit(spec,shard,shards):
         if record['success'] and record.get('body_token_ids'):
             trace=propose_editor(model,tokenizer,prompt=plan['body_prompt'],body=record['body_token_ids'],
                 n=plan['plan_state']['N'],support=support,seed=derived_seed(str(plan['body_noise_seed']),'E'),
-                known_sun=score['strict_sun'] is True,force_proposal=plan.get('source_split')=='train',
+                known_sun=score['strict_sun'] is True and (not spec.get('ranked_training') or endpoint_quality(score)['reliable']),
+                force_proposal=spec.get('collect_training_proposals',False) if spec.get('ranked_training') else plan.get('source_split')=='train',
                 keep_prior=spec['policy']['known_SUN_keep_prior'])
             for output,key in [(proposed,'proposal_tokens'),(edited,'final_tokens')]:
                 output.update(body_token_ids=trace[key],body=''.join(inverse[i] for i in trace[key]),structure=None)
@@ -401,8 +410,10 @@ def rebind_labels(spec, stage):
         inputs=root/parent/'inputs.jsonl';records=read_rows(inputs)
         scope=validate_training_feedback(records,inputs,root/parent/'FEEDBACK_MANIFEST.json') if training else None
         directory=root/parent/'labeling/result'
+        from crystal_dlm.ranked_feedback import ranked_relaxation_protocol
+        expected=ranked_relaxation_protocol(api.COMMON_RELAXATION_PROTOCOL) if spec.get('ranked_training') else api.COMMON_RELAXATION_PROTOCOL
         labels,identities=api.load_bound_evaluation_labels(records,[directory/'labels.jsonl'],
-            paths_file=inputs,endpoint='native',purpose=purpose,feedback_scope=scope)
+            paths_file=inputs,endpoint='native',purpose=purpose,feedback_scope=scope,expected_protocol=expected)
         report=json.loads((directory/'LABEL_FINAL.json').read_text())
         actual=report['runtime_identities'][0]
         if actual['labeler_sha256']!=file_hash(source_root/'scripts/label_programmed_paths.py'):

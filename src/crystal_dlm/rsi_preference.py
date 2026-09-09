@@ -52,7 +52,11 @@ def forward_view(model,tokenizer,prompt,old,current,n,branch,active=(),reveal=0.
 
 def conditional_logp(model,tokenizer,example,target,cut,branch,support):
     n=example['num_sites']
-    order=numeric_order(n,branch)
+    order=example.get('action_positions',numeric_order(n,branch)) if branch=='E' else numeric_order(n,branch)
+    if branch=='E' and 'action_positions' in example:
+        from crystal_dlm.ranked_feedback import validate_action_target
+        validate_action_target(example['current_tokens'],target,order)
+    if not order or not 0 <= cut < len(order): raise ValueError('invalid conditional mask cut')
     current=list(target)
     for position in order[cut:]: current[position]=MASK_TOKEN_ID
     output,prefix=forward_view(model,tokenizer,example['prompt'],example.get('current_tokens',target),
@@ -62,6 +66,58 @@ def conditional_logp(model,tokenizer,example,target,cut,branch,support):
     if not report['available'] or vector[int(target[position])]<=torch.finfo(vector.dtype).min:
         raise ValueError('preference target absent from unchanged hard support')
     return vector.log_softmax(-1)[int(target[position])]
+
+
+@torch.no_grad()
+def propose_ranked_editor(model,tokenizer,*,prompt,body,n,support,seed,known_sun=False,
+                          force_proposal=False,keep_prior=9.):
+    """One learned adaptive action, then one learned accept decision."""
+    from crystal_dlm.ranked_feedback import action_positions, COUNTS, MODES
+    before=list(body)
+    inspect,_=forward_view(model,tokenizer,prompt,before,before,n,'E')
+    logits=inspect.mode_logits[0].float().clone()
+    if known_sun: logits[0]+=math.log(keep_prior)
+    selected=int(logits.argmax())
+    # Non-SUN current states always receive a proposal before the final judge.
+    mode=selected if selected else int(logits[1:].argmax())+1
+    result=dict(current_tokens=before,proposal_tokens=before,final_tokens=before,
+        known_sun=known_sun,learned_mode=selected,mode_logits=logits.tolist(),
+        proposal_generated=False,forward_calls=1,applied=False,
+        origin='forced_training_proposal' if force_proposal else 'current_policy',
+        counterfactual_training_proposal=bool(force_proposal and selected==0))
+    if known_sun and selected==0 and not force_proposal:
+        result.update(action=dict(mode=0,name=MODES[0],sites=[],positions=[]),learned_decision='KEEP')
+        return result
+    if mode==1:
+        allowed=[i for i,count in enumerate(COUNTS) if count<=n]
+        count=COUNTS[allowed[int(inspect.count_logits[0,allowed].argmax())]]
+        sites=sorted(inspect.site_logits[0,:n].topk(count).indices.tolist())
+    else: sites=list(range(n))
+    order=action_positions(n,mode,sites)
+    result['action']=dict(mode=mode,name=MODES[mode],sites=sites,positions=order)
+    candidate=before.copy()
+    for position in order: candidate[position]=MASK_TOKEN_ID
+    generator=torch.Generator(device=next(model.parameters()).device).manual_seed(seed)
+    for offset,position in enumerate(order):
+        output,prefix=forward_view(model,tokenizer,prompt,before,candidate,n,'E',order,offset/len(order))
+        result['forward_calls']+=1
+        vector,report=legal_vector(output.logits[0,prefix+position].float(),candidate,n,position,support)
+        if not report['available']:
+            result.update(proposal_failure='empty_hard_support',learned_decision='KEEP')
+            return result
+        candidate[position]=int(torch.multinomial((vector/.7).softmax(-1),1,generator=generator))
+    report=geometry_support_report(candidate,constraints=support)
+    if not report['supported']:
+        result.update(proposal_failure=report,learned_decision='KEEP')
+        return result
+    judge,_=forward_view(model,tokenizer,prompt,before,candidate,n,'E',order,1.)
+    accept=float(judge.quality_logits[0,3].sigmoid())
+    applied=accept>=.5 and not (known_sun and selected==0)
+    result.update(proposal_generated=True,proposal_tokens=candidate,final_tokens=candidate if applied else before,
+                  learned_accept_probability=accept,applied=applied,forward_calls=result['forward_calls']+1,
+                  learned_decision='EDIT' if applied else 'KEEP')
+    if result['forward_calls']>80: raise RuntimeError('editor forward budget exceeded')
+    return result
 
 
 @torch.no_grad()

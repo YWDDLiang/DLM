@@ -39,9 +39,15 @@ def main():
     p.add_argument('--record-timeout',type=float,default=300.)
     p.add_argument('--worker-startup-timeout',type=float,default=120.)
     p.add_argument('--deterministic',action='store_true')
+    p.add_argument('--joint-physical-stop',action='store_true')
+    p.add_argument('--max-steps',type=int,default=500)
     p.add_argument('--reuse-endpoints',type=Path,nargs='*',default=[])
     args=p.parse_args()
-    args.fmax=.1;args.stress_tolerance=.5;args.max_steps=500
+    args.fmax=.1;args.stress_tolerance=.5
+    if args.joint_physical_stop and (args.purpose!='training_feedback' or args.max_steps!=1000):
+        raise ValueError('ranked physics must use TRAIN and 1000 maximum steps')
+    os.environ['RSI_JOINT_PHYSICAL_STOP']='1' if args.joint_physical_stop else '0'
+    os.environ['RSI_STRESS_TOLERANCE']='.5'
     os.environ['R03_DETERMINISTIC_LABELING']='1' if args.deterministic else '0'
     physics.configure_deterministic_execution(args.deterministic)
     if not os.environ.get('SLURM_JOB_ID'): raise RuntimeError('cached labeling requires a registered allocation')
@@ -55,6 +61,9 @@ def main():
         if args.purpose=='evaluation' and record.get('source_split')!='evaluation': raise ValueError('TRAIN/EVAL cache mixing forbidden')
     scope=validate_training_feedback(records,args.input_jsonl,args.feedback_manifest) if args.purpose=='training_feedback' else None
     by_endpoint=grouped(records);runtime=physics.runtime_identity();protocol=physics.COMMON_RELAXATION_PROTOCOL
+    if args.joint_physical_stop:
+        from crystal_dlm.ranked_feedback import ranked_relaxation_protocol
+        protocol=ranked_relaxation_protocol(protocol)
     cached={};provenance=[]
     for directory in args.reuse_endpoints:
         report_path=directory/'LABEL_FINAL.json';report=json.loads(report_path.read_text())

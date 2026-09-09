@@ -250,6 +250,8 @@ def label_record(record, *, model, optimizer, structure_factory=structure_from_r
             result["status"] = "verified"
     except GeometryCertificationUnavailable as error:
         result.update(status='worker_error', verified=False, error=f'{type(error).__name__}: {error}')
+    except InvalidPeriodicGeometry as error:
+        result.update(status='invalid_terminal', verified=False, error=f'{type(error).__name__}: {error}')
     except Exception as error:
         result.update(status="evaluation_error", verified=False, error=f"{type(error).__name__}: {error}")
     return result
@@ -280,6 +282,22 @@ def worker_init(gpu_index):
     torch.set_num_threads(1)
     torch.cuda.set_device(gpu_index)
     class RecordedFIRE(FIRE):
+        def converged(self, *args, **kwargs):
+            native = super().converged(*args, **kwargs)
+            if os.environ.get('RSI_JOINT_PHYSICAL_STOP') != '1':
+                return native
+            from crystal_dlm.ranked_feedback import joint_stop_status
+            atoms = self.atoms.atoms if hasattr(self.atoms, 'atoms') else self.atoms
+            physical = joint_stop_status(atoms.get_forces(apply_constraint=False),
+                np.asarray(atoms.get_stress(voigt=False, apply_constraint=False))*EV_A3_TO_GPA,
+                fmax=float(self.fmax), stress_tolerance=float(os.environ.get('RSI_STRESS_TOLERANCE','.5')))
+            _OPT_STATUS.update(filter_converged=bool(native), **physical)
+            # Catch a collapsing cell without spending the remainder of 1000 steps.
+            if self.nsteps % 25 == 0 or physical['physical_converged']:
+                from pymatgen.io.ase import AseAtomsAdaptor
+                validate_structure_geometry(AseAtomsAdaptor.get_structure(atoms))
+            return physical['physical_converged']
+
         def run(self, *args, **kwargs):
             outcome = super().run(*args, **kwargs)
             _OPT_STATUS.update(steps=int(self.nsteps), converged=None if outcome is None else bool(outcome))
@@ -313,6 +331,10 @@ def runtime_identity():
     versions['labeler_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     versions['deterministic_algorithms_enabled'] = torch.are_deterministic_algorithms_enabled()
     versions['cublas_workspace_config'] = os.environ.get('CUBLAS_WORKSPACE_CONFIG')
+    if os.environ.get('RSI_JOINT_PHYSICAL_STOP') == '1':
+        from crystal_dlm import ranked_feedback
+        versions['joint_stop_source_sha256'] = hashlib.sha256(Path(ranked_feedback.__file__).read_bytes()).hexdigest()
+        versions['optimizer_stop'] = 'joint_atomic_force_and_stress_v1'
     return versions
 
 
@@ -320,6 +342,8 @@ def worker_label(record, fmax, stress_tolerance, max_steps):
     result = label_record(record, model=_MODEL, optimizer=_OPTIMIZER, fmax=fmax,
                           stress_tolerance=stress_tolerance, max_steps=max_steps,
                           optimizer_status=_OPT_STATUS)
+    if os.environ.get('RSI_JOINT_PHYSICAL_STOP') == '1':
+        result['stopping_observation'] = dict(_OPT_STATUS)
     result["versions"] = _VERSIONS
     error = str(result.get('error') or '').lower()
     if any(token in error for token in ('out of memory', 'cuda error', 'brokenprocesspool', 'modulenotfounderror')):
@@ -434,6 +458,7 @@ def main():
     p.add_argument("--fmax", type=float, default=.1)
     p.add_argument("--stress-tolerance", type=float, default=.5)
     p.add_argument("--max-steps", type=int, default=500)
+    p.add_argument('--joint-physical-stop', action='store_true')
     p.add_argument('--record-timeout', type=float, default=180.,
                    help='Hard wall limit per active structure; timeouts are engineering unknowns')
     p.add_argument('--worker-startup-timeout', type=float, default=120.)
@@ -441,6 +466,11 @@ def main():
     p.add_argument("--shard-ranks", type=int, nargs="+")
     p.add_argument("--shard-count", type=int, default=1)
     args = p.parse_args()
+    if args.joint_physical_stop:
+        if args.purpose != 'training_feedback' or (args.fmax,args.stress_tolerance,args.max_steps) != (.1,.5,1000):
+            raise ValueError('ranked TRAIN physics requires fmax=.1, stress=.5, max_steps=1000')
+    os.environ['RSI_JOINT_PHYSICAL_STOP'] = '1' if args.joint_physical_stop else '0'
+    os.environ['RSI_STRESS_TOLERANCE'] = str(args.stress_tolerance)
     os.environ['R03_DETERMINISTIC_LABELING'] = '1' if args.deterministic else '0'
     configure_deterministic_execution(args.deterministic)
     if args.shard_count < 1 or not 0 <= args.shard_rank < args.shard_count:
@@ -487,6 +517,9 @@ def main():
         by_endpoint.setdefault(key, []).append(record)
     protocol = {**COMMON_RELAXATION_PROTOCOL,'fmax':args.fmax,
                 'stress_tolerance_GPa':args.stress_tolerance,'max_steps':args.max_steps}
+    if args.joint_physical_stop:
+        from crystal_dlm.ranked_feedback import ranked_relaxation_protocol
+        protocol = ranked_relaxation_protocol(protocol)
     input_sha256 = hashlib.sha256(args.input_jsonl.read_bytes()).hexdigest()
     cached, reuse = ({},None) if args.reuse_labels is None else reusable_labels(args.reuse_labels,by_endpoint,
         input_sha256=input_sha256,purpose=args.purpose,protocol=protocol,runtime=runtime_identity())

@@ -9,7 +9,7 @@ import torch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from test_r03_physics_transfer import TinyTokenizer,make_body
 from crystal_dlm.r03_physics_transfer import build_repair_constraints
-from crystal_dlm.rsi_preference import legal_vector,conditional_logp,propose_editor
+from crystal_dlm.rsi_preference import legal_vector,conditional_logp,propose_editor,propose_ranked_editor
 from crystal_dlm.fixed_slot import MASK_TOKEN_ID
 
 
@@ -81,6 +81,31 @@ class PreferenceContracts(unittest.TestCase):
         self.assertEqual(result['proposal_tokens'],body)
         self.assertFalse(result['proposal_generated'])
         self.assertEqual(result['forward_calls'],1)
+
+    def test_ranked_non_sun_proposes_local_action_before_judging(self):
+        policy=ScalarPolicy(self.width);body,_=make_body(self.tokenizer)
+        inspect=SimpleNamespace(mode_logits=torch.tensor([[8.,7.,0.,0.]]),
+            site_logits=torch.tensor([[0.,4.]]),count_logits=torch.tensor([[9.,0.,0.,0.]]))
+        judge=SimpleNamespace(quality_logits=torch.tensor([[0.,0.,0.,-9.]]))
+        generated=SimpleNamespace(logits=torch.zeros(1,100,self.width))
+        with patch('crystal_dlm.rsi_preference.forward_view',side_effect=[(inspect,2),
+                  (generated,2),(generated,2),(generated,2),(judge,2)]), \
+             patch('crystal_dlm.rsi_preference.geometry_support_report',return_value={'supported':True}):
+            result=propose_ranked_editor(policy,self.tokenizer,prompt='p',body=body,n=2,
+                support=self.support,seed=1,known_sun=False)
+        self.assertTrue(result['proposal_generated'])
+        self.assertEqual(result['action']['sites'],[1])
+        self.assertEqual(result['action']['positions'],[12,13,14])
+        self.assertEqual(result['final_tokens'],body)
+        self.assertEqual(result['proposal_tokens'][:12],body[:12])
+        self.assertEqual(result['forward_calls'],5)
+
+    def test_ranked_conditioned_target_cannot_change_cell_outside_action(self):
+        policy=ScalarPolicy(self.width);body,_=make_body(self.tokenizer)
+        target=body.copy();target[1]=self.tokenizer.vocab['<LA_050>']
+        example={'num_sites':2,'prompt':'p','current_tokens':body,'action_positions':[12,13,14]}
+        with self.assertRaisesRegex(ValueError,'outside'):
+            conditional_logp(policy,self.tokenizer,example,target,0,'E',self.support)
 
 
 if __name__=='__main__': unittest.main()
