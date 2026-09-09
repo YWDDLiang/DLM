@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Attribute completed TRAIN editor outcomes without selecting new outputs."""
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 import hashlib
 from itertools import islice
 import json
@@ -116,6 +116,24 @@ def analyze(root, source, index):
         result['training_examples'] = dict(count=len(examples),
             edit_positive=sum(bool(x.get('mode_target')) for x in examples),
             accept_positive=sum(x.get('accept_target') == 1 for x in examples))
+        conditions = defaultdict(list)
+        for example in examples:
+            conditions[example['conditioning_sha256']].append(example)
+        conflicting = [group for group in conditions.values()
+                       if len({x['mode_target'] for x in group}) > 1]
+        result['mode_supervision'] = dict(
+            distinct_current_conditions=len(conditions),
+            target_counts=dict(Counter(x['mode_target'] for x in examples)),
+            differing_mode_conditions=len(conflicting),
+            keep_and_edit_conditions=sum(any(x['mode_target'] == 0 for x in group)
+                and any(x['mode_target'] != 0 for x in group) for group in conflicting),
+            note='Mode sees the current state; acceptance also sees the actual proposal. '
+                 'Differing candidate labels do not establish a causal effect on the trained model.',
+            positive_scope=[dict(pair_id=x['pair_id'], origin=x['origin'], mode=x['mode_target'],
+                changed_numeric_tokens=sum(a != b for a, b in
+                    zip(x['current_tokens'], x['proposal_tokens'], strict=True)),
+                opened_tokens=len(x['action_positions']))
+                for x in examples if x.get('mode_target')])
     training = root/'training'/f'round{index}'/'E/result'
     if (training/'TRAINING_FINAL.json').exists():
         path = training/'TRAINING_FINAL.json'; hashes[str(path)] = digest(path)
