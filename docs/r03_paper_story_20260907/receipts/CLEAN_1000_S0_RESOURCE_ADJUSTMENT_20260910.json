@@ -1,0 +1,122 @@
+{
+  "schema": "clean_1000_S0_resource_adjustment_v1",
+  "local_coordinator_checks_passed": 25,
+  "scientific_settings_and_original_deadline_unchanged": true,
+  "PENDING_CANCEL_REQUEST.json": {
+    "sha256": "004f939afad1152f94266ae25d8c8be630bed70ad65aa45f3db2dcb8bb115ae7",
+    "payload": {
+      "RUN_SPEC_sha256": "b237b3279faf35ae820a22ae6afba54b7737c185566b7089fa9c8623819f8989",
+      "budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+      "cancel_pending_only_job": "41764",
+      "main_F_job_retained": "41763",
+      "paused_coordinator_pid": 35924,
+      "pre_cancel_state": "PENDING",
+      "replacement_not_submitted_yet": true,
+      "utc": "2026-09-09T23:52:48.301170+00:00"
+    }
+  },
+  "PREVIOUS_COORDINATOR_PID.json": {
+    "sha256": "44009782769f18d8757c2b8acb48789022e6ae6568bdfb52e30b55e736e1978c",
+    "payload": {
+      "orchestrator_sha256": "cd6708c979fbf5a4d8e43175d5bc99eebd4f03c108956c9a9954df2271f3206b",
+      "orchestrator_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/0c74f75194c81ba26be1add3626cbb50bea4bd37",
+      "pid": 35924,
+      "scientific_source_identity": {
+        "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+        "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+      },
+      "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6"
+    }
+  },
+  "RESUME.json": {
+    "sha256": "87d791413b0362e5f994066e6b77f9bd824a1de64262cc8c261b36c2ee64bad5",
+    "payload": {
+      "RUN_SPEC_unchanged": true,
+      "allocations": {
+        "parallel_main_GPUs": 3,
+        "parallel_other_GPUs": 2,
+        "single_GPUs": 6,
+        "training_GPUs": 6,
+        "training_batch_size": 32
+      },
+      "budget_unchanged": true,
+      "cancelled_job": "41764",
+      "cancelled_job_elapsed_seconds": 0,
+      "deadline_utc": "2026-09-10T10:01:15.570418+00:00",
+      "main_job_retained": "41763",
+      "orchestrator_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/120193ed4c3e017d780b6ec179a5936c5c8a908a",
+      "pid": 55349,
+      "replacement_job": "twin_refine_available2_v1",
+      "resume_utc": "2026-09-09T23:55:02.367415+00:00",
+      "scientific_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6"
+    }
+  },
+  "S0_RESOURCE_OVERRIDE.json": {
+    "sha256": "42b417814f6d2f46d9b899505cd02611415069abea9aa0f3e60b021f29264b47",
+    "payload": {
+      "cancelled_job_elapsed_seconds": 0,
+      "cancelled_pending_job": "41764",
+      "created_utc": "2026-09-09T23:54:42.018182+00:00",
+      "parallel_other_GPUs": 2,
+      "previous_parallel_other_GPUs": 3,
+      "reason": "two_free_GPUs_while_three_GPU_comparator_waited_for_resources",
+      "schema": "ranked_S0_resource_allocation_v1",
+      "scope": "remaining_S0_comparator_only_until_S0_COMPLETE",
+      "training_GPUs_unchanged": 6,
+      "training_batch_size_unchanged": 32
+    }
+  },
+  "replacement": {
+    "job_id": "41765",
+    "submission_sha256": "d82bc8aecfb3a5d04e2642554cf8ef53a58c3dfdbb3b27f024201ff0668b5ff1",
+    "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "source_identity": {
+      "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+    },
+    "component": {
+      "gpus": 2,
+      "id": "twin_refine_available2_v1",
+      "output_dir": "bootstrap_comparator/refined",
+      "stages": [
+        {
+          "args": [
+            "--config",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/bootstrap_comparator/RUN_SPEC.json",
+            "--action",
+            "refine"
+          ],
+          "distributed_processes": 8,
+          "independent_workers_per_gpu": 4,
+          "inputs": [
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/bootstrap_comparator/RUN_SPEC.json",
+            "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/bootstrap_comparator/construction/GATE.json"
+          ],
+          "name": "refine",
+          "outputs": [
+            "{output}/worker_0_DONE.json",
+            "{output}/worker_1_DONE.json",
+            "{output}/worker_2_DONE.json",
+            "{output}/worker_3_DONE.json",
+            "{output}/worker_4_DONE.json",
+            "{output}/worker_5_DONE.json",
+            "{output}/worker_6_DONE.json",
+            "{output}/worker_7_DONE.json"
+          ],
+          "script": "src/scripts/run_rsi_stages.py"
+        }
+      ]
+    },
+    "resource_request": {
+      "component_indices": [
+        0
+      ],
+      "cpus_per_task": 8,
+      "gpus_per_task": 2,
+      "memory": "64G",
+      "parallel_tasks": 1,
+      "partition": "gpu",
+      "wall_minutes": 90
+    }
+  }
+}

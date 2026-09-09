@@ -16,4 +16,6 @@
 
 1000条的逐阶段指标、同Plan获得/损失、六次真实训练和资源记录见[逐轮结果报告](docs/r03_paper_story_20260907/CLEAN_1000_RESULTS_20260910.md)。已完成固定G/F试验的48个作业共分配8.0283 GPU小时，含两次失败开销，见[试验资源回执](docs/r03_paper_story_20260907/receipts/EDITOR_T2T_TRIAL_RESOURCE_USAGE_20260910.json)。
 
+S0对照因资源排队，后续临时采用主路3卡、对照2卡并行；仅取消一个尚未运行的排队作业，主路持续运行，训练仍保持原6卡设置，见[资源回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_RESOURCE_ADJUSTMENT_20260910.json)。
+
 本文件将在固定输入比较、成功或失败论证、方法冻结和1000条每轮结果完成后补充相应回执与证据。
