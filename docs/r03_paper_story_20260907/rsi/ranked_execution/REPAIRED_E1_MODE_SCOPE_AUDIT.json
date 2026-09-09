@@ -1,0 +1,835 @@
+{
+  "scope": "same pre-proposal input conflicting candidate-level mode labels; acceptance labels condition on proposal and are not conflated",
+  "input_sha256": "eae286fcb6a19c130a6aac41321730b91ea798b6f5ab0118326f6a79b56022c1",
+  "examples": 401,
+  "distinct_current_conditions": 218,
+  "conflicting_conditions": 33,
+  "conflicts": [
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3675",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3911",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "meta_stable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4762",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2237",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:4089",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 2,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5522",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "SUN"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "meta_stable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2581",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "meta_stable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2161",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4225",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5455",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2910",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7799",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:5037",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3957",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "meta_stable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6433",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5679",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "meta_stable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2374",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6916",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5773",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:5051",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7980",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2222",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:8097",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4983",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2365",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7603",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2473",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "meta_stable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4361",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2540",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4097",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5322",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 3,
+          "accept_target": 1,
+          "level": "meta_stable"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5957",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    },
+    {
+      "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:5053",
+      "targets": [
+        {
+          "origin": "proposal",
+          "mode_target": 1,
+          "accept_target": 1,
+          "level": "ordinary_improvement"
+        },
+        {
+          "origin": "teacher",
+          "mode_target": 0,
+          "accept_target": 0,
+          "level": "unstable"
+        }
+      ]
+    }
+  ],
+  "keep_vs_edit_conflicts": 32,
+  "scope_audit": {
+    "all_modes": {
+      "0": 367,
+      "1": 22,
+      "2": 1,
+      "3": 11
+    },
+    "positive_by_origin": {
+      "proposal": {
+        "count": 31,
+        "modes": {
+          "1": 22,
+          "2": 1,
+          "3": 8
+        }
+      },
+      "teacher": {
+        "count": 3,
+        "modes": {
+          "3": 3
+        }
+      }
+    },
+    "scope_expansion": [
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 4
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 33,
+        "masked_tokens": 36,
+        "sites": 10
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 7
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 11,
+        "masked_tokens": 12,
+        "sites": 12
+      },
+      {
+        "origin": "proposal",
+        "mode": 2,
+        "different_numeric_tokens": 48,
+        "masked_tokens": 48,
+        "sites": 16
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 16
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 12
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 12,
+        "masked_tokens": 12,
+        "sites": 10
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 12,
+        "masked_tokens": 12,
+        "sites": 10
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 6
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 24,
+        "masked_tokens": 24,
+        "sites": 6
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 23,
+        "masked_tokens": 24,
+        "sites": 6
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 8
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 17,
+        "masked_tokens": 18,
+        "sites": 4
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 8
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 12,
+        "masked_tokens": 12,
+        "sites": 6
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 12,
+        "masked_tokens": 12,
+        "sites": 7
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 29,
+        "masked_tokens": 30,
+        "sites": 8
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 11,
+        "masked_tokens": 12,
+        "sites": 10
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 3
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 16
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 26,
+        "masked_tokens": 30,
+        "sites": 8
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 12
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 8
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 6
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 15,
+        "masked_tokens": 18,
+        "sites": 4
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 6
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 12,
+        "masked_tokens": 12,
+        "sites": 15
+      },
+      {
+        "origin": "proposal",
+        "mode": 3,
+        "different_numeric_tokens": 24,
+        "masked_tokens": 24,
+        "sites": 6
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 10
+      },
+      {
+        "origin": "proposal",
+        "mode": 1,
+        "different_numeric_tokens": 3,
+        "masked_tokens": 3,
+        "sites": 6
+      },
+      {
+        "origin": "teacher",
+        "mode": 3,
+        "different_numeric_tokens": 8,
+        "masked_tokens": 36,
+        "sites": 10
+      },
+      {
+        "origin": "teacher",
+        "mode": 3,
+        "different_numeric_tokens": 58,
+        "masked_tokens": 60,
+        "sites": 18
+      },
+      {
+        "origin": "teacher",
+        "mode": 3,
+        "different_numeric_tokens": 22,
+        "masked_tokens": 30,
+        "sites": 8
+      }
+    ]
+  }
+}
