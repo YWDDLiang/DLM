@@ -1,5 +1,6 @@
 {
-  "status": "restarted_not_completed",
+  "status": "stopped_after_G1_failed_predeclared_SUN_admission",
+  "final_result": "REPAIRED_G1_RESULT.json",
   "source_commit": "b2e5dbee523a353d9f3f0f7b7ebdba269a44d779",
   "run_suffix": "run_20260909T112500Z_repaired",
   "coordinator_pid": 10784,

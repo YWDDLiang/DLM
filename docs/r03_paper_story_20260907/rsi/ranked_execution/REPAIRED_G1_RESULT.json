@@ -1,0 +1,105 @@
+{
+  "status": "G1_rejected_by_predeclared_TRAIN_gate",
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T112500Z_repaired",
+  "source_commit": "db3e3621fd124d0bdd6b06543a8dd94ed23a49a7",
+  "same_plan_prompt_and_seeds": true,
+  "baseline_G_and_F_reproduction": "256/256 exact in each of main and comparator",
+  "S0": {
+    "generation_success": 229,
+    "generation_failure": 27,
+    "raw_SUN": 4,
+    "F_SUN": 27,
+    "F_strict_Stable": 30,
+    "F_exclusive_MetaStable": 97,
+    "E0_SUN": 27,
+    "E0_strict_Stable": 29,
+    "E0_exclusive_MetaStable": 85
+  },
+  "old_failed_G1": {
+    "generation_success": 157,
+    "generation_failure": 99,
+    "F_SUN": 18,
+    "F_strict_Stable": 21,
+    "F_exclusive_MetaStable": 74,
+    "optimizer_steps": 695
+  },
+  "repaired_G1": {
+    "generation_success": 223,
+    "generation_failure": 33,
+    "raw_SUN": 5,
+    "F_SUN": 26,
+    "F_strict_Stable": 29,
+    "F_exclusive_MetaStable": 99,
+    "training": {
+      "optimizer_steps": 8,
+      "training_seconds": 127.45576019026339,
+      "parameter_delta_squared": 0.0038767228420510946
+    },
+    "global_source_visits": 752,
+    "peak_GPU_GB": 42.397639168,
+    "last_observed_reference_KL": 0.0033881342969834805
+  },
+  "SUN_pairing": {
+    "True->True": 22,
+    "False->False": 225,
+    "False->True": 4,
+    "True->False": 5
+  },
+  "lost_SUN_ordinals": [
+    51,
+    125,
+    127,
+    148,
+    219
+  ],
+  "gained_SUN_ordinals": [
+    3,
+    168,
+    190,
+    214
+  ],
+  "all_lost_SUN_generated_successfully": true,
+  "all_lost_SUN_became_MetaStable": true,
+  "admission": {
+    "accepted": false,
+    "actual": {
+      "G_plus_F": {
+        "exclusive_MetaStable": 99,
+        "input_sha256": "6bf3b20be81e530f357b300d265cfcc6e18d1b4e2510e4f4e779a7de77b49373",
+        "known_physical_failure": 0,
+        "reliable_SUN": 26,
+        "requested": 256,
+        "score_sha256": "969a8459de4570b7637f07b93c22b7057a5aa630cf529a64b6f4a4256ff05bb4",
+        "stage": "tokenized",
+        "strict_Stable": 29,
+        "unknown": 38,
+        "unstable": 90
+      },
+      "generation_failures": 33
+    },
+    "baseline": {
+      "G_plus_F": {
+        "exclusive_MetaStable": 97,
+        "input_sha256": "ff0411ad6a5de2ccdae6ff3ea9b2a53b9b115c9418d819358a56ae98871562ea",
+        "known_physical_failure": 0,
+        "reliable_SUN": 27,
+        "requested": 256,
+        "score_sha256": "e0fc70fb7dc3eecab295d4b479e97263767591970a3f5cf233680c16a87ff0f8",
+        "stage": "tokenized",
+        "strict_Stable": 30,
+        "unknown": 32,
+        "unstable": 97
+      },
+      "generation_failures": 27
+    },
+    "does_not_prove_heldout_generalization": true,
+    "round": 1,
+    "rule": "TRAIN same-condition complete G+F SUN must not fall below S0; generation failures may rise by at most 8/256"
+  },
+  "E1_G2_E2_G3_E3_not_run": true,
+  "active_or_queued_jobs": 0,
+  "preserved_G_preference_records": 363,
+  "archive_manifest_sha256": "c2201e6e89b634c462837fddcbc5c6cb14f56584944a1d72f8008b07dadfd85a",
+  "limits": "TRAIN-only result. Smaller regression does not demonstrate a SUN improvement or identify a unique causal mechanism.",
+  "absolute_deadline_unchanged": "2026-09-09T19:31:10.188531+00:00"
+}
