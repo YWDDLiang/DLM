@@ -102,6 +102,8 @@ def train_t2t(model, tokenizer, examples, spec, selected, reference, optimizer, 
     inspected, head_visits, content_visits = Counter(), Counter(), Counter()
     token_visits = Counter()
     history, trigger = [], None
+    hard_stop = spec.get('reference_KL_hard_stop', True)
+    threshold_crossings = 0; maximum_observed_kl = 0.
     started = time.monotonic()
     content_steps = head_steps = total_heads = 0
     timed_out = False
@@ -138,7 +140,10 @@ def train_t2t(model, tokenizer, examples, spec, selected, reference, optimizer, 
             if world > 1:
                 dist.all_reduce(observed, op=dist.ReduceOp.MAX)
             pass_kl = max(pass_kl, float(observed))
-            if not frozen and float(observed) > spec['max_reference_kl']:
+            maximum_observed_kl = max(maximum_observed_kl, float(observed))
+            crossed = not frozen and float(observed) > spec['max_reference_kl']
+            threshold_crossings += int(crossed)
+            if crossed and hard_stop:
                 trigger = dict(epoch=epoch, after_content_optimizer_steps=content_steps,
                                maximum_rank_KL=float(observed), local_KL=measured_kl,
                                discarded_partial_pass=True)
@@ -177,6 +182,7 @@ def train_t2t(model, tokenizer, examples, spec, selected, reference, optimizer, 
             event = dict(step=head_steps, epoch=epoch, update_kind='detached_heads',
                 mean_loss=float(head_loss.detach()) if head_loss is not None else None,
                 reference_KL=measured_kl, content_optimizer_steps=content_steps,
+                reference_KL_hard_stop=hard_stop, maximum_rank_KL=float(observed),
                 head_optimizer_steps=head_steps, content_frozen_by_KL=trigger is not None,
                 gradient_norm=float(grad), source_examples_per_GPU=width,
                 seconds=time.monotonic() - started,
@@ -214,6 +220,8 @@ def train_t2t(model, tokenizer, examples, spec, selected, reference, optimizer, 
         head_optimizer_steps=head_steps, KL_stop=trigger is not None, KL_trigger=trigger,
         head_continuation_after_KL=trigger is not None, content_frozen_from_start=spec.get('editor_heads_only', False),
         content_update_unit='one_complete_dense_data_pass', epochs_cap=spec['epochs'], timed_out=timed_out,
+        reference_KL_hard_stop=hard_stop, KL_threshold_crossing_batches=threshold_crossings,
+        maximum_observed_batch_rank_KL=maximum_observed_kl,
         dense_view_schedule='even_epoch_T2T_odd_epoch_all_mask_M2T',
         current_structure_always_visible=True, detached_decision_head_gradients=True)
     write_json(output/f'EXPOSURE_rank{rank}.json', report)

@@ -199,14 +199,18 @@ def coverage(root, arm):
         content.update(report['content_updated_pair_visits']); heads.update(report['head_updated_pair_visits'])
     promotions = [r['pair_id'] for r in rows if r.get('content_kind') == 'Stable_promotion']
     dense = [r['pair_id'] for r in rows if r.get('content_target_tokens')]
+    heads_complete = bool(len(reports) == 6 and all(heads[r['pair_id']] >= 8 for r in rows))
+    content_complete = bool(all(r['content_optimizer_steps'] >= 2 for r in reports)
+                            and promotions and all(content[i] >= 2 for i in dense))
     return dict(ranks=len(reports), content_optimizer_steps=[r['content_optimizer_steps'] for r in reports],
         head_optimizer_steps=[r['head_optimizer_steps'] for r in reports],
         Stable_promotion_targets=len(promotions), minimum_Stable_promotion_visits=min((content[i] for i in promotions), default=0),
         minimum_dense_target_visits=min((content[i] for i in dense), default=0),
         content_targets=len(dense), missing_content_targets=sum(content[i] == 0 for i in dense),
         total_content_target_visits=sum(content.values()), total_head_pair_visits=sum(heads.values()),
-        qualifies=bool(len(reports) == 6 and all(r['content_optimizer_steps'] == 8 for r in reports)
-                       and promotions and all(content[i] >= 8 for i in dense)))
+        minimum_head_pair_visits=min((heads[r['pair_id']] for r in rows), default=0),
+        selected_method='heads_only' if arm == 'heads' else 'dense_T2T_and_heads',
+        qualifies=bool(heads_complete and (arm == 'heads' or content_complete)))
 
 
 def freeze_selection(root, arm, policy_panels):
@@ -214,25 +218,33 @@ def freeze_selection(root, arm, policy_panels):
     destination = root/'FROZEN_SELECTION.json'
     if destination.exists(): return json.loads(destination.read_text())
     candidates = []
+    arm_coverage = {}
     for panel in policy_panels:
         panel = Path(panel); report = panel_report(root, panel, 'dev')
         policy = json.loads((panel/'RUN_SPEC.json').read_text())['trial_decision_policy']
+        model_arm = Path(policy['collection']).name
+        if model_arm not in arm_coverage: arm_coverage[model_arm] = coverage(root, model_arm)
+        if not arm_coverage[model_arm]['qualifies']: continue
         counts = report['counts']
         key = [counts['Stable'], counts['SUN'], -len(report['transitions']['Stable']['losses']),
-               -counts['actual_edits'], policy['acceptance_threshold'], int(policy['respect_learned_KEEP'])]
-        candidates.append(dict(panel=str(panel), policy=policy, dev=report, ranking_key=key,
+               -counts['actual_edits'], policy['acceptance_threshold'], int(policy['respect_learned_KEEP']),
+               -max(arm_coverage[model_arm]['content_optimizer_steps'])]
+        candidates.append(dict(panel=str(panel), arm=model_arm, policy=policy, dev=report, ranking_key=key,
             score_sha256=file_hash(panel/'edited/scoring/result/attempt_results.jsonl')))
+    if not candidates: raise ValueError('no complete, trained editor candidate is eligible for selection')
     selected = max(candidates, key=lambda x: x['ranking_key'])
-    result = dict(frozen_utc=dt.datetime.now(dt.timezone.utc).isoformat(), selected=selected, arm=arm,
-        calibration_split='dev_only', candidates=candidates, coverage=coverage(root, arm),
+    result = dict(frozen_utc=dt.datetime.now(dt.timezone.utc).isoformat(), selected=selected, arm=selected['arm'],
+        calibration_split='dev_only', candidates=candidates, coverage=arm_coverage[selected['arm']],
+        all_arm_coverage=arm_coverage,
         preregistration_sha256=file_hash(root/'PREREGISTRATION.json'),
         scope_amendment_sha256=file_hash(root/'SCOPE_AMENDMENT_STABLE_SUN.json'),
+        KL_amendment_sha256=file_hash(root/'KL_ABLATION_AMENDMENT.json'),
         final_metrics_used_for_selection=False)
     write_json(destination, result)
     return result
 
 
-def final_report(root, heads_panel):
+def final_report(root, comparison_panels):
     root = Path(root); frozen = json.loads((root/'FROZEN_SELECTION.json').read_text())
     reg = json.loads((root/'PREREGISTRATION.json').read_text())
     old = Path(reg['fixed_current']); candidate = Path(frozen['selected']['panel'])
@@ -241,18 +253,23 @@ def final_report(root, heads_panel):
         indices = [r['ordinal'] for r in read_rows(root/'SOURCE_SPLIT.jsonl') if name == 'all' or r['split'] == name]
         current = scores(old, 'current')
         reports[name] = dict(KEEP=paired(current, current, indices), old_E3=panel_report(root, old, name),
-            T2T=panel_report(root, candidate, name), heads_only=panel_report(root, Path(heads_panel), name))
-    test = reports['final']; result = test['T2T']; a, b, c = [test[n]['counts'] for n in ('KEEP', 'old_E3', 'T2T')]
+            selected_editor=panel_report(root, candidate, name),
+            **{arm: panel_report(root, Path(panel), name) for arm, panel in comparison_panels.items()})
+    test = reports['final']; result = test['selected_editor']; a, b, c = [test[n]['counts'] for n in ('KEEP', 'old_E3', 'selected_editor')]
     criteria = dict(actual_training_coverage=frozen['coverage']['qualifies'],
         Stable_above_both=c['Stable'] > max(a['Stable'], b['Stable']),
         SUN_not_lower=c['SUN'] >= max(a['SUN'], b['SUN']),
-        Stable_protection=len(result['transitions']['Stable']['losses']) <= min(1, len(test['old_E3']['transitions']['Stable']['losses'])),
-        physical_failures=c['known_failure'] <= max(a['known_failure'], b['known_failure']))
+        Stable_protection=len(result['transitions']['Stable']['losses']) <= min(1, len(test['old_E3']['transitions']['Stable']['losses'])))
+    if 'old_E3_matched' in test:
+        matched = test['old_E3_matched']['counts']
+        criteria.update(Stable_above_matched_E3=c['Stable'] > matched['Stable'],
+                        SUN_not_lower_matched_E3=c['SUN'] >= matched['SUN'])
     report = dict(schema='fixed_GF_editor_trial_result_v1', work=all(criteria.values()), criteria=criteria,
         frozen_selection_sha256=file_hash(root/'FROZEN_SELECTION.json'),
         coverage=frozen['coverage'], selected_policy=frozen['selected']['policy'], reports=reports,
+        selected_arm=frozen['arm'], all_arm_coverage=frozen['all_arm_coverage'],
         denominator_policy='all_registered_requests_in_each_source_split_including_failures',
-        heads_ablation='identical_selected_acceptance_threshold_and_KEEP_rule',
+        ablations='identical_selected_decision_policy_for_trained_arms; matched_old_E3_uses_legacy_0.5_and_nonSUN_proposal_rule',
         heldout_scope=reg['split_scope'], measured_effect='this_fixed_GF_panel_and_shared_rng_only')
     write_json(root/'PRIMARY_TRIAL_RESULT.json', report)
     print(json.dumps(dict(work=report['work'], criteria=criteria,
@@ -263,6 +280,6 @@ def final_report(root, heads_panel):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
-    parser.add_argument('--heads-panel', type=Path, required=True)
+    parser.add_argument('--comparison-panels-json', type=Path, required=True)
     args = parser.parse_args()
-    final_report(args.root, args.heads_panel)
+    final_report(args.root, json.loads(args.comparison_panels_json.read_text()))

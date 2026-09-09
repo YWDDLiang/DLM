@@ -45,7 +45,7 @@ class DenseTrainingTests(unittest.TestCase):
             Stable_promotion=True) for i in range(4)]
         return tok, rows
 
-    def train(self, *, heads_only=False, threshold=10., rate=.01, epochs=4):
+    def train(self, *, heads_only=False, threshold=10., rate=.01, epochs=4, hard_stop=True, kl_weight=1.):
         tok, rows = self.fixture(); torch.manual_seed(31)
         model = DensePolicy(max(tok.vocab.values())+1)
         selected = list(model.named_parameters())
@@ -54,7 +54,8 @@ class DenseTrainingTests(unittest.TestCase):
             dict(params=[p for n, p in selected if not decision_head_parameter(n)], lr=rate),
             dict(params=[p for n, p in selected if decision_head_parameter(n)], lr=.001)], weight_decay=.1)
         spec = dict(branch='E', batch_size=1, epochs=epochs, seed=17, max_training_seconds=60,
-            max_reference_kl=threshold, reference_kl_weight=1., editor_heads_only=heads_only)
+            max_reference_kl=threshold, reference_kl_weight=kl_weight, editor_heads_only=heads_only,
+            reference_KL_hard_stop=hard_stop)
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             write = lambda path, value: path.write_text(json.dumps(value))
@@ -84,6 +85,17 @@ class DenseTrainingTests(unittest.TestCase):
         self.assertNotIn(model.content, optimizer.state)
         self.assertEqual(report['content_updated_pair_visits'], {})
         self.assertTrue(any(not torch.equal(p, reference[n]) for n, p in model.named_parameters() if decision_head_parameter(n)))
+
+    def test_no_hard_stop_retains_soft_KL_and_records_threshold_crossings(self):
+        model, _, _, report, _ = self.train(threshold=1e-10, rate=.2, hard_stop=False)
+        self.assertEqual(report['content_optimizer_steps'], 4)
+        self.assertEqual(report['head_optimizer_steps'], 16)
+        self.assertGreater(report['KL_threshold_crossing_batches'], 0)
+        self.assertGreater(report['maximum_observed_batch_rank_KL'], 1e-10)
+        self.assertIsNone(report['KL_trigger'])
+        self.assertEqual(report['content_updated_pair_visits'], {str(i): 4 for i in range(4)})
+        without_penalty, _, _, _, _ = self.train(threshold=1e-10, rate=.2, hard_stop=False, kl_weight=0.)
+        self.assertFalse(torch.equal(model.content, without_penalty.content))
 
     def test_dense_t2t_and_masked_views_keep_old_structure_visible(self):
         _, rows = self.fixture(); row = rows[0]
