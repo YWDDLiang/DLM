@@ -143,7 +143,15 @@ class Coordinator:
 
     def allocations(self):
         control=json.loads((self.root/'RUN_SPEC.json').read_text())
-        return runtime_allocations(control.get('execution_policy',{}),self.budget.get('max_GPUs',6))
+        policy=dict(control.get('execution_policy',{}))
+        override=self.root/'S0_RESOURCE_OVERRIDE.json'
+        if override.exists():
+            value=json.loads(override.read_text())
+            if value.get('schema')!='ranked_S0_resource_allocation_v1':
+                raise ValueError('invalid S0 resource override schema')
+            if not (self.root/'S0_COMPLETE.json').exists():
+                policy['parallel_other_GPUs']=value['parallel_other_GPUs']
+        return runtime_allocations(policy,self.budget.get('max_GPUs',6))
 
     @property
     def parallel_main_gpus(self): return self.allocations()['parallel_main_GPUs']

@@ -1,0 +1,385 @@
+{
+  "schema": "clean_1000_reference_coverage_recovery_v1",
+  "diagnosis": {
+    "plan_count": 1000,
+    "wanted_chemsys": 925,
+    "old_cache_count": 242,
+    "combined_resolved": 305,
+    "combined_official_unresolved": 6,
+    "missing": 614,
+    "old_resolved_changed": [],
+    "old_unknown_became_resolved": [],
+    "reference_versions": [
+      "2026.04.13",
+      "2026.04.13"
+    ],
+    "known_cache_paths": [
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit_hull/official_mp_cache",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/formal_baselines/hull/official_mp_cache"
+    ],
+    "excluded_transport_errors": 0
+  },
+  "query_dispatch": {
+    "pid": 51636,
+    "utc": "2026-09-09T23:15:06.084216+00:00",
+    "command_without_credential": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=30s",
+      "38709s",
+      "/public/home/jiaosz/ywliang/ai4s/.venvs/mp_api_0_45_13_emmet0_85_1_py310_v4_system/bin/python",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6/operations/r03_c3fd_main_20260907/run_hull_query.py",
+      "--hull-root",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union"
+    ],
+    "deadline_utc": "2026-09-10T10:01:15.570418+00:00",
+    "new_SSH_sessions": 0,
+    "credentials_serialized": false,
+    "expected_MP_database_version": "2026.04.13"
+  },
+  "guard_source": {
+    "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000",
+    "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/0c74f75194c81ba26be1add3626cbb50bea4bd37",
+    "source_identity": {
+      "commit": "0c74f75194c81ba26be1add3626cbb50bea4bd37",
+      "manifest_sha256": "314cb32c5a61616fc8759c922ae251b141ae7846706c6f11113b860bcaeec3ab"
+    },
+    "files_verified": 507,
+    "ready": true
+  },
+  "local_checks": {
+    "coordinator_checks": 23,
+    "hull_union_checks": 14,
+    "total_distinct_checks_passed": 37
+  },
+  "recovery": {
+    "CACHE_VALIDATED.json": {
+      "sha256": "def1d2c0814a8bda18ddb408d629d2593c43fe706d1157f1915d42956557cea6",
+      "payload": {
+        "all16_before_files_unchanged": true,
+        "completion_manifest_sha256": "9b052b9f8cd9fab151fa134e16f25d65c49a433aee5366266fc1e000561d9923",
+        "database_version": "2026.04.13",
+        "new_queries": 614,
+        "new_transport_errors": 0,
+        "official_unresolved": 30,
+        "old237_resolved_contents_unchanged": true,
+        "old5_official_unknown_classifications_unchanged": true,
+        "resolved": 895,
+        "utc": "2026-09-09T23:31:18.604268+00:00",
+        "wanted_chemical_systems": 925,
+        "actual_endpoint_summary": [
+          {
+            "cell_id": "fit_actual_RAW",
+            "observed_requests": 1000,
+            "composition_counts": {
+              "body_composition_unavailable": 2,
+              "composition_available": 998
+            }
+          },
+          {
+            "cell_id": "bootstrap_comparator_actual_RAW",
+            "observed_requests": 1000,
+            "composition_counts": {
+              "body_composition_unavailable": 3,
+              "composition_available": 997
+            }
+          }
+        ]
+      }
+    },
+    "OLD_CACHE_GUARD_CHECK.json": {
+      "sha256": "f16197f56e5744fe502b45862d851fcad86954efdd0864473ca7a8353aea7b68",
+      "payload": {
+        "GPU_jobs_submitted": 0,
+        "budget_sha256_unchanged": true,
+        "message": "official reference coverage incomplete for 683 fixed-Plan chemical systems; complete reference preparation before GPU dispatch: Ag-Al-Pm, Ag-As-Er, Ag-As-O, Ag-Ba-Bi-O, Ag-Br-Hg-Rb, Ag-Ca-Cd, Ag-Ce, Ag-Ce-Ge, Ag-Ce-In, Ag-Cl-Cs, Ag-Cl-K-Ru, Ag-Cr-O",
+        "orchestrator_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/8b55ead66fbe242e2859612f2327d5b5e42c6728",
+        "real_old_cache_rejected": true,
+        "scientific_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6"
+      }
+    },
+    "EXTENDED_CACHE_GUARD_CHECK.json": {
+      "sha256": "ae895745d19ed6ebed87ec3617dac1c5d44c23f98f078e7aea52b0b910435c1a",
+      "payload": {
+        "cache_identity": {
+          "completion_manifest": {
+            "bytes": 157642,
+            "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/completion_manifest.json",
+            "sha256": "9b052b9f8cd9fab151fa134e16f25d65c49a433aee5366266fc1e000561d9923"
+          },
+          "completion_marker": {
+            "bytes": 0,
+            "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/completion_SUCCESS",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "database_version": "2026.04.13",
+          "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache",
+          "fresh_empty_cache": false,
+          "other_recorded_outputs": {},
+          "outputs_verified": {
+            "query_audit": {
+              "bytes": 1215602,
+              "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/query_audit.jsonl",
+              "recorded_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/query_audit.jsonl",
+              "sha256": "6fa0d6e47f76cb2b3807c8e3d8046f2500d483805973635f479e3716684199f4"
+            },
+            "slim_evaluation_cache": {
+              "bytes": 16320208,
+              "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/official_slim_cache.jsonl",
+              "recorded_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/official_slim_cache.jsonl",
+              "sha256": "926dce75543041fc48fe97b1e3d5132d72531c334d3dd54105274e33e39f6b87"
+            },
+            "unresolved_chemsys": {
+              "bytes": 10608,
+              "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/unresolved_chemsys.jsonl",
+              "recorded_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/unresolved_chemsys.jsonl",
+              "sha256": "44bb707392933431f7d32e616415bedb7d0fc33ffe1542caf3e201016ecf849b"
+            }
+          },
+          "package_versions": null,
+          "schema": "r03_official_hull_union_cache_v1"
+        },
+        "chemical_systems": 925,
+        "coverage_accounted": true,
+        "officially_unresolved_systems": [
+          "Ac-Yb",
+          "Ag-P-S-Yb",
+          "Ag-Sm-Yb",
+          "Al-Ge-Yb",
+          "As-Yb-Zn",
+          "Au-Cd-Yb",
+          "Au-In-Yb",
+          "B-Mn-O-Yb",
+          "B-Pd-Yb",
+          "B-Yb",
+          "Ba-Cu-O-Yb",
+          "C-Ca-Yb",
+          "C-Cl-Yb",
+          "Ca-O-Se-Yb-Zn",
+          "Cd-Tb-Yb",
+          "Co-In-Yb",
+          "Co-Sn-Yb",
+          "Cu-In-Yb",
+          "Cu-O-Se-Yb",
+          "Eu-S-Yb",
+          "F-O-Yb",
+          "Fe-Si-Yb",
+          "Ga-Pd-Yb",
+          "Ge-Sn-Yb",
+          "In-Sm-Yb",
+          "Mg-Yb",
+          "O-S-V-Yb",
+          "Pt-Sb-Yb",
+          "S-Yb-Zn",
+          "Yb-Zn"
+        ],
+        "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+        "requests": 1000,
+        "resolved_systems": 895,
+        "transport_errors_counted_as_official_absence": false
+      }
+    },
+    "FAILED_SCORING_ARCHIVE.json": {
+      "sha256": "122422b5890a08deccdc114a6ac299b5ada6ebb22c88210beeafa92b1aaf166a",
+      "payload": {
+        "budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+        "failed_score_jobs": [
+          "41756",
+          "41757"
+        ],
+        "job_retries": {
+          "S0_raw_score": "S0_raw_score_ref925_v1",
+          "twin_raw_score": "twin_raw_score_ref925_v1"
+        },
+        "no_generation_or_physical_label_rerun": true,
+        "preserved_components": [
+          {
+            "files_sha256": {
+              "COMPONENT_CONFIG.json": "e4d9ad937ad0e0a5375fa71ee55cef1cb0a5cb94980da28ddd25bfe10beb1167",
+              "score.command.json": "6ff49b8ebf85039bf7fba38be321f8a99a67bba32c623790055a6f04252ca09f",
+              "score.err": "adca632359b845dbb0beda00b0d11e5b65936d1be574bf5248cf07aaff0e01aa",
+              "score.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "score.stage.json": "31372f65c4154d48adc371fabf4231122f148bedd8b1887ed2834f05240b1978"
+            },
+            "old_directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit/construction/scoring",
+            "preserved_directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/failed_scoring/fit_41756"
+          },
+          {
+            "files_sha256": {
+              "COMPONENT_CONFIG.json": "1e308f5df5ce9b15509bd1d77a1151c3ade8366ac05b9bd28370dfdd40d7d796",
+              "score.command.json": "8feaeafbcfcf4e0479276142d519a2780b8bd7c8d3a4b7817ce0a867013643d0",
+              "score.err": "5e855328a3c4edd0078414542c2c6221333602e3fef921767727d7e0497ca2ce",
+              "score.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "score.stage.json": "20e5e196a4566fc82e16f333d711907d138285631713542457ec7ece5253005f"
+            },
+            "old_directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/bootstrap_comparator/construction/scoring",
+            "preserved_directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/failed_scoring/bootstrap_comparator_41757"
+          }
+        ],
+        "resume_not_yet_started": true,
+        "utc": "2026-09-09T23:27:50.876787+00:00"
+      }
+    },
+    "REFERENCE_CACHE_OVERRIDE.json": {
+      "sha256": "4a9052100b0dd098d830a231253a83e22a7ff728612d87df0cecebf4bf98fddd",
+      "payload": {
+        "cache_manifest_sha256": "9b052b9f8cd9fab151fa134e16f25d65c49a433aee5366266fc1e000561d9923",
+        "created_utc": "2026-09-09T23:36:55.516749+00:00",
+        "database_version": "2026.04.13",
+        "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache",
+        "old_cache_preserved_at_original_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit_hull/official_mp_cache",
+        "original_configs_labels_and_inputs_unchanged": true,
+        "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+        "reason": "same_reference_version_complete_all925_fixed_Plan_systems",
+        "schema": "ranked_reference_coverage_completion_v1"
+      }
+    },
+    "REFERENCE_COVERAGE.json": {
+      "sha256": "625384da68526ee902a7c183b900656a6c0e78a8fcc7e70926fc20b6fd890f05",
+      "payload": {
+        "cache_identity": {
+          "completion_manifest": {
+            "bytes": 157642,
+            "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/completion_manifest.json",
+            "sha256": "9b052b9f8cd9fab151fa134e16f25d65c49a433aee5366266fc1e000561d9923"
+          },
+          "completion_marker": {
+            "bytes": 0,
+            "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/completion_SUCCESS",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "database_version": "2026.04.13",
+          "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache",
+          "fresh_empty_cache": false,
+          "other_recorded_outputs": {},
+          "outputs_verified": {
+            "query_audit": {
+              "bytes": 1215602,
+              "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/query_audit.jsonl",
+              "recorded_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/query_audit.jsonl",
+              "sha256": "6fa0d6e47f76cb2b3807c8e3d8046f2500d483805973635f479e3716684199f4"
+            },
+            "slim_evaluation_cache": {
+              "bytes": 16320208,
+              "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/official_slim_cache.jsonl",
+              "recorded_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/official_slim_cache.jsonl",
+              "sha256": "926dce75543041fc48fe97b1e3d5132d72531c334d3dd54105274e33e39f6b87"
+            },
+            "unresolved_chemsys": {
+              "bytes": 10608,
+              "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/unresolved_chemsys.jsonl",
+              "recorded_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/unresolved_chemsys.jsonl",
+              "sha256": "44bb707392933431f7d32e616415bedb7d0fc33ffe1542caf3e201016ecf849b"
+            }
+          },
+          "package_versions": null,
+          "schema": "r03_official_hull_union_cache_v1"
+        },
+        "chemical_systems": 925,
+        "coverage_accounted": true,
+        "officially_unresolved_systems": [
+          "Ac-Yb",
+          "Ag-P-S-Yb",
+          "Ag-Sm-Yb",
+          "Al-Ge-Yb",
+          "As-Yb-Zn",
+          "Au-Cd-Yb",
+          "Au-In-Yb",
+          "B-Mn-O-Yb",
+          "B-Pd-Yb",
+          "B-Yb",
+          "Ba-Cu-O-Yb",
+          "C-Ca-Yb",
+          "C-Cl-Yb",
+          "Ca-O-Se-Yb-Zn",
+          "Cd-Tb-Yb",
+          "Co-In-Yb",
+          "Co-Sn-Yb",
+          "Cu-In-Yb",
+          "Cu-O-Se-Yb",
+          "Eu-S-Yb",
+          "F-O-Yb",
+          "Fe-Si-Yb",
+          "Ga-Pd-Yb",
+          "Ge-Sn-Yb",
+          "In-Sm-Yb",
+          "Mg-Yb",
+          "O-S-V-Yb",
+          "Pt-Sb-Yb",
+          "S-Yb-Zn",
+          "Yb-Zn"
+        ],
+        "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+        "requests": 1000,
+        "resolved_systems": 895,
+        "transport_errors_counted_as_official_absence": false
+      }
+    },
+    "HULL_COVERAGE_RECOVERY_RESUME.json": {
+      "sha256": "58b6a6a1b6f686f5f1e9d5bf49f6ae4e5f0eb0155c79407ad8300f5ae42e4b1d",
+      "payload": {
+        "budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+        "completed_generation_and_labels_preserved": true,
+        "deadline_utc": "2026-09-10T10:01:15.570418+00:00",
+        "failed_jobs_preserved": [
+          "41756",
+          "41757"
+        ],
+        "only_failed_score_jobs_retried_first": true,
+        "orchestrator_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/0c74f75194c81ba26be1add3626cbb50bea4bd37",
+        "pid": 35924,
+        "reference_override_sha256": "4a9052100b0dd098d830a231253a83e22a7ff728612d87df0cecebf4bf98fddd",
+        "resume_utc": "2026-09-09T23:37:46.839123+00:00",
+        "scientific_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6"
+      }
+    }
+  },
+  "RAW_metrics": [
+    {
+      "panel": "fit",
+      "metrics": {
+        "exclusive_MetaStable": 106,
+        "input_sha256": "6a676a1076b55879484ff606c9881c8fcc1bada0c8eb127eb3a0c78483b8782f",
+        "known_physical_failure": 486,
+        "reliable_SUN": 25,
+        "requested": 1000,
+        "score_sha256": "84421b36dbdf7644eb142287df13e26263a9e89e867997a40e9fe42ef34843c0",
+        "stage": "construction",
+        "strict_Stable": 25,
+        "unknown": 97,
+        "unstable": 286
+      },
+      "metrics_sha256": "22d782c40c20d1b6b026c8ec38e6dd2d802ec8f0e285cf541e207c4edef9a2d9",
+      "job_id": "41761",
+      "science_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "source_identity": {
+        "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+        "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+      },
+      "scoring_complete": true
+    },
+    {
+      "panel": "bootstrap_comparator",
+      "metrics": {
+        "exclusive_MetaStable": 105,
+        "input_sha256": "7554af2363b42b610c8e12530ebffdb47182601cf545048f1f875e0fd77a52ab",
+        "known_physical_failure": 509,
+        "reliable_SUN": 19,
+        "requested": 1000,
+        "score_sha256": "aa0d2d409754d7e497482a375df6a53002781096547e93fccfe6d507335d0100",
+        "stage": "construction",
+        "strict_Stable": 19,
+        "unknown": 108,
+        "unstable": 259
+      },
+      "metrics_sha256": "dfab45e8ae7e6ddbea4a821d989fe71ad6d5d2f902c16af34cb94dfe21faec51",
+      "job_id": "41762",
+      "science_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "source_identity": {
+        "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+        "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+      },
+      "scoring_complete": true
+    }
+  ]
+}

@@ -179,4 +179,34 @@ class ReferenceCoverageBeforeDispatchTests(unittest.TestCase):
             coordinator.require_complete_reference_coverage(self.root)
 
 
+class S0ResourceAllocationTests(unittest.TestCase):
+    def test_temporary_comparator_allocation_preserves_training_and_expires(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            control={'execution_policy':{'single_GPUs':6,'parallel_main_GPUs':3,
+                'parallel_other_GPUs':3,'training_GPUs':6,'training_batch_size':32}}
+            (root/'RUN_SPEC.json').write_text(json.dumps(control))
+            (root/'S0_RESOURCE_OVERRIDE.json').write_text(json.dumps(
+                {'schema':'ranked_S0_resource_allocation_v1','parallel_other_GPUs':2}))
+            driver=coordinator.Coordinator.__new__(coordinator.Coordinator)
+            driver.root=root;driver.budget={'max_GPUs':6}
+            values=driver.allocations()
+            self.assertEqual(values['parallel_other_GPUs'],2)
+            self.assertEqual((values['single_GPUs'],values['training_GPUs'],values['training_batch_size']),(6,6,32))
+            self.assertEqual(json.loads((root/'RUN_SPEC.json').read_text()),control)
+            (root/'S0_COMPLETE.json').write_text('{}')
+            self.assertEqual(driver.allocations()['parallel_other_GPUs'],3)
+
+    def test_temporary_allocation_still_enforces_shared_gpu_limit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            (root/'RUN_SPEC.json').write_text(json.dumps({'execution_policy':{'parallel_main_GPUs':3}}))
+            (root/'S0_RESOURCE_OVERRIDE.json').write_text(json.dumps(
+                {'schema':'ranked_S0_resource_allocation_v1','parallel_other_GPUs':4}))
+            driver=coordinator.Coordinator.__new__(coordinator.Coordinator)
+            driver.root=root;driver.budget={'max_GPUs':6}
+            with self.assertRaisesRegex(ValueError,'exceed'):
+                driver.allocations()
+
+
 if __name__=='__main__':unittest.main()
