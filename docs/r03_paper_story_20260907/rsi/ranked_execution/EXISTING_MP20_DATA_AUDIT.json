@@ -1,0 +1,77 @@
+{
+  "data_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/training_controls_refresh/geometry_auxiliary",
+  "data_final": {
+    "schema": "expert_crystal_edit_v1",
+    "records": 10228,
+    "admitted_sources": 2048,
+    "splits": {
+      "train": 1779,
+      "dev": 269
+    },
+    "counts": {
+      "single_site": 2044,
+      "cooperative_sites": 2044,
+      "all_xyz": 2044,
+      "lattice_coupled": 2048,
+      "state": 2048
+    },
+    "exclusions": {
+      "evaluation_composition": 51
+    },
+    "source_sha256": "232f7e1e6f0d4a634db8a9cfd01c0e3fd61f31f154adf142b5cc11af57c61a1c",
+    "heldout_sha256": "b7acb3ddd58f7a9382d0c21fa5a0a377e5c60279cf0a8b99e2abb2b7e505d722",
+    "seed": 20260908,
+    "geometry_protocol": {
+      "minimum_distance_A": 0.5,
+      "minimum_volume_A3": 0.1,
+      "image_bound": "reciprocal_column_norm_complete_for_contact_cutoff",
+      "max_pair_images": 4000000,
+      "tolerance_A": 1e-8
+    },
+    "content_task": "G_only",
+    "physical_energy_supervision": false,
+    "GT_soft_hints_used": false,
+    "identity_teaches_S_stop": false,
+    "output_sha256": {
+      "train.jsonl": "5118c60927e2db4479027dced6855cb08e683d65114d9fcabd0fb995fd60e294",
+      "dev.jsonl": "9c26395f30f9605e0b97304278b47b5df9b4775862930d753b7265b8dfbb43bb",
+      "outcomes.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "data_final_sha256": "83942ba60c47dcd3b5d9e93e0c6d4f20619020151dbd104d5a7b70e218afa8b9",
+  "train_record_count": 8883,
+  "train_recovery_count": 7104,
+  "train_clean_states": 1779,
+  "train_physics_ids_present": 0,
+  "train_reliable_clean_states": 0,
+  "old_training": {
+    "config_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/TRAIN_CONFIG.json",
+    "config_sha256": "7eb19f4b4ec4c9767b521c75f9b375467833809fb18800c389e3ad2bcd922409",
+    "train_file_pin": {
+      "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/training_controls_refresh/geometry_auxiliary/train.jsonl",
+      "report_sha256": "83942ba60c47dcd3b5d9e93e0c6d4f20619020151dbd104d5a7b70e218afa8b9",
+      "sha256": "5118c60927e2db4479027dced6855cb08e683d65114d9fcabd0fb995fd60e294"
+    },
+    "allowed_modes": {
+      "G": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "S": [
+        3
+      ]
+    },
+    "geometry_aux_fraction": 0.2,
+    "final_file": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/expert_self_edit_20260908/run_20260907T180747Z/expert_full_stage2/train/TRAIN_FINAL.json",
+    "final_sha256": "ddf0956d9cbea3db260faeb946df67848a84c7b236742a8be918661a4ab32d62",
+    "status": "complete",
+    "positive_edits_all_sources": {
+      "G": 11750,
+      "S": 423
+    }
+  },
+  "current_run_uses_old_editor_weights": false,
+  "current_run_loads_this_geometry_dataset": false
+}
