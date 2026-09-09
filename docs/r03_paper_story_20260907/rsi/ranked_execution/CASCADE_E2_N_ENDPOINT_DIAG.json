@@ -1,0 +1,48 @@
+{
+  "proposal_actually_applied": false,
+  "scope": "Saved terminal pair diagnostic only; registered input N is unchanged",
+  "ordinal": 87,
+  "terminal_match_current_to_proposal": true,
+  "terminal_match_proposal_to_current": true,
+  "terminal_RMS": [
+    0.004731963922085536,
+    0.006313717280336804
+  ],
+  "matcher": {
+    "settings": {
+      "version": "1.0",
+      "@module": "pymatgen.analysis.structure_matcher",
+      "@class": "StructureMatcher",
+      "comparator": {
+        "version": "1.0",
+        "@module": "pymatgen.analysis.structure_matcher",
+        "@class": "SpeciesComparator"
+      },
+      "stol": 0.3,
+      "ltol": 0.2,
+      "angle_tol": 5,
+      "primitive_cell": true,
+      "scale": true,
+      "attempt_supercell": false,
+      "allow_subset": false,
+      "supercell_size": "num_sites",
+      "ignored_species": []
+    },
+    "pymatgen_version": "2025.6.14",
+    "implementation": "pymatgen.analysis.structure_matcher.StructureMatcher",
+    "source_sha256": "b6a7cd674aaf579ca4eae594f2592cad3ead8dba3af7c6713de4e73f212ca809"
+  },
+  "source_files_sha256": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round2/fit/current/inputs.jsonl": "018ec036776a25c25bee0be95360b3dea17f5b92e87b3c5beb9f13fcfd55416a",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round2/fit/current/labeling/result/labels.jsonl": "6e3184610c28c7a7e6af1186dac40b3c84656df7ffbd08b59a66c35fe9c325a7",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round2/fit/current/scoring/result/attempt_results.jsonl": "92ba6b5cd76f74a65c8a94f8ab23c694af8ce2244b939cc197e1a0a6b2050ab9",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round2/fit/proposal/inputs.jsonl": "93857793f1fe8997693279bf7997dc2aaa85db677f49749b6e49bb05589c4f4d",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round2/fit/proposal/labeling/result/labels.jsonl": "f8e7a2ae4ad73de93aed01eaea7896c97daaf4aab7b59b7281e85ef193187289",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round2/fit/proposal/scoring/result/attempt_results.jsonl": "2d27b9afbc99759713f156509d658a3a3b74c13d0464f8e2efcce99cfd5f21da"
+  },
+  "terminal_structure_sha256": {
+    "current": "84b5a1be0885a14f2b38b53b16c81f46385ba186981cba5d612ff26c4b3083b6",
+    "proposal": "4442a6c78f793b65a79b27c9934fc084552a928914aef200db1c848a4575ab48"
+  },
+  "interpretation": "The N gain is registered at the input; matched relaxed terminals do not establish a new stable polymorph. Terminal N against the full training reference was not evaluated here."
+}
