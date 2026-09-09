@@ -1,0 +1,21 @@
+{
+  "B0_generator": true,
+  "MAIN_reduced_composition_overlap": 0,
+  "all_TRAIN": true,
+  "distinct_ancestors": 1000,
+  "distinct_reduced_compositions": 987,
+  "editor_destination_exists": false,
+  "formal_GPU_budget_started": false,
+  "fresh_editor_destination": true,
+  "method_profile_not_selected_until_trial_result": true,
+  "parent_sha256": "423ec6dc83a5250ad4f82c863ae562b2c03e62dfe44dbc32f1066f43dff27d4b",
+  "parents": 1000,
+  "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+  "prefix256_same_Plan_prompt_seed": true,
+  "requests": 1000,
+  "source_split_counts": {
+    "train": 1000
+  },
+  "trial_validation_labels_imported": false,
+  "trial_weights_or_optimizer_used": false
+}
