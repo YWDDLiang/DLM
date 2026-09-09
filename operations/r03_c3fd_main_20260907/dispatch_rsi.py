@@ -15,6 +15,17 @@ def allocation_cpus_per_gpu(action,workers,label_workers=2,cap=None):
     return cpus
 
 
+def action_source(root, configured_source, action, *, editor_trial=False):
+    """Keep trial physics on its exact reference implementation and identity."""
+    pin_path=Path(root)/'PHYSICS_SOURCE_PIN.json'
+    if action!='label' or not pin_path.exists(): return Path(configured_source),None
+    if not editor_trial: raise ValueError('a separate physics source is limited to the registered editor trial')
+    pin=json.loads(pin_path.read_text());source=Path(pin['source']).resolve()
+    if verify_deployed_source(source)!=pin['identity']:
+        raise ValueError('pinned physics source identity changed')
+    return source,pin_path
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--root',type=Path,required=True)
@@ -33,6 +44,7 @@ def main():
     if a.resume_manifest and a.action != 'refine': p.error('resume manifest requires refine')
     cohort=Path(cfg['run_root']);relative=cohort.relative_to(root)
     source=Path(os.environ.get('RANKED_EXECUTION_SOURCE',str(Path(__file__).resolve().parents[2]))).resolve()
+    source,physics_pin=action_source(root,source,a.action,editor_trial=cfg.get('editor_trial') is True)
     pipeline=json.loads((root/'RAW0_PIPELINE.json').read_text())
     training='training_parent_root' in cfg
     ranked=cfg.get('ranked_training') is True
@@ -45,6 +57,7 @@ def main():
     if not 1<=workers<=8: raise ValueError('invalid independent workers per GPU')
     script='src/scripts/run_rsi_stages.py'
     args=['--config',str(a.config)];inputs=[str(a.config)];distributed=False
+    if physics_pin is not None: inputs.append(str(physics_pin))
     if a.action=='editor_kl_probe':
         if cfg.get('editor_trial') is not True: raise ValueError('KL probe requires its registered editor trial')
         directory=Path('KL_audit');script='operations/r03_c3fd_main_20260907/editor_trial_kl_probe.py'

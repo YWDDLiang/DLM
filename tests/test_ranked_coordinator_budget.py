@@ -1,6 +1,9 @@
 import importlib.util
+import hashlib
+import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 from concurrent.futures import Future
 
@@ -9,7 +12,8 @@ sys.path.insert(0,str(ROOT/'operations/r03_c3fd_main_20260907'))
 spec=importlib.util.spec_from_file_location('ranked_coordinator_budget',ROOT/'operations/r03_c3fd_main_20260907/coordinate_ranked_rsi.py')
 coordinator=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(coordinator)
-from dispatch_rsi import allocation_cpus_per_gpu
+from dispatch_rsi import allocation_cpus_per_gpu, action_source
+from run_component import verify_deployed_source
 
 
 class RankedCoordinatorBudgetTests(unittest.TestCase):
@@ -67,6 +71,36 @@ class RankedCoordinatorBudgetTests(unittest.TestCase):
 
     def test_zero_cpu_cap_is_rejected(self):
         with self.assertRaises(ValueError):allocation_cpus_per_gpu('generate',3,cap=0)
+
+
+class PinnedTrialPhysicsTests(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
+        self.root=Path(self.temp.name);self.physics=self.root/'old_physics';self.physics.mkdir()
+        self.editor=self.root/'new_editor'
+        (self.physics/'worker.py').write_text('original physics\n')
+        (self.physics/'_CODE_READY').write_text('a'*40)
+        (self.physics/'_SOURCE_FILES.json').write_text(json.dumps({'worker.py':hashlib.sha256((self.physics/'worker.py').read_bytes()).hexdigest()}))
+        self.pin=self.root/'PHYSICS_SOURCE_PIN.json'
+        self.pin.write_text(json.dumps({'source':str(self.physics),'identity':verify_deployed_source(self.physics)}))
+
+    def test_only_trial_labeling_uses_verified_old_source(self):
+        self.assertEqual(action_source(self.root,self.editor,'label',editor_trial=True),(self.physics,self.pin))
+        for action in ('edit','train','score','generate','refine'):
+            self.assertEqual(action_source(self.root,self.editor,action,editor_trial=True),(self.editor,None))
+
+    def test_non_trial_and_mutated_physics_are_rejected(self):
+        with self.assertRaisesRegex(ValueError,'limited to'):
+            action_source(self.root,self.editor,'label')
+        (self.physics/'worker.py').write_text('changed physics\n')
+        with self.assertRaisesRegex(ValueError,'immutable deployed source changed'):
+            action_source(self.root,self.editor,'label',editor_trial=True)
+
+    def test_wrong_pinned_identity_is_rejected(self):
+        pin=json.loads(self.pin.read_text());pin['identity']['commit']='b'*40
+        self.pin.write_text(json.dumps(pin))
+        with self.assertRaisesRegex(ValueError,'pinned physics source identity changed'):
+            action_source(self.root,self.editor,'label',editor_trial=True)
 
 
 if __name__=='__main__':unittest.main()
