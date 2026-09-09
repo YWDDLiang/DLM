@@ -103,15 +103,33 @@ def prepare_training(root, index, branch):
     if report['source_split']!='train' or report['files_sha256'][data.name]!=file_hash(data):
         raise ValueError('new training preferences not bound to TRAIN')
     config=json.loads((root/'training_configs'/f'TRAIN_{branch}1.json').read_text())
+    round_fields=('source_round','update_index')
+    inherited_round_fields={key:config[key] for key in round_fields if key in config}
     replay=[root/'fit/pairs'/f'{branch}.jsonl']
     replay += [root/'rounds'/f'round{i}'/'fit/pairs'/f'{branch}.jsonl' for i in range(1,previous)]
     config.update(checkpoint=str(checkpoint),data=str(data),seed=config['seed']+100*previous,
+        source_round=previous,update_index=index,
         output_dir=str(root/'training'/f'round{index}'/branch/'result'),replay_data=[str(p) for p in replay])
     path=root/'training_configs'/f'TRAIN_{branch}{index}.json'
+    correction=None
     if path.exists():
-        if json.loads(path.read_text())!=config: raise ValueError('existing training configuration changed')
+        registered=json.loads(path.read_text())
+        if registered!=config:
+            # Previously registered configurations are immutable. The original
+            # generator inherited these descriptive fields from round one;
+            # all executable inputs must still match the requested update.
+            legacy=dict(config)
+            for key in round_fields:
+                if key in inherited_round_fields: legacy[key]=inherited_round_fields[key]
+                else: legacy.pop(key,None)
+            if registered!=legacy: raise ValueError('existing training configuration changed')
+            correction={'registered':{key:registered.get(key) for key in round_fields},
+                        'effective':{'source_round':previous,'update_index':index},
+                        'configuration_bytes_preserved':True}
     else: write_json(path,config)
-    return {'config':str(path),'sha256':file_hash(path)}
+    result={'config':str(path),'sha256':file_hash(path)}
+    if correction is not None: result['round_metadata_correction']=correction
+    return result
 
 
 if __name__=='__main__':
