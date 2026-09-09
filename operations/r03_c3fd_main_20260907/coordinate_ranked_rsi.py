@@ -126,6 +126,26 @@ class Coordinator:
         self.rsi(tag+'_edited_labels',config,'rebind','edited')
         self.job(tag+'_edited_score',config,'score','edited',0,35)
 
+    def check_update(self,index,current):
+        """A TRAIN admission check on the complete G->F outputs, not local loss."""
+        fit=json.loads((self.root/'fit/RUN_SPEC.json').read_text())
+        if not fit.get('training_policy',{}).get('bounded_minibatch_training'):return
+        reports=[]
+        for root in [self.root/'fit',current]:
+            label=root/'construction/labeling/result/labels.jsonl'
+            generation_failures=sum(json.loads(line)['status']=='generation_failure' for line in label.read_text().splitlines() if line)
+            scores=json.loads((root/'tokenized/scoring/result/RANKED_METRICS.json').read_text())
+            reports.append({'generation_failures':generation_failures,'G_plus_F':scores})
+        baseline,actual=reports
+        accepted=(actual['generation_failures']<=baseline['generation_failures']+8 and
+                  actual['G_plus_F']['reliable_SUN']>=baseline['G_plus_F']['reliable_SUN'])
+        report={'round':index,'accepted':accepted,'baseline':baseline,'actual':actual,
+            'rule':'TRAIN same-condition complete G+F SUN must not fall below S0; generation failures may rise by at most 8/256',
+            'does_not_prove_heldout_generalization':True}
+        write_json(self.root/f'G{index}_ADMISSION.json',report)
+        if not accepted:
+            raise RuntimeError('complete G+F regression: update rejected before downstream training')
+
     def training(self,index,branch,data,replay):
         config=self.root/'training_configs'/f'TRAIN_{branch}{index}.json'
         fit=json.loads((self.root/'fit/RUN_SPEC.json').read_text())
@@ -187,6 +207,7 @@ class Coordinator:
                 ['--root',self.root,'--index',index,'--generation-only'])
             current=self.root/'rounds'/f'round{index}'/'fit';config=current/'RUN_SPEC.json'
             self.body(f'S{index}',config,4)
+            self.check_update(index,current)
             self.ranked(f'S{index}_compile_G',config,'compile',['--branch','G','--comparators',*history])
             g_data.append(current/'pairs/G.jsonl');history.append(current)
             previous=fit/'initialization/checkpoint' if index==1 else self.root/'training'/f'round{index-1}'/'E/result/checkpoint'

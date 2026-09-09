@@ -54,6 +54,16 @@ class BatchTests(unittest.TestCase):
         model=Policy(self.width)
         scores,_=conditional_batch(model,self.tok,[training_view(a,body,0,'G'),training_view(b,body,0,'G')],'G',self.support)
         self.assertNotEqual(float(scores[0]),float(scores[1]))
+    def test_registered_semantic_groups_cover_native_numeric_slots(self):
+        body,_=make_body(self.tok)
+        groups=[[1,2,3,4,5,6],[8],[12],[9],[13],[10],[14]]
+        example={'num_sites':2,'prompt':'p','plan_state':{'N':2},'generation_groups':groups}
+        view=training_view(example,body,6,'G',mask_seed=19)
+        self.assertEqual(set(view['order'][:6]),set(groups[0]))
+        self.assertEqual(view['position'],8)
+        self.assertEqual(view['current'][1:7],body[1:7])
+        with self.assertRaisesRegex(ValueError,'numeric support'):
+            training_view({**example,'generation_groups':[[1,2,3]]},body,0,'G')
     def test_editor_batch_preserves_independent_sampling(self):
         body,_=make_body(self.tok);model=Policy(self.width)
         requests=[dict(prompt='p',body=body,n=2,seed=s,known_sun=False) for s in (13,17)]

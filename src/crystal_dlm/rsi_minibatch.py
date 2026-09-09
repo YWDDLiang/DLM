@@ -33,8 +33,11 @@ def epoch_indices(size, *, batch_size, world, epochs, seed):
 def training_view(example, target, cut, branch, *, mask_seed=0):
     n = example['num_sites']
     if branch == 'G' and example.get('plan_state'):
-        from r03.safe_axis_schedule import h1a2_safe_axis_generation_schedule
-        groups = h1a2_safe_axis_generation_schedule(example['plan_state'])[1:]
+        groups = example['generation_groups']
+        expected=set(numeric_order(n,'G'))
+        positions=[pos for group in groups for pos in group]
+        if len(positions)!=len(expected) or set(positions)!=expected:
+            raise ValueError('registered native groups changed numeric support')
         rng = random.Random(mask_seed)
         # Native semantic groups stay in order; cover possible reveal subsets
         # within each confidence-remasked group instead of one site ordering.

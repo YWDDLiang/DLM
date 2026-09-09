@@ -122,6 +122,13 @@ def collection(spec,checkpoint):
 
 def compile_dataset(spec,branch,comparators=()):
     root,plans=require_train(spec);examples=[];audit=[];pins={}
+    schedules={}
+    if branch=='G' and spec.get('training_policy',{}).get('bounded_minibatch_training'):
+        from scripts.run_post_refine_cycle import constructor_api
+        native=constructor_api();runtime=native.load_frozen_runtime(Path(spec['assets']['frozen_runtime']))
+        with native.frozen_imports(runtime):
+            tasks=native.prepare_tasks(plans,runtime,seed=17029)
+        schedules={task['body_prompt']:task['schedule'][1:] for task in tasks}
     def stage(at,name):
         at=Path(at);key=str(at/name)
         records=read_rows(at/name/'inputs.jsonl');measured=scores(at,name)
@@ -152,6 +159,7 @@ def compile_dataset(spec,branch,comparators=()):
                   'priority':preference['priority'],'chosen_tokens':None,'rejected_tokens':None,
                   'origin':name,'source_round':spec.get('round_index',0),
                   'teacher_distribution':None,'log_probability_kind':'masked_conditional_surrogate'}
+            if branch=='G' and schedules:item['generation_groups']=schedules[plan['body_prompt']]
             trace={'preference':preference,'before_record_sha256':fingerprint(a),'after_record_sha256':fingerprint(b),
                    'before_score_sha256':fingerprint(qa),'after_score_sha256':fingerprint(qb),
                    'source':str(source),'conditioning_sha256':fingerprint({'Plan':plan['body_prompt'],

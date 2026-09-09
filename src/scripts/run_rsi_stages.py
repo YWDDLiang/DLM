@@ -307,6 +307,13 @@ def edit(spec,shard,shards):
     support=build_repair_constraints(tokenizer); inverse={int(v):k for k,v in tokenizer.get_vocab().items()}
     started=time.monotonic()
     batched={}
+    def persist(index,trace):
+        plan,record=plans[index],current[index];original=plan['original_ordinal']
+        for stage,key in [('proposal','proposal_tokens'),('edited','final_tokens')]:
+            value=dict(record,trajectory_id=f"{spec['run_id']}:{stage}:{original}")
+            value.update(body_token_ids=trace[key],body=''.join(inverse[i] for i in trace[key]),structure=None)
+            write_json(root/stage/'records'/f'{original:04d}.json',{'record':value,'editor_trace':trace,
+                       'checkpoint':checkpoint,'config_sha256':spec['_config_sha256']})
     batch_size=spec.get('parallelism',{}).get('editor_batch_size',1)
     if spec.get('ranked_training') and batch_size>1:
         from crystal_dlm.rsi_minibatch import propose_ranked_batch
@@ -320,9 +327,11 @@ def edit(spec,shard,shards):
             traces=propose_ranked_batch(model,tokenizer,requests,support=support,batch_size=batch_size,
                                        keep_prior=spec['policy']['known_SUN_keep_prior'])
             batched.update(zip(selected,traces))
+            for index,trace in zip(selected,traces):persist(index,trace)
             print(json.dumps({'shard':shard,'batched_editor_requests':len(batched),'batch_size':batch_size,
                               'peak_GPU_GB':torch.cuda.max_memory_allocated()/1e9,'seconds':time.monotonic()-started}),flush=True)
     for index in range(shard,len(plans),shards):
+        if index in batched:continue
         plan,record,score=plans[index],current[index],quality[index]
         original=plan['original_ordinal'];trace={'upstream_failure':True}
         proposed=dict(record,trajectory_id=f"{spec['run_id']}:proposal:{original}")
