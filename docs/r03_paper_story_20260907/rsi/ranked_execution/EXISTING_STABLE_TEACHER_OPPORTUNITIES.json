@@ -1,0 +1,108 @@
+{
+  "scope": "Existing same-Plan TRAIN Stable target availability, not new mixed SUN scores",
+  "current": "old_S1_token_F",
+  "count": 15,
+  "targets": {
+    "18": [
+      {
+        "source": "S0_twin",
+        "hull": -0.0311828893790711
+      }
+    ],
+    "21": [
+      {
+        "source": "S0_twin",
+        "hull": -0.010097852383006867
+      }
+    ],
+    "28": [
+      {
+        "source": "S0_twin",
+        "hull": -0.008765932019992206
+      }
+    ],
+    "51": [
+      {
+        "source": "S0_main",
+        "hull": -0.00048812525878894064
+      },
+      {
+        "source": "S0_twin",
+        "hull": -0.0005935062707518313
+      }
+    ],
+    "52": [
+      {
+        "source": "S0_twin",
+        "hull": -0.0042507336007133745
+      }
+    ],
+    "53": [
+      {
+        "source": "S0_twin",
+        "hull": -0.0048262319586172
+      }
+    ],
+    "85": [
+      {
+        "source": "S0_twin",
+        "hull": -0.01200412983332555
+      }
+    ],
+    "125": [
+      {
+        "source": "S0_main",
+        "hull": -0.008199478398804416
+      }
+    ],
+    "127": [
+      {
+        "source": "S0_main",
+        "hull": -0.014401933423461966
+      }
+    ],
+    "140": [
+      {
+        "source": "S0_twin",
+        "hull": -0.011057545306396577
+      }
+    ],
+    "146": [
+      {
+        "source": "S0_twin",
+        "hull": -0.010164704761065124
+      }
+    ],
+    "148": [
+      {
+        "source": "S0_main",
+        "hull": -0.043917517363621705
+      }
+    ],
+    "213": [
+      {
+        "source": "S0_twin",
+        "hull": -0.013722372523805149
+      }
+    ],
+    "219": [
+      {
+        "source": "S0_main",
+        "hull": -0.0063173423364251136
+      }
+    ],
+    "247": [
+      {
+        "source": "S0_twin",
+        "hull": -0.00037039231992697097
+      }
+    ]
+  },
+  "input_sha256": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T112500Z_repaired/fit/tokenized/scoring/result/attempt_results.jsonl": "e0fc70fb7dc3eecab295d4b479e97263767591970a3f5cf233680c16a87ff0f8",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T112500Z_repaired/bootstrap_comparator/tokenized/scoring/result/attempt_results.jsonl": "2239b28a10b87863ef690e8bae224aa21b057ed2c3d9949d12e53f4984c53e1f",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T112500Z_repaired/rounds/round1/fit/current/scoring/result/attempt_results.jsonl": "f325f755197003115183854124152409cf8b3d5fac7db8a920e4986ec3dd2b42",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T112500Z_repaired/rounds/round1/fit/current/inputs.jsonl": "519475cc5dc0c62e4203906bdc1aaba2f88f216e70723da299b1a2f7d24798b0",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T112500Z_repaired/rounds/round1/fit/cohort/plans.jsonl": "05e633ee4550d5acc539ce19e72acdbaddd827a666e54e363bb144d1c417c486"
+  }
+}
