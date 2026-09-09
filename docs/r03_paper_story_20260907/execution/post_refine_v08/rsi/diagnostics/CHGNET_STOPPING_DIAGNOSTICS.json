@@ -1,0 +1,819 @@
+{
+  "scope": "Existing TRAIN token-F records only; read-only, no new relaxation. These are four repeated 256-Plan panels, not 1024 distinct compositions.",
+  "question": "Would increasing CHGNet maximum relaxation steps from 500 to 1000 improve SUN?",
+  "reproduction_python": "import pathlib,json,gzip,sys,collections;sys.path.insert(0,\"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/code/6228f95343049cbb89884944c1af68e75e31d770/src\");from scripts.run_rsi_stages import scores;root=pathlib.Path(\"/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1\");out=[]\nfor i in range(4):\n base=(root if i==0 else root/'rounds'/f'round{i}')/'fit';rows=scores(base,'tokenized');labels={x['trajectory_id']:x for x in [json.loads(s) for s in (base/'tokenized/labeling/result/labels.jsonl').read_text().splitlines()]};c=collections.Counter();near=[]\n for x in rows:\n  l=labels[x['trajectory_id']];n=l.get('actual_steps') or 0;status=l['status'];c['requests']+=1;c['capped_500']+=n>=500;c['not_converged']+=status=='not_converged';c['not_converged_at_cap']+=status=='not_converged' and n>=500;c['not_converged_early_stop']+=status=='not_converged' and n<500;c['invalid_terminal']+=status=='invalid_terminal';e=x.get('e_above_hull_eV_atom');term=l.get('terminal') or {}\n  if status=='not_converged' and n<500:\n   c['early_stop_force_above_tolerance']+=(term.get('force_max_eV_A') or 0)>.10000001;c['early_stop_stress_above_tolerance']+=(term.get('stress_max_GPa') or 0)>.50000001\n  if e is not None and 0<e<=.03 and x['novel_unique'] is True:\n   v={'id':x['sample_idx'],'hull':e,'steps':n,'status':status,'optimizer_converged':l.get('optimizer_converged')};c['near_threshold']+=1\n   if status=='not_converged' and n>=500:\n    c['near_not_converged_at_cap']+=1;tr=json.loads(gzip.open(l['trajectory_file'],'rt').read());energies=tr['energies_eV_atom'];v.update(frames=len(energies),last50_energy_drop=energies[max(0,len(energies)-51)]-energies[-1],last100_energy_drop=energies[max(0,len(energies)-101)]-energies[-1])\n   near.append(v)\n out.append({'theta':i,'counts':dict(c),'near_threshold_details':near})\nprint(json.dumps(out))",
+  "frozen_source": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/code/6228f95343049cbb89884944c1af68e75e31d770",
+    "commit": "6228f95343049cbb89884944c1af68e75e31d770",
+    "manifest_sha256": "16545e6efe9663330960985f1e4ef7f3184f5081f930b43a134eef2cdf5a31b8"
+  },
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1",
+  "panels": [
+    {
+      "theta": 0,
+      "counts": {
+        "requests": 256,
+        "capped_500": 0,
+        "not_converged": 146,
+        "not_converged_at_cap": 0,
+        "not_converged_early_stop": 146,
+        "invalid_terminal": 0,
+        "early_stop_force_above_tolerance": 15,
+        "early_stop_stress_above_tolerance": 138,
+        "near_threshold": 27
+      },
+      "near_threshold_details": [
+        {
+          "id": 28,
+          "hull": 0.021039728227810528,
+          "steps": 100,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 51,
+          "hull": 0.018154300278320434,
+          "steps": 15,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 52,
+          "hull": 0.005989821208856938,
+          "steps": 9,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 53,
+          "hull": 0.020195559499512683,
+          "steps": 41,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 54,
+          "hull": 0.0021042343315427203,
+          "steps": 18,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 72,
+          "hull": 0.010228588579917819,
+          "steps": 28,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 82,
+          "hull": 0.016326818706543733,
+          "steps": 30,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 85,
+          "hull": 0.012515790515795544,
+          "steps": 14,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 91,
+          "hull": 0.009593797406005855,
+          "steps": 6,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 96,
+          "hull": 0.027312485382624097,
+          "steps": 24,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 107,
+          "hull": 0.008228840548502703,
+          "steps": 22,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 109,
+          "hull": 0.014339064469807816,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 113,
+          "hull": 0.016004685469971136,
+          "steps": 8,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 124,
+          "hull": 0.02523889674804103,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 133,
+          "hull": 0.019941271797445648,
+          "steps": 24,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 140,
+          "hull": 0.02637464844970694,
+          "steps": 45,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 141,
+          "hull": 0.0198812721386723,
+          "steps": 6,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 152,
+          "hull": 0.0060102176747349745,
+          "steps": 24,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 157,
+          "hull": 0.014391924987860794,
+          "steps": 11,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 172,
+          "hull": 0.013623879233398029,
+          "steps": 19,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 186,
+          "hull": 0.0197403014636226,
+          "steps": 5,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 206,
+          "hull": 0.026152220144377125,
+          "steps": 19,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 217,
+          "hull": 0.012164253358646349,
+          "steps": 12,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 235,
+          "hull": 0.0073762147967531,
+          "steps": 7,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 241,
+          "hull": 0.009240914811592837,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 246,
+          "hull": 0.01272993771606501,
+          "steps": 0,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 248,
+          "hull": 0.0037132298555508925,
+          "steps": 7,
+          "status": "verified",
+          "optimizer_converged": true
+        }
+      ]
+    },
+    {
+      "theta": 1,
+      "counts": {
+        "requests": 256,
+        "capped_500": 2,
+        "not_converged": 164,
+        "not_converged_at_cap": 0,
+        "not_converged_early_stop": 164,
+        "invalid_terminal": 2,
+        "early_stop_force_above_tolerance": 19,
+        "early_stop_stress_above_tolerance": 157,
+        "near_threshold": 30
+      },
+      "near_threshold_details": [
+        {
+          "id": 21,
+          "hull": 0.012966284122120086,
+          "steps": 26,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 24,
+          "hull": 0.017948415906711368,
+          "steps": 18,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 52,
+          "hull": 0.009485275997064946,
+          "steps": 19,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 53,
+          "hull": 0.0057817258813486205,
+          "steps": 35,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 54,
+          "hull": 0.002376985186034908,
+          "steps": 8,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 80,
+          "hull": 0.012145524300944288,
+          "steps": 23,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 82,
+          "hull": 0.014706049205811311,
+          "steps": 22,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 85,
+          "hull": 0.012079484516039685,
+          "steps": 16,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 91,
+          "hull": 0.009508920391845699,
+          "steps": 6,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 109,
+          "hull": 0.014861677995198441,
+          "steps": 4,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 113,
+          "hull": 0.015984658309326605,
+          "steps": 8,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 124,
+          "hull": 0.004607583424066419,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 125,
+          "hull": 0.0227172124276116,
+          "steps": 19,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 133,
+          "hull": 0.019902647987631195,
+          "steps": 24,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 141,
+          "hull": 0.02005341035278363,
+          "steps": 6,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 152,
+          "hull": 0.008303804405692006,
+          "steps": 40,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 157,
+          "hull": 0.014984633575507278,
+          "steps": 9,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 164,
+          "hull": 0.0035048102156576277,
+          "steps": 34,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 181,
+          "hull": 0.018750121374389472,
+          "steps": 29,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 186,
+          "hull": 0.019741255137939007,
+          "steps": 5,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 187,
+          "hull": 0.004107290304294242,
+          "steps": 23,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 206,
+          "hull": 0.018565740957365406,
+          "steps": 18,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 217,
+          "hull": 0.012440342073245958,
+          "steps": 11,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 221,
+          "hull": 0.01733414475585615,
+          "steps": 32,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 231,
+          "hull": 0.006995452041748784,
+          "steps": 38,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 235,
+          "hull": 0.007954379851074389,
+          "steps": 7,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 239,
+          "hull": 0.026346971519164875,
+          "steps": 5,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 241,
+          "hull": 0.009240676393013736,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 246,
+          "hull": 0.013180310411987861,
+          "steps": 0,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 248,
+          "hull": 0.004012206753744252,
+          "steps": 7,
+          "status": "verified",
+          "optimizer_converged": true
+        }
+      ]
+    },
+    {
+      "theta": 2,
+      "counts": {
+        "requests": 256,
+        "capped_500": 1,
+        "not_converged": 178,
+        "not_converged_at_cap": 1,
+        "not_converged_early_stop": 177,
+        "invalid_terminal": 0,
+        "early_stop_force_above_tolerance": 7,
+        "early_stop_stress_above_tolerance": 175,
+        "near_threshold": 24
+      },
+      "near_threshold_details": [
+        {
+          "id": 12,
+          "hull": 0.028917371524903146,
+          "steps": 16,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 18,
+          "hull": 0.007616396509600776,
+          "steps": 60,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 21,
+          "hull": 0.00011695322002047703,
+          "steps": 31,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 48,
+          "hull": 0.029007539459925624,
+          "steps": 23,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 51,
+          "hull": 0.02621952397216809,
+          "steps": 8,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 54,
+          "hull": 0.003076505297118892,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 65,
+          "hull": 0.017278380507672608,
+          "steps": 24,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 80,
+          "hull": 0.013319020547282179,
+          "steps": 7,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 82,
+          "hull": 0.009620580913574983,
+          "steps": 28,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 85,
+          "hull": 0.017949349933520153,
+          "steps": 17,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 91,
+          "hull": 0.009444070538330074,
+          "steps": 6,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 113,
+          "hull": 0.015957717009888128,
+          "steps": 8,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 125,
+          "hull": 0.02431795476769949,
+          "steps": 25,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 140,
+          "hull": 0.0266741021850585,
+          "steps": 46,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 148,
+          "hull": 0.017709870636866576,
+          "steps": 17,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 157,
+          "hull": 0.014595534454413528,
+          "steps": 3,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 181,
+          "hull": 0.013297250051757636,
+          "steps": 18,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 186,
+          "hull": 0.019740778300780804,
+          "steps": 5,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 190,
+          "hull": 0.02802261389905958,
+          "steps": 86,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 194,
+          "hull": 0.011581692155218981,
+          "steps": 21,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 235,
+          "hull": 0.007050296599121264,
+          "steps": 6,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 241,
+          "hull": 0.009939719666939517,
+          "steps": 1,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 246,
+          "hull": 0.013180310411987861,
+          "steps": 0,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 248,
+          "hull": 0.006670573910726674,
+          "steps": 9,
+          "status": "verified",
+          "optimizer_converged": true
+        }
+      ]
+    },
+    {
+      "theta": 3,
+      "counts": {
+        "requests": 256,
+        "capped_500": 1,
+        "not_converged": 177,
+        "not_converged_at_cap": 0,
+        "not_converged_early_stop": 177,
+        "invalid_terminal": 1,
+        "early_stop_force_above_tolerance": 16,
+        "early_stop_stress_above_tolerance": 169,
+        "near_threshold": 24
+      },
+      "near_threshold_details": [
+        {
+          "id": 18,
+          "hull": 0.0103973108162414,
+          "steps": 60,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 41,
+          "hull": 0.01608325801367183,
+          "steps": 42,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 51,
+          "hull": 0.026432193344726684,
+          "steps": 11,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 52,
+          "hull": 0.010219128383539555,
+          "steps": 15,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 54,
+          "hull": 0.0026196952995602985,
+          "steps": 14,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 65,
+          "hull": 0.017427630538190186,
+          "steps": 17,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 82,
+          "hull": 0.0036377050896003738,
+          "steps": 21,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 113,
+          "hull": 0.015919331618652777,
+          "steps": 8,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 124,
+          "hull": 0.025232221027826185,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 127,
+          "hull": 0.010619858034667917,
+          "steps": 24,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 140,
+          "hull": 0.005205939648437408,
+          "steps": 62,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 141,
+          "hull": 0.019881748975830504,
+          "steps": 6,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 146,
+          "hull": 0.01739171461149347,
+          "steps": 48,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 148,
+          "hull": 0.0157755807046156,
+          "steps": 22,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 152,
+          "hull": 0.007042093285086537,
+          "steps": 17,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 157,
+          "hull": 0.014887597213812942,
+          "steps": 0,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 186,
+          "hull": 0.019741255137939007,
+          "steps": 5,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 194,
+          "hull": 0.012941631730414294,
+          "steps": 7,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 202,
+          "hull": 0.023951271321550394,
+          "steps": 17,
+          "status": "verified",
+          "optimizer_converged": true
+        },
+        {
+          "id": 205,
+          "hull": 0.015423872564096719,
+          "steps": 51,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 221,
+          "hull": 0.018280666514889354,
+          "steps": 31,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 235,
+          "hull": 0.017741939360351733,
+          "steps": 0,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 241,
+          "hull": 0.009240914811592837,
+          "steps": 5,
+          "status": "not_converged",
+          "optimizer_converged": true
+        },
+        {
+          "id": 246,
+          "hull": 0.012729460878906806,
+          "steps": 0,
+          "status": "verified",
+          "optimizer_converged": true
+        }
+      ]
+    }
+  ],
+  "interpretation": {
+    "maximum_steps_is_not_a_required_step_count": true,
+    "near_threshold_all_stopped_before_500": true,
+    "early_optimizer_stop_and_posthoc_force_stress_criteria_differ": true,
+    "no_1000_step_outcome_measured": true
+  },
+  "official_reference": "https://github.com/CederGroupHub/chgnet/blob/main/chgnet/model/dynamics.py"
+}
