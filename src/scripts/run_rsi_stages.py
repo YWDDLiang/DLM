@@ -451,7 +451,7 @@ def rebind_labels(spec, stage):
             'N_U_copied':False,'exact_endpoint_and_source_identity_checked':True}
     write_json(directory/'LABEL_FINAL.json',report);(directory/'_SUCCESS').touch()
     api.load_bound_evaluation_labels(records,[directory/'labels.jsonl'],paths_file=inputs,endpoint='native',
-                                    purpose=purpose,feedback_scope=scope)
+                                    purpose=purpose,feedback_scope=scope,expected_protocol=expected)
 
 
 def validity(spec,stage):
@@ -485,6 +485,18 @@ def validity(spec,stage):
         rows.append({'sample_idx':record['sample_idx'],'trajectory_id':record['trajectory_id'],
                      'comp_valid':comp,'Struct_valid':struct,'SUN':score['strict_sun'],'MSUN':score['meta_sun'],'reason':reason})
     output=score_directory(root,stage)
+    if spec.get('ranked_training'):
+        from crystal_dlm.ranked_feedback import endpoint_quality
+        quality=[endpoint_quality(row) for row in measured]
+        write_json(output/'RANKED_METRICS.json',{'requested':len(rows),'stage':stage,
+            'reliable_SUN':sum(q['rank']==4 for q in quality),
+            'strict_Stable':sum(q['reliable'] and q['hull']<=0 for q in quality),
+            'exclusive_MetaStable':sum(q['reliable'] and 0<q['hull']<=.1 for q in quality),
+            'unstable':sum(q['rank']==0 for q in quality),
+            'unknown':sum(not q['reliable'] and not q['known_failure'] for q in quality),
+            'known_physical_failure':sum(q['known_failure'] for q in quality),
+            'input_sha256':file_hash(root/stage/'inputs.jsonl'),
+            'score_sha256':file_hash(output/'attempt_results.jsonl')})
     write_rows(output/'four_metrics.jsonl',rows)
     write_json(output/'BASIC_METRICS.json',{'requested':len(rows),'stage':stage,
         'comp_valid':{'count':sum(r['comp_valid'] for r in rows),'percent':100*sum(r['comp_valid'] for r in rows)/len(rows)},

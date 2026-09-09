@@ -1,0 +1,222 @@
+#!/usr/bin/env python3
+"""Resumeable coordinator for the approved three TRAIN G/E updates."""
+from concurrent.futures import ThreadPoolExecutor
+import argparse
+import datetime as dt
+import json
+import math
+import os
+from pathlib import Path
+import subprocess as sp
+import sys
+import threading
+import time
+
+SOURCE=Path(__file__).resolve().parents[2]
+sys.path.insert(0,str(SOURCE/'src'))
+from scripts.run_post_refine_cycle import write_json,file_hash,validate_rsi_checkpoint
+from run_component import verify_deployed_source
+
+
+class Coordinator:
+    def __init__(self,root):
+        self.root=Path(root).resolve();self.lock=threading.Lock()
+        self.events=self.root/'driver_steps';self.events.mkdir(exist_ok=True)
+        self.env={**os.environ,'PYTHONPATH':str(SOURCE/'src'),'OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1',
+                  'MKL_NUM_THREADS':'1','TOKENIZERS_PARALLELISM':'false','CUDA_VISIBLE_DEVICES':''}
+        budget=self.root/'BUDGET.json'
+        if not budget.exists():
+            now=dt.datetime.now(dt.timezone.utc)
+            write_json(budget,{'dispatch_start_utc':now.isoformat(),'first_GPU_start_utc':None,
+                'deadline_utc':(now+dt.timedelta(hours=12)).isoformat(),'wall_hours':12,'max_GPUs':6,
+                'max_queued_and_running_jobs':3,'deadline_policy':'conservative_dispatch_plus_12h'})
+        self.budget=json.loads(budget.read_text())
+        self.deadline=dt.datetime.fromisoformat(self.budget['deadline_utc'])
+        path=self.root/'RAW0_PIPELINE.json'
+        if not path.exists():
+            pipeline=json.loads((self.root/'RAW0_PIPELINE_TEMPLATE.json').read_text())
+            pipeline.update(source_root=str(SOURCE),source_identity=verify_deployed_source(SOURCE))
+            pipeline['resources'].update(deadline_utc=self.deadline.isoformat(),extra_gpu_until_utc=self.deadline.isoformat())
+            write_json(path,pipeline)
+
+    def remaining(self): return (self.deadline-dt.datetime.now(dt.timezone.utc)).total_seconds()
+
+    def local(self,name,script,args):
+        marker=self.events/(name+'_DONE.json')
+        cmd=[sys.executable,str(SOURCE/script),*map(str,args)]
+        if marker.exists():
+            if json.loads(marker.read_text())['command']!=cmd: raise ValueError('completed local stage changed: '+name)
+            return
+        attempt=len(list(self.events.glob(name+'_attempt*.json')))+1
+        log=self.events/f'{name}_attempt{attempt}.log';started=time.monotonic()
+        with log.open('x') as stream: result=sp.run(cmd,env=self.env,stdout=stream,stderr=sp.STDOUT)
+        report={'command':cmd,'seconds':time.monotonic()-started,'returncode':result.returncode,'log':str(log)}
+        write_json(self.events/f'{name}_attempt{attempt}.json',report)
+        if result.returncode: raise RuntimeError('local stage failed: '+name+'; '+str(log))
+        write_json(marker,report)
+
+    def rsi(self,name,config,action,stage=None):
+        args=['--config',config,'--action',action]
+        if stage: args+=['--stage',stage]
+        self.local(name,'src/scripts/run_rsi_stages.py',args)
+
+    def ranked(self,name,config,action,extra=()):
+        self.local(name,'src/scripts/run_ranked_rsi.py',['--config',config,'--action',action,*extra])
+
+    def job(self,name,config,action,stage='construction',gpus=4,minutes=90,extra=()):
+        args=[sys.executable,str(SOURCE/'operations/r03_c3fd_main_20260907/dispatch_rsi.py'),
+              '--root',str(self.root),'--config',str(config),'--job',name,'--action',action,
+              '--stage',stage,'--gpus',str(gpus),'--minutes',str(minutes),*map(str,extra)]
+        receipt=self.root/'submissions'/f'{name}.json'
+        while not receipt.exists():
+            if self.remaining() < minutes*60+90: raise RuntimeError('insufficient absolute budget for '+name)
+            with self.lock:
+                result=sp.run(args,text=True,capture_output=True,env=self.env)
+            if result.returncode:
+                message=result.stdout+result.stderr
+                if any(s in message for s in ('resource budget is occupied','Slurm job count exceeds')):
+                    time.sleep(20);continue
+                write_json(self.events/(name+'_dispatch_failure.json'),{'command':args,'output':message})
+                raise RuntimeError('dispatch failed: '+name+' '+message[-1000:])
+        submitted=json.loads(receipt.read_text());job_id=submitted['job_id']
+        manifest=json.loads(Path(submitted['manifest']).read_text())
+        component=self.root/manifest['components'][0]['output_dir']
+        failures=0
+        while not (component/'_SUCCESS').exists():
+            if self.remaining()<=0: raise RuntimeError('absolute deadline reached')
+            state=sp.run(['squeue','-h','-j',job_id,'-o','%T'],text=True,capture_output=True).stdout.strip()
+            if not state:
+                failures+=1
+                if failures>=3:
+                    accounting=sp.run(['sacct','-n','-j',job_id,'-o','JobID,State,ExitCode'],text=True,capture_output=True).stdout
+                    raise RuntimeError('job stopped without complete outputs: '+name+' '+accounting)
+            else: failures=0
+            if gpus and not self.budget.get('first_GPU_start_utc') and state.startswith('RUNNING'):
+                with self.lock:
+                    self.budget['first_GPU_start_utc']=dt.datetime.now(dt.timezone.utc).isoformat()
+                    self.budget['first_observed_GPU_job']=job_id
+                    self.budget['start_time_precision']='first_running_observation; exact_sacct_time_recorded_in_final'
+                    write_json(self.root/'BUDGET.json',self.budget)
+            time.sleep(20)
+        print(json.dumps({'event':'job_complete','name':name,'job_id':job_id,'remaining_seconds':int(self.remaining())}),flush=True)
+
+    def evaluate(self,prefix,config,stage,gpus=4,caches=()):
+        extra=['--reuse-endpoints',*caches] if caches else []
+        self.job(prefix+'_label',config,'label',stage,gpus,90,extra)
+        self.job(prefix+'_score',config,'score',stage,0,35)
+
+    def body(self,tag,config,gpus=4):
+        root=Path(json.loads(Path(config).read_text())['run_root'])
+        self.job(tag+'_generate',config,'generate',gpus=gpus)
+        self.rsi(tag+'_raw_inputs',config,'materialize','construction')
+        self.evaluate(tag+'_raw',config,'construction',gpus)
+        self.rsi(tag+'_gate',config,'gate')
+        self.job(tag+'_refine',config,'refine',gpus=gpus)
+        for stage in ('refined','tokenized'): self.rsi(tag+'_'+stage+'_inputs',config,'materialize',stage)
+        self.evaluate(tag+'_token',config,'tokenized',gpus,[root/'construction/labeling/result'])
+        self.rsi(tag+'_current_inputs',config,'select')
+        self.rsi(tag+'_current_labels',config,'rebind','current')
+        self.job(tag+'_current_score',config,'score','current',0,35)
+
+    def final_editor(self,tag,config,gpus=4):
+        root=Path(json.loads(Path(config).read_text())['run_root'])
+        self.job(tag+'_edit',config,'edit',gpus=gpus)
+        for stage in ('proposal','edited'): self.rsi(tag+'_'+stage+'_inputs',config,'materialize',stage)
+        self.evaluate(tag+'_proposal',config,'proposal',gpus,[root/'current/labeling/result'])
+        self.rsi(tag+'_edited_labels',config,'rebind','edited')
+        self.job(tag+'_edited_score',config,'score','edited',0,35)
+
+    def training(self,index,branch,data,replay):
+        config=self.root/'training_configs'/f'TRAIN_{branch}{index}.json'
+        fit=json.loads((self.root/'fit/RUN_SPEC.json').read_text())
+        if not config.exists():
+            remaining_updates=8-2*index-(branch=='E')
+            # Reserve complete inference, physical feedback and reporting for
+            # every remaining round. Allocation changes with actual elapsed work.
+            inference_rounds=4-index
+            reserve=inference_rounds*65*60+15*60
+            seconds=int((self.remaining()-reserve)/remaining_updates)
+            if seconds<180: raise RuntimeError('insufficient training budget after reserving complete panels')
+            checkpoint=(fit['assets']['b0_checkpoint'] if branch=='G' else fit['assets']['editor_checkpoint']) if index==1 else str(
+                self.root/'training'/f'round{index-1}'/branch/'result/checkpoint')
+            if index>1: validate_rsi_checkpoint(checkpoint,branch)
+            spec={'ranked_training':True,'branch':branch,'base_model':fit['assets']['base_model'],
+                'checkpoint':checkpoint,'data':str(data),'replay_data':[str(p) for p in replay],
+                'output_dir':str(self.root/'training'/f'round{index}'/branch/'result'),
+                'seed':20260909+100*index+(37 if branch=='E' else 0),'learning_rate':2e-5,
+                'head_learning_rate':1e-4,'beta':.1,'anchor_weight':.2,'accumulation':2,
+                'steps':4096,'mask_cuts':2,'max_training_seconds':seconds,'update_index':index,
+                'source_round':index-1 if branch=='G' else index,
+                'time_allocation':{'remaining_seconds':self.remaining(),'reserved_panel_seconds':reserve,
+                    'remaining_weight_updates':remaining_updates,'rule':'share_remaining_after_complete_panel_reserve'}}
+            write_json(config,spec)
+        training=json.loads(config.read_text())
+        self.job(f'train_{branch}{index}',self.root/'fit/RUN_SPEC.json','train',gpus=4,
+            minutes=math.ceil(training['max_training_seconds']/60)+15,extra=['--training-config',config])
+
+    def run(self):
+        fit=self.root/'fit';initial=fit/'RUN_SPEC.json';twin=self.root/'bootstrap_comparator'
+        started=time.monotonic()
+        # Four main GPUs and two throughput GPUs, always under the shared guard.
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            other=pool.submit(self.body,'twin',twin/'RUN_SPEC.json',2)
+            self.body('S0',initial,4)
+            self.job('initialize_E0',initial,'initialize',gpus=1,minutes=30)
+            self.final_editor('S0',initial,2)
+            other.result()
+        write_json(self.root/'S0_COMPLETE.json',{'seconds':time.monotonic()-started,
+            'config_sha256':file_hash(initial),'initial_E_seed':20260909})
+        history=[twin,fit];g_data=[];e_data=[]
+        self.ranked('S0_compile_G',initial,'compile',['--branch','G','--comparators',twin])
+        g_data.append(fit/'pairs/G.jsonl')
+        self.ranked('S0_archive',initial,'archive')
+        for index in (1,2,3):
+            self.training(index,'G',g_data[-1],g_data[:-1])
+            self.local(f'round{index}_generation_register','src/scripts/prepare_rsi_round.py',
+                ['--root',self.root,'--index',index,'--generation-only'])
+            current=self.root/'rounds'/f'round{index}'/'fit';config=current/'RUN_SPEC.json'
+            self.body(f'S{index}',config,4)
+            self.ranked(f'S{index}_compile_G',config,'compile',['--branch','G','--comparators',*history])
+            g_data.append(current/'pairs/G.jsonl');history.append(current)
+            previous=fit/'initialization/checkpoint' if index==1 else self.root/'training'/f'round{index-1}'/'E/result/checkpoint'
+            self.ranked(f'S{index}_collection_register',config,'collection',['--checkpoint',previous])
+            collection=current/'editor_collection';collect_config=collection/'RUN_SPEC.json'
+            self.ranked(f'S{index}_teachers',collect_config,'teachers')
+            # Teacher endpoint scoring and old-E proposal collection are independent.
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                teacher=pool.submit(self.evaluate,f'S{index}_teacher',collect_config,'teacher',4,
+                                    [current/'current/labeling/result'])
+                self.job(f'S{index}_collect',collect_config,'edit',gpus=2)
+                self.rsi(f'S{index}_collect_inputs',collect_config,'materialize','proposal')
+                self.evaluate(f'S{index}_collect',collect_config,'proposal',2,[current/'current/labeling/result'])
+                teacher.result()
+            self.ranked(f'S{index}_compile_E',collect_config,'compile',['--branch','E'])
+            data=collection/'pairs/E.jsonl'
+            self.training(index,'E',data,e_data);e_data.append(data)
+            self.ranked(f'S{index}_collection_archive',collect_config,'archive')
+            self.local(f'round{index}_edit_register','src/scripts/prepare_rsi_round.py',
+                ['--root',self.root,'--index',index])
+            edited=current/'EDIT_SPEC.json'
+            self.final_editor(f'S{index}',edited,4)
+            self.ranked(f'S{index}_archive',edited,'archive')
+        reports=[]
+        for index,current in enumerate([fit,*[self.root/'rounds'/f'round{i}'/'fit' for i in (1,2,3)]]):
+            for stage in ('construction','tokenized','edited'):
+                directory=current/stage/'scoring/result'
+                reports.append({'round_index':index,'stage':stage,
+                    'ranked':json.loads((directory/'RANKED_METRICS.json').read_text()),
+                    'basic':json.loads((directory/'BASIC_METRICS.json').read_text())})
+        write_json(self.root/'RANKED_RUN_FINAL.json',{'status':'complete','reports':reports,'budget':self.budget,
+            'completed_utc':dt.datetime.now(dt.timezone.utc).isoformat(),'source':verify_deployed_source(SOURCE),
+            'actual_weight_updates':{f'{b}{i}':validate_rsi_checkpoint(self.root/'training'/f'round{i}'/b/'result/checkpoint',b)
+                                     for i in (1,2,3) for b in ('G','E')}})
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
+    args=parser.parse_args()
+    write_json(args.root/'COORDINATOR_PID.json',{'pid':os.getpid(),'source':str(SOURCE)})
+    try: Coordinator(args.root).run()
+    except Exception as error:
+        write_json(args.root/'COORDINATOR_FAILURE.json',{'error':repr(error),'utc':dt.datetime.now(dt.timezone.utc).isoformat()})
+        raise

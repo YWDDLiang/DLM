@@ -187,6 +187,10 @@ def main():
         stop=torch.tensor(int(time.monotonic()-started>spec['max_training_seconds']),device=device)
         if world>1: dist.all_reduce(stop,op=dist.ReduceOp.MAX)
         if bool(stop): break
+    if ranked:
+        torch.save({'python_rng':rng.getstate(),'torch_rng':torch.get_rng_state(),
+                    'cuda_rng':torch.cuda.get_rng_state(device),'rank':rank,'world_size':world,
+                    'steps':steps},output/f'RNG_rank{rank}.pt')
     if world>1: dist.barrier()
     if rank==0:
         delta=sum(float((p.detach()-reference[n]).square().sum()) for n,p in selected)
@@ -208,7 +212,7 @@ def main():
         files={p.name:file_hash(p) for p in checkpoint.iterdir() if p.is_file()}
         if ranked:
             torch.save({'optimizer':optimizer.state_dict(),'python_rng':rng.getstate(),
-                        'torch_rng':torch.get_rng_state(),'cuda_rng':torch.cuda.get_rng_state_all(),
+                        'torch_rng':torch.get_rng_state(),'cuda_rng':torch.cuda.get_rng_state(device),
                         'steps':steps,'rank':rank,'world_size':world},output/'optimizer_and_rng.pt')
         receipt={'optimizer_steps':steps,'parameter_delta_squared':delta,'local_preference_examples':total_pairs,
             'local_decision_examples':total_heads,'training_seconds':time.monotonic()-started,

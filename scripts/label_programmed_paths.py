@@ -268,19 +268,8 @@ def configure_deterministic_execution(enabled):
         torch.backends.cudnn.deterministic = True
 
 
-def worker_init(gpu_index):
-    global _MODEL, _OPTIMIZER, _VERSIONS
-    os.environ["OMP_NUM_THREADS"] = "1"
-    os.environ["MKL_NUM_THREADS"] = "1"
-    os.environ["OPENBLAS_NUM_THREADS"] = "1"
-    import torch
-    configure_deterministic_execution(os.environ.get('R03_DETERMINISTIC_LABELING') == '1')
-    from ase.optimize import FIRE
-    from ase.filters import FrechetCellFilter
-    from chgnet.model.model import CHGNet
-    from chgnet.model.dynamics import StructOptimizer
-    torch.set_num_threads(1)
-    torch.cuda.set_device(gpu_index)
+def recorded_fire_class(FIRE):
+    """Construct the pinned optimizer independently of GPU/model loading."""
     class RecordedFIRE(FIRE):
         def converged(self, *args, **kwargs):
             native = super().converged(*args, **kwargs)
@@ -302,6 +291,23 @@ def worker_init(gpu_index):
             outcome = super().run(*args, **kwargs)
             _OPT_STATUS.update(steps=int(self.nsteps), converged=None if outcome is None else bool(outcome))
             return outcome
+    return RecordedFIRE
+
+
+def worker_init(gpu_index):
+    global _MODEL, _OPTIMIZER, _VERSIONS
+    os.environ["OMP_NUM_THREADS"] = "1"
+    os.environ["MKL_NUM_THREADS"] = "1"
+    os.environ["OPENBLAS_NUM_THREADS"] = "1"
+    import torch
+    configure_deterministic_execution(os.environ.get('R03_DETERMINISTIC_LABELING') == '1')
+    from ase.optimize import FIRE
+    from ase.filters import FrechetCellFilter
+    from chgnet.model.model import CHGNet
+    from chgnet.model.dynamics import StructOptimizer
+    torch.set_num_threads(1)
+    torch.cuda.set_device(gpu_index)
+    RecordedFIRE=recorded_fire_class(FIRE)
     class PinnedOptimizer(StructOptimizer):
         def relax(self, structure, **kwargs):
             if kwargs.pop("ase_filter") != "FrechetCellFilter":

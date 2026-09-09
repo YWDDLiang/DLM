@@ -28,6 +28,25 @@ class PurposeContractTests(unittest.TestCase):
 
 
 class PeriodicGeometryProtocolTests(unittest.TestCase):
+    def test_joint_optimizer_does_not_accept_filtered_false_convergence(self):
+        from ase import Atoms
+        from ase.filters import FrechetCellFilter
+        from ase.optimize import FIRE
+        from ase.calculators.singlepoint import SinglePointCalculator
+        atoms=Atoms('Na',positions=[[0,0,0]],cell=[2,2,2],pbc=True)
+        optimizer_class=MODULE.recorded_fire_class(FIRE)
+        with patch.dict('os.environ',{'RSI_JOINT_PHYSICAL_STOP':'1','RSI_STRESS_TOLERANCE':'.5'}):
+            atoms.calc=SinglePointCalculator(atoms,energy=0.,forces=np.zeros((1,3)),
+                stress=np.array([1.,0,0,0,0,0])/EV_A3_TO_GPA)
+            optimizer=optimizer_class(FrechetCellFilter(atoms),logfile=None)
+            self.assertFalse(optimizer.run(fmax=.1,steps=0))
+            self.assertTrue(MODULE._OPT_STATUS['filter_converged'])
+            self.assertAlmostEqual(MODULE._OPT_STATUS['stress_max_GPa'],1.)
+            atoms.calc=SinglePointCalculator(atoms,energy=0.,forces=np.zeros((1,3)),
+                stress=np.array([.4,0,0,0,0,0])/EV_A3_TO_GPA)
+            optimizer=optimizer_class(FrechetCellFilter(atoms),logfile=None)
+            self.assertTrue(optimizer.run(fmax=.1,steps=0))
+
     def test_early_integer_witness_uses_original_nonzero_image_even_without_certified_basis(self):
         from pymatgen.core import Lattice, Structure
         # A spurious tiny LLL vector rounds to the zero image: it cannot reject
