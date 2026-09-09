@@ -1,0 +1,803 @@
+{
+  "editor_targets": [
+    {
+      "SUN_gain_proposals": [],
+      "counts": {
+        "examples": 224,
+        "no_SUN_after": 32,
+        "nonSUN_positive_MSUN_gain": 9,
+        "positive_after_targets": 32
+      },
+      "source_theta": 0
+    },
+    {
+      "SUN_gain_proposals": [
+        {
+          "accept": 0.10740979760885239,
+          "applied": false,
+          "hull": -0.2135527278385414,
+          "id": 71,
+          "mode": "KEEP",
+          "positive_target": true,
+          "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6676",
+          "status": "invalid_terminal"
+        },
+        {
+          "accept": 0.8753039836883545,
+          "applied": true,
+          "hull": -0.04239273443278013,
+          "id": 185,
+          "mode": "EDIT",
+          "positive_target": true,
+          "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6461",
+          "status": "invalid_terminal"
+        },
+        {
+          "accept": 0.01379193365573883,
+          "applied": false,
+          "hull": -3.8343448632539,
+          "id": 188,
+          "mode": "KEEP",
+          "positive_target": true,
+          "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3790",
+          "status": "invalid_terminal"
+        }
+      ],
+      "counts": {
+        "SUN_gain": 3,
+        "SUN_gain_invalid_terminal": 3,
+        "examples": 248,
+        "no_SUN_after": 23,
+        "nonSUN_positive_MSUN_gain": 8,
+        "positive_after_targets": 26
+      },
+      "source_theta": 1
+    },
+    {
+      "SUN_gain_proposals": [
+        {
+          "accept": 0.010822617448866367,
+          "applied": false,
+          "hull": -0.11362829023803744,
+          "id": 1,
+          "mode": "KEEP",
+          "positive_target": true,
+          "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4602",
+          "status": "invalid_terminal"
+        },
+        {
+          "accept": 0.014180089347064495,
+          "applied": false,
+          "hull": -0.00903597633699782,
+          "id": 87,
+          "mode": "KEEP",
+          "positive_target": true,
+          "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2721",
+          "status": "not_converged"
+        },
+        {
+          "accept": 0.004171078093349934,
+          "applied": false,
+          "hull": -4.222385982742449,
+          "id": 208,
+          "mode": "KEEP",
+          "positive_target": true,
+          "source_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5342",
+          "status": "invalid_terminal"
+        }
+      ],
+      "counts": {
+        "SUN_gain": 3,
+        "SUN_gain_invalid_terminal": 2,
+        "SUN_gain_not_converged": 1,
+        "examples": 251,
+        "no_SUN_after": 37,
+        "nonSUN_positive_MSUN_gain": 14,
+        "positive_after_targets": 40
+      },
+      "source_theta": 2
+    }
+  ],
+  "generator_targets": [
+    {
+      "SUN_gain_proposals": [],
+      "counts": {
+        "SUN_gain": 22,
+        "SUN_gain_not_converged": 15,
+        "SUN_gain_verified": 7,
+        "examples": 215,
+        "no_SUN_after": 159,
+        "nonSUN_positive_MSUN_gain": 64,
+        "positive_after_targets": 181
+      },
+      "source_theta": 0
+    },
+    {
+      "SUN_gain_proposals": [],
+      "counts": {
+        "SUN_gain": 24,
+        "SUN_gain_not_converged": 11,
+        "SUN_gain_verified": 13,
+        "examples": 241,
+        "no_SUN_after": 191,
+        "nonSUN_positive_MSUN_gain": 75,
+        "positive_after_targets": 215
+      },
+      "source_theta": 1
+    },
+    {
+      "SUN_gain_proposals": [],
+      "counts": {
+        "SUN_gain": 26,
+        "SUN_gain_not_converged": 16,
+        "SUN_gain_verified": 10,
+        "examples": 239,
+        "no_SUN_after": 186,
+        "nonSUN_positive_MSUN_gain": 69,
+        "positive_after_targets": 212
+      },
+      "source_theta": 2
+    }
+  ],
+  "input_hashes": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/fit/construction/scoring/result/attempt_results.jsonl": "1e329212315da40d9f577c7b0ede0c72a48202fbf5d03d99dffa05409ed36f16",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/fit/edited/scoring/result/attempt_results.jsonl": "403f30ecd6716cbfd156e8ac239c55d9c1e4a9fcbcbde2ee23888e5dc61e682b",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/fit/pairs/E.jsonl": "4421b79a49696ba4aa621fc753344e78eaef874ecfec99a1231f2c13909a7aa5",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/fit/pairs/G.jsonl": "446b866ae888b022de308a4da6d05b26048a62159ad1aa696921ecfb484b46ea",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/fit/proposal/scoring/result/attempt_results.jsonl": "aeebe63bb509e51ddc3ecf4c9294e38ad2f3bbdf7da600a373841eb96476d289",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/fit/refined/scoring/result/attempt_results.jsonl": "ccf5c3495eb17308b45d86888478efa5291fce61cd22fd396304f8d1bf9a8005",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/fit/tokenized/scoring/result/attempt_results.jsonl": "2c92ff903c4b867fb69311ab69d252f6831166e2ffb6b6b577fdf1253674c980",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/construction/scoring/result/attempt_results.jsonl": "e33e100bd526212665956da0831c29e8b7725ed1ff77af1361f9f5f7e1fdcbba",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/edited/scoring/result/attempt_results.jsonl": "46d5ffb78b6bc3fa038bc17877aae8a0a6bcf2a86359b8b76174cc8a1370165f",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/pairs/E.jsonl": "e090f61d53c1843e8dc1979bcf88ea4cec60254c1cc0001eacbfb411d9a34da4",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/pairs/G.jsonl": "f0de669c603bc79847905b0598b44ea0a72d0cf5de538506c4bc9582b34f83b7",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/proposal/scoring/result/attempt_results.jsonl": "0a72ddfd3f68d0c0788214187d191140e37879a3c2d7dc35b41cba8542c2530c",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/refined/scoring/result/attempt_results.jsonl": "b2bd6af42a8b91f798cf4885e624dbebca55df5eea61022784603734c9a19114",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/tokenized/scoring/result/attempt_results.jsonl": "bbcb2bf717c9c91b3281395957d795f11aa00cb55ee84bb7e34125f4686bc2bb",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/construction/scoring/result/attempt_results.jsonl": "4d238233426ddcdf169a048645742e0f5ffe5c10dfc61cb853c7623b3e4f03a9",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/edited/scoring/result/attempt_results.jsonl": "9946986f075efb07322e0b723d37f00617555585ddb5a4071a73e227d25c2768",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/pairs/E.jsonl": "ab1f1413321a7cf9f55db7f3478a1a26e7ea2b1c1fefc68d018e8b4ee9d23240",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/pairs/G.jsonl": "5643f5597f7c5e97421e1ffbda9079e9a02c4a015a652e1b079e34e9b9cd5607",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/proposal/scoring/result/attempt_results.jsonl": "3fced6561fb22ab14467a68c72dd460e27a256659ffb513981678b27d81e2298",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/refined/scoring/result/attempt_results.jsonl": "96f33e7a9f4d5aa659f6303ac0e205dcc5b077f148e686437945e1cacd2545f2",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/tokenized/scoring/result/attempt_results.jsonl": "791cd2185a89e5c6f5e28e79a28ac0fe27ecbba9c82d0d5359947a2628d4e021",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round3/fit/construction/scoring/result/attempt_results.jsonl": "2b235e8fcdfacd16b5819ef9717469393e6ce55d99b9acf39366fb41025f36bf",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round3/fit/edited/scoring/result/attempt_results.jsonl": "d7be46922c9a45c12978484dd952da0d78cb94eb43e5631bc8cae73002e72b7e",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round3/fit/refined/scoring/result/attempt_results.jsonl": "e7f0b0104b14ce69e68ecfcc71195c6062c303926df50904a022e4af44f39b7b",
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round3/fit/tokenized/scoring/result/attempt_results.jsonl": "f539e100fb6215a22eb08f9d1e41e3ceab6b394c3b704d7c9ccca8206ee30313"
+  },
+  "scope": "Existing TRAIN only; no new neural calls or physical scoring.",
+  "stages": [
+    {
+      "counts": {
+        "SUN": 4,
+        "meta_stable": 36,
+        "requested": 256,
+        "strict_stable": 4
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 12,
+        "0.03_to_0.1": 19,
+        "0_to_0.01": 1,
+        "verified_0.01_to_0.03": 6,
+        "verified_0.03_to_0.1": 9,
+        "verified_0_to_0.01": 1
+      },
+      "stage": "construction",
+      "theta": 0
+    },
+    {
+      "counts": {
+        "SUN": 25,
+        "meta_stable": 126,
+        "requested": 256,
+        "stable_but_not_SUN": 2,
+        "stable_non_novel": 2,
+        "stable_non_unique": 0,
+        "strict_stable": 27
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 18,
+        "0.03_to_0.1": 57,
+        "0_to_0.01": 10,
+        "verified_0.01_to_0.03": 9,
+        "verified_0.03_to_0.1": 27,
+        "verified_0_to_0.01": 5
+      },
+      "stage": "refined",
+      "theta": 0
+    },
+    {
+      "counts": {
+        "SUN": 26,
+        "meta_stable": 122,
+        "requested": 256,
+        "stable_but_not_SUN": 3,
+        "stable_non_novel": 3,
+        "stable_non_unique": 0,
+        "strict_stable": 29
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 19,
+        "0.03_to_0.1": 53,
+        "0_to_0.01": 8,
+        "verified_0.01_to_0.03": 11,
+        "verified_0.03_to_0.1": 18,
+        "verified_0_to_0.01": 3
+      },
+      "stage": "tokenized",
+      "theta": 0
+    },
+    {
+      "counts": {
+        "SUN": 26,
+        "meta_stable": 122,
+        "requested": 256,
+        "stable_but_not_SUN": 3,
+        "stable_non_novel": 3,
+        "stable_non_unique": 0,
+        "strict_stable": 29
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 19,
+        "0.03_to_0.1": 53,
+        "0_to_0.01": 8,
+        "verified_0.01_to_0.03": 11,
+        "verified_0.03_to_0.1": 18,
+        "verified_0_to_0.01": 3
+      },
+      "stage": "edited",
+      "theta": 0
+    },
+    {
+      "counts": {
+        "SUN": 7,
+        "meta_stable": 36,
+        "requested": 256,
+        "strict_stable": 7
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 5,
+        "0.03_to_0.1": 23,
+        "0_to_0.01": 1,
+        "verified_0.01_to_0.03": 1,
+        "verified_0.03_to_0.1": 10
+      },
+      "stage": "proposal",
+      "theta": 0
+    },
+    {
+      "counts": {
+        "SUN": 7,
+        "meta_stable": 32,
+        "requested": 256,
+        "strict_stable": 7
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 5,
+        "0.03_to_0.1": 19,
+        "0_to_0.01": 1,
+        "verified_0.01_to_0.03": 3,
+        "verified_0.03_to_0.1": 10,
+        "verified_0_to_0.01": 1
+      },
+      "stage": "construction",
+      "theta": 1
+    },
+    {
+      "counts": {
+        "SUN": 29,
+        "meta_stable": 142,
+        "requested": 256,
+        "stable_but_not_SUN": 5,
+        "stable_non_novel": 5,
+        "stable_non_unique": 0,
+        "strict_stable": 34
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 17,
+        "0.03_to_0.1": 59,
+        "0_to_0.01": 15,
+        "verified_0.01_to_0.03": 9,
+        "verified_0.03_to_0.1": 23,
+        "verified_0_to_0.01": 6
+      },
+      "stage": "refined",
+      "theta": 1
+    },
+    {
+      "counts": {
+        "SUN": 31,
+        "meta_stable": 141,
+        "requested": 256,
+        "stable_but_not_SUN": 5,
+        "stable_non_novel": 5,
+        "stable_non_unique": 0,
+        "strict_stable": 36
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 18,
+        "0.03_to_0.1": 58,
+        "0_to_0.01": 12,
+        "verified_0.01_to_0.03": 9,
+        "verified_0.03_to_0.1": 20,
+        "verified_0_to_0.01": 6
+      },
+      "stage": "tokenized",
+      "theta": 1
+    },
+    {
+      "counts": {
+        "SUN": 32,
+        "meta_stable": 141,
+        "requested": 256,
+        "stable_but_not_SUN": 5,
+        "stable_non_novel": 5,
+        "stable_non_unique": 0,
+        "strict_stable": 37
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 17,
+        "0.03_to_0.1": 60,
+        "0_to_0.01": 12,
+        "verified_0.01_to_0.03": 8,
+        "verified_0.03_to_0.1": 23,
+        "verified_0_to_0.01": 6
+      },
+      "stage": "edited",
+      "theta": 1
+    },
+    {
+      "counts": {
+        "SUN": 8,
+        "meta_stable": 49,
+        "requested": 256,
+        "strict_stable": 8
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 9,
+        "0.03_to_0.1": 29,
+        "0_to_0.01": 3,
+        "verified_0.01_to_0.03": 4,
+        "verified_0.03_to_0.1": 16
+      },
+      "stage": "proposal",
+      "theta": 1
+    },
+    {
+      "counts": {
+        "SUN": 4,
+        "meta_stable": 29,
+        "requested": 256,
+        "strict_stable": 4
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 5,
+        "0.03_to_0.1": 16,
+        "0_to_0.01": 4,
+        "verified_0.01_to_0.03": 4,
+        "verified_0.03_to_0.1": 7,
+        "verified_0_to_0.01": 2
+      },
+      "stage": "construction",
+      "theta": 2
+    },
+    {
+      "counts": {
+        "SUN": 29,
+        "meta_stable": 142,
+        "requested": 256,
+        "stable_but_not_SUN": 4,
+        "stable_non_novel": 4,
+        "stable_non_unique": 0,
+        "strict_stable": 33
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 15,
+        "0.03_to_0.1": 64,
+        "0_to_0.01": 9,
+        "verified_0.01_to_0.03": 8,
+        "verified_0.03_to_0.1": 25,
+        "verified_0_to_0.01": 5
+      },
+      "stage": "refined",
+      "theta": 2
+    },
+    {
+      "counts": {
+        "SUN": 30,
+        "meta_stable": 139,
+        "requested": 256,
+        "stable_but_not_SUN": 4,
+        "stable_non_novel": 4,
+        "stable_non_unique": 0,
+        "strict_stable": 34
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 16,
+        "0.03_to_0.1": 60,
+        "0_to_0.01": 8,
+        "verified_0.01_to_0.03": 9,
+        "verified_0.03_to_0.1": 20,
+        "verified_0_to_0.01": 5
+      },
+      "stage": "tokenized",
+      "theta": 2
+    },
+    {
+      "counts": {
+        "SUN": 30,
+        "meta_stable": 140,
+        "requested": 256,
+        "stable_but_not_SUN": 4,
+        "stable_non_novel": 4,
+        "stable_non_unique": 0,
+        "strict_stable": 34
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 18,
+        "0.03_to_0.1": 63,
+        "0_to_0.01": 8,
+        "verified_0.01_to_0.03": 9,
+        "verified_0.03_to_0.1": 21,
+        "verified_0_to_0.01": 5
+      },
+      "stage": "edited",
+      "theta": 2
+    },
+    {
+      "counts": {
+        "SUN": 13,
+        "meta_stable": 52,
+        "requested": 256,
+        "strict_stable": 13
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 12,
+        "0.03_to_0.1": 26,
+        "0_to_0.01": 1,
+        "verified_0.01_to_0.03": 6,
+        "verified_0.03_to_0.1": 15,
+        "verified_0_to_0.01": 1
+      },
+      "stage": "proposal",
+      "theta": 2
+    },
+    {
+      "counts": {
+        "SUN": 4,
+        "meta_stable": 33,
+        "requested": 256,
+        "strict_stable": 4
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 5,
+        "0.03_to_0.1": 22,
+        "0_to_0.01": 2,
+        "verified_0.01_to_0.03": 1,
+        "verified_0.03_to_0.1": 9,
+        "verified_0_to_0.01": 2
+      },
+      "stage": "construction",
+      "theta": 3
+    },
+    {
+      "counts": {
+        "SUN": 32,
+        "meta_stable": 138,
+        "requested": 256,
+        "stable_but_not_SUN": 3,
+        "stable_non_novel": 3,
+        "stable_non_unique": 0,
+        "strict_stable": 35
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 18,
+        "0.03_to_0.1": 61,
+        "0_to_0.01": 6,
+        "verified_0.01_to_0.03": 7,
+        "verified_0.03_to_0.1": 23,
+        "verified_0_to_0.01": 3
+      },
+      "stage": "refined",
+      "theta": 3
+    },
+    {
+      "counts": {
+        "SUN": 32,
+        "meta_stable": 135,
+        "requested": 256,
+        "stable_but_not_SUN": 4,
+        "stable_non_novel": 4,
+        "stable_non_unique": 0,
+        "strict_stable": 36
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 19,
+        "0.03_to_0.1": 58,
+        "0_to_0.01": 5,
+        "verified_0.01_to_0.03": 9,
+        "verified_0.03_to_0.1": 18
+      },
+      "stage": "tokenized",
+      "theta": 3
+    },
+    {
+      "counts": {
+        "SUN": 32,
+        "meta_stable": 135,
+        "requested": 256,
+        "stable_but_not_SUN": 4,
+        "stable_non_novel": 4,
+        "stable_non_unique": 0,
+        "strict_stable": 36
+      },
+      "nonSUN_novel_unique_hull_bins": {
+        "0.01_to_0.03": 18,
+        "0.03_to_0.1": 61,
+        "0_to_0.01": 5,
+        "verified_0.01_to_0.03": 9,
+        "verified_0.03_to_0.1": 19
+      },
+      "stage": "edited",
+      "theta": 3
+    }
+  ],
+  "transitions": [
+    {
+      "after": "refined",
+      "before": "construction",
+      "gain_ids": [
+        20,
+        31,
+        41,
+        42,
+        50,
+        70,
+        105,
+        118,
+        120,
+        127,
+        128,
+        148,
+        166,
+        173,
+        180,
+        195,
+        219,
+        232,
+        236,
+        244,
+        251
+      ],
+      "gain_status": {
+        "not_converged": 9,
+        "verified": 12
+      },
+      "gains": 21,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 0
+    },
+    {
+      "after": "tokenized",
+      "before": "refined",
+      "gain_ids": [
+        125
+      ],
+      "gain_status": {
+        "not_converged": 1
+      },
+      "gains": 1,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 0
+    },
+    {
+      "after": "edited",
+      "before": "tokenized",
+      "gain_ids": [],
+      "gain_status": {},
+      "gains": 0,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 0
+    },
+    {
+      "after": "refined",
+      "before": "construction",
+      "gain_ids": [
+        41,
+        42,
+        49,
+        70,
+        72,
+        105,
+        118,
+        120,
+        121,
+        127,
+        146,
+        166,
+        168,
+        173,
+        180,
+        195,
+        213,
+        219,
+        232,
+        236,
+        244,
+        251
+      ],
+      "gain_status": {
+        "not_converged": 10,
+        "verified": 12
+      },
+      "gains": 22,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 1
+    },
+    {
+      "after": "tokenized",
+      "before": "refined",
+      "gain_ids": [
+        18,
+        148
+      ],
+      "gain_status": {
+        "verified": 2
+      },
+      "gains": 2,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 1
+    },
+    {
+      "after": "edited",
+      "before": "tokenized",
+      "gain_ids": [
+        185
+      ],
+      "gain_status": {
+        "invalid_terminal": 1
+      },
+      "gains": 1,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 1
+    },
+    {
+      "after": "refined",
+      "before": "construction",
+      "gain_ids": [
+        3,
+        20,
+        31,
+        37,
+        42,
+        49,
+        50,
+        53,
+        70,
+        105,
+        118,
+        120,
+        121,
+        127,
+        136,
+        146,
+        168,
+        173,
+        180,
+        195,
+        213,
+        232,
+        236,
+        244,
+        251
+      ],
+      "gain_status": {
+        "not_converged": 13,
+        "verified": 12
+      },
+      "gains": 25,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 2
+    },
+    {
+      "after": "tokenized",
+      "before": "refined",
+      "gain_ids": [
+        52
+      ],
+      "gain_status": {
+        "verified": 1
+      },
+      "gains": 1,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 2
+    },
+    {
+      "after": "edited",
+      "before": "tokenized",
+      "gain_ids": [],
+      "gain_status": {},
+      "gains": 0,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 2
+    },
+    {
+      "after": "refined",
+      "before": "construction",
+      "gain_ids": [
+        3,
+        20,
+        31,
+        37,
+        41,
+        42,
+        49,
+        50,
+        53,
+        70,
+        72,
+        105,
+        118,
+        120,
+        121,
+        125,
+        128,
+        136,
+        168,
+        173,
+        180,
+        181,
+        187,
+        213,
+        232,
+        236,
+        244,
+        248
+      ],
+      "gain_status": {
+        "not_converged": 13,
+        "verified": 15
+      },
+      "gains": 28,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 3
+    },
+    {
+      "after": "tokenized",
+      "before": "refined",
+      "gain_ids": [
+        85
+      ],
+      "gain_status": {
+        "verified": 1
+      },
+      "gains": 1,
+      "loss_ids": [
+        41
+      ],
+      "losses": 1,
+      "theta": 3
+    },
+    {
+      "after": "edited",
+      "before": "tokenized",
+      "gain_ids": [],
+      "gain_status": {},
+      "gains": 0,
+      "loss_ids": [],
+      "losses": 0,
+      "theta": 3
+    }
+  ]
+}

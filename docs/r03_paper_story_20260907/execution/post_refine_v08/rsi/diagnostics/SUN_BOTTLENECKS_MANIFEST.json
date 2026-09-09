@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "scope": "Read-only SUN-specific analysis of existing TRAIN records. No new model inference, training, or physical scoring.",
+  "artifact": "SUN_BOTTLENECKS.json",
+  "artifact_sha256": "37eec33f03f3505f95ce53a81677cbe28fb3f6a952cc178b47d62dff511a0ce1",
+  "remote_artifact": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/diagnostics/mechanisms_20260909/SUN_BOTTLENECKS.json",
+  "source": "operations/r03_c3fd_main_20260907/analyze_rsi_sun_bottlenecks.py",
+  "source_sha256": "f9ba863bf6bdcfd64a103fd6b7fc8e313865997f370409900d169366fba2bd73",
+  "remote_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/diagnostics/mechanisms_20260909/sun_source_f9ba863bf6bd.py",
+  "frozen_source": {
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/code/6228f95343049cbb89884944c1af68e75e31d770",
+    "commit": "6228f95343049cbb89884944c1af68e75e31d770",
+    "manifest_sha256": "16545e6efe9663330960985f1e4ef7f3184f5081f930b43a134eef2cdf5a31b8"
+  },
+  "run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1",
+  "findings": {
+    "E_positive_targets": 98,
+    "E_positive_after_still_not_SUN": 92,
+    "E_formal_SUN_gain_proposals": 6,
+    "E_SUN_gain_invalid_terminal": 5,
+    "E_SUN_gain_not_converged": 1,
+    "E_SUN_gain_verified": 0,
+    "G_positive_after_targets": 608,
+    "G_positive_after_still_not_SUN": 536,
+    "G_formal_SUN_gain_targets": 72,
+    "G_SUN_gain_verified": 30
+  },
+  "limits": [
+    "Positive means preferred by the historical broad quality rule, not automatically a SUN gain.",
+    "Terminal status is reported without changing historical formal SUN.",
+    "Near-threshold bins use existing N/U labels, not an estimate of achievable SUN.",
+    "Same-relaxation-basin discussion is a mechanism hypothesis from the terminal-energy scoring definition, not measured basin assignments."
+  ]
+}
