@@ -11,6 +11,15 @@ from test_r03_geometry_bridge import TinyTokenizer, canvas, groups, native_const
 
 
 class CascadeTests(unittest.TestCase):
+    def test_relaxed_drafts_keep_labels_without_zero_support_content_targets(self):
+        example={'chosen_tokens':[1],'rejected_tokens':[0]}
+        keep,bad=recovery.restrict_training_content(example,'G',lambda tokens:tokens==[1])
+        self.assertTrue(keep);self.assertEqual(bad,['rejected_tokens'])
+        self.assertEqual(example['healthy_anchor_tokens'],[1]);self.assertIsNone(example['chosen_tokens'])
+        example={'chosen_tokens':[0],'rejected_tokens':[0],'mode_target':0,'accept_target':0}
+        keep,bad=recovery.restrict_training_content(example,'E',lambda tokens:False)
+        self.assertTrue(keep);self.assertEqual(example['mode_target'],0);self.assertIsNone(example['chosen_tokens'])
+
     def setUp(self):
         self.tokenizer = TinyTokenizer()
         self.body = canvas(self.tokenizer, 3, length=10, coords=[(0,0,0),(0,0,50),(0,0,None)])[0,2:].tolist()

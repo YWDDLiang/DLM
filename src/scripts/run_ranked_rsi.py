@@ -122,6 +122,17 @@ def collection(spec,checkpoint):
 
 def compile_dataset(spec,branch,comparators=()):
     root,plans=require_train(spec);examples=[];audit=[];pins={}
+    content_support = None
+    if spec['policy'].get('construction_recovery') == 'three_stage_final_Z':
+        from transformers import AutoTokenizer
+        from crystal_dlm.r03_physics_transfer import build_repair_constraints, geometry_support_report
+        from crystal_dlm.construction_recovery import restrict_training_content
+        tokenizer = AutoTokenizer.from_pretrained(spec['assets']['b0_checkpoint'],trust_remote_code=True)
+        support = build_repair_constraints(tokenizer); support_cache = {}
+        def content_support(tokens):
+            key=tuple(tokens)
+            if key not in support_cache: support_cache[key]=geometry_support_report(tokens,constraints=support)['supported']
+            return support_cache[key]
     schedules={}
     if branch=='G' and spec.get('training_policy',{}).get('bounded_minibatch_training'):
         from scripts.run_post_refine_cycle import constructor_api
@@ -192,6 +203,13 @@ def compile_dataset(spec,branch,comparators=()):
                 item.update(chosen_tokens=right if choice=='after' else left,rejected_tokens=left if choice=='after' else right)
             if branch=='G' and item['chosen_tokens'] is None and 'healthy_anchor_tokens' not in item: continue
             item.update(atom_permutation=permutation,preference=preference,conditioning_sha256=trace['conditioning_sha256'])
+            if content_support is not None:
+                keep, excluded=restrict_training_content(item,branch,content_support)
+                if excluded:
+                    audit[-1]['strict_content_support_exclusions']=excluded
+                    audit[-1]['physical_trajectory_retained']=True
+                    audit[-1]['retained_supervision']='head_or_supported_anchor' if keep else 'archive_only'
+                if not keep: continue
             examples.append(item)
     directory=root/'pairs';data=directory/f'{branch}.jsonl';audit_file=directory/f'pair_audit_{branch}.jsonl'
     write_rows(data,examples);write_rows(audit_file,audit)

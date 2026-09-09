@@ -7,6 +7,21 @@ from crystal_dlm.llada_generation import _lattice_matrix_from_token_ids
 from crystal_dlm.post_refine_contract import derived_seed
 
 
+def restrict_training_content(example, branch, supported):
+    """Retain physical/head supervision without inventing strict-support logp."""
+    fields = ['chosen_tokens','rejected_tokens','healthy_anchor_tokens','content_target_tokens']
+    bad = [key for key in fields if example.get(key) is not None and not supported(example[key])]
+    if not bad: return True, []
+    chosen = example.get('chosen_tokens')
+    anchor = example.get('healthy_anchor_tokens') if branch == 'G' else example.get('content_target_tokens')
+    target = chosen if chosen is not None and supported(chosen) else anchor if anchor is not None and supported(anchor) else None
+    example['chosen_tokens'] = example['rejected_tokens'] = None
+    example.pop('healthy_anchor_tokens',None);example.pop('content_target_tokens',None)
+    if target is not None: example['healthy_anchor_tokens' if branch == 'G' else 'content_target_tokens'] = target
+    example['strict_content_support_exclusions'] = bad
+    return branch == 'E' or target is not None, bad
+
+
 def failed_sites(body, n, failure):
     sites = {(int(p)-8)//4 for p in failure.get('failure_positions', []) if 8 <= int(p) < len(body)}
     if not sites:
