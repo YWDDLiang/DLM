@@ -1,0 +1,39 @@
+{
+  "created_utc": "2026-09-09T21:22:41.409957+00:00",
+  "all_bytes_unchanged": true,
+  "no_new_proposal_generation": true,
+  "stages": [
+    {
+      "arm": "heads",
+      "hashes_before": {
+        "inputs.jsonl": "72af2b160a2f7a216a835536d15a65e0a539737e62fbd672f121c61e10adbda6",
+        "FEEDBACK_MANIFEST.json": "c883f62cfb655db67d8addefae731d0e1362d480472262c512ebe4035117ca72",
+        "MATERIALIZED.json": "2a83d461a3bba8c9556b46a666e59cad561ae87c5c9cba052a3ccae4427b424a"
+      },
+      "hashes_after": {
+        "inputs.jsonl": "72af2b160a2f7a216a835536d15a65e0a539737e62fbd672f121c61e10adbda6",
+        "FEEDBACK_MANIFEST.json": "c883f62cfb655db67d8addefae731d0e1362d480472262c512ebe4035117ca72",
+        "MATERIALIZED.json": "2a83d461a3bba8c9556b46a666e59cad561ae87c5c9cba052a3ccae4427b424a"
+      },
+      "original_bytes_preserved_at": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/preflight/materialize_source_archive/heads",
+      "prior_receipt_preserved_at": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/driver_steps/heads_proposal_inputs_DONE_before_physics_source_recovery.json",
+      "new_receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/driver_steps/heads_proposal_inputs_DONE.json"
+    },
+    {
+      "arm": "t2t",
+      "hashes_before": {
+        "inputs.jsonl": "92074f07429d0adddd477196e228410194af70707278d75955a5fcd0de163831",
+        "FEEDBACK_MANIFEST.json": "7e97d8b250e902dda9824ec11e5aa6463f69c2ef879f165d8e8e8dc053f70af6",
+        "MATERIALIZED.json": "3904a1ae84a36045b9937218f7641784c7f13a29ffc485717a64f6c738f5de27"
+      },
+      "hashes_after": {
+        "inputs.jsonl": "92074f07429d0adddd477196e228410194af70707278d75955a5fcd0de163831",
+        "FEEDBACK_MANIFEST.json": "7e97d8b250e902dda9824ec11e5aa6463f69c2ef879f165d8e8e8dc053f70af6",
+        "MATERIALIZED.json": "3904a1ae84a36045b9937218f7641784c7f13a29ffc485717a64f6c738f5de27"
+      },
+      "original_bytes_preserved_at": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/preflight/materialize_source_archive/t2t",
+      "prior_receipt_preserved_at": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/driver_steps/t2t_proposal_inputs_DONE_before_physics_source_recovery.json",
+      "new_receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/driver_steps/t2t_proposal_inputs_DONE.json"
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "PHYSICS_SOURCE_PIN.json": {
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/code/d88e68a76007384173c76c0d4b94250618e0eeb8",
+    "identity": {
+      "commit": "d88e68a76007384173c76c0d4b94250618e0eeb8",
+      "manifest_sha256": "1cae556863768c61ef0e6c8c907dd0469a993e8a20bcdac3f201a5499500129d"
+    },
+    "applies_to": "editor_trial_label_only",
+    "strict_runtime_validation_unchanged": true,
+    "reference_runtime": {
+      "model": "CHGNet-0.3.0",
+      "chgnet_package": "0.4.2",
+      "ase_package": "3.28.0",
+      "torch_package": "2.4.0+cu121",
+      "pymatgen_package": "2025.6.14",
+      "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+      "labeler_sha256": "2ce3c400a22c51efbf33bcee57ef3c6957e285ad7fe699fe5e2f1ea89cead073",
+      "deterministic_algorithms_enabled": true,
+      "cublas_workspace_config": ":4096:8",
+      "joint_stop_source_sha256": "ecff4099348db67b85fdc0f265a303bc7e5132cda9ef8625f1f6dda125cfcdd3",
+      "optimizer_stop": "joint_atomic_force_and_stress_v1"
+    },
+    "cache_verification_sha256": "2f73eed18e0d044398f5b23cbfa76792bd352792d0f86575367a458292a4149f",
+    "diagnosis_sha256": "5a9bb1971f8316739d1554ffd3ff6bfbab19ee8811c0494df5182ed9214a5d23",
+    "unchanged_physics_functions_and_models": true,
+    "created_utc": "2026-09-09T21:14:46.129364+00:00"
+  },
+  "preflight/PHYSICS_SOURCE_IDENTITY_DIAGNOSIS.json": {
+    "created_utc": "2026-09-09T21:11:02.309931+00:00",
+    "paused_driver_pid": 64180,
+    "runtime_differences": {
+      "joint_stop_source_sha256": {
+        "old": "ecff4099348db67b85fdc0f265a303bc7e5132cda9ef8625f1f6dda125cfcdd3",
+        "new": "04c5455c7278fb3a341b44a5bbf1dbcf38b14b0ca2d5c42a9f72b1362e279a26"
+      }
+    },
+    "old_runtime_equals_frozen_reference": true,
+    "existing_function_or_class_AST_changes": [],
+    "new_definitions": [
+      "assign_current_mode_targets"
+    ],
+    "labeler_bytes_equal": true,
+    "cache_wrapper_bytes_equal": true,
+    "old_physics_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/code/d88e68a76007384173c76c0d4b94250618e0eeb8",
+    "editor_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/code/956b01043e3f0b043eaba6c6296725cdf539d751",
+    "runtime_old": {
+      "model": "CHGNet-0.3.0",
+      "chgnet_package": "0.4.2",
+      "ase_package": "3.28.0",
+      "torch_package": "2.4.0+cu121",
+      "pymatgen_package": "2025.6.14",
+      "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+      "labeler_sha256": "2ce3c400a22c51efbf33bcee57ef3c6957e285ad7fe699fe5e2f1ea89cead073",
+      "deterministic_algorithms_enabled": true,
+      "cublas_workspace_config": ":4096:8",
+      "joint_stop_source_sha256": "ecff4099348db67b85fdc0f265a303bc7e5132cda9ef8625f1f6dda125cfcdd3",
+      "optimizer_stop": "joint_atomic_force_and_stress_v1"
+    }
+  },
+  "preflight/PHYSICS_SOURCE_CACHE_REPLAY_VERIFIED.json": {
+    "created_utc": "2026-09-09T21:14:46.129364+00:00",
+    "complete": true,
+    "new_physics_calls": 0,
+    "caches": [
+      {
+        "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/heads/current/labeling/result",
+        "rows": 256,
+        "verified_endpoints": 256,
+        "pin": {
+          "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/heads/current/labeling/result",
+          "labels_sha256": "b54beaa0c1f730dbfc6ed084756bb327cd46e2d495676c4005b8b625288c4c56",
+          "report_sha256": "7df45e9bb7452e83903ca05e4cf00a3ab5521ef90428b4efb651a5d9bbccc058",
+          "reused_endpoints": 256,
+          "worker_errors_reused": false
+        }
+      },
+      {
+        "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/t2t/current/labeling/result",
+        "rows": 256,
+        "verified_endpoints": 256,
+        "pin": {
+          "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/t2t/current/labeling/result",
+          "labels_sha256": "b54beaa0c1f730dbfc6ed084756bb327cd46e2d495676c4005b8b625288c4c56",
+          "report_sha256": "129893f9d3c262a4fd777fe694c303fea6a8027e03abb54933d43ddfb9834191",
+          "reused_endpoints": 256,
+          "worker_errors_reused": false
+        }
+      },
+      {
+        "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/proposal/labeling/result",
+        "rows": 256,
+        "verified_endpoints": 256,
+        "pin": {
+          "directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/proposal/labeling/result",
+          "labels_sha256": "8829d4cfdefa0dd755bba4f2ede3e89d1a0ba629edb8ca3f408be5b48220d141",
+          "report_sha256": "0e8db5159cf2b70781cb760c49695b4ff063b2c527808715af8dc110cab8673a",
+          "reused_endpoints": 256,
+          "worker_errors_reused": false
+        }
+      }
+    ],
+    "runtime": {
+      "model": "CHGNet-0.3.0",
+      "chgnet_package": "0.4.2",
+      "ase_package": "3.28.0",
+      "torch_package": "2.4.0+cu121",
+      "pymatgen_package": "2025.6.14",
+      "model_checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+      "labeler_sha256": "2ce3c400a22c51efbf33bcee57ef3c6957e285ad7fe699fe5e2f1ea89cead073",
+      "deterministic_algorithms_enabled": true,
+      "cublas_workspace_config": ":4096:8",
+      "joint_stop_source_sha256": "ecff4099348db67b85fdc0f265a303bc7e5132cda9ef8625f1f6dda125cfcdd3",
+      "optimizer_stop": "joint_atomic_force_and_stress_v1"
+    }
+  },
+  "preflight/PHYSICS_SOURCE_ROUTING_TESTS.json": {
+    "returncode": 0,
+    "tests": 3,
+    "test_commit": "e3b70371a05c83a1c3d81c746dea57f351e5b633",
+    "test_source_sha256": "b68aca2a70e77ecfbd34e13431652c0ff1096bd582d2f52a8fc28ea9129fa2e0",
+    "routes": {
+      "label": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/code/d88e68a76007384173c76c0d4b94250618e0eeb8",
+      "edit": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/code/e3b70371a05c83a1c3d81c746dea57f351e5b633",
+      "train": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/code/e3b70371a05c83a1c3d81c746dea57f351e5b633",
+      "score": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/code/e3b70371a05c83a1c3d81c746dea57f351e5b633"
+    },
+    "initial_import_failure_preserved": true
+  },
+  "preflight/PHYSICS_IDENTITY_FAILURE_RECOVERY.json": {
+    "created_utc": "2026-09-09T21:15:30.639287+00:00",
+    "prior_driver_pid": 64180,
+    "archives": [
+      {
+        "original": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/heads/proposal/labeling",
+        "preserved_at": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/heads/proposal/labeling_failed_source_identity_41706",
+        "job_id": "41706",
+        "file_hashes": {
+          "COMPONENT_CONFIG.json": "8bc40a8af6e9bcbbd5d4765df31ed6a1c8ffb2726f1c942e02b3bfae6c7b1f11",
+          "label.command.json": "569748123ac30fa580a1148272c93c5097b74b8e0b2e588d9e5af06a98a764c1",
+          "label.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "label.err": "8d797e54de51d09c1678fdcd8b043f24ef5e32d6a849b218bd9478dac21ce33d",
+          "label.stage.json": "2242f857e2043fd4de8b8060a01dd518fbe906e539deb8113d53da7d8b0c93dc"
+        }
+      },
+      {
+        "original": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/t2t/proposal/labeling",
+        "preserved_at": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/t2t/proposal/labeling_failed_source_identity_41705",
+        "job_id": "41705",
+        "file_hashes": {
+          "COMPONENT_CONFIG.json": "d6aefbc79479483aa3d8d31cc16c7c5469473445d0e79a30c47432a87d0844dc",
+          "label.command.json": "a1cd3939320258fd2333b02cecf78dda57acf440eccf936fa02469145d795b49",
+          "label.out": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "label.err": "8d797e54de51d09c1678fdcd8b043f24ef5e32d6a849b218bd9478dac21ce33d",
+          "label.stage.json": "134b2a043252622efff20a5fdfa6d557c019e827ca82f0e324ed2ab6d7584f36"
+        }
+      }
+    ],
+    "retry_jobs": {
+      "heads_proposal_label": "heads_proposal_label_physics_pinned_v1",
+      "t2t_proposal_label": "t2t_proposal_label_physics_pinned_v1"
+    },
+    "weights_and_proposal_tokens_unchanged": true,
+    "new_label_calls_before_fix": 0,
+    "absolute_deadline_unchanged": true
+  }
+}

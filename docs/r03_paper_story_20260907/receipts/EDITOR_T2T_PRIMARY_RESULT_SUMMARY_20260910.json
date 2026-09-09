@@ -1,0 +1,1325 @@
+{
+  "ablations": "identical_selected_decision_policy_for_trained_arms; matched_old_E3_uses_legacy_0.5_and_nonSUN_proposal_rule",
+  "all_arm_coverage": {
+    "heads": {
+      "Stable_promotion_targets": 52,
+      "content_optimizer_steps": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "content_targets": 632,
+      "head_optimizer_steps": [
+        552,
+        552,
+        552,
+        552,
+        552,
+        552
+      ],
+      "minimum_Stable_promotion_visits": 0,
+      "minimum_dense_target_visits": 0,
+      "minimum_head_pair_visits": 8,
+      "missing_content_targets": 632,
+      "qualifies": true,
+      "ranks": 6,
+      "selected_method": "heads_only",
+      "total_content_target_visits": 0,
+      "total_head_pair_visits": 26352
+    },
+    "t2t": {
+      "Stable_promotion_targets": 52,
+      "content_optimizer_steps": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "content_targets": 632,
+      "head_optimizer_steps": [
+        552,
+        552,
+        552,
+        552,
+        552,
+        552
+      ],
+      "minimum_Stable_promotion_visits": 2,
+      "minimum_dense_target_visits": 2,
+      "minimum_head_pair_visits": 8,
+      "missing_content_targets": 0,
+      "qualifies": true,
+      "ranks": 6,
+      "selected_method": "dense_T2T_and_heads",
+      "total_content_target_visits": 1264,
+      "total_head_pair_visits": 26352
+    },
+    "t2t_no_hard_stop": {
+      "Stable_promotion_targets": 52,
+      "content_optimizer_steps": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "content_targets": 632,
+      "head_optimizer_steps": [
+        552,
+        552,
+        552,
+        552,
+        552,
+        552
+      ],
+      "minimum_Stable_promotion_visits": 8,
+      "minimum_dense_target_visits": 8,
+      "minimum_head_pair_visits": 8,
+      "missing_content_targets": 0,
+      "qualifies": true,
+      "ranks": 6,
+      "selected_method": "dense_T2T_and_heads",
+      "total_content_target_visits": 5056,
+      "total_head_pair_visits": 26352
+    },
+    "t2t_small": {
+      "Stable_promotion_targets": 52,
+      "content_optimizer_steps": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "content_targets": 632,
+      "head_optimizer_steps": [
+        552,
+        552,
+        552,
+        552,
+        552,
+        552
+      ],
+      "minimum_Stable_promotion_visits": 8,
+      "minimum_dense_target_visits": 8,
+      "minimum_head_pair_visits": 8,
+      "missing_content_targets": 0,
+      "qualifies": true,
+      "ranks": 6,
+      "selected_method": "dense_T2T_and_heads",
+      "total_content_target_visits": 5056,
+      "total_head_pair_visits": 26352
+    }
+  },
+  "coverage": {
+    "Stable_promotion_targets": 52,
+    "content_optimizer_steps": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "content_targets": 632,
+    "head_optimizer_steps": [
+      552,
+      552,
+      552,
+      552,
+      552,
+      552
+    ],
+    "minimum_Stable_promotion_visits": 0,
+    "minimum_dense_target_visits": 0,
+    "minimum_head_pair_visits": 8,
+    "missing_content_targets": 632,
+    "qualifies": true,
+    "ranks": 6,
+    "selected_method": "heads_only",
+    "total_content_target_visits": 0,
+    "total_head_pair_visits": 26352
+  },
+  "criteria": {
+    "SUN_not_lower": true,
+    "SUN_not_lower_matched_E3": true,
+    "Stable_above_both": false,
+    "Stable_above_matched_E3": false,
+    "Stable_protection": true,
+    "actual_training_coverage": true
+  },
+  "denominator_policy": "all_registered_requests_in_each_source_split_including_failures",
+  "frozen_selection_sha256": "7b547ed3d9464ac6ea91ae5de14c6caedc649750772bb4c7f7815de09756f330",
+  "heldout_scope": "excluded_from_this_editor_update; old_RSI_training_may_have_seen_all_256",
+  "measured_effect": "this_fixed_GF_panel_and_shared_rng_only",
+  "schema": "fixed_GF_editor_trial_result_v1",
+  "selected_arm": "heads",
+  "selected_policy": {
+    "acceptance_threshold": 0.8,
+    "collection": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/collections/heads",
+    "physics_used_for_decision": false,
+    "respect_learned_KEEP": true
+  },
+  "work": false,
+  "reports": {
+    "all": {
+      "KEEP": {
+        "counts": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 28,
+          "Stable": 32,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 251,
+          "requested": 256,
+          "unknown": 5
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {},
+        "predicate_changes": {}
+      },
+      "heads": {
+        "counts": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 28,
+          "Stable": 32,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 251,
+          "requested": 256,
+          "unknown": 5
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 116,
+          "MS_promotion_rejected": 2,
+          "Stable_damage_rejected": 29,
+          "beneficial_rejected": 19,
+          "harmful_rejected": 159,
+          "learned_EDIT": 144,
+          "learned_KEEP": 112,
+          "tie_or_unknown_rejected": 78
+        },
+        "predicate_changes": {}
+      },
+      "old_E3": {
+        "counts": {
+          "MS": 131,
+          "MSUN": 122,
+          "SUN": 32,
+          "Stable": 33,
+          "actual_edits": 140,
+          "known_failure": 23,
+          "reliable": 223,
+          "requested": 256,
+          "unknown": 10
+        },
+        "Stable": {
+          "gains": [
+            85,
+            157,
+            214
+          ],
+          "losses": [
+            136,
+            243
+          ]
+        },
+        "SUN": {
+          "gains": [
+            85,
+            87,
+            157,
+            214
+          ],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 26,
+          "MS_damage_rejected": 19,
+          "MS_promotion_accepted": 5,
+          "MS_promotion_rejected": 4,
+          "Stable_damage_accepted": 2,
+          "Stable_damage_rejected": 1,
+          "Stable_promotion_accepted": 3,
+          "beneficial_accepted": 35,
+          "beneficial_rejected": 11,
+          "harmful_accepted": 45,
+          "harmful_rejected": 34,
+          "learned_EDIT": 209,
+          "learned_KEEP": 47,
+          "no_complete_proposal": 28,
+          "tie_or_unknown_accepted": 60,
+          "tie_or_unknown_rejected": 43
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 5,
+          "MSUN_gain:N": 10,
+          "MSUN_loss:MS+N+U": 22,
+          "SUN_gain:N": 1,
+          "SUN_gain:Stable": 2,
+          "SUN_gain:Stable+N": 1
+        }
+      },
+      "old_E3_matched": {
+        "counts": {
+          "MS": 132,
+          "MSUN": 123,
+          "SUN": 32,
+          "Stable": 33,
+          "actual_edits": 141,
+          "known_failure": 23,
+          "reliable": 223,
+          "requested": 256,
+          "unknown": 10
+        },
+        "Stable": {
+          "gains": [
+            85,
+            157,
+            214
+          ],
+          "losses": [
+            136,
+            243
+          ]
+        },
+        "SUN": {
+          "gains": [
+            85,
+            87,
+            157,
+            214
+          ],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 25,
+          "MS_damage_rejected": 22,
+          "MS_promotion_accepted": 5,
+          "MS_promotion_rejected": 4,
+          "Stable_damage_accepted": 2,
+          "Stable_damage_rejected": 10,
+          "Stable_promotion_accepted": 3,
+          "beneficial_accepted": 32,
+          "beneficial_rejected": 13,
+          "harmful_accepted": 45,
+          "harmful_rejected": 45,
+          "learned_EDIT": 208,
+          "learned_KEEP": 48,
+          "tie_or_unknown_accepted": 64,
+          "tie_or_unknown_rejected": 57
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 5,
+          "MSUN_gain:N": 10,
+          "MSUN_loss:MS+N+U": 21,
+          "SUN_gain:N": 1,
+          "SUN_gain:Stable": 2,
+          "SUN_gain:Stable+N": 1
+        }
+      },
+      "selected_editor": {
+        "counts": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 28,
+          "Stable": 32,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 251,
+          "requested": 256,
+          "unknown": 5
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 116,
+          "MS_promotion_rejected": 2,
+          "Stable_damage_rejected": 29,
+          "beneficial_rejected": 19,
+          "harmful_rejected": 159,
+          "learned_EDIT": 144,
+          "learned_KEEP": 112,
+          "tie_or_unknown_rejected": 78
+        },
+        "predicate_changes": {}
+      },
+      "t2t": {
+        "counts": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 28,
+          "Stable": 32,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 251,
+          "requested": 256,
+          "unknown": 5
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 112,
+          "Stable_damage_rejected": 25,
+          "beneficial_rejected": 14,
+          "harmful_rejected": 153,
+          "learned_EDIT": 156,
+          "learned_KEEP": 100,
+          "tie_or_unknown_rejected": 89
+        },
+        "predicate_changes": {}
+      },
+      "t2t_no_hard_stop": {
+        "counts": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 28,
+          "Stable": 32,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 251,
+          "requested": 256,
+          "unknown": 5
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 118,
+          "MS_promotion_rejected": 3,
+          "Stable_damage_rejected": 29,
+          "Stable_promotion_rejected": 1,
+          "beneficial_rejected": 17,
+          "harmful_rejected": 154,
+          "learned_EDIT": 132,
+          "learned_KEEP": 124,
+          "tie_or_unknown_rejected": 85
+        },
+        "predicate_changes": {}
+      },
+      "t2t_small": {
+        "counts": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 28,
+          "Stable": 32,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 251,
+          "requested": 256,
+          "unknown": 5
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 114,
+          "Stable_damage_rejected": 29,
+          "beneficial_rejected": 15,
+          "harmful_rejected": 159,
+          "learned_EDIT": 138,
+          "learned_KEEP": 118,
+          "tie_or_unknown_rejected": 82
+        },
+        "predicate_changes": {}
+      }
+    },
+    "dev": {
+      "KEEP": {
+        "counts": {
+          "MS": 32,
+          "MSUN": 27,
+          "SUN": 7,
+          "Stable": 7,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 50,
+          "requested": 51,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {},
+        "predicate_changes": {}
+      },
+      "heads": {
+        "counts": {
+          "MS": 32,
+          "MSUN": 27,
+          "SUN": 7,
+          "Stable": 7,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 50,
+          "requested": 51,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 23,
+          "Stable_damage_rejected": 5,
+          "beneficial_rejected": 1,
+          "harmful_rejected": 32,
+          "learned_EDIT": 22,
+          "learned_KEEP": 29,
+          "tie_or_unknown_rejected": 18
+        },
+        "predicate_changes": {}
+      },
+      "old_E3": {
+        "counts": {
+          "MS": 29,
+          "MSUN": 26,
+          "SUN": 8,
+          "Stable": 8,
+          "actual_edits": 23,
+          "known_failure": 5,
+          "reliable": 44,
+          "requested": 51,
+          "unknown": 2
+        },
+        "Stable": {
+          "gains": [
+            85
+          ],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [
+            85
+          ],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 4,
+          "MS_damage_rejected": 2,
+          "MS_promotion_accepted": 1,
+          "MS_promotion_rejected": 1,
+          "Stable_promotion_accepted": 1,
+          "beneficial_accepted": 5,
+          "beneficial_rejected": 1,
+          "harmful_accepted": 6,
+          "harmful_rejected": 7,
+          "learned_EDIT": 40,
+          "learned_KEEP": 11,
+          "no_complete_proposal": 7,
+          "tie_or_unknown_accepted": 12,
+          "tie_or_unknown_rejected": 13
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 1,
+          "MSUN_gain:N": 2,
+          "MSUN_loss:MS+N+U": 4,
+          "SUN_gain:Stable": 1
+        }
+      },
+      "old_E3_matched": {
+        "counts": {
+          "MS": 29,
+          "MSUN": 26,
+          "SUN": 8,
+          "Stable": 8,
+          "actual_edits": 24,
+          "known_failure": 5,
+          "reliable": 44,
+          "requested": 51,
+          "unknown": 2
+        },
+        "Stable": {
+          "gains": [
+            85
+          ],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [
+            85
+          ],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 4,
+          "MS_damage_rejected": 3,
+          "MS_promotion_accepted": 1,
+          "MS_promotion_rejected": 1,
+          "Stable_damage_rejected": 2,
+          "Stable_promotion_accepted": 1,
+          "beneficial_accepted": 4,
+          "beneficial_rejected": 1,
+          "harmful_accepted": 7,
+          "harmful_rejected": 10,
+          "learned_EDIT": 40,
+          "learned_KEEP": 11,
+          "tie_or_unknown_accepted": 13,
+          "tie_or_unknown_rejected": 16
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 1,
+          "MSUN_gain:N": 2,
+          "MSUN_loss:MS+N+U": 4,
+          "SUN_gain:Stable": 1
+        }
+      },
+      "selected_editor": {
+        "counts": {
+          "MS": 32,
+          "MSUN": 27,
+          "SUN": 7,
+          "Stable": 7,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 50,
+          "requested": 51,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 23,
+          "Stable_damage_rejected": 5,
+          "beneficial_rejected": 1,
+          "harmful_rejected": 32,
+          "learned_EDIT": 22,
+          "learned_KEEP": 29,
+          "tie_or_unknown_rejected": 18
+        },
+        "predicate_changes": {}
+      },
+      "t2t": {
+        "counts": {
+          "MS": 32,
+          "MSUN": 27,
+          "SUN": 7,
+          "Stable": 7,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 50,
+          "requested": 51,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 23,
+          "Stable_damage_rejected": 5,
+          "beneficial_rejected": 2,
+          "harmful_rejected": 30,
+          "learned_EDIT": 25,
+          "learned_KEEP": 26,
+          "tie_or_unknown_rejected": 19
+        },
+        "predicate_changes": {}
+      },
+      "t2t_no_hard_stop": {
+        "counts": {
+          "MS": 32,
+          "MSUN": 27,
+          "SUN": 7,
+          "Stable": 7,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 50,
+          "requested": 51,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 22,
+          "Stable_damage_rejected": 5,
+          "Stable_promotion_rejected": 1,
+          "beneficial_rejected": 2,
+          "harmful_rejected": 31,
+          "learned_EDIT": 18,
+          "learned_KEEP": 33,
+          "tie_or_unknown_rejected": 18
+        },
+        "predicate_changes": {}
+      },
+      "t2t_small": {
+        "counts": {
+          "MS": 32,
+          "MSUN": 27,
+          "SUN": 7,
+          "Stable": 7,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 50,
+          "requested": 51,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 23,
+          "Stable_damage_rejected": 5,
+          "beneficial_rejected": 1,
+          "harmful_rejected": 32,
+          "learned_EDIT": 19,
+          "learned_KEEP": 32,
+          "tie_or_unknown_rejected": 18
+        },
+        "predicate_changes": {}
+      }
+    },
+    "final": {
+      "KEEP": {
+        "counts": {
+          "MS": 30,
+          "MSUN": 28,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 51,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {},
+        "predicate_changes": {}
+      },
+      "heads": {
+        "counts": {
+          "MS": 30,
+          "MSUN": 28,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 51,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 23,
+          "MS_promotion_rejected": 1,
+          "Stable_damage_rejected": 4,
+          "beneficial_rejected": 4,
+          "harmful_rejected": 33,
+          "learned_EDIT": 31,
+          "learned_KEEP": 21,
+          "tie_or_unknown_rejected": 15
+        },
+        "predicate_changes": {}
+      },
+      "old_E3": {
+        "counts": {
+          "MS": 25,
+          "MSUN": 24,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 30,
+          "known_failure": 6,
+          "reliable": 45,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 6,
+          "MS_damage_rejected": 1,
+          "MS_promotion_accepted": 1,
+          "beneficial_accepted": 7,
+          "beneficial_rejected": 2,
+          "harmful_accepted": 14,
+          "harmful_rejected": 7,
+          "learned_EDIT": 43,
+          "learned_KEEP": 9,
+          "no_complete_proposal": 5,
+          "tie_or_unknown_accepted": 9,
+          "tie_or_unknown_rejected": 8
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 1,
+          "MSUN_gain:N": 1,
+          "MSUN_loss:MS+N+U": 6
+        }
+      },
+      "old_E3_matched": {
+        "counts": {
+          "MS": 26,
+          "MSUN": 25,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 30,
+          "known_failure": 5,
+          "reliable": 46,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 5,
+          "MS_damage_rejected": 2,
+          "MS_promotion_accepted": 1,
+          "Stable_damage_rejected": 2,
+          "beneficial_accepted": 7,
+          "beneficial_rejected": 3,
+          "harmful_accepted": 13,
+          "harmful_rejected": 10,
+          "learned_EDIT": 42,
+          "learned_KEEP": 10,
+          "tie_or_unknown_accepted": 10,
+          "tie_or_unknown_rejected": 9
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 1,
+          "MSUN_gain:N": 1,
+          "MSUN_loss:MS+N+U": 5
+        }
+      },
+      "selected_editor": {
+        "counts": {
+          "MS": 30,
+          "MSUN": 28,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 51,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 23,
+          "MS_promotion_rejected": 1,
+          "Stable_damage_rejected": 4,
+          "beneficial_rejected": 4,
+          "harmful_rejected": 33,
+          "learned_EDIT": 31,
+          "learned_KEEP": 21,
+          "tie_or_unknown_rejected": 15
+        },
+        "predicate_changes": {}
+      },
+      "t2t": {
+        "counts": {
+          "MS": 30,
+          "MSUN": 28,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 51,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 21,
+          "Stable_damage_rejected": 3,
+          "beneficial_rejected": 2,
+          "harmful_rejected": 30,
+          "learned_EDIT": 36,
+          "learned_KEEP": 16,
+          "tie_or_unknown_rejected": 20
+        },
+        "predicate_changes": {}
+      },
+      "t2t_no_hard_stop": {
+        "counts": {
+          "MS": 30,
+          "MSUN": 28,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 51,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 25,
+          "MS_promotion_rejected": 1,
+          "Stable_damage_rejected": 5,
+          "beneficial_rejected": 3,
+          "harmful_rejected": 35,
+          "learned_EDIT": 29,
+          "learned_KEEP": 23,
+          "tie_or_unknown_rejected": 14
+        },
+        "predicate_changes": {}
+      },
+      "t2t_small": {
+        "counts": {
+          "MS": 30,
+          "MSUN": 28,
+          "SUN": 5,
+          "Stable": 5,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 51,
+          "requested": 52,
+          "unknown": 1
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 23,
+          "Stable_damage_rejected": 4,
+          "beneficial_rejected": 3,
+          "harmful_rejected": 31,
+          "learned_EDIT": 30,
+          "learned_KEEP": 22,
+          "tie_or_unknown_rejected": 18
+        },
+        "predicate_changes": {}
+      }
+    },
+    "train": {
+      "KEEP": {
+        "counts": {
+          "MS": 90,
+          "MSUN": 74,
+          "SUN": 16,
+          "Stable": 20,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 150,
+          "requested": 153,
+          "unknown": 3
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {},
+        "predicate_changes": {}
+      },
+      "heads": {
+        "counts": {
+          "MS": 90,
+          "MSUN": 74,
+          "SUN": 16,
+          "Stable": 20,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 150,
+          "requested": 153,
+          "unknown": 3
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 70,
+          "MS_promotion_rejected": 1,
+          "Stable_damage_rejected": 20,
+          "beneficial_rejected": 14,
+          "harmful_rejected": 94,
+          "learned_EDIT": 91,
+          "learned_KEEP": 62,
+          "tie_or_unknown_rejected": 45
+        },
+        "predicate_changes": {}
+      },
+      "old_E3": {
+        "counts": {
+          "MS": 77,
+          "MSUN": 72,
+          "SUN": 19,
+          "Stable": 20,
+          "actual_edits": 87,
+          "known_failure": 12,
+          "reliable": 134,
+          "requested": 153,
+          "unknown": 7
+        },
+        "Stable": {
+          "gains": [
+            157,
+            214
+          ],
+          "losses": [
+            136,
+            243
+          ]
+        },
+        "SUN": {
+          "gains": [
+            87,
+            157,
+            214
+          ],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 16,
+          "MS_damage_rejected": 16,
+          "MS_promotion_accepted": 3,
+          "MS_promotion_rejected": 3,
+          "Stable_damage_accepted": 2,
+          "Stable_damage_rejected": 1,
+          "Stable_promotion_accepted": 2,
+          "beneficial_accepted": 23,
+          "beneficial_rejected": 8,
+          "harmful_accepted": 25,
+          "harmful_rejected": 20,
+          "learned_EDIT": 126,
+          "learned_KEEP": 27,
+          "no_complete_proposal": 16,
+          "tie_or_unknown_accepted": 39,
+          "tie_or_unknown_rejected": 22
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 3,
+          "MSUN_gain:N": 7,
+          "MSUN_loss:MS+N+U": 12,
+          "SUN_gain:N": 1,
+          "SUN_gain:Stable": 1,
+          "SUN_gain:Stable+N": 1
+        }
+      },
+      "old_E3_matched": {
+        "counts": {
+          "MS": 77,
+          "MSUN": 72,
+          "SUN": 19,
+          "Stable": 20,
+          "actual_edits": 87,
+          "known_failure": 13,
+          "reliable": 133,
+          "requested": 153,
+          "unknown": 7
+        },
+        "Stable": {
+          "gains": [
+            157,
+            214
+          ],
+          "losses": [
+            136,
+            243
+          ]
+        },
+        "SUN": {
+          "gains": [
+            87,
+            157,
+            214
+          ],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_accepted": 16,
+          "MS_damage_rejected": 17,
+          "MS_promotion_accepted": 3,
+          "MS_promotion_rejected": 3,
+          "Stable_damage_accepted": 2,
+          "Stable_damage_rejected": 6,
+          "Stable_promotion_accepted": 2,
+          "beneficial_accepted": 21,
+          "beneficial_rejected": 9,
+          "harmful_accepted": 25,
+          "harmful_rejected": 25,
+          "learned_EDIT": 126,
+          "learned_KEEP": 27,
+          "tie_or_unknown_accepted": 41,
+          "tie_or_unknown_rejected": 32
+        },
+        "predicate_changes": {
+          "MSUN_gain:MS+N+U": 3,
+          "MSUN_gain:N": 7,
+          "MSUN_loss:MS+N+U": 12,
+          "SUN_gain:N": 1,
+          "SUN_gain:Stable": 1,
+          "SUN_gain:Stable+N": 1
+        }
+      },
+      "selected_editor": {
+        "counts": {
+          "MS": 90,
+          "MSUN": 74,
+          "SUN": 16,
+          "Stable": 20,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 150,
+          "requested": 153,
+          "unknown": 3
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 70,
+          "MS_promotion_rejected": 1,
+          "Stable_damage_rejected": 20,
+          "beneficial_rejected": 14,
+          "harmful_rejected": 94,
+          "learned_EDIT": 91,
+          "learned_KEEP": 62,
+          "tie_or_unknown_rejected": 45
+        },
+        "predicate_changes": {}
+      },
+      "t2t": {
+        "counts": {
+          "MS": 90,
+          "MSUN": 74,
+          "SUN": 16,
+          "Stable": 20,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 150,
+          "requested": 153,
+          "unknown": 3
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 68,
+          "Stable_damage_rejected": 17,
+          "beneficial_rejected": 10,
+          "harmful_rejected": 93,
+          "learned_EDIT": 95,
+          "learned_KEEP": 58,
+          "tie_or_unknown_rejected": 50
+        },
+        "predicate_changes": {}
+      },
+      "t2t_no_hard_stop": {
+        "counts": {
+          "MS": 90,
+          "MSUN": 74,
+          "SUN": 16,
+          "Stable": 20,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 150,
+          "requested": 153,
+          "unknown": 3
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 71,
+          "MS_promotion_rejected": 2,
+          "Stable_damage_rejected": 19,
+          "beneficial_rejected": 12,
+          "harmful_rejected": 88,
+          "learned_EDIT": 85,
+          "learned_KEEP": 68,
+          "tie_or_unknown_rejected": 53
+        },
+        "predicate_changes": {}
+      },
+      "t2t_small": {
+        "counts": {
+          "MS": 90,
+          "MSUN": 74,
+          "SUN": 16,
+          "Stable": 20,
+          "actual_edits": 0,
+          "known_failure": 0,
+          "reliable": 150,
+          "requested": 153,
+          "unknown": 3
+        },
+        "Stable": {
+          "gains": [],
+          "losses": []
+        },
+        "SUN": {
+          "gains": [],
+          "losses": []
+        },
+        "proposal_decisions": {
+          "MS_damage_rejected": 68,
+          "Stable_damage_rejected": 20,
+          "beneficial_rejected": 11,
+          "harmful_rejected": 96,
+          "learned_EDIT": 89,
+          "learned_KEEP": 64,
+          "tie_or_unknown_rejected": 46
+        },
+        "predicate_changes": {}
+      }
+    }
+  },
+  "primary_sha256": "80ed946c69ee93b3c18c80323a35c519d6ef781e424c0eaac0ae68993e3b0eca",
+  "old_E3_matched_execution": {
+    "equal_final_token_rows": 246,
+    "fixed_current": true,
+    "fixed_model": true,
+    "fixed_sampling_seeds": true,
+    "matched_trial_GPU_sharding": true,
+    "repeated_policy": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/policies/old_E3_matched_keep0_a50",
+    "requests": 256
+  },
+  "completion": {
+    "primary_result_sha256": "80ed946c69ee93b3c18c80323a35c519d6ef781e424c0eaac0ae68993e3b0eca",
+    "remaining_seconds": 36263.55739,
+    "scope_amendment_sha256": "dd890bc41ea4c9a3d89a443520c7ac61d9d912ba950f37bf6b2af08f6c88a5b7",
+    "status": "complete",
+    "work": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "complete": true,
+  "created_utc": "2026-09-09T21:42:41.803808+00:00",
+  "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/code/53e781ade57ca78e0e3bbbf88ecff20b33940969",
+  "consecutive_copy_and_repeat_reuse_passed": true,
+  "incorrect_manifest_path_rejected_even_with_marker": true,
+  "repaired_panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/policies/old_E3_matched_keep0_a50",
+  "inputs_before": {
+    "current": "9becac501c8d974a6a576b5a9a021ecd4a73b0430dd74618e27f207a861f1d98",
+    "proposal": "2786a3cd9d7af72092a4795318e2b4809f4c2f84bc85551be4dd4594072c7981",
+    "edited": "c8131d4f0315e90f40502d729d5ad4dce7eb83862956cda2e9256a998753ba73"
+  },
+  "inputs_after": {
+    "current": "9becac501c8d974a6a576b5a9a021ecd4a73b0430dd74618e27f207a861f1d98",
+    "proposal": "2786a3cd9d7af72092a4795318e2b4809f4c2f84bc85551be4dd4594072c7981",
+    "edited": "c8131d4f0315e90f40502d729d5ad4dce7eb83862956cda2e9256a998753ba73"
+  },
+  "source_physical_label_values_unchanged": true,
+  "new_model_inference": 0,
+  "new_physics_calls": 0,
+  "edited_labels_complete": true,
+  "original_metadata_archive": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/preflight/chained_binding_recovery_original_metadata"
+}
