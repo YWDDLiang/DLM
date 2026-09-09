@@ -33,6 +33,15 @@ def training_reserve_seconds(index,branch):
     return ((4-index)*65+15)*60 if branch=='G' else ((3-index)*65+20+15)*60
 
 
+def collection_label_allocation(teacher,parallel_gpus,single_gpus):
+    if not teacher.done():
+        return parallel_gpus
+    # Completed teacher scoring releases its allocation. Propagate failures
+    # before starting more work; submitted collection jobs retain their receipts.
+    teacher.result()
+    return single_gpus
+
+
 def runtime_allocations(policy,maximum=6):
     values={key:policy.get(key,default) for key,default in {
         'single_GPUs':4,'parallel_main_GPUs':4,'parallel_other_GPUs':2,'training_GPUs':4,
@@ -276,7 +285,8 @@ class Coordinator:
                                     [current/'current/labeling/result'])
                 self.job(f'S{index}_collect',collect_config,'edit',gpus=self.parallel_other_gpus)
                 self.rsi(f'S{index}_collect_inputs',collect_config,'materialize','proposal')
-                self.evaluate(f'S{index}_collect',collect_config,'proposal',self.parallel_other_gpus,[current/'current/labeling/result'])
+                label_gpus=collection_label_allocation(teacher,self.parallel_other_gpus,self.single_gpus)
+                self.evaluate(f'S{index}_collect',collect_config,'proposal',label_gpus,[current/'current/labeling/result'])
                 teacher.result()
             self.ranked(f'S{index}_compile_E',collect_config,'compile',['--branch','E'])
             data=collection/'pairs/E.jsonl'

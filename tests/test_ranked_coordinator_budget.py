@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 import sys
 import unittest
+from concurrent.futures import Future
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'operations/r03_c3fd_main_20260907'))
@@ -12,6 +13,18 @@ from dispatch_rsi import allocation_cpus_per_gpu
 
 
 class RankedCoordinatorBudgetTests(unittest.TestCase):
+    def test_collection_labels_keep_shared_allocation_while_teacher_runs(self):
+        self.assertEqual(coordinator.collection_label_allocation(Future(),2,4),2)
+
+    def test_collection_labels_use_single_allocation_after_teacher_finishes(self):
+        teacher=Future();teacher.set_result(None)
+        self.assertEqual(coordinator.collection_label_allocation(teacher,2,4),4)
+
+    def test_teacher_failure_stops_new_collection_label_work(self):
+        teacher=Future();teacher.set_exception(RuntimeError('teacher failed'))
+        with self.assertRaisesRegex(RuntimeError,'teacher failed'):
+            coordinator.collection_label_allocation(teacher,2,4)
+
     def test_short_stage_can_dispatch_with_twenty_minutes_remaining(self):
         minutes=coordinator.dispatch_minutes(90,1200)
         self.assertGreater(minutes,0)
