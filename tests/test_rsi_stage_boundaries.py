@@ -22,7 +22,7 @@ class TokenBoundary(unittest.TestCase):
                 write_rows(directory/'attempt_results.jsonl',[{'sample_idx':0,'strict_sun':sun,
                     'strict_stable':sun,'meta_sun':True,'meta_stable':True,'e_above_hull_eV_atom':hull}])
                 write_json(directory/'EVALUATION_FINAL.json',{'status':'complete','input_sha256':file_hash(inputs)})
-            select_current({'run_root':str(root),'run_id':'fixture'})
+            select_current({'run_root':str(root),'run_id':'fixture','requests':1})
             current=json.loads((root/'current/records/0000.json').read_text())
             self.assertEqual(current['record']['body_token_ids'],[1,3])
             self.assertEqual(current['preference_for_training_only']['chosen'],'before')

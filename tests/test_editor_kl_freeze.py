@@ -1,5 +1,6 @@
 """Exercise real optimizer state across a content KL latch on CPU."""
 import json
+import datetime
 from pathlib import Path
 import sys
 import tempfile
@@ -25,7 +26,11 @@ def view(row,target,cut,branch,mask_seed=0):
 
 
 def conditional(model,tokenizer,views,branch,support):
-    q=torch.stack((model.content,-model.content)).log_softmax(0)
+    import torch.distributed as dist
+    # A distributed run deliberately triggers on rank 1 alone. The latch and
+    # reduced active parameter set must still agree on both ranks.
+    scale=(4. if dist.get_rank()==1 else .1) if dist.is_initialized() else 1.
+    q=torch.stack((model.content*scale,-model.content*scale)).log_softmax(0)
     return torch.stack([q[v['target']] for v in views]),[q for _ in views]
 
 
@@ -60,6 +65,20 @@ def exercise(directory,branch):
     return result,snapshots
 
 
+def distributed_worker(rank,directory):
+    import torch.distributed as dist
+    root=Path(directory)
+    dist.init_process_group('gloo',init_method='file://'+str(root/'gloo_store'),
+                            rank=rank,world_size=2,timeout=datetime.timedelta(seconds=30))
+    try:
+        result,snapshots=exercise(root,'E')
+        write_json(root/f'DDP_rank{rank}.json',{'steps':result[0],
+            'content_frozen':all(torch.equal(s['content'],snapshots[0]['content']) for s in snapshots[1:]),
+            'head_changed':not torch.equal(snapshots[-1]['quality_head.weight'],snapshots[0]['quality_head.weight']),
+            'last_weights':{n:p.tolist() for n,p in snapshots[-1].items()}})
+    finally: dist.destroy_process_group()
+
+
 class ContentFreeze(unittest.TestCase):
     def test_editor_content_stays_bit_exact_while_heads_continue(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -87,6 +106,20 @@ class ContentFreeze(unittest.TestCase):
             self.assertEqual(sum(exposure['pair_visits'].values()),2)
             self.assertEqual(sum(exposure['content_updated_pair_visits'].values()),1)
             self.assertEqual(result[0],1)
+
+    @unittest.skipUnless(torch.distributed.is_available() and torch.distributed.is_gloo_available(),
+                         'CPU distributed backend unavailable')
+    def test_two_ranks_share_one_kl_latch_and_continue_without_deadlock(self):
+        import torch.multiprocessing as mp
+        with tempfile.TemporaryDirectory() as tmp:
+            mp.spawn(distributed_worker,args=(tmp,),nprocs=2,join=True)
+            root=Path(tmp)
+            a,b=[json.loads((root/f'DDP_rank{i}.json').read_text()) for i in range(2)]
+            self.assertEqual(a,b);self.assertEqual(a['steps'],4)
+            self.assertTrue(a['content_frozen']);self.assertTrue(a['head_changed'])
+            x,y=[json.loads((root/f'EXPOSURE_rank{i}.json').read_text())['KL_trigger'] for i in range(2)]
+            self.assertLess(x['local_KL'],.02);self.assertGreater(y['local_KL'],.02)
+            self.assertEqual(x['maximum_rank_KL'],y['maximum_rank_KL'])
 
 
 if __name__=='__main__': unittest.main()
