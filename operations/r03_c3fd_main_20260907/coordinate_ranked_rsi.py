@@ -12,10 +12,25 @@ import sys
 import threading
 import time
 
-SOURCE=Path(__file__).resolve().parents[2]
+ORCHESTRATOR_SOURCE=Path(__file__).resolve().parents[2]
+# A scheduling-only resume can keep every scientific command pinned to its
+# original immutable deployment, including already completed local markers.
+SOURCE=Path(os.environ.get('RANKED_EXECUTION_SOURCE',str(ORCHESTRATOR_SOURCE))).resolve()
 sys.path.insert(0,str(SOURCE/'src'))
 from scripts.run_post_refine_cycle import write_json,file_hash,validate_rsi_checkpoint
 from run_component import verify_deployed_source
+
+
+def dispatch_minutes(requested,remaining):
+    if remaining < 180:
+        raise RuntimeError('less than three minutes remain before the absolute deadline')
+    return min(requested,int((remaining-90)//60))
+
+
+def training_reserve_seconds(index,branch):
+    # At E training the current G/F and training feedback are already complete.
+    # Reserve only its final editor/evaluation, plus all future complete rounds.
+    return ((4-index)*65+15)*60 if branch=='G' else ((3-index)*65+20+15)*60
 
 
 class Coordinator:
@@ -32,6 +47,9 @@ class Coordinator:
                 'max_queued_and_running_jobs':3,'deadline_policy':'conservative_dispatch_plus_12h'})
         self.budget=json.loads(budget.read_text())
         self.deadline=dt.datetime.fromisoformat(self.budget['deadline_utc'])
+        control=json.loads((self.root/'RUN_SPEC.json').read_text())
+        self.parallel_main_gpus=control.get('execution_policy',{}).get('parallel_main_GPUs',4)
+        if self.parallel_main_gpus not in (2,4): raise ValueError('parallel main allocation must use two or four GPUs')
         path=self.root/'RAW0_PIPELINE.json'
         if not path.exists():
             pipeline=json.loads((self.root/'RAW0_PIPELINE_TEMPLATE.json').read_text())
@@ -67,12 +85,12 @@ class Coordinator:
         recovery=self.root/'JOB_RETRIES.json'
         if recovery.exists():
             name=json.loads(recovery.read_text()).get(name,name)
-        args=[sys.executable,str(SOURCE/'operations/r03_c3fd_main_20260907/dispatch_rsi.py'),
-              '--root',str(self.root),'--config',str(config),'--job',name,'--action',action,
-              '--stage',stage,'--gpus',str(gpus),'--minutes',str(minutes),*map(str,extra)]
         receipt=self.root/'submissions'/f'{name}.json'
         while not receipt.exists():
-            if self.remaining() < minutes*60+90: raise RuntimeError('insufficient absolute budget for '+name)
+            actual_minutes=dispatch_minutes(minutes,self.remaining())
+            args=[sys.executable,str(SOURCE/'operations/r03_c3fd_main_20260907/dispatch_rsi.py'),
+                  '--root',str(self.root),'--config',str(config),'--job',name,'--action',action,
+                  '--stage',stage,'--gpus',str(gpus),'--minutes',str(actual_minutes),*map(str,extra)]
             with self.lock:
                 result=sp.run(args,text=True,capture_output=True,env=self.env)
             if result.returncode:
@@ -156,8 +174,7 @@ class Coordinator:
             remaining_updates=8-2*index-(branch=='E')
             # Reserve complete inference, physical feedback and reporting for
             # every remaining round. Allocation changes with actual elapsed work.
-            inference_rounds=4-index
-            reserve=inference_rounds*65*60+15*60
+            reserve=training_reserve_seconds(index,branch)
             seconds=int((self.remaining()-reserve)/remaining_updates)
             if seconds<180: raise RuntimeError('insufficient training budget after reserving complete panels')
             checkpoint=(fit['assets']['b0_checkpoint'] if branch=='G' else fit['assets']['editor_checkpoint']) if index==1 else str(
@@ -194,9 +211,9 @@ class Coordinator:
         # Four main GPUs and two throughput GPUs, always under the shared guard.
         with ThreadPoolExecutor(max_workers=2) as pool:
             other=pool.submit(self.body,'twin',twin/'RUN_SPEC.json',2)
-            self.body('S0',initial,4)
+            self.body('S0',initial,self.parallel_main_gpus)
             self.job('initialize_E0',initial,'initialize',gpus=1,minutes=30)
-            self.final_editor('S0',initial,4)
+            self.final_editor('S0',initial,self.parallel_main_gpus)
             other.result()
         write_json(self.root/'S0_COMPLETE.json',{'seconds':time.monotonic()-started,
             'config_sha256':file_hash(initial),'initial_E_seed':20260909})
@@ -220,7 +237,7 @@ class Coordinator:
             self.ranked(f'S{index}_teachers',collect_config,'teachers')
             # Teacher endpoint scoring and old-E proposal collection are independent.
             with ThreadPoolExecutor(max_workers=2) as pool:
-                teacher=pool.submit(self.evaluate,f'S{index}_teacher',collect_config,'teacher',4,
+                teacher=pool.submit(self.evaluate,f'S{index}_teacher',collect_config,'teacher',self.parallel_main_gpus,
                                     [current/'current/labeling/result'])
                 self.job(f'S{index}_collect',collect_config,'edit',gpus=2)
                 self.rsi(f'S{index}_collect_inputs',collect_config,'materialize','proposal')
@@ -258,7 +275,9 @@ class Coordinator:
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
     args=parser.parse_args()
-    write_json(args.root/'COORDINATOR_PID.json',{'pid':os.getpid(),'source':str(SOURCE)})
+    write_json(args.root/'COORDINATOR_PID.json',{'pid':os.getpid(),'source':str(SOURCE),
+        'orchestrator_source':str(ORCHESTRATOR_SOURCE),'orchestrator_sha256':file_hash(Path(__file__)),
+        'scientific_source_identity':verify_deployed_source(SOURCE)})
     try: Coordinator(args.root).run()
     except Exception as error:
         write_json(args.root/'COORDINATOR_FAILURE.json',{'error':repr(error),'utc':dt.datetime.now(dt.timezone.utc).isoformat()})
