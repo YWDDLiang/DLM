@@ -273,6 +273,14 @@ def recorded_fire_class(FIRE):
     class RecordedFIRE(FIRE):
         def converged(self, *args, **kwargs):
             native = super().converged(*args, **kwargs)
+            # ASE 3.28 routes both run() and this compatibility method through
+            # gradient_converged(); older ASE calls converged() directly.
+            return native if hasattr(FIRE,'gradient_converged') else self.physical_convergence(native)
+
+        def gradient_converged(self, gradient):
+            return self.physical_convergence(super().gradient_converged(gradient))
+
+        def physical_convergence(self, native):
             if os.environ.get('RSI_JOINT_PHYSICAL_STOP') != '1':
                 return native
             from crystal_dlm.ranked_feedback import joint_stop_status
