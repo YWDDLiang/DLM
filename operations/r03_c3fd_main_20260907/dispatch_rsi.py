@@ -20,7 +20,7 @@ def main():
     p.add_argument('--root',type=Path,required=True)
     p.add_argument('--config',type=Path,required=True)
     p.add_argument('--job',required=True)
-    p.add_argument('--action',choices=['generate','label','score','refine','edit','train','initialize'],required=True)
+    p.add_argument('--action',choices=['generate','label','score','refine','edit','train','initialize','editor_kl_probe'],required=True)
     p.add_argument('--stage',default='construction')
     p.add_argument('--gpus',type=int,default=2)
     p.add_argument('--minutes',type=int,default=90)
@@ -45,7 +45,12 @@ def main():
     if not 1<=workers<=8: raise ValueError('invalid independent workers per GPU')
     script='src/scripts/run_rsi_stages.py'
     args=['--config',str(a.config)];inputs=[str(a.config)];distributed=False
-    if a.action=='generate':
+    if a.action=='editor_kl_probe':
+        if cfg.get('editor_trial') is not True: raise ValueError('KL probe requires its registered editor trial')
+        directory=Path('KL_audit');script='operations/r03_c3fd_main_20260907/editor_trial_kl_probe.py'
+        args=['--root',str(root)];inputs+=[str(root/'KL_PROBE_PLAN.json'),str(root/'data/E.jsonl')]
+        outputs=['{output}/GLOBAL_KL_AUDIT.json'];distributed=True
+    elif a.action=='generate':
         directory=relative/'construction';script='src/scripts/run_post_refine_cycle.py'
         args+=['--stage','construct'];distributed=True
         inputs+=[str(cohort/'cohort/MANIFEST.json')]
