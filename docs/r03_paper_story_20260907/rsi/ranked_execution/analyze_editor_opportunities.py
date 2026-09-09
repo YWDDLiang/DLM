@@ -3,6 +3,7 @@
 import argparse
 from collections import Counter
 import hashlib
+from itertools import islice
 import json
 from pathlib import Path
 import sys
@@ -125,6 +126,27 @@ def analyze(root, source, index):
             for path in sorted(training.glob('EXPOSURE_rank*.json')) if json.loads(path.read_text())['KL_stop']]
         result['training']['stop_KL_value'] = None
         result['training']['stop_KL_note'] = 'Existing trainer records the stop flag, not the triggering KL value.'
+        contract = receipt['contract']
+        if contract.get('bounded_minibatch_training'):
+            from crystal_dlm.rsi_minibatch import epoch_indices
+            data_path = Path(contract['data'])
+            if digest(data_path) != contract['data_sha256']:
+                raise ValueError('training examples changed after the actual update')
+            examples = read_rows(data_path)
+            batches = epoch_indices(len(examples), batch_size=contract['batch_size'],
+                world=contract['world_size'], epochs=contract['epochs'], seed=contract['seed'])
+            updated = [examples[i] for _, indices in islice(batches, receipt['optimizer_steps']) for i in indices]
+            promotions = [x for x in updated if x.get('mode_target')
+                and x['preference']['before']['rank'] not in (3,4)
+                and x['preference']['after']['rank'] in (3,4)]
+            result['training']['actual_updated_exposure'] = dict(
+                visits=len(updated), unique_examples=len({x['pair_id'] for x in updated}),
+                dataset_examples=len(examples),
+                edit_positive_visits=sum(bool(x.get('mode_target')) for x in updated),
+                Stable_promotion_visits=len(promotions),
+                Stable_promotion_pair_ids=sorted({x['pair_id'] for x in promotions}),
+                SUN_positive_visits=sum(bool(x.get('mode_target')) and x['objective_level']=='SUN' for x in updated),
+                note='Reconstructed optimizer batches; excludes the next inspected batch that triggered KL stop.')
     result['input_sha256'] = hashes
     return result
 
