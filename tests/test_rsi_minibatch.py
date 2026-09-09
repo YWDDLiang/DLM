@@ -33,9 +33,11 @@ class BatchTests(unittest.TestCase):
         cls.width=max(cls.tok.vocab.values())+1
     def test_rare_records_no_longer_oversampled(self):
         counts=Counter(i for _,batch in epoch_indices(185,batch_size=8,world=4,epochs=4,seed=7) for i in batch)
-        self.assertEqual(len(counts),185);self.assertEqual(sum(counts.values()),768)
+        self.assertEqual(len(counts),185);self.assertEqual(sum(counts.values()),752)
         self.assertGreaterEqual(min(counts.values()),4);self.assertLessEqual(max(counts.values()),8)
         self.assertLessEqual(sum(counts[i] for i in (0,1,2)),24)
+        larger=Counter(i for _,batch in epoch_indices(185,batch_size=32,world=4,epochs=4,seed=7) for i in batch)
+        self.assertEqual(counts,larger)
     def test_batch_matches_single_and_gradients(self):
         a,_=make_body(self.tok);b,_=make_body(self.tok,length=50)
         examples=[{'num_sites':2,'prompt':'first'}, {'num_sites':2,'prompt':'second'}]

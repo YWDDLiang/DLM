@@ -20,7 +20,9 @@ def epoch_indices(size, *, batch_size, world, epochs, seed):
     for epoch in range(epochs):
         indices = list(range(size))
         rng.shuffle(indices)
-        padding = (-len(indices)) % width
+        # Pad only to world size, not to a full large minibatch. The final
+        # minibatch is smaller; increasing capacity must not multiply exposure.
+        padding = (-len(indices)) % world
         # Small datasets may need more than one padding copy; expose this in receipts.
         extra = []
         while len(extra) < padding:
@@ -131,7 +133,8 @@ def train_bounded(model, tokenizer, examples, spec, selected, reference, optimiz
     kl_stop = False
     for epoch, indices in epoch_indices(len(examples), batch_size=batch_size, world=world,
                                        epochs=spec['epochs'], seed=spec['seed']):
-        rows = [examples[i] for i in indices[rank*batch_size:(rank+1)*batch_size]]
+        local_size=len(indices)//world
+        rows = [examples[i] for i in indices[rank*local_size:(rank+1)*local_size]]
         optimizer.zero_grad(set_to_none=True)
         views, pair_slots, anchor_slots = [], [], []
         for row in rows:
@@ -164,7 +167,7 @@ def train_bounded(model, tokenizer, examples, spec, selected, reference, optimiz
             terms.extend(-spec['anchor_weight']*actual[i] for i in anchor_slots)
             kl = torch.stack([(q.exp()*(q-p)).sum() for q, p in zip(reference_distribution, distribution)]).mean()
             kl_value = float(kl.detach())
-            loss = torch.stack(terms).sum()/(batch_size*spec['mask_cuts']) + spec['reference_kl_weight']*kl
+            loss = torch.stack(terms).sum()/(local_size*spec['mask_cuts']) + spec['reference_kl_weight']*kl
             if margins: margin_value = float(torch.stack(margins).mean().detach())
         if branch == 'E':
             head_loss, count = editor_head_loss(model, tokenizer, rows, device)
@@ -186,7 +189,8 @@ def train_bounded(model, tokenizer, examples, spec, selected, reference, optimiz
         optimizer.step(); pairs += len(pair_slots)
         event = {'step': len(history)+1, 'epoch': epoch, 'mean_loss': float(loss.detach()),
                  'mean_preference_margin': margin_value, 'reference_KL': kl_value,
-                 'gradient_norm': float(grad), 'source_examples_per_GPU': batch_size,
+                 'gradient_norm': float(grad), 'source_examples_per_GPU': local_size,
+                 'source_batch_capacity_per_GPU': batch_size,
                  'conditional_forward_rows': len(views), 'seconds': time.monotonic()-started,
                  'peak_GPU_GB': torch.cuda.max_memory_allocated()/1e9}
         history.append(event)
