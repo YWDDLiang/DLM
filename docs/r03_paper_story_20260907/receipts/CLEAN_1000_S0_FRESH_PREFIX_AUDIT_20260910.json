@@ -1,0 +1,25 @@
+{
+  "schema": "S0_fresh_prefix_output_audit_v1",
+  "utc": "2026-09-09T22:23:18.809918+00:00",
+  "new_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000",
+  "old_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow",
+  "compared": 256,
+  "body_equal": 256,
+  "success_equal": 256,
+  "DLM_calls_equal": 256,
+  "differences": [],
+  "scope": "read_only_output_comparison; no old endpoints or labels imported into new training",
+  "hashes": {
+    "new": {
+      "first256_record_hash_manifest_sha256": "0893ef175e7e5efa342a39f1de324e1a5866f3f66bc26dd63df047e0b5658114",
+      "config_sha256": "0ec79ff5a2c6f4dfae7e5fc79911c3d68eca45780310587eb2be151e1e214c8b",
+      "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971"
+    },
+    "old": {
+      "first256_record_hash_manifest_sha256": "7054d9acc0d8fa8995523b1973aeb84c4e69f59d2cb0bce54cf0dd97ea2bf169",
+      "config_sha256": "b18f4539f3ed33821a92b360d268ae624d7390083d15afd464332e53801d44ce",
+      "plans_sha256": "05e633ee4550d5acc539ce19e72acdbaddd827a666e54e363bb144d1c417c486"
+    }
+  },
+  "record_manifest_digest_definition": "sha256(concatenate filename:sha256(file_bytes) followed by LF for records 0000.json through 0255.json in ordinal order)"
+}

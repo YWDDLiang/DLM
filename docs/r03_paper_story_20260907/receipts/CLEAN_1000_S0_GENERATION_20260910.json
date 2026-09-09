@@ -1,0 +1,98 @@
+{
+  "schema": "clean_1000_S0_generation_summary_v1",
+  "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000",
+  "source_commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+  "observed_utc": "2026-09-09T22:40:01.828869+00:00",
+  "phase": "both_RAW_generations_completed; physical_labels_running",
+  "no_weight_updates_yet": true,
+  "allocated_GPU_hours_for_generation": 3.7925,
+  "accounting_definition": "Slurm allocation elapsed seconds times allocated GPUs; both successful jobs, whole-second Slurm timestamps in +08:00",
+  "panels": [
+    {
+      "panel": "fit",
+      "requested": 1000,
+      "record_count": 1000,
+      "graph_available": 998,
+      "worker_done_count": 9,
+      "worker_new_records_sum": 1000,
+      "DLM_forward_calls": 46432,
+      "worker_forward_calls": [
+        5075,
+        4934,
+        5392,
+        5084,
+        5569,
+        4919,
+        5267,
+        5691,
+        4501
+      ],
+      "source_signature": "b5ab9a5e15e20811d7787334c24002204a7582cbf81083e493ca72f76e225bb3",
+      "inputs_sha256": "6a676a1076b55879484ff606c9881c8fcc1bada0c8eb127eb3a0c78483b8782f",
+      "generation_failures": [
+        115,
+        837
+      ],
+      "slurm": {
+        "job_id": "41745",
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "start": "2026-09-10T06:01:16+08:00",
+        "end": "2026-09-10T06:39:17+08:00",
+        "elapsed_seconds": 2281,
+        "allocated_gpus": 3,
+        "allocated_cpus": 12
+      }
+    },
+    {
+      "panel": "bootstrap_comparator",
+      "requested": 1000,
+      "record_count": 1000,
+      "graph_available": 997,
+      "worker_done_count": 9,
+      "worker_new_records_sum": 1000,
+      "DLM_forward_calls": 48333,
+      "worker_forward_calls": [
+        5605,
+        5069,
+        5686,
+        5540,
+        5278,
+        5261,
+        5595,
+        5465,
+        4834
+      ],
+      "source_signature": "56528616f39dd1e23854dcc75dd8c4419ba4f23fc9b8a86d40a910c640f4a532",
+      "inputs_sha256": "7554af2363b42b610c8e12530ebffdb47182601cf545048f1f875e0fd77a52ab",
+      "generation_failures": [
+        129,
+        729,
+        850
+      ],
+      "slurm": {
+        "job_id": "41746",
+        "state": "COMPLETED",
+        "exit_code": "0:0",
+        "start": "2026-09-10T06:01:16+08:00",
+        "end": "2026-09-10T06:39:06+08:00",
+        "elapsed_seconds": 2270,
+        "allocated_gpus": 3,
+        "allocated_cpus": 12
+      }
+    }
+  ],
+  "all_five_failures": {
+    "reason": "construction_geometry_exhausted",
+    "detail": "nondegenerate_lattice_has_no_legal_continuation",
+    "DLM_forward_calls_each": 17,
+    "all_registered_geometry_recovery_stages_exhausted": true,
+    "denominator_retained": true
+  },
+  "labels_started": {
+    "S0_raw_label": "41749",
+    "twin_raw_label": "41750",
+    "gpus_each": 3
+  },
+  "quality_metrics_available": false
+}
