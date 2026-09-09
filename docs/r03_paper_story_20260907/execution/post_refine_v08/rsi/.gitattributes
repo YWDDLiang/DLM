@@ -1,0 +1,4 @@
+# Preserve the byte-identical final exports and their SHA-256 receipts.
+RSI_FINAL_*.json -text
+RSI_METRICS.csv -text
+ROUND_METADATA_ERRATUM.json -text

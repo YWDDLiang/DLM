@@ -1,0 +1,1259 @@
+{
+  "active_jobs": [],
+  "allocated_gpu_hours": 45.75277777777777,
+  "jobs": [
+    {
+      "end": "2026-09-09T02:53:26",
+      "gpus": 4,
+      "job": "rsi_raw0",
+      "job_id": "41174",
+      "seconds": 946,
+      "start": "2026-09-09T02:37:40",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "daaa83811e3b7d304fc542cc070249b2a6bfc682c2a1631a7ae375178fcce9bd"
+    },
+    {
+      "end": "2026-09-09T03:18:26",
+      "gpus": 2,
+      "job": "rsi_fitraw0",
+      "job_id": "41175",
+      "seconds": 1612,
+      "start": "2026-09-09T02:51:34",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "bcbf1b8d87ef5d3e5635218679f431b86a73882891997cf8db6362b8a2a49312"
+    },
+    {
+      "end": "2026-09-09T02:53:55",
+      "gpus": 4,
+      "job": "rsi_raw0_label",
+      "job_id": "41176",
+      "seconds": 4,
+      "start": "2026-09-09T02:53:51",
+      "state": "FAILED",
+      "submission_manifest_sha256": "d195913a9aa5d94cac1f71a3b52262e049026cf101f9746e0001eabc7e72710b"
+    },
+    {
+      "end": "2026-09-09T03:14:59",
+      "gpus": 4,
+      "job": "rsi_raw0_label_retry1",
+      "job_id": "41177",
+      "seconds": 911,
+      "start": "2026-09-09T02:59:48",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "371affc6d35e578c78c35a65f68d342aabe1f3332310305f3130ec65a9f51a6d"
+    },
+    {
+      "end": "2026-09-09T03:18:23",
+      "gpus": 0,
+      "job": "rsi_raw0_score",
+      "job_id": "41180",
+      "seconds": 5,
+      "start": "2026-09-09T03:18:18",
+      "state": "FAILED",
+      "submission_manifest_sha256": "98b74ec8325203b20eaafa65a670ca69eca11c7df81ea5a61478b85323ffa986"
+    },
+    {
+      "end": "2026-09-09T03:33:33",
+      "gpus": 4,
+      "job": "rsi_fitraw0_label",
+      "job_id": "41181",
+      "seconds": 892,
+      "start": "2026-09-09T03:18:41",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "29db787667f9b9798e5fa2d62af11f6260f052ee3ee7b9c0efe3c68f0fa87da0"
+    },
+    {
+      "end": "2026-09-09T03:21:06",
+      "gpus": 0,
+      "job": "rsi_raw0_score_retry1",
+      "job_id": "41183",
+      "seconds": 28,
+      "start": "2026-09-09T03:20:38",
+      "state": "FAILED",
+      "submission_manifest_sha256": "622dc27c1a2782afe3792ecc8dcf1c33e87847d65e157da063c78c6fa5fbd8e8"
+    },
+    {
+      "end": "2026-09-09T03:24:46",
+      "gpus": 0,
+      "job": "rsi_raw0_score_retry2",
+      "job_id": "41184",
+      "seconds": 34,
+      "start": "2026-09-09T03:24:12",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "afd27fac730734c9ae93958bd88eb381cc29b9099915e8a785019346e713d673"
+    },
+    {
+      "end": "2026-09-09T03:25:54",
+      "gpus": 2,
+      "job": "rsi_modelcheck",
+      "job_id": "41185",
+      "seconds": 80,
+      "start": "2026-09-09T03:24:34",
+      "state": "FAILED",
+      "submission_manifest_sha256": "2ca548d4c98e96e9481ec80ee7da33afcbc71434cc908f46d9cff6ae6ca145a5"
+    },
+    {
+      "end": "2026-09-09T04:09:32",
+      "gpus": 2,
+      "job": "rsi_main_F0",
+      "job_id": "41186",
+      "seconds": 2540,
+      "start": "2026-09-09T03:27:12",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "1f7fb9ecd3b85ffb2ace5b9d12c7cbba8492d9881284afc02ffdd1b08bb0efb2"
+    },
+    {
+      "end": "2026-09-09T03:36:27",
+      "gpus": 0,
+      "job": "rsi_fitraw0_score",
+      "job_id": "41187",
+      "seconds": 22,
+      "start": "2026-09-09T03:36:05",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "c3642b7ee417f71a5fb7db4382222364b5ba28eed1a846da80621abb93c36dc0"
+    },
+    {
+      "end": "2026-09-09T03:37:51",
+      "gpus": 2,
+      "job": "rsi_modelcheck_retry1",
+      "job_id": "41188",
+      "seconds": 81,
+      "start": "2026-09-09T03:36:30",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "2513af099b478afd2f0e059e903317e62fa086be36524595472b8e1d1a8ddad2"
+    },
+    {
+      "end": "2026-09-09T04:20:20",
+      "gpus": 2,
+      "job": "rsi_fit_F0",
+      "job_id": "41189",
+      "seconds": 2606,
+      "start": "2026-09-09T03:36:54",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "80e5626d0d7b7c37c665b4cdc029390da4d4f79b3192ab107c486c072a8b50a1"
+    },
+    {
+      "end": "2026-09-09T04:07:01",
+      "gpus": 2,
+      "job": "rsi_H1A2_chunk0",
+      "job_id": "41190",
+      "seconds": 659,
+      "start": "2026-09-09T03:56:02",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "af32b6cded4af66dc28c5c80a2bad4d75cf97be55fa84e5a1137d6bf4c9fd174"
+    },
+    {
+      "end": "2026-09-09T04:12:49",
+      "gpus": 2,
+      "job": "rsi_main_token0_labels",
+      "job_id": "41191",
+      "seconds": 195,
+      "start": "2026-09-09T04:09:34",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "44f09aa1e7d32f05845ad54234596043e7b03259a70c9d3a052225ea3aaa6143"
+    },
+    {
+      "end": "2026-09-09T04:13:11",
+      "gpus": 2,
+      "job": "rsi_main_float0_labels",
+      "job_id": "41192",
+      "seconds": 188,
+      "start": "2026-09-09T04:10:03",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "55f292e6fb3612d96820d6499daad86cd58b0d5e4f9ac13a48c5219e5d822929"
+    },
+    {
+      "end": "2026-09-09T04:15:04",
+      "gpus": 0,
+      "job": "rsi_main_token0_score",
+      "job_id": "41193",
+      "seconds": 22,
+      "start": "2026-09-09T04:14:42",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "59afdeb70f871ee1d5ac0ba13aba496196ff71c5fb466b6c8ab1843316442cfd"
+    },
+    {
+      "end": "2026-09-09T04:15:05",
+      "gpus": 0,
+      "job": "rsi_main_float0_score",
+      "job_id": "41194",
+      "seconds": 20,
+      "start": "2026-09-09T04:14:45",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "b56ca62a8ea7aa33e57c86f15b9b2f9385a7eb933cd4cbe23ea1fb573747494e"
+    },
+    {
+      "end": "2026-09-09T04:17:13",
+      "gpus": 0,
+      "job": "rsi_main_current0_score",
+      "job_id": "41195",
+      "seconds": 21,
+      "start": "2026-09-09T04:16:52",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "d879ae071052bcb166fbffe6df8d391765460321d91be85c9cf6101f880240c0"
+    },
+    {
+      "end": "2026-09-09T04:28:17",
+      "gpus": 2,
+      "job": "rsi_H1A2_chunk1",
+      "job_id": "41196",
+      "seconds": 660,
+      "start": "2026-09-09T04:17:17",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "bf87ed395d0e0506ffd27fc5569c351e7bcc8bfdfffc4843a41edcdd4a288d99"
+    },
+    {
+      "end": "2026-09-09T04:32:19",
+      "gpus": 2,
+      "job": "rsi_main_E0",
+      "job_id": "41197",
+      "seconds": 886,
+      "start": "2026-09-09T04:17:33",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "e0e298a591f9e048744161627c7ef359d0bd118c4fb3e7635d993b2d6792ee77"
+    },
+    {
+      "end": "2026-09-09T04:24:20",
+      "gpus": 2,
+      "job": "rsi_fit_token0_labels",
+      "job_id": "41198",
+      "seconds": 185,
+      "start": "2026-09-09T04:21:15",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "6cf46fb3c66aa8203c0b295907f249cb18460083fa0865dd85bbc4e09cae92f1"
+    },
+    {
+      "end": "2026-09-09T04:25:30",
+      "gpus": 0,
+      "job": "rsi_fit_token0_score",
+      "job_id": "41199",
+      "seconds": 28,
+      "start": "2026-09-09T04:25:02",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "3ea7df856e6e6cb144753d1c22ec55c3a5472c483a8041683ac706d96dfbb714"
+    },
+    {
+      "end": "2026-09-09T04:42:41",
+      "gpus": 2,
+      "job": "rsi_train_G1",
+      "job_id": "41200",
+      "seconds": 947,
+      "start": "2026-09-09T04:26:54",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "4d3827817b0c0c2191172616d5bf3c9b11aeafc72bbdec42a138656b481dfdb3"
+    },
+    {
+      "end": "2026-09-09T04:29:09",
+      "gpus": 0,
+      "job": "rsi_fit_current0_score",
+      "job_id": "41201",
+      "seconds": 20,
+      "start": "2026-09-09T04:28:49",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "72716a2062a15f1c0d6c062b8e4335e2414454bb887cc721753470dc6ab205a1"
+    },
+    {
+      "end": "2026-09-09T04:45:12",
+      "gpus": 2,
+      "job": "rsi_fit_E0",
+      "job_id": "41202",
+      "seconds": 934,
+      "start": "2026-09-09T04:29:38",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "d3cef07614fff0eb5d11791c59dd238fb30b2b3512de9e15a422247ea39b5e95"
+    },
+    {
+      "end": "2026-09-09T04:59:19",
+      "gpus": 2,
+      "job": "rsi_main_proposal0_labels",
+      "job_id": "41203",
+      "seconds": 1579,
+      "start": "2026-09-09T04:33:00",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "ba952b49064110f5c68df8a2640b9cf4a2a731a03ca5290fb5e99cfafcc55e82"
+    },
+    {
+      "end": "2026-09-09T05:09:25",
+      "gpus": 2,
+      "job": "rsi_fit_raw1",
+      "job_id": "41204",
+      "seconds": 1516,
+      "start": "2026-09-09T04:44:09",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "9ad0bc23f2c55fc3414b9ddea6014360593f385cef41bcc7b8e49a86519cfac7"
+    },
+    {
+      "end": "2026-09-09T05:15:50",
+      "gpus": 2,
+      "job": "rsi_fit_proposal0_labels",
+      "job_id": "41205",
+      "seconds": 1713,
+      "start": "2026-09-09T04:47:17",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "e5ef92504c6b15025fc8e6b0b36ee1c078957dbad0440211a6993e263a44fef7"
+    },
+    {
+      "end": "2026-09-09T05:00:08",
+      "gpus": 0,
+      "job": "rsi_main_edited0_score",
+      "job_id": "41206",
+      "seconds": 20,
+      "start": "2026-09-09T04:59:48",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "2e011cacb2398c42504cdc31d2d28b28d29665c8954ac7928d65b905817af216"
+    },
+    {
+      "end": "2026-09-09T05:26:18",
+      "gpus": 2,
+      "job": "rsi_main_raw1",
+      "job_id": "41207",
+      "seconds": 1545,
+      "start": "2026-09-09T05:00:33",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "6d9d79953ff5e41299a6fefb5852a460971b6e5188767e3ebc533f02b9804455"
+    },
+    {
+      "end": "2026-09-09T05:44:30",
+      "gpus": 2,
+      "job": "rsi_fit_raw1_labels",
+      "job_id": "41208",
+      "seconds": 2082,
+      "start": "2026-09-09T05:09:48",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "74010158a51fcb296e982967a7022e23be3ee976c11e4ef3d6f4c5da5e387a30"
+    },
+    {
+      "end": "2026-09-09T05:17:06",
+      "gpus": 0,
+      "job": "rsi_fit_proposal0_score",
+      "job_id": "41209",
+      "seconds": 21,
+      "start": "2026-09-09T05:16:45",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "cf642aa6076dba75dc445a325c4a62ce2dc8f2b5443939ff66d10d363a7c9d9c"
+    },
+    {
+      "end": "2026-09-09T05:39:26",
+      "gpus": 2,
+      "job": "rsi_train_E1",
+      "job_id": "41210",
+      "seconds": 1307,
+      "start": "2026-09-09T05:17:39",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "2b93d8550bb715048299eb059f6211c7cc4988b70ed44422e31dbdb74c07528c"
+    },
+    {
+      "end": "2026-09-09T06:02:14",
+      "gpus": 2,
+      "job": "rsi_main_raw1_labels",
+      "job_id": "41211",
+      "seconds": 2101,
+      "start": "2026-09-09T05:27:13",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "d61ca03b834b3db49ae7e695927283550bb369c114d57987a28cd17f3a955af7"
+    },
+    {
+      "end": "2026-09-09T05:42:58",
+      "gpus": 2,
+      "job": "rsi_fit_float0_labels",
+      "job_id": "41212",
+      "seconds": 194,
+      "start": "2026-09-09T05:39:44",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "069caf1211eac4247998f7bbae957411914b9c25f50b43bf31bdadd005f06b38"
+    },
+    {
+      "end": "2026-09-09T05:44:20",
+      "gpus": 0,
+      "job": "rsi_fit_float0_score",
+      "job_id": "41213",
+      "seconds": 21,
+      "start": "2026-09-09T05:43:59",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "ac5146a90140699d98e205720b1acb5a49d54d4434b287f2b1f12a09de8a1550"
+    },
+    {
+      "end": "2026-09-09T05:44:51",
+      "gpus": 0,
+      "job": "rsi_fit_edited0_score",
+      "job_id": "41214",
+      "seconds": 19,
+      "start": "2026-09-09T05:44:32",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "36d92ca93561a6a0d4f8be2722fb20712aec7470e89f40186cadd4bbd7534d66"
+    },
+    {
+      "end": "2026-09-09T05:45:08",
+      "gpus": 0,
+      "job": "rsi_fit_raw1_score",
+      "job_id": "41215",
+      "seconds": 21,
+      "start": "2026-09-09T05:44:47",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "eec721fb729d7c4b5d79a5d6dbd821567ed9e569e1680438b2fc8c30ef31d543"
+    },
+    {
+      "end": "2026-09-09T05:55:54",
+      "gpus": 2,
+      "job": "rsi_H1A2_chunk2",
+      "job_id": "41216",
+      "seconds": 640,
+      "start": "2026-09-09T05:45:14",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "cff99e0d796341dfa63be1132b59d93b7bac5b57436dcd6f76cc5fa1c7ebe8b9"
+    },
+    {
+      "end": "2026-09-09T06:30:55",
+      "gpus": 2,
+      "job": "rsi_fit_refine1",
+      "job_id": "41217",
+      "seconds": 2724,
+      "start": "2026-09-09T05:45:31",
+      "state": "TIMEOUT",
+      "submission_manifest_sha256": "dfa7162d4bfbcad748b7cf10d76c7654ced4ec41f112ff851aa2934d98024d37"
+    },
+    {
+      "end": "2026-09-09T06:08:02",
+      "gpus": 2,
+      "job": "rsi_H1A2_chunk3",
+      "job_id": "41219",
+      "seconds": 668,
+      "start": "2026-09-09T05:56:54",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "01fe4e01e42bd9b409b2eeb94da05833f624c3139da05224fa80edad099e5b25"
+    },
+    {
+      "end": "2026-09-09T06:03:29",
+      "gpus": 0,
+      "job": "rsi_main_raw1_score",
+      "job_id": "41221",
+      "seconds": 22,
+      "start": "2026-09-09T06:03:07",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "02ae236b1ee24d947ab3de550b9b1f2ae2cef9ae0b79849fe8cadc5200172f85"
+    },
+    {
+      "end": "2026-09-09T06:52:56",
+      "gpus": 2,
+      "job": "rsi_main_refine1",
+      "job_id": "41222",
+      "seconds": 2923,
+      "start": "2026-09-09T06:04:13",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "1fe1621a7f7406bf63248751ce5d7eda8fa8203ba7f0808c7017b8b41e40e8b3"
+    },
+    {
+      "end": "2026-09-09T06:12:22",
+      "gpus": 2,
+      "job": "rsi_H1A2_F_labels",
+      "job_id": "41223",
+      "seconds": 207,
+      "start": "2026-09-09T06:08:55",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "068004b4e0971d3e722324d06dd07005fd69195bb2606f100166abddbee76c96"
+    },
+    {
+      "end": "2026-09-09T06:13:11",
+      "gpus": 0,
+      "job": "rsi_H1A2_F_score",
+      "job_id": "41224",
+      "seconds": 19,
+      "start": "2026-09-09T06:12:52",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "a757c9a43d6322fa682b9f965314973566d5ea6472235637720ba033a8ed3105"
+    },
+    {
+      "end": "2026-09-09T06:22:00",
+      "gpus": 2,
+      "job": "rsi_H1A2_raw_labels",
+      "job_id": "41225",
+      "seconds": 483,
+      "start": "2026-09-09T06:13:57",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "73773c6b19fd1217b37533fedebe23348aa95b8ab3bbadba255b79bd28865b88"
+    },
+    {
+      "end": "2026-09-09T06:23:05",
+      "gpus": 0,
+      "job": "rsi_H1A2_raw_score",
+      "job_id": "41226",
+      "seconds": 19,
+      "start": "2026-09-09T06:22:46",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "6669d1365697ed9c7bd4da23e8bb2d6f3cf6af7f64fb3ffb8f2e1e25ca4d40a6"
+    },
+    {
+      "end": "2026-09-09T06:36:22",
+      "gpus": 2,
+      "job": "rsi_R03_chunk0",
+      "job_id": "41227",
+      "seconds": 763,
+      "start": "2026-09-09T06:23:39",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "ac50963dffb90b81c4107012507f9c13b1d5d171f0d4593c4d7a426b33398e89"
+    },
+    {
+      "end": "2026-09-09T06:34:53",
+      "gpus": 2,
+      "job": "rsi_fit_refine1_resume",
+      "job_id": "41230",
+      "seconds": 211,
+      "start": "2026-09-09T06:31:22",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "4e58548a76f615ea4db504eddde3fd00474a0efaf0116d24d58ca43360930d51"
+    },
+    {
+      "end": "2026-09-09T06:39:16",
+      "gpus": 2,
+      "job": "rsi_fit_token1_labels",
+      "job_id": "41231",
+      "seconds": 230,
+      "start": "2026-09-09T06:35:26",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "9386c0549db9c0fb5731f05ecb2eadf91cac397a4fc33311b2bddc42aa4afc7d"
+    },
+    {
+      "end": "2026-09-09T06:41:28",
+      "gpus": 2,
+      "job": "rsi_fit_float1_labels",
+      "job_id": "41232",
+      "seconds": 230,
+      "start": "2026-09-09T06:37:38",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "23da1cf5e93eeef80ee88e8e7d9bde44632efd50143882496ce2748e6c832954"
+    },
+    {
+      "end": "2026-09-09T06:39:49",
+      "gpus": 0,
+      "job": "rsi_fit_token1_score",
+      "job_id": "41233",
+      "seconds": 19,
+      "start": "2026-09-09T06:39:30",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "2bff087b14c8e14c8e0e3f77b65de6d020cdf57eb8e39730bcafe56796b19ca1"
+    },
+    {
+      "end": "2026-09-09T06:56:17",
+      "gpus": 2,
+      "job": "rsi_G2_train",
+      "job_id": "41234",
+      "seconds": 946,
+      "start": "2026-09-09T06:40:31",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "b052d74bd331a2f5626b07fa333d499a2c4eb03a348279bb58f324d1ce7ed884"
+    },
+    {
+      "end": "2026-09-09T06:42:29",
+      "gpus": 0,
+      "job": "rsi_fit_current1_score",
+      "job_id": "41235",
+      "seconds": 18,
+      "start": "2026-09-09T06:42:11",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "a7ecc2b5de565a8601edc6cd2afca5a7bd5e7a20a5fd421713dbb1c8b85daf0a"
+    },
+    {
+      "end": "2026-09-09T06:43:19",
+      "gpus": 0,
+      "job": "rsi_fit_float1_score",
+      "job_id": "41236",
+      "seconds": 23,
+      "start": "2026-09-09T06:42:56",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "ef0089c51c70c8f4a59313ed43f22a475e28ec885cec88634f34dc97acb285f5"
+    },
+    {
+      "end": "2026-09-09T07:01:59",
+      "gpus": 2,
+      "job": "rsi_fit_edit1",
+      "job_id": "41237",
+      "seconds": 1102,
+      "start": "2026-09-09T06:43:37",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "5035aa2d049047b0ac24b6f1f0887f3137fd0cdc42105a53a54d4de5aa6cd444"
+    },
+    {
+      "end": "2026-09-09T06:57:18",
+      "gpus": 2,
+      "job": "rsi_main_token1_labels",
+      "job_id": "41238",
+      "seconds": 230,
+      "start": "2026-09-09T06:53:28",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "17416ac0d9c7a51ae4ffdb4b82a09c47a45f4bdc55627d4d10c6da113d31c79b"
+    },
+    {
+      "end": "2026-09-09T07:21:17",
+      "gpus": 2,
+      "job": "rsi_fit_raw2",
+      "job_id": "41239",
+      "seconds": 1479,
+      "start": "2026-09-09T06:56:38",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "6016bcc13339fbafee30e02f9a4456252c5143a6dc4976d7c5a5043b8fe24f34"
+    },
+    {
+      "end": "2026-09-09T06:58:33",
+      "gpus": 0,
+      "job": "rsi_main_token1_score",
+      "job_id": "41241",
+      "seconds": 19,
+      "start": "2026-09-09T06:58:14",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "44c3c9d957a200928a59ae051ebeafb77875ea04b6d61be9f87ac86c5c815c04"
+    },
+    {
+      "end": "2026-09-09T06:59:31",
+      "gpus": 0,
+      "job": "rsi_main_current1_score",
+      "job_id": "41242",
+      "seconds": 19,
+      "start": "2026-09-09T06:59:12",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "c0e33502edcb1698db54e1144f19b58002ca5da9252ef815e16209ad5bddc90b"
+    },
+    {
+      "end": "2026-09-09T07:25:16",
+      "gpus": 2,
+      "job": "rsi_main_raw2",
+      "job_id": "41243",
+      "seconds": 1505,
+      "start": "2026-09-09T07:00:11",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "630060ce36c1e8ecfee5f31e93805aa27c6c617d312ec86338764f4389f9fe94"
+    },
+    {
+      "end": "2026-09-09T07:36:47",
+      "gpus": 2,
+      "job": "rsi_fit_proposal1_labels",
+      "job_id": "41246",
+      "seconds": 2037,
+      "start": "2026-09-09T07:02:50",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "8359ef89411b1e99bae696a5622522a4810dff581fb3374cd60040911185f4b6"
+    },
+    {
+      "end": "2026-09-09T07:58:13",
+      "gpus": 2,
+      "job": "rsi_fit_raw2_labels",
+      "job_id": "41251",
+      "seconds": 2163,
+      "start": "2026-09-09T07:22:10",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "3a00c215034dd03b1c05fd45a2fe269b9c721e6cb643b6ed2eb640527a30b1d6"
+    },
+    {
+      "end": "2026-09-09T07:28:15",
+      "gpus": 2,
+      "job": "rsi_main_edit1",
+      "job_id": "41252",
+      "seconds": 123,
+      "start": "2026-09-09T07:26:12",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "1007e1f38a1b7f79fe9bbb6a828bc8c4a72c63a96a4e76b1158ab8cea4b2b6e1"
+    },
+    {
+      "end": "2026-09-09T07:30:15",
+      "gpus": 2,
+      "job": "rsi_main_edited1_labels",
+      "job_id": "41253",
+      "seconds": 53,
+      "start": "2026-09-09T07:29:22",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "0bf59880b78d469d24884f148939e8f0e46410ee362466e1ceed33144d89763d"
+    },
+    {
+      "end": "2026-09-09T07:30:59",
+      "gpus": 0,
+      "job": "rsi_main_edited1_score",
+      "job_id": "41254",
+      "seconds": 21,
+      "start": "2026-09-09T07:30:38",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "14e9988acd505dc71b9ced066226f4349944dabb77063184ab3d10a9902d5396"
+    },
+    {
+      "end": "2026-09-09T07:35:29",
+      "gpus": 2,
+      "job": "rsi_main_float1_labels",
+      "job_id": "41255",
+      "seconds": 228,
+      "start": "2026-09-09T07:31:41",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "c95f4e368a248874fef97c9d2d9cc464d0772b4b81aab7f87224430eddc25364"
+    },
+    {
+      "end": "2026-09-09T07:36:51",
+      "gpus": 0,
+      "job": "rsi_main_float1_score",
+      "job_id": "41256",
+      "seconds": 20,
+      "start": "2026-09-09T07:36:31",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "81f7c9b7a5f7aced69315a209f0c37944d98285db79dfeeea213f28c8a8fc848"
+    },
+    {
+      "end": "2026-09-09T08:14:45",
+      "gpus": 2,
+      "job": "rsi_main_raw2_labels",
+      "job_id": "41257",
+      "seconds": 2238,
+      "start": "2026-09-09T07:37:27",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "bea5780008972903102801bee19b3e3b2c6ada268bec9d7855027c4e8c6dfa3c"
+    },
+    {
+      "end": "2026-09-09T07:37:53",
+      "gpus": 0,
+      "job": "rsi_fit_proposal1_score",
+      "job_id": "41258",
+      "seconds": 19,
+      "start": "2026-09-09T07:37:34",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "1d625047ddb4c57737272b52e618f6d830892e37c431ae3b70e504a52c7cf270"
+    },
+    {
+      "end": "2026-09-09T07:38:51",
+      "gpus": 0,
+      "job": "rsi_fit_edited1_score",
+      "job_id": "41259",
+      "seconds": 18,
+      "start": "2026-09-09T07:38:33",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "d1be39848de24005f3ab3f18c9eea0e4d3731ca95b9fecfc3ada97c9598506d1"
+    },
+    {
+      "end": "2026-09-09T08:01:20",
+      "gpus": 2,
+      "job": "rsi_E2_train",
+      "job_id": "41260",
+      "seconds": 1298,
+      "start": "2026-09-09T07:39:42",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "1a13d08310d11486e7280074f25cb3730f92545d8ce1452f3521b64e746407bb"
+    },
+    {
+      "end": "2026-09-09T07:59:31",
+      "gpus": 0,
+      "job": "rsi_fit_raw2_score",
+      "job_id": "41261",
+      "seconds": 19,
+      "start": "2026-09-09T07:59:12",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "4f9a5281aa2480be7b679da012f41e6d5c55b0c4a648b1041580921433f3cd95"
+    },
+    {
+      "end": "2026-09-09T08:48:32",
+      "gpus": 2,
+      "job": "rsi_fit_refine2",
+      "job_id": "41262",
+      "seconds": 2900,
+      "start": "2026-09-09T08:00:12",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "7173f27e19ad562dbf53ec555a623cf1595e872869195fa9e367967cf3242f87"
+    },
+    {
+      "end": "2026-09-09T08:14:23",
+      "gpus": 2,
+      "job": "rsi_R03_chunk1",
+      "job_id": "41263",
+      "seconds": 756,
+      "start": "2026-09-09T08:01:47",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "31cd98e002ecc1216339b4f5af47f304e7c1b2f07aee04420e84a50d334b14d6"
+    },
+    {
+      "end": "2026-09-09T08:27:27",
+      "gpus": 2,
+      "job": "rsi_R03_chunk2",
+      "job_id": "41264",
+      "seconds": 759,
+      "start": "2026-09-09T08:14:48",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "63300286010a3a465ff45f95d952f3f8b587050940d416ea1bed4e58be6aa835"
+    },
+    {
+      "end": "2026-09-09T08:15:20",
+      "gpus": 0,
+      "job": "rsi_main_raw2_score",
+      "job_id": "41265",
+      "seconds": 19,
+      "start": "2026-09-09T08:15:01",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "dbb3b0bf46d5e919cc4b9d01ae0b550332a79c0427585f181ea33eee54f8c3e1"
+    },
+    {
+      "end": "2026-09-09T09:04:42",
+      "gpus": 2,
+      "job": "rsi_main_refine2",
+      "job_id": "41266",
+      "seconds": 2916,
+      "start": "2026-09-09T08:16:06",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "ac7bb91165a68804ee1244d3486b923599323a566482aef4286d1f2b9f3fd102"
+    },
+    {
+      "end": "2026-09-09T08:40:52",
+      "gpus": 2,
+      "job": "rsi_R03_chunk3",
+      "job_id": "41267",
+      "seconds": 757,
+      "start": "2026-09-09T08:28:15",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "6b8b63ed80ac2b294984499b71a272e437e3a0b9063ab2de738c8db3d216d717"
+    },
+    {
+      "end": "2026-09-09T08:44:35",
+      "gpus": 2,
+      "job": "rsi_R03_F_labels",
+      "job_id": "41268",
+      "seconds": 193,
+      "start": "2026-09-09T08:41:22",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "7e56cf488f11005261bdcc557320c172d721ff2b8815da501d3495b7e52da633"
+    },
+    {
+      "end": "2026-09-09T08:45:26",
+      "gpus": 0,
+      "job": "rsi_R03_F_score",
+      "job_id": "41269",
+      "seconds": 19,
+      "start": "2026-09-09T08:45:07",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "464ff122a2ceedd0a74158b63978f78e13782e259f3c69a655303ba8a30542dd"
+    },
+    {
+      "end": "2026-09-09T08:51:17",
+      "gpus": 2,
+      "job": "rsi_R03_raw_labels",
+      "job_id": "41270",
+      "seconds": 312,
+      "start": "2026-09-09T08:46:05",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "efc480e9d7821b0927bd0fa4b930c040974147549a696814cd829decead9eafd"
+    },
+    {
+      "end": "2026-09-09T08:53:12",
+      "gpus": 2,
+      "job": "rsi_fit_token2_labels",
+      "job_id": "41271",
+      "seconds": 237,
+      "start": "2026-09-09T08:49:15",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "18cf787a04261a32277846721a8a09e588107b1d779ebd5cfcaca1900c3416c8"
+    },
+    {
+      "end": "2026-09-09T08:51:50",
+      "gpus": 0,
+      "job": "rsi_R03_raw_score",
+      "job_id": "41272",
+      "seconds": 19,
+      "start": "2026-09-09T08:51:31",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "85bd98e9206d097f82deb051a27f104ca7cd030f428032a3dfe41b0593c76120"
+    },
+    {
+      "end": "2026-09-09T08:56:51",
+      "gpus": 2,
+      "job": "rsi_fit_float2_labels",
+      "job_id": "41273",
+      "seconds": 243,
+      "start": "2026-09-09T08:52:48",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "abc0bab7ac86ef8652bb662447c876b61fa2e3fbb99a0241e83f123e02d8c4b9"
+    },
+    {
+      "end": "2026-09-09T08:55:20",
+      "gpus": 0,
+      "job": "rsi_fit_token2_score",
+      "job_id": "41274",
+      "seconds": 19,
+      "start": "2026-09-09T08:55:01",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "8cf6b1434bb140ce0d9a1a1753192b49a284ad1277781e9944a10d98fedac4d9"
+    },
+    {
+      "end": "2026-09-09T09:12:10",
+      "gpus": 2,
+      "job": "rsi_G3_train",
+      "job_id": "41275",
+      "seconds": 938,
+      "start": "2026-09-09T08:56:32",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "54809c65ea92221e74b13d684c2628ba5d8de8ddeb21f1239d03a0ab3477428f"
+    },
+    {
+      "end": "2026-09-09T08:57:28",
+      "gpus": 0,
+      "job": "rsi_fit_current2_score",
+      "job_id": "41276",
+      "seconds": 18,
+      "start": "2026-09-09T08:57:10",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "16dacfb375120f4d499001a9841773fb1b1685637fdaf53113c7fa3ea7dbfd75"
+    },
+    {
+      "end": "2026-09-09T08:58:35",
+      "gpus": 0,
+      "job": "rsi_fit_float2_score",
+      "job_id": "41277",
+      "seconds": 18,
+      "start": "2026-09-09T08:58:17",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "18d46d689801e86bc226006438613515903de0822cb02d71de850fb6ed063ea6"
+    },
+    {
+      "end": "2026-09-09T09:17:23",
+      "gpus": 2,
+      "job": "rsi_fit_edit2",
+      "job_id": "41278",
+      "seconds": 1090,
+      "start": "2026-09-09T08:59:13",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "d55521e89d85aaac66df9a05be2700351943f155d569628d75cef4072c9e494d"
+    },
+    {
+      "end": "2026-09-09T09:09:20",
+      "gpus": 2,
+      "job": "rsi_main_token2_labels",
+      "job_id": "41280",
+      "seconds": 225,
+      "start": "2026-09-09T09:05:35",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "bd47bd67662a4d34b104c606d7f77d1ae59cdef49540b8cad1d03ffc4b1ea344"
+    },
+    {
+      "end": "2026-09-09T09:10:48",
+      "gpus": 0,
+      "job": "rsi_main_token2_score",
+      "job_id": "41282",
+      "seconds": 20,
+      "start": "2026-09-09T09:10:28",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "6f5acada0281c5513a00d1800ae351870db7486f47c581f3f87c3e541983579e"
+    },
+    {
+      "end": "2026-09-09T09:12:10",
+      "gpus": 0,
+      "job": "rsi_main_current2_score",
+      "job_id": "41283",
+      "seconds": 19,
+      "start": "2026-09-09T09:11:51",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "02859f8ff717eab81dc861f95d58ab1e59d7f0ae2e76fda2293d975eb9131d06"
+    },
+    {
+      "end": "2026-09-09T09:38:07",
+      "gpus": 2,
+      "job": "rsi_main_raw3",
+      "job_id": "41284",
+      "seconds": 1512,
+      "start": "2026-09-09T09:12:55",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "870a7966c211523a6ed236d3ad4ebd681e6de5c0906e456da73fec61ea79f126"
+    },
+    {
+      "end": "2026-09-09T09:14:53",
+      "gpus": 2,
+      "job": "rsi_main_edit2",
+      "job_id": "41285",
+      "seconds": 111,
+      "start": "2026-09-09T09:13:02",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "92156c9bad711bb27888bc9f449971c1fc36f87e4ca69088ad03bde7bb23cdb6"
+    },
+    {
+      "end": "2026-09-09T09:16:09",
+      "gpus": 0,
+      "job": "rsi_main_edited2_score",
+      "job_id": "41286",
+      "seconds": 19,
+      "start": "2026-09-09T09:15:50",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "189876eae32f138ac01f8b178f6f6ebd6c959516286227c067a1333f5426704f"
+    },
+    {
+      "end": "2026-09-09T09:20:42",
+      "gpus": 2,
+      "job": "rsi_main_float2_labels",
+      "job_id": "41287",
+      "seconds": 227,
+      "start": "2026-09-09T09:16:55",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "69296a30690a857374845fb83f003c88328e6adcdd5ad8eac82bdbfa86c0bdd4"
+    },
+    {
+      "end": "2026-09-09T09:53:01",
+      "gpus": 2,
+      "job": "rsi_fit_proposal2_labels",
+      "job_id": "41288",
+      "seconds": 2076,
+      "start": "2026-09-09T09:18:25",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "f41bfe104fe2c0bd82afd493ef4cd8aad499e9c59637f0df506ee8f7004358ff"
+    },
+    {
+      "end": "2026-09-09T09:22:37",
+      "gpus": 0,
+      "job": "rsi_main_float2_score",
+      "job_id": "41289",
+      "seconds": 19,
+      "start": "2026-09-09T09:22:18",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "e7768b42a3011ea42232580efd287c1e6823c4e6747ea5c5aa9512f226df4487"
+    },
+    {
+      "end": "2026-09-09T09:48:49",
+      "gpus": 2,
+      "job": "rsi_fit_raw3",
+      "job_id": "41290",
+      "seconds": 1496,
+      "start": "2026-09-09T09:23:53",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "3992637e2207aa51c1a8d96d7ac46093e017fa610b73bee23e14067dd4ffaedb"
+    },
+    {
+      "end": "2026-09-09T10:15:49",
+      "gpus": 2,
+      "job": "rsi_main_raw3_labels",
+      "job_id": "41296",
+      "seconds": 2225,
+      "start": "2026-09-09T09:38:44",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "07e29b3cef2f36b8904f1d366bc6c2d5dc166d1ddcd7dd2a5098e5f8142c4b42"
+    },
+    {
+      "end": "2026-09-09T10:26:17",
+      "gpus": 2,
+      "job": "rsi_fit_raw3_labels",
+      "job_id": "41297",
+      "seconds": 2210,
+      "start": "2026-09-09T09:49:27",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "802c52be46f11b787aea88432897b971eb78d3fa08ac1709f5c2caf2710419a6"
+    },
+    {
+      "end": "2026-09-09T09:53:54",
+      "gpus": 0,
+      "job": "rsi_fit_proposal2_score",
+      "job_id": "41298",
+      "seconds": 19,
+      "start": "2026-09-09T09:53:35",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "fb955b1d8575220b589f4b11ccb5493e303719580104da3848da869e8dff32ea"
+    },
+    {
+      "end": "2026-09-09T09:55:05",
+      "gpus": 0,
+      "job": "rsi_fit_edited2_score",
+      "job_id": "41299",
+      "seconds": 19,
+      "start": "2026-09-09T09:54:46",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "0a6567d0468f5ed2a089d63f1912c7070a0727c290be05a5957568dc929eed86"
+    },
+    {
+      "end": "2026-09-09T10:17:57",
+      "gpus": 2,
+      "job": "rsi_E3_train",
+      "job_id": "41300",
+      "seconds": 1299,
+      "start": "2026-09-09T09:56:18",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "b7a2b90c9d4a77cc4019c7a75dff188debca7ab9622ba96e17512dc9000b5f49"
+    },
+    {
+      "end": "2026-09-09T10:16:26",
+      "gpus": 0,
+      "job": "rsi_main_raw3_score",
+      "job_id": "41301",
+      "seconds": 20,
+      "start": "2026-09-09T10:16:06",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "d9948905be8651a901c1af17392760e96d2cc3653e4e7e68b0306fe6ca8c8d2c"
+    },
+    {
+      "end": "2026-09-09T11:05:57",
+      "gpus": 2,
+      "job": "rsi_main_refine3",
+      "job_id": "41302",
+      "seconds": 2862,
+      "start": "2026-09-09T10:18:15",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "dd2011dca8a376dae30503245a21949a741ea20e51e6d97be30d84d82c43c206"
+    },
+    {
+      "end": "2026-09-09T10:28:11",
+      "gpus": 0,
+      "job": "rsi_fit_raw3_score",
+      "job_id": "41303",
+      "seconds": 19,
+      "start": "2026-09-09T10:27:52",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "fc1204f004f83dd26a4a1cde037d324341d199f31bcc6f13fa2ab1690a7f8ef4"
+    },
+    {
+      "end": "2026-09-09T10:54:27",
+      "gpus": 4,
+      "job": "rsi_fit_refine3",
+      "job_id": "41304",
+      "seconds": 1501,
+      "start": "2026-09-09T10:29:26",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "e91ce25ad7536cffd29cf51dbb7176c8b43acc3b9e47a44aebe30e69466439ee"
+    },
+    {
+      "end": "2026-09-09T11:00:05",
+      "gpus": 2,
+      "job": "rsi_fit_token3_labels",
+      "job_id": "41306",
+      "seconds": 298,
+      "start": "2026-09-09T10:55:07",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "b694aadf4af5077a5a32ab3db2d2e488bc3473f87aca8b288379dea1eac3676c"
+    },
+    {
+      "end": "2026-09-09T11:00:00",
+      "gpus": 2,
+      "job": "rsi_fit_float3_labels",
+      "job_id": "41307",
+      "seconds": 286,
+      "start": "2026-09-09T10:55:14",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "5be06b6e23a08f9e2e11d2e6b6fd86645ae1bee873501687ad09bea5da17a508"
+    },
+    {
+      "end": "2026-09-09T11:00:48",
+      "gpus": 0,
+      "job": "rsi_fit_float3_score",
+      "job_id": "41310",
+      "seconds": 18,
+      "start": "2026-09-09T11:00:30",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "df12c9fc4e8dd7de1edf30a0ee22ff35e2b2e8263307c03ec9ea6cfbc23cf202"
+    },
+    {
+      "end": "2026-09-09T11:01:02",
+      "gpus": 0,
+      "job": "rsi_fit_token3_score",
+      "job_id": "41311",
+      "seconds": 17,
+      "start": "2026-09-09T11:00:45",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "e8ff72ee22bcbd9e399ecfe7ebc7ae35dac8eecac99c5233f237b206fb445084"
+    },
+    {
+      "end": "2026-09-09T11:02:20",
+      "gpus": 0,
+      "job": "rsi_fit_current3_score",
+      "job_id": "41312",
+      "seconds": 18,
+      "start": "2026-09-09T11:02:02",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "bac5c15730fb9737ada8ec6043b505c3141fa2ddb3c8d7a013ff4e9057db22f9"
+    },
+    {
+      "end": "2026-09-09T11:12:59",
+      "gpus": 4,
+      "job": "rsi_fit_edit3",
+      "job_id": "41313",
+      "seconds": 595,
+      "start": "2026-09-09T11:03:04",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "14bb3d594850739611460fec2305b376b7fcfec531c2d160ba313b6aeb314a8f"
+    },
+    {
+      "end": "2026-09-09T11:10:18",
+      "gpus": 2,
+      "job": "rsi_main_token3_labels",
+      "job_id": "41314",
+      "seconds": 230,
+      "start": "2026-09-09T11:06:28",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "347cb2ff0ba0ba20a9f7532575e481b1549169f06c0c2780a529aa7dd18b17f9"
+    },
+    {
+      "end": "2026-09-09T11:11:49",
+      "gpus": 0,
+      "job": "rsi_main_token3_score",
+      "job_id": "41316",
+      "seconds": 20,
+      "start": "2026-09-09T11:11:29",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "6412ae60810f7ee604f1274e2b89cb777020a3526a27eddadc155dd39df85e20"
+    },
+    {
+      "end": "2026-09-09T11:15:22",
+      "gpus": 2,
+      "job": "rsi_main_float3_labels",
+      "job_id": "41317",
+      "seconds": 226,
+      "start": "2026-09-09T11:11:36",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "fec738662468c740e9134d9756922c3a705ecda9bf15f47725aa75d679f800a1"
+    },
+    {
+      "end": "2026-09-09T11:13:45",
+      "gpus": 0,
+      "job": "rsi_main_current3_score",
+      "job_id": "41318",
+      "seconds": 23,
+      "start": "2026-09-09T11:13:22",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "043e3fd5fae8dcc31a64d11eaa00462730a724ab1a19b216268f600b7067eb5b"
+    },
+    {
+      "end": "2026-09-09T11:14:55",
+      "gpus": 2,
+      "job": "rsi_fit_edited3_labels",
+      "job_id": "41319",
+      "seconds": 60,
+      "start": "2026-09-09T11:13:55",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "589766d78ab619eafa92609cf392a6484d53a06cb1488d2c2eb71657f7fca40a"
+    },
+    {
+      "end": "2026-09-09T11:16:24",
+      "gpus": 2,
+      "job": "rsi_main_edit3",
+      "job_id": "41321",
+      "seconds": 122,
+      "start": "2026-09-09T11:14:22",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "a6890e4ec8fbd4c89381d8d93108edc9dc9ef915fb6f57addd95786be6192255"
+    },
+    {
+      "end": "2026-09-09T11:16:37",
+      "gpus": 0,
+      "job": "rsi_main_float3_score",
+      "job_id": "41323",
+      "seconds": 20,
+      "start": "2026-09-09T11:16:17",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "ae7018e6d4b0bdef2e67f8cea0374e9977631e9ccc2f9d3bf21ad5b3fde5dff4"
+    },
+    {
+      "end": "2026-09-09T11:16:42",
+      "gpus": 0,
+      "job": "rsi_fit_edited3_score",
+      "job_id": "41324",
+      "seconds": 18,
+      "start": "2026-09-09T11:16:24",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "1a31e3b4ce549a1098652d0167b402854558caa15d1453f9647fb7308e6370a2"
+    },
+    {
+      "end": "2026-09-09T11:20:11",
+      "gpus": 0,
+      "job": "rsi_main_edited3_score",
+      "job_id": "41326",
+      "seconds": 19,
+      "start": "2026-09-09T11:19:52",
+      "state": "COMPLETED",
+      "submission_manifest_sha256": "dd243ec278894a07103d57cbdeabb571aac7a1ad2ff99feb327680749117dba5"
+    }
+  ],
+  "observed_utc": "2026-09-09T03:37:18.160465+00:00",
+  "scope": "All jobs registered in this RSI run, including failed allocations; historical cached assets and prior-run preparation are outside this ledger.",
+  "training_gpu_hours": 3.7416666666666663
+}

@@ -1,0 +1,20 @@
+{
+  "derived_files_sha256": {
+    "RSI_FINAL_PAIRED_CHANGES.json": "f055301f801e1ae5d693577f5018d9748753dfc7eb78b8af75622771630da4b1"
+  },
+  "execution_source": {
+    "commit": "6228f95343049cbb89884944c1af68e75e31d770",
+    "manifest_sha256": "16545e6efe9663330960985f1e4ef7f3184f5081f930b43a134eef2cdf5a31b8",
+    "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/code/6228f95343049cbb89884944c1af68e75e31d770"
+  },
+  "files_sha256": {
+    "ROUND_METADATA_ERRATUM.json": "5ba6d7ede8c55da076c348476e1e20fecfdfe6e676eca2e12ae38530e4f84a8c",
+    "RSI_FINAL_AUDIT.json": "d53742c85927b494e6903dc987a9493a8e6dc5101b932a7498871fef18a6ce50",
+    "RSI_FINAL_CALL_COUNTS.json": "d4b184026df8a2a4d78c3282926fe87c37386ee0a158d2d5dbb5004fb65fa0c6",
+    "RSI_FINAL_GPU_ACCOUNTING.json": "12edb16583a8b2af9baf4f88597f6e5939f57647b342591c9c0750ed6d0c9b95",
+    "RSI_FINAL_RESULTS.json": "45b31c711a9b4ea08c8e4d528850d7f1b58b295924f339e6d8eeb84bb3a93359",
+    "RSI_METRICS.csv": "f391fe66090467f8c75e674d82484e87a7194dc96256e2bf33263ff2b074c8dc"
+  },
+  "metadata_fix_commit": "acb99cdccad3f86f6ab95ef55b44cfd311aff6d4",
+  "remote_run_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1"
+}

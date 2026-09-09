@@ -1,80 +1,80 @@
 {
-  "reason": "Descriptive round fields were inherited from update 1; executable parent and data paths are correct.",
-  "training_math_affected": false,
-  "original_artifacts_unchanged": true,
   "fix_commit": "acb99cdccad3f86f6ab95ef55b44cfd311aff6d4",
+  "original_artifacts_unchanged": true,
+  "reason": "Descriptive round fields were inherited from update 1; executable parent and data paths are correct.",
   "rows": [
     {
-      "update": 2,
       "branch": "G",
-      "recorded": {
-        "source_round": 0,
-        "update_index": 1
-      },
-      "effective": {
-        "source_round": 1,
-        "update_index": 2
-      },
       "config": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training_configs/TRAIN_G2.json",
       "config_sha256": "c760187c5f6999e24c55fb1581ea81128294ea22615e67b1ea2bc99f8b8d9fe4",
-      "receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round2/G/result/checkpoint/RSI_TRAINING_DONE.json",
-      "receipt_sha256": "2a33b4bba100b12a11ca1be590e6970e5ff6270cc418ac7da17890d6b4e51150",
-      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round1/G/result/checkpoint",
-      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/pairs/G.jsonl"
-    },
-    {
-      "update": 2,
-      "branch": "E",
-      "recorded": {
-        "source_round": 0,
-        "update_index": 1
-      },
+      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/pairs/G.jsonl",
       "effective": {
         "source_round": 1,
         "update_index": 2
       },
+      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round1/G/result/checkpoint",
+      "receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round2/G/result/checkpoint/RSI_TRAINING_DONE.json",
+      "receipt_sha256": "2a33b4bba100b12a11ca1be590e6970e5ff6270cc418ac7da17890d6b4e51150",
+      "recorded": {
+        "source_round": 0,
+        "update_index": 1
+      },
+      "update": 2
+    },
+    {
+      "branch": "E",
       "config": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training_configs/TRAIN_E2.json",
       "config_sha256": "9f294086d99f29089e9a9da20d66c2222a814a4ee21186d29b3c0b89a0bc7c99",
+      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/pairs/E.jsonl",
+      "effective": {
+        "source_round": 1,
+        "update_index": 2
+      },
+      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round1/E/result/checkpoint",
       "receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round2/E/result/checkpoint/RSI_TRAINING_DONE.json",
       "receipt_sha256": "f7c003914e45bf49afb266b1e8c80b3830309d36a05dd34d948d19c0783e43dd",
-      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round1/E/result/checkpoint",
-      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round1/fit/pairs/E.jsonl"
-    },
-    {
-      "update": 3,
-      "branch": "G",
       "recorded": {
         "source_round": 0,
         "update_index": 1
       },
-      "effective": {
-        "source_round": 2,
-        "update_index": 3
-      },
+      "update": 2
+    },
+    {
+      "branch": "G",
       "config": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training_configs/TRAIN_G3.json",
       "config_sha256": "104d1b6e21506441ae53ad2efdbdc2bdd616e7dd0af55df3f8cd7bc152f5b18f",
-      "receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round3/G/result/checkpoint/RSI_TRAINING_DONE.json",
-      "receipt_sha256": "47a3c5ccd5fb81e61e37ecda4b44ce42b66b4cc35e1c781dff4e030d5fdb447a",
-      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round2/G/result/checkpoint",
-      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/pairs/G.jsonl"
-    },
-    {
-      "update": 3,
-      "branch": "E",
-      "recorded": {
-        "source_round": 0,
-        "update_index": 1
-      },
+      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/pairs/G.jsonl",
       "effective": {
         "source_round": 2,
         "update_index": 3
       },
+      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round2/G/result/checkpoint",
+      "receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round3/G/result/checkpoint/RSI_TRAINING_DONE.json",
+      "receipt_sha256": "47a3c5ccd5fb81e61e37ecda4b44ce42b66b4cc35e1c781dff4e030d5fdb447a",
+      "recorded": {
+        "source_round": 0,
+        "update_index": 1
+      },
+      "update": 3
+    },
+    {
+      "branch": "E",
       "config": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training_configs/TRAIN_E3.json",
       "config_sha256": "e2758af3301bcc2126700c53efd7d9cf86305a77f89abae612562931f1384db7",
+      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/pairs/E.jsonl",
+      "effective": {
+        "source_round": 2,
+        "update_index": 3
+      },
+      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round2/E/result/checkpoint",
       "receipt": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round3/E/result/checkpoint/RSI_TRAINING_DONE.json",
       "receipt_sha256": "dde0dff897a4ff68c3554550d923284d7f6f19f8e3601e3498ee9ffe775f785a",
-      "parent": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/training/round2/E/result/checkpoint",
-      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/post_refine_sun_gated_20260909/run_20260908T161205Z/rsi_training_v1/rounds/round2/fit/pairs/E.jsonl"
+      "recorded": {
+        "source_round": 0,
+        "update_index": 1
+      },
+      "update": 3
     }
-  ]
+  ],
+  "training_math_affected": false
 }
