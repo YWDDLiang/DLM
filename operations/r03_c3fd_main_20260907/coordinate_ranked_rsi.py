@@ -27,10 +27,18 @@ def dispatch_minutes(requested,remaining):
     return min(requested,int((remaining-90)//60))
 
 
-def training_reserve_seconds(index,branch):
+def training_reserve_seconds(index,branch,requests=256,single_gpus=4):
     # At E training the current G/F and training feedback are already complete.
     # Reserve only its final editor/evaluation, plus all future complete rounds.
-    return ((4-index)*65+15)*60 if branch=='G' else ((3-index)*65+20+15)*60
+    if index not in (1,2,3) or branch not in ('G','E') or min(requests,single_gpus)<1:
+        raise ValueError('invalid remaining-panel budget inputs')
+    scale=(requests/256)*(4/single_gpus)
+    # Preserve the measured 256/4-GPU allowance. Startup and reporting do not
+    # scale with rows; generation/refinement/physics do. This is a reservation,
+    # not a claim that the final runtime is known before the new panel runs.
+    complete_round=20+45*scale
+    editor_tail=5+15*scale
+    return ((4-index)*complete_round+15)*60 if branch=='G' else ((3-index)*complete_round+editor_tail+15)*60
 
 
 def collection_label_allocation(teacher,parallel_gpus,single_gpus):
@@ -193,10 +201,12 @@ class Coordinator:
             scores=json.loads((root/'tokenized/scoring/result/RANKED_METRICS.json').read_text())
             reports.append({'generation_failures':generation_failures,'G_plus_F':scores})
         baseline,actual=reports
-        accepted=(actual['generation_failures']<=baseline['generation_failures']+8 and
+        allowance=math.ceil(8*fit['requests']/256)
+        accepted=(actual['generation_failures']<=baseline['generation_failures']+allowance and
                   actual['G_plus_F']['reliable_SUN']>=baseline['G_plus_F']['reliable_SUN'])
         report={'round':index,'accepted':accepted,'baseline':baseline,'actual':actual,
-            'rule':'TRAIN same-condition complete G+F SUN must not fall below S0; generation failures may rise by at most 8/256',
+            'requests':fit['requests'],'generation_failure_allowance':allowance,
+            'rule':'TRAIN same-condition complete G+F SUN must not fall below S0; generation failures may rise by ceil(requests*8/256)',
             'does_not_prove_heldout_generalization':True}
         write_json(self.root/f'G{index}_ADMISSION.json',report)
         if not accepted and not json.loads((self.root/'RUN_SPEC.json').read_text()).get('complete_flow_before_judgment'):
@@ -214,7 +224,7 @@ class Coordinator:
             remaining_updates=8-2*index-(branch=='E')
             # Reserve complete inference, physical feedback and reporting for
             # every remaining round. Allocation changes with actual elapsed work.
-            reserve=training_reserve_seconds(index,branch)
+            reserve=training_reserve_seconds(index,branch,fit['requests'],allocation['single_GPUs'])
             seconds=int((self.remaining()-reserve)/remaining_updates)
             if seconds<180: raise RuntimeError('insufficient training budget after reserving complete panels')
             checkpoint=(fit['assets']['b0_checkpoint'] if branch=='G' else fit['assets']['editor_checkpoint']) if index==1 else str(
@@ -241,7 +251,8 @@ class Coordinator:
                     batch_size=allocation['training_batch_size'] or tuning.get('batch_size',8),
                     accumulation=1,epochs=tuning.get(branch+'_epochs',4 if branch=='G' else 8),
                     reference_kl_weight=tuning.get('reference_kl_weight',1.),
-                    max_reference_kl=tuning.get('max_reference_kl',.02))
+                    max_reference_kl=tuning.get('max_reference_kl',.02),
+                    continue_heads_after_content_KL=tuning.get('continue_heads_after_content_KL',False))
             write_json(config,spec)
         training=json.loads(config.read_text())
         self.job(f'train_{branch}{index}',self.root/'fit/RUN_SPEC.json','train',gpus=training.get('training_gpus',4),
@@ -278,11 +289,17 @@ class Coordinator:
             previous=fit/'initialization/checkpoint' if index==1 else self.root/'training'/f'round{index-1}'/'E/result/checkpoint'
             self.ranked(f'S{index}_collection_register',config,'collection',['--checkpoint',previous])
             collection=current/'editor_collection';collect_config=collection/'RUN_SPEC.json'
-            self.ranked(f'S{index}_teachers',collect_config,'teachers')
+            use_history=json.loads(initial.read_text()).get('training_policy',{}).get('historical_Stable_teachers',False)
+            teacher_history=history[:-1] if use_history else []
+            self.ranked(f'S{index}_teachers',collect_config,'teachers',
+                        ['--comparators',*teacher_history] if teacher_history else [])
+            teacher_caches=[current/'current/labeling/result',*[prior/stage/'labeling/result'
+                for prior in teacher_history for stage in ('current','edited')
+                if (prior/stage/'inputs.jsonl').exists()]]
             # Teacher endpoint scoring and old-E proposal collection are independent.
             with ThreadPoolExecutor(max_workers=2) as pool:
                 teacher=pool.submit(self.evaluate,f'S{index}_teacher',collect_config,'teacher',self.parallel_main_gpus,
-                                    [current/'current/labeling/result'])
+                                    teacher_caches)
                 self.job(f'S{index}_collect',collect_config,'edit',gpus=self.parallel_other_gpus)
                 self.rsi(f'S{index}_collect_inputs',collect_config,'materialize','proposal')
                 label_gpus=collection_label_allocation(teacher,self.parallel_other_gpus,self.single_gpus)

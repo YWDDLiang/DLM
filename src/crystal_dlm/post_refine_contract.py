@@ -17,6 +17,13 @@ PAIR_SCHEMA = "sun_ranked_revision_pair_v1"
 QUALITY_ORDER = ("other", "meta_stable", "meta_sun", "stable", "sun")
 
 
+def registered_requests(spec: Mapping[str, Any]) -> int:
+    count = spec.get('requests')
+    if type(count) is not int or count < 1:
+        raise ValueError('a positive registered request count is required')
+    return count
+
+
 def recovery_canvas(body: Sequence[int], n: int, *, reset_cell: bool = False,
                     mask_id: int = 126336) -> tuple[list[int], list[int]]:
     """Reopen incomplete XYZ transactions; keep complete sites and identity."""

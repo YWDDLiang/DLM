@@ -3,7 +3,7 @@
 All ranks describe measured endpoints, never a claim about an unscored target.
 Ordinary improvement is a pairwise relation, not a permanent structure class.
 """
-from collections import Counter
+from collections import Counter, defaultdict
 import math
 
 SCHEMA = 'ranked_physics_feedback_v2'
@@ -11,6 +11,31 @@ LEVELS = ('unstable', 'ordinary_improvement', 'meta_stable', 'strict_stable', 'S
 INVALID = frozenset(('invalid_raw', 'invalid_terminal', 'relaxation_energy_increased'))
 MODES = ('none', 'local_xyz', 'all_xyz', 'full_cell')
 COUNTS = (1, 2, 4, 8)
+
+
+def assign_current_mode_targets(examples):
+    """One pre-proposal decision per state; acceptance remains candidate-specific."""
+    groups = defaultdict(list)
+    for row in examples:
+        groups[row['conditioning_sha256']].append(row)
+    for group in groups.values():
+        positives = [r for r in group if r.get('accept_target') == 1 and r.get('mode_target')]
+        keep = [r for r in group if r.get('mode_target') == 0]
+        if positives:
+            winner = min(positives, key=lambda r: (-r['priority'],
+                -r['preference']['after']['rank'], r['preference']['after']['hull'],
+                len(r['action_positions']), r['pair_id']))
+        else:
+            winner = min(keep, key=lambda r: r['pair_id']) if keep else None
+        target = winner['mode_target'] if winner is not None else None
+        for row in group:
+            row['mode_target'] = target if row is winner else None
+            row['mode_decision_pair_id'] = winner['pair_id'] if winner is not None else None
+        # Candidate rejection means no useful edit in this measured pool, not a
+        # proof that every possible edit of the state would fail.
+        if winner is not None:
+            winner['mode_supervision_scope'] = 'best_verified_candidate_in_current_measured_pool'
+    return examples
 
 
 def endpoint_quality(score):

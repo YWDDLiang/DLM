@@ -20,7 +20,9 @@ def read_rows(path):
 def analyze(root, source, index):
     sys.path.insert(0, str(source/'src'))
     from crystal_dlm.ranked_feedback import endpoint_quality, ranked_preference
+    from crystal_dlm.post_refine_contract import registered_requests
     root = root.resolve()
+    count = registered_requests(json.loads((root/'RUN_SPEC.json').read_text()))
     cohort = root/'fit' if index == 0 else root/'rounds'/f'round{index}'/'fit'
     hashes = {}
 
@@ -30,8 +32,8 @@ def analyze(root, source, index):
             raise ValueError(f'incomplete scores: {directory}')
         path = directory/'attempt_results.jsonl'
         data = read_rows(path)
-        if len(data) != 256 or [x['sample_idx'] for x in data] != list(range(256)):
-            raise ValueError('expected complete ordered TRAIN256')
+        if len(data) != count or [x['sample_idx'] for x in data] != list(range(count)):
+            raise ValueError('expected complete ordered registered TRAIN panel')
         hashes[str(path)] = digest(path)
         return data
 
@@ -149,13 +151,14 @@ def analyze(root, source, index):
         for example in examples:
             conditions[example['conditioning_sha256']].append(example)
         conflicting = [group for group in conditions.values()
-                       if len({x['mode_target'] for x in group}) > 1]
+                       if len({x['mode_target'] for x in group if x.get('mode_target') is not None}) > 1]
         result['mode_supervision'] = dict(
             distinct_current_conditions=len(conditions),
-            target_counts=dict(Counter(x['mode_target'] for x in examples)),
+            target_counts=dict(Counter(x['mode_target'] for x in examples if x.get('mode_target') is not None)),
+            candidate_rows_without_mode_target=sum(x.get('mode_target') is None for x in examples),
             differing_mode_conditions=len(conflicting),
             keep_and_edit_conditions=sum(any(x['mode_target'] == 0 for x in group)
-                and any(x['mode_target'] != 0 for x in group) for group in conflicting),
+                and any(bool(x['mode_target']) for x in group) for group in conflicting),
             note='Mode sees the current state; acceptance also sees the actual proposal. '
                  'Differing candidate labels do not establish a causal effect on the trained model.',
             positive_scope=[dict(pair_id=x['pair_id'], origin=x['origin'], mode=x['mode_target'],
@@ -169,10 +172,16 @@ def analyze(root, source, index):
         receipt = json.loads(path.read_text())
         result['training'] = {k:receipt[k] for k in
             ('optimizer_steps', 'training_seconds', 'parameter_delta_squared')}
+        exposures={path:json.loads(path.read_text()) for path in sorted(training.glob('EXPOSURE_rank*.json'))}
+        hashes.update({str(path):digest(path) for path in exposures})
         result['training']['KL_stopped_ranks'] = [int(path.stem.split('rank')[-1])
-            for path in sorted(training.glob('EXPOSURE_rank*.json')) if json.loads(path.read_text())['KL_stop']]
-        result['training']['stop_KL_value'] = None
-        result['training']['stop_KL_note'] = 'Existing trainer records the stop flag, not the triggering KL value.'
+            for path,exposure in exposures.items() if exposure['KL_stop']]
+        trigger=receipt.get('KL_trigger')
+        result['training']['stop_KL_value'] = trigger.get('maximum_rank_KL') if trigger else None
+        result['training']['stop_KL_note'] = ('Recorded maximum across ranks.' if trigger else
+            'No triggering value recorded; consult the stop flags.')
+        result['training'].update({k:receipt.get(k) for k in
+            ('content_optimizer_steps','head_optimizer_steps','head_continuation_after_KL')})
         contract = receipt['contract']
         if contract.get('bounded_minibatch_training'):
             from crystal_dlm.rsi_minibatch import epoch_indices
@@ -180,20 +189,35 @@ def analyze(root, source, index):
             if digest(data_path) != contract['data_sha256']:
                 raise ValueError('training examples changed after the actual update')
             examples = read_rows(data_path)
-            batches = epoch_indices(len(examples), batch_size=contract['batch_size'],
-                world=contract['world_size'], epochs=contract['epochs'], seed=contract['seed'])
-            updated = [examples[i] for _, indices in islice(batches, receipt['optimizer_steps']) for i in indices]
-            promotions = [x for x in updated if x.get('mode_target')
+            if exposures and all('content_updated_pair_visits' in x for x in exposures.values()):
+                if len(exposures)!=contract['world_size']: raise ValueError('missing rank exposure receipt')
+                by_id={x['pair_id']:x for x in examples}
+                totals={name:Counter() for name in ('content','head')}
+                for exposure in exposures.values():
+                    for name in totals: totals[name].update(exposure[name+'_updated_pair_visits'])
+                updated=[by_id[k] for k,v in totals['content'].items() for _ in range(v)]
+                head_updated=[by_id[k] for k,v in totals['head'].items() for _ in range(v)]
+                result['training']['actual_head_updated_exposure']={
+                    'visits':len(head_updated),'unique_examples':len(totals['head']),
+                    'mode_positive_visits':sum(bool(x.get('mode_target')) for x in head_updated),
+                    'accept_positive_visits':sum(x.get('accept_target')==1 for x in head_updated)}
+                exposure_note='Explicit content preference/anchor updates; head-only updates are reported separately.'
+            else:
+                batches = epoch_indices(len(examples), batch_size=contract['batch_size'],
+                    world=contract['world_size'], epochs=contract['epochs'], seed=contract['seed'])
+                updated = [examples[i] for _, indices in islice(batches, receipt['optimizer_steps']) for i in indices]
+                exposure_note='Legacy reconstructed optimizer batches; excludes the next inspected KL-stop batch.'
+            promotions = [x for x in updated if x.get('accept_target')==1
                 and x['preference']['before']['rank'] not in (3,4)
                 and x['preference']['after']['rank'] in (3,4)]
             result['training']['actual_updated_exposure'] = dict(
                 visits=len(updated), unique_examples=len({x['pair_id'] for x in updated}),
                 dataset_examples=len(examples),
-                edit_positive_visits=sum(bool(x.get('mode_target')) for x in updated),
+                edit_positive_visits=sum(x.get('accept_target')==1 for x in updated),
                 Stable_promotion_visits=len(promotions),
                 Stable_promotion_pair_ids=sorted({x['pair_id'] for x in promotions}),
-                SUN_positive_visits=sum(bool(x.get('mode_target')) and x['objective_level']=='SUN' for x in updated),
-                note='Reconstructed optimizer batches; excludes the next inspected batch that triggered KL stop.')
+                SUN_positive_visits=sum(x.get('accept_target')==1 and x['objective_level']=='SUN' for x in updated),
+                note=exposure_note)
     result['input_sha256'] = hashes
     return result
 

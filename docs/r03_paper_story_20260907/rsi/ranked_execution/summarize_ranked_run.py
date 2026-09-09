@@ -23,6 +23,8 @@ def collect(root):
     sys.path.insert(0,str(source/'src'))
     from crystal_dlm.ranked_feedback import ranked_preference,endpoint_quality
     from scripts.run_rsi_stages import score_directory
+    from crystal_dlm.post_refine_contract import registered_requests
+    count=registered_requests(json.loads((root/'RUN_SPEC.json').read_text()))
     result={'observed_utc':dt.datetime.now(dt.timezone.utc).isoformat(),
         'root':str(root),'analysis_sha256':digest(__file__),'source_path':str(source),
         'budget':json.loads((root/'BUDGET.json').read_text()),'rounds':[],'weight_updates':{}}
@@ -40,13 +42,13 @@ def collect(root):
             report=json.loads(reports[0].read_text())
             if report['status']!='complete' or report['input_sha256']!=digest(inputs):
                 raise ValueError('scoring report does not bind the current inputs')
-            if len(measured)!=256 or len(input_rows)!=256:
-                raise ValueError('complete 256-request denominator required')
+            if len(measured)!=count or len(input_rows)!=count:
+                raise ValueError('complete registered request denominator required')
             if any(a['sample_idx']!=b['sample_idx'] for a,b in zip(measured,input_rows,strict=True)):
                 raise ValueError('source ordering changed')
             physical_rows=rows(cohort/stage/'labeling/result/labels.jsonl')
             by_identity={row['trajectory_id']:row for row in physical_rows}
-            if len(by_identity)!=256 or set(by_identity)!={row['trajectory_id'] for row in measured}:
+            if len(by_identity)!=count or set(by_identity)!={row['trajectory_id'] for row in measured}:
                 raise ValueError('physical labels do not match complete scored occurrences')
             physics=[by_identity[row['trajectory_id']] for row in measured]
             quality=[endpoint_quality(row) for row in measured]
@@ -56,7 +58,7 @@ def collect(root):
                     'generation_failure' if p['status']=='generation_failure' else
                     'physical_failure' if q['known_failure'] else 'unverified_or_reference_unknown']+=1
             basic=json.loads((directory/'BASIC_METRICS.json').read_text())
-            record['stages'][stage]={'requested':256,'quality_categories':dict(categories),
+            record['stages'][stage]={'requested':count,'quality_categories':dict(categories),
                 'strict_Stable_including_SUN':sum(q['reliable'] and q['hull']<=0 for q in quality),
                 'physics_statuses':dict(Counter(p['status'] for p in physics)),
                 'comp_valid':basic['comp_valid'],'Struct_valid':basic['Struct_valid'],
@@ -64,7 +66,7 @@ def collect(root):
             labels[stage]=measured
         if all(stage in labels for stage in ('current','proposal','edited')):
             counts=Counter();transitions=Counter()
-            for i in range(256):
+            for i in range(count):
                 trace=json.loads((cohort/'proposal/records'/f'{i:04d}.json').read_text())['editor_trace']
                 current,proposal,final=(labels[stage][i] for stage in ('current','proposal','edited'))
                 preference=ranked_preference(current,proposal)
@@ -107,6 +109,8 @@ def collect(root):
             result['weight_updates'][f'{branch}{index}']={key:receipt[key] for key in
                 ('optimizer_steps','parameter_delta_squared','training_seconds','local_preference_examples','local_decision_examples')}
             result['weight_updates'][f'{branch}{index}']['receipt_sha256']=digest(path)
+            result['weight_updates'][f'{branch}{index}'].update({k:receipt.get(k) for k in
+                ('content_optimizer_steps','head_optimizer_steps','KL_trigger','head_continuation_after_KL')})
     result['complete']=len(result['weight_updates'])==6 and any(
         row['index']==3 and 'edited' in row['stages'] for row in result['rounds'])
     return result

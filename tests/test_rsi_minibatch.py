@@ -8,7 +8,7 @@ import torch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from test_r03_physics_transfer import TinyTokenizer,make_body
 from crystal_dlm.r03_physics_transfer import build_repair_constraints
-from crystal_dlm.rsi_minibatch import epoch_indices,training_view,conditional_batch,propose_ranked_batch
+from crystal_dlm.rsi_minibatch import epoch_indices,training_view,conditional_batch,propose_ranked_batch,editor_head_loss
 from crystal_dlm.rsi_preference import propose_ranked_editor
 
 
@@ -76,6 +76,26 @@ class BatchTests(unittest.TestCase):
                 self.assertEqual(a[key],b[key])
             self.assertEqual([(x['position'],x['token_id']) for x in a['sampling_trace']],
                              [(x['position'],x['token_id']) for x in b['sampling_trace']])
+
+    def test_accept_only_record_trains_judge_without_duplicate_mode_target(self):
+        class Heads(Policy):
+            def __init__(self,width):
+                super().__init__(width)
+                self.mode=torch.nn.Parameter(torch.zeros(4))
+                self.quality=torch.nn.Parameter(torch.zeros(4))
+            def forward(self,ids,**kwargs):
+                out=super().forward(ids,**kwargs)
+                out.mode_logits=self.mode[None].expand(len(ids),-1)
+                out.quality_logits=self.quality[None].expand(len(ids),-1)
+                return out
+        body,_=make_body(self.tok);model=Heads(self.width)
+        row={'prompt':'p','current_tokens':body,'proposal_tokens':body,'num_sites':2,
+             'mode_target':None,'accept_target':1,'action_positions':[8,9,10]}
+        loss,count=editor_head_loss(model,self.tok,[row],torch.device('cpu'))
+        loss.backward()
+        self.assertEqual(count,1)
+        self.assertIsNone(model.mode.grad)
+        self.assertLess(float(model.quality.grad[3]),0.)
 
 
 if __name__=='__main__':unittest.main()

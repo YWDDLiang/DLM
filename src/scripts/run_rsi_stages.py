@@ -11,11 +11,12 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.run_post_refine_cycle import (read_rows, file_hash, write_json, write_rows,
     load_config, physics_record, load_refiner, refine_one, structure_from_refined)
-from crystal_dlm.post_refine_contract import derived_seed, fingerprint, make_gate, Quality, preference, make_pair
+from crystal_dlm.post_refine_contract import derived_seed, fingerprint, make_gate, Quality, preference, make_pair, registered_requests
 from crystal_dlm.sun_feedback_contract import composition_counts, reduced_key
 
 
 def prepare_fit(spec):
+    requests = registered_requests(spec)
     root = Path(spec['run_root']) / 'fit'
     parent = Path(spec['assets']['training_preparation']) / 'pairs_pending.jsonl'
     heldout = Path(spec['assets']['cohort'])
@@ -35,8 +36,8 @@ def prepare_fit(spec):
                 and reduced_key(composition_counts(plan)) not in forbidden):
             sources.setdefault(row['ancestor_id'], row)
     selected = sorted(sources.values(), key=lambda r: fingerprint({'fit_panel': 'rsi_v1',
-                                                     'ancestor': r['ancestor_id']}))[:256]
-    if len(selected) != 256:
+                                                     'ancestor': r['ancestor_id']}))[:requests]
+    if len(selected) != requests:
         raise ValueError('not enough composition-excluded training conditions')
     plans = []
     for index, row in enumerate(selected):
@@ -52,7 +53,8 @@ def prepare_fit(spec):
         'heldout_cohort_sha256': file_hash(heldout),
         'files_sha256': {'parents.jsonl': file_hash(root/'cohort/parents.jsonl')},
         'plans_sha256': file_hash(root/'cohort/plans.jsonl'),
-        'use': 'training_only_all_256', 'heldout_compositions': len(forbidden)}
+        'use': f'training_only_all_{requests}', 'heldout_compositions': len(forbidden),
+        'eligible_unique_sources': len(sources), 'requests': requests}
     write_json(root/'cohort/PREPARATION_FINAL.json', registration)
     write_json(root/'cohort/MANIFEST.json', registration)
     (root/'cohort/_SUCCESS').touch()
@@ -68,6 +70,8 @@ def prepare_fit(spec):
 def materialize(spec, stage):
     root = Path(spec['run_root'])
     plans = read_rows(root/'cohort/plans.jsonl')
+    if len(plans) != registered_requests(spec):
+        raise ValueError('materialization cohort differs from registered requests')
     source = root / stage
     records = [json.loads((source/'records'/f"{p['original_ordinal']:04d}.json").read_text())['record'] for p in plans]
     if any(r['evaluation_ordinal'] != i for i,r in enumerate(records)):

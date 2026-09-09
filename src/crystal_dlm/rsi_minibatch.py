@@ -94,13 +94,15 @@ def conditional_batch(model, tokenizer, views, branch, support):
 
 def editor_head_loss(model, tokenizer, examples, device):
     from crystal_dlm.ranked_feedback import COUNTS
-    chosen = [x for x in examples if x.get('mode_target') is not None]
+    chosen = [x for x in examples if has_head_supervision(x)]
     if not chosen: return None, 0
     views, modes, judges = [], [], []
     for row in chosen:
         prefix = tokenizer(row['prompt'], add_special_tokens=False)['input_ids']
-        modes.append(len(views))
-        views.append(inference_view(prefix, row['current_tokens'], row['current_tokens'], row['num_sites'], 1))
+        if row.get('mode_target') is not None:
+            modes.append(len(views))
+            views.append(inference_view(prefix, row['current_tokens'], row['current_tokens'], row['num_sites'], 1))
+        else: modes.append(None)
         if row.get('proposal_tokens') is not None and row.get('accept_target') is not None:
             judges.append(len(views))
             views.append(inference_view(prefix, row['current_tokens'], row['proposal_tokens'], row['num_sites'],
@@ -111,7 +113,9 @@ def editor_head_loss(model, tokenizer, examples, device):
     losses = []
     for row, i, j in zip(chosen, modes, judges):
         weight = 2. if row.get('known_sun') else 1.
-        loss = weight * torch.nn.functional.cross_entropy(out.mode_logits[i:i+1], torch.tensor([row['mode_target']], device=device))
+        loss = out.quality_logits.new_zeros(())
+        if i is not None:
+            loss = weight * torch.nn.functional.cross_entropy(out.mode_logits[i:i+1], torch.tensor([row['mode_target']], device=device))
         if row['mode_target'] == 1:
             sites = torch.tensor(row['site_targets'], device=device, dtype=torch.float32)
             loss = loss + torch.nn.functional.binary_cross_entropy_with_logits(out.site_logits[i, :row['num_sites']], sites)
@@ -123,6 +127,15 @@ def editor_head_loss(model, tokenizer, examples, device):
     return torch.stack(losses).sum()/len(examples), len(chosen)
 
 
+def has_head_supervision(row):
+    return (row.get('mode_target') is not None or
+            (row.get('proposal_tokens') is not None and row.get('accept_target') is not None))
+
+
+def decision_head_parameter(name):
+    return name.split('.', 1)[0] in ('mode_head', 'site_head', 'count_head', 'quality_head')
+
+
 def train_bounded(model, tokenizer, examples, spec, selected, reference, optimizer, support, output, write_json):
     import torch.distributed as dist
     device = next(model.parameters()).device
@@ -130,17 +143,26 @@ def train_bounded(model, tokenizer, examples, spec, selected, reference, optimiz
     rank = dist.get_rank() if dist.is_initialized() else 0
     branch = spec['branch']; batch_size = spec['batch_size']; rng = random.Random(spec['seed'] + rank)
     started = time.monotonic(); history = []; exposures = Counter(); pairs = heads = 0
-    kl_stop = False
+    content_exposures, head_exposures = Counter(), Counter()
+    kl_stop = False; kl_trigger = None; content_frozen = False
+    content_steps = head_steps = 0
+    head_parameters = [(n,p) for n,p in selected if decision_head_parameter(n)]
+    content_parameters = [(n,p) for n,p in selected if not decision_head_parameter(n)]
+    freeze_after_kl = branch == 'E' and spec.get('continue_heads_after_content_KL', False)
+    if freeze_after_kl and not head_parameters:
+        raise ValueError('head continuation requires the existing editor decision heads')
     for epoch, indices in epoch_indices(len(examples), batch_size=batch_size, world=world,
                                        epochs=spec['epochs'], seed=spec['seed']):
         local_size=len(indices)//world
         rows = [examples[i] for i in indices[rank*local_size:(rank+1)*local_size]]
         optimizer.zero_grad(set_to_none=True)
-        views, pair_slots, anchor_slots = [], [], []
+        views, pair_slots, anchor_slots, content_rows = [], [], [], []
         for row in rows:
             exposures[row['pair_id']] += 1
+            if content_frozen: continue
             order = row.get('action_positions', numeric_order(row['num_sites'], branch)) if branch == 'E' else numeric_order(row['num_sites'], branch)
             if not order: continue
+            first_view = len(views)
             for cut in rng.sample(range(len(order)), min(spec['mask_cuts'], len(order))):
                 seed = rng.randrange(2**63)
                 if row.get('chosen_tokens') is not None and row.get('rejected_tokens') is not None:
@@ -150,7 +172,8 @@ def train_bounded(model, tokenizer, examples, spec, selected, reference, optimiz
                     anchor = row.get('healthy_anchor_tokens') if branch == 'G' else row.get('content_target_tokens')
                     if anchor is not None:
                         anchor_slots.append(len(views)); views.append(training_view(row, anchor, cut, branch, mask_seed=seed))
-        loss = None; kl_value = 0.; margin_value = None
+            if len(views) > first_view: content_rows.append(row['pair_id'])
+        loss = None; kl_value = None if content_frozen else 0.; margin_value = None
         if views:
             live = {n: p.detach().clone() for n, p in selected}
             with torch.no_grad():
@@ -169,37 +192,67 @@ def train_bounded(model, tokenizer, examples, spec, selected, reference, optimiz
             kl_value = float(kl.detach())
             loss = torch.stack(terms).sum()/(local_size*spec['mask_cuts']) + spec['reference_kl_weight']*kl
             if margins: margin_value = float(torch.stack(margins).mean().detach())
+        if not content_frozen:
+            # The same maximum is observed on every rank, including ranks with
+            # no local content views, so the active parameter set stays aligned.
+            observed = torch.tensor(kl_value, device=device)
+            if world > 1: dist.all_reduce(observed, op=dist.ReduceOp.MAX)
+            if float(observed) > spec['max_reference_kl']:
+                kl_stop = True
+                kl_trigger = {'after_optimizer_steps':len(history), 'epoch':epoch,
+                              'maximum_rank_KL':float(observed), 'local_KL':kl_value}
+                if not freeze_after_kl: break
+                content_frozen = True; loss = None
+                # grad=None is essential: zero gradients still let AdamW
+                # momentum or weight decay change the content parameters.
+                for _, p in content_parameters:
+                    p.requires_grad_(False); p.grad = None
+                if views:
+                    if margins: del margin
+                    del actual, distribution, reference_logp, reference_distribution, terms, margins, kl
+        count = 0
         if branch == 'E':
             head_loss, count = editor_head_loss(model, tokenizer, rows, device)
             if head_loss is not None: loss = head_loss if loss is None else loss+head_loss
-            heads += count
-        if loss is None: raise ValueError('minibatch contains no supervised examples')
-        stop = torch.tensor(int(kl_value > spec['max_reference_kl']), device=device)
-        if world > 1: dist.all_reduce(stop, op=dist.ReduceOp.MAX)
-        if bool(stop):
-            kl_stop = True
-            break  # Do not take another step after excessive observed drift.
-        loss.backward()
+        supervised = torch.tensor(int(loss is not None), device=device)
+        if world > 1: dist.all_reduce(supervised, op=dist.ReduceOp.SUM)
+        if not bool(supervised): raise ValueError('minibatch contains no supervised examples')
+        if loss is not None: loss.backward()
+        active = head_parameters if content_frozen else selected
         if world > 1:
-            for _, p in selected:
+            for _, p in active:
                 if p.grad is None: p.grad = torch.zeros_like(p)
                 dist.all_reduce(p.grad); p.grad.div_(world)
-        grad = torch.nn.utils.clip_grad_norm_([p for _, p in selected], 1., error_if_nonfinite=True)
+        grad = torch.nn.utils.clip_grad_norm_([p for _, p in active], 1., error_if_nonfinite=True)
         if float(grad) == 0: raise ValueError('no effective minibatch gradient')
-        optimizer.step(); pairs += len(pair_slots)
-        event = {'step': len(history)+1, 'epoch': epoch, 'mean_loss': float(loss.detach()),
+        optimizer.step(); heads += count
+        if not content_frozen:
+            pairs += len(pair_slots); content_exposures.update(content_rows)
+            content_steps += 1
+        if branch == 'E':
+            head_exposures.update(row['pair_id'] for row in rows if has_head_supervision(row))
+            head_steps += 1
+        event = {'step': len(history)+1, 'epoch': epoch, 'mean_loss': float(loss.detach()) if loss is not None else None,
                  'mean_preference_margin': margin_value, 'reference_KL': kl_value,
+                 'update_kind':'heads_only' if content_frozen else 'joint' if branch=='E' else 'content',
+                 'content_optimizer_steps':content_steps, 'head_optimizer_steps':head_steps,
+                 'content_frozen_by_KL':content_frozen,
                  'gradient_norm': float(grad), 'source_examples_per_GPU': local_size,
                  'source_batch_capacity_per_GPU': batch_size,
                  'conditional_forward_rows': len(views), 'seconds': time.monotonic()-started,
-                 'peak_GPU_GB': torch.cuda.max_memory_allocated()/1e9}
+                 'peak_GPU_GB': torch.cuda.max_memory_allocated()/1e9 if device.type=='cuda' else 0.}
         history.append(event)
         if rank == 0: write_json(output/'PROGRESS.json', event); print(__import__('json').dumps(event), flush=True)
         stop = torch.tensor(int(time.monotonic()-started > spec['max_training_seconds']), device=device)
         if world > 1: dist.all_reduce(stop, op=dist.ReduceOp.MAX)
         if bool(stop): break
-    write_json(output/f'EXPOSURE_rank{rank}.json', {'pair_visits': dict(exposures), 'sampling': 'shuffled_complete_data_passes',
-                                                'batch_size': batch_size, 'epochs_cap': spec['epochs'], 'KL_stop': kl_stop})
+    write_json(output/f'EXPOSURE_rank{rank}.json', {'pair_visits': dict(exposures),
+        'pair_visits_semantics':'inspected_batches_including_KL_trigger_batch',
+        'content_updated_pair_visits':dict(content_exposures), 'head_updated_pair_visits':dict(head_exposures),
+        'content_optimizer_steps':content_steps, 'head_optimizer_steps':head_steps,
+        'sampling':'shuffled_complete_data_passes', 'batch_size':batch_size,
+        'epochs_cap':spec['epochs'], 'KL_stop':kl_stop, 'KL_trigger':kl_trigger,
+        'head_continuation_after_KL':content_frozen})
     if not history: raise ValueError('no bounded optimizer update completed')
     return len(history), pairs, heads, history, rng
 

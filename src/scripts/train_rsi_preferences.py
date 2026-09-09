@@ -111,7 +111,9 @@ def main():
             sampling='shuffled_complete_data_passes_without_priority_group_oversampling',
             categorical_temperature=.7,
             effective_source_batch=spec['batch_size']*world,
-            update_limit='epoch_cap_and_reference_KL_and_wall_time')
+            update_limit='epoch_cap_and_reference_KL_and_wall_time',
+            E_content_KL_policy='freeze_content_continue_existing_heads' if spec.get('continue_heads_after_content_KL')
+                and branch=='E' else 'stop_all_updates')
     if rank==0: write_json(output/'TRAIN_CONFIG.json',contract)
     started=time.monotonic(); steps=0; total_pairs=0; total_heads=0; history=[]
     rng=random.Random(spec['seed']+rank)
@@ -230,6 +232,10 @@ def main():
         receipt={'optimizer_steps':steps,'parameter_delta_squared':delta,'local_preference_examples':total_pairs,
             'local_decision_examples':total_heads,'training_seconds':time.monotonic()-started,
             'checkpoint_files':files,'contract':contract,'loss_history':history}
+        if bounded:
+            exposure=json.loads((output/'EXPOSURE_rank0.json').read_text())
+            receipt.update({k:exposure[k] for k in ('content_optimizer_steps','head_optimizer_steps',
+                'KL_trigger','head_continuation_after_KL')})
         write_json(checkpoint/'RSI_TRAINING_DONE.json',receipt)
         write_json(output/'TRAINING_FINAL.json',receipt)
         (output/'_SUCCESS').touch()
