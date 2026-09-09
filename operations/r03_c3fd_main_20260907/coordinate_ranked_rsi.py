@@ -248,8 +248,10 @@ class Coordinator:
             self.job('initialize_E0',initial,'initialize',gpus=1,minutes=30)
             self.final_editor('S0',initial,self.parallel_main_gpus)
             other.result()
-        write_json(self.root/'S0_COMPLETE.json',{'seconds':time.monotonic()-started,
-            'config_sha256':file_hash(initial),'initial_E_seed':20260909})
+        if not (self.root/'S0_COMPLETE.json').exists():
+            write_json(self.root/'S0_COMPLETE.json',{'seconds':time.monotonic()-started,
+                'config_sha256':file_hash(initial),'initial_E_seed':20260909,
+                'timer_scope':'current_coordinator_attempt'})
         history=[twin,fit];g_data=[];e_data=[]
         self.ranked('S0_compile_G',initial,'compile',['--branch','G','--comparators',twin])
         g_data.append(fit/'pairs/G.jsonl')
