@@ -1,0 +1,99 @@
+{
+  "FROZEN_METHOD.json": {
+    "MAIN_composition_overlap": 0,
+    "all_TRAIN": true,
+    "complete_S0_and_three_G_E_updates": true,
+    "configs": [
+      {
+        "changed_training_fields": {
+          "continue_heads_after_content_KL": false,
+          "editor_dense_t2t": false,
+          "editor_heads_only": false,
+          "historical_Stable_teachers": false,
+          "one_mode_per_condition": false
+        },
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/RUN_SPEC.json",
+        "previous_sha256": "7adac7a8ede10cede417ce2b13bb7b369ad283ea93e664ba198e052bb90fc6f4",
+        "sha256": "b237b3279faf35ae820a22ae6afba54b7737c185566b7089fa9c8623819f8989"
+      },
+      {
+        "changed_training_fields": {
+          "continue_heads_after_content_KL": false,
+          "editor_dense_t2t": false,
+          "editor_heads_only": false,
+          "historical_Stable_teachers": false,
+          "one_mode_per_condition": false
+        },
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit/RUN_SPEC.json",
+        "previous_sha256": "a5a4f882528f4123e1db85682278825ead020552cd1da812a2aafa304edb2946",
+        "sha256": "0ec79ff5a2c6f4dfae7e5fc79911c3d68eca45780310587eb2be151e1e214c8b"
+      },
+      {
+        "changed_training_fields": {
+          "continue_heads_after_content_KL": false,
+          "editor_dense_t2t": false,
+          "editor_heads_only": false,
+          "historical_Stable_teachers": false,
+          "one_mode_per_condition": false
+        },
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/bootstrap_comparator/RUN_SPEC.json",
+        "previous_sha256": "8a5245518b18ce37dace3465a7d2c228898b675796547fc1e21f9c8bb638cf91",
+        "sha256": "e999cb500824ee130261149ff282cc3051d41d07cc58a116f2b492afe54aa9bb"
+      }
+    ],
+    "created_utc": "2026-09-09T22:00:25.505551+00:00",
+    "decision": "completed_trial_failed_use_completed_old_method",
+    "distinct_ancestors": 1000,
+    "editor_decision": {
+      "acceptance_threshold": 0.5,
+      "known_SUN_keep_prior": 9,
+      "respect_learned_KEEP_for_nonSUN": false
+    },
+    "formal_wall_hours": 12,
+    "fresh_B0_and_E_initialization": true,
+    "max_GPUs": 6,
+    "max_jobs": 3,
+    "parents_sha256": "423ec6dc83a5250ad4f82c863ae562b2c03e62dfe44dbc32f1066f43dff27d4b",
+    "plan_document_sha256": "bd1e4c5d37609d7b092390e439051fabaf8b625e999547bbe7ae744f6e1daca8",
+    "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+    "prior_budget_reset": false,
+    "requests": 1000,
+    "schema": "frozen_legacy_ranked_RSI_1000_v1",
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "source_identity": {
+      "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+    },
+    "training_profile": {
+      "continue_heads_after_content_KL": false,
+      "editor_dense_t2t": false,
+      "editor_heads_only": false,
+      "historical_Stable_teachers": false,
+      "one_mode_per_condition": false
+    },
+    "trial_frozen_selection_sha256": "7b547ed3d9464ac6ea91ae5de14c6caedc649750772bb4c7f7815de09756f330",
+    "trial_primary_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial/PRIMARY_TRIAL_RESULT.json",
+    "trial_primary_sha256": "80ed946c69ee93b3c18c80323a35c519d6ef781e424c0eaac0ae68993e3b0eca",
+    "trial_weights_optimizer_or_validation_feedback_imported": false
+  },
+  "FORMAL_DISPATCH.json": {
+    "pid": 40216,
+    "script": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6/operations/r03_c3fd_main_20260907/coordinate_ranked_rsi.py",
+    "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "dispatch_utc": "2026-09-09T22:01:15.332588+00:00",
+    "requests": 1000,
+    "training_updates": "S0_plus_G1_E1_G2_E2_G3_E3",
+    "frozen_method": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/FROZEN_METHOD.json"
+  },
+  "BUDGET.json": {
+    "deadline_policy": "conservative_dispatch_plus_12h",
+    "deadline_utc": "2026-09-10T10:01:15.570418+00:00",
+    "dispatch_start_utc": "2026-09-09T22:01:15.570418+00:00",
+    "first_GPU_start_utc": "2026-09-09T22:01:36.045605+00:00",
+    "first_observed_GPU_job": "41745",
+    "max_GPUs": 6,
+    "max_queued_and_running_jobs": 3,
+    "start_time_precision": "first_running_observation; exact_sacct_time_recorded_in_final",
+    "wall_hours": 12
+  }
+}
