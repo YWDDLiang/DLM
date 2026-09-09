@@ -1,4 +1,113 @@
 {
+  "historical_Stable_targets": {
+    "current_states_with_targets": 14,
+    "note": "Earlier same-Plan verified Stable endpoints available for reliable non-Stable inputs; not compiled targets, learned successes, or mixed-output scores.",
+    "targets": {
+      "3": [
+        {
+          "SUN": true,
+          "hull": -0.0016866209147137212,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "18": [
+        {
+          "SUN": true,
+          "hull": -0.0311828893790711,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "21": [
+        {
+          "SUN": true,
+          "hull": -0.010097852383006867,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "51": [
+        {
+          "SUN": true,
+          "hull": -0.00048812525878894064,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/fit"
+        },
+        {
+          "SUN": true,
+          "hull": -0.0005935062707518313,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "52": [
+        {
+          "SUN": true,
+          "hull": -0.0042507336007133745,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "53": [
+        {
+          "SUN": true,
+          "hull": -0.0048262319586172,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "85": [
+        {
+          "SUN": true,
+          "hull": -0.01200412983332555,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "86": [
+        {
+          "SUN": true,
+          "hull": -0.0017320289867512884,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "125": [
+        {
+          "SUN": true,
+          "hull": -0.008199478398804416,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/fit"
+        }
+      ],
+      "140": [
+        {
+          "SUN": true,
+          "hull": -0.011057545306396577,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "146": [
+        {
+          "SUN": true,
+          "hull": -0.010164704761065124,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "148": [
+        {
+          "SUN": true,
+          "hull": -0.043917517363621705,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/fit"
+        }
+      ],
+      "213": [
+        {
+          "SUN": true,
+          "hull": -0.013722372523805149,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ],
+      "247": [
+        {
+          "SUN": true,
+          "hull": -0.00037039231992697097,
+          "source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/bootstrap_comparator"
+        }
+      ]
+    }
+  },
   "full_flow": {
     "G_plus_F_does_not_stop_full_flow": true,
     "actual": {
