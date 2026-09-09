@@ -3,6 +3,7 @@ import argparse
 from collections import Counter
 import copy
 import datetime as dt
+import importlib.util
 import json
 from pathlib import Path
 import shutil
@@ -13,6 +14,49 @@ sys.path.insert(0, str(SOURCE/'src'))
 from scripts.run_post_refine_cycle import read_rows, write_rows, write_json, file_hash, load_config
 from scripts.run_rsi_stages import scores, materialize, rebind_labels
 from crystal_dlm.ranked_feedback import endpoint_quality, ranked_preference
+
+
+def clone_bound_stage(source, destination):
+    """Copy identical observations and bind their path-dependent TRAIN scope."""
+    from crystal_dlm.sun_feedback_contract import validate_training_feedback
+    from crystal_dlm.ranked_feedback import ranked_relaxation_protocol
+    source, destination = Path(source), Path(destination)
+    original_inputs = source/'inputs.jsonl'
+    manifest = json.loads((source/'FEEDBACK_MANIFEST.json').read_text())
+    declared = Path(manifest['paths']['path'])
+    if file_hash(original_inputs) != file_hash(declared):
+        raise ValueError('copied stage differs from its declared original input bytes')
+    records = read_rows(original_inputs)
+    old_scope = validate_training_feedback(records, declared, source/'FEEDBACK_MANIFEST.json')
+    binding = importlib.util.spec_from_file_location('_trial_exact_labels', SOURCE/'scripts/evaluate_programmed_paths.py')
+    api = importlib.util.module_from_spec(binding); binding.loader.exec_module(api)
+    expected = ranked_relaxation_protocol(api.COMMON_RELAXATION_PROTOCOL)
+    original_report = source/'labeling/result/LABEL_FINAL.json'
+    api.load_bound_evaluation_labels(records, [source/'labeling/result/labels.jsonl'], paths_file=declared,
+        endpoint='native', purpose='training_feedback', feedback_scope=old_scope, expected_protocol=expected)
+    if not destination.exists(): shutil.copytree(source, destination)
+    inputs = destination/'inputs.jsonl'
+    if file_hash(inputs) != file_hash(original_inputs): raise ValueError('stage copy changed input bytes')
+    marker = destination/'COPIED_STAGE_BINDING.json'
+    if marker.exists():
+        prior = json.loads(marker.read_text())
+        if prior['source_inputs_sha256'] != file_hash(original_inputs): raise ValueError('bound copy changed source')
+        return
+    manifest['paths'] = dict(path=str(inputs), sha256=file_hash(inputs))
+    write_json(destination/'FEEDBACK_MANIFEST.json', manifest)
+    scope = validate_training_feedback(records, inputs, destination/'FEEDBACK_MANIFEST.json')
+    report = json.loads(original_report.read_text())
+    pins = dict(source_inputs=str(original_inputs), source_inputs_sha256=file_hash(original_inputs),
+        source_manifest=str(source/'FEEDBACK_MANIFEST.json'), source_manifest_sha256=file_hash(source/'FEEDBACK_MANIFEST.json'),
+        source_report=str(original_report), source_report_sha256=file_hash(original_report),
+        source_labels_sha256=file_hash(source/'labeling/result/labels.jsonl'),
+        identical_input_bytes=True, label_values_unchanged=True, new_physics_calls=0)
+    report.update(input_file=str(inputs), input_sha256=file_hash(inputs), training_feedback_scope=scope,
+                  distinct_endpoint_evaluations=0, new_endpoint_evaluations=0, copied_stage_binding=pins)
+    write_json(destination/'labeling/result/LABEL_FINAL.json', report)
+    api.load_bound_evaluation_labels(records, [destination/'labeling/result/labels.jsonl'], paths_file=inputs,
+        endpoint='native', purpose='training_feedback', feedback_scope=scope, expected_protocol=expected)
+    write_json(marker, pins)
 
 
 def clone_collection(root, arm, checkpoint, stream='E'):
@@ -32,7 +76,7 @@ def clone_collection(root, arm, checkpoint, stream='E'):
         return config
     panel.mkdir(parents=True)
     shutil.copytree(root/'fit/cohort', panel/'cohort')
-    shutil.copytree(root/'fit/current', panel/'current')
+    clone_bound_stage(root/'fit/current', panel/'current')
     write_json(config, spec)
     return config
 
@@ -59,8 +103,9 @@ def policy_panel(root, collection, *, threshold, respect_keep):
         if (panel/'edited/labeling/result/_SUCCESS').exists(): return config
         raise ValueError('incomplete existing policy panel requires inspection')
     panel.mkdir(parents=True)
-    for name in ('cohort', 'current', 'proposal'):
-        shutil.copytree(collection/name, panel/name)
+    shutil.copytree(collection/'cohort', panel/'cohort')
+    for name in ('current', 'proposal'):
+        clone_bound_stage(collection/name, panel/name)
     write_json(config, spec)
     current, proposal = read_rows(panel/'current/inputs.jsonl'), read_rows(panel/'proposal/inputs.jsonl')
     bindings = []
