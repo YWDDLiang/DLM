@@ -10,7 +10,9 @@
 
 1000条检查确认1000个不同TRAIN来源、987个不同约化组成、与MAIN验证组成零重叠，保留原256条Plan/prompt/seed前缀。G从B0开始、E使用新初始化，不导入试验权重或验证反馈；采用旧偏好/局部提案/接受规则，关闭试验性历史教师、模式归一化、头续训和稠密T2T路径。固定配方和三份配置哈希见[启动回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_FROZEN_METHOD_AND_LAUNCH_20260910.json)。
 
-正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。两路RAW生成、物理标注和评分均已完成：S0主路Stable/SUN为25/25（各2.5%），第二RAW对照为19/19（各1.9%），分母均为1000。主路F800及token回写已完整完成，正在进行token物理评价，对照继续精修；S0的KEEP/EDIT及权重更新尚未完成。主路实际973条运行F800、25条SUN直通、2条生成失败保留分母，另1条按原量化规则回退原始token，见[精修回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_MAIN_REFINEMENT_20260910.json)。
+正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。两路RAW生成、物理标注和评分均已完成：S0主路Stable/SUN为25/25（各2.5%），第二RAW对照为19/19（各1.9%），分母均为1000。主路F/token和current的完整评分为Stable122、SUN105（12.2%/10.5%）；E0已新初始化并进行KEEP/EDIT，对照继续精修。S0最终输出及三次G/E更新尚未完成。
+
+F新增97条Stable、80条SUN，原有25条Stable/SUN全部保留。Stable晋升来自41条原明确物理失败、9条原未知和47条原可靠非Stable；80条SUN新增都同时发生Stable晋升。另17条Stable因N为假未成为SUN，其中1条同时U为假。新物理标签998条已验证、2条生成失败；32条已验证结构缺少官方参考，故完整评分保留34条未知。精修的800步、SUN直通和量化回退见[精修回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_MAIN_REFINEMENT_20260910.json)，逐条配对及案例见[F贡献分析](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_RAW_TO_TOKEN_ANALYSIS_20260910.json)。
 
 新运行前256条与旧S0逐条核对通过：RAW body、生成状态和调用数一致，RAW Stable/SUN标记一致，F800回写后的token、种子、分流和回退也一致。各项只读核验及哈希见[生成前缀](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_FRESH_PREFIX_AUDIT_20260910.json)、[RAW物理前缀](docs/r03_paper_story_20260907/receipts/CLEAN_1000_RAW_PREFIX_PHYSICS_AUDIT_20260910.json)和[F/token前缀](docs/r03_paper_story_20260907/receipts/CLEAN_1000_F_TOKEN_PREFIX_AUDIT_20260910.json)。这些比较未将旧输出或标签导入本轮。
 
