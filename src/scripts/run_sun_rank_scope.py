@@ -144,12 +144,12 @@ def fresh_inputs(root):
         body,_,_=quantize_arrays(aligned,vocab)
         if body!=parent['target_body'] or order!=parent['alignment']['target_order']:
             raise ValueError('fresh teacher/token correspondence changed')
-        token=physics_record(plan,state_id=f'sun_rank_scope_fresh:current:{i}',body=''.join(inverse[t] for t in body))
+        token=physics_record(plan,state_id=f"{spec['run_id']}:current:{i}",body=''.join(inverse[t] for t in body))
         token.update(body_token_ids=body,body_prompt=plan['body_prompt'])
-        native=physics_record(plan,state_id=f'sun_rank_scope_fresh:native:{i}',structure=arrays_to_structure(aligned).as_dict())
+        native=physics_record(plan,state_id=f"{spec['run_id']}:native:{i}",structure=arrays_to_structure(aligned).as_dict())
         check=geometry(native);trace=dict(source='cached_continuous_F800',editable=True,geometry=check)
         if check['valid'] is not True:
-            native=copy.deepcopy(token);native['trajectory_id']=f'sun_rank_scope_fresh:native:{i}'
+            native=copy.deepcopy(token);native['trajectory_id']=f"{spec['run_id']}:native:{i}"
             trace.update(source='cached_token_geometry_fallback',fallback_reason=check['reason'])
         write_json(panel/f'current/records/{i:04d}.json',dict(record=token))
         write_json(panel/f'native/records/{i:04d}.json',dict(record=native,continuous_trace=trace,cached_source_row=source_idx))

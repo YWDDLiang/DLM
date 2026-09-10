@@ -110,7 +110,7 @@ def summary(root,panel,role):
     reg=json.loads((root/'PREREGISTRATION.json').read_text());previous=Path(reg['previous_run'])
     fresh=role=='fresh';before=scores(root/'fresh','native') if fresh else scores(previous/'fit','native')
     after=scores(panel,'edited');decisions=json.loads((panel/'DECISION_BINDING.json').read_text())['decisions']
-    split=read_rows(root/'SOURCE_SPLIT.jsonl')
+    split=[] if fresh else read_rows(root/'SOURCE_SPLIT.jsonl')
     indices=range(len(after)) if role in ('all','fresh') else [i for i,r in enumerate(split) if r['split']==role]
     if role=='final':indices=[i for i in indices if i!=300]
     metrics=('Stable','MS','SUN','MSUN');base={k:0 for k in metrics};count=dict(base)
