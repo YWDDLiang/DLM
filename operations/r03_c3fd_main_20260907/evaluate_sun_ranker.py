@@ -62,7 +62,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
         calls=0
         for name in streams:
             if name=='keep':
-                calls+=int((name,i) in predictions)
+                calls+=predictions.get((name,i),{}).get('feature_forward_calls',int((name,i) in predictions))
                 continue
             trace=json.loads((data/f'bank/{name}/candidate/records/{i:04d}.json').read_text())['editor_trace']
             calls+=trace.get('forward_calls',0)+int((name,i) in predictions)

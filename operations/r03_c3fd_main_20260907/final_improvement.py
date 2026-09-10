@@ -381,6 +381,51 @@ def retained_worker(root,name):
         model_sha256=file_hash(model_path),feature_pins=pins,retrained=False))
 
 
+def retained_fresh_worker(root,name,*,evaluate_only=False):
+    """Apply the frozen gain utility to the previously viewed 256 sources."""
+    import subprocess
+    from evaluate_sun_ranker import build,evaluate,summary
+    destination=root/'variants'/name
+    original=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
+    panel=destination/'policies/fresh/zero_gain_keep'
+    if not evaluate_only:
+        fresh=destination/'fresh'
+        if not fresh.exists():fresh.symlink_to(original/'fresh',target_is_directory=True)
+        model_path=original/'training/sun_ranker/SUN_RANKER.pt'
+        source=original/'fresh/ranker_inference/FRESH_PREDICTIONS.jsonl'
+        write_json(destination/'FRESH_GAIN_POLICY_REGISTRATION.json',dict(model_sha256=file_hash(model_path),
+            prediction_source_sha256=file_hash(source),score_weights=[2.,1.],KEEP_reference=[0.,0.],
+            no_new_training=True,role='exploratory_replication_on_previously_viewed_sources',
+            no_candidate_outcomes_used_for_choice=True))
+        rows=read_rows(source)
+        rows += [dict(ordinal=i,stream='keep',sun_gain=0.,ms_gain=0.,operational_utility=0.,
+            valid=record['success'],feature_forward_calls=0)
+            for i,record in enumerate(read_rows(fresh/'native/inputs.jsonl'))]
+        prediction=destination/'retained_fresh_execution/FRESH_PREDICTIONS.jsonl'
+        write_rows(prediction,rows)
+        panel=build(destination,'fresh','zero_gain_keep',0.,0.,prediction_path=prediction,
+            score_kind='signed_NS_NMS_gains',learned_keep=True,score_weights=(2.,1.))
+        write_json(destination/'retained_fresh_execution/DONE.json',dict(complete=True,panel=str(panel),
+            predictions_sha256=file_hash(prediction),candidate_physics_not_consulted=True))
+        return
+    import torch
+    reuse=[original/'fresh/native/labeling/result']
+    reuse += [p/'edited/labeling/result' for p in (original/'policies/fresh').glob('*')
+              if (p/'edited/labeling/result/LABEL_FINAL.json').exists()]
+    output=panel/'edited/labeling/result'
+    command=[sys.executable,str(SOURCE/'scripts/label_rsi_cached_endpoints.py'),
+        '--input-jsonl',str(panel/'edited/inputs.jsonl'),'--output-dir',str(output),
+        '--purpose','training_feedback','--gpu-count',str(torch.cuda.device_count()),'--workers-per-gpu','4',
+        '--record-timeout','600','--deterministic','--feedback-manifest',str(panel/'edited/FEEDBACK_MANIFEST.json'),
+        '--reuse-endpoints',*[str(p) for p in reuse],'--joint-physical-stop','--max-steps','1000']
+    subprocess.run(command,check=True)
+    evaluate(destination,panel,cached=False,nu_workers=3)
+    report=dict(complete=True,result=summary(destination,panel,'fresh'),
+        role='exploratory_replication_on_previously_viewed_sources',selection='frozen_before_new_endpoint_labels')
+    write_json(destination/'retained_fresh_evaluate_execution/DONE.json',report)
+    print(json.dumps(report),flush=True)
+
+
 def score_bank(root,name,stream,*,nu_workers=7):
     import subprocess
     from scripts.run_rsi_stages import validity
@@ -449,7 +494,7 @@ def collect_keep_features(destination,panel_name='fit'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','retained','score_worker','rank_worker','policy_worker','utility_policy_worker','retained_worker'])
+    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','retained','retained_fresh','retained_fresh_evaluate','score_worker','rank_worker','policy_worker','utility_policy_worker','retained_worker','retained_fresh_worker','retained_fresh_evaluate_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3','retained_delta_e3'])
@@ -470,6 +515,8 @@ if __name__ == '__main__':
         policy_worker(args.root,args.name,utility=True)
     elif args.mode=='retained_worker':
         retained_worker(args.root,args.name)
+    elif args.mode in ('retained_fresh_worker','retained_fresh_evaluate_worker'):
+        retained_fresh_worker(args.root,args.name,evaluate_only=args.mode=='retained_fresh_evaluate_worker')
     elif args.mode.endswith('_worker'):
         (rank_worker if args.mode=='rank_worker' else policy_worker)(args.root,args.name)
     else:
