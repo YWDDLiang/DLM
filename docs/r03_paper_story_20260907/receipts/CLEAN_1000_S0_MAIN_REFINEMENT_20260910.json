@@ -1,0 +1,42 @@
+{
+  "schema": "clean_1000_S0_main_refinement_audit_v1",
+  "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000",
+  "science_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+  "job": {
+    "id": "41763",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 3162,
+    "allocated_GPUs": 3,
+    "allocated_GPU_hours": 2.635,
+    "start_local": "2026-09-10T07:38:29",
+    "end_local": "2026-09-10T08:31:11",
+    "Slurm_time_zone": "Asia/Shanghai"
+  },
+  "requests": 1000,
+  "token_records": 1000,
+  "successful_token_records": 998,
+  "complete_worker_receipts": 12,
+  "actual_F800_requests": 973,
+  "geometry_decoder_calls": 1556800,
+  "strict_SUN_passthrough": 25,
+  "strict_SUN_tokens_exactly_retained": true,
+  "upstream_generation_failures": 2,
+  "fallbacks": [
+    {
+      "ordinal": 752,
+      "reason": "expert target clipped by B0 quantization",
+      "returned_exact_raw_tokens": true
+    }
+  ],
+  "all_record_config_and_ordinal_bindings_valid": true,
+  "all_diffused_records_use_800_steps": true,
+  "hashes": {
+    "fit/RUN_SPEC.json": "0ec79ff5a2c6f4dfae7e5fc79911c3d68eca45780310587eb2be151e1e214c8b",
+    "fit/construction/GATE.json": "9b409152ec819874aeaa0c2a302faf566ce03b5dc56125b024a09bf5a66f10c5",
+    "fit/construction/inputs.jsonl": "6a676a1076b55879484ff606c9881c8fcc1bada0c8eb127eb3a0c78483b8782f",
+    "token_record_hash_manifest": "1a4f3a2aeedc8d6513351d242a7fdee527fb62ff86655ba815e0664f20e6bae7"
+  },
+  "record_manifest_digest_definition": "sha256(concatenate filename:sha256(file_bytes) followed by LF for records 0000.json through 0999.json in ordinal order)",
+  "scope": "complete refinement execution audit; Stable/SUN still require complete token physical evaluation"
+}

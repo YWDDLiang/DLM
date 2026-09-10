@@ -10,7 +10,9 @@
 
 1000条检查确认1000个不同TRAIN来源、987个不同约化组成、与MAIN验证组成零重叠，保留原256条Plan/prompt/seed前缀。G从B0开始、E使用新初始化，不导入试验权重或验证反馈；采用旧偏好/局部提案/接受规则，关闭试验性历史教师、模式归一化、头续训和稠密T2T路径。固定配方和三份配置哈希见[启动回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_FROZEN_METHOD_AND_LAUNCH_20260910.json)。
 
-正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。两路RAW生成、物理标注和评分均已完成：S0主路Stable/SUN为25/25（各2.5%），第二RAW对照为19/19（各1.9%），分母均为1000。当前继续F800，尚未完成S0的KEEP/EDIT或权重更新。前256条新生成RAW与旧实验在body、生成状态及调用数上全部逐条一致，见[前缀复核](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_FRESH_PREFIX_AUDIT_20260910.json)。
+正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。两路RAW生成、物理标注和评分均已完成：S0主路Stable/SUN为25/25（各2.5%），第二RAW对照为19/19（各1.9%），分母均为1000。主路F800及token回写已完整完成，正在进行token物理评价，对照继续精修；S0的KEEP/EDIT及权重更新尚未完成。主路实际973条运行F800、25条SUN直通、2条生成失败保留分母，另1条按原量化规则回退原始token，见[精修回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_MAIN_REFINEMENT_20260910.json)。
+
+新运行前256条与旧S0逐条核对通过：RAW body、生成状态和调用数一致，RAW Stable/SUN标记一致，F800回写后的token、种子、分流和回退也一致。各项只读核验及哈希见[生成前缀](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_FRESH_PREFIX_AUDIT_20260910.json)、[RAW物理前缀](docs/r03_paper_story_20260907/receipts/CLEAN_1000_RAW_PREFIX_PHYSICS_AUDIT_20260910.json)和[F/token前缀](docs/r03_paper_story_20260907/receipts/CLEAN_1000_F_TOKEN_PREFIX_AUDIT_20260910.json)。这些比较未将旧输出或标签导入本轮。
 
 扩容时遗漏的参考缓存覆盖已修复：原242体系缓存保留原路径，按相同2026.04.13版本与原协议扩展至925体系（895可评分、30官方参考缺失）。原输入、物理标签和配置字节未变；失败评分已归档，仅重试评分，科学源码仍固定657985c。37项相关检查及真实覆盖检查通过，恢复后的两路评分均正常完成，见[修复回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_HULL_COVERAGE_RECOVERY_20260910.json)。
 
