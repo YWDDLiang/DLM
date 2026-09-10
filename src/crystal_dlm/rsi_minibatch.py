@@ -304,7 +304,13 @@ def propose_ranked_batch(model, tokenizer, requests, *, support, batch_size=16, 
                         result.update(action=dict(mode=0,name=MODES[0],sites=[],positions=[]),learned_decision='KEEP')
                         s['stage']='done';continue
                     exploration=request.get('exploration_local_rank')
-                    if exploration is not None:
+                    scope=request.get('exploration_mode')
+                    if scope is not None:
+                        if scope not in ('all_xyz','full_cell') or not request.get('force_proposal'):
+                            raise ValueError('global diagnostic scope needs a forced proposal')
+                        mode=MODES.index(scope);sites=list(range(n))
+                        result.update(scope_policy='diagnostic_global_scope',exploration_mode=scope)
+                    elif exploration is not None:
                         if type(exploration) is not int or not 0<=exploration<=3 or not request.get('force_proposal'):
                             raise ValueError('registered site exploration needs a forced proposal and rank 0..3')
                         mode=1
