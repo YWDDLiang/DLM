@@ -184,7 +184,7 @@ def variant(root, name):
     receipt = checkpoint/'RSI_TRAINING_DONE.json'
     reg = json.loads((previous/'PREREGISTRATION.json').read_text())
     reg.update(old_editor=str(checkpoint), old_editor_receipt_sha256=file_hash(receipt),
-               editor_content_changed=True, parent_content_experiment=str(root))
+               editor_content_changed=True, parent_content_experiment=str(root),enforce_shared_forward_budget=True)
     for folder in ('cohort','current','native'):
         shutil.copytree(previous/'fit'/folder, destination/'fit'/folder)
     shutil.copy2(previous/'SOURCE_SPLIT.jsonl', destination/'SOURCE_SPLIT.jsonl')
@@ -195,7 +195,76 @@ def variant(root, name):
     spec['assets']['nu_cache'] = str(root/'nu_cache')
     write_json(destination/'fit/RUN_SPEC.json',spec)
     write_json(destination/'PREREGISTRATION.json',reg)
+    write_json(destination/'LEARNED_KEEP_REGISTRATION.json',dict(schema='learned_KEEP_candidate_comparison_v1',
+        decision='argmax predicted NS then NMS over learned KEEP and edit views',absolute_acceptance_floor=None,
+        MS_gain_floor=None,known_SUN_hard_veto=False,role='feasibility'))
     return destination
+
+
+def prepare_scope(root):
+    from pymatgen.core import Composition
+    from pymatgen.analysis.phase_diagram import PDEntry,PhaseDiagram
+    previous=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
+    spec=json.loads((previous/'fit/RUN_SPEC.json').read_text())
+    prep=Path(spec['assets']['training_preparation'])
+    roles=read_rows(previous/'SOURCE_SPLIT.jsonl')
+    allowed={r['ancestor_id'] for r in roles if r['split']=='train' and r['ordinal'] not in (549,837)}
+    parents=[r for r in read_rows(prep/'pairs_pending.jsonl') if r['ancestor_id'] in allowed]
+    ids={r[k] for r in parents for k in ('old_physics_id','target_physics_id') if r.get(k)}
+    labels={r['trajectory_id']:r for r in read_rows(prep.parent/'labels/labels.jsonl') if r['trajectory_id'] in ids}
+    inputs={r['trajectory_id']:r for r in read_rows(prep/'all_inputs.jsonl') if r['trajectory_id'] in ids}
+    tok=json.loads((Path(spec['assets']['b0_checkpoint'])/'tokenizer.json').read_text())
+    inverse={i:t for t,i in tok['model']['vocab'].items()}
+    inverse.update({r['id']:r['content'] for r in tok.get('added_tokens',[])})
+    systems={'-'.join(sorted(r['plan_state']['elements'])) for r in parents}
+    diagrams={}
+    for r in read_rows(Path(spec['assets']['official_cache'])/'official_slim_cache.jsonl'):
+        if r['chemsys'] in systems:
+            diagrams[r['chemsys']]=PhaseDiagram([PDEntry(Composition(e['composition']),float(e['energy'])) for e in r['entries']])
+    data=read_rows(root/'data/E.jsonl');added=[];excluded=Counter()
+    for row in parents:
+        before=labels.get(row['old_physics_id'],{});after=labels.get(row.get('target_physics_id'),{})
+        system='-'.join(sorted(row['plan_state']['elements']))
+        if (not row.get('target_body') or after.get('status')!='verified' or not after.get('verified')
+                or system not in diagrams or not row.get('target_geometry',{}).get('valid')):
+            excluded['unavailable_or_unverified_target']+=1;continue
+        hull=float(diagrams[system].get_hull_energy_per_atom(Composition(dict(zip(row['plan_state']['elements'],row['plan_state']['counts'])))))
+        target_hull=float(after['terminal_energy'])-hull
+        if target_hull>.1:
+            excluded['target_not_stable_or_metastable']+=1;continue
+        good=(before.get('status') in ('invalid_raw','invalid_terminal','relaxation_energy_increased') or
+              (before.get('status')=='verified' and after['terminal_energy']<before['terminal_energy']-.01))
+        if not good:
+            excluded['no_reliable_pair_improvement']+=1;continue
+        for label_key,body_key in [('old_physics_id','old_body'),('target_physics_id','target_body')]:
+            raw=inputs[row[label_key]]
+            if raw.get('body')!=''.join(inverse[t] for t in row[body_key]):
+                raise ValueError('cached physical label belongs to a different teacher token body')
+        action=row['action'];mode=('none','local_xyz','all_xyz','full_cell').index(action['mode'])
+        if mode not in (2,3):
+            excluded['not_a_global_scope_teacher']+=1;continue
+        item=dict(pair_id=fingerprint({'source':row['ancestor_id'],'kind':'trusted_global_scope_teacher_v1'}),
+            source_id=row['ancestor_id'],source_split='train',num_sites=row['num_atoms'],prompt=row['prompt'],
+            current_tokens=row['old_body'],content_target_tokens=row['target_body'],
+            content_positions=action['positions'],proposal_tokens=row['target_body'],action_positions=action['positions'],
+            mode_target=mode,site_targets=[0]*row['num_atoms'],accept_target=1.,known_sun=False,
+            objective_level='strict_stable' if target_hull<=0 else 'meta_stable',
+            teacher_provenance=dict(source='cached_B0_to_F800',old_status=before['status'],target_hull=target_hull,
+                label_protocol_max_steps=500,target_physically_verified=True,
+                before_label_sha256=fingerprint(before),after_label_sha256=fingerprint(after)))
+        data.append(item);added.append(item)
+    path=root/'data/E_SCOPE.jsonl';write_rows(path,data)
+    manifest=dict(source_split='train',files_sha256={path.name:file_hash(path)},rows=len(data),global_teachers=len(added),
+        global_stable=sum(r['objective_level']=='strict_stable' for r in added),
+        global_source_ids=[r['source_id'] for r in added],exclusions=dict(excluded),
+        explicitly_excluded_diagnostic_ordinals=[549,837],cached_target_labels_bound_to_exact_token_bodies=True,
+        base_local_training_data_sha256=file_hash(root/'data/E.jsonl'),
+        cached_label_receipt_sha256=file_hash(prep.parent/'labels/LABEL_FINAL.json'))
+    write_json(root/'data/PAIRS_E_SCOPE_FINAL.json',manifest)
+    cfg=json.loads((root/'configs/mini_2e6.json').read_text())
+    cfg.update(data=str(path),output_dir=str(root/'training/scope_2e6/result'))
+    write_json(root/'configs/scope_2e6.json',cfg)
+    print(json.dumps(manifest),flush=True)
 
 
 def run_variant(root, name, mode, stream=None, gpus=1):
@@ -324,15 +393,17 @@ def collect_keep_features(destination):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','train','probe','collect','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
+    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
-    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7'])
+    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6'])
     parser.add_argument('--stream',choices=['primary','rank1','rank2','rank3'])
     parser.add_argument('--gpus',type=int,default=1)
     args = parser.parse_args()
     if args.mode == 'prepare':
         prepare(args.root, args.previous)
+    elif args.mode == 'scope':
+        prepare_scope(args.root)
     elif args.mode == 'train':
         train(args.root, args.name)
     elif args.mode == 'probe':

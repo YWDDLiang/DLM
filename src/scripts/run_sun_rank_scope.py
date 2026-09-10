@@ -181,6 +181,21 @@ def collect(root,panel_name,output):
                 traces[i]=json.loads((previous/f'fit/proposal/records/{i:04d}.json').read_text())['editor_trace']
         else:
             eligible=[i for i,c in enumerate(current) if c.get('body_token_ids') and c.get('success')]
+            if reg.get('enforce_shared_forward_budget') and k:
+                admitted=[]
+                for i in eligible:
+                    used=0
+                    for prior in list(STREAMS)[:k]:
+                        past=json.loads((panel/f'bank/{prior}/candidate/records/{i:04d}.json').read_text())['editor_trace']
+                        used+=past.get('forward_calls',0)+int(bool(past.get('proposal_tokens')))
+                    # This local candidate takes 5 generation/judgement calls
+                    # and one scoring view. Reserve one view for learned KEEP.
+                    if used+7<=spec['policy']['editor_max_calls']:
+                        admitted.append(i)
+                    else:
+                        traces[i]=dict(proposal_generated=False,proposal_tokens=[],forward_calls=0,
+                            proposal_failure='remaining_forward_budget_reserved_for_KEEP')
+                eligible=admitted
             for offset in range(0,len(eligible),64):
                 indices=eligible[offset:offset+64]
                 requests=[dict(prompt=plans[i]['body_prompt'],body=current[i]['body_token_ids'],n=plans[i]['plan_state']['N'],

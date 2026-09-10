@@ -294,6 +294,9 @@ def construct_batch(
             lightweight_decoding_constraints=constraints,
         )
         geometry_report = monitor.report() if monitor is not None else None
+        if geometry_report is not None and lattice_gamma_last:
+            geometry_report['schedule_changed']=True
+            geometry_report['schedule_change']='conditional_gamma_after_alpha_beta'
     suffix = generated[:, input_ids.shape[1]:]
     if suffix.shape[1] != 7 + 4 * n:
         raise RuntimeError("native R03 constructor changed its exact-length answer ABI")
