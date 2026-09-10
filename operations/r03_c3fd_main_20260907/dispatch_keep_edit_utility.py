@@ -26,7 +26,7 @@ def main():
     else:
         required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl',
             root/'fit/native/labeling/result/LABEL_FINAL.json',root/'fit/hybrid_proposal/labeling/result/LABEL_FINAL.json']
-        products=[str(root/'FROZEN_SELECTION.json'),str(root/'UTILITY_COMPARISON_FINAL.json')]
+        products=[str(root/'UTILITY_DEV_SELECTION_FINAL.json')]
     if any(not p.is_file() for p in required):raise ValueError('utility admission inputs are incomplete')
     gpu=0 if args.mode=='policies' else 1
     script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/train_keep_edit_utility.py'

@@ -116,6 +116,7 @@ def main():
             snapshots=reg['head_training']['snapshots'],thresholds=reg['head_training']['thresholds'],
             rule='both_gains_then_SUN_MSUN_Stable_fewer_Stable_losses_fewer_edits_higher_margin_earlier_epoch',
             acceptance='raw_quality_output_greater_than_or_equal_to_margin',
+            FINAL_admission='DEV_SUN_and_MSUN_both_above_continuous_KEEP',
             before_first_matched_proposal_DEV_policy_score=True))
     candidates=[]
     for epoch in reg['head_training']['snapshots']:
@@ -129,6 +130,12 @@ def main():
         return (d['delta']['SUN']>0 and d['delta']['MSUN']>0,c['SUN'],c['MSUN'],c['Stable'],
             -len(d['losses']['Stable']),-c['actual_edits'],candidate['margin'],-candidate['epoch'])
     selected=max(candidates,key=key)
+    admitted=bool(key(selected)[0])
+    write_json(root/'UTILITY_DEV_SELECTION_FINAL.json',dict(selected=selected,candidates=candidates,
+        admitted_to_FINAL=admitted,final_quality_consulted=False,selection_rule_sha256=file_hash(rule_path)))
+    if not admitted:
+        print(json.dumps(dict(event='DEV_FAILED_FINAL_REMAINS_SEALED',selected=selected)),flush=True)
+        return
     frozen=dict(schema='keep_edit_utility_DEV_selection_v1',created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
         selected=selected,candidates=candidates,selection_split='dev',final_quality_consulted=False,
         training_receipt_sha256=file_hash(root/'training/utility/result/TRAINING_FINAL.json'),
