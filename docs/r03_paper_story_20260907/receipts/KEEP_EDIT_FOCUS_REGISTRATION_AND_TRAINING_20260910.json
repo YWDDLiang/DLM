@@ -1,0 +1,358 @@
+{
+  "PREREGISTRATION.json": {
+    "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/PREREGISTRATION.json",
+    "remote_sha256": "cd582ad367825579284774fee5cdde1b7cea1281c0ff38ff8544dbc26a4eb7b9",
+    "value": {
+      "absolute_deadline_utc": "2026-09-10T10:01:15.570418+00:00",
+      "created_utc": "2026-09-10T05:59:40.678673+00:00",
+      "final_quality_sealed_until_policy_frozen": true,
+      "fixed_input": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit",
+      "head_training": {
+        "batch_size": 256,
+        "epochs": 32,
+        "frozen": "all_except_quality_head",
+        "learning_rate": 0.00001,
+        "loss": "SmoothL1_signed_novel_Stable_plus_novel_MS_gain",
+        "seed": 20260910,
+        "snapshots": [
+          4,
+          8,
+          16,
+          32
+        ],
+        "thresholds": [
+          0,
+          0.05,
+          0.1,
+          0.2
+        ]
+      },
+      "old256_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow",
+      "old_E_source_provenance": {
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round1/fit/editor_collection/pairs/E.jsonl": "4135f8864b991ea12cd86e8d9a3273ea29be2f1ebc46913cd3df6852f3ce5e32",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round2/fit/editor_collection/pairs/E.jsonl": "d19be24b3851740edecc2f348193f5fa5e83682b2e52f2c80f797a6ca74a9838",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/rounds/round3/fit/editor_collection/pairs/E.jsonl": "1e355e36267e905967ef31bf8399d7f1fe2481f6458ad3a9042b5af9ddc6aa2b",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round1/E/result/checkpoint/RSI_TRAINING_DONE.json": "43c5ec968604a433f17633ab10ecf7b2589c486ed40353fdccff88f64ce24c29",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round2/E/result/checkpoint/RSI_TRAINING_DONE.json": "bb85e23f33fc552f144b13922fb6fac827c58c22ec16d119fafaf415a603137f",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint/RSI_TRAINING_DONE.json": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training_configs/TRAIN_E1.json": "859c4c00dbcd33162d19fd0874dbc08f4247fb928f2cf00ffe491cb8ac53939a",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training_configs/TRAIN_E2.json": "911c912cc9f0b5da2654d95787b541aac07530b4a5b81632a842a8cf26fe955e",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training_configs/TRAIN_E3.json": "cd21427bb5f68fd60df2536ab8420f670ba881c3b08f01cfbf5e7497886abaf6"
+      },
+      "old_budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+      "old_editor": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+      "old_plans_sha256": "05e633ee4550d5acc539ce19e72acdbaddd827a666e54e363bb144d1c417c486",
+      "original_source_split": "MP20_train",
+      "plan_sha256": "02fd28d4ffde7501044e5e714789982bd1de264bef0d9cbafd61d8d13db5d2b2",
+      "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+      "previous_run": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000",
+      "previous_trial": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_editor_t2t_20260910/run_20260909T193000Z_fixedG3F_trial",
+      "schema": "keep_edit_focus_v1",
+      "source_split_sha256": "9bb3cdee76272aebeaa690325d3e1f91664871b0d3cef3e06c78af3909015042",
+      "split_counts": {
+        "dev": 247,
+        "final": 247,
+        "train": 506
+      }
+    }
+  },
+  "PREPARATION_FINAL.json": {
+    "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/PREPARATION_FINAL.json",
+    "remote_sha256": "82dfc03c8b44feae808235cd8e96284a9670445368e13c6525f580656340fc06",
+    "value": {
+      "audit_sha256": "b0f56202614e8dd8e592987bb3f5fdaaa692231c462d19bf8ccdc984d9f8aef8",
+      "metadata_recovery": "completed_missing_training_parent_files_with_original_hashes",
+      "native_inputs_sha256": "11eaa1535f0c9738caf3fcbe15989a8e2dbc221dbab65493e2c8a18fcd4f832f",
+      "noneditable": [
+        837
+      ],
+      "registration_sha256": "cd582ad367825579284774fee5cdde1b7cea1281c0ff38ff8544dbc26a4eb7b9",
+      "representation_counts": {
+        "continuous_F": 974,
+        "existing_token_bypass_or_F_failure": 24,
+        "existing_token_geometry_fallback": 2
+      },
+      "split_counts": {
+        "dev": 247,
+        "final": 247,
+        "train": 506
+      }
+    }
+  },
+  "data/UTILITY_DATA_FINAL.json": {
+    "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/data/UTILITY_DATA_FINAL.json",
+    "remote_sha256": "85be7a5be7503b81f08f25770d4bbf0b68c59db8598fdcf8e8f320acdc8487b8",
+    "value": {
+      "complete_source_weight_sum": 492,
+      "current_official_cache": {
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/official_slim_cache.jsonl",
+        "sha256": "926dce75543041fc48fe97b1e3d5132d72531c334d3dd54105274e33e39f6b87"
+      },
+      "data_sha256": "7c781ea76ad0063a998a694096369dbae67a1fe547026f7f1965dcbf97b9d6f5",
+      "examples": 5664,
+      "exclusions": {
+        "duplicate_pair": 1072,
+        "missing_token_view": 9,
+        "unknown_physics_or_needed_novelty": 434
+      },
+      "historical_U_reused": false,
+      "official_cache_checks": {
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/fit_hull/official_mp_cache/official_slim_cache.jsonl": {
+          "chemsystems": 237,
+          "exact_entries_subset": true,
+          "sha256": "cc1908d3855cdbdf2309eccd3316459a8eaf8fdae06958881609cfab39bdba8a"
+        },
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/hull_coverage_1000_20260910/union/official_mp_cache/official_slim_cache.jsonl": {
+          "chemsystems": 895,
+          "exact_entries_subset": true,
+          "sha256": "926dce75543041fc48fe97b1e3d5132d72531c334d3dd54105274e33e39f6b87"
+        }
+      },
+      "old_E_seen_sources": 251,
+      "old_E_unseen_train_sources": 241,
+      "physics_equivalence": {
+        "all_other_module_AST_equal": true,
+        "excluded_nonphysical_function": "assign_current_mode_targets",
+        "excluded_unused_import": "collections.defaultdict",
+        "sources": {
+          "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/code/d88e68a76007384173c76c0d4b94250618e0eeb8/src/crystal_dlm/ranked_feedback.py": "ecff4099348db67b85fdc0f265a303bc7e5132cda9ef8625f1f6dda125cfcdd3",
+          "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6/src/crystal_dlm/ranked_feedback.py": "04c5455c7278fb3a341b44a5bbf1dbcf38b14b0ca2d5c42a9f72b1362e279a26"
+        }
+      },
+      "schema": "signed_editor_utility_training_v1",
+      "source_split_sha256": "9bb3cdee76272aebeaa690325d3e1f91664871b0d3cef3e06c78af3909015042",
+      "sources": 492,
+      "target_counts": {
+        "0": 4549,
+        "1": 215,
+        "2": 11,
+        "-2": 87,
+        "-1": 802
+      },
+      "evidence_entry_count": 191,
+      "evidence_fingerprint": "fa5d178ccda248a8091b6faa36126735f7ae2e1986d0aecf0ce41acf8eb8f58b"
+    }
+  },
+  "training/utility/result/TRAINING_FINAL.json": {
+    "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/utility/result/TRAINING_FINAL.json",
+    "remote_sha256": "a36e7f031488c7336ee25f56f88efa877fd4e10a7ff5696276e6220933c8d506",
+    "value": {
+      "all_model_parameters_frozen_during_extraction": true,
+      "cached_head_reproduction_exact": true,
+      "complete_passes": 32,
+      "data_manifest_sha256": "85be7a5be7503b81f08f25770d4bbf0b68c59db8598fdcf8e8f320acdc8487b8",
+      "data_sha256": "7c781ea76ad0063a998a694096369dbae67a1fe547026f7f1965dcbf97b9d6f5",
+      "features_sha256": "2bc67c24e454b82c949c33a2fa69576c8e1db8771c79c0accea33e70ebe18e97",
+      "maximum_row_visits": 32,
+      "minimum_row_visits": 32,
+      "optimized_parameters": "detached_existing_quality_head_copy_only",
+      "optimizer_steps": 736,
+      "original_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+      "schema": "quality_only_signed_utility_v1",
+      "settings": {
+        "batch_size": 256,
+        "epochs": 32,
+        "frozen": "all_except_quality_head",
+        "learning_rate": 0.00001,
+        "loss": "SmoothL1_signed_novel_Stable_plus_novel_MS_gain",
+        "seed": 20260910,
+        "snapshots": [
+          4,
+          8,
+          16,
+          32
+        ],
+        "thresholds": [
+          0,
+          0.05,
+          0.1,
+          0.2
+        ]
+      },
+      "snapshots": {
+        "4": {
+          "complete_passes": 4,
+          "optimizer_steps": 92,
+          "parameter_delta_squared": 0.015027923690341172,
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/utility/result/quality_head_epoch4.pt",
+          "sha256": "6b28bd874e4ad8f250b126e04d4bb8aaca0e0522d6420bd6eb8c9d3efdf1584a"
+        },
+        "8": {
+          "complete_passes": 8,
+          "optimizer_steps": 184,
+          "parameter_delta_squared": 0.03484512901188563,
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/utility/result/quality_head_epoch8.pt",
+          "sha256": "b930b35c37ac4713a66a597d9ceb20e7db1c920a79d6299f1fc81270a1844738"
+        },
+        "16": {
+          "complete_passes": 16,
+          "optimizer_steps": 368,
+          "parameter_delta_squared": 0.08347731942390657,
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/utility/result/quality_head_epoch16.pt",
+          "sha256": "406d93940dc87436ad0ea228ac4fd90e2cd74e75685d6b9a33891c717c2e50b9"
+        },
+        "32": {
+          "complete_passes": 32,
+          "optimizer_steps": 736,
+          "parameter_delta_squared": 0.17209900639288855,
+          "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/utility/result/quality_head_epoch32.pt",
+          "sha256": "06714ca9893d75fe27f5dbb4d5b8aa83f3432fc1b7800cba39293e278eed4c72"
+        }
+      },
+      "source_target_counts": {
+        "0": 4549,
+        "1": 215,
+        "2": 11,
+        "-2": 87,
+        "-1": 802
+      },
+      "status": "complete",
+      "train_rows": 5664,
+      "train_sources": 492,
+      "training_seconds": 2.4571645073592663,
+      "frozen_content_and_scope_parameters_before_entry_count": 382,
+      "frozen_content_and_scope_parameters_before_fingerprint": "1203096ce4442a24bd2815e63e62e3290bf28a3af2caea0101d2e25a9955e08c",
+      "frozen_content_and_scope_parameters_after_entry_count": 382,
+      "frozen_content_and_scope_parameters_after_fingerprint": "1203096ce4442a24bd2815e63e62e3290bf28a3af2caea0101d2e25a9955e08c",
+      "history_entry_count": 32,
+      "history_fingerprint": "8eea5d5f4df8df463aae3fa5ad71e28c5d45afbe87193966f25213e212ab61da"
+    }
+  },
+  "evaluation_features/FEATURES_FINAL.json": {
+    "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/evaluation_features/FEATURES_FINAL.json",
+    "remote_sha256": "ba17ee8237173f40d9eeb9764386908610aa9d97700a3b334b5876a95433c34c",
+    "value": {
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+      "checkpoint_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+      "features_sha256": "bb126c140fa86e88402d6d1faf7ff8cd3baeed43ae71f2dafe6635327de09390",
+      "no_endpoint_labels_loaded": true,
+      "old_probability_max_abs_drift": 0.008778542280197144,
+      "predictions_sha256": "357b27adc708fde4f6c2a05a627522ad0f27b45fce0d9fefbfc5bd54db92392d",
+      "proposal_inputs_sha256": "ce53c1ab6211942f035ea6520ad649c40e03791646d477b4c8fcfa44baab5407",
+      "rows": 999,
+      "rows_sha256": "3863b9ec474a3427059dd99cb1a2412fcad0b5b0a071c5c11e2cbff86d31479f",
+      "training_receipt_sha256": "a36e7f031488c7336ee25f56f88efa877fd4e10a7ff5696276e6220933c8d506"
+    }
+  },
+  "analysis/CONTINUOUS_TRAIN_DEV_BASELINE.json": {
+    "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/analysis/CONTINUOUS_TRAIN_DEV_BASELINE.json",
+    "remote_sha256": "f12ed7ed5e3759f610d1d8699d40113c8a6b9d7c8da0f2f62acbd401e8911ed9",
+    "value": {
+      "paired": {
+        "dev": {
+          "meta_stable": {
+            "gains": [
+              418,
+              509,
+              824
+            ],
+            "losses": [
+              400,
+              880,
+              886
+            ]
+          },
+          "meta_sun": {
+            "gains": [
+              418,
+              509,
+              824
+            ],
+            "losses": [
+              400,
+              880,
+              886
+            ]
+          },
+          "strict_stable": {
+            "gains": [
+              948
+            ],
+            "losses": []
+          },
+          "strict_sun": {
+            "gains": [],
+            "losses": []
+          }
+        },
+        "train": {
+          "meta_stable": {
+            "gains": [
+              63,
+              129,
+              130,
+              453
+            ],
+            "losses": [
+              174,
+              318
+            ]
+          },
+          "meta_sun": {
+            "gains": [
+              63,
+              129,
+              130,
+              453,
+              476,
+              718
+            ],
+            "losses": [
+              174,
+              318
+            ]
+          },
+          "strict_stable": {
+            "gains": [
+              187
+            ],
+            "losses": [
+              180
+            ]
+          },
+          "strict_sun": {
+            "gains": [
+              187
+            ],
+            "losses": [
+              180
+            ]
+          }
+        }
+      },
+      "scope": "TRAIN_DEV_only_before_final_freeze",
+      "stages": {
+        "dev": {
+          "continuous_KEEP": {
+            "meta_stable": 135,
+            "meta_sun": 115,
+            "strict_stable": 29,
+            "strict_sun": 24
+          },
+          "requests": 247,
+          "token_KEEP": {
+            "meta_stable": 135,
+            "meta_sun": 115,
+            "strict_stable": 28,
+            "strict_sun": 24
+          }
+        },
+        "train": {
+          "continuous_KEEP": {
+            "meta_stable": 286,
+            "meta_sun": 245,
+            "strict_stable": 57,
+            "strict_sun": 51
+          },
+          "requests": 506,
+          "token_KEEP": {
+            "meta_stable": 284,
+            "meta_sun": 241,
+            "strict_stable": 57,
+            "strict_sun": 51
+          }
+        }
+      }
+    }
+  }
+}

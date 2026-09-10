@@ -65,7 +65,10 @@ def main():
         original_generation_partition=dict(shards=2,batch_size=64),canonical_judgement_partition=dict(batch_size=16,order='original_ordinal'),
         original_contexts_reproduced=all(r['original_batch_reproduced_exactly'] for r in result),
         canonical_contexts_reproduced=all(r['canonical_batch_reproduced_exactly'] for r in result))
-    write_json(root/'analysis/JUDGEMENT_BATCH_AUDIT.json',report);print(json.dumps(report),flush=True)
+    write_json(root/'analysis/JUDGEMENT_BATCH_AUDIT.json',report)
+    write_json(root/'analysis/utility_audit/AUDIT_FINAL.json',dict(report=str(root/'analysis/JUDGEMENT_BATCH_AUDIT.json'),
+        sha256=file_hash(root/'analysis/JUDGEMENT_BATCH_AUDIT.json')))
+    print(json.dumps(report),flush=True)
 
 
 if __name__=='__main__':main()

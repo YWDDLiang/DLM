@@ -11,10 +11,12 @@ def main():
     parser.add_argument('--root',type=Path,required=True)
     parser.add_argument('--mode',choices=['train','evaluate','policies','audit'],required=True)
     parser.add_argument('--minutes',type=int,default=35)
+    parser.add_argument('--job-suffix',default='')
     args=parser.parse_args();root=args.root.resolve();source=Path(__file__).resolve().parents[2]
     pipeline=json.loads((root/'RAW0_PIPELINE.json').read_text())
     pipeline.update(source_root=str(source),source_identity=verify_deployed_source(source))
-    job='focus_utility_'+args.mode
+    if args.job_suffix and not args.job_suffix.replace('_','').isalnum():raise ValueError('invalid job suffix')
+    job='focus_utility_'+args.mode+('_'+args.job_suffix if args.job_suffix else '')
     output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'analysis/utility_'+args.mode
     required=[root/'PREREGISTRATION.json',root/'SOURCE_SPLIT.jsonl',root/'fit/RUN_SPEC.json']
     if args.mode=='train':
@@ -26,10 +28,10 @@ def main():
     elif args.mode=='policies':
         required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl',
             root/'fit/native/labeling/result/LABEL_FINAL.json',root/'fit/hybrid_proposal/labeling/result/LABEL_FINAL.json']
-        products=[str(root/'UTILITY_DEV_SELECTION_FINAL.json')]
+        products=['{output}/POLICY_EVALUATION_FINAL.json']
     else:
         required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl']
-        products=[str(root/'analysis/JUDGEMENT_BATCH_AUDIT.json')]
+        products=['{output}/AUDIT_FINAL.json']
     if any(not p.is_file() for p in required):raise ValueError('utility admission inputs are incomplete')
     gpu=0 if args.mode=='policies' else 1
     script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/audit_keep_edit_judgement.py' if args.mode=='audit' else 'src/scripts/train_keep_edit_utility.py'
