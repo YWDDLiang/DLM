@@ -132,9 +132,13 @@ def main():
         return (d['delta']['SUN']>0 and d['delta']['MSUN']>0,c['SUN'],c['MSUN'],c['Stable'],
             -len(d['losses']['Stable']),-c['actual_edits'],candidate['margin'],-candidate['epoch'])
     selected=max(candidates,key=key)
+    control=build_panel(root,0,.5,old=True);evaluate(root,control)
+    original_control=build_panel(root,0,.5,old=True,recorded=True);evaluate(root,original_control)
+    dev_controls=dict(old_E3_canonical=summary(root,control.parent,'dev'),
+        old_E3_recorded=summary(root,original_control.parent,'dev'))
     admitted=bool(key(selected)[0])
     write_json(root/'UTILITY_DEV_SELECTION_FINAL.json',dict(selected=selected,candidates=candidates,
-        admitted_to_FINAL=admitted,final_quality_consulted=False,selection_rule_sha256=file_hash(rule_path)))
+        admitted_to_FINAL=admitted,final_quality_consulted=False,selection_rule_sha256=file_hash(rule_path),controls=dev_controls))
     if not admitted:
         write_json(completion/'POLICY_EVALUATION_FINAL.json',dict(status='DEV_failed_FINAL_sealed',
             dev_selection_sha256=file_hash(root/'UTILITY_DEV_SELECTION_FINAL.json')))
@@ -148,8 +152,6 @@ def main():
         selection_rule='both_gains_then_SUN_MSUN_Stable_fewer_Stable_losses_fewer_edits_higher_margin_earlier_epoch')
     if (root/'FROZEN_SELECTION.json').exists():raise ValueError('selection is already frozen')
     write_json(root/'FROZEN_SELECTION.json',frozen)
-    control=build_panel(root,0,.5,old=True);evaluate(root,control)
-    original_control=build_panel(root,0,.5,old=True,recorded=True);evaluate(root,original_control)
     panel=Path(selected['dev']['panel'])
     reports={role:{'learned':summary(root,panel,role),'old_E3':summary(root,control.parent,role),
         'old_E3_original_execution':summary(root,original_control.parent,role)} for role in ['train','dev','final','all']}

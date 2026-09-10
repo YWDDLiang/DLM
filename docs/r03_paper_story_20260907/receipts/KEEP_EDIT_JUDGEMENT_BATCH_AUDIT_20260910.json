@@ -1,0 +1,121 @@
+{
+  "remote_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/analysis/JUDGEMENT_BATCH_AUDIT.json",
+  "remote_sha256": "f26f830a15f9509c3059a7c2b0b1b456e2f55fd1abaab3623022be6955612a1c",
+  "value": {
+    "canonical_contexts_reproduced": true,
+    "canonical_judgement_partition": {
+      "batch_size": 16,
+      "order": "original_ordinal"
+    },
+    "cases": [
+      {
+        "cached_canonical_logit": -0.6344148516654968,
+        "canonical_batch_reproduced_exactly": true,
+        "canonical_batch_shape": [
+          16,
+          298
+        ],
+        "fresh_canonical_logit": -0.6344148516654968,
+        "ordinal": 429,
+        "original_batch_reproduced_exactly": true,
+        "original_batch_shape": [
+          55,
+          311
+        ],
+        "original_forward_step": 5,
+        "reconstructed_mixed_probability": 0.35528871417045593,
+        "recorded_probability": 0.35528871417045593,
+        "single_logit": -0.6026808619499207,
+        "split": "dev"
+      },
+      {
+        "cached_canonical_logit": 0.26813867688179016,
+        "canonical_batch_reproduced_exactly": true,
+        "canonical_batch_shape": [
+          16,
+          288
+        ],
+        "fresh_canonical_logit": 0.26813867688179016,
+        "ordinal": 201,
+        "original_batch_reproduced_exactly": false,
+        "original_batch_shape": [
+          60,
+          295
+        ],
+        "original_forward_step": 5,
+        "reconstructed_mixed_probability": 0.5739341974258423,
+        "recorded_probability": 0.5739341378211975,
+        "single_logit": 0.2636280655860901,
+        "split": "train"
+      },
+      {
+        "cached_canonical_logit": -0.03343115374445915,
+        "canonical_batch_reproduced_exactly": true,
+        "canonical_batch_shape": [
+          16,
+          301
+        ],
+        "fresh_canonical_logit": -0.03343115374445915,
+        "ordinal": 516,
+        "original_batch_reproduced_exactly": true,
+        "original_batch_shape": [
+          57,
+          311
+        ],
+        "original_forward_step": 5,
+        "reconstructed_mixed_probability": 0.49823126196861267,
+        "recorded_probability": 0.49823126196861267,
+        "single_logit": -0.01538870856165886,
+        "split": "dev"
+      },
+      {
+        "cached_canonical_logit": -0.3923366069793701,
+        "canonical_batch_reproduced_exactly": true,
+        "canonical_batch_shape": [
+          16,
+          298
+        ],
+        "fresh_canonical_logit": -0.3923366069793701,
+        "ordinal": 711,
+        "original_batch_reproduced_exactly": true,
+        "original_batch_shape": [
+          53,
+          303
+        ],
+        "original_forward_step": 5,
+        "reconstructed_mixed_probability": 0.40969961881637573,
+        "recorded_probability": 0.40969961881637573,
+        "single_logit": -0.377346009016037,
+        "split": "train"
+      },
+      {
+        "cached_canonical_logit": 0.457381933927536,
+        "canonical_batch_reproduced_exactly": true,
+        "canonical_batch_shape": [
+          16,
+          301
+        ],
+        "fresh_canonical_logit": 0.457381933927536,
+        "ordinal": 835,
+        "original_batch_reproduced_exactly": true,
+        "original_batch_shape": [
+          54,
+          309
+        ],
+        "original_forward_step": 5,
+        "reconstructed_mixed_probability": 0.6186189651489258,
+        "recorded_probability": 0.6186189651489258,
+        "single_logit": 0.47169938683509827,
+        "split": "train"
+      }
+    ],
+    "model_checkpoint_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+    "no_endpoint_labels_used": true,
+    "original_contexts_reproduced": false,
+    "original_generation_partition": {
+      "batch_size": 64,
+      "shards": 2
+    },
+    "schema": "editor_judgement_batch_reconstruction_v1"
+  }
+}
