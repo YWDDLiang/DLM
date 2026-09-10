@@ -1,0 +1,45 @@
+{
+  "schema": "clean_1000_S0_twin_refinement_audit_v1",
+  "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000",
+  "records": 1000,
+  "successful_token_records": 997,
+  "actual_F800_requests": 978,
+  "geometry_decoder_calls": 1564800,
+  "strict_SUN_passthrough": 19,
+  "strict_SUN_tokens_exactly_retained": true,
+  "complete_worker_receipts": 8,
+  "fallbacks": [
+    {
+      "ordinal": 62,
+      "reason": "token_F_geometry_outside_hard_support",
+      "returned_exact_raw_tokens": true
+    },
+    {
+      "ordinal": 887,
+      "reason": "token_F_geometry_outside_hard_support",
+      "returned_exact_raw_tokens": true
+    }
+  ],
+  "input_bindings": {
+    "bootstrap_comparator/RUN_SPEC.json": "e999cb500824ee130261149ff282cc3051d41d07cc58a116f2b492afe54aa9bb",
+    "bootstrap_comparator/construction/GATE.json": "1ac6c4e10fe4d0146da1250154672a577b8f9c0dee501dbb925618803ad5656f",
+    "bootstrap_comparator/construction/inputs.jsonl": "7554af2363b42b610c8e12530ebffdb47182601cf545048f1f875e0fd77a52ab",
+    "bootstrap_comparator/tokenized/inputs.jsonl": "cac6fc0b6ea598544aa7b6230f37195d52db544cf47ccbf4d9e520c2911283b4"
+  },
+  "Slurm_accounting": "41765|COMPLETED|4673|billing=8,cpu=8,gres/gpu=2,mem=64G,node=1|0:0|2026-09-10T07:55:04|2026-09-10T09:12:57",
+  "science_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+  "job": {
+    "id": "41765",
+    "state": "COMPLETED",
+    "exit_code": "0:0",
+    "elapsed_seconds": 4673,
+    "allocated_GPUs": 2,
+    "allocated_GPU_hours": 2.596111111111111,
+    "Slurm_time_zone": "Asia/Shanghai"
+  },
+  "generation_failures": 3,
+  "all_record_config_and_ordinal_bindings_valid": true,
+  "all_diffused_records_use_800_steps": true,
+  "token_record_hash_manifest": "57d5bb01a72e83173edf60f63782f3e5a8fffce22f0282f7c500f4833809e38b",
+  "record_manifest_digest_definition": "sha256(concatenate filename:sha256(file_bytes) followed by LF for records 0000.json through 0999.json in ordinal order)"
+}

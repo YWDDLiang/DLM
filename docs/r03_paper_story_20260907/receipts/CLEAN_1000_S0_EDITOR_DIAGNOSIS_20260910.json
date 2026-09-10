@@ -1,0 +1,1072 @@
+{
+  "schema": "clean_1000_S0_editor_diagnosis_v1",
+  "completed_round_report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/analysis/S0_COMPLETED_ROUND.json",
+  "completed_round_sha256": "c553a3842d9f275785988bd5bc7a166a825ba102dcaa76dcaede2d7e2ae7919b",
+  "new_SUN_proposals_rejected": [
+    761,
+    792,
+    795
+  ],
+  "execution_counts": {
+    "complete_proposals": 889,
+    "applied_decisions": 182,
+    "actual_changed_outputs": 182,
+    "proposal_failures": 4,
+    "upstream_failures": 2,
+    "known_SUN_KEPT": 105,
+    "DLM_forward_calls": 17586
+  },
+  "proposal_physical_evaluation": {
+    "requested": 1000,
+    "completed": 1000,
+    "cached_endpoints": 109,
+    "new_endpoint_evaluations": 889,
+    "generation_failures_without_model_calls": 2,
+    "elapsed_seconds": 1433.5096755288541,
+    "gpu_count": 3,
+    "workers_per_gpu": 4
+  },
+  "execution_jobs": [
+    {
+      "id": "41771",
+      "role": "fresh_E0_initialization",
+      "GPUs": 1,
+      "elapsed_seconds": 87
+    },
+    {
+      "id": "41772",
+      "role": "S0_E0_edit",
+      "GPUs": 3,
+      "elapsed_seconds": 376
+    },
+    {
+      "id": "41775",
+      "role": "S0_proposal_physics",
+      "GPUs": 3,
+      "elapsed_seconds": 1437
+    }
+  ],
+  "action_modes": {
+    "none": 105,
+    "full_cell": 224,
+    "local_xyz": 558,
+    "all_xyz": 111,
+    "None": 2
+  },
+  "cases": [
+    {
+      "ordinal": 87,
+      "composition": {
+        "Cu": 1,
+        "O": 4,
+        "Sr": 2
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.009276779101890398,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": null,
+        "known_failure": true,
+        "reliable": false
+      },
+      "after": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": null,
+        "known_failure": true,
+        "reliable": false
+      },
+      "applied": true,
+      "accept_probability": 0.518394947052002,
+      "learned_mode": 1,
+      "action": {
+        "mode": 1,
+        "name": "local_xyz",
+        "positions": [
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          24,
+          25,
+          26
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          4
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "invalid_terminal",
+      "final_terminal_status": "invalid_terminal"
+    },
+    {
+      "ordinal": 136,
+      "composition": {
+        "Gd": 2,
+        "Na": 2,
+        "O": 12,
+        "Ti": 4
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.003623938131823934,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": false,
+        "Stable": false,
+        "U": true,
+        "hull": 0.08540442032764872,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": false,
+        "Stable": false,
+        "U": true,
+        "hull": 0.08540442032764872,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": true,
+      "accept_probability": 0.5025812983512878,
+      "learned_mode": 1,
+      "action": {
+        "mode": 1,
+        "name": "local_xyz",
+        "positions": [
+          16,
+          17,
+          18,
+          20,
+          21,
+          22,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34
+        ],
+        "sites": [
+          2,
+          3,
+          5,
+          6
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 319,
+      "composition": {
+        "Cu": 1,
+        "O": 4,
+        "Sr": 2
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": false,
+        "hull": -0.009133251117271257,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 0.17806634147306077,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 0.17806634147306077,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": true,
+      "accept_probability": 0.5046306252479553,
+      "learned_mode": 1,
+      "action": {
+        "mode": 1,
+        "name": "local_xyz",
+        "positions": [
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 365,
+      "composition": {
+        "Er": 4,
+        "Ga": 2,
+        "Ru": 4
+      },
+      "before": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": false,
+        "Stable": false,
+        "U": true,
+        "hull": 0.053460994467041445,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": true,
+        "Stable": true,
+        "U": true,
+        "hull": -0.012031635537841368,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": true,
+        "Stable": true,
+        "U": true,
+        "hull": -0.012031635537841368,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": true,
+      "accept_probability": 0.5104115605354309,
+      "learned_mode": 1,
+      "action": {
+        "mode": 1,
+        "name": "local_xyz",
+        "positions": [
+          24,
+          25,
+          26,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          44,
+          45,
+          46
+        ],
+        "sites": [
+          4,
+          5,
+          6,
+          9
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 598,
+      "composition": {
+        "F": 6,
+        "K": 2,
+        "Li": 1,
+        "V": 1
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.03264538480321999,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": false,
+        "Stable": false,
+        "U": true,
+        "hull": 0.08831580446679954,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": false,
+        "Stable": false,
+        "U": true,
+        "hull": 0.08831580446679954,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": true,
+      "accept_probability": 0.5320285558700562,
+      "learned_mode": 3,
+      "action": {
+        "mode": 3,
+        "name": "full_cell",
+        "positions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22,
+          24,
+          25,
+          26,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          36,
+          37,
+          38,
+          40,
+          41,
+          42,
+          44,
+          45,
+          46
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 705,
+      "composition": {
+        "Cs": 2,
+        "F": 6,
+        "In": 1,
+        "K": 1
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.0018198986616209112,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 0.15341586870288104,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 0.15341586870288104,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": true,
+      "accept_probability": 0.5482853651046753,
+      "learned_mode": 3,
+      "action": {
+        "mode": 3,
+        "name": "full_cell",
+        "positions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22,
+          24,
+          25,
+          26,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          36,
+          37,
+          38,
+          40,
+          41,
+          42,
+          44,
+          45,
+          46
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 712,
+      "composition": {
+        "Cl": 6,
+        "Cs": 2,
+        "Li": 1,
+        "Tm": 1
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.00011773480590893115,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 0.1163120709497063,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 0.1163120709497063,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": true,
+      "accept_probability": 0.604699432849884,
+      "learned_mode": 3,
+      "action": {
+        "mode": 3,
+        "name": "full_cell",
+        "positions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22,
+          24,
+          25,
+          26,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          36,
+          37,
+          38,
+          40,
+          41,
+          42,
+          44,
+          45,
+          46
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 761,
+      "composition": {
+        "Al": 1,
+        "La": 1,
+        "Ni": 4
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.007123388683268672,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": true,
+        "Stable": true,
+        "U": true,
+        "hull": -0.006833471691081172,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.007123388683268672,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": false,
+      "accept_probability": 0.38340237736701965,
+      "learned_mode": 0,
+      "action": {
+        "mode": 1,
+        "name": "local_xyz",
+        "positions": [
+          8,
+          9,
+          10
+        ],
+        "sites": [
+          0
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 762,
+      "composition": {
+        "Cl": 6,
+        "Cs": 2,
+        "Sb": 1
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.022748449790039427,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 2.143136760247192,
+        "known_failure": false,
+        "reliable": false
+      },
+      "after": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": 2.143136760247192,
+        "known_failure": false,
+        "reliable": false
+      },
+      "applied": true,
+      "accept_probability": 0.5440723896026611,
+      "learned_mode": 3,
+      "action": {
+        "mode": 3,
+        "name": "full_cell",
+        "positions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22,
+          24,
+          25,
+          26,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          36,
+          37,
+          38,
+          40,
+          41,
+          42
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "not_converged",
+      "final_terminal_status": "not_converged"
+    },
+    {
+      "ordinal": 792,
+      "composition": {
+        "La": 2,
+        "N": 2
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.007676900847167545,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": true,
+        "Stable": true,
+        "U": true,
+        "hull": -0.014399351103515201,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.007676900847167545,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": false,
+      "accept_probability": 0.35071125626564026,
+      "learned_mode": 0,
+      "action": {
+        "mode": 3,
+        "name": "full_cell",
+        "positions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 795,
+      "composition": {
+        "La": 6,
+        "Sn": 10
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.015326431482177938,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": true,
+        "Stable": true,
+        "U": true,
+        "hull": -0.015502384393554891,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.015326431482177938,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": false,
+      "accept_probability": 0.4777727723121643,
+      "learned_mode": 0,
+      "action": {
+        "mode": 1,
+        "name": "local_xyz",
+        "positions": [
+          44,
+          45,
+          46
+        ],
+        "sites": [
+          9
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    },
+    {
+      "ordinal": 962,
+      "composition": {
+        "Br": 6,
+        "Li": 1,
+        "Rb": 2,
+        "Tl": 1
+      },
+      "before": {
+        "MS": true,
+        "MSUN": false,
+        "N": false,
+        "SUN": false,
+        "Stable": true,
+        "U": true,
+        "hull": -0.00827883061535628,
+        "known_failure": false,
+        "reliable": true
+      },
+      "proposal": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": false,
+        "Stable": false,
+        "U": true,
+        "hull": 0.05055023852221696,
+        "known_failure": false,
+        "reliable": true
+      },
+      "after": {
+        "MS": true,
+        "MSUN": true,
+        "N": true,
+        "SUN": false,
+        "Stable": false,
+        "U": true,
+        "hull": 0.05055023852221696,
+        "known_failure": false,
+        "reliable": true
+      },
+      "applied": true,
+      "accept_probability": 0.5062188506126404,
+      "learned_mode": 3,
+      "action": {
+        "mode": 3,
+        "name": "full_cell",
+        "positions": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          12,
+          13,
+          14,
+          16,
+          17,
+          18,
+          20,
+          21,
+          22,
+          24,
+          25,
+          26,
+          28,
+          29,
+          30,
+          32,
+          33,
+          34,
+          36,
+          37,
+          38,
+          40,
+          41,
+          42,
+          44,
+          45,
+          46
+        ],
+        "sites": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "current_terminal_status": "verified",
+      "proposal_terminal_status": "verified",
+      "final_terminal_status": "verified"
+    }
+  ],
+  "current_terminal_statuses": {
+    "verified": 998,
+    "generation_failure": 2
+  },
+  "current_reference_statuses": {
+    "known": 966,
+    "official_cache_unresolved": 32,
+    "input_not_reconstructed": 2
+  },
+  "proposal_terminal_statuses": {
+    "verified": 738,
+    "not_converged": 56,
+    "invalid_terminal": 204,
+    "generation_failure": 2
+  },
+  "proposal_reference_statuses": {
+    "known": 966,
+    "official_cache_unresolved": 32,
+    "input_not_reconstructed": 2
+  },
+  "edited_terminal_statuses": {
+    "verified": 941,
+    "invalid_terminal": 50,
+    "not_converged": 7,
+    "generation_failure": 2
+  },
+  "edited_reference_statuses": {
+    "known": 966,
+    "official_cache_unresolved": 32,
+    "input_not_reconstructed": 2
+  }
+}

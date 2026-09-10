@@ -10,7 +10,9 @@
 
 1000条检查确认1000个不同TRAIN来源、987个不同约化组成、与MAIN验证组成零重叠，保留原256条Plan/prompt/seed前缀。G从B0开始、E使用新初始化，不导入试验权重或验证反馈；采用旧偏好/局部提案/接受规则，关闭试验性历史教师、模式归一化、头续训和稠密T2T路径。固定配方和三份配置哈希见[启动回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_FROZEN_METHOD_AND_LAUNCH_20260910.json)。
 
-正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。两路RAW生成、物理标注和评分均已完成：S0主路Stable/SUN为25/25（各2.5%），第二RAW对照为19/19（各1.9%），分母均为1000。主路F/token和current的完整评分为Stable122、SUN105（12.2%/10.5%）；E0已新初始化并进行KEEP/EDIT，对照继续精修。S0最终输出及三次G/E更新尚未完成。
+正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。S0主路已完整结束：RAW为Stable25/SUN25，F/token及current为122/105，最终KEEP/EDIT为115/106，分母均为1000。第二RAW对照的RAW为19/19，已完成F800并进行token物理评价；后续三次G/E更新继续按计划执行。
+
+新初始化E0实际修改182条，获得1条Stable、损失8条，SUN获得1条、损失0。105条current SUN全部保留，八条Stable损失全部来自原本Stable但非SUN的输入；最终新增50条明确物理失败。唯一Stable晋升365被接受，另三条维持Stable并满足SUN的提案被拒绝。S0的SUN净增不能抵消Stable净损失，E0基线尚未显示整体稳定性收益；它只有初始化、没有训练更新，不能将该损失归因于KL停止。完整状态/哈希核验见[S0回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_COMPLETED_MAIN_20260910.json)，所有获得与损失的动作、概率和hull见[E0诊断](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_EDITOR_DIAGNOSIS_20260910.json)。
 
 F新增97条Stable、80条SUN，原有25条Stable/SUN全部保留。Stable晋升来自41条原明确物理失败、9条原未知和47条原可靠非Stable；80条SUN新增都同时发生Stable晋升。另17条Stable因N为假未成为SUN，其中1条同时U为假。新物理标签998条已验证、2条生成失败；32条已验证结构缺少官方参考，故完整评分保留34条未知。精修的800步、SUN直通和量化回退见[精修回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_MAIN_REFINEMENT_20260910.json)，逐条配对及案例见[F贡献分析](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_RAW_TO_TOKEN_ANALYSIS_20260910.json)。
 
