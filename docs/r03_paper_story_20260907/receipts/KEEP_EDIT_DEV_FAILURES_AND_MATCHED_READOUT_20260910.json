@@ -1,0 +1,992 @@
+{
+  "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility",
+  "FINAL_sealed": true,
+  "stages": {
+    "UTILITY": {
+      "receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/UTILITY_DEV_SELECTION_FINAL.json",
+      "receipt_sha256": "c53511a7ed1827a33dd14e99b5892248e203a3a73bf6628868e3414f75ce62ce",
+      "admitted_to_FINAL": false,
+      "selected": {
+        "dev": {
+          "KEEP": {
+            "MS": 135,
+            "MSUN": 115,
+            "SUN": 24,
+            "Stable": 29
+          },
+          "counts": {
+            "MS": 127,
+            "MSUN": 115,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 57,
+            "known_failure": 4,
+            "unknown": 11
+          },
+          "decision_sha256": "c4f5ee272055da2245a2093038b4b961a9bb82c9946d4f273497a6dbd5d42bad",
+          "delta": {
+            "MS": -8,
+            "MSUN": 0,
+            "SUN": 1,
+            "Stable": -1
+          },
+          "gains": {
+            "MS": [
+              557,
+              577,
+              973
+            ],
+            "MSUN": [
+              289,
+              557,
+              577,
+              604,
+              610,
+              962,
+              973
+            ],
+            "SUN": [
+              962
+            ],
+            "Stable": []
+          },
+          "losses": {
+            "MS": [
+              284,
+              343,
+              353,
+              437,
+              438,
+              510,
+              527,
+              584,
+              646,
+              892,
+              925
+            ],
+            "MSUN": [
+              353,
+              510,
+              527,
+              584,
+              646,
+              892,
+              925
+            ],
+            "SUN": [],
+            "Stable": [
+              438
+            ]
+          },
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/policies/utility_e32_m05",
+          "requests": 247,
+          "scores_sha256": "f6a19f5ce17be655a73b504b5f55b0f1e920320ae8af33e62dec65b0bf5b349f",
+          "split": "dev"
+        },
+        "epoch": 32,
+        "margin": 0.05
+      },
+      "candidates": [
+        {
+          "epoch": 4,
+          "margin": 0,
+          "counts": {
+            "MS": 133,
+            "MSUN": 118,
+            "SUN": 24,
+            "Stable": 28,
+            "actual_edits": 36,
+            "known_failure": 2,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -2,
+            "MSUN": 3,
+            "SUN": 0,
+            "Stable": -1
+          }
+        },
+        {
+          "epoch": 4,
+          "margin": 0.05,
+          "counts": {
+            "MS": 135,
+            "MSUN": 118,
+            "SUN": 24,
+            "Stable": 28,
+            "actual_edits": 26,
+            "known_failure": 2,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": 0,
+            "MSUN": 3,
+            "SUN": 0,
+            "Stable": -1
+          }
+        },
+        {
+          "epoch": 4,
+          "margin": 0.1,
+          "counts": {
+            "MS": 137,
+            "MSUN": 118,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 19,
+            "known_failure": 1,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": 2,
+            "MSUN": 3,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 4,
+          "margin": 0.2,
+          "counts": {
+            "MS": 134,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 5,
+            "known_failure": 0,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0,
+          "counts": {
+            "MS": 123,
+            "MSUN": 114,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 89,
+            "known_failure": 8,
+            "unknown": 14
+          },
+          "delta": {
+            "MS": -12,
+            "MSUN": -1,
+            "SUN": 1,
+            "Stable": -1
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0.05,
+          "counts": {
+            "MS": 130,
+            "MSUN": 116,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 52,
+            "known_failure": 3,
+            "unknown": 12
+          },
+          "delta": {
+            "MS": -5,
+            "MSUN": 1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0.1,
+          "counts": {
+            "MS": 134,
+            "MSUN": 118,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 32,
+            "known_failure": 2,
+            "unknown": 10
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": 3,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0.2,
+          "counts": {
+            "MS": 136,
+            "MSUN": 117,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 13,
+            "known_failure": 1,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": 1,
+            "MSUN": 2,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0,
+          "counts": {
+            "MS": 125,
+            "MSUN": 113,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 67,
+            "known_failure": 5,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -10,
+            "MSUN": -2,
+            "SUN": 1,
+            "Stable": -1
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0.05,
+          "counts": {
+            "MS": 130,
+            "MSUN": 117,
+            "SUN": 24,
+            "Stable": 28,
+            "actual_edits": 49,
+            "known_failure": 3,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -5,
+            "MSUN": 2,
+            "SUN": 0,
+            "Stable": -1
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0.1,
+          "counts": {
+            "MS": 134,
+            "MSUN": 119,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 38,
+            "known_failure": 2,
+            "unknown": 10
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": 4,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0.2,
+          "counts": {
+            "MS": 136,
+            "MSUN": 117,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 17,
+            "known_failure": 1,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": 1,
+            "MSUN": 2,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0,
+          "counts": {
+            "MS": 123,
+            "MSUN": 111,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 83,
+            "known_failure": 4,
+            "unknown": 13
+          },
+          "delta": {
+            "MS": -12,
+            "MSUN": -4,
+            "SUN": 1,
+            "Stable": -1
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0.05,
+          "counts": {
+            "MS": 127,
+            "MSUN": 115,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 57,
+            "known_failure": 4,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -8,
+            "MSUN": 0,
+            "SUN": 1,
+            "Stable": -1
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0.1,
+          "counts": {
+            "MS": 132,
+            "MSUN": 117,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 40,
+            "known_failure": 3,
+            "unknown": 10
+          },
+          "delta": {
+            "MS": -3,
+            "MSUN": 2,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0.2,
+          "counts": {
+            "MS": 135,
+            "MSUN": 117,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 20,
+            "known_failure": 2,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": 0,
+            "MSUN": 2,
+            "SUN": 0,
+            "Stable": 0
+          }
+        }
+      ],
+      "controls": {
+        "old_E3_canonical": {
+          "counts": {
+            "MS": 113,
+            "MSUN": 103,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 133,
+            "known_failure": 10,
+            "unknown": 18
+          },
+          "delta": {
+            "MS": -22,
+            "MSUN": -12,
+            "SUN": 1,
+            "Stable": -1
+          }
+        },
+        "old_E3_recorded": {
+          "counts": {
+            "MS": 113,
+            "MSUN": 103,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 133,
+            "known_failure": 10,
+            "unknown": 18
+          },
+          "delta": {
+            "MS": -22,
+            "MSUN": -12,
+            "SUN": 1,
+            "Stable": -1
+          }
+        }
+      }
+    },
+    "CONSENSUS": {
+      "receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/CONSENSUS_DEV_SELECTION_FINAL.json",
+      "receipt_sha256": "781c43fc63c7c10fa7d7a44e137b75695046fb1a586b5dbd31f5c8d4b86cdfcd",
+      "admitted_to_FINAL": false,
+      "selected": {
+        "dev": {
+          "KEEP": {
+            "MS": 135,
+            "MSUN": 115,
+            "SUN": 24,
+            "Stable": 29
+          },
+          "counts": {
+            "MS": 129,
+            "MSUN": 113,
+            "SUN": 25,
+            "Stable": 29,
+            "actual_edits": 26,
+            "known_failure": 3,
+            "unknown": 11
+          },
+          "decision_sha256": "0a84260a8bbdabdf709fbb46ba75cbe6e0f6e5d87c926947384688709b985759",
+          "delta": {
+            "MS": -6,
+            "MSUN": -2,
+            "SUN": 1,
+            "Stable": 0
+          },
+          "gains": {
+            "MS": [],
+            "MSUN": [
+              604,
+              962
+            ],
+            "SUN": [
+              962
+            ],
+            "Stable": []
+          },
+          "losses": {
+            "MS": [
+              284,
+              343,
+              353,
+              510,
+              527,
+              584
+            ],
+            "MSUN": [
+              353,
+              510,
+              527,
+              584
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/policies/consensus_e32_m05",
+          "requests": 247,
+          "scores_sha256": "a45407ba2ce7ca76980da055d5706f86ec7aad51fa6ed2448aede0b14c6e7723",
+          "split": "dev"
+        },
+        "epoch": 32,
+        "margin": 0.05
+      },
+      "candidates": [
+        {
+          "epoch": 4,
+          "margin": 0,
+          "counts": {
+            "MS": 131,
+            "MSUN": 113,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 19,
+            "known_failure": 2,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -4,
+            "MSUN": -2,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 4,
+          "margin": 0.05,
+          "counts": {
+            "MS": 133,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 11,
+            "known_failure": 2,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": -2,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 4,
+          "margin": 0.1,
+          "counts": {
+            "MS": 134,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 6,
+            "known_failure": 1,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 4,
+          "margin": 0.2,
+          "counts": {
+            "MS": 134,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 2,
+            "known_failure": 0,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0,
+          "counts": {
+            "MS": 123,
+            "MSUN": 110,
+            "SUN": 25,
+            "Stable": 29,
+            "actual_edits": 57,
+            "known_failure": 7,
+            "unknown": 14
+          },
+          "delta": {
+            "MS": -12,
+            "MSUN": -5,
+            "SUN": 1,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0.05,
+          "counts": {
+            "MS": 128,
+            "MSUN": 111,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 29,
+            "known_failure": 2,
+            "unknown": 12
+          },
+          "delta": {
+            "MS": -7,
+            "MSUN": -4,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0.1,
+          "counts": {
+            "MS": 131,
+            "MSUN": 113,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 17,
+            "known_failure": 2,
+            "unknown": 10
+          },
+          "delta": {
+            "MS": -4,
+            "MSUN": -2,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 8,
+          "margin": 0.2,
+          "counts": {
+            "MS": 134,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 4,
+            "known_failure": 1,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0,
+          "counts": {
+            "MS": 127,
+            "MSUN": 111,
+            "SUN": 25,
+            "Stable": 29,
+            "actual_edits": 33,
+            "known_failure": 4,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -8,
+            "MSUN": -4,
+            "SUN": 1,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0.05,
+          "counts": {
+            "MS": 129,
+            "MSUN": 112,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 21,
+            "known_failure": 2,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -6,
+            "MSUN": -3,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0.1,
+          "counts": {
+            "MS": 132,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 16,
+            "known_failure": 1,
+            "unknown": 10
+          },
+          "delta": {
+            "MS": -3,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 16,
+          "margin": 0.2,
+          "counts": {
+            "MS": 134,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 4,
+            "known_failure": 1,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0,
+          "counts": {
+            "MS": 125,
+            "MSUN": 109,
+            "SUN": 25,
+            "Stable": 29,
+            "actual_edits": 47,
+            "known_failure": 3,
+            "unknown": 13
+          },
+          "delta": {
+            "MS": -10,
+            "MSUN": -6,
+            "SUN": 1,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0.05,
+          "counts": {
+            "MS": 129,
+            "MSUN": 113,
+            "SUN": 25,
+            "Stable": 29,
+            "actual_edits": 26,
+            "known_failure": 3,
+            "unknown": 11
+          },
+          "delta": {
+            "MS": -6,
+            "MSUN": -2,
+            "SUN": 1,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0.1,
+          "counts": {
+            "MS": 131,
+            "MSUN": 113,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 16,
+            "known_failure": 2,
+            "unknown": 10
+          },
+          "delta": {
+            "MS": -4,
+            "MSUN": -2,
+            "SUN": 0,
+            "Stable": 0
+          }
+        },
+        {
+          "epoch": 32,
+          "margin": 0.2,
+          "counts": {
+            "MS": 134,
+            "MSUN": 114,
+            "SUN": 24,
+            "Stable": 29,
+            "actual_edits": 4,
+            "known_failure": 1,
+            "unknown": 9
+          },
+          "delta": {
+            "MS": -1,
+            "MSUN": -1,
+            "SUN": 0,
+            "Stable": 0
+          }
+        }
+      ],
+      "controls": {
+        "old_E3_canonical": {
+          "counts": {
+            "MS": 113,
+            "MSUN": 103,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 133,
+            "known_failure": 10,
+            "unknown": 18
+          },
+          "delta": {
+            "MS": -22,
+            "MSUN": -12,
+            "SUN": 1,
+            "Stable": -1
+          }
+        },
+        "old_E3_recorded": {
+          "counts": {
+            "MS": 113,
+            "MSUN": 103,
+            "SUN": 25,
+            "Stable": 28,
+            "actual_edits": 133,
+            "known_failure": 10,
+            "unknown": 18
+          },
+          "delta": {
+            "MS": -22,
+            "MSUN": -12,
+            "SUN": 1,
+            "Stable": -1
+          }
+        }
+      }
+    }
+  },
+  "matched_readout_training": {
+    "all_content_scope_and_quality_hidden_parameters_frozen": true,
+    "complete_passes": 64,
+    "data_manifest_sha256": "63bb248e33c007830e5b9d9de36e58a51b86e54075ddffc4d44ca02759c932af",
+    "data_sha256": "c0b8464ea677597a8cecbeb1306d2e7dff42a05c80ce54a71ff9e73f3d6c226a",
+    "initial_old_head_max_abs_error": 2.384185791015625e-7,
+    "maximum_row_visits": 64,
+    "minimum_row_visits": 64,
+    "no_DEV_FINAL_supervision": true,
+    "optimized_parameter_count": 129,
+    "optimized_parameters": "quality_head.layers.2.weight[3] and quality_head.layers.2.bias[3] only",
+    "optimizer_steps": 1536,
+    "original_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+    "other_quality_outputs_unchanged": true,
+    "schema": "matched_continuous_frozen_quality_readout_v1",
+    "settings": {
+      "batch_size": 256,
+      "epochs": 64,
+      "hidden_standard_deviation_floor": 0.0001,
+      "historical_group_weight": 0.5,
+      "learning_rate": 0.001,
+      "matched_group_weight": 0.5,
+      "ridge_coefficient": 0.1,
+      "seed": 20260910,
+      "snapshots": [
+        8,
+        16,
+        32,
+        64
+      ],
+      "thresholds": [
+        0,
+        0.05,
+        0.1,
+        0.2
+      ]
+    },
+    "snapshots": {
+      "8": {
+        "complete_passes": 8,
+        "optimizer_steps": 192,
+        "parameter_delta_squared": 2.7047492215363143,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/readout_matched/result/quality_head_epoch8.pt",
+        "sha256": "4fededaaf1a30430f64a705f20cfe1cd846d907bbe2aeeb560ff85ae5472c786",
+        "standardization_fold_max_abs_error": 1.5273690223693848e-7
+      },
+      "16": {
+        "complete_passes": 16,
+        "optimizer_steps": 384,
+        "parameter_delta_squared": 3.3050104995304874,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/readout_matched/result/quality_head_epoch16.pt",
+        "sha256": "ff0f962ca6ea8be9064720ff78c241ea45fb3a66013c2d27aedbbf99967c6309",
+        "standardization_fold_max_abs_error": 1.7881393432617188e-7
+      },
+      "32": {
+        "complete_passes": 32,
+        "optimizer_steps": 768,
+        "parameter_delta_squared": 4.012692749198815,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/readout_matched/result/quality_head_epoch32.pt",
+        "sha256": "04bb9383c0ade0eeb38e718b21feaca503e99db04498557611a907b2c1cac6b7",
+        "standardization_fold_max_abs_error": 2.2351741790771484e-7
+      },
+      "64": {
+        "complete_passes": 64,
+        "optimizer_steps": 1536,
+        "parameter_delta_squared": 4.118619780360063,
+        "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/readout_matched/result/quality_head_epoch64.pt",
+        "sha256": "85701d7703fc8705383be3fcbb4d375524a2231ac3693d11e83bfbcb53f1d2e7",
+        "standardization_fold_max_abs_error": 2.086162567138672e-7
+      }
+    },
+    "status": "complete",
+    "train_rows": 6131,
+    "train_sources": 492,
+    "training_seconds": 7.237918255850673,
+    "receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/readout_matched/result/TRAINING_FINAL.json",
+    "receipt_sha256": "10337321ffa7f92bc714bb933a69e73eb6e29b4070fe8f9c3402caa388ca8cfc"
+  },
+  "matched_readout_data": {
+    "data_sha256": "c0b8464ea677597a8cecbeb1306d2e7dff42a05c80ce54a71ff9e73f3d6c226a",
+    "exclusions": {
+      "matched_unknown_physics_or_novelty": 38
+    },
+    "historical_rows": 5664,
+    "historical_target_counts": {
+      "0": 4549,
+      "1": 215,
+      "2": 11,
+      "-2": 87,
+      "-1": 802
+    },
+    "matched_rows": 467,
+    "matched_sources": 467,
+    "matched_target_counts": {
+      "0": 364,
+      "1": 46,
+      "2": 3,
+      "-1": 54
+    },
+    "no_DEV_FINAL_supervision": true,
+    "representation_domains_kept_distinct": true,
+    "rows": 6131,
+    "sources": 492,
+    "receipt_sha256": "63bb248e33c007830e5b9d9de36e58a51b86e54075ddffc4d44ca02759c932af"
+  },
+  "DEV_962": {
+    "directed_pairs": {
+      "hybrid_proposal_terminal->native_input": true,
+      "native_input->hybrid_proposal_input": false,
+      "native_input->hybrid_proposal_terminal": true,
+      "native_terminal->hybrid_proposal_terminal": true
+    },
+    "formula": "Rb2LiTlBr6",
+    "matcher": {
+      "@class": "StructureMatcher",
+      "@module": "pymatgen.analysis.structure_matcher",
+      "allow_subset": false,
+      "angle_tol": 5,
+      "attempt_supercell": false,
+      "comparator": {
+        "@class": "SpeciesComparator",
+        "@module": "pymatgen.analysis.structure_matcher",
+        "version": "1.0"
+      },
+      "ignored_species": [],
+      "ltol": 0.2,
+      "primitive_cell": true,
+      "scale": true,
+      "stol": 0.3,
+      "supercell_size": "num_sites",
+      "version": "1.0"
+    },
+    "ordinal": 962,
+    "physical": {
+      "hybrid_proposal": {
+        "actual_steps": 42,
+        "raw_energy": -0.219437837600708,
+        "status": "verified",
+        "terminal_energy": -3.1351871490478516
+      },
+      "native": {
+        "actual_steps": 9,
+        "raw_energy": -3.1358139514923096,
+        "status": "verified",
+        "terminal_energy": -3.140882968902588
+      }
+    },
+    "primary_metrics_changed": false,
+    "split": "dev",
+    "receipt_sha256": "5e8f6debe90b9561238538cdd2a1a9e332505204e0820f17fae1078a3198ea53"
+  }
+}

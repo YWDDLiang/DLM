@@ -6,7 +6,11 @@
 
 第一阶段接受头已完成真实训练：5664条配对来自492个TRAIN来源，完整32遍、736步，每行覆盖32次；旧E3内容/范围参数哈希保持一致，缓存特征精确复现原头。226条正收益中只有34条涉及新颖Stable晋升，来自22个来源（其中7个是新TRAIN来源），显示SUN有效监督仍稀疏。连续KEEP的TRAIN为57 Stable/51 SUN/245 MSUN，DEV为29/24/115；相对token KEEP，TRAIN为0/0/+4、DEV为+1/0/0。无损保存本身尚未证明SUN增益。见[登记及训练回执](docs/r03_paper_story_20260907/receipts/KEEP_EDIT_FOCUS_REGISTRATION_AND_TRAINING_20260910.json)。
 
-旧头完整提案判断与原解码批次记录的最高概率差约0.0088；重建原批次的5个案例中4个逐位一致、1个仅差约6e-8，固定16条判断批次5个全部一致。新旧头使用同一固定判断方式，同时保留原旧头执行作对照；这项执行差异不计作训练收益。见[批次复核](docs/r03_paper_story_20260907/receipts/KEEP_EDIT_JUDGEMENT_BATCH_AUDIT_20260910.json)。897个实际混合提案的完整物理标签仍在运行，16个预定DEV策略待评价；所有候选若不能在DEV上同时提高SUN和MSUN，FINAL继续封存。
+旧头完整提案判断与原解码批次记录的最高概率差约0.0088；重建原批次的5个案例中4个逐位一致、1个仅差约6e-8，固定16条判断批次5个全部一致。新旧头使用同一固定判断方式，同时保留原旧头执行作对照；这项执行差异不计作训练收益。见[批次复核](docs/r03_paper_story_20260907/receipts/KEEP_EDIT_JUDGEMENT_BATCH_AUDIT_20260910.json)。实际混合提案物理评价现已完成，纯收益头和双头交集共32个DEV策略均未同时提高SUN、MSUN，FINAL继续封存。
+
+DEV连续KEEP为29 Stable/24 SUN/115 MSUN；旧E3为28/25/103，纯收益阶段被选失败候选为28/25/115，双头交集为29/25/113。DEV提案没有真正的Stable晋升，唯一SUN新增962来自已有Stable结构的输入N变化；前后共同弛豫终态在同一匹配器下相同，不能写成新稳定结构发现。完整失败与案例分析见[专注实验结果](docs/r03_paper_story_20260907/KEEP_EDIT_FOCUS_RESULTS_20260910.md)。
+
+第三阶段已按[匹配监督计划](docs/r03_paper_story_20260907/KEEP_EDIT_MATCHED_READOUT_PLAN_20260910.md)加入467条当前连续TRAIN配对，与历史数据合计6131条、492来源；只更新129个末层参数，完成64遍、1536步，DEV/FINAL未进入监督。其16个预定DEV策略正在评分，未有FINAL采用结论。实际覆盖与前两阶段失败回执见[记录](docs/r03_paper_story_20260907/receipts/KEEP_EDIT_DEV_FAILURES_AND_MATCHED_READOUT_20260910.json)。
 
 2026-09-10最新状态：1000条运行已按用户要求于北京时间12:57:35完成S1并暂停，S0/S1和G1/E1均已核验归档；G2/E2/G3/E3未运行。调度已退出，本次运行没有活动Slurm作业。后续集中改进KEEP/EDIT的SUN与MSUN。原预算、已完成科学结果及三轮原计划均保留，见[暂停完成回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_PAUSED_AFTER_S1_20260910.json)。
 
