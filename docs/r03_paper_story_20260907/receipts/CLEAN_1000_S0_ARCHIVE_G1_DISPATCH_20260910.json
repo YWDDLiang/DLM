@@ -1,0 +1,125 @@
+{
+  "budget_dispatch_start_utc": "2026-09-09T22:01:15.570418+00:00",
+  "S0_completion_marker_mtime_utc": "2026-09-10T01:26:37.946678+00:00",
+  "S0_wall_seconds_from_dispatch": 12322.37626,
+  "S0_coordinator_attempt_seconds": 5494.508549006656,
+  "S0_marker_sha256": "764c9893effe5e64f4f80e91795bdc96b4be71d02dc5976e64b1a40ab5ca9141",
+  "budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+  "S0_archive_manifest_sha256": "d59bde85b909473da4abe49bb125f7a53c15e689658152928f45dedbb6b3768e",
+  "S0_archive_files": {
+    "TRAJECTORIES.jsonl.gz": {
+      "bytes": 4891763,
+      "sha256": "90c9fa57d4875e19b6dbdb8989f03ec315cef2c3fb9d168e0c1a3999a1c4f96b"
+    },
+    "PHYSICS_LABELS.jsonl.gz": {
+      "bytes": 338152609,
+      "sha256": "bd851232f10331ee6754101f16d81daf1da63d96288725be3bd6badcbd62e6a1"
+    },
+    "G_PAIRS.jsonl": {
+      "bytes": 3186408,
+      "sha256": "5099e26eca68deb2a7eb2b9e044381e4e0e21fa03cd17888603927f45ba4e355"
+    },
+    "DATASET_MANIFEST.json": {
+      "bytes": 4238,
+      "sha256": "d59bde85b909473da4abe49bb125f7a53c15e689658152928f45dedbb6b3768e"
+    }
+  },
+  "G1_job": {
+    "job_id": "41785",
+    "job": "train_G1",
+    "command": [
+      "sbatch",
+      "--parsable",
+      "--no-requeue",
+      "--partition=gpu",
+      "--job-name=train_G1",
+      "--nodes=1",
+      "--ntasks=1",
+      "--cpus-per-task=24",
+      "--gres=gpu:NVIDIAA800-SXM4-80GB:6",
+      "--mem=576G",
+      "--time=30",
+      "--chdir=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "--output=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/logs/train_G1_%A_%a.out",
+      "--error=/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/logs/train_G1_%A_%a.err",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/submissions/train_G1.sbatch"
+    ],
+    "manifest": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/submissions/train_G1.5ab2f43a17db60c1.manifest.json",
+    "manifest_sha256": "5ab2f43a17db60c1ab161621fd61eadae437497fe25c6129e052367023a13a69",
+    "fingerprint": "77ec19fd8fd70c37965871daeb1c29635dc572668fd54a01d8ee50ff7bba45dc",
+    "submitted_utc": "2026-09-10T01:29:02.055141+00:00",
+    "max_parallel_tasks": 1,
+    "allocation_mode": "array",
+    "gpus_per_allocation": 6,
+    "cpus_per_allocation": 24,
+    "allocation_wall_minutes": 30,
+    "gpus_per_task": 6,
+    "cpus_per_task": 24,
+    "queue_before": [],
+    "gpu_budget_applied": 6,
+    "worst_end_utc": "2026-09-10T01:59:02.055141+00:00",
+    "absolute_stop_utc": "2026-09-10T10:01:15.570418+00:00",
+    "runtime_cutoff_enforced": true
+  },
+  "G1_manifest_source": {
+    "source_root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "source_identity": {
+      "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+    }
+  },
+  "G1_requested_GPUs": 6,
+  "training_config_sha256": "94f0dcdccff5068612804742600fe7da37f01fb2f74de6cf546f38ad1c60783b",
+  "twin_metrics": {
+    "construction": {
+      "exclusive_MetaStable": 105,
+      "input_sha256": "7554af2363b42b610c8e12530ebffdb47182601cf545048f1f875e0fd77a52ab",
+      "known_physical_failure": 509,
+      "reliable_SUN": 19,
+      "requested": 1000,
+      "score_sha256": "aa0d2d409754d7e497482a375df6a53002781096547e93fccfe6d507335d0100",
+      "stage": "construction",
+      "strict_Stable": 19,
+      "unknown": 108,
+      "unstable": 259
+    },
+    "tokenized": {
+      "exclusive_MetaStable": 448,
+      "input_sha256": "cac6fc0b6ea598544aa7b6230f37195d52db544cf47ccbf4d9e520c2911283b4",
+      "known_physical_failure": 2,
+      "reliable_SUN": 106,
+      "requested": 1000,
+      "score_sha256": "0862270f418469267c08f0d797c5b4d120d40f1d6873c740041bb8acc2b641d1",
+      "stage": "tokenized",
+      "strict_Stable": 122,
+      "unknown": 35,
+      "unstable": 393
+    },
+    "current": {
+      "exclusive_MetaStable": 448,
+      "input_sha256": "6d175dcfa7d83efdc40ca046d7d209e38292a94f72619cba1a9747915fda8d86",
+      "known_physical_failure": 2,
+      "reliable_SUN": 106,
+      "requested": 1000,
+      "score_sha256": "4910157de0e8c5968efbd71d068c4129f18c00b1638c14a2c0adfa010754ff5b",
+      "stage": "current",
+      "strict_Stable": 122,
+      "unknown": 35,
+      "unstable": 393
+    }
+  },
+  "twin_label_summary": {
+    "requested": 1000,
+    "completed": 1000,
+    "statuses": {
+      "verified": 995,
+      "invalid_terminal": 2,
+      "generation_failure": 3
+    },
+    "cached_endpoints": 21,
+    "generation_failures_without_model_calls": 3,
+    "new_endpoint_evaluations": 976,
+    "elapsed_seconds": 714.0206408016384
+  },
+  "schema": "clean_1000_S0_archive_and_G1_dispatch_v1"
+}

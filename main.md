@@ -10,7 +10,9 @@
 
 1000条检查确认1000个不同TRAIN来源、987个不同约化组成、与MAIN验证组成零重叠，保留原256条Plan/prompt/seed前缀。G从B0开始、E使用新初始化，不导入试验权重或验证反馈；采用旧偏好/局部提案/接受规则，关闭试验性历史教师、模式归一化、头续训和稠密T2T路径。固定配方和三份配置哈希见[启动回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_FROZEN_METHOD_AND_LAUNCH_20260910.json)。
 
-正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。S0主路已完整结束：RAW为Stable25/SUN25，F/token及current为122/105，最终KEEP/EDIT为115/106，分母均为1000。第二RAW对照的RAW为19/19，已完成F800并进行token物理评价；后续三次G/E更新继续按计划执行。
+正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。S0及对照已完整结束并归档：主路RAW为Stable25/SUN25，F/token及current为122/105，最终KEEP/EDIT为115/106；对照RAW19/19、F/current122/106，分母均为1000。S0从原调度起累计约3小时25分22秒，不能用重启后进程计时替代总耗时。
+
+G1已完成20个真实优化器步，822个有效TRAIN样本各参与4次内容更新，六张卡均未触发KL停止，参数确有变化且检查点验证通过。S1生成已开始；六次G/E更新目前完成G1一次，后续继续固定流程。数据来源、实际覆盖和检查点哈希见[G1数据回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_G1_DATA_AUDIT_20260910.json)及[更新回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_G1_WEIGHT_UPDATE_20260910.json)。
 
 新初始化E0实际修改182条，获得1条Stable、损失8条，SUN获得1条、损失0。105条current SUN全部保留，八条Stable损失全部来自原本Stable但非SUN的输入；最终新增50条明确物理失败。唯一Stable晋升365被接受，另三条维持Stable并满足SUN的提案被拒绝。S0的SUN净增不能抵消Stable净损失，E0基线尚未显示整体稳定性收益；它只有初始化、没有训练更新，不能将该损失归因于KL停止。完整状态/哈希核验见[S0回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_COMPLETED_MAIN_20260910.json)，所有获得与损失的动作、概率和hull见[E0诊断](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S0_EDITOR_DIAGNOSIS_20260910.json)。
 
