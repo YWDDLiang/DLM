@@ -1,0 +1,15 @@
+{
+  "schema": "inference_information_boundary_correction_v1",
+  "requirement": "Autonomous inference uses generated Plan, current structure, model outputs and learned parameters. Physical experts and evaluation feedback are offline supervision or post-output evaluation.",
+  "finding": "Several SUN-ranker experiments supplied measured current stability, metastability, novelty, hull, verification and raw MLIP summaries as observable extras. The measured-current expected-utility variant also used the measured current NS/NMS reward as the KEEP reference.",
+  "affected_claim_scope": "These numerical results remain valid controlled experiments conditional on current physical feedback, but do not demonstrate the required autonomous inference path.",
+  "retained_evidence": "Keep original outputs, configurations, weights and results with the current-feedback condition stated. Preserve the independently effective content-learning, position-learning and continuous-representation changes.",
+  "correction": {
+    "model_inputs": ["Plan/current/proposal/action DLM features", "geometry computed from current and proposal"],
+    "forbidden_runtime_inputs": ["measured current NS/NMS or SUN/MSUN", "measured hull", "measured verification outcome", "MLIP forces/stresses", "candidate physical labels"],
+    "supervision": "Reliable TRAIN physical labels only; not passed as model inputs.",
+    "selection": "Learn the current and candidate values and compare their difference with exact zero-change KEEP.",
+    "verification": "Deny reads of physical labeling/scoring result files during model inference and output selection, then evaluate the selected outputs.",
+    "formal_pipeline": "Autonomous decisions; no measured-current SUN gate in G/F/E selection. Evaluation remains separate from request inference."
+  }
+}
