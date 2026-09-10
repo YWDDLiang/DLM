@@ -1,0 +1,3651 @@
+{
+  "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility",
+  "formal": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/analysis/FINAL_AND_REPEATS_COMPLETE.json",
+    "sha256": "89e253c836652549896e1faaa5bcc7f395589b495114216812f4026865b03dba",
+    "data": {
+      "composition_admission_sha256": "0ad7315d05b984ed0671cb0b4dbec82c011ce8d016087e91328ca7877a475dc6",
+      "excluded_original_FINAL": [
+        300
+      ],
+      "metadata_based_strict_subset_is_an_additional_audit": true,
+      "no_weight_threshold_or_seed_reselection": true,
+      "original_cohort_metrics_preserved": true,
+      "pending": [],
+      "reports": {
+        "old_E3": {
+          "registered_FINAL": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 126,
+              "MSUN": 113,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 124,
+              "known_failure": 12,
+              "unknown": 17
+            },
+            "decision_sha256": "6bd3bb756b38905e35f882db3cc1db3500bbad669cfa6304b4d46080c1e4db44",
+            "delta": {
+              "MS": -20,
+              "MSUN": -9,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                393,
+                565
+              ],
+              "MSUN": [
+                309,
+                393,
+                491,
+                531,
+                565,
+                696,
+                705,
+                716,
+                733
+              ],
+              "SUN": [
+                705
+              ],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                256,
+                323,
+                412,
+                416,
+                455,
+                467,
+                483,
+                497,
+                523,
+                553,
+                562,
+                599,
+                611,
+                625,
+                641,
+                661,
+                663,
+                670,
+                768,
+                778,
+                879,
+                896
+              ],
+              "MSUN": [
+                256,
+                323,
+                416,
+                483,
+                497,
+                523,
+                553,
+                562,
+                599,
+                611,
+                625,
+                641,
+                661,
+                663,
+                670,
+                768,
+                778,
+                896
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 247,
+            "scores_sha256": "110923e27c54568bce05168c795acbd7abf01a6611300545ae1417376ec3bae1"
+          },
+          "strict_composition_FINAL": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 125,
+              "MSUN": 112,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 124,
+              "known_failure": 12,
+              "unknown": 17
+            },
+            "decision_sha256": "6bd3bb756b38905e35f882db3cc1db3500bbad669cfa6304b4d46080c1e4db44",
+            "delta": {
+              "MS": -20,
+              "MSUN": -9,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                393,
+                565
+              ],
+              "MSUN": [
+                309,
+                393,
+                491,
+                531,
+                565,
+                696,
+                705,
+                716,
+                733
+              ],
+              "SUN": [
+                705
+              ],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                256,
+                323,
+                412,
+                416,
+                455,
+                467,
+                483,
+                497,
+                523,
+                553,
+                562,
+                599,
+                611,
+                625,
+                641,
+                661,
+                663,
+                670,
+                768,
+                778,
+                879,
+                896
+              ],
+              "MSUN": [
+                256,
+                323,
+                416,
+                483,
+                497,
+                523,
+                553,
+                562,
+                599,
+                611,
+                625,
+                641,
+                661,
+                663,
+                670,
+                768,
+                778,
+                896
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 246,
+            "scores_sha256": "110923e27c54568bce05168c795acbd7abf01a6611300545ae1417376ec3bae1"
+          }
+        },
+        "primary": {
+          "registered_FINAL": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 141,
+              "MSUN": 125,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 52,
+              "known_failure": 5,
+              "unknown": 14
+            },
+            "decision_sha256": "7af7561a5c27695d92be70a2466ba6498605bc0a59d3854fa68e155abae87a95",
+            "delta": {
+              "MS": -5,
+              "MSUN": 3,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                277,
+                393,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                393,
+                689,
+                696,
+                716,
+                733,
+                754,
+                859
+              ],
+              "SUN": [
+                493
+              ],
+              "Stable": [
+                493
+              ]
+            },
+            "losses": {
+              "MS": [
+                256,
+                467,
+                483,
+                523,
+                544,
+                562,
+                649,
+                761,
+                766
+              ],
+              "MSUN": [
+                256,
+                483,
+                523,
+                562,
+                649,
+                766
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 247,
+            "scores_sha256": "8292d61fe06fff80ee9afca18ef4fb6862a8f17227d5069f2e2f3cdd70c985da"
+          },
+          "strict_composition_FINAL": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 140,
+              "MSUN": 124,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 52,
+              "known_failure": 5,
+              "unknown": 14
+            },
+            "decision_sha256": "7af7561a5c27695d92be70a2466ba6498605bc0a59d3854fa68e155abae87a95",
+            "delta": {
+              "MS": -5,
+              "MSUN": 3,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                277,
+                393,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                393,
+                689,
+                696,
+                716,
+                733,
+                754,
+                859
+              ],
+              "SUN": [
+                493
+              ],
+              "Stable": [
+                493
+              ]
+            },
+            "losses": {
+              "MS": [
+                256,
+                467,
+                483,
+                523,
+                544,
+                562,
+                649,
+                761,
+                766
+              ],
+              "MSUN": [
+                256,
+                483,
+                523,
+                562,
+                649,
+                766
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 246,
+            "scores_sha256": "8292d61fe06fff80ee9afca18ef4fb6862a8f17227d5069f2e2f3cdd70c985da"
+          }
+        },
+        "repeat1": {
+          "registered_FINAL": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 137,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 31,
+              "actual_edits": 50,
+              "known_failure": 9,
+              "unknown": 10
+            },
+            "decision_sha256": "a057cbc28e49e733d3e771b46f13c6952a41cd946c54a8f53458cbb5aed1cd6b",
+            "delta": {
+              "MS": -9,
+              "MSUN": -1,
+              "SUN": 0,
+              "Stable": -1
+            },
+            "gains": {
+              "MS": [
+                277,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                544,
+                689,
+                696,
+                716,
+                733,
+                859
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                256,
+                348,
+                440,
+                467,
+                483,
+                523,
+                665,
+                754,
+                761,
+                766,
+                850,
+                893
+              ],
+              "MSUN": [
+                256,
+                348,
+                440,
+                483,
+                523,
+                665,
+                766,
+                850,
+                893
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 247,
+            "scores_sha256": "c1ad4babf8a90cc0abac8bf923cd9d7781c25fa6c9dcf8e8120b81add1dc1052"
+          },
+          "strict_composition_FINAL": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 136,
+              "MSUN": 120,
+              "SUN": 28,
+              "Stable": 31,
+              "actual_edits": 50,
+              "known_failure": 9,
+              "unknown": 10
+            },
+            "decision_sha256": "a057cbc28e49e733d3e771b46f13c6952a41cd946c54a8f53458cbb5aed1cd6b",
+            "delta": {
+              "MS": -9,
+              "MSUN": -1,
+              "SUN": 0,
+              "Stable": -1
+            },
+            "gains": {
+              "MS": [
+                277,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                544,
+                689,
+                696,
+                716,
+                733,
+                859
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                256,
+                348,
+                440,
+                467,
+                483,
+                523,
+                665,
+                754,
+                761,
+                766,
+                850,
+                893
+              ],
+              "MSUN": [
+                256,
+                348,
+                440,
+                483,
+                523,
+                665,
+                766,
+                850,
+                893
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 246,
+            "scores_sha256": "c1ad4babf8a90cc0abac8bf923cd9d7781c25fa6c9dcf8e8120b81add1dc1052"
+          }
+        },
+        "repeat2": {
+          "registered_FINAL": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 141,
+              "MSUN": 124,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 53,
+              "known_failure": 6,
+              "unknown": 12
+            },
+            "decision_sha256": "24e9fd2700752518f42ecc5f1d4245a53dc664343cd3fa5b65d922bc4cd92fd1",
+            "delta": {
+              "MS": -5,
+              "MSUN": 2,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                282,
+                679,
+                689,
+                859
+              ],
+              "MSUN": [
+                282,
+                285,
+                679,
+                689,
+                696,
+                716,
+                859
+              ],
+              "SUN": [
+                974
+              ],
+              "Stable": [
+                974
+              ]
+            },
+            "losses": {
+              "MS": [
+                467,
+                493,
+                523,
+                649,
+                733,
+                754,
+                761,
+                766,
+                893
+              ],
+              "MSUN": [
+                493,
+                523,
+                649,
+                766,
+                893
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 247,
+            "scores_sha256": "196176e6d938a139684f20ee0f8e965ff144cbc15078a726a1bc438ed8376c44"
+          },
+          "strict_composition_FINAL": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 140,
+              "MSUN": 123,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 53,
+              "known_failure": 6,
+              "unknown": 12
+            },
+            "decision_sha256": "24e9fd2700752518f42ecc5f1d4245a53dc664343cd3fa5b65d922bc4cd92fd1",
+            "delta": {
+              "MS": -5,
+              "MSUN": 2,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                282,
+                679,
+                689,
+                859
+              ],
+              "MSUN": [
+                282,
+                285,
+                679,
+                689,
+                696,
+                716,
+                859
+              ],
+              "SUN": [
+                974
+              ],
+              "Stable": [
+                974
+              ]
+            },
+            "losses": {
+              "MS": [
+                467,
+                493,
+                523,
+                649,
+                733,
+                754,
+                761,
+                766,
+                893
+              ],
+              "MSUN": [
+                493,
+                523,
+                649,
+                766,
+                893
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 246,
+            "scores_sha256": "196176e6d938a139684f20ee0f8e965ff144cbc15078a726a1bc438ed8376c44"
+          }
+        }
+      },
+      "schema": "frozen_E_primary_and_repeated_FINAL_audit_v1",
+      "selection_sha256": "b98ef8aeb010a0f9bcaf6f74728855e41c0734228029c23d8421e4487f20ee48",
+      "strict_subset_repeated_uncertainty": {
+        "all_three_SUN_and_MSUN_strictly_positive": false,
+        "bootstrap_replicates": 10000,
+        "bootstrap_seed": 20260910,
+        "composition_clusters": 245,
+        "does_not_quantify_CHGNet_or_hull_reference_uncertainty": true,
+        "inference_scope": "sampling uncertainty conditional on the fixed model, observed input cohort, physical protocol and three E seeds",
+        "mean_net_count": {
+          "MS": -6.333333333333333,
+          "MSUN": 1.3333333333333333,
+          "SUN": 0.6666666666666666,
+          "Stable": -0.3333333333333333
+        },
+        "mean_percentage_point_delta": {
+          "MS": -2.574525745257452,
+          "MSUN": 0.5420054200542002,
+          "SUN": 0.27100271002710025,
+          "Stable": -0.13550135501355018
+        },
+        "paired_composition_cluster_bootstrap_95pct_percentage_point_interval": {
+          "MS": [
+            -5.149051490514904,
+            -0.13550135501355018
+          ],
+          "MSUN": [
+            -2.0325203252032527,
+            3.2520325203252027
+          ],
+          "SUN": [
+            0,
+            0.6802721088435374
+          ],
+          "Stable": [
+            -1.214574898785425,
+            0.5442176870748299
+          ]
+        },
+        "sources": 246,
+        "streams": [
+          "primary",
+          "repeat1",
+          "repeat2"
+        ]
+      }
+    }
+  },
+  "resource": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/analysis/FOCUS_RESOURCE_USAGE_FINAL.json",
+    "sha256": "55eb9d6a03ee59b1044241604b3d4e556084cbf3fd6fa024c8c42b7d12b5edd2",
+    "data": {
+      "CPU_hours": 16.631111111111107,
+      "GPU_hours": 3.140555555555555,
+      "all_jobs_finished": true,
+      "all_registered_jobs_accounted": true,
+      "failed_jobs": [
+        "42017",
+        "42023",
+        "42024",
+        "42030",
+        "42038"
+      ],
+      "job_count": 37,
+      "jobs": [
+        {
+          "CPU_hours": 1.7466666666666666,
+          "CPUs": 12,
+          "GPU_hours": 0.43666666666666665,
+          "GPUs": 3,
+          "end": "2026-09-10T14:11:23",
+          "job_id": "42011",
+          "name": "focus_native_label",
+          "seconds": 524,
+          "start": "2026-09-10T14:02:39",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.4066666666666667,
+          "CPUs": 8,
+          "GPU_hours": 0.10166666666666667,
+          "GPUs": 2,
+          "end": "2026-09-10T14:05:42",
+          "job_id": "42012",
+          "name": "focus_oldE3_edit",
+          "seconds": 183,
+          "start": "2026-09-10T14:02:39",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 4.2188888888888885,
+          "CPUs": 4,
+          "GPU_hours": 1.0547222222222221,
+          "GPUs": 1,
+          "end": "2026-09-10T15:15:35",
+          "job_id": "42015",
+          "name": "focus_hybrid_label",
+          "seconds": 3797,
+          "start": "2026-09-10T14:12:18",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.02,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T14:13:17",
+          "job_id": "42017",
+          "name": "focus_native_score",
+          "seconds": 9,
+          "start": "2026-09-10T14:13:08",
+          "state": "FAILED"
+        },
+        {
+          "CPU_hours": 0.06666666666666667,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T14:16:52",
+          "job_id": "42018",
+          "name": "focus_native_score_ref925",
+          "seconds": 30,
+          "start": "2026-09-10T14:16:22",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.3388888888888889,
+          "CPUs": 4,
+          "GPU_hours": 0.08472222222222223,
+          "GPUs": 1,
+          "end": "2026-09-10T14:22:07",
+          "job_id": "42019",
+          "name": "focus_utility_train",
+          "seconds": 305,
+          "start": "2026-09-10T14:17:02",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.12777777777777777,
+          "CPUs": 4,
+          "GPU_hours": 0.03194444444444444,
+          "GPUs": 1,
+          "end": "2026-09-10T14:25:08",
+          "job_id": "42021",
+          "name": "focus_utility_evaluate",
+          "seconds": 115,
+          "start": "2026-09-10T14:23:13",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.0011111111111111111,
+          "CPUs": 4,
+          "GPU_hours": 0.0002777777777777778,
+          "GPUs": 1,
+          "end": "2026-09-10T14:32:08",
+          "job_id": "42023",
+          "name": "focus_utility_audit",
+          "seconds": 1,
+          "start": "2026-09-10T14:32:07",
+          "state": "FAILED"
+        },
+        {
+          "CPU_hours": 0.0011111111111111111,
+          "CPUs": 4,
+          "GPU_hours": 0.0002777777777777778,
+          "GPUs": 1,
+          "end": "2026-09-10T14:38:05",
+          "job_id": "42024",
+          "name": "focus_utility_audit_outputs_v2",
+          "seconds": 1,
+          "start": "2026-09-10T14:38:04",
+          "state": "FAILED"
+        },
+        {
+          "CPU_hours": 0.09888888888888889,
+          "CPUs": 4,
+          "GPU_hours": 0.024722222222222222,
+          "GPUs": 1,
+          "end": "2026-09-10T14:42:31",
+          "job_id": "42026",
+          "name": "focus_utility_audit_isolated_v3",
+          "seconds": 89,
+          "start": "2026-09-10T14:41:02",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.024444444444444446,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T15:16:28",
+          "job_id": "42030",
+          "name": "focus_utility_policies",
+          "seconds": 11,
+          "start": "2026-09-10T15:16:17",
+          "state": "FAILED"
+        },
+        {
+          "CPU_hours": 0.06666666666666667,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T15:16:47",
+          "job_id": "42031",
+          "name": "focus_hybrid_score",
+          "seconds": 30,
+          "start": "2026-09-10T15:16:17",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 1.2644444444444445,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T15:28:07",
+          "job_id": "42033",
+          "name": "focus_utility_policies_outputdirfix",
+          "seconds": 569,
+          "start": "2026-09-10T15:18:38",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 1.1155555555555556,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T15:37:08",
+          "job_id": "42034",
+          "name": "focus_utility_policies_consensus",
+          "seconds": 502,
+          "start": "2026-09-10T15:28:46",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.012222222222222223,
+          "CPUs": 4,
+          "GPU_hours": 0.0030555555555555557,
+          "GPUs": 1,
+          "end": "2026-09-10T15:42:56",
+          "job_id": "42035",
+          "name": "focus_utility_train_readout",
+          "seconds": 11,
+          "start": "2026-09-10T15:42:45",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 1.0955555555555556,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T15:51:49",
+          "job_id": "42036",
+          "name": "focus_utility_policies_readout",
+          "seconds": 493,
+          "start": "2026-09-10T15:43:36",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.21777777777777776,
+          "CPUs": 4,
+          "GPU_hours": 0.05444444444444444,
+          "GPUs": 1,
+          "end": "2026-09-10T15:55:59",
+          "job_id": "42038",
+          "name": "focus_utility_export",
+          "seconds": 196,
+          "start": "2026-09-10T15:52:43",
+          "state": "FAILED"
+        },
+        {
+          "CPU_hours": 0.13111111111111112,
+          "CPUs": 4,
+          "GPU_hours": 0.03277777777777778,
+          "GPUs": 1,
+          "end": "2026-09-10T16:03:28",
+          "job_id": "42039",
+          "name": "focus_utility_export_audit",
+          "seconds": 118,
+          "start": "2026-09-10T16:01:30",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.41555555555555557,
+          "CPUs": 8,
+          "GPU_hours": 0.10388888888888889,
+          "GPUs": 2,
+          "end": "2026-09-10T16:16:03",
+          "job_id": "42042",
+          "name": "focus_utility_replay",
+          "seconds": 187,
+          "start": "2026-09-10T16:12:56",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.41555555555555557,
+          "CPUs": 8,
+          "GPU_hours": 0.10388888888888889,
+          "GPUs": 2,
+          "end": "2026-09-10T16:16:03",
+          "job_id": "42043",
+          "name": "focus_repeat1_edit",
+          "seconds": 187,
+          "start": "2026-09-10T16:12:56",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.42,
+          "CPUs": 8,
+          "GPU_hours": 0.105,
+          "GPUs": 2,
+          "end": "2026-09-10T16:21:16",
+          "job_id": "42044",
+          "name": "focus_repeat2_edit",
+          "seconds": 189,
+          "start": "2026-09-10T16:18:07",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.13333333333333333,
+          "CPUs": 4,
+          "GPU_hours": 0.03333333333333333,
+          "GPUs": 1,
+          "end": "2026-09-10T16:20:17",
+          "job_id": "42045",
+          "name": "focus_utility_decide_repeat_1",
+          "seconds": 120,
+          "start": "2026-09-10T16:18:17",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 1.0333333333333334,
+          "CPUs": 12,
+          "GPU_hours": 0.25833333333333336,
+          "GPUs": 3,
+          "end": "2026-09-10T16:27:24",
+          "job_id": "42046",
+          "name": "focus_repeat1_label",
+          "seconds": 310,
+          "start": "2026-09-10T16:22:14",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.14222222222222222,
+          "CPUs": 4,
+          "GPU_hours": 0.035555555555555556,
+          "GPUs": 1,
+          "end": "2026-09-10T16:24:32",
+          "job_id": "42047",
+          "name": "focus_utility_decide_repeat_2",
+          "seconds": 128,
+          "start": "2026-09-10T16:22:24",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 1.0222222222222221,
+          "CPUs": 8,
+          "GPU_hours": 0.25555555555555554,
+          "GPUs": 2,
+          "end": "2026-09-10T16:34:14",
+          "job_id": "42048",
+          "name": "focus_repeat2_label",
+          "seconds": 460,
+          "start": "2026-09-10T16:26:34",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.07333333333333333,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T16:31:11",
+          "job_id": "42049",
+          "name": "focus_repeat1_score",
+          "seconds": 33,
+          "start": "2026-09-10T16:30:38",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.08222222222222222,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T16:35:37",
+          "job_id": "42050",
+          "name": "focus_repeat2_score",
+          "seconds": 37,
+          "start": "2026-09-10T16:35:00",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.014444444444444444,
+          "CPUs": 4,
+          "GPU_hours": 0.003611111111111111,
+          "GPUs": 1,
+          "end": "2026-09-10T16:54:12",
+          "job_id": "42053",
+          "name": "focus_utility_train_operational",
+          "seconds": 13,
+          "start": "2026-09-10T16:53:59",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.40444444444444444,
+          "CPUs": 8,
+          "GPU_hours": 0.10111111111111111,
+          "GPUs": 2,
+          "end": "2026-09-10T16:59:06",
+          "job_id": "42055",
+          "name": "focus_operational_fresh_edit",
+          "seconds": 182,
+          "start": "2026-09-10T16:56:04",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.4222222222222222,
+          "CPUs": 8,
+          "GPU_hours": 0.10555555555555556,
+          "GPUs": 2,
+          "end": "2026-09-10T17:18:18",
+          "job_id": "42069",
+          "name": "focus_operational_open_edit",
+          "seconds": 190,
+          "start": "2026-09-10T17:15:08",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.35777777777777775,
+          "CPUs": 8,
+          "GPU_hours": 0.08944444444444444,
+          "GPUs": 2,
+          "end": "2026-09-10T17:24:11",
+          "job_id": "42075",
+          "name": "focus_utility_infer_operational",
+          "seconds": 161,
+          "start": "2026-09-10T17:21:30",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.12,
+          "CPUs": 12,
+          "GPU_hours": 0.03,
+          "GPUs": 3,
+          "end": "2026-09-10T17:28:09",
+          "job_id": "42079",
+          "name": "focus_operational_pool_A_K2_label",
+          "seconds": 36,
+          "start": "2026-09-10T17:27:33",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.36,
+          "CPUs": 8,
+          "GPU_hours": 0.09,
+          "GPUs": 2,
+          "end": "2026-09-10T17:30:18",
+          "job_id": "42080",
+          "name": "focus_operational_pool_B_K2_label",
+          "seconds": 162,
+          "start": "2026-09-10T17:27:36",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.06444444444444444,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T17:28:05",
+          "job_id": "42081",
+          "name": "focus_operational_primary_score",
+          "seconds": 29,
+          "start": "2026-09-10T17:27:36",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.06666666666666667,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T17:33:33",
+          "job_id": "42090",
+          "name": "focus_operational_pool_A_K2_score",
+          "seconds": 30,
+          "start": "2026-09-10T17:33:03",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.06444444444444444,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T17:33:35",
+          "job_id": "42091",
+          "name": "focus_operational_pool_B_K2_score",
+          "seconds": 29,
+          "start": "2026-09-10T17:33:06",
+          "state": "COMPLETED"
+        },
+        {
+          "CPU_hours": 0.06444444444444444,
+          "CPUs": 8,
+          "GPU_hours": 0,
+          "GPUs": 0,
+          "end": "2026-09-10T17:33:35",
+          "job_id": "42092",
+          "name": "focus_operational_all_K4_score",
+          "seconds": 29,
+          "start": "2026-09-10T17:33:06",
+          "state": "COMPLETED"
+        }
+      ]
+    }
+  },
+  "composition": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/analysis/FINAL_COMPOSITION_ADMISSION.json",
+    "sha256": "0ad7315d05b984ed0671cb0b4dbec82c011ce8d016087e91328ca7877a475dc6",
+    "data": {
+      "U_still_computed_on_original_full_1000_panel": true,
+      "created_utc": "2026-09-10T08:26:06.641452+00:00",
+      "cross_partition_formulas": {
+        "MgPb": [
+          {
+            "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2898",
+            "old_E_seen_formula": true,
+            "old_E_seen_source": true,
+            "ordinal": 235,
+            "reduced_formula": "Mg2Pb2",
+            "split": "train"
+          },
+          {
+            "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3169",
+            "old_E_seen_formula": false,
+            "old_E_seen_source": false,
+            "ordinal": 300,
+            "reduced_formula": "Mg4Pb4",
+            "split": "final"
+          }
+        ]
+      },
+      "excluded_FINAL": [
+        300
+      ],
+      "exclusion_uses_composition_only": true,
+      "original_FINAL": [
+        256,
+        258,
+        259,
+        267,
+        273,
+        277,
+        281,
+        282,
+        283,
+        285,
+        300,
+        306,
+        309,
+        311,
+        313,
+        315,
+        323,
+        327,
+        330,
+        335,
+        336,
+        338,
+        341,
+        348,
+        355,
+        361,
+        366,
+        369,
+        371,
+        374,
+        375,
+        382,
+        384,
+        385,
+        389,
+        390,
+        392,
+        393,
+        394,
+        395,
+        408,
+        412,
+        415,
+        416,
+        420,
+        423,
+        431,
+        440,
+        445,
+        446,
+        455,
+        456,
+        459,
+        460,
+        461,
+        465,
+        466,
+        467,
+        468,
+        473,
+        478,
+        483,
+        485,
+        491,
+        492,
+        493,
+        496,
+        497,
+        501,
+        505,
+        507,
+        512,
+        515,
+        520,
+        521,
+        522,
+        523,
+        525,
+        529,
+        531,
+        534,
+        535,
+        544,
+        549,
+        553,
+        559,
+        561,
+        562,
+        565,
+        567,
+        569,
+        571,
+        583,
+        585,
+        591,
+        599,
+        600,
+        606,
+        608,
+        611,
+        612,
+        613,
+        614,
+        615,
+        625,
+        626,
+        630,
+        633,
+        634,
+        635,
+        638,
+        640,
+        641,
+        647,
+        648,
+        649,
+        650,
+        653,
+        655,
+        656,
+        661,
+        663,
+        665,
+        666,
+        670,
+        671,
+        674,
+        678,
+        679,
+        681,
+        682,
+        683,
+        685,
+        689,
+        692,
+        693,
+        696,
+        701,
+        705,
+        709,
+        714,
+        716,
+        719,
+        723,
+        726,
+        727,
+        733,
+        736,
+        738,
+        740,
+        741,
+        742,
+        743,
+        746,
+        747,
+        748,
+        751,
+        754,
+        756,
+        757,
+        760,
+        761,
+        762,
+        764,
+        766,
+        768,
+        770,
+        773,
+        776,
+        778,
+        781,
+        782,
+        784,
+        785,
+        794,
+        795,
+        797,
+        802,
+        803,
+        812,
+        814,
+        815,
+        817,
+        818,
+        822,
+        823,
+        825,
+        827,
+        829,
+        832,
+        833,
+        838,
+        839,
+        847,
+        848,
+        850,
+        852,
+        854,
+        858,
+        859,
+        861,
+        862,
+        864,
+        867,
+        870,
+        872,
+        873,
+        878,
+        879,
+        890,
+        891,
+        893,
+        894,
+        895,
+        896,
+        897,
+        898,
+        899,
+        905,
+        907,
+        908,
+        909,
+        910,
+        912,
+        913,
+        915,
+        929,
+        933,
+        934,
+        935,
+        939,
+        940,
+        945,
+        951,
+        952,
+        956,
+        957,
+        965,
+        966,
+        971,
+        974,
+        975,
+        977,
+        981,
+        982,
+        993,
+        997
+      ],
+      "original_split_and_frozen_selection_unchanged": true,
+      "schema": "post_registration_canonical_composition_audit_v1",
+      "source_identity_unseen_and_composition_unseen_reported_separately": true,
+      "source_split_sha256": "9bb3cdee76272aebeaa690325d3e1f91664871b0d3cef3e06c78af3909015042",
+      "strict_composition_isolated_FINAL": [
+        256,
+        258,
+        259,
+        267,
+        273,
+        277,
+        281,
+        282,
+        283,
+        285,
+        306,
+        309,
+        311,
+        313,
+        315,
+        323,
+        327,
+        330,
+        335,
+        336,
+        338,
+        341,
+        348,
+        355,
+        361,
+        366,
+        369,
+        371,
+        374,
+        375,
+        382,
+        384,
+        385,
+        389,
+        390,
+        392,
+        393,
+        394,
+        395,
+        408,
+        412,
+        415,
+        416,
+        420,
+        423,
+        431,
+        440,
+        445,
+        446,
+        455,
+        456,
+        459,
+        460,
+        461,
+        465,
+        466,
+        467,
+        468,
+        473,
+        478,
+        483,
+        485,
+        491,
+        492,
+        493,
+        496,
+        497,
+        501,
+        505,
+        507,
+        512,
+        515,
+        520,
+        521,
+        522,
+        523,
+        525,
+        529,
+        531,
+        534,
+        535,
+        544,
+        549,
+        553,
+        559,
+        561,
+        562,
+        565,
+        567,
+        569,
+        571,
+        583,
+        585,
+        591,
+        599,
+        600,
+        606,
+        608,
+        611,
+        612,
+        613,
+        614,
+        615,
+        625,
+        626,
+        630,
+        633,
+        634,
+        635,
+        638,
+        640,
+        641,
+        647,
+        648,
+        649,
+        650,
+        653,
+        655,
+        656,
+        661,
+        663,
+        665,
+        666,
+        670,
+        671,
+        674,
+        678,
+        679,
+        681,
+        682,
+        683,
+        685,
+        689,
+        692,
+        693,
+        696,
+        701,
+        705,
+        709,
+        714,
+        716,
+        719,
+        723,
+        726,
+        727,
+        733,
+        736,
+        738,
+        740,
+        741,
+        742,
+        743,
+        746,
+        747,
+        748,
+        751,
+        754,
+        756,
+        757,
+        760,
+        761,
+        762,
+        764,
+        766,
+        768,
+        770,
+        773,
+        776,
+        778,
+        781,
+        782,
+        784,
+        785,
+        794,
+        795,
+        797,
+        802,
+        803,
+        812,
+        814,
+        815,
+        817,
+        818,
+        822,
+        823,
+        825,
+        827,
+        829,
+        832,
+        833,
+        838,
+        839,
+        847,
+        848,
+        850,
+        852,
+        854,
+        858,
+        859,
+        861,
+        862,
+        864,
+        867,
+        870,
+        872,
+        873,
+        878,
+        879,
+        890,
+        891,
+        893,
+        894,
+        895,
+        896,
+        897,
+        898,
+        899,
+        905,
+        907,
+        908,
+        909,
+        910,
+        912,
+        913,
+        915,
+        929,
+        933,
+        934,
+        935,
+        939,
+        940,
+        945,
+        951,
+        952,
+        956,
+        957,
+        965,
+        966,
+        971,
+        974,
+        975,
+        977,
+        981,
+        982,
+        993,
+        997
+      ]
+    }
+  },
+  "export": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/models/selected_utility/EXPORT_FINAL.json",
+    "sha256": "9cdebee1ca5cf8a019df11e97d7eb7af0cc35287ccd5fef4895e0076c55bd5ba",
+    "data": {
+      "actual_edits": 196,
+      "all_1000_continuous_outputs_reproduced": true,
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/models/selected_utility/checkpoint",
+      "checkpoint_receipt_sha256": "e1842bcb0331f7d2e8fe91db21f054cbb16381b2374b166a385433a39fd92967",
+      "classification": "exported_candidate; stability_across_registered_streams_pending",
+      "full_model_vs_cached_head_max_abs_utility_drift": 0,
+      "margin": 0.05,
+      "materialization": "construct_once_then_select_bound_record_without_recomputing_derived_xyz",
+      "materialized_parity_sha256": "49074617fd63bfd5aa60d65ac0ceb2edcdd446bad884f2343864af0111b27ae6",
+      "model_files_copied_exactly": {
+        "EXPERT_EDITOR.json": "39b50136a1ea649bce0f74af665f1d11e4d4d12e7690765760108028b45b20b2",
+        "README.md": "994978b0352fcdadef1d24a249cd7ff663b07334b3a13d6a8a54997f1003f973",
+        "adapter_config.json": "d9265ba2c05db7ab6f44169487a79cdaaaf5f2e5284c79dabd593ee8ae6fab31",
+        "adapter_model.safetensors": "cb2359fe1f1ee0bb7aaf509650f1fca140e0e8632d386b5c20a98de618e2371c",
+        "chat_template.jinja": "b48c47f6443892716176eb200bf4ef108f64e06ca26ed0fa8ebc0a4b3992fcb2",
+        "expert_edit_config.json": "2935a2426a8fa9c567f6644c4d7f86b341f0539c16b19527b7efd4fbc33e0ff6",
+        "periodic_state.pt": "fac0ed468fdadc1f2c903e590f10930ee281e5169b646ef09d7882b4faabb3d2",
+        "periodic_state_config.json": "d79d4a18dcb8970fc53ecd011dae3615efeff3a8993de3a8955fb1350ab8caf7",
+        "special_tokens_map.json": "ab123ae27cd63c425c706a51bde5a34090f8f5fbf3b3533e5423fd80a17e5979",
+        "tokenizer.json": "3a21588abca8e56155cc7b6cabb81df51992ccd2e89704aec770912f24e75509",
+        "tokenizer_config.json": "8e89acaa54a8fb8fc7d228165ac483f61b7fef7c4c9761214092511190f75de2"
+      },
+      "original_export_job": "42038",
+      "original_recomputed_xyz_difference_records": 56,
+      "original_recomputed_xyz_max_abs_difference": 1.7763568394002505e-15,
+      "reference_acceptance_required": false,
+      "reference_head_max_abs_drift": 0,
+      "scientific_inputs_weights_thresholds_or_geometry_rules_changed": false,
+      "selected_epoch": 64,
+      "selection_sha256": "b98ef8aeb010a0f9bcaf6f74728855e41c0734228029c23d8421e4487f20ee48",
+      "strict_reload_probe_passed": true,
+      "verification_full_model_job": "42039"
+    }
+  },
+  "next_data": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/data/SUN_FIRST_PAIRWISE_DATA_FINAL.json",
+    "sha256": "9de3d6e3010cdf9159d992dd39feb66f49e61783091a55b158c00d2e69939b95",
+    "data": {
+      "basis_counts": {
+        "novel_MS_tiebreak": 16,
+        "novel_Stable_priority": 4
+      },
+      "data_sha256": "1680efc1edcf9e8758b4de5abcec42b349cb85c70ec7180ef89d1ac67102d13a",
+      "exclusions": {
+        "tie": 472,
+        "unknown_outcome": 14
+      },
+      "no_DEV_FINAL_supervision": true,
+      "physical_score_bindings": {
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/operational/panels/pool_A_K2/edited/scoring/result/attempt_results.jsonl": "2fde3a8e5bc57a76b6c3758f62fa96b114fff7d8054bfd7fc901d71334274f35",
+        "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/operational/panels/pool_B_K2/edited/scoring/result/attempt_results.jsonl": "3c75d0a1605324a03faa18f22667de77f0bba14e6263f0ac80d09eb8f5472c2c"
+      },
+      "purpose": "prepared_next_stage_supervision; no new ranking checkpoint is claimed",
+      "rows": 20,
+      "source_split_sha256": "9bb3cdee76272aebeaa690325d3e1f91664871b0d3cef3e06c78af3909015042",
+      "sources": 20,
+      "training_performed": false
+    }
+  },
+  "model": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/operational/MODEL_DEFINITION.json",
+    "sha256": "a6d8ca74af17ae8148ecda9696fe967f66734ec9f1b417774bdc528bdd825f29",
+    "data": {
+      "base_editor": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+      "base_editor_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+      "committed_plan_sha256": "bd3b2b0fb7809183fb722bc47a84e4272f93a475c09094373dec916f1f95edcd",
+      "created_utc": "2026-09-10T09:21:30.130824+00:00",
+      "epoch": 64,
+      "failed_or_not_converged_current_with_valid_token_view_is_editable": true,
+      "known_current_SUN_guard": "verified_continuous_native_current",
+      "no_physical_candidate_reranking": true,
+      "pools": {
+        "all_K4": [
+          "primary",
+          "repeat1",
+          "repeat2",
+          "fresh1"
+        ],
+        "pool_A_K2": [
+          "primary",
+          "repeat1"
+        ],
+        "pool_B_K2": [
+          "repeat2",
+          "fresh1"
+        ],
+        "primary_K1": [
+          "primary"
+        ]
+      },
+      "quality_head": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/operational_utility/result/quality_head_epoch64.pt",
+      "quality_head_sha256": "17f3f901eeb664e867fbbebe58f0277f696bb31745b6110ba4f4af757e6c9519",
+      "raw_margin": 0.05,
+      "registration_sha256": "f34b01ce3bea6346f1aff97a9b3ac6353745dd009795274b32c7a8c883c6fee8",
+      "schema": "frozen_operational_utility_patch_v1",
+      "selection": "highest_model_utility_above_fixed_margin; ties_use_registered_stream_order",
+      "source_split_sha256": "9bb3cdee76272aebeaa690325d3e1f91664871b0d3cef3e06c78af3909015042",
+      "sources": {
+        "fresh1": {
+          "materialization_sha256": "9601ccc3fa0faa0d9eecb29a641311929c539ede0c930bc3c697dc322dcfe8a9",
+          "materialized": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/operational/fresh_open_generation/materialized_proposal",
+          "proposal_inputs_sha256": "efd64f6c1c9b967294b69beb0d0505488b483b36baebb2c7d4f842e26af60cc6",
+          "proposals": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/operational/fresh_open_generation"
+        },
+        "primary": {
+          "materialization_sha256": "a9c65886ea65a8a502a713fd8161b66b455ac1fec84a4b21612ff331102e1515",
+          "materialized": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/materialized_primary",
+          "proposal_inputs_sha256": "ce53c1ab6211942f035ea6520ad649c40e03791646d477b4c8fcfa44baab5407",
+          "proposals": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/fit"
+        },
+        "repeat1": {
+          "materialization_sha256": "7c3e724839420ddc439efdf923dd3a1942cc2344212d7e39d8eecb01ae47f4ef",
+          "materialized": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/repeats/repeat1/materialized_proposal",
+          "proposal_inputs_sha256": "94e0b5c1de9b8f9dd4924a78065a8ffec6d8bfeb792d5635096ec172a9357950",
+          "proposals": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/repeats/repeat1"
+        },
+        "repeat2": {
+          "materialization_sha256": "395896dbdf8b57aff43607179a9f3cc88b87b3bdb433a2bd5828c71288a02829",
+          "materialized": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/repeats/repeat2/materialized_proposal",
+          "proposal_inputs_sha256": "e8a0aca8eec681522a85b2f3630c6c8c685e94968ac6a0d525870111574684d6",
+          "proposals": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/repeats/repeat2"
+        }
+      },
+      "training_receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/training/operational_utility/result/TRAINING_FINAL.json",
+      "training_receipt_sha256": "802a628f403a9dd7620597441a1e17aa3525a4769dcec1461610e8659e83f073",
+      "validation_status": "exploratory_reuse_not_a_new_blind_test"
+    }
+  },
+  "operational": {
+    "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/keep_edit_focus_20260910/run_20260910T060000Z_continuous_utility/operational/COMPARISON_FINAL.json",
+    "sha256": "36049bd5657b866e9cf8b2912778f34a9f4ac0763bb3c7471197f21beb1387d4",
+    "data": {
+      "all_policies_reported_without_posthoc_selection": true,
+      "evaluation_status": "exploratory_reuse_of_previously_examined_sources",
+      "formal_original_trial_is_reported_separately": true,
+      "fresh_random_stream": "keep_edit_operational_fresh1",
+      "model_definition_sha256": "a6d8ca74af17ae8148ecda9696fe967f66734ec9f1b417774bdc528bdd825f29",
+      "no_DEV_FINAL_training": true,
+      "original_frozen_model_unchanged": true,
+      "pending": [],
+      "reports": {
+        "all_K4": {
+          "all": {
+            "KEEP": {
+              "MS": 567,
+              "MSUN": 482,
+              "SUN": 103,
+              "Stable": 118
+            },
+            "counts": {
+              "MS": 563,
+              "MSUN": 503,
+              "SUN": 110,
+              "Stable": 119,
+              "actual_edits": 154,
+              "known_failure": 13,
+              "unknown": 36
+            },
+            "decision_sha256": "435f2e2ce20abd6bcef74df3e077cd525577c7255fa7c424f762ab6de49a22d9",
+            "delta": {
+              "MS": -4,
+              "MSUN": 21,
+              "SUN": 7,
+              "Stable": 1
+            },
+            "gains": {
+              "MS": [
+                174,
+                201,
+                277,
+                345,
+                355,
+                357,
+                377,
+                424,
+                477,
+                558,
+                679,
+                689,
+                720,
+                793,
+                859,
+                973
+              ],
+              "MSUN": [
+                26,
+                33,
+                87,
+                94,
+                110,
+                144,
+                174,
+                185,
+                201,
+                214,
+                243,
+                277,
+                285,
+                289,
+                319,
+                345,
+                355,
+                357,
+                377,
+                424,
+                437,
+                452,
+                477,
+                507,
+                558,
+                679,
+                689,
+                696,
+                720,
+                761,
+                793,
+                859,
+                943,
+                962,
+                973
+              ],
+              "SUN": [
+                87,
+                214,
+                243,
+                319,
+                325,
+                372,
+                761
+              ],
+              "Stable": [
+                214,
+                325,
+                372
+              ]
+            },
+            "losses": {
+              "MS": [
+                27,
+                186,
+                290,
+                339,
+                353,
+                370,
+                383,
+                409,
+                434,
+                467,
+                483,
+                517,
+                523,
+                527,
+                584,
+                588,
+                655,
+                792,
+                892,
+                924
+              ],
+              "MSUN": [
+                27,
+                186,
+                353,
+                370,
+                383,
+                409,
+                434,
+                483,
+                523,
+                527,
+                584,
+                588,
+                655,
+                892
+              ],
+              "SUN": [],
+              "Stable": [
+                792,
+                962
+              ]
+            },
+            "requests": 1000,
+            "scores_sha256": "64cca945d60b1609d6f649cf8d6446636464bbac05a44c1c2651a465dd34f132"
+          },
+          "before_not_SUN_with_candidate": 896,
+          "dev": {
+            "KEEP": {
+              "MS": 135,
+              "MSUN": 115,
+              "SUN": 24,
+              "Stable": 29
+            },
+            "counts": {
+              "MS": 131,
+              "MSUN": 114,
+              "SUN": 24,
+              "Stable": 28,
+              "actual_edits": 40,
+              "known_failure": 1,
+              "unknown": 12
+            },
+            "decision_sha256": "435f2e2ce20abd6bcef74df3e077cd525577c7255fa7c424f762ab6de49a22d9",
+            "delta": {
+              "MS": -4,
+              "MSUN": -1,
+              "SUN": 0,
+              "Stable": -1
+            },
+            "gains": {
+              "MS": [
+                377,
+                477,
+                558,
+                973
+              ],
+              "MSUN": [
+                289,
+                377,
+                437,
+                477,
+                558,
+                962,
+                973
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                353,
+                370,
+                383,
+                409,
+                434,
+                527,
+                584,
+                892
+              ],
+              "MSUN": [
+                353,
+                370,
+                383,
+                409,
+                434,
+                527,
+                584,
+                892
+              ],
+              "SUN": [],
+              "Stable": [
+                962
+              ]
+            },
+            "requests": 247,
+            "scores_sha256": "64cca945d60b1609d6f649cf8d6446636464bbac05a44c1c2651a465dd34f132"
+          },
+          "final": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 147,
+              "MSUN": 128,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 42,
+              "known_failure": 6,
+              "unknown": 8
+            },
+            "decision_sha256": "435f2e2ce20abd6bcef74df3e077cd525577c7255fa7c424f762ab6de49a22d9",
+            "delta": {
+              "MS": 1,
+              "MSUN": 6,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                277,
+                355,
+                679,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                355,
+                507,
+                679,
+                689,
+                696,
+                761,
+                859
+              ],
+              "SUN": [
+                761
+              ],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                467,
+                483,
+                523,
+                655
+              ],
+              "MSUN": [
+                483,
+                523,
+                655
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 247,
+            "scores_sha256": "64cca945d60b1609d6f649cf8d6446636464bbac05a44c1c2651a465dd34f132"
+          },
+          "known_SUN_guarded": 103,
+          "max_DLM_calls": 24,
+          "model_definition_sha256": "a6d8ca74af17ae8148ecda9696fe967f66734ec9f1b417774bdc528bdd825f29",
+          "no_candidate_indices": [
+            837
+          ],
+          "strict_composition_final": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 146,
+              "MSUN": 127,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 42,
+              "known_failure": 6,
+              "unknown": 8
+            },
+            "decision_sha256": "435f2e2ce20abd6bcef74df3e077cd525577c7255fa7c424f762ab6de49a22d9",
+            "delta": {
+              "MS": 1,
+              "MSUN": 6,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                277,
+                355,
+                679,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                355,
+                507,
+                679,
+                689,
+                696,
+                761,
+                859
+              ],
+              "SUN": [
+                761
+              ],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                467,
+                483,
+                523,
+                655
+              ],
+              "MSUN": [
+                483,
+                523,
+                655
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 246,
+            "scores_sha256": "64cca945d60b1609d6f649cf8d6446636464bbac05a44c1c2651a465dd34f132"
+          },
+          "train": {
+            "KEEP": {
+              "MS": 286,
+              "MSUN": 245,
+              "SUN": 51,
+              "Stable": 57
+            },
+            "counts": {
+              "MS": 285,
+              "MSUN": 261,
+              "SUN": 57,
+              "Stable": 59,
+              "actual_edits": 72,
+              "known_failure": 6,
+              "unknown": 16
+            },
+            "decision_sha256": "435f2e2ce20abd6bcef74df3e077cd525577c7255fa7c424f762ab6de49a22d9",
+            "delta": {
+              "MS": -1,
+              "MSUN": 16,
+              "SUN": 6,
+              "Stable": 2
+            },
+            "gains": {
+              "MS": [
+                174,
+                201,
+                345,
+                357,
+                424,
+                720,
+                793
+              ],
+              "MSUN": [
+                26,
+                33,
+                87,
+                94,
+                110,
+                144,
+                174,
+                185,
+                201,
+                214,
+                243,
+                319,
+                345,
+                357,
+                424,
+                452,
+                720,
+                793,
+                943
+              ],
+              "SUN": [
+                87,
+                214,
+                243,
+                319,
+                325,
+                372
+              ],
+              "Stable": [
+                214,
+                325,
+                372
+              ]
+            },
+            "losses": {
+              "MS": [
+                27,
+                186,
+                290,
+                339,
+                517,
+                588,
+                792,
+                924
+              ],
+              "MSUN": [
+                27,
+                186,
+                588
+              ],
+              "SUN": [],
+              "Stable": [
+                792
+              ]
+            },
+            "requests": 506,
+            "scores_sha256": "64cca945d60b1609d6f649cf8d6446636464bbac05a44c1c2651a465dd34f132"
+          }
+        },
+        "pool_A_K2": {
+          "all": {
+            "KEEP": {
+              "MS": 567,
+              "MSUN": 482,
+              "SUN": 103,
+              "Stable": 118
+            },
+            "counts": {
+              "MS": 557,
+              "MSUN": 497,
+              "SUN": 107,
+              "Stable": 116,
+              "actual_edits": 148,
+              "known_failure": 16,
+              "unknown": 40
+            },
+            "decision_sha256": "391c07d116c3d4711307e5c9e943f1f703aa756f0a3bd1ae3cb956c866a0ec60",
+            "delta": {
+              "MS": -10,
+              "MSUN": 15,
+              "SUN": 4,
+              "Stable": -2
+            },
+            "gains": {
+              "MS": [
+                123,
+                153,
+                174,
+                201,
+                277,
+                345,
+                355,
+                357,
+                377,
+                424,
+                577,
+                689,
+                730,
+                793,
+                859,
+                973
+              ],
+              "MSUN": [
+                26,
+                33,
+                94,
+                110,
+                123,
+                144,
+                153,
+                174,
+                185,
+                191,
+                201,
+                214,
+                277,
+                285,
+                289,
+                339,
+                345,
+                355,
+                357,
+                377,
+                424,
+                452,
+                577,
+                689,
+                696,
+                730,
+                792,
+                793,
+                859,
+                943,
+                962,
+                973
+              ],
+              "SUN": [
+                214,
+                325,
+                372,
+                792
+              ],
+              "Stable": [
+                214,
+                325,
+                372
+              ]
+            },
+            "losses": {
+              "MS": [
+                27,
+                76,
+                87,
+                149,
+                186,
+                243,
+                256,
+                290,
+                319,
+                353,
+                370,
+                383,
+                409,
+                437,
+                467,
+                483,
+                517,
+                523,
+                527,
+                584,
+                588,
+                605,
+                732,
+                761,
+                892,
+                924
+              ],
+              "MSUN": [
+                27,
+                76,
+                149,
+                186,
+                256,
+                353,
+                370,
+                383,
+                409,
+                483,
+                523,
+                527,
+                584,
+                588,
+                605,
+                732,
+                892
+              ],
+              "SUN": [],
+              "Stable": [
+                87,
+                243,
+                319,
+                761,
+                962
+              ]
+            },
+            "requests": 1000,
+            "scores_sha256": "2fde3a8e5bc57a76b6c3758f62fa96b114fff7d8054bfd7fc901d71334274f35"
+          },
+          "before_not_SUN_with_candidate": 895,
+          "dev": {
+            "KEEP": {
+              "MS": 135,
+              "MSUN": 115,
+              "SUN": 24,
+              "Stable": 29
+            },
+            "counts": {
+              "MS": 129,
+              "MSUN": 112,
+              "SUN": 24,
+              "Stable": 28,
+              "actual_edits": 39,
+              "known_failure": 3,
+              "unknown": 13
+            },
+            "decision_sha256": "391c07d116c3d4711307e5c9e943f1f703aa756f0a3bd1ae3cb956c866a0ec60",
+            "delta": {
+              "MS": -6,
+              "MSUN": -3,
+              "SUN": 0,
+              "Stable": -1
+            },
+            "gains": {
+              "MS": [
+                377,
+                577,
+                973
+              ],
+              "MSUN": [
+                289,
+                377,
+                577,
+                962,
+                973
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                353,
+                370,
+                383,
+                409,
+                437,
+                527,
+                584,
+                605,
+                892
+              ],
+              "MSUN": [
+                353,
+                370,
+                383,
+                409,
+                527,
+                584,
+                605,
+                892
+              ],
+              "SUN": [],
+              "Stable": [
+                962
+              ]
+            },
+            "requests": 247,
+            "scores_sha256": "2fde3a8e5bc57a76b6c3758f62fa96b114fff7d8054bfd7fc901d71334274f35"
+          },
+          "final": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 145,
+              "MSUN": 125,
+              "SUN": 28,
+              "Stable": 31,
+              "actual_edits": 39,
+              "known_failure": 6,
+              "unknown": 10
+            },
+            "decision_sha256": "391c07d116c3d4711307e5c9e943f1f703aa756f0a3bd1ae3cb956c866a0ec60",
+            "delta": {
+              "MS": -1,
+              "MSUN": 3,
+              "SUN": 0,
+              "Stable": -1
+            },
+            "gains": {
+              "MS": [
+                277,
+                355,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                355,
+                689,
+                696,
+                859
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                256,
+                467,
+                483,
+                523,
+                761
+              ],
+              "MSUN": [
+                256,
+                483,
+                523
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 247,
+            "scores_sha256": "2fde3a8e5bc57a76b6c3758f62fa96b114fff7d8054bfd7fc901d71334274f35"
+          },
+          "known_SUN_guarded": 103,
+          "max_DLM_calls": 12,
+          "model_definition_sha256": "a6d8ca74af17ae8148ecda9696fe967f66734ec9f1b417774bdc528bdd825f29",
+          "no_candidate_indices": [
+            180,
+            837
+          ],
+          "strict_composition_final": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 144,
+              "MSUN": 124,
+              "SUN": 28,
+              "Stable": 31,
+              "actual_edits": 39,
+              "known_failure": 6,
+              "unknown": 10
+            },
+            "decision_sha256": "391c07d116c3d4711307e5c9e943f1f703aa756f0a3bd1ae3cb956c866a0ec60",
+            "delta": {
+              "MS": -1,
+              "MSUN": 3,
+              "SUN": 0,
+              "Stable": -1
+            },
+            "gains": {
+              "MS": [
+                277,
+                355,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                355,
+                689,
+                696,
+                859
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                256,
+                467,
+                483,
+                523,
+                761
+              ],
+              "MSUN": [
+                256,
+                483,
+                523
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 246,
+            "scores_sha256": "2fde3a8e5bc57a76b6c3758f62fa96b114fff7d8054bfd7fc901d71334274f35"
+          },
+          "train": {
+            "KEEP": {
+              "MS": 286,
+              "MSUN": 245,
+              "SUN": 51,
+              "Stable": 57
+            },
+            "counts": {
+              "MS": 283,
+              "MSUN": 260,
+              "SUN": 55,
+              "Stable": 57,
+              "actual_edits": 70,
+              "known_failure": 7,
+              "unknown": 17
+            },
+            "decision_sha256": "391c07d116c3d4711307e5c9e943f1f703aa756f0a3bd1ae3cb956c866a0ec60",
+            "delta": {
+              "MS": -3,
+              "MSUN": 15,
+              "SUN": 4,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                123,
+                153,
+                174,
+                201,
+                345,
+                357,
+                424,
+                730,
+                793
+              ],
+              "MSUN": [
+                26,
+                33,
+                94,
+                110,
+                123,
+                144,
+                153,
+                174,
+                185,
+                191,
+                201,
+                214,
+                339,
+                345,
+                357,
+                424,
+                452,
+                730,
+                792,
+                793,
+                943
+              ],
+              "SUN": [
+                214,
+                325,
+                372,
+                792
+              ],
+              "Stable": [
+                214,
+                325,
+                372
+              ]
+            },
+            "losses": {
+              "MS": [
+                27,
+                76,
+                87,
+                149,
+                186,
+                243,
+                290,
+                319,
+                517,
+                588,
+                732,
+                924
+              ],
+              "MSUN": [
+                27,
+                76,
+                149,
+                186,
+                588,
+                732
+              ],
+              "SUN": [],
+              "Stable": [
+                87,
+                243,
+                319
+              ]
+            },
+            "requests": 506,
+            "scores_sha256": "2fde3a8e5bc57a76b6c3758f62fa96b114fff7d8054bfd7fc901d71334274f35"
+          }
+        },
+        "pool_B_K2": {
+          "all": {
+            "KEEP": {
+              "MS": 567,
+              "MSUN": 482,
+              "SUN": 103,
+              "Stable": 118
+            },
+            "counts": {
+              "MS": 562,
+              "MSUN": 502,
+              "SUN": 113,
+              "Stable": 122,
+              "actual_edits": 151,
+              "known_failure": 9,
+              "unknown": 39
+            },
+            "decision_sha256": "a8b3125527800c2ac4d9b8a69078fda016f72e48baf17ffc962250b1a6858b25",
+            "delta": {
+              "MS": -5,
+              "MSUN": 20,
+              "SUN": 10,
+              "Stable": 4
+            },
+            "gains": {
+              "MS": [
+                174,
+                277,
+                345,
+                424,
+                477,
+                558,
+                679,
+                689,
+                720,
+                793,
+                859
+              ],
+              "MSUN": [
+                26,
+                33,
+                87,
+                94,
+                110,
+                144,
+                174,
+                185,
+                214,
+                243,
+                277,
+                285,
+                289,
+                290,
+                319,
+                345,
+                424,
+                437,
+                452,
+                477,
+                507,
+                517,
+                558,
+                679,
+                689,
+                696,
+                720,
+                761,
+                793,
+                859,
+                924,
+                943,
+                962
+              ],
+              "SUN": [
+                87,
+                214,
+                243,
+                319,
+                325,
+                372,
+                493,
+                761,
+                962,
+                974
+              ],
+              "Stable": [
+                214,
+                325,
+                372,
+                493,
+                974
+              ]
+            },
+            "losses": {
+              "MS": [
+                27,
+                339,
+                353,
+                370,
+                383,
+                409,
+                429,
+                434,
+                440,
+                467,
+                483,
+                523,
+                655,
+                792,
+                827,
+                892
+              ],
+              "MSUN": [
+                27,
+                353,
+                370,
+                383,
+                409,
+                429,
+                434,
+                440,
+                483,
+                523,
+                655,
+                827,
+                892
+              ],
+              "SUN": [],
+              "Stable": [
+                792
+              ]
+            },
+            "requests": 1000,
+            "scores_sha256": "3c75d0a1605324a03faa18f22667de77f0bba14e6263f0ac80d09eb8f5472c2c"
+          },
+          "before_not_SUN_with_candidate": 896,
+          "dev": {
+            "KEEP": {
+              "MS": 135,
+              "MSUN": 115,
+              "SUN": 24,
+              "Stable": 29
+            },
+            "counts": {
+              "MS": 130,
+              "MSUN": 113,
+              "SUN": 25,
+              "Stable": 29,
+              "actual_edits": 40,
+              "known_failure": 1,
+              "unknown": 14
+            },
+            "decision_sha256": "a8b3125527800c2ac4d9b8a69078fda016f72e48baf17ffc962250b1a6858b25",
+            "delta": {
+              "MS": -5,
+              "MSUN": -2,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                477,
+                558
+              ],
+              "MSUN": [
+                289,
+                437,
+                477,
+                558,
+                962
+              ],
+              "SUN": [
+                962
+              ],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                353,
+                370,
+                383,
+                409,
+                429,
+                434,
+                892
+              ],
+              "MSUN": [
+                353,
+                370,
+                383,
+                409,
+                429,
+                434,
+                892
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 247,
+            "scores_sha256": "3c75d0a1605324a03faa18f22667de77f0bba14e6263f0ac80d09eb8f5472c2c"
+          },
+          "final": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 144,
+              "MSUN": 125,
+              "SUN": 31,
+              "Stable": 34,
+              "actual_edits": 40,
+              "known_failure": 5,
+              "unknown": 9
+            },
+            "decision_sha256": "a8b3125527800c2ac4d9b8a69078fda016f72e48baf17ffc962250b1a6858b25",
+            "delta": {
+              "MS": -2,
+              "MSUN": 3,
+              "SUN": 3,
+              "Stable": 2
+            },
+            "gains": {
+              "MS": [
+                277,
+                679,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                507,
+                679,
+                689,
+                696,
+                761,
+                859
+              ],
+              "SUN": [
+                493,
+                761,
+                974
+              ],
+              "Stable": [
+                493,
+                974
+              ]
+            },
+            "losses": {
+              "MS": [
+                440,
+                467,
+                483,
+                523,
+                655,
+                827
+              ],
+              "MSUN": [
+                440,
+                483,
+                523,
+                655,
+                827
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 247,
+            "scores_sha256": "3c75d0a1605324a03faa18f22667de77f0bba14e6263f0ac80d09eb8f5472c2c"
+          },
+          "known_SUN_guarded": 103,
+          "max_DLM_calls": 12,
+          "model_definition_sha256": "a6d8ca74af17ae8148ecda9696fe967f66734ec9f1b417774bdc528bdd825f29",
+          "no_candidate_indices": [
+            837
+          ],
+          "strict_composition_final": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 143,
+              "MSUN": 124,
+              "SUN": 31,
+              "Stable": 34,
+              "actual_edits": 40,
+              "known_failure": 5,
+              "unknown": 9
+            },
+            "decision_sha256": "a8b3125527800c2ac4d9b8a69078fda016f72e48baf17ffc962250b1a6858b25",
+            "delta": {
+              "MS": -2,
+              "MSUN": 3,
+              "SUN": 3,
+              "Stable": 2
+            },
+            "gains": {
+              "MS": [
+                277,
+                679,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                507,
+                679,
+                689,
+                696,
+                761,
+                859
+              ],
+              "SUN": [
+                493,
+                761,
+                974
+              ],
+              "Stable": [
+                493,
+                974
+              ]
+            },
+            "losses": {
+              "MS": [
+                440,
+                467,
+                483,
+                523,
+                655,
+                827
+              ],
+              "MSUN": [
+                440,
+                483,
+                523,
+                655,
+                827
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 246,
+            "scores_sha256": "3c75d0a1605324a03faa18f22667de77f0bba14e6263f0ac80d09eb8f5472c2c"
+          },
+          "train": {
+            "KEEP": {
+              "MS": 286,
+              "MSUN": 245,
+              "SUN": 51,
+              "Stable": 57
+            },
+            "counts": {
+              "MS": 288,
+              "MSUN": 264,
+              "SUN": 57,
+              "Stable": 59,
+              "actual_edits": 71,
+              "known_failure": 3,
+              "unknown": 16
+            },
+            "decision_sha256": "a8b3125527800c2ac4d9b8a69078fda016f72e48baf17ffc962250b1a6858b25",
+            "delta": {
+              "MS": 2,
+              "MSUN": 19,
+              "SUN": 6,
+              "Stable": 2
+            },
+            "gains": {
+              "MS": [
+                174,
+                345,
+                424,
+                720,
+                793
+              ],
+              "MSUN": [
+                26,
+                33,
+                87,
+                94,
+                110,
+                144,
+                174,
+                185,
+                214,
+                243,
+                290,
+                319,
+                345,
+                424,
+                452,
+                517,
+                720,
+                793,
+                924,
+                943
+              ],
+              "SUN": [
+                87,
+                214,
+                243,
+                319,
+                325,
+                372
+              ],
+              "Stable": [
+                214,
+                325,
+                372
+              ]
+            },
+            "losses": {
+              "MS": [
+                27,
+                339,
+                792
+              ],
+              "MSUN": [
+                27
+              ],
+              "SUN": [],
+              "Stable": [
+                792
+              ]
+            },
+            "requests": 506,
+            "scores_sha256": "3c75d0a1605324a03faa18f22667de77f0bba14e6263f0ac80d09eb8f5472c2c"
+          }
+        },
+        "primary_K1": {
+          "all": {
+            "KEEP": {
+              "MS": 567,
+              "MSUN": 482,
+              "SUN": 103,
+              "Stable": 118
+            },
+            "counts": {
+              "MS": 562,
+              "MSUN": 502,
+              "SUN": 109,
+              "Stable": 118,
+              "actual_edits": 143,
+              "known_failure": 12,
+              "unknown": 38
+            },
+            "decision_sha256": "4c10f69558c638d5ac91b0303dee15d6136aef8fd8096cc9bd1ef72ae8bc3ceb",
+            "delta": {
+              "MS": -5,
+              "MSUN": 20,
+              "SUN": 6,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                123,
+                153,
+                174,
+                201,
+                277,
+                355,
+                377,
+                424,
+                557,
+                558,
+                577,
+                689,
+                720,
+                730,
+                793,
+                859,
+                973
+              ],
+              "MSUN": [
+                26,
+                33,
+                94,
+                110,
+                123,
+                144,
+                153,
+                174,
+                185,
+                191,
+                201,
+                214,
+                277,
+                285,
+                289,
+                319,
+                339,
+                355,
+                377,
+                424,
+                452,
+                557,
+                558,
+                577,
+                689,
+                696,
+                720,
+                730,
+                793,
+                859,
+                924,
+                943,
+                962,
+                973
+              ],
+              "SUN": [
+                214,
+                319,
+                325,
+                372,
+                493,
+                962
+              ],
+              "Stable": [
+                214,
+                325,
+                372,
+                493
+              ]
+            },
+            "losses": {
+              "MS": [
+                87,
+                186,
+                243,
+                256,
+                288,
+                290,
+                353,
+                383,
+                409,
+                434,
+                437,
+                454,
+                467,
+                483,
+                517,
+                523,
+                527,
+                584,
+                761,
+                792,
+                892,
+                951
+              ],
+              "MSUN": [
+                186,
+                256,
+                288,
+                353,
+                383,
+                409,
+                434,
+                454,
+                483,
+                523,
+                527,
+                584,
+                892,
+                951
+              ],
+              "SUN": [],
+              "Stable": [
+                87,
+                243,
+                761,
+                792
+              ]
+            },
+            "requests": 1000,
+            "scores_sha256": "ad6ac27fd9228af9548647913e7aa1537c065b20a8f73138f7ed1b81731e6adc"
+          },
+          "before_not_SUN_with_candidate": 895,
+          "dev": {
+            "KEEP": {
+              "MS": 135,
+              "MSUN": 115,
+              "SUN": 24,
+              "Stable": 29
+            },
+            "counts": {
+              "MS": 131,
+              "MSUN": 114,
+              "SUN": 25,
+              "Stable": 29,
+              "actual_edits": 38,
+              "known_failure": 3,
+              "unknown": 10
+            },
+            "decision_sha256": "4c10f69558c638d5ac91b0303dee15d6136aef8fd8096cc9bd1ef72ae8bc3ceb",
+            "delta": {
+              "MS": -4,
+              "MSUN": -1,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                377,
+                557,
+                558,
+                577,
+                973
+              ],
+              "MSUN": [
+                289,
+                377,
+                557,
+                558,
+                577,
+                962,
+                973
+              ],
+              "SUN": [
+                962
+              ],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                353,
+                383,
+                409,
+                434,
+                437,
+                454,
+                527,
+                584,
+                892
+              ],
+              "MSUN": [
+                353,
+                383,
+                409,
+                434,
+                454,
+                527,
+                584,
+                892
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "requests": 247,
+            "scores_sha256": "ad6ac27fd9228af9548647913e7aa1537c065b20a8f73138f7ed1b81731e6adc"
+          },
+          "final": {
+            "KEEP": {
+              "MS": 146,
+              "MSUN": 122,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 144,
+              "MSUN": 124,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 36,
+              "known_failure": 5,
+              "unknown": 11
+            },
+            "decision_sha256": "4c10f69558c638d5ac91b0303dee15d6136aef8fd8096cc9bd1ef72ae8bc3ceb",
+            "delta": {
+              "MS": -2,
+              "MSUN": 2,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                277,
+                355,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                355,
+                689,
+                696,
+                859
+              ],
+              "SUN": [
+                493
+              ],
+              "Stable": [
+                493
+              ]
+            },
+            "losses": {
+              "MS": [
+                256,
+                467,
+                483,
+                523,
+                761,
+                951
+              ],
+              "MSUN": [
+                256,
+                483,
+                523,
+                951
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 247,
+            "scores_sha256": "ad6ac27fd9228af9548647913e7aa1537c065b20a8f73138f7ed1b81731e6adc"
+          },
+          "known_SUN_guarded": 103,
+          "max_DLM_calls": 6,
+          "model_definition_sha256": "a6d8ca74af17ae8148ecda9696fe967f66734ec9f1b417774bdc528bdd825f29",
+          "no_candidate_indices": [
+            180,
+            837
+          ],
+          "strict_composition_final": {
+            "KEEP": {
+              "MS": 145,
+              "MSUN": 121,
+              "SUN": 28,
+              "Stable": 32
+            },
+            "counts": {
+              "MS": 143,
+              "MSUN": 123,
+              "SUN": 29,
+              "Stable": 32,
+              "actual_edits": 36,
+              "known_failure": 5,
+              "unknown": 11
+            },
+            "decision_sha256": "4c10f69558c638d5ac91b0303dee15d6136aef8fd8096cc9bd1ef72ae8bc3ceb",
+            "delta": {
+              "MS": -2,
+              "MSUN": 2,
+              "SUN": 1,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                277,
+                355,
+                689,
+                859
+              ],
+              "MSUN": [
+                277,
+                285,
+                355,
+                689,
+                696,
+                859
+              ],
+              "SUN": [
+                493
+              ],
+              "Stable": [
+                493
+              ]
+            },
+            "losses": {
+              "MS": [
+                256,
+                467,
+                483,
+                523,
+                761,
+                951
+              ],
+              "MSUN": [
+                256,
+                483,
+                523,
+                951
+              ],
+              "SUN": [],
+              "Stable": [
+                761
+              ]
+            },
+            "requests": 246,
+            "scores_sha256": "ad6ac27fd9228af9548647913e7aa1537c065b20a8f73138f7ed1b81731e6adc"
+          },
+          "train": {
+            "KEEP": {
+              "MS": 286,
+              "MSUN": 245,
+              "SUN": 51,
+              "Stable": 57
+            },
+            "counts": {
+              "MS": 287,
+              "MSUN": 264,
+              "SUN": 55,
+              "Stable": 57,
+              "actual_edits": 69,
+              "known_failure": 4,
+              "unknown": 17
+            },
+            "decision_sha256": "4c10f69558c638d5ac91b0303dee15d6136aef8fd8096cc9bd1ef72ae8bc3ceb",
+            "delta": {
+              "MS": 1,
+              "MSUN": 19,
+              "SUN": 4,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                123,
+                153,
+                174,
+                201,
+                424,
+                720,
+                730,
+                793
+              ],
+              "MSUN": [
+                26,
+                33,
+                94,
+                110,
+                123,
+                144,
+                153,
+                174,
+                185,
+                191,
+                201,
+                214,
+                319,
+                339,
+                424,
+                452,
+                720,
+                730,
+                793,
+                924,
+                943
+              ],
+              "SUN": [
+                214,
+                319,
+                325,
+                372
+              ],
+              "Stable": [
+                214,
+                325,
+                372
+              ]
+            },
+            "losses": {
+              "MS": [
+                87,
+                186,
+                243,
+                288,
+                290,
+                517,
+                792
+              ],
+              "MSUN": [
+                186,
+                288
+              ],
+              "SUN": [],
+              "Stable": [
+                87,
+                243,
+                792
+              ]
+            },
+            "requests": 506,
+            "scores_sha256": "ad6ac27fd9228af9548647913e7aa1537c065b20a8f73138f7ed1b81731e6adc"
+          }
+        }
+      },
+      "schema": "operational_utility_repair_pool_comparison_v1"
+    }
+  }
+}
