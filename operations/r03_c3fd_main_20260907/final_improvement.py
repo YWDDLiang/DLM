@@ -133,7 +133,7 @@ def train(root, name):
     pipe['components'] = [dict(id=job, output_dir=f'training/{name}', gpus=1, stages=[
         dict(name='train', script='src/scripts/train_rsi_preferences.py', args=['--config', str(cfg)],
              inputs=[str(cfg), str(root/'data/E.jsonl'), str(root/'data/PAIRS_E_FINAL.json')],
-             outputs=['{output}/TRAINING_FINAL.json', '{output}/checkpoint/RSI_TRAINING_DONE.json'])])]
+             outputs=['{output}/result/TRAINING_FINAL.json', '{output}/result/checkpoint/RSI_TRAINING_DONE.json'])])]
     pipe['jobs'] = {job: dict(component_indices=[0],gpus_per_task=1,cpus_per_task=4,
         parallel_tasks=1,wall_minutes=40,memory='96G',partition='gpu')}
     path = root/f'{job}_PIPELINE.json'
