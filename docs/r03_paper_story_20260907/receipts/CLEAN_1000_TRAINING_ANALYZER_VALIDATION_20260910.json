@@ -1,0 +1,212 @@
+{
+  "schema": "clean_1000_training_analyzer_validation_v1",
+  "git_commit": "78eda9dfbeaa2ed1a0d4ae3e14c9f0a2f53bbe75",
+  "path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/78eda9dfbeaa2ed1a0d4ae3e14c9f0a2f53bbe75/operations/r03_c3fd_main_20260907/report_clean_1000_training.py",
+  "analyzer_sha256": "c9e66a20fe0478911d7b7e96a1afac29fbad2acc39bda7695d71ac42f468512e",
+  "checks": {
+    "python_syntax": true,
+    "git_diff_check": true,
+    "actual_G1_checkpoint_and_source_binding_passed": true,
+    "G1_822_rows_exactly_four_updates_reproduced": true,
+    "incomplete_E1_rejected": true
+  },
+  "G1_validation": {
+    "actual_source_batch": 192,
+    "actual_world_size": 6,
+    "analyzer_sha256": "c9e66a20fe0478911d7b7e96a1afac29fbad2acc39bda7695d71ac42f468512e",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/training/round1/G/result/checkpoint",
+    "checkpoint_validation_passed": true,
+    "content_optimizer_steps": 20,
+    "coverage": {
+      "Stable_damage_rejection_content": {
+        "content_updated_unique": 23,
+        "content_visits": 92,
+        "eligible_rows": 23,
+        "head_updated_unique": 0,
+        "head_visits": 0,
+        "inspected_unique": 23,
+        "max_content_visits": 4,
+        "max_head_visits": 0,
+        "min_content_visits": 4,
+        "min_head_visits": 0
+      },
+      "Stable_promotion_content": {
+        "content_updated_unique": 24,
+        "content_visits": 96,
+        "eligible_rows": 24,
+        "head_updated_unique": 0,
+        "head_visits": 0,
+        "inspected_unique": 24,
+        "max_content_visits": 4,
+        "max_head_visits": 0,
+        "min_content_visits": 4,
+        "min_head_visits": 0
+      },
+      "all_training_rows": {
+        "content_updated_unique": 822,
+        "content_visits": 3288,
+        "eligible_rows": 822,
+        "head_updated_unique": 0,
+        "head_visits": 0,
+        "inspected_unique": 822,
+        "max_content_visits": 4,
+        "max_head_visits": 0,
+        "min_content_visits": 4,
+        "min_head_visits": 0
+      },
+      "eligible_content": {
+        "content_updated_unique": 822,
+        "content_visits": 3288,
+        "eligible_rows": 822,
+        "head_updated_unique": 0,
+        "head_visits": 0,
+        "inspected_unique": 822,
+        "max_content_visits": 4,
+        "max_head_visits": 0,
+        "min_content_visits": 4,
+        "min_head_visits": 0
+      },
+      "eligible_heads": {
+        "content_updated_unique": 0,
+        "content_visits": 0,
+        "eligible_rows": 0,
+        "head_updated_unique": 0,
+        "head_visits": 0,
+        "inspected_unique": 0,
+        "max_content_visits": 0,
+        "max_head_visits": 0,
+        "min_content_visits": 0,
+        "min_head_visits": 0
+      }
+    },
+    "full_epoch_cap_content_coverage": true,
+    "full_epoch_cap_head_coverage": true,
+    "head_optimizer_steps": 0,
+    "max_logged_rank0_GPU_GB": 46.155344896,
+    "objective_levels": {
+      "SUN": 124,
+      "meta_stable": 479,
+      "ordinary_improvement": 202,
+      "strict_stable": 17
+    },
+    "optimizer_steps": 20,
+    "origins": {
+      "G_RAW_F_value": 822
+    },
+    "parameter_delta_squared": 0.007043263902687613,
+    "purpose": "derived_report_only_not_training_feedback",
+    "rank_stop_details": [
+      {
+        "KL_stop": false,
+        "KL_trigger": null,
+        "batch_size": 32,
+        "content_optimizer_steps": 20,
+        "epochs_cap": 4,
+        "head_continuation_after_KL": false,
+        "head_optimizer_steps": 0,
+        "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+        "sampling": "shuffled_complete_data_passes"
+      },
+      {
+        "KL_stop": false,
+        "KL_trigger": null,
+        "batch_size": 32,
+        "content_optimizer_steps": 20,
+        "epochs_cap": 4,
+        "head_continuation_after_KL": false,
+        "head_optimizer_steps": 0,
+        "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+        "sampling": "shuffled_complete_data_passes"
+      },
+      {
+        "KL_stop": false,
+        "KL_trigger": null,
+        "batch_size": 32,
+        "content_optimizer_steps": 20,
+        "epochs_cap": 4,
+        "head_continuation_after_KL": false,
+        "head_optimizer_steps": 0,
+        "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+        "sampling": "shuffled_complete_data_passes"
+      },
+      {
+        "KL_stop": false,
+        "KL_trigger": null,
+        "batch_size": 32,
+        "content_optimizer_steps": 20,
+        "epochs_cap": 4,
+        "head_continuation_after_KL": false,
+        "head_optimizer_steps": 0,
+        "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+        "sampling": "shuffled_complete_data_passes"
+      },
+      {
+        "KL_stop": false,
+        "KL_trigger": null,
+        "batch_size": 32,
+        "content_optimizer_steps": 20,
+        "epochs_cap": 4,
+        "head_continuation_after_KL": false,
+        "head_optimizer_steps": 0,
+        "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+        "sampling": "shuffled_complete_data_passes"
+      },
+      {
+        "KL_stop": false,
+        "KL_trigger": null,
+        "batch_size": 32,
+        "content_optimizer_steps": 20,
+        "epochs_cap": 4,
+        "head_continuation_after_KL": false,
+        "head_optimizer_steps": 0,
+        "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+        "sampling": "shuffled_complete_data_passes"
+      }
+    ],
+    "report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/analysis/G1_COMPLETED_TRAINING.json",
+    "report_sha256": "959328acb3a7fa4b260398658a6e3ae6dd35e12bfeb0adb70d2b40bf4f7bfce3",
+    "schema": "clean_1000_completed_training_analysis_v1",
+    "source_identity": {
+      "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+    },
+    "stopping_evidence": "epoch_cap",
+    "training_config": {
+      "accumulation": 1,
+      "anchor_weight": 0.2,
+      "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+      "batch_size": 32,
+      "beta": 0.1,
+      "bounded_minibatch_training": true,
+      "branch": "G",
+      "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/runs/20260529_212834-r5c-exactlen-256/outputs/r5c_exact_sft/final",
+      "continue_heads_after_content_KL": false,
+      "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit/pairs/G.jsonl",
+      "epochs": 4,
+      "head_learning_rate": 0.0001,
+      "learning_rate": 0.000005,
+      "mask_cuts": 2,
+      "max_reference_kl": 0.02,
+      "max_training_seconds": 856,
+      "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/training/round1/G/result",
+      "ranked_training": true,
+      "reference_kl_weight": 1,
+      "replay_data": [],
+      "seed": 20261009,
+      "source_round": 0,
+      "steps": 4096,
+      "time_allocation": {
+        "remaining_seconds": 30733.829135,
+        "remaining_weight_updates": 6,
+        "reserved_panel_seconds": 25593.75,
+        "rule": "share_remaining_after_complete_panel_reserve"
+      },
+      "training_gpus": 6,
+      "update_index": 1
+    },
+    "training_rows": 822,
+    "training_seconds": 374.8902774229646,
+    "unique_TRAIN_sources": 822,
+    "update": "G1"
+  }
+}
