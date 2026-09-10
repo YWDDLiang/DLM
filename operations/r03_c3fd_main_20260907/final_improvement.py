@@ -141,11 +141,49 @@ def train(root, name):
     configured_dispatch(['--config', str(path), '--job', job])
 
 
+def probe(root):
+    from run_component import verify_deployed_source
+    from submit_stage import configured_dispatch
+    reg = json.loads((root/'REGISTRATION.json').read_text())
+    previous = Path(reg['previous'])
+    panel = root/'failure_probe'
+    spec = json.loads((previous/'fit/RUN_SPEC.json').read_text())
+    plans = read_rows(previous/'fit/cohort/plans.jsonl')
+    parents = read_rows(previous/'fit/cohort/parents.jsonl')
+    selected = [dict(plans[i], evaluation_ordinal=j) for j, i in enumerate([549, 837])]
+    write_rows(panel/'cohort/plans.jsonl', selected)
+    write_rows(panel/'cohort/parents.jsonl', [parents[i] for i in [549, 837]])
+    write_json(panel/'cohort/PREPARATION_FINAL.json',dict(files_sha256={
+        'parents.jsonl':file_hash(panel/'cohort/parents.jsonl')}, source='fixed failure diagnostics 549 and 837'))
+    spec.update(run_root=str(panel), run_id='final_failure_probe', requests=2,
+                training_parent_root=str(panel/'cohort'))
+    spec['policy']['adaptive_lattice_recovery'] = True
+    cfg = panel/'RUN_SPEC.json'
+    write_json(cfg, spec)
+    pipe = json.loads((root/'PIPELINE.json').read_text())
+    pipe.update(source_root=str(SOURCE), source_identity=verify_deployed_source(SOURCE))
+    pipe['components'] = [dict(id='failure_probe', output_dir='failure_probe', gpus=1,
+        stages=[dict(name='generate', script='src/scripts/run_post_refine_cycle.py',
+            args=['--config',str(cfg),'--stage','construct'], inputs=[str(cfg)],
+            outputs=['{output}/construction/records/0549.json','{output}/construction/records/0837.json',
+                     '{output}/construction/worker_0_DONE.json'])])]
+    pipe['jobs'] = {'failure_probe':dict(component_indices=[0],gpus_per_task=1,cpus_per_task=4,
+        parallel_tasks=1,wall_minutes=15,memory='96G',partition='gpu')}
+    path = root/'FAILURE_PROBE_PIPELINE.json'
+    write_json(path, pipe)
+    configured_dispatch(['--config',str(path),'--job','failure_probe'])
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare', 'train'])
+    parser.add_argument('mode', choices=['prepare', 'train', 'probe'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7'])
     args = parser.parse_args()
-    prepare(args.root, args.previous) if args.mode == 'prepare' else train(args.root, args.name)
+    if args.mode == 'prepare':
+        prepare(args.root, args.previous)
+    elif args.mode == 'train':
+        train(args.root, args.name)
+    else:
+        probe(args.root)

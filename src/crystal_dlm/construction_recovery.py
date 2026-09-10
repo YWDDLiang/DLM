@@ -64,15 +64,16 @@ def reopen(body, n, sites, *, cell=False, z_only=False):
 
 
 def construct_cascade(model, tokenizer, task, runtime, *, construct, constraints, repair_constraints,
-                      geometry_api, complete_geometry):
+                      geometry_api, complete_geometry, adaptive_lattice=False):
     n = int(task['plan_state']['N']); initial = None; episodes = []; stages = ['draft', 'failed_XYZ', 'neighbor_XYZ', 'all_numeric', 'final_Z_relaxed']
-    centers = []; opened = []
+    centers = []; opened = []; lattice_recoveries = 0; gamma_last = False
     for stage_index, stage in enumerate(stages):
         relaxed = stage == 'final_Z_relaxed'
         seed = None if stage_index == 0 else derived_seed(str(task['body_noise_seed']), 'geometry_recovery_'+stage, 1)
         try:
             body, metadata = construct(model, tokenizer, [task], runtime, constraints=constraints,
-                geometry_api=geometry_api, initial_body=initial, noise_seed_override=seed, relax_final_z=relaxed)
+                geometry_api=geometry_api, initial_body=initial, noise_seed_override=seed, relax_final_z=relaxed,
+                **({'lattice_gamma_last': True} if gamma_last else {}))
             support = complete_geometry(body[0].tolist())
             if support['supported'] or (relaxed and support.get('reason') == 'native_pair_below_0.5A'):
                 episodes.append({'stage':stage,'seed':seed,'opened_positions':opened,'completed':True,
@@ -81,6 +82,7 @@ def construct_cascade(model, tokenizer, task, runtime, *, construct, constraints
                     'schema':'DLM_geometry_three_stage_v1','episodes':episodes,'recoveries_used':stage_index,
                     'final_Z_relaxed':relaxed,'Plan_replacement_or_resampling':False,
                     'relaxed_generation_is_not_physical_validity':True,'neighbor_radius_A':2.0,
+                    'adaptive_lattice_recovery':adaptive_lattice,'lattice_recoveries':lattice_recoveries,
                     'original_exact_duplicate_guard_retained_for_refiner_graph':True})
                 return body, metadata
             error = geometry_api.GeometryNoLegalSupport({'reason':support['reason'],'complete_geometry':support}, body, 0)
@@ -92,7 +94,17 @@ def construct_cascade(model, tokenizer, task, runtime, *, construct, constraints
             error.details['recovery_episodes'] = episodes
             raise error
         centers = sorted(set(centers) | set(failed_sites(partial, n, error.details)))
-        if stage_index == 0:
+        if adaptive_lattice and 'lattice' in error.details.get('reason', ''):
+            # Gamma can have been revealed before alpha/beta. Reopening XYZ
+            # cannot repair that cell. First resample gamma conditional on the
+            # other angles; if needed resample the cell with gamma revealed last.
+            lattice_recoveries += 1
+            initial, opened = reopen(partial, n, range(n), cell=lattice_recoveries > 1)
+            initial[6] = MASK_TOKEN_ID
+            opened = sorted(set(opened) | {6})
+            gamma_last = True
+            stages[stage_index + 1] = 'conditional_gamma' if lattice_recoveries == 1 else 'conditional_cell'
+        elif stage_index == 0:
             initial, opened = reopen(partial, n, centers)
         elif stage_index == 1:
             sites = neighbor_sites(partial, n, centers, repair_constraints)

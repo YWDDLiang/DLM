@@ -244,12 +244,16 @@ def construct_batch(
     model: Any, tokenizer: Any, batch: Sequence[Mapping[str, Any]], runtime: Any,
     *, constraints: Any, geometry_api: Any = None, initial_body: Sequence[int] | None = None,
     noise_seed_override: int | None = None, relax_final_z: bool = False,
+    lattice_gamma_last: bool = False,
 ) -> Any:
     """Call the frozen constructor, optionally adding the registered geometry hook."""
     api = runtime.module
     schedule = batch[0]["schedule"]
     if any(task["schedule"] != schedule for task in batch):
         raise ValueError("R03 batch has nonhomogeneous PlanGraph schedules")
+    if lattice_gamma_last:
+        schedule = [part for group in schedule for part in
+                    ([[p for p in group if p != 6], [6]] if 6 in group and len(group) > 1 else [list(group)])]
     n = int(batch[0]["plan_state"]["N"])
     encoded = tokenizer([task["body_prompt"] for task in batch], add_special_tokens=False,
                         padding=True, return_tensors="pt")
@@ -297,7 +301,9 @@ def construct_batch(
         if suffix[:, position].detach().cpu().tolist() != list(values):
             raise RuntimeError("native R03 constructor changed a prefilled count/element")
     metadata = {"prompt_token_lengths": attention_mask.sum(dim=1).cpu().tolist(),
-                "prefill": {str(key): values for key, values in prefill.items()}}
+                "prefill": {str(key): values for key, values in prefill.items()},
+                "lattice_gamma_last": lattice_gamma_last,
+                "effective_generation_schedule": schedule}
     if geometry_report is not None:
         metadata["construction_geometry"] = geometry_report
     return suffix.detach().cpu(), metadata

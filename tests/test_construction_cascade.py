@@ -54,6 +54,25 @@ class CascadeTests(unittest.TestCase):
         constraints = bridge.build_repair_constraints(self.tokenizer)
         self.assertEqual(recovery.neighbor_sites(self.body,3,[2],constraints),[0,1,2])
 
+    def test_lattice_failure_reopens_gamma_before_retrying_coordinates(self):
+        calls = []
+        def construct(*args, **kwargs):
+            calls.append(kwargs)
+            if len(calls) == 1:
+                raise bridge.GeometryNoLegalSupport(
+                    {'reason':'nondegenerate_lattice_has_no_legal_continuation'}, torch.tensor([self.body]), 0)
+            return torch.tensor([self.body]), {}
+        _, report = recovery.construct_cascade(None, None, self.task, None, construct=construct,
+            constraints={}, repair_constraints={}, geometry_api=bridge,
+            complete_geometry=lambda _: {'supported':True}, adaptive_lattice=True)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(calls[1]['initial_body'][6], 126336)
+        self.assertEqual(calls[1]['initial_body'][:6], self.body[:6])
+        self.assertTrue(calls[1]['lattice_gamma_last'])
+        self.assertEqual([calls[1]['initial_body'][i] for i in [0,7,11,15]],
+                         [self.body[i] for i in [0,7,11,15]])
+        self.assertEqual(report['construction_recovery']['episodes'][1]['stage'], 'conditional_gamma')
+
     def test_final_Z_escape_changes_DLM_mask_but_keeps_alias_schema(self):
         x = torch.tensor([[1,1,*self.body]])
         kwargs = dict(current_tokens=x,prompt_length=2,gen_length=len(self.body),semantic_group=4,step_in_group=0)

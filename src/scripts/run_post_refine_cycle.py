@@ -262,7 +262,8 @@ def construct(spec, shard, shards):
                 if spec['policy'].get('construction_recovery') == 'three_stage_final_Z':
                     suffix, metadata = construct_cascade(model, tokenizer, task, runtime,
                         construct=native.construct_batch, constraints=constraints, repair_constraints=repair_constraints,
-                        geometry_api=bridge, complete_geometry=complete_geometry)
+                        geometry_api=bridge, complete_geometry=complete_geometry,
+                        adaptive_lattice=spec['policy'].get('adaptive_lattice_recovery',False))
                 else:
                     suffix, metadata = native.construct_with_recovery(model, tokenizer, task, runtime,
                         constraints=constraints, geometry_api=bridge, complete_geometry=complete_geometry,
