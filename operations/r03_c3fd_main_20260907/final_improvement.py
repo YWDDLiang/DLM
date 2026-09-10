@@ -550,6 +550,8 @@ def label_fresh_policy(root,destination,panel,original):
     import subprocess
     import torch
     reuse=[original/'fresh/native/labeling/result']
+    current=destination/'fresh/native/labeling/result'
+    if (current/'LABEL_FINAL.json').exists() and current not in reuse:reuse.append(current)
     reuse += [p/'edited/labeling/result' for p in (original/'policies/fresh').glob('*')
               if (p/'edited/labeling/result/LABEL_FINAL.json').exists()]
     reuse += [p for p in (root/'variants').glob('*/policies/fresh/*/edited/labeling/result')
