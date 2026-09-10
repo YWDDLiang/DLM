@@ -1,0 +1,200 @@
+{
+  "actual_source_batch": 192,
+  "actual_world_size": 4,
+  "analyzer_sha256": "c9e66a20fe0478911d7b7e96a1afac29fbad2acc39bda7695d71ac42f468512e",
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/training/round1/E/result/checkpoint",
+  "checkpoint_validation_passed": true,
+  "content_optimizer_steps": 1,
+  "coverage": {
+    "Stable_damage_rejection_content": {
+      "content_updated_unique": 7,
+      "content_visits": 7,
+      "eligible_rows": 60,
+      "head_updated_unique": 7,
+      "head_visits": 7,
+      "inspected_unique": 15,
+      "max_content_visits": 1,
+      "max_head_visits": 1,
+      "min_content_visits": 0,
+      "min_head_visits": 0
+    },
+    "Stable_promotion_content": {
+      "content_updated_unique": 1,
+      "content_visits": 1,
+      "eligible_rows": 4,
+      "head_updated_unique": 1,
+      "head_visits": 1,
+      "inspected_unique": 1,
+      "max_content_visits": 1,
+      "max_head_visits": 1,
+      "min_content_visits": 0,
+      "min_head_visits": 0
+    },
+    "all_training_rows": {
+      "content_updated_unique": 62,
+      "content_visits": 62,
+      "eligible_rows": 1758,
+      "head_updated_unique": 192,
+      "head_visits": 192,
+      "inspected_unique": 384,
+      "max_content_visits": 1,
+      "max_head_visits": 1,
+      "min_content_visits": 0,
+      "min_head_visits": 0
+    },
+    "eligible_content": {
+      "content_updated_unique": 62,
+      "content_visits": 62,
+      "eligible_rows": 642,
+      "head_updated_unique": 62,
+      "head_visits": 62,
+      "inspected_unique": 128,
+      "max_content_visits": 1,
+      "max_head_visits": 1,
+      "min_content_visits": 0,
+      "min_head_visits": 0
+    },
+    "eligible_heads": {
+      "content_updated_unique": 62,
+      "content_visits": 62,
+      "eligible_rows": 1758,
+      "head_updated_unique": 192,
+      "head_visits": 192,
+      "inspected_unique": 384,
+      "max_content_visits": 1,
+      "max_head_visits": 1,
+      "min_content_visits": 0,
+      "min_head_visits": 0
+    }
+  },
+  "full_epoch_cap_content_coverage": false,
+  "full_epoch_cap_head_coverage": false,
+  "head_optimizer_steps": 1,
+  "max_logged_rank0_GPU_GB": 44.576335872,
+  "objective_levels": {
+    "SUN": 206,
+    "decision": 7,
+    "meta_stable": 890,
+    "ordinary_improvement": 210,
+    "strict_stable": 22,
+    "unstable": 423
+  },
+  "optimizer_steps": 1,
+  "origins": {
+    "proposal": 793,
+    "teacher": 965
+  },
+  "parameter_delta_squared": 0.07839105820815906,
+  "purpose": "derived_report_only_not_training_feedback",
+  "rank_stop_details": [
+    {
+      "KL_stop": true,
+      "KL_trigger": {
+        "after_optimizer_steps": 1,
+        "epoch": 0,
+        "local_KL": 1.1991770267486572,
+        "maximum_rank_KL": 1.1991770267486572
+      },
+      "batch_size": 48,
+      "content_optimizer_steps": 1,
+      "epochs_cap": 8,
+      "head_continuation_after_KL": false,
+      "head_optimizer_steps": 1,
+      "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+      "sampling": "shuffled_complete_data_passes"
+    },
+    {
+      "KL_stop": true,
+      "KL_trigger": {
+        "after_optimizer_steps": 1,
+        "epoch": 0,
+        "local_KL": 0.786405086517334,
+        "maximum_rank_KL": 1.1991770267486572
+      },
+      "batch_size": 48,
+      "content_optimizer_steps": 1,
+      "epochs_cap": 8,
+      "head_continuation_after_KL": false,
+      "head_optimizer_steps": 1,
+      "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+      "sampling": "shuffled_complete_data_passes"
+    },
+    {
+      "KL_stop": true,
+      "KL_trigger": {
+        "after_optimizer_steps": 1,
+        "epoch": 0,
+        "local_KL": 0.7573832869529724,
+        "maximum_rank_KL": 1.1991770267486572
+      },
+      "batch_size": 48,
+      "content_optimizer_steps": 1,
+      "epochs_cap": 8,
+      "head_continuation_after_KL": false,
+      "head_optimizer_steps": 1,
+      "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+      "sampling": "shuffled_complete_data_passes"
+    },
+    {
+      "KL_stop": true,
+      "KL_trigger": {
+        "after_optimizer_steps": 1,
+        "epoch": 0,
+        "local_KL": 0.8045299649238586,
+        "maximum_rank_KL": 1.1991770267486572
+      },
+      "batch_size": 48,
+      "content_optimizer_steps": 1,
+      "epochs_cap": 8,
+      "head_continuation_after_KL": false,
+      "head_optimizer_steps": 1,
+      "pair_visits_semantics": "inspected_batches_including_KL_trigger_batch",
+      "sampling": "shuffled_complete_data_passes"
+    }
+  ],
+  "report": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/analysis/E1_COMPLETED_TRAINING.json",
+  "report_sha256": "11423f89333d196e06a17a660c1826263069970ca0703a5e31ca4386eed920db",
+  "schema": "clean_1000_completed_training_analysis_v1",
+  "source_identity": {
+    "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+  },
+  "stopping_evidence": "reference_KL",
+  "training_config": {
+    "accumulation": 1,
+    "anchor_weight": 0.2,
+    "base_model": "/public/home/jiaosz/ywliang/models/LLaDA-8B-Instruct",
+    "batch_size": 48,
+    "beta": 0.1,
+    "bounded_minibatch_training": true,
+    "branch": "E",
+    "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit/initialization/checkpoint",
+    "continue_heads_after_content_KL": false,
+    "data": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit/editor_collection/pairs/E.jsonl",
+    "epochs": 8,
+    "head_learning_rate": 0.0001,
+    "learning_rate": 0.00002,
+    "mask_cuts": 2,
+    "max_reference_kl": 0.02,
+    "max_training_seconds": 1800,
+    "output_dir": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/training/round1/E/result",
+    "ranked_training": true,
+    "reference_kl_weight": 1,
+    "replay_data": [],
+    "seed": 20261046,
+    "source_round": 1,
+    "steps": 4096,
+    "time_allocation": {
+      "remaining_seconds": 20040.039421,
+      "remaining_weight_updates": 1,
+      "reserved_panel_seconds": 3000,
+      "rule": "share_remaining_after_measured_1000_panel_reserve__requested_stop_after_round_1"
+    },
+    "training_gpus": 4,
+    "update_index": 1
+  },
+  "training_rows": 1758,
+  "training_seconds": 49.08124288357794,
+  "unique_TRAIN_sources": 965,
+  "update": "E1"
+}

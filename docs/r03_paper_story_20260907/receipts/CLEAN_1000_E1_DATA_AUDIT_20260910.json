@@ -1,0 +1,50 @@
+{
+  "schema": "clean_1000_E1_data_source_audit_v1",
+  "rows": 1758,
+  "unique_TRAIN_sources": 965,
+  "audit_comparisons": 2000,
+  "origins": {
+    "proposal": 793,
+    "teacher": 965
+  },
+  "objective_levels": {
+    "SUN": 206,
+    "meta_stable": 890,
+    "unstable": 423,
+    "ordinary_improvement": 210,
+    "decision": 7,
+    "strict_stable": 22
+  },
+  "content_preference_rows": 642,
+  "mode_targets": {
+    "0": 1619,
+    "1": 85,
+    "2": 9,
+    "3": 45
+  },
+  "accept_targets": {
+    "0": 1612,
+    "1": 139,
+    "None": 7
+  },
+  "strict_content_exclusion_events": 0,
+  "source_round": 1,
+  "all_sources_from_clean_run": true,
+  "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+  "data_sha256": "2f1188f9fb93c2476dd8d17413896409ff9dad1109e22c9e69e8b503ebf8ebc9",
+  "pair_manifest_sha256": "b0c5ba1e74401c24ee2d0447d59d844cadcbbe2ce71a3488002c29e259678af2",
+  "stage_evidence": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit/editor_collection/current": {
+      "inputs_sha256": "ac42fb04a7e6ac2a546dbdb20fc5d47e5aeaf81e70a6deb395c4e19d8ab2596e",
+      "scores_sha256": "733d321358ff135d2ac3e85740433dee7e158742b82801ceb15f4944fafaf7b0"
+    },
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit/editor_collection/proposal": {
+      "inputs_sha256": "e53fd04765ab4eadd63bffcc485248cf843e10ac117a091fe98868393e923ad9",
+      "scores_sha256": "e5b4eb25290a9f91f465d2c04c2410eef2286dd63683f3a58dc75ca0a6cd3f8a"
+    },
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit/editor_collection/teacher": {
+      "inputs_sha256": "225ab7a6ddda1b7fa55c22ecd7860e6ee45bdfe1bad354240a42436399af8a5d",
+      "scores_sha256": "136d8140a2843ee1c29fdeb2fb239da67f8a4ef640aaf2ae2ffaf2a44a01a03f"
+    }
+  }
+}

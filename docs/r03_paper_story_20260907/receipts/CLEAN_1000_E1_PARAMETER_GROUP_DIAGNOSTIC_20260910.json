@@ -1,0 +1,99 @@
+{
+  "schema": "E1_first_update_parameter_family_diagnostic_v1",
+  "groups": {
+    "LoRA": {
+      "tensors": 320,
+      "elements": 14680064,
+      "delta_squared": 0.005709584820279306,
+      "max_abs_delta": 0.0000200001522898674,
+      "old_squared_norm": 518.4481669549891,
+      "actual_learning_rate": 0.00002,
+      "delta_fraction": 0.07283464452066815
+    },
+    "state_conditioner": {
+      "tensors": 23,
+      "elements": 1267717,
+      "delta_squared": 0.010369214356187983,
+      "max_abs_delta": 0.00009999788017012179,
+      "old_squared_norm": 16506.147223948472,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.13227547455098765
+    },
+    "current_state_conditioner": {
+      "tensors": 23,
+      "elements": 1267717,
+      "delta_squared": 0.01038545111553664,
+      "max_abs_delta": 0.0000999976327875629,
+      "old_squared_norm": 16392.153179381356,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.13248259969800824
+    },
+    "raw_cell_adapter": {
+      "tensors": 4,
+      "elements": 531968,
+      "delta_squared": 0.005271511125475617,
+      "max_abs_delta": 0.00009999979374697432,
+      "old_squared_norm": 44.573153380198974,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.06724633243857853
+    },
+    "raw_site_adapter": {
+      "tensors": 4,
+      "elements": 531200,
+      "delta_squared": 0.0052759741654382995,
+      "max_abs_delta": 0.00009999983740272,
+      "old_squared_norm": 44.25943493470575,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.06730326546250155
+    },
+    "task_adapter": {
+      "tensors": 4,
+      "elements": 529024,
+      "delta_squared": 0.005280330999301888,
+      "max_abs_delta": 0.00009999993199016899,
+      "old_squared_norm": 52.14888463909526,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.0673588436622619
+    },
+    "mode_head": {
+      "tensors": 4,
+      "elements": 1049220,
+      "delta_squared": 0.010457243048540281,
+      "max_abs_delta": 0.00010000169277191162,
+      "old_squared_norm": 44.077310193358194,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.13339841758746313
+    },
+    "site_head": {
+      "tensors": 4,
+      "elements": 524545,
+      "delta_squared": 0.005009193033134124,
+      "max_abs_delta": 0.00009999610483646393,
+      "old_squared_norm": 43.0503395042196,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.06390005672704653
+    },
+    "count_head": {
+      "tensors": 4,
+      "elements": 1049220,
+      "delta_squared": 0.010187487278533776,
+      "max_abs_delta": 0.00009999889880418777,
+      "old_squared_norm": 43.99853937256426,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.12995726271644018
+    },
+    "quality_head": {
+      "tensors": 4,
+      "elements": 1049220,
+      "delta_squared": 0.01044506774522384,
+      "max_abs_delta": 0.00010000169277191162,
+      "old_squared_norm": 44.02410682766024,
+      "actual_learning_rate": 0.0001,
+      "delta_fraction": 0.13324310263604414
+    }
+  },
+  "total_delta_squared": 0.07839105768765176,
+  "receipt_delta_squared": 0.07839105820815906,
+  "head_features_detached": false,
+  "scope": "tensor movement and configured optimizer groups; not causal attribution of physical quality"
+}

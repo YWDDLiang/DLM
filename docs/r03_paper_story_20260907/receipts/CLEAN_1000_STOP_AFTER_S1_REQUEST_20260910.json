@@ -1,0 +1,52 @@
+{
+  "schema": "clean_1000_requested_stop_after_S1_v1",
+  "request": "Finish current S1 including E1 training and final evaluation, pause the 1000 run before G2, then investigate Edit/KEEP improvements in SUN and MSUN.",
+  "tests_passed": 37,
+  "validated": {
+    "stop_request": {
+      "schema": "ranked_stop_after_round_v1",
+      "last_round": 1,
+      "run_spec_sha256": "b237b3279faf35ae820a22ae6afba54b7737c185566b7089fa9c8623819f8989",
+      "budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+      "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+      "registered_utc": "2026-09-10T04:25:44.210248+00:00",
+      "plan_git_commit": "2941d5cefa51eaab9597f062363596a125ceac75",
+      "reason": "Complete S1, pause before G2, investigate Edit/KEEP SUN and MSUN gains."
+    },
+    "stop_sha256": "cb5891a59a570ba7f563b4cd930f759f3984fb76e9ef350062de91dd24d8fc30",
+    "reserved_seconds": 3000,
+    "remaining_updates": 1,
+    "E1_max_training_seconds": 1800,
+    "allocations": {
+      "single_GPUs": 5,
+      "parallel_main_GPUs": 3,
+      "parallel_other_GPUs": 2,
+      "training_GPUs": 4,
+      "training_batch_size": 48
+    },
+    "original_inputs_unchanged": 18,
+    "scientific_source": {
+      "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+      "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+    },
+    "orchestrator_source": {
+      "commit": "2941d5cefa51eaab9597f062363596a125ceac75",
+      "manifest_sha256": "be8117520d0ebff27cd1770e8ae36252f12b304f672ff90926939842a0e07bf5"
+    }
+  },
+  "resume": {
+    "pid": 2487,
+    "command": [
+      "/public/home/jiaosz/miniconda3/envs/diff_meets_diff/bin/python",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/2941d5cefa51eaab9597f062363596a125ceac75/operations/r03_c3fd_main_20260907/coordinate_ranked_rsi.py",
+      "--root",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000"
+    ],
+    "scientific_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "stop_sha256": "cb5891a59a570ba7f563b4cd930f759f3984fb76e9ef350062de91dd24d8fc30",
+    "started_utc": "2026-09-10T04:27:14.179343+00:00",
+    "initial_returncode": null
+  },
+  "editor_tail30_plan_applied": false,
+  "old_budget_guard_failure_preserved": true
+}

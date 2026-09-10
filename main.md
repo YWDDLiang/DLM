@@ -2,7 +2,9 @@
 
 当前执行计划见[固定G/F的KEEP/EDIT尝试与后续1000条计划](docs/r03_paper_story_20260907/EDITOR_T2T_TRIAL_PLAN_20260910.md)。详细实验讨论见[EXPERT_REPAIR_DISCUSSION.md](docs/r03_paper_story_20260907/EXPERT_REPAIR_DISCUSSION.md)。
 
-2026-09-10更新：固定G/F的KEEP/EDIT试验完整结束，未通过采用条件。按用户约定冻结回退到原已完成方法，1000条S0＋三次G/E更新已正式启动。后续仅修阻断执行的小bug，主判断仍为Stable和SUN。
+2026-09-10最新范围：按用户追加要求，完成当前S1的E1训练、最终KEEP/EDIT评价和归档后暂停1000条运行，不进入G2/S2及S3。随后研究如何让Edit/KEEP增加SUN与MSUN。本轮继续冻结方法；固定G/F试验失败后沿用旧方法启动1000条的原始计划与回执仍保留。停止范围已实际登记并绑定原预算，见[停止请求回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_STOP_AFTER_S1_REQUEST_20260910.json)。
+
+用户进一步要求后续重点全部放在KEEP/EDIT训练和分析，只使用现有DLM draft、proposal和对应反馈，旧256数据也可纳入。新尝试以未参与E训练的来源上SUN、MSUN同时高于同输入KEEP为采用条件，并单列训练中见过来源的增量。划分时合并祖先/约化组成及其跨轮变体；旧256和起始E权重已训练过的来源保留在训练侧，避免把1000前缀重叠误当泛化。具体数据与训练方案提交前登记。
 
 固定G3/F输入为Stable 32、SUN 28；旧E3为Stable 33、SUN 32。四个新候选在24个预定DEV策略下全部KEEP；冻结选择在52条FINAL上为Stable 5、SUN 5，与KEEP及旧E3持平，未获得新增Stable。全256条新输出为32/28，低于旧E3的33/32。本次划分只保证不参与此次E更新，不能称为旧RSI从未见过的独立测试。
 
@@ -12,7 +14,11 @@
 
 正式调度于北京时间2026-09-10 06:01:15启动，绝对截止18:01:15；最多6张A800及3个并发/排队作业。S0及对照已完整结束并归档：主路RAW为Stable25/SUN25，F/token及current为122/105，最终KEEP/EDIT为115/106；对照RAW19/19、F/current122/106，分母均为1000。S0从原调度起累计约3小时25分22秒，不能用重启后进程计时替代总耗时。
 
-G1已完成20个真实优化器步，822个有效TRAIN样本各参与4次内容更新，六张卡均未触发KL停止，参数确有变化且检查点验证通过。S1的1000条RAW为23 Stable/23 SUN，F/token及current为116/102；E1正在采集本轮干净训练反馈。六次G/E更新目前完成G1一次，后续继续固定流程。数据来源、实际覆盖和检查点哈希见[G1数据回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_G1_DATA_AUDIT_20260910.json)及[更新回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_G1_WEIGHT_UPDATE_20260910.json)。
+G1已完成20个真实优化器步，822个有效TRAIN样本各参与4次内容更新，六张卡均未触发KL停止，参数确有变化且检查点验证通过。S1的1000条RAW为23 Stable/23 SUN，F/token及current为116/102；E1已完成一次联合更新，正在做最终编辑评价。按新范围，仅保留G1/E1两次实际更新，后续G2/E2/G3/E3不再提交。G1数据来源、实际覆盖和检查点哈希见[G1数据回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_G1_DATA_AUDIT_20260910.json)及[更新回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_G1_WEIGHT_UPDATE_20260910.json)。
+
+E1训练使用965个不同TRAIN来源的1758条记录，其中642条有内容偏好监督；4条Stable晋升目标只实际更新1条，60条Stable损伤拒绝目标只更新7条。四rank合计检查384条，但仅192条参与头更新、62条参与条件内容更新。第二批次四rank的KL分别约1.199/0.786/0.757/0.805，均远高于0.02，因此停止全部更新；训练计时49.1秒，原30分钟预算未用尽。参数确有变化、检查点验证通过，rank0已记录更新的峰值显存44.58 GB。这次未完成一遍数据，后续必须把KL停止、首步更新及共享梯度、稀少晋升目标覆盖和最终物理效果结合分析。见[E1数据](docs/r03_paper_story_20260907/receipts/CLEAN_1000_E1_DATA_AUDIT_20260910.json)及[真实更新](docs/r03_paper_story_20260907/receipts/CLEAN_1000_E1_WEIGHT_UPDATE_20260910.json)。
+
+按用户重新加入MSUN的要求，现有完整评分重新汇总：S0的F/current为Stable122、SUN105、MSUN482，E0最终为115、106、439；S1 current为116、102、477，E1最终仍待评价。MSUN包含满足同一可靠性与N/U条件、hull≤0.1 eV/atom的结构，含SUN。S0的E0虽SUN净增1，MSUN却净减43，同样未显示整体收益。
 
 S1的F相对本轮RAW新增93 Stable、79 SUN，均无损失；与S0的F同Plan比较则为Stable14得20失、净−6，SUN15得18失、净−3。跨轮34条Stable变化的两端都具备可靠物理评价，不能解释成未知标签补齐。SUN另有136仅因N变化获得、607仅因N变化损失，不作为新Stable。该阶段未显示G1带来整体G/F收益；后续E1仍按完整流程评价。见[配对诊断](docs/r03_paper_story_20260907/receipts/CLEAN_1000_S1_F_DIAGNOSTIC_20260910.json)。
 
@@ -24,7 +30,7 @@ F新增97条Stable、80条SUN，原有25条Stable/SUN全部保留。Stable晋升
 
 扩容时遗漏的参考缓存覆盖已修复：原242体系缓存保留原路径，按相同2026.04.13版本与原协议扩展至925体系（895可评分、30官方参考缺失）。原输入、物理标签和配置字节未变；失败评分已归档，仅重试评分，科学源码仍固定657985c。37项相关检查及真实覆盖检查通过，恢复后的两路评分均正常完成，见[修复回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_HULL_COVERAGE_RECOVERY_20260910.json)。
 
-1000条的逐阶段指标、同Plan获得/损失、六次真实训练和资源记录见[逐轮结果报告](docs/r03_paper_story_20260907/CLEAN_1000_RESULTS_20260910.md)。已完成固定G/F试验的48个作业共分配8.0283 GPU小时，含两次失败开销，见[试验资源回执](docs/r03_paper_story_20260907/receipts/EDITOR_T2T_TRIAL_RESOURCE_USAGE_20260910.json)。
+1000条已完成阶段的指标、同Plan获得/损失、实际训练和资源记录见[逐轮结果报告](docs/r03_paper_story_20260907/CLEAN_1000_RESULTS_20260910.md)；原三次G/E更新计划按最新要求在S1后暂停，不能记作全部完成。已完成固定G/F试验的48个作业共分配8.0283 GPU小时，含两次失败开销，见[试验资源回执](docs/r03_paper_story_20260907/receipts/EDITOR_T2T_TRIAL_RESOURCE_USAGE_20260910.json)。
 
 S0曾临时采用主路3卡、对照2卡，G1仍按6×32完成。随后节点3卡被长期作业占用，6卡请求被排到数天后；按事前计划将剩余单路推理调整为5卡、并行3+2，后续训练4×48保持全局批量192，并依据已测1000条耗时登记140分钟完整轮、35分钟E后处理及15分钟收尾预留。原学习率、损失、KL规则、遍历上限和绝对截止不变，rank划分变动如实记录。只取消未运行的41831，新41861已用5卡完成F800，科学源码保持657985c。详见[当前容量回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_CAPACITY_FIVE_GPUS_20260910.json)。
 
