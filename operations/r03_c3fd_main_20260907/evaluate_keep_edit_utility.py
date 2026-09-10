@@ -81,9 +81,9 @@ def evaluate(root,config):
     if result.returncode:raise RuntimeError('continuous policy scoring failed:'+str(panel))
 
 
-def summary(root,panel,role):
+def summary(root,panel,role,*,after_stage='edited'):
     if role=='final' and not (root/'FROZEN_SELECTION.json').exists():raise ValueError('FINAL policy is not frozen')
-    roles=read_rows(root/'SOURCE_SPLIT.jsonl');before=scores(root/'fit','native');after=scores(panel,'edited')
+    roles=read_rows(root/'SOURCE_SPLIT.jsonl');before=scores(root/'fit','native');after=scores(panel,after_stage)
     decisions=json.loads((panel/'DECISION_BINDING.json').read_text())['decisions']
     indices=[i for i,r in enumerate(roles) if role=='all' or r['split']==role]
     if role=='all' and not (root/'FROZEN_SELECTION.json').exists():raise ValueError('all includes sealed FINAL')
@@ -99,7 +99,7 @@ def summary(root,panel,role):
         counts['actual_edits']+=int(decisions[i]['actual_edit'])
     return dict(panel=str(panel),split=role,requests=len(indices),counts=counts,KEEP=base,gains=gains,losses=losses,
         delta={k:counts[k]-base[k] for k in gains},decision_sha256=file_hash(panel/'DECISION_BINDING.json'),
-        scores_sha256=file_hash(score_directory(panel,'edited')/'attempt_results.jsonl'))
+        scores_sha256=file_hash(score_directory(panel,after_stage)/'attempt_results.jsonl'))
 
 
 def main():

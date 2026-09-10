@@ -294,6 +294,9 @@ def edit(spec,shard,shards):
         from crystal_dlm.rsi_preference import propose_ranked_editor as propose_editor
     from crystal_dlm.ranked_feedback import endpoint_quality
     rank=int(os.environ.get('LOCAL_RANK','0'))
+    seed_stream=spec.get('editor_seed_stream','E')
+    if not isinstance(seed_stream,str) or not seed_stream or len(seed_stream)>128:
+        raise ValueError('editor seed stream must be a nonempty bounded string')
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():
         raise RuntimeError('editor requires a Slurm GPU')
     torch.cuda.set_device(rank);torch.set_num_threads(1);torch.use_deterministic_algorithms(True)
@@ -325,7 +328,7 @@ def edit(spec,shard,shards):
         for offset in range(0,len(indices),batch_size):
             selected=indices[offset:offset+batch_size]
             requests=[dict(prompt=plans[i]['body_prompt'],body=current[i]['body_token_ids'],n=plans[i]['plan_state']['N'],
-                seed=derived_seed(str(plans[i]['body_noise_seed']),'E'),
+                seed=derived_seed(str(plans[i]['body_noise_seed']),seed_stream),
                 known_sun=quality[i]['strict_sun'] is True and endpoint_quality(quality[i])['reliable'],
                 force_proposal=spec.get('collect_training_proposals',False)) for i in selected]
             traces=propose_ranked_batch(model,tokenizer,requests,support=support,batch_size=batch_size,
@@ -342,7 +345,7 @@ def edit(spec,shard,shards):
         edited=dict(record,trajectory_id=f"{spec['run_id']}:edited:{original}")
         if record['success'] and record.get('body_token_ids'):
             trace=batched[index] if index in batched else propose_editor(model,tokenizer,prompt=plan['body_prompt'],body=record['body_token_ids'],
-                n=plan['plan_state']['N'],support=support,seed=derived_seed(str(plan['body_noise_seed']),'E'),
+                n=plan['plan_state']['N'],support=support,seed=derived_seed(str(plan['body_noise_seed']),seed_stream),
                 known_sun=score['strict_sun'] is True and (not spec.get('ranked_training') or endpoint_quality(score)['reliable']),
                 force_proposal=spec.get('collect_training_proposals',False) if spec.get('ranked_training') else plan.get('source_split')=='train',
                 keep_prior=spec['policy']['known_SUN_keep_prior'])

@@ -9,7 +9,8 @@ from submit_stage import configured_dispatch
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,required=True)
-    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export'],required=True)
+    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export','decide_repeat'],required=True)
+    parser.add_argument('--repeat-index',type=int,choices=[1,2])
     parser.add_argument('--minutes',type=int,default=35)
     parser.add_argument('--job-suffix',default='')
     args=parser.parse_args();root=args.root.resolve();source=Path(__file__).resolve().parents[2]
@@ -18,6 +19,9 @@ def main():
     if args.job_suffix and not args.job_suffix.replace('_','').isalnum():raise ValueError('invalid job suffix')
     job='focus_utility_'+args.mode+('_'+args.job_suffix if args.job_suffix else '')
     output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'models/selected_utility' if args.mode=='export' else 'analysis/utility_'+args.mode
+    if args.mode=='decide_repeat':
+        if args.repeat_index is None:raise ValueError('repeat decision needs an index')
+        job+='_'+str(args.repeat_index);output=f'repeats/repeat{args.repeat_index}/decision'
     if args.job_suffix:
         if args.mode not in ('audit','policies'):raise ValueError('training/feature retries require explicit data recovery')
         output+='_'+args.job_suffix
@@ -35,15 +39,22 @@ def main():
     elif args.mode=='audit':
         required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl']
         products=['{output}/AUDIT_FINAL.json']
-    else:
+    elif args.mode=='export':
         required += [root/'FROZEN_SELECTION.json',root/'training/utility/result/TRAINING_FINAL.json',
             root/'evaluation_features/FEATURES_FINAL.json']
         products=['{output}/EXPORT_FINAL.json','{output}/checkpoint/RSI_TRAINING_DONE.json']
+    else:
+        required += [root/'FROZEN_SELECTION.json',root/'REPEAT_SEED_REGISTRATION.json',
+            root/'models/selected_utility/EXPORT_FINAL.json',
+            root/f'repeats/repeat{args.repeat_index}/proposal/inputs.jsonl']
+        products=['{output}/REPEAT_DECISION_FINAL.json']
     if any(not p.is_file() for p in required):raise ValueError('utility admission inputs are incomplete')
     gpu=0 if args.mode=='policies' else 1
     script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/audit_keep_edit_judgement.py' if args.mode=='audit' else 'src/scripts/export_keep_edit_utility.py' if args.mode=='export' else 'src/scripts/train_keep_edit_utility.py'
-    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export') else ['--mode',args.mode])
-    if args.mode in ('policies','audit','export'):stage_args+=['--completion-dir','{output}']
+    if args.mode=='decide_repeat':script='operations/r03_c3fd_main_20260907/repeat_keep_edit_utility.py'
+    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export','decide_repeat') else ['--mode',args.mode])
+    if args.mode=='decide_repeat':stage_args+=['--mode','decide','--index',str(args.repeat_index)]
+    if args.mode in ('policies','audit','export','decide_repeat'):stage_args+=['--completion-dir','{output}']
     pipeline['components']=[dict(id=job,output_dir=output,gpus=gpu,stages=[dict(name=args.mode,
         script=script,args=stage_args,
         inputs=[str(p) for p in required],outputs=products)])]

@@ -13,18 +13,10 @@ from scripts.run_post_refine_cycle import read_rows, write_json, file_hash, vali
 from scripts.run_rsi_stages import scores, score_directory
 
 
-def prepare(root):
-    fit = root / 'fit'
-    export = root / 'models/selected_utility/EXPORT_FINAL.json'
-    receipt = json.loads(export.read_text())
-    if not receipt['all_1000_continuous_outputs_reproduced']:
-        raise ValueError('the selected utility checkpoint has not passed reload verification')
-    checkpoint = Path(receipt['checkpoint'])
-    validate_rsi_checkpoint(checkpoint, 'E')
-    panel = root / 'decoder_replay'
+def clone_decoder_inputs(fit, panel):
     if panel.exists():
         raise ValueError('decoder replay already has a registration')
-    panel.mkdir()
+    panel.mkdir(parents=True)
     shutil.copytree(fit / 'cohort', panel / 'cohort')
     current = panel / 'current'
     current.mkdir()
@@ -38,6 +30,20 @@ def prepare(root):
     # The decoder reads current quality only for the original known-SUN guard.
     # Byte-identical input and score files preserve that decision context.
     scores(panel, 'current')
+    return observed
+
+
+def prepare(root):
+    fit = root / 'fit'
+    export = root / 'models/selected_utility/EXPORT_FINAL.json'
+    receipt = json.loads(export.read_text())
+    if not receipt['all_1000_continuous_outputs_reproduced']:
+        raise ValueError('the selected utility checkpoint has not passed reload verification')
+    checkpoint = Path(receipt['checkpoint'])
+    validate_rsi_checkpoint(checkpoint, 'E')
+    panel = root / 'decoder_replay'
+    observed = clone_decoder_inputs(fit, panel)
+    current = panel / 'current'
     spec = json.loads((fit / 'RUN_SPEC.json').read_text())
     spec.update(run_root=str(panel), run_id='keep_edit_focus:decoder_replay',
                 focus_replay_role='same_inputs_scope_seed_and_batch_shape_with_exported_quality_head')
