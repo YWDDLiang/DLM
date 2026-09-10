@@ -299,7 +299,17 @@ def propose_ranked_batch(model, tokenizer, requests, *, support, batch_size=16, 
                     if request['known_sun'] and selected==0 and not request.get('force_proposal'):
                         result.update(action=dict(mode=0,name=MODES[0],sites=[],positions=[]),learned_decision='KEEP')
                         s['stage']='done';continue
-                    if mode==1:
+                    exploration=request.get('exploration_local_rank')
+                    if exploration is not None:
+                        if type(exploration) is not int or not 0<=exploration<=3 or not request.get('force_proposal'):
+                            raise ValueError('registered site exploration needs a forced proposal and rank 0..3')
+                        mode=1
+                        ranked=out.site_logits[i,:n].float().argsort(descending=True,stable=True).tolist()
+                        sites=[ranked[exploration % n]]
+                        result.update(scope_policy='registered_local_site_rank',exploration_local_rank=exploration,
+                            available_site_ranks=n,site_logits=out.site_logits[i,:n].float().tolist(),
+                            count_logits=out.count_logits[i].float().tolist(),site_rank_wrapped=exploration>=n)
+                    elif mode==1:
                         allowed=[j for j,count in enumerate(COUNTS) if count<=n]
                         count=COUNTS[allowed[int(out.count_logits[i,allowed].argmax())]]
                         sites=sorted(out.site_logits[i,:n].topk(count).indices.tolist())

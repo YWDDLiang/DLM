@@ -77,6 +77,23 @@ class BatchTests(unittest.TestCase):
             self.assertEqual([(x['position'],x['token_id']) for x in a['sampling_trace']],
                              [(x['position'],x['token_id']) for x in b['sampling_trace']])
 
+    def test_site_exploration_preserves_fixed_fields_and_opens_failed_current(self):
+        body,_=make_body(self.tok);model=Policy(self.width)
+        requests=[dict(prompt='p',body=body,n=2,seed=17,known_sun=False,
+            force_proposal=True,exploration_local_rank=k) for k in (0,1,2,3)]
+        rows=propose_ranked_batch(model,self.tok,requests,support=self.support,batch_size=4)
+        for k,row in enumerate(rows):
+            self.assertEqual(row['action']['sites'],[k%2])
+            self.assertEqual(row['action']['mode'],1)
+            self.assertEqual(row['forward_calls'],5)
+            self.assertTrue(row['proposal_generated'])
+            self.assertEqual(row['site_rank_wrapped'],k>=2)
+            positions=set(row['action']['positions'])
+            for i,token in enumerate(row['proposal_tokens']):
+                if i not in positions:self.assertEqual(token,body[i])
+        with self.assertRaisesRegex(ValueError,'forced proposal'):
+            propose_ranked_batch(model,self.tok,[dict(requests[0],force_proposal=False)],support=self.support)
+
     def test_accept_only_record_trains_judge_without_duplicate_mode_target(self):
         class Heads(Policy):
             def __init__(self,width):
