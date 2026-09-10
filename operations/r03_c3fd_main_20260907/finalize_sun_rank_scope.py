@@ -76,6 +76,11 @@ def finalize(root):
     new_comp={canonical(p) for p in newplans};old_comp={canonical(p) for p in oldplans}
     if len(new_comp)!=256 or new_comp&old_comp:raise ValueError('new FINAL is not composition excluded')
     if {p['ancestor_id'] for p in newplans}&{p['ancestor_id'] for p in oldplans}:raise ValueError('new FINAL ancestor overlap')
+    from pymatgen.core import Structure
+    from pymatgen.analysis.structure_matcher import StructureMatcher
+    matcher=StructureMatcher(ltol=.2,stol=.3,angle_tol=5)
+    native_labels={r['trajectory_id']:r for r in read_rows(root/'fresh/native/labeling/result/labels.jsonl')}
+    native_records=read_rows(root/'fresh/native/inputs.jsonl')
     outcome={};cases={};parity={};interval={};pins={}
     for name,value in panels.items():
         panel=Path(value['panel']);inputs=panel/'edited/inputs.jsonl';decision_path=panel/'DECISION_BINDING.json'
@@ -91,9 +96,18 @@ def finalize(root):
             verified.append(dict(ordinal=i,KEEP=chosen is None,record_sha256=fingerprint(record)))
         parity[name]=dict(requests=len(verified),all_outputs_exact=True,all_KEEP_originals_exact=True,records=verified)
         outcome[name]=summary(root,panel,'fresh');interval[name]=paired_ci(before,after)
-        cases[name]=[dict(ordinal=i,composition=canonical(newplans[i]),ancestor_id=newplans[i]['ancestor_id'],
-            before=flags(a),after=flags(b),decision=decisions[i]) for i,(a,b) in enumerate(zip(before,after,strict=True))
-            if any(flags(a)[k]!=flags(b)[k] for k in ('Stable','SUN','MSUN'))]
+        after_labels={r['trajectory_id']:r for r in read_rows(panel/'edited/labeling/result/labels.jsonl')}
+        cases[name]=[]
+        for i,(a,b) in enumerate(zip(before,after,strict=True)):
+            if not any(flags(a)[k]!=flags(b)[k] for k in ('Stable','SUN','MSUN')):continue
+            left=native_labels[native_records[i]['trajectory_id']].get('final_structure')
+            right=after_labels[actual[i]['trajectory_id']].get('final_structure');matches=None
+            if left is not None and right is not None:
+                aa,bb=Structure.from_dict(left),Structure.from_dict(right)
+                matches=dict(before_to_after=bool(matcher.fit(aa,bb)),after_to_before=bool(matcher.fit(bb,aa)))
+            cases[name].append(dict(ordinal=i,composition=canonical(newplans[i]),ancestor_id=newplans[i]['ancestor_id'],
+                before=flags(a),after=flags(b),decision=decisions[i],relaxed_terminal_structure_match=matches,
+                N_metric_endpoint='input_before_common_relaxation'))
         for p in [inputs,decision_path,panel/'edited/labeling/result/LABEL_FINAL.json',
             score_directory(panel,'edited')/'attempt_results.jsonl',score_directory(panel,'edited')/'BASIC_METRICS.json']:
             pins[str(p)]=file_hash(p)
