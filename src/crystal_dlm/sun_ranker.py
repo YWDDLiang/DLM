@@ -17,6 +17,15 @@ def nested_probabilities(logits):
     return __import__('torch').stack((probability[...,0]*probability[...,1],probability[...,1]),dim=-1)
 
 
+def select_scored_state(candidates):
+    """Compare the learned KEEP view with edits, without acceptance floors."""
+    valid=[c for c in candidates if c['valid']]
+    for candidate in valid:
+        if not all(math.isfinite(candidate[key]) for key in ('sun_gain','ms_gain')):
+            raise ValueError('nonfinite state prediction')
+    return max(valid,key=lambda c:(c['sun_gain'],c['ms_gain'],c['stream']=='keep'))['stream'] if valid else 'keep'
+
+
 def endpoint_targets(score):
     from crystal_dlm.ranked_feedback import endpoint_quality
     q=endpoint_quality(score)

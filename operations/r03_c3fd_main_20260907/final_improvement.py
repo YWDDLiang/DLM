@@ -258,6 +258,7 @@ def rank_worker(root,name):
             '--feedback-manifest',str(panel/'candidate/FEEDBACK_MANIFEST.json'),'--joint-physical-stop']
         subprocess.run(command,check=True)
         validity(spec,'candidate')
+    collect_keep_features(destination)
     train(destination,destination/'training/sun_ranker')
     training=destination/'training/sun_ranker/TRAINING_FINAL.json'
     report=json.loads(training.read_text())
@@ -272,13 +273,35 @@ def policy_worker(root,name):
     from evaluate_sun_ranker import build,evaluate,summary
     destination=root/'variants'/name
     predictions=destination/'training/nested_sun_ranker/FIT_PREDICTIONS.jsonl'
-    panel=build(destination,'fit','nested_sun10',.1,0.,prediction_path=predictions,
-                score_kind='absolute_NS_NMS_probabilities')
+    panel=build(destination,'fit','learned_keep',0.,0.,prediction_path=predictions,
+                score_kind='absolute_NS_NMS_probabilities',learned_keep=True)
     evaluate(destination,panel,nu_workers=3)
     results={role:summary(destination,panel,role) for role in ('train','dev','final','all')}
-    report=dict(complete=True,threshold=.1,results=results,DEV_role='feasibility',old_FINAL_role='exploratory')
+    report=dict(complete=True,threshold=None,learned_keep=True,results=results,DEV_role='feasibility',old_FINAL_role='exploratory')
     write_json(destination/'policy_execution/DONE.json',report)
     print(json.dumps(report),flush=True)
+
+
+def collect_keep_features(destination):
+    import gc
+    import torch
+    from crystal_dlm.expert_edit import load_editor_model
+    from scripts.train_keep_edit_utility import feature_rows
+    spec=json.loads((destination/'fit/RUN_SPEC.json').read_text())
+    plans=read_rows(destination/'fit/cohort/plans.jsonl')
+    current=read_rows(destination/'fit/current/inputs.jsonl')
+    bank=destination/'fit/bank/keep'
+    model,tokenizer=load_editor_model(spec['assets']['base_model'],spec['assets']['editor_checkpoint'],torch.device('cuda',0))
+    rows=[dict(ordinal=i,pair_id=fingerprint(dict(panel='fit',stream='keep',source=p['ancestor_id'])),
+        source_id=p['ancestor_id'],prompt=p['body_prompt'],num_sites=p['plan_state']['N'],
+        current_tokens=c['body_token_ids'],proposal_tokens=c['body_token_ids'],action_positions=[])
+        for i,(p,c) in enumerate(zip(plans,current)) if c.get('body_token_ids') and c.get('success')]
+    bank.mkdir(parents=True,exist_ok=True)
+    write_rows(bank/'FEATURE_ROWS.jsonl',rows)
+    feature_rows(model,tokenizer,rows,torch.device('cuda',0),bank,'CANDIDATE')
+    write_json(bank/'COLLECTION_FINAL.json',dict(features_sha256=file_hash(bank/'CANDIDATE_FEATURES.pt'),
+        feature_rows_sha256=file_hash(bank/'FEATURE_ROWS.jsonl'),rows=len(rows),kind='unchanged_current_as_model_candidate'))
+    del model,tokenizer;gc.collect();torch.cuda.empty_cache()
 
 
 if __name__ == '__main__':

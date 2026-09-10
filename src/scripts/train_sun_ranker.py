@@ -44,16 +44,23 @@ def features(root,panel_name,device):
     bound_current=[source_current/'inputs.jsonl',source_current/'labeling/result/LABEL_FINAL.json',
         score_directory(source_current.parent,source_current.name)/'attempt_results.jsonl',editor/'expert_edit_modules.pt']
     result={};pins={str(p):file_hash(p) for p in [op_path,*bound_current]}
-    for name in STREAMS:
+    learned_keep=(root/'LEARNED_KEEP_REGISTRATION.json').exists()
+    if learned_keep:pins[str(root/'LEARNED_KEEP_REGISTRATION.json')]=file_hash(root/'LEARNED_KEEP_REGISTRATION.json')
+    for name in [*STREAMS,*(['keep'] if learned_keep else [])]:
         bank=panel/'bank'/name;receipt=json.loads((bank/'COLLECTION_FINAL.json').read_text())
         fp=bank/'CANDIDATE_FEATURES.pt';rp=bank/'FEATURE_ROWS.jsonl'
         if file_hash(fp)!=receipt['features_sha256'] or file_hash(rp)!=receipt['feature_rows_sha256']:
             raise ValueError('ranker feature cache changed')
         payload=torch.load(fp,map_location='cpu',weights_only=False);rows=read_rows(rp)
         if payload['pair_ids']!=[r['pair_id'] for r in rows]:raise ValueError('ranker feature identities differ')
-        candidate=read_rows(bank/'candidate/inputs.jsonl');traces={};extra=[]
+        candidate=current if name=='keep' else read_rows(bank/'candidate/inputs.jsonl');traces={};extra=[]
         for row in rows:
-            i=row['ordinal'];wrapper=json.loads((bank/f'candidate/records/{i:04d}.json').read_text())
+            i=row['ordinal']
+            if name=='keep':
+                trace=dict(action=dict(positions=[]),proposal_generated=False,continuous_applied=False)
+                traces[i]=trace;extra.append(extra_features(before[i],current[i],current[i],trace,row['num_sites']))
+                continue
+            wrapper=json.loads((bank/f'candidate/records/{i:04d}.json').read_text())
             bound=json.loads((bank/f'bound/{i:04d}.json').read_text())
             if receipt['bindings'][i]['record_sha256']!=fingerprint(candidate[i]) or bound['record']!=candidate[i]:
                 raise ValueError('ranker continuous input binding changed')
@@ -86,8 +93,8 @@ def train(root,output,*,nested=False):
     for stream,bank in banks.items():
         path=root/'fit/bank'/stream
         old_primary=stream=='primary' and not reg.get('editor_content_changed')
-        observed=scores(Path(reg['previous_run'])/'fit','hybrid_proposal') if old_primary else scores(path,'candidate')
-        measured=Path(reg['previous_run'])/'fit/hybrid_proposal' if old_primary else path/'candidate'
+        observed=before if stream=='keep' else scores(Path(reg['previous_run'])/'fit','hybrid_proposal') if old_primary else scores(path,'candidate')
+        measured=Path(reg['previous_run'])/'fit/native' if stream=='keep' else Path(reg['previous_run'])/'fit/hybrid_proposal' if old_primary else path/'candidate'
         for pin in (measured/'inputs.jsonl',measured/'labeling/result/LABEL_FINAL.json',
                     score_directory(measured.parent,measured.name)/'attempt_results.jsonl'):pins[str(pin)]=file_hash(pin)
         observed_inputs=read_rows(measured/'inputs.jsonl')
@@ -95,7 +102,7 @@ def train(root,output,*,nested=False):
             i=row['ordinal'];role=split[i]
             if role['split']!='train':continue
             if role['ancestor_id']!=row['source_id']:raise ValueError('TRAIN source misalignment')
-            if not bank['traces'][i]['continuous_applied']:
+            if stream!='keep' and not bank['traces'][i]['continuous_applied']:
                 exclusions['exact_KEEP_not_a_physical_edit']+=1;continue
             a,ak=endpoint_targets(before[i]);b,bk=endpoint_targets(observed[i])
             if a is None or b is None:
@@ -126,7 +133,7 @@ def train(root,output,*,nested=False):
     edges=[]
     for source,indices in groups.items():
         comparisons=[]
-        for a,b in itertools.combinations([-1]+indices,2):
+        for a,b in itertools.combinations(indices if (root/'LEARNED_KEEP_REGISTRATION.json').exists() else [-1]+indices,2):
             sa=0 if a==-1 else data[a]['target_sun_gain'];sb=0 if b==-1 else data[b]['target_sun_gain']
             if sa==sb:continue
             comparisons.append((a,b) if sa>sb else (b,a))
@@ -181,7 +188,7 @@ def train(root,output,*,nested=False):
         for row,value,op_value in zip(bank['rows'],values,bank['operational_utilities'],strict=True):
             prediction_rows.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],
                 operational_utility=op_value,
-                valid=bank['traces'][row['ordinal']].get('proposal_generated',False) and bank['traces'][row['ordinal']]['continuous_applied']))
+                valid=stream=='keep' or (bank['traces'][row['ordinal']].get('proposal_generated',False) and bank['traces'][row['ordinal']]['continuous_applied'])))
     write_rows(output/'FIT_PREDICTIONS.jsonl',prediction_rows)
     report=dict(schema='SUN_nested_absolute_state_ranker_v1' if nested else 'SUN_specific_linear_gain_ranker_v1',
         head_kind='nested_absolute_states' if nested else 'linear_gains',status='complete',settings=cfg,train_rows=len(data),

@@ -15,13 +15,13 @@ sys.path.insert(0,str(SOURCE/'src'))
 from scripts.run_post_refine_cycle import read_rows,write_rows,write_json,file_hash
 from scripts.run_rsi_stages import materialize,rebind_labels,scores,score_directory,validity
 from scripts.run_sun_rank_scope import STREAMS
-from crystal_dlm.sun_ranker import select_candidate
+from crystal_dlm.sun_ranker import select_candidate,select_scored_state
 from crystal_dlm.post_refine_contract import fingerprint
 from editor_trial_analysis import flags
 
 
 def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary_only=False,
-          prediction_path=None,score_kind='signed_gains'):
+          prediction_path=None,score_kind='signed_gains',learned_keep=False):
     data=root/panel_name;panel=root/'policies'/panel_name/tag
     if (panel/'DECISION_BINDING.json').exists():
         if file_hash(panel/'edited/inputs.jsonl')!=json.loads((panel/'DECISION_BINDING.json').read_text())['inputs_sha256']:
@@ -37,12 +37,17 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
     spec=json.loads((data/'RUN_SPEC.json').read_text());spec.update(run_root=str(panel),run_id='sun_rank_policy:'+panel_name+':'+tag,
         training_parent_root=str(panel/'cohort'))
     streams=['primary'] if primary_only else list(STREAMS)
+    if learned_keep:streams=['keep',*streams]
     panel.mkdir(parents=True);shutil.copytree(data/'cohort',panel/'cohort');write_json(panel/'RUN_SPEC.json',spec)
     decisions=[]
     for i,native in enumerate(current):
         candidates=[predictions.get((name,i),dict(stream=name,valid=False,sun_gain=0.,ms_gain=0.,operational_utility=0.)) for name in streams]
-        guard=flags(observed[i])['SUN']
-        if operational:
+        guard=flags(observed[i])['SUN'] and not learned_keep
+        selected_stream=None
+        if learned_keep:
+            selected_stream=select_scored_state(candidates)
+            chosen=None if selected_stream=='keep' else selected_stream
+        elif operational:
             eligible=[(c['operational_utility'],-k,c['stream']) for k,c in enumerate(candidates)
                 if c['valid'] and c['operational_utility']>=.05]
             chosen=max(eligible)[2] if eligible and not guard else None
@@ -56,15 +61,20 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
             record=bound['record']
         calls=0
         for name in streams:
+            if name=='keep':
+                calls+=int((name,i) in predictions)
+                continue
             trace=json.loads((data/f'bank/{name}/candidate/records/{i:04d}.json').read_text())['editor_trace']
             calls+=trace.get('forward_calls',0)+int((name,i) in predictions)
         if calls>80:raise ValueError('ranker exceeded the per-request DLM budget')
         decision=dict(ordinal=i,chosen_stream=chosen,actual_edit=chosen is not None,known_SUN_guard=guard,
+            learned_selected_stream=selected_stream,learned_KEEP_compared=learned_keep,
             source_trajectory_id=record['trajectory_id'],source_record_sha256=fingerprint(record),DLM_forward_calls=calls)
         result=copy.deepcopy(record);result['trajectory_id']=f'{spec["run_id"]}:edited:{i}'
         write_json(panel/f'edited/records/{i:04d}.json',dict(record=result,editor_trace=decision));decisions.append(decision)
     materialize(spec,'edited')
-    write_json(panel/'DECISION_BINDING.json',dict(decisions=decisions,sun_threshold=sun_threshold,ms_floor=ms_floor,
+    write_json(panel/'DECISION_BINDING.json',dict(decisions=decisions,sun_threshold=None if learned_keep else sun_threshold,
+        ms_floor=None if learned_keep else ms_floor,learned_keep_compared=learned_keep,
         operational_comparator=operational,primary_only=primary_only,score_kind=score_kind,model_choice_without_candidate_physics=True,
         predictions_path=str(prediction_path),predictions_sha256=file_hash(prediction_path),
         inputs_sha256=file_hash(panel/'edited/inputs.jsonl')))
