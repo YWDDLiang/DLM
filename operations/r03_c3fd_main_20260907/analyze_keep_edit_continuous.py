@@ -70,6 +70,9 @@ def main(root):
                     full_proposal_panel_flag_gains=gains, full_proposal_panel_flag_losses=losses,
                     U_needs_actual_policy_panel=True))
         reports[role] = dict(requests=len(cases), utility_transition_counts=dict(transitions),
+            available_Stable_promotions=[r['ordinal'] for r in cases if r['proposal']['Stable'] and not r['before']['Stable']],
+            available_SUN_gains_without_Stable_promotion=[r['ordinal'] for r in cases
+                if r['proposal']['SUN'] and not r['before']['SUN'] and r['before']['Stable']],
             available_novel_Stable_promotions=[r['ordinal'] for r in cases
                 if r['proposal_utility'] == 2 and r['before_utility'] is not None and r['before_utility'] < 2],
             available_positive_utility=[r['ordinal'] for r in cases if r['utility_delta'] is not None and r['utility_delta'] > 0],

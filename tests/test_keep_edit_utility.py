@@ -41,5 +41,13 @@ class SignedUtilityTests(unittest.TestCase):
         self.assertFalse(accept_utility(None,0.,proposal_generated=True))
         with self.assertRaises(ValueError):accept_utility(float('nan'),0.,proposal_generated=True)
 
+    def test_consensus_requires_both_scores_and_has_no_missing_reference_bypass(self):
+        conditions=dict(proposal_generated=True,reference_required=True)
+        self.assertTrue(accept_utility(.05,.05,reference_logit=0.,**conditions))
+        self.assertFalse(accept_utility(2.,.05,reference_logit=-.001,**conditions))
+        self.assertFalse(accept_utility(.049,.05,reference_logit=10.,**conditions))
+        self.assertFalse(accept_utility(2.,.05,reference_logit=None,**conditions))
+        with self.assertRaises(ValueError):accept_utility(2.,.05,reference_logit=float('nan'),**conditions)
+
 
 if __name__=='__main__':unittest.main()

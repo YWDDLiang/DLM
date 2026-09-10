@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import datetime as dt
 import json
 import os
@@ -77,7 +78,7 @@ def decide(root, index, completion):
     os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
     import torch
     from crystal_dlm.expert_edit import load_editor_model
-    from crystal_dlm.utility_acceptance import judge_completed_proposals, continuous_decision
+    from crystal_dlm.utility_acceptance import canonical_judgements, continuous_decision
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():
         raise RuntimeError('canonical repeated utility decisions need a GPU allocation')
     torch.cuda.set_device(0)
@@ -114,14 +115,21 @@ def decide(root, index, completion):
                 proposal_tokens=after['body_token_ids'], num_sites=plan['plan_state']['N'],
                 action_positions=trace.get('action', {}).get('positions', [])))
     model, tokenizer = load_editor_model(spec['assets']['base_model'], checkpoint, torch.device('cuda', 0))
-    raw = judge_completed_proposals(model, tokenizer, views)
+    reference_head=None
+    if policy.get('reference_acceptance_required'):
+        if file_hash(checkpoint/'REFERENCE_QUALITY_HEAD.pt')!=policy['reference_head_sha256']:
+            raise ValueError('frozen consensus reference head changed')
+        reference_head=copy.deepcopy(model.quality_head)
+        reference_head.load_state_dict(torch.load(checkpoint/'REFERENCE_QUALITY_HEAD.pt',map_location='cuda:0',weights_only=True))
+    raw, reference = canonical_judgements(model, tokenizer, views, reference_head=reference_head)
     inverse = {int(v): k for k, v in tokenizer.get_vocab().items()}
     margin = policy['raw_utility_margin']
     decisions = []
     for plan, before in zip(plans, current, strict=True):
         i = plan['original_ordinal']
         native = json.loads((root / f'fit/native/records/{i:04d}.json').read_text())
-        record, decision = continuous_decision(native, before.get('body_token_ids', []), traces[i], inverse, raw.get(i), margin)
+        record, decision = continuous_decision(native, before.get('body_token_ids', []), traces[i], inverse, raw.get(i), margin,
+            reference_logit=reference.get(i),reference_required=bool(policy.get('reference_acceptance_required')))
         record['trajectory_id'] = f'{spec["run_id"]}:edited:{i}'
         # The legacy decode-stage edited view stays in its original directory;
         # this canonical stage is the registered deployment output.
@@ -131,7 +139,7 @@ def decide(root, index, completion):
     write_json(panel / 'DECISION_BINDING.json', dict(policy=policy, decisions=decisions,
         native_inputs_sha256=file_hash(root / 'fit/native/inputs.jsonl'),
         proposal_inputs_sha256=file_hash(panel / 'proposal/inputs.jsonl'), model_scores_only=True))
-    write_rows(panel / 'CANONICAL_UTILITY_SCORES.jsonl', [dict(ordinal=i, raw_utility=v) for i, v in raw.items()])
+    write_rows(panel / 'CANONICAL_UTILITY_SCORES.jsonl', [dict(ordinal=i, raw_utility=v,reference_accept_logit=reference.get(i)) for i, v in raw.items()])
     report = dict(index=index, stream=binding['stream'], requests=len(plans), actual_seed_changes=len(compared),
         model_proposals=sum(int(t.get('proposal_generated', False)) for t in traces.values()),
         actual_edits=sum(int(d['actual_edit']) for d in decisions), raw_margin=margin,
