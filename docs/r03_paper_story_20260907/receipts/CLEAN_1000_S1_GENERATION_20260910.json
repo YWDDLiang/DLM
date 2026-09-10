@@ -1,0 +1,61 @@
+{
+  "schema": "clean_1000_S1_generation_audit_v1",
+  "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit",
+  "requests": 1000,
+  "records": 1000,
+  "graphs": 999,
+  "workers": 18,
+  "DLM_forward_calls": 48782,
+  "generation_failures": [
+    {
+      "ordinal": 837,
+      "reason": "construction_geometry_exhausted",
+      "calls": 17,
+      "failure_class": "construction_constraint_no_legal_support",
+      "detail": "nondegenerate_lattice_has_no_legal_continuation",
+      "recovery_stages": [
+        {
+          "stage": "draft",
+          "completed": false
+        },
+        {
+          "stage": "failed_XYZ",
+          "completed": false
+        },
+        {
+          "stage": "neighbor_XYZ",
+          "completed": false
+        },
+        {
+          "stage": "all_numeric",
+          "completed": false
+        },
+        {
+          "stage": "final_Z_relaxed",
+          "completed": false
+        }
+      ]
+    }
+  ],
+  "source_signatures": [
+    "d8d79b72d8f253481f57ea96c2f972889c11db7265503fd4017878f186d77a42"
+  ],
+  "same_registered_Plans": true,
+  "config_sha256": "7cc5e7c1ef3d2135b5a6744ea282d900f63ccb0255e16002e2d188fc76f897a1",
+  "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+  "generator_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/training/round1/G/result/checkpoint",
+  "generator_checkpoint_receipt_sha256": "3861294cd5adf229888177e2e6d3f047e43bc72d5b7c229c64c89611d8a94e70",
+  "accounting": "41787|COMPLETED|1342|billing=24,cpu=24,gres/gpu=6,mem=576G,node=1|0:0|2026-09-10T09:43:06|2026-09-10T10:05:28",
+  "inputs_sha256": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+  "failed_record_0837_sha256": "911bb1c16ce5c8ff3d09bfe2b0e69f5af0b667047aae5a1fb29a79dca370f1f2",
+  "record_hash_manifest": "3e6de99da13c9f1351f4c95e3bbaeb1f1d1803655d43aadbf3660da4d58bc7cf",
+  "record_manifest_digest_definition": "sha256(concatenate filename:sha256(file_bytes) followed by LF for records 0000.json through 0999.json in ordinal order)",
+  "job": {
+    "id": "41787",
+    "state": "COMPLETED",
+    "elapsed_seconds": 1342,
+    "allocated_GPUs": 6,
+    "allocated_GPU_hours": 2.236666666666667,
+    "Slurm_time_zone": "Asia/Shanghai"
+  }
+}
