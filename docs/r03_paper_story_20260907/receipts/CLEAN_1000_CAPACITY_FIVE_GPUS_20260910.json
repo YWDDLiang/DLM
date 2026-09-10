@@ -1,0 +1,81 @@
+{
+  "schema": "clean_1000_capacity_five_GPU_adjustment_v1",
+  "registered_plan_commit": "c3f9d75c0d841c5bbc2ec191b98d5685ed89375c",
+  "prior_input_pins": {
+    "BUDGET.json": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+    "FROZEN_METHOD.json": "4d91d1bcc3770e68fbfc28e6f784a9b0a22565006b48e66bac06b7a310c1b8b6",
+    "RUN_SPEC.json": "b237b3279faf35ae820a22ae6afba54b7737c185566b7089fa9c8623819f8989",
+    "fit/RUN_SPEC.json": "0ec79ff5a2c6f4dfae7e5fc79911c3d68eca45780310587eb2be151e1e214c8b",
+    "fit/cohort/plans.jsonl": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+    "rounds/round1/fit/RUN_SPEC.json": "7cc5e7c1ef3d2135b5a6744ea282d900f63ccb0255e16002e2d188fc76f897a1",
+    "rounds/round1/fit/construction/inputs.jsonl": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+    "rounds/round1/fit/construction/labeling/result/labels.jsonl": "a671ccb5b860c73e738f1a5b3bd01c2a374fdab5a6bb3ef73e79606ee9a65b2e",
+    "rounds/round1/fit/construction/scoring/result/RANKED_METRICS.json": "95c2d0a4dd6957a01586a18e4603ed651540393ae2e244a9111501e831bd901c",
+    "training/round1/G/result/checkpoint/RSI_TRAINING_DONE.json": "3861294cd5adf229888177e2e6d3f047e43bc72d5b7c229c64c89611d8a94e70",
+    "training_configs/TRAIN_G1.json": "94f0dcdccff5068612804742600fe7da37f01fb2f74de6cf546f38ad1c60783b"
+  },
+  "all_prior_pins_unchanged": true,
+  "override": {
+    "allocations": {
+      "parallel_main_GPUs": 3,
+      "parallel_other_GPUs": 2,
+      "single_GPUs": 5,
+      "training_GPUs": 4,
+      "training_batch_size": 48
+    },
+    "available_GPUs": 5,
+    "budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+    "plan_git_commit": "c3f9d75c0d841c5bbc2ec191b98d5685ed89375c",
+    "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+    "reason": "three GPUs occupied by long-lived unrelated jobs; preserve global batch 192 within five available GPUs; measured 1000-panel scheduling reserve",
+    "registered_utc": "2026-09-10T03:06:28.385745+00:00",
+    "reservations_seconds": {
+      "complete_round": 8400,
+      "editor_tail": 2100,
+      "final_report": 900
+    },
+    "run_spec_sha256": "b237b3279faf35ae820a22ae6afba54b7737c185566b7089fa9c8623819f8989",
+    "schema": "ranked_execution_capacity_v1"
+  },
+  "override_sha256": "2af036aabc81f8e2338986df16017af05b9ced1df44cfb49153df7d0f385f991",
+  "remote_validation": {
+    "all_input_pins_unchanged": true,
+    "allocations": {
+      "parallel_main_GPUs": 3,
+      "parallel_other_GPUs": 2,
+      "single_GPUs": 5,
+      "training_GPUs": 4,
+      "training_batch_size": 48
+    },
+    "override_sha256": "2af036aabc81f8e2338986df16017af05b9ced1df44cfb49153df7d0f385f991",
+    "reserved_E1_seconds": 19800,
+    "scientific_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6"
+  },
+  "pending_request_resolution": {
+    "accounting": "41831|CANCELLED by 1034|0|",
+    "action": "cancelled_only_pending_job",
+    "checked_utc": "2026-09-10T03:04:14.330418+00:00",
+    "original_state": "PENDING",
+    "retry_name": "S1_refine_available5_v1"
+  },
+  "resumed_coordinator_pid": 33531,
+  "orchestrator_identity": {
+    "commit": "c3f9d75c0d841c5bbc2ec191b98d5685ed89375c",
+    "manifest_sha256": "1c505d8b67ec4a2afc9120b4ed9a5d1c247ab5cf2561039851c769b5a5038266"
+  },
+  "scientific_source_identity": {
+    "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+  },
+  "refine_job_id": "41861",
+  "refine_manifest_sha256": "1c10a800ef5345d191f0406283cca403f1570aeb98d59d1a2e049c3ae59298e3",
+  "refine_source": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/code/657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+  "refine_GPUs": 5,
+  "refine_workers": 20,
+  "global_source_batch_preserved": 192,
+  "new_training_allocation_is_prospective": true,
+  "existing_G1_kept_six_GPUs_batch32": true,
+  "local_coordinator_checks_passed": 33,
+  "refine_queue": "41861|RUNNING|2026-09-10T11:07:52|5:10",
+  "remote_receipt_sha256": "1eb6d358b71a9743022b4fd2b30d26ea360deb77da8ca935341c1453ee658152"
+}
