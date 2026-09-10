@@ -176,7 +176,7 @@ def collect(root,panel_name,output):
         destination=panel/'bank'/name;destination.mkdir(parents=True,exist_ok=True)
         if (destination/'COLLECTION_FINAL.json').exists():raise ValueError('stream already finalized')
         traces={}
-        if name=='primary' and panel_name=='fit':
+        if name=='primary' and panel_name=='fit' and not reg.get('editor_content_changed'):
             for i in range(len(plans)):
                 traces[i]=json.loads((previous/f'fit/proposal/records/{i:04d}.json').read_text())['editor_trace']
         else:
@@ -193,7 +193,7 @@ def collect(root,panel_name,output):
         for i,(plan,before) in enumerate(zip(plans,current,strict=True)):
             trace=traces.get(i,dict(upstream_failure=True,proposal_generated=False,proposal_tokens=[],forward_calls=0))
             old_tokens=before.get('body_token_ids') or []
-            if name=='primary' and panel_name=='fit':
+            if name=='primary' and panel_name=='fit' and not reg.get('editor_content_changed'):
                 bound=json.loads((previous/f'materialized_primary/records/{i:04d}.json').read_text())
             else:bound=materialize_continuous_patch(native[i],old_tokens,trace.get('proposal_tokens') or [],inverse)
             write_json(destination/f'bound/{i:04d}.json',bound)

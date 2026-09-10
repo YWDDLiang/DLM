@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 import copy
 import json
 from pathlib import Path
+import shutil
 import sys
 
 SOURCE = Path(__file__).resolve().parents[2]
@@ -174,16 +175,128 @@ def probe(root):
     configured_dispatch(['--config',str(path),'--job','failure_probe'])
 
 
+def variant(root, name):
+    previous = Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
+    destination = root/'variants'/name
+    if (destination/'PREREGISTRATION.json').exists():
+        return destination
+    checkpoint = root/'training'/name/'result/checkpoint'
+    receipt = checkpoint/'RSI_TRAINING_DONE.json'
+    reg = json.loads((previous/'PREREGISTRATION.json').read_text())
+    reg.update(old_editor=str(checkpoint), old_editor_receipt_sha256=file_hash(receipt),
+               editor_content_changed=True, parent_content_experiment=str(root))
+    for folder in ('cohort','current','native'):
+        shutil.copytree(previous/'fit'/folder, destination/'fit'/folder)
+    shutil.copy2(previous/'SOURCE_SPLIT.jsonl', destination/'SOURCE_SPLIT.jsonl')
+    shutil.copy2(previous/'PHYSICS_SOURCE_PIN.json', destination/'PHYSICS_SOURCE_PIN.json')
+    spec = json.loads((previous/'fit/RUN_SPEC.json').read_text())
+    spec.update(run_root=str(destination/'fit'), run_id=name, training_parent_root=str(destination/'fit/cohort'))
+    spec['assets']['editor_checkpoint'] = str(checkpoint)
+    spec['assets']['nu_cache'] = str(root/'nu_cache')
+    write_json(destination/'fit/RUN_SPEC.json',spec)
+    write_json(destination/'PREREGISTRATION.json',reg)
+    return destination
+
+
+def run_variant(root, name, mode, stream=None, gpus=1):
+    from run_component import verify_deployed_source
+    from submit_stage import configured_dispatch
+    destination = variant(root,name)
+    pipe = json.loads((root/'PIPELINE.json').read_text())
+    pipe.update(source_root=str(SOURCE), source_identity=verify_deployed_source(SOURCE))
+    job = name + '_' + mode + ('_' + stream if stream else '')
+    if mode == 'collect':
+        relative = f'variants/{name}/fit/collection'
+        stage = dict(name='collect',script='src/scripts/run_sun_rank_scope.py',
+            args=['--root',str(destination),'--mode','collect','--panel','fit','--completion-dir','{output}'],
+            inputs=[str(destination/'PREREGISTRATION.json')], outputs=['{output}/worker_0_DONE.json'])
+        minutes = 30
+    elif mode == 'physics':
+        bank = destination/'fit/bank'/stream
+        relative = f'variants/{name}/fit/bank/{stream}/candidate/labeling'
+        origin = Path(json.loads((destination/'PREREGISTRATION.json').read_text())['previous_run'])
+        stage = dict(name='label',script='scripts/label_rsi_cached_endpoints.py',args=[
+            '--input-jsonl',str(bank/'candidate/inputs.jsonl'),'--output-dir','{output}/result',
+            '--purpose','training_feedback','--gpu-count',str(gpus),'--workers-per-gpu','4',
+            '--record-timeout','600','--deterministic','--feedback-manifest',str(bank/'candidate/FEEDBACK_MANIFEST.json'),
+            '--reuse-endpoints',str(origin/'fit/native/labeling/result'),str(origin/'fit/hybrid_proposal/labeling/result'),
+            '--joint-physical-stop','--max-steps','1000'],
+            inputs=[str(bank/'candidate/inputs.jsonl'),str(bank/'candidate/FEEDBACK_MANIFEST.json')],
+            outputs=['{output}/result/LABEL_FINAL.json','{output}/result/labels.jsonl'])
+        minutes = 65
+    else:
+        relative = f'variants/{name}/{mode}_execution'
+        stage = dict(name=mode, script='operations/r03_c3fd_main_20260907/final_improvement.py',
+            args=[mode+'_worker','--root',str(root),'--name',name],inputs=[str(destination/'PREREGISTRATION.json')],
+            outputs=['{output}/DONE.json'])
+        minutes = 35
+    pipe['components'] = [dict(id=job,output_dir=relative,gpus=gpus,stages=[stage])]
+    pipe['jobs'] = {job:dict(component_indices=[0],gpus_per_task=gpus,cpus_per_task=4*gpus,
+        parallel_tasks=1,wall_minutes=minutes,memory=f'{96*gpus}G',partition='gpu')}
+    path = root/(job+'_PIPELINE.json')
+    write_json(path,pipe)
+    configured_dispatch(['--config',str(path),'--job',job])
+
+
+def rank_worker(root,name):
+    from scripts.train_sun_ranker import train
+    from scripts.run_rsi_stages import validity
+    import subprocess
+    destination=root/'variants'/name
+    reg=json.loads((destination/'PREREGISTRATION.json').read_text())
+    for stream in ('primary','rank1','rank2','rank3'):
+        panel=destination/'fit/bank'/stream
+        spec=json.loads((panel/'RUN_SPEC.json').read_text())
+        output=panel/'candidate/scoring/result'
+        command=[sys.executable,str(SOURCE/'scripts/evaluate_programmed_paths.py'),
+            '--paths-jsonl',str(panel/'candidate/inputs.jsonl'),
+            '--labels-jsonl',str(panel/'candidate/labeling/result/labels.jsonl'),
+            '--frozen-config',spec['assets']['frozen_config'],'--official-cache',spec['assets']['official_cache'],
+            '--output-dir',str(output),'--expected-requests',str(spec['requests']),
+            '--endpoint','native','--cohort-role','training_feedback','--policy-stage','round0_diagnostic',
+            '--sun-only','--nu-workers','3','--nu-cache',str(root/'nu_cache'),
+            '--feedback-manifest',str(panel/'candidate/FEEDBACK_MANIFEST.json'),'--joint-physical-stop']
+        subprocess.run(command,check=True)
+        validity(spec,'candidate')
+    train(destination,destination/'training/sun_ranker')
+    training=destination/'training/sun_ranker/TRAINING_FINAL.json'
+    report=json.loads(training.read_text())
+    write_json(destination/'ABSOLUTE_STATE_REGISTRATION.json',dict(base_training_sha256=file_hash(training),
+        base_train_rows_sha256=report['train_data_sha256'],sun_probability_thresholds=[.1],
+        no_per_candidate_MS_gain_veto=True,feasibility_only=True))
+    train(destination,destination/'training/nested_sun_ranker',nested=True)
+    write_json(destination/'rank_execution/DONE.json',dict(complete=True))
+
+
+def policy_worker(root,name):
+    from evaluate_sun_ranker import build,evaluate,summary
+    destination=root/'variants'/name
+    predictions=destination/'training/nested_sun_ranker/FIT_PREDICTIONS.jsonl'
+    panel=build(destination,'fit','nested_sun10',.1,0.,prediction_path=predictions,
+                score_kind='absolute_NS_NMS_probabilities')
+    evaluate(destination,panel,nu_workers=3)
+    results={role:summary(destination,panel,role) for role in ('train','dev','final','all')}
+    report=dict(complete=True,threshold=.1,results=results,DEV_role='feasibility',old_FINAL_role='exploratory')
+    write_json(destination/'policy_execution/DONE.json',report)
+    print(json.dumps(report),flush=True)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare', 'train', 'probe'])
+    parser.add_argument('mode', choices=['prepare','train','probe','collect','physics','rank','policy','rank_worker','policy_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7'])
+    parser.add_argument('--stream',choices=['primary','rank1','rank2','rank3'])
+    parser.add_argument('--gpus',type=int,default=1)
     args = parser.parse_args()
     if args.mode == 'prepare':
         prepare(args.root, args.previous)
     elif args.mode == 'train':
         train(args.root, args.name)
-    else:
+    elif args.mode == 'probe':
         probe(args.root)
+    elif args.mode.endswith('_worker'):
+        (rank_worker if args.mode=='rank_worker' else policy_worker)(args.root,args.name)
+    else:
+        run_variant(args.root,args.name,args.mode,args.stream,args.gpus)

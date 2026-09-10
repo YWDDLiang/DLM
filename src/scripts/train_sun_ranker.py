@@ -30,10 +30,14 @@ def features(root,panel_name,device):
     head.load_state_dict(state);head.eval()
     panel=root/panel_name;current=read_rows(panel/'native/inputs.jsonl')
     before=scores(previous/'fit','native') if panel_name=='fit' else scores(panel,'native')
-    operational=json.loads((previous/'operational/MODEL_DEFINITION.json').read_text())
-    op_path=Path(operational['quality_head'])
-    if file_hash(op_path)!=operational['quality_head_sha256']:raise ValueError('fixed operational comparator changed')
-    op_state=torch.load(op_path,map_location=device,weights_only=True)
+    if reg.get('editor_content_changed'):
+        op_path=editor/'expert_edit_modules.pt'
+        op_state=state
+    else:
+        operational=json.loads((previous/'operational/MODEL_DEFINITION.json').read_text())
+        op_path=Path(operational['quality_head'])
+        if file_hash(op_path)!=operational['quality_head_sha256']:raise ValueError('fixed operational comparator changed')
+        op_state=torch.load(op_path,map_location=device,weights_only=True)
     if any(not torch.equal(op_state[k],state[k]) for k in ('layers.0.weight','layers.0.bias')):
         raise ValueError('operational comparator has a different hidden representation')
     source_current=previous/'fit/native' if panel_name=='fit' else panel/'native'
@@ -81,8 +85,9 @@ def train(root,output,*,nested=False):
     data=[];xs=[];exclusions=Counter();content=[]
     for stream,bank in banks.items():
         path=root/'fit/bank'/stream
-        observed=scores(Path(reg['previous_run'])/'fit','hybrid_proposal') if stream=='primary' else scores(path,'candidate')
-        measured=Path(reg['previous_run'])/'fit/hybrid_proposal' if stream=='primary' else path/'candidate'
+        old_primary=stream=='primary' and not reg.get('editor_content_changed')
+        observed=scores(Path(reg['previous_run'])/'fit','hybrid_proposal') if old_primary else scores(path,'candidate')
+        measured=Path(reg['previous_run'])/'fit/hybrid_proposal' if old_primary else path/'candidate'
         for pin in (measured/'inputs.jsonl',measured/'labeling/result/LABEL_FINAL.json',
                     score_directory(measured.parent,measured.name)/'attempt_results.jsonl'):pins[str(pin)]=file_hash(pin)
         observed_inputs=read_rows(measured/'inputs.jsonl')

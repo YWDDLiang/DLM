@@ -71,13 +71,14 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
     return panel
 
 
-def evaluate(root,panel,*,cached=True):
+def evaluate(root,panel,*,cached=True,nu_workers=7):
     spec=json.loads((panel/'RUN_SPEC.json').read_text());output=panel/'edited/scoring/result'
     if (output/'_SUCCESS').exists():return
     if cached and not (panel/'edited/labeling/result/_SUCCESS').exists():
         reg=json.loads((root/'PREREGISTRATION.json').read_text());previous=Path(reg['previous_run'])
         source=[previous/'fit/native',previous/'fit/hybrid_proposal']
-        source += [root/f'fit/bank/{name}/candidate' for name in STREAMS if name!='primary']
+        source += [root/f'fit/bank/{name}/candidate' for name in STREAMS
+                   if name!='primary' or reg.get('editor_content_changed')]
         rebind_labels(spec,'edited',source_directories=source)
     if not (panel/'edited/labeling/result/_SUCCESS').exists():raise ValueError('policy needs complete endpoint labels')
     command=[sys.executable,str(SOURCE/'scripts/evaluate_programmed_paths.py'),
@@ -85,7 +86,7 @@ def evaluate(root,panel,*,cached=True):
         '--frozen-config',spec['assets']['frozen_config'],'--official-cache',spec['assets']['official_cache'],
         '--output-dir',str(output),'--expected-requests',str(spec['requests']),
         '--endpoint','native','--cohort-role','training_feedback','--policy-stage','round0_diagnostic',
-        '--sun-only','--nu-workers','7','--nu-cache',str(root/'nu_cache'),
+        '--sun-only','--nu-workers',str(nu_workers),'--nu-cache',str(root/'nu_cache'),
         '--feedback-manifest',str(panel/'edited/FEEDBACK_MANIFEST.json'),'--joint-physical-stop']
     write_json(panel/'SCORE_COMMAND.json',dict(command=command))
     with (panel/'score.out').open('x') as out,(panel/'score.err').open('x') as err:
