@@ -224,6 +224,15 @@ def run_variant(root, name, mode, stream=None, gpus=1):
             inputs=[str(bank/'candidate/inputs.jsonl'),str(bank/'candidate/FEEDBACK_MANIFEST.json')],
             outputs=['{output}/result/LABEL_FINAL.json','{output}/result/labels.jsonl'])
         minutes = 65
+    elif mode == 'score':
+        gpus=0
+        bank=destination/'fit/bank'/stream
+        relative=f'variants/{name}/fit/bank/{stream}/candidate/scoring'
+        stage=dict(name='score',script='operations/r03_c3fd_main_20260907/final_improvement.py',
+            args=['score_worker','--root',str(root),'--name',name,'--stream',stream],
+            inputs=[str(bank/'candidate/inputs.jsonl'),str(bank/'candidate/labeling/result/labels.jsonl')],
+            outputs=['{output}/result/FEEDBACK_FINAL.json','{output}/result/attempt_results.jsonl'])
+        minutes=30
     else:
         relative = f'variants/{name}/{mode}_execution'
         stage = dict(name=mode, script='operations/r03_c3fd_main_20260907/final_improvement.py',
@@ -231,8 +240,8 @@ def run_variant(root, name, mode, stream=None, gpus=1):
             outputs=['{output}/DONE.json'])
         minutes = 35
     pipe['components'] = [dict(id=job,output_dir=relative,gpus=gpus,stages=[stage])]
-    pipe['jobs'] = {job:dict(component_indices=[0],gpus_per_task=gpus,cpus_per_task=4*gpus,
-        parallel_tasks=1,wall_minutes=minutes,memory=f'{96*gpus}G',partition='gpu')}
+    pipe['jobs'] = {job:dict(component_indices=[0],gpus_per_task=gpus,cpus_per_task=4*gpus if gpus else 8,
+        parallel_tasks=1,wall_minutes=minutes,memory=f'{96*gpus}G' if gpus else '64G',partition='gpu' if gpus else 'normal')}
     path = root/(job+'_PIPELINE.json')
     write_json(path,pipe)
     configured_dispatch(['--config',str(path),'--job',job])
@@ -240,24 +249,10 @@ def run_variant(root, name, mode, stream=None, gpus=1):
 
 def rank_worker(root,name):
     from scripts.train_sun_ranker import train
-    from scripts.run_rsi_stages import validity
-    import subprocess
     destination=root/'variants'/name
     reg=json.loads((destination/'PREREGISTRATION.json').read_text())
     for stream in ('primary','rank1','rank2','rank3'):
-        panel=destination/'fit/bank'/stream
-        spec=json.loads((panel/'RUN_SPEC.json').read_text())
-        output=panel/'candidate/scoring/result'
-        command=[sys.executable,str(SOURCE/'scripts/evaluate_programmed_paths.py'),
-            '--paths-jsonl',str(panel/'candidate/inputs.jsonl'),
-            '--labels-jsonl',str(panel/'candidate/labeling/result/labels.jsonl'),
-            '--frozen-config',spec['assets']['frozen_config'],'--official-cache',spec['assets']['official_cache'],
-            '--output-dir',str(output),'--expected-requests',str(spec['requests']),
-            '--endpoint','native','--cohort-role','training_feedback','--policy-stage','round0_diagnostic',
-            '--sun-only','--nu-workers','3','--nu-cache',str(root/'nu_cache'),
-            '--feedback-manifest',str(panel/'candidate/FEEDBACK_MANIFEST.json'),'--joint-physical-stop']
-        subprocess.run(command,check=True)
-        validity(spec,'candidate')
+        score_bank(root,name,stream,nu_workers=3)
     collect_keep_features(destination)
     train(destination,destination/'training/sun_ranker')
     training=destination/'training/sun_ranker/TRAINING_FINAL.json'
@@ -267,6 +262,29 @@ def rank_worker(root,name):
         no_per_candidate_MS_gain_veto=True,feasibility_only=True))
     train(destination,destination/'training/nested_sun_ranker',nested=True)
     write_json(destination/'rank_execution/DONE.json',dict(complete=True))
+
+
+def score_bank(root,name,stream,*,nu_workers=7):
+    import subprocess
+    from scripts.run_rsi_stages import validity
+    panel=root/'variants'/name/'fit/bank'/stream
+    spec=json.loads((panel/'RUN_SPEC.json').read_text())
+    output=panel/'candidate/scoring/result'
+    if (output/'_SUCCESS').exists():
+        receipt=json.loads((output/'FEEDBACK_FINAL.json').read_text())
+        if receipt['input_sha256']!=file_hash(panel/'candidate/inputs.jsonl'):
+            raise ValueError('scored input changed')
+        return
+    command=[sys.executable,str(SOURCE/'scripts/evaluate_programmed_paths.py'),
+        '--paths-jsonl',str(panel/'candidate/inputs.jsonl'),
+        '--labels-jsonl',str(panel/'candidate/labeling/result/labels.jsonl'),
+        '--frozen-config',spec['assets']['frozen_config'],'--official-cache',spec['assets']['official_cache'],
+        '--output-dir',str(output),'--expected-requests',str(spec['requests']),
+        '--endpoint','native','--cohort-role','training_feedback','--policy-stage','round0_diagnostic',
+        '--sun-only','--nu-workers',str(nu_workers),'--nu-cache',str(root/'nu_cache'),
+        '--feedback-manifest',str(panel/'candidate/FEEDBACK_MANIFEST.json'),'--joint-physical-stop']
+    subprocess.run(command,check=True)
+    validity(spec,'candidate')
 
 
 def policy_worker(root,name):
@@ -306,7 +324,7 @@ def collect_keep_features(destination):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','train','probe','collect','physics','rank','policy','rank_worker','policy_worker'])
+    parser.add_argument('mode', choices=['prepare','train','probe','collect','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7'])
@@ -319,6 +337,8 @@ if __name__ == '__main__':
         train(args.root, args.name)
     elif args.mode == 'probe':
         probe(args.root)
+    elif args.mode=='score_worker':
+        score_bank(args.root,args.name,args.stream)
     elif args.mode.endswith('_worker'):
         (rank_worker if args.mode=='rank_worker' else policy_worker)(args.root,args.name)
     else:
