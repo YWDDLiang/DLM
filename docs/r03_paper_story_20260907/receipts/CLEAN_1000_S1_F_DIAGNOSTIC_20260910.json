@@ -1,0 +1,3012 @@
+{
+  "schema": "clean_1000_S1_F_paired_diagnostic_v1",
+  "requests": 1000,
+  "scope": "same_Plan_F_checkpoint_comparison_and_within_S1_RAW_to_F; final_E1_pending",
+  "source_identity": {
+    "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+  },
+  "S1_counts": {
+    "strict_Stable": 116,
+    "reliable_SUN": 102,
+    "unknown": 34,
+    "known_physical_failure": 1
+  },
+  "S1_RAW_to_F": {
+    "Stable": {
+      "gains": [
+        20,
+        28,
+        31,
+        37,
+        49,
+        50,
+        52,
+        70,
+        72,
+        87,
+        105,
+        118,
+        120,
+        121,
+        127,
+        128,
+        136,
+        148,
+        166,
+        168,
+        173,
+        175,
+        180,
+        195,
+        232,
+        236,
+        243,
+        244,
+        251,
+        271,
+        273,
+        276,
+        291,
+        296,
+        304,
+        319,
+        337,
+        340,
+        361,
+        365,
+        371,
+        403,
+        423,
+        438,
+        445,
+        446,
+        485,
+        501,
+        503,
+        518,
+        532,
+        543,
+        560,
+        573,
+        579,
+        587,
+        598,
+        607,
+        612,
+        623,
+        637,
+        638,
+        657,
+        671,
+        683,
+        693,
+        705,
+        708,
+        731,
+        741,
+        749,
+        750,
+        759,
+        761,
+        763,
+        767,
+        791,
+        792,
+        807,
+        815,
+        820,
+        829,
+        849,
+        855,
+        863,
+        866,
+        885,
+        897,
+        962,
+        966,
+        971,
+        982,
+        985
+      ],
+      "losses": []
+    },
+    "SUN": {
+      "gains": [
+        20,
+        28,
+        31,
+        37,
+        49,
+        50,
+        52,
+        70,
+        72,
+        105,
+        118,
+        120,
+        121,
+        127,
+        128,
+        136,
+        148,
+        166,
+        168,
+        173,
+        180,
+        195,
+        232,
+        236,
+        244,
+        251,
+        271,
+        276,
+        291,
+        296,
+        304,
+        337,
+        340,
+        361,
+        365,
+        371,
+        403,
+        423,
+        445,
+        446,
+        485,
+        501,
+        503,
+        518,
+        532,
+        543,
+        560,
+        573,
+        579,
+        587,
+        612,
+        623,
+        637,
+        638,
+        657,
+        671,
+        683,
+        693,
+        708,
+        741,
+        749,
+        750,
+        759,
+        763,
+        767,
+        791,
+        807,
+        815,
+        820,
+        849,
+        855,
+        863,
+        866,
+        885,
+        897,
+        966,
+        971,
+        982,
+        985
+      ],
+      "losses": []
+    },
+    "changed_outputs": 974,
+    "Stable_transition_statuses": {
+      "gain_from_known_failure": 44,
+      "gain_from_reliable_nonStable": 34,
+      "gain_from_unknown": 15
+    },
+    "SUN_predicate_changes": {
+      "gain:Stable+N+U": 69,
+      "gain:Stable": 10
+    },
+    "Stable_cases": [
+      {
+        "ordinal": 20,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.025937961255968034
+        }
+      },
+      {
+        "ordinal": 28,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.06092857926730666
+        }
+      },
+      {
+        "ordinal": 31,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.12952740497965465
+        }
+      },
+      {
+        "ordinal": 37,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.076740484770915
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.2603395170601397
+        }
+      },
+      {
+        "ordinal": 49,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.19143800659667987
+        }
+      },
+      {
+        "ordinal": 50,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.04754870910725906
+        }
+      },
+      {
+        "ordinal": 52,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.14576581264867627
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0036649391518608354
+        }
+      },
+      {
+        "ordinal": 70,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.2558066140643309
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005272697306518692
+        }
+      },
+      {
+        "ordinal": 72,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.013694331647132962
+        }
+      },
+      {
+        "ordinal": 87,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.3725868149532854
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.009248645709556413
+        }
+      },
+      {
+        "ordinal": 105,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.02154375649108875
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0014030780731202341
+        }
+      },
+      {
+        "ordinal": 118,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 4.52479691593533
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0068936815988500655
+        }
+      },
+      {
+        "ordinal": 120,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.052236104529459926
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03543899007503226
+        }
+      },
+      {
+        "ordinal": 121,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.09514079900591277
+        }
+      },
+      {
+        "ordinal": 127,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.009859821072998098
+        }
+      },
+      {
+        "ordinal": 128,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.6227896387582712
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.023280364751250282
+        }
+      },
+      {
+        "ordinal": 136,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.018424009848132528
+        }
+      },
+      {
+        "ordinal": 148,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.06881775409023572
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.004116396605565065
+        }
+      },
+      {
+        "ordinal": 166,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.023008470885010013
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.012100572236327878
+        }
+      },
+      {
+        "ordinal": 168,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005648552346190883
+        }
+      },
+      {
+        "ordinal": 173,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 1.2324415549180276
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.04219805155780243
+        }
+      },
+      {
+        "ordinal": 175,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01890275940023045
+        }
+      },
+      {
+        "ordinal": 180,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.022081281541748154
+        }
+      },
+      {
+        "ordinal": 195,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.053620074793023775
+        }
+      },
+      {
+        "ordinal": 232,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.23204737445149703
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01581734875406937
+        }
+      },
+      {
+        "ordinal": 236,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.32862297982299804
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.023980694111938483
+        }
+      },
+      {
+        "ordinal": 243,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0007352702526857158
+        }
+      },
+      {
+        "ordinal": 244,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0802660060759175
+        }
+      },
+      {
+        "ordinal": 251,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 10.252244961480713
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.011000144262695244
+        }
+      },
+      {
+        "ordinal": 271,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.00201936668554481
+        }
+      },
+      {
+        "ordinal": 273,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.017204621857638713
+        }
+      },
+      {
+        "ordinal": 276,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.019544276425293994
+        }
+      },
+      {
+        "ordinal": 291,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.023508785426432866
+        }
+      },
+      {
+        "ordinal": 296,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.1598763237677403
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.025453113488119072
+        }
+      },
+      {
+        "ordinal": 304,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.012056998996174961
+        }
+      },
+      {
+        "ordinal": 319,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.14569625098844163
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": false,
+          "known_failure": false,
+          "hull": -0.009274394916099382
+        }
+      },
+      {
+        "ordinal": 337,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.00669214778825733
+        }
+      },
+      {
+        "ordinal": 340,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.015056048845214498
+        }
+      },
+      {
+        "ordinal": 361,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005456024062494791
+        }
+      },
+      {
+        "ordinal": 365,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.021896442666747618
+        }
+      },
+      {
+        "ordinal": 371,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 5.92064457220918
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.06118411736601548
+        }
+      },
+      {
+        "ordinal": 403,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 11.488636786859516
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.00006598718833661366
+        }
+      },
+      {
+        "ordinal": 423,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.019880379966417117
+        }
+      },
+      {
+        "ordinal": 438,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01454977868123386
+        }
+      },
+      {
+        "ordinal": 445,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.06001920826326668
+        }
+      },
+      {
+        "ordinal": 446,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.0015826542395016574
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0024900119287112332
+        }
+      },
+      {
+        "ordinal": 485,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.5543503630631506
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.013362897587484213
+        }
+      },
+      {
+        "ordinal": 501,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.059139063310002626
+        }
+      },
+      {
+        "ordinal": 503,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.025180968967283945
+        }
+      },
+      {
+        "ordinal": 518,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03538426028922448
+        }
+      },
+      {
+        "ordinal": 532,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.4029962949881538
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.039372689234258296
+        }
+      },
+      {
+        "ordinal": 543,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.006385111941324517
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.020777439938558295
+        }
+      },
+      {
+        "ordinal": 560,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.020590653658255853
+        }
+      },
+      {
+        "ordinal": 573,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 3.829387119947917
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.08847767955159469
+        }
+      },
+      {
+        "ordinal": 579,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 6.991499412281631
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.013476860301376625
+        }
+      },
+      {
+        "ordinal": 587,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 5.303794759316137
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.004283052878687688
+        }
+      },
+      {
+        "ordinal": 598,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03264538480321999
+        }
+      },
+      {
+        "ordinal": 607,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.014612689857178118
+        }
+      },
+      {
+        "ordinal": 612,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005984393361083917
+        }
+      },
+      {
+        "ordinal": 623,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.20247200039213986
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0007297703903308417
+        }
+      },
+      {
+        "ordinal": 637,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 7.387028709196371
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.028988823152261922
+        }
+      },
+      {
+        "ordinal": 638,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.033085298061523716
+        }
+      },
+      {
+        "ordinal": 657,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.009387192103835318
+        }
+      },
+      {
+        "ordinal": 671,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.02736412106811592
+        }
+      },
+      {
+        "ordinal": 683,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.6442144445377602
+        }
+      },
+      {
+        "ordinal": 693,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.3230631731983795
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0591418362620697
+        }
+      },
+      {
+        "ordinal": 705,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.03804988664721698
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0018198986616209112
+        }
+      },
+      {
+        "ordinal": 708,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 10.605966682124837
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.003281002353922702
+        }
+      },
+      {
+        "ordinal": 731,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.22091139727600106
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.012390957536621006
+        }
+      },
+      {
+        "ordinal": 741,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005887645690103582
+        }
+      },
+      {
+        "ordinal": 749,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.013794568033080878
+        }
+      },
+      {
+        "ordinal": 750,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.42796120183946407
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.02857509119032109
+        }
+      },
+      {
+        "ordinal": 759,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03805730580224598
+        }
+      },
+      {
+        "ordinal": 761,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.18896730955891883
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.007385172283122188
+        }
+      },
+      {
+        "ordinal": 763,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.014060007459717028
+        }
+      },
+      {
+        "ordinal": 767,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.06848341634372979
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.02388804743190498
+        }
+      },
+      {
+        "ordinal": 791,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.1401088496191405
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.006960604573974738
+        }
+      },
+      {
+        "ordinal": 792,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.3987743244335942
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.007676900847167545
+        }
+      },
+      {
+        "ordinal": 807,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 4.5455130672583
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01431282995849692
+        }
+      },
+      {
+        "ordinal": 815,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.06823417895385653
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.06166198498657316
+        }
+      },
+      {
+        "ordinal": 820,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 9.108933731584958
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.012523845166750647
+        }
+      },
+      {
+        "ordinal": 829,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 7.956809872823079
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.015033608240763385
+        }
+      },
+      {
+        "ordinal": 849,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.11366851067365413
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01624052787004704
+        }
+      },
+      {
+        "ordinal": 855,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.09171595468261717
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03206048116943361
+        }
+      },
+      {
+        "ordinal": 863,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.21604491026706185
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.019523136302762367
+        }
+      },
+      {
+        "ordinal": 866,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 5.87037590434485
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0074104935891101675
+        }
+      },
+      {
+        "ordinal": 885,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03569002470126925
+        }
+      },
+      {
+        "ordinal": 897,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": true,
+          "hull": null
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.15693177506993017
+        }
+      },
+      {
+        "ordinal": 962,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.04108692828051774
+        },
+        "after": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01043008145458968
+        }
+      },
+      {
+        "ordinal": 966,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.17323778192309636
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0007696338483880183
+        }
+      },
+      {
+        "ordinal": 971,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 8.793419884887694
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0556354053344732
+        }
+      },
+      {
+        "ordinal": 982,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.44506814703726594
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.07357022538399871
+        }
+      },
+      {
+        "ordinal": 985,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": false,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 5.169775493745524
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.04955624758748378
+        }
+      }
+    ]
+  },
+  "S0_F_to_S1_F": {
+    "Stable": {
+      "gains": [
+        28,
+        52,
+        72,
+        168,
+        271,
+        361,
+        365,
+        423,
+        638,
+        657,
+        671,
+        741,
+        759,
+        849
+      ],
+      "losses": [
+        42,
+        51,
+        125,
+        187,
+        219,
+        325,
+        332,
+        372,
+        499,
+        519,
+        558,
+        570,
+        611,
+        712,
+        762,
+        795,
+        800,
+        812,
+        907,
+        974
+      ]
+    },
+    "SUN": {
+      "gains": [
+        28,
+        52,
+        72,
+        136,
+        168,
+        271,
+        361,
+        365,
+        423,
+        638,
+        657,
+        671,
+        741,
+        759,
+        849
+      ],
+      "losses": [
+        42,
+        51,
+        125,
+        187,
+        219,
+        325,
+        332,
+        372,
+        499,
+        519,
+        558,
+        570,
+        607,
+        611,
+        800,
+        812,
+        907,
+        974
+      ]
+    },
+    "changed_outputs": 837,
+    "Stable_transition_statuses": {
+      "gain_from_reliable_nonStable": 14,
+      "loss_to_reliable_nonStable": 20
+    },
+    "SUN_predicate_changes": {
+      "gain:Stable": 12,
+      "loss:Stable": 13,
+      "gain:N": 1,
+      "gain:Stable+N+U": 2,
+      "loss:Stable+N": 1,
+      "loss:Stable+N+U": 3,
+      "loss:N": 1
+    },
+    "Stable_cases": [
+      {
+        "ordinal": 28,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.021039728227810528
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.06092857926730666
+        }
+      },
+      {
+        "ordinal": 52,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.005989821208856938
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0036649391518608354
+        }
+      },
+      {
+        "ordinal": 72,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.00909800767781821
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.013694331647132962
+        }
+      },
+      {
+        "ordinal": 168,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.13992458684448295
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005648552346190883
+        }
+      },
+      {
+        "ordinal": 271,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.09037069373925988
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.00201936668554481
+        }
+      },
+      {
+        "ordinal": 361,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.07844538127197787
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005456024062494791
+        }
+      },
+      {
+        "ordinal": 365,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.053460994467041445
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.021896442666747618
+        }
+      },
+      {
+        "ordinal": 423,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.006648932167371946
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.019880379966417117
+        }
+      },
+      {
+        "ordinal": 638,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.11785464334472628
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.033085298061523716
+        }
+      },
+      {
+        "ordinal": 657,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.019625964787033823
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.009387192103835318
+        }
+      },
+      {
+        "ordinal": 671,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.06651796282470634
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.02736412106811592
+        }
+      },
+      {
+        "ordinal": 741,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.0021308479622401677
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.005887645690103582
+        }
+      },
+      {
+        "ordinal": 759,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.016058466445068476
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03805730580224598
+        }
+      },
+      {
+        "ordinal": 849,
+        "before": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.05765111183942562
+        },
+        "after": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01624052787004704
+        }
+      },
+      {
+        "ordinal": 42,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.026659038669434754
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.029341909282835754
+        }
+      },
+      {
+        "ordinal": 51,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.00048812525878894064
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.04236809117187512
+        }
+      },
+      {
+        "ordinal": 125,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.008199478398804416
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.022531484354491482
+        }
+      },
+      {
+        "ordinal": 187,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.006811565362820016
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.01349573711215557
+        }
+      },
+      {
+        "ordinal": 219,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0063173423364251136
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.0015409340307623864
+        }
+      },
+      {
+        "ordinal": 325,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.03405936517211927
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.0845736666729735
+        }
+      },
+      {
+        "ordinal": 332,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.010899188619792
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.05320489158040331
+        }
+      },
+      {
+        "ordinal": 372,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.026040536870972186
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.010636585245116681
+        }
+      },
+      {
+        "ordinal": 499,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01351643994335916
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.12872360751147482
+        }
+      },
+      {
+        "ordinal": 519,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0024234149709334574
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.04782997629493568
+        }
+      },
+      {
+        "ordinal": 558,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.02001676739306557
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.13522662936596763
+        }
+      },
+      {
+        "ordinal": 570,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0017600226019505172
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.011568529644143233
+        }
+      },
+      {
+        "ordinal": 611,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.025382279955960207
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.04150700608529956
+        }
+      },
+      {
+        "ordinal": 712,
+        "before": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.00011773480590893115
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.00178675280395435
+        }
+      },
+      {
+        "ordinal": 762,
+        "before": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.022748449790039427
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.10644628669067346
+        }
+      },
+      {
+        "ordinal": 795,
+        "before": {
+          "Stable": true,
+          "SUN": false,
+          "reliable": true,
+          "N": false,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.015326431482177938
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.02455336740698222
+        }
+      },
+      {
+        "ordinal": 800,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.010492532983155556
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.011411935553221397
+        }
+      },
+      {
+        "ordinal": 812,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.0011935108418787976
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": null,
+          "U": null,
+          "known_failure": false,
+          "hull": 0.13316918675943956
+        }
+      },
+      {
+        "ordinal": 907,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.044734477745361545
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.013272762550048611
+        }
+      },
+      {
+        "ordinal": 974,
+        "before": {
+          "Stable": true,
+          "SUN": true,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": -0.01277890091308631
+        },
+        "after": {
+          "Stable": false,
+          "SUN": false,
+          "reliable": true,
+          "N": true,
+          "U": true,
+          "known_failure": false,
+          "hull": 0.004421092220458611
+        }
+      }
+    ]
+  },
+  "S1_current_identical_F_tokens": true,
+  "physical_statuses": {
+    "verified": 997,
+    "invalid_terminal": 1,
+    "generation_failure": 1,
+    "not_converged": 1
+  },
+  "label_summary": {
+    "cached_endpoints": 25,
+    "generation_failures_without_model_calls": 1,
+    "distinct_endpoint_evaluations": 1000,
+    "new_endpoint_evaluations": 974,
+    "elapsed_seconds": 320.13751104287803
+  },
+  "input_bindings": {
+    "rounds/round1/fit/construction/inputs.jsonl": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+    "rounds/round1/fit/construction/FEEDBACK_MANIFEST.json": "88c53a8bf6f155e2f415893da21512c773fb9cf5b6592d32ff1b9763f268b59b",
+    "rounds/round1/fit/construction/labeling/result/LABEL_FINAL.json": "7c82a5ca3f86b8012f0d0b16f5a09c374a4b6548584959a7de3c0b598f13b322",
+    "rounds/round1/fit/construction/scoring/result/attempt_results.jsonl": "aefc5cba7a4ffeab8460b36355734027016aed7bd5570d4a2b4ee6226fa4b891",
+    "rounds/round1/fit/construction/scoring/result/RANKED_METRICS.json": "95c2d0a4dd6957a01586a18e4603ed651540393ae2e244a9111501e831bd901c",
+    "rounds/round1/fit/tokenized/inputs.jsonl": "bdef444a396dce74a4c684a2cca2f1783ffe4badf965be9d82afdab6cae56734",
+    "rounds/round1/fit/tokenized/FEEDBACK_MANIFEST.json": "0cb959b1057304d2ad8b8e0c351d66bcd93f2b2d43aed445d3a128a17708c9f1",
+    "rounds/round1/fit/tokenized/labeling/result/LABEL_FINAL.json": "17ed42bfc7831738dc63417990551a7f628b06934ab24cfa23d90d560dd8b0b1",
+    "rounds/round1/fit/tokenized/scoring/result/attempt_results.jsonl": "79ec1df938c1f02d5de6d21a7bf87ef85efc9e0c10c5873dd0975939dd107006",
+    "rounds/round1/fit/tokenized/scoring/result/RANKED_METRICS.json": "0cd951c867785cfcec2c207620c06c095d51e2fcc36b6c9b5c73838b445e20b7",
+    "fit/tokenized/inputs.jsonl": "d38cdfa79b3d7ca6715181ed90696888482c95f3d900f2dc51ddbe9083b22a9c",
+    "fit/tokenized/FEEDBACK_MANIFEST.json": "78128feebcc4cfe6bf5e88bb6325f01be080010da8dc8e4cb36f9a0fb532ce94",
+    "fit/tokenized/labeling/result/LABEL_FINAL.json": "54152c93a6c3c37fff18141b40bee94ccd0f506168d79e10a5f52f205ac3124d",
+    "fit/tokenized/scoring/result/attempt_results.jsonl": "8e300498b931032b85eba8635a490051cf13b43f8ee5177c19d10b5e481b4a96",
+    "fit/tokenized/scoring/result/RANKED_METRICS.json": "8e6d6139be140a7e32f7e83840816cb4911f84aaa18e4c1f4ccfa9f78d7c1caa",
+    "rounds/round1/fit/current/inputs.jsonl": "ac42fb04a7e6ac2a546dbdb20fc5d47e5aeaf81e70a6deb395c4e19d8ab2596e",
+    "rounds/round1/fit/current/FEEDBACK_MANIFEST.json": "98b2ffe106c6bb2599586a172215dcfc5f36d3dffb8c60800eaafb438042fb67",
+    "rounds/round1/fit/current/labeling/result/LABEL_FINAL.json": "2626780f45b4f8ae4f32a7e89bfbd3ed5985af0fac7703b5fac060e50857c354",
+    "rounds/round1/fit/current/scoring/result/attempt_results.jsonl": "733d321358ff135d2ac3e85740433dee7e158742b82801ceb15f4944fafaf7b0",
+    "rounds/round1/fit/current/scoring/result/RANKED_METRICS.json": "babef5bec8d86888ba1d3f26c69f50e8df2282a21459e81f1887a4163ec3ae06"
+  },
+  "created_utc": "2026-09-10T03:51:11.979861+00:00"
+}

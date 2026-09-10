@@ -1,0 +1,41 @@
+{
+  "schema": "clean_1000_S1_refinement_audit_v1",
+  "requests": 1000,
+  "records": 1000,
+  "successful_records": 999,
+  "completed_workers": 20,
+  "actual_F800_requests": 976,
+  "geometry_decoder_calls": 1561600,
+  "known_SUN_passthrough": 23,
+  "known_SUN_tokens_exactly_retained": true,
+  "fallbacks": [
+    {
+      "ordinal": 549,
+      "reason": "token_F_geometry_outside_hard_support",
+      "exact_raw_return": true
+    },
+    {
+      "ordinal": 887,
+      "reason": "token_F_geometry_outside_hard_support",
+      "exact_raw_return": true
+    }
+  ],
+  "input_bindings": {
+    "rounds/round1/fit/RUN_SPEC.json": "7cc5e7c1ef3d2135b5a6744ea282d900f63ccb0255e16002e2d188fc76f897a1",
+    "rounds/round1/fit/cohort/plans.jsonl": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+    "rounds/round1/fit/construction/inputs.jsonl": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+    "rounds/round1/fit/construction/GATE.json": "facac32ecc3ec243b5ee9b67e444b0836537ee7b726770f58c956cf3cbdd613c",
+    "rounds/round1/fit/tokenized/inputs.jsonl": "bdef444a396dce74a4c684a2cca2f1783ffe4badf965be9d82afdab6cae56734"
+  },
+  "record_manifest": "4518869e5e25139a32f3b52496cce8c9cc03aa0d8918f9698807c872400bb255",
+  "accounting": "41861|COMPLETED|1914|billing=20,cpu=20,gres/gpu=5,mem=160G,node=1|0:0|2026-09-10T11:07:52|2026-09-10T11:39:46",
+  "record_manifest_digest_definition": "sha256(concatenate filename:sha256(file_bytes) followed by LF for records 0000.json through 0999.json in ordinal order)",
+  "job": {
+    "id": "41861",
+    "state": "COMPLETED",
+    "elapsed_seconds": 1914,
+    "allocated_GPUs": 5,
+    "allocated_GPU_hours": 2.658333333333333,
+    "Slurm_time_zone": "Asia/Shanghai"
+  }
+}
