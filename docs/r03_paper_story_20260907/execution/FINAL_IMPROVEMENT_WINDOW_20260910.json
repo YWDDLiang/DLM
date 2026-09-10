@@ -28,5 +28,22 @@
     "gpus": 5,
     "queued_or_running_jobs": 3
   },
-  "no_extra_release_hard_gates": true
+  "no_extra_release_hard_gates": true,
+  "training_progress": {
+    "variants": [
+      "mini_2e6",
+      "mini_5e7"
+    ],
+    "content_updates_each": 248,
+    "head_updates_each": 248,
+    "sources": 492,
+    "actual_passes_each": 8,
+    "content_drift_audited": true
+  },
+  "generation_failure_837": {
+    "recovered_valid_structure": true,
+    "graph_available": true,
+    "DLM_forward_calls": 47,
+    "physical_evaluation": "in_progress"
+  }
 }
