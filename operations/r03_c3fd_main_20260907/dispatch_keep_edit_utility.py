@@ -9,7 +9,7 @@ from submit_stage import configured_dispatch
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,required=True)
-    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export','decide_repeat','train_readout'],required=True)
+    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export','export_audit','decide_repeat','train_readout'],required=True)
     parser.add_argument('--repeat-index',type=int,choices=[1,2])
     parser.add_argument('--policy-method',choices=['utility','consensus','readout'],default='utility')
     parser.add_argument('--minutes',type=int,default=35)
@@ -21,6 +21,7 @@ def main():
     job='focus_utility_'+args.mode+('_'+args.job_suffix if args.job_suffix else '')
     output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'models/selected_utility' if args.mode=='export' else 'analysis/utility_'+args.mode
     if args.mode=='train_readout':output='training/readout_matched'
+    if args.mode=='export_audit':output='models/selected_utility/parity_audit'
     if args.policy_method!='utility':
         if args.mode!='policies':raise ValueError('policy method applies only to policy evaluation')
         job+='_'+args.policy_method;output+='_'+args.policy_method
@@ -59,6 +60,9 @@ def main():
             frozen=json.loads((root/'FROZEN_SELECTION.json').read_text())
             required += [Path(frozen[k]) for k in ('training_receipt_path','feature_receipt_path','predictions_path') if k in frozen]
         products=['{output}/EXPORT_FINAL.json','{output}/checkpoint/RSI_TRAINING_DONE.json']
+    elif args.mode=='export_audit':
+        required += [root/'FROZEN_SELECTION.json',root/'models/selected_utility/checkpoint/RSI_TRAINING_DONE.json']
+        products=['{output}/EXPORT_AUDIT_FINAL.json']
     else:
         required += [root/'FROZEN_SELECTION.json',root/'REPEAT_SEED_REGISTRATION.json',
             root/'models/selected_utility/EXPORT_FINAL.json',
@@ -69,10 +73,11 @@ def main():
     script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/audit_keep_edit_judgement.py' if args.mode=='audit' else 'src/scripts/export_keep_edit_utility.py' if args.mode=='export' else 'src/scripts/train_keep_edit_utility.py'
     if args.mode=='decide_repeat':script='operations/r03_c3fd_main_20260907/repeat_keep_edit_utility.py'
     if args.mode=='train_readout':script='src/scripts/train_keep_edit_readout.py'
-    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export','decide_repeat','train_readout') else ['--mode',args.mode])
+    if args.mode=='export_audit':script='src/scripts/audit_exported_utility.py'
+    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export','export_audit','decide_repeat','train_readout') else ['--mode',args.mode])
     if args.mode=='policies':stage_args+=['--method',args.policy_method]
     if args.mode=='decide_repeat':stage_args+=['--mode','decide','--index',str(args.repeat_index)]
-    if args.mode in ('policies','audit','export','decide_repeat'):stage_args+=['--completion-dir','{output}']
+    if args.mode in ('policies','audit','export','export_audit','decide_repeat'):stage_args+=['--completion-dir','{output}']
     pipeline['components']=[dict(id=job,output_dir=output,gpus=gpu,stages=[dict(name=args.mode,
         script=script,args=stage_args,
         inputs=[str(p) for p in required],outputs=products)])]
