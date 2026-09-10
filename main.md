@@ -1,6 +1,8 @@
 # KEEP/EDIT主线进度
 
-当前执行计划见[固定G/F的KEEP/EDIT尝试与后续1000条计划](docs/r03_paper_story_20260907/EDITOR_T2T_TRIAL_PLAN_20260910.md)。详细实验讨论见[EXPERT_REPAIR_DISCUSSION.md](docs/r03_paper_story_20260907/EXPERT_REPAIR_DISCUSSION.md)。
+当前执行计划见[KEEP/EDIT专注训练与未见来源验证](docs/r03_paper_story_20260907/KEEP_EDIT_FOCUS_PLAN_20260910.md)。先前固定G/F试验见[原计划](docs/r03_paper_story_20260907/EDITOR_T2T_TRIAL_PLAN_20260910.md)，详细实验讨论见[EXPERT_REPAIR_DISCUSSION.md](docs/r03_paper_story_20260907/EXPERT_REPAIR_DISCUSSION.md)。
+
+北京时间14:02:39已在独立目录启动连续KEEP基线物理评价和旧E3的同输入提案；1000旧主流程继续暂停。新划分固定为506 TRAIN、247 DEV、247 FINAL，旧256来源及同约化组成全部纳入训练侧；FINAL在候选策略冻结前不用于选择。1000个输入中974个保留连续F结构，24个沿用原SUN直通/生成或F失败状态，2个连续结构未通过既定几何检查而使用原token回退；不丢样本。7项KEEP/EDIT表示边界测试通过。第一阶段只训练quality头的有符号收益回归，所有内容与范围参数冻结；尚无新SUN/MSUN效果结论。
 
 2026-09-10最新状态：1000条运行已按用户要求于北京时间12:57:35完成S1并暂停，S0/S1和G1/E1均已核验归档；G2/E2/G3/E3未运行。调度已退出，本次运行没有活动Slurm作业。后续集中改进KEEP/EDIT的SUN与MSUN。原预算、已完成科学结果及三轮原计划均保留，见[暂停完成回执](docs/r03_paper_story_20260907/receipts/CLEAN_1000_PAUSED_AFTER_S1_20260910.json)。
 
