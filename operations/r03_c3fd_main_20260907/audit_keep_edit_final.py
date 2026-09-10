@@ -50,6 +50,32 @@ def compare(root,panel,stage,indices):
         decision_sha256=file_hash(panel/'DECISION_BINDING.json'))
 
 
+def repeated_uncertainty(root,panels,indices):
+    import numpy as np
+    from pymatgen.core import Composition
+    names=('Stable','MS','SUN','MSUN');before=scores(root/'fit','native')
+    sources=read_rows(root/'SOURCE_SPLIT.jsonl');groups=defaultdict(list)
+    for i in indices:groups[Composition(sources[i]['reduced_formula']).reduced_formula].append(i)
+    ordered=sorted(groups);matrix=[]
+    for key in ('primary','repeat1','repeat2'):
+        panel,stage=panels[key];after=scores(panel,stage)
+        matrix.append([[int(flags(after[i])[name])-int(flags(before[i])[name]) for name in names] for i in indices])
+    values=np.asarray(matrix,dtype=float);average=values.mean(0);positions={i:j for j,i in enumerate(indices)}
+    aggregate=np.asarray([average[[positions[i] for i in groups[g]]].sum(0) for g in ordered])
+    sizes=np.asarray([len(groups[g]) for g in ordered])
+    rng=np.random.default_rng(20260910);draws=rng.integers(len(ordered),size=(10000,len(ordered)))
+    boot=100.*aggregate[draws].sum(1)/sizes[draws].sum(1)[:,None]
+    intervals=np.quantile(boot,[.025,.975],axis=0)
+    return dict(streams=['primary','repeat1','repeat2'],sources=len(indices),composition_clusters=len(ordered),
+        mean_net_count={name:float(values[:,:,j].sum(1).mean()) for j,name in enumerate(names)},
+        mean_percentage_point_delta={name:float(100.*average[:,j].mean()) for j,name in enumerate(names)},
+        paired_composition_cluster_bootstrap_95pct_percentage_point_interval={name:intervals[:,j].tolist() for j,name in enumerate(names)},
+        bootstrap_replicates=10000,bootstrap_seed=20260910,
+        inference_scope='sampling uncertainty conditional on the fixed model, observed input cohort, physical protocol and three E seeds',
+        does_not_quantify_CHGNet_or_hull_reference_uncertainty=True,
+        all_three_SUN_and_MSUN_strictly_positive=bool(np.all(values[:,:,2].sum(1)>0) and np.all(values[:,:,3].sum(1)>0)))
+
+
 def main(root):
     frozen=json.loads((root/'FROZEN_SELECTION.json').read_text())
     admission=composition_admission(root);path=root/'analysis/FINAL_COMPOSITION_ADMISSION.json'
@@ -73,6 +99,7 @@ def main(root):
         excluded_original_FINAL=admission['excluded_FINAL'],reports=reports,pending=pending,
         no_weight_threshold_or_seed_reselection=True,
         original_cohort_metrics_preserved=True,metadata_based_strict_subset_is_an_additional_audit=True)
+    if not pending:report['strict_subset_repeated_uncertainty']=repeated_uncertainty(root,panels,admission['strict_composition_isolated_FINAL'])
     output=root/'analysis'/('FINAL_AND_REPEATS_COMPLETE.json' if not pending else 'FINAL_AND_REPEATS_PROGRESS.json')
     write_json(output,report)
     print(json.dumps(dict(excluded=admission['excluded_FINAL'],pending=pending,reports={
