@@ -1,0 +1,20 @@
+{
+  "schema": "clean_1000_RAW_prefix_physics_audit_v1",
+  "compared": 256,
+  "same_flags": {
+    "Stable": 256,
+    "SUN": 256,
+    "reliable": 256,
+    "known_failure": 256
+  },
+  "maximum_abs_hull_difference": 0,
+  "finite_hull_pairs": 126,
+  "differences": [],
+  "new_first256_Stable": 4,
+  "old256_Stable": 4,
+  "new_first256_SUN": 4,
+  "old256_SUN": 4,
+  "new_score_sha256": "84421b36dbdf7644eb142287df13e26263a9e89e867997a40e9fe42ef34843c0",
+  "old_score_sha256": "21e161da44faad53a264c015961c4fb07f8b75791b3d00f74bd21b6e80b530c8",
+  "scope": "read_only_prefix_audit; no cached labels imported; U remains defined on each original full panel"
+}
