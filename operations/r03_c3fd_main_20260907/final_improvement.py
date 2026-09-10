@@ -180,11 +180,12 @@ def variant(root, name):
     destination = root/'variants'/name
     if (destination/'PREREGISTRATION.json').exists():
         return destination
-    checkpoint = root/'training'/name/'result/checkpoint'
-    receipt = checkpoint/'RSI_TRAINING_DONE.json'
     reg = json.loads((previous/'PREREGISTRATION.json').read_text())
+    frozen=name=='frozen_e3'
+    checkpoint = Path(reg['old_editor']) if frozen else root/'training'/name/'result/checkpoint'
+    receipt = checkpoint/'RSI_TRAINING_DONE.json'
     reg.update(old_editor=str(checkpoint), old_editor_receipt_sha256=file_hash(receipt),
-               editor_content_changed=True, parent_content_experiment=str(root),enforce_shared_forward_budget=True)
+               editor_content_changed=not frozen, parent_content_experiment=str(root),enforce_shared_forward_budget=True)
     for folder in ('cohort','current','native'):
         shutil.copytree(previous/'fit'/folder, destination/'fit'/folder)
     shutil.copy2(previous/'SOURCE_SPLIT.jsonl', destination/'SOURCE_SPLIT.jsonl')
@@ -198,6 +199,11 @@ def variant(root, name):
     write_json(destination/'LEARNED_KEEP_REGISTRATION.json',dict(schema='learned_KEEP_candidate_comparison_v1',
         decision='argmax predicted NS then NMS over learned KEEP and edit views',absolute_acceptance_floor=None,
         MS_gain_floor=None,known_SUN_hard_veto=False,role='feasibility'))
+    if frozen:
+        for stream in ('primary','rank1','rank2','rank3'):
+            link=destination/'fit/bank'/stream
+            link.parent.mkdir(parents=True,exist_ok=True)
+            link.symlink_to(previous/'fit/bank'/stream,target_is_directory=True)
     return destination
 
 
@@ -320,8 +326,9 @@ def rank_worker(root,name):
     from scripts.train_sun_ranker import train
     destination=root/'variants'/name
     reg=json.loads((destination/'PREREGISTRATION.json').read_text())
-    for stream in ('primary','rank1','rank2','rank3'):
-        score_bank(root,name,stream,nu_workers=3)
+    if name!='frozen_e3':
+        for stream in ('primary','rank1','rank2','rank3'):
+            score_bank(root,name,stream,nu_workers=3)
     collect_keep_features(destination)
     train(destination,destination/'training/sun_ranker')
     training=destination/'training/sun_ranker/TRAINING_FINAL.json'
@@ -369,17 +376,18 @@ def policy_worker(root,name):
     print(json.dumps(report),flush=True)
 
 
-def collect_keep_features(destination):
+def collect_keep_features(destination,panel_name='fit'):
     import gc
     import torch
     from crystal_dlm.expert_edit import load_editor_model
     from scripts.train_keep_edit_utility import feature_rows
-    spec=json.loads((destination/'fit/RUN_SPEC.json').read_text())
-    plans=read_rows(destination/'fit/cohort/plans.jsonl')
-    current=read_rows(destination/'fit/current/inputs.jsonl')
-    bank=destination/'fit/bank/keep'
+    panel=destination/panel_name
+    spec=json.loads((panel/'RUN_SPEC.json').read_text())
+    plans=read_rows(panel/'cohort/plans.jsonl')
+    current=read_rows(panel/'current/inputs.jsonl')
+    bank=panel/'bank/keep'
     model,tokenizer=load_editor_model(spec['assets']['base_model'],spec['assets']['editor_checkpoint'],torch.device('cuda',0))
-    rows=[dict(ordinal=i,pair_id=fingerprint(dict(panel='fit',stream='keep',source=p['ancestor_id'])),
+    rows=[dict(ordinal=i,pair_id=fingerprint(dict(panel=panel_name,stream='keep',source=p['ancestor_id'])),
         source_id=p['ancestor_id'],prompt=p['body_prompt'],num_sites=p['plan_state']['N'],
         current_tokens=c['body_token_ids'],proposal_tokens=c['body_token_ids'],action_positions=[])
         for i,(p,c) in enumerate(zip(plans,current)) if c.get('body_token_ids') and c.get('success')]
@@ -396,7 +404,7 @@ if __name__ == '__main__':
     parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
-    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6'])
+    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3'])
     parser.add_argument('--stream',choices=['primary','rank1','rank2','rank3'])
     parser.add_argument('--gpus',type=int,default=1)
     args = parser.parse_args()
