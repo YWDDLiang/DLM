@@ -1,0 +1,5554 @@
+{
+  "candidate_supply": {
+    "delta": {
+      "all": {
+        "missed_NS_sources": [
+          18,
+          42,
+          85,
+          87,
+          140,
+          157,
+          175,
+          180,
+          243,
+          273,
+          319,
+          349,
+          372,
+          437,
+          438,
+          493,
+          499,
+          558,
+          578,
+          598,
+          607,
+          696,
+          705,
+          731,
+          732,
+          761,
+          790,
+          829,
+          928,
+          929,
+          962
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 11,
+            "true_Stable_loss_rows": 12,
+            "true_Stable_promotion_rows": 6
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 19,
+            "true_Stable_loss_rows": 59,
+            "true_Stable_promotion_rows": 10
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 12,
+            "true_Stable_loss_rows": 51,
+            "true_Stable_promotion_rows": 7
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 16,
+            "true_Stable_loss_rows": 60,
+            "true_Stable_promotion_rows": 9
+          }
+        },
+        "pool_sources_with_NS_promotion": 34,
+        "pool_sources_with_true_Stable_promotion": 21,
+        "requests": 1000,
+        "selected_NS_promotions": 3,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 3,
+        "selected_stream_counts": {
+          "None": 683,
+          "primary": 81,
+          "rank1": 73,
+          "rank2": 81,
+          "rank3": 82
+        }
+      },
+      "dev": {
+        "missed_NS_sources": [
+          437,
+          438,
+          558,
+          578,
+          598,
+          607,
+          928,
+          962
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 1,
+            "true_Stable_loss_rows": 4,
+            "true_Stable_promotion_rows": 0
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 4,
+            "true_Stable_loss_rows": 17,
+            "true_Stable_promotion_rows": 1
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 4,
+            "true_Stable_loss_rows": 15,
+            "true_Stable_promotion_rows": 2
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 4,
+            "true_Stable_loss_rows": 14,
+            "true_Stable_promotion_rows": 1
+          }
+        },
+        "pool_sources_with_NS_promotion": 8,
+        "pool_sources_with_true_Stable_promotion": 4,
+        "requests": 247,
+        "selected_NS_promotions": 0,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 0,
+        "selected_stream_counts": {
+          "None": 169,
+          "primary": 12,
+          "rank1": 19,
+          "rank2": 22,
+          "rank3": 25
+        }
+      },
+      "final": {
+        "missed_NS_sources": [
+          273,
+          493,
+          696,
+          705,
+          761,
+          829,
+          929
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 3,
+            "true_Stable_loss_rows": 3,
+            "true_Stable_promotion_rows": 1
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 2,
+            "true_Stable_loss_rows": 11,
+            "true_Stable_promotion_rows": 0
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 1,
+            "true_Stable_loss_rows": 11,
+            "true_Stable_promotion_rows": 0
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 3,
+            "true_Stable_loss_rows": 14,
+            "true_Stable_promotion_rows": 2
+          }
+        },
+        "pool_sources_with_NS_promotion": 7,
+        "pool_sources_with_true_Stable_promotion": 3,
+        "requests": 246,
+        "selected_NS_promotions": 0,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 0,
+        "selected_stream_counts": {
+          "None": 167,
+          "primary": 18,
+          "rank1": 20,
+          "rank2": 23,
+          "rank3": 18
+        }
+      },
+      "train": {
+        "missed_NS_sources": [
+          18,
+          42,
+          85,
+          87,
+          140,
+          157,
+          175,
+          180,
+          243,
+          319,
+          349,
+          372,
+          499,
+          731,
+          732,
+          790
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 7,
+            "true_Stable_loss_rows": 5,
+            "true_Stable_promotion_rows": 5
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 13,
+            "true_Stable_loss_rows": 31,
+            "true_Stable_promotion_rows": 9
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 7,
+            "true_Stable_loss_rows": 25,
+            "true_Stable_promotion_rows": 5
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 9,
+            "true_Stable_loss_rows": 32,
+            "true_Stable_promotion_rows": 6
+          }
+        },
+        "pool_sources_with_NS_promotion": 19,
+        "pool_sources_with_true_Stable_promotion": 14,
+        "requests": 506,
+        "selected_NS_promotions": 3,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 3,
+        "selected_stream_counts": {
+          "None": 346,
+          "primary": 51,
+          "rank1": 34,
+          "rank2": 36,
+          "rank3": 39
+        }
+      }
+    },
+    "nested": {
+      "all": {
+        "missed_NS_sources": [
+          85,
+          140,
+          157,
+          180,
+          349,
+          437,
+          499,
+          558,
+          732,
+          761,
+          790,
+          928,
+          929
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 11,
+            "true_Stable_loss_rows": 12,
+            "true_Stable_promotion_rows": 6
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 19,
+            "true_Stable_loss_rows": 59,
+            "true_Stable_promotion_rows": 10
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 12,
+            "true_Stable_loss_rows": 51,
+            "true_Stable_promotion_rows": 7
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 16,
+            "true_Stable_loss_rows": 60,
+            "true_Stable_promotion_rows": 9
+          }
+        },
+        "pool_sources_with_NS_promotion": 34,
+        "pool_sources_with_true_Stable_promotion": 21,
+        "requests": 1000,
+        "selected_NS_promotions": 21,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 21,
+        "selected_stream_counts": {
+          "None": 684,
+          "primary": 68,
+          "rank1": 84,
+          "rank2": 88,
+          "rank3": 76
+        }
+      },
+      "dev": {
+        "missed_NS_sources": [
+          437,
+          558,
+          928
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 1,
+            "true_Stable_loss_rows": 4,
+            "true_Stable_promotion_rows": 0
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 4,
+            "true_Stable_loss_rows": 17,
+            "true_Stable_promotion_rows": 1
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 4,
+            "true_Stable_loss_rows": 15,
+            "true_Stable_promotion_rows": 2
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 4,
+            "true_Stable_loss_rows": 14,
+            "true_Stable_promotion_rows": 1
+          }
+        },
+        "pool_sources_with_NS_promotion": 8,
+        "pool_sources_with_true_Stable_promotion": 4,
+        "requests": 247,
+        "selected_NS_promotions": 5,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 5,
+        "selected_stream_counts": {
+          "None": 165,
+          "primary": 14,
+          "rank1": 19,
+          "rank2": 27,
+          "rank3": 22
+        }
+      },
+      "final": {
+        "missed_NS_sources": [
+          761,
+          929
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 3,
+            "true_Stable_loss_rows": 3,
+            "true_Stable_promotion_rows": 1
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 2,
+            "true_Stable_loss_rows": 11,
+            "true_Stable_promotion_rows": 0
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 1,
+            "true_Stable_loss_rows": 11,
+            "true_Stable_promotion_rows": 0
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 3,
+            "true_Stable_loss_rows": 14,
+            "true_Stable_promotion_rows": 2
+          }
+        },
+        "pool_sources_with_NS_promotion": 7,
+        "pool_sources_with_true_Stable_promotion": 3,
+        "requests": 246,
+        "selected_NS_promotions": 5,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 5,
+        "selected_stream_counts": {
+          "None": 164,
+          "primary": 19,
+          "rank1": 14,
+          "rank2": 23,
+          "rank3": 26
+        }
+      },
+      "train": {
+        "missed_NS_sources": [
+          85,
+          140,
+          157,
+          180,
+          349,
+          499,
+          732,
+          790
+        ],
+        "per_stream": {
+          "primary": {
+            "new_NS_candidate_rows": 7,
+            "true_Stable_loss_rows": 5,
+            "true_Stable_promotion_rows": 5
+          },
+          "rank1": {
+            "new_NS_candidate_rows": 13,
+            "true_Stable_loss_rows": 31,
+            "true_Stable_promotion_rows": 9
+          },
+          "rank2": {
+            "new_NS_candidate_rows": 7,
+            "true_Stable_loss_rows": 25,
+            "true_Stable_promotion_rows": 5
+          },
+          "rank3": {
+            "new_NS_candidate_rows": 9,
+            "true_Stable_loss_rows": 32,
+            "true_Stable_promotion_rows": 6
+          }
+        },
+        "pool_sources_with_NS_promotion": 19,
+        "pool_sources_with_true_Stable_promotion": 14,
+        "requests": 506,
+        "selected_NS_promotions": 11,
+        "selected_SUN_losses": 0,
+        "selected_SUN_promotions": 11,
+        "selected_stream_counts": {
+          "None": 354,
+          "primary": 35,
+          "rank1": 51,
+          "rank2": 38,
+          "rank3": 28
+        }
+      }
+    }
+  },
+  "created_utc": "2026-09-10T12:26:18.131386+00:00",
+  "failed_input_attempts": [
+    {
+      "after": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": null,
+        "known_failure": true,
+        "reliable": false
+      },
+      "after_status": "invalid_terminal",
+      "before": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": null,
+        "known_failure": true,
+        "reliable": false
+      },
+      "before_status": "invalid_terminal",
+      "decision": {
+        "DLM_forward_calls": 24,
+        "actual_edit": false,
+        "chosen_stream": null,
+        "known_SUN_guard": false,
+        "ordinal": 549,
+        "source_record_sha256": "101cee51cf2a93cf89f8a464b4c16011acfcf596a2f56bd8d2ccfe78c5c34b44",
+        "source_trajectory_id": "keep_edit_focus_20260910:native:549"
+      },
+      "ordinal": 549,
+      "proposal_generated": {
+        "primary": true,
+        "rank1": true,
+        "rank2": true,
+        "rank3": true
+      }
+    },
+    {
+      "after": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": null,
+        "known_failure": false,
+        "reliable": false
+      },
+      "after_status": "generation_failure",
+      "before": {
+        "MS": false,
+        "MSUN": false,
+        "N": null,
+        "SUN": false,
+        "Stable": false,
+        "U": null,
+        "hull": null,
+        "known_failure": false,
+        "reliable": false
+      },
+      "before_status": "generation_failure",
+      "decision": {
+        "DLM_forward_calls": 0,
+        "actual_edit": false,
+        "chosen_stream": null,
+        "known_SUN_guard": false,
+        "ordinal": 837,
+        "source_record_sha256": "35ce1c1864c219f2e2913c6c3c66bf56b68784a8380ae211cabd50739a571687",
+        "source_trajectory_id": "keep_edit_focus_20260910:native:837"
+      },
+      "ordinal": 837,
+      "proposal_generated": {
+        "primary": false,
+        "rank1": false,
+        "rank2": false,
+        "rank3": false
+      }
+    }
+  ],
+  "fresh": {
+    "DEV_selected_primary_variant": "nested",
+    "all_policies_reported_without_posthoc_new_FINAL_selection": true,
+    "cases": {
+      "SUN_diverse_K4": [
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.01225274003295862,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2226",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.4490150729492184,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "PdO2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 2,
+            "source_record_sha256": "2317c9b795c271e87e3f6e13cd53674a442d43a0fcb813dcb47cc07688d23fa1",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:2"
+          },
+          "ordinal": 2,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.037521896323648996,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3603",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.18495708461710603,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "MgPd2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 6,
+            "source_record_sha256": "52ca0a758d50926aa110bb791d51afa432d957dc2675feff2c9232dc155a991a",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:6"
+          },
+          "ordinal": 6,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0496879010126694,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2293",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.15006355332590182,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Tb2GeRu",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 11,
+            "source_record_sha256": "9899df1b922aeb96ed398b0bfa62669fa8e006e9dcf1585dae70790765b7fc5d",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:11"
+          },
+          "ordinal": 11,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.07875952566223177,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5768",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.06767568433837923,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "MgSn",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 16,
+            "source_record_sha256": "f016b68df1af16182cf4f6e33228a757f066dba83b124859c03f6d78994979e7",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:16"
+          },
+          "ordinal": 16,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0884350231625941,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6371",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.11386141094945934,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Y(AlPt)2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 98,
+            "source_record_sha256": "20e88932420a89e8ed967a8d5ea0c00895494eb9bcb975c86b39e51abd5a360a",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:98"
+          },
+          "ordinal": 98,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.02803038708593686,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3160",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.02779721371557553,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Tb(CoSi)2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 105,
+            "source_record_sha256": "1ed8ec2b532763b7dd7ffe1e68decb4529e8bd3b41fca77ac94debe397ab8e43",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:105"
+          },
+          "ordinal": 105,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 4.773190239765218,
+            "known_failure": false,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:4011",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.018925169803670094,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "NdIn2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 109,
+            "source_record_sha256": "438ef8b87900830faa4e62812b3f8bda1dc93fa0cd1c0dbd04874b24e6e70915",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:109"
+          },
+          "ordinal": 109,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.024043458384765515,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2373",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.02319135038305653,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "BaBiO3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 110,
+            "source_record_sha256": "32529e4be2e39d6806e5a985cf6eeaa8a0ae97063f8948316cff5c3b21a27abe",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:110"
+          },
+          "ordinal": 110,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.09879826202637165,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2364",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.12512014999634236,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "LiCeO2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 144,
+            "source_record_sha256": "04db80eb6e80e0f2944c0a7d36e5a94bbe1016d7e8cb35a0ca7f74c313de986b",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:144"
+          },
+          "ordinal": 144,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.020465381327221976,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5311",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.01986456650788604,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "CaVO3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 150,
+            "source_record_sha256": "d91611d6f7745c27ba22cc55bd10985e812beb0247338a6753daf24602f5b219",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:150"
+          },
+          "ordinal": 150,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.006238217615799346,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3319",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.12135506126908835,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Bi2(SeBr2)3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 153,
+            "source_record_sha256": "60dc6aa30b466940a1498e528056d96deb1764cd07a2adf964d552cf7a74ee92",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:153"
+          },
+          "ordinal": 153,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.001972003496662822,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7906",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0034331841101487015,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Rb3AgS4",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 156,
+            "source_record_sha256": "bac79a6e81f113e9e1bc30f0008edab9cd1ff83d26f69d690817eb4857b5c2f5",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:156"
+          },
+          "ordinal": 156,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.026868866461181806,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3609",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0228093133148195,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "YMg2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 183,
+            "source_record_sha256": "ede5f4b8c9203450479a800886b5da4a26712682985dff30e8716aa957dacab7",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:183"
+          },
+          "ordinal": 183,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.004894191290690131,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:3056",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.005380565192057318,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "MgAg2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 211,
+            "source_record_sha256": "8613576573f1a91c0e891109a632b064053ec3224216ce15b1063ddd813fcf1b",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:211"
+          },
+          "ordinal": 211,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 5.134572024154751,
+            "known_failure": false,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4537",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0788230846405904,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Eu3In4",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 250,
+            "source_record_sha256": "97a4f0c8eebca1a8cbcf5403b613f73eee35a7ab93d0d7f67d3a70735a5d4340",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:250"
+          },
+          "ordinal": 250,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        }
+      ],
+      "nested_SUN_diverse_K4": [
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.12800910081068295,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4880",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.1268551548878314,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Te4Mo2WS2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 10,
+            "source_record_sha256": "01bfc544c0b42d2ca3879096daf5d662a0b6e158eeaedf8ab075848a724f5d6e",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:10"
+          },
+          "ordinal": 10,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0037478163293456213,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4390",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.0007687852331543787,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "PmAgHg2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 34,
+            "source_record_sha256": "91c390f7cd69f831baa274e1d5ba35ae90502e1458abab1a9d55c3e5654b2ecb",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:34"
+          },
+          "ordinal": 34,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": null,
+            "known_failure": true,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3234",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.06244759987487791,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Ca3Cd",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 36,
+            "source_record_sha256": "1ff3797b6061afd191bb5e35ccdf571c9d6963bffc1da4fbea91ae1e5eba5b64",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:36"
+          },
+          "ordinal": 36,
+          "relaxed_terminal_structure_match": null
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.14041621985302744,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:6014",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.04564435782299814,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Ba2In3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 57,
+            "source_record_sha256": "bf8eef1fd0f33142798e3723e73b90c0e249d685a3802ac2095bdccf9c806fa9",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:57"
+          },
+          "ordinal": 57,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": null,
+            "known_failure": true,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:5017",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.09236235778686286,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Li3Co2O5",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 64,
+            "source_record_sha256": "ba1a4e062234f03304275e65e616daec4021630cf8eec4b4fbff6c9b374e530b",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:64"
+          },
+          "ordinal": 64,
+          "relaxed_terminal_structure_match": null
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 4.773190239765218,
+            "known_failure": false,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:4011",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.018925169803670094,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "NdIn2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 109,
+            "source_record_sha256": "438ef8b87900830faa4e62812b3f8bda1dc93fa0cd1c0dbd04874b24e6e70915",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:109"
+          },
+          "ordinal": 109,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.024043458384765515,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2373",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.02319135038305653,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "BaBiO3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 110,
+            "source_record_sha256": "32529e4be2e39d6806e5a985cf6eeaa8a0ae97063f8948316cff5c3b21a27abe",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:110"
+          },
+          "ordinal": 110,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.07846788727343679,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6666",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.07975725494921804,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Ce2SeO2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 116,
+            "source_record_sha256": "2329fa4d6149e84b0e6405d1664fccb50d8c9ebc68c9469cdb945f968a006f1d",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:116"
+          },
+          "ordinal": 116,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.03519147713378956,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2715",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.035117090537109874,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "HfRh3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 125,
+            "source_record_sha256": "7dde6fe099dfce92216a794f5ffaec85ad7c60b5c89df75f9b840f2819f91af3",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:125"
+          },
+          "ordinal": 125,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.037824002860597616,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6723",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.0036419311748066008,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Cs3TbCl6",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 151,
+            "source_record_sha256": "96e0adbf8e18423038da60c0ebdd73a29016e071e0e5aca6234b20a729ddbea3",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:151"
+          },
+          "ordinal": 151,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.001972003496662822,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7906",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0034331841101487015,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Rb3AgS4",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 156,
+            "source_record_sha256": "bac79a6e81f113e9e1bc30f0008edab9cd1ff83d26f69d690817eb4857b5c2f5",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:156"
+          },
+          "ordinal": 156,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": null,
+            "known_failure": true,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7452",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.0030305352746582415,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "ErInAu2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 165,
+            "source_record_sha256": "0a640dd4ecf4e6f5db013f7d71c5303f5d9be5edf3b26e079bd0b81d0eef8864",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:165"
+          },
+          "ordinal": 165,
+          "relaxed_terminal_structure_match": null
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": null,
+            "known_failure": true,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4471",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.013088561746418925,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Li2CuF6",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 193,
+            "source_record_sha256": "fd589e9d8748c3372361bb3bc2f384c42e1b2f4403282dd471ac00b7c5b71d65",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:193"
+          },
+          "ordinal": 193,
+          "relaxed_terminal_structure_match": null
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.6810297751626004,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3107",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.02252338172998325,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Li2PdO2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 216,
+            "source_record_sha256": "3dbe1cc30800dba2e1e52412afcaa4553c326e74d18c8a056eafccc7e2b1c282",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:216"
+          },
+          "ordinal": 216,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.01097934687289559,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7256",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.011018447519868246,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "TiMnIr2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 223,
+            "source_record_sha256": "a7879b538ea659cbfb08944a716bd53b400ecde78d5473462731e16fd5fdceff",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:223"
+          },
+          "ordinal": 223,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 5.134572024154751,
+            "known_failure": false,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4537",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0788230846405904,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Eu3In4",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 250,
+            "source_record_sha256": "97a4f0c8eebca1a8cbcf5403b613f73eee35a7ab93d0d7f67d3a70735a5d4340",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:250"
+          },
+          "ordinal": 250,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        }
+      ],
+      "operational_diverse_K4": [
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.037521896323648996,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3603",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.18495708461710603,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "MgPd2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 6,
+            "source_record_sha256": "52ca0a758d50926aa110bb791d51afa432d957dc2675feff2c9232dc155a991a",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:6"
+          },
+          "ordinal": 6,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.04941658066965182,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2293",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.15006355332590182,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Tb2GeRu",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 11,
+            "source_record_sha256": "d68bad4a731c7fb0b86e67fbbb5b4548c271d4676c66e64b8cb6500897a69e91",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:11"
+          },
+          "ordinal": 11,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.20422655868408235,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:3018",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.05115324783203157,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Mo3P2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 37,
+            "source_record_sha256": "afe74fa69d968de1a0fcce8f2ff15873f852039df624432dcb7d582225bbb1bc",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:37"
+          },
+          "ordinal": 37,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.03760493131286613,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2663",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.03767502637512199,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Mg3Cd",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 48,
+            "source_record_sha256": "fc515c9a19bd3a80ce5e3f950a50bce9de98168cd4474f47ed923a0be03320eb",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:48"
+          },
+          "ordinal": 48,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.03433975491308239,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_4:6371",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.11386141094945934,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Y(AlPt)2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank2",
+            "known_SUN_guard": false,
+            "ordinal": 98,
+            "source_record_sha256": "1b9997e0bd0eb7c0ccf6188743416be240c0e49c5d00937eaba2bcff1ee09f5a",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:98"
+          },
+          "ordinal": 98,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.05381097986083905,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5555",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.053285505312499204,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "LaSiRu",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 99,
+            "source_record_sha256": "d14f55004276ed50751327564710a1bfbc182fb064875691cc7036f0516e3423",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:99"
+          },
+          "ordinal": 99,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.05299483644238201,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3847",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.12148677217236248,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Nb3S",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 126,
+            "source_record_sha256": "1c807532d1eea0f18cf815066634ff52beacbcf3a3b0af0c68a67a7eed9529f6",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:126"
+          },
+          "ordinal": 126,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": null,
+            "known_failure": true,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_3:5824",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.09038860169018648,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "La(AlNi)2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 142,
+            "source_record_sha256": "c43fbb77be100c88eb518e2f4fff3771684912a61fff8b84f8420b20212bd5bd",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:142"
+          },
+          "ordinal": 142,
+          "relaxed_terminal_structure_match": null
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.09890316620117634,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2364",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.12512014999634236,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "LiCeO2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 144,
+            "source_record_sha256": "b82daa608d5c2bcf7a0ab80a0885d901081059bbf414dab56ae0328b78406d9d",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:144"
+          },
+          "ordinal": 144,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.011186604237838349,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3319",
+          "before": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 0.12135506126908835,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Bi2(SeBr2)3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 153,
+            "source_record_sha256": "3cabfffe8d1edf1f250b64e107b1b140ccd5d88771a9d36c22dc872ec261e1cc",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:153"
+          },
+          "ordinal": 153,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": null,
+            "known_failure": true,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7452",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.0030305352746582415,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "ErInAu2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 165,
+            "source_record_sha256": "0a640dd4ecf4e6f5db013f7d71c5303f5d9be5edf3b26e079bd0b81d0eef8864",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:165"
+          },
+          "ordinal": 165,
+          "relaxed_terminal_structure_match": null
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": null,
+            "known_failure": true,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_0:2821",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.07516102659294166,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "LiV4(OF3)3",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 182,
+            "source_record_sha256": "fd72192eabaaa075ce7f77dfa52461609678a2e86bf40aaad681918ac94ae506",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:182"
+          },
+          "ordinal": 182,
+          "relaxed_terminal_structure_match": null
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.03187994815673845,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_1:3609",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0228093133148195,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "YMg2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank1",
+            "known_SUN_guard": false,
+            "ordinal": 183,
+            "source_record_sha256": "6755cfb3659d4549263b1ffe41102de19a5bc7734dd492258c35700639c42bcc",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:183"
+          },
+          "ordinal": 183,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.07565413479760785,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7181",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0020495510573734776,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Tm(NiGe)2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 199,
+            "source_record_sha256": "c182ecd5c7188ff9342ac7d01d66702c58f7a5a605232bb0c8b29c0871207f3a",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:199"
+          },
+          "ordinal": 199,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": true,
+            "Stable": true,
+            "U": true,
+            "hull": -0.01097934687289559,
+            "known_failure": false,
+            "reliable": true
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_5:7256",
+          "before": {
+            "MS": true,
+            "MSUN": false,
+            "N": false,
+            "SUN": false,
+            "Stable": true,
+            "U": true,
+            "hull": -0.011018447519868246,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "TiMnIr2",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "primary",
+            "known_SUN_guard": false,
+            "ordinal": 223,
+            "source_record_sha256": "a7879b538ea659cbfb08944a716bd53b400ecde78d5473462731e16fd5fdceff",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:223"
+          },
+          "ordinal": 223,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": true,
+            "before_to_after": true
+          }
+        },
+        {
+          "N_metric_endpoint": "input_before_common_relaxation",
+          "after": {
+            "MS": false,
+            "MSUN": false,
+            "N": null,
+            "SUN": false,
+            "Stable": false,
+            "U": null,
+            "hull": 5.134572024154751,
+            "known_failure": false,
+            "reliable": false
+          },
+          "ancestor_id": "25462ad9306ee6eb3648bf2be8a696c919be3694:expanded_source_2:4537",
+          "before": {
+            "MS": true,
+            "MSUN": true,
+            "N": true,
+            "SUN": false,
+            "Stable": false,
+            "U": true,
+            "hull": 0.0788230846405904,
+            "known_failure": false,
+            "reliable": true
+          },
+          "composition": "Eu3In4",
+          "decision": {
+            "DLM_forward_calls": 24,
+            "actual_edit": true,
+            "chosen_stream": "rank3",
+            "known_SUN_guard": false,
+            "ordinal": 250,
+            "source_record_sha256": "97a4f0c8eebca1a8cbcf5403b613f73eee35a7ab93d0d7f67d3a70735a5d4340",
+            "source_trajectory_id": "sun_rank_scope_fresh:native:250"
+          },
+          "ordinal": 250,
+          "relaxed_terminal_structure_match": {
+            "after_to_before": false,
+            "before_to_after": false
+          }
+        }
+      ]
+    },
+    "created_utc": "2026-09-10T12:21:27.049607+00:00",
+    "editor_final_role": "new_source_and_composition_isolated_final",
+    "endpoint_and_score_pins": {
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4/DECISION_BINDING.json": "68c12ffb4739f0cd1d886cb3a48858d9fb1fb87657177de52f4e711442937b64",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4/edited/inputs.jsonl": "7d16e84f2e8072b4f28db335e0aa04bc3e7eea79d638516bfe53efbdc4954f09",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4/edited/labeling/result/LABEL_FINAL.json": "1d50b5d12b57fba779c34a820b5231f81b49447043e066b1c0956bc7430457ec",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4/edited/scoring/result/BASIC_METRICS.json": "3f4616140535b76f637aa8af17c81468e1a50268e80ca2377a1c237e8aef4343",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4/edited/scoring/result/attempt_results.jsonl": "f515f4f976b83c98437aa0ea7de805122c7a70c762487407580441fe8fd39ef3",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4/DECISION_BINDING.json": "14281e3281a749d857e60a8700e4018bc6d090908213afa1e0c69877c410ad9a",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4/edited/inputs.jsonl": "a96b57236f51ecc7f6d65c0198069c715bea46bce4c2c27aae0696dae53ac0ec",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4/edited/labeling/result/LABEL_FINAL.json": "bb0f32ca1ca2662f022af5a94faad07d77475e00035a70f4b06727bccffc9c80",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4/edited/scoring/result/BASIC_METRICS.json": "0f1614712fee7fa77b59ffbbdb4f987cdd2594f4de80cc0a0f76d7513dabe0b2",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4/edited/scoring/result/attempt_results.jsonl": "eda995ee1dcc43d784bddeef1012197eb1befb00cd1b91009d0eec6e209c0da2",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/operational_diverse_K4/DECISION_BINDING.json": "0ff51bf2312741c9470af0f06fbf808c9d4de04bb4f7a7b976c727cab369c5bd",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/operational_diverse_K4/edited/inputs.jsonl": "4570b986a8cf31c9c8764fbf9654d1f4e5bc783141c1105e417513e850cc7cc3",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/operational_diverse_K4/edited/labeling/result/LABEL_FINAL.json": "c90db910cf6b2cbf6f92058e71cee734bcaa254fbae21d0d1f03b3a06b162686",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/operational_diverse_K4/edited/scoring/result/BASIC_METRICS.json": "46db5c27de6d81bcc50f67701a5b659a41f969f3945cf3a3e5db28e2ebac6d0f",
+      "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/operational_diverse_K4/edited/scoring/result/attempt_results.jsonl": "291a4d27cf00152859df6d0b952adbc9bed70f9e4e93132625c3b58c139e4d4b"
+    },
+    "fresh_compositions": 256,
+    "fresh_sources": 256,
+    "frozen_selection_sha256": "d95fee8f110941ffe9b86140dfc0b9cee44bdd7a8f308c4ff002c2ccd943dee2",
+    "full_model_runtime_audit_sha256": "65439e3635d42123f5baa4cffdc40307598bca41def4b4f62d931f371b2a2cfe",
+    "generator_domain": "cached_original_B0_F800; differs_from_G1_F1000_fit",
+    "model_definition_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/models/sun_ranker/MODEL_DEFINITION.json",
+    "model_definition_sha256": "be81c0f5f396c4d7e9d87749ec2bb373ab1d47896334ddac73f59ef176f4f969",
+    "model_variants": {
+      "delta": {
+        "DEV_admitted": false,
+        "editor_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+        "editor_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+        "feature_schema": {
+          "observable_extra_features": [
+            "current_stable",
+            "current_meta",
+            "current_novel_known",
+            "current_novel",
+            "current_verified",
+            "current_known_failure",
+            "current_not_converged",
+            "current_hull_known",
+            "current_hull_clipped",
+            "current_hull_signed_log",
+            "raw_force_scaled",
+            "raw_stress_scaled",
+            "sites_scaled",
+            "changed_site_fraction",
+            "changed_token_fraction",
+            "cell_changed",
+            "fractional_displacement_rms",
+            "fractional_displacement_max",
+            "cartesian_displacement_rms",
+            "cartesian_displacement_max",
+            "geometry_delta_available"
+          ],
+          "quality_hidden_width": 128
+        },
+        "fresh_result": {
+          "KEEP": {
+            "MS": 152,
+            "MSUN": 129,
+            "SUN": 13,
+            "Stable": 20
+          },
+          "actual_edits": 68,
+          "counts": {
+            "MS": 153,
+            "MSUN": 139,
+            "SUN": 15,
+            "Stable": 22
+          },
+          "delta": {
+            "MS": 1,
+            "MSUN": 10,
+            "SUN": 2,
+            "Stable": 2
+          },
+          "gains": {
+            "MS": [
+              2,
+              6,
+              11,
+              98,
+              144,
+              153
+            ],
+            "MSUN": [
+              2,
+              6,
+              11,
+              16,
+              98,
+              105,
+              110,
+              144,
+              150,
+              153,
+              183,
+              211
+            ],
+            "SUN": [
+              153,
+              156
+            ],
+            "Stable": [
+              153,
+              156
+            ]
+          },
+          "losses": {
+            "MS": [
+              18,
+              30,
+              109,
+              199,
+              250
+            ],
+            "MSUN": [
+              109,
+              250
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4",
+          "requests": 256,
+          "role": "fresh",
+          "scores_sha256": "f515f4f976b83c98437aa0ea7de805122c7a70c762487407580441fe8fd39ef3"
+        },
+        "full_model_audit_sha256": "65439e3635d42123f5baa4cffdc40307598bca41def4b4f62d931f371b2a2cfe",
+        "head_kind": "linear_gains",
+        "original_and_fresh_results_retained_without_posthoc_selection": true,
+        "ranker_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/models/delta_sun_ranker/SUN_RANKER.pt",
+        "ranker_sha256": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+        "schema": "frozen_SUN_variant_bundle_v1",
+        "selected_as_primary_before_fresh": false,
+        "selected_policy": {
+          "DEV": {
+            "KEEP": {
+              "MS": 135,
+              "MSUN": 115,
+              "SUN": 24,
+              "Stable": 29
+            },
+            "actual_edits": 78,
+            "counts": {
+              "MS": 135,
+              "MSUN": 125,
+              "SUN": 24,
+              "Stable": 29
+            },
+            "delta": {
+              "MS": 0,
+              "MSUN": 10,
+              "SUN": 0,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                400,
+                651,
+                880,
+                973
+              ],
+              "MSUN": [
+                289,
+                400,
+                437,
+                481,
+                490,
+                556,
+                651,
+                869,
+                880,
+                882,
+                973
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "losses": {
+              "MS": [
+                307,
+                310,
+                343,
+                840
+              ],
+              "MSUN": [
+                840
+              ],
+              "SUN": [],
+              "Stable": []
+            },
+            "max_DLM_calls": 24,
+            "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+            "requests": 247,
+            "role": "dev",
+            "scores_sha256": "9ca6830800123a8155a6636eea0abb70da7526d1561d9559e796fbf372bb941e"
+          },
+          "ms_floor": 0.0,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+          "sun_threshold": 0.05
+        },
+        "selection_sha256": "d95fee8f110941ffe9b86140dfc0b9cee44bdd7a8f308c4ff002c2ccd943dee2",
+        "target_definition": "delta_verified_Stable_and_novel; delta_verified_MS_and_novel; excludes_cohort_U",
+        "training_receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/training/sun_ranker/TRAINING_FINAL.json",
+        "training_receipt_sha256": "6744135d193258758f792c39a60a6b23a48d4abd93228f33001ce0d100bafd26",
+        "variant": "delta"
+      },
+      "nested": {
+        "DEV_admitted": true,
+        "editor_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+        "editor_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+        "feature_schema": {
+          "observable_extra_features": [
+            "current_stable",
+            "current_meta",
+            "current_novel_known",
+            "current_novel",
+            "current_verified",
+            "current_known_failure",
+            "current_not_converged",
+            "current_hull_known",
+            "current_hull_clipped",
+            "current_hull_signed_log",
+            "raw_force_scaled",
+            "raw_stress_scaled",
+            "sites_scaled",
+            "changed_site_fraction",
+            "changed_token_fraction",
+            "cell_changed",
+            "fractional_displacement_rms",
+            "fractional_displacement_max",
+            "cartesian_displacement_rms",
+            "cartesian_displacement_max",
+            "geometry_delta_available"
+          ],
+          "quality_hidden_width": 128
+        },
+        "fresh_result": {
+          "KEEP": {
+            "MS": 152,
+            "MSUN": 129,
+            "SUN": 13,
+            "Stable": 20
+          },
+          "actual_edits": 84,
+          "counts": {
+            "MS": 142,
+            "MSUN": 129,
+            "SUN": 19,
+            "Stable": 19
+          },
+          "delta": {
+            "MS": -10,
+            "MSUN": 0,
+            "SUN": 6,
+            "Stable": -1
+          },
+          "gains": {
+            "MS": [],
+            "MSUN": [
+              10,
+              34,
+              110,
+              116,
+              125,
+              151,
+              223
+            ],
+            "SUN": [
+              10,
+              116,
+              125,
+              151,
+              156,
+              223
+            ],
+            "Stable": [
+              156
+            ]
+          },
+          "losses": {
+            "MS": [
+              30,
+              36,
+              57,
+              64,
+              109,
+              165,
+              193,
+              199,
+              216,
+              250
+            ],
+            "MSUN": [
+              36,
+              57,
+              64,
+              109,
+              193,
+              216,
+              250
+            ],
+            "SUN": [],
+            "Stable": [
+              34,
+              165
+            ]
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4",
+          "requests": 256,
+          "role": "fresh",
+          "scores_sha256": "eda995ee1dcc43d784bddeef1012197eb1befb00cd1b91009d0eec6e209c0da2"
+        },
+        "full_model_audit_sha256": "e32e6338d74ce9e9dcd45349ea2b2758eeb9a0cb481ba9c9d0b0e986aef2169e",
+        "head_kind": "nested_absolute_states",
+        "original_and_fresh_results_retained_without_posthoc_selection": true,
+        "ranker_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/models/nested_sun_ranker/SUN_RANKER.pt",
+        "ranker_sha256": "0f8c430c70edb39404862c638fcc0d9767dc7803493d8ab0e3b1acdc8505295b",
+        "schema": "frozen_SUN_variant_bundle_v1",
+        "selected_as_primary_before_fresh": true,
+        "selected_policy": {
+          "DEV": {
+            "KEEP": {
+              "MS": 135,
+              "MSUN": 115,
+              "SUN": 24,
+              "Stable": 29
+            },
+            "actual_edits": 82,
+            "counts": {
+              "MS": 124,
+              "MSUN": 118,
+              "SUN": 29,
+              "Stable": 29
+            },
+            "delta": {
+              "MS": -11,
+              "MSUN": 3,
+              "SUN": 5,
+              "Stable": 0
+            },
+            "gains": {
+              "MS": [
+                651
+              ],
+              "MSUN": [
+                289,
+                437,
+                438,
+                481,
+                490,
+                598,
+                607,
+                651,
+                882,
+                962
+              ],
+              "SUN": [
+                438,
+                578,
+                598,
+                607,
+                962
+              ],
+              "Stable": [
+                578
+              ]
+            },
+            "losses": {
+              "MS": [
+                307,
+                310,
+                343,
+                396,
+                509,
+                584,
+                646,
+                662,
+                801,
+                840,
+                948,
+                990
+              ],
+              "MSUN": [
+                396,
+                509,
+                584,
+                646,
+                801,
+                840,
+                990
+              ],
+              "SUN": [],
+              "Stable": [
+                948
+              ]
+            },
+            "max_DLM_calls": 24,
+            "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+            "requests": 247,
+            "role": "dev",
+            "scores_sha256": "0cae911d96e671410637da4949ef7510bf2a39b945029788770bc7a2ea9a74c2"
+          },
+          "ms_floor": 0.0,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+          "sun_threshold": 0.2
+        },
+        "selection_sha256": "b8328112dc6c2377d8890beadd5208e14acb4286f69d9175cfd20f7fe7efec7a",
+        "target_definition": "absolute_candidate_NS_and_NMS_nested_probabilities; excludes_cohort_U",
+        "training_receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/training/nested_sun_ranker/TRAINING_FINAL.json",
+        "training_receipt_sha256": "80fb80b5eae703bc31cd7e0d8200e49fc944681f863b69e47b48894fad851cf6",
+        "variant": "nested"
+      }
+    },
+    "no_G_F_training_or_sampling": true,
+    "one_fixed_candidate_stream_set": true,
+    "original_MP20_source_split": "train",
+    "overlap_with_all_prior_1000_compositions": 0,
+    "paired_uncertainty": {
+      "SUN_diverse_K4": {
+        "does_not_measure_repeat_seed_variance": true,
+        "draws": 10000,
+        "method": "paired_bootstrap_by_unique_composition_source",
+        "metrics": {
+          "MSUN": {
+            "delta_percentage_points": 3.90625,
+            "gain_rows": 12,
+            "loss_rows": 2,
+            "net_count": 10,
+            "source_bootstrap_95_percent_interval_pp": [
+              1.171875,
+              6.640625
+            ]
+          },
+          "SUN": {
+            "delta_percentage_points": 0.78125,
+            "gain_rows": 2,
+            "loss_rows": 0,
+            "net_count": 2,
+            "source_bootstrap_95_percent_interval_pp": [
+              0.0,
+              1.953125
+            ]
+          },
+          "Stable": {
+            "delta_percentage_points": 0.78125,
+            "gain_rows": 2,
+            "loss_rows": 0,
+            "net_count": 2,
+            "source_bootstrap_95_percent_interval_pp": [
+              0.0,
+              1.953125
+            ]
+          }
+        },
+        "one_fixed_candidate_random_stream_set": true,
+        "seed": 20260910
+      },
+      "nested_SUN_diverse_K4": {
+        "does_not_measure_repeat_seed_variance": true,
+        "draws": 10000,
+        "method": "paired_bootstrap_by_unique_composition_source",
+        "metrics": {
+          "MSUN": {
+            "delta_percentage_points": 0.0,
+            "gain_rows": 7,
+            "loss_rows": 7,
+            "net_count": 0,
+            "source_bootstrap_95_percent_interval_pp": [
+              -2.734375,
+              2.734375
+            ]
+          },
+          "SUN": {
+            "delta_percentage_points": 2.34375,
+            "gain_rows": 6,
+            "loss_rows": 0,
+            "net_count": 6,
+            "source_bootstrap_95_percent_interval_pp": [
+              0.78125,
+              4.296875
+            ]
+          },
+          "Stable": {
+            "delta_percentage_points": -0.390625,
+            "gain_rows": 1,
+            "loss_rows": 2,
+            "net_count": -1,
+            "source_bootstrap_95_percent_interval_pp": [
+              -1.953125,
+              0.78125
+            ]
+          }
+        },
+        "one_fixed_candidate_random_stream_set": true,
+        "seed": 20260910
+      },
+      "operational_diverse_K4": {
+        "does_not_measure_repeat_seed_variance": true,
+        "draws": 10000,
+        "method": "paired_bootstrap_by_unique_composition_source",
+        "metrics": {
+          "MSUN": {
+            "delta_percentage_points": 2.734375,
+            "gain_rows": 11,
+            "loss_rows": 4,
+            "net_count": 7,
+            "source_bootstrap_95_percent_interval_pp": [
+              0.0,
+              5.859375
+            ]
+          },
+          "SUN": {
+            "delta_percentage_points": 0.390625,
+            "gain_rows": 1,
+            "loss_rows": 0,
+            "net_count": 1,
+            "source_bootstrap_95_percent_interval_pp": [
+              0.0,
+              1.171875
+            ]
+          },
+          "Stable": {
+            "delta_percentage_points": -0.390625,
+            "gain_rows": 0,
+            "loss_rows": 1,
+            "net_count": -1,
+            "source_bootstrap_95_percent_interval_pp": [
+              -1.171875,
+              0.0
+            ]
+          }
+        },
+        "one_fixed_candidate_random_stream_set": true,
+        "seed": 20260910
+      }
+    },
+    "passes_predeclared_DEV_and_fresh_joint_improvement": false,
+    "reports": {
+      "SUN_diverse_K4": {
+        "KEEP": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 13,
+          "Stable": 20
+        },
+        "actual_edits": 68,
+        "counts": {
+          "MS": 153,
+          "MSUN": 139,
+          "SUN": 15,
+          "Stable": 22
+        },
+        "delta": {
+          "MS": 1,
+          "MSUN": 10,
+          "SUN": 2,
+          "Stable": 2
+        },
+        "gains": {
+          "MS": [
+            2,
+            6,
+            11,
+            98,
+            144,
+            153
+          ],
+          "MSUN": [
+            2,
+            6,
+            11,
+            16,
+            98,
+            105,
+            110,
+            144,
+            150,
+            153,
+            183,
+            211
+          ],
+          "SUN": [
+            153,
+            156
+          ],
+          "Stable": [
+            153,
+            156
+          ]
+        },
+        "losses": {
+          "MS": [
+            18,
+            30,
+            109,
+            199,
+            250
+          ],
+          "MSUN": [
+            109,
+            250
+          ],
+          "SUN": [],
+          "Stable": []
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4",
+        "requests": 256,
+        "role": "fresh",
+        "scores_sha256": "f515f4f976b83c98437aa0ea7de805122c7a70c762487407580441fe8fd39ef3"
+      },
+      "nested_SUN_diverse_K4": {
+        "KEEP": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 13,
+          "Stable": 20
+        },
+        "actual_edits": 84,
+        "counts": {
+          "MS": 142,
+          "MSUN": 129,
+          "SUN": 19,
+          "Stable": 19
+        },
+        "delta": {
+          "MS": -10,
+          "MSUN": 0,
+          "SUN": 6,
+          "Stable": -1
+        },
+        "gains": {
+          "MS": [],
+          "MSUN": [
+            10,
+            34,
+            110,
+            116,
+            125,
+            151,
+            223
+          ],
+          "SUN": [
+            10,
+            116,
+            125,
+            151,
+            156,
+            223
+          ],
+          "Stable": [
+            156
+          ]
+        },
+        "losses": {
+          "MS": [
+            30,
+            36,
+            57,
+            64,
+            109,
+            165,
+            193,
+            199,
+            216,
+            250
+          ],
+          "MSUN": [
+            36,
+            57,
+            64,
+            109,
+            193,
+            216,
+            250
+          ],
+          "SUN": [],
+          "Stable": [
+            34,
+            165
+          ]
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4",
+        "requests": 256,
+        "role": "fresh",
+        "scores_sha256": "eda995ee1dcc43d784bddeef1012197eb1befb00cd1b91009d0eec6e209c0da2"
+      },
+      "operational_diverse_K4": {
+        "KEEP": {
+          "MS": 152,
+          "MSUN": 129,
+          "SUN": 13,
+          "Stable": 20
+        },
+        "actual_edits": 55,
+        "counts": {
+          "MS": 150,
+          "MSUN": 136,
+          "SUN": 14,
+          "Stable": 19
+        },
+        "delta": {
+          "MS": -2,
+          "MSUN": 7,
+          "SUN": 1,
+          "Stable": -1
+        },
+        "gains": {
+          "MS": [
+            6,
+            11,
+            98,
+            126,
+            144,
+            153
+          ],
+          "MSUN": [
+            6,
+            11,
+            48,
+            98,
+            99,
+            126,
+            144,
+            153,
+            183,
+            199,
+            223
+          ],
+          "SUN": [
+            223
+          ],
+          "Stable": []
+        },
+        "losses": {
+          "MS": [
+            16,
+            30,
+            37,
+            142,
+            165,
+            182,
+            211,
+            250
+          ],
+          "MSUN": [
+            37,
+            142,
+            182,
+            250
+          ],
+          "SUN": [],
+          "Stable": [
+            165
+          ]
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/operational_diverse_K4",
+        "requests": 256,
+        "role": "fresh",
+        "scores_sha256": "291a4d27cf00152859df6d0b952adbc9bed70f9e4e93132625c3b58c139e4d4b"
+      }
+    },
+    "schema": "sun_rank_scope_fresh_comparison_v1",
+    "selected_before_new_final": true,
+    "status": "complete",
+    "training_receipt_sha256": "6744135d193258758f792c39a60a6b23a48d4abd93228f33001ce0d100bafd26"
+  },
+  "local_tests_passed": 29,
+  "model_choice_before_fresh_candidate_evaluation": true,
+  "nested_fit": {
+    "DEV_admitted": true,
+    "new_FINAL_remains_unopened": true,
+    "old_FINAL_is_exploratory": true,
+    "results": {
+      "all": {
+        "KEEP": {
+          "MS": 567,
+          "MSUN": 482,
+          "SUN": 103,
+          "Stable": 118
+        },
+        "actual_edits": 316,
+        "counts": {
+          "MS": 546,
+          "MSUN": 512,
+          "SUN": 124,
+          "Stable": 125
+        },
+        "delta": {
+          "MS": -21,
+          "MSUN": 30,
+          "SUN": 21,
+          "Stable": 7
+        },
+        "gains": {
+          "MS": [
+            651,
+            720
+          ],
+          "MSUN": [
+            26,
+            32,
+            81,
+            87,
+            94,
+            110,
+            112,
+            132,
+            175,
+            177,
+            185,
+            214,
+            243,
+            267,
+            273,
+            285,
+            289,
+            308,
+            319,
+            328,
+            362,
+            375,
+            437,
+            438,
+            442,
+            452,
+            467,
+            481,
+            490,
+            507,
+            517,
+            598,
+            607,
+            651,
+            696,
+            705,
+            712,
+            720,
+            731,
+            829,
+            882,
+            908,
+            909,
+            940,
+            943,
+            962
+          ],
+          "SUN": [
+            18,
+            42,
+            54,
+            87,
+            175,
+            214,
+            243,
+            273,
+            319,
+            325,
+            372,
+            438,
+            493,
+            578,
+            598,
+            607,
+            696,
+            705,
+            731,
+            829,
+            962
+          ],
+          "Stable": [
+            18,
+            42,
+            54,
+            214,
+            325,
+            372,
+            493,
+            578,
+            696
+          ]
+        },
+        "losses": {
+          "MS": [
+            6,
+            19,
+            33,
+            240,
+            307,
+            310,
+            343,
+            396,
+            509,
+            584,
+            646,
+            661,
+            662,
+            766,
+            778,
+            792,
+            801,
+            806,
+            827,
+            840,
+            924,
+            948,
+            990
+          ],
+          "MSUN": [
+            6,
+            19,
+            240,
+            396,
+            473,
+            509,
+            584,
+            646,
+            661,
+            766,
+            778,
+            801,
+            806,
+            827,
+            840,
+            990
+          ],
+          "SUN": [],
+          "Stable": [
+            792,
+            948
+          ]
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+        "requests": 1000,
+        "role": "all",
+        "scores_sha256": "0cae911d96e671410637da4949ef7510bf2a39b945029788770bc7a2ea9a74c2"
+      },
+      "dev": {
+        "KEEP": {
+          "MS": 135,
+          "MSUN": 115,
+          "SUN": 24,
+          "Stable": 29
+        },
+        "actual_edits": 82,
+        "counts": {
+          "MS": 124,
+          "MSUN": 118,
+          "SUN": 29,
+          "Stable": 29
+        },
+        "delta": {
+          "MS": -11,
+          "MSUN": 3,
+          "SUN": 5,
+          "Stable": 0
+        },
+        "gains": {
+          "MS": [
+            651
+          ],
+          "MSUN": [
+            289,
+            437,
+            438,
+            481,
+            490,
+            598,
+            607,
+            651,
+            882,
+            962
+          ],
+          "SUN": [
+            438,
+            578,
+            598,
+            607,
+            962
+          ],
+          "Stable": [
+            578
+          ]
+        },
+        "losses": {
+          "MS": [
+            307,
+            310,
+            343,
+            396,
+            509,
+            584,
+            646,
+            662,
+            801,
+            840,
+            948,
+            990
+          ],
+          "MSUN": [
+            396,
+            509,
+            584,
+            646,
+            801,
+            840,
+            990
+          ],
+          "SUN": [],
+          "Stable": [
+            948
+          ]
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+        "requests": 247,
+        "role": "dev",
+        "scores_sha256": "0cae911d96e671410637da4949ef7510bf2a39b945029788770bc7a2ea9a74c2"
+      },
+      "final": {
+        "KEEP": {
+          "MS": 145,
+          "MSUN": 121,
+          "SUN": 28,
+          "Stable": 32
+        },
+        "actual_edits": 82,
+        "counts": {
+          "MS": 141,
+          "MSUN": 128,
+          "SUN": 33,
+          "Stable": 34
+        },
+        "delta": {
+          "MS": -4,
+          "MSUN": 7,
+          "SUN": 5,
+          "Stable": 2
+        },
+        "gains": {
+          "MS": [],
+          "MSUN": [
+            267,
+            273,
+            285,
+            375,
+            467,
+            507,
+            696,
+            705,
+            829,
+            908,
+            909,
+            940
+          ],
+          "SUN": [
+            273,
+            493,
+            696,
+            705,
+            829
+          ],
+          "Stable": [
+            493,
+            696
+          ]
+        },
+        "losses": {
+          "MS": [
+            661,
+            766,
+            778,
+            827
+          ],
+          "MSUN": [
+            473,
+            661,
+            766,
+            778,
+            827
+          ],
+          "SUN": [],
+          "Stable": []
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+        "requests": 246,
+        "role": "final",
+        "scores_sha256": "0cae911d96e671410637da4949ef7510bf2a39b945029788770bc7a2ea9a74c2"
+      },
+      "train": {
+        "KEEP": {
+          "MS": 286,
+          "MSUN": 245,
+          "SUN": 51,
+          "Stable": 57
+        },
+        "actual_edits": 152,
+        "counts": {
+          "MS": 280,
+          "MSUN": 265,
+          "SUN": 62,
+          "Stable": 62
+        },
+        "delta": {
+          "MS": -6,
+          "MSUN": 20,
+          "SUN": 11,
+          "Stable": 5
+        },
+        "gains": {
+          "MS": [
+            720
+          ],
+          "MSUN": [
+            26,
+            32,
+            81,
+            87,
+            94,
+            110,
+            112,
+            132,
+            175,
+            177,
+            185,
+            214,
+            243,
+            308,
+            319,
+            328,
+            362,
+            442,
+            452,
+            517,
+            712,
+            720,
+            731,
+            943
+          ],
+          "SUN": [
+            18,
+            42,
+            54,
+            87,
+            175,
+            214,
+            243,
+            319,
+            325,
+            372,
+            731
+          ],
+          "Stable": [
+            18,
+            42,
+            54,
+            214,
+            325,
+            372
+          ]
+        },
+        "losses": {
+          "MS": [
+            6,
+            19,
+            33,
+            240,
+            792,
+            806,
+            924
+          ],
+          "MSUN": [
+            6,
+            19,
+            240,
+            806
+          ],
+          "SUN": [],
+          "Stable": [
+            792
+          ]
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+        "requests": 506,
+        "role": "train",
+        "scores_sha256": "0cae911d96e671410637da4949ef7510bf2a39b945029788770bc7a2ea9a74c2"
+      }
+    },
+    "selected": {
+      "DEV": {
+        "KEEP": {
+          "MS": 135,
+          "MSUN": 115,
+          "SUN": 24,
+          "Stable": 29
+        },
+        "actual_edits": 82,
+        "counts": {
+          "MS": 124,
+          "MSUN": 118,
+          "SUN": 29,
+          "Stable": 29
+        },
+        "delta": {
+          "MS": -11,
+          "MSUN": 3,
+          "SUN": 5,
+          "Stable": 0
+        },
+        "gains": {
+          "MS": [
+            651
+          ],
+          "MSUN": [
+            289,
+            437,
+            438,
+            481,
+            490,
+            598,
+            607,
+            651,
+            882,
+            962
+          ],
+          "SUN": [
+            438,
+            578,
+            598,
+            607,
+            962
+          ],
+          "Stable": [
+            578
+          ]
+        },
+        "losses": {
+          "MS": [
+            307,
+            310,
+            343,
+            396,
+            509,
+            584,
+            646,
+            662,
+            801,
+            840,
+            948,
+            990
+          ],
+          "MSUN": [
+            396,
+            509,
+            584,
+            646,
+            801,
+            840,
+            990
+          ],
+          "SUN": [],
+          "Stable": [
+            948
+          ]
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+        "requests": 247,
+        "role": "dev",
+        "scores_sha256": "0cae911d96e671410637da4949ef7510bf2a39b945029788770bc7a2ea9a74c2"
+      },
+      "ms_floor": 0.0,
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+      "sun_threshold": 0.2
+    },
+    "status": "complete"
+  },
+  "new_G_F_calls": 0,
+  "new_final_validity": {
+    "KEEP": {
+      "Struct_valid": {
+        "count": 256,
+        "percent": 100.0
+      },
+      "comp_valid": {
+        "count": 208,
+        "percent": 81.25
+      },
+      "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+      "inputs_sha256": "eba669fc7c3151dbf4dc8c8b0c71fbee478c99b9f4ff19f39e33711f61586b1d",
+      "metrics_sha256": "531f9ce0d24cd8bfe7c17d50a7c9b88523937dc83d0d8094dcdef3f029d83c66",
+      "requested": 256,
+      "score_sha256": "1216ec8731a4a0404854aa72b38784b3eae639ae1cfbc878dbca691e3f890c8a",
+      "stability": {
+        "meta_stable": {
+          "bounds_percent": [
+            59.375,
+            59.375
+          ],
+          "confirmed": 152,
+          "count": 152,
+          "percent": 59.375,
+          "unknown": 0
+        },
+        "meta_sun": {
+          "bounds_percent": [
+            50.390625,
+            50.390625
+          ],
+          "confirmed": 129,
+          "count": 129,
+          "percent": 50.390625,
+          "unknown": 0
+        },
+        "requested": 256,
+        "strict_stable": {
+          "bounds_percent": [
+            7.8125,
+            7.8125
+          ],
+          "confirmed": 20,
+          "count": 20,
+          "percent": 7.8125,
+          "unknown": 0
+        },
+        "strict_sun": {
+          "bounds_percent": [
+            5.078125,
+            5.078125
+          ],
+          "confirmed": 13,
+          "count": 13,
+          "percent": 5.078125,
+          "unknown": 0
+        }
+      },
+      "stage": "native"
+    },
+    "SUN_diverse_K4": {
+      "Struct_valid": {
+        "count": 256,
+        "percent": 100.0
+      },
+      "comp_valid": {
+        "count": 208,
+        "percent": 81.25
+      },
+      "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+      "inputs_sha256": "7d16e84f2e8072b4f28db335e0aa04bc3e7eea79d638516bfe53efbdc4954f09",
+      "metrics_sha256": "9e14180fbd297c6806142c23a74082e638622b5cf3f06ba0531e6f1ed5429568",
+      "requested": 256,
+      "score_sha256": "f515f4f976b83c98437aa0ea7de805122c7a70c762487407580441fe8fd39ef3",
+      "stability": {
+        "meta_stable": {
+          "bounds_percent": [
+            59.765625,
+            59.765625
+          ],
+          "confirmed": 153,
+          "count": 153,
+          "percent": 59.765625,
+          "unknown": 0
+        },
+        "meta_sun": {
+          "bounds_percent": [
+            54.296875,
+            54.296875
+          ],
+          "confirmed": 139,
+          "count": 139,
+          "percent": 54.296875,
+          "unknown": 0
+        },
+        "requested": 256,
+        "strict_stable": {
+          "bounds_percent": [
+            8.59375,
+            8.59375
+          ],
+          "confirmed": 22,
+          "count": 22,
+          "percent": 8.59375,
+          "unknown": 0
+        },
+        "strict_sun": {
+          "bounds_percent": [
+            5.859375,
+            5.859375
+          ],
+          "confirmed": 15,
+          "count": 15,
+          "percent": 5.859375,
+          "unknown": 0
+        }
+      },
+      "stage": "edited"
+    },
+    "nested_SUN_diverse_K4": {
+      "Struct_valid": {
+        "count": 256,
+        "percent": 100.0
+      },
+      "comp_valid": {
+        "count": 208,
+        "percent": 81.25
+      },
+      "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+      "inputs_sha256": "a96b57236f51ecc7f6d65c0198069c715bea46bce4c2c27aae0696dae53ac0ec",
+      "metrics_sha256": "20e9d825435951139119ae812a3d5096438903c5e61a2ebde7294a83d2a55e01",
+      "requested": 256,
+      "score_sha256": "eda995ee1dcc43d784bddeef1012197eb1befb00cd1b91009d0eec6e209c0da2",
+      "stability": {
+        "meta_stable": {
+          "bounds_percent": [
+            55.46875,
+            55.46875
+          ],
+          "confirmed": 142,
+          "count": 142,
+          "percent": 55.46875,
+          "unknown": 0
+        },
+        "meta_sun": {
+          "bounds_percent": [
+            50.390625,
+            50.390625
+          ],
+          "confirmed": 129,
+          "count": 129,
+          "percent": 50.390625,
+          "unknown": 0
+        },
+        "requested": 256,
+        "strict_stable": {
+          "bounds_percent": [
+            7.421875,
+            7.421875
+          ],
+          "confirmed": 19,
+          "count": 19,
+          "percent": 7.421875,
+          "unknown": 0
+        },
+        "strict_sun": {
+          "bounds_percent": [
+            7.421875,
+            7.421875
+          ],
+          "confirmed": 19,
+          "count": 19,
+          "percent": 7.421875,
+          "unknown": 0
+        }
+      },
+      "stage": "edited"
+    },
+    "operational_diverse_K4": {
+      "Struct_valid": {
+        "count": 256,
+        "percent": 100.0
+      },
+      "comp_valid": {
+        "count": 208,
+        "percent": 81.25
+      },
+      "frozen_validity_sha256": "68e6d0a9703f412cfd3215e6d0ae687e5b153e941d16f3fa4f2fffeedb505cb6",
+      "inputs_sha256": "4570b986a8cf31c9c8764fbf9654d1f4e5bc783141c1105e417513e850cc7cc3",
+      "metrics_sha256": "b88db43a4a385479c0edda7ecdf0516a462bbe5af980ef801cd76411d6157857",
+      "requested": 256,
+      "score_sha256": "291a4d27cf00152859df6d0b952adbc9bed70f9e4e93132625c3b58c139e4d4b",
+      "stability": {
+        "meta_stable": {
+          "bounds_percent": [
+            58.59375,
+            58.59375
+          ],
+          "confirmed": 150,
+          "count": 150,
+          "percent": 58.59375,
+          "unknown": 0
+        },
+        "meta_sun": {
+          "bounds_percent": [
+            53.125,
+            53.125
+          ],
+          "confirmed": 136,
+          "count": 136,
+          "percent": 53.125,
+          "unknown": 0
+        },
+        "requested": 256,
+        "strict_stable": {
+          "bounds_percent": [
+            7.421875,
+            7.421875
+          ],
+          "confirmed": 19,
+          "count": 19,
+          "percent": 7.421875,
+          "unknown": 0
+        },
+        "strict_sun": {
+          "bounds_percent": [
+            5.46875,
+            5.46875
+          ],
+          "confirmed": 14,
+          "count": 14,
+          "percent": 5.46875,
+          "unknown": 0
+        }
+      },
+      "stage": "edited"
+    }
+  },
+  "original1000_remains_paused_after_S1": true,
+  "original_fit": {
+    "DEV_admitted": false,
+    "frozen_sha256": "d95fee8f110941ffe9b86140dfc0b9cee44bdd7a8f308c4ff002c2ccd943dee2",
+    "old_FINAL_is_exploratory": true,
+    "results": {
+      "SUN_diverse_K4": {
+        "all": {
+          "KEEP": {
+            "MS": 567,
+            "MSUN": 482,
+            "SUN": 103,
+            "Stable": 118
+          },
+          "actual_edits": 317,
+          "counts": {
+            "MS": 574,
+            "MSUN": 541,
+            "SUN": 106,
+            "Stable": 121
+          },
+          "delta": {
+            "MS": 7,
+            "MSUN": 59,
+            "SUN": 3,
+            "Stable": 3
+          },
+          "gains": {
+            "MS": [
+              21,
+              38,
+              44,
+              153,
+              192,
+              207,
+              277,
+              400,
+              424,
+              525,
+              651,
+              679,
+              709,
+              720,
+              730,
+              880,
+              973,
+              980
+            ],
+            "MSUN": [
+              21,
+              32,
+              36,
+              38,
+              44,
+              94,
+              109,
+              110,
+              112,
+              132,
+              144,
+              153,
+              177,
+              185,
+              188,
+              192,
+              207,
+              214,
+              228,
+              267,
+              277,
+              285,
+              289,
+              308,
+              309,
+              328,
+              339,
+              362,
+              400,
+              424,
+              437,
+              442,
+              452,
+              455,
+              467,
+              481,
+              490,
+              507,
+              517,
+              525,
+              531,
+              556,
+              651,
+              679,
+              696,
+              709,
+              712,
+              716,
+              720,
+              730,
+              733,
+              777,
+              869,
+              879,
+              880,
+              882,
+              909,
+              943,
+              973,
+              980
+            ],
+            "SUN": [
+              54,
+              214,
+              325
+            ],
+            "Stable": [
+              54,
+              214,
+              325
+            ]
+          },
+          "losses": {
+            "MS": [
+              26,
+              33,
+              191,
+              307,
+              310,
+              343,
+              412,
+              754,
+              840,
+              924,
+              960
+            ],
+            "MSUN": [
+              840
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+          "requests": 1000,
+          "role": "all",
+          "scores_sha256": "9ca6830800123a8155a6636eea0abb70da7526d1561d9559e796fbf372bb941e"
+        },
+        "dev": {
+          "KEEP": {
+            "MS": 135,
+            "MSUN": 115,
+            "SUN": 24,
+            "Stable": 29
+          },
+          "actual_edits": 78,
+          "counts": {
+            "MS": 135,
+            "MSUN": 125,
+            "SUN": 24,
+            "Stable": 29
+          },
+          "delta": {
+            "MS": 0,
+            "MSUN": 10,
+            "SUN": 0,
+            "Stable": 0
+          },
+          "gains": {
+            "MS": [
+              400,
+              651,
+              880,
+              973
+            ],
+            "MSUN": [
+              289,
+              400,
+              437,
+              481,
+              490,
+              556,
+              651,
+              869,
+              880,
+              882,
+              973
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "losses": {
+            "MS": [
+              307,
+              310,
+              343,
+              840
+            ],
+            "MSUN": [
+              840
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+          "requests": 247,
+          "role": "dev",
+          "scores_sha256": "9ca6830800123a8155a6636eea0abb70da7526d1561d9559e796fbf372bb941e"
+        },
+        "final": {
+          "KEEP": {
+            "MS": 145,
+            "MSUN": 121,
+            "SUN": 28,
+            "Stable": 32
+          },
+          "actual_edits": 79,
+          "counts": {
+            "MS": 147,
+            "MSUN": 137,
+            "SUN": 28,
+            "Stable": 32
+          },
+          "delta": {
+            "MS": 2,
+            "MSUN": 16,
+            "SUN": 0,
+            "Stable": 0
+          },
+          "gains": {
+            "MS": [
+              277,
+              525,
+              679,
+              709
+            ],
+            "MSUN": [
+              267,
+              277,
+              285,
+              309,
+              455,
+              467,
+              507,
+              525,
+              531,
+              679,
+              696,
+              709,
+              716,
+              733,
+              879,
+              909
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "losses": {
+            "MS": [
+              412,
+              754
+            ],
+            "MSUN": [],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+          "requests": 246,
+          "role": "final",
+          "scores_sha256": "9ca6830800123a8155a6636eea0abb70da7526d1561d9559e796fbf372bb941e"
+        },
+        "train": {
+          "KEEP": {
+            "MS": 286,
+            "MSUN": 245,
+            "SUN": 51,
+            "Stable": 57
+          },
+          "actual_edits": 160,
+          "counts": {
+            "MS": 291,
+            "MSUN": 278,
+            "SUN": 54,
+            "Stable": 60
+          },
+          "delta": {
+            "MS": 5,
+            "MSUN": 33,
+            "SUN": 3,
+            "Stable": 3
+          },
+          "gains": {
+            "MS": [
+              21,
+              38,
+              44,
+              153,
+              192,
+              207,
+              424,
+              720,
+              730,
+              980
+            ],
+            "MSUN": [
+              21,
+              32,
+              36,
+              38,
+              44,
+              94,
+              109,
+              110,
+              112,
+              132,
+              144,
+              153,
+              177,
+              185,
+              188,
+              192,
+              207,
+              214,
+              228,
+              308,
+              328,
+              339,
+              362,
+              424,
+              442,
+              452,
+              517,
+              712,
+              720,
+              730,
+              777,
+              943,
+              980
+            ],
+            "SUN": [
+              54,
+              214,
+              325
+            ],
+            "Stable": [
+              54,
+              214,
+              325
+            ]
+          },
+          "losses": {
+            "MS": [
+              26,
+              33,
+              191,
+              924,
+              960
+            ],
+            "MSUN": [],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+          "requests": 506,
+          "role": "train",
+          "scores_sha256": "9ca6830800123a8155a6636eea0abb70da7526d1561d9559e796fbf372bb941e"
+        }
+      },
+      "SUN_primary_K1": {
+        "all": {
+          "KEEP": {
+            "MS": 567,
+            "MSUN": 482,
+            "SUN": 103,
+            "Stable": 118
+          },
+          "actual_edits": 179,
+          "counts": {
+            "MS": 572,
+            "MSUN": 526,
+            "SUN": 105,
+            "Stable": 120
+          },
+          "delta": {
+            "MS": 5,
+            "MSUN": 44,
+            "SUN": 2,
+            "Stable": 2
+          },
+          "gains": {
+            "MS": [
+              21,
+              44,
+              153,
+              207,
+              277,
+              377,
+              424,
+              557,
+              651,
+              720,
+              730,
+              859,
+              880,
+              973,
+              980
+            ],
+            "MSUN": [
+              21,
+              26,
+              32,
+              33,
+              36,
+              44,
+              94,
+              112,
+              132,
+              144,
+              153,
+              177,
+              185,
+              191,
+              207,
+              214,
+              267,
+              277,
+              285,
+              289,
+              307,
+              309,
+              328,
+              377,
+              424,
+              442,
+              452,
+              490,
+              531,
+              556,
+              557,
+              651,
+              696,
+              716,
+              720,
+              730,
+              733,
+              754,
+              859,
+              880,
+              908,
+              924,
+              943,
+              973,
+              980
+            ],
+            "SUN": [
+              54,
+              214
+            ],
+            "Stable": [
+              54,
+              214
+            ]
+          },
+          "losses": {
+            "MS": [
+              310,
+              362,
+              437,
+              455,
+              481,
+              504,
+              517,
+              712,
+              879,
+              960
+            ],
+            "MSUN": [
+              504
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 6,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/SUN_ranker_primary_K1",
+          "requests": 1000,
+          "role": "all",
+          "scores_sha256": "96c3e963ce8d6f010c3e5974d68eadfe0354a9844f09257ed03031e003f3a242"
+        },
+        "dev": {
+          "KEEP": {
+            "MS": 135,
+            "MSUN": 115,
+            "SUN": 24,
+            "Stable": 29
+          },
+          "actual_edits": 46,
+          "counts": {
+            "MS": 136,
+            "MSUN": 123,
+            "SUN": 24,
+            "Stable": 29
+          },
+          "delta": {
+            "MS": 1,
+            "MSUN": 8,
+            "SUN": 0,
+            "Stable": 0
+          },
+          "gains": {
+            "MS": [
+              377,
+              557,
+              651,
+              880,
+              973
+            ],
+            "MSUN": [
+              289,
+              307,
+              377,
+              490,
+              556,
+              557,
+              651,
+              880,
+              973
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "losses": {
+            "MS": [
+              310,
+              437,
+              481,
+              504
+            ],
+            "MSUN": [
+              504
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 6,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/SUN_ranker_primary_K1",
+          "requests": 247,
+          "role": "dev",
+          "scores_sha256": "96c3e963ce8d6f010c3e5974d68eadfe0354a9844f09257ed03031e003f3a242"
+        },
+        "final": {
+          "KEEP": {
+            "MS": 145,
+            "MSUN": 121,
+            "SUN": 28,
+            "Stable": 32
+          },
+          "actual_edits": 45,
+          "counts": {
+            "MS": 145,
+            "MSUN": 132,
+            "SUN": 28,
+            "Stable": 32
+          },
+          "delta": {
+            "MS": 0,
+            "MSUN": 11,
+            "SUN": 0,
+            "Stable": 0
+          },
+          "gains": {
+            "MS": [
+              277,
+              859
+            ],
+            "MSUN": [
+              267,
+              277,
+              285,
+              309,
+              531,
+              696,
+              716,
+              733,
+              754,
+              859,
+              908
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "losses": {
+            "MS": [
+              455,
+              879
+            ],
+            "MSUN": [],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 6,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/SUN_ranker_primary_K1",
+          "requests": 246,
+          "role": "final",
+          "scores_sha256": "96c3e963ce8d6f010c3e5974d68eadfe0354a9844f09257ed03031e003f3a242"
+        },
+        "train": {
+          "KEEP": {
+            "MS": 286,
+            "MSUN": 245,
+            "SUN": 51,
+            "Stable": 57
+          },
+          "actual_edits": 88,
+          "counts": {
+            "MS": 290,
+            "MSUN": 270,
+            "SUN": 53,
+            "Stable": 59
+          },
+          "delta": {
+            "MS": 4,
+            "MSUN": 25,
+            "SUN": 2,
+            "Stable": 2
+          },
+          "gains": {
+            "MS": [
+              21,
+              44,
+              153,
+              207,
+              424,
+              720,
+              730,
+              980
+            ],
+            "MSUN": [
+              21,
+              26,
+              32,
+              33,
+              36,
+              44,
+              94,
+              112,
+              132,
+              144,
+              153,
+              177,
+              185,
+              191,
+              207,
+              214,
+              328,
+              424,
+              442,
+              452,
+              720,
+              730,
+              924,
+              943,
+              980
+            ],
+            "SUN": [
+              54,
+              214
+            ],
+            "Stable": [
+              54,
+              214
+            ]
+          },
+          "losses": {
+            "MS": [
+              362,
+              517,
+              712,
+              960
+            ],
+            "MSUN": [],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 6,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/SUN_ranker_primary_K1",
+          "requests": 506,
+          "role": "train",
+          "scores_sha256": "96c3e963ce8d6f010c3e5974d68eadfe0354a9844f09257ed03031e003f3a242"
+        }
+      },
+      "operational_diverse_K4": {
+        "all": {
+          "KEEP": {
+            "MS": 567,
+            "MSUN": 482,
+            "SUN": 103,
+            "Stable": 118
+          },
+          "actual_edits": 159,
+          "counts": {
+            "MS": 556,
+            "MSUN": 494,
+            "SUN": 111,
+            "Stable": 121
+          },
+          "delta": {
+            "MS": -11,
+            "MSUN": 12,
+            "SUN": 8,
+            "Stable": 3
+          },
+          "gains": {
+            "MS": [
+              174,
+              277,
+              282,
+              345,
+              355,
+              477,
+              499,
+              558,
+              563,
+              577,
+              679,
+              689,
+              720,
+              730
+            ],
+            "MSUN": [
+              26,
+              87,
+              94,
+              110,
+              144,
+              174,
+              214,
+              243,
+              277,
+              282,
+              285,
+              289,
+              319,
+              339,
+              345,
+              355,
+              437,
+              452,
+              477,
+              499,
+              507,
+              558,
+              563,
+              577,
+              679,
+              689,
+              696,
+              720,
+              730,
+              924,
+              943,
+              962
+            ],
+            "SUN": [
+              87,
+              214,
+              243,
+              319,
+              325,
+              372,
+              437,
+              499
+            ],
+            "Stable": [
+              214,
+              325,
+              372,
+              437,
+              499
+            ]
+          },
+          "losses": {
+            "MS": [
+              33,
+              63,
+              150,
+              185,
+              186,
+              229,
+              246,
+              256,
+              363,
+              383,
+              434,
+              435,
+              454,
+              467,
+              483,
+              493,
+              517,
+              523,
+              527,
+              584,
+              605,
+              792,
+              814,
+              899,
+              951
+            ],
+            "MSUN": [
+              63,
+              150,
+              186,
+              229,
+              246,
+              256,
+              363,
+              383,
+              434,
+              435,
+              454,
+              483,
+              493,
+              523,
+              527,
+              584,
+              605,
+              814,
+              899,
+              951
+            ],
+            "SUN": [],
+            "Stable": [
+              792,
+              962
+            ]
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/operational_diverse_K4",
+          "requests": 1000,
+          "role": "all",
+          "scores_sha256": "c08379956f1d5c58083b3088feab10d42da530955db78af0cd600fa29ede4381"
+        },
+        "dev": {
+          "KEEP": {
+            "MS": 135,
+            "MSUN": 115,
+            "SUN": 24,
+            "Stable": 29
+          },
+          "actual_edits": 40,
+          "counts": {
+            "MS": 133,
+            "MSUN": 116,
+            "SUN": 25,
+            "Stable": 29
+          },
+          "delta": {
+            "MS": -2,
+            "MSUN": 1,
+            "SUN": 1,
+            "Stable": 0
+          },
+          "gains": {
+            "MS": [
+              477,
+              558,
+              563,
+              577
+            ],
+            "MSUN": [
+              289,
+              437,
+              477,
+              558,
+              563,
+              577,
+              962
+            ],
+            "SUN": [
+              437
+            ],
+            "Stable": [
+              437
+            ]
+          },
+          "losses": {
+            "MS": [
+              383,
+              434,
+              454,
+              527,
+              584,
+              605
+            ],
+            "MSUN": [
+              383,
+              434,
+              454,
+              527,
+              584,
+              605
+            ],
+            "SUN": [],
+            "Stable": [
+              962
+            ]
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/operational_diverse_K4",
+          "requests": 247,
+          "role": "dev",
+          "scores_sha256": "c08379956f1d5c58083b3088feab10d42da530955db78af0cd600fa29ede4381"
+        },
+        "final": {
+          "KEEP": {
+            "MS": 145,
+            "MSUN": 121,
+            "SUN": 28,
+            "Stable": 32
+          },
+          "actual_edits": 41,
+          "counts": {
+            "MS": 142,
+            "MSUN": 122,
+            "SUN": 28,
+            "Stable": 32
+          },
+          "delta": {
+            "MS": -3,
+            "MSUN": 1,
+            "SUN": 0,
+            "Stable": 0
+          },
+          "gains": {
+            "MS": [
+              277,
+              282,
+              355,
+              679,
+              689
+            ],
+            "MSUN": [
+              277,
+              282,
+              285,
+              355,
+              507,
+              679,
+              689,
+              696
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "losses": {
+            "MS": [
+              256,
+              467,
+              483,
+              493,
+              523,
+              814,
+              899,
+              951
+            ],
+            "MSUN": [
+              256,
+              483,
+              493,
+              523,
+              814,
+              899,
+              951
+            ],
+            "SUN": [],
+            "Stable": []
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/operational_diverse_K4",
+          "requests": 246,
+          "role": "final",
+          "scores_sha256": "c08379956f1d5c58083b3088feab10d42da530955db78af0cd600fa29ede4381"
+        },
+        "train": {
+          "KEEP": {
+            "MS": 286,
+            "MSUN": 245,
+            "SUN": 51,
+            "Stable": 57
+          },
+          "actual_edits": 78,
+          "counts": {
+            "MS": 280,
+            "MSUN": 255,
+            "SUN": 58,
+            "Stable": 60
+          },
+          "delta": {
+            "MS": -6,
+            "MSUN": 10,
+            "SUN": 7,
+            "Stable": 3
+          },
+          "gains": {
+            "MS": [
+              174,
+              345,
+              499,
+              720,
+              730
+            ],
+            "MSUN": [
+              26,
+              87,
+              94,
+              110,
+              144,
+              174,
+              214,
+              243,
+              319,
+              339,
+              345,
+              452,
+              499,
+              720,
+              730,
+              924,
+              943
+            ],
+            "SUN": [
+              87,
+              214,
+              243,
+              319,
+              325,
+              372,
+              499
+            ],
+            "Stable": [
+              214,
+              325,
+              372,
+              499
+            ]
+          },
+          "losses": {
+            "MS": [
+              33,
+              63,
+              150,
+              185,
+              186,
+              229,
+              246,
+              363,
+              435,
+              517,
+              792
+            ],
+            "MSUN": [
+              63,
+              150,
+              186,
+              229,
+              246,
+              363,
+              435
+            ],
+            "SUN": [],
+            "Stable": [
+              792
+            ]
+          },
+          "max_DLM_calls": 24,
+          "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/operational_diverse_K4",
+          "requests": 506,
+          "role": "train",
+          "scores_sha256": "c08379956f1d5c58083b3088feab10d42da530955db78af0cd600fa29ede4381"
+        }
+      }
+    },
+    "status": "complete"
+  },
+  "primary_scientific_outcome": "SUN_increase_observed; complete_DEV_and_fresh_joint_adoption_gate_not_met",
+  "prior_budget_unchanged": true,
+  "resources": {
+    "all_jobs_completed": true,
+    "allocated_CPU_hours": 19.305555555555557,
+    "allocated_GPU_hours": 4.445277777777778,
+    "deadline_utc": "2026-09-10T13:54:41.123093+00:00",
+    "failed_jobs": [],
+    "jobs": 24,
+    "last_job_end_utc": "2026-09-10T12:19:16+00:00",
+    "peak_allocated_CPUs": 28,
+    "peak_allocated_GPUs": 5,
+    "peak_running_jobs": 3,
+    "peak_submitted_and_unfinished_jobs": 3,
+    "records": [
+      {
+        "cpus": 8,
+        "elapsed_seconds": 619,
+        "end_utc": "2026-09-10T11:05:15+00:00",
+        "exit_code": "0:0",
+        "gpus": 2,
+        "job_id": "42125",
+        "name": "sun_rank_collect_fit",
+        "start_utc": "2026-09-10T10:54:56+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "951cf1f154d1f0fa982e8db203912551d921a4189be1fa475a4106972670363e"
+      },
+      {
+        "cpus": 12,
+        "elapsed_seconds": 1379,
+        "end_utc": "2026-09-10T11:24:26+00:00",
+        "exit_code": "0:0",
+        "gpus": 3,
+        "job_id": "42128",
+        "name": "sun_rank_rank1_label",
+        "start_utc": "2026-09-10T11:01:27+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "7fb57911bfccd435dda6e154bc5c410fbb4393c936b87b204a3d41c0c4ab4027"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 2068,
+        "end_utc": "2026-09-10T11:40:40+00:00",
+        "exit_code": "0:0",
+        "gpus": 2,
+        "job_id": "42130",
+        "name": "sun_rank_rank2_label",
+        "start_utc": "2026-09-10T11:06:12+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "1f002bc79f7ac123b7c0cd41c9b4baed8cf958c14ad106fe9794c0ffc7b41519"
+      },
+      {
+        "cpus": 12,
+        "elapsed_seconds": 1304,
+        "end_utc": "2026-09-10T11:49:20+00:00",
+        "exit_code": "0:0",
+        "gpus": 3,
+        "job_id": "42138",
+        "name": "sun_rank_rank3_label",
+        "start_utc": "2026-09-10T11:27:36+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "c7afface07f20886844e2aa6fc19a6a3488abce28d58ef512da50d8a3816e393"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 30,
+        "end_utc": "2026-09-10T11:28:09+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42139",
+        "name": "sun_rank_rank1_score",
+        "start_utc": "2026-09-10T11:27:39+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "943728c37bdbd40a2434530256562f5a1ac7b4f9dd8d9095dc67729aa3f0203a"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 32,
+        "end_utc": "2026-09-10T11:41:55+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42146",
+        "name": "sun_rank_rank2_score",
+        "start_utc": "2026-09-10T11:41:23+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "172e7951c7619447846b156c418cbcd35b8dce1f610c0a61e65ac1c7074ba440"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 222,
+        "end_utc": "2026-09-10T11:45:24+00:00",
+        "exit_code": "0:0",
+        "gpus": 2,
+        "job_id": "42147",
+        "name": "sun_rank_fresh_native_label",
+        "start_utc": "2026-09-10T11:41:42+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "24edee859c7732d275e58f32dfae7083fd29cff1f1c3a9709842f33326e30679"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 23,
+        "end_utc": "2026-09-10T11:47:32+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42154",
+        "name": "sun_rank_fresh_native_score",
+        "start_utc": "2026-09-10T11:47:09+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "f1f636f959270a9a8660eea1a533aefece8b58871e090fdeebb6859ce310d16d"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 30,
+        "end_utc": "2026-09-10T11:50:07+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42155",
+        "name": "sun_rank_rank3_score",
+        "start_utc": "2026-09-10T11:49:37+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "d076fb9d2a42a7dae919a66358ad82f52d085d00a6ce8b393144fd006c1c43c4"
+      },
+      {
+        "cpus": 4,
+        "elapsed_seconds": 13,
+        "end_utc": "2026-09-10T11:50:36+00:00",
+        "exit_code": "0:0",
+        "gpus": 1,
+        "job_id": "42157",
+        "name": "sun_rank_train_fit",
+        "start_utc": "2026-09-10T11:50:23+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "87b1df17204de876d8f72abe1a41a6e71bb65bd79d4bcbd10667b95090066581"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 377,
+        "end_utc": "2026-09-10T11:57:23+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42159",
+        "name": "sun_rank_policies_fit",
+        "start_utc": "2026-09-10T11:51:06+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "f4dc8528a402bb8fa0a512089b42467ac047ad69765d393ab998629711ca5e4b"
+      },
+      {
+        "cpus": 4,
+        "elapsed_seconds": 14,
+        "end_utc": "2026-09-10T12:03:37+00:00",
+        "exit_code": "0:0",
+        "gpus": 1,
+        "job_id": "42168",
+        "name": "sun_rank_train_fit__nested",
+        "start_utc": "2026-09-10T12:03:23+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "df7f9185aca3cc269d67faa20159538851e92ba0fd625f4180ff9423ab725389"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 213,
+        "end_utc": "2026-09-10T12:06:56+00:00",
+        "exit_code": "0:0",
+        "gpus": 2,
+        "job_id": "42169",
+        "name": "sun_rank_collect_fresh",
+        "start_utc": "2026-09-10T12:03:23+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "01f8bd7de78c087ed073033376fb5f95ef753f070f2ad11c466b483c36fb0585"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 139,
+        "end_utc": "2026-09-10T12:06:42+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42171",
+        "name": "sun_rank_policies_fit__nested",
+        "start_utc": "2026-09-10T12:04:23+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "850c5a1953dfd225bb16ed0f03c0360a26ee8ba3259e29550eaf356746f3b424"
+      },
+      {
+        "cpus": 4,
+        "elapsed_seconds": 6,
+        "end_utc": "2026-09-10T12:07:38+00:00",
+        "exit_code": "0:0",
+        "gpus": 1,
+        "job_id": "42174",
+        "name": "sun_rank_infer_fresh",
+        "start_utc": "2026-09-10T12:07:32+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "81981d267b3d29494b632528ed52f1c7e324c120ace0fdb71480168099b0f626"
+      },
+      {
+        "cpus": 4,
+        "elapsed_seconds": 5,
+        "end_utc": "2026-09-10T12:07:40+00:00",
+        "exit_code": "0:0",
+        "gpus": 1,
+        "job_id": "42175",
+        "name": "sun_rank_infer_fresh__nested",
+        "start_utc": "2026-09-10T12:07:35+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "a50fdf64c5cd46e26e6065ae62ffe6c4d79b6709688add9a71b9be6044c6cc6f"
+      },
+      {
+        "cpus": 12,
+        "elapsed_seconds": 141,
+        "end_utc": "2026-09-10T12:11:27+00:00",
+        "exit_code": "0:0",
+        "gpus": 3,
+        "job_id": "42177",
+        "name": "sun_rank_fresh_nested_label",
+        "start_utc": "2026-09-10T12:09:06+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "f4af8e023073f5f35f37e06ce9b889390146e632cb250baf5fd4fa3c764a1d23"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 155,
+        "end_utc": "2026-09-10T12:11:44+00:00",
+        "exit_code": "0:0",
+        "gpus": 2,
+        "job_id": "42178",
+        "name": "sun_rank_fresh_delta_label",
+        "start_utc": "2026-09-10T12:09:09+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "33ff624f779f0ec8e5a82ad3da0e71d67dfbdfdf6dbe90f06f2fead1e50826e7"
+      },
+      {
+        "cpus": 12,
+        "elapsed_seconds": 111,
+        "end_utc": "2026-09-10T12:14:52+00:00",
+        "exit_code": "0:0",
+        "gpus": 3,
+        "job_id": "42182",
+        "name": "sun_rank_fresh_operational_label",
+        "start_utc": "2026-09-10T12:13:01+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "3a874a5bb8f9f4b34875a6bf03fdedada5d69a4e89d6894b361aca0c3a44f7d3"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 20,
+        "end_utc": "2026-09-10T12:13:21+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42183",
+        "name": "sun_rank_fresh_nested_score",
+        "start_utc": "2026-09-10T12:13:01+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "5cd0c13aa1918655e7c8400add690cadf1a27f62a9aeb85f95bb2164464a9b05"
+      },
+      {
+        "cpus": 4,
+        "elapsed_seconds": 313,
+        "end_utc": "2026-09-10T12:18:14+00:00",
+        "exit_code": "0:0",
+        "gpus": 1,
+        "job_id": "42184",
+        "name": "sun_rank_audit_fresh__nested",
+        "start_utc": "2026-09-10T12:13:01+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "7e022dcc8adaca910746f9a557a35108746600444bab995061719509fadabbdc"
+      },
+      {
+        "cpus": 4,
+        "elapsed_seconds": 293,
+        "end_utc": "2026-09-10T12:19:16+00:00",
+        "exit_code": "0:0",
+        "gpus": 1,
+        "job_id": "42186",
+        "name": "sun_rank_audit_fresh",
+        "start_utc": "2026-09-10T12:14:23+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "f42370a2211d85e5b873ad5b8f79bc8321d2350f3e955d6fb28e8f70245c1ba0"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 18,
+        "end_utc": "2026-09-10T12:16:47+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42189",
+        "name": "sun_rank_fresh_delta_score",
+        "start_utc": "2026-09-10T12:16:29+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "313d70adb43e69269dd134a0b71d84efbfee8f7931f6a0d8dc163ea45e651bd0"
+      },
+      {
+        "cpus": 8,
+        "elapsed_seconds": 17,
+        "end_utc": "2026-09-10T12:18:12+00:00",
+        "exit_code": "0:0",
+        "gpus": 0,
+        "job_id": "42191",
+        "name": "sun_rank_fresh_operational_score",
+        "start_utc": "2026-09-10T12:17:55+00:00",
+        "state": "COMPLETED",
+        "submission_sha256": "908b48504540ce8e79ea7f51d01fb32cf37b0483ce34907f21364f8448f31e96"
+      }
+    ],
+    "scheduler_display_timezone": "UTC_explicit_TZ_environment"
+  },
+  "root": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope",
+  "runtime_audits": {
+    "delta": {
+      "exported_ranker_sha256": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+      "fixed_canonical_batch_size": 16,
+      "full_editor_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+      "full_editor_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+      "results": {
+        "fit": {
+          "canonical_views": 3996,
+          "decision_mismatches": [],
+          "max_prediction_abs_difference": 0.0,
+          "model_sha256": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+          "no_candidate_physical_labels_loaded": true
+        },
+        "fresh": {
+          "canonical_views": 1024,
+          "decision_mismatches": [],
+          "max_prediction_abs_difference": 0.0,
+          "model_sha256": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+          "no_candidate_physical_labels_loaded": true
+        }
+      },
+      "status": "complete"
+    },
+    "nested": {
+      "exported_ranker_sha256": "0f8c430c70edb39404862c638fcc0d9767dc7803493d8ab0e3b1acdc8505295b",
+      "fixed_canonical_batch_size": 16,
+      "full_editor_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+      "full_editor_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+      "results": {
+        "fit": {
+          "canonical_views": 3996,
+          "decision_mismatches": [],
+          "max_prediction_abs_difference": 0.0,
+          "model_sha256": "0f8c430c70edb39404862c638fcc0d9767dc7803493d8ab0e3b1acdc8505295b",
+          "no_candidate_physical_labels_loaded": true
+        },
+        "fresh": {
+          "canonical_views": 1024,
+          "decision_mismatches": [],
+          "max_prediction_abs_difference": 0.0,
+          "model_sha256": "0f8c430c70edb39404862c638fcc0d9767dc7803493d8ab0e3b1acdc8505295b",
+          "no_candidate_physical_labels_loaded": true
+        }
+      },
+      "status": "complete"
+    }
+  },
+  "schema": "sun_rank_scope_run_complete_v1",
+  "scientific_receipt_pins": {
+    "ABSOLUTE_STATE_REGISTRATION.json": "0096678aa4289bfb0863d55b69f3430a0011595b64ef2f210afad518d8521707",
+    "FINAL_MODEL_SELECTION.json": "3b34c5003956f4cf479d8946f262380f4ce6159109d1e6e57047c0219ea54e7b",
+    "FRESH_COMPARISON_FINAL.json": "708a74fa887c23882049bcb6261d1e45f682fcb15a669da52f10372dc50b20ec",
+    "FROZEN_SELECTION.json": "d95fee8f110941ffe9b86140dfc0b9cee44bdd7a8f308c4ff002c2ccd943dee2",
+    "NESTED_FROZEN_SELECTION.json": "b8328112dc6c2377d8890beadd5208e14acb4286f69d9175cfd20f7fe7efec7a",
+    "PREREGISTRATION.json": "4833f1698d921479f676cc37f7fb12c2eec6316a344dd6336f5b441b8647ca10",
+    "RESOURCE_FINAL.json": "9c5f28ec3da45edf031cd5829355900f1a6b1028c77a09cd2e4b4e225c3abe75",
+    "SOURCE_SPLIT.jsonl": "9bb3cdee76272aebeaa690325d3e1f91664871b0d3cef3e06c78af3909015042",
+    "analysis/CANDIDATE_SUPPLY_FINAL.json": "093d236d9ad942eab01dda26d6845c122746932551f9efa75042d6b2556e01d9",
+    "analysis/NESTED_CANDIDATE_SUPPLY_FINAL.json": "b3b79eae4830419d5ef7db8fd9b51261a2045db71713dd92b1e8ac6ab7295a7b",
+    "fresh/INPUTS_FINAL.json": "f0341210561e483538a9186e85b9aafdb3dc2a4c391ab5d0381c5bbb0aa9153a",
+    "fresh/PANELS_FROZEN.json": "3be15622a660814a3e6d17201cefbfa52c0f673e9b83f631140a9a82f31bbf85",
+    "fresh/cohort/PREPARATION_FINAL.json": "269adde3635b37bbadecd0c143372a8d49ebd9942f11d8c0fe8bf79b4384f7b9",
+    "models/MATERIALIZED_OUTPUT_PARITY.json": "ce18315c55d38823461ee692aa235aa8304f1ae4c6e4a044ad7c29cb882d36e2",
+    "models/sun_ranker/MODEL_DEFINITION.json": "be81c0f5f396c4d7e9d87749ec2bb373ab1d47896334ddac73f59ef176f4f969",
+    "training/nested_sun_ranker/TRAINING_FINAL.json": "80fb80b5eae703bc31cd7e0d8200e49fc944681f863b69e47b48894fad851cf6",
+    "training/sun_ranker/TRAINING_FINAL.json": "6744135d193258758f792c39a60a6b23a48d4abd93228f33001ce0d100bafd26"
+  },
+  "source_commit": "8808c1699a2da75fbb6e2434a6524fb7bceb062e",
+  "status": "complete",
+  "training": {
+    "delta": {
+      "MSE_row_visits_semantics": "actual_minibatch_updates; ranking term visits all registered edges each step",
+      "SUN_content_positives": 36,
+      "SUN_pairwise_updates_per_edge": 512,
+      "SUN_positive_sources": 19,
+      "SUN_ranking_pairs": 254,
+      "SUN_ranking_sources": 64,
+      "complete_passes": 64,
+      "exclusions": {
+        "exact_KEEP_not_a_physical_edit": 51,
+        "excluded_unknown_physics": 52
+      },
+      "feature_normalization_TRAIN_only": true,
+      "feature_schema": {
+        "observable_extra_features": [
+          "current_stable",
+          "current_meta",
+          "current_novel_known",
+          "current_novel",
+          "current_verified",
+          "current_known_failure",
+          "current_not_converged",
+          "current_hull_known",
+          "current_hull_clipped",
+          "current_hull_signed_log",
+          "raw_force_scaled",
+          "raw_stress_scaled",
+          "sites_scaled",
+          "changed_site_fraction",
+          "changed_token_fraction",
+          "cell_changed",
+          "fractional_displacement_rms",
+          "fractional_displacement_max",
+          "cartesian_displacement_rms",
+          "cartesian_displacement_max",
+          "geometry_delta_available"
+        ],
+        "quality_hidden_width": 128
+      },
+      "fold_max_abs_error": 1.9371509552001953e-07,
+      "frozen_content_scope_and_quality_hidden": true,
+      "maximum_row_visits": 64,
+      "minimum_row_visits": 64,
+      "model_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/training/sun_ranker/SUN_RANKER.pt",
+      "model_sha256": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+      "no_DEV_FINAL_supervision": true,
+      "optimized_parameter_count": 300,
+      "optimizer_steps": 512,
+      "predictions_sha256": "021a89f0cfd9e019510db4244d0f30dc8b7bc235f4aae98ac22f5e4042127b7a",
+      "schema": "SUN_specific_linear_gain_ranker_v1",
+      "settings": {
+        "SUN_pairwise_coefficient": 0.2,
+        "batch_size": 256,
+        "epochs": 64,
+        "learning_rate": 0.001,
+        "ridge": 0.1,
+        "seed": 20260910
+      },
+      "source_target_counts": {
+        "(-1.0, -1.0)": 45,
+        "(-1.0, 0.0)": 35,
+        "(0.0, -1.0)": 260,
+        "(0.0, 0.0)": 1383,
+        "(0.0, 1.0)": 158,
+        "(1.0, 0.0)": 20,
+        "(1.0, 1.0)": 16
+      },
+      "status": "complete",
+      "target_definition": "delta_verified_Stable_and_novel; delta_verified_MS_and_novel; excludes_cohort_U",
+      "train_data_sha256": "6d90e66635527f1e3b676ccfd591e641189e427875c67d82df93d0568ad7d1c8",
+      "train_rows": 1917,
+      "train_sources": 492,
+      "training_seconds": 9.720856353640556,
+      "true_Stable_promotion_rows": 25
+    },
+    "nested": {
+      "MSE_row_visits_semantics": "actual_minibatch_updates; ranking term visits all registered edges each step",
+      "SUN_content_positives": 36,
+      "SUN_pairwise_updates_per_edge": 512,
+      "SUN_positive_sources": 19,
+      "SUN_ranking_pairs": 254,
+      "SUN_ranking_sources": 64,
+      "complete_passes": 64,
+      "exclusions": {
+        "exact_KEEP_not_a_physical_edit": 51,
+        "excluded_unknown_physics": 52
+      },
+      "feature_normalization_TRAIN_only": true,
+      "feature_schema": {
+        "observable_extra_features": [
+          "current_stable",
+          "current_meta",
+          "current_novel_known",
+          "current_novel",
+          "current_verified",
+          "current_known_failure",
+          "current_not_converged",
+          "current_hull_known",
+          "current_hull_clipped",
+          "current_hull_signed_log",
+          "raw_force_scaled",
+          "raw_stress_scaled",
+          "sites_scaled",
+          "changed_site_fraction",
+          "changed_token_fraction",
+          "cell_changed",
+          "fractional_displacement_rms",
+          "fractional_displacement_max",
+          "cartesian_displacement_rms",
+          "cartesian_displacement_max",
+          "geometry_delta_available"
+        ],
+        "quality_hidden_width": 128
+      },
+      "fold_max_abs_error": 7.152557373046875e-07,
+      "frozen_content_scope_and_quality_hidden": true,
+      "head_kind": "nested_absolute_states",
+      "maximum_row_visits": 64,
+      "minimum_row_visits": 64,
+      "model_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/training/nested_sun_ranker/SUN_RANKER.pt",
+      "model_sha256": "0f8c430c70edb39404862c638fcc0d9767dc7803493d8ab0e3b1acdc8505295b",
+      "no_DEV_FINAL_supervision": true,
+      "optimized_parameter_count": 300,
+      "optimizer_steps": 512,
+      "predictions_sha256": "d7ea481bf7bb282f0989fb5adf5a299e5ab84419bf2335fae1f50baac2711429",
+      "schema": "SUN_nested_absolute_state_ranker_v1",
+      "settings": {
+        "SUN_pairwise_coefficient": 0.2,
+        "batch_size": 256,
+        "epochs": 64,
+        "learning_rate": 0.001,
+        "ridge": 0.1,
+        "seed": 20260910
+      },
+      "source_target_counts": {
+        "(-1.0, -1.0)": 45,
+        "(-1.0, 0.0)": 35,
+        "(0.0, -1.0)": 260,
+        "(0.0, 0.0)": 1383,
+        "(0.0, 1.0)": 158,
+        "(1.0, 0.0)": 20,
+        "(1.0, 1.0)": 16
+      },
+      "status": "complete",
+      "target_definition": "absolute_candidate_NS_and_NMS_nested_probabilities; excludes_cohort_U",
+      "train_data_sha256": "6d90e66635527f1e3b676ccfd591e641189e427875c67d82df93d0568ad7d1c8",
+      "train_rows": 1917,
+      "train_sources": 492,
+      "training_seconds": 10.011704783886671,
+      "true_Stable_promotion_rows": 25
+    }
+  }
+}

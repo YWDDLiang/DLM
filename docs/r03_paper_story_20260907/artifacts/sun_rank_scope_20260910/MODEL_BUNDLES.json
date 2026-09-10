@@ -1,0 +1,392 @@
+{
+  "delta": {
+    "DEV_admitted": false,
+    "editor_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+    "editor_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+    "feature_schema": {
+      "observable_extra_features": [
+        "current_stable",
+        "current_meta",
+        "current_novel_known",
+        "current_novel",
+        "current_verified",
+        "current_known_failure",
+        "current_not_converged",
+        "current_hull_known",
+        "current_hull_clipped",
+        "current_hull_signed_log",
+        "raw_force_scaled",
+        "raw_stress_scaled",
+        "sites_scaled",
+        "changed_site_fraction",
+        "changed_token_fraction",
+        "cell_changed",
+        "fractional_displacement_rms",
+        "fractional_displacement_max",
+        "cartesian_displacement_rms",
+        "cartesian_displacement_max",
+        "geometry_delta_available"
+      ],
+      "quality_hidden_width": 128
+    },
+    "fresh_result": {
+      "KEEP": {
+        "MS": 152,
+        "MSUN": 129,
+        "SUN": 13,
+        "Stable": 20
+      },
+      "actual_edits": 68,
+      "counts": {
+        "MS": 153,
+        "MSUN": 139,
+        "SUN": 15,
+        "Stable": 22
+      },
+      "delta": {
+        "MS": 1,
+        "MSUN": 10,
+        "SUN": 2,
+        "Stable": 2
+      },
+      "gains": {
+        "MS": [
+          2,
+          6,
+          11,
+          98,
+          144,
+          153
+        ],
+        "MSUN": [
+          2,
+          6,
+          11,
+          16,
+          98,
+          105,
+          110,
+          144,
+          150,
+          153,
+          183,
+          211
+        ],
+        "SUN": [
+          153,
+          156
+        ],
+        "Stable": [
+          153,
+          156
+        ]
+      },
+      "losses": {
+        "MS": [
+          18,
+          30,
+          109,
+          199,
+          250
+        ],
+        "MSUN": [
+          109,
+          250
+        ],
+        "SUN": [],
+        "Stable": []
+      },
+      "max_DLM_calls": 24,
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/SUN_diverse_K4",
+      "requests": 256,
+      "role": "fresh",
+      "scores_sha256": "f515f4f976b83c98437aa0ea7de805122c7a70c762487407580441fe8fd39ef3"
+    },
+    "full_model_audit_sha256": "65439e3635d42123f5baa4cffdc40307598bca41def4b4f62d931f371b2a2cfe",
+    "head_kind": "linear_gains",
+    "original_and_fresh_results_retained_without_posthoc_selection": true,
+    "ranker_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/models/delta_sun_ranker/SUN_RANKER.pt",
+    "ranker_sha256": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+    "schema": "frozen_SUN_variant_bundle_v1",
+    "selected_as_primary_before_fresh": false,
+    "selected_policy": {
+      "DEV": {
+        "KEEP": {
+          "MS": 135,
+          "MSUN": 115,
+          "SUN": 24,
+          "Stable": 29
+        },
+        "actual_edits": 78,
+        "counts": {
+          "MS": 135,
+          "MSUN": 125,
+          "SUN": 24,
+          "Stable": 29
+        },
+        "delta": {
+          "MS": 0,
+          "MSUN": 10,
+          "SUN": 0,
+          "Stable": 0
+        },
+        "gains": {
+          "MS": [
+            400,
+            651,
+            880,
+            973
+          ],
+          "MSUN": [
+            289,
+            400,
+            437,
+            481,
+            490,
+            556,
+            651,
+            869,
+            880,
+            882,
+            973
+          ],
+          "SUN": [],
+          "Stable": []
+        },
+        "losses": {
+          "MS": [
+            307,
+            310,
+            343,
+            840
+          ],
+          "MSUN": [
+            840
+          ],
+          "SUN": [],
+          "Stable": []
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+        "requests": 247,
+        "role": "dev",
+        "scores_sha256": "9ca6830800123a8155a6636eea0abb70da7526d1561d9559e796fbf372bb941e"
+      },
+      "ms_floor": 0.0,
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/sun05_ms000",
+      "sun_threshold": 0.05
+    },
+    "selection_sha256": "d95fee8f110941ffe9b86140dfc0b9cee44bdd7a8f308c4ff002c2ccd943dee2",
+    "target_definition": "delta_verified_Stable_and_novel; delta_verified_MS_and_novel; excludes_cohort_U",
+    "training_receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/training/sun_ranker/TRAINING_FINAL.json",
+    "training_receipt_sha256": "6744135d193258758f792c39a60a6b23a48d4abd93228f33001ce0d100bafd26",
+    "variant": "delta"
+  },
+  "nested": {
+    "DEV_admitted": true,
+    "editor_checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260909/run_20260909T132800Z_cascade_fullflow/training/round3/E/result/checkpoint",
+    "editor_receipt_sha256": "f5d204025f647898cf8ae7b70e9ce8777cc15b1b7c8deed3259c7a7eaa1edd98",
+    "feature_schema": {
+      "observable_extra_features": [
+        "current_stable",
+        "current_meta",
+        "current_novel_known",
+        "current_novel",
+        "current_verified",
+        "current_known_failure",
+        "current_not_converged",
+        "current_hull_known",
+        "current_hull_clipped",
+        "current_hull_signed_log",
+        "raw_force_scaled",
+        "raw_stress_scaled",
+        "sites_scaled",
+        "changed_site_fraction",
+        "changed_token_fraction",
+        "cell_changed",
+        "fractional_displacement_rms",
+        "fractional_displacement_max",
+        "cartesian_displacement_rms",
+        "cartesian_displacement_max",
+        "geometry_delta_available"
+      ],
+      "quality_hidden_width": 128
+    },
+    "fresh_result": {
+      "KEEP": {
+        "MS": 152,
+        "MSUN": 129,
+        "SUN": 13,
+        "Stable": 20
+      },
+      "actual_edits": 84,
+      "counts": {
+        "MS": 142,
+        "MSUN": 129,
+        "SUN": 19,
+        "Stable": 19
+      },
+      "delta": {
+        "MS": -10,
+        "MSUN": 0,
+        "SUN": 6,
+        "Stable": -1
+      },
+      "gains": {
+        "MS": [],
+        "MSUN": [
+          10,
+          34,
+          110,
+          116,
+          125,
+          151,
+          223
+        ],
+        "SUN": [
+          10,
+          116,
+          125,
+          151,
+          156,
+          223
+        ],
+        "Stable": [
+          156
+        ]
+      },
+      "losses": {
+        "MS": [
+          30,
+          36,
+          57,
+          64,
+          109,
+          165,
+          193,
+          199,
+          216,
+          250
+        ],
+        "MSUN": [
+          36,
+          57,
+          64,
+          109,
+          193,
+          216,
+          250
+        ],
+        "SUN": [],
+        "Stable": [
+          34,
+          165
+        ]
+      },
+      "max_DLM_calls": 24,
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fresh/nested_SUN_diverse_K4",
+      "requests": 256,
+      "role": "fresh",
+      "scores_sha256": "eda995ee1dcc43d784bddeef1012197eb1befb00cd1b91009d0eec6e209c0da2"
+    },
+    "full_model_audit_sha256": "e32e6338d74ce9e9dcd45349ea2b2758eeb9a0cb481ba9c9d0b0e986aef2169e",
+    "head_kind": "nested_absolute_states",
+    "original_and_fresh_results_retained_without_posthoc_selection": true,
+    "ranker_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/models/nested_sun_ranker/SUN_RANKER.pt",
+    "ranker_sha256": "0f8c430c70edb39404862c638fcc0d9767dc7803493d8ab0e3b1acdc8505295b",
+    "schema": "frozen_SUN_variant_bundle_v1",
+    "selected_as_primary_before_fresh": true,
+    "selected_policy": {
+      "DEV": {
+        "KEEP": {
+          "MS": 135,
+          "MSUN": 115,
+          "SUN": 24,
+          "Stable": 29
+        },
+        "actual_edits": 82,
+        "counts": {
+          "MS": 124,
+          "MSUN": 118,
+          "SUN": 29,
+          "Stable": 29
+        },
+        "delta": {
+          "MS": -11,
+          "MSUN": 3,
+          "SUN": 5,
+          "Stable": 0
+        },
+        "gains": {
+          "MS": [
+            651
+          ],
+          "MSUN": [
+            289,
+            437,
+            438,
+            481,
+            490,
+            598,
+            607,
+            651,
+            882,
+            962
+          ],
+          "SUN": [
+            438,
+            578,
+            598,
+            607,
+            962
+          ],
+          "Stable": [
+            578
+          ]
+        },
+        "losses": {
+          "MS": [
+            307,
+            310,
+            343,
+            396,
+            509,
+            584,
+            646,
+            662,
+            801,
+            840,
+            948,
+            990
+          ],
+          "MSUN": [
+            396,
+            509,
+            584,
+            646,
+            801,
+            840,
+            990
+          ],
+          "SUN": [],
+          "Stable": [
+            948
+          ]
+        },
+        "max_DLM_calls": 24,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+        "requests": 247,
+        "role": "dev",
+        "scores_sha256": "0cae911d96e671410637da4949ef7510bf2a39b945029788770bc7a2ea9a74c2"
+      },
+      "ms_floor": 0.0,
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/policies/fit/nested_sun20",
+      "sun_threshold": 0.2
+    },
+    "selection_sha256": "b8328112dc6c2377d8890beadd5208e14acb4286f69d9175cfd20f7fe7efec7a",
+    "target_definition": "absolute_candidate_NS_and_NMS_nested_probabilities; excludes_cohort_U",
+    "training_receipt_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/training/nested_sun_ranker/TRAINING_FINAL.json",
+    "training_receipt_sha256": "80fb80b5eae703bc31cd7e0d8200e49fc944681f863b69e47b48894fad851cf6",
+    "variant": "nested"
+  }
+}
