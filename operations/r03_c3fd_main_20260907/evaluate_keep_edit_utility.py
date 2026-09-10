@@ -68,7 +68,9 @@ def build_panel(root,epoch,threshold,*,old=False,recorded=False):
 def evaluate(root,config):
     spec=load_config(config);panel=Path(spec['run_root']);output=panel/'edited/scoring/result'
     if (output/'_SUCCESS').exists():return
-    output.mkdir(parents=True,exist_ok=True)
+    # The common scorer owns creation of the result directory and rejects
+    # pre-existing output, including an empty directory.
+    output.parent.mkdir(parents=True,exist_ok=True)
     command=[sys.executable,str(SOURCE/'scripts/evaluate_programmed_paths.py'),
         '--paths-jsonl',str(panel/'edited/inputs.jsonl'),'--labels-jsonl',str(panel/'edited/labeling/result/labels.jsonl'),
         '--frozen-config',spec['assets']['frozen_config'],'--official-cache',spec['assets']['official_cache'],
