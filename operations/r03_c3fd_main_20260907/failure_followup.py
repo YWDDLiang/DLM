@@ -48,6 +48,13 @@ def run(root):
     records.append(record)
     del model,tokenizer;gc.collect();torch.cuda.empty_cache()
     write_rows(output/'inputs.jsonl',records)
+    label_records(root,output)
+
+
+def label_records(root,output):
+    records=read_rows(root/'failure_followup/inputs.jsonl')
+    recovered=json.loads((root/'failure_probe/construction/records/0837.json').read_text())
+    trace=json.loads((root/'failure_followup/549_FULL_CELL.json').read_text())['trace']
     os.environ['RSI_JOINT_PHYSICAL_STOP']='1';os.environ['RSI_STRESS_TOLERANCE']='.5'
     os.environ['R03_DETERMINISTIC_LABELING']='1'
     import label_programmed_paths as physics
@@ -55,6 +62,7 @@ def run(root):
     labels=[]
     for record in records:
         label=physics.worker_label(record,.1,.5,1000)
+        label=json.loads(json.dumps(label,default=physics.json_default))
         labels.append(label)
         write_json(output/(record['trajectory_id'].replace(':','_')+'.json'),label)
         print(json.dumps({k:label.get(k) for k in ['trajectory_id','status','verified','raw_energy','terminal_energy','actual_steps','error']}),flush=True)
@@ -66,4 +74,8 @@ def run(root):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
-    run(parser.parse_args().root)
+    parser.add_argument('--labels-only',action='store_true');args=parser.parse_args()
+    if args.labels_only:
+        label_records(args.root,args.root/'failure_physics')
+    else:
+        run(args.root)
