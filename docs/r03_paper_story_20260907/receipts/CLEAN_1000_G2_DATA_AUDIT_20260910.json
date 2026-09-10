@@ -1,0 +1,48 @@
+{
+  "schema": "clean_1000_G2_data_source_audit_v1",
+  "training_performed": false,
+  "rows": 1635,
+  "unique_TRAIN_sources": 883,
+  "audit_comparisons": 2000,
+  "objective_levels": {
+    "SUN": 237,
+    "meta_stable": 955,
+    "ordinary_improvement": 409,
+    "strict_stable": 33,
+    "decision": 1
+  },
+  "preference_rows": 935,
+  "healthy_anchor_rows": 1105,
+  "strict_content_exclusion_events": 105,
+  "source_round": 1,
+  "all_sources_from_clean_run": true,
+  "plans_sha256": "26318e6851ecc4976913641682dfc9da4ca8a6283afd84d2c9b5471eb7a4b971",
+  "data_sha256": "1f4599ff32a49af5ec9b0c0020566a90ff3cafc64b3815c434dd0eab8151670e",
+  "pair_manifest_sha256": "e4e98a93dc57ff1d301be3c0eba1ce11c7c901a3e1fad4ab042bbfc54034ef67",
+  "stage_evidence": {
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/bootstrap_comparator/construction": {
+      "inputs_sha256": "7554af2363b42b610c8e12530ebffdb47182601cf545048f1f875e0fd77a52ab",
+      "scores_sha256": "aa0d2d409754d7e497482a375df6a53002781096547e93fccfe6d507335d0100"
+    },
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/bootstrap_comparator/tokenized": {
+      "inputs_sha256": "cac6fc0b6ea598544aa7b6230f37195d52db544cf47ccbf4d9e520c2911283b4",
+      "scores_sha256": "0862270f418469267c08f0d797c5b4d120d40f1d6873c740041bb8acc2b641d1"
+    },
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit/construction": {
+      "inputs_sha256": "6a676a1076b55879484ff606c9881c8fcc1bada0c8eb127eb3a0c78483b8782f",
+      "scores_sha256": "84421b36dbdf7644eb142287df13e26263a9e89e867997a40e9fe42ef34843c0"
+    },
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit/tokenized": {
+      "inputs_sha256": "d38cdfa79b3d7ca6715181ed90696888482c95f3d900f2dc51ddbe9083b22a9c",
+      "scores_sha256": "8e300498b931032b85eba8635a490051cf13b43f8ee5177c19d10b5e481b4a96"
+    },
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit/construction": {
+      "inputs_sha256": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+      "scores_sha256": "aefc5cba7a4ffeab8460b36355734027016aed7bd5570d4a2b4ee6226fa4b891"
+    },
+    "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit/tokenized": {
+      "inputs_sha256": "bdef444a396dce74a4c684a2cca2f1783ffe4badf965be9d82afdab6cae56734",
+      "scores_sha256": "79ec1df938c1f02d5de6d21a7bf87ef85efc9e0c10c5873dd0975939dd107006"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "clean_1000_E1_collection_model_identity_v1",
+  "requests": 1000,
+  "checkpoint": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit/initialization/checkpoint",
+  "old_editor_weights_used": false,
+  "collection_config_sha256": "5e1f39be878fa3ae3bee7dee29a180d404855f5bc305e8305da8abd198e1a102",
+  "source_current_tokens_identical": true,
+  "trace_fields": {
+    "proposal_generated": {
+      "True": 996,
+      "False": 3,
+      "None": 1
+    },
+    "applied": {
+      "False": 831,
+      "True": 168,
+      "None": 1
+    },
+    "learned_mode": {
+      "0": 298,
+      "1": 434,
+      "2": 84,
+      "3": 183,
+      "None": 1
+    },
+    "known_sun": {
+      "True": 102,
+      "False": 897,
+      "None": 1
+    },
+    "proposal_error": {
+      "None": 1000
+    }
+  },
+  "total_DLM_calls": 19464,
+  "teacher_origins": {
+    "CHGNet_terminal_teacher": 1000
+  },
+  "training_policy": {
+    "E_epochs": 8,
+    "G_epochs": 4,
+    "G_learning_rate": 0.000005,
+    "batch_size": 32,
+    "bounded_minibatch_training": true,
+    "continue_heads_after_content_KL": false,
+    "editor_dense_t2t": false,
+    "editor_heads_only": false,
+    "historical_Stable_teachers": false,
+    "max_reference_kl": 0.02,
+    "max_training_seconds": 1800,
+    "one_mode_per_condition": false,
+    "reference_kl_weight": 1
+  },
+  "initialization_receipt_sha256": "9b24a06be4328c56b9f2136672181b07eec47b7e6a191b1a82375ed98d79459a",
+  "failed_proposals": [
+    {
+      "ordinal": 221,
+      "reason": "empty_hard_support",
+      "forward_calls": 67
+    },
+    {
+      "ordinal": 663,
+      "reason": "empty_hard_support",
+      "forward_calls": 64
+    },
+    {
+      "ordinal": 695,
+      "reason": "empty_hard_support",
+      "forward_calls": 46
+    }
+  ],
+  "generation_failure_ordinal": 837,
+  "scope": "counterfactual_training_collection_with_fresh_E0; not_official_E1_output"
+}
