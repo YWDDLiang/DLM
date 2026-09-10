@@ -85,7 +85,7 @@ def materialize_continuous_patch(native_wrapper,current_tokens,proposal_tokens,i
 
 
 def materialized_continuous_decision(native_wrapper,current_tokens,trace,materialized,raw_utility,margin,*,
-                                     reference_logit=None,reference_required=False):
+                                     reference_logit=None,reference_required=False,known_sun_guard=None):
     """Select the already constructed candidate whose exact bytes are evaluated."""
     from crystal_dlm.post_refine_contract import fingerprint
     if materialized.get('schema')!='bound_continuous_patch_v1':raise ValueError('unbound continuous proposal')
@@ -94,7 +94,7 @@ def materialized_continuous_decision(native_wrapper,current_tokens,trace,materia
         proposal_tokens_sha256=fingerprint(trace.get('proposal_tokens') or []),
         record_sha256=fingerprint(materialized['record']))
     if any(materialized.get(k)!=v for k,v in checks.items()):raise ValueError('continuous proposal source or bytes changed')
-    guarded=bool(trace.get('known_sun') and trace.get('learned_mode')==0)
+    guarded=bool(trace.get('known_sun') and trace.get('learned_mode')==0) if known_sun_guard is None else bool(known_sun_guard)
     accepted=accept_utility(raw_utility,margin,proposal_generated=trace.get('proposal_generated',False),
         known_sun_guard=guarded,reference_logit=reference_logit,reference_required=reference_required)
     commit=materialized['commit_trace'];applied=bool(accepted and commit['applied'])

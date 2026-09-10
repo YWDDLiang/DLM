@@ -19,7 +19,7 @@ def sources(root):
     return dict(primary=(root/'fit',root/'materialized_primary'),
         repeat1=(root/'repeats/repeat1',root/'repeats/repeat1/materialized_proposal'),
         repeat2=(root/'repeats/repeat2',root/'repeats/repeat2/materialized_proposal'),
-        fresh1=(root/'operational/fresh_generation',root/'operational/fresh_generation/materialized_proposal'))
+        fresh1=(root/'operational/fresh_open_generation',root/'operational/fresh_open_generation/materialized_proposal'))
 
 
 def prepare(root):
@@ -141,7 +141,7 @@ def combine(root):
             chosen=max(valid)[2] if valid and not known_sun else None
             if chosen is not None:
                 value,decision=materialized_continuous_decision(native,record.get('body_token_ids') or [],traces[chosen][i],
-                    wrappers[chosen][i],predictions[chosen][i],definition['raw_margin'])
+                    wrappers[chosen][i],predictions[chosen][i],definition['raw_margin'],known_sun_guard=known_sun)
             else:value,decision=copy.deepcopy(native['record']),dict(learned_accept=False,actual_edit=False,raw_utility=None)
             calls=sum(traces[stream][i].get('forward_calls',0)+(i in predictions[stream]) for stream in streams)
             if calls>80:raise ValueError('repair pool exceeds original per-request DLM budget')

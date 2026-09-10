@@ -87,6 +87,11 @@ class ContinuousKeepEditTests(unittest.TestCase):
         self.assertEqual(selected,bound['record']);self.assertTrue(decision['actual_edit'])
         selected,decision=materialized_continuous_decision(native,self.tokens,trace,bound,.01,.05)
         self.assertEqual(selected,self.current);self.assertFalse(decision['actual_edit'])
+        legacy=dict(trace,known_sun=True,learned_mode=0)
+        selected,decision=materialized_continuous_decision(native,self.tokens,legacy,bound,.1,.05,known_sun_guard=False)
+        self.assertTrue(decision['actual_edit'])
+        selected,decision=materialized_continuous_decision(native,self.tokens,trace,bound,.1,.05,known_sun_guard=True)
+        self.assertEqual(selected,self.current);self.assertFalse(decision['actual_edit'])
 
     def test_materialized_proposal_rejects_changed_source_or_candidate(self):
         native=dict(record=self.current,continuous_trace=dict(editable=True))
