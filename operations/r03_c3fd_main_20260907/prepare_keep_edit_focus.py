@@ -89,7 +89,10 @@ def register(previous, old, trial, root):
                 collect_training_proposals=False, training_parent_root=str(fit/'cohort'))
     spec['assets']['editor_checkpoint'] = registration['old_editor']
     spec['assets']['nu_cache'] = str(root/'nu_cache')
-    spec['assets']['official_cache'] = str(previous/'fit_hull/official_mp_cache')
+    cache_override = previous/'REFERENCE_CACHE_OVERRIDE.json'
+    if cache_override.exists():
+        shutil.copy2(cache_override, root/'REFERENCE_CACHE_OVERRIDE.json')
+        spec['assets']['official_cache'] = json.loads(cache_override.read_text())['directory']
     spec['updated_checkpoint_receipts'].pop('E', None)
     spec['resources']['budget_receipt'] = str(root/'BUDGET.json')
     spec['execution_policy'].update(single_GPUs=5, parallel_main_GPUs=3, parallel_other_GPUs=2, training_GPUs=1)

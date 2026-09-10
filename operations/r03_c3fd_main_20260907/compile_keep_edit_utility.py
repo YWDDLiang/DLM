@@ -61,7 +61,10 @@ def compile_data(root):
     base_physics = json.loads((fixed/'current/labeling/result/LABEL_FINAL.json').read_text())
     base_score_path = next(score_directory(fixed,'current').glob('*FINAL.json'))
     base_score = json.loads(base_score_path.read_text())
-    official = {r['chemsys']:fingerprint(r) for r in read_rows(previous/'fit_hull/official_mp_cache/official_slim_cache.jsonl')}
+    official_path = Path(base_score['official_cache'])/'official_slim_cache.jsonl'
+    if file_hash(official_path) != base_score['official_cache_sha256']:
+        raise ValueError('actual S1 reference cache changed')
+    official = {r['chemsys']:fingerprint(r) for r in read_rows(official_path)}
     cache_checks = {}
     def normalized(runtime): return {k:v for k,v in runtime.items() if k != 'joint_stop_source_sha256'}
     base_runtime = [normalized(x) for x in base_physics['runtime_identities']]
@@ -154,6 +157,7 @@ def compile_data(root):
         old_E_unseen_train_sources=sum(not roles[s]['old_E_seen_source'] for s in multiplicity),
         historical_U_reused=False, complete_source_weight_sum=len(multiplicity),
         physics_equivalence=equivalence, official_cache_checks=cache_checks,
+        current_official_cache=dict(path=str(official_path),sha256=file_hash(official_path)),
         evidence=evidence, exclusions=dict(exclusions))
     write_json(root/'data/UTILITY_DATA_FINAL.json',report)
     print(json.dumps({k:v for k,v in report.items() if k not in ('evidence','official_cache_checks','physics_equivalence')}),flush=True)
