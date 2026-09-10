@@ -9,7 +9,7 @@ from submit_stage import configured_dispatch
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,required=True)
-    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export','export_audit','decide_repeat','train_readout','train_operational'],required=True)
+    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export','export_audit','decide_repeat','train_readout','train_operational','infer_operational'],required=True)
     parser.add_argument('--repeat-index',type=int,choices=[1,2])
     parser.add_argument('--policy-method',choices=['utility','consensus','readout'],default='utility')
     parser.add_argument('--minutes',type=int,default=35)
@@ -22,6 +22,7 @@ def main():
     output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'models/selected_utility' if args.mode=='export' else 'analysis/utility_'+args.mode
     if args.mode=='train_readout':output='training/readout_matched'
     if args.mode=='train_operational':output='training/operational_utility'
+    if args.mode=='infer_operational':output='operational/model_inference'
     if args.mode=='export_audit':output='models/selected_utility/parity_audit'
     if args.policy_method!='utility':
         if args.mode!='policies':raise ValueError('policy method applies only to policy evaluation')
@@ -41,6 +42,9 @@ def main():
             root/'training/utility/result/TRAIN_FEATURES.pt',root/'evaluation_features/EVAL_FEATURES.pt']
         products=['{output}/result/TRAINING_FINAL.json','{output}/result/_SUCCESS',
             '{output}/evaluation/FEATURES_FINAL.json','{output}/evaluation/UTILITY_PREDICTIONS.jsonl']
+    elif args.mode=='infer_operational':
+        required += [root/'operational/MODEL_DEFINITION.json']
+        products=['{output}/worker_0_DONE.json','{output}/worker_1_DONE.json']
     elif args.mode=='evaluate':
         required += [root/'fit/proposal/inputs.jsonl',root/'training/utility/result/TRAINING_FINAL.json']
         products=['{output}/FEATURES_FINAL.json','{output}/UTILITY_PREDICTIONS.jsonl']
@@ -71,21 +75,24 @@ def main():
             root/f'repeats/repeat{args.repeat_index}/materialized_proposal/MATERIALIZATION_FINAL.json']
         products=['{output}/REPEAT_DECISION_FINAL.json']
     if any(not p.is_file() for p in required):raise ValueError('utility admission inputs are incomplete')
-    gpu=0 if args.mode=='policies' else 1
+    gpu=0 if args.mode=='policies' else 2 if args.mode=='infer_operational' else 1
     script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/audit_keep_edit_judgement.py' if args.mode=='audit' else 'src/scripts/export_keep_edit_utility.py' if args.mode=='export' else 'src/scripts/train_keep_edit_utility.py'
     if args.mode=='decide_repeat':script='operations/r03_c3fd_main_20260907/repeat_keep_edit_utility.py'
     if args.mode in ('train_readout','train_operational'):script='src/scripts/train_keep_edit_readout.py'
     if args.mode=='export_audit':script='src/scripts/audit_exported_utility.py'
-    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export','export_audit','decide_repeat','train_readout','train_operational') else ['--mode',args.mode])
+    if args.mode=='infer_operational':script='src/scripts/run_operational_utility.py'
+    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export','export_audit','decide_repeat','train_readout','train_operational','infer_operational') else ['--mode',args.mode])
+    if args.mode=='infer_operational':stage_args+=['--mode','infer']
     if args.mode=='train_operational':stage_args+=['--operational']
     if args.mode=='policies':stage_args+=['--method',args.policy_method]
     if args.mode=='decide_repeat':stage_args+=['--mode','decide','--index',str(args.repeat_index)]
-    if args.mode in ('policies','audit','export','export_audit','decide_repeat'):stage_args+=['--completion-dir','{output}']
+    if args.mode in ('policies','audit','export','export_audit','decide_repeat','infer_operational'):stage_args+=['--completion-dir','{output}']
     pipeline['components']=[dict(id=job,output_dir=output,gpus=gpu,stages=[dict(name=args.mode,
         script=script,args=stage_args,
         inputs=[str(p) for p in required],outputs=products)])]
-    pipeline['jobs']={job:dict(component_indices=[0],gpus_per_task=gpu,cpus_per_task=4 if gpu else 8,parallel_tasks=1,
-        wall_minutes=args.minutes,memory='96G' if gpu else '64G',partition='gpu' if gpu else 'normal')}
+    if args.mode=='infer_operational':pipeline['components'][0]['stages'][0]['distributed_processes']=2
+    pipeline['jobs']={job:dict(component_indices=[0],gpus_per_task=gpu,cpus_per_task=4*gpu if gpu else 8,parallel_tasks=1,
+        wall_minutes=args.minutes,memory=f'{96*gpu}G' if gpu else '64G',partition='gpu' if gpu else 'normal')}
     path=root/(job+'_PIPELINE.json')
     if path.exists() and json.loads(path.read_text())!=pipeline:raise ValueError('utility registration differs')
     if not path.exists():path.write_text(json.dumps(pipeline,sort_keys=True,indent=2)+'\n')
