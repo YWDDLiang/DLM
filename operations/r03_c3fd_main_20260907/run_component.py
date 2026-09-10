@@ -230,8 +230,8 @@ def configured_group(argv=None):
     if len(indices) != len(set(indices)) or any(not 0 <= i < len(spec['components']) for i in indices):
         raise ValueError('group component indices must be distinct and in bounds')
     width = int(spec['job_runtime']['gpus_per_component'])
-    devices = [x for x in os.environ.get('CUDA_VISIBLE_DEVICES', '').split(',') if x]
-    if (not os.environ.get('SLURM_JOB_ID') or width < 1
+    devices = [] if width == 0 else [x for x in os.environ.get('CUDA_VISIBLE_DEVICES', '').split(',') if x]
+    if (not os.environ.get('SLURM_JOB_ID') or width < 0
             or len(devices) != width * args.parallel_components
             or int(os.environ.get('SLURM_CPUS_PER_TASK', 0)) != spec['job_runtime']['cpus_per_task']):
         raise ValueError('group allocation differs from its frozen manifest')
