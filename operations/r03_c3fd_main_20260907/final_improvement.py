@@ -190,7 +190,9 @@ def variant(root, name):
         reg['head_training']=dict(reg['head_training'],balanced_keep_pairs=True,
             SUN_pairwise_coefficient=2.,ridge=.01,device='cpu')
     if name=='mini_k8':
+        from scripts.run_sun_rank_scope import candidate_streams
         reg['candidate_site_ranks']=8
+        reg['streams']=candidate_streams(reg)
         reg['candidate_extension']='same trained mini_2e6 editor; retain first four candidates; add ranks 4 through 7'
     for folder in ('cohort','current','native'):
         shutil.copytree(previous/'fit'/folder, destination/'fit'/folder)
@@ -213,7 +215,7 @@ def variant(root, name):
         if name in ('balanced_e3','retained_e3','retained_delta_e3'):
             (destination/'fit/bank/keep').symlink_to(root/'variants/frozen_e3/fit/bank/keep',target_is_directory=True)
     elif name=='mini_k8':
-        for stream in ('primary','rank1','rank2','rank3'):
+        for stream in ('primary','rank1','rank2','rank3','keep'):
             link=destination/'fit/bank'/stream;link.parent.mkdir(parents=True,exist_ok=True)
             link.symlink_to(root/'variants/mini_2e6/fit/bank'/stream,target_is_directory=True)
     return destination
@@ -342,7 +344,7 @@ def rank_worker(root,name):
     if name not in ('frozen_e3','balanced_e3'):
         for stream in candidate_streams(reg):
             score_bank(root,name,stream,nu_workers=3)
-    if name!='balanced_e3':collect_keep_features(destination)
+    if not (destination/'fit/bank/keep/COLLECTION_FINAL.json').exists():collect_keep_features(destination)
     train(destination,destination/'training/sun_ranker')
     training=destination/'training/sun_ranker/TRAINING_FINAL.json'
     report=json.loads(training.read_text())
