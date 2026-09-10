@@ -18,7 +18,7 @@ from crystal_dlm.sun_ranker import endpoint_targets,extra_features,EXTRA_FEATURE
 from crystal_dlm.post_refine_contract import fingerprint
 
 
-def features(root,panel_name,device):
+def features(root,panel_name,device,*,include_keep=None):
     import torch
     from crystal_dlm.expert_edit import FloatMLP
     reg=json.loads((root/'PREREGISTRATION.json').read_text());previous=Path(reg['previous_run'])
@@ -44,7 +44,7 @@ def features(root,panel_name,device):
     bound_current=[source_current/'inputs.jsonl',source_current/'labeling/result/LABEL_FINAL.json',
         score_directory(source_current.parent,source_current.name)/'attempt_results.jsonl',editor/'expert_edit_modules.pt']
     result={};pins={str(p):file_hash(p) for p in [op_path,*bound_current]}
-    learned_keep=(root/'LEARNED_KEEP_REGISTRATION.json').exists()
+    learned_keep=(root/'LEARNED_KEEP_REGISTRATION.json').exists() if include_keep is None else include_keep
     if learned_keep:pins[str(root/'LEARNED_KEEP_REGISTRATION.json')]=file_hash(root/'LEARNED_KEEP_REGISTRATION.json')
     for name in [*STREAMS,*(['keep'] if learned_keep else [])]:
         bank=panel/'bank'/name;receipt=json.loads((bank/'COLLECTION_FINAL.json').read_text())

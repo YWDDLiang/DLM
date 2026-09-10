@@ -490,6 +490,77 @@ def gain_policy_worker(root,name):
     print(json.dumps(report),flush=True)
 
 
+def fresh_collect_worker(root,name):
+    from scripts.run_sun_rank_scope import collect
+    destination=root/'variants'/name
+    original=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
+    panel=destination/'fresh';panel.mkdir(exist_ok=True)
+    for folder in ('cohort','current','native'):
+        path=panel/folder
+        if not path.exists():path.symlink_to(original/'fresh'/folder,target_is_directory=True)
+    spec=json.loads((original/'fresh/RUN_SPEC.json').read_text())
+    spec.update(run_root=str(panel),run_id=name+':fresh',training_parent_root=str(panel/'cohort'))
+    spec['assets']['editor_checkpoint']=str(root/'training'/name/'result/checkpoint')
+    spec['assets']['nu_cache']=str(root/'nu_cache')
+    write_json(panel/'RUN_SPEC.json',spec)
+    model=destination/'training/sun_ranker/SUN_RANKER.pt'
+    write_json(destination/'FROZEN_SELECTION.json',dict(schema='fixed_gain_utility_for_new_content',
+        model_path=str(model),model_sha256=file_hash(model),score_weights=[2.,1.],KEEP_reference=[0.,0.],
+        role='exploratory_replication_on_previously_viewed_256_sources',no_candidate_outcome_selection=True))
+    collect(destination,'fresh',destination/'fresh_collect_execution')
+    write_json(destination/'fresh_collect_execution/DONE.json',dict(complete=True))
+
+
+def fresh_infer_worker(root,name):
+    import torch
+    from scripts.train_sun_ranker import features
+    from evaluate_sun_ranker import build
+    torch.set_num_threads(1)
+    destination=root/'variants'/name
+    selection=json.loads((destination/'FROZEN_SELECTION.json').read_text())
+    state=torch.load(selection['model_path'],map_location='cpu',weights_only=False)
+    banks,_,pins=features(destination,'fresh',torch.device('cpu'),include_keep=False)
+    rows=[]
+    for stream,bank in banks.items():
+        with torch.no_grad():values=(bank['x']@state['weight'].T+state['bias']).tolist()
+        for row,value,op in zip(bank['rows'],values,bank['operational_utilities'],strict=True):
+            trace=bank['traces'][row['ordinal']]
+            rows.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],
+                operational_utility=op,valid=trace.get('proposal_generated',False) and trace['continuous_applied']))
+    rows += [dict(ordinal=i,stream='keep',sun_gain=0.,ms_gain=0.,operational_utility=0.,
+        valid=record['success'],feature_forward_calls=0)
+        for i,record in enumerate(read_rows(destination/'fresh/native/inputs.jsonl'))]
+    prediction=destination/'fresh_infer_execution/FRESH_PREDICTIONS.jsonl';write_rows(prediction,rows)
+    panel=build(destination,'fresh','gain_utility',0.,0.,prediction_path=prediction,
+        score_kind='signed_NS_NMS_gains',learned_keep=True,score_weights=tuple(selection['score_weights']))
+    write_json(destination/'fresh_infer_execution/DONE.json',dict(complete=True,panel=str(panel),
+        predictions_sha256=file_hash(prediction),feature_pins=pins,no_candidate_outcomes_used=True))
+
+
+def fresh_evaluate_worker(root,name):
+    import subprocess
+    import torch
+    from evaluate_sun_ranker import evaluate,summary
+    destination=root/'variants'/name;panel=destination/'policies/fresh/gain_utility'
+    original=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
+    reuse=[original/'fresh/native/labeling/result']
+    reuse += [p/'edited/labeling/result' for p in (original/'policies/fresh').glob('*')
+              if (p/'edited/labeling/result/LABEL_FINAL.json').exists()]
+    old_gain=root/'variants/retained_delta_e3/policies/fresh/zero_gain_keep/edited/labeling/result'
+    if (old_gain/'LABEL_FINAL.json').exists():reuse.append(old_gain)
+    command=[sys.executable,str(SOURCE/'scripts/label_rsi_cached_endpoints.py'),
+        '--input-jsonl',str(panel/'edited/inputs.jsonl'),'--output-dir',str(panel/'edited/labeling/result'),
+        '--purpose','training_feedback','--gpu-count',str(torch.cuda.device_count()),'--workers-per-gpu','4',
+        '--record-timeout','600','--deterministic','--feedback-manifest',str(panel/'edited/FEEDBACK_MANIFEST.json'),
+        '--reuse-endpoints',*[str(p) for p in reuse],'--joint-physical-stop','--max-steps','1000']
+    subprocess.run(command,check=True)
+    evaluate(destination,panel,cached=False,nu_workers=3)
+    report=dict(complete=True,result=summary(destination,panel,'fresh'),
+        role='exploratory_replication_on_previously_viewed_256_sources',selection='fixed_before_new_candidates')
+    write_json(destination/'fresh_evaluate_execution/DONE.json',report)
+    print(json.dumps(report),flush=True)
+
+
 def collect_keep_features(destination,panel_name='fit'):
     import gc
     import torch
@@ -515,7 +586,7 @@ def collect_keep_features(destination,panel_name='fit'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','gain_policy','retained','retained_fresh','retained_fresh_evaluate','score_worker','rank_worker','policy_worker','utility_policy_worker','gain_policy_worker','retained_worker','retained_fresh_worker','retained_fresh_evaluate_worker'])
+    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','gain_policy','retained','retained_fresh','retained_fresh_evaluate','fresh_collect','fresh_infer','fresh_evaluate','score_worker','rank_worker','policy_worker','utility_policy_worker','gain_policy_worker','retained_worker','retained_fresh_worker','retained_fresh_evaluate_worker','fresh_collect_worker','fresh_infer_worker','fresh_evaluate_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3','retained_delta_e3'])
@@ -540,6 +611,9 @@ if __name__ == '__main__':
         retained_worker(args.root,args.name)
     elif args.mode in ('retained_fresh_worker','retained_fresh_evaluate_worker'):
         retained_fresh_worker(args.root,args.name,evaluate_only=args.mode=='retained_fresh_evaluate_worker')
+    elif args.mode in ('fresh_collect_worker','fresh_infer_worker','fresh_evaluate_worker'):
+        {'fresh_collect_worker':fresh_collect_worker,'fresh_infer_worker':fresh_infer_worker,
+         'fresh_evaluate_worker':fresh_evaluate_worker}[args.mode](args.root,args.name)
     elif args.mode.endswith('_worker'):
         (rank_worker if args.mode=='rank_worker' else policy_worker)(args.root,args.name)
     else:
