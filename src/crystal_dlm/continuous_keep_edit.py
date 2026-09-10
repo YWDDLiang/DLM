@@ -65,6 +65,8 @@ def commit_patch(current_record, old_tokens, new_tokens, inverse, *, editable=Tr
         if not changed:
             return copy.deepcopy(current_record),dict(applied=False,reason='periodic_equivalent_KEEP',changed=[])
         structure = copy.deepcopy(current_record.get('structure') or native.as_dict())
+        if current_record.get('structure') is None:
+            structure['lattice']['pbc'] = list(structure['lattice']['pbc'])
         lattice_changed = any(1 <= i <= 6 for i in changed)
         if lattice_changed:
             lengths, angles = list(native.lattice.abc), list(native.lattice.angles)

@@ -85,7 +85,9 @@ def main():
         trace=json.loads((root/f'fit/proposal/records/{i:04d}.json').read_text())['editor_trace']
         selected,decision=continuous_decision(wrapper,record.get('body_token_ids',[]),trace,inverse,actual_scores.get(i),margin)
         expected=reference[i]
-        if any(selected.get(k)!=expected.get(k) for k in ('structure','body','body_token_ids','success','reason')):mismatches.append(i)
+        fields=('structure','body','body_token_ids','success','reason')
+        if (json.dumps({k:selected.get(k) for k in fields},sort_keys=True) !=
+                json.dumps({k:expected.get(k) for k in fields},sort_keys=True)):mismatches.append(i)
         decisions.append(dict(ordinal=i,**decision))
     if mismatches:raise ValueError('exported full-model continuous decisions differ:'+str(mismatches))
     report=dict(checkpoint=str(checkpoint),checkpoint_receipt_sha256=file_hash(checkpoint/'RSI_TRAINING_DONE.json'),
