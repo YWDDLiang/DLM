@@ -11,6 +11,12 @@ EXTRA_FEATURES=('current_stable','current_meta','current_novel_known','current_n
     'cartesian_displacement_max','geometry_delta_available')
 
 
+def nested_probabilities(logits):
+    """The NS event is a subset of NMS; both outputs describe candidates."""
+    probability=logits.sigmoid()
+    return __import__('torch').stack((probability[...,0]*probability[...,1],probability[...,1]),dim=-1)
+
+
 def endpoint_targets(score):
     from crystal_dlm.ranked_feedback import endpoint_quality
     q=endpoint_quality(score)

@@ -29,6 +29,16 @@ def fresh_panels(root):
         panel=build(root,'fresh',name,selected['sun_threshold'],selected['ms_floor'],operational=op)
         panels[name]=dict(panel=str(panel),inputs_sha256=file_hash(panel/'edited/inputs.jsonl'),
             decision_sha256=file_hash(panel/'DECISION_BINDING.json'))
+    if (root/'ABSOLUTE_STATE_REGISTRATION.json').exists():
+        nested=json.loads((root/'NESTED_FROZEN_SELECTION.json').read_text());selection=json.loads((root/'FINAL_MODEL_SELECTION.json').read_text())
+        infer=json.loads((root/'fresh/nested_ranker_inference/INFERENCE_FINAL.json').read_text())
+        predictions=root/'fresh/nested_ranker_inference/FRESH_PREDICTIONS.jsonl'
+        if infer['model_sha256']!=nested['model_sha256'] or file_hash(predictions)!=infer['predictions_sha256']:
+            raise ValueError('nested fresh inference changed')
+        panel=build(root,'fresh','nested_SUN_diverse_K4',nested['selected']['sun_threshold'],0.,
+            prediction_path=predictions,score_kind='absolute_NS_NMS_probabilities')
+        panels['nested_SUN_diverse_K4']=dict(panel=str(panel),inputs_sha256=file_hash(panel/'edited/inputs.jsonl'),
+            decision_sha256=file_hash(panel/'DECISION_BINDING.json'))
     write_json(root/'fresh/PANELS_FROZEN.json',dict(panels=panels,frozen_selection_sha256=file_hash(root/'FROZEN_SELECTION.json'),
         before_candidate_endpoint_evaluation=True,secondary_comparator_fixed_before_new_final_results=True))
     print(json.dumps(panels),flush=True)
@@ -88,25 +98,39 @@ def finalize(root):
             score_directory(panel,'edited')/'attempt_results.jsonl',score_directory(panel,'edited')/'BASIC_METRICS.json']:
             pins[str(p)]=file_hash(p)
     write_json(root/'models/MATERIALIZED_OUTPUT_PARITY.json',parity)
-    final=outcome['SUN_diverse_K4'];delta=final['delta']
-    passes=bool(frozen['DEV_admitted'] and delta['SUN']>0 and delta['MSUN']>0 and delta['Stable']>=0)
+    primary='original';selected_frozen=frozen;selected_training=training;selected_training_path=training_path;selected_audit=audit_path
+    if (root/'FINAL_MODEL_SELECTION.json').exists():
+        primary=json.loads((root/'FINAL_MODEL_SELECTION.json').read_text())['primary']
+        if primary=='nested':
+            selected_frozen=json.loads((root/'NESTED_FROZEN_SELECTION.json').read_text())
+            selected_training_path=root/'training/nested_sun_ranker/TRAINING_FINAL.json';selected_training=json.loads(selected_training_path.read_text())
+            selected_audit=root/'models/nested_sun_ranker_runtime_audit/AUDIT_FINAL.json'
+            nested_audit=json.loads(selected_audit.read_text())
+            if (nested_audit['status']!='complete' or nested_audit['exported_ranker_sha256']!=selected_frozen['model_sha256']
+                or file_hash(selected_training_path)!=selected_frozen['training_receipt_sha256']):
+                raise ValueError('selected nested model has no verified runtime binding')
+            if any(v['decision_mismatches'] or v['max_prediction_abs_difference']>1e-5 for v in nested_audit['results'].values()):
+                raise ValueError('nested full-model audit failed')
+    final=outcome['nested_SUN_diverse_K4' if primary=='nested' else 'SUN_diverse_K4'];delta=final['delta']
+    passes=bool(primary!='KEEP' and selected_frozen['DEV_admitted'] and delta['SUN']>0 and delta['MSUN']>0 and delta['Stable']>=0)
     model_dir=root/'models/sun_ranker';model_dir.mkdir(parents=True,exist_ok=True)
-    exported=model_dir/'SUN_RANKER.pt';shutil.copy2(frozen['model_path'],exported)
-    if file_hash(exported)!=frozen['model_sha256']:raise ValueError('ranker export bytes changed')
+    exported=model_dir/'SUN_RANKER.pt';shutil.copy2(selected_frozen['model_path'],exported)
+    if file_hash(exported)!=selected_frozen['model_sha256']:raise ValueError('ranker export bytes changed')
     reg=json.loads((root/'PREREGISTRATION.json').read_text())
     model_definition=dict(schema='SUN_rank_scope_model_bundle_v1',editor_checkpoint=reg['old_editor'],
         editor_receipt_sha256=reg['old_editor_receipt_sha256'],ranker=str(exported),ranker_sha256=file_hash(exported),
-        training_receipt_path=str(training_path),training_receipt_sha256=file_hash(training_path),
+        training_receipt_path=str(selected_training_path),training_receipt_sha256=file_hash(selected_training_path),
         source_commit=(SOURCE/'_CODE_READY').read_text().strip(),
-        feature_schema=training['feature_schema'],output_targets=training['target_definition'],
+        head_variant=primary,feature_schema=selected_training['feature_schema'],output_targets=selected_training['target_definition'],
         scope_candidates=reg['streams'],current_quality_features='only already measured native current; no candidate physical outcomes',
-        decision=frozen['selected'],known_native_SUN_guard=True,max_DLM_calls=24,
+        decision=selected_frozen['selected'],known_native_SUN_guard=True,max_DLM_calls=24,
         composition_and_unmodified_continuous_fields_preserved=True,
-        runtime_audit_sha256=file_hash(audit_path),materialized_parity_sha256=file_hash(root/'models/MATERIALIZED_OUTPUT_PARITY.json'),
+        runtime_audit_sha256=file_hash(selected_audit),materialized_parity_sha256=file_hash(root/'models/MATERIALIZED_OUTPUT_PARITY.json'),
         validated_adoption=passes,adoption='candidate_passes_point_estimate_gate' if passes else 'retain_current_policy; candidate_not_admitted')
     write_json(model_dir/'MODEL_DEFINITION.json',model_definition)
     result=dict(schema='sun_rank_scope_fresh_comparison_v1',status='complete',created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
-        reports=outcome,paired_uncertainty=interval,cases=cases,passes_predeclared_DEV_and_fresh_joint_improvement=passes,
+        reports=outcome,paired_uncertainty=interval,cases=cases,DEV_selected_primary_variant=primary,
+        passes_predeclared_DEV_and_fresh_joint_improvement=passes,
         fresh_compositions=256,fresh_sources=256,overlap_with_all_prior_1000_compositions=0,
         original_MP20_source_split='train',editor_final_role='new_source_and_composition_isolated_final',
         generator_domain='cached_original_B0_F800; differs_from_G1_F1000_fit',

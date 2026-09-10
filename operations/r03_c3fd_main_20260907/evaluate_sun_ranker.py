@@ -20,7 +20,8 @@ from crystal_dlm.post_refine_contract import fingerprint
 from editor_trial_analysis import flags
 
 
-def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary_only=False):
+def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary_only=False,
+          prediction_path=None,score_kind='signed_gains'):
     data=root/panel_name;panel=root/'policies'/panel_name/tag
     if (panel/'DECISION_BINDING.json').exists():
         if file_hash(panel/'edited/inputs.jsonl')!=json.loads((panel/'DECISION_BINDING.json').read_text())['inputs_sha256']:
@@ -28,7 +29,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
         return panel
     if panel.exists():raise ValueError('partial policy requires explicit inspection')
     previous=Path(json.loads((root/'PREREGISTRATION.json').read_text())['previous_run'])
-    prediction_path=root/('training/sun_ranker/FIT_PREDICTIONS.jsonl' if panel_name=='fit' else 'fresh/ranker_inference/FRESH_PREDICTIONS.jsonl')
+    prediction_path=prediction_path or root/('training/sun_ranker/FIT_PREDICTIONS.jsonl' if panel_name=='fit' else 'fresh/ranker_inference/FRESH_PREDICTIONS.jsonl')
     predictions={}
     for row in read_rows(prediction_path):predictions[(row['stream'],row['ordinal'])]=row
     current=read_rows(data/'native/inputs.jsonl')
@@ -64,7 +65,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
         write_json(panel/f'edited/records/{i:04d}.json',dict(record=result,editor_trace=decision));decisions.append(decision)
     materialize(spec,'edited')
     write_json(panel/'DECISION_BINDING.json',dict(decisions=decisions,sun_threshold=sun_threshold,ms_floor=ms_floor,
-        operational_comparator=operational,primary_only=primary_only,model_choice_without_candidate_physics=True,
+        operational_comparator=operational,primary_only=primary_only,score_kind=score_kind,model_choice_without_candidate_physics=True,
         predictions_path=str(prediction_path),predictions_sha256=file_hash(prediction_path),
         inputs_sha256=file_hash(panel/'edited/inputs.jsonl')))
     return panel

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
-from crystal_dlm.sun_ranker import endpoint_targets,select_candidate
+from crystal_dlm.sun_ranker import endpoint_targets,select_candidate,nested_probabilities
 
 
 def score(hull,**kwargs):
@@ -37,6 +37,15 @@ class SUNRankerTests(unittest.TestCase):
             dict(stream='second',valid=True,sun_gain=.05,ms_gain=.02),
             dict(stream='invalid',valid=False,sun_gain=1.,ms_gain=1.)]
         self.assertEqual(select_candidate(candidates,sun_threshold=.05,ms_floor=0.),'first')
+
+    def test_nested_state_probabilities_preserve_SUN_subset_and_gradients(self):
+        import torch
+        logits=torch.tensor([[-3.,3.],[3.,-3.],[3.,3.]],requires_grad=True)
+        probabilities=nested_probabilities(logits)
+        self.assertTrue(bool((probabilities[:,0]<=probabilities[:,1]).all()))
+        self.assertTrue(bool(((probabilities>=0)&(probabilities<=1)).all()))
+        loss=torch.nn.functional.binary_cross_entropy(probabilities,torch.tensor([[0.,1.],[0.,0.],[1.,1.]]))
+        loss.backward();self.assertTrue(bool(torch.isfinite(logits.grad).all()))
 
 
 if __name__=='__main__':unittest.main()

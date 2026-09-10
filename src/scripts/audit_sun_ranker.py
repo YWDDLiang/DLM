@@ -10,18 +10,18 @@ sys.path[:0]=[str(SOURCE/'src'),str(SOURCE/'operations/r03_c3fd_main_20260907')]
 from scripts.run_post_refine_cycle import read_rows,write_json,file_hash,validate_rsi_checkpoint
 from scripts.run_rsi_stages import scores
 from scripts.run_sun_rank_scope import STREAMS
-from crystal_dlm.sun_ranker import extra_features,select_candidate
+from crystal_dlm.sun_ranker import extra_features,select_candidate,nested_probabilities
 from editor_trial_analysis import flags
 
 
-def audit(root,output):
+def audit(root,output,*,nested=False):
     import torch
     from crystal_dlm.expert_edit import load_editor_model
     from scripts.train_keep_edit_utility import feature_rows
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():raise ValueError('runtime parity needs GPU allocation')
     torch.set_num_threads(1);torch.cuda.set_device(0);torch.use_deterministic_algorithms(True)
     device=torch.device('cuda',0);reg=json.loads((root/'PREREGISTRATION.json').read_text())
-    frozen=json.loads((root/'FROZEN_SELECTION.json').read_text());spec=json.loads((root/'fit/RUN_SPEC.json').read_text())
+    frozen=json.loads((root/('NESTED_FROZEN_SELECTION.json' if nested else 'FROZEN_SELECTION.json')).read_text());spec=json.loads((root/'fit/RUN_SPEC.json').read_text())
     validate_rsi_checkpoint(reg['old_editor'],'E')
     if file_hash(frozen['model_path'])!=frozen['model_sha256']:raise ValueError('exported ranker changed')
     model,tokenizer=load_editor_model(spec['assets']['base_model'],reg['old_editor'],device)
@@ -29,7 +29,7 @@ def audit(root,output):
     results={}
     for name in ('fit','fresh'):
         data=root/name
-        prediction_path=root/('training/sun_ranker/FIT_PREDICTIONS.jsonl' if name=='fit' else 'fresh/ranker_inference/FRESH_PREDICTIONS.jsonl')
+        prediction_path=root/(('training/nested_sun_ranker/FIT_PREDICTIONS.jsonl' if nested else 'training/sun_ranker/FIT_PREDICTIONS.jsonl') if name=='fit' else ('fresh/nested_ranker_inference/FRESH_PREDICTIONS.jsonl' if nested else 'fresh/ranker_inference/FRESH_PREDICTIONS.jsonl'))
         expected={(r['stream'],r['ordinal']):r for r in read_rows(prediction_path)}
         current=read_rows(data/'native/inputs.jsonl');previous=Path(reg['previous_run'])
         before=scores(previous/'fit','native') if name=='fit' else scores(data,'native')
@@ -47,7 +47,8 @@ def audit(root,output):
             with torch.no_grad():
                 hidden=torch.cat([model.quality_head.layers[:2](payload['features'][i:i+16].to(device)) for i in range(0,len(rows),16)])
                 x=torch.cat((hidden,torch.tensor(extra,device=device,dtype=torch.float32)),dim=1)
-                values=(x@ranker['weight'].T+ranker['bias']).cpu().tolist()
+                logits=x@ranker['weight'].T+ranker['bias']
+                values=(nested_probabilities(logits) if nested else logits).cpu().tolist()
             for row,value,is_valid in zip(rows,values,valid,strict=True):
                 i=row['ordinal'];wanted=expected[(stream,i)]
                 maximum=max(maximum,abs(value[0]-wanted['sun_gain']),abs(value[1]-wanted['ms_gain']))
@@ -72,4 +73,5 @@ def audit(root,output):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,required=True)
-    p.add_argument('--completion-dir',type=Path,required=True);a=p.parse_args();audit(a.root,a.completion_dir)
+    p.add_argument('--completion-dir',type=Path,required=True);p.add_argument('--nested',action='store_true')
+    a=p.parse_args();audit(a.root,a.completion_dir,nested=a.nested)

@@ -14,7 +14,7 @@ sys.path[:0]=[str(SOURCE/'src'),str(SOURCE/'operations/r03_c3fd_main_20260907')]
 from scripts.run_post_refine_cycle import read_rows,write_rows,write_json,file_hash
 from scripts.run_rsi_stages import scores,score_directory
 from scripts.run_sun_rank_scope import STREAMS
-from crystal_dlm.sun_ranker import endpoint_targets,extra_features,EXTRA_FEATURES
+from crystal_dlm.sun_ranker import endpoint_targets,extra_features,EXTRA_FEATURES,nested_probabilities
 from crystal_dlm.post_refine_contract import fingerprint
 
 
@@ -64,12 +64,16 @@ def features(root,panel_name,device):
     return result,before,pins
 
 
-def train(root,output):
+def train(root,output,*,nested=False):
     import torch
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():raise ValueError('ranker training needs GPU allocation')
     torch.set_num_threads(1);torch.cuda.set_device(0);torch.use_deterministic_algorithms(True)
     device=torch.device('cuda',0);started=time.monotonic()
     reg=json.loads((root/'PREREGISTRATION.json').read_text());cfg=reg['head_training'];torch.manual_seed(cfg['seed'])
+    if nested:
+        supplement=json.loads((root/'ABSOLUTE_STATE_REGISTRATION.json').read_text())
+        if supplement['base_training_sha256']!=file_hash(root/'training/sun_ranker/TRAINING_FINAL.json'):
+            raise ValueError('absolute-state comparison changed base training')
     split=read_rows(root/'SOURCE_SPLIT.jsonl')
     if file_hash(root/'SOURCE_SPLIT.jsonl')!=reg['source_split_sha256']:raise ValueError('TRAIN roles changed')
     output.mkdir(parents=True,exist_ok=True)
@@ -104,7 +108,7 @@ def train(root,output):
                     changed_sites=trace.get('action',{}).get('sites',[]),candidate_record_sha256=fingerprint(observed_inputs[i]),
                     physical_comparison=data[-1]))
     if not data:raise ValueError('no reliable TRAIN candidate comparisons')
-    x=torch.stack(xs);target=torch.tensor([[r['target_sun_gain'],r['target_ms_gain']] for r in data],device=device)
+    x=torch.stack(xs);target=torch.tensor([r['after_targets'] if nested else [r['target_sun_gain'],r['target_ms_gain']] for r in data],device=device)
     multiplicity=Counter(r['source_id'] for r in data)
     weights=torch.tensor([1/len(multiplicity)/multiplicity[r['source_id']] for r in data],device=device)
     mean=(x*weights[:,None]).sum(0);scale=((x-mean).square()*weights[:,None]).sum(0).sqrt().clamp_min(.05)
@@ -125,21 +129,30 @@ def train(root,output):
     edge_a=torch.tensor([a+1 for a,b,w in edges],device=device,dtype=torch.long)
     edge_b=torch.tensor([b+1 for a,b,w in edges],device=device,dtype=torch.long)
     edge_w=torch.tensor([w for a,b,w in edges],device=device);edge_w/=edge_w.sum().clamp_min(1)
+    keep_values=torch.tensor([data[a if a>=0 else b]['before_targets'][0] for a,b,w in edges],device=device)
     generator=torch.Generator(device='cpu').manual_seed(cfg['seed']);visits=torch.zeros(len(data),dtype=torch.int64)
     steps=0;history=[]
     for epoch in range(1,cfg['epochs']+1):
         order=torch.randperm(len(data),generator=generator)
         for start in range(0,len(data),cfg['batch_size']):
             cpu=order[start:start+cfg['batch_size']];idx=cpu.to(device);optimizer.zero_grad(set_to_none=True)
-            prediction=linear(z[idx]);mse=((prediction-target[idx]).square().mean(1)*weights[idx]).sum()*len(data)/len(idx)
+            prediction=linear(z[idx])
+            errors=torch.nn.functional.binary_cross_entropy(nested_probabilities(prediction),target[idx],reduction='none') if nested else (prediction-target[idx]).square()
+            mse=(errors.mean(1)*weights[idx]).sum()*len(data)/len(idx)
             rank_loss=mse.new_zeros(())
             if edges:
-                all_sun=torch.cat((mse.new_zeros(1),linear(z)[:,0]))
-                rank_loss=(torch.nn.functional.softplus(-(all_sun[edge_a]-all_sun[edge_b]))*edge_w).sum()
+                all_logits=linear(z);all_sun=torch.cat((mse.new_zeros(1),nested_probabilities(all_logits)[:,0] if nested else all_logits[:,0]))
+                a_score=all_sun[edge_a];b_score=all_sun[edge_b]
+                if nested:
+                    a_score=torch.where(edge_a==0,keep_values,a_score);b_score=torch.where(edge_b==0,keep_values,b_score)
+                rank_loss=(torch.nn.functional.softplus(-(a_score-b_score))*edge_w).sum()
             loss=mse+cfg['ridge']*linear.weight.square().sum()+cfg['SUN_pairwise_coefficient']*rank_loss
             loss.backward();optimizer.step();visits[cpu]+=1;steps+=1
-        with torch.no_grad():mse=float(((linear(z)-target).square().mean(1)*weights).sum())
-        event=dict(epoch=epoch,optimizer_steps=steps,source_weighted_MSE=mse,seconds=time.monotonic()-started)
+        with torch.no_grad():
+            error=torch.nn.functional.binary_cross_entropy(nested_probabilities(linear(z)),target,reduction='none') if nested else (linear(z)-target).square()
+            mse=float((error.mean(1)*weights).sum())
+        event=dict(epoch=epoch,optimizer_steps=steps,source_weighted_objective=mse,
+            objective='absolute_state_BCE' if nested else 'delta_MSE',seconds=time.monotonic()-started)
         history.append(event);write_json(output/'PROGRESS.json',event)
         if epoch%8==0:print(json.dumps(event),flush=True)
     if not bool((visits==cfg['epochs']).all()):raise ValueError('incomplete actual supervised coverage')
@@ -149,24 +162,30 @@ def train(root,output):
     if drift>1e-5:raise ValueError('folded ranker parity failed')
     model=output/'SUN_RANKER.pt'
     torch.save(dict(weight=folded_weight.cpu(),bias=folded_bias.cpu(),mean=mean.cpu(),scale=scale.cpu(),
-        extra_features=list(EXTRA_FEATURES),output_names=['sun_gain','ms_gain'],frozen_editor=reg['old_editor']),model)
+        extra_features=list(EXTRA_FEATURES),output_names=['P_NS','P_NMS'] if nested else ['sun_gain','ms_gain'],
+        head_kind='nested_absolute_states' if nested else 'linear_gains',frozen_editor=reg['old_editor']),model)
     write_rows(output/'TRAIN_ROWS.jsonl',data);write_rows(output/'SUN_CONTENT_POSITIVES.jsonl',content)
+    if nested and file_hash(output/'TRAIN_ROWS.jsonl')!=supplement['base_train_rows_sha256']:
+        raise ValueError('absolute-state model did not use the exact original TRAIN comparisons')
     torch.save(dict(optimizer=optimizer.state_dict(),row_visits=visits,sampler_rng=generator.get_state()),output/'OPTIMIZER_COVERAGE.pt')
     prediction_rows=[]
     for stream,bank in banks.items():
-        with torch.no_grad():values=(bank['x']@folded_weight.T+folded_bias).cpu().tolist()
+        with torch.no_grad():
+            logits=bank['x']@folded_weight.T+folded_bias
+            values=(nested_probabilities(logits) if nested else logits).cpu().tolist()
         for row,value,op_value in zip(bank['rows'],values,bank['operational_utilities'],strict=True):
             prediction_rows.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],
                 operational_utility=op_value,
                 valid=bank['traces'][row['ordinal']].get('proposal_generated',False) and bank['traces'][row['ordinal']]['continuous_applied']))
     write_rows(output/'FIT_PREDICTIONS.jsonl',prediction_rows)
-    report=dict(schema='SUN_specific_linear_gain_ranker_v1',status='complete',settings=cfg,train_rows=len(data),
+    report=dict(schema='SUN_nested_absolute_state_ranker_v1' if nested else 'SUN_specific_linear_gain_ranker_v1',
+        head_kind='nested_absolute_states' if nested else 'linear_gains',status='complete',settings=cfg,train_rows=len(data),
         train_sources=len(multiplicity),optimizer_steps=steps,complete_passes=cfg['epochs'],
         minimum_row_visits=int(visits.min()),maximum_row_visits=int(visits.max()),
         SUN_ranking_pairs=len(edges),SUN_ranking_sources=len({data[a if a>=0 else b]['source_id'] for a,b,w in edges}),
         SUN_pairwise_updates_per_edge=steps,MSE_row_visits_semantics='actual_minibatch_updates; ranking term visits all registered edges each step',
         source_target_counts=dict(Counter(str((r['target_sun_gain'],r['target_ms_gain'])) for r in data)),
-        target_definition='delta_verified_Stable_and_novel; delta_verified_MS_and_novel; excludes_cohort_U',
+        target_definition=('absolute_candidate_NS_and_NMS_nested_probabilities' if nested else 'delta_verified_Stable_and_novel; delta_verified_MS_and_novel')+'; excludes_cohort_U',
         feature_schema=dict(quality_hidden_width=x.shape[1]-len(EXTRA_FEATURES),observable_extra_features=list(EXTRA_FEATURES)),
         SUN_content_positives=len(content),SUN_positive_sources=len({r['source_id'] for r in content}),
         true_Stable_promotion_rows=sum(r['actual_Stable_promotion'] for r in content),
@@ -179,16 +198,18 @@ def train(root,output):
     print(json.dumps({k:v for k,v in report.items() if k not in ('history','feature_and_feedback_pins')}),flush=True)
 
 
-def infer(root,output):
+def infer(root,output,*,nested=False):
     import torch
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():raise ValueError('fresh ranker inference needs GPU allocation')
     torch.set_num_threads(1);torch.cuda.set_device(0);torch.use_deterministic_algorithms(True)
-    frozen=json.loads((root/'FROZEN_SELECTION.json').read_text());model=Path(frozen['model_path'])
+    frozen=json.loads((root/('NESTED_FROZEN_SELECTION.json' if nested else 'FROZEN_SELECTION.json')).read_text());model=Path(frozen['model_path'])
     if file_hash(model)!=frozen['model_sha256']:raise ValueError('frozen ranker changed')
     device=torch.device('cuda',0);state=torch.load(model,map_location=device,weights_only=False)
     banks,_,pins=features(root,'fresh',device);rows=[]
     for stream,bank in banks.items():
-        with torch.no_grad():values=(bank['x']@state['weight'].T+state['bias']).cpu().tolist()
+        with torch.no_grad():
+            logits=bank['x']@state['weight'].T+state['bias']
+            values=(nested_probabilities(logits) if nested else logits).cpu().tolist()
         for row,value,op_value in zip(bank['rows'],values,bank['operational_utilities'],strict=True):
             rows.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],
                 operational_utility=op_value,
@@ -201,4 +222,5 @@ def infer(root,output):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,required=True)
     p.add_argument('--completion-dir',type=Path,required=True);p.add_argument('--mode',choices=['train','infer'],default='train')
-    a=p.parse_args();(train if a.mode=='train' else infer)(a.root,a.completion_dir)
+    p.add_argument('--nested',action='store_true')
+    a=p.parse_args();(train if a.mode=='train' else infer)(a.root,a.completion_dir,nested=a.nested)
