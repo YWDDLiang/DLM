@@ -414,7 +414,7 @@ def compile_pairs(spec, requested_branch='both'):
         'examples':{branch:len(rows) for branch,rows in result.items()},'DPO_training_performed':False})
 
 
-def rebind_labels(spec, stage):
+def rebind_labels(spec, stage, *, source_directories=None):
     """Reuse exactly identical physical endpoints, retaining the complete cohort.
 
     Current is token-F; edited is chosen by the learned current/proposal decision.
@@ -434,7 +434,10 @@ def rebind_labels(spec, stage):
     def key(record):
         return (record.get('group_id'),record.get('source_row_idx'),record['sample_idx'],
                 api.endpoint_cache_key(record) if record['success'] else 'explicit_generation_failure')
-    for parent in sources[stage]:
+    parents=sources[stage] if source_directories is None else [Path(p).resolve() for p in source_directories]
+    if source_directories is not None and (stage!='edited' or not parents):
+        raise ValueError('explicit label sources are limited to selected edited endpoints')
+    for parent in parents:
         # Deployment may KEEP every current endpoint. In that case an unused
         # proposal needs no physical call; unmatched targets still fail below.
         if stage=='edited' and parent=='proposal' and not (root/parent/'labeling/result/_SUCCESS').exists():

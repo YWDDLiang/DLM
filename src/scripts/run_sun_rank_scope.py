@@ -124,7 +124,9 @@ def fresh_inputs(root):
     for i,(parent,plan) in enumerate(zip(parents,plans,strict=True)):
         source_idx=parent['source_row_idx'];shard=(source_idx-2048)//1024
         if shard not in cache:
-            path=expert/f'collection_expanded/shard_{shard}/teacher_refine/dlm_refined_mp_994.pt'
+            candidates=sorted((expert/f'collection_expanded/shard_{shard}/teacher_refine').glob('dlm_refined_mp_*.pt'))
+            if len(candidates)!=1:raise ValueError('cached teacher output is ambiguous or absent')
+            path=candidates[0]
             conf=json.loads((path.parent/'run_config.json').read_text())
             if conf['diff_steps']!=800 or conf['checkpoint']!=spec['assets']['model494']:
                 raise ValueError('fresh cached teacher differs')
