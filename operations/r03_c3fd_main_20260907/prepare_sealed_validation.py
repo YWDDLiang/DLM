@@ -16,7 +16,7 @@ from crystal_dlm.sun_feedback_contract import composition_counts,reduced_key
 def prepare(root):
     previous=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
     spec=json.loads((previous/'fresh/RUN_SPEC.json').read_text())
-    assets=spec['assets'];study=root/'sealed_validation';panel=study/'fresh'
+    assets=spec['assets'];study=root/'sealed_validation_v2';panel=study/'fresh'
     if (study/'DATA_FINAL.json').exists():
         return study
     def key(row):return reduced_key(composition_counts(row['plan_state']))
@@ -45,8 +45,9 @@ def prepare(root):
     for row in sorted(eligible,key=lambda r:fingerprint(dict(domain='final_improvement_validation_source_v1',source=r['ancestor_id']))):
         unique.setdefault(key(row),row)
     order=sorted(unique,key=lambda k:fingerprint(dict(domain='final_improvement_validation_composition_v1',composition=k)))
-    if len(order)<256:raise ValueError('fewer than 256 unused, covered cached input compositions')
+    if not order:raise ValueError('no unused, covered cached input compositions')
     parents=[unique[k] for k in order[:256]]
+    count=len(parents)
     parent_path=panel/'cohort/parents.jsonl';write_rows(parent_path,parents)
     plans=[dict(original_ordinal=i,evaluation_ordinal=i,sample_idx=i,body_eligible=True,
         ancestor_id=row['ancestor_id'],source_row_idx=row['source_row_idx'],source_split='train',
@@ -56,7 +57,7 @@ def prepare(root):
         body_noise_seed=derived_seed(row['ancestor_id'],'final_improvement_validation_E'),
         cached_teacher=True,canonical_composition=key(row)) for i,row in enumerate(parents)]
     plan_path=panel/'cohort/plans.jsonl';write_rows(plan_path,plans)
-    report=dict(schema='composition_excluded_cached_GF_validation_v1',sources=256,
+    report=dict(schema='composition_excluded_cached_GF_validation_v1',sources=count,requested_upper_bound=256,
         dataset_origin='planner_generated',original_split='generated',usage_role='heldout_validation',
         original_assignment='synthetic_training_pool',E_supervised_use=False,
         files_sha256={'parents.jsonl':file_hash(parent_path)},plans_sha256=file_hash(plan_path),
@@ -68,7 +69,7 @@ def prepare(root):
         exclusion_source_sha256={name:file_hash(path) for name,path in sources.items()})
     write_json(panel/'cohort/PREPARATION_FINAL.json',report)
     write_json(panel/'cohort/MANIFEST.json',report);(panel/'cohort/_SUCCESS').touch()
-    spec.update(run_root=str(panel),run_id='final_improvement_sealed_validation',requests=256,
+    spec.update(run_root=str(panel),run_id='final_improvement_sealed_validation',requests=count,
         training_parent_root=str(panel/'cohort'),E_evaluation_role='sealed_validation')
     spec['assets']['nu_cache']=str(root/'nu_cache')
     spec['resources'].update(deadline_utc='2026-09-10T19:16:40+00:00',
