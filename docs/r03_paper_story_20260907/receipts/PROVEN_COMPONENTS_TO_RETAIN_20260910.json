@@ -1,0 +1,29 @@
+{
+  "user_requirement": "别忘了上一轮我们效果很好，好的内容记得保留",
+  "source": "user 2026-09-10T14:51:13Z",
+  "preserved_components": [
+    "lossless continuous KEEP and numeric-field patches",
+    "four local-site candidates",
+    "SUN/NMS nested final-state readout",
+    "SUN/MS gain comparison readout",
+    "frozen E3 content checkpoint and matched sampling configuration",
+    "actual outcome tables and positive edit examples"
+  ],
+  "previous_stage_result": {
+    "fresh_sources": 256,
+    "nested_SUN_before": 13,
+    "nested_SUN_after": 19,
+    "nested_MSUN_delta": 0,
+    "nested_Stable_delta": -1,
+    "delta_comparator_SUN_delta": 2,
+    "delta_comparator_MSUN_delta": 10,
+    "delta_comparator_Stable_delta": 2
+  },
+  "preserved_local_artifact_sha256": {
+    "delta_sun_ranker.pt": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+    "MODEL_BUNDLES.json": "2d77c89daa6ff702624d430ef5d1d93ad7922ee96b9deb3346b930694148fd9a",
+    "nested_sun_ranker.pt": "0f8c430c70edb39404862c638fcc0d9767dc7803493d8ab0e3b1acdc8505295b",
+    "README.md": "d1531a0b1c6f020e86971d0bde89fd6f0d83dc86ab80b5e2367849d6590aa50c"
+  },
+  "release_policy": "Preserve validated components and their reproducible configuration as the baseline; archive current experimental alternatives separately until their measured contribution is understood."
+}
