@@ -9,13 +9,13 @@ from submit_stage import configured_dispatch
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,required=True)
-    parser.add_argument('--mode',choices=['train','evaluate','policies'],required=True)
+    parser.add_argument('--mode',choices=['train','evaluate','policies','audit'],required=True)
     parser.add_argument('--minutes',type=int,default=35)
     args=parser.parse_args();root=args.root.resolve();source=Path(__file__).resolve().parents[2]
     pipeline=json.loads((root/'RAW0_PIPELINE.json').read_text())
     pipeline.update(source_root=str(source),source_identity=verify_deployed_source(source))
     job='focus_utility_'+args.mode
-    output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'analysis/utility_policies'
+    output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'analysis/utility_'+args.mode
     required=[root/'PREREGISTRATION.json',root/'SOURCE_SPLIT.jsonl',root/'fit/RUN_SPEC.json']
     if args.mode=='train':
         required += [root/'data/UTILITY_TRAIN.jsonl',root/'data/UTILITY_DATA_FINAL.json']
@@ -23,14 +23,17 @@ def main():
     elif args.mode=='evaluate':
         required += [root/'fit/proposal/inputs.jsonl',root/'training/utility/result/TRAINING_FINAL.json']
         products=['{output}/FEATURES_FINAL.json','{output}/UTILITY_PREDICTIONS.jsonl']
-    else:
+    elif args.mode=='policies':
         required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl',
             root/'fit/native/labeling/result/LABEL_FINAL.json',root/'fit/hybrid_proposal/labeling/result/LABEL_FINAL.json']
         products=[str(root/'UTILITY_DEV_SELECTION_FINAL.json')]
+    else:
+        required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl']
+        products=[str(root/'analysis/JUDGEMENT_BATCH_AUDIT.json')]
     if any(not p.is_file() for p in required):raise ValueError('utility admission inputs are incomplete')
     gpu=0 if args.mode=='policies' else 1
-    script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/train_keep_edit_utility.py'
-    stage_args=['--root',str(root)] + ([] if args.mode=='policies' else ['--mode',args.mode])
+    script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/audit_keep_edit_judgement.py' if args.mode=='audit' else 'src/scripts/train_keep_edit_utility.py'
+    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit') else ['--mode',args.mode])
     pipeline['components']=[dict(id=job,output_dir=output,gpus=gpu,stages=[dict(name=args.mode,
         script=script,args=stage_args,
         inputs=[str(p) for p in required],outputs=products)])]

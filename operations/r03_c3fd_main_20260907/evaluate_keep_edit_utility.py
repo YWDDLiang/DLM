@@ -26,8 +26,8 @@ def light_clone(source,destination):
     clone_bound_stage(source,destination)
 
 
-def build_panel(root,epoch,threshold,*,old=False):
-    fit=root/'fit';tag='old_E3_continuous' if old else f'utility_e{epoch}_m{round(threshold*100):02d}'
+def build_panel(root,epoch,threshold,*,old=False,recorded=False):
+    fit=root/'fit';tag=('old_E3_recorded_continuous' if recorded else 'old_E3_canonical_continuous') if old else f'utility_e{epoch}_m{round(threshold*100):02d}'
     panel=root/'policies'/tag;config=panel/'RUN_SPEC.json'
     if config.exists():
         if not (panel/'edited/labeling/result/_SUCCESS').exists():raise ValueError('unfinished policy requires inspection')
@@ -36,7 +36,7 @@ def build_panel(root,epoch,threshold,*,old=False):
     native=read_rows(fit/'native/inputs.jsonl');hybrid=read_rows(fit/'hybrid_proposal/inputs.jsonl')
     spec=json.loads((fit/'RUN_SPEC.json').read_text());spec.update(run_root=str(panel),run_id='keep_edit_focus:'+tag)
     spec['assets']['official_cache']=json.loads((root/'REFERENCE_CACHE_OVERRIDE.json').read_text())['directory']
-    policy=dict(kind='old_E3_probability' if old else 'quality_only_signed_utility',epoch=epoch,raw_margin=threshold,
+    policy=dict(kind=('old_E3_recorded_probability' if recorded else 'old_E3_canonical_probability') if old else 'quality_only_signed_utility',epoch=epoch,raw_margin=threshold,
         known_SUN_guard='same_original_E3_guard',physics_used_for_acceptance=False,
         predictions_sha256=file_hash(root/'evaluation_features/UTILITY_PREDICTIONS.jsonl'))
     spec['focus_decision_policy']=policy
@@ -49,7 +49,8 @@ def build_panel(root,epoch,threshold,*,old=False):
         commit=json.loads((fit/f'hybrid_proposal/records/{i:04d}.json').read_text())['commit_trace']
         guarded=trace.get('known_sun') and trace.get('learned_mode')==0
         chosen=bool(prediction and prediction['proposal_generated'] and not guarded and
-            (prediction['old_applied'] if old else prediction['learned_utilities'][str(epoch)]>=threshold))
+            ((prediction['old_applied'] if recorded else prediction['original_quality_logit']>=0.) if old
+             else prediction['learned_utilities'][str(epoch)]>=threshold))
         actual=chosen and commit['applied'];source=b if actual else a
         record=dict(source,trajectory_id=f'keep_edit_focus:{tag}:edited:{i}')
         write_json(panel/f'edited/records/{i:04d}.json',dict(record=record,learned_accept=chosen,
@@ -145,8 +146,10 @@ def main():
     if (root/'FROZEN_SELECTION.json').exists():raise ValueError('selection is already frozen')
     write_json(root/'FROZEN_SELECTION.json',frozen)
     control=build_panel(root,0,.5,old=True);evaluate(root,control)
+    original_control=build_panel(root,0,.5,old=True,recorded=True);evaluate(root,original_control)
     panel=Path(selected['dev']['panel'])
-    reports={role:{'learned':summary(root,panel,role),'old_E3':summary(root,control.parent,role)} for role in ['train','dev','final','all']}
+    reports={role:{'learned':summary(root,panel,role),'old_E3':summary(root,control.parent,role),
+        'old_E3_original_execution':summary(root,original_control.parent,role)} for role in ['train','dev','final','all']}
     final=reports['final']['learned'];passed=final['delta']['SUN']>0 and final['delta']['MSUN']>0
     report=dict(schema='continuous_keep_edit_utility_comparison_v1',selected=dict(epoch=selected['epoch'],margin=selected['margin'],panel=str(panel)),
         frozen_selection_sha256=file_hash(root/'FROZEN_SELECTION.json'),reports=reports,
