@@ -1,0 +1,32 @@
+{
+  "schema": "final_improvement_window_v1",
+  "status": "running",
+  "start_utc": "2026-09-10T13:02:01+00:00",
+  "default_deadline_utc": "2026-09-10T17:02:01+00:00",
+  "default_hours": 4,
+  "extension_authorized_for_promising_mechanism": true,
+  "extension_requires_new_permission": false,
+  "extension_record_fields": [
+    "mechanism",
+    "evidence",
+    "next_validation",
+    "estimated_extra_time"
+  ],
+  "followup_order": [
+    "clean_reusable_public_repository",
+    "publish_YWDDLiang_DLM_ICLR",
+    "fixed_1200_plan_full_flow_with_3_self_improvement_rounds"
+  ],
+  "final_plan_selection": {
+    "preset": "H1A2_1200",
+    "selection": "first_1050_legal_plans_in_original_order",
+    "count": 1050,
+    "fixed_across_rounds": true,
+    "rounds": 3
+  },
+  "temporary_compute_cap": {
+    "gpus": 5,
+    "queued_or_running_jobs": 3
+  },
+  "no_extra_release_hard_gates": true
+}
