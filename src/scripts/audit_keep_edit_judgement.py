@@ -12,7 +12,8 @@ from scripts.run_post_refine_cycle import read_rows,write_json,file_hash
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
-    root=parser.parse_args().root
+    parser.add_argument('--completion-dir',type=Path)
+    args=parser.parse_args();root=args.root;completion=args.completion_dir or root/'analysis/utility_audit'
     os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
     import torch
     from crystal_dlm.expert_edit import load_editor_model,inference_view,materialize_edit_batch
@@ -66,7 +67,7 @@ def main():
         original_contexts_reproduced=all(r['original_batch_reproduced_exactly'] for r in result),
         canonical_contexts_reproduced=all(r['canonical_batch_reproduced_exactly'] for r in result))
     write_json(root/'analysis/JUDGEMENT_BATCH_AUDIT.json',report)
-    write_json(root/'analysis/utility_audit/AUDIT_FINAL.json',dict(report=str(root/'analysis/JUDGEMENT_BATCH_AUDIT.json'),
+    write_json(completion/'AUDIT_FINAL.json',dict(report=str(root/'analysis/JUDGEMENT_BATCH_AUDIT.json'),
         sha256=file_hash(root/'analysis/JUDGEMENT_BATCH_AUDIT.json')))
     print(json.dumps(report),flush=True)
 

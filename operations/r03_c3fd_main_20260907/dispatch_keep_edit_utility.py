@@ -18,6 +18,9 @@ def main():
     if args.job_suffix and not args.job_suffix.replace('_','').isalnum():raise ValueError('invalid job suffix')
     job='focus_utility_'+args.mode+('_'+args.job_suffix if args.job_suffix else '')
     output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'analysis/utility_'+args.mode
+    if args.job_suffix:
+        if args.mode not in ('audit','policies'):raise ValueError('training/feature retries require explicit data recovery')
+        output+='_'+args.job_suffix
     required=[root/'PREREGISTRATION.json',root/'SOURCE_SPLIT.jsonl',root/'fit/RUN_SPEC.json']
     if args.mode=='train':
         required += [root/'data/UTILITY_TRAIN.jsonl',root/'data/UTILITY_DATA_FINAL.json']
@@ -36,6 +39,7 @@ def main():
     gpu=0 if args.mode=='policies' else 1
     script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/audit_keep_edit_judgement.py' if args.mode=='audit' else 'src/scripts/train_keep_edit_utility.py'
     stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit') else ['--mode',args.mode])
+    if args.mode in ('policies','audit'):stage_args+=['--completion-dir','{output}']
     pipeline['components']=[dict(id=job,output_dir=output,gpus=gpu,stages=[dict(name=args.mode,
         script=script,args=stage_args,
         inputs=[str(p) for p in required],outputs=products)])]

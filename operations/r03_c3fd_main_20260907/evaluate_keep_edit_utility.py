@@ -104,7 +104,8 @@ def summary(root,panel,role):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
-    args=parser.parse_args();root=args.root
+    parser.add_argument('--completion-dir',type=Path)
+    args=parser.parse_args();root=args.root;completion=args.completion_dir or root/'analysis/utility_policies'
     import os
     if not os.environ.get('SLURM_JOB_ID'):raise RuntimeError('policy evaluation requires its CPU allocation')
     reg=json.loads((root/'PREREGISTRATION.json').read_text());receipt=json.loads((root/'evaluation_features/FEATURES_FINAL.json').read_text())
@@ -135,7 +136,7 @@ def main():
     write_json(root/'UTILITY_DEV_SELECTION_FINAL.json',dict(selected=selected,candidates=candidates,
         admitted_to_FINAL=admitted,final_quality_consulted=False,selection_rule_sha256=file_hash(rule_path)))
     if not admitted:
-        write_json(root/'analysis/utility_policies/POLICY_EVALUATION_FINAL.json',dict(status='DEV_failed_FINAL_sealed',
+        write_json(completion/'POLICY_EVALUATION_FINAL.json',dict(status='DEV_failed_FINAL_sealed',
             dev_selection_sha256=file_hash(root/'UTILITY_DEV_SELECTION_FINAL.json')))
         print(json.dumps(dict(event='DEV_FAILED_FINAL_REMAINS_SEALED',selected=selected)),flush=True)
         return
@@ -159,7 +160,7 @@ def main():
         old_editor_source_exclusion='old256_and_same_formula_all_TRAIN',original_data_domain='MP20_TRAIN',
         E_unseen_does_not_mean_G_F_B0_unseen=True)
     write_json(root/'UTILITY_COMPARISON_FINAL.json',report)
-    write_json(root/'analysis/utility_policies/POLICY_EVALUATION_FINAL.json',dict(status='complete',
+    write_json(completion/'POLICY_EVALUATION_FINAL.json',dict(status='complete',
         dev_selection_sha256=file_hash(root/'UTILITY_DEV_SELECTION_FINAL.json'),
         final_report_sha256=file_hash(root/'UTILITY_COMPARISON_FINAL.json')))
     print(json.dumps(dict(event='FINAL_AFTER_FROZEN_SELECTION',primary_pass=passed,
