@@ -285,8 +285,8 @@ def run_variant(root, name, mode, stream=None, gpus=1):
     pipe = json.loads((root/'PIPELINE.json').read_text())
     pipe.update(source_root=str(SOURCE), source_identity=verify_deployed_source(SOURCE))
     job = name + '_' + mode + ('_' + stream if stream else '')
-    if mode == 'collect':
-        relative = f'variants/{name}/fit/collection'
+    if mode in ('collect','collect_resume'):
+        relative = f'variants/{name}/fit/'+('collection_resume' if mode=='collect_resume' else 'collection')
         stage = dict(name='collect',script='src/scripts/run_sun_rank_scope.py',
             args=['--root',str(destination),'--mode','collect','--panel','fit','--completion-dir','{output}'],
             inputs=[str(destination/'PREREGISTRATION.json')], outputs=['{output}/worker_0_DONE.json'])
@@ -406,7 +406,7 @@ def collect_keep_features(destination,panel_name='fit'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
+    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3'])

@@ -174,13 +174,22 @@ def collect(root,panel_name,output):
     for k,(name,seed_stream) in enumerate(STREAMS.items()):
         if k%world!=rank:continue
         destination=panel/'bank'/name;destination.mkdir(parents=True,exist_ok=True)
-        if (destination/'COLLECTION_FINAL.json').exists():raise ValueError('stream already finalized')
+        if (destination/'COLLECTION_FINAL.json').exists():
+            receipt=json.loads((destination/'COLLECTION_FINAL.json').read_text())
+            if (receipt['content_checkpoint']!=reg['old_editor'] or
+                    receipt['candidate_inputs_sha256']!=file_hash(destination/'candidate/inputs.jsonl') or
+                    receipt['features_sha256']!=file_hash(destination/'CANDIDATE_FEATURES.pt')):
+                raise ValueError('completed candidate stream changed')
+            completed.append(name)
+            continue
         traces={}
+        for path in sorted((destination/'raw_traces').glob('*.json')):
+            traces[int(path.stem)]=json.loads(path.read_text())
         if name=='primary' and panel_name=='fit' and not reg.get('editor_content_changed'):
             for i in range(len(plans)):
                 traces[i]=json.loads((previous/f'fit/proposal/records/{i:04d}.json').read_text())['editor_trace']
         else:
-            eligible=[i for i,c in enumerate(current) if c.get('body_token_ids') and c.get('success')]
+            eligible=[i for i,c in enumerate(current) if c.get('body_token_ids') and c.get('success') and i not in traces]
             if reg.get('enforce_shared_forward_budget') and k:
                 admitted=[]
                 for i in eligible:
@@ -203,6 +212,8 @@ def collect(root,panel_name,output):
                     force_proposal=True,**({'exploration_local_rank':k} if k else {})) for i in indices]
                 values=propose_ranked_batch(model,tokenizer,requests,support=support,batch_size=64)
                 traces.update(zip(indices,values,strict=True))
+                for i,value in zip(indices,values,strict=True):
+                    write_json(destination/f'raw_traces/{i:04d}.json',value)
                 print(json.dumps(dict(panel=panel_name,stream=name,generated=len(traces),requests=len(plans))),flush=True)
         rows=[];bindings=[]
         for i,(plan,before) in enumerate(zip(plans,current,strict=True)):
@@ -219,8 +230,12 @@ def collect(root,panel_name,output):
                 rows.append(dict(ordinal=i,pair_id=fingerprint(dict(panel=panel_name,stream=name,source=plan['ancestor_id'])),
                     source_id=plan['ancestor_id'],prompt=plan['body_prompt'],num_sites=plan['plan_state']['N'],
                     current_tokens=old_tokens,proposal_tokens=trace['proposal_tokens'],action_positions=trace.get('action',{}).get('positions',[])))
-        shutil.copytree(panel/'cohort',destination/'cohort')
+        shutil.copytree(panel/'cohort',destination/'cohort',dirs_exist_ok=True)
         cfg=copy.deepcopy(spec);cfg.update(run_root=str(destination),training_parent_root=str(destination/'cohort'))
+        # These two ledgers are deterministic products of saved model traces.
+        # Replace an interrupted write only while the stream is unfinalized.
+        for derived in (destination/'candidate/inputs.jsonl',destination/'FEATURE_ROWS.jsonl'):
+            if derived.exists():derived.unlink()
         write_json(destination/'RUN_SPEC.json',cfg);materialize(cfg,'candidate')
         write_rows(destination/'FEATURE_ROWS.jsonl',rows)
         feature_rows(model,tokenizer,rows,torch.device('cuda',rank),destination,'CANDIDATE')
