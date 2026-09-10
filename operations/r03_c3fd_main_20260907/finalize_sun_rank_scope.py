@@ -141,10 +141,35 @@ def finalize(root):
         composition_and_unmodified_continuous_fields_preserved=True,
         runtime_audit_sha256=file_hash(selected_audit),materialized_parity_sha256=file_hash(root/'models/MATERIALIZED_OUTPUT_PARITY.json'),
         validated_adoption=passes,adoption='candidate_passes_point_estimate_gate' if passes else 'retain_current_policy; candidate_not_admitted')
+    variants={}
+    for name,selection_file,training_folder,audit_folder,result_name in [
+        ('delta','FROZEN_SELECTION.json','sun_ranker','sun_ranker_runtime_audit','SUN_diverse_K4'),
+        ('nested','NESTED_FROZEN_SELECTION.json','nested_sun_ranker','nested_sun_ranker_runtime_audit','nested_SUN_diverse_K4')]:
+        selection=root/selection_file
+        if not selection.exists():continue
+        variant=json.loads(selection.read_text());report_path=root/'training'/training_folder/'TRAINING_FINAL.json'
+        report=json.loads(report_path.read_text());checked=root/'models'/audit_folder/'AUDIT_FINAL.json'
+        check=json.loads(checked.read_text())
+        if check['status']!='complete' or check['exported_ranker_sha256']!=variant['model_sha256']:
+            raise ValueError('a reported variant lacks a completed full-model audit')
+        directory=root/'models'/(name+'_sun_ranker');directory.mkdir(parents=True,exist_ok=True)
+        weights=directory/'SUN_RANKER.pt';shutil.copy2(variant['model_path'],weights)
+        if file_hash(weights)!=variant['model_sha256']:raise ValueError('variant export changed weights')
+        entry=dict(schema='frozen_SUN_variant_bundle_v1',variant=name,ranker_path=str(weights),ranker_sha256=file_hash(weights),
+            editor_checkpoint=reg['old_editor'],editor_receipt_sha256=reg['old_editor_receipt_sha256'],
+            head_kind=report.get('head_kind','linear_gains'),feature_schema=report['feature_schema'],
+            target_definition=report['target_definition'],selected_policy=variant['selected'],DEV_admitted=variant['DEV_admitted'],
+            fresh_result=outcome[result_name],selected_as_primary_before_fresh=primary==('original' if name=='delta' else name),
+            training_receipt_path=str(report_path),training_receipt_sha256=file_hash(report_path),
+            selection_sha256=file_hash(selection),full_model_audit_sha256=file_hash(checked),
+            original_and_fresh_results_retained_without_posthoc_selection=True)
+        write_json(directory/'MODEL_DEFINITION.json',entry);variants[name]=entry
+    model_definition['reported_variants']={name:dict(ranker=v['ranker_path'],ranker_sha256=v['ranker_sha256'],
+        model_definition=str(root/'models'/(name+'_sun_ranker')/'MODEL_DEFINITION.json')) for name,v in variants.items()}
     write_json(model_dir/'MODEL_DEFINITION.json',model_definition)
     result=dict(schema='sun_rank_scope_fresh_comparison_v1',status='complete',created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
         reports=outcome,paired_uncertainty=interval,cases=cases,DEV_selected_primary_variant=primary,
-        passes_predeclared_DEV_and_fresh_joint_improvement=passes,
+        passes_predeclared_DEV_and_fresh_joint_improvement=passes,model_variants=variants,
         fresh_compositions=256,fresh_sources=256,overlap_with_all_prior_1000_compositions=0,
         original_MP20_source_split='train',editor_final_role='new_source_and_composition_isolated_final',
         generator_domain='cached_original_B0_F800; differs_from_G1_F1000_fit',
