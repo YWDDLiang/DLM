@@ -11,7 +11,7 @@ class ContinuousKeepEditTests(unittest.TestCase):
     def setUp(self):
         s = Structure(Lattice.from_parameters(5.031234, 5.071234, 5.021234, 90.11, 90.22, 90.33),
                       ['Na','Cl'], [[.123456,.234567,.345678],[.623456,.734567,.845678]])
-        a = arrays_from_structure(s)
+        a = arrays_from_structure(s.as_dict())
         tokens, _ = arrays_to_dynamic_tokens(a['lengths'], a['angles'], a['species'], a['frac_coords'], config=FixedSlotConfig())
         self.inverse = dict(enumerate(tokens)); self.tokens = list(self.inverse)
         self.current = dict(structure=s.as_dict(), body=None, success=True)

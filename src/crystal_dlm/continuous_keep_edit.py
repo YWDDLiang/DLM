@@ -17,7 +17,7 @@ def structure_of(record):
 def geometry(record):
     from crystal_dlm.expert_edit_data import arrays_from_structure, certify_geometry
     try:
-        return certify_geometry(arrays_from_structure(structure_of(record)))
+        return certify_geometry(arrays_from_structure(structure_of(record).as_dict()))
     except (ValueError, TypeError, KeyError, FloatingPointError) as error:
         return dict(valid=False, certified=True, reason=str(error))
 
