@@ -181,11 +181,14 @@ def variant(root, name):
     if (destination/'PREREGISTRATION.json').exists():
         return destination
     reg = json.loads((previous/'PREREGISTRATION.json').read_text())
-    frozen=name=='frozen_e3'
+    frozen=name in ('frozen_e3','balanced_e3')
     checkpoint = Path(reg['old_editor']) if frozen else root/'training'/name/'result/checkpoint'
     receipt = checkpoint/'RSI_TRAINING_DONE.json'
     reg.update(old_editor=str(checkpoint), old_editor_receipt_sha256=file_hash(receipt),
                editor_content_changed=not frozen, parent_content_experiment=str(root),enforce_shared_forward_budget=True)
+    if name=='balanced_e3':
+        reg['head_training']=dict(reg['head_training'],balanced_keep_pairs=True,
+            SUN_pairwise_coefficient=2.,ridge=.01,device='cpu')
     for folder in ('cohort','current','native'):
         shutil.copytree(previous/'fit'/folder, destination/'fit'/folder)
     shutil.copy2(previous/'SOURCE_SPLIT.jsonl', destination/'SOURCE_SPLIT.jsonl')
@@ -204,6 +207,8 @@ def variant(root, name):
             link=destination/'fit/bank'/stream
             link.parent.mkdir(parents=True,exist_ok=True)
             link.symlink_to(previous/'fit/bank'/stream,target_is_directory=True)
+        if name=='balanced_e3':
+            (destination/'fit/bank/keep').symlink_to(root/'variants/frozen_e3/fit/bank/keep',target_is_directory=True)
     return destination
 
 
@@ -326,10 +331,10 @@ def rank_worker(root,name):
     from scripts.train_sun_ranker import train
     destination=root/'variants'/name
     reg=json.loads((destination/'PREREGISTRATION.json').read_text())
-    if name!='frozen_e3':
+    if name not in ('frozen_e3','balanced_e3'):
         for stream in ('primary','rank1','rank2','rank3'):
             score_bank(root,name,stream,nu_workers=3)
-    collect_keep_features(destination)
+    if name!='balanced_e3':collect_keep_features(destination)
     train(destination,destination/'training/sun_ranker')
     training=destination/'training/sun_ranker/TRAINING_FINAL.json'
     report=json.loads(training.read_text())
@@ -404,7 +409,7 @@ if __name__ == '__main__':
     parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
-    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3'])
+    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3'])
     parser.add_argument('--stream',choices=['primary','rank1','rank2','rank3'])
     parser.add_argument('--gpus',type=int,default=1)
     args = parser.parse_args()

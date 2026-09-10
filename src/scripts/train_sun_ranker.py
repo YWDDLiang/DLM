@@ -77,10 +77,12 @@ def features(root,panel_name,device):
 
 def train(root,output,*,nested=False):
     import torch
-    if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():raise ValueError('ranker training needs GPU allocation')
-    torch.set_num_threads(1);torch.cuda.set_device(0);torch.use_deterministic_algorithms(True)
-    device=torch.device('cuda',0);started=time.monotonic()
     reg=json.loads((root/'PREREGISTRATION.json').read_text());cfg=reg['head_training'];torch.manual_seed(cfg['seed'])
+    if not os.environ.get('SLURM_JOB_ID'):raise ValueError('ranker training needs an allocation')
+    torch.set_num_threads(1);torch.use_deterministic_algorithms(True)
+    device=torch.device(cfg.get('device','cuda'))
+    if device.type=='cuda':torch.cuda.set_device(0)
+    started=time.monotonic()
     if nested:
         supplement=json.loads((root/'ABSOLUTE_STATE_REGISTRATION.json').read_text())
         if supplement['base_training_sha256']!=file_hash(root/'training/sun_ranker/TRAINING_FINAL.json'):
@@ -130,17 +132,25 @@ def train(root,output,*,nested=False):
     optimizer=torch.optim.Adam(linear.parameters(),lr=cfg['learning_rate'])
     groups=defaultdict(list)
     for i,row in enumerate(data):groups[row['source_id']].append(i)
-    edges=[]
+    edges=[];edge_classes=[]
     for source,indices in groups.items():
         comparisons=[]
         for a,b in itertools.combinations(indices if (root/'LEARNED_KEEP_REGISTRATION.json').exists() else [-1]+indices,2):
+            if cfg.get('balanced_keep_pairs') and (data[a]['stream']=='keep')==(data[b]['stream']=='keep'):
+                continue
             sa=0 if a==-1 else data[a]['target_sun_gain'];sb=0 if b==-1 else data[b]['target_sun_gain']
             if sa==sb:continue
             comparisons.append((a,b) if sa>sb else (b,a))
-        for a,b in comparisons:edges.append((a,b,1/max(1,len(comparisons))))
+        for a,b in comparisons:
+            edges.append((a,b,1/max(1,len(comparisons))))
+            edge_classes.append('keep' if a<0 or data[a]['stream']=='keep' else 'edit')
     edge_a=torch.tensor([a+1 for a,b,w in edges],device=device,dtype=torch.long)
     edge_b=torch.tensor([b+1 for a,b,w in edges],device=device,dtype=torch.long)
-    edge_w=torch.tensor([w for a,b,w in edges],device=device);edge_w/=edge_w.sum().clamp_min(1)
+    edge_w=torch.tensor([w for a,b,w in edges],device=device)
+    if cfg.get('balanced_keep_pairs') and edges:
+        totals={kind:sum(w for (_,_,w),k in zip(edges,edge_classes) if k==kind) for kind in set(edge_classes)}
+        edge_w=torch.tensor([w/totals[k]/len(totals) for (_,_,w),k in zip(edges,edge_classes)],device=device)
+    else:edge_w/=edge_w.sum().clamp_min(1)
     keep_values=torch.tensor([data[a if a>=0 else b]['before_targets'][0] for a,b,w in edges],device=device)
     generator=torch.Generator(device='cpu').manual_seed(cfg['seed']);visits=torch.zeros(len(data),dtype=torch.int64)
     steps=0;history=[]
