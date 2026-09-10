@@ -81,6 +81,8 @@ def register(previous, old, trial, root):
     write_json(root/'PHYSICS_SOURCE_PIN.json', dict(source=pipe['source_root'], identity=pipe['source_identity']))
     fit = root/'fit'; fit.mkdir(exist_ok=True)
     shutil.copytree(fixed/'cohort', fit/'cohort')
+    for name in ('PREPARATION_FINAL.json', 'parents.jsonl'):
+        if not (fit/'cohort'/name).exists(): shutil.copy2(previous/'fit/cohort'/name, fit/'cohort'/name)
     shutil.copytree(fixed/'current', fit/'current')
     spec = json.loads((fixed/'RUN_SPEC.json').read_text())
     spec.update(run_root=str(fit), run_id='keep_edit_focus_20260910', editor_trial=True,
@@ -107,6 +109,39 @@ def register(previous, old, trial, root):
         native_inputs_sha256=file_hash(fit/'native/inputs.jsonl'), audit_sha256=file_hash(root/'REPRESENTATION_AUDIT.jsonl'),
         split_counts=registration['split_counts'], representation_counts=dict(Counter(a['trace']['source'] for a in audit)),
         noneditable=[a['ordinal'] for a in audit if not a['trace']['editable']]))
+    print((root/'PREPARATION_FINAL.json').read_text(), flush=True)
+
+
+def finish_registration(root):
+    """Complete manifests after a recorded preparation-only metadata failure."""
+    root = Path(root); reg = json.loads((root/'PREREGISTRATION.json').read_text())
+    fit = root/'fit'; previous = Path(reg['previous_run']); fixed = Path(reg['fixed_input'])
+    if (root/'PREPARATION_FINAL.json').exists(): raise ValueError('preparation already finalized')
+    if (file_hash(root/'SOURCE_SPLIT.jsonl') != reg['source_split_sha256'] or
+            file_hash(fixed/'cohort/plans.jsonl') != reg['plans_sha256']):
+        raise ValueError('registered source changed')
+    for name in ('PREPARATION_FINAL.json', 'parents.jsonl'):
+        original = previous/'fit/cohort'/name; destination = fit/'cohort'/name
+        if destination.exists() and file_hash(destination) != file_hash(original):
+            raise ValueError('existing parent manifest differs')
+        if not destination.exists(): shutil.copy2(original, destination)
+    spec = json.loads((fit/'RUN_SPEC.json').read_text())
+    split = read_rows(root/'SOURCE_SPLIT.jsonl'); token = read_rows(fit/'current/inputs.jsonl'); audit = []
+    for role, before in zip(split, token, strict=True):
+        i = role['ordinal']; wrapper = json.loads((fit/f'native/records/{i:04d}.json').read_text())
+        if file_hash(wrapper['source_path']) != wrapper['source_sha256']: raise ValueError('native source changed')
+        expected, trace = native_current(json.loads(Path(wrapper['source_path']).read_text()), before)
+        expected['trajectory_id'] = f'keep_edit_focus_20260910:native:{i}'
+        if wrapper['record'] != expected or wrapper['continuous_trace'] != trace:
+            raise ValueError('retained native endpoint differs')
+        error = quantization_error(expected, before) if trace['source'] == 'continuous_F' and trace['editable'] else None
+        audit.append(dict(ordinal=i, split=role['split'], trace=trace, quantization=error))
+    materialize(spec, 'native'); write_rows(root/'REPRESENTATION_AUDIT.jsonl', audit)
+    write_json(root/'PREPARATION_FINAL.json', dict(registration_sha256=file_hash(root/'PREREGISTRATION.json'),
+        native_inputs_sha256=file_hash(fit/'native/inputs.jsonl'), audit_sha256=file_hash(root/'REPRESENTATION_AUDIT.jsonl'),
+        split_counts=reg['split_counts'], representation_counts=dict(Counter(a['trace']['source'] for a in audit)),
+        noneditable=[a['ordinal'] for a in audit if not a['trace']['editable']],
+        metadata_recovery='completed_missing_training_parent_files_with_original_hashes'))
     print((root/'PREPARATION_FINAL.json').read_text(), flush=True)
 
 
@@ -138,6 +173,8 @@ if __name__ == '__main__':
     parser.add_argument('--root', required=True); parser.add_argument('--previous')
     parser.add_argument('--old'); parser.add_argument('--trial'); parser.add_argument('--candidate-root')
     parser.add_argument('--output-stage', default='hybrid_proposal')
+    parser.add_argument('--finish-registration', action='store_true')
     args = parser.parse_args()
-    if args.candidate_root: hybrid(args.root, args.candidate_root, args.output_stage)
+    if args.finish_registration: finish_registration(args.root)
+    elif args.candidate_root: hybrid(args.root, args.candidate_root, args.output_stage)
     else: register(args.previous, args.old, args.trial, args.root)
