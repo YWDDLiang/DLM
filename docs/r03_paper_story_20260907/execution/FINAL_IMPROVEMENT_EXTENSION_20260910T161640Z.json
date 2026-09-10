@@ -1,0 +1,13 @@
+{
+  "schema": "research_window_amendment_v1",
+  "user_message_utc": "2026-09-10T16:16:39.960992Z",
+  "previous_deadline_utc": "2026-09-10T17:02:01+00:00",
+  "active_deadline_utc": "2026-09-10T19:16:40+00:00",
+  "remaining_research_hours": 3,
+  "reason": "Explicit user request for three more hours of KEEP/EDIT SUN and MSUN research",
+  "formal_runs": 3,
+  "rounds_per_formal_run": 3,
+  "plans_per_formal_run": 1050,
+  "selection": "Highest final S3 SUN, then MSUN, then Stable; publish the complete S0-S3 sequence of that run as best of three",
+  "other_two_runs": "Private documents and artifacts only; excluded from public Git repositories"
+}

@@ -22,7 +22,9 @@
     "selection": "first_1050_legal_plans_in_original_order",
     "count": 1050,
     "fixed_across_rounds": true,
-    "rounds": 3
+    "rounds": 3,
+    "independent_runs": 3,
+    "rounds_per_run": 3
   },
   "temporary_compute_cap": {
     "gpus": 5,
@@ -45,5 +47,9 @@
     "graph_available": true,
     "DLM_forward_calls": 47,
     "physical_evaluation": "in_progress"
-  }
+  },
+  "active_deadline_utc": "2026-09-10T19:16:40+00:00",
+  "user_extension_utc": "2026-09-10T16:16:39.960992Z",
+  "main_table_selection": "best final S3 SUN, then MSUN, then Stable; clearly label best of three and show that run S0-S3",
+  "nonselected_runs_storage": "private documents outside public version control"
 }
