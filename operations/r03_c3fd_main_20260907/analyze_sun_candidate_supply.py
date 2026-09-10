@@ -14,8 +14,8 @@ from crystal_dlm.sun_ranker import endpoint_targets
 from editor_trial_analysis import flags
 
 
-def analyze(root):
-    frozen=root/'FROZEN_SELECTION.json'
+def analyze(root,*,nested=False):
+    frozen=root/('NESTED_FROZEN_SELECTION.json' if nested else 'FROZEN_SELECTION.json')
     if not frozen.exists():raise ValueError('complete old-FINAL supply analysis waits for policy freeze')
     reg=json.loads((root/'PREREGISTRATION.json').read_text());previous=Path(reg['previous_run'])
     before=scores(previous/'fit','native');roles=read_rows(root/'SOURCE_SPLIT.jsonl')
@@ -56,7 +56,7 @@ def analyze(root):
             selected_SUN_losses=sum(r['selected_SUN_loss'] for r in selected),
             missed_NS_sources=[r['ordinal'] for r in selected if r['missed_measured_NS_opportunity']],
             selected_stream_counts=dict(Counter(str(r['selected_stream']) for r in selected)))
-    path=root/'analysis/CANDIDATE_SUPPLY_FINAL.json'
+    path=root/'analysis'/('NESTED_CANDIDATE_SUPPLY_FINAL.json' if nested else 'CANDIDATE_SUPPLY_FINAL.json')
     write_json(path,dict(schema='measured_SUN_supply_vs_selection_v1',reports=result,rows=rows,
         candidate_coverage_is_not_a_deployable_policy=True,candidate_NS_excludes_cross_candidate_pool_U=True,
         selected_policy_sha256=file_hash(chosen/'DECISION_BINDING.json'),
@@ -65,4 +65,5 @@ def analyze(root):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,required=True);a=p.parse_args();analyze(a.root)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,required=True)
+    p.add_argument('--nested',action='store_true');a=p.parse_args();analyze(a.root,nested=a.nested)
