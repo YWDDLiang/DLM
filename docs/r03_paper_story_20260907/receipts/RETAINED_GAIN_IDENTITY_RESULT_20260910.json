@@ -1,0 +1,647 @@
+{
+  "schema": "retained_gain_identity_comparison_v1",
+  "score_weights": [
+    2,
+    1
+  ],
+  "KEEP_reference": [
+    0,
+    0
+  ],
+  "acceptance_floor": null,
+  "MS_gain_floor": null,
+  "known_SUN_veto": false,
+  "fit": {
+    "DEV_role": "feasibility",
+    "complete": true,
+    "learned_keep": true,
+    "old_FINAL_role": "exploratory",
+    "results": {
+      "all": {
+        "KEEP": {
+          "MS": 567,
+          "MSUN": 482,
+          "SUN": 103,
+          "Stable": 118
+        },
+        "actual_edits": 582,
+        "counts": {
+          "MS": 576,
+          "MSUN": 559,
+          "SUN": 116,
+          "Stable": 125
+        },
+        "delta": {
+          "MS": 9,
+          "MSUN": 77,
+          "SUN": 13,
+          "Stable": 7
+        },
+        "gains": {
+          "MS": [
+            21,
+            38,
+            44,
+            62,
+            153,
+            174,
+            192,
+            207,
+            277,
+            357,
+            393,
+            400,
+            424,
+            447,
+            525,
+            558,
+            651,
+            679,
+            680,
+            709,
+            720,
+            730,
+            810,
+            831,
+            880,
+            911,
+            973,
+            980
+          ],
+          "MSUN": [
+            21,
+            32,
+            36,
+            38,
+            44,
+            62,
+            81,
+            87,
+            94,
+            109,
+            110,
+            112,
+            132,
+            144,
+            153,
+            174,
+            177,
+            185,
+            188,
+            192,
+            207,
+            214,
+            219,
+            228,
+            243,
+            267,
+            277,
+            285,
+            289,
+            308,
+            309,
+            319,
+            328,
+            339,
+            357,
+            362,
+            375,
+            393,
+            400,
+            424,
+            437,
+            442,
+            447,
+            452,
+            455,
+            467,
+            481,
+            482,
+            490,
+            507,
+            517,
+            525,
+            531,
+            544,
+            556,
+            558,
+            604,
+            651,
+            679,
+            680,
+            696,
+            709,
+            712,
+            716,
+            720,
+            730,
+            731,
+            733,
+            777,
+            810,
+            831,
+            869,
+            879,
+            880,
+            881,
+            882,
+            908,
+            909,
+            911,
+            940,
+            943,
+            962,
+            973,
+            980
+          ],
+          "SUN": [
+            18,
+            42,
+            54,
+            87,
+            214,
+            243,
+            319,
+            325,
+            372,
+            493,
+            578,
+            731,
+            962
+          ],
+          "Stable": [
+            18,
+            42,
+            54,
+            214,
+            325,
+            372,
+            493,
+            578
+          ]
+        },
+        "losses": {
+          "MS": [
+            19,
+            26,
+            33,
+            191,
+            227,
+            307,
+            310,
+            343,
+            412,
+            540,
+            646,
+            662,
+            754,
+            827,
+            840,
+            924,
+            948,
+            960,
+            990
+          ],
+          "MSUN": [
+            19,
+            227,
+            473,
+            646,
+            827,
+            840,
+            990
+          ],
+          "SUN": [],
+          "Stable": [
+            948
+          ]
+        },
+        "max_DLM_calls": 25,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/final_improvement_20260910/run_20260910T130201Z_minibatch/variants/retained_delta_e3/policies/fit/learned_keep_utility",
+        "requests": 1000,
+        "role": "all",
+        "scores_sha256": "a6faa5deee05c914358f4cde12d7c22e6c111e28b57aa449275a0638c6b4b56b"
+      },
+      "dev": {
+        "KEEP": {
+          "MS": 135,
+          "MSUN": 115,
+          "SUN": 24,
+          "Stable": 29
+        },
+        "actual_edits": 134,
+        "counts": {
+          "MS": 134,
+          "MSUN": 129,
+          "SUN": 26,
+          "Stable": 29
+        },
+        "delta": {
+          "MS": -1,
+          "MSUN": 14,
+          "SUN": 2,
+          "Stable": 0
+        },
+        "gains": {
+          "MS": [
+            400,
+            447,
+            558,
+            651,
+            880,
+            911,
+            973
+          ],
+          "MSUN": [
+            289,
+            400,
+            437,
+            447,
+            481,
+            482,
+            490,
+            556,
+            558,
+            604,
+            651,
+            869,
+            880,
+            882,
+            911,
+            962,
+            973
+          ],
+          "SUN": [
+            578,
+            962
+          ],
+          "Stable": [
+            578
+          ]
+        },
+        "losses": {
+          "MS": [
+            307,
+            310,
+            343,
+            646,
+            662,
+            840,
+            948,
+            990
+          ],
+          "MSUN": [
+            646,
+            840,
+            990
+          ],
+          "SUN": [],
+          "Stable": [
+            948
+          ]
+        },
+        "max_DLM_calls": 25,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/final_improvement_20260910/run_20260910T130201Z_minibatch/variants/retained_delta_e3/policies/fit/learned_keep_utility",
+        "requests": 247,
+        "role": "dev",
+        "scores_sha256": "a6faa5deee05c914358f4cde12d7c22e6c111e28b57aa449275a0638c6b4b56b"
+      },
+      "final": {
+        "KEEP": {
+          "MS": 145,
+          "MSUN": 121,
+          "SUN": 28,
+          "Stable": 32
+        },
+        "actual_edits": 143,
+        "counts": {
+          "MS": 147,
+          "MSUN": 140,
+          "SUN": 29,
+          "Stable": 33
+        },
+        "delta": {
+          "MS": 2,
+          "MSUN": 19,
+          "SUN": 1,
+          "Stable": 1
+        },
+        "gains": {
+          "MS": [
+            277,
+            393,
+            525,
+            679,
+            709
+          ],
+          "MSUN": [
+            267,
+            277,
+            285,
+            309,
+            375,
+            393,
+            455,
+            467,
+            507,
+            525,
+            531,
+            544,
+            679,
+            696,
+            709,
+            716,
+            733,
+            879,
+            908,
+            909,
+            940
+          ],
+          "SUN": [
+            493
+          ],
+          "Stable": [
+            493
+          ]
+        },
+        "losses": {
+          "MS": [
+            412,
+            754,
+            827
+          ],
+          "MSUN": [
+            473,
+            827
+          ],
+          "SUN": [],
+          "Stable": []
+        },
+        "max_DLM_calls": 25,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/final_improvement_20260910/run_20260910T130201Z_minibatch/variants/retained_delta_e3/policies/fit/learned_keep_utility",
+        "requests": 246,
+        "role": "final",
+        "scores_sha256": "a6faa5deee05c914358f4cde12d7c22e6c111e28b57aa449275a0638c6b4b56b"
+      },
+      "train": {
+        "KEEP": {
+          "MS": 286,
+          "MSUN": 245,
+          "SUN": 51,
+          "Stable": 57
+        },
+        "actual_edits": 305,
+        "counts": {
+          "MS": 294,
+          "MSUN": 289,
+          "SUN": 61,
+          "Stable": 63
+        },
+        "delta": {
+          "MS": 8,
+          "MSUN": 44,
+          "SUN": 10,
+          "Stable": 6
+        },
+        "gains": {
+          "MS": [
+            21,
+            38,
+            44,
+            62,
+            153,
+            174,
+            192,
+            207,
+            357,
+            424,
+            680,
+            720,
+            730,
+            810,
+            831,
+            980
+          ],
+          "MSUN": [
+            21,
+            32,
+            36,
+            38,
+            44,
+            62,
+            81,
+            87,
+            94,
+            109,
+            110,
+            112,
+            132,
+            144,
+            153,
+            174,
+            177,
+            185,
+            188,
+            192,
+            207,
+            214,
+            219,
+            228,
+            243,
+            308,
+            319,
+            328,
+            339,
+            357,
+            362,
+            424,
+            442,
+            452,
+            517,
+            680,
+            712,
+            720,
+            730,
+            731,
+            777,
+            810,
+            831,
+            881,
+            943,
+            980
+          ],
+          "SUN": [
+            18,
+            42,
+            54,
+            87,
+            214,
+            243,
+            319,
+            325,
+            372,
+            731
+          ],
+          "Stable": [
+            18,
+            42,
+            54,
+            214,
+            325,
+            372
+          ]
+        },
+        "losses": {
+          "MS": [
+            19,
+            26,
+            33,
+            191,
+            227,
+            540,
+            924,
+            960
+          ],
+          "MSUN": [
+            19,
+            227
+          ],
+          "SUN": [],
+          "Stable": []
+        },
+        "max_DLM_calls": 25,
+        "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/final_improvement_20260910/run_20260910T130201Z_minibatch/variants/retained_delta_e3/policies/fit/learned_keep_utility",
+        "requests": 506,
+        "role": "train",
+        "scores_sha256": "a6faa5deee05c914358f4cde12d7c22e6c111e28b57aa449275a0638c6b4b56b"
+      }
+    },
+    "score_weights": [
+      2,
+      1
+    ],
+    "threshold": null
+  },
+  "replication": {
+    "complete": true,
+    "result": {
+      "KEEP": {
+        "MS": 152,
+        "MSUN": 129,
+        "SUN": 13,
+        "Stable": 20
+      },
+      "actual_edits": 133,
+      "counts": {
+        "MS": 151,
+        "MSUN": 141,
+        "SUN": 15,
+        "Stable": 21
+      },
+      "delta": {
+        "MS": -1,
+        "MSUN": 12,
+        "SUN": 2,
+        "Stable": 1
+      },
+      "gains": {
+        "MS": [
+          2,
+          6,
+          11,
+          42,
+          98,
+          144,
+          153,
+          154,
+          159,
+          173
+        ],
+        "MSUN": [
+          2,
+          6,
+          11,
+          16,
+          42,
+          87,
+          98,
+          105,
+          110,
+          137,
+          144,
+          150,
+          153,
+          154,
+          159,
+          173,
+          183,
+          211,
+          227
+        ],
+        "SUN": [
+          153,
+          156
+        ],
+        "Stable": [
+          153,
+          156
+        ]
+      },
+      "losses": {
+        "MS": [
+          18,
+          24,
+          30,
+          33,
+          36,
+          57,
+          109,
+          165,
+          193,
+          199,
+          250
+        ],
+        "MSUN": [
+          24,
+          33,
+          36,
+          57,
+          109,
+          193,
+          250
+        ],
+        "SUN": [],
+        "Stable": [
+          165
+        ]
+      },
+      "max_DLM_calls": 24,
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/final_improvement_20260910/run_20260910T130201Z_minibatch/variants/retained_delta_e3/policies/fresh/zero_gain_keep",
+      "requests": 256,
+      "role": "fresh",
+      "scores_sha256": "3053db56321f282b993be59a386276295dfcc236484071007b0dac59e1dc4108"
+    },
+    "role": "exploratory_replication_on_previously_viewed_sources",
+    "selection": "frozen_before_new_endpoint_labels"
+  },
+  "registration": {
+    "KEEP_reference": "exact_zero_self_difference",
+    "current_as_learned_KEEP": false,
+    "model_path": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/sun_rank_scope_20260910/run_20260910T110000Z_sun_rank_scope/training/sun_ranker/SUN_RANKER.pt",
+    "model_sha256": "522a935509ac9cad844b8c72e9711440f21c592a049a945c9581669588c993b5",
+    "no_absolute_acceptance_floor": true,
+    "no_candidate_quality_labels_for_selection": true,
+    "retrained": false,
+    "score_rules": [
+      "2_delta_NS_plus_delta_NMS"
+    ]
+  },
+  "code_commit": "6e5030f3671ddd0861929f491cecf01fd239032a",
+  "reuse_previous_proven_components": true,
+  "receipt_sha256": {
+    "utility_policy_execution/DONE.json": "28a95352cab257d3a25fa4c55f2f7902603c5944106506f4b393c78db1fa9e3c",
+    "retained_fresh_evaluate_execution/DONE.json": "34b8f22e9a6aec92a7025625ce1cf95b8b3f38ca1076a13b70c77c328aa01019",
+    "FRESH_GAIN_POLICY_REGISTRATION.json": "5cac412d5631a45a73560ba4d2adc19550eb86653230879fc0cb332b2e6d0f3d",
+    "training/nested_sun_ranker/FIT_PREDICTIONS.jsonl": "58903addd09a41e418549ea757f76b6b03e3534520c9dd48079577834ded070e"
+  }
+}

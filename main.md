@@ -2,6 +2,8 @@
 
 用户最新强调保留上一轮有效内容。连续KEEP精度保持、扩展位置候选、SUN/NMS终态评分及差值对照、冻结权重与对应配置/结果均纳入[保留清单](docs/r03_paper_story_20260907/receipts/PROVEN_COMPONENTS_TO_RETAIN_20260910.json)，作为发布基线。本轮实验保持独立记录。
 
+新增有效结果：保留上一轮E3、四候选和增量评分器，以`2×预测NS增量+预测NMS增量`和KEEP的精确零增量直接比较，去掉额外接受阈值、MS增量下限和已知SUN手工否决。DEV为SUN+2/MSUN+14/Stable持平，旧246条探索性复核为+1/+19/+1；上一轮256条来源的探索性复核为SUN13→15、MSUN129→141、Stable20→21，新增两条SUN均为真实Stable晋升，没有损失原SUN。这些结果与原终态概率方案的SUN+6分别保留，不能混为同一配置。详见[当前证据](docs/r03_paper_story_20260907/FINAL_IMPROVEMENT_PROGRESS_20260910.md)和[完整回执](docs/r03_paper_story_20260907/receipts/RETAINED_GAIN_IDENTITY_RESULT_20260910.json)。
+
 本阶段实测进度：两档小学习率的E内容/定位训练各完成248次内容更新和248次头部更新，492条可信TRAIN配对各实际参与8遍；全局教师版本完成296次更新，并实际生成422条全晶胞提案和577条局部提案。837通过条件重采样gamma得到合法结构、图和物理收敛结果，但F后hull约+0.1249 eV/atom，不能计作Stable/MS/SUN。549的全晶胞提案仍在弛豫中失败，尚未修复。新KEEP评分试验暂未优于上一轮留出结果，原有效组件及权重保留为发布基线。正式1050 Plan已按原顺序冻结，覆盖原始序号0至1061，三轮保持一致。详见[当前证据与局限](docs/r03_paper_story_20260907/FINAL_IMPROVEMENT_PROGRESS_20260910.md)和[实际内容学习审计](docs/r03_paper_story_20260907/receipts/FINAL_CONTENT_LEARNING_AUDIT_20260910.json)。
 
 来源澄清：现有扩展TRAIN池是Planner生成的合成请求，`source_row_idx`是请求索引，不是MP20原始训练表行。历史输入和结果保留，正式数据接口将明确区分数据来源、原始划分和使用角色，并剔除评估组成及其后代。见[来源澄清回执](docs/r03_paper_story_20260907/receipts/TRAIN_SOURCE_CLARIFICATION_20260910.json)。
