@@ -37,10 +37,16 @@ def physics_equivalence(old, previous):
         tree = ast.parse(path.read_text())
         tree.body = [node for node in tree.body if not
             (isinstance(node, ast.FunctionDef) and node.name == 'assign_current_mode_targets')]
+        if any(isinstance(node, ast.Name) and node.id == 'defaultdict' for node in ast.walk(tree)):
+            raise ValueError('new import affects logic outside mode-target assignment')
+        for node in tree.body:
+            if isinstance(node, ast.ImportFrom) and node.module == 'collections':
+                node.names = [alias for alias in node.names if alias.name != 'defaultdict']
         trees.append(ast.dump(tree, include_attributes=False))
     if trees[0] != trees[1]: raise ValueError('historical physical helper logic differs')
     return dict(sources={str(p):file_hash(p) for p in sources},
-        all_other_module_AST_equal=True, excluded_nonphysical_function='assign_current_mode_targets')
+        all_other_module_AST_equal=True, excluded_nonphysical_function='assign_current_mode_targets',
+        excluded_unused_import='collections.defaultdict')
 
 
 def compile_data(root):
