@@ -9,9 +9,9 @@ from submit_stage import configured_dispatch
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,required=True)
-    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export','decide_repeat'],required=True)
+    parser.add_argument('--mode',choices=['train','evaluate','policies','audit','export','decide_repeat','train_readout'],required=True)
     parser.add_argument('--repeat-index',type=int,choices=[1,2])
-    parser.add_argument('--policy-method',choices=['utility','consensus'],default='utility')
+    parser.add_argument('--policy-method',choices=['utility','consensus','readout'],default='utility')
     parser.add_argument('--minutes',type=int,default=35)
     parser.add_argument('--job-suffix',default='')
     args=parser.parse_args();root=args.root.resolve();source=Path(__file__).resolve().parents[2]
@@ -20,9 +20,10 @@ def main():
     if args.job_suffix and not args.job_suffix.replace('_','').isalnum():raise ValueError('invalid job suffix')
     job='focus_utility_'+args.mode+('_'+args.job_suffix if args.job_suffix else '')
     output='training/utility' if args.mode=='train' else 'evaluation_features' if args.mode=='evaluate' else 'models/selected_utility' if args.mode=='export' else 'analysis/utility_'+args.mode
-    if args.policy_method=='consensus':
+    if args.mode=='train_readout':output='training/readout_matched'
+    if args.policy_method!='utility':
         if args.mode!='policies':raise ValueError('policy method applies only to policy evaluation')
-        job+='_consensus';output+='_consensus'
+        job+='_'+args.policy_method;output+='_'+args.policy_method
     if args.mode=='decide_repeat':
         if args.repeat_index is None:raise ValueError('repeat decision needs an index')
         job+='_'+str(args.repeat_index);output=f'repeats/repeat{args.repeat_index}/decision'
@@ -33,20 +34,30 @@ def main():
     if args.mode=='train':
         required += [root/'data/UTILITY_TRAIN.jsonl',root/'data/UTILITY_DATA_FINAL.json']
         products=['{output}/result/TRAINING_FINAL.json','{output}/result/_SUCCESS']
+    elif args.mode=='train_readout':
+        required += [root/'READOUT_REGISTRATION.json',root/'data/UTILITY_TRAIN.jsonl',
+            root/'training/utility/result/TRAIN_FEATURES.pt',root/'evaluation_features/EVAL_FEATURES.pt']
+        products=['{output}/result/TRAINING_FINAL.json','{output}/result/_SUCCESS',
+            '{output}/evaluation/FEATURES_FINAL.json','{output}/evaluation/UTILITY_PREDICTIONS.jsonl']
     elif args.mode=='evaluate':
         required += [root/'fit/proposal/inputs.jsonl',root/'training/utility/result/TRAINING_FINAL.json']
         products=['{output}/FEATURES_FINAL.json','{output}/UTILITY_PREDICTIONS.jsonl']
     elif args.mode=='policies':
-        required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl',
+        feature_dir=root/('training/readout_matched/evaluation' if args.policy_method=='readout' else 'evaluation_features')
+        required += [feature_dir/'FEATURES_FINAL.json',feature_dir/'UTILITY_PREDICTIONS.jsonl',
             root/'fit/native/labeling/result/LABEL_FINAL.json',root/'fit/hybrid_proposal/labeling/result/LABEL_FINAL.json']
         products=['{output}/POLICY_EVALUATION_FINAL.json']
         if args.policy_method=='consensus':required+=[root/'CONSENSUS_REGISTRATION.json']
+        if args.policy_method=='readout':required+=[root/'READOUT_REGISTRATION.json']
     elif args.mode=='audit':
         required += [root/'evaluation_features/FEATURES_FINAL.json',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl']
         products=['{output}/AUDIT_FINAL.json']
     elif args.mode=='export':
         required += [root/'FROZEN_SELECTION.json',root/'training/utility/result/TRAINING_FINAL.json',
             root/'evaluation_features/FEATURES_FINAL.json']
+        if (root/'FROZEN_SELECTION.json').exists():
+            frozen=json.loads((root/'FROZEN_SELECTION.json').read_text())
+            required += [Path(frozen[k]) for k in ('training_receipt_path','feature_receipt_path','predictions_path') if k in frozen]
         products=['{output}/EXPORT_FINAL.json','{output}/checkpoint/RSI_TRAINING_DONE.json']
     else:
         required += [root/'FROZEN_SELECTION.json',root/'REPEAT_SEED_REGISTRATION.json',
@@ -57,7 +68,8 @@ def main():
     gpu=0 if args.mode=='policies' else 1
     script='operations/r03_c3fd_main_20260907/evaluate_keep_edit_utility.py' if args.mode=='policies' else 'src/scripts/audit_keep_edit_judgement.py' if args.mode=='audit' else 'src/scripts/export_keep_edit_utility.py' if args.mode=='export' else 'src/scripts/train_keep_edit_utility.py'
     if args.mode=='decide_repeat':script='operations/r03_c3fd_main_20260907/repeat_keep_edit_utility.py'
-    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export','decide_repeat') else ['--mode',args.mode])
+    if args.mode=='train_readout':script='src/scripts/train_keep_edit_readout.py'
+    stage_args=['--root',str(root)] + ([] if args.mode in ('policies','audit','export','decide_repeat','train_readout') else ['--mode',args.mode])
     if args.mode=='policies':stage_args+=['--method',args.policy_method]
     if args.mode=='decide_repeat':stage_args+=['--mode','decide','--index',str(args.repeat_index)]
     if args.mode in ('policies','audit','export','decide_repeat'):stage_args+=['--completion-dir','{output}']

@@ -20,10 +20,18 @@ def main():
     from crystal_dlm.utility_acceptance import canonical_judgements,continuous_decision
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():raise RuntimeError('GPU allocation required')
     torch.cuda.set_device(0);torch.set_num_threads(1);torch.use_deterministic_algorithms(True);device=torch.device('cuda',0)
-    reg=json.loads((root/'PREREGISTRATION.json').read_text());training=json.loads((root/'training/utility/result/TRAINING_FINAL.json').read_text())
+    reg=json.loads((root/'PREREGISTRATION.json').read_text())
     selection=root/'FROZEN_SELECTION.json'
     if not selection.exists():raise ValueError('export requires a DEV-admitted frozen policy')
     frozen=json.loads(selection.read_text());chosen=frozen['selected'];epoch=str(chosen['epoch']);margin=chosen['margin']
+    training_path=Path(frozen.get('training_receipt_path',root/'training/utility/result/TRAINING_FINAL.json'))
+    training=json.loads(training_path.read_text())
+    if file_hash(training_path)!=frozen['training_receipt_sha256']:raise ValueError('selected training receipt changed')
+    feature_path=Path(frozen.get('feature_receipt_path',root/'evaluation_features/FEATURES_FINAL.json'))
+    if file_hash(feature_path)!=frozen['feature_receipt_sha256']:raise ValueError('selected feature receipt changed')
+    feature_receipt=json.loads(feature_path.read_text())
+    prediction_path=Path(frozen.get('predictions_path',root/'evaluation_features/UTILITY_PREDICTIONS.jsonl'))
+    if file_hash(prediction_path)!=feature_receipt['predictions_sha256']:raise ValueError('selected predictions changed')
     consensus=frozen.get('method')=='consensus'
     snapshot=training['snapshots'][epoch]
     if file_hash(snapshot['path'])!=snapshot['sha256']:raise ValueError('selected head snapshot changed')
@@ -70,7 +78,7 @@ def main():
         checkpoint_files=files,contract=dict(branch='E',objective='signed_novel_Stable_plus_novel_MS_utility',
             source_checkpoint=str(old),source_checkpoint_receipt_sha256=file_hash(old/'RSI_TRAINING_DONE.json'),
             training_data_sha256=training['data_sha256'],source_split_sha256=reg['source_split_sha256']),
-        training_receipt_sha256=file_hash(root/'training/utility/result/TRAINING_FINAL.json'),complete_passes=int(epoch),
+        training_receipt_sha256=file_hash(training_path),complete_passes=int(epoch),
         frozen_files_identical=frozen_files,nonquality_extra_modules_identical=True,frozen_probe_outputs_identical=True,
         acceptance_policy=policy)
     write_json(checkpoint/'RSI_TRAINING_DONE.json',receipt)
@@ -81,7 +89,7 @@ def main():
     if consensus:
         reference_head.load_state_dict(torch.load(checkpoint/'REFERENCE_QUALITY_HEAD.pt',map_location=device,weights_only=True))
     actual_scores,reference_scores=canonical_judgements(reloaded,tokenizer,rows,reference_head=reference_head)
-    stored={r['ordinal']:r for r in read_rows(root/'evaluation_features/UTILITY_PREDICTIONS.jsonl')}
+    stored={r['ordinal']:r for r in read_rows(prediction_path)}
     drifts={i:abs(value-stored[i]['learned_utilities'][epoch]) for i,value in actual_scores.items()}
     max_drift=max(drifts.values(),default=0.)
     if max_drift>1e-5:raise ValueError('exported full-model utility differs from cached trained-head evaluation')

@@ -26,22 +26,27 @@ def light_clone(source,destination):
     clone_bound_stage(source,destination)
 
 
-def build_panel(root,epoch,threshold,*,old=False,recorded=False,consensus=False):
-    fit=root/'fit';tag=('old_E3_recorded_continuous' if recorded else 'old_E3_canonical_continuous') if old else f'{"consensus" if consensus else "utility"}_e{epoch}_m{round(threshold*100):02d}'
+def build_panel(root,epoch,threshold,*,old=False,recorded=False,consensus=False,readout=False):
+    method='consensus' if consensus else 'readout' if readout else 'utility'
+    fit=root/'fit';tag=('old_E3_recorded_continuous' if recorded else 'old_E3_canonical_continuous') if old else f'{method}_e{epoch}_m{round(threshold*100):02d}'
     panel=root/'policies'/tag;config=panel/'RUN_SPEC.json'
     if config.exists():
         if not (panel/'edited/labeling/result/_SUCCESS').exists():raise ValueError('unfinished policy requires inspection')
         return config
-    predictions={r['ordinal']:r for r in read_rows(root/'evaluation_features/UTILITY_PREDICTIONS.jsonl')}
+    prediction_path=root/('training/readout_matched/evaluation' if readout else 'evaluation_features')/'UTILITY_PREDICTIONS.jsonl'
+    predictions={r['ordinal']:r for r in read_rows(prediction_path)}
     native=read_rows(fit/'native/inputs.jsonl');hybrid=read_rows(fit/'hybrid_proposal/inputs.jsonl')
     spec=json.loads((fit/'RUN_SPEC.json').read_text());spec.update(run_root=str(panel),run_id='keep_edit_focus:'+tag)
     spec['assets']['official_cache']=json.loads((root/'REFERENCE_CACHE_OVERRIDE.json').read_text())['directory']
     policy=dict(kind=('old_E3_recorded_probability' if recorded else 'old_E3_canonical_probability') if old else 'quality_only_signed_utility',epoch=epoch,raw_margin=threshold,
         known_SUN_guard='same_original_E3_guard',physics_used_for_acceptance=False,
-        predictions_sha256=file_hash(root/'evaluation_features/UTILITY_PREDICTIONS.jsonl'))
+        predictions_sha256=file_hash(prediction_path))
     if consensus:
         policy.update(kind='original_accept_AND_learned_signed_utility',reference_acceptance_required=True,
             reference_raw_margin=0.,registration_sha256=file_hash(root/'CONSENSUS_REGISTRATION.json'))
+    if readout:
+        policy.update(kind='matched_continuous_regularized_utility_readout',
+            registration_sha256=file_hash(root/'READOUT_REGISTRATION.json'))
     spec['focus_decision_policy']=policy
     panel.mkdir(parents=True,exist_ok=True);shutil.copytree(fit/'cohort',panel/'cohort')
     light_clone(fit/'native',panel/'current');light_clone(fit/'hybrid_proposal',panel/'proposal')
@@ -128,23 +133,26 @@ def register_consensus(root):
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
     parser.add_argument('--completion-dir',type=Path)
-    parser.add_argument('--method',choices=['utility','consensus'],default='utility')
+    parser.add_argument('--method',choices=['utility','consensus','readout'],default='utility')
     args=parser.parse_args();root=args.root;completion=args.completion_dir or root/'analysis/utility_policies'
     import os
     if not os.environ.get('SLURM_JOB_ID'):raise RuntimeError('policy evaluation requires its CPU allocation')
-    consensus=args.method=='consensus';prefix='CONSENSUS' if consensus else 'UTILITY'
+    consensus=args.method=='consensus';readout=args.method=='readout';prefix=args.method.upper()
+    feature_dir=root/('training/readout_matched/evaluation' if readout else 'evaluation_features')
+    training_path=root/('training/readout_matched/result' if readout else 'training/utility/result')/'TRAINING_FINAL.json'
     if consensus:
         admission=json.loads((root/'CONSENSUS_REGISTRATION.json').read_text())
         if admission['predictions_sha256']!=file_hash(root/'evaluation_features/UTILITY_PREDICTIONS.jsonl'):
             raise ValueError('registered consensus predictions changed')
-    reg=json.loads((root/'PREREGISTRATION.json').read_text());receipt=json.loads((root/'evaluation_features/FEATURES_FINAL.json').read_text())
-    if receipt['predictions_sha256']!=file_hash(root/'evaluation_features/UTILITY_PREDICTIONS.jsonl'):
+    reg=json.loads((root/('READOUT_REGISTRATION.json' if readout else 'PREREGISTRATION.json')).read_text())
+    receipt=json.loads((feature_dir/'FEATURES_FINAL.json').read_text())
+    if receipt['predictions_sha256']!=file_hash(feature_dir/'UTILITY_PREDICTIONS.jsonl'):
         raise ValueError('learned predictions changed')
-    rule_path=root/('CONSENSUS_SELECTION_RULE.json' if consensus else 'DECISION_SELECTION_RULE.json')
+    rule_path=root/(prefix+'_SELECTION_RULE.json' if consensus or readout else 'DECISION_SELECTION_RULE.json')
     if not rule_path.exists():
         write_json(rule_path,dict(created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
             committed_plan_sha256=file_hash(SOURCE/'docs/r03_paper_story_20260907'/
-                ('KEEP_EDIT_ACCEPTANCE_CONSENSUS_PLAN_20260910.md' if consensus else 'KEEP_EDIT_FOCUS_PLAN_20260910.md')),
+                ('KEEP_EDIT_ACCEPTANCE_CONSENSUS_PLAN_20260910.md' if consensus else 'KEEP_EDIT_MATCHED_READOUT_PLAN_20260910.md' if readout else 'KEEP_EDIT_FOCUS_PLAN_20260910.md')),
             snapshots=reg['head_training']['snapshots'],thresholds=reg['head_training']['thresholds'],
             rule='both_gains_then_SUN_MSUN_Stable_fewer_Stable_losses_fewer_edits_higher_margin_earlier_epoch',
             acceptance='original_logit_ge_zero_AND_raw_utility_ge_margin' if consensus else 'raw_quality_output_greater_than_or_equal_to_margin',
@@ -153,7 +161,7 @@ def main():
     candidates=[]
     for epoch in reg['head_training']['snapshots']:
         for margin in reg['head_training']['thresholds']:
-            config=build_panel(root,epoch,margin,consensus=consensus);evaluate(root,config);dev=summary(root,config.parent,'dev')
+            config=build_panel(root,epoch,margin,consensus=consensus,readout=readout);evaluate(root,config);dev=summary(root,config.parent,'dev')
             entry=dict(epoch=epoch,margin=margin,dev=dev);candidates.append(entry)
             write_json(config.parent/'DEV_RESULT.json',dev)
             print(json.dumps(dict(epoch=epoch,margin=margin,dev=dev['counts'],delta=dev['delta'])),flush=True)
@@ -177,8 +185,9 @@ def main():
         return
     frozen=dict(schema='keep_edit_utility_DEV_selection_v1',method=args.method,created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),
         selected=selected,candidates=candidates,selection_split='dev',final_quality_consulted=False,
-        training_receipt_sha256=file_hash(root/'training/utility/result/TRAINING_FINAL.json'),
-        feature_receipt_sha256=file_hash(root/'evaluation_features/FEATURES_FINAL.json'),
+        training_receipt_path=str(training_path),training_receipt_sha256=file_hash(training_path),
+        feature_receipt_path=str(feature_dir/'FEATURES_FINAL.json'),feature_receipt_sha256=file_hash(feature_dir/'FEATURES_FINAL.json'),
+        predictions_path=str(feature_dir/'UTILITY_PREDICTIONS.jsonl'),
         selection_rule_sha256=file_hash(rule_path),
         selection_rule='both_gains_then_SUN_MSUN_Stable_fewer_Stable_losses_fewer_edits_higher_margin_earlier_epoch')
     if (root/'FROZEN_SELECTION.json').exists():raise ValueError('selection is already frozen')
