@@ -62,7 +62,10 @@ def commit_patch(current_record, old_tokens, new_tokens, inverse, *, editable=Tr
             for i in changed:
                 if 1 <= i <= 3: lengths[i - 1] = new['lengths'][i - 1]
                 if 4 <= i <= 6: angles[i - 4] = new['angles'][i - 4]
-            structure['lattice'] = Lattice.from_parameters(*lengths, *angles).as_dict()
+            lattice = Lattice.from_parameters(*lengths, *angles)
+            structure['lattice'] = dict(matrix=lattice.matrix.tolist(), pbc=list(lattice.pbc),
+                a=lattice.a, b=lattice.b, c=lattice.c, alpha=lattice.alpha,
+                beta=lattice.beta, gamma=lattice.gamma, volume=lattice.volume)
         matrix = np.asarray(structure['lattice']['matrix'], dtype=float)
         changed_sites = set()
         for position in changed:
