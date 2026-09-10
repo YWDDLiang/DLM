@@ -54,7 +54,16 @@ def commit_patch(current_record, old_tokens, new_tokens, inverse, *, editable=Tr
         native = structure_of(current_record)
         if [str(s.specie) for s in native] != old['species']:
             raise ValueError('continuous_and_token_site_order_differ')
-        changed = [i for i, (a, b) in enumerate(zip(old_tokens, new_tokens, strict=True)) if a != b]
+        changed = []
+        for i,(a,b) in enumerate(zip(old_tokens,new_tokens,strict=True)):
+            if a==b:continue
+            if i>=8:
+                site,axis=divmod(i-8,4)
+                if axis<=2 and float(old['frac_coords'][site][axis])%1. == float(new['frac_coords'][site][axis])%1.:
+                    continue
+            changed.append(i)
+        if not changed:
+            return copy.deepcopy(current_record),dict(applied=False,reason='periodic_equivalent_KEEP',changed=[])
         structure = copy.deepcopy(current_record.get('structure') or native.as_dict())
         lattice_changed = any(1 <= i <= 6 for i in changed)
         if lattice_changed:

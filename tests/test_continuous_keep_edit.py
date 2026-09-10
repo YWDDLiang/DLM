@@ -68,5 +68,13 @@ class ContinuousKeepEditTests(unittest.TestCase):
         self.assertTrue(trace['applied']); self.assertEqual(result['structure']['sites'][0]['abc'][0],0.)
         self.assertEqual(result['structure']['sites'][0]['abc'][1:],self.current['structure']['sites'][0]['abc'][1:])
 
+    def test_periodic_token_alias_does_not_erase_continuous_residual(self):
+        structure=Structure.from_dict(self.current['structure'])
+        structure.translate_sites([0],[.003-structure[0].frac_coords[0],0.,0.],frac_coords=True,to_unit_cell=False)
+        self.current['structure']=structure.as_dict();self.inverse[8]='<X_000>'
+        result,trace=commit_patch(self.current,self.tokens,self.replace(8,'<X_100>'),self.inverse)
+        self.assertEqual(result,self.current);self.assertFalse(trace['applied'])
+        self.assertEqual(trace['reason'],'periodic_equivalent_KEEP')
+
 
 if __name__ == '__main__': unittest.main()
