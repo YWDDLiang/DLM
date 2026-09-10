@@ -88,7 +88,8 @@ def main(root):
         original_recomputed_xyz_difference_records=len(audit['raw_field_mismatches']),
         original_recomputed_xyz_max_abs_difference=max((d['absolute_difference'] for d in delta),default=0.),
         scientific_inputs_weights_thresholds_or_geometry_rules_changed=False,
-        original_export_job='42038',verification_full_model_job=audit['slurm_job_id'],
+        original_export_job=json.loads((root/'submissions/focus_utility_export.json').read_text())['job_id'],
+        verification_full_model_job=audit['slurm_job_id'],
         classification='exported_candidate; stability_across_registered_streams_pending')
     write_json(output/'EXPORT_FINAL.json',report);print(json.dumps(report),flush=True)
 

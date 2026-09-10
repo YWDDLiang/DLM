@@ -18,18 +18,21 @@ from crystal_dlm.continuous_keep_edit import native_current, quantization_error,
 
 
 def partition(plans, old_plans):
+    from pymatgen.core import Composition
+    def canonical(plan):return Composition(plan['plan_state']['reduced_formula']).reduced_formula
     ancestors = {p['ancestor_id'] for p in old_plans}
-    formulas = {p['plan_state']['reduced_formula'] for p in old_plans}
-    extra = {p['plan_state']['reduced_formula'] for p in plans} - formulas
+    formulas = {canonical(p) for p in old_plans}
+    extra = {canonical(p) for p in plans} - formulas
     ordered = sorted(extra, key=lambda f: hashlib.sha256(('keep_edit_focus_20260910_v1'+f).encode()).hexdigest())
     cut = len(ordered)//3
     roles = {f: ('train' if i < cut else 'dev' if i < 2*cut else 'final') for i, f in enumerate(ordered)}
     rows = []
     for p in plans:
-        f = p['plan_state']['reduced_formula']; seen = p['ancestor_id'] in ancestors
+        f = canonical(p); seen = p['ancestor_id'] in ancestors
         role = 'train' if f in formulas or seen else roles[f]
         rows.append(dict(ordinal=p['original_ordinal'], ancestor_id=p['ancestor_id'],
-            reduced_formula=f, split=role, old_E_seen_source=seen, old_E_seen_formula=f in formulas))
+            reduced_formula=p['plan_state']['reduced_formula'],canonical_reduced_formula=f,
+            split=role, old_E_seen_source=seen, old_E_seen_formula=f in formulas))
     return rows
 
 
@@ -62,7 +65,7 @@ def register(previous, old, trial, root):
     if dt.datetime.now(dt.timezone.utc) >= dt.datetime.fromisoformat(budget['deadline_utc']):
         raise ValueError('original budget expired')
     write_rows(root/'SOURCE_SPLIT.jsonl', split)
-    registration = dict(schema='keep_edit_focus_v1', previous_run=str(previous), old256_run=str(old),
+    registration = dict(schema='keep_edit_focus_v2_canonical_composition', previous_run=str(previous), old256_run=str(old),
         previous_trial=str(trial), fixed_input=str(fixed), old_editor=str(old/'training/round3/E/result/checkpoint'),
         plan_sha256=file_hash(SOURCE/'docs/r03_paper_story_20260907/KEEP_EDIT_FOCUS_PLAN_20260910.md'),
         plans_sha256=file_hash(fixed/'cohort/plans.jsonl'), old_plans_sha256=file_hash(old/'fit/cohort/plans.jsonl'),

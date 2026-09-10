@@ -1,4 +1,6 @@
 import copy
+import importlib.util
+from pathlib import Path
 import unittest
 from pymatgen.core import Lattice, Structure
 from crystal_dlm.continuous_keep_edit import commit_patch, native_current, quantization_error
@@ -94,6 +96,17 @@ class ContinuousKeepEditTests(unittest.TestCase):
         with self.assertRaises(ValueError):materialized_continuous_decision(changed,self.tokens,trace,bound,.1,.05)
         bound['record']['structure']['sites'][0]['xyz'][0]+=.000001
         with self.assertRaises(ValueError):materialized_continuous_decision(native,self.tokens,trace,bound,.1,.05)
+
+    def test_partition_co_locates_scaled_compositions(self):
+        path=Path(__file__).resolve().parents[1]/'operations/r03_c3fd_main_20260907/prepare_keep_edit_focus.py'
+        spec=importlib.util.spec_from_file_location('focus_partition_test',path)
+        module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        formulas=['Mg2Pb2','Mg4Pb4','Cu2O2','Cu4O4','NaCl','LiBr','KF']
+        plans=[dict(ancestor_id=str(i),original_ordinal=i,plan_state=dict(reduced_formula=f)) for i,f in enumerate(formulas)]
+        rows=module.partition(plans,[plans[0]])
+        self.assertEqual(rows[1]['split'],'train');self.assertTrue(rows[1]['old_E_seen_formula'])
+        self.assertEqual(rows[0]['canonical_reduced_formula'],rows[1]['canonical_reduced_formula'])
+        self.assertEqual(rows[2]['split'],rows[3]['split'])
 
 
 if __name__ == '__main__': unittest.main()
