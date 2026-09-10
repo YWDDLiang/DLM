@@ -27,10 +27,10 @@ def dispatch_minutes(requested,remaining):
     return min(requested,int((remaining-90)//60))
 
 
-def training_reserve_seconds(index,branch,requests=256,single_gpus=4):
+def training_reserve_seconds(index,branch,requests=256,single_gpus=4,last_round=3):
     # At E training the current G/F and training feedback are already complete.
     # Reserve only its final editor/evaluation, plus all future complete rounds.
-    if index not in (1,2,3) or branch not in ('G','E') or min(requests,single_gpus)<1:
+    if last_round not in (1,2,3) or index not in range(1,last_round+1) or branch not in ('G','E') or min(requests,single_gpus)<1:
         raise ValueError('invalid remaining-panel budget inputs')
     scale=(requests/256)*(4/single_gpus)
     # Preserve the measured 256/4-GPU allowance. Startup and reporting do not
@@ -38,7 +38,7 @@ def training_reserve_seconds(index,branch,requests=256,single_gpus=4):
     # not a claim that the final runtime is known before the new panel runs.
     complete_round=20+45*scale
     editor_tail=5+15*scale
-    return ((4-index)*complete_round+15)*60 if branch=='G' else ((3-index)*complete_round+editor_tail+15)*60
+    return ((last_round+1-index)*complete_round+15)*60 if branch=='G' else ((last_round-index)*complete_round+editor_tail+15)*60
 
 
 def collection_label_allocation(teacher,parallel_gpus,single_gpus):
@@ -115,10 +115,24 @@ def execution_capacity_override(root):
     return value
 
 
-def capacity_training_reserve(index,branch,reservations):
-    if index not in (1,2,3) or branch not in ('G','E'):
+def requested_last_round(root):
+    root=Path(root);path=root/'STOP_AFTER_ROUND.json'
+    if not path.exists(): return 3
+    value=json.loads(path.read_text())
+    index=value.get('last_round')
+    if value.get('schema')!='ranked_stop_after_round_v1' or type(index) is not int or index not in (1,2,3):
+        raise ValueError('invalid requested stopping round')
+    for key,name in (('run_spec_sha256','RUN_SPEC.json'),('budget_sha256','BUDGET.json'),
+                     ('plans_sha256','fit/cohort/plans.jsonl')):
+        if value.get(key)!=file_hash(root/name):
+            raise ValueError('requested stopping round identity changed: '+name)
+    return index
+
+
+def capacity_training_reserve(index,branch,reservations,last_round=3):
+    if last_round not in (1,2,3) or index not in range(1,last_round+1) or branch not in ('G','E'):
         raise ValueError('invalid remaining update for measured reservation')
-    future=4-index if branch=='G' else 3-index
+    future=last_round+1-index if branch=='G' else last_round-index
     return future*reservations['complete_round']+reservations['final_report']+(
         reservations['editor_tail'] if branch=='E' else 0)
 
@@ -318,6 +332,9 @@ class Coordinator:
             raise RuntimeError('complete G+F regression: update rejected before downstream training')
 
     def training(self,index,branch,data,replay):
+        last_round=requested_last_round(self.root)
+        if index>last_round:
+            raise RuntimeError('requested stopping round forbids further training')
         overrides=self.root/'TRAINING_CONFIG_OVERRIDES.json'
         names=json.loads(overrides.read_text()) if overrides.exists() else {}
         name=names.get(f'{branch}{index}',f'TRAIN_{branch}{index}.json')
@@ -326,15 +343,16 @@ class Coordinator:
         fit=json.loads((self.root/'fit/RUN_SPEC.json').read_text())
         if not config.exists():
             allocation=self.allocations()
-            remaining_updates=8-2*index-(branch=='E')
+            remaining_updates=2*(last_round+1-index)-(branch=='E')
             # Reserve complete inference, physical feedback and reporting for
             # every remaining round. Allocation changes with actual elapsed work.
-            reserve=training_reserve_seconds(index,branch,fit['requests'],allocation['single_GPUs'])
+            reserve=training_reserve_seconds(index,branch,fit['requests'],allocation['single_GPUs'],last_round)
             reserve_rule='share_remaining_after_complete_panel_reserve'
             capacity=execution_capacity_override(self.root)
             if capacity is not None:
-                reserve=capacity_training_reserve(index,branch,capacity['reservations_seconds'])
+                reserve=capacity_training_reserve(index,branch,capacity['reservations_seconds'],last_round)
                 reserve_rule='share_remaining_after_measured_1000_panel_reserve'
+            if last_round<3: reserve_rule+='__requested_stop_after_round_'+str(last_round)
             seconds=int((self.remaining()-reserve)/remaining_updates)
             if seconds<180: raise RuntimeError('insufficient training budget after reserving complete panels')
             checkpoint=(fit['assets']['b0_checkpoint'] if branch=='G' else fit['assets']['editor_checkpoint']) if index==1 else str(
@@ -369,6 +387,7 @@ class Coordinator:
             minutes=math.ceil(training['max_training_seconds']/60)+15,extra=['--training-config',config])
 
     def run(self):
+        last_round=requested_last_round(self.root)
         fit=self.root/'fit';initial=fit/'RUN_SPEC.json';twin=self.root/'bootstrap_comparator'
         coverage=require_complete_reference_coverage(self.root)
         coverage_marker=self.root/'REFERENCE_COVERAGE.json'
@@ -392,7 +411,7 @@ class Coordinator:
         self.ranked('S0_compile_G',initial,'compile',['--branch','G','--comparators',twin])
         g_data.append(fit/'pairs/G.jsonl')
         self.ranked('S0_archive',initial,'archive')
-        for index in (1,2,3):
+        for index in range(1,last_round+1):
             self.training(index,'G',g_data[-1],g_data[:-1])
             self.local(f'round{index}_generation_register','src/scripts/prepare_rsi_round.py',
                 ['--root',self.root,'--index',index,'--generation-only'])
@@ -437,6 +456,18 @@ class Coordinator:
                     'actual':json.loads((current/'edited/scoring/result/RANKED_METRICS.json').read_text()),
                     'training_diagnostic_only':True,'G_plus_F_does_not_stop_full_flow':True})
             self.ranked(f'S{index}_archive',edited,'archive')
+        if last_round<3:
+            write_json(self.root/'RANKED_RUN_PAUSED.json',{
+                'status':'paused_by_user_after_completed_round','last_completed_round':last_round,
+                'completed_rounds':list(range(last_round+1)),
+                'pending_updates':[f'{b}{i}' for i in range(last_round+1,4) for b in ('G','E')],
+                'stop_request_sha256':file_hash(self.root/'STOP_AFTER_ROUND.json'),
+                'completed_utc':dt.datetime.now(dt.timezone.utc).isoformat(),'budget':self.budget,
+                'source':verify_deployed_source(SOURCE),
+                'actual_weight_updates':{f'{b}{i}':validate_rsi_checkpoint(
+                    self.root/'training'/f'round{i}'/b/'result/checkpoint',b)
+                    for i in range(1,last_round+1) for b in ('G','E')}})
+            return
         reports=[]
         for index,current in enumerate([fit,*[self.root/'rounds'/f'round{i}'/'fit' for i in (1,2,3)]]):
             for stage in ('construction','tokenized','edited'):

@@ -6,7 +6,7 @@ import sys
 import tempfile
 import unittest
 from concurrent.futures import Future
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'operations/r03_c3fd_main_20260907'))
@@ -299,6 +299,63 @@ class ExecutionCapacityTests(unittest.TestCase):
         self.assertEqual((saved['learning_rate'],saved['epochs'],saved['max_reference_kl']),(2e-5,8,.02))
         self.assertEqual(saved['checkpoint'],'E0')
         self.assertEqual(self.driver.job.call_args.kwargs['gpus'],4)
+
+    def register_stop(self,last_round=1):
+        value={'schema':'ranked_stop_after_round_v1','last_round':last_round,
+            'run_spec_sha256':coordinator.file_hash(self.root/'RUN_SPEC.json'),
+            'budget_sha256':coordinator.file_hash(self.root/'BUDGET.json'),
+            'plans_sha256':coordinator.file_hash(self.root/'fit/cohort/plans.jsonl')}
+        reference_fixture.write_json(self.root/'STOP_AFTER_ROUND.json',value)
+
+    def test_stop_scope_uses_only_the_remaining_current_editor_budget(self):
+        self.register_stop()
+        reference_fixture.write_json(self.root/'fit/RUN_SPEC.json',{'requests':1000,
+            'assets':{'base_model':'base','b0_checkpoint':'B0','editor_checkpoint':'E0'},
+            'training_policy':{'bounded_minibatch_training':True,'E_epochs':8,
+                'reference_kl_weight':1.,'max_reference_kl':.02,'max_training_seconds':1800}})
+        self.driver.remaining=lambda:20000
+        self.driver.training(1,'E','fresh_E_data',[])
+        saved=json.loads((self.root/'training_configs/TRAIN_E1.json').read_text())
+        self.assertEqual(saved['max_training_seconds'],1800)
+        self.assertEqual(saved['time_allocation']['reserved_panel_seconds'],3000)
+        self.assertEqual(saved['time_allocation']['remaining_weight_updates'],1)
+        self.assertEqual((saved['learning_rate'],saved['epochs'],saved['max_reference_kl']),(2e-5,8,.02))
+        self.assertEqual((saved['training_gpus'],saved['batch_size']),(4,48))
+
+    def test_stop_scope_rejects_training_beyond_user_boundary(self):
+        self.register_stop()
+        with self.assertRaisesRegex(RuntimeError,'forbids further training'):
+            self.driver.training(2,'G','future_data',[])
+        self.driver.job.assert_not_called()
+        self.assertFalse((self.root/'training_configs/TRAIN_G2.json').exists())
+
+    def test_stop_scope_rejects_invalid_round_and_changed_identity(self):
+        for value in (0,4,True,'1'):
+            self.register_stop(value)
+            with self.assertRaisesRegex(ValueError,'invalid requested'):
+                coordinator.requested_last_round(self.root)
+        self.register_stop()
+        (self.root/'BUDGET.json').write_text('{}')
+        with self.assertRaisesRegex(ValueError,'identity changed'):
+            coordinator.requested_last_round(self.root)
+
+    def test_coordinator_archives_current_round_then_pauses_without_round_two(self):
+        self.register_stop()
+        reference_fixture.write_json(self.root/'fit/RUN_SPEC.json',{'requests':1000})
+        for panel in ('fit','rounds/round1/fit'):
+            reference_fixture.write_json(self.root/panel/'edited/scoring/result/RANKED_METRICS.json',{'requested':1000})
+        for method in ('body','ranked','rsi','training','local','evaluate','final_editor','check_update'):
+            setattr(self.driver,method,Mock())
+        with patch.object(coordinator,'require_complete_reference_coverage',return_value={'coverage_accounted':True}), \
+             patch.object(coordinator,'verify_deployed_source',return_value={'commit':'science'}), \
+             patch.object(coordinator,'validate_rsi_checkpoint',return_value={'optimizer_steps':1}):
+            self.driver.run()
+        self.assertEqual([(c.args[0],c.args[1]) for c in self.driver.training.call_args_list],[(1,'G'),(1,'E')])
+        self.assertIn('S1_archive',[c.args[0] for c in self.driver.ranked.call_args_list])
+        paused=json.loads((self.root/'RANKED_RUN_PAUSED.json').read_text())
+        self.assertEqual(paused['completed_rounds'],[0,1])
+        self.assertEqual(paused['pending_updates'],['G2','E2','G3','E3'])
+        self.assertFalse((self.root/'RANKED_RUN_FINAL.json').exists())
 
 
 if __name__=='__main__':unittest.main()
