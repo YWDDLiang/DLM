@@ -1,0 +1,119 @@
+{
+  "schema": "clean_1000_paused_after_S1_verified_v1",
+  "paused_marker_sha256": "4015b48ab205e460238ce564d1100767db5b0be45b3ab3f6852d9e7541947da2",
+  "S1_full_flow_sha256": "88bf86213f308c747c993093cd20e33acfb076b7378efd96845cc98553b67c1a",
+  "completed_utc": "2026-09-10T04:57:35.611206+00:00",
+  "completed_rounds": [
+    0,
+    1
+  ],
+  "not_run": [
+    "G2",
+    "E2",
+    "G3",
+    "E3"
+  ],
+  "active_owned_jobs": [],
+  "coordinator_exited": true,
+  "original_budget_sha256": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+  "original_capacity_sha256": "2af036aabc81f8e2338986df16017af05b9ced1df44cfb49153df7d0f385f991",
+  "actual_updates": {
+    "E1": {
+      "optimizer_steps": 1,
+      "parameter_delta_squared": 0.07839105820815906,
+      "training_seconds": 49.08124288357794
+    },
+    "G1": {
+      "optimizer_steps": 20,
+      "parameter_delta_squared": 0.007043263902687613,
+      "training_seconds": 374.8902774229646
+    }
+  },
+  "archives": [
+    {
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/fit",
+      "files": [
+        {
+          "name": "TRAJECTORIES.jsonl.gz",
+          "bytes": 4891763,
+          "sha256": "90c9fa57d4875e19b6dbdb8989f03ec315cef2c3fb9d168e0c1a3999a1c4f96b"
+        },
+        {
+          "name": "PHYSICS_LABELS.jsonl.gz",
+          "bytes": 338152609,
+          "sha256": "bd851232f10331ee6754101f16d81daf1da63d96288725be3bd6badcbd62e6a1"
+        },
+        {
+          "name": "G_PAIRS.jsonl",
+          "bytes": 3186408,
+          "sha256": "5099e26eca68deb2a7eb2b9e044381e4e0e21fa03cd17888603927f45ba4e355"
+        },
+        {
+          "name": "DATASET_MANIFEST.json",
+          "bytes": 4238,
+          "sha256": "d59bde85b909473da4abe49bb125f7a53c15e689658152928f45dedbb6b3768e"
+        }
+      ]
+    },
+    {
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit",
+      "files": [
+        {
+          "name": "TRAJECTORIES.jsonl.gz",
+          "bytes": 5179169,
+          "sha256": "3cc73deeb8f16c4fa7ae7c0deb08d573e5a069016be653a876074741a39a0d71"
+        },
+        {
+          "name": "PHYSICS_LABELS.jsonl.gz",
+          "bytes": 335752485,
+          "sha256": "6e7ce69008c96fe975fa2405ddb21cea2a440237983bb37716ba31c273b8e5b8"
+        },
+        {
+          "name": "G_PAIRS.jsonl",
+          "bytes": 6308015,
+          "sha256": "1f4599ff32a49af5ec9b0c0020566a90ff3cafc64b3815c434dd0eab8151670e"
+        },
+        {
+          "name": "DATASET_MANIFEST.json",
+          "bytes": 4346,
+          "sha256": "b80172a82a148c68aac8ce19ba2a19d05dea1dfa6c3a7efd8b3ef5ee6158ebc7"
+        }
+      ]
+    },
+    {
+      "panel": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/rounds/round1/fit/editor_collection",
+      "files": [
+        {
+          "name": "TRAJECTORIES.jsonl.gz",
+          "bytes": 2291058,
+          "sha256": "247c45d8d9155b0314a2138bea48bf8e9f499c3a37d8eb5090833bba0dc020ed"
+        },
+        {
+          "name": "PHYSICS_LABELS.jsonl.gz",
+          "bytes": 180290902,
+          "sha256": "12f5b80e56188ca6292994b1c3427b681686054b6a15a25d99b56e501348ebe9"
+        },
+        {
+          "name": "E_PAIRS.jsonl",
+          "bytes": 7826631,
+          "sha256": "2f1188f9fb93c2476dd8d17413896409ff9dad1109e22c9e69e8b503ebf8ebc9"
+        },
+        {
+          "name": "EDIT_TARGETS.jsonl",
+          "bytes": 665698,
+          "sha256": "669038b53076c314b7e5f40cc464dea580e1ac76e02748383f4e6e7bba786d4e"
+        },
+        {
+          "name": "KEEP_ANCHORS.jsonl",
+          "bytes": 7160933,
+          "sha256": "818b5e5898217a721a7b58975256ab17fcfdf2b90361ac0eb443d3380734cda1"
+        },
+        {
+          "name": "DATASET_MANIFEST.json",
+          "bytes": 4528,
+          "sha256": "e1673bd1c113af873e6c4d181ca943ea5aec81f77d92ee81a55fdc29cba816f1"
+        }
+      ]
+    }
+  ]
+}
