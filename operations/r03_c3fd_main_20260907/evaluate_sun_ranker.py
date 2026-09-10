@@ -34,7 +34,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
     predictions={}
     for row in read_rows(prediction_path):predictions[(row['stream'],row['ordinal'])]=row
     current=read_rows(data/'native/inputs.jsonl')
-    observed=scores(previous/'fit','native') if panel_name=='fit' else scores(data,'native')
+    observed=None if learned_keep else (scores(previous/'fit','native') if panel_name=='fit' else scores(data,'native'))
     spec=json.loads((data/'RUN_SPEC.json').read_text());spec.update(run_root=str(panel),run_id='sun_rank_policy:'+panel_name+':'+tag,
         training_parent_root=str(panel/'cohort'))
     streams=['primary'] if primary_only else list(candidate_streams(reg))
@@ -43,7 +43,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
     decisions=[]
     for i,native in enumerate(current):
         candidates=[predictions.get((name,i),dict(stream=name,valid=False,sun_gain=0.,ms_gain=0.,operational_utility=0.)) for name in streams]
-        guard=flags(observed[i])['SUN'] and not learned_keep
+        guard=not learned_keep and flags(observed[i])['SUN']
         selected_stream=None
         if learned_keep:
             selected_stream=select_scored_state(candidates,score_weights=score_weights)

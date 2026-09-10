@@ -71,7 +71,7 @@ def network(editor,kind,device):
 def train(root,kind):
     import torch
     from scripts.run_rsi_stages import scores
-    torch.set_num_threads(1);torch.manual_seed(20260911);torch.cuda.set_device(0)
+    torch.set_num_threads(1);torch.manual_seed(20260911);torch.cuda.set_device(0);torch.use_deterministic_algorithms(True)
     device=torch.device('cuda',0);started=time.monotonic()
     reg=json.loads((root/'PREREGISTRATION.json').read_text())
     output=root/('autonomous_'+kind);output.mkdir(parents=True,exist_ok=True)
@@ -124,7 +124,7 @@ def train(root,kind):
                 if better.any():loss=loss+.2*torch.nn.functional.softplus(-(values[:,None]-values[None,:])[better]).mean()
                 losses.append(loss);offset+=count
             loss=torch.stack(losses).mean()+.1*model.head.weight.square().sum()
-            loss.backward();torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad],1.)
+            loss.backward();torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad],1.,error_if_nonfinite=True)
             optimizer.step();visits[flat]+=1;steps+=1
         event=dict(epoch=epoch,optimizer_steps=steps,last_loss=float(loss.detach()),seconds=time.monotonic()-started)
         history.append(event);write_json(output/'PROGRESS.json',event)
@@ -153,8 +153,9 @@ def infer(root,kind,panel_name='fit'):
                 values.extend((model(bank['raw'][sl],bank['geometry'][sl])-model(bank['baseline'][sl],bank['base_geometry'][sl])).tolist())
         for row,value,valid in zip(bank['rows'],values,bank['valid'],strict=True):
             rows.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],operational_utility=0.,valid=valid))
+    keeper_ids={row['ordinal'] for row in read_rows(root/panel_name/'bank/keep/FEATURE_ROWS.jsonl')}
     for i,current in enumerate(read_rows(root/panel_name/'native/inputs.jsonl')):
-        rows.append(dict(ordinal=i,stream='keep',sun_gain=0.,ms_gain=0.,operational_utility=0.,valid=current['success'],feature_forward_calls=1))
+        rows.append(dict(ordinal=i,stream='keep',sun_gain=0.,ms_gain=0.,operational_utility=0.,valid=current['success'],feature_forward_calls=int(i in keeper_ids)))
     path=output/(panel_name.upper()+'_PREDICTIONS.jsonl');write_rows(path,rows)
     write_json(output/(panel_name.upper()+'_INFERENCE.json'),dict(complete=True,model_sha256=file_hash(output/'MODEL.pt'),
         predictions_sha256=file_hash(path),input_contract=saved['contract'],feature_pins=pins,no_physical_labels_loaded=True))
