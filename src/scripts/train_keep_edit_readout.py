@@ -21,8 +21,23 @@ from compile_keep_edit_utility import utility
 from crystal_dlm.post_refine_contract import fingerprint
 
 
-def register(root):
-    path=root/'READOUT_REGISTRATION.json'
+def register(root,operational=False):
+    path=root/('OPERATIONAL_REGISTRATION.json' if operational else 'READOUT_REGISTRATION.json')
+    if operational:
+        if path.exists():raise ValueError('operational utility is already registered')
+        prior=[root/'FROZEN_SELECTION.json',root/'READOUT_COMPARISON_FINAL.json']
+        prior += [root/f'repeats/repeat{i}/REPEAT_COMPARISON_FINAL.json' for i in (1,2)]
+        write_json(path,dict(schema='operational_physical_utility_readout_v1',
+            created_utc=dt.datetime.now(dt.timezone.utc).isoformat(),preceding_evidence={str(p):file_hash(p) for p in prior},
+            plan_sha256=file_hash(SOURCE/'docs/r03_paper_story_20260907/KEEP_EDIT_OPERATIONAL_UTILITY_PLAN_20260910.md'),
+            source_split_sha256=file_hash(root/'SOURCE_SPLIT.jsonl'),
+            head_training=dict(epochs=64,snapshots=[64],thresholds=[.05],learning_rate=1e-3,batch_size=256,
+                seed=20260910,ridge_coefficient=.1,hidden_standard_deviation_floor=1e-4,
+                historical_group_weight=.5,matched_group_weight=.5,physical_preservation_coefficient=.25),
+            final_previously_examined=True,evaluation_status='exploratory_reuse_not_a_new_blind_test',
+            no_DEV_FINAL_training=True,no_new_hyperparameter_selection=True,
+            not_converged_reward='zero_operational_return_under_the_unchanged_protocol_not_a_thermodynamic_label'))
+        return
     if path.exists() or (root/'FROZEN_SELECTION.json').exists():
         raise ValueError('readout needs a new registration and sealed FINAL')
     preceding={}
@@ -42,14 +57,16 @@ def register(root):
         final_quality_consulted=False,matched_supervision_partition='train'))
 
 
-def train(root):
+def train(root,operational=False):
     os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
     import torch
     from crystal_dlm.expert_edit import FloatMLP
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():
         raise RuntimeError('readout training needs a GPU allocation')
     torch.cuda.set_device(0);torch.set_num_threads(1);torch.use_deterministic_algorithms(True)
-    reg=json.loads((root/'READOUT_REGISTRATION.json').read_text());settings=reg['head_training']
+    reg=json.loads((root/('OPERATIONAL_REGISTRATION.json' if operational else 'READOUT_REGISTRATION.json')).read_text());settings=reg['head_training']
+    component='operational_utility' if operational else 'readout_matched'
+    data_name='OPERATIONAL_UTILITY' if operational else 'READOUT'
     torch.manual_seed(settings['seed']);device=torch.device('cuda',0);started=time.monotonic()
     if file_hash(root/'SOURCE_SPLIT.jsonl')!=reg['source_split_sha256']:
         raise ValueError('readout split changed')
@@ -70,6 +87,27 @@ def train(root):
     roles=read_rows(root/'SOURCE_SPLIT.jsonl');by_source={r['ancestor_id']:r for r in roles}
     if any(by_source[r['source_id']]['split']!='train' for r in historic):
         raise ValueError('historical readout supervision leaks held-out sources')
+    def observed(row):
+        value=utility(row)
+        if operational and value is None and row.get('terminal_status')=='not_converged' and row.get('e_above_hull_eV_atom') is not None:
+            return 0
+        return value
+    def physical(row):
+        from crystal_dlm.ranked_feedback import endpoint_quality
+        q=endpoint_quality(row)
+        return int(q['reliable'] and row.get('strict_stable') is True)+int(q['reliable'] and row.get('meta_stable') is True)
+    score_cache={}
+    def bound_score(directory,digest):
+        if directory not in score_cache:
+            location=Path(directory);score_cache[directory]={fingerprint(x):x for x in scores(location.parent,location.name)}
+        if digest not in score_cache[directory]:raise ValueError('historical physical-score binding changed')
+        return score_cache[directory][digest]
+    if operational:
+        for row in historic:
+            trace=row['source_trace'];a=bound_score(trace['current'],trace['before_score_sha256'])
+            b=a if row.get('training_kind')=='exact_KEEP_anchor' else bound_score(trace['proposal'],trace['after_score_sha256'])
+            row['base_utility_target']=row['utility_target'];row['physical_delta']=physical(b)-physical(a)
+            row['utility_target']+=settings['physical_preservation_coefficient']*row['physical_delta']
     before=scores(root/'fit','native');after=scores(root/'fit','hybrid_proposal')
     native_inputs_sha=file_hash(root/'fit/native/inputs.jsonl')
     proposal_inputs_sha=file_hash(root/'fit/hybrid_proposal/inputs.jsonl')
@@ -79,27 +117,32 @@ def train(root):
         if source['split']!='train':continue
         a,b=before[i],after[i]
         if a['sample_idx']!=b['sample_idx']:raise ValueError('matched readout source alignment differs')
-        u,v=utility(a),utility(b)
+        u,v=observed(a),observed(b)
         if u is None or v is None:
             excluded['matched_unknown_physics_or_novelty']+=1;continue
         selected.append(offset)
+        if operational and utility(b) is None:excluded['included_candidate_not_converged_as_operational_zero']+=1
         matched.append(dict(pair_id=fingerprint(dict(domain='current_continuous',source=source['ancestor_id'],
             native_input=native_inputs_sha,proposal_input=proposal_inputs_sha,
             original_view_pair_id=row['pair_id'])),source_id=source['ancestor_id'],ordinal=i,
-            utility_target=v-u,before_utility=u,after_utility=v,domain='current_continuous',
+            utility_target=v-u+(settings['physical_preservation_coefficient']*(physical(b)-physical(a)) if operational else 0),
+            base_utility_target=v-u,physical_delta=physical(b)-physical(a),
+            candidate_operational_zero=bool(operational and utility(b) is None),
+            before_utility=u,after_utility=v,domain='current_continuous',
             cache_row=offset,before_score_sha256=fingerprint(a),after_score_sha256=fingerprint(b),focus_split='train'))
     if not matched:raise ValueError('no matched TRAIN supervision')
     rows=[dict(pair_id=r['pair_id'],source_id=r['source_id'],utility_target=r['utility_target'],
         before_utility=r['before_utility'],after_utility=r['after_utility'],domain='historical_token',
-        cache_row=i,focus_split='train') for i,r in enumerate(historic)]+matched
+        cache_row=i,focus_split='train',base_utility_target=r.get('base_utility_target',r['utility_target']),
+        physical_delta=r.get('physical_delta')) for i,r in enumerate(historic)]+matched
     raw_weights=[]
     for group,group_weight in ((rows[:len(historic)],settings['historical_group_weight']),
                                (matched,settings['matched_group_weight'])):
         multiplicity=Counter(r['source_id'] for r in group)
         raw_weights.extend(group_weight/len(multiplicity)/multiplicity[r['source_id']] for r in group)
     for row,weight in zip(rows,raw_weights,strict=True):row['training_weight']=weight
-    output=root/'training/readout_matched/result';output.mkdir(parents=True,exist_ok=True)
-    data_path=root/'data/READOUT_TRAIN.jsonl';write_rows(data_path,rows)
+    output=root/'training'/component/'result';output.mkdir(parents=True,exist_ok=True)
+    data_path=root/'data'/(data_name+'_TRAIN.jsonl');write_rows(data_path,rows)
     binding_paths=[history_path,train_features,eval_features,eval_rows_path,root/'SOURCE_SPLIT.jsonl']
     for stage in ('native','hybrid_proposal'):
         binding_paths.extend([root/f'fit/{stage}/inputs.jsonl',root/f'fit/{stage}/labeling/result/LABEL_FINAL.json',
@@ -110,7 +153,7 @@ def train(root):
         matched_target_counts=dict(Counter(r['utility_target'] for r in matched)),
         data_sha256=file_hash(data_path),no_DEV_FINAL_supervision=True,exclusions=dict(excluded),
         representation_domains_kept_distinct=True,binding={str(p):file_hash(p) for p in binding_paths})
-    write_json(root/'data/READOUT_DATA_FINAL.json',data_report)
+    write_json(root/'data'/(data_name+'_DATA_FINAL.json'),data_report)
     features=torch.cat((hf['features'],ef['features'][selected])).to(device)
     modules=torch.load(old/'expert_edit_modules.pt',map_location='cpu',weights_only=True)
     state=modules['quality_head'];head=FloatMLP(state['layers.0.weight'].shape[1],state['layers.0.weight'].shape[0],4).to(device)
@@ -173,17 +216,18 @@ def train(root):
         sampler_state=generator.get_state()),output/'OPTIMIZER_NORMALIZATION_COVERAGE.pt')
     report=dict(schema='matched_continuous_frozen_quality_readout_v1',status='complete',train_rows=len(rows),
         train_sources=data_report['sources'],optimizer_steps=steps,complete_passes=settings['epochs'],settings=settings,
-        data_sha256=file_hash(data_path),data_manifest_sha256=file_hash(root/'data/READOUT_DATA_FINAL.json'),
+        data_sha256=file_hash(data_path),data_manifest_sha256=file_hash(root/'data'/(data_name+'_DATA_FINAL.json')),
         snapshots=snapshots,history=history,minimum_row_visits=int(exposure.min()),maximum_row_visits=int(exposure.max()),
         optimized_parameters='quality_head.layers.2.weight[3] and quality_head.layers.2.bias[3] only',
         optimized_parameter_count=hidden.shape[1]+1,all_content_scope_and_quality_hidden_parameters_frozen=True,
         other_quality_outputs_unchanged=True,initial_old_head_max_abs_error=equivalent,
-        original_checkpoint=str(old),training_seconds=time.monotonic()-started,no_DEV_FINAL_supervision=True)
+        original_checkpoint=str(old),training_seconds=time.monotonic()-started,no_DEV_FINAL_supervision=True,
+        operational_utility=operational,evaluation_status='exploratory_after_previous_FINAL' if operational else 'registered_DEV_then_FINAL')
     write_json(output/'TRAINING_FINAL.json',report);(output/'_SUCCESS').touch()
     original_predictions={r['ordinal']:r for r in read_rows(root/'evaluation_features/UTILITY_PREDICTIONS.jsonl')}
     values=[dict(original_predictions[row['ordinal']],learned_utilities={epoch:v[i] for epoch,v in predictions.items()})
         for i,row in enumerate(eval_rows)]
-    evaluation_dir=root/'training/readout_matched/evaluation';write_rows(evaluation_dir/'UTILITY_PREDICTIONS.jsonl',values)
+    evaluation_dir=root/'training'/component/'evaluation';write_rows(evaluation_dir/'UTILITY_PREDICTIONS.jsonl',values)
     write_json(evaluation_dir/'FEATURES_FINAL.json',dict(rows=len(eval_rows),rows_path=str(eval_rows_path),
         rows_sha256=file_hash(eval_rows_path),predictions_sha256=file_hash(evaluation_dir/'UTILITY_PREDICTIONS.jsonl'),
         features_sha256=file_hash(eval_features),features_path=str(eval_features),
@@ -195,5 +239,5 @@ def train(root):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
-    parser.add_argument('--register',action='store_true');args=parser.parse_args()
-    (register if args.register else train)(args.root)
+    parser.add_argument('--register',action='store_true');parser.add_argument('--operational',action='store_true');args=parser.parse_args()
+    (register if args.register else train)(args.root,args.operational)
