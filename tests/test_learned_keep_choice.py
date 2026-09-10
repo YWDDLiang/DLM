@@ -20,6 +20,11 @@ class LearnedKeepChoiceTests(unittest.TestCase):
         self.assertEqual(select_scored_state(rows),'keep')
         self.assertEqual(select_scored_state([]),'keep')
 
+    def test_soft_state_utility_allows_a_sun_gain_without_an_ms_gain_veto(self):
+        keep=self.candidate('keep',.01,.8)
+        self.assertEqual(select_scored_state([keep,self.candidate('weak',.02,.7)],score_weights=(2.,1.)),'keep')
+        self.assertEqual(select_scored_state([keep,self.candidate('sun',.2,.78)],score_weights=(2.,1.)),'sun')
+
 
 if __name__=='__main__':
     unittest.main()

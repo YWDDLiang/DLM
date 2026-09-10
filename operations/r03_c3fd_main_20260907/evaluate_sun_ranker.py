@@ -21,7 +21,7 @@ from editor_trial_analysis import flags
 
 
 def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary_only=False,
-          prediction_path=None,score_kind='signed_gains',learned_keep=False):
+          prediction_path=None,score_kind='signed_gains',learned_keep=False,score_weights=None):
     data=root/panel_name;panel=root/'policies'/panel_name/tag
     if (panel/'DECISION_BINDING.json').exists():
         if file_hash(panel/'edited/inputs.jsonl')!=json.loads((panel/'DECISION_BINDING.json').read_text())['inputs_sha256']:
@@ -45,7 +45,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
         guard=flags(observed[i])['SUN'] and not learned_keep
         selected_stream=None
         if learned_keep:
-            selected_stream=select_scored_state(candidates)
+            selected_stream=select_scored_state(candidates,score_weights=score_weights)
             chosen=None if selected_stream=='keep' else selected_stream
         elif operational:
             eligible=[(c['operational_utility'],-k,c['stream']) for k,c in enumerate(candidates)
@@ -74,7 +74,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
         write_json(panel/f'edited/records/{i:04d}.json',dict(record=result,editor_trace=decision));decisions.append(decision)
     materialize(spec,'edited')
     write_json(panel/'DECISION_BINDING.json',dict(decisions=decisions,sun_threshold=None if learned_keep else sun_threshold,
-        ms_floor=None if learned_keep else ms_floor,learned_keep_compared=learned_keep,
+        ms_floor=None if learned_keep else ms_floor,learned_keep_compared=learned_keep,score_weights=score_weights,
         operational_comparator=operational,primary_only=primary_only,score_kind=score_kind,model_choice_without_candidate_physics=True,
         predictions_path=str(prediction_path),predictions_sha256=file_hash(prediction_path),
         inputs_sha256=file_hash(panel/'edited/inputs.jsonl')))

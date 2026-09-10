@@ -17,12 +17,18 @@ def nested_probabilities(logits):
     return __import__('torch').stack((probability[...,0]*probability[...,1],probability[...,1]),dim=-1)
 
 
-def select_scored_state(candidates):
+def select_scored_state(candidates,*,score_weights=None):
     """Compare the learned KEEP view with edits, without acceptance floors."""
     valid=[c for c in candidates if c['valid']]
     for candidate in valid:
         if not all(math.isfinite(candidate[key]) for key in ('sun_gain','ms_gain')):
             raise ValueError('nonfinite state prediction')
+    if score_weights is not None:
+        sun_weight,ms_weight=score_weights
+        if not all(math.isfinite(w) and w>=0 for w in score_weights) or sun_weight+ms_weight==0:
+            raise ValueError('state utility weights must be finite, nonnegative, and nonzero')
+        return max(valid,key=lambda c:(sun_weight*c['sun_gain']+ms_weight*c['ms_gain'],
+            c['sun_gain'],c['stream']=='keep'))['stream'] if valid else 'keep'
     return max(valid,key=lambda c:(c['sun_gain'],c['ms_gain'],c['stream']=='keep'))['stream'] if valid else 'keep'
 
 

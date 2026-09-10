@@ -368,16 +368,22 @@ def score_bank(root,name,stream,*,nu_workers=7):
     validity(spec,'candidate')
 
 
-def policy_worker(root,name):
+def policy_worker(root,name,*,utility=False):
     from evaluate_sun_ranker import build,evaluate,summary
     destination=root/'variants'/name
     predictions=destination/'training/nested_sun_ranker/FIT_PREDICTIONS.jsonl'
-    panel=build(destination,'fit','learned_keep',0.,0.,prediction_path=predictions,
-                score_kind='absolute_NS_NMS_probabilities',learned_keep=True)
+    weights=(2.,1.) if utility else None
+    tag='learned_keep_utility' if utility else 'learned_keep'
+    if utility:
+        write_json(destination/'UTILITY_POLICY_REGISTRATION.json',dict(score_weights=weights,
+            rule='compare expected NS and NMS utility over learned KEEP and edits',
+            candidate_MS_gain_veto=False,absolute_acceptance_threshold=None,reason='reduce weak edits while allowing SUN gains'))
+    panel=build(destination,'fit',tag,0.,0.,prediction_path=predictions,
+                score_kind='absolute_NS_NMS_probabilities',learned_keep=True,score_weights=weights)
     evaluate(destination,panel,nu_workers=3)
     results={role:summary(destination,panel,role) for role in ('train','dev','final','all')}
-    report=dict(complete=True,threshold=None,learned_keep=True,results=results,DEV_role='feasibility',old_FINAL_role='exploratory')
-    write_json(destination/'policy_execution/DONE.json',report)
+    report=dict(complete=True,threshold=None,learned_keep=True,score_weights=weights,results=results,DEV_role='feasibility',old_FINAL_role='exploratory')
+    write_json(destination/('utility_policy_execution' if utility else 'policy_execution')/'DONE.json',report)
     print(json.dumps(report),flush=True)
 
 
@@ -406,7 +412,7 @@ def collect_keep_features(destination,panel_name='fit'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','score_worker','rank_worker','policy_worker'])
+    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','score_worker','rank_worker','policy_worker','utility_policy_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3'])
@@ -423,6 +429,8 @@ if __name__ == '__main__':
         probe(args.root)
     elif args.mode=='score_worker':
         score_bank(args.root,args.name,args.stream)
+    elif args.mode=='utility_policy_worker':
+        policy_worker(args.root,args.name,utility=True)
     elif args.mode.endswith('_worker'):
         (rank_worker if args.mode=='rank_worker' else policy_worker)(args.root,args.name)
     else:
