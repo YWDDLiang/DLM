@@ -181,7 +181,7 @@ def variant(root, name):
     if (destination/'PREREGISTRATION.json').exists():
         return destination
     reg = json.loads((previous/'PREREGISTRATION.json').read_text())
-    frozen=name in ('frozen_e3','balanced_e3')
+    frozen=name in ('frozen_e3','balanced_e3','retained_e3')
     checkpoint = Path(reg['old_editor']) if frozen else root/'training'/name/'result/checkpoint'
     receipt = checkpoint/'RSI_TRAINING_DONE.json'
     reg.update(old_editor=str(checkpoint), old_editor_receipt_sha256=file_hash(receipt),
@@ -207,7 +207,7 @@ def variant(root, name):
             link=destination/'fit/bank'/stream
             link.parent.mkdir(parents=True,exist_ok=True)
             link.symlink_to(previous/'fit/bank'/stream,target_is_directory=True)
-        if name=='balanced_e3':
+        if name in ('balanced_e3','retained_e3'):
             (destination/'fit/bank/keep').symlink_to(root/'variants/frozen_e3/fit/bank/keep',target_is_directory=True)
     return destination
 
@@ -345,6 +345,37 @@ def rank_worker(root,name):
     write_json(destination/'rank_execution/DONE.json',dict(complete=True))
 
 
+def retained_worker(root,name):
+    """Evaluate the retained state readout on KEEP without retraining it."""
+    import torch
+    from scripts.train_sun_ranker import features
+    from crystal_dlm.sun_ranker import nested_probabilities
+    torch.set_num_threads(1)
+    destination=root/'variants'/name
+    original=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
+    model_path=original/'training/nested_sun_ranker/SUN_RANKER.pt'
+    state=torch.load(model_path,map_location='cpu',weights_only=False)
+    write_json(destination/'RETAINED_READOUT_REGISTRATION.json',dict(
+        model_path=str(model_path),model_sha256=file_hash(model_path),retrained=False,
+        current_as_learned_KEEP=True,score_rules=['NS_then_NMS','2_NS_plus_NMS'],
+        no_absolute_acceptance_floor=True,no_candidate_quality_labels_for_selection=True))
+    banks,_,pins=features(destination,'fit',torch.device('cpu'))
+    predictions=[]
+    for stream,bank in banks.items():
+        with torch.no_grad():
+            values=nested_probabilities(bank['x']@state['weight'].T+state['bias']).tolist()
+        for row,value,op in zip(bank['rows'],values,bank['operational_utilities'],strict=True):
+            trace=bank['traces'][row['ordinal']]
+            predictions.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],
+                operational_utility=op,valid=stream=='keep' or
+                    (trace.get('proposal_generated',False) and trace['continuous_applied'])))
+    write_rows(destination/'training/nested_sun_ranker/FIT_PREDICTIONS.jsonl',predictions)
+    policy_worker(root,name)
+    policy_worker(root,name,utility=True)
+    write_json(destination/'retained_execution/DONE.json',dict(complete=True,
+        model_sha256=file_hash(model_path),feature_pins=pins,retrained=False))
+
+
 def score_bank(root,name,stream,*,nu_workers=7):
     import subprocess
     from scripts.run_rsi_stages import validity
@@ -412,10 +443,10 @@ def collect_keep_features(destination,panel_name='fit'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','score_worker','rank_worker','policy_worker','utility_policy_worker'])
+    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','retained','score_worker','rank_worker','policy_worker','utility_policy_worker','retained_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
-    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3'])
+    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3'])
     parser.add_argument('--stream',choices=['primary','rank1','rank2','rank3'])
     parser.add_argument('--gpus',type=int,default=1)
     args = parser.parse_args()
@@ -431,6 +462,8 @@ if __name__ == '__main__':
         score_bank(args.root,args.name,args.stream)
     elif args.mode=='utility_policy_worker':
         policy_worker(args.root,args.name,utility=True)
+    elif args.mode=='retained_worker':
+        retained_worker(args.root,args.name)
     elif args.mode.endswith('_worker'):
         (rank_worker if args.mode=='rank_worker' else policy_worker)(args.root,args.name)
     else:
