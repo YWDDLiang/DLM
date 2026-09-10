@@ -78,11 +78,18 @@ def train(root,kind):
     contract=dict(inputs=['DLM forward features from Plan/current/proposal/action','geometry computed from current and proposal'],
         geometry_features=list(EXTRA_FEATURES[12:]),current_physics_inputs=False,candidate_physics_inputs=False,
         current_stability_novelty_or_hull_inputs=False,physical_feedback_use='offline supervised targets only',
-        KEEP_rule='subtract the learned value of the current view; identity gain is exactly zero')
+        KEEP_rule='subtract the learned value of the current view; identity gain is exactly zero',
+        privileged_teacher_distillation_training_only=kind=='distill')
     write_json(output/'INPUT_CONTRACT.json',contract)
     banks,pins=model_inputs(root,'fit')
     before=scores(Path(reg['previous_run'])/'fit','native')
     roles=read_rows(root/'SOURCE_SPLIT.jsonl')
+    teacher={}
+    if kind=='distill':
+        path=root/'training/nested_sun_ranker/FIT_PREDICTIONS.jsonl'
+        teacher={(row['stream'],row['ordinal']):[row['sun_gain'],row['ms_gain']] for row in read_rows(path)}
+        write_json(output/'TEACHER_TRAINING_ONLY.json',dict(predictions_sha256=file_hash(path),
+            teacher_mix=.5,teacher_uses_privileged_current_feedback=True,teacher_not_loaded_at_inference=True))
     raw=[];baseline=[];geometry=[];base_geometry=[];metadata=[];targets=[];levels=[]
     for stream,bank in banks.items():
         after=scores(root/'fit/bank'/stream,'candidate') if reg.get('editor_content_changed') or stream!='primary' else scores(Path(reg['previous_run'])/'fit','hybrid_proposal')
@@ -93,10 +100,14 @@ def train(root,kind):
             if a is None or b is None:continue
             if roles[i]['ancestor_id']!=row['source_id']:raise ValueError('supervision source misalignment')
             raw.append(bank['raw'][j]);baseline.append(bank['baseline'][j]);geometry.append(bank['geometry'][j]);base_geometry.append(bank['base_geometry'][j])
-            targets.append([b[k]-a[k] for k in range(2)]);levels.append([a,b])
-            metadata.append(dict(source_id=row['source_id'],ordinal=i,stream=stream,pair_id=row['pair_id'],target_gain=targets[-1]))
+            actual=[b[k]-a[k] for k in range(2)]
+            soft=[.5*b[k]+.5*teacher[(stream,i)][k] for k in range(2)] if kind=='distill' else b
+            targets.append([soft[k]-a[k] for k in range(2)]);levels.append([a,soft])
+            metadata.append(dict(source_id=row['source_id'],ordinal=i,stream=stream,pair_id=row['pair_id'],
+                target_gain=targets[-1],actual_gain=actual))
     tensors=[torch.stack(values).to(device) for values in (raw,baseline,geometry,base_geometry)]
     x,x0,g,g0=tensors;target=torch.tensor(targets,device=device);level=torch.tensor(levels,device=device)
+    actual_target=torch.tensor([row['actual_gain'] for row in metadata],device=device)
     grouped=defaultdict(list)
     for i,row in enumerate(metadata):grouped[row['source_id']].append(i)
     groups=list(grouped.values());weights=torch.tensor([1/len(groups)/len(grouped[r['source_id']]) for r in metadata],device=device)
@@ -106,7 +117,7 @@ def train(root,kind):
         model.mean.copy_((z*weights[:,None]).sum(0));model.scale.copy_(((z-model.mean).square()*weights[:,None]).sum(0).sqrt().clamp_min(.05))
     initial={n:p.detach().clone() for n,p in model.named_parameters()}
     parameter_groups=[dict(params=list(model.head.parameters()),lr=1e-3)]
-    if kind=='mlp':parameter_groups.append(dict(params=list(model.hidden.parameters()),lr=1e-5))
+    if kind!='linear':parameter_groups.append(dict(params=list(model.hidden.parameters()),lr=1e-5))
     optimizer=torch.optim.AdamW(parameter_groups,weight_decay=0.)
     rng=torch.Generator().manual_seed(20260911);visits=torch.zeros(len(metadata),dtype=torch.int64);steps=0;history=[]
     for epoch in range(1,65):
@@ -119,7 +130,7 @@ def train(root,kind):
             for group in selected:
                 count=len(group);sl=slice(offset,offset+count);truth=target[idx[sl]];prediction=gain[sl]
                 loss=(prediction-truth).square().mean()+.1*((before_value[sl]-level[idx[sl],0]).square().mean()+(after_value[sl]-level[idx[sl],1]).square().mean())
-                values=torch.cat((prediction.new_zeros(1),prediction[:,0]));gold=torch.cat((truth.new_zeros(1),truth[:,0]))
+                values=torch.cat((prediction.new_zeros(1),prediction[:,0]));gold=torch.cat((truth.new_zeros(1),actual_target[idx[sl],0]))
                 better=gold[:,None]>gold[None,:]
                 if better.any():loss=loss+.2*torch.nn.functional.softplus(-(values[:,None]-values[None,:])[better]).mean()
                 losses.append(loss);offset+=count
@@ -164,7 +175,7 @@ def infer(root,kind,panel_name='fit'):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('mode',choices=['train','infer'])
-    parser.add_argument('--root',type=Path,required=True);parser.add_argument('--kind',choices=['linear','mlp'],required=True)
+    parser.add_argument('--root',type=Path,required=True);parser.add_argument('--kind',choices=['linear','mlp','distill'],required=True)
     parser.add_argument('--panel',choices=['fit','fresh'],default='fit');args=parser.parse_args()
     if args.mode=='train':train(args.root,args.kind)
     else:infer(args.root,args.kind,args.panel)

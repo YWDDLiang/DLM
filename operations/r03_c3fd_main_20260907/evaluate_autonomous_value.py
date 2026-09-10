@@ -21,6 +21,7 @@ def deny_physical_results():
         if isinstance(path,(str,bytes,Path)):
             text=str(path).replace('\\','/')
             if 'r' in str(mode) and ('/scoring/' in text or '/labeling/' in text or
+                '/training/nested_sun_ranker/' in text or '/training/sun_ranker/' in text or '/state_utility_execution/' in text or
                 Path(text).name in ('labels.jsonl','attempt_results.jsonl')):
                 raise RuntimeError('physical result accessed during model selection: '+text)
             accesses.append(text)
@@ -50,6 +51,6 @@ def run(root,kind,panel_name,output):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--root',type=Path,required=True)
-    parser.add_argument('--kind',choices=['linear','mlp'],required=True);parser.add_argument('--panel',choices=['fit','fresh'],default='fit')
+    parser.add_argument('--kind',choices=['linear','mlp','distill'],required=True);parser.add_argument('--panel',choices=['fit','fresh'],default='fit')
     parser.add_argument('--output',type=Path,required=True);args=parser.parse_args()
     run(args.root,args.kind,args.panel,args.output)
