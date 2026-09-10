@@ -78,7 +78,7 @@ def decide(root, index, completion):
     os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
     import torch
     from crystal_dlm.expert_edit import load_editor_model
-    from crystal_dlm.utility_acceptance import canonical_judgements, continuous_decision
+    from crystal_dlm.utility_acceptance import canonical_judgements, materialized_continuous_decision
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():
         raise RuntimeError('canonical repeated utility decisions need a GPU allocation')
     torch.cuda.set_device(0)
@@ -128,7 +128,8 @@ def decide(root, index, completion):
     for plan, before in zip(plans, current, strict=True):
         i = plan['original_ordinal']
         native = json.loads((root / f'fit/native/records/{i:04d}.json').read_text())
-        record, decision = continuous_decision(native, before.get('body_token_ids', []), traces[i], inverse, raw.get(i), margin,
+        materialized=json.loads((panel/f'materialized_proposal/records/{i:04d}.json').read_text())
+        record, decision = materialized_continuous_decision(native, before.get('body_token_ids', []), traces[i], materialized, raw.get(i), margin,
             reference_logit=reference.get(i),reference_required=bool(policy.get('reference_acceptance_required')))
         record['trajectory_id'] = f'{spec["run_id"]}:edited:{i}'
         # The legacy decode-stage edited view stays in its original directory;
@@ -171,7 +172,7 @@ def report(root, index):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True)
-    parser.add_argument('--mode', choices=['register', 'prepare', 'decide', 'report'], required=True)
+    parser.add_argument('--mode', choices=['register', 'prepare', 'materialize', 'decide', 'report'], required=True)
     parser.add_argument('--index', type=int, choices=[1, 2])
     parser.add_argument('--completion-dir', type=Path)
     args = parser.parse_args()
@@ -185,6 +186,11 @@ if __name__ == '__main__':
         if args.index is None:
             parser.error('report requires a repeat index')
         report(args.root, args.index)
+    elif args.mode == 'materialize':
+        if args.index is None:parser.error('materialize requires a repeat index')
+        from materialize_keep_edit_proposals import materialize_proposals
+        panel=args.root/f'repeats/repeat{args.index}'
+        materialize_proposals(args.root,panel,panel/'materialized_proposal')
     else:
         if args.index is None or args.completion_dir is None:
             parser.error('decide requires a repeat index and a component completion directory')

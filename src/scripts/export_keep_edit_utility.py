@@ -17,7 +17,7 @@ def main():
     os.environ['CUBLAS_WORKSPACE_CONFIG']=':4096:8'
     import torch
     from crystal_dlm.expert_edit import load_editor_model,materialize_edit_batch
-    from crystal_dlm.utility_acceptance import canonical_judgements,continuous_decision
+    from crystal_dlm.utility_acceptance import canonical_judgements,materialized_continuous_decision
     if not os.environ.get('SLURM_JOB_ID') or not torch.cuda.is_available():raise RuntimeError('GPU allocation required')
     torch.cuda.set_device(0);torch.set_num_threads(1);torch.use_deterministic_algorithms(True);device=torch.device('cuda',0)
     reg=json.loads((root/'PREREGISTRATION.json').read_text())
@@ -101,7 +101,8 @@ def main():
     for i,record in enumerate(current):
         wrapper=json.loads((native/f'{i:04d}.json').read_text())
         trace=json.loads((root/f'fit/proposal/records/{i:04d}.json').read_text())['editor_trace']
-        selected,decision=continuous_decision(wrapper,record.get('body_token_ids',[]),trace,inverse,actual_scores.get(i),margin,
+        materialized=json.loads((root/f'materialized_primary/records/{i:04d}.json').read_text())
+        selected,decision=materialized_continuous_decision(wrapper,record.get('body_token_ids',[]),trace,materialized,actual_scores.get(i),margin,
             reference_logit=reference_scores.get(i),reference_required=consensus)
         expected=reference[i]
         fields=('structure','body','body_token_ids','success','reason')

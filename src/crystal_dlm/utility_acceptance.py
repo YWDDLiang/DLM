@@ -70,3 +70,35 @@ def continuous_decision(native_wrapper,current_tokens,trace,inverse,raw_utility,
     result,commit=commit_patch(native_wrapper['record'],current_tokens,trace['proposal_tokens'],inverse,
         editable=native_wrapper['continuous_trace']['editable'])
     return result,dict(learned_accept=True,actual_edit=commit['applied'],raw_utility=raw_utility,margin=margin,commit=commit,**evidence)
+
+
+def materialize_continuous_patch(native_wrapper,current_tokens,proposal_tokens,inverse):
+    """Construct a candidate once, independently of learned acceptance or labels."""
+    from crystal_dlm.continuous_keep_edit import commit_patch
+    from crystal_dlm.post_refine_contract import fingerprint
+    record,commit=commit_patch(native_wrapper['record'],current_tokens,proposal_tokens,inverse,
+        editable=native_wrapper['continuous_trace']['editable'])
+    return dict(schema='bound_continuous_patch_v1',record=record,commit_trace=commit,
+        native_record_sha256=fingerprint(native_wrapper['record']),
+        current_tokens_sha256=fingerprint(current_tokens),proposal_tokens_sha256=fingerprint(proposal_tokens),
+        record_sha256=fingerprint(record))
+
+
+def materialized_continuous_decision(native_wrapper,current_tokens,trace,materialized,raw_utility,margin,*,
+                                     reference_logit=None,reference_required=False):
+    """Select the already constructed candidate whose exact bytes are evaluated."""
+    from crystal_dlm.post_refine_contract import fingerprint
+    if materialized.get('schema')!='bound_continuous_patch_v1':raise ValueError('unbound continuous proposal')
+    checks=dict(native_record_sha256=fingerprint(native_wrapper['record']),
+        current_tokens_sha256=fingerprint(current_tokens or []),
+        proposal_tokens_sha256=fingerprint(trace.get('proposal_tokens') or []),
+        record_sha256=fingerprint(materialized['record']))
+    if any(materialized.get(k)!=v for k,v in checks.items()):raise ValueError('continuous proposal source or bytes changed')
+    guarded=bool(trace.get('known_sun') and trace.get('learned_mode')==0)
+    accepted=accept_utility(raw_utility,margin,proposal_generated=trace.get('proposal_generated',False),
+        known_sun_guard=guarded,reference_logit=reference_logit,reference_required=reference_required)
+    commit=materialized['commit_trace'];applied=bool(accepted and commit['applied'])
+    result=materialized['record'] if applied else native_wrapper['record']
+    return copy.deepcopy(result),dict(learned_accept=accepted,actual_edit=applied,raw_utility=raw_utility,margin=margin,
+        reference_acceptance_required=reference_required,reference_accept_logit=reference_logit,
+        commit=commit,materialized_proposal_sha256=materialized['record_sha256'])

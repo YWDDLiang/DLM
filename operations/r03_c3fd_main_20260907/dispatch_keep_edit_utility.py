@@ -55,7 +55,7 @@ def main():
         products=['{output}/AUDIT_FINAL.json']
     elif args.mode=='export':
         required += [root/'FROZEN_SELECTION.json',root/'training/utility/result/TRAINING_FINAL.json',
-            root/'evaluation_features/FEATURES_FINAL.json']
+            root/'evaluation_features/FEATURES_FINAL.json',root/'materialized_primary/MATERIALIZATION_FINAL.json']
         if (root/'FROZEN_SELECTION.json').exists():
             frozen=json.loads((root/'FROZEN_SELECTION.json').read_text())
             required += [Path(frozen[k]) for k in ('training_receipt_path','feature_receipt_path','predictions_path') if k in frozen]
@@ -66,7 +66,8 @@ def main():
     else:
         required += [root/'FROZEN_SELECTION.json',root/'REPEAT_SEED_REGISTRATION.json',
             root/'models/selected_utility/EXPORT_FINAL.json',
-            root/f'repeats/repeat{args.repeat_index}/proposal/inputs.jsonl']
+            root/f'repeats/repeat{args.repeat_index}/proposal/inputs.jsonl',
+            root/f'repeats/repeat{args.repeat_index}/materialized_proposal/MATERIALIZATION_FINAL.json']
         products=['{output}/REPEAT_DECISION_FINAL.json']
     if any(not p.is_file() for p in required):raise ValueError('utility admission inputs are incomplete')
     gpu=0 if args.mode=='policies' else 1

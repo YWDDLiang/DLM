@@ -5,6 +5,7 @@ from crystal_dlm.continuous_keep_edit import commit_patch, native_current, quant
 from crystal_dlm.dynamic_crystal import arrays_to_dynamic_tokens
 from crystal_dlm.expert_edit_data import arrays_from_structure
 from crystal_dlm.fixed_slot import FixedSlotConfig
+from crystal_dlm.utility_acceptance import materialize_continuous_patch,materialized_continuous_decision
 
 
 class ContinuousKeepEditTests(unittest.TestCase):
@@ -75,6 +76,24 @@ class ContinuousKeepEditTests(unittest.TestCase):
         result,trace=commit_patch(self.current,self.tokens,self.replace(8,'<X_100>'),self.inverse)
         self.assertEqual(result,self.current);self.assertFalse(trace['applied'])
         self.assertEqual(trace['reason'],'periodic_equivalent_KEEP')
+
+    def test_materialized_selection_keeps_exact_committed_bytes(self):
+        native=dict(record=self.current,continuous_trace=dict(editable=True))
+        proposal=self.replace(8,'<X_020>');trace=dict(proposal_generated=True,proposal_tokens=proposal)
+        bound=materialize_continuous_patch(native,self.tokens,proposal,self.inverse)
+        selected,decision=materialized_continuous_decision(native,self.tokens,trace,bound,.1,.05)
+        self.assertEqual(selected,bound['record']);self.assertTrue(decision['actual_edit'])
+        selected,decision=materialized_continuous_decision(native,self.tokens,trace,bound,.01,.05)
+        self.assertEqual(selected,self.current);self.assertFalse(decision['actual_edit'])
+
+    def test_materialized_proposal_rejects_changed_source_or_candidate(self):
+        native=dict(record=self.current,continuous_trace=dict(editable=True))
+        proposal=self.replace(8,'<X_020>');trace=dict(proposal_generated=True,proposal_tokens=proposal)
+        bound=materialize_continuous_patch(native,self.tokens,proposal,self.inverse)
+        changed=copy.deepcopy(native);changed['record']['structure']['sites'][0]['abc'][1]+=.001
+        with self.assertRaises(ValueError):materialized_continuous_decision(changed,self.tokens,trace,bound,.1,.05)
+        bound['record']['structure']['sites'][0]['xyz'][0]+=.000001
+        with self.assertRaises(ValueError):materialized_continuous_decision(native,self.tokens,trace,bound,.1,.05)
 
 
 if __name__ == '__main__': unittest.main()
