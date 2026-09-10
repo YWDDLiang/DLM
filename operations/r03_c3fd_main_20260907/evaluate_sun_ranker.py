@@ -14,7 +14,7 @@ SOURCE=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(SOURCE/'src'))
 from scripts.run_post_refine_cycle import read_rows,write_rows,write_json,file_hash
 from scripts.run_rsi_stages import materialize,rebind_labels,scores,score_directory,validity
-from scripts.run_sun_rank_scope import STREAMS
+from scripts.run_sun_rank_scope import candidate_streams
 from crystal_dlm.sun_ranker import select_candidate,select_scored_state
 from crystal_dlm.post_refine_contract import fingerprint
 from editor_trial_analysis import flags
@@ -28,7 +28,8 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
             raise ValueError('registered policy inputs changed')
         return panel
     if panel.exists():raise ValueError('partial policy requires explicit inspection')
-    previous=Path(json.loads((root/'PREREGISTRATION.json').read_text())['previous_run'])
+    reg=json.loads((root/'PREREGISTRATION.json').read_text())
+    previous=Path(reg['previous_run'])
     prediction_path=prediction_path or root/('training/sun_ranker/FIT_PREDICTIONS.jsonl' if panel_name=='fit' else 'fresh/ranker_inference/FRESH_PREDICTIONS.jsonl')
     predictions={}
     for row in read_rows(prediction_path):predictions[(row['stream'],row['ordinal'])]=row
@@ -36,7 +37,7 @@ def build(root,panel_name,tag,sun_threshold,ms_floor,*,operational=False,primary
     observed=scores(previous/'fit','native') if panel_name=='fit' else scores(data,'native')
     spec=json.loads((data/'RUN_SPEC.json').read_text());spec.update(run_root=str(panel),run_id='sun_rank_policy:'+panel_name+':'+tag,
         training_parent_root=str(panel/'cohort'))
-    streams=['primary'] if primary_only else list(STREAMS)
+    streams=['primary'] if primary_only else list(candidate_streams(reg))
     if learned_keep:streams=['keep',*streams]
     panel.mkdir(parents=True);shutil.copytree(data/'cohort',panel/'cohort');write_json(panel/'RUN_SPEC.json',spec)
     decisions=[]
@@ -87,7 +88,7 @@ def evaluate(root,panel,*,cached=True,nu_workers=7):
     if cached and not (panel/'edited/labeling/result/_SUCCESS').exists():
         reg=json.loads((root/'PREREGISTRATION.json').read_text());previous=Path(reg['previous_run'])
         source=[previous/'fit/native',previous/'fit/hybrid_proposal']
-        source += [root/f'fit/bank/{name}/candidate' for name in STREAMS
+        source += [root/f'fit/bank/{name}/candidate' for name in candidate_streams(reg)
                    if name!='primary' or reg.get('editor_content_changed')]
         rebind_labels(spec,'edited',source_directories=source)
     if not (panel/'edited/labeling/result/_SUCCESS').exists():raise ValueError('policy needs complete endpoint labels')

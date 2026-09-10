@@ -20,6 +20,15 @@ STREAMS={'primary':None,'rank1':'keep_edit_focus_repeat1','rank2':'keep_edit_foc
          'rank3':'keep_edit_operational_fresh1'}
 
 
+def candidate_streams(registration):
+    count=registration.get('candidate_site_ranks',4)
+    if type(count) is not int or count<1:
+        raise ValueError('candidate_site_ranks must be a positive integer')
+    result=dict(list(STREAMS.items())[:count])
+    result.update({f'rank{k}':f'keep_edit_scope_rank{k}' for k in range(4,count)})
+    return result
+
+
 def register(root,previous,cache):
     from pymatgen.core import Composition
     from run_component import verify_deployed_source
@@ -171,7 +180,8 @@ def collect(root,panel_name,output):
     plans=read_rows(panel/'cohort/plans.jsonl');current=read_rows(panel/'current/inputs.jsonl')
     native=[json.loads((panel/f'native/records/{i:04d}.json').read_text()) for i in range(len(plans))]
     completed=[]
-    for k,(name,seed_stream) in enumerate(STREAMS.items()):
+    streams=candidate_streams(reg)
+    for k,(name,seed_stream) in enumerate(streams.items()):
         if k%world!=rank:continue
         destination=panel/'bank'/name;destination.mkdir(parents=True,exist_ok=True)
         if (destination/'COLLECTION_FINAL.json').exists():
@@ -194,7 +204,7 @@ def collect(root,panel_name,output):
                 admitted=[]
                 for i in eligible:
                     used=0
-                    for prior in list(STREAMS)[:k]:
+                    for prior in list(streams)[:k]:
                         past=json.loads((panel/f'bank/{prior}/candidate/records/{i:04d}.json').read_text())['editor_trace']
                         used+=past.get('forward_calls',0)+int(bool(past.get('proposal_tokens')))
                     # This local candidate takes 5 generation/judgement calls

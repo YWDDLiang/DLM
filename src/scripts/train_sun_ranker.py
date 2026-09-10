@@ -13,7 +13,7 @@ SOURCE=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(SOURCE/'src'),str(SOURCE/'operations/r03_c3fd_main_20260907')]
 from scripts.run_post_refine_cycle import read_rows,write_rows,write_json,file_hash
 from scripts.run_rsi_stages import scores,score_directory
-from scripts.run_sun_rank_scope import STREAMS
+from scripts.run_sun_rank_scope import candidate_streams
 from crystal_dlm.sun_ranker import endpoint_targets,extra_features,EXTRA_FEATURES,nested_probabilities
 from crystal_dlm.post_refine_contract import fingerprint
 
@@ -46,7 +46,7 @@ def features(root,panel_name,device,*,include_keep=None):
     result={};pins={str(p):file_hash(p) for p in [op_path,*bound_current]}
     learned_keep=(root/'LEARNED_KEEP_REGISTRATION.json').exists() if include_keep is None else include_keep
     if learned_keep:pins[str(root/'LEARNED_KEEP_REGISTRATION.json')]=file_hash(root/'LEARNED_KEEP_REGISTRATION.json')
-    for name in [*STREAMS,*(['keep'] if learned_keep else [])]:
+    for name in [*candidate_streams(reg),*(['keep'] if learned_keep else [])]:
         bank=panel/'bank'/name;receipt=json.loads((bank/'COLLECTION_FINAL.json').read_text())
         fp=bank/'CANDIDATE_FEATURES.pt';rp=bank/'FEATURE_ROWS.jsonl'
         if file_hash(fp)!=receipt['features_sha256'] or file_hash(rp)!=receipt['feature_rows_sha256']:

@@ -182,13 +182,16 @@ def variant(root, name):
         return destination
     reg = json.loads((previous/'PREREGISTRATION.json').read_text())
     frozen=name in ('frozen_e3','balanced_e3','retained_e3','retained_delta_e3')
-    checkpoint = Path(reg['old_editor']) if frozen else root/'training'/name/'result/checkpoint'
+    checkpoint = Path(reg['old_editor']) if frozen else root/'training'/('mini_2e6' if name=='mini_k8' else name)/'result/checkpoint'
     receipt = checkpoint/'RSI_TRAINING_DONE.json'
     reg.update(old_editor=str(checkpoint), old_editor_receipt_sha256=file_hash(receipt),
                editor_content_changed=not frozen, parent_content_experiment=str(root),enforce_shared_forward_budget=True)
     if name=='balanced_e3':
         reg['head_training']=dict(reg['head_training'],balanced_keep_pairs=True,
             SUN_pairwise_coefficient=2.,ridge=.01,device='cpu')
+    if name=='mini_k8':
+        reg['candidate_site_ranks']=8
+        reg['candidate_extension']='same trained mini_2e6 editor; retain first four candidates; add ranks 4 through 7'
     for folder in ('cohort','current','native'):
         shutil.copytree(previous/'fit'/folder, destination/'fit'/folder)
     shutil.copy2(previous/'SOURCE_SPLIT.jsonl', destination/'SOURCE_SPLIT.jsonl')
@@ -209,6 +212,10 @@ def variant(root, name):
             link.symlink_to(previous/'fit/bank'/stream,target_is_directory=True)
         if name in ('balanced_e3','retained_e3','retained_delta_e3'):
             (destination/'fit/bank/keep').symlink_to(root/'variants/frozen_e3/fit/bank/keep',target_is_directory=True)
+    elif name=='mini_k8':
+        for stream in ('primary','rank1','rank2','rank3'):
+            link=destination/'fit/bank'/stream;link.parent.mkdir(parents=True,exist_ok=True)
+            link.symlink_to(root/'variants/mini_2e6/fit/bank'/stream,target_is_directory=True)
     return destination
 
 
@@ -329,10 +336,11 @@ def run_variant(root, name, mode, stream=None, gpus=1):
 
 def rank_worker(root,name):
     from scripts.train_sun_ranker import train
+    from scripts.run_sun_rank_scope import candidate_streams
     destination=root/'variants'/name
     reg=json.loads((destination/'PREREGISTRATION.json').read_text())
     if name not in ('frozen_e3','balanced_e3'):
-        for stream in ('primary','rank1','rank2','rank3'):
+        for stream in candidate_streams(reg):
             score_bank(root,name,stream,nu_workers=3)
     if name!='balanced_e3':collect_keep_features(destination)
     train(destination,destination/'training/sun_ranker')
@@ -500,13 +508,18 @@ def fresh_collect_worker(root,name):
         if not path.exists():path.symlink_to(original/'fresh'/folder,target_is_directory=True)
     spec=json.loads((original/'fresh/RUN_SPEC.json').read_text())
     spec.update(run_root=str(panel),run_id=name+':fresh',training_parent_root=str(panel/'cohort'))
-    spec['assets']['editor_checkpoint']=str(root/'training'/name/'result/checkpoint')
+    reg=json.loads((destination/'PREREGISTRATION.json').read_text())
+    spec['assets']['editor_checkpoint']=reg['old_editor']
     spec['assets']['nu_cache']=str(root/'nu_cache')
     write_json(panel/'RUN_SPEC.json',spec)
     model=destination/'training/sun_ranker/SUN_RANKER.pt'
     write_json(destination/'FROZEN_SELECTION.json',dict(schema='fixed_gain_utility_for_new_content',
         model_path=str(model),model_sha256=file_hash(model),score_weights=[2.,1.],KEEP_reference=[0.,0.],
         role='exploratory_replication_on_previously_viewed_256_sources',no_candidate_outcome_selection=True))
+    if name=='mini_k8':
+        for stream in ('primary','rank1','rank2','rank3'):
+            link=panel/'bank'/stream;link.parent.mkdir(parents=True,exist_ok=True)
+            if not link.exists():link.symlink_to(root/'variants/mini_2e6/fresh/bank'/stream,target_is_directory=True)
     collect(destination,'fresh',destination/'fresh_collect_execution')
     write_json(destination/'fresh_collect_execution/DONE.json',dict(complete=True))
 
@@ -589,8 +602,8 @@ if __name__ == '__main__':
     parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','gain_policy','retained','retained_fresh','retained_fresh_evaluate','fresh_collect','fresh_infer','fresh_evaluate','score_worker','rank_worker','policy_worker','utility_policy_worker','gain_policy_worker','retained_worker','retained_fresh_worker','retained_fresh_evaluate_worker','fresh_collect_worker','fresh_infer_worker','fresh_evaluate_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
-    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3','retained_delta_e3'])
-    parser.add_argument('--stream',choices=['primary','rank1','rank2','rank3'])
+    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3','retained_delta_e3','mini_k8'])
+    parser.add_argument('--stream',choices=['primary',*[f'rank{k}' for k in range(1,8)]])
     parser.add_argument('--gpus',type=int,default=1)
     args = parser.parse_args()
     if args.mode == 'prepare':

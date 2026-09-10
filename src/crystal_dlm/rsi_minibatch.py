@@ -311,8 +311,8 @@ def propose_ranked_batch(model, tokenizer, requests, *, support, batch_size=16, 
                         mode=MODES.index(scope);sites=list(range(n))
                         result.update(scope_policy='diagnostic_global_scope',exploration_mode=scope)
                     elif exploration is not None:
-                        if type(exploration) is not int or not 0<=exploration<=3 or not request.get('force_proposal'):
-                            raise ValueError('registered site exploration needs a forced proposal and rank 0..3')
+                        if type(exploration) is not int or exploration<0 or not request.get('force_proposal'):
+                            raise ValueError('site exploration needs a forced proposal and nonnegative rank')
                         mode=1
                         ranked=out.site_logits[i,:n].float().argsort(descending=True,stable=True).tolist()
                         sites=[ranked[exploration % n]]
