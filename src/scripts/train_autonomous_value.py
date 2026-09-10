@@ -20,7 +20,8 @@ def model_inputs(root,panel_name):
     reg=json.loads((root/'PREREGISTRATION.json').read_text())
     panel=root/panel_name
     current=read_rows(panel/'native/inputs.jsonl')
-    keep=panel/'bank/keep'
+    dedicated_keep=root/('autonomous_keep_'+panel_name)
+    keep=dedicated_keep if (dedicated_keep/'COLLECTION_FINAL.json').exists() else panel/'bank/keep'
     keep_rows=read_rows(keep/'FEATURE_ROWS.jsonl')
     keep_payload=torch.load(keep/'CANDIDATE_FEATURES.pt',map_location='cpu',weights_only=False)
     if keep_payload['pair_ids']!=[row['pair_id'] for row in keep_rows]:raise ValueError('KEEP feature order differs')
@@ -164,7 +165,9 @@ def infer(root,kind,panel_name='fit'):
                 values.extend((model(bank['raw'][sl],bank['geometry'][sl])-model(bank['baseline'][sl],bank['base_geometry'][sl])).tolist())
         for row,value,valid in zip(bank['rows'],values,bank['valid'],strict=True):
             rows.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],operational_utility=0.,valid=valid))
-    keeper_ids={row['ordinal'] for row in read_rows(root/panel_name/'bank/keep/FEATURE_ROWS.jsonl')}
+    dedicated_keep=root/('autonomous_keep_'+panel_name)
+    keep=dedicated_keep if (dedicated_keep/'COLLECTION_FINAL.json').exists() else root/panel_name/'bank/keep'
+    keeper_ids={row['ordinal'] for row in read_rows(keep/'FEATURE_ROWS.jsonl')}
     for i,current in enumerate(read_rows(root/panel_name/'native/inputs.jsonl')):
         rows.append(dict(ordinal=i,stream='keep',sun_gain=0.,ms_gain=0.,operational_utility=0.,valid=current['success'],feature_forward_calls=int(i in keeper_ids)))
     path=output/(panel_name.upper()+'_PREDICTIONS.jsonl');write_rows(path,rows)

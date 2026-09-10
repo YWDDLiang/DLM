@@ -638,7 +638,7 @@ def fresh_evaluate_worker(root,name):
     print(json.dumps(report),flush=True)
 
 
-def collect_keep_features(destination,panel_name='fit'):
+def collect_keep_features(destination,panel_name='fit',*,bank_override=None):
     import gc
     import torch
     from crystal_dlm.expert_edit import load_editor_model
@@ -647,7 +647,7 @@ def collect_keep_features(destination,panel_name='fit'):
     spec=json.loads((panel/'RUN_SPEC.json').read_text())
     plans=read_rows(panel/'cohort/plans.jsonl')
     current=read_rows(panel/'current/inputs.jsonl')
-    bank=panel/'bank/keep'
+    bank=Path(bank_override) if bank_override is not None else panel/'bank/keep'
     model,tokenizer=load_editor_model(spec['assets']['base_model'],spec['assets']['editor_checkpoint'],torch.device('cuda',0))
     rows=[dict(ordinal=i,pair_id=fingerprint(dict(panel=panel_name,stream='keep',source=p['ancestor_id'])),
         source_id=p['ancestor_id'],prompt=p['body_prompt'],num_sites=p['plan_state']['N'],
@@ -657,7 +657,8 @@ def collect_keep_features(destination,panel_name='fit'):
     write_rows(bank/'FEATURE_ROWS.jsonl',rows)
     feature_rows(model,tokenizer,rows,torch.device('cuda',0),bank,'CANDIDATE')
     write_json(bank/'COLLECTION_FINAL.json',dict(features_sha256=file_hash(bank/'CANDIDATE_FEATURES.pt'),
-        feature_rows_sha256=file_hash(bank/'FEATURE_ROWS.jsonl'),rows=len(rows),kind='unchanged_current_as_model_candidate'))
+        feature_rows_sha256=file_hash(bank/'FEATURE_ROWS.jsonl'),rows=len(rows),kind='unchanged_current_as_model_candidate',
+        editor_checkpoint=spec['assets']['editor_checkpoint'],current_tokens_sha256=file_hash(panel/'current/inputs.jsonl')))
     del model,tokenizer;gc.collect();torch.cuda.empty_cache()
 
 
