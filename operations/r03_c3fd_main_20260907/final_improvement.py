@@ -181,7 +181,7 @@ def variant(root, name):
     if (destination/'PREREGISTRATION.json').exists():
         return destination
     reg = json.loads((previous/'PREREGISTRATION.json').read_text())
-    frozen=name in ('frozen_e3','balanced_e3','retained_e3')
+    frozen=name in ('frozen_e3','balanced_e3','retained_e3','retained_delta_e3')
     checkpoint = Path(reg['old_editor']) if frozen else root/'training'/name/'result/checkpoint'
     receipt = checkpoint/'RSI_TRAINING_DONE.json'
     reg.update(old_editor=str(checkpoint), old_editor_receipt_sha256=file_hash(receipt),
@@ -207,7 +207,7 @@ def variant(root, name):
             link=destination/'fit/bank'/stream
             link.parent.mkdir(parents=True,exist_ok=True)
             link.symlink_to(previous/'fit/bank'/stream,target_is_directory=True)
-        if name in ('balanced_e3','retained_e3'):
+        if name in ('balanced_e3','retained_e3','retained_delta_e3'):
             (destination/'fit/bank/keep').symlink_to(root/'variants/frozen_e3/fit/bank/keep',target_is_directory=True)
     return destination
 
@@ -353,24 +353,29 @@ def retained_worker(root,name):
     torch.set_num_threads(1)
     destination=root/'variants'/name
     original=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
-    model_path=original/'training/nested_sun_ranker/SUN_RANKER.pt'
+    is_delta=name=='retained_delta_e3'
+    model_path=original/'training'/('sun_ranker' if is_delta else 'nested_sun_ranker')/'SUN_RANKER.pt'
     state=torch.load(model_path,map_location='cpu',weights_only=False)
     write_json(destination/'RETAINED_READOUT_REGISTRATION.json',dict(
         model_path=str(model_path),model_sha256=file_hash(model_path),retrained=False,
-        current_as_learned_KEEP=True,score_rules=['NS_then_NMS','2_NS_plus_NMS'],
+        current_as_learned_KEEP=not is_delta,
+        KEEP_reference='exact_zero_self_difference' if is_delta else 'model_current_view',
+        score_rules=['2_delta_NS_plus_delta_NMS'] if is_delta else ['NS_then_NMS','2_NS_plus_NMS'],
         no_absolute_acceptance_floor=True,no_candidate_quality_labels_for_selection=True))
     banks,_,pins=features(destination,'fit',torch.device('cpu'))
     predictions=[]
     for stream,bank in banks.items():
         with torch.no_grad():
-            values=nested_probabilities(bank['x']@state['weight'].T+state['bias']).tolist()
+            logits=bank['x']@state['weight'].T+state['bias']
+            values=(logits if is_delta else nested_probabilities(logits)).tolist()
         for row,value,op in zip(bank['rows'],values,bank['operational_utilities'],strict=True):
             trace=bank['traces'][row['ordinal']]
+            value=[0.,0.] if is_delta and stream=='keep' else value
             predictions.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],
                 operational_utility=op,valid=stream=='keep' or
                     (trace.get('proposal_generated',False) and trace['continuous_applied'])))
     write_rows(destination/'training/nested_sun_ranker/FIT_PREDICTIONS.jsonl',predictions)
-    policy_worker(root,name)
+    if not is_delta:policy_worker(root,name)
     policy_worker(root,name,utility=True)
     write_json(destination/'retained_execution/DONE.json',dict(complete=True,
         model_sha256=file_hash(model_path),feature_pins=pins,retrained=False))
@@ -410,7 +415,8 @@ def policy_worker(root,name,*,utility=False):
             rule='compare expected NS and NMS utility over learned KEEP and edits',
             candidate_MS_gain_veto=False,absolute_acceptance_threshold=None,reason='reduce weak edits while allowing SUN gains'))
     panel=build(destination,'fit',tag,0.,0.,prediction_path=predictions,
-                score_kind='absolute_NS_NMS_probabilities',learned_keep=True,score_weights=weights)
+                score_kind='signed_NS_NMS_gains' if name=='retained_delta_e3' else 'absolute_NS_NMS_probabilities',
+                learned_keep=True,score_weights=weights)
     evaluate(destination,panel,nu_workers=3)
     results={role:summary(destination,panel,role) for role in ('train','dev','final','all')}
     report=dict(complete=True,threshold=None,learned_keep=True,score_weights=weights,results=results,DEV_role='feasibility',old_FINAL_role='exploratory')
@@ -446,7 +452,7 @@ if __name__ == '__main__':
     parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','retained','score_worker','rank_worker','policy_worker','utility_policy_worker','retained_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
-    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3'])
+    parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3','retained_delta_e3'])
     parser.add_argument('--stream',choices=['primary','rank1','rank2','rank3'])
     parser.add_argument('--gpus',type=int,default=1)
     args = parser.parse_args()
