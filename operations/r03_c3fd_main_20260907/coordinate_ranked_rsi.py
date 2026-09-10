@@ -81,6 +81,48 @@ def reference_cache_override(root):
     return value
 
 
+def execution_capacity_override(root):
+    """Read a recorded capacity change while retaining the original run files."""
+    root=Path(root);path=root/'EXECUTION_CAPACITY_OVERRIDE.json'
+    if not path.exists(): return None
+    value=json.loads(path.read_text())
+    if value.get('schema')!='ranked_execution_capacity_v1' or not (root/'S0_COMPLETE.json').is_file():
+        raise ValueError('capacity adjustment requires a completed S0 and its registered schema')
+    for key,name in (('run_spec_sha256','RUN_SPEC.json'),('budget_sha256','BUDGET.json'),
+                     ('plans_sha256','fit/cohort/plans.jsonl')):
+        if value.get(key)!=file_hash(root/name):
+            raise ValueError('capacity adjustment identity changed: '+name)
+    original=json.loads((root/'RUN_SPEC.json').read_text()).get('execution_policy',{})
+    maximum=json.loads((root/'BUDGET.json').read_text()).get('max_GPUs',6)
+    baseline=runtime_allocations(original,maximum)
+    requested=value.get('allocations',{})
+    if set(requested)!=set(baseline):
+        raise ValueError('capacity adjustment may contain only the complete allocation fields')
+    available=value.get('available_GPUs')
+    if type(available) is not int or not 1<=available<=maximum:
+        raise ValueError('invalid available GPU capacity')
+    actual=runtime_allocations(requested,available)
+    if (baseline['training_batch_size'] is None or actual['training_batch_size'] is None or
+            actual['training_GPUs']*actual['training_batch_size']!=
+            baseline['training_GPUs']*baseline['training_batch_size']):
+        raise ValueError('capacity adjustment must preserve the global source batch')
+    reservations=value.get('reservations_seconds',{})
+    bounds={'complete_round':(3600,21600),'editor_tail':(600,7200),'final_report':(900,3600)}
+    if set(reservations)!=set(bounds) or any(type(reservations[k]) is not int or
+            not low<=reservations[k]<=high for k,(low,high) in bounds.items()):
+        raise ValueError('invalid measured panel reservation')
+    value['allocations']=actual
+    return value
+
+
+def capacity_training_reserve(index,branch,reservations):
+    if index not in (1,2,3) or branch not in ('G','E'):
+        raise ValueError('invalid remaining update for measured reservation')
+    future=4-index if branch=='G' else 3-index
+    return future*reservations['complete_round']+reservations['final_report']+(
+        reservations['editor_tail'] if branch=='E' else 0)
+
+
 def score_reference_arguments(root,extra):
     value=reference_cache_override(root)
     if value is None: return tuple(extra)
@@ -142,6 +184,8 @@ class Coordinator:
     def remaining(self): return (self.deadline-dt.datetime.now(dt.timezone.utc)).total_seconds()
 
     def allocations(self):
+        capacity=execution_capacity_override(self.root)
+        if capacity is not None: return capacity['allocations']
         control=json.loads((self.root/'RUN_SPEC.json').read_text())
         policy=dict(control.get('execution_policy',{}))
         override=self.root/'S0_RESOURCE_OVERRIDE.json'
@@ -286,6 +330,11 @@ class Coordinator:
             # Reserve complete inference, physical feedback and reporting for
             # every remaining round. Allocation changes with actual elapsed work.
             reserve=training_reserve_seconds(index,branch,fit['requests'],allocation['single_GPUs'])
+            reserve_rule='share_remaining_after_complete_panel_reserve'
+            capacity=execution_capacity_override(self.root)
+            if capacity is not None:
+                reserve=capacity_training_reserve(index,branch,capacity['reservations_seconds'])
+                reserve_rule='share_remaining_after_measured_1000_panel_reserve'
             seconds=int((self.remaining()-reserve)/remaining_updates)
             if seconds<180: raise RuntimeError('insufficient training budget after reserving complete panels')
             checkpoint=(fit['assets']['b0_checkpoint'] if branch=='G' else fit['assets']['editor_checkpoint']) if index==1 else str(
@@ -306,7 +355,7 @@ class Coordinator:
                 'training_gpus':allocation['training_GPUs'],
                 'source_round':index-1 if branch=='G' else index,
                 'time_allocation':{'remaining_seconds':self.remaining(),'reserved_panel_seconds':reserve,
-                    'remaining_weight_updates':remaining_updates,'rule':'share_remaining_after_complete_panel_reserve'}}
+                    'remaining_weight_updates':remaining_updates,'rule':reserve_rule}}
             if bounded:
                 spec.update(bounded_minibatch_training=True,
                     batch_size=allocation['training_batch_size'] or tuning.get('batch_size',8),

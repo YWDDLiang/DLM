@@ -209,4 +209,96 @@ class S0ResourceAllocationTests(unittest.TestCase):
                 driver.allocations()
 
 
+class ExecutionCapacityTests(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
+        self.root=Path(self.temp.name)
+        self.control={'execution_policy':{'single_GPUs':6,'parallel_main_GPUs':3,
+            'parallel_other_GPUs':3,'training_GPUs':6,'training_batch_size':32}}
+        reference_fixture.write_json(self.root/'RUN_SPEC.json',self.control)
+        reference_fixture.write_json(self.root/'BUDGET.json',{'max_GPUs':6,'deadline_utc':'fixed'})
+        reference_fixture.write_json(self.root/'fit/RUN_SPEC.json',{'requests':1000})
+        reference_fixture.write_rows(self.root/'fit/cohort/plans.jsonl',[{'sample_idx':0}])
+        reference_fixture.write_json(self.root/'S0_COMPLETE.json',{})
+        self.value={'schema':'ranked_execution_capacity_v1','available_GPUs':5,
+            'run_spec_sha256':coordinator.file_hash(self.root/'RUN_SPEC.json'),
+            'budget_sha256':coordinator.file_hash(self.root/'BUDGET.json'),
+            'plans_sha256':coordinator.file_hash(self.root/'fit/cohort/plans.jsonl'),
+            'allocations':{'single_GPUs':5,'parallel_main_GPUs':3,'parallel_other_GPUs':2,
+                'training_GPUs':4,'training_batch_size':48},
+            'reservations_seconds':{'complete_round':8400,'editor_tail':2100,'final_report':900}}
+        self.driver=coordinator.Coordinator.__new__(coordinator.Coordinator)
+        self.driver.root=self.root;self.driver.budget={'max_GPUs':6};self.driver.job=Mock()
+        self.save()
+
+    def save(self):
+        reference_fixture.write_json(self.root/'EXECUTION_CAPACITY_OVERRIDE.json',self.value)
+
+    def test_five_available_cards_preserve_global_batch_without_changing_run_files(self):
+        v=self.driver.allocations()
+        self.assertEqual(v['single_GPUs'],5)
+        self.assertEqual(v['parallel_main_GPUs']+v['parallel_other_GPUs'],5)
+        self.assertEqual(v['training_GPUs']*v['training_batch_size'],192)
+        self.assertEqual(json.loads((self.root/'RUN_SPEC.json').read_text()),self.control)
+        self.assertEqual(coordinator.file_hash(self.root/'BUDGET.json'),self.value['budget_sha256'])
+
+    def test_batch_change_or_scientific_parameter_injection_is_rejected(self):
+        self.value['allocations']['training_batch_size']=32;self.save()
+        with self.assertRaisesRegex(ValueError,'global source batch'):self.driver.allocations()
+        self.value['allocations']['training_batch_size']=48
+        self.value['allocations']['learning_rate']=1.;self.save()
+        with self.assertRaisesRegex(ValueError,'allocation fields'):self.driver.allocations()
+
+    def test_parallel_or_single_requests_cannot_exceed_available_capacity(self):
+        self.value['allocations']['parallel_other_GPUs']=3;self.save()
+        with self.assertRaisesRegex(ValueError,'exceed'):self.driver.allocations()
+        self.value['allocations']['parallel_other_GPUs']=2
+        self.value['allocations']['single_GPUs']=6;self.save()
+        with self.assertRaisesRegex(ValueError,'allocation'):self.driver.allocations()
+
+    def test_mutated_deadline_or_plan_cannot_use_the_override(self):
+        (self.root/'BUDGET.json').write_text('{}')
+        with self.assertRaisesRegex(ValueError,'identity changed'):self.driver.allocations()
+        self.value['budget_sha256']=coordinator.file_hash(self.root/'BUDGET.json');self.save()
+        (self.root/'fit/cohort/plans.jsonl').write_text('changed\n')
+        with self.assertRaisesRegex(ValueError,'identity changed'):self.driver.allocations()
+
+    def test_override_cannot_be_used_before_s0_or_with_zero_reservations(self):
+        (self.root/'S0_COMPLETE.json').unlink()
+        with self.assertRaisesRegex(ValueError,'completed S0'):self.driver.allocations()
+        (self.root/'S0_COMPLETE.json').write_text('{}')
+        self.value['reservations_seconds']['editor_tail']=0;self.save()
+        with self.assertRaisesRegex(ValueError,'panel reservation'):self.driver.allocations()
+
+    def test_existing_six_card_training_configuration_remains_immutable(self):
+        path=self.root/'training_configs/TRAIN_G1.json'
+        existing={'training_gpus':6,'batch_size':32,'max_training_seconds':856}
+        reference_fixture.write_json(path,existing)
+        self.driver.training(1,'G','existing_data',[])
+        self.assertEqual(json.loads(path.read_text()),existing)
+        self.assertEqual(self.driver.job.call_args.kwargs['gpus'],6)
+
+    def test_measured_reserve_counts_only_unfinished_panels(self):
+        r=self.value['reservations_seconds']
+        self.assertEqual(coordinator.capacity_training_reserve(1,'E',r),19800)
+        self.assertEqual(coordinator.capacity_training_reserve(3,'E',r),3000)
+        self.assertEqual(coordinator.capacity_training_reserve(3,'G',r),9300)
+        with self.assertRaises(ValueError):coordinator.capacity_training_reserve(0,'E',r)
+
+    def test_new_e_training_uses_repartitioned_batch_and_measured_budget(self):
+        reference_fixture.write_json(self.root/'fit/RUN_SPEC.json',{'requests':1000,
+            'assets':{'base_model':'base','b0_checkpoint':'B0','editor_checkpoint':'E0'},
+            'training_policy':{'bounded_minibatch_training':True,'E_epochs':8,
+                'reference_kl_weight':1.,'max_reference_kl':.02,'max_training_seconds':1800}})
+        self.driver.remaining=lambda:24000
+        self.driver.training(1,'E','fresh_E_data',[])
+        saved=json.loads((self.root/'training_configs/TRAIN_E1.json').read_text())
+        self.assertEqual((saved['training_gpus'],saved['batch_size']),(4,48))
+        self.assertEqual(saved['max_training_seconds'],840)
+        self.assertEqual(saved['time_allocation']['reserved_panel_seconds'],19800)
+        self.assertEqual((saved['learning_rate'],saved['epochs'],saved['max_reference_kl']),(2e-5,8,.02))
+        self.assertEqual(saved['checkpoint'],'E0')
+        self.assertEqual(self.driver.job.call_args.kwargs['gpus'],4)
+
+
 if __name__=='__main__':unittest.main()

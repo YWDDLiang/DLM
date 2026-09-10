@@ -1,0 +1,54 @@
+{
+  "schema": "clean_1000_S1_score_startup_recovery_v1",
+  "recovery_directory": "/public/home/jiaosz/ywliang/ai4s/diffsion_language_model_meets_diffusion/workstreams/proposal_realization_candidates_20260826/grounding/experiments/ranked_train_rsi_20260910/run_20260909T191900Z_fixed1000/preflight/s1_score_initialization_20260910",
+  "plan_git_commit": "c068a6ec15313483701fc2b927decb7bdd0cf02a",
+  "failed_job": "41817",
+  "retry_job": "41830",
+  "resume_pid": 50338,
+  "scientific_source_identity": {
+    "commit": "657985c0e501f629a4eb52f4e14d2404b60bf2c6",
+    "manifest_sha256": "d98edcd0f4ea5b30130f8299e03d0cf309f420186d6889a1bd54a9044c3cd5cb"
+  },
+  "identical_scoring_command": true,
+  "initialization_and_pair_timeouts_unchanged": true,
+  "NU_workers": 7,
+  "input_pins_unchanged": true,
+  "input_pins": {
+    "BUDGET.json": "d8f084e93f6a7ec48924debf9fd5befca6322d35f42752ce58dd0197886f2b75",
+    "FROZEN_METHOD.json": "4d91d1bcc3770e68fbfc28e6f784a9b0a22565006b48e66bac06b7a310c1b8b6",
+    "REFERENCE_CACHE_OVERRIDE.json": "4a9052100b0dd098d830a231253a83e22a7ff728612d87df0cecebf4bf98fddd",
+    "REFERENCE_COVERAGE.json": "625384da68526ee902a7c183b900656a6c0e78a8fcc7e70926fc20b6fd890f05",
+    "RUN_SPEC.json": "b237b3279faf35ae820a22ae6afba54b7737c185566b7089fa9c8623819f8989",
+    "rounds/round1/fit/RUN_SPEC.json": "7cc5e7c1ef3d2135b5a6744ea282d900f63ccb0255e16002e2d188fc76f897a1",
+    "rounds/round1/fit/construction/FEEDBACK_MANIFEST.json": "88c53a8bf6f155e2f415893da21512c773fb9cf5b6592d32ff1b9763f268b59b",
+    "rounds/round1/fit/construction/inputs.jsonl": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+    "rounds/round1/fit/construction/labeling/result/LABEL_FINAL.json": "7c82a5ca3f86b8012f0d0b16f5a09c374a4b6548584959a7de3c0b598f13b322",
+    "rounds/round1/fit/construction/labeling/result/labels.jsonl": "a671ccb5b860c73e738f1a5b3bd01c2a374fdab5a6bb3ef73e79606ee9a65b2e",
+    "training/round1/G/result/checkpoint/RSI_TRAINING_DONE.json": "3861294cd5adf229888177e2e6d3f047e43bc72d5b7c229c64c89611d8a94e70"
+  },
+  "failed_files_preserved": {
+    "COMPONENT_CONFIG.json": "3908f437f2c115345b77bac99612273e1b33895d49f8a5209bb7307ada3d3305",
+    "score.command.json": "e9480e924fc087bff8d9467cca0c71957ccd5b5e265af3d0dee24339409c3c8d",
+    "score.err": "0d7a29e4e66194ffa259eb988fdf1c556488758b951876b86232d815132ef70d",
+    "score.out": "f0ab35d600daafb1fd217d27873455371e57cfc9b6753947b73b49dad4615fd1",
+    "score.stage.json": "cf94acdf0ccf78e5ed1d54b444ff82c4137e2de0071662e5b556fd8f6c283c6b"
+  },
+  "plan_sha256": "ac3a97a84541c3898f29887e844e9e1bc5545e22c0cfdf443a2378ec8fb77524",
+  "resume_sha256": "7d27726d8a22bd6761c4ed347703fe540e18128c25346a164730acf32c5dc64a",
+  "failed_stage_sha256": "cf94acdf0ccf78e5ed1d54b444ff82c4137e2de0071662e5b556fd8f6c283c6b",
+  "successful_stage_sha256": "fe6d5db59ce4d7cd5eb3839a8341b438e19dddeb8a848fcd45c5c0d6108fef90",
+  "metrics": {
+    "exclusive_MetaStable": 108,
+    "input_sha256": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+    "known_physical_failure": 498,
+    "reliable_SUN": 23,
+    "requested": 1000,
+    "score_sha256": "aefc5cba7a4ffeab8460b36355734027016aed7bd5570d4a2b4ee6226fa4b891",
+    "stage": "construction",
+    "strict_Stable": 23,
+    "unknown": 101,
+    "unstable": 270
+  },
+  "Slurm_accounting": "41817|FAILED|222|billing=8,cpu=8,mem=64G,node=1|1:0|2026-09-10T10:21:12|2026-09-10T10:24:54\n41830|COMPLETED|30|billing=8,cpu=8,mem=64G,node=1|0:0|2026-09-10T10:36:25|2026-09-10T10:36:55",
+  "recovery_receipt_sha256": "bddb261d9c95e7342c8f0a0db2a15775fdd9cf2fb7b69ea87ec7833dfa135466"
+}

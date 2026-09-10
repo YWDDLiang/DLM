@@ -1,0 +1,70 @@
+{
+  "schema": "clean_1000_S1_RAW_paired_diagnostic_v1",
+  "requests": 1000,
+  "scope": "same_Plans_raw_checkpoint_comparison; G training objective is downstream F quality; full round pending",
+  "S1_counts": {
+    "Stable": 23,
+    "SUN": 23,
+    "known_failure": 498,
+    "unknown": 101,
+    "reliable": 401
+  },
+  "changed_RAW_outputs": 837,
+  "transitions": {
+    "Stable": {
+      "gains": [
+        41,
+        537,
+        677
+      ],
+      "losses": [
+        37,
+        325,
+        570,
+        767,
+        974
+      ]
+    },
+    "SUN": {
+      "gains": [
+        41,
+        537,
+        677
+      ],
+      "losses": [
+        37,
+        325,
+        570,
+        767,
+        974
+      ]
+    }
+  },
+  "SUN_predicate_changes": {
+    "SUN_loss:Stable": 4,
+    "SUN_gain:Stable+N+U": 2,
+    "SUN_gain:Stable": 1,
+    "SUN_loss:Stable+N+U": 1
+  },
+  "S1_physical_statuses": {
+    "invalid_terminal": 441,
+    "invalid_raw": 57,
+    "verified": 420,
+    "not_converged": 81,
+    "generation_failure": 1
+  },
+  "S1_label_seconds": 788.2680421732366,
+  "S1_gate_reasons": {
+    "draft_strict_SUN": 23,
+    "not_confirmed_strict_SUN": 868,
+    "MSUN_still_requires_diffusion": 108,
+    "upstream_generation_failure": 1
+  },
+  "S1_F_required": 976,
+  "input_bindings": {
+    "fit/construction/inputs.jsonl": "6a676a1076b55879484ff606c9881c8fcc1bada0c8eb127eb3a0c78483b8782f",
+    "fit/construction/scoring/result/attempt_results.jsonl": "84421b36dbdf7644eb142287df13e26263a9e89e867997a40e9fe42ef34843c0",
+    "rounds/round1/fit/construction/inputs.jsonl": "91fb186fc7e6b86fe67b94a3fe37d98e7510e190a97fe48cba3d18fbc51830cd",
+    "rounds/round1/fit/construction/scoring/result/attempt_results.jsonl": "aefc5cba7a4ffeab8460b36355734027016aed7bd5570d4a2b4ee6226fa4b891"
+  }
+}
