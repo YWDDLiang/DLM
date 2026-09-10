@@ -85,6 +85,13 @@ def commit_patch(current_record, old_tokens, new_tokens, inverse, *, editable=Tr
                 if axis > 2: raise ValueError('non_numeric_edit')
                 structure['sites'][site]['abc'][axis] = float(new['frac_coords'][site][axis]) % 1.
                 changed_sites.add(site)
+        if not lattice_changed:
+            displacement = np.asarray([site['abc'] for site in structure['sites']]) - native.frac_coords
+            displacement -= np.round(displacement)
+            relative = displacement - displacement[0]
+            relative -= np.round(relative)
+            if np.max(np.abs(relative)) <= 1e-12:
+                return copy.deepcopy(current_record), dict(applied=False, reason='rigid_translation_KEEP', changed=changed)
         for site in range(n):
             if lattice_changed or site in changed_sites:
                 structure['sites'][site]['xyz'] = (np.asarray(structure['sites'][site]['abc']) @ matrix).tolist()

@@ -79,6 +79,33 @@ class ContinuousKeepEditTests(unittest.TestCase):
         self.assertEqual(result,self.current);self.assertFalse(trace['applied'])
         self.assertEqual(trace['reason'],'periodic_equivalent_KEEP')
 
+    def test_common_translation_preserves_exact_current_record(self):
+        proposal = self.replace(8, '<X_020>')
+        ident = max(self.inverse) + 1
+        self.inverse[ident] = '<X_070>'; proposal[12] = ident
+        result, trace = commit_patch(self.current, self.tokens, proposal, self.inverse)
+        self.assertEqual(result, self.current)
+        self.assertFalse(trace['applied'])
+        self.assertEqual(trace['reason'], 'rigid_translation_KEEP')
+
+    def test_one_atom_coordinates_are_identity_but_cell_edit_is_meaningful(self):
+        structure = Structure(Lattice.cubic(5.), ['Sn'], [[.123456, .234567, .345678]])
+        arrays = arrays_from_structure(structure.as_dict())
+        strings, _ = arrays_to_dynamic_tokens(arrays['lengths'], arrays['angles'], arrays['species'],
+                                               arrays['frac_coords'], config=FixedSlotConfig())
+        inverse = dict(enumerate(strings)); tokens = list(inverse)
+        current = dict(structure=structure.as_dict(), body=None, success=True)
+        proposal = list(tokens); ident = len(inverse)
+        inverse[ident] = '<X_020>'; proposal[8] = ident
+        result, trace = commit_patch(current, tokens, proposal, inverse)
+        self.assertEqual(result, current); self.assertEqual(trace['reason'], 'rigid_translation_KEEP')
+        prefix, number = inverse[1].rsplit('_', 1)
+        inverse[ident+1] = prefix+'_'+str(int(number[:-1])+1).zfill(len(number)-1)+'>'
+        proposal = list(tokens); proposal[1] = ident+1
+        result, trace = commit_patch(current, tokens, proposal, inverse)
+        self.assertTrue(trace['applied']); self.assertTrue(trace['lattice_changed'])
+        self.assertEqual(result['structure']['sites'][0]['abc'], current['structure']['sites'][0]['abc'])
+
     def test_materialized_selection_keeps_exact_committed_bytes(self):
         native=dict(record=self.current,continuous_trace=dict(editable=True))
         proposal=self.replace(8,'<X_020>');trace=dict(proposal_generated=True,proposal_tokens=proposal)
