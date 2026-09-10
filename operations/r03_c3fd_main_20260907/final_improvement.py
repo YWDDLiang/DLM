@@ -500,7 +500,7 @@ def gain_policy_worker(root,name):
     print(json.dumps(report),flush=True)
 
 
-def state_utility_worker(root,name):
+def state_utility_worker(root,name,*,panel_name='fit'):
     """Compare predicted candidate state reward with the observed current reward."""
     import torch
     from crystal_dlm.sun_ranker import endpoint_targets,nested_probabilities
@@ -509,14 +509,17 @@ def state_utility_worker(root,name):
     torch.set_num_threads(1)
     destination=root/'variants'/name
     original=Path(json.loads((root/'REGISTRATION.json').read_text())['previous'])
+    if panel_name=='fresh' and not (destination/'fresh').exists():
+        (destination/'fresh').symlink_to(original/'fresh',target_is_directory=True)
+    execution='state_fresh_execution' if panel_name=='fresh' else 'state_utility_execution'
     model=(original if name=='retained_e3' else destination)/'training/nested_sun_ranker/SUN_RANKER.pt'
-    write_json(destination/'STATE_UTILITY_REGISTRATION.json',dict(model_sha256=file_hash(model),
+    write_json(destination/(panel_name.upper()+'_STATE_UTILITY_REGISTRATION.json'),dict(model_sha256=file_hash(model),
         score_weights=[2.,1.],KEEP_reference='observed_current_NS_NMS_operational_reward',
         predicted_current_classifier_not_used=True,no_absolute_probability_floor=True,
         no_MS_gain_floor=True,no_explicit_known_SUN_veto=True,
         unknown_current_reward='zero_contribution_under_the_observed_verification_protocol; not a training target'))
     state=torch.load(model,map_location='cpu',weights_only=False)
-    banks,before,pins=features(destination,'fit',torch.device('cpu'),include_keep=False)
+    banks,before,pins=features(destination,panel_name,torch.device('cpu'),include_keep=False)
     rows=[]
     for stream,bank in banks.items():
         with torch.no_grad():values=nested_probabilities(bank['x']@state['weight'].T+state['bias']).tolist()
@@ -524,20 +527,39 @@ def state_utility_worker(root,name):
             trace=bank['traces'][row['ordinal']]
             rows.append(dict(ordinal=row['ordinal'],stream=stream,sun_gain=value[0],ms_gain=value[1],
                 operational_utility=op,valid=trace.get('proposal_generated',False) and trace['continuous_applied']))
-    for i,record in enumerate(read_rows(destination/'fit/native/inputs.jsonl')):
+    for i,record in enumerate(read_rows(destination/panel_name/'native/inputs.jsonl')):
         target,kind=endpoint_targets(before[i])
         value=target or (0.,0.)
         rows.append(dict(ordinal=i,stream='keep',sun_gain=value[0],ms_gain=value[1],operational_utility=0.,
             valid=record['success'],feature_forward_calls=0,current_reward_status=kind))
-    prediction=destination/'state_utility_execution/FIT_PREDICTIONS.jsonl';write_rows(prediction,rows)
-    panel=build(destination,'fit','state_utility',0.,0.,prediction_path=prediction,
+    prediction=destination/execution/'PREDICTIONS.jsonl';write_rows(prediction,rows)
+    panel=build(destination,panel_name,'state_utility',0.,0.,prediction_path=prediction,
         score_kind='predicted_candidate_NS_NMS_vs_observed_current_state',learned_keep=True,score_weights=(2.,1.))
-    evaluate(destination,panel,nu_workers=3)
+    if panel_name=='fresh':
+        label_fresh_policy(root,destination,panel,original)
+    evaluate(destination,panel,cached=panel_name=='fit',nu_workers=3)
+    roles=['fresh'] if panel_name=='fresh' else ['train','dev','final','all']
     report=dict(complete=True,score_weights=[2.,1.],model_sha256=file_hash(model),
-        results={role:summary(destination,panel,role) for role in ('train','dev','final','all')},
+        results={role:summary(destination,panel,role) for role in roles},
         feature_pins=pins,DEV_role='feasibility',old_FINAL_role='exploratory')
-    write_json(destination/'state_utility_execution/DONE.json',report)
+    write_json(destination/execution/'DONE.json',report)
     print(json.dumps({k:v for k,v in report.items() if k!='feature_pins'}),flush=True)
+
+
+def label_fresh_policy(root,destination,panel,original):
+    import subprocess
+    import torch
+    reuse=[original/'fresh/native/labeling/result']
+    reuse += [p/'edited/labeling/result' for p in (original/'policies/fresh').glob('*')
+              if (p/'edited/labeling/result/LABEL_FINAL.json').exists()]
+    reuse += [p for p in (root/'variants').glob('*/policies/fresh/*/edited/labeling/result')
+              if (p/'LABEL_FINAL.json').exists() and p!=panel/'edited/labeling/result']
+    command=[sys.executable,str(SOURCE/'scripts/label_rsi_cached_endpoints.py'),
+        '--input-jsonl',str(panel/'edited/inputs.jsonl'),'--output-dir',str(panel/'edited/labeling/result'),
+        '--purpose','training_feedback','--gpu-count',str(torch.cuda.device_count()),'--workers-per-gpu','4',
+        '--record-timeout','600','--deterministic','--feedback-manifest',str(panel/'edited/FEEDBACK_MANIFEST.json'),
+        '--reuse-endpoints',*[str(p) for p in reuse],'--joint-physical-stop','--max-steps','1000']
+    subprocess.run(command,check=True)
 
 
 def fresh_collect_worker(root,name):
@@ -641,7 +663,7 @@ def collect_keep_features(destination,panel_name='fit'):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','gain_policy','state_utility','retained','retained_fresh','retained_fresh_evaluate','fresh_collect','fresh_infer','fresh_evaluate','score_worker','rank_worker','policy_worker','utility_policy_worker','gain_policy_worker','state_utility_worker','retained_worker','retained_fresh_worker','retained_fresh_evaluate_worker','fresh_collect_worker','fresh_infer_worker','fresh_evaluate_worker'])
+    parser.add_argument('mode', choices=['prepare','scope','train','probe','collect','collect_resume','physics','score','rank','policy','utility_policy','gain_policy','state_utility','state_fresh','retained','retained_fresh','retained_fresh_evaluate','fresh_collect','fresh_infer','fresh_evaluate','score_worker','rank_worker','policy_worker','utility_policy_worker','gain_policy_worker','state_utility_worker','state_fresh_worker','retained_worker','retained_fresh_worker','retained_fresh_evaluate_worker','fresh_collect_worker','fresh_infer_worker','fresh_evaluate_worker'])
     parser.add_argument('--root', type=Path, required=True)
     parser.add_argument('--previous', type=Path)
     parser.add_argument('--name', choices=['mini_2e6', 'mini_5e7','scope_2e6','frozen_e3','balanced_e3','retained_e3','retained_delta_e3','mini_k8'])
@@ -662,8 +684,8 @@ if __name__ == '__main__':
         policy_worker(args.root,args.name,utility=True)
     elif args.mode=='gain_policy_worker':
         gain_policy_worker(args.root,args.name)
-    elif args.mode=='state_utility_worker':
-        state_utility_worker(args.root,args.name)
+    elif args.mode in ('state_utility_worker','state_fresh_worker'):
+        state_utility_worker(args.root,args.name,panel_name='fresh' if args.mode=='state_fresh_worker' else 'fit')
     elif args.mode=='retained_worker':
         retained_worker(args.root,args.name)
     elif args.mode in ('retained_fresh_worker','retained_fresh_evaluate_worker'):
