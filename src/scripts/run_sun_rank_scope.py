@@ -30,7 +30,7 @@ def register(root,previous,cache):
     forbidden={canonical(p) for p in oldplans}
     for p in read_rows(Path(spec['assets']['cohort'])):
         try:forbidden.add(canonical(p))
-        except (KeyError,ValueError):
+        except (KeyError,ValueError,TypeError):
             if p.get('body_eligible'):raise
     pool=Path(spec['assets']['training_preparation'])/'pairs_pending.jsonl'
     covered={p['chemsys'] for p in read_rows(cache/'official_slim_cache.jsonl')}
