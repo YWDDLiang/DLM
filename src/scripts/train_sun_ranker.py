@@ -22,7 +22,10 @@ def features(root,panel_name,device):
     import torch
     from crystal_dlm.expert_edit import FloatMLP
     reg=json.loads((root/'PREREGISTRATION.json').read_text());previous=Path(reg['previous_run'])
-    state=torch.load(Path(reg['old_editor'])/'expert_edit_modules.pt',map_location=device,weights_only=True)['quality_head']
+    editor=Path(reg['old_editor'])
+    if file_hash(editor/'RSI_TRAINING_DONE.json')!=reg['old_editor_receipt_sha256']:
+        raise ValueError('frozen content checkpoint receipt changed')
+    state=torch.load(editor/'expert_edit_modules.pt',map_location=device,weights_only=True)['quality_head']
     head=FloatMLP(state['layers.0.weight'].shape[1],state['layers.0.weight'].shape[0],4).to(device)
     head.load_state_dict(state);head.eval()
     panel=root/panel_name;current=read_rows(panel/'native/inputs.jsonl')
@@ -33,7 +36,10 @@ def features(root,panel_name,device):
     op_state=torch.load(op_path,map_location=device,weights_only=True)
     if any(not torch.equal(op_state[k],state[k]) for k in ('layers.0.weight','layers.0.bias')):
         raise ValueError('operational comparator has a different hidden representation')
-    result={};pins={str(op_path):file_hash(op_path)}
+    source_current=previous/'fit/native' if panel_name=='fit' else panel/'native'
+    bound_current=[source_current/'inputs.jsonl',source_current/'labeling/result/LABEL_FINAL.json',
+        score_directory(source_current.parent,source_current.name)/'attempt_results.jsonl',editor/'expert_edit_modules.pt']
+    result={};pins={str(p):file_hash(p) for p in [op_path,*bound_current]}
     for name in STREAMS:
         bank=panel/'bank'/name;receipt=json.loads((bank/'COLLECTION_FINAL.json').read_text())
         fp=bank/'CANDIDATE_FEATURES.pt';rp=bank/'FEATURE_ROWS.jsonl'
@@ -160,6 +166,8 @@ def train(root,output):
         SUN_ranking_pairs=len(edges),SUN_ranking_sources=len({data[a if a>=0 else b]['source_id'] for a,b,w in edges}),
         SUN_pairwise_updates_per_edge=steps,MSE_row_visits_semantics='actual_minibatch_updates; ranking term visits all registered edges each step',
         source_target_counts=dict(Counter(str((r['target_sun_gain'],r['target_ms_gain'])) for r in data)),
+        target_definition='delta_verified_Stable_and_novel; delta_verified_MS_and_novel; excludes_cohort_U',
+        feature_schema=dict(quality_hidden_width=x.shape[1]-len(EXTRA_FEATURES),observable_extra_features=list(EXTRA_FEATURES)),
         SUN_content_positives=len(content),SUN_positive_sources=len({r['source_id'] for r in content}),
         true_Stable_promotion_rows=sum(r['actual_Stable_promotion'] for r in content),
         exclusions=dict(exclusions),optimized_parameter_count=sum(p.numel() for p in linear.parameters()),

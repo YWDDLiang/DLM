@@ -10,7 +10,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,required=True)
     parser.add_argument('--panel',choices=['fit','fresh'],default='fit')
-    parser.add_argument('--mode',choices=['collect','train','infer','policies'],default='collect')
+    parser.add_argument('--mode',choices=['collect','train','infer','policies','audit'],default='collect')
     parser.add_argument('--minutes',type=int,default=30)
     args=parser.parse_args();root=args.root.resolve();source=Path(__file__).resolve().parents[2]
     pipeline=json.loads((root/'RAW0_PIPELINE.json').read_text())
@@ -19,6 +19,11 @@ def main():
     required=[root/'PREREGISTRATION.json',root/'SOURCE_SPLIT.jsonl',root/args.panel/'RUN_SPEC.json',
         root/args.panel/'native/inputs.jsonl',root/args.panel/'current/inputs.jsonl']
     if args.panel=='fresh':required+=[root/'FROZEN_SELECTION.json']
+    if args.mode=='train':
+        required += [root/f'fit/bank/{s}/COLLECTION_FINAL.json' for s in ('primary','rank1','rank2','rank3')]
+        required += [root/f'fit/bank/{s}/candidate/scoring/result/_SUCCESS' for s in ('rank1','rank2','rank3')]
+    if args.mode=='policies':required += [root/'training/sun_ranker/TRAINING_FINAL.json']
+    if args.mode in ('infer','audit'):required += [root/'FROZEN_SELECTION.json',root/'fresh/native/labeling/result/LABEL_FINAL.json']
     if any(not p.exists() for p in required):raise ValueError('SUN pilot inputs are incomplete')
     stage=dict(name='collect',script='src/scripts/run_sun_rank_scope.py',
         args=['--root',str(root),'--mode','collect','--panel',args.panel,'--completion-dir','{output}'],
@@ -33,6 +38,11 @@ def main():
         stage=dict(name=args.mode,script=script,
             args=['--root',str(root),'--completion-dir','{output}',*extra],
             inputs=[str(p) for p in required],outputs=required_outputs)
+    if args.mode=='audit':
+        output='models/sun_ranker_runtime_audit'
+        stage=dict(name='audit',script='src/scripts/audit_sun_ranker.py',
+            args=['--root',str(root),'--completion-dir','{output}'],inputs=[str(p) for p in required],
+            outputs=['{output}/AUDIT_FINAL.json'])
     pipeline['components']=[dict(id=job,output_dir=output,gpus=gpus,stages=[stage])]
     pipeline['jobs']={job:dict(component_indices=[0],gpus_per_task=gpus,cpus_per_task=4*gpus if gpus else 8,
         parallel_tasks=1,wall_minutes=args.minutes,memory=f'{96*gpus}G' if gpus else '64G',partition='gpu' if gpus else 'normal')}
