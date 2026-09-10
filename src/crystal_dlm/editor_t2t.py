@@ -21,12 +21,18 @@ def dense_view(row, prefix, *, masked):
     order = row['content_positions']
     validate_action_target(row['current_tokens'], target, order)
     current = list(row['current_tokens'])
+    cut = row.get('training_cut')
+    if cut is not None:
+        if not 0 <= cut < len(order):
+            raise ValueError('training cut must leave at least one masked target')
+        for index, pos in enumerate(order):
+            current[pos] = target[pos] if index < cut else MASK_TOKEN_ID
     if masked:
-        for pos in order:
+        for pos in order if cut is None else []:
             current[pos] = MASK_TOKEN_ID
     view = inference_view(prefix, row['current_tokens'], current, row['num_sites'], 1,
-                          order, remaining=80, reveal=0.)
-    for pos in order:
+                          order, remaining=80, reveal=0. if cut is None else cut / len(order))
+    for pos in order if cut is None else order[cut:]:
         view['targets'][pos] = target[pos]
     return view
 

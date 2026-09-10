@@ -93,13 +93,10 @@ def main():
     base.enable_input_require_grads()
     model.eval()
     support=build_repair_constraints(tokenizer)
-    if spec.get('editor_dense_t2t'):
-        from crystal_dlm.rsi_minibatch import decision_head_parameter
-        groups=[{'params':[p for n,p in selected if not decision_head_parameter(n)],'lr':spec['learning_rate']},
-                {'params':[p for n,p in selected if decision_head_parameter(n)],'lr':spec['head_learning_rate']}]
-    else:
-        groups=[{'params':[p for n,p in selected if 'lora_' in n],'lr':spec['learning_rate']},
-                {'params':[p for n,p in selected if 'lora_' not in n],'lr':spec['head_learning_rate']}]
+    from crystal_dlm.rsi_minibatch import decision_head_parameter
+    groups=[{'params':[p for n,p in selected if not decision_head_parameter(n)],'lr':spec['learning_rate']},
+            {'params':[p for n,p in selected if decision_head_parameter(n)],'lr':spec['head_learning_rate']}]
+    groups=[group for group in groups if group['params']]
     optimizer=torch.optim.AdamW(groups,weight_decay=0.)
     if rank==0: output.mkdir(parents=True,exist_ok=False)
     if world>1: dist.barrier()
@@ -126,7 +123,15 @@ def main():
     if bounded:
         if replay:
             raise ValueError('bounded training requires replay merged and deduplicated before epoch construction')
-        if spec.get('editor_dense_t2t'):
+        if spec.get('editor_minibatch_content'):
+            from crystal_dlm.editor_minibatch import train_editor_minibatches as train_bounded
+            contract.update(objective='masked_dense_teacher_CE_and_reference_KL_with_detached_decisions',
+                sampling='shuffled_complete_data_passes_with_consistent_atom_permutations',
+                content_update_unit='minibatch', reference_KL_policy='regularization_only',
+                content_parameter_learning_rate=spec['learning_rate'],
+                decision_parameter_learning_rate=spec['head_learning_rate'])
+            if rank==0: write_json(output/'TRAIN_CONFIG.json',contract)
+        elif spec.get('editor_dense_t2t'):
             from crystal_dlm.editor_t2t import train_t2t as train_bounded
             contract.update(objective='dense_T2T_M2T_typed_periodic_CE_with_reference_KL',
                 hard_support='typed_periodic_training; complete_target_geometry_certified; unchanged_runtime_hard_masks',

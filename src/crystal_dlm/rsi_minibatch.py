@@ -92,7 +92,7 @@ def conditional_batch(model, tokenizer, views, branch, support):
     return torch.stack(values), distributions
 
 
-def editor_head_loss(model, tokenizer, examples, device, *, detach_content=False):
+def editor_head_loss(model, tokenizer, examples, device, *, detach_content=False, site_objective='binary'):
     from crystal_dlm.ranked_feedback import COUNTS
     chosen = [x for x in examples if has_head_supervision(x)]
     if not chosen: return None, 0
@@ -117,9 +117,13 @@ def editor_head_loss(model, tokenizer, examples, device, *, detach_content=False
         loss = out.quality_logits.new_zeros(())
         if i is not None:
             loss = weight * torch.nn.functional.cross_entropy(out.mode_logits[i:i+1], torch.tensor([row['mode_target']], device=device))
-        if row['mode_target'] == 1:
+        if row.get('mode_target') == 1:
             sites = torch.tensor(row['site_targets'], device=device, dtype=torch.float32)
-            loss = loss + torch.nn.functional.binary_cross_entropy_with_logits(out.site_logits[i, :row['num_sites']], sites)
+            site_logits = out.site_logits[i, :row['num_sites']]
+            if site_objective == 'categorical':
+                loss = loss - (site_logits.log_softmax(-1) * sites).sum() / sites.sum().clamp_min(1)
+            else:
+                loss = loss + torch.nn.functional.binary_cross_entropy_with_logits(site_logits, sites)
             loss = loss + torch.nn.functional.cross_entropy(out.count_logits[i:i+1], torch.tensor([COUNTS.index(int(sites.sum()))], device=device))
         if j is not None:
             loss = loss + weight * torch.nn.functional.binary_cross_entropy_with_logits(out.quality_logits[j, 3],
